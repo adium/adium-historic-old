@@ -130,41 +130,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		11B1D44904956F11002782CE = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = ContactStatusEventsDefaults.plist;
-			path = "Plugins/Contact Status Events/ContactStatusEventsDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11B1D44B049571B9002782CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactStatusEventsPrefs.nib;
-			path = "Plugins/Contact Status Events/ContactStatusEventsPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11B1D451049572C7002782CE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactStatusEventsPreferences.h;
-			path = "Plugins/Contact Status Events/AIContactStatusEventsPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11B1D452049572C7002782CE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactStatusEventsPreferences.m;
-			path = "Plugins/Contact Status Events/AIContactStatusEventsPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		11B96D81049AF85900C6304D = {
 			children = (
 				11B96D97049AF8FB00C6304D,
@@ -292,7 +257,6 @@
 				34BDA0A3053147E1000AB133,
 				34BDA0B5053147E8000AB133,
 				34BDA0C9053147F0000AB133,
-				34BDA0DD053147F8000AB133,
 				34BDA0ED05314800000AB133,
 				34BDA10105314807000AB133,
 				34BDA1110531480F000AB133,
@@ -412,7 +376,6 @@
 				34BDA090053147E1000AB133,
 				34BDA0A4053147E8000AB133,
 				34BDA0B6053147EF000AB133,
-				34BDA0CA053147F7000AB133,
 				34BDA0DE053147FF000AB133,
 				34BDA0EE05314806000AB133,
 				34BDA1020531480E000AB133,
@@ -4014,18 +3977,6 @@
 			settings = {
 			};
 		};
-		3419F72305314F4B00C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F72405314F4B00C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3419F72505314F4F00C68BA3 = {
 			fileRef = 34BD9DE105314751000AB133;
 			isa = PBXBuildFile;
@@ -4604,12 +4555,6 @@
 		};
 		3419FDF90531585600C68BA3 = {
 			fileRef = 34BDA0C9053147F0000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419FDFA0531585600C68BA3 = {
-			fileRef = 34BDA0DD053147F8000AB133;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8161,13 +8106,6 @@
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
 		};
-		34BD98E70531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD98E80531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8300,13 +8238,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
-		};
-		34BD98FC0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
 		};
 		34BD98FD0531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -8447,13 +8378,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 11C157C404A88D33008E0C76;
 			remoteInfo = Emoticons;
-		};
-		34BD99120531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 4B52A57C03EDB96E00A8010A;
-			remoteInfo = "Contact Status Events";
 		};
 		34BD99130531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -8801,7 +8725,6 @@
 				34BD9CE6053146CC000AB133,
 				34BD9CE7053146CC000AB133,
 				34BD9CE8053146CC000AB133,
-				34BD9CE9053146CC000AB133,
 				34BD9D09053146CC000AB133,
 				34BD9CEA053146CC000AB133,
 				34BD9D0E053146CC000AB133,
@@ -8852,7 +8775,6 @@
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
 				520FE46A05BE2118002D063D,
-				6E99206C05BDCA250070E854,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -8965,11 +8887,6 @@
 			isa = PBXTargetDependency;
 			target = 34BDA0B6053147EF000AB133;
 			targetProxy = 34BD98A40531467B000AB133;
-		};
-		34BD9CE9053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BDA0CA053147F7000AB133;
-			targetProxy = 34BD99120531467B000AB133;
 		};
 		34BD9CEA053146CC000AB133 = {
 			isa = PBXTargetDependency;
@@ -9784,7 +9701,6 @@
 				3419FDF70531585600C68BA3,
 				3419FDF80531585600C68BA3,
 				3419FDF90531585600C68BA3,
-				3419FDFA0531585600C68BA3,
 				3419FDFB0531585600C68BA3,
 				3419FDFC0531585600C68BA3,
 				3419FDFD0531585600C68BA3,
@@ -15029,139 +14945,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		34BDA0CA053147F7000AB133 = {
-			buildPhases = (
-				34BDA0CD053147F7000AB133,
-				34BDA0D0053147F7000AB133,
-				34BDA0D3053147F7000AB133,
-				34BDA0D6053147F7000AB133,
-				34BDA0DA053147F7000AB133,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Contact_Status_Events.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Contact Status Events";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				34BDA0CB053147F7000AB133,
-				34BDA0CC053147F7000AB133,
-			);
-			isa = PBXNativeTarget;
-			name = "Contact Status Events";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Contact Status Events";
-			productReference = 34BDA0DD053147F8000AB133;
-			productType = "com.apple.product-type.bundle";
-		};
-		34BDA0CB053147F7000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98E70531467B000AB133;
-		};
-		34BDA0CC053147F7000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98FC0531467B000AB133;
-		};
-		34BDA0CD053147F7000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA0CE053147F7000AB133,
-				34BDA0CF053147F7000AB133,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA0CE053147F7000AB133 = {
-			fileRef = 4B52A58203EDB9B600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0CF053147F7000AB133 = {
-			fileRef = 11B1D451049572C7002782CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0D0053147F7000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA0D1053147F7000AB133,
-				34BDA0D2053147F7000AB133,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA0D1053147F7000AB133 = {
-			fileRef = 11B1D44904956F11002782CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0D2053147F7000AB133 = {
-			fileRef = 11B1D44B049571B9002782CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0D3053147F7000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA0D4053147F7000AB133,
-				34BDA0D5053147F7000AB133,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA0D4053147F7000AB133 = {
-			fileRef = 4B52A58303EDB9B600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0D5053147F7000AB133 = {
-			fileRef = 11B1D452049572C7002782CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0D6053147F7000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F72305314F4B00C68BA3,
-				3419F72405314F4B00C68BA3,
-				34BDA0D9053147F7000AB133,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA0D9053147F7000AB133 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA0DA053147F7000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA0DD053147F8000AB133 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Contact Status Events.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		34BDA0DE053147FF000AB133 = {
 			buildPhases = (
 				34BDA0E1053147FF000AB133,
@@ -19234,7 +19017,6 @@
 		4B4F5B29042D63DC00A8010A = {
 			children = (
 				C42C170005BA687800135D3C,
-				4B52A58603EDB9D200A8010A,
 				4B30490B047FBD6A00A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				6C60B147056059ED00CAD137,
@@ -19515,39 +19297,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = StatusCirclesPrefs.nib;
 			path = "Plugins/Status Circles/StatusCirclesPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B52A58203EDB9B600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactStatusEventsPlugin.h;
-			path = "Plugins/Contact Status Events/AIContactStatusEventsPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B52A58303EDB9B600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactStatusEventsPlugin.m;
-			path = "Plugins/Contact Status Events/AIContactStatusEventsPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B52A58603EDB9D200A8010A = {
-			children = (
-				4B52A58203EDB9B600A8010A,
-				4B52A58303EDB9B600A8010A,
-				11B1D451049572C7002782CE,
-				11B1D452049572C7002782CE,
-				11B1D44B049571B9002782CE,
-				11B1D44904956F11002782CE,
-			);
-			isa = PBXGroup;
-			name = "Contact Status Events";
-			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -25921,17 +25670,6 @@
 			path = "Plugins/Idle Message/IdleMessagePreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6E99206B05BDCA250070E854 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 6EB4AC3305BCB81D00D0042B;
-			remoteInfo = "Message Push Preferences";
-		};
-		6E99206C05BDCA250070E854 = {
-			isa = PBXTargetDependency;
-			targetProxy = 6E99206B05BDCA250070E854;
 		};
 		6ECE6C2004749C9600CAEAD0 = {
 			isa = PBXFileReference;

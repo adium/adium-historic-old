@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.99 2004/02/13 06:19:53 evands Exp $
+// $Id: AIContactController.m,v 1.100 2004/02/16 22:55:39 eevyl Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -81,6 +81,12 @@
 	contactList = [[AIListGroup alloc] initWithUID:ADIUM_ROOT_GROUP_NAME];
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
+
+	// AIContactStatusEvents Stuff
+    onlineDict = [[NSMutableDictionary alloc] init];
+    awayDict = [[NSMutableDictionary alloc] init];
+    idleDict = [[NSMutableDictionary alloc] init];
+    [owner registerEventNotification:CONTACT_STATUS_AWAY_YES displayName:@"Contact Away"];
 
 	//
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
@@ -616,6 +622,62 @@
 	[[owner notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys forKey:@"Keys"] : nil)];
+	
+	if (![inObject isKindOfClass: [AIAccount class]]) {
+
+		if([modifiedKeys containsObject:@"Online"]){ //Sign on/off
+			BOOL		newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+			NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
+			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+
+			if(oldStatusNumber == nil || newStatus != oldStatus){
+				//Save the new status
+				[onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+				
+				//Take action (If this update isn't silent)
+				if(!silent){
+					[[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO) object:inObject userInfo:nil];
+				}
+			}
+		}
+
+		if([modifiedKeys containsObject:@"Away"]){ //Away / Unaway
+			BOOL 	newStatus = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+			NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject UIDAndServiceID]];
+			BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+			
+			if(oldStatusNumber == nil || newStatus != oldStatus){
+				//Save the new state
+				[awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+				
+				//Take action (If this update isn't silent)
+				if(!silent){
+					[[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO) object:inObject userInfo:nil];
+				}
+				
+			}
+		}
+		
+		if([modifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
+			NSDate 		*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
+			NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject UIDAndServiceID]];
+			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+			BOOL		newStatus = (idleSince != nil);
+			
+			if(oldStatusNumber == nil || newStatus != oldStatus){
+				//Save the new state
+				[idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+				
+				//Take action (If this update isn't silent)
+				if(!silent){
+					[[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO) object:inObject userInfo:nil];
+				}
+				
+			}
+		}
+		
+	}
+	
 	return(attrChange);
 }
 

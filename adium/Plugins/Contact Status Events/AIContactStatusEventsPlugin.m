@@ -63,7 +63,7 @@
 	// Check if kind of AIListObject is not of Account class
 	if (![inObject isKindOfClass: [AIAccount class]]) {
 	
-    if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
+    /*if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
         BOOL		newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
         NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
         BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
@@ -112,7 +112,7 @@
             }
             
         }
-    }
+    }*/
 	
 	} // end of the account class check
 	

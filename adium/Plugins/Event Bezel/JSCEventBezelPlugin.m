@@ -8,7 +8,6 @@
 
 #import "JSCEventBezelPlugin.h"
 #import "JSCEventBezelPreferences.h"
-#import "AIContactStatusEventsPlugin.h"
 #import "AIContactStatusColoringPlugin.h"
 #import "ESEventBezelContactAlert.h"
 
