@@ -245,22 +245,34 @@
 
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object
 {
-    NSString                    *displayName = [object displayName];
-    NSString                    *uid = [object UID];
-    //Configure fonts and attributes
-    NSFontManager       *fontManager = [NSFontManager sharedFontManager];
-    
-    NSFont              *toolTipsFont = [NSFont toolTipsFontOfSize:10];
-    
-    NSDictionary        *labelDict = [NSDictionary dictionaryWithObjectsAndKeys:
-        [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
-    NSDictionary        *entryDict =[NSDictionary dictionaryWithObjectsAndKeys:
-        toolTipsFont, NSFontAttributeName, nil];
-    NSMutableDictionary *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:2] , NSFontAttributeName, nil];
-    NSDictionary        *titleDict = [NSDictionary dictionaryWithObjectsAndKeys:
-        [fontManager convertFont:[NSFont toolTipsFontOfSize:12] toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil];
-    
     NSMutableAttributedString * titleString = [[NSMutableAttributedString alloc] init];
+    
+    id <AIContactListTooltipEntry>	tooltipEntry;
+    NSEnumerator			*enumerator;
+    NSEnumerator                        *labelEnumerator;
+    NSMutableArray                      *labelArray = [[NSMutableArray alloc] init];
+    NSMutableArray                      *entryArray = [[NSMutableArray alloc] init];
+    NSArray                             *tabArray;
+    NSMutableString                     *entryString;
+    float                               maxLabelWidth = 0;
+    float                               labelWidth;
+    BOOL                                isFirst = YES;
+    
+    NSString                            *displayName = [object displayName];
+    NSString                            *uid = [object UID];
+    
+    //Configure fonts and attributes
+    NSFontManager                       *fontManager = [NSFontManager sharedFontManager];
+    NSFont                              *toolTipsFont = [NSFont toolTipsFontOfSize:10];
+    NSMutableDictionary                 *titleDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+        [fontManager convertFont:[NSFont toolTipsFontOfSize:12] toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil];
+    NSMutableDictionary                 *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+        [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
+    NSMutableDictionary                 *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:2] , NSFontAttributeName, nil];
+    NSMutableDictionary                 *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
+        toolTipsFont, NSFontAttributeName, nil];
+    NSMutableParagraphStyle             *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
     if([displayName compare:uid] == 0){
         [titleString appendString:[NSString stringWithFormat:@"%@",displayName] withAttributes:titleDict];
@@ -268,6 +280,8 @@
         [titleString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,uid] withAttributes:titleDict];
     }
     
+    
+    //Add the serviceID, one tab away
     if ([object isKindOfClass:[AIListContact class]]){
         [titleString appendString:[NSString stringWithFormat:@" \t%@",[object serviceID]]
                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -276,44 +290,75 @@
     }
     
     //Entries from plugins
-    id <AIContactListTooltipEntry>	tooltipEntry;
-    NSEnumerator			*enumerator;
+    
+    //Calculate the widest label while loading the arrays
     enumerator = [contactListTooltipEntryArray objectEnumerator];
-    BOOL isFirst = YES;
-    while((tooltipEntry = [enumerator nextObject])){
-        NSString	*entryString = [tooltipEntry entryForObject:object];
-        NSString	*labelString = [tooltipEntry labelForObject:object];
+    
+    while (tooltipEntry = [enumerator nextObject]){
         
-        if(entryString && [entryString length] && labelString && [labelString length]) {
-            if (isFirst) {
-                [titleString appendString:@"\r\r" withAttributes:labelEndLineDict];
-                [titleString appendString:[NSString stringWithFormat:@"%@: ",labelString] withAttributes:labelDict];
-                isFirst = NO;
-            } else {
-                //Add a carriage return and the label
-                [titleString appendString:[NSString stringWithFormat:@"\r%@: ",labelString] withAttributes:labelDict];
+        entryString = [[tooltipEntry entryForObject:object] mutableCopy];
+        if (entryString && [entryString length]) {
+            
+            NSString        *labelString = [tooltipEntry labelForObject:object];
+            if (labelString && [labelString length]) {
+                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
+                
+                [entryArray addObject:entryString];
+                [labelArray addObject:labelString];
+                
+                //The largest size should be the label's size plus the distance to the next tab at least a space past its end
+                labelWidth = [labelAttribString size].width;
+                
+                if (labelWidth > maxLabelWidth)
+                    maxLabelWidth = labelWidth;
             }
-            [titleString appendString:entryString withAttributes:entryDict];
         }
+    }
+    
+    //Set a right-align tab at the maximum label width and a left-align just past it
+    tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth+1],nil];
+    [paragraphStyle setTabStops:tabArray];
+    [labelDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    [labelEndLineDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    [entryDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    
+    //Add labels plus entires to the toolTip
+    enumerator = [entryArray objectEnumerator];
+    labelEnumerator = [labelArray objectEnumerator];
+    
+    while((entryString = [enumerator nextObject])){        
+        NSAttributedString * labelString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t ",[labelEnumerator nextObject]]
+                                                                           attributes:labelDict];
+        
+        //Add a carriage return
+        [titleString appendString:@"\r" withAttributes:labelEndLineDict];
+        
+        if (isFirst) {
+            //skip a line
+            [titleString appendString:@"\r" withAttributes:labelEndLineDict];
+            isFirst = NO;
+        }
+        
+        //Add the label (with its spacing)
+        [titleString appendAttributedString:labelString];
+        [titleString appendString:entryString withAttributes:entryDict];
     }
     return [titleString autorelease];
 }
 
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object
 {
-    NSMutableAttributedString	*tipString = [[NSMutableAttributedString alloc] init];
+    NSMutableAttributedString       *tipString = [[NSMutableAttributedString alloc] init];
     
     //Configure fonts and attributes
-    NSFontManager       *fontManager = [NSFontManager sharedFontManager];
-    NSFont              *toolTipsFont = [NSFont toolTipsFontOfSize:10];
-    
-    NSMutableDictionary        *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+    NSFontManager                   *fontManager = [NSFontManager sharedFontManager];
+    NSFont                          *toolTipsFont = [NSFont toolTipsFontOfSize:10];
+    NSMutableDictionary             *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
         [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
-    NSMutableDictionary        *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1] , NSFontAttributeName, nil];
-    NSMutableDictionary        *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
+    NSMutableDictionary             *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1] , NSFontAttributeName, nil];
+    NSMutableDictionary             *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
-    
-    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    NSMutableParagraphStyle         *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     
     //Entries from plugins
     id <AIContactListTooltipEntry>  tooltipEntry;
@@ -368,21 +413,18 @@
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
     while((entryString = [enumerator nextObject])){
-        NSMutableAttributedString * labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:",[labelEnumerator nextObject]]
+        NSMutableAttributedString * labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t ",[labelEnumerator nextObject]]
                                                                                          attributes:labelDict];
         
-        //Add a tab to the label to make lining up multiple-line entries a whole lot easier
-        [labelString appendString:@"\t " withAttributes:labelDict];
-        
         if (firstEntry) {
-            //Add the label (with its spacing)
-            [tipString appendAttributedString:labelString];
             firstEntry = NO;
         } else {
-            //Add a carriage return, skip a line, then add the label (with its spacing)
+            //Add a carriage return and skip a line
             [tipString appendString:@"\r\r" withAttributes:labelEndLineDict];
-            [tipString appendAttributedString:labelString];
         }
+        
+        //Add the label (with its spacing)
+        [tipString appendAttributedString:labelString];
         
         //convert returns to new lines so return can be used internally without interference
         [entryString replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [entryString length])];
