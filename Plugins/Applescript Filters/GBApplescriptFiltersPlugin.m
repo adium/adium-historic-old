@@ -479,7 +479,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 					
 					//Replace the substring with script result
 					if (([scriptResult hasPrefix:@"<HTML>"])){
-						NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+						//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
+						NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
+																		 withDefaultAttributes:[attributedString attributesAtIndex:(keywordStart + offset)
+																													effectiveRange:nil]];
 						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
 														withAttributedString:attributedScriptResult];
 						scriptResultLength = [attributedScriptResult length];
