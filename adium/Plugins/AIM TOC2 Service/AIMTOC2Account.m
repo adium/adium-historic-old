@@ -127,6 +127,40 @@
 
 
 // AIAccount_Handles ---------------------------------------------------------------------------
+- (void)removeContacts:(NSArray *)objects
+{
+	NSEnumerator	*enumerator = [objects objectEnumerator];
+	AIListContact	*object;
+	
+	while(object = [enumerator nextObject]){
+		NSString	*group = [object remoteGroupNameForAccount:self];
+
+		//Remove it server-side & update our remote grouping
+		[object setRemoteGroupName:nil forAccount:self];
+		[self AIM_RemoveHandle:[object UID] fromGroup:group];
+	}
+}
+
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
+{
+	NSEnumerator	*enumerator = [objects objectEnumerator];
+	AIListContact	*object;
+	
+	while(object = [enumerator nextObject]){
+		//Add it server-side & update our remote grouping
+		[self AIM_AddHandle:[object UID] toGroup:[inGroup UID]];
+		[object setRemoteGroupName:[inGroup UID] forAccount:self];
+	}
+}
+
+// Return YES if the contact list is editable
+- (BOOL)contactListEditable
+{
+    return([[self statusObjectForKey:@"Online"] boolValue]);
+}
+
+
+
 // Add a handle
 //- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 //{
@@ -229,10 +263,10 @@
 //}
 
 // Return YES if the contact list is editable
-- (BOOL)contactListEditable
-{
-    return([[self statusObjectForKey:@"Online"] boolValue]);
-}
+//- (BOOL)contactListEditable
+//{
+//    return([[self statusObjectForKey:@"Online"] boolValue]);
+//}
 
 // Return a dictionary of our handles
 //- (NSDictionary *)availableHandles
@@ -740,7 +774,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.117 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.118 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
