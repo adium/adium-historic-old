@@ -69,9 +69,12 @@ void xml_char_data	(void *userData,
 - (void)dealloc
 {
 	if (connection != nil) {
-            [connection closeFile];
+		[connection closeFile];
 	    [connection release];
 	}
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[super dealloc];
 }
 
