@@ -1,19 +1,18 @@
 {
     IBClasses = (
-        {CLASS = ESContactAlert; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {saveMessageDetails = id; }; 
-            CLASS = ESSendMessageContactAlert; 
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_anotherAccount" = NSButton; 
-                "button_displayAlert" = NSButton; 
-                "popUp_message_actionDetails_one" = NSPopUpButton; 
-                "popUp_message_actionDetails_two" = NSPopUpButton; 
-                "textField_message_actionDetails" = NSTextField; 
-                "view_details_message" = NSView; 
-            }; 
-            SUPERCLASS = ESContactAlert; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESSendMessageAlertDetailPane; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIActionDetailsPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

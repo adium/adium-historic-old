@@ -3509,6 +3509,7 @@
 				4BAA1B540632EF0000D8B92C,
 				4BAA1B5C0632EFB100D8B92C,
 				34C2D31806334A880018E5D2,
+				4BFF665C063693FB00308A3B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4144,6 +4145,7 @@
 				4BAA1B550632EF0000D8B92C,
 				4BAA1B5D0632EFB100D8B92C,
 				34C2D31906334A880018E5D2,
+				4BFF665B063693FA00308A3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15251,6 +15253,18 @@
 			path = "Frameworks/Adium Framework/AIContentStatus.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BFF665B063693FA00308A3B = {
+			fileRef = 342DC49C05783BE8000E1D83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFF665C063693FB00308A3B = {
+			fileRef = 342DC49B05783BE8000E1D83;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //4B0
 //4B1
