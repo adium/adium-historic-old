@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 723 $ $Date: 2004/05/07 17:32:36 $ -->
+<!--$Rev: 728 $ $Date: 2004/05/07 18:06:12 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -442,7 +442,9 @@ try {
 %>
                 </div>
                 <div class="boxWideBottom"></div>
-
+<%
+/*
+%>
                 <h1>Messages Sent/Received by Hour</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
@@ -459,7 +461,9 @@ try {
 %>
                 </div>
                 <div class="boxWideBottom"></div>
-                
+<%
+*/
+%>
                 <h1>Most Popular Messages</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">

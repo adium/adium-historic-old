@@ -16,7 +16,7 @@ PreparedStatement updateStmt = null;
 
 try {
 
-    pstmt = conn.prepareStatement("select key_id from information_keys");
+    pstmt = conn.prepareStatement("select key_id from information_keys where delete = false");
 
     rset = pstmt.executeQuery();
     
@@ -25,14 +25,8 @@ try {
         int returnVal;
 
         if(requestText != null && requestText.equals("on")) {
-            updateStmt = conn.prepareStatement("delete from adium.contact_information where key_id = ? ");
 
-            updateStmt.setInt(1, rset.getInt("key_id"));
-
-            returnVal = updateStmt.executeUpdate();
-
-
-            updateStmt = conn.prepareStatement("delete from adium.information_keys where key_id = ? ");
+            updateStmt = conn.prepareStatement("update adium.information_keys set delete = true where key_id = ? ");
 
             updateStmt.setInt(1, rset.getInt("key_id"));
 

@@ -241,7 +241,8 @@ insert into adium.preferences values ('scramble', 'false');
 
 create table adium.information_keys (
 key_id          serial primary key,
-key_name        text not null
+key_name        text not null,
+delete          boolean default false
 );
 
 create table adium.contact_information (
@@ -257,10 +258,10 @@ create or replace view adium.user_contact_info as
 (select user_id, username, key_id, key_name, value 
 from adium.users natural join 
      adium.contact_information natural join
-     adium.information_keys);
+     adium.information_keys where delete = false);
 
 create or replace view adium.meta_contact_info as 
 (select meta_id, name, key_id, key_name, value 
 from adium.meta_container natural join 
      adium.contact_information natural join
-     adium.information_keys);
+     adium.information_keys where delete = false);

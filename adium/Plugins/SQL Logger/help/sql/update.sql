@@ -8,8 +8,10 @@
 
 create table adium.information_keys (
 key_id          serial primary key,
-key_name        text not null
+key_name        text not null,
+delete          boolean
 );
+
 
 create table adium.contact_information (
 meta_id         int references adium.meta_container (meta_id),
@@ -41,13 +43,13 @@ create or replace view adium.user_contact_info as
 (select user_id, username, key_id, key_name, value 
 from adium.users natural join 
      adium.contact_information natural join
-     adium.information_keys);
+     adium.information_keys where delete = false);
 
 create or replace view adium.meta_contact_info as 
 (select meta_id, name, key_id, key_name, value 
 from adium.meta_container natural join 
      adium.contact_information natural join
-     adium.information_keys);
+     adium.information_keys where delete = false);
 
 alter table adium.meta_container drop column notes;
 alter table adium.meta_container drop column url;

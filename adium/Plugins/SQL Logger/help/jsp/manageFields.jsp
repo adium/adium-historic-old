@@ -11,7 +11,7 @@ PreparedStatement pstmt = null;
 ResultSet rset = null;
 
 try {
-    pstmt = conn.prepareStatement("select key_id, key_name from adium.information_keys order by key_name");
+    pstmt = conn.prepareStatement("select key_id, key_name from adium.information_keys where delete = false order by key_name ");
 
     rset = pstmt.executeQuery();
     rset.next();
@@ -31,6 +31,7 @@ try {
             </td>
             </tr>
 <%
+    rset.beforeFirst();
     while(rset.next()) {
         out.println("<tr><td align=\"right\">");
 

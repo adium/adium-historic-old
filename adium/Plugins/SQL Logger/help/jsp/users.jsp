@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/07 17:32:36 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/07 18:06:12 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -97,7 +97,7 @@ try {
                 <div class="boxWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 30 + 125 as height from adium.information_keys");
+    pstmt = conn.prepareStatement("select count(*) * 31 + 125 as height from adium.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
 
