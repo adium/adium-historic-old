@@ -23,10 +23,10 @@
 #define ENTRY_TEXTVIEW_MIN_HEIGHT	20
 #define ENTRY_TEXTVIEW_MAX_HEIGHT	70
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
-#define TEXT_ENTRY_PADDING 2
+#define TEXT_ENTRY_PADDING 3
 #define SEND_BUTTON_PADDING 0
 #define fixed_width 100
-#define fixed_padding 4
+#define fixed_padding 3
 
 @interface AIMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
