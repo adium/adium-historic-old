@@ -11,6 +11,7 @@
 #import "AIAwayMessagesPlugin.h"
 #import "AIAwayMessagePreferences.h"
 #import "AIEnterAwayWindowController.h"
+#import "AIAwayStatusWindowController.h"
 
 #define AWAY_SPELLING_DEFAULT_PREFS		@"AwaySpellingDefaults"
 
@@ -62,12 +63,22 @@
 {
     NSAttributedString	*awayMessage = [sender representedObject];
     [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
+
+    // Get an away status window and update its contents
+    [[AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner] showWindow:nil];
+    // Tell it to update in case we were already away
+    [AIAwayStatusWindowController updateAwayStatusWindow];
+
 }
 
 //Remove the active away message
 - (IBAction)removeAwayMessage:(id)sender
 {
-    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil]; //Remove the away status flag
+    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
+    //Remove the away status flag	
+
+    [AIAwayStatusWindowController updateAwayStatusWindow];
+    
 }
 
 //Update our menu when the away status changes
@@ -181,9 +192,7 @@
 {
     //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
 
-    //    if(menuItem == menuItem_away || menuItem == menuItem_removeAway){
-    [self updateAwayMenu]; //Update the away message menu
-                           //    }
+        [self updateAwayMenu]; //Update the away message menu
 
     return(YES);
 }
