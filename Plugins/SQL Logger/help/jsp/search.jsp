@@ -137,7 +137,7 @@ try {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger: Search</title>
+<title>SQL Logger: Search</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -170,9 +170,10 @@ try {
                 <ul id="navlist">
                     <li><a href="index.jsp">Viewer</a></li>
                     <li><span id="current">Search</span></li>
-                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="chats.jsp">Chats</a></li>
+                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>
@@ -309,7 +310,7 @@ try {
                                         out.print("value=\"" + date_start +
                                         "\"");
                                 %> id="start_date" />
-                                <a 
+                                <a
                         href="javascript:show_calendar('control.start');"
                         onmouseover="window.status='Date Picker';return true;"
                         onmouseout="window.status='';return true;">
@@ -323,8 +324,8 @@ try {
                                         if (date_finish != null)
                                             out.print("value=\"" + date_finish + "\"");
                                     %> id="finish_date" />
-                                    <a 
-                                    
+                                    <a
+
                     href="javascript:show_calendar('control.finish');"
                     onmouseover="window.status='Date Picker';return true;"
                     onmouseout="window.status='';return true;">
@@ -582,7 +583,7 @@ try {
                 "&amp;to=" + rset.getString("recipient_sn") +
                 "&amp;hl=" + cleanString +
                 "&amp;message_id=" + rset.getString("message_id") +
-                "#" + rset.getInt("message_id") + "\">");
+                "&amp;time=15#" + rset.getInt("message_id") + "\">");
                 out.print("&#177;15&nbsp;");
                 out.print("</a>");
 

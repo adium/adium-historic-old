@@ -92,6 +92,10 @@ try {
             }
         }
     }
+
+    if(request.getParameter("redirect") != null) {
+        response.sendRedirect(request.getParameter("redirect"));
+    }
 } catch (SQLException e) {
     out.println("<br/>" + e.getMessage());
 } finally {

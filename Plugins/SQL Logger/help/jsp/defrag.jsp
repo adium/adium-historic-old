@@ -24,7 +24,7 @@ loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 %>
 <html>
     <head>
-        <title>Adium Statistics</title>
+        <title>SQL Logger: Defrag Statistics</title>
     </head>
     <body>
     <%

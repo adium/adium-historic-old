@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 898 $ $Date$ -->
+<!--$Rev: 900 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -95,7 +95,7 @@ try {
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger: Statistics</title>
+<title>SQL Logger: Statistics</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -124,9 +124,10 @@ try {
                 <ul id="navlist">
                     <li><a href="index.jsp">Viewer</a></li>
                     <li><a href="search.jsp">Search</a></li>
-                    <li><span id="current">Statistics</span></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="chats.jsp">Chats</a></li>
+                    <li><span id="current">Statistics</span></li>
                     <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>

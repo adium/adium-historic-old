@@ -27,7 +27,7 @@ try {
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger: Meta-Contacts</title>
+<title>SQL Logger: Meta-Contacts</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -56,9 +56,10 @@ try {
                 <ul id="navlist">
                     <li><a href="index.jsp">Viewer</a></li>
                     <li><a href="search.jsp">Search</a></li>
-                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><span id="current">Meta-Contacts</span></li>
+                    <li><a href="chats.jsp">Chats</a></li>
+                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>
@@ -68,7 +69,7 @@ try {
                 <div class="boxExtraWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 125 as height from im.information_keys where delete = false");
+    pstmt = conn.prepareStatement("select count(*) * 31 + 105 as height from im.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
 
@@ -94,11 +95,18 @@ try {
 
         String editURL = "editMeta.jsp?meta_id=" + rset.getInt("meta_id");
 %>
-<span class="edit"<a href="#"
-    onClick="window.open('<%= editURL %>', 'Edit Meta Contact', 'width=275,height=<%= height %>')">Edit ...</a></span>
+<span class="edit">
+
+    <a href="updateMeta.jsp?meta_id=<%= rset.getInt("meta_id") %>&delete=on&redirect=meta.jsp">Delete</a> |
+
+    <a href="#" onClick="window.open('<%= editURL %>',
+    'Edit Meta Contact', 'width=275,height=<%= height %>')">Edit ...</a>
+    </span>
 <%
 
-        out.print("<h2>" + rset.getString("name") + " (" +
+        out.print("<h2><a href=\"chats.jsp?meta_id=" +
+            rset.getString("meta_id") + "\">" +
+            rset.getString("name") + "</a> (" +
             rset.getString("count") + ")</h2>");
         out.println("<div class=\"meta\">");
         out.print("<div class=\"personal_info\">");
@@ -130,7 +138,9 @@ try {
             out.println("<p><img src=\"images/services/" +
                 metaSet.getString("lower_service") + ".png\" width=\"12\" height=\"12\" /> " +
                 metaSet.getString("display_name")  + " (" +
-                metaSet.getString("username") + ")");
+                "<a href=\"chats.jsp?sender=" +
+                metaSet.getString("user_id") + "\">" +
+                metaSet.getString("username") + "</a>)");
             out.println("<span class=\"remove\">");
 
             if(!metaSet.getBoolean("preferred")) {

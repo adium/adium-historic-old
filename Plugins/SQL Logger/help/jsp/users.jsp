@@ -27,7 +27,7 @@ try {
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger: Users</title>
+<title>SQL Logger: Users</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -56,9 +56,10 @@ try {
                 <ul id="navlist">
                     <li><a href="index.jsp">Viewer</a></li>
                     <li><a href="search.jsp">Search</a></li>
-                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><span id="current">Users</span></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="chats.jsp">Chats</a></li>
+                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>
@@ -99,7 +100,7 @@ try {
                 <div class="boxWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 100 as height from im.information_keys where delete = false");
+    pstmt = conn.prepareStatement("select count(*) * 31 + 80 as height from im.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
 
@@ -131,7 +132,9 @@ try {
         out.print("<h2><img src=\"images/services/" +
             rset.getString("service") + ".png\" width=\"14\" height=\"14\" /> " +
             rset.getString("display_name") + " (" +
-            rset.getString("username") + ")</h2>");
+            "<a href=\"chats.jsp?sender=" +
+            rset.getString("user_id") + "\">" +
+            rset.getString("username") + "</a>)</h2>");
         out.println("<div class=\"meta\">");
 
         infoStmt = conn.prepareStatement("select key_name, value from im.user_contact_info where user_id = ? order by key_name");

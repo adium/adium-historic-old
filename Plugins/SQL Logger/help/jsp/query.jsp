@@ -76,9 +76,10 @@ try {
                     <ul id="navlist">
                         <li><a href="index.jsp">Viewer</a></li>
                         <li><a href="search.jsp">Search</a></li>
-                        <li><a href="statistics.jsp">Statistics</a></li>
                         <li><a href="users.jsp">Users</a></li>
                         <li><a href="meta.jsp">Meta-Contacts</a></li>
+                        <li><a href="chats.jsp">Chats</a></li>
+                        <li><a href="statistics.jsp">Statistics</a></li>
                         <li><span id="current">Query</span></li>
                     </ul>
                 </div>
@@ -159,6 +160,7 @@ try {
             while(rset.next()) {
                 out.println(rset.getString(1));
             }
+            out.println("</pre>");
         }
 
         while(rset.next()) {
