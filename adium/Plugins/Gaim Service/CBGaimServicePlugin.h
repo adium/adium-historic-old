@@ -31,6 +31,8 @@
         IBOutlet 	NSView		*view_preferences;
 }
 
+- (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;
 - (void)removeAccount:(GaimAccount *)gaimAcct;
-- (void)configureGaimProxySettings;
+- (BOOL)configureGaimProxySettings;
+
 @end
