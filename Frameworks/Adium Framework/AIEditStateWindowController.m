@@ -53,7 +53,7 @@
  * @param parentWindow Parent window for a sheet, nil for a stand alone editor
  * @param inTarget Target object to notify when editing is complete
  */
-+ (void)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
++ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditStateWindowController	*controller;
 	
@@ -67,7 +67,11 @@
 			  contextInfo:nil];
 	}else{
 		[controller showWindow:nil];
+		[[controller window] makeKeyAndOrderFront:nil];
+		[NSApp activateIgnoringOtherApps:YES];
 	}
+	
+	return controller;
 }
 
 /*!
