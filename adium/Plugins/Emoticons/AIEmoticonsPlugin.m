@@ -560,7 +560,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     }
 }
 
-#pragma Cache flushing
+#pragma mark Cache flushing
 
 //Flush any cached emoticon images (and image attachment strings)
 - (void)flushEmoticonImageCache
