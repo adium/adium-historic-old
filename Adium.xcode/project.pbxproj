@@ -5838,6 +5838,8 @@
 				3429BB05070378F700EED705,
 				34B4B5A30708B049002C4C6D,
 				344458EF070B5BEF00D8E932,
+				4B0148D10733D0EA001A4C57,
+				4B0149070733D3A5001A4C57,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6432,6 +6434,8 @@
 				3429BB06070378F700EED705,
 				34B4B5A40708B049002C4C6D,
 				344458F0070B5BEF00D8E932,
+				4B0148D20733D0EA001A4C57,
+				4B0149080733D3A5001A4C57,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9875,6 +9879,76 @@
 		};
 		4B0118090679168700FCB992 = {
 			fileRef = 4B0118080679168700FCB992;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0148CC0733D0B0001A4C57 = {
+			children = (
+				4B0148CF0733D0EA001A4C57,
+				4B0148D00733D0EA001A4C57,
+			);
+			isa = PBXGroup;
+			name = "Service Icon Preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0148CF0733D0EA001A4C57 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIServiceIconPreferencesPlugin.h;
+			path = "Plugins/Service Icon Preferences/AIServiceIconPreferencesPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0148D00733D0EA001A4C57 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIServiceIconPreferencesPlugin.m;
+			path = "Plugins/Service Icon Preferences/AIServiceIconPreferencesPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0148D10733D0EA001A4C57 = {
+			fileRef = 4B0148CF0733D0EA001A4C57;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0148D20733D0EA001A4C57 = {
+			fileRef = 4B0148D00733D0EA001A4C57;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0149050733D3A4001A4C57 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AICoreComponentLoader.h;
+			path = Source/AICoreComponentLoader.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0149060733D3A5001A4C57 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AICoreComponentLoader.m;
+			path = Source/AICoreComponentLoader.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0149070733D3A5001A4C57 = {
+			fileRef = 4B0149050733D3A4001A4C57;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0149080733D3A5001A4C57 = {
+			fileRef = 4B0149060733D3A5001A4C57;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23213,6 +23287,9 @@
 		};
 		F5B53FBB0333AB5C01A8010A = {
 			children = (
+				4B0149050733D3A4001A4C57,
+				4B0149060733D3A5001A4C57,
+				4B0148CC0733D0B0001A4C57,
 				4B1332390459BCFA00A8010A,
 				4B4F5B25042D637700A8010A,
 				3470638906010161004F0D20,

@@ -22,6 +22,7 @@
             OUTLETS = {
                 accountController = AIAccountController; 
                 applescriptabilityController = ESApplescriptabilityController; 
+                componentLoader = AICoreComponentLoader; 
                 contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
                 contentController = AIContentController; 
@@ -58,6 +59,7 @@
             OUTLETS = {owner = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = AICoreComponentLoader; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AICustomFormatTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = AICustomTabsView; 

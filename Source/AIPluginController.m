@@ -50,7 +50,7 @@ ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBApplescriptFiltersPlugin,
 JSCEventBezelPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
-ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin,
+ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin, AIServiceIconPreferencesPlugin,
 ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptContactAlertPlugin, ESFileTransferMessagesPlugin;
 
 #ifdef ALL_IN_ONE
@@ -65,94 +65,6 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
     pluginArray = [[NSMutableArray alloc] init];
 
 #ifdef ADIUM_COMPONENTS
-	//Load integrated plugins
-	[self loadPluginWithClass:[ESAccountEvents class]];
-	[self loadPluginWithClass:[AIAccountListPreferencesPlugin class]];
-	[self loadPluginWithClass:[AIAccountMenuAccessPlugin class]];
-	[self loadPluginWithClass:[AIAliasSupportPlugin class]];
-	[self loadPluginWithClass:[AIAlphabeticalSortPlugin class]];
-	[self loadPluginWithClass:[AIAutoLinkingPlugin class]];
-	[self loadPluginWithClass:[AIAwayMessagesPlugin class]];
-	[self loadPluginWithClass:[AIAwayStatusWindowPlugin class]];
-	[self loadPluginWithClass:[AIChatCyclingPlugin class]];
-	[self loadPluginWithClass:[AIChatConsolidationPlugin class]];
-	[self loadPluginWithClass:[AIContactAwayPlugin class]];
-	[self loadPluginWithClass:[AIContactIdlePlugin class]];
-	[self loadPluginWithClass:[AIContactProfilePlugin class]];
-	[self loadPluginWithClass:[AIContactListEditorPlugin class]];
-	[self loadPluginWithClass:[AIContactOnlineSincePlugin class]];
-	[self loadPluginWithClass:[AIContactSortSelectionPlugin class]];
-	[self loadPluginWithClass:[AIContactStatusColoringPlugin class]];
-	[self loadPluginWithClass:[AIContactStatusDockOverlaysPlugin class]];
-//	[self loadPluginWithClass:[AIContactStatusTabColoringPlugin class]];
-	[self loadPluginWithClass:[AIContactSettingsPlugin class]];
-	[self loadPluginWithClass:[AIContactWarningLevelPlugin class]];
-	[self loadPluginWithClass:[AIDefaultFormattingPlugin class]];
-	[self loadPluginWithClass:[AIDockAccountStatusPlugin class]];
-	[self loadPluginWithClass:[AIDockBehaviorPlugin class]];
-	[self loadPluginWithClass:[AIDockIconSelectionPlugin class]];
-	[self loadPluginWithClass:[AIDockUnviewedContentPlugin class]];
-	[self loadPluginWithClass:[AIDualWindowInterfacePlugin class]];
-	[self loadPluginWithClass:[AIEmoticonsPlugin class]];
-	[self loadPluginWithClass:[AIEventSoundsPlugin class]];
-	[self loadPluginWithClass:[AIIdleTimePlugin class]];
-	[self loadPluginWithClass:[AILoggerPlugin class]];	
-	[self loadPluginWithClass:[AIManualSortPlugin class]];
-	[self loadPluginWithClass:[AIMessageAliasPlugin class]];
-	[self loadPluginWithClass:[ESMessageEvents class]];
-//	[self loadPluginWithClass:[AIMessageViewSelectionPlugin class]];
-	[self loadPluginWithClass:[AINewMessagePanelPlugin class]];
-	[self loadPluginWithClass:[AIOfflineContactHidingPlugin class]];
-	[self loadPluginWithClass:[AISCLViewPlugin class]];
-	[self loadPluginWithClass:[AISendingKeyPreferencesPlugin class]];
-	[self loadPluginWithClass:[AISpellCheckingPlugin class]];
-	[self loadPluginWithClass:[AIStandardToolbarItemsPlugin class]];
-	[self loadPluginWithClass:[AIStatusChangedMessagesPlugin class]];
-	[self loadPluginWithClass:[AITabStatusIconsPlugin class]];
-	[self loadPluginWithClass:[AITextForcingPlugin class]];
-	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
-	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
-	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
-	[self loadPluginWithClass:[BGContactNotesPlugin class]];
-	[self loadPluginWithClass:[BGEmoticonMenuPlugin class]];
-//	[self loadPluginWithClass:[BGThemesPlugin class]];
-	[self loadPluginWithClass:[CBActionSupportPlugin class]];
-	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
-    [self loadPluginWithClass:[CBStatusMenuItemPlugin class]];
-    [self loadPluginWithClass:[CBURLHandlingPlugin class]];
-    [self loadPluginWithClass:[CPFVersionChecker class]];
-	[self loadPluginWithClass:[CSDisconnectAllPlugin class]];
-	[self loadPluginWithClass:[DCMessageContextDisplayPlugin class]];
-	[self loadPluginWithClass:[ErrorMessageHandlerPlugin class]];
-	[self loadPluginWithClass:[ESAddressBookIntegrationPlugin class]];
-	[self loadPluginWithClass:[ESAnnouncerPlugin class]];
-    [self loadPluginWithClass:[ESBlockingPlugin class]];
-	[self loadPluginWithClass:[ESContactAlertsPlugin class]];
-	[self loadPluginWithClass:[ESContactClientPlugin class]];
-	[self loadPluginWithClass:[ESContactListWindowHandlingPlugin class]];
-	[self loadPluginWithClass:[ESFastUserSwitchingSupportPlugin class]];
-	[self loadPluginWithClass:[ESOpenMessageWindowContactAlertPlugin class]];
-	[self loadPluginWithClass:[ESSendMessageContactAlertPlugin class]];
-	[self loadPluginWithClass:[ESContactServersideDisplayName class]];
-	[self loadPluginWithClass:[ESStatusSortPlugin class]];
-	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
-	[self loadPluginWithClass:[GBApplescriptFiltersPlugin class]];
-	[self loadPluginWithClass:[IdleMessagePlugin class]];
-	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
-	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
-	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
-//	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
-	[self loadPluginWithClass:[SHLinkManagementPlugin class]];
-	[self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
-	[self loadPluginWithClass:[AIContactAccountsPlugin class]];
-	[self loadPluginWithClass:[ESSafariLinkToolbarItemPlugin class]];
-	[self loadPluginWithClass:[DCJoinChatPanelPlugin class]];
-	[self loadPluginWithClass:[DCInviteToChatPlugin class]];
-	[self loadPluginWithClass:[ESAccountNetworkConnectivityPlugin class]];
-	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
-	[self loadPluginWithClass:[AIExtendedStatusPlugin class]];
-	[self loadPluginWithClass:[ESApplescriptContactAlertPlugin class]];
-	[self loadPluginWithClass:[ESFileTransferMessagesPlugin class]];
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 
@@ -205,19 +117,6 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
     [pluginArray release]; pluginArray = nil;
 
     [super dealloc];
-}
-
-//
-- (void)loadPluginWithClass:(Class)inClass
-{
-	id	object = [inClass newInstanceOfPlugin];
-	
-	if (object){
-		[pluginArray addObject:object];
-	}else{
-		NSString *failureNotice = [NSString stringWithFormat:@"Failed to load integrated component %@",NSStringFromClass(inClass)];
-		NSAssert(object,failureNotice);
-	}
 }
 
 //Load all the plugins
