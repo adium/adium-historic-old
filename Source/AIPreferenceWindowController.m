@@ -42,6 +42,7 @@
 - (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
 - (void)_saveControlChanges;
 - (void)_configureAdvancedPreferencesTable;
+- (void)_configreTabViewItemLabels;
 @end
 
 static AIPreferenceWindowController *sharedPreferenceInstance = nil;
@@ -147,6 +148,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[self window] setTitle:AILocalizedString(@"Preferences",nil)];
 	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
 	[self _configureAdvancedPreferencesTable];
+	[self _configreTabViewItemLabels];
 
 	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
 	viewArray = [[NSArray alloc] initWithObjects:
@@ -286,13 +288,47 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 /*!
  * @brief Save any preference changes
  *
- * This take focus away from any controls to ensure that any changes in the current pane are saved.
+ * This takes focus away from any controls to ensure that any changes in the current pane are saved.
  * This isn't a problem for most controls, but can cause issues with text fields if the user switches panes
  * with a text field focused.
  */
 - (void)_saveControlChanges
 {
 	[[self window] makeFirstResponder:tabView_category];
+}
+
+/*!
+* @brief Configure tab view item labels
+ *
+ * Use the tab view item identifiers to set the (localized) labels for the tab view items.
+ */
+- (void)_configreTabViewItemLabels
+{
+	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
+	NSTabViewItem	*tabViewItem;
+
+	static NSDictionary	*identifierToLabelDict = nil;
+	if(!identifierToLabelDict){
+		identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+			AILocalizedString(@"Accounts",nil),@"accounts",
+			AILocalizedString(@"General",nil),@"general",
+			AILocalizedString(@"Appearance",nil),@"appearance",
+			AILocalizedString(@"Messages",nil),@"messages",
+			AILocalizedString(@"Status",nil),@"status",
+			AILocalizedString(@"Events",nil),@"events",
+			AILocalizedString(@"File Transfer",nil),@"ft",
+			AILocalizedString(@"Advanced",nil),@"advanced",
+			AILocalizedString(@"Loading",nil),@"loading",
+			nil];
+	}
+
+	while(tabViewItem = [enumerator nextObject]){
+		NSString	*localizedLabel;
+		
+		if(localizedLabel = [identifierToLabelDict objectForKey:[tabViewItem identifier]]){
+			[tabViewItem setLabel:localizedLabel];
+		}
+	}
 }
 
 
