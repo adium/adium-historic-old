@@ -41,8 +41,7 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
     
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_TEXT_FORCING];
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
@@ -71,30 +70,27 @@
 	return(inAttributedString);
 }    
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_TEXT_FORCING]){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
-
-        //Release the old values..
-        [force_desiredFont release]; force_desiredFont = nil;
-        [force_desiredTextColor release]; force_desiredTextColor = nil;
-        [force_desiredBackgroundColor release]; force_desiredBackgroundColor = nil;
-
-        //Cache the preference values
-        forceFont = [[prefDict objectForKey:KEY_FORCE_FONT] boolValue];
-        forceText = [[prefDict objectForKey:KEY_FORCE_TEXT_COLOR] boolValue];
-        forceBackground = [[prefDict objectForKey:KEY_FORCE_BACKGROUND_COLOR] boolValue];
-
-        force_desiredFont = [[[prefDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] retain];
-        force_desiredTextColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_TEXT_COLOR] representedColor] retain];
-        force_desiredBackgroundColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR] representedColor] retain];
-		
-		//If a preference load fails for some reason, don't try to make that formatting substitution
-		if(!force_desiredFont) forceFont = NO;
-		if(!force_desiredTextColor) forceText = NO;
-		if(!force_desiredBackgroundColor) forceBackground = NO;
-    }
+	//Release the old values..
+	[force_desiredFont release]; force_desiredFont = nil;
+	[force_desiredTextColor release]; force_desiredTextColor = nil;
+	[force_desiredBackgroundColor release]; force_desiredBackgroundColor = nil;
+	
+	//Cache the preference values
+	forceFont = [[prefDict objectForKey:KEY_FORCE_FONT] boolValue];
+	forceText = [[prefDict objectForKey:KEY_FORCE_TEXT_COLOR] boolValue];
+	forceBackground = [[prefDict objectForKey:KEY_FORCE_BACKGROUND_COLOR] boolValue];
+	
+	force_desiredFont = [[[prefDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] retain];
+	force_desiredTextColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_TEXT_COLOR] representedColor] retain];
+	force_desiredBackgroundColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR] representedColor] retain];
+	
+	//If a preference load fails for some reason, don't try to make that formatting substitution
+	if(!force_desiredFont) forceFont = NO;
+	if(!force_desiredTextColor) forceText = NO;
+	if(!force_desiredBackgroundColor) forceBackground = NO;
 }
 
 @end
