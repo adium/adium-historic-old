@@ -55,15 +55,14 @@
 // init the login controller
 - (id)initWithOwner:(id)inOwner windowNibName:(NSString *)windowNibName
 {    
-    [super initWithWindowNibName:windowNibName];
+	if((self = [super initWithWindowNibName:windowNibName]) {
+		//Retain our owner
+		owner = [inOwner retain];
 
-    //Retain our owner
-    owner = [inOwner retain];
-
-    //Get the user list
-    [self updateUserList];
-
-    return(self);    
+		//Get the user list
+		[self updateUserList];
+	}
+	return self;    
 }
 
 // deallocate the login controller

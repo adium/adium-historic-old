@@ -83,12 +83,9 @@
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName];
-	accounts = nil;
-	contactName = nil;
-	service = nil;
-	
-    return(self);
+    self = [super initWithWindowNibName:windowNibName];
+
+	return self;
 }
 
 /*!

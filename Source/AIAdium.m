@@ -81,11 +81,11 @@ static NSString	*prefsCategory;
 //Init
 - (id)init
 {
-	[super init];
+	if((self = [super init])) {
+		[AIObject _setSharedAdiumInstance:self];
+	}
 
-    [AIObject _setSharedAdiumInstance:self];
-
-    return(self);
+	return self;
 }
 
 /*!

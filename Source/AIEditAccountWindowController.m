@@ -74,13 +74,12 @@
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
-    [super initWithWindowNibName:windowNibName];
-
-	account = [inAccount retain];
-	deleteIfCanceled = inDeleteIfCanceled;
-	userIconData = nil;
-	
-	return(self);
+	if((self = [super initWithWindowNibName:windowNibName]) {
+		account = [inAccount retain];
+		deleteIfCanceled = inDeleteIfCanceled;
+		userIconData = nil;
+	}
+	return self;
 }
 
 /*!

@@ -113,14 +113,13 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName];
-
-    loadedPanes = [[NSMutableArray alloc] init];
-    loadedAdvancedPanes = nil;
-    _advancedCategoryArray = nil;
-	shouldRestorePreviousSelectedPane = YES;
-
-    return(self);    
+	if((self = [super initWithWindowNibName:windowNibName])) {
+		loadedPanes = [[NSMutableArray alloc] init];
+		loadedAdvancedPanes = nil;
+		_advancedCategoryArray = nil;
+		shouldRestorePreviousSelectedPane = YES;
+	}
+	return self;    
 }
 
 /*!

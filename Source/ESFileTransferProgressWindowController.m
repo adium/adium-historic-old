@@ -76,11 +76,10 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 #pragma mark Basic window controller functionality
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {    
-    [super initWithWindowNibName:windowNibName];
-	
-	progressRows = [[NSMutableArray alloc] init];
-	
-    return(self);    
+    if((self = [super initWithWindowNibName:windowNibName]) {
+		progressRows = [[NSMutableArray alloc] init];
+	}
+	return self;    
 }
 
 - (void)dealloc
@@ -88,6 +87,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[[adium notificationCenter] removeObserver:self];
 
 	[progressRows release]; progressRows = nil;
+
     [super dealloc];
 }	
 
