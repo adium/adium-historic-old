@@ -13,6 +13,15 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		07CEA2910770DFD100BDA33C = {
+			fileRef = 4BBF41ED066119A8001D31E1;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 //070
 //071
 //072
@@ -7047,6 +7056,7 @@
 				34E829840766B0FE00EFB3BC,
 				34B70343076EDB370016E8BA,
 				34B70345076EDB370016E8BA,
+				07CEA2910770DFD100BDA33C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
