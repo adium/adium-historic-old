@@ -46,7 +46,7 @@
 
     //Setup our default colors
     customColor = [[NSColor blackColor] retain];
-    [self setAvailableColors:[NSArray arrayWithObjects:@"Red", [NSColor redColor], @"Blue", [NSColor blueColor], @"Green", [NSColor greenColor], @"Yellow", [NSColor yellowColor], nil]];
+    [self setAvailableColors:[NSArray arrayWithObjects:@"Black",[NSColor blackColor],@"White",[NSColor whiteColor],@"Red", [NSColor redColor], @"Blue", [NSColor blueColor], @"Green", [NSColor greenColor], @"Yellow", [NSColor yellowColor], nil]];
 }
 
 - (void)dealloc
