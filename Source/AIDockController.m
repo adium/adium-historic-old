@@ -26,6 +26,9 @@
 #import <Adium/AIIconState.h>
 #import <Adium/IconFamily.h>
 
+#warning crosslink
+#import "AIAppearancePreferencesPlugin.h"
+
 #define DOCK_DEFAULT_PREFS			@"DockPrefs"
 #define ICON_DISPLAY_DELAY			0.1
 
@@ -72,10 +75,10 @@
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
 																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_GENERAL];
+										  forGroup:PREF_GROUP_APPEARANCE];
     
     //Observe pref changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
     //We always want to stop bouncing when Adium is made active
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -116,6 +119,39 @@
 	
 	[stateArrayCopy release];
 }
+
+
+/*!
+ * @brief Returns an array of available dock icon pack paths
+ */
+- (NSArray *)availableDockIconPacks
+{
+	if(!dockIconPacks){
+		NSDirectoryEnumerator	*fileEnumerator;
+		NSString				*iconPath;
+		NSString				*filePath;
+		NSEnumerator			*enumerator;
+		
+		//Create a fresh icon array
+		dockIconPacks = [[NSMutableArray alloc] init];
+		enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
+		
+		while(iconPath = [enumerator nextObject]) {            
+			fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
+			
+			//Find all the .AdiumIcon's and add them to our array
+			while((filePath = [fileEnumerator nextObject])){
+				if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
+					[dockIconPacks addObject:[iconPath stringByAppendingPathComponent:filePath]];    
+				}
+			}
+		}
+	}
+		
+	return(dockIconPacks);
+}
+
+
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
