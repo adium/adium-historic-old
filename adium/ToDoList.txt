@@ -1,145 +1,19 @@
-$Id: ToDoList.txt,v 1.141 2004/05/16 19:39:56 adamiser Exp $
-
 Legend
 + Change or Addition
 - Removal
-* Bug Fix
 # Debatable (ASK and debate before doing!)
 
 If you are working on something big and it may take a while, please tag it with your [name].
 
 
--------------------------------------------------------------------------------------------------------
-Bugs - LibGaim
--------------------------------------------------------------------------------------------------------
-* [ICQ] Displaying raw HTML (Messages sent from iChat)
-	Libgaim is escaping all incoming HTML characters over ICQ.
-
-* [MSN] Outoing chat appears twice
-	Libgaim is sending our message back to us
-
-
--------------------------------------------------------------------------------------------------------
-Bugs - Resources
--------------------------------------------------------------------------------------------------------
-* Webkit styles rendering incorrectly in very wide windows
-	The two included styles with problems are Smooth Operator and Mockie
-
-* Webkit styles are inconsistently handling long lines
-	All styles should use the overflow scrollbar if possible.  The following styles do not:
-	Elisha, Minimal, Mockie, Retro, Simple
-
-* Webkit styles must support multi-line status messages
-	The included style with problems is Smooth Operator 
-
-
--------------------------------------------------------------------------------------------------------
-Bugs - Adium
--------------------------------------------------------------------------------------------------------
-* "Custom..." sound option is not working.
-	The user is prompted for a custom sound, but it doesn't appear in the menu and doesn't save.
-
-* Short emoticons mask longer ones
-	For instance, :) prevents :)) from working.  A solution to this would be shorting all the text
-	equivelants from longest to shortest, but the way we store emoticons makes this impossible.
-
-* Message history is being colored
-	History messages should be stripped of color before being passed to the message view, so they
-	use the view's default text color (which is usually dimmed or special in some way)
-
-* Escapes aren't processed in links
-	The escapes are filtered using the plain text version of the message, so any escapes within the
-	link attributes of the attributed message are not filtered.  This prevents subprofile links from
-	working.
-
-* Message formatting is reset on send
-	If the user changes their message formatting, it should stay until that window is closed.  This
-	causes problems for users who use right-to-left text entry, and users wishing to use a special
-	message format temporarily.
-
-* Applescripts are parsed in other's profiles
-	This is a potential security risk if the user has scripts that run shell commands.  We shuold
-	not be parsing script commands sent by other users (via profiles)
-
-* Customize Toolbar doesn't disable
-	This menu item should disable when there is no toolbar visible
-
-* Spawning new windows unhides Adium
-	We don't want to spawn new windows while Adium is hudden.  Windows should be qued and shown when
-	Adium is unhid.
-
-* Auto-resizing is not docking
-	Auto-resizing is no longer docking to the bottom of the screen.
-
-* Manual ordering not saving
-	All manual ordering is lost on relaunch
-
-* Contact list view goes behind toolbar
-	It's possible for the contact list view to become stuck under the toolbar, covering the first
-	few contacts on the list.  Toggling the toolbar will sometimes correct the view.
-
-* Adding contact with no groups crashes
-	Adding a contact with no groups defined crashes adium.
-
-* Adding contact that already exists
-	Adding an existing contact causes issues.  It may result in duplicate contacts on the user's
-	list, and will make the contact appear offline.  Sometimes they will appear on the list 
-	twice until Adium is restarted.
-
-
--------------------------------------------------------------------------------------------------------
-Bugs - Deferred (Awaiting a rewrite / other change)
--------------------------------------------------------------------------------------------------------
-* Info window can be opened with no selection
-	Shows a blank window titled "window".  Waiting on info/inspector/alert merge.
-
-* AIM chats are logging as (null)
-	Happens with both loggers.  Waiting on full multi-chat support.
-
-
--------------------------------------------------------------------------------------------------------
-Bugs - Unconfirmed
--------------------------------------------------------------------------------------------------------
-* User icons are still getting flipped (Icons from AIM, apparently)
-* We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
-* Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
-* Update checker reporting a new version when non exists? (possibly a caching error?)
-* If one tries to change one's idle time to a lower amount, (for example, from 2:32 to :36), an update will not occur, and your idle time will stay at 2:32.
-* Tooltips are flashing when the contact list auto-resizes?
-* Deleting an idle contact may cause a crash when the idle updates next? http://www.visualdistortion.org/crash/view.jsp?crash=10088
-* Empty groups come back on next launch after being deleted?
-* Unicode (German) messages not working over ICQ ?
-* away messages aren't going away
-* Yahoo giving some users a Gaim error: unknown error 29 on connect
-	Evan: This is an unauthorized user error, so far as I can tell. I got it after trying a wrong password a ton of times in a row.  The linked image is one of those "type this distorted text to verify you're a person" things.
-* We're receiving (but not processing/interpreting) HTML over ICQ
-	Evan: Official ICQ clients send RTF, not HTML.  SIM is an unofficial one that does.  Gaim intentionally escapes HTML coming from ICQ for this reason... Odd.
-* away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
-* We are having some text encoding issues with ICQ (multiple mentions)
-* Do we support ISA proxies? (ISA and NTLM authorization).  Does gaim have support for these?
-	- Evan: No, gaim proxy support is ancient.
-* Yahoo ignore list is being ignored?
-* Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
-* Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
-* Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
-* We aren't fetching the display names of ICQ users, some icq users, when over AIM? (They still show up in the info, apparently)
-* text to speech not working ?
-* Dragging buddies on MSN account not working
-* Contact screennames aren't appearing for all contacts when using ICQ
-* AIM Passwords with question marks in them prevent libgaim from connecting?
-* Jabber UIDs do not include the server.
-	- Evan: The formattedUID does.  The UID should not.
-* Out of curiosity - is there a reason we use .adiumEmoticonset instead of .adiumEmoticonSet (call me a capitalization nut :)? 
-
--------------------------------------------------------------------------------------------------------
-Minor Changes
--------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
+// Minor Changes
+//-------------------------------------------------------------------------------------------------------
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
-                // notes in, tooltips spacing funky [tooltips off] Evan: tooltip indentation sucks right now.  I'll fix it next week.
 	+ Add keyboard shortcut for the 'add contact' menu item
-	+ Pass our aliases to libgaim so they get uploaded to the server?
+	+ Pass our aliases to libgaim so they get uploaded to the server
 
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
@@ -183,9 +57,9 @@ Other:
     	+ Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
 	+ Display new mail notices for the accounts that support it.  This is bloat - but some people expect it.
 
--------------------------------------------------------------------------------------------------------
-Big Stuff
--------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
+// Big Stuff
+//-------------------------------------------------------------------------------------------------------
 
 Contact alerts:
 	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
@@ -282,9 +156,9 @@ Will sort of resemble Safari's. Entries in the window only reflect progress of i
 + Get Filter field working
 	+ ...including under Jaguar (need to create it programmatically in that event, since IB Services on Jaguar won't unarchive it)
 		
--------------------------------------------------------------------------------------------------------
-Areas that require more thought before implementing
--------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
+// Areas that require more thought before implementing
+//-------------------------------------------------------------------------------------------------------
 New State System:
     Allow users to create 'states' that describe their activity online.  States would set their status
     across the various protocols and allow them to alert certain behavior in Adium (Window spawning, 
@@ -336,9 +210,9 @@ Link Management:
     Just throwing out a thought for discussion... how about a button like those for emoticons or push/pop with add/edit and a list of favorites to make them accessible within the message view without using contextual menus? In that same vein... what about autocompleting recognized URLs (such as www.ad completes to www.adiumx.com if its a favorite)? 
 	//Steve: yeah, both of those seem to be good ideas, and the link editor window is certainly abstract enough to be called through most any mechanism, and I had always intended a button to be included for it eventually.  Auto-completing URLs is an interesting idea... and would work very well if done right.  I'd comment more, but I'm feeling a little under the weather right now. :\
     
--------------------------------------------------------------------------------------------------------
-Unfixable(?) Issues
--------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
+// Unfixable(?) Issues
+//-------------------------------------------------------------------------------------------------------
 * Stop contact list from auto-resizing under the dock
 	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how
  wide the dock is; only how tall it is.
