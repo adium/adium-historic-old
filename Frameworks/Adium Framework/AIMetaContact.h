@@ -43,6 +43,7 @@
 
 //Used for one metaContact talking to another
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact;
+- (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName;
 
 //YES if the metaContact has only one UID/serviceID within it - for example, three different accounts' AIListContacts for a particular screen name
 - (BOOL)containsOnlyOneUniqueContact;
@@ -66,4 +67,6 @@
 
 //Delay sorting the contained object list; this should only be used by the contactController. Be sure to set it back to YES when operations are done
 - (void)setDelayContainedObjectSorting:(BOOL)flag;
+
+
 @end
