@@ -25,6 +25,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_combineConsecutive" = NSButton; 
+                "checkBox_customNameFormatting" = NSButton; 
                 "popUp_nameFormat" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
