@@ -144,7 +144,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
 	NSTabViewItem	*tabViewItem;
 	while(tabViewItem = [enumerator nextObject]){		
-		NSString	*label;
+		NSString	*label = nil;
 		int			identifier = [[tabViewItem identifier] intValue];
 
 		switch(identifier){
