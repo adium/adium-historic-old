@@ -366,7 +366,7 @@
 		// Associate the gaim conv with the AIChat
 		conv->ui_data = chat;
 		
-		NSAsset(chat != nil, @"failed to generate a chat");		
+		NSAssert(chat != nil, @"failed to generate a chat");		
     } else  {
         NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
     }
