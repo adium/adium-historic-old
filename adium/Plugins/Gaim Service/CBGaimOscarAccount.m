@@ -127,12 +127,13 @@ struct buddyinfo {
 {
 	[super accountUpdateBuddy:buddy forEvent:event];
 	
-	//Get the node's ui_data
-    AIListContact           *theContact = (AIListContact *)buddy->node.ui_data;
-
+	AIListContact           *theContact;
+	OscarData				*od;
+	aim_userinfo_t			*userinfo;
+	
 	if (buddy != nil) {
-		OscarData		*od;
-		aim_userinfo_t  *userinfo;
+		//Get the node's ui_data
+		theContact = (AIListContact *)buddy->node.ui_data;
 		
 		if (GAIM_BUDDY_IS_ONLINE(buddy) && 
 			(od = gc->proto_data) &&
@@ -142,10 +143,10 @@ struct buddyinfo {
 			{
 				case GAIM_BUDDY_STATUS_MESSAGE:
 				{
-					NSString		*statusMsgString = nil;
-					NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+					NSString			*statusMsgString = nil;
+					NSString			*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
 					
-					struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
+					struct buddyinfo	*bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
 					
 					if ((bi != NULL) && (bi->availmsg != NULL) && !(buddy->uc & UC_UNAVAILABLE)) {
 						
@@ -162,17 +163,18 @@ struct buddyinfo {
 							g_free(away_utf8);
 							
 							//If the away message changed, make sure the contact is marked as away
-							BOOL newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
-							NSNumber *storedValue = [theContact statusObjectForKey:@"Away"];
+							BOOL		newAway;
+							NSNumber	*storedValue;
+							
+							newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
+							storedValue = [theContact statusObjectForKey:@"Away"];
 							if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
 								[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
 							}
 
 						}
 					}
-					
-//					if (GAIM_DEBUG) NSLog(@"Status message for %s: %@",buddy->name,statusMsgString);
-					
+										
 					//Update the status message if necessary
 					if (statusMsgString && [statusMsgString length]) {
 						if (![statusMsgString isEqualToString:oldStatusMsgString]) {
