@@ -60,6 +60,14 @@
 
 
 //Selection Hiding -----------------------------------------------------------------------------------------------------
+//If our window isn't in the foreground, we're not displaying a selection.  So override this method to pass NO for
+//selected in that situation
+- (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
+{
+	if(![[self window] isKeyWindow]) selected = NO;
+	[super _drawRowInRect:rect colored:colored selected:selected];
+}
+	
 //When our view is inserted into a window, observe that window so we can hide selection when it's not main
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview
 {
@@ -79,7 +87,6 @@
 	[self setNeedsDisplay:YES];
 }
 
-    
 
 //Sizing -----------------------------------------------------------------------------------------------------
 // Returns our desired size
