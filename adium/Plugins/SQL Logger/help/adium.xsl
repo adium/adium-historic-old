@@ -55,6 +55,21 @@
               <br /><a
               href="http://www.xceltech.net/products/freeware_products.html"
               class="offsides">PostMan Query</a>
+              <br />
+              <br />
+              <h4>Visual Distortion Links</h4>
+              <a href="http://www.visualdistortion.org/"
+              class="offsides">Visual Distortion Home</a>
+              <br />
+              <a href="http://www.visualdistortion.org/guestbook.jsp"
+              class="offsides">Guestbook</a>
+              <br /><a
+              href="http://www.visualdistortion.org/pictures/"
+              class="offsides">Pictures</a>
+              <br /><a href="http://www.visualdistortion.org/films/"
+              class="offsides">Films</a>
+              <br /><a href="http://www.visualdistortion.org/music/"
+              class="offsides">Music</a>
             </td>
             <td>
               <xsl:apply-templates select="body"/>

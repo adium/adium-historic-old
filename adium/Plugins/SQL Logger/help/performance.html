@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>Performance / Maintenance</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -19,7 +19,8 @@
               Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><br><h4>Other links</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
                 2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
-                Forums</a><br><a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a>
+                Forums</a><br><a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><br><h4>Visual Distortion Links</h4>
+<a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
 </td>
 <td>
 <h2>Maintenance</h2>
@@ -58,22 +59,49 @@ vacuumdb -z</pre></div>
 <p>If you want to see if PostgreSQL is using an index for something, you
       can construct a similar query in psql:</p>
 <div class="tutorialcode">
-      <pre>select * from adium.message_v where message_date &gt; 'now'::date</pre>
+      <pre>select * from adium.message_v where message_date &gt; 'now'::date;</pre>
     </div>
-<p>If you want to see how fast it runs:</p>
+<p>That query should return very quickly.
+      If you want to see exactly how fast it runs:
+    </p>
 <div class="tutorialcode">
-      <pre>explain analyze select * from messages 
-where message_date &gt;'now'::date;</pre>
+      <pre>explain analyze select * from messages where message_date &gt; CURRENT_DATE;</pre>
 </div>
 <p>The output I get is something like this, for a relatively typical
       day:</p>
 <div class="tutorialcode">
-      <pre>Index Scan using adium_msg_date_sender_recipient on messages
-  (cost=0.00..160.60 rows=45 width=97) (actual time=0.11..3.55 rows=223 loops=1)
+      <pre><b>Index Scan</b> using adium_msg_date_sender_recipient on messages (cost=0.00..160.60 <b>rows=45</b> width=97) (actual time=0.11..3.55 <b>rows=223</b> loops=1)
   Index Cond: (message_date &gt; '2003-09-02 00:00:00'::timestamp without time zone)
- Total runtime: 4.31 msec
+  Total runtime: <b>4.31 msec</b>
  (3 rows)</pre>
 </div>
+<p>I've swapped <b>message_v</b> for <b>messages</b> here, because message_v
+   has a nasty query plan, and it's very difficult to learn anything
+   constructive from it.</p>
+<p>The important parts of the example above are boldfaced.
+   I've boldfaced the term &quot;Index Scan&quot;, because that indicates it is using
+   the index (named adium_msg_date_sender_recipient) to determine where the
+   proper dates are.  This is good.  Index Scans are much faster than
+   Sequential Scans for large tables.</p>
+<p>If you're not seeing an index scan, there are a few reasons that could be
+   the cause:
+   <ul>
+     <li>Not enough data 
+       <ul>
+         <li>if your table is small, there is no reason to use
+           an index scan
+         </li>
+       </ul>
+     </li>
+       <li>Not properly analyzed.</li>
+       <ul>
+         <li>If the number of rows in the cost and the number of rows in the
+           result are significantly different (a factor of 10 or so), rerun
+           <code>vacuum analyze</code> and try again
+         </li>
+       </ul>
+   </ul>
+ </p>
 <hr>
 <div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
 </td>
