@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.42 2004/04/15 04:59:00 ramoth4 Exp $
+//$Id: AIPluginController.m,v 1.43 2004/04/17 17:55:29 jmelloy Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -129,7 +129,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 #endif
 	
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]];
-	//[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath]];
+	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath]];
 }
 
 //close
