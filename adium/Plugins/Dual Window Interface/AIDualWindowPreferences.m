@@ -55,6 +55,11 @@
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
+- (void)viewWillClose
+{
+	[[adium notificationCenter] removeObserver:self];
+}
+
 //Keep the preferences current
 - (void)preferencesChanged:(NSNotification *)notification
 {
