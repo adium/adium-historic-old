@@ -10,6 +10,7 @@
 @interface AIMultiCellOutlineView (PRIVATE)
 - (void)resetRowHeightCache;
 - (void)updateRowHeightCache;
+- (void)_drawRowSelectionInRect:(NSRect)rect;
 @end
 
 @implementation AIMultiCellOutlineView
@@ -367,7 +368,7 @@
 	}
 }
 
-- (void)_drawRowSelectionInRect:(NSRect *)rect
+- (void)_drawRowSelectionInRect:(NSRect)rect
 {
 	//Draw the gradient
 	AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
