@@ -23,7 +23,7 @@
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:75] retain];
+													allowedLength:113] retain];
     
     //Register this service
     [[adium accountController] registerService:self];
