@@ -97,11 +97,15 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 														   green:state.green
 															blue:state.blue
 														   alpha:1.0];
-				[mutableDict setObject:color forKey: name];
-				[mutableDict setObject:color forKey:[name lowercaseString]];
-				
+				[mutableDict setObject:color forKey:name];
+				NSString *lowercaseName = [name lowercaseString];
+				if(![mutableDict objectForKey:lowercaseName]) {
+					//only add the lowercase version if it isn't already defined
+					[mutableDict setObject:color forKey:lowercaseName];
+				}
+
 				state.redStart = state.greenStart = state.blueStart = state.nameStart = 
-					state.redEnd   = state.greenEnd   = state.blueEnd   = NULL;
+				state.redEnd   = state.greenEnd   = state.blueEnd   = NULL;
 			} //if(prevChar != '\n')
 		} else if((ch[i] != ' ') && (ch[i] != '\t')) {
 			if(state.prevChar == '\n' && ch[i] == '#') {
@@ -456,6 +460,7 @@ float _v(float m1, float m2, float hue){
 		//look it up; it's a colour name
 		NSDictionary *colorValues = [self colorNamesDictionary];
 		colorValue = [colorValues objectForKey:str];
+		if(!colorValue) colorValue = [colorValues objectForKey:[str lowercaseString]];
 		if(!colorValue) {
 			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name: str is %@", str);
 			return nil;
