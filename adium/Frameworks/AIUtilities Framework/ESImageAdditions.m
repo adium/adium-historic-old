@@ -34,21 +34,18 @@
 
 - (NSData *)JPEGRepresentation
 {
-    NSBitmapImageRep *imageRep = [[[NSBitmapImageRep alloc] initWithData:[self TIFFRepresentation]] autorelease];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
     
-    /*
-     //This ends up looking terrible.  We're just going to use no compression (1.0 compression factor, despite what the documentation says) for now.
-    //Figure out the compression
-    NSTIFFCompression   tiffCompression;
-    float               compressionFactor;
-
-    [imageRep getCompression:&tiffCompression factor:&compressionFactor];
-    if (tiffCompression == NSTIFFCompressionNone)
-        compressionFactor = 0.0;
-    */
     return ([imageRep representationUsingType:NSJPEGFileType 
                                    properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] 
 																		  forKey:NSImageCompressionFactor]]);
+}
+
+- (NSData *)PNGRepresentation
+{
+	NSBitmapImageRep	*bitmapRep =  [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
+	
+	return ([bitmapRep representationUsingType:NSPNGFileType properties:nil]);
 }
 
 //Draw this image in a rect, tiling if the rect is larger than the image
