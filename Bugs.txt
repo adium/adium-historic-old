@@ -26,6 +26,7 @@
 - Selected cells need to draw with inverted text
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
+- *Window loss - completely offscreen due to vertical autoresizing... manually trash window positions.plist & mess around to return (single monitor, etc.) -  [Evan]
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
