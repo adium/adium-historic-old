@@ -19,8 +19,4 @@
     IBOutlet 	NSButton		*checkBox_hideInBackground;
 }
 
-- (IBAction)toggleShowAway:(id)sender;
-- (IBAction)toggleHideInBackground:(id)sender;
-- (IBAction)toggleFloatAway:(id)sender;
-
 @end
