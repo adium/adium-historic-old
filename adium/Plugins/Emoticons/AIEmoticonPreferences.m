@@ -95,10 +95,10 @@
         if(![[plugin activeEmoticonPacks] containsObject:pack] && [[pack emoticons] count] > 0){
             NSMenuItem  *menuItem;
             
-            menuItem = [[NSMenuItem alloc] initWithTitle:[pack name]
+            menuItem = [[[NSMenuItem alloc] initWithTitle:[pack name]
                                                   target:self
                                                   action:@selector(addEmoticonPack:)
-                                           keyEquivalent:@""];
+                                           keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:pack];
             [menuItem setImage:[[[[[pack emoticons] objectAtIndex:0] image] copy] autorelease]]; //Must use a copy, since the menu will flip our image and not flip it back when done.
 
