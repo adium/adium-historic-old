@@ -22,6 +22,8 @@ static BOOL didInitMSN = NO;
 {
 	[super initAccount];
 	currentFriendlyName = nil;
+	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
 }
 
 - (const char*)protocolPlugin
@@ -195,20 +197,16 @@ static BOOL didInitMSN = NO;
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	NSDictionary	*userInfo = [notification userInfo];
-	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict];
 	
-	if (notification == nil || [prefGroup isEqualToString:PREF_GROUP_MSN_SERVICE]){
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_MSN_SERVICE];
-		
+	if([group isEqualToString:PREF_GROUP_MSN_SERVICE]){
 		displayNamesAsStatus = [[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue];
 		displayConversationClosed = [[prefDict objectForKey:KEY_MSN_CONVERSATION_CLOSED] boolValue];
 		displayConversationTimedOut = [[prefDict objectForKey:KEY_MSN_CONVERSATION_TIMED_OUT] boolValue];
 	}
-	
-	[super preferencesChanged:notification];
 }
 
 #pragma mark Contact List Menu Items
