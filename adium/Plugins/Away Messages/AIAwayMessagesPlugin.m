@@ -20,6 +20,7 @@
 #define AWAY_SPELLING_DEFAULT_PREFS		@"AwaySpellingDefaults"
 
 #define AWAY_MESSAGE_MENU_TITLE			@"Set Away Message"
+#define AWAY_MESSAGE_MENU_TITLE_SHORT           @"Set Away"
 #define	REMOVE_AWAY_MESSAGE_MENU_TITLE		@"Remove Away Message"
 #define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		@"Custom MessageÉ"
 #define AWAY_MENU_HOTKEY			@"y"
@@ -166,12 +167,24 @@
 - (void)installAwayMenu
 {
     /*
-     It would be easier (and safer) to use a single menu item, and dynamically set it to behave as both menu items ("Set Away ->" and "Remove Away"), dynamically adding and removing the submenu and hotkey.  However, NSMenuItem appears to dislike it when a menu that has previously contained a submenu is assigned a hotkey.  setKeyEquivalent is ignored for any menu that has previuosly contained a submenu, resulting in a hotkey that will stick and persist even when the submenu is present, and that cannot be removed.  To work around this we must use two seperate menu items, and sneak them into Adium's menu.  Using the menu controller with two seperate dynamic items would result in them jumping position in the menu if other items were present in the same category, and is not a good solution.
+     JAGUAR: It would be easier (and safer) to use a single menu item, and dynamically set it to behave as both menu items ("Set Away ->" and "Remove Away"), dynamically adding and removing the submenu and hotkey.  However, NSMenuItem appears to dislike it when a menu that has previously contained a submenu is assigned a hotkey.  setKeyEquivalent is ignored for any menu that has previuosly contained a submenu, resulting in a hotkey that will stick and persist even when the submenu is present, and that cannot be removed.  To work around this we must use two seperate menu items, and sneak them into Adium's menu.  Using the menu controller with two seperate dynamic items would result in them jumping position in the menu if other items were present in the same category, and is not a good solution.
      */
     
-    //Setup the menubar away selector
+    //Set up the menubar away selector
     menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+    
     menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
+    
+    //Set up 
+    if ([NSApp isOnPantherOrBetter]) {
+        menuItem_away_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+        [menuItem_away_alternate setAlternate:YES];
+        [menuItem_away_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+        
+        menuItem_removeAway_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE_SHORT target:self action:@selector(enterAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
+        [menuItem_removeAway_alternate setAlternate:YES];
+        [menuItem_removeAway_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+       }
     
     //Setup the dock menu away selector
     menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
@@ -180,9 +193,15 @@
     //Add it to the menubar
     if([self shouldConfigureForAway]){
         [[owner menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
+         if ([NSApp isOnPantherOrBetter]) {
+             [[owner menuController] addMenuItem:menuItem_removeAway_alternate toLocation:LOC_File_Status];
+         }
         [[owner menuController] addMenuItem:menuItem_dockRemoveAway toLocation:LOC_Dock_Status];
     }else{
         [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
+        if ([NSApp isOnPantherOrBetter]) {
+            [[owner menuController] addMenuItem:menuItem_away_alternate toLocation:LOC_File_Status];
+        }
         [[owner menuController] addMenuItem:menuItem_dockAway toLocation:LOC_Dock_Status];
     }
     
@@ -193,9 +212,10 @@
 //Called as our menu item is displayed, update it to reflect option key status
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
-    [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]]; //Update the away message menu
-    
+    if (![NSApp isOnPantherOrBetter]) {
+        //JAGUAR: It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
+        [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]]; //Update the away message menu
+    }
     return(YES);
 }
 
@@ -215,7 +235,6 @@
     }
 }
 
-
 //--- Private
 //Updates the away selection menus to reflect the requested away state
 - (void)_updateMenusToReflectAwayState:(BOOL)shouldConfigureForAway
@@ -224,9 +243,15 @@
         //Swap the menu items
         if(shouldConfigureForAway){
             [self swapMenuItem:menuItem_away with:menuItem_removeAway];
+            if ([NSApp isOnPantherOrBetter]) {
+                [self swapMenuItem:menuItem_away_alternate with:menuItem_removeAway_alternate];
+            }
             [self swapMenuItem:menuItem_dockAway with:menuItem_dockRemoveAway];
         }else{
             [self swapMenuItem:menuItem_removeAway with:menuItem_away];
+            if ([NSApp isOnPantherOrBetter]) {
+                [self swapMenuItem:menuItem_removeAway_alternate with:menuItem_away_alternate];
+            }
             [self swapMenuItem:menuItem_dockRemoveAway with:menuItem_dockAway];
         }
         
@@ -253,7 +278,16 @@
     awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
     
     //Update the menus
-    [menuItem_away setSubmenu:[self _awaySubmenuFromArray:awayArray forMainMenu:YES]];
+    NSMenu *mainMenuSubmenu = [self _awaySubmenuFromArray:awayArray forMainMenu:YES];
+    [menuItem_away setSubmenu:mainMenuSubmenu];
+    [menuItem_away_alternate setSubmenu:[mainMenuSubmenu copy]];
+    [menuItem_removeAway_alternate setSubmenu:[mainMenuSubmenu copy]];
+    
+    
+  //  [menuItem_removeAway_alternate setKeyEquivalent:@""];
+  //  [menuItem_removeAway_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+    
+    
     [menuItem_dockAway setSubmenu:[self _awaySubmenuFromArray:awayArray forMainMenu:NO]];
 }
 
