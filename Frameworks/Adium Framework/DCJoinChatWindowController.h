@@ -23,4 +23,6 @@
 - (IBAction)joinChat:(id)sender;
 - (IBAction)closeWindow:(id)sender;
 
+- (void)setJoinChatEnabled:(BOOL)enabled;
+
 @end

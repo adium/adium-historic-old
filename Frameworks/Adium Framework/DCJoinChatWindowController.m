@@ -60,6 +60,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	//Get a view controller for this account if there is one
 	controller = [[[inAccount service] joinChatView] retain];
 	currentView = [controller view];
+	[controller setDelegate:self];
 
 	//Resize the window to fit the new view
 	diff = [view_customView frame].size.height - [currentView frame].size.height;
@@ -144,6 +145,12 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (void)dealloc
 {    
      [super dealloc];
+}
+
+#pragma mark DCJoinChatViewController delegate
+- (void)setJoinChatEnabled:(BOOL)enabled
+{
+	[button_joinChat setEnabled:enabled];
 }
 
 @end

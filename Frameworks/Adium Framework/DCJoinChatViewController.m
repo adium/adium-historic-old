@@ -21,6 +21,7 @@
     [super init];
 	
 	chat = nil;
+	delegate = nil;
 	
 	NSString	*nibName = [self nibName];
 	if(nibName){
@@ -144,6 +145,15 @@
 	}
 	
 	return(contactsArray);
+}
+
+- (void)setDelegate:(id)inDelegate
+{
+	delegate = inDelegate;
+}
+- (id)delegate;
+{
+	return delegate;
 }
 
 
