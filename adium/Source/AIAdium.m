@@ -361,7 +361,7 @@ void Adium_HandleSignal(int i){
 	if(err == noErr) {
 		path = [NSString pathForFSRef:&ref];
 		if(path) {
-			path = [[path autorelease] stringByAppendingPathComponent:adiumFolderName];
+			path = [path stringByAppendingPathComponent:adiumFolderName];
 		}
 		if(path && [manager fileExistsAtPath:path]) {
 			[pathArray addObject:path];
@@ -373,7 +373,7 @@ void Adium_HandleSignal(int i){
 	if(err == noErr) {
 		path = [NSString pathForFSRef:&ref];
 		if(path) {
-			path = [[path autorelease] stringByAppendingPathComponent:adiumFolderName];
+			path = [path stringByAppendingPathComponent:adiumFolderName];
 		}
 		if(path && [manager fileExistsAtPath:path]) {
 			[pathArray addObject:path];
@@ -385,13 +385,13 @@ void Adium_HandleSignal(int i){
 	if(err == noErr) {
 		path = [NSString pathForFSRef:&ref];
 		if(path) {
-			path = [[path autorelease] stringByAppendingPathComponent:adiumFolderName];
+			path = [path stringByAppendingPathComponent:adiumFolderName];
 		}
 		if(path && [manager fileExistsAtPath:path]) {
 			[pathArray addObject:path];
 		}
 	}
 
-	return [[pathArray copy] autorelease];
+	return pathArray;
 }
 @end
