@@ -370,10 +370,17 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		
 		if((prefixOnly && ([stringMessage compare:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)] == NSOrderedSame)) ||
 		   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)){
-			
+						
 			if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
 			[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
 			stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
+			
+			NSNumber	*shouldSendNumber = [infoDict objectForKey:@"ShouldSend"];
+			if ((shouldSendNumber) &&
+				(![shouldSendNumber boolValue]) &&
+				([context isKindOfClass:[AIContentObject class]])){
+					[(AIContentObject *)context setSendContent:NO];
+			}
 		}
 	}
 	
@@ -446,7 +453,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSString		*arg;
 	
 	while(arg = [enumerator nextObject]) {
-		[argArray addObject:[arg dataUsingEncoding:NSUTF8StringEncoding]];
+		[argArray addObject:arg];
 	}
 	
 	return(argArray);
