@@ -43,85 +43,6 @@
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
-/*****************************/
-/* accountConnection methods */
-/*****************************/
-
-- (void)accountConnectionReportDisconnect:(const char*)text
-{
-    [self displayError: [NSString stringWithUTF8String: text]];
-}
-
-- (void)accountConnectionConnected
-{
-    [[adium accountController]
-        setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
-        forKey:@"Status" account:self];
-
-    NSLog(@"Setting handle updates to silent and delayed (connected)");
-    silentAndDelayed = YES;
-    NSAssert(signonTimer == nil, @"Already have a signon timer");
-    signonTimer = [[NSTimer scheduledTimerWithTimeInterval:18
-                                                   target:self
-                                                 selector:@selector(signonTimerExpired:)
-                                                 userInfo:nil
-                                                  repeats:NO] retain];
-    [self performSelector:@selector(delayedInitialSettings:) withObject:nil afterDelay:1];
-}
-
-- (void)delayedInitialSettings:(id)object
-{
-    //Set our correct status
-    {
-        NSDate 		*idle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
-        NSData	 	*profile = [[adium accountController] propertyForKey:@"TextProfile" account:self];
-        NSData	 	*away = [[adium accountController] propertyForKey:@"AwayMessage" account:self];
-        
-        
-        if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
-        if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
-        if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
-    }
-    
-    //set the image file name, which is saved in the account preferences and generally easy to access
-    [[adium accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
-    
-    NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
-    if (buddyImage && [buddyImage isValid]) {
-        [[adium accountController] setUserIcon:buddyImage forAccount:self];
-    }
-    [buddyImage release];
-    
-    //let the accountController tell us about the default user icon filename
-    [self statusForKey:@"DefaultUserIconFilename" willChangeTo:[[adium accountController] defaultUserIconFilename]];
-}
-
-
-- (void)signonTimerExpired:(NSTimer*)timer
-{
-    [signonTimer invalidate];
-    [signonTimer release];
-    signonTimer = nil;
-    silentAndDelayed = NO;
-    NSLog(@"Setting handle updates to loud and instantaneous (signon timer expired)");
-
-    [[adium contactController] handlesChangedForAccount:self];
-}
-
-- (void)accountConnectionDisconnected
-{
-    
-    [[adium accountController] 
-        setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-        forKey:@"Status" account:self];
-    
-    if (signonTimer != nil) {
-        [signonTimer invalidate];
-        [signonTimer release];
-        signonTimer = nil;
-    }
-}
-
 /************************/
 /* accountBlist methods */
 /************************/
@@ -135,10 +56,16 @@
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
 //    NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+    int                     online;
+    NSMutableDictionary     *statusDict;
+    NSMutableArray          *modifiedKeys = [NSMutableArray array];
+    AIHandle                *theHandle;
 
-    NSMutableArray *modifiedKeys = [NSMutableArray array];
-    AIHandle *theHandle = (AIHandle*) buddy->node.ui_data;
-    if (!theHandle) { //no associated handle - gaim has a buddy for us but we are no longer tracking that buddy
+    //Get the node's ui_data
+    theHandle = (AIHandle*)buddy->node.ui_data;
+
+    //no associated handle - gaim has a buddy for us but we are no longer tracking that buddy
+    if (!theHandle) { 
         theHandle = [handleDict objectForKey:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];    
         if (theHandle) {
             buddy->node.ui_data = theHandle;
@@ -147,27 +74,34 @@
             theHandle = [self createHandleAssociatingWithBuddy:buddy];
             //Update the contact list
             if (!silentAndDelayed)
-                [[adium contactController] handle:theHandle addedToAccount:self];
+                [[adium contactController] handle:theHandle 
+                                   addedToAccount:self];
         }
     }
     
-    int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
+    statusDict = [theHandle statusDictionary];
     
-    NSMutableDictionary * statusDict = [theHandle statusDictionary];
-    
-    //see if our online state is up to date
+    //Online / Offline
+    online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
     if([[statusDict objectForKey:@"Online"] intValue] != online)
     {
-        [statusDict
-            setObject:[NSNumber numberWithInt:online] 
-            forKey:@"Online"];
+        NSNumber *onlineNum = [NSNumber numberWithBool:online];
+        [statusDict setObject:onlineNum forKey:@"Online"];
         [modifiedKeys addObject:@"Online"];
+        
+        //Enable/disable any instant messages with this handle
+        AIChat *chat = [chatDict objectForKey:[[theHandle containingContact] UID]];
+        if (chat) {
+            //Enable/disable the chat
+            [[chat statusDictionary] setObject:onlineNum forKey:@"Enabled"];
+            
+            //Notify
+            [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
+        }
 /*           
-             //This doesn't work - buddy->signon is always 0.  not sure why.
-        NSLog(@"%i",buddy->signon);
+        //This doesn't work - buddy->signon is always 0.  evands has a patch to fix this gaimside, but the gaim pepople won't accept it since signon is apparently oscar-specific.
         if (online && buddy->signon != 0) {
         //Set the signon time
-            NSLog(@"%i resolves to %@",buddy->signon,[[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] description]);
             NSMutableDictionary * statusDict = [theHandle statusDictionary];
             
             [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
@@ -176,59 +110,53 @@
 */
     }
 
-    //snag the correct alias, and the current display name
-    char *alias = (char *)gaim_get_buddy_alias(buddy);
-    char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
-    if(!disp_name) disp_name = "";
-    
-    //check 'em and update
-    if(alias && strcmp(disp_name, alias))
+    //Display Name - use the serverside buddy_alias if present - do we want to be doing this?
     {
-        [statusDict
-            setObject:[NSString stringWithUTF8String:alias]
-            forKey:@"Display Name"];
-        [modifiedKeys addObject:@"Display Name"];
+        char *alias = (char *)gaim_get_buddy_alias(buddy);
+        char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
+        if(!disp_name) disp_name = "";
+    
+        if(alias && strcmp(disp_name, alias))
+        {
+            [statusDict setObject:[NSString stringWithUTF8String:alias]
+                           forKey:@"Display Name"];
+            [modifiedKeys addObject:@"Display Name"];
+        }
     }
             
-    //update their idletime
-    if(buddy->idle != (int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970]))
+    //Idletime
     {
-        if(buddy->idle != 0)
-        {
-            [statusDict
-                setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle]
-                forKey:@"IdleSince"];
+        if(buddy->idle != (int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970])){
+            if(buddy->idle != 0){
+                [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle]
+                               forKey:@"IdleSince"];
+            } else {
+                [statusDict removeObjectForKey:@"IdleSince"];
+            }
+            [modifiedKeys addObject:@"IdleSince"];
         }
-        else
-        {
-            [statusDict removeObjectForKey:@"IdleSince"];
-        }
-        [modifiedKeys addObject:@"IdleSince"];
     }
     
-    //did the group change/did we finally find out what group the buddy is in
-    GaimGroup *g = gaim_find_buddys_group(buddy);
-    if(g && strcmp([[theHandle serverGroup] UTF8String], g->name))
+    //Group changes - gaim buddies start off in no group, so this is an important update for us
     {
-        [[adium contactController] handle:theHandle removedFromAccount:self];
-//            NSLog(@"Changed to group %s", g->name);
-        [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
-        [[adium contactController] handle:theHandle addedToAccount:self];
+        GaimGroup *g = gaim_find_buddys_group(buddy);
+        if(g && strcmp([[theHandle serverGroup] UTF8String], g->name)){
+            //            NSLog(@"Changed to group %s", g->name);        
+            [[adium contactController] handle:theHandle removedFromAccount:self];
+            [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
+            [[adium contactController] handle:theHandle addedToAccount:self];
+        }
     }
     
-    //grab their data, and compare
-    GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
-    if(buddyIcon)
+    //Buddy Icon
     {
-        if(buddyIcon != [[statusDict objectForKey:@"BuddyImagePointer"] pointerValue])
-        {
-//                NSLog(@"Icon for %s", buddy->name);
-                            
+        GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
+        if(buddyIcon && (buddyIcon != [[statusDict objectForKey:@"BuddyImagePointer"] pointerValue])) {                            
             //save this for convenience
             [[theHandle statusDictionary]
-                setObject:[NSValue valueWithPointer:buddyIcon]
-                forKey:@"BuddyImagePointer"];
-        
+                    setObject:[NSValue valueWithPointer:buddyIcon]
+                       forKey:@"BuddyImagePointer"];
+            
             //set the buddy image
             NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease];
             [statusDict setObject:image forKey:@"BuddyImage"];
@@ -238,17 +166,19 @@
         }
     }     
     
-    // Away status
-    BOOL newAway = (buddy->uc & UC_UNAVAILABLE) != 0;
-    id storedValue = [[theHandle statusDictionary] objectForKey:@"Away"];
-    if (storedValue == nil || newAway != [storedValue boolValue]) {
-        [[theHandle statusDictionary] setObject:[NSNumber numberWithBool:newAway] forKey:@"Away"];
-        [modifiedKeys addObject:@"Away"];
+    //Away status
+    {
+        BOOL newAway = ((buddy->uc & UC_UNAVAILABLE) != 0);
+        NSNumber *storedValue = [[theHandle statusDictionary] objectForKey:@"Away"];
+        if (storedValue == nil || newAway != [storedValue boolValue]) {
+            [[theHandle statusDictionary] setObject:[NSNumber numberWithBool:newAway] 
+                                             forKey:@"Away"];
+            [modifiedKeys addObject:@"Away"];
+        }
     }
-
-    //if anything changed
-    if([modifiedKeys count] > 0)
-    {  
+    
+    //Broadcast any changes
+    if([modifiedKeys count] > 0){
         //tell the contact controller, silencing if necessary
         [[adium contactController] handleStatusChanged:theHandle
                                     modifiedStatusKeys:modifiedKeys
@@ -325,19 +255,6 @@
     }
 }
 
-- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing
-{
-    BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
-    
-    if((typing && !currentValue) || (!typing && currentValue)){
-        //NSLog(@"Changing typing state to %i", typing);
-
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
-        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
-    }
-}
-
-
 - (void)accountConvReceivedIM: (const char*)message inConversation:(GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
 {
     if ((flags & GAIM_MESSAGE_SEND) != 0) {
@@ -386,114 +303,6 @@
     [[adium contentController] addIncomingContentObject:messageObject];
 }
 
-/*****************************************************/
-/* File transfer / AIAccount_Files inherited methods */
-/*****************************************************/
-
-//The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
-- (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
-{
-    NSLog(@"file transfer request received");
-    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
-    
-    [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
-        
-    [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
-}
-
-//The account requested that we send a file, but we do not know what file yet - query the fileTransferController for a target file
-/*- (void)accountXferSendFileWithXfer:(GaimXfer *)xfer
-{
-    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
-    //prompt the fileTransferController for the target filename
-    [[adium fileTransferController] sendRequestForFileTransfer:fileTransfer];
-}
-*/
-
-- (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer
-{
-    //set up our fileTransfer object
-    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
-
-    NSString *filename = [filesToSendArray objectAtIndex:0];
-    [fileTransfer setLocalFilename:filename];
-    [filesToSendArray removeObjectAtIndex:0];
-
-    //set the xfer local filename; accepting the file transfer will take care of setting size and such
-    //gaim takes responsibility for freeing cFilename at a later date
-    char * xferFileName = g_strdup([filename UTF8String]);
-    gaim_xfer_set_local_filename(xfer,xferFileName);
-
-    //begin transferring the file
-    [self acceptFileTransferRequest:fileTransfer];    
-}
-
-
-
-//Create an ESFileTransfer object from an xfer, associating the xfer with the object and the object with the xfer
-- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
-{
-    AIHandle * handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
-    //handle new handles here
-    //****
-    
-    ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithHandle:handle forAccount:self]; 
-
-    [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = fileTransfer;
-    
-    return fileTransfer;
-}
-
-//Update an ESFileTransfer object progress
-- (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent
-{
-    [(ESFileTransfer *)(xfer->ui_data) setPercentDone:percent bytesSent:(xfer->bytes_sent)];
-}
-
-//The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
-- (void)accountXferCanceledRemotely:(GaimXfer *)xfer
-{
-    [[adium fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
-    gaim_xfer_destroy(xfer);
-}
-
-//Accept a send or receive ESFileTransfer object, beginning the transfer.  Subsequently inform the fileTransferController that the fun has begun.
-- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
-{
-    NSLog(@"accept file transfer");
-    GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
- 
-    //gaim takes responsibility for freeing cFilename at a later date
-    char * xferFileName = g_strdup([[fileTransfer localFilename] UTF8String]);
-    gaim_xfer_set_local_filename(xfer,xferFileName);
-    
-    //set the size - must be done after request is accepted?
-    [fileTransfer setSize:(xfer->size)];
-    
-    GaimXferType xferType = gaim_xfer_get_type(xfer);
-    if ( xferType == GAIM_XFER_SEND ) {
-        [fileTransfer setType:Outgoing_FileTransfer];   
-    } else if ( xferType == GAIM_XFER_RECEIVE ) {
-        [fileTransfer setType:Incoming_FileTransfer];
-    }
-        
-    //accept the request
-    gaim_xfer_request_accepted(xfer, xferFileName);
-    
-    //tell the fileTransferController to display appropriately
-    [[adium fileTransferController] beganFileTransfer:fileTransfer];
-}
-
-//User refused a receive request.  Tell gaim, then release the ESFileTransfer object
-- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
-{
-    gaim_xfer_request_denied((GaimXfer *)[[fileTransfer accountData] pointerValue]);
-    [fileTransfer release];
-}
-
-
-
 /********************************/
 /* AIAccount subclassed methods */
 /********************************/
@@ -503,13 +312,6 @@
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
-
-    //EDS
-//    [handleDict release];
-//    [handleDict setObject:@"blah" forKey:@"blah"];
- //   NSLog(@"now %@",handleDict);
-    
-// [handleDict setObject:nil forKey:@"evan!"];
     
     //create an initial gaim account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
@@ -517,8 +319,6 @@
     gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     signonTimer = nil;
-
-
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -553,9 +353,7 @@
         }
         NSAttributedString *profile = [[[NSAttributedString alloc] initWithString:PROFILE_STRING attributes:attributes] autorelease];
         [[adium accountController] setProperty:[profile dataRepresentation] forKey:@"TextProfile" account:self];
-        
     }
-        
 }
 
 - (void)dealloc
@@ -602,21 +400,20 @@
     ACCOUNT_STATUS status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
     
     //Online status changed
-    if([key compare:@"Online"] == 0)
-    {
-        if([inValue boolValue]) {
-            if(status == STATUS_OFFLINE) { 
+    if([key compare:@"Online"] == 0){
+        if([inValue boolValue]){
+            if(status == STATUS_OFFLINE){ 
                 [self connect];
             }
-        } else { //Disconnect
-            if(status == STATUS_ONLINE) {
+        } else{ //Disconnect
+            if(status == STATUS_ONLINE){
                 [self disconnect];
             }
         }
     } 
     
     //Now look at keys which only make sense while online
-    else if (status == STATUS_ONLINE) {
+    else if (status == STATUS_ONLINE){
         if ([key compare:@"IdleSince"] == 0){
             // Even if we're setting a non-zero idle time, set it to zero first.
             // Some clients ignore idle time changes unless it moves to/from 0.
@@ -636,138 +433,33 @@
     
     //User Icon can be set regardless of ONLINE state
     if ([key compare:@"UserIcon"] == 0) {
+        //set the NSImage in AIAccount
         [self setUserIcon:inValue];
         
-        if (inValue) {          
-            NSData *data = [[(NSImage *)inValue JPEGRepresentation] retain];
-            NSString            *buddyImageFilename = [[self _userIconCachePath] retain];
-            if ([data writeToFile:buddyImageFilename atomically:YES]) {
+        //gaim requires a file to be used as the userIcon.  Give it its file.
+        if (inValue){          
+            NSData      *data = [[(NSImage *)inValue JPEGRepresentation] retain];
+            NSString    *buddyImageFilename = [[self _userIconCachePath] retain];
+            if ([data writeToFile:buddyImageFilename atomically:YES]){
                 [self setBuddyImageFromFilename:(char *)[buddyImageFilename UTF8String]];
-            } else {
-                NSLog(@"error writing file %@",buddyImageFilename);   
+            }else{
+                NSLog(@"Error writing file %@",buddyImageFilename);   
             }
             [buddyImageFilename release];
         } else {
             [self setBuddyImageFromFilename:nil];   
         }
     }
-    else if ([key compare:@"DefaultUserIconFilename"] == 0) {
-        if (!userIcon) {
-            if (inValue) {
+    else if ([key compare:@"DefaultUserIconFilename"] == 0){
+        if (!userIcon){
+            if (inValue){
                 [self setBuddyImageFromFilename:(char *)[inValue UTF8String]];
-            } else {
+            }else{
                 [self setBuddyImageFromFilename:nil];
             }
         }
     }
 }
-
-- (NSString *)_userIconCachePath
-{    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self UIDAndServiceID]];
-    return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
-}
-
-- (void)setAwayMessage:(id)message
-{
-    char *newValue = NULL;
-    
-    if (message) {
-        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
-                                               headers:YES
-                                              fontTags:YES
-                                         closeFontTags:YES
-                                             styleTags:YES
-                            closeStyleTagsOnFontChange:NO
-                                        encodeNonASCII:NO
-                                            imagesPath:nil] UTF8String];
-    }
-
-    serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
-}
-
-- (void)setProfile:(id)profile
-{
-    char *newValue = NULL;
-    
-    if (profile) {
-        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:profile]
-                                          headers:YES
-                                         fontTags:YES
-                                    closeFontTags:YES
-                                        styleTags:YES
-                       closeStyleTagsOnFontChange:NO
-                                   encodeNonASCII:NO
-                                       imagesPath:nil] UTF8String];
-    }
-
-    serv_set_info(gc, newValue);
-}
-
-- (void)setBuddyImageFromFilename:(char *)imageFilename
-{
-    //Set to nil first
-    gaim_account_set_buddy_icon(account, nil);
-    //Set to new user icon
-    gaim_account_set_buddy_icon(account,imageFilename);
-}
-
-- (void)finishConnect:(NSString *)inPassword
-{
-    if(inPassword && [inPassword length] != 0)
-    {
-        //
-        needToRemoveGaimObjects = YES;
-        
-        //now we start to connect
-        [[adium accountController] 
-            setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
-                 forKey:@"Status" account:self];
-        
-        //setup the account, get things ready
-        gaim_account_set_password(account, [inPassword UTF8String]);
-        
-        //configure at sign on time so we get the latest settings from the system
-        if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
-            
-            //proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the service plugin and are our systemwide prefs) or account-specific prefs
-            GaimProxyInfo *proxy_info = gaim_proxy_info_new();
-            
-            char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
-            int proxytype;
-            
-            if (!strcmp(type, "none"))
-                proxytype = GAIM_PROXY_NONE;
-            else if (!strcmp(type, "http"))
-                proxytype = GAIM_PROXY_HTTP;
-            else if (!strcmp(type, "socks4"))
-                proxytype = GAIM_PROXY_SOCKS4;
-            else if (!strcmp(type, "socks5"))
-                proxytype = GAIM_PROXY_SOCKS5;
-            else if (!strcmp(type, "envvar"))
-                proxytype = GAIM_PROXY_USE_ENVVAR;
-            else
-                proxytype = -1;
-            
-            proxy_info->type = proxytype;
-            
-            proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host");
-            proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
-            
-            proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
-                proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
-            
-            //            gaim_account_set_proxy_info(testAccount,proxy_info);
-            gaim_account_set_proxy_info(account,proxy_info);
-        }
-        //NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
-        //NSLog(@"%i %i",gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_NONE,gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_SOCKS5);
-        
-//        gc = gaim_account_connect(testAccount);
-        gc = gaim_account_connect(account);
-    }
-}
-
 
 - (NSString *)accountID {
     return [NSString stringWithFormat:@"GAIM-%@.%@", [self serviceID], [self UID]];
@@ -825,16 +517,28 @@
     return sent;
 }
 
-- (BOOL)availableForSendingContentType:(NSString*)inType toListObject:(AIListObject*)inListObject
+//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    BOOL available = NO;
-    BOOL weAreOnline = ([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
-
-    if ([inType compare:CONTENT_MESSAGE_TYPE] == 0 && weAreOnline) {
-        // TODO: check if they are online
-        available = YES;
+    BOOL 	available = NO;
+    BOOL	weAreOnline = ([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        if(weAreOnline){
+            if(inListObject == nil){ 
+                available = YES; //If we're online, we're most likely available to message this object
+            }else{
+                if([inListObject isKindOfClass:[AIListContact class]]){
+                    AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
+                    
+                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+                        available = YES; //This handle is online and on our list
+                    }
+                }
+            }
+        }
     }
-    return available;
+    return(available);
 }
 
 - (AIChat*)openChatWithListObject:(AIListObject*)inListObject
@@ -906,12 +610,9 @@
 {
     int	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
     
-    if(status == STATUS_ONLINE || status == STATUS_CONNECTING)
-    {
+    if(status == STATUS_ONLINE || status == STATUS_CONNECTING){
         return(handleDict);
-    }
-    else
-    {
+    }else{
         return(nil);
     }
 }
@@ -1056,13 +757,6 @@
     return handle;
 }
 
-
-- (void)displayError:(NSString *)errorDesc
-{
-    [[adium interfaceController] handleErrorMessage:@"Gaim error"
-                                    withDescription:errorDesc];
-}
-
 /*********************/
 /* AIAccount_Privacy */
 /*********************/
@@ -1082,17 +776,84 @@
         return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
 
+/*****************************/
+/* accountConnection methods */
+/*****************************/
 
-/***************************/
-/* Account private methods */
-/***************************/
-
-// Removes all the possible status flags (that are valid on the calling account) from the passed handle
-- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
+- (void)accountConnectionReportDisconnect:(const char*)text
 {
-    NSArray * keyArray = [self supportedPropertyKeys];
-    [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
+    [self displayError: [NSString stringWithUTF8String: text]];
+}
+
+- (void)accountConnectionConnected
+{
+    [[adium accountController]
+        setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
+             forKey:@"Status" account:self];
+    
+    NSLog(@"Setting handle updates to silent and delayed (connected)");
+    silentAndDelayed = YES;
+    NSAssert(signonTimer == nil, @"Already have a signon timer");
+    signonTimer = [[NSTimer scheduledTimerWithTimeInterval:18
+                                                    target:self
+                                                  selector:@selector(signonTimerExpired:)
+                                                  userInfo:nil
+                                                   repeats:NO] retain];
+    [self performSelector:@selector(delayedInitialSettings:) withObject:nil afterDelay:1];
+}
+
+- (void)delayedInitialSettings:(id)object
+{
+    //Set our correct status
+    {
+        NSDate 		*idle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
+        NSData	 	*profile = [[adium accountController] propertyForKey:@"TextProfile" account:self];
+        NSData	 	*away = [[adium accountController] propertyForKey:@"AwayMessage" account:self];
+        
+        
+        if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
+        if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
+        if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
+    }
+    
+    //set the image file name, which is saved in the account preferences and generally easy to access
+    [[adium accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
+    
+    NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
+    if (buddyImage && [buddyImage isValid]) {
+        [[adium accountController] setUserIcon:buddyImage 
+                                    forAccount:self];
+    }
+    [buddyImage release];
+    
+    //let the accountController tell us about the default user icon filename
+    [self statusForKey:@"DefaultUserIconFilename" 
+          willChangeTo:[[adium accountController] defaultUserIconFilename]];
+}
+
+
+- (void)signonTimerExpired:(NSTimer*)timer
+{
+    [signonTimer invalidate];
+    [signonTimer release];
+    signonTimer = nil;
+    silentAndDelayed = NO;
+    NSLog(@"Setting handle updates to loud and instantaneous (signon timer expired)");
+    
+    [[adium contactController] handlesChangedForAccount:self];
+}
+
+- (void)accountConnectionDisconnected
+{
+    [[adium accountController] 
+        setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
+             forKey:@"Status" account:self];
+    
+    if (signonTimer != nil) {
+        [signonTimer invalidate];
+        [signonTimer release];
+        signonTimer = nil;
+    }
 }
 
 //connecting / disconnecting
@@ -1101,6 +862,57 @@
     //get password
     [[adium accountController] passwordForAccount:self 
                                   notifyingTarget:self selector:@selector(finishConnect:)];
+}
+//Called by the accountController once a password is available
+- (void)finishConnect:(NSString *)inPassword
+{
+    if(inPassword && [inPassword length] != 0)
+    {
+        //now we start to connect
+        [[adium accountController] 
+            setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
+                 forKey:@"Status" account:self];
+        
+        //setup the account, get things ready
+        gaim_account_set_password(account, [inPassword UTF8String]);
+        
+        //configure at sign on time so we get the latest settings from the system
+        if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
+            
+            //proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the service plugin and are our systemwide prefs) or account-specific prefs
+            GaimProxyInfo *proxy_info = gaim_proxy_info_new();
+            
+            char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
+            int proxytype;
+            
+            if (!strcmp(type, "none"))
+                proxytype = GAIM_PROXY_NONE;
+            else if (!strcmp(type, "http"))
+                proxytype = GAIM_PROXY_HTTP;
+            else if (!strcmp(type, "socks4"))
+                proxytype = GAIM_PROXY_SOCKS4;
+            else if (!strcmp(type, "socks5"))
+                proxytype = GAIM_PROXY_SOCKS5;
+            else if (!strcmp(type, "envvar"))
+                proxytype = GAIM_PROXY_USE_ENVVAR;
+            else
+                proxytype = -1;
+            
+            proxy_info->type = proxytype;
+            
+            proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host");
+            proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
+            
+            proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
+                proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
+            
+            gaim_account_set_proxy_info(account,proxy_info);
+        }
+        //NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
+        //NSLog(@"%i %i",gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_NONE,gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_SOCKS5);
+        
+        gc = gaim_account_connect(account);
+    }
 }
 
 - (void)disconnect
@@ -1117,18 +929,6 @@
     silentAndDelayed = YES;
     NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
 
-    //Destroy all conversations so they get recreated if we sign on again
-   /* GList *gaimConvs;
-    GaimConversation *conv;
-    for (gaimConvs = gaim_get_conversations(); gaimConvs != NULL; gaimConvs = gaimConvs->next) {
-        conv = gaimConvs->data;
-        if (conv) {
-            NSLog(@"destroying");
-            gaim_conversation_destroy(conv);
-            NSLog(@"destroyed");
-        }
-    }
-    */
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
@@ -1162,5 +962,187 @@
     [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
 }
 
+/*****************************************************/
+/* File transfer / AIAccount_Files inherited methods */
+/*****************************************************/
+
+//The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
+- (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
+{
+    NSLog(@"file transfer request received");
+    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
+    
+    [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
+    
+    [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
+}
+
+//The account requested that we send a file, but we do not know what file yet - query the fileTransferController for a target file
+/*- (void)accountXferSendFileWithXfer:(GaimXfer *)xfer
+{
+    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
+    //prompt the fileTransferController for the target filename
+    [[adium fileTransferController] sendRequestForFileTransfer:fileTransfer];
+}
+*/
+
+- (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer
+{
+    //set up our fileTransfer object
+    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
+    
+    NSString *filename = [filesToSendArray objectAtIndex:0];
+    [fileTransfer setLocalFilename:filename];
+    [filesToSendArray removeObjectAtIndex:0];
+    
+    //set the xfer local filename; accepting the file transfer will take care of setting size and such
+    //gaim takes responsibility for freeing cFilename at a later date
+    char * xferFileName = g_strdup([filename UTF8String]);
+    gaim_xfer_set_local_filename(xfer,xferFileName);
+    
+    //begin transferring the file
+    [self acceptFileTransferRequest:fileTransfer];    
+}
+
+
+
+//Create an ESFileTransfer object from an xfer, associating the xfer with the object and the object with the xfer
+- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
+{
+    AIHandle * handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
+    //handle new handles here
+    //****
+    
+    ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithHandle:handle forAccount:self]; 
+    
+    [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+    xfer->ui_data = fileTransfer;
+    
+    return fileTransfer;
+}
+
+//Update an ESFileTransfer object progress
+- (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent
+{
+    [(ESFileTransfer *)(xfer->ui_data) setPercentDone:percent bytesSent:(xfer->bytes_sent)];
+}
+
+//The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
+- (void)accountXferCanceledRemotely:(GaimXfer *)xfer
+{
+    [[adium fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
+    gaim_xfer_destroy(xfer);
+}
+
+//Accept a send or receive ESFileTransfer object, beginning the transfer.  Subsequently inform the fileTransferController that the fun has begun.
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+{
+    NSLog(@"accept file transfer");
+    GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
+    
+    //gaim takes responsibility for freeing cFilename at a later date
+    char * xferFileName = g_strdup([[fileTransfer localFilename] UTF8String]);
+    gaim_xfer_set_local_filename(xfer,xferFileName);
+    
+    //set the size - must be done after request is accepted?
+    [fileTransfer setSize:(xfer->size)];
+    
+    GaimXferType xferType = gaim_xfer_get_type(xfer);
+    if ( xferType == GAIM_XFER_SEND ) {
+        [fileTransfer setType:Outgoing_FileTransfer];   
+    } else if ( xferType == GAIM_XFER_RECEIVE ) {
+        [fileTransfer setType:Incoming_FileTransfer];
+    }
+    
+    //accept the request
+    gaim_xfer_request_accepted(xfer, xferFileName);
+    
+    //tell the fileTransferController to display appropriately
+    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+}
+
+//User refused a receive request.  Tell gaim, then release the ESFileTransfer object
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
+{
+    gaim_xfer_request_denied((GaimXfer *)[[fileTransfer accountData] pointerValue]);
+    [fileTransfer release];
+}
+
+/***************************/
+/* Account private methods */
+/***************************/
+
+// Removes all the possible status flags (that are valid on the calling account) from the passed handle
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
+{
+    NSArray * keyArray = [self supportedPropertyKeys];
+    [[handle statusDictionary] removeObjectsForKeys:keyArray];
+    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
+}
+
+- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing
+{
+    BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
+    
+    if((typing && !currentValue) || (!typing && currentValue)){
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] 
+                                      forKey:@"Typing"];
+        [[adium contactController] handleStatusChanged:handle 
+                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] 
+                                               delayed:YES 
+                                                silent:NO];
+    }
+}
+
+- (void)setAwayMessage:(id)message
+{
+    char *newValue = NULL;
+    
+    if (message) {
+        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+                                              headers:YES
+                                             fontTags:YES   closeFontTags:YES
+                                            styleTags:YES   closeStyleTagsOnFontChange:NO
+                                       encodeNonASCII:NO
+                                           imagesPath:nil] UTF8String];
+    }
+    
+    serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
+}
+- (void)setProfile:(id)profile
+{
+    char *newValue = NULL;
+    
+    if (profile) {
+        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:profile]
+                                              headers:YES
+                                             fontTags:YES   closeFontTags:YES
+                                            styleTags:YES   closeStyleTagsOnFontChange:NO
+                                       encodeNonASCII:NO
+                                           imagesPath:nil] UTF8String];
+    }
+    
+    serv_set_info(gc, newValue);
+}
+
+- (void)setBuddyImageFromFilename:(char *)imageFilename
+{
+    //Set to nil first
+    gaim_account_set_buddy_icon(account, nil);
+    //Set to new user icon
+    gaim_account_set_buddy_icon(account,imageFilename);
+}
+
+- (void)displayError:(NSString *)errorDesc
+{
+    [[adium interfaceController] handleErrorMessage:@"Gaim error"
+                                    withDescription:errorDesc];
+}
+
+- (NSString *)_userIconCachePath
+{    
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self UIDAndServiceID]];
+    return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
+}
 
 @end
