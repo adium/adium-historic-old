@@ -1343,11 +1343,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	GaimProxyInfo		*proxy_info;
 	GaimProxyType		gaimAccountProxyType;
 	
-	NSNumber			*proxyPref = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+	NSNumber			*proxyPref = [self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+	BOOL				proxyEnabled = [[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
+
 	NSString			*host = nil;
 	NSString			*proxyUserName = nil;
 	NSString			*proxyPassword = nil;
-	AdiumGaimProxyType  proxyType;
+	AdiumProxyType  	proxyType;
 	int					port = 0;
 	NSInvocation		*invocation; 
 	
@@ -1359,30 +1361,30 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	proxy_info = gaim_proxy_info_new();
 	gaim_account_set_proxy_info(account, proxy_info);
 	
-	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default_SOCKS5);
+	proxyType = (proxyPref ? [proxyPref intValue] : Adium_Proxy_Default_SOCKS5);
 	
-	if (proxyType == Gaim_Proxy_None){
+	if(!proxyEnabled){
 		//No proxy
 		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
 		GaimDebug (@"Connecting with no proxy.");
 		[invocation invoke];
 		
-	}else if ((proxyType == Gaim_Proxy_Default_SOCKS5) || 
-			  (proxyType == Gaim_Proxy_Default_HTTP) || 
-			  (proxyType == Gaim_Proxy_Default_SOCKS4)) {
+	}else if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
+			  (proxyType == Adium_Proxy_Default_HTTP) || 
+			  (proxyType == Adium_Proxy_Default_SOCKS4)) {
 		//Load and use systemwide proxy settings
 		NSDictionary *systemProxySettingsDictionary;
 		ProxyType adiumProxyType = Proxy_None;
 		
-		if (proxyType == Gaim_Proxy_Default_SOCKS5){
+		if (proxyType == Adium_Proxy_Default_SOCKS5){
 			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
 			adiumProxyType = Proxy_SOCKS5;
 			
-		}else if (proxyType == Gaim_Proxy_Default_HTTP){
+		}else if (proxyType == Adium_Proxy_Default_HTTP){
 			gaimAccountProxyType = GAIM_PROXY_HTTP;
 			adiumProxyType = Proxy_HTTP;
 			
-		}else if (proxyType == Gaim_Proxy_Default_SOCKS4){
+		}else if (proxyType == Adium_Proxy_Default_SOCKS4){
 				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
 				adiumProxyType = Proxy_SOCKS4;
 		}
@@ -1421,17 +1423,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[invocation invoke];
 
 	}else{
-		host = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
-		port = [[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+		host = [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+		port = [[self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 		
 		switch (proxyType){
-			case Gaim_Proxy_HTTP:
+			case Adium_Proxy_HTTP:
 				gaimAccountProxyType = GAIM_PROXY_HTTP;
 				break;
-			case Gaim_Proxy_SOCKS4:
+			case Adium_Proxy_SOCKS4:
 				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
 				break;
-			case Gaim_Proxy_SOCKS5:
+			case Adium_Proxy_SOCKS5:
 				gaimAccountProxyType = GAIM_PROXY_SOCKS5;
 				break;
 			default:
@@ -1444,7 +1446,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_proxy_info_set_port(proxy_info, port);
 		
 		//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:context:
-		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 		if (proxyUserName && [proxyUserName length]){
 			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
 			

@@ -65,20 +65,20 @@
 		account = [inAccount retain];
 
 		//Enabled & Type
-		[checkBox_useProxy setState:[[account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_ENABLED
+		[checkBox_useProxy setState:[[account preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED
 														 group:GROUP_ACCOUNT_STATUS] boolValue]];
-		[popUpButton_proxy compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE
+		[popUpButton_proxy compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ACCOUNT_PROXY_TYPE
 																			group:GROUP_ACCOUNT_STATUS] intValue]];
 		
 		//Host & Port
-		NSString	*proxyHost = [account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+		NSString	*proxyHost = [account preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
 		[textField_proxyHostName setStringValue:(proxyHost ? proxyHost : @"")];
 		
-		NSString	*proxyPort = [account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
+		NSString	*proxyPort = [account preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
 		[textField_proxyPortNumber setStringValue:(proxyPort ? proxyHost : @"")];
 		
 		//Username
-		NSString	*proxyUser = [account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+		NSString	*proxyUser = [account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 		[textField_proxyUserName setStringValue:(proxyUser ? proxyHost : @"")];
 
 		[self updatePasswordField];
@@ -93,8 +93,8 @@
 	NSString	*proxyUserName = [textField_proxyUserName stringValue];
 
 	//Password
-	if(![proxyUserName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS]] ||
-	   ![proxyHostName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS]]){
+	if(![proxyUserName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS]] ||
+	   ![proxyHostName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS]]){
 		
 		[[adium accountController] setPassword:[textField_proxyPassword stringValue]
 								forProxyServer:proxyHostName
@@ -103,19 +103,19 @@
 
 	//Enabled & Type
 	[account setPreference:[NSNumber numberWithInt:[checkBox_useProxy state]]
-					forKey:KEY_ACCOUNT_GAIM_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS];
+					forKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS];
 	[account setPreference:[NSNumber numberWithInt:[[popUpButton_proxy selectedItem] tag]]
-					forKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+					forKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 	
 	//Host & Port
 	[account setPreference:[textField_proxyHostName stringValue]
-					forKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+					forKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
 	[account setPreference:[textField_proxyPortNumber stringValue]
-					forKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
+					forKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
 	
 	//Username
 	[account setPreference:[textField_proxyUserName stringValue]
-					forKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+					forKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 }
 
 
@@ -143,17 +143,17 @@
 		
 	}else if(sender == textField_proxyPortNumber){
 		[account setPreference:[NSNumber numberWithInt:[textField_proxyPortNumber intValue]]
-						forKey:KEY_ACCOUNT_GAIM_PROXY_PORT
+						forKey:KEY_ACCOUNT_PROXY_PORT
 						 group:GROUP_ACCOUNT_STATUS];
 		
 	}else if(sender == textField_proxyUserName){
 		NSString	*userName = [textField_proxyUserName stringValue];
 		
 		//If the username changed, save the new username and clear the password field
-		if(![userName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME 
+		if(![userName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME 
 														  group:GROUP_ACCOUNT_STATUS]]){
 			[account setPreference:userName
-							forKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME
+							forKey:KEY_ACCOUNT_PROXY_USERNAME
 							 group:GROUP_ACCOUNT_STATUS];
 			
 			//Update the password field
@@ -167,11 +167,11 @@
 //Configure dimming of proxy controls
 - (void)configureControlDimming
 {
-	AdiumGaimProxyType	proxyType = [[popUpButton_proxy selectedItem] tag];
-	BOOL	proxyEnabled = [checkBox_useProxy state];
-	BOOL	usingSystemwide = (proxyType == Gaim_Proxy_Default_SOCKS5 ||
-							   proxyType == Gaim_Proxy_Default_HTTP || 
-							   proxyType == Gaim_Proxy_Default_SOCKS4);
+	AdiumProxyType	proxyType = [[popUpButton_proxy selectedItem] tag];
+	BOOL			proxyEnabled = [checkBox_useProxy state];
+	BOOL			usingSystemwide = (proxyType == Adium_Proxy_Default_SOCKS5 ||
+									   proxyType == Adium_Proxy_Default_HTTP || 
+									   proxyType == Adium_Proxy_Default_SOCKS4);
 	
 	[popUpButton_proxy setEnabled:proxyEnabled];
 	[textField_proxyHostName setEnabled:(proxyEnabled && !usingSystemwide)];
@@ -188,12 +188,12 @@
 {
     NSMenu			*proxyMenu = [[NSMenu alloc] init];
 	
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS4 Settings",nil) tag:Gaim_Proxy_Default_SOCKS4]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS5 Settings",nil) tag:Gaim_Proxy_Default_SOCKS5]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide HTTP Settings",nil) tag:Gaim_Proxy_Default_HTTP]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS4" tag:Gaim_Proxy_SOCKS4]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS5" tag:Gaim_Proxy_SOCKS5]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Gaim_Proxy_HTTP]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS4 Settings",nil) tag:Adium_Proxy_Default_SOCKS4]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS5 Settings",nil) tag:Adium_Proxy_Default_SOCKS5]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide HTTP Settings",nil) tag:Adium_Proxy_Default_HTTP]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS4" tag:Adium_Proxy_SOCKS4]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS5" tag:Adium_Proxy_SOCKS5]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Adium_Proxy_HTTP]];
 	
 	return [proxyMenu autorelease];
 }
