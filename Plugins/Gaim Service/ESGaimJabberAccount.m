@@ -28,6 +28,8 @@
 #include <Libgaim/presence.h>
 #include <Libgaim/si.h>
 
+#define DEFAULT_JABBER_HOST @"jabber.org"
+
 @implementation ESGaimJabberAccount
 
 static BOOL				didInitJabber = NO;
@@ -137,9 +139,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	if((location != NSNotFound) && (location + 1 < [UID length])){
 		return [UID substringFromIndex:(location + 1)];
 	}else{
-		//If that fails for some reason, fall back on [super host], which probably returns nil, but
-		//really, you never know ;)
-		return [super host];
+		return DEFAULT_JABBER_HOST;
 	}
 }
 
