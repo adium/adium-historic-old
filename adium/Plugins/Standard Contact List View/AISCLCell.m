@@ -79,15 +79,17 @@
     }
 
     //Text Font
-    if(!isGroup){
-        font = [(AISCLOutlineView *)controlView font];
-    }else{
-        font = [NSFont boldSystemFontOfSize:11];
+    font = [(AISCLOutlineView *)controlView font];
+
+    //Add Bold for Groups
+    if(isGroup){
+	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
     }
 
     //Name
     displayName = [[NSAttributedString alloc] initWithString:[listObject displayName]
                                                   attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
+    
     displayNameSize = [displayName size];
     cellSize.width += displayNameSize.width;
     cellSize.height += displayNameSize.height;
@@ -227,10 +229,11 @@
     }
 
     //Text Font
-    if(!isGroup){
-        font = [(AISCLOutlineView *)controlView font];;
-    }else{
-        font = [NSFont boldSystemFontOfSize:11];
+    font = [(AISCLOutlineView *)controlView font];
+
+    //Add Bold for Groups
+    if(isGroup){
+	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
     }
 
     //Create a paragraph Style (To turn off clipping by word)
