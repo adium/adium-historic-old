@@ -85,7 +85,7 @@ CBStatusMenuItemController *sharedInstance = nil;
 
 - (void)accountsChanged:(NSNotification *)notification
 {
-    //we'll be building from scrach for now, so clear the array out.
+    //we'll be building from scratch for now, so clear the array out.
     [accountsMenuItems release];
     accountsMenuItems = [[NSMutableArray alloc] init];
     
@@ -129,26 +129,28 @@ CBStatusMenuItemController *sharedInstance = nil;
     else //we don't care about accounts
     {
         //snag the contact from the notification
-        AIListObject *contact = [notification object];
+        AIListObject    *contact = [notification object];
+        
+        NSString        *containingGroupUID = [[contact containingGroup] UID];
         
         //see if there's already a group menu for this contact
-        NSMenuItem *groupItem = [groupsMenuItems objectForKey:[[contact containingGroup] UID]];
+        NSMenuItem *groupItem = [groupsMenuItems objectForKey:containingGroupUID];
         
         if(!groupItem) //No group menu item!
         {
             //so we create one
-            groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] UID] action:nil keyEquivalent:@""] autorelease];
+            groupItem = [[[NSMenuItem alloc] initWithTitle:containingGroupUID action:nil keyEquivalent:@""] autorelease];
             [groupItem setRepresentedObject:[contact containingGroup]];
             [groupItem setEnabled:YES];
             
             //and add it to our dict
-            [groupsMenuItems setObject:groupItem forKey:[[contact containingGroup] UID]];
+            [groupsMenuItems setObject:groupItem forKey:containingGroupUID];
         }
         
         if(![groupItem hasSubmenu]) //No submenuon the group menu item
         {
             //so we add them
-            [groupItem setSubmenu:[[NSMenu alloc] initWithTitle:[[contact containingGroup] UID]]];
+            [groupItem setSubmenu:[[NSMenu alloc] initWithTitle:containingGroupUID]];
         } /* small WoA: the reason I didn't combine this with the above is in case Something Weird happens
                 and we don't have a menu for the existing group (bad reference counting, or just plain
                 Wackyness). I don't actually expect this case to happen without the (!groupItem) statement being
@@ -208,7 +210,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         //if this group is empty, remove it!
         if([[[groupItem submenu] itemArray] count] == 0)
         {
-            [groupsMenuItems removeObjectForKey:[[contact containingGroup] UID]];
+            [groupsMenuItems removeObjectForKey:containingGroupUID];
             
             //GO GO GO!
             [self buildMenu];
