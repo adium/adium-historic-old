@@ -105,7 +105,7 @@
 }
 
 //Resizable
-- (void)resizable
+- (BOOL)resizable
 {
 	return(NO);
 }
