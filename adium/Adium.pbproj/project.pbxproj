@@ -99,6 +99,7 @@
 				F5A01D8C0379813301A8010A,
 				F501BB1403882A2901A8010A,
 				F5AAD090039BA10901A8010A,
+				A1D4690703AFDCBF00A8000D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -119,6 +120,7 @@
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -133,6 +135,7 @@
 				F53B9ACB02CD12CB01A8010A,
 				F5370C9802D76F3B01A8010A,
 				F51DEFAE032633E301A8010A,
+				A1D468F103AFDCBF00A8000D,
 				F59F9A89032BE6B101A8010A,
 				F510B77303339F1C01A8010A,
 				F5B53FC60333AFB501A8010A,
@@ -158,6 +161,7 @@
 				F53B9AC502CD12AB01A8010A,
 				F59F9A7F032BE67901A8010A,
 				F51DEFA40326330101A8010A,
+				A1D4690803AFDD1900A8000D,
 				F5BD46C402D0786601A8010A,
 				F5370C9202D76F1F01A8010A,
 				F510B76D03339ED501A8010A,
@@ -222,6 +226,7 @@
 				F5CED5F10388303901A8010A,
 				F55263BC0333CA4401A8010A,
 				F51DEFB00326341601A8010A,
+				A1D4691403AFDD5F00A8000D,
 				F5370C9A02D76F5101A8010A,
 				F5BD470702D0845E01A8010A,
 				F5BD46D902D078CC01A8010A,
@@ -276,7 +281,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 1;
 		};
 		29B97327FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -402,6 +406,212 @@
 //4A2
 //4A3
 //4A4
+//A10
+//A11
+//A12
+//A13
+//A14
+		A1D468F103AFDCBF00A8000D = {
+			buildPhases = (
+				A1D468F303AFDCBF00A8000D,
+				A1D468F603AFDCBF00A8000D,
+				A1D468FF03AFDCBF00A8000D,
+				A1D4690203AFDCBF00A8000D,
+				A1D4690603AFDCBF00A8000D,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Standard Contact List Preferences";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				A1D468F203AFDCBF00A8000D,
+			);
+			isa = PBXBundleTarget;
+			name = "Standard Contact List Preferences";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Account List Preferences";
+			productReference = A1D4690703AFDCBF00A8000D;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Standard Contact List Preferences</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactListPreferencesPlugin</string>
+</dict>
+</plist>
+";
+		};
+		A1D468F203AFDCBF00A8000D = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		A1D468F303AFDCBF00A8000D = {
+			buildActionMask = 2147483647;
+			files = (
+				A1D4690F03AFDD1900A8000D,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1D468F603AFDCBF00A8000D = {
+			buildActionMask = 2147483647;
+			files = (
+				A1D4691103AFDD1900A8000D,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1D468FF03AFDCBF00A8000D = {
+			buildActionMask = 2147483647;
+			files = (
+				A1D4691003AFDD1900A8000D,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1D4690203AFDCBF00A8000D = {
+			buildActionMask = 2147483647;
+			files = (
+				A1D4690303AFDCBF00A8000D,
+				A1D4690403AFDCBF00A8000D,
+				A1D4690503AFDCBF00A8000D,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1D4690303AFDCBF00A8000D = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1D4690403AFDCBF00A8000D = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1D4690503AFDCBF00A8000D = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1D4690603AFDCBF00A8000D = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1D4690703AFDCBF00A8000D = {
+			isa = PBXBundleReference;
+			path = "Standard Contact List Preferences.AdiumPlugin";
+			refType = 3;
+		};
+		A1D4690803AFDD1900A8000D = {
+			children = (
+				A1D4691303AFDD4600A8000D,
+				A1D4690B03AFDD1900A8000D,
+				A1D4690C03AFDD1900A8000D,
+			);
+			isa = PBXGroup;
+			name = "Standard Contact List Preferences";
+			path = "Plugins/Standard Contact List Preferences";
+			refType = 4;
+		};
+		A1D4690A03AFDD1900A8000D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = AIContactListPreferencesPlugin.h;
+			refType = 4;
+		};
+		A1D4690B03AFDD1900A8000D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = AIContactListPreferencesPlugin.m;
+			refType = 4;
+		};
+		A1D4690C03AFDD1900A8000D = {
+			isa = PBXFileReference;
+			path = ContactListPrefView.nib;
+			refType = 4;
+		};
+		A1D4690F03AFDD1900A8000D = {
+			fileRef = A1D4690A03AFDD1900A8000D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1D4691003AFDD1900A8000D = {
+			fileRef = A1D4690B03AFDD1900A8000D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1D4691103AFDD1900A8000D = {
+			fileRef = A1D4690C03AFDD1900A8000D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1D4691303AFDD4600A8000D = {
+			children = (
+				A1D4690A03AFDD1900A8000D,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		A1D4691403AFDD5F00A8000D = {
+			isa = PBXTargetDependency;
+			target = A1D468F103AFDCBF00A8000D;
+		};
+		A1D4691E03AFDDFC00A8000D = {
+			isa = PBXBundleReference;
+			name = "Standard Contact List Preferences.AdiumPlugin";
+			path = "build/Standard Contact List Preferences.AdiumPlugin";
+			refType = 4;
+		};
+		A1D4691F03AFDDFC00A8000D = {
+			fileRef = A1D4691E03AFDDFC00A8000D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//A10
+//A11
+//A12
+//A13
+//A14
 //F50
 //F51
 //F52
@@ -524,7 +734,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F501BB1403882A2901A8010A = {
 			isa = PBXBundleReference;
@@ -704,7 +913,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F50CD62903603C7201A8010A = {
 			isa = PBXBundleReference;
@@ -860,7 +1068,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F510B77403339F1C01A8010A = {
 			isa = PBXBundleReference;
@@ -955,56 +1162,67 @@
 			refType = 4;
 		};
 		F5186B6B03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = account.html;
 			refType = 4;
 		};
 		F5186B6C03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = contactGroup.html;
 			refType = 4;
 		};
 		F5186B6D03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = contactHandle.html;
 			refType = 4;
 		};
 		F5186B6E03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = contactObject.html;
 			refType = 4;
 		};
 		F5186B6F03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = contentMessage.html;
 			refType = 4;
 		};
 		F5186B7003ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = infoView.html;
 			refType = 4;
 		};
 		F5186B7103ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = plugin.html;
 			refType = 4;
 		};
 		F5186B7203ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = preferencePane.html;
 			refType = 4;
 		};
 		F5186B7303ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = prefView.html;
 			refType = 4;
 		};
 		F5186B7403ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = service.html;
 			refType = 4;
 		};
 		F5186B7503ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = serviceType.html;
 			refType = 4;
@@ -1015,6 +1233,7 @@
 			refType = 4;
 		};
 		F5186B7703ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = blank.html;
 			refType = 4;
@@ -1037,56 +1256,67 @@
 			refType = 4;
 		};
 		F5186B7A03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = account.html;
 			refType = 4;
 		};
 		F5186B7B03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = contact.html;
 			refType = 4;
 		};
 		F5186B7C03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = content.html;
 			refType = 4;
 		};
 		F5186B7D03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = interface.html;
 			refType = 4;
 		};
 		F5186B7E03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = login.html;
 			refType = 4;
 		};
 		F5186B7F03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = menu.html;
 			refType = 4;
 		};
 		F5186B8003ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = plugin.html;
 			refType = 4;
 		};
 		F5186B8103ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = preference.html;
 			refType = 4;
 		};
 		F5186B8203ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = sound.html;
 			refType = 4;
 		};
 		F5186B8303ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = toolbar.html;
 			refType = 4;
 		};
 		F5186B8403ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = header.html;
 			refType = 4;
@@ -1135,16 +1365,19 @@
 			refType = 4;
 		};
 		F5186B9E03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = index.html;
 			refType = 4;
 		};
 		F5186B9F03ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = line.html;
 			refType = 4;
 		};
 		F5186BA003ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = main.html;
 			refType = 4;
@@ -1155,6 +1388,7 @@
 			refType = 4;
 		};
 		F5186BA203ABD62101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = tree.html;
 			refType = 4;
@@ -1303,7 +1537,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F51DEFAF032633E301A8010A = {
 			isa = PBXBundleReference;
@@ -1507,7 +1740,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5370C9902D76F3B01A8010A = {
 			isa = PBXBundleReference;
@@ -1707,7 +1939,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9A0702CCED6401A8010A = {
 			isa = PBXFrameworkReference;
@@ -1833,7 +2064,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9A0F02CCED8B01A8010A = {
 			isa = PBXFrameworkReference;
@@ -2039,7 +2269,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9ACC02CD12CB01A8010A = {
 			isa = PBXBundleReference;
@@ -2207,7 +2436,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53EA2CE02C803C101A8010A = {
 			isa = PBXBundleReference;
@@ -2233,6 +2461,7 @@
 				F551A50B03AC4C5001A8010A,
 				F551A50C03AC4C5001A8010A,
 				F551A50D03AC4C5001A8010A,
+				A1D4691F03AFDDFC00A8000D,
 				F551A50E03AC4C5001A8010A,
 				F551A50F03AC4C5001A8010A,
 				F551A51003AC4C5001A8010A,
@@ -2439,6 +2668,7 @@
 				F551A4FF03AC4C4F01A8010A,
 				F551A50003AC4C4F01A8010A,
 				F551A50103AC4C4F01A8010A,
+				A1D4691E03AFDDFC00A8000D,
 				F551A50203AC4C4F01A8010A,
 				F551A50303AC4C4F01A8010A,
 				F551A50403AC4C4F01A8010A,
@@ -2610,6 +2840,7 @@
 			target = F59F9A89032BE6B101A8010A;
 		};
 		F55B40F803AB877401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIEventSoundsPlugin.h;
 			path = "Plugins/Event Sounds/AIEventSoundsPlugin.h";
@@ -2622,6 +2853,7 @@
 			};
 		};
 		F55B40FA03AB877E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIEventSoundsPlugin.m;
 			path = "Plugins/Event Sounds/AIEventSoundsPlugin.m";
@@ -2634,24 +2866,28 @@
 			};
 		};
 		F55B40FC03AB87CA01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIFramedMiniToolbarButton.h;
 			path = "Plugins/Standard Toolbar Items/AIFramedMiniToolbarButton.h";
 			refType = 4;
 		};
 		F55B40FD03AB87CA01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIFramedMiniToolbarButton.m;
 			path = "Plugins/Standard Toolbar Items/AIFramedMiniToolbarButton.m";
 			refType = 4;
 		};
 		F55B40FE03AB87CA01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIStandardToolbarItemsPlugin.h;
 			path = "Plugins/Standard Toolbar Items/AIStandardToolbarItemsPlugin.h";
 			refType = 4;
 		};
 		F55B40FF03AB87CA01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIStandardToolbarItemsPlugin.m;
 			path = "Plugins/Standard Toolbar Items/AIStandardToolbarItemsPlugin.m";
@@ -2754,24 +2990,28 @@
 			refType = 4;
 		};
 		F55B411003AB88D601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListCheckbox.h;
 			path = "Plugins/Contact List Editor/AIContactListCheckbox.h";
 			refType = 4;
 		};
 		F55B411103AB88D601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListCheckbox.m;
 			path = "Plugins/Contact List Editor/AIContactListCheckbox.m";
 			refType = 4;
 		};
 		F55B411203AB88D601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListEditorWindowController.h;
 			path = "Plugins/Contact List Editor/AIContactListEditorWindowController.h";
 			refType = 4;
 		};
 		F55B411303AB88D601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListEditorWindowController.m;
 			path = "Plugins/Contact List Editor/AIContactListEditorWindowController.m";
@@ -2784,12 +3024,14 @@
 			refType = 4;
 		};
 		F55B411503AB88D601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLEditHeaderView.h;
 			path = "Plugins/Contact List Editor/AISCLEditHeaderView.h";
 			refType = 4;
 		};
 		F55B411603AB88D601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLEditHeaderView.m;
 			path = "Plugins/Contact List Editor/AISCLEditHeaderView.m";
@@ -2988,24 +3230,28 @@
 			refType = 4;
 		};
 		F55B413903AB895501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountListEditSheetController.h;
 			path = "Plugins/Account List Preferences/AIAccountListEditSheetController.h";
 			refType = 4;
 		};
 		F55B413A03AB895501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountListEditSheetController.m;
 			path = "Plugins/Account List Preferences/AIAccountListEditSheetController.m";
 			refType = 4;
 		};
 		F55B413B03AB895501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountListPreferencesPlugin.h;
 			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.h";
 			refType = 4;
 		};
 		F55B413C03AB895501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountListPreferencesPlugin.m;
 			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.m";
@@ -3126,12 +3372,14 @@
 			};
 		};
 		F55B415003AB89E301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMVSenderCell.h;
 			path = "Plugins/Standard Message View/AISMVSenderCell.h";
 			refType = 4;
 		};
 		F55B415103AB89E301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMVSenderCell.m;
 			path = "Plugins/Standard Message View/AISMVSenderCell.m";
@@ -3150,6 +3398,7 @@
 			};
 		};
 		F55B415403AB8AF901A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarItem.m;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarItem.m";
@@ -3162,6 +3411,7 @@
 			};
 		};
 		F55B415603AB8B0901A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AITabViewAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AITabViewAdditions.m";
@@ -3174,6 +3424,7 @@
 			};
 		};
 		F55B415903AB8B2601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AITabViewAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AITabViewAdditions.h";
@@ -3186,12 +3437,14 @@
 			};
 		};
 		F55B415C03AB8B5601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContentController.h;
 			path = Source/AIContentController.h;
 			refType = 4;
 		};
 		F55B415D03AB8B5601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContentController.m;
 			path = Source/AIContentController.m;
@@ -3222,6 +3475,7 @@
 			};
 		};
 		F55B416203AB8BED01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIOutOfSyncWindowController.m;
 			path = Source/AIOutOfSyncWindowController.m;
@@ -3234,6 +3488,7 @@
 			};
 		};
 		F55B416403AB8BF501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIOutOfSyncEntry.m;
 			path = Source/AIOutOfSyncEntry.m;
@@ -3246,6 +3501,7 @@
 			};
 		};
 		F55B416603AB8BFC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPasswordPromptController.m;
 			path = Source/AIPasswordPromptController.m;
@@ -3282,18 +3538,21 @@
 			};
 		};
 		F55B416C03AB8C3201A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIOutOfSyncEntry.h;
 			path = Source/AIOutOfSyncEntry.h;
 			refType = 4;
 		};
 		F55B416D03AB8C3201A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIOutOfSyncWindowController.h;
 			path = Source/AIOutOfSyncWindowController.h;
 			refType = 4;
 		};
 		F55B416E03AB8C3201A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPasswordPromptController.h;
 			path = Source/AIPasswordPromptController.h;
@@ -3318,6 +3577,7 @@
 			};
 		};
 		F55B417203AB8C5601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarTableView.h;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarTableView.h";
@@ -3330,6 +3590,7 @@
 			};
 		};
 		F55B417403AB8C6201A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarTableView.m;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarTableView.m";
@@ -3342,24 +3603,28 @@
 			};
 		};
 		F56621A503AD02AC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiChatAccount.h;
 			path = "Plugins/AIM iChat Service/AIMiChatAccount.h";
 			refType = 4;
 		};
 		F56621A603AD02AC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiChatAccount.m;
 			path = "Plugins/AIM iChat Service/AIMiChatAccount.m";
 			refType = 4;
 		};
 		F56621A703AD02AC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiChatService.h;
 			path = "Plugins/AIM iChat Service/AIMiChatService.h";
 			refType = 4;
 		};
 		F56621A803AD02AC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiChatService.m;
 			path = "Plugins/AIM iChat Service/AIMiChatService.m";
@@ -3498,7 +3763,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F569E39202CA88C701A8010A = {
 			isa = PBXBundleReference;
@@ -3516,12 +3780,14 @@
 			};
 		};
 		F570A584037049D501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountMenuAccessPlugin.h;
 			path = "Plugins/Account Menu Access/AIAccountMenuAccessPlugin.h";
 			refType = 4;
 		};
 		F570A585037049D501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountMenuAccessPlugin.m;
 			path = "Plugins/Account Menu Access/AIAccountMenuAccessPlugin.m";
@@ -3540,24 +3806,28 @@
 			};
 		};
 		F570A58803704A8F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAnimatedFloater.h;
 			path = "Frameworks/AIUtilities Framework/AIAnimatedFloater.h";
 			refType = 4;
 		};
 		F570A58903704A8F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAnimatedFloater.m;
 			path = "Frameworks/AIUtilities Framework/AIAnimatedFloater.m";
 			refType = 4;
 		};
 		F570A58A03704A8F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAnimatedView.h;
 			path = "Frameworks/AIUtilities Framework/AIAnimatedView.h";
 			refType = 4;
 		};
 		F570A58B03704A8F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAnimatedView.m;
 			path = "Frameworks/AIUtilities Framework/AIAnimatedView.m";
@@ -3588,12 +3858,14 @@
 			};
 		};
 		F570A59003704AB901A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICompletingTextField.h;
 			path = "Frameworks/AIUtilities Framework/AICompletingTextField.h";
 			refType = 4;
 		};
 		F570A59103704AB901A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICompletingTextField.m;
 			path = "Frameworks/AIUtilities Framework/AICompletingTextField.m";
@@ -3612,12 +3884,14 @@
 			};
 		};
 		F570A59403704AF501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactInfoViewController.h;
 			path = "Frameworks/Adium Framework/AIContactInfoViewController.h";
 			refType = 4;
 		};
 		F570A59503704AF501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactInfoViewController.m;
 			path = "Frameworks/Adium Framework/AIContactInfoViewController.m";
@@ -3636,12 +3910,14 @@
 			};
 		};
 		F570A59803704B6101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactInfoWindowController.h;
 			path = Source/AIContactInfoWindowController.h;
 			refType = 4;
 		};
 		F570A59903704B6101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactInfoWindowController.m;
 			path = Source/AIContactInfoWindowController.m;
@@ -3660,12 +3936,14 @@
 			};
 		};
 		F570A59C03704B9501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListEditorPlugin.h;
 			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.h";
 			refType = 4;
 		};
 		F570A59D03704B9501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListEditorPlugin.m;
 			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.m";
@@ -3684,12 +3962,14 @@
 			};
 		};
 		F570A5A103704BCE01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICursorUtilities.h;
 			path = "Frameworks/AIUtilities Framework/AICursorUtilities.h";
 			refType = 4;
 		};
 		F570A5A203704BCE01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICursorUtilities.m;
 			path = "Frameworks/AIUtilities Framework/AICursorUtilities.m";
@@ -3708,24 +3988,28 @@
 			};
 		};
 		F570A5A503704BED01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICustomTab.h;
 			path = "Frameworks/AIUtilities Framework/AICustomTab.h";
 			refType = 4;
 		};
 		F570A5A603704BED01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICustomTab.m;
 			path = "Frameworks/AIUtilities Framework/AICustomTab.m";
 			refType = 4;
 		};
 		F570A5A703704BED01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICustomTabsView.h;
 			path = "Frameworks/AIUtilities Framework/AICustomTabsView.h";
 			refType = 4;
 		};
 		F570A5A803704BED01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICustomTabsView.m;
 			path = "Frameworks/AIUtilities Framework/AICustomTabsView.m";
@@ -3756,12 +4040,14 @@
 			};
 		};
 		F570A5AD03704C1101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIGradient.h;
 			path = "Frameworks/AIUtilities Framework/AIGradient.h";
 			refType = 4;
 		};
 		F570A5AE03704C1101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIGradient.m;
 			path = "Frameworks/AIUtilities Framework/AIGradient.m";
@@ -3780,12 +4066,14 @@
 			};
 		};
 		F570A5B103704C3701A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMenuAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AIMenuAdditions.h";
 			refType = 4;
 		};
 		F570A5B203704C3701A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMenuAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIMenuAdditions.m";
@@ -3804,12 +4092,14 @@
 			};
 		};
 		F570A5B503704C6101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMenuController.h;
 			path = Source/AIMenuController.h;
 			refType = 4;
 		};
 		F570A5B603704C6101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMenuController.m;
 			path = Source/AIMenuController.m;
@@ -3828,36 +4118,42 @@
 			};
 		};
 		F570A5BD03704CB801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbar.h;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbar.h";
 			refType = 4;
 		};
 		F570A5BE03704CB801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbar.m;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbar.m";
 			refType = 4;
 		};
 		F570A5BF03704CB801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarButton.h;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarButton.h";
 			refType = 4;
 		};
 		F570A5C003704CB801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarButton.m;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarButton.m";
 			refType = 4;
 		};
 		F570A5C103704CB801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarCenter.h;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarCenter.h";
 			refType = 4;
 		};
 		F570A5C203704CB801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMiniToolbarCenter.m;
 			path = "Frameworks/AIUtilities Framework/AIMiniToolbarCenter.m";
@@ -3900,12 +4196,14 @@
 			};
 		};
 		F570A5C903704D1A01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2ServicePlugin.h;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2ServicePlugin.h";
 			refType = 4;
 		};
 		F570A5CA03704D1A01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2ServicePlugin.m;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2ServicePlugin.m";
@@ -3924,12 +4222,14 @@
 			};
 		};
 		F570A5CD03704D3D01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMessageViewController.h;
 			path = "Plugins/Dual Window Interface/AIMessageViewController.h";
 			refType = 4;
 		};
 		F570A5CE03704D3D01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMessageViewController.m;
 			path = "Plugins/Dual Window Interface/AIMessageViewController.m";
@@ -4128,12 +4428,14 @@
 			};
 		};
 		F570A60703704E9701A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIToolbarController.h;
 			path = Source/AIToolbarController.h;
 			refType = 4;
 		};
 		F570A60803704E9701A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIToolbarController.m;
 			path = Source/AIToolbarController.m;
@@ -4152,12 +4454,14 @@
 			};
 		};
 		F570A60B03704EBA01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMVMessageCell.h;
 			path = "Plugins/Standard Message View/AISMVMessageCell.h";
 			refType = 4;
 		};
 		F570A60C03704EBA01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMVMessageCell.m;
 			path = "Plugins/Standard Message View/AISMVMessageCell.m";
@@ -4176,24 +4480,28 @@
 			};
 		};
 		F570A60F03704EF401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIService.h;
 			path = "Frameworks/Adium Framework/AIService.h";
 			refType = 4;
 		};
 		F570A61003704EF401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIService.m;
 			path = "Frameworks/Adium Framework/AIService.m";
 			refType = 4;
 		};
 		F570A61303704F4201A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AITextFieldAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AITextFieldAdditions.h";
 			refType = 4;
 		};
 		F570A61403704F4201A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AITextFieldAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AITextFieldAdditions.m";
@@ -4212,12 +4520,14 @@
 			};
 		};
 		F570A61703704F6601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISendingTextView.h;
 			path = "Frameworks/AIUtilities Framework/AISendingTextView.h";
 			refType = 4;
 		};
 		F570A61803704F6601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISendingTextView.m;
 			path = "Frameworks/AIUtilities Framework/AISendingTextView.m";
@@ -4248,6 +4558,7 @@
 			target = F53B9A0E02CCED8B01A8010A;
 		};
 		F574173F033E72AC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = gpl.txt;
 			path = Documentation/gpl.txt;
@@ -4284,42 +4595,49 @@
 			};
 		};
 		F57938AA033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountController.m;
 			path = Source/AIAccountController.m;
 			refType = 4;
 		};
 		F57938AB033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactController.m;
 			path = Source/AIContactController.m;
 			refType = 4;
 		};
 		F57938AC033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIInterfaceController.m;
 			path = Source/AIInterfaceController.m;
 			refType = 4;
 		};
 		F57938AD033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AILoginController.m;
 			path = Source/AILoginController.m;
 			refType = 4;
 		};
 		F57938AE033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPluginController.m;
 			path = Source/AIPluginController.m;
 			refType = 4;
 		};
 		F57938AF033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceController.m;
 			path = Source/AIPreferenceController.m;
 			refType = 4;
 		};
 		F57938B0033E737001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISoundController.m;
 			path = Source/AISoundController.m;
@@ -4356,24 +4674,28 @@
 			};
 		};
 		F57938B8033E739101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIColoredBoxView.m;
 			path = Source/AIColoredBoxView.m;
 			refType = 4;
 		};
 		F57938B9033E739101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIFlippedCategoryView.m;
 			path = Source/AIFlippedCategoryView.m;
 			refType = 4;
 		};
 		F57938BA033E739101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceCategory.m;
 			path = Source/AIPreferenceCategory.m;
 			refType = 4;
 		};
 		F57938BB033E739101A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceWindowController.m;
 			path = Source/AIPreferenceWindowController.m;
@@ -4410,6 +4732,7 @@
 			};
 		};
 		F57938C2033E73AC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AILoginWindowController.m;
 			path = Source/AILoginWindowController.m;
@@ -4459,72 +4782,84 @@
 			refType = 4;
 		};
 		F57938ED033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceController.h;
 			path = Source/AIPreferenceController.h;
 			refType = 4;
 		};
 		F57938EF033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccountController.h;
 			path = Source/AIAccountController.h;
 			refType = 4;
 		};
 		F57938F0033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceWindowController.h;
 			path = Source/AIPreferenceWindowController.h;
 			refType = 4;
 		};
 		F57938F1033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceCategory.h;
 			path = Source/AIPreferenceCategory.h;
 			refType = 4;
 		};
 		F57938F2033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPluginController.h;
 			path = Source/AIPluginController.h;
 			refType = 4;
 		};
 		F57938F3033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIInterfaceController.h;
 			path = Source/AIInterfaceController.h;
 			refType = 4;
 		};
 		F57938F4033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIFlippedCategoryView.h;
 			path = Source/AIFlippedCategoryView.h;
 			refType = 4;
 		};
 		F57938F6033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactController.h;
 			path = Source/AIContactController.h;
 			refType = 4;
 		};
 		F57938F8033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIColoredBoxView.h;
 			path = Source/AIColoredBoxView.h;
 			refType = 4;
 		};
 		F57938F9033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISoundController.h;
 			path = Source/AISoundController.h;
 			refType = 4;
 		};
 		F57938FA033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AILoginWindowController.h;
 			path = Source/AILoginWindowController.h;
 			refType = 4;
 		};
 		F57938FB033E745F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AILoginController.h;
 			path = Source/AILoginController.h;
@@ -4597,48 +4932,56 @@
 			};
 		};
 		F579390B033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccount.m;
 			path = "Frameworks/Adium Framework/AIAccount.m";
 			refType = 4;
 		};
 		F579390C033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactGroup.m;
 			path = "Frameworks/Adium Framework/AIContactGroup.m";
 			refType = 4;
 		};
 		F579390D033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactHandle.m;
 			path = "Frameworks/Adium Framework/AIContactHandle.m";
 			refType = 4;
 		};
 		F579390E033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactObject.m;
 			path = "Frameworks/Adium Framework/AIContactObject.m";
 			refType = 4;
 		};
 		F5793911033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContentMessage.m;
 			path = "Frameworks/Adium Framework/AIContentMessage.m";
 			refType = 4;
 		};
 		F5793912033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPlugin.m;
 			path = "Frameworks/Adium Framework/AIPlugin.m";
 			refType = 4;
 		};
 		F5793913033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceViewController.m;
 			path = "Frameworks/Adium Framework/AIPreferenceViewController.m";
 			refType = 4;
 		};
 		F5793914033E748F01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIServiceType.m;
 			path = "Frameworks/Adium Framework/AIServiceType.m";
@@ -4723,48 +5066,56 @@
 			refType = 4;
 		};
 		F5793922033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAccount.h;
 			path = "Frameworks/Adium Framework/AIAccount.h";
 			refType = 4;
 		};
 		F5793923033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPreferenceViewController.h;
 			path = "Frameworks/Adium Framework/AIPreferenceViewController.h";
 			refType = 4;
 		};
 		F5793924033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIPlugin.h;
 			path = "Frameworks/Adium Framework/AIPlugin.h";
 			refType = 4;
 		};
 		F5793925033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIServiceType.h;
 			path = "Frameworks/Adium Framework/AIServiceType.h";
 			refType = 4;
 		};
 		F5793926033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactHandle.h;
 			path = "Frameworks/Adium Framework/AIContactHandle.h";
 			refType = 4;
 		};
 		F5793927033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactGroup.h;
 			path = "Frameworks/Adium Framework/AIContactGroup.h";
 			refType = 4;
 		};
 		F5793928033E74C301A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactObject.h;
 			path = "Frameworks/Adium Framework/AIContactObject.h";
 			refType = 4;
 		};
 		F579392B033E74C401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContentMessage.h;
 			path = "Frameworks/Adium Framework/AIContentMessage.h";
@@ -4821,186 +5172,217 @@
 			};
 		};
 		F5793936033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAlternatingRowOutlineView.h;
 			path = "Frameworks/AIUtilities Framework/AIAlternatingRowOutlineView.h";
 			refType = 4;
 		};
 		F5793937033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAlternatingRowOutlineView.m;
 			path = "Frameworks/AIUtilities Framework/AIAlternatingRowOutlineView.m";
 			refType = 4;
 		};
 		F5793938033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAttributedStringAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AIAttributedStringAdditions.h";
 			refType = 4;
 		};
 		F5793939033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAttributedStringAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIAttributedStringAdditions.m";
 			refType = 4;
 		};
 		F579393A033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIColorAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AIColorAdditions.h";
 			refType = 4;
 		};
 		F579393B033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIColorAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIColorAdditions.m";
 			refType = 4;
 		};
 		F579393E033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIDictionaryAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AIDictionaryAdditions.h";
 			refType = 4;
 		};
 		F579393F033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIDictionaryAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIDictionaryAdditions.m";
 			refType = 4;
 		};
 		F5793940033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIFileUtilities.h;
 			path = "Frameworks/AIUtilities Framework/AIFileUtilities.h";
 			refType = 4;
 		};
 		F5793941033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIFileUtilities.m;
 			path = "Frameworks/AIUtilities Framework/AIFileUtilities.m";
 			refType = 4;
 		};
 		F5793942033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIHTMLDecoder.h;
 			path = "Frameworks/AIUtilities Framework/AIHTMLDecoder.h";
 			refType = 4;
 		};
 		F5793943033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIHTMLDecoder.m;
 			path = "Frameworks/AIUtilities Framework/AIHTMLDecoder.m";
 			refType = 4;
 		};
 		F5793944033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIImageTextCell.h;
 			path = "Frameworks/AIUtilities Framework/AIImageTextCell.h";
 			refType = 4;
 		};
 		F5793945033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIImageTextCell.m;
 			path = "Frameworks/AIUtilities Framework/AIImageTextCell.m";
 			refType = 4;
 		};
 		F5793946033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIImageUtilities.h;
 			path = "Frameworks/AIUtilities Framework/AIImageUtilities.h";
 			refType = 4;
 		};
 		F5793947033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIImageUtilities.m;
 			path = "Frameworks/AIUtilities Framework/AIImageUtilities.m";
 			refType = 4;
 		};
 		F5793948033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIKeychain.h;
 			path = "Frameworks/AIUtilities Framework/AIKeychain.h";
 			refType = 4;
 		};
 		F5793949033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIKeychain.m;
 			path = "Frameworks/AIUtilities Framework/AIKeychain.m";
 			refType = 4;
 		};
 		F579394A033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMutableOwnerArray.h;
 			path = "Frameworks/AIUtilities Framework/AIMutableOwnerArray.h";
 			refType = 4;
 		};
 		F579394B033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMutableOwnerArray.m;
 			path = "Frameworks/AIUtilities Framework/AIMutableOwnerArray.m";
 			refType = 4;
 		};
 		F579394C033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIScrollViewAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AIScrollViewAdditions.h";
 			refType = 4;
 		};
 		F579394D033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIScrollViewAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIScrollViewAdditions.m";
 			refType = 4;
 		};
 		F579394E033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISocket.h;
 			path = "Frameworks/AIUtilities Framework/AISocket.h";
 			refType = 4;
 		};
 		F579394F033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISocket.m;
 			path = "Frameworks/AIUtilities Framework/AISocket.m";
 			refType = 4;
 		};
 		F5793950033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIToolbarUtilities.h;
 			path = "Frameworks/AIUtilities Framework/AIToolbarUtilities.h";
 			refType = 4;
 		};
 		F5793951033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIToolbarUtilities.m;
 			path = "Frameworks/AIUtilities Framework/AIToolbarUtilities.m";
 			refType = 4;
 		};
 		F5793952033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIUtilities.h;
 			path = "Frameworks/AIUtilities Framework/AIUtilities.h";
 			refType = 4;
 		};
 		F5793953033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIVerticallyCenteredTextCell.h;
 			path = "Frameworks/AIUtilities Framework/AIVerticallyCenteredTextCell.h";
 			refType = 4;
 		};
 		F5793954033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIVerticallyCenteredTextCell.m;
 			path = "Frameworks/AIUtilities Framework/AIVerticallyCenteredTextCell.m";
 			refType = 4;
 		};
 		F5793955033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIViewAdditions.h;
 			path = "Frameworks/AIUtilities Framework/AIViewAdditions.h";
 			refType = 4;
 		};
 		F5793956033E74E401A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIViewAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIViewAdditions.m";
@@ -5236,12 +5618,14 @@
 			refType = 4;
 		};
 		F5793979033E755501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AITextAttributes.h;
 			path = "Frameworks/AIUtilities Framework/AITextAttributes.h";
 			refType = 4;
 		};
 		F579397A033E755501A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AITextAttributes.m;
 			path = "Frameworks/AIUtilities Framework/AITextAttributes.m";
@@ -5260,36 +5644,42 @@
 			};
 		};
 		F579397D033E756E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListWindowController.h;
 			path = "Plugins/Dual Window Interface/AIContactListWindowController.h";
 			refType = 4;
 		};
 		F579397E033E756E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactListWindowController.m;
 			path = "Plugins/Dual Window Interface/AIContactListWindowController.m";
 			refType = 4;
 		};
 		F579397F033E756E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIDualWindowInterface.h;
 			path = "Plugins/Dual Window Interface/AIDualWindowInterface.h";
 			refType = 4;
 		};
 		F5793980033E756E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIDualWindowInterface.m;
 			path = "Plugins/Dual Window Interface/AIDualWindowInterface.m";
 			refType = 4;
 		};
 		F5793981033E756E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMessageWindowController.h;
 			path = "Plugins/Dual Window Interface/AIMessageWindowController.h";
 			refType = 4;
 		};
 		F5793982033E756E01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMessageWindowController.m;
 			path = "Plugins/Dual Window Interface/AIMessageWindowController.m";
@@ -5375,12 +5765,14 @@
 			refType = 4;
 		};
 		F579398F033E759C01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIOfflineContactHidingPlugin.h;
 			path = "Plugins/Offline Contact Hiding/AIOfflineContactHidingPlugin.h";
 			refType = 4;
 		};
 		F5793990033E759C01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIOfflineContactHidingPlugin.m;
 			path = "Plugins/Offline Contact Hiding/AIOfflineContactHidingPlugin.m";
@@ -5399,24 +5791,28 @@
 			};
 		};
 		F5793993033E75B001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMTextView.h;
 			path = "Plugins/Standard Message View/AISMTextView.h";
 			refType = 4;
 		};
 		F5793994033E75B001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMTextView.m;
 			path = "Plugins/Standard Message View/AISMTextView.m";
 			refType = 4;
 		};
 		F5793995033E75B001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMViewPlugin.h;
 			path = "Plugins/Standard Message View/AISMViewPlugin.h";
 			refType = 4;
 		};
 		F5793996033E75B001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISMViewPlugin.m;
 			path = "Plugins/Standard Message View/AISMViewPlugin.m";
@@ -5468,36 +5864,42 @@
 			refType = 4;
 		};
 		F579399D033E75CB01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLCell.h;
 			path = "Plugins/Standard Contact List View/AISCLCell.h";
 			refType = 4;
 		};
 		F579399E033E75CB01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLCell.m;
 			path = "Plugins/Standard Contact List View/AISCLCell.m";
 			refType = 4;
 		};
 		F579399F033E75CB01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLOutlineView.h;
 			path = "Plugins/Standard Contact List View/AISCLOutlineView.h";
 			refType = 4;
 		};
 		F57939A0033E75CB01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLOutlineView.m;
 			path = "Plugins/Standard Contact List View/AISCLOutlineView.m";
 			refType = 4;
 		};
 		F57939A1033E75CB01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLViewPlugin.h;
 			path = "Plugins/Standard Contact List View/AISCLViewPlugin.h";
 			refType = 4;
 		};
 		F57939A2033E75CB01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AISCLViewPlugin.m;
 			path = "Plugins/Standard Contact List View/AISCLViewPlugin.m";
@@ -5540,12 +5942,14 @@
 			};
 		};
 		F57939A9033E75FD01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactStatusColoringPlugin.h;
 			path = "Plugins/Contact Status Coloring/AIContactStatusColoringPlugin.h";
 			refType = 4;
 		};
 		F57939AA033E75FD01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIContactStatusColoringPlugin.m;
 			path = "Plugins/Contact Status Coloring/AIContactStatusColoringPlugin.m";
@@ -5615,24 +6019,28 @@
 			refType = 4;
 		};
 		F59DB3AC033EA8EC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIStatusCircle.h;
 			path = "Plugins/Status Circles/AIStatusCircle.h";
 			refType = 4;
 		};
 		F59DB3AD033EA8EC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIStatusCircle.m;
 			path = "Plugins/Status Circles/AIStatusCircle.m";
 			refType = 4;
 		};
 		F59DB3AE033EA8EC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIStatusCirclesPlugin.h;
 			path = "Plugins/Status Circles/AIStatusCirclesPlugin.h";
 			refType = 4;
 		};
 		F59DB3AF033EA8EC01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIStatusCirclesPlugin.m;
 			path = "Plugins/Status Circles/AIStatusCirclesPlugin.m";
@@ -5669,48 +6077,56 @@
 			refType = 4;
 		};
 		F59DB3B8033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2Account.h;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2Account.h";
 			refType = 4;
 		};
 		F59DB3B9033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2Account.m;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2Account.m";
 			refType = 4;
 		};
 		F59DB3BA033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2AccountViewController.h;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2AccountViewController.h";
 			refType = 4;
 		};
 		F59DB3BB033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2AccountViewController.m;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2AccountViewController.m";
 			refType = 4;
 		};
 		F59DB3BC033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2Packet.h;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2Packet.h";
 			refType = 4;
 		};
 		F59DB3BD033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2Packet.m;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2Packet.m";
 			refType = 4;
 		};
 		F59DB3BE033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2StringAdditions.h;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.h";
 			refType = 4;
 		};
 		F59DB3BF033EA90801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIMTOC2StringAdditions.m;
 			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.m";
@@ -5830,12 +6246,14 @@
 			refType = 4;
 		};
 		F59DB3D6033EA9CD01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAdium.h;
 			path = Source/AIAdium.h;
 			refType = 4;
 		};
 		F59DB3D7033EA9CD01A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAdium.m;
 			path = Source/AIAdium.m;
@@ -5860,6 +6278,7 @@
 			};
 		};
 		F59DB3E7033EB4B601A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Adium.h;
 			refType = 4;
@@ -5874,6 +6293,7 @@
 			};
 		};
 		F59DB6AD033EB74801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = main.m;
 			path = Source/main.m;
@@ -6002,7 +6422,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F59F9A8A032BE6B101A8010A = {
 			isa = PBXBundleReference;
@@ -6115,7 +6534,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5A01D8C0379813301A8010A = {
 			isa = PBXBundleReference;
@@ -6297,7 +6715,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5AAD090039BA10901A8010A = {
 			isa = PBXBundleReference;
@@ -6488,7 +6905,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5B53FC70333AFB501A8010A = {
 			isa = PBXBundleReference;
@@ -6662,7 +7078,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5BD46CF02D0789901A8010A = {
 			isa = PBXBundleReference;
@@ -6730,6 +7145,7 @@
 			refType = 4;
 		};
 		F5C8B7720358631001A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = "Default Preferences.plist";
 			path = "Plugins/AIM TOC2 Service/Default Preferences.plist";
@@ -6815,6 +7231,7 @@
 			};
 		};
 		F5CDD1170350B92801A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = "Default Preferences.plist";
 			path = "Source/Default Preferences.plist";
