@@ -35,6 +35,15 @@
 	IBOutlet	NSPopUpButton	*popUp_serviceIcons;
 	
 	IBOutlet	NSButton		*checkBox_enableMenuItem;
+	
+	IBOutlet	NSTextField		*label_logging;
+	IBOutlet	NSTextField		*label_messagesSendOn;
+	IBOutlet	NSTextField		*label_messagesTabs;
+	IBOutlet	NSTextField		*label_menuItem;
+	IBOutlet	NSTextField		*label_switchTabsWith;
+	IBOutlet	NSTextField		*label_serviceIcons;
+	IBOutlet	NSTextField		*label_statusIcons;
+	IBOutlet	NSTextField		*label_sound;
 }
 
 - (IBAction)selectVolume:(id)sender;

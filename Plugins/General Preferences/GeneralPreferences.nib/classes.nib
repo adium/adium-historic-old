@@ -43,6 +43,14 @@
                 "checkBox_messagesInTabs" = NSButton; 
                 "checkBox_sendOnEnter" = NSButton; 
                 "checkBox_sendOnReturn" = NSButton; 
+                "label_logging" = NSTextField; 
+                "label_menuItem" = NSTextField; 
+                "label_messagesSendOn" = NSTextField; 
+                "label_messagesTabs" = NSTextField; 
+                "label_serviceIcons" = NSTextField; 
+                "label_sound" = NSTextField; 
+                "label_statusIcons" = NSTextField; 
+                "label_switchTabsWith" = NSTextField; 
                 "popUp_outputDevice" = NSPopUpButton; 
                 "popUp_serviceIcons" = NSPopUpButton; 
                 "popUp_statusIcons" = NSPopUpButton; 
