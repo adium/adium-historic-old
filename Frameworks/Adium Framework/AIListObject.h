@@ -17,6 +17,8 @@
 
 #import "ESObjectWithStatus.h"
 
+#define	KEY_ORDER_INDEX	@"Order Index"
+
 typedef enum {
 	AIAvailableStatus = 'avaL',
 	AIAwayStatus = 'awaY',
@@ -37,6 +39,9 @@ typedef enum {
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
+- (float)smallestOrder;
+- (float)largestOrder;
+- (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex;
 @end
 
 @interface AIListObject : ESObjectWithStatus{

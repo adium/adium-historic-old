@@ -22,6 +22,9 @@
 	
 	NSMutableArray		*containedObjects;	//Manually ordered array of contents
     BOOL				expanded;			//Exanded/Collapsed state of this object
+	
+	float				largestOrder;
+	float				smallestOrder;
 }
 
 - (id)initWithUID:(NSString *)inUID;

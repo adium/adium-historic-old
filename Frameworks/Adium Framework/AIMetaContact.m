@@ -44,6 +44,9 @@
 	containsOnlyOneService = YES;
 	expanded = YES;
 	
+	largestOrder = 1.0;
+	smallestOrder = 1.0;
+		
 	return(self);
 }
 
@@ -825,6 +828,26 @@
 - (BOOL)isExpanded
 {
     return(expanded);
+}
+
+//Order index
+- (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex
+{
+	if (inOrderIndex > largestOrder){
+		largestOrder = inOrderIndex;
+	}else if (inOrderIndex < smallestOrder){
+		smallestOrder = inOrderIndex;
+	}
+}
+
+- (float)smallestOrder
+{
+	return smallestOrder;
+}
+
+- (float)largestOrder
+{
+	return largestOrder;
 }
 
 @end
