@@ -41,10 +41,10 @@
 	if([argumentArray count]){
 		NSAppleEventDescriptor  *arguments = [[[NSAppleEventDescriptor alloc] initListDescriptor] autorelease];
 		NSEnumerator			*enumerator = [argumentArray objectEnumerator];
-		NSData					*object;
-		
+		NSString				*object;
+
 		while(object = [enumerator nextObject]){
-			[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithDescriptorType:typeChar data:object]
+			[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:object]
 								atIndex:[arguments numberOfItems]+1]; //This +1 seems wrong... but it's not :)
 		}
 		
