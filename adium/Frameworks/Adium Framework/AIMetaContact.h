@@ -6,12 +6,16 @@
 
 #import "AIListGroup.h"
 
+#define META_SERVICE_STRING				AILocalizedString(@"Meta",nil)
+
 @interface AIMetaContact : AIListContact {
 	NSNumber				*objectID;
 	
 	NSMutableDictionary		*statusCacheDict;	//Cache of the status of our contained objects
 	
 	AIListContact			*_preferredContact;
+	
+	BOOL					containsOnlyOneUniqueContact;
 }
 
 //The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance
@@ -26,6 +30,6 @@
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
 
-
+- (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact;
 
 @end

@@ -21,6 +21,7 @@
 - (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify;
 
 - (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
+- (void)_determineIfWeShouldAppearToContainOnlyOneContact;
 @end
 
 @implementation AIMetaContact
@@ -35,7 +36,9 @@
 	[super initWithUID:[objectID stringValue] serviceID:nil];
 
 	containedObjects = [[NSMutableArray alloc] init];
-
+	
+	containsOnlyOneUniqueContact = YES;
+	
 	return(self);
 }
 
@@ -70,6 +73,34 @@
 	BOOL	success = NO;
 	
 	if(![containedObjects containsObject:inObject]){
+		
+		//Check if we will still be unique after adding this contact
+		if (containsOnlyOneUniqueContact){
+			//If the new object's formattedUID isn't the same as ours, we no longer can claim to only have one
+			//unique contact
+			NSString	*currentUID = [self formattedUID];
+			NSString	*currentService = [self displayServiceID];
+			
+			NSString	*newUID = [inObject formattedUID];
+			NSString	*newService = [inObject displayServiceID];
+			
+			//If newUID is nil, then the containedContact is a metaContact with multiple unique contacts... 
+			//so we are no longer unique.
+			//If we have a currentUID, and it's not the same as the new one, we are no longer unique.
+			//Similarly, if we have a currentUID and our serviceID isn't the same as the new one, we are no longer unique.
+			if ((newUID == nil) ||
+				(currentUID && (![currentUID isEqualToString:newUID] || ![currentService isEqualToString:newService]))){
+				
+				containsOnlyOneUniqueContact = NO;
+
+				if ([containingObject isKindOfClass:[AIMetaContact class]]){
+					[(AIMetaContact *)containingObject containedMetaContact:self
+									  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
+				}
+				
+			}
+		}
+		
 		[inObject setContainingObject:self];
 		[containedObjects addObject:inObject];
 		[self _updateCachedStatusOfObject:inObject];
@@ -87,6 +118,12 @@
 		[self _removeCachedStatusOfObject:inObject];
 		[inObject setContainingObject:[self containingObject]];
 		[containedObjects removeObject:inObject];
+		
+		//Only need to check if we are now unique if we weren't unique before, since we've either become
+		//unique are stayed the same.
+		if (!containsOnlyOneUniqueContact){
+			[self _determineIfWeShouldAppearToContainOnlyOneContact];
+		}
 	}
 }
 
@@ -132,6 +169,140 @@
 	return _preferredContact;
 }
 
+- (BOOL)containsOnlyOneUniqueContact
+{
+	return containsOnlyOneUniqueContact;
+}
+
+- (NSString *)formattedUID
+{
+	if (containsOnlyOneUniqueContact){
+		return([[self preferredContact] formattedUID]);
+	}else{
+		return nil;
+	}
+}
+
+
+- (NSString *)displayServiceID
+{
+	if (containsOnlyOneUniqueContact){
+		return([[self preferredContact] displayServiceID]);
+	}else{
+		return nil;
+	}
+}
+
+- (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact
+{
+	//If the contained meta contact's status isn't the same as our current one - i.e.
+	//It now contains multiple contacts, but we currently think we are unique
+	//--OR--
+	//It now contains only one contact, but currently think we are not unique
+	//
+	//then we need to redetermine our uniqueness.
+	NSLog(@"%i: %@ changed to %i",containsOnlyOneUniqueContact,containedMetaContact,inContainsOnlyOneUniqueContact);
+	if (inContainsOnlyOneUniqueContact != containsOnlyOneUniqueContact){
+		[self _determineIfWeShouldAppearToContainOnlyOneContact];
+	}
+}
+
+//When do we claim to contain only one contact?
+//		- When all online contacts within the metaContact have the same UID and service
+//			-OR-
+//		- When all contacts within the metaContact are offline and have the same UID and service
+//This makes the UID and service information presented to the user as accurate as possible for at-a-glance
+//knowlege of the metaContact's effective contents
+- (void)_determineIfWeShouldAppearToContainOnlyOneContact
+{
+	int count = [self containedObjectsCount];
+	
+	if (count > 1){
+		NSString	*formattedUIDToMatch = nil;
+		NSString	*serviceIDToMatch = nil;
+		
+		NSString	*offline_formattedUIDToMatch = nil;
+		NSString	*offline_serviceIDToMatch = nil;
+		
+		int i;
+		for (i = 0; i < count; i++){
+			AIListContact   *thisContact = [self objectAtIndex:i];
+			
+			NSString	*thisContactFormattedUID;
+			NSString	*thisContactServiceID;
+			
+			thisContactFormattedUID = [thisContact formattedUID];
+			thisContactServiceID = [thisContact displayServiceID];
+			
+			if ([thisContact online]){
+				NSLog(@"%@ is online (%@)",thisContact,thisContactFormattedUID);
+				//If this contact has no formattedUID, it isn't unique, so break
+				if (!thisContactFormattedUID)
+					break;
+				
+				//If we don't have a set of data to match yet, this contact is our target
+				if (!formattedUIDToMatch){
+					formattedUIDToMatch = thisContactFormattedUID;
+					serviceIDToMatch = thisContactServiceID;
+					NSLog(@"ONLINE: Going to match %@",formattedUIDToMatch);
+				}else{
+					//Otherwise, compare this contact to our target
+					if ((![thisContactFormattedUID isEqualToString:formattedUIDToMatch]) ||
+						(![thisContactServiceID isEqualToString:serviceIDToMatch])){
+						NSLog(@"%@ doesn't match %@ so breaking",thisContactFormattedUID,thisContactServiceID);
+						break;
+					}
+				}
+			}else{
+				NSLog(@"%@ is offline",thisContact);
+				//If we're not searching for a match, we haven't found an online contact yet
+				if (!formattedUIDToMatch){
+					//If we don't have a set of data for an offline contact to match yet,
+					//this offline contact is our target, which will be needed only if we find no
+					//online targets
+					if (!offline_formattedUIDToMatch){
+						offline_formattedUIDToMatch = thisContactFormattedUID;
+						offline_serviceIDToMatch = thisContactServiceID;
+						NSLog(@"OFFLINE: Going to match %@",offline_formattedUIDToMatch);
+
+					}else{
+						//Otherwise, compare this contact to our target
+						if ((![thisContactFormattedUID isEqualToString:offline_formattedUIDToMatch]) ||
+							(![thisContactServiceID isEqualToString:offline_serviceIDToMatch])){
+							
+							//This offline contact does not match our previous offline contact.
+							//We will no work on the assumption that we do not contain only one unique contact.
+							//If all the online contacts match, however, this flag will be changed to YES
+							//once the search is complete.
+							containsOnlyOneUniqueContact = NO;
+						}
+					}		
+				}
+			}
+		}
+		
+		/*
+		 If we made it all the way through the loop, and we were looking at online contacts
+		 (and hence formattedUIDToMatch != nil), all our contacts have the same formattedUID
+		 */
+		NSLog(@"i: %i, count: %i, formattedUIDToMatch: %@, was %i",i,count,formattedUIDToMatch,containsOnlyOneUniqueContact);
+		if ((i == count) && formattedUIDToMatch){
+			containsOnlyOneUniqueContact = YES;
+			NSLog(@"Now 1");
+		}
+		
+	}else{
+		
+		if (count == 1) {
+			//With only one contact, we are as unique as the contact we contain...
+			containsOnlyOneUniqueContact = ([[self objectAtIndex:0] formattedUID] != nil);
+		}else{
+			containsOnlyOneUniqueContact = YES;
+		}
+	}	
+}
+
+
 //Status Object Handling -----------------------------------------------------------------------------------------------
 #pragma mark Status Object Handling
 //Update our status cache as object we contain change status
@@ -140,11 +311,20 @@
 	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
 		[super listObject:self didSetStatusObject:value forKey:key notify:notify];
+	}
+	
+	//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
+	{
+		//If the online status of a contained object changed, we should also check if our one-contact-only
+		//in terms of online contacts has changed
+		if ([key isEqualToString:@"Online"]){
+			NSLog(@"%@ set %@ for %@",inObject,value,key);
+			_preferredContact = nil;
+			[self _determineIfWeShouldAppearToContainOnlyOneContact];
+		}
 		
-		//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
-		if ([key isEqualToString:@"Online"] ||
-			[key isEqualToString:@"Away"] ||
-			[key isEqualToString:@"IdleSince"]){
+		if([key isEqualToString:@"Away"] ||
+		   [key isEqualToString:@"IdleSince"]){
 			
 			_preferredContact = nil;
 		}
