@@ -15,7 +15,7 @@
  * @protocol AIOutlineViewDelegate
  * @brief Delegate protocol for <tt>AIOutlineView</tt>
  *
- * Delegate protocol for <tt>AIOutlineView</tt>.  Implementation of all methods is optional.
+ * Implementation of all methods is optional.
  */
 @protocol AIOutlineViewDelegate
 /*!
