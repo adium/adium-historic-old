@@ -16,14 +16,9 @@
 
 @interface SHFireFoxBookmarksImporter(PRIVATE)
 - (NSString *)bookmarkPath;
-//- (void)parseBookmarksFile:(NSString *)inString;
 @end
 
 @implementation SHFireFoxBookmarksImporter
-
-static NSMenu   *firefoxBookmarksMenu;
-//static NSMenu   *firefixBookmarksSupermenu;
-//static NSMenu   *firefoxTopMenu;
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -31,34 +26,14 @@ static NSMenu   *firefoxBookmarksMenu;
     return [[[self alloc] init] autorelease];
 }
 
-+(NSString *)importerTitle
+- (NSArray *)availableBookmarks
 {
-    return FIREFOX_ROOT_MENU_TITLE;
-}
-
--(NSMenu *)parseBookmarksForOwner:(id)inObject
-{
-    owner = inObject;
-    NSString        *bookmarkString = [NSString stringWithContentsOfFile:[self bookmarkPath]];
+    NSString    *bookmarkString = [NSString stringWithContentsOfFile:[self bookmarkPath]];
     
-    // remove our root menu, if it exists
-    if(firefoxBookmarksMenu){
-        [firefoxBookmarksMenu removeAllItems];
-        [firefoxBookmarksMenu release];
-    }
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath] traverseLink:YES];
+    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    // store the modification date for future reference
-    if (lastModDate) [lastModDate release];
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath] traverseLink:YES];
-    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    firefoxBookmarksMenu = [[[NSMenu alloc] initWithTitle:FIREFOX_ROOT_MENU_TITLE] autorelease];
-//    firefixBookmarksSupermenu = firefoxBookmarksMenu;
-//    firefoxTopMenu = firefoxBookmarksMenu;
-    //[self parseBookmarksFile:bookmarkString];
-    [SHMozillaCommonParser parseBookmarksfromString:bookmarkString forOwner:owner andMenu:firefoxBookmarksMenu];
-    
-    return firefoxBookmarksMenu;
+    return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
 -(BOOL)bookmarksExist
@@ -92,72 +67,5 @@ static NSMenu   *firefoxBookmarksMenu;
     }
     return FIREFOX_BOOKMARKS_PATH;
 }
-
-//- (void)parseBookmarksFile:(NSString *)inString
-//{
-//    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-//    NSString    *titleString, *urlString;
-//    
-//    while(![linkScanner isAtEnd]){
-//        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
-//            [linkScanner setScanLocation:[inString length]];
-//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
-//            [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-//            [linkScanner scanUpToString:@">" intoString:nil];
-//            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-//            [linkScanner scanUpToString:@"</H" intoString:&titleString];
-//
-//            if(titleString){
-//                //if we have a title string, decode any html stuff in it.
-//                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
-//            }
-//            
-//            firefixBookmarksSupermenu = firefoxBookmarksMenu;
-//            firefoxBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
-//        
-//            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
-//                                                                         target:owner
-//                                                                         action:nil
-//                                                                  keyEquivalent:@""] autorelease];
-//            [firefixBookmarksSupermenu addItem:mozillaSubmenuItem];
-//            [firefixBookmarksSupermenu setSubmenu:firefoxBookmarksMenu forItem:mozillaSubmenuItem];
-//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
-//            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-//            [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
-//            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-//            [linkScanner scanUpToString:@"\"" intoString:&urlString];
-//                
-//            [linkScanner scanUpToString:@"\">" intoString:nil];
-//            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
-//            [linkScanner scanUpToString:@"</A" intoString:&titleString];
-//            
-//            if(titleString){
-//                // decode html stuff
-//                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
-//            }
-//                
-//            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
-//                                                                  withValidationStatus:SH_URL_VALID
-//                                                                          parentString:titleString? titleString : urlString
-//                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
-//                                                                          
-//            [firefoxBookmarksMenu addItemWithTitle:titleString? titleString : urlString
-//                                            target:owner
-//                                            action:@selector(injectBookmarkFrom:)
-//                                     keyEquivalent:@""
-//                                 representedObject:markedLink];
-//        
-//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
-//            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-//            if([firefoxBookmarksMenu isNotEqualTo:firefoxTopMenu]){
-//                firefoxBookmarksMenu = firefixBookmarksSupermenu;
-//                firefixBookmarksSupermenu = [firefixBookmarksSupermenu supermenu];
-//            }
-//        }else{
-//            [linkScanner scanUpToString:@"<" intoString:nil];
-//            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-//        }
-//    }
-//}
 
 @end

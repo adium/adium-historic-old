@@ -13,9 +13,4 @@
     NSDate  *lastModDate;
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject;
--(NSString *)menuTitle;
--(BOOL)bookmarksExist;
--(BOOL)bookmarksUpdated;
-
 @end

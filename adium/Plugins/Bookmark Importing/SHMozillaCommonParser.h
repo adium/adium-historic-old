@@ -7,6 +7,6 @@
 @interface SHMozillaCommonParser : NSObject {
 }
 
-+ (void)parseBookmarksfromString:(NSString *)inString forOwner:(id)owner andMenu:(NSMenu *)BookmarksMenu;
++ (NSArray *)parseBookmarksfromString:(NSString *)inString;
 + (NSString *)simplyReplaceHTMLCodes:(NSString *)inString;
 @end
