@@ -26,6 +26,7 @@
 - (void)installAwayMenu;
 - (void)updateAwayMenu;
 - (void)rebuildSavedAways;
+- (BOOL)shouldConfigureForAway;
 @end
 
 @implementation AIAwayMessagesPlugin
@@ -176,13 +177,17 @@
 
     
     //Add it to the menubar
-    [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
+    if([self shouldConfigureForAway]){
+        [[owner menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
+    }else{
+        [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
+    }
 }
 
 //Update the away message menu
 - (void)updateAwayMenu
 {
-    BOOL shouldConfigureForAway = ([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey];
+    BOOL shouldConfigureForAway = [self shouldConfigureForAway];
 
     if(shouldConfigureForAway != menuConfiguredForAway){
         //Swap the menu items
@@ -204,6 +209,11 @@
 
         menuConfiguredForAway = shouldConfigureForAway;
     }
+}
+
+- (BOOL)shouldConfigureForAway
+{
+    return(([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
 }
 
 - (void)rebuildSavedAways

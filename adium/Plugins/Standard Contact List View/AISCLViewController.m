@@ -12,6 +12,9 @@
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 
+#define TOOL_TIP_CHECK_INTERVAL	5.0	//Check for mouse movement 5 times a second
+#define TOOL_TIP_DELAY 		3	//Number of check intervals of no movement before a tip is displayed
+
 @interface AISCLViewController (PRIVATE)
 - (AISCLViewController *)initWithOwner:(id)inOwner;
 - (void)contactListChanged:(NSNotification *)notification;
@@ -25,8 +28,9 @@
 - (void)mouseExited:(NSEvent *)theEvent;
 - (void)_endTrackingMouse;
 - (void)mouseMoved:(NSEvent *)theEvent;
-- (void)_showTooltipForEvent:(NSEvent *)theEvent;
+- (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 - (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView;
+- (void)updateTooltipTrackingRect;
 @end
 
 @implementation AISCLViewController
@@ -45,6 +49,8 @@
     owner = [inOwner retain];
     tooltipTrackingTag = 0;
     trackingMouseMovedEvents = NO;
+    tooltipTimer = nil;
+    tooltipCount = 0;
 
     //Apply the preferences to our view
     [self preferencesChanged:nil];
@@ -204,108 +210,10 @@
 //Frame changed, reinstall cursor tracking rect
 - (void)frameDidChange:(NSNotification *)notification
 {
-    NSView		*windowContentView = [[contactListView window] contentView];
-    NSScrollView	*scrollView = [contactListView enclosingScrollView];
-    NSPoint		localPoint;
-    BOOL		mouseInside;
-    NSRect		trackingRect;
-    
-    [self _endTrackingMouse]; //Hide any open tooltips
-
-    //Remove the existing tracking rect
-    [windowContentView removeTrackingRect:tooltipTrackingTag];
-
-    //If the mouse is already inside, start tracking
-    localPoint = [[contactListView window] convertScreenToBase:[NSEvent mouseLocation]];
-    mouseInside = NSPointInRect(localPoint, [scrollView frame]);
-    if(mouseInside){
-        [self mouseEntered:nil];
-        //Once I put a delay on the tooltips, the _showTipForEvent method will no longer be in mouse entered, and this will work correctly.
-    }
-    
-    //Add a new tracking rect, remembering the view we added it to
-    trackingRect = [scrollView frame];
-    trackingRect.size.width = [scrollView contentSize].width; //Adjust to not include the scrollbar
-    tooltipTrackingTag = [windowContentView addTrackingRect:trackingRect
-                                                      owner:self
-                                                   userData:scrollView
-                                               assumeInside:mouseInside];
+    //Update the tooltip tracking rect
+    [self updateTooltipTrackingRect];
 }
 
-//Called when the mouse enters the view
-- (void)mouseEntered:(NSEvent *)theEvent
-{
-    trackingMouseMovedEvents = YES;
-    [contactListView setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
-
-    //Start our mouse movement timer
-    tooltipTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/5.0)
-                                                     target:self
-                                                   selector:@selector(tooltipTimer:)
-                                                   userInfo:nil
-                                                    repeats:YES] retain];
-}
-#define TOOL_TIP_DELAY 3
-- (void)tooltipTimer:(NSTimer *)inTimer
-{
-    if(toolTipCount > TOOL_TIP_DELAY){
-        [self _showTooltipForEvent:/*theEvent*/nil]; //Show the tooltip
-    }
-}
-
-//Called when the mouse leaves the view
-- (void)mouseExited:(NSEvent *)theEvent
-{
-    [self _endTrackingMouse];
-}
-
-//Stop tracking mouse events
-- (void)_endTrackingMouse
-{
-    trackingMouseMovedEvents = NO;
-    [contactListView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
-    [self _showTooltipForEvent:nil]; //Hide the tooltip
-
-    toolTipCount = 0;
-    [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil;
-}
-
-//Called as the mouse moves across the view
-- (void)mouseMoved:(NSEvent *)theEvent
-{
-    if(trackingMouseMovedEvents){
-        if(toolTipCount > TOOL_TIP_DELAY){
-            [self _showTooltipForEvent:theEvent];    
-        }else{
-            toolTipCount = 0;
-        }
-    }
-}
-
-//Show the correctly positioned tooltip
-- (void)_showTooltipForEvent:(NSEvent *)theEvent
-{
-    if(theEvent){
-        if([[contactListView window] isKeyWindow]){
-            NSPoint		viewPoint, screenPoint;
-            AIListObject	*hoveredObject;
-            int			hoveredRow;
-    
-            //Extract data from the event
-            viewPoint = [contactListView convertPoint:[theEvent locationInWindow] fromView:nil];
-            screenPoint = [[theEvent window] convertBaseToScreen:[theEvent locationInWindow]];
-    
-            //Get the hovered contact
-            hoveredRow = [contactListView rowAtPoint:viewPoint];
-            hoveredObject = [contactListView itemAtRow:hoveredRow];
-    
-            //Show tooltip for it
-            [[owner interfaceController] showTooltipForListObject:hoveredObject atPoint:screenPoint];
-        }
-    }else{
-        [[owner interfaceController] showTooltipForListObject:nil atPoint:NSMakePoint(0,0)];
-    }
-}
 
 
 //Double click in outline view
@@ -395,7 +303,6 @@
         [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
     
     }
-
 }
 
 //Correctly sets the contact groups as expanded or collapsed, depending on their saved state
@@ -439,4 +346,133 @@
     }
 }
 
+
+
+// Tooltips ------------------------------------------------------------------------------------
+//Add a tracking rect to catch when the mouse enters/exits our view
+- (void)updateTooltipTrackingRect
+{
+    NSView		*windowContentView = [[contactListView window] contentView];
+    NSScrollView	*scrollView = [contactListView enclosingScrollView];
+    NSRect	 	trackingRect;
+    NSPoint		localPoint;
+    BOOL		mouseInside;
+
+    [self _endTrackingMouse]; //Hide any open tooltips
+
+    //Remove the existing tracking rect
+    [windowContentView removeTrackingRect:tooltipTrackingTag];
+
+    //Add a new tracking rect
+    trackingRect = [scrollView frame];
+    trackingRect.size.width = [scrollView contentSize].width; //Adjust to not include the scrollbar
+    tooltipTrackingTag = [windowContentView addTrackingRect:trackingRect
+                                                      owner:self
+                                                   userData:scrollView
+                                               assumeInside:mouseInside];
+
+    //If the mouse is already inside, start tracking
+    localPoint = [[contactListView window] convertScreenToBase:[NSEvent mouseLocation]];
+    mouseInside = NSPointInRect(localPoint, [scrollView frame]);
+    if(mouseInside){
+        [self mouseEntered:nil];
+    }
+
+}
+
+//Called when the mouse enters the view
+// - When the mouse enters, we being tracking cursor movement.
+// - tooltipCount starts at 0.  It is periodically incremented.
+// - If the mouse moves, tooltipCount is reset to 0
+// When the user holds the mouse still over the contact list, tooltipCount will eventually get larger than TOOL_TIP_DELAY.  When this happens, we begin displaying tooltips.
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+    NSLog(@"mouseEntered");
+    trackingMouseMovedEvents = YES;
+    [contactListView setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
+
+    //Start our mouse movement timer
+    tooltipCount = 0;
+    tooltipTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/TOOL_TIP_CHECK_INTERVAL)
+                                                     target:self
+                                                   selector:@selector(tooltipTimer:)
+                                                   userInfo:nil
+                                                    repeats:YES] retain];
+}
+
+//Increment the tooltipCount variable
+- (void)tooltipTimer:(NSTimer *)inTimer
+{
+    tooltipCount++;
+    NSLog(@"tooltipTimer %i",tooltipCount);
+
+    if(tooltipCount > TOOL_TIP_DELAY){ //If the user has held still long enough
+        [self _showTooltipAtPoint:[NSEvent mouseLocation]]; //Show the tooltip
+        [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+    }
+}
+
+//Called when the mouse leaves the view
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    [self _endTrackingMouse];
+}
+
+//Stop tracking mouse events, stop displaying tooltips
+- (void)_endTrackingMouse
+{
+    trackingMouseMovedEvents = NO;
+    [contactListView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
+    [self _showTooltipAtPoint:NSMakePoint(0,0)]; //Hide the tooltip
+    [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+}
+
+
+//Called as the mouse moves across the view
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    if(trackingMouseMovedEvents){
+        if(tooltipCount > TOOL_TIP_DELAY){ //If we are displaying tooltips
+            //Update the displayed tooltip
+            NSLog(@"mouseMoved (show)");
+            [self _showTooltipAtPoint:[[theEvent window] convertBaseToScreen:[theEvent locationInWindow]]];
+        }else{
+            //Otherwise, reset tooltipCount to 0 since the mouse has moved
+            NSLog(@"mouseMoved (reset)");
+            tooltipCount = 0;
+        }
+    }
+}
+
+//Show the correctly positioned tooltip (Pass a screen point)
+//Pass (0,0) to hide the tooltip
+- (void)_showTooltipAtPoint:(NSPoint)screenPoint
+{
+    NSLog(@"_showTooltipAtPoint");
+    if(screenPoint.x != 0 && screenPoint.y != 0){
+        if([[contactListView window] isKeyWindow]){
+            NSPoint		viewPoint;
+            AIListObject	*hoveredObject;
+            int			hoveredRow;
+
+            //Extract data from the event
+            viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
+
+            //Get the hovered contact
+            hoveredRow = [contactListView rowAtPoint:viewPoint];
+            hoveredObject = [contactListView itemAtRow:hoveredRow];
+
+            //Show tooltip for it
+            [[owner interfaceController] showTooltipForListObject:hoveredObject atPoint:screenPoint];
+        }
+    }else{
+        [[owner interfaceController] showTooltipForListObject:nil atPoint:NSMakePoint(0,0)];
+    }
+}
+
 @end
+
+
+
+
+
