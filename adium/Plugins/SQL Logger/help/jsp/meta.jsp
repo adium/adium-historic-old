@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/22 20:08:07 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/24 16:39:37 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -75,6 +75,14 @@ try {
 
     int height = rset.getInt("height");
 
+    pstmt = conn.prepareStatement("select (max(length(username || display_name)) + 5) * 5 as width from adium.users natural join adium.user_display_name where not exists (select 'x' from adium.user_display_name where user_id = users.user_id and effdate < user_display_name.effdate)");
+
+    rset = pstmt.executeQuery();
+
+    rset.next();
+
+    int longDispWidth = rset.getInt(1);
+
     pstmt = conn.prepareStatement("select meta_id, name " +
         " from adium.meta_container order by name");
 
@@ -109,7 +117,7 @@ try {
         out.println("</table>");
         out.println("</div>");
 
-        metaStmt = conn.prepareStatement("select user_id, service, scramble(username) as username, display_name from adium.users natural join adium.meta_contact natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where effdate > udn.effdate and user_id = users.user_id)");
+        metaStmt = conn.prepareStatement("select user_id, service, scramble(username) as username, display_name, preferred from adium.users natural join adium.meta_contact natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where effdate > udn.effdate and user_id = users.user_id) order by display_name, username");
 
         metaStmt.setInt(1, rset.getInt("meta_id"));
 
@@ -119,8 +127,15 @@ try {
             out.println("<p>" + metaSet.getString("display_name")  +
                 " (" + metaSet.getString("service") + "." +
                 metaSet.getString("username") + ")");
-            out.println("<span class=\"remove\">" +
-            "<a href=\"removeMetaContact.jsp?meta_id=" +
+            out.println("<span class=\"remove\">");
+
+            if(!metaSet.getBoolean("preferred")) {
+                out.println("<a href=\"updatePreferredMeta.jsp?meta_id=" +
+                    rset.getString("meta_id") + "&amp;user_id=" +
+                    metaSet.getString("user_id") + "\">Set Preferred</a>");
+            }
+
+            out.println("<a href=\"removeMetaContact.jsp?meta_id=" +
                 rset.getString("meta_id") + "&amp;user_id=" +
                 metaSet.getString("user_id") + "\">Remove</a></span></p>");
         }
@@ -129,7 +144,7 @@ try {
             rset.getString("meta_id"));
 %>
 <p><a href="#"
-    onClick="window.open('<%= formURL %>', 'Add Contact', 'width=450,height=100')">
+    onClick="window.open('<%= formURL %>', 'Add Contact', 'width=<%= longDispWidth %>,height=100')">
                 Add Contact ...
             </a></p>
 

@@ -17,6 +17,7 @@ try {
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
+String name = new String();
 
 try {
     pstmt = conn.prepareStatement("select name, key_id, key_name, coalesce(value, '') as value from adium.meta_container natural join adium.information_keys natural left join adium.contact_information where meta_id = ? and delete = false order by key_name");
@@ -24,10 +25,15 @@ try {
     pstmt.setInt(1, meta_id);
 
     rset = pstmt.executeQuery();
-    rset.next();
+    if(rset.isBeforeFirst()) {
+        rset.next();
+        name = rset.getString("name");
+        rset.beforeFirst();
+    }
+
 %>
 <html>
-    <head><title>Edit Meta-Contact <%= rset.getString("name") %></title></head>
+    <head><title>Edit Meta-Contact <%= name %></title></head>
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
     <link rel="stylesheet" type="text/css" href="styles/users.css" />
     <body style="background :#fff">
@@ -39,24 +45,24 @@ try {
             </td>
             <td>
             <input type="text" name="name" size="20"
-                value="<%= rset.getString("name")%>"/>
+                value="<%= name %>"/>
             </td>
             </tr>
 <%
-    rset.beforeFirst();
+    if(rset.isBeforeFirst()) {
+        while(rset.next()) {
+            out.println("<tr><td align=\"right\">");
+            out.println("<label for=\"" + rset.getString("key_name") + "\">" +
+                rset.getString("key_name") + "</label>");
 
-    while(rset.next()) {
-        out.println("<tr><td align=\"right\">");
-        out.println("<label for=\"" + rset.getString("key_name") + "\">" +
-            rset.getString("key_name") + "</label>");
+            out.println("</td><td>");
 
-        out.println("</td><td>");
+            out.println("<input type=\"text\" name=\"" +
+                rset.getString("key_id") + "\" size=\"20\" value=\"" +
+                rset.getString("value") + "\">");
 
-        out.println("<input type=\"text\" name=\"" +
-            rset.getString("key_id") + "\" size=\"20\" value=\"" +
-            rset.getString("value") + "\">");
-
-        out.println("</td></tr>");
+            out.println("</td></tr>");
+        }
     }
 
 %>

@@ -247,6 +247,11 @@ key_name        text not null,
 delete          boolean default false
 );
 
+insert into adium.information_keys (key_name) values ('Location');
+insert into adium.information_keys (key_name) values ('URL');
+insert into adium.information_keys (key_name) values ('Email');
+insert into adium.information_keys (key_name) values ('Notes');
+
 create table adium.contact_information (
 meta_id         int references adium.meta_container (meta_id),
 user_id         int references adium.users (user_id),

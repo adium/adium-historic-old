@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/22 20:08:07 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/24 16:39:37 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -129,7 +129,6 @@ try {
         out.print("<h2>" + rset.getString("display_name") + " (" +
             rset.getString("username") + ")</h2>");
         out.println("<div class=\"meta\">");
-        out.print("<div class=\"personal_info\">");
 
         infoStmt = conn.prepareStatement("select key_name, value from adium.user_contact_info where user_id = ? order by key_name");
 
@@ -146,35 +145,9 @@ try {
                 "</td></tr>");
         }
         out.println("</table>");
-        out.println("</div>");
 
 
-        metaStmt = conn.prepareStatement("select meta_id, name, preferred from meta_container natural join meta_contact where user_id = ? order by name");
-
-        metaStmt.setInt(1, rset.getInt("user_id"));
-
-        metaSet = metaStmt.executeQuery();
-
-        if(metaSet != null && metaSet.isBeforeFirst()) {
-            out.println("<p>Select preferred meta-contact for this user:</p>");
-
-            out.println("<form action=\"updatePreferredMeta.jsp\" method=\"get\">");
-            out.println("<input type=\"hidden\" name=\"user_id\" value=\"" +
-                rset.getInt("user_id") + "\" />");
-            while(metaSet.next()) {
-                out.print("<input type=\"radio\" name=\"meta_id\" value=\"" + metaSet.getString("meta_id") +
-                    "\"");
-                if(metaSet.getBoolean("preferred")) {
-                    out.print(" checked=\"checked\"");
-                }
-                out.print(" />" + metaSet.getString("name") + "<br />");
-            }
-
-            out.println("<span style=\"float:right; padding-right: 225px\"><input type=\"submit\"></span>");
-            out.println("</form>");
-        }
 %>
-            <div style="clear:both">&nbsp;</div>
         </div>
 <%
 

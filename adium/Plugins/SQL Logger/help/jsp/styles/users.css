@@ -1,6 +1,6 @@
 .personal_info {
     float: right;
-    border-left: 2px solid #000;
+    border-left: 1px solid #000;
     text-align:right;
     width: 225px;
 }
@@ -16,13 +16,13 @@
 }
 
 .meta p {
-    padding-left: 10px;
     padding-top: 5px;
 }
 
 .meta {
-    border-top: 2px solid #000;
+    border-top: 1px solid #000;
     padding-bottom: 15px;
+    padding-left: 10px;
 }
 
 .personal_info td.left {
