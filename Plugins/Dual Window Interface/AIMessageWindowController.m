@@ -210,11 +210,11 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
-    enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];
+	enumerator = [[tabView_messages tabViewItems] reverseObjectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
 		[[adium interfaceController] closeChat:[tabViewItem chat]];
     }
-	
+
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
 	//window is no longer visible, since in that case another window will have already became active.
 	if([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
