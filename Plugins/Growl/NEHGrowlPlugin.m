@@ -27,6 +27,7 @@
 #define GROWL_FT_BEGAN						@"File Transfer Began"
 #define GROWL_FT_CANCELED					@"File Transfer Canceled"
 #define GROWL_FT_COMPLETE					@"File Transfer Complete"
+#define GROWL_UNKNOWN						@"Unknown Event"
 
 //-------------------------------------------------------------------
 //In order to add another notification to this plugin:
@@ -196,14 +197,17 @@
 			
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			if(![NSApp isActive]) {
-				if([NSApp isHidden])
+				if([NSApp isHidden]) {
 					description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
-				else
+					note = GROWL_HIDDEN_MESSAGE;
+				} else {
 					description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while in background"), message];
+					note = GROWL_BACKGROUND_MESSAGE;
+				}
 			} else {
+				note = GROWL_UNKNOWN;
 				return;
 			}
-			note = GROWL_HIDDEN_MESSAGE;
 		}else if([notificationName isEqualToString: FILE_TRANSFER_REQUEST]) {
 			description = AILocalizedString(@"wants to send you a file","");
 			note = GROWL_FT_REQUEST;
@@ -217,32 +221,34 @@
 			description = AILocalizedString(@"completed a file transfer","");
 			note = GROWL_FT_COMPLETE;
 		}else{
-			NSLog(@"Unknown notification: %@",notificationName);
+			//NSLog(@"Unknown notification: %@",notificationName);
+			note = GROWL_UNKNOWN;
 			return;
 		}
-
-		iconData = [contact userIconData];
 		
-		if (!iconData) {
-			iconData = [[AIServiceIcons serviceIconForObject:contact
-					type:AIServiceIconLarge
-					direction:AIIconNormal] TIFFRepresentation];
+		if (![note isEqualToString:GROWL_UNKNOWN]) {
+			iconData = [contact userIconData];
+			
+			if (!iconData) {
+				iconData = [[AIServiceIcons serviceIconForObject:contact
+						type:AIServiceIconLarge
+						direction:AIIconNormal] TIFFRepresentation];
+			}
+			
+			NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
+											note, GROWL_NOTIFICATION_NAME,
+											title, GROWL_NOTIFICATION_TITLE,
+											description, GROWL_NOTIFICATION_DESCRIPTION,
+											@"Adium", GROWL_APP_NAME,
+											iconData, GROWL_NOTIFICATION_ICON,
+											nil];
+		
+			[[NSDistributedNotificationCenter defaultCenter]
+											postNotificationName: GROWL_NOTIFICATION
+														  object: nil
+														userInfo: growlEvent
+											  deliverImmediately: NO];
 		}
-		
-		NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
-										note, GROWL_NOTIFICATION_NAME,
-										title, GROWL_NOTIFICATION_TITLE,
-										description, GROWL_NOTIFICATION_DESCRIPTION,
-										@"Adium", GROWL_APP_NAME,
-										iconData, GROWL_NOTIFICATION_ICON,
-										nil];
-	
-		[[NSDistributedNotificationCenter defaultCenter]
-										postNotificationName: GROWL_NOTIFICATION
-													  object: nil
-													userInfo: growlEvent
-										  deliverImmediately: NO];
-		
 	}
 }
 
