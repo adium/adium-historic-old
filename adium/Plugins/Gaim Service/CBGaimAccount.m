@@ -499,12 +499,21 @@
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
+	
+	insideDealloc = NO;
 }
 
 - (void)dealloc
 {
-    [(CBGaimServicePlugin *)service removeAccount:account];
-    
+	//Protections are needed since removeAccount will remove us from the service account dict which will release us
+	//which will call dealloc which will... and halcyon and on and on.
+	[self retain];
+	if (!insideDealloc) {
+		insideDealloc = YES;
+		[(CBGaimServicePlugin *)service removeAccount:account];
+	}
+    [self autorelease];
+	
     [chatDict release];
     [filesToSendArray release];
 
@@ -1331,10 +1340,14 @@
 
 - (void)createNewGaimAccount
 {
-	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+	NSString *accountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
 	
-    //Recreate a fresh version of the account
-    account = gaim_account_new([formattedAccountName UTF8String], [self protocolPlugin]);
+	//Sanity check: If no preference has been set, use the UID
+	if (!accountName)
+		accountName = UID;
+	
+    //Create a fresh version of the account
+    account = gaim_account_new([accountName UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
 //	gaim_account_set_username(account, [[self serverDisplayName] UTF8String]);
     

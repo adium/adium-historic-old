@@ -17,6 +17,8 @@
     GaimConnection      *gc;
     
     int                 reconnectAttemptsRemaining;
+	
+	BOOL				insideDealloc;
 }
 
 - (const char*)protocolPlugin;
