@@ -7,17 +7,17 @@
  
 @interface SHAutoValidatingTextView : NSTextView {
 
-    BOOL         continiousURLValidation;
-    BOOL         URLIsValid;
-    NSString    *urlString;
-    unsigned     scanOffset;
-    int          validStatus;
+    BOOL                         continiousURLValidation;
+    BOOL                         URLIsValid;
+    NSString                    *urlString;
+    unsigned                     scanOffset;
+    URI_VERIFICATION_STATUS      validStatus;
 }
 
 - (void)setContiniousURLValidationEnabled:(BOOL)flag;
 - (void)toggleContiniousURLValidationEnabled;
 - (BOOL)isContiniousURLValidationEnabled;
-- (int)validationStatus;
+- (URI_VERIFICATION_STATUS)validationStatus;
 - (BOOL)isURLValid;
 
 @end

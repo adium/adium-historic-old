@@ -194,6 +194,8 @@
             case SH_MAILTO_DEGENERATE:
                 [urlString insertString:@"mailto:" atIndex:0];
                 break;
+            default:
+                break;
         }
     
         //call the insertion method
