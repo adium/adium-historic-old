@@ -23,7 +23,6 @@
 {
 	NSMutableString	*string = [[NSString alloc] init];
 	NSString		*randomCharacters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	NSString		*randomString;
 	int				i;
 	
 	//Prepare our random

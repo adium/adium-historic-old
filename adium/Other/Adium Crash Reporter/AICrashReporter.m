@@ -13,30 +13,56 @@
 #define EXCEPTIONS_PATH		[@"~/Desktop/accountstuff.txt" stringByExpandingTildeInPath]
 #define CRASHES_PATH		[@"~/NOEMPTYPATHS" stringByExpandingTildeInPath]
 
+#define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
+
 @implementation AICrashReporter
 
 - (void)awakeFromNib
 {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *theLog;
+    NSFileManager 	*fileManager = [NSFileManager defaultManager];
     
+	//Search for either an exception log or a crash log
     if([fileManager fileExistsAtPath:EXCEPTIONS_PATH]){
-		theLog = [NSString stringWithContentsOfFile:EXCEPTIONS_PATH];
-//		[fileManager trashFileAtPath:EXCEPTIONS_PATH];
+		[self reportCrashForLogAtPath:EXCEPTIONS_PATH];
 		
     }else if([fileManager fileExistsAtPath:CRASHES_PATH]){
-		theLog = [NSString stringWithContentsOfFile:CRASHES_PATH];
-		[fileManager trashFileAtPath:CRASHES_PATH];
-		
-    }else{
-		[NSApp terminate:nil];
-		return;
+		[self reportCrashForLogAtPath:CRASHES_PATH];
 		
     }
-    
+	
+}
+
+//Display the report crash window for the passed log
+- (IBAction)reportCrashForLogAtPath:(NSString *)inPath
+{
+	NSString	*emailAddress;
+	
+	//Fetch and delete the log
+	crashLog = [NSString stringWithContentsOfFile:inPath];
+	[[NSFileManager defaultManager] trashFileAtPath:inPath];
+
+	//Restore the user's email address if they've entered it previously
+	if(emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS]){
+		[textField_emailAddress setStringValue:emailAddress];
+	}
+	
+	//Open our window
 	[window_MainWindow center];
 	[window_MainWindow makeKeyAndOrderFront:nil];
 }
+
+//
+- (BOOL)windowShouldClose:(id)sender
+{
+	//Remember the user's email address
+	[[NSUserDefaults standardUserDefaults] setObject:[textField_emailAddress stringValue]
+											  forKey:KEY_CRASH_EMAIL_ADDRESS];	
+	
+	return(YES);
+}
+
+
+
 
 - (IBAction)send:(id)sender
 {
