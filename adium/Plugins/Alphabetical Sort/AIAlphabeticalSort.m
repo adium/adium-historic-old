@@ -40,6 +40,9 @@ static  BOOL	sortByLastName;
 	sortByLastName = [[prefDict objectForKey:KEY_SORT_BY_LAST_NAME] boolValue];
 }
 
+- (NSString *)description{
+	return(@"Sort alphabetically");
+}
 - (NSString *)identifier{
     return(@"Alphabetical");
 }
