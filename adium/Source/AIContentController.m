@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.86 2004/06/25 03:58:21 evands Exp $
+// $Id: AIContentController.m,v 1.87 2004/06/26 22:32:35 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -532,6 +532,7 @@
         mostRecentChat = nil;
     
 	//Lower the chat count for this contact
+#warning Dave: What in the world is ChatsCount used for?
 	if(listObject = [inChat listObject]){
         int currentCount = [[listObject numberStatusObjectForKey:@"ChatsCount"] intValue];
         if(currentCount > 0) {
@@ -544,7 +545,7 @@
     //Notify the account and send out the Chat_WillClose notification
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
     [[owner notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
-    
+
     //Remove the chat
     [chatArray removeObject:inChat];
 

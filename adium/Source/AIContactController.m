@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.150 2004/06/25 03:58:21 evands Exp $
+// $Id: AIContactController.m,v 1.151 2004/06/26 22:32:35 dchoby98 Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -675,9 +675,14 @@
 //Selected contact ------------------------------------------------
 #pragma mark Selected contact
 //Returns the "selected"(represented) contact (By finding the first responder that returns a contact)
+//If no listObject is found, try to find a list object selected in a group chat
 - (AIListObject *)selectedListObject
 {
-	return([self _performSelectorOnFirstAvailableResponder:@selector(listObject)]);
+	AIListObject *listObject = [self _performSelectorOnFirstAvailableResponder:@selector(listObject)];
+	if( !listObject) {
+		listObject = [self _performSelectorOnFirstAvailableResponder:@selector(preferredListObject)];
+	}
+	return listObject;
 }
 - (AIListObject *)selectedListObjectInContactList
 {
