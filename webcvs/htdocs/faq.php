@@ -59,7 +59,7 @@
                         </form>
                         <p><span class="tiny"><a href="iseek://url/?=&amp;name=Adium%20Forums&amp;category=Foros&amp;encoding=5&amp;scheme=http&amp;url=www.funmac.com/search.php?s=%26searchdate=-1%26beforeafter=after%26forumchoice=38%26action=simplesearch%26query=">iSeek URL</a> (click to add it)</span></p>
                     
-                    <p>Try asking in our <a href="irc://irc.freenode.net/adium">irc channel</a>:<br />
+                    <p>Try asking in our <a href="irc://irc.freenode.net/adium">IRC channel</a>:<br />
                     <span class="tiny">Server: irc.freenode.net</span><br />
                     <span class="tiny">Channel: #adium</span></p>
                     <p>Get support via email: <a href="mailto:support@adiumx.com">support@adiumx.com</a></p>
@@ -89,7 +89,7 @@
                     Adium X is an instant messaging client for Mac OS X.  Adium supports multiple protocols, allowing you to communicate on many services from within a single application.</p>
                     
                     <p><span class="faqQuestion">What are the requirements to use Adium?</span><br />
-                    Adium requires Mac OS X 10.2 or higher ("Jaguar" or better) to run. Certain features (WebKit Messaeg Styles, log content searching, and tab dragging animations) require Mac OS X 10.3 ("Panther").</p>
+                    Adium requires Mac OS X 10.2 or higher ("Jaguar" or better) to run. Certain features (WebKit Message Styles, log content searching, and tab dragging animations) require Mac OS X 10.3 ("Panther").</p>
                     
                     <p><span class="faqQuestion">What services does Adium X support?</span><br />
                     Adium supports AIM, MSN, Yahoo!, Yahoo! Japan, Gadu-Gadu, Jabber, Napster, and Novell GroupWise.</p>
