@@ -3,7 +3,7 @@
  * File:        AWEzvXMLNode.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLNode.h,v 1.2 2004/05/16 07:10:36 proton Exp $
+ * CVS tag:     $Id: AWEzvXMLNode.h,v 1.3 2004/07/13 15:05:56 evands Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -34,7 +34,7 @@
 #import <Foundation/Foundation.h>
 
 enum types {
-    XMLElement,
+    AWEzvXMLElement,
     XMLText,
     XMLRaw
 };

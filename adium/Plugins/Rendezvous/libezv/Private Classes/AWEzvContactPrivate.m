@@ -3,7 +3,7 @@
  * File:        AWEzvContactPrivate.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactPrivate.m,v 1.2 2004/05/16 15:06:53 proton Exp $
+ * CVS tag:     $Id: AWEzvContactPrivate.m,v 1.3 2004/07/13 15:05:56 evands Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -161,12 +161,12 @@
     NSString	    *html = nil;
 
     /* parse incoming message */
-    if (([root type] == XMLElement) && ([[root name] compare:@"message"] == NSOrderedSame)) {
+    if (([root type] == AWEzvXMLElement) && ([[root name] compare:@"message"] == NSOrderedSame)) {
         if (([[root attributes] objectForKey:@"type"] != nil) && ([(NSString *)[[root attributes] objectForKey:@"type"] compare:@"chat"] == NSOrderedSame)) {
             NSEnumerator	*objs = [[root children] objectEnumerator];
             
             while ((node = [objs nextObject])) {
-                if (([node type] == XMLElement) && ([[node name] compare:@"body"] == NSOrderedSame)) {
+                if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"body"] == NSOrderedSame)) {
                     NSEnumerator	*childs = [[node children] objectEnumerator];
                         
                     while ((node = [childs nextObject])) {
@@ -176,11 +176,11 @@
                     }
                 }
                 
-                if (([node type] == XMLElement) && ([[node name] compare:@"html"] == NSOrderedSame)) {
+                if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"html"] == NSOrderedSame)) {
                     html = [node xmlString];
                 }
 		
-		if (([node type] == XMLElement) && ([[node name] compare:@"x"] == NSOrderedSame)) {
+		if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"x"] == NSOrderedSame)) {
 		    [self XMLCheckForEvent:node];
 		}
             }
@@ -189,7 +189,7 @@
             NSEnumerator	*objs = [[root children] objectEnumerator];
             
             while ((node = [objs nextObject])) {
-                if (([node type] == XMLElement) && ([[node name] compare:@"x"] == NSOrderedSame)) {
+                if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"x"] == NSOrderedSame)) {
                     [self XMLCheckForEvent:node];
 		}
             }
