@@ -9,6 +9,7 @@
 
 @interface AITextColorPreviewView : NSView {
 	IBOutlet	NSColorWell		*textColor;
+	IBOutlet	NSColorWell		*textShadowColor;
 	IBOutlet	NSColorWell		*backgroundColor;
 	IBOutlet	NSColorWell		*backgroundGradientColor;
 }

@@ -7,6 +7,7 @@
             OUTLETS = {
                 "button_setBackgroundImage" = NSButton; 
                 "checkBox_away" = NSButton; 
+                "checkBox_drawGrid" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_idleAndAway" = NSButton; 
                 "checkBox_offline" = NSButton; 
@@ -24,6 +25,7 @@
                 "colorWell_groupBackgroundGradient" = NSColorWell; 
                 "colorWell_groupShadow" = NSColorWell; 
                 "colorWell_groupText" = NSColorWell; 
+                "colorWell_groupTextInverted" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
                 "colorWell_idleAndAwayLabel" = NSColorWell; 
@@ -43,7 +45,8 @@
                 "preview_away" = AITextColorPreviewView; 
                 "preview_background" = AITextColorPreviewView; 
                 "preview_grid" = AITextColorPreviewView; 
-                "preview_groupBackground" = AITextColorPreviewView; 
+                "preview_group" = AITextColorPreviewView; 
+                "preview_groupInverted" = AITextColorPreviewView; 
                 "preview_idle" = AITextColorPreviewView; 
                 "preview_idleAndAway" = AITextColorPreviewView; 
                 "preview_offline" = AITextColorPreviewView; 
@@ -66,6 +69,7 @@
                 backgroundColor = NSColorWell; 
                 backgroundGradientColor = NSColorWell; 
                 textColor = NSColorWell; 
+                textShadowColor = NSColorWell; 
             }; 
             SUPERCLASS = NSView; 
         }, 

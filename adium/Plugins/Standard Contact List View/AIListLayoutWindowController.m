@@ -151,7 +151,6 @@
 	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
 	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];	
 	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
-	[checkBox_drawGrid setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue]];
 	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
 	
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
@@ -253,11 +252,6 @@
 											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
-    }else if(sender == checkBox_drawGrid){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_LIST_LAYOUT_GRID_ENABLED
-                                              group:PREF_GROUP_LIST_LAYOUT];
-		
     }else if(sender == checkBox_verticalAutosizing){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
@@ -342,9 +336,6 @@
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
-	
-	//Grid is not available in pillows
-	[checkBox_drawGrid setEnabled:(windowStyle != WINDOW_STYLE_PILLOWS)];
 	
 	//Contact style
 	BOOL	enableNormal = (windowStyle != WINDOW_STYLE_PILLOWS);
