@@ -136,6 +136,13 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    [awayMessageArray release];
+    
+    [super dealloc];
+}
+
 //Return the view for our preference pane
 - (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
 {
@@ -184,7 +191,7 @@
     tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
     if(tempArray){
         //Load the aways
-        awayMessageArray = [self _loadAwaysFromArray:tempArray];
+        awayMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
 
     }else{
         //If no aways exist, create an empty array
@@ -215,7 +222,7 @@
 {
     NSEnumerator	*enumerator;
     NSDictionary	*dict;
-    NSMutableArray	*mutableArray = [[NSMutableArray alloc] init];
+    NSMutableArray	*mutableArray = [NSMutableArray array];
 
     enumerator = [array objectEnumerator];
     while((dict = [enumerator nextObject])){
@@ -229,16 +236,16 @@
                 nil]];
 
         }else if([type compare:@"Away"] == 0){
-	    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-	    NSString * title = [dict objectForKey:@"Title"];
-	    NSData * autoresponse = [dict objectForKey:@"Autoresponse"];
+	    NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
+	    NSString                *title = [dict objectForKey:@"Title"];
+	    NSData                  *autoresponse = [dict objectForKey:@"Autoresponse"];
 	    
 	    [newDict setObject:@"Away" forKey:@"Type"];
 	    [newDict setObject:[NSAttributedString stringWithData:[dict objectForKey:@"Message"]] forKey:@"Message"];
-	    if (title && [title length]) {
+	    if(title && [title length]) {
 		[newDict setObject:title forKey:@"Title"];
 	    }
-	    if (autoresponse) {
+	    if(autoresponse) {
 		[newDict setObject:[NSAttributedString stringWithData:autoresponse] forKey:@"Autoresponse"];
 	    }
             [mutableArray addObject:newDict];
@@ -252,7 +259,7 @@
 {
     NSEnumerator	*enumerator;
     NSDictionary	*dict;
-    NSMutableArray	*saveArray = [[NSMutableArray alloc] init];
+    NSMutableArray	*saveArray = [NSMutableArray array];
 
     enumerator = [array objectEnumerator];
     while((dict = [enumerator nextObject])){
@@ -266,9 +273,9 @@
                 nil]];
 
         }else if([type compare:@"Away"] == 0){
-	    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-	    NSString * title = [dict objectForKey:@"Title"];
-	    NSData * autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
+	    NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
+	    NSString                *title = [dict objectForKey:@"Title"];
+	    NSData                  *autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
 	    
 	    [newDict setObject:@"Away" forKey:@"Type"];
 	    [newDict setObject:[[dict objectForKey:@"Message"] dataRepresentation] forKey:@"Message"];
@@ -281,14 +288,14 @@
             [saveArray addObject:newDict];
         }
     }
+    
     return(saveArray);
 }
 
 //Display the specified away message in the text view (pass nil to clear the text view & disable it)
 - (void)_displayAwayMessage:(NSMutableDictionary *)awayDict
 {
-    if (awayDict)
-    {
+    if(awayDict){
 	NSString	*type;
 
 	//Get the selected item
@@ -303,7 +310,6 @@
 	    [textView_autoresponse setEditable:NO];
 	    [textView_autoresponse setSelectable:NO];
 	    
-
 	}else if([type compare:@"Away"] == 0){
 	    //Show the away message in our text view, and enable it for editing
 	    NSAttributedString * autoresponse = [awayDict objectForKey:@"Autoresponse"];
@@ -317,9 +323,7 @@
 	    [textView_autoresponse setEditable:YES];
 	    [textView_autoresponse setSelectable:YES];
 	}
-    }
-    else
-    {
+    }else{
         [textView_message setString:@""];
         [textView_message setEditable:NO];
         [textView_message setSelectable:NO];
