@@ -330,7 +330,7 @@ void Adium_HandleSignal(int i){
     NSString			*fileDescription = nil, *prefsButton = nil, *advancedPrefsName = nil;
 	BOOL				success = NO, requiresRestart = NO;
 	int					buttonPressed;
-	PREFERENCE_CATEGORY prefsCategory;
+	PREFERENCE_CATEGORY prefsCategory = -1;
     
     //Specify a file extension and a human-readable description of what the files of this type do
     if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame){
