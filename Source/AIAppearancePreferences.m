@@ -75,21 +75,12 @@ typedef enum {
 {
     NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_APPEARANCE];
 	
-	//Service and status icons
+	//Build our menus
 	[popUp_statusIcons setMenu:[self _statusIconsMenu]];
-	[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
 	[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
-	[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
-
-	//Dock icons
 	[popUp_dockIcon setMenu:[self _dockIconMenu]];
-	[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
-	
-	//List layout and theme
 	[popUp_listLayout setMenu:[self _listLayoutMenu]];
-	[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
 	[popUp_colorTheme setMenu:[self _colorThemeMenu]];
-	[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
 	
 	//Other list options
 	[popUp_windowStyle setMenu:[self _windowStyleMenu]];
@@ -98,36 +89,16 @@ typedef enum {
 	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
 	[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
 	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
+	[self _updateSliderValues];
 
 	//Localized strings
 	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
 	[label_statusIcons setLocalizedString:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
 	[label_dockIcons setLocalizedString:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
-
-	//Horizontal Sizing Label
-	int windowMode = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-	BOOL horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
-	
-	if(windowMode == WINDOW_STYLE_STANDARD){
-		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
-		[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
-		[slider_horizontalWidth setEnabled:horizontalAutosize];
 		
-	}else{
-		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
-		//horizontal sizing slider when autosizing is off
-		if(horizontalAutosize){
-			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
-		}else{
-			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Width:",nil)];			
-		}
-		[slider_horizontalWidth setEnabled:YES];
-	}
-	
-	[self _updateSliderValues];
-	
-	//This will set up the emoticon pack menu
+	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
 /*!
@@ -142,26 +113,74 @@ typedef enum {
 /*!
  * @brief Preferences changed
  *
- * Update the emoticons pop up when emoticons preferences change
+ * Update controls in our view to reflect the changed preferences
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	//Emoticons
 	if([group isEqualToString:PREF_GROUP_EMOTICONS]){
-		//Emoticons
+		//Rebuild the emoticon menu
 		[popUp_emoticons setMenu:[self _emoticonPackMenu]];
-		{
-			NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
-			int		numActivePacks = [activeEmoticonPacks count];
-			
-			if(numActivePacks == 0){
-				[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
-			}else if(numActivePacks > 1){
-				[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
-			}else{
-				[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
-			}
+
+		//Update the selected pack
+		NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
+		int		numActivePacks = [activeEmoticonPacks count];
+		
+		if(numActivePacks == 0){
+			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
+		}else if(numActivePacks > 1){
+			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
+		}else{
+			[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
 		}
+	}
+	
+	//Appearance
+	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
+		
+		//Horizontal resizing label
+		if(firstTime || 
+		   [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE] ||
+		   [key isEqualToString:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE]){
+			
+			int windowMode = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+			BOOL horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+			
+			if(windowMode == WINDOW_STYLE_STANDARD){
+				//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
+				[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
+				[slider_horizontalWidth setEnabled:horizontalAutosize];
+				
+			}else{
+				//In all the borderless transparent modes, the horizontal autosizing slider becomes the
+				//horizontal sizing slider when autosizing is off
+				if(horizontalAutosize){
+					[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
+				}else{
+					[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Width:",nil)];			
+				}
+				[slider_horizontalWidth setEnabled:YES];
+			}
+			
+		}
+
+		//Selected menu items
+		if(firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]){
+			[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];		
+		}
+		if(firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]){
+			[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
+		}		
+		if(firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
+			[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
+		}
+		if(firstTime || [key isEqualToString:KEY_LIST_THEME_NAME]){
+			[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
+		}	
+		if(firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
+			[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+		}		
 	}
 }
 

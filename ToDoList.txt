@@ -1,7 +1,6 @@
 5 - Contact list layout defaults
 5 - Contact list theme defaults
 5 - Contact list toolbar icons for toggle groups, add group, toggle offline
-5 - Fix appearance prefs to update in response to preference changes
 5 - Implement edit sheets for layout
 5 - Implement edit sheets for themes
 5 - Mobile status icon (get this in before icon packs start excluding it!)
