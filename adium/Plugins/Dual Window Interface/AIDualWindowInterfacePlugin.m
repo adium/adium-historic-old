@@ -518,10 +518,11 @@
     [item setRepresentedObject:contactListWindowController];
     [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
     [windowMenuArray addObject:[item autorelease]];
+    
     //Add dock Menu
     item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@""];
     [item setRepresentedObject:contactListWindowController];
-    [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+    [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];    
     [windowMenuArray addObject:[item autorelease]];
 
     //Messages window and any open messasge
@@ -532,6 +533,12 @@
         [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
         [windowMenuArray addObject:[item autorelease]];
 
+        //Add a 'Messages' menu item to the dock
+        item = [[NSMenuItem alloc] initWithTitle:MESSAGES_WINDOW_MENU_TITLE target:self action:@selector(showMessageWindow:) keyEquivalent:@""];
+        [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+        [windowMenuArray addObject:[item autorelease]];
+
+        
 	//enumerate all windows
 	windowEnumerator = [messageWindowControllerArray objectEnumerator];
 	while (messageWindowController = [windowEnumerator nextObject])
@@ -558,8 +565,16 @@
 
 		    //Add it to the menu and array
 		    [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
-		    [windowMenuArray addObject:[item autorelease]];
+                    [windowMenuArray addObject:[item autorelease]];
 
+          
+                    //Create the same menu item for the dock menu
+                    item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"   %@",[tabViewItem labelString]] target:self action:@selector(showMessageWindow:) keyEquivalent:windowKeyString];
+                    [item setRepresentedObject:tabViewItem]; //associate this item with a tab
+                    
+                    [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+                    [windowMenuArray addObject:[item autorelease]];
+                 
 		    windowKey++;
 		}
 	    }
@@ -573,6 +588,7 @@
 //remove our menu items
 - (void)removeMenuItems
 {
+
     [[owner menuController] removeMenuItem:menuItem_closeTab];
     [[owner menuController] removeMenuItem:menuItem_nextMessage];
     [[owner menuController] removeMenuItem:menuItem_previousMessage];

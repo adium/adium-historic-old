@@ -2,7 +2,6 @@
 #import <Adium/Adium.h>
 #import "AILinkTextView.h"
 
-
 @interface LNAboutBoxController : NSWindowController {
 
     IBOutlet	NSButton	*button_duckIcon;
@@ -12,6 +11,7 @@
     NSMutableArray      *avatarArray;
     AIAdium		*owner;
     int			numberOfDuckClicks;
+    BOOL		previousKeyWasOption;
 
 }
 
