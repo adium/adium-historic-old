@@ -19,8 +19,6 @@
 
 #define SHOW_CLOSE_BUTTON_FOR_SINGLE_TAB	YES		//Show close button when there is only one tab?
 
-#warning We use -icon on NSTabViewItem in this method multiple times, which is implemented in our AIMessagTabViewItem in Adium.
-
 //Images (Shared between AICustomTabCell instances)
 static NSImage		*tabFrontLeft = nil;
 static NSImage		*tabFrontMiddle = nil;
@@ -42,20 +40,20 @@ static NSImage		*tabCloseFrontRollover = nil;
 #define TAB_SELECTED_HIGHER     NO     	//Draw the selected tab higher?
 
 @interface AICustomTabCell (PRIVATE)
-- (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
+- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem;
 - (NSRect)_closeButtonRect;
 @end
 
 @implementation AICustomTabCell
 
 //Create a new custom tab
-+ (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem
++ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem
 {
     return([[[self alloc] initForTabViewItem:inTabViewItem] autorelease]);
 }
 
 //init
-- (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem
+- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem
 {
     static BOOL haveLoadedImages = NO;
     

@@ -19,6 +19,13 @@
 #define Low_Priority  		0.75
 #define Lowest_Priority  	1.0
 
+@class AIMutableOwnerArray;
+
+//Delegate protocol for documentation purposes; it is not necessasry to declare conformance to this protocol.
+@protocol AIMutableOwnerArrayDelegate
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority;
+@end
+
 @interface AIMutableOwnerArray : NSObject {
     NSMutableArray	*contentArray;
     NSMutableArray	*ownerArray;
