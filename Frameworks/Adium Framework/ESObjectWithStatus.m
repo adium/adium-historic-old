@@ -158,7 +158,8 @@ DeclareString(Value);
 }
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key
 {
-    return([statusDictionary objectForKey:key]);
+	id obj = [statusDictionary objectForKey:key];
+	return ((obj && [obj isKindOfClass:[NSNumber class]]) ? obj : nil);
 }
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
 {
