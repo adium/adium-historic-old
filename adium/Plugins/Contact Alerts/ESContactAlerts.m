@@ -127,14 +127,14 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
         
         //If no cache is available (or we're not using the cache), load the array
         if(!newActionArray){
-            newActionArray = [object preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS]; //load from prefs
+            newActionArray = [object preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS ignoreInheritedValues:YES]; //load from prefs
             
             //Update the cache
             if(newActionArray){
                 [cachedAlertsDict setObject:newActionArray forKey:UID]; //cache it
             }else{
                 [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
-                newActionArray = [NSMutableArray array]; //Create a new, empty action array
+                newActionArray = [NSMutableArray arrayWithCapacity:0]; //Create a new, empty action array
             }
         }
         
