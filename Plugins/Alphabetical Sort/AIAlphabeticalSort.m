@@ -24,14 +24,20 @@
 #define KEY_SORT_GROUPS						@"ABC:Sort Groups"
 #define ALPHABETICAL_SORT_DEFAULT_PREFS		@"AlphabeticalSortDefaults"
 
-int alphabeticalSort(id objectA, id objectB, BOOL groups);
 static 	BOOL	sortGroups;
 static  BOOL	sortByLastName;
 
+/*!
+ * @class AIAlphabeticalSort
+ * @brief Sort controller to sort contacts and groups alphabetically.
+ */
 @implementation AIAlphabeticalSort
 
-//Sort contacts and groups alphabetically.
-
+/*!
+ * @brief Did become active first time
+ *
+ * Called only once; gives the sort controller an opportunity to set defaults and load preferences lazily.
+ */
 - (void)didBecomeActiveFirstTime
 {
 	//Register our default preferences
@@ -45,33 +51,55 @@ static  BOOL	sortByLastName;
 	sortByLastName = [[prefDict objectForKey:KEY_SORT_BY_LAST_NAME] boolValue];
 }
 
-- (NSString *)description{
-	return(@"Sort alphabetically");
-}
+/*!
+ * @brief Non-localized identifier
+ */
 - (NSString *)identifier{
     return(@"Alphabetical");
 }
+
+/*!
+ * @brief Localized display name
+ */
 - (NSString *)displayName{
     return(AILocalizedString(@"Sort Contacts Alphabetically",nil));
 }
+
+/*!
+ * @brief Status keys which, when changed, should trigger a resort
+ */
 - (NSSet *)statusKeysRequiringResort{
 	return(nil);
 }
+
+/*!
+ * @brief Attribute keys which, when changed, should trigger a resort
+ */
 - (NSSet *)attributeKeysRequiringResort{
 	return([NSSet setWithObject:@"Display Name"]);
 }
 
 #pragma mark Configuration
-//Configuration
-- (NSString *)configureSortMenuItemTitle{ 
-	return(AILocalizedString(@"Configure Alphabetical Sort...",nil));
-}
+/*!
+ * @brief Window title when configuring the sort
+ *
+ * Subclasses should provide a title for configuring the sort only if configuration is possible.
+ * @result Localized title. If nil, the menu item will be disabled.
+ */
 - (NSString *)configureSortWindowTitle{
 	return(AILocalizedString(@"Configure Alphabetical Sort",nil));	
 }
+
+/*!
+ * @brief Nib name for configuration
+ */
 - (NSString *)configureNibName{
 	return @"AlphabeticalSortConfiguration";
 }
+
+/*!
+ * @brief View did load
+ */
 - (void)viewDidLoad{
 	[checkBox_sortByLastName setTitle:AILocalizedString(@"Sort contacts by last name",nil)];
 	[checkBox_sortGroups setTitle:AILocalizedString(@"Sort groups alphabetically",nil)];
@@ -79,6 +107,12 @@ static  BOOL	sortByLastName;
 	[checkBox_sortByLastName setState:sortByLastName];
 	[checkBox_sortGroups setState:sortGroups];
 }
+
+/*!
+ * @brief Preference changed
+ *
+ * Sort controllers should live update as preferences change.
+ */
 - (IBAction)changePreference:(id)sender
 {
 	if (sender == checkBox_sortGroups){
@@ -97,10 +131,9 @@ static  BOOL	sortByLastName;
 }
 
 #pragma mark Sorting
-//Sort functions
-- (sortfunc)sortFunction{
-	return(&alphabeticalSort);
-}
+/*!
+ * @brief Alphabetical sort
+ */
 int alphabeticalSort(id objectA, id objectB, BOOL groups)
 {
 	//If we were not passed groups or if we should be sorting groups, sort alphabetically
@@ -132,6 +165,13 @@ int alphabeticalSort(id objectA, id objectB, BOOL groups)
 			return(NSOrderedAscending);
 		}
 	}
+}
+
+/*!
+ * @brief Sort function
+ */
+- (sortfunc)sortFunction{
+	return(&alphabeticalSort);
 }
 
 @end
