@@ -1,0 +1,29 @@
+{
+    IBClasses = (
+        {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESPanelAlertDetailPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_alertText" = NSTextView; }; 
+            SUPERCLASS = AIActionDetailsPane; 
+        }, 
+        {
+            ACTIONS = {chooseFile = id; }; 
+            CLASS = ESPanelApplescriptDetailPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textField_scriptName" = NSTextField; }; 
+            SUPERCLASS = AIActionDetailsPane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
