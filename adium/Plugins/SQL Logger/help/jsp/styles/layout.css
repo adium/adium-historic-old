@@ -143,19 +143,20 @@ body {
 }
 
 .boxExtraWideTop {
-	width: 731px;
-	height: 12px;
+    width: 731px;
+    height: 12px;
 }
 
 .boxExtraWideContent {
-	padding-left: 16px;
-	padding-right: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow: auto;
 }
 
 
 .boxExtraWideBottom {
-	width: 731px;
-	height: 32px;
+    width: 731px;
+    height: 32px;
 }
 
 /*<group=Weblog>*/
