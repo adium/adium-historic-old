@@ -16,7 +16,7 @@
 
 #import "SHLinkEditorWindowController.h"
 #import "SHAutoValidatingTextView.h"
-#import "SHLinkLexer.h"
+#import <AIHyperlinks/SHLinkLexer.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
