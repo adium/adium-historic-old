@@ -1,38 +1,43 @@
 #!/usr/bin/perl -I/home/jmelloy/lib/perl5/site_perl/5.6.1/
 
-# $Id: make_logfile.pl,v 1.6 2003/12/13 00:52:56 jmelloy Exp $
+# $Id: make_logfile.pl,v 1.7 2003/12/22 20:57:22 jmelloy Exp $
 
 use warnings;
 use strict;
 
 use File::List;
 
-my $search = new File::List("/home/jmelloy/adium");
+my $search = new File::List("/Users/jmelloy/clean-adium");
 my @filelist = @{ $search->find(".") };
+my %directories;
 
 foreach my $file (@filelist) {
-    $file =~ s/\/home\/jmelloy\/adium\///;
-
-    $_ = $file;
-
-    my $contains_cvs  = /CVS/;
-    my $contains_log = /\.log$/;
-    my $contains_plist = /Plist/;
     
-    if(!$contains_cvs && !$contains_log && !$contains_plist) {
+    $file =~ s/\/Users\/jmelloy\/clean-adium\/(.*\/).*/$1/;
 
-        my $logfile = $file . ".log";
-        $logfile =~ s/^ *//;
+    print $file . "\n";
 
-        if (!-e $logfile) {
-
-            warn $file . "\n";
-
-            open(STDOUT, ">$logfile");
-
-            system('cvs', '-z3', 'log', $file);
-
-            close STDOUT;
-        }
+    if($file =~ m/\// && !($file =~ m/CVS/)) {
+        $directories{$file} = 1;
+    } else {
+        $directories{"."} = 1;
     }
+}
+
+foreach my $key (keys %directories) {
+    my $logfile = "directory.log";
+    
+    chdir("$key");
+
+    if(!-e $logfile) {
+        warn $key . "\n";
+
+        open(STDOUT, ">$logfile");
+
+        system('cvs', '-z3', 'log', '-l');
+
+        close STDOUT;
+    }
+
+    chdir("/Users/jmelloy/clean-adium");
 }
