@@ -179,8 +179,7 @@
 /*!
  * @brief Begin closing the status controller
  *
- * Save the currently array of accountsToConnect so we can make use of them on next launch for better
- * global status behavior.
+ * Save the online accounts; they will be the accounts connected by a global status change
  *
  * Also save the current status state of each account so it can be restored on next launch.
  *
@@ -196,8 +195,8 @@
 	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while(account = [enumerator nextObject]){
 		
-		//If this is in our accountToConnect array, we'll want to save its internalObjectID.
-		if([accountsToConnect containsObject:account]){
+		//If this account is online, we'll want to save its internalObjectID.
+		if([account online]){
 			[savedAccountsToConnect addObject:[account internalObjectID]];
 		}
 		
