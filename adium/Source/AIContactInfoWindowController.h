@@ -31,5 +31,6 @@
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
 - (IBAction)closeWindow:(id)sender;
+- (void)configurePanes;
 
 @end
