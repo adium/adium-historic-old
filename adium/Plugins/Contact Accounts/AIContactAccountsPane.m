@@ -142,8 +142,8 @@
 	if([identifier isEqualToString:@"group"]){
 		if(accountOnline){
 			//Get the containing group (taking into account meta contacts)
-			AIListGroup	*group = [existing containingGroup];
-			if([group isKindOfClass:[AIMetaContact class]]) group = [group containingGroup];
+			AIListGroup	*group = [existing containingObject];
+			if([group isKindOfClass:[AIMetaContact class]]) group = [group containingObject];
 			
 			if(group){
 				[cell selectItemWithRepresentedObject:group];			
@@ -177,7 +177,7 @@
 		if(menuIndex >= 0 && menuIndex < [menu numberOfItems]){
 			AIListGroup	*group = [[menu itemAtIndex:menuIndex] representedObject];
 			
-			if(group && (group != [listObject containingGroup])){
+			if(group && (group != [listObject containingObject])){
 				if(existing){ //Move contact
 					[[adium contactController] addContacts:[NSArray arrayWithObject:existing] toGroup:group];
 
