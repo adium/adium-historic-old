@@ -518,7 +518,7 @@
     Handle hExistingCustomIcon;
     Handle hIconFamilyCopy;
 	NSDictionary *fileAttributes;
-	OSType existingType = '????', existingCreator = '????';
+	OSType existingType = '\?\?\?\?', existingCreator = '\?\?\?\?';
         
     // Get an FSRef and an FSSpec for the target file, and an FSRef for its parent directory that we can use in the FNNotify() call below.
     if (![path getFSRef:&targetFileFSRef createFileIfNecessary:NO])
@@ -716,7 +716,7 @@
     // Make sure the file has a resource fork that we can open.  (Although
     // this sounds like it would clobber an existing resource fork, the Carbon
     // Resource Manager docs for this function say that's not the case.)
-    FSpCreateResFile( &targetFileFSSpec, '????', '????', smRoman );
+    FSpCreateResFile( &targetFileFSSpec, '\?\?\?\?', '\?\?\?\?', smRoman );
     if (ResError() != noErr)
         return NO;
 
