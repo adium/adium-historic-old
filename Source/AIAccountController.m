@@ -257,13 +257,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 //Return the active services (services for which there is an account).  These are used for contact creation and determining if
 //the service of accounts and contacts should be presented to the user.
+//Simultaneously determine if any active service can 
 - (NSArray *)activeServices
 {
 	if(!_cachedActiveServices){
 		NSMutableArray	*serviceArray = [NSMutableArray array];
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		AIAccount		*account;
-		
+
 		//Build an array of all currently used services
 		while(account = [enumerator nextObject]){
 			NSEnumerator	*serviceEnumerator;
@@ -456,6 +457,24 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return([self createAccountWithService:[self serviceWithUniqueID:@"libgaim-oscar-AIM"] UID:@"" accountNumber:0]);
 }
 
+- (BOOL)anOnlineAccountCanCreateGroupChats
+{
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	BOOL			anOnlineAccountCanCreateGroupChats;
+	
+	anOnlineAccountCanCreateGroupChats = NO;
+	
+    enumerator = [accountArray objectEnumerator];
+    while(account = [enumerator nextObject]){	
+		if ([account online] && [[account service] canCreateGroupChats]){
+			anOnlineAccountCanCreateGroupChats = YES;
+			break;
+		}
+	}
+	
+	return(anOnlineAccountCanCreateGroupChats);
+}
 
 //Account Editing ------------------------------------------------------------------------------------------------------
 #pragma mark Account Editing
