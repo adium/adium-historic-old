@@ -96,6 +96,7 @@ Adium, Copyright 2001-2005, Adam Iser
 															direction:AIIconNormal]];	
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	[textField_accountDescription setStringValue:[account UID]];
+	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
 	//User icon
 	if(iconData = [account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
@@ -176,6 +177,11 @@ Adium, Copyright 2001-2005, Adam Iser
 	//User icon
 	[account setPreference:[[imageView_userIcon image] PNGRepresentation]
 					forKey:KEY_USER_ICON 
+					 group:GROUP_ACCOUNT_STATUS];
+					 
+	//Auto connect
+	[account setPreference:[NSNumber numberWithBool:[checkBox_autoConnect state]]
+					forKey:@"AutoConnect"
 					 group:GROUP_ACCOUNT_STATUS];
 }
 

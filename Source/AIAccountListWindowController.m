@@ -310,6 +310,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[button_deleteAccount setEnabled:selection];
 }
 
+
 //Account List Table Delegate ------------------------------------------------------------------------------------------
 #pragma mark Account List (Table Delegate)
 /*
@@ -362,13 +363,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
 	if([identifier isEqualToString:@"enabled"]){
 		BOOL online = [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue];
-		BOOL autoConnect = [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
-		
-		if(![cell allowsMixedState]) [cell setAllowsMixedState:YES];
-		
-		if(online && autoConnect) [cell setState:NSOnState];
-		else if(!online && !autoConnect) [cell setState:NSOffState];
-		else [cell setState:NSMixedState];
+		[cell setState:(online ? NSOnState : NSOffState)];
 	}
 	
 }
@@ -381,9 +376,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if([[tableColumn identifier] isEqualToString:@"enabled"]){
-		NSLog(@"Setting %@ %@",[accountArray objectAtIndex:row],object);
 		[[accountArray objectAtIndex:row] setPreference:object forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-		[[accountArray objectAtIndex:row] setPreference:object forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
 	}
 }
 
