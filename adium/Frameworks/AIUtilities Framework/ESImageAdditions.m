@@ -48,6 +48,13 @@
 	return ([bitmapRep representationUsingType:NSPNGFileType properties:nil]);
 }
 
+- (NSData *)BMPRepresentation
+{
+	NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
+	
+	return ([bitmapRep representationUsingType:NSBMPFileType properties:nil]);
+}
+
 //Draw this image in a rect, tiling if the rect is larger than the image
 - (void)tileInRect:(NSRect)rect
 {
