@@ -628,22 +628,23 @@
 - (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes shouldPerformHeadIndent:(BOOL)performHeadIndent
 {
     AIFlexibleTableFramedTextCell   *messageCell;
-    NSAttributedString		    *messageString;
-    
+    NSAttributedString		    	*messageString;
+ 	NSColor 						*bodyColor = nil;
+   
     //Get the message string
     if(includePrefixes){
-	messageString = [self _prefixStringForContent:content performHeadIndent:performHeadIndent];
+		messageString = [self _prefixStringForContent:content performHeadIndent:performHeadIndent];
     }else{
-	messageString = [self _messageStringForContent:content];
+		messageString = [self _messageStringForContent:content];
     }
-
+	
     //Create the cell for this string
     messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:messageString];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
     if(inlinePrefixes){
         [messageCell setInternalPaddingLeft:(showUserIcons ? 7 : 10) top:2 right:5 bottom:2];
     }else{
-      [messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
+		[messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
     }
     [messageCell setVariableWidth:YES];
     [messageCell setDrawTop:YES];
@@ -651,23 +652,25 @@
     [messageCell setDrawSides:(showUserIcons && inlinePrefixes)];
     
     //Background coloring
-    NSColor *bodyColor = [[content message] attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil];
+	if([[content message] length]){
+		bodyColor = [[content message] attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil];
+	}
     if(![content isOutgoing]){
-	if(ignoreBackgroundColor || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
-	    [messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
-	}else{
-	    [messageCell setFrameBackgroundColor:bodyColor
-								 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
-								dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
-	}
+		if(ignoreBackgroundColor || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+			[messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
+		}else{
+			[messageCell setFrameBackgroundColor:bodyColor
+									 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
+									dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
+		}
     }else{
-	if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
-	    [messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
-	}else{
-	    [messageCell setFrameBackgroundColor:bodyColor
-								 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
-								dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
-	}
+		if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+			[messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+		}else{
+			[messageCell setFrameBackgroundColor:bodyColor
+									 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
+									dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
+		}
     }
     
     return(messageCell);
