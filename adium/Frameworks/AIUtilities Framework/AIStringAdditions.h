@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSString (AIStringAdditions)
++ (NSString *)randomStringOfLength:(int)inLength;
 - (NSString *)compactedString;
 - (int)intValueFromHex;
 - (NSString *)stringByExpandingBundlePath;
