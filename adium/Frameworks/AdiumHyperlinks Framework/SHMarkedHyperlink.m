@@ -20,8 +20,9 @@
 {
     linkRange = inRange;
     pString = [pInString retain];
-    linkURL = [[NSURL URLWithString:inString] autorelease];
+    linkURL = [[NSURL URLWithString:inString] retain];
     urlStatus = status;
+    
     [super init];
     
     return self;
@@ -30,6 +31,7 @@
 #pragma mark accessors
 -(void)dealloc
 {
+    [linkURL release];
     [pString release];
     [super dealloc];
 }
