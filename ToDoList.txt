@@ -75,12 +75,6 @@ Standardize/enhance Xtras pref panes [brian]
   This will solve issues with the save dialog catching keystrokes, and provides
   an easy way to just save an incoming file to the desktop.
 
-//File Transfer window
-  The file transfer window should be simple yet functional, displaying
-	- Source/destination contact and direction
-	- Transfer progress, speed
-  Transfers should be cancelable, and stay in the window when finished.
-
 //Fast User Switching
   The fast user switching plugin needs to provide advanced preferences for
 	- Enabling or disabling the feature
