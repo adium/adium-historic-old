@@ -531,10 +531,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
 {
-	AIListContact	*listContact;
-	
 	/* The #if 0'd block below causes crashes in msn_tooltip_text() on MSN */
 #if 0
+	AIListContact	*listContact;
+	
 	//Obtain the contact's information if it's a stranger
 	if ((listContact = [chat listObject]) && ([listContact isStranger])){
 		[self delayedUpdateContactStatus:listContact];

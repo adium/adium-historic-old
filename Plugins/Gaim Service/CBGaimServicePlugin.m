@@ -39,13 +39,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
 										  forGroup:GROUP_ACCOUNT_STATUS];
 	
 	[self _initGaim];
-
-	/*
-	static char buf[10];
-	g_snprintf(buf, sizeof(buf), "%s", nil);
-	
-	NSLog(@"%s",buf);
-	*/
 	
     //Install the services
 	AIMService			= [[ESAIMService alloc] init];
