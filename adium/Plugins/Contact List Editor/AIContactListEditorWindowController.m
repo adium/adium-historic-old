@@ -108,6 +108,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         [[self window] center];
     }
 
+    [button_import setTitle:@"Import"];
+    
     //Observe Collection changes
     [[owner notificationCenter] addObserver:self selector:@selector(collectionStatusChanged:) name:Editor_CollectionStatusChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];

@@ -34,6 +34,8 @@
 
     IBOutlet	NSButton		*button_newHandle;
     IBOutlet	NSButton		*button_newGroup;
+
+    IBOutlet	NSButton		*button_import;
     
     AIAdium			*owner;				//AIAdium
     AIContactListEditorPlugin	*plugin;			//Our owning plugin
