@@ -20,6 +20,9 @@
 
 @interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
     NSString	*logBasePath; //The base directory of all logs
+
+    NSMenuItem	*logViewerMenuItem;
+    NSMenuItem	*viewContactLogsMenuItem;
 }
 
 @end

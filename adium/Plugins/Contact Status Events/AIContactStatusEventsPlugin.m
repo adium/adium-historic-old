@@ -65,7 +65,7 @@
 
                 if(oldStatusNumber == nil || newStatus != oldStatus){
                     AIMutableOwnerArray	*signedOnArray = [inContact statusArrayForKey:@"Signed On"];
-                    AIMutableOwnerArray	*signedOffArray = [inContact statusArrayForKey:@"Signed On"];
+                    AIMutableOwnerArray	*signedOffArray = [inContact statusArrayForKey:@"Signed Off"];
                     
                     //Post an online/offline notification
                     [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)

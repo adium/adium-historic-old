@@ -26,11 +26,17 @@
 
 
 @interface AILogViewerWindowController (PRIVATE)
-- (void)_scanAvailableLogs;
-- (void)_makeActiveLogsForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
+- (void)scanAvailableLogs;
+- (void)makeActiveLogsForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
+- (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
+- (void)displayLogAtPath:(NSString *)path;
 - (NSDate *)dateFromFileName:(NSString *)fileName;
 @end
-int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context);
+
+int _sortStringWithKey(id objectA, id objectB, void *key);
+int _sortStringWithKeyBackwards(id objectA, id objectB, void *key);
+int _sortDateWithKey(id objectA, id objectB, void *key);
+int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 
 @implementation AILogViewerWindowController
 
@@ -60,9 +66,10 @@ static AILogViewerWindowController *sharedInstance = nil;
 
     availableLogArray = nil;
     selectedLogArray = nil;
-    
-    [super initWithWindowNibName:windowNibName owner:self];
+    selectedColumn = nil;
+    sortDirection = 0;
 
+    [super initWithWindowNibName:windowNibName owner:self];
 
     return(self);
 }
@@ -89,13 +96,16 @@ static AILogViewerWindowController *sharedInstance = nil;
     }
 
     //Colors and alternating rows
-    [outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
-    [outlineView_contacts setDrawsAlternatingRows:YES];
-    [outlineView_contacts setAlternatingRowColor:[NSColor colorWithCalibratedRed:(231.0/255.0) green:(243.0/255.0) blue:(255.0/255.0) alpha:1.0]];
-    [outlineView_contacts setNeedsDisplay:YES];
+//    [outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
+//    [outlineView_contacts setDrawsAlternatingRows:YES];
+//    [outlineView_contacts setAlternatingRowColor:[NSColor colorWithCalibratedRed:(231.0/255.0) green:(243.0/255.0) blue:(255.0/255.0) alpha:1.0]];
+//    [outlineView_contacts setNeedsDisplay:YES];
 
     //Scan the user's logs    
-    [self _scanAvailableLogs];
+    [self scanAvailableLogs];
+
+    //Sort by date
+    selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
 }
 
 //Close the window
@@ -119,14 +129,53 @@ static AILogViewerWindowController *sharedInstance = nil;
     return(YES);
 }
 
-// prevent the system from moving our window around
+//Prevent the system from moving our window around
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
 }
 
+//Select and display the logs for the specified contact
+- (void)showLogsForContact:(AIListContact *)contact
+{
+    NSEnumerator	*groupEnumerator;
+    NSDictionary	*groupDict;
+    NSEnumerator	*contactEnumerator;
+    NSDictionary	*contactDict;
+    int			selectedRow;
+    
+    //Find this contact in our log list
+    groupEnumerator = [availableLogArray objectEnumerator];
+    while((groupDict = [groupEnumerator nextObject])){
 
-- (void)_scanAvailableLogs
+        contactEnumerator = [[groupDict objectForKey:@"Contents"] objectEnumerator];
+        while((contactDict = [contactEnumerator nextObject])){
+
+            if([(NSString *)[contactDict objectForKey:@"UID"] compare:[contact UID]] == 0 &&
+               [(NSString *)[contactDict objectForKey:@"ServiceID"] compare:[contact serviceID]] == 0){
+                
+                //Expand the containing group
+                [outlineView_contacts expandItem:groupDict];
+                    
+                //Select the contact, and scroll it visible
+                selectedRow = [outlineView_contacts rowForItem:contactDict];
+                if(selectedRow != NSNotFound){
+                    [outlineView_contacts selectRow:selectedRow byExtendingSelection:NO];
+                    [outlineView_contacts scrollRowToVisible:selectedRow];
+                }
+                
+                //Update the displayed logs
+                [self outlineViewSelectionDidChange:nil];
+
+                //Exit early
+                return;
+            }
+        }
+    }
+}
+
+//Scans the available logs, and builds the contact list in the viewer
+- (void)scanAvailableLogs
 {
     NSString		*logFolderPath = [[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
     NSString		*accountFolderPath;
@@ -178,7 +227,6 @@ static AILogViewerWindowController *sharedInstance = nil;
         }
     }
 
-
     //Build a sorted available log array from our dictionaries
     //Yes, it'd be easier to just use arrays above, but using dictionaries (and transfering the results to an array) gives us a very nice speed boost.
     [availableLogArray release];
@@ -193,24 +241,17 @@ static AILogViewerWindowController *sharedInstance = nil;
     //Sort group contents and add them to the main array
     enumerator = [[groupDict allValues] objectEnumerator];
     while(dictionary = [enumerator nextObject]){
-        [[dictionary objectForKey:@"Contents"] sortUsingFunction:_sortLogArray context:nil]; //Sort the group
+        [[dictionary objectForKey:@"Contents"] sortUsingFunction:_sortStringWithKey context:@"UID"]; //Sort the group
         [availableLogArray addObject:dictionary]; //Add it to our available log array
     }
 
     //Sort the main array
-    [availableLogArray sortUsingFunction:_sortLogArray context:nil];
+    [availableLogArray sortUsingFunction:_sortStringWithKey context:@"UID"];
     [outlineView_contacts reloadData];
 }
 
-int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
-{
-    NSString	*nameA = [objectA objectForKey:@"UID"];
-    NSString	*nameB = [objectB objectForKey:@"UID"];
-
-    return([nameA compare:nameB]);
-}
-
-- (void)_makeActiveLogsForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
+//Puts the specified contact's logs in the 'active logs' section of the viewer
+- (void)makeActiveLogsForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
     NSString		*logFolderPath = [[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
     NSString		*accountFolderPath, *subFolderPath;
@@ -261,9 +302,80 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
         }
     }
 
+    //Sort the logs correctly
+    [self sortSelectedLogArrayForTableColumn:selectedColumn direction:sortDirection];
+
+    //Reload/redisplay
     [tableView_results reloadData];
+
+    //Select the top log
+    [tableView_results selectRow:0 byExtendingSelection:NO];
+    [self tableViewSelectionDidChange:nil];
 }
 
+//Sorts the selected log array and adjusts the selected column
+- (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
+{
+    int		selectedRow;
+    id		selectedObject = nil;
+    NSString	*identifier;
+
+    //If there already was a sorted column, remove the indicator image from it.
+    if(selectedColumn && selectedColumn != tableColumn){
+        [tableView_results setIndicatorImage:nil inTableColumn:selectedColumn];
+    }
+
+    //Set the indicator image in the newly selected column
+    [tableView_results setIndicatorImage:[NSImage imageNamed:(direction ? @"NSAscendingSortIndicator" : @"NSDescendingSortIndicator")]
+                           inTableColumn:tableColumn];
+
+    //Set the highlighted table column.
+    [tableView_results setHighlightedTableColumn:tableColumn];
+    [selectedColumn release]; selectedColumn = [tableColumn retain];
+    sortDirection = direction;
+
+    //Deselect all selected rows.
+    selectedRow = [tableView_results selectedRow];
+    if(selectedRow >= 0 && selectedRow < [selectedLogArray count]){
+        selectedObject = [selectedLogArray objectAtIndex:selectedRow];
+    }
+    [tableView_results deselectAll:nil];
+
+    //Resort the data
+    identifier = [selectedColumn identifier];
+    if([identifier compare:@"To"] == 0 || [identifier compare:@"From"] == 0){
+        [selectedLogArray sortUsingFunction:(sortDirection ? _sortStringWithKeyBackwards : _sortStringWithKey)
+                                    context:identifier];
+
+    }else if([identifier compare:@"Date"] == 0){
+        [selectedLogArray sortUsingFunction:(sortDirection ? _sortDateWithKeyBackwards : _sortDateWithKey)
+                                    context:identifier];
+
+    }
+
+    //Reload the data
+    [tableView_results reloadData];
+
+    //Reapply the selection
+    if(selectedObject){
+        [tableView_results selectRow:[selectedLogArray indexOfObject:selectedObject] byExtendingSelection:NO];
+    }
+}
+
+//Displays the contents of the specified log in our window
+- (void)displayLogAtPath:(NSString *)path
+{
+    NSAttributedString	*logText;
+    
+    //Load the log
+    logText = [[[NSAttributedString alloc] initWithString:[NSString stringWithContentsOfFile:path]] autorelease];
+    [[textView_content textStorage] setAttributedString:logText];
+
+    //Scroll to the top
+    [textView_content scrollRangeToVisible:NSMakeRange(0,0)];    
+}
+
+//Returns the date specified by a filename
 - (NSDate *)dateFromFileName:(NSString *)fileName
 {
     NSScanner	*scanner = [NSScanner scannerWithString:fileName];
@@ -291,23 +403,8 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     }
 }
 
-- (void)displayLogAtPath:(NSString *)path
-{
-    NSAttributedString	*logText;
-    
-    //Load the log
-    logText = [[[NSAttributedString alloc] initWithString:[NSString stringWithContentsOfFile:path]] autorelease];
-    [[textView_content textStorage] setAttributedString:logText];
-
-    //Scroll to the top
-    [textView_content scrollRangeToVisible:NSMakeRange(0,0)];
-    
-}
-
-
-// Contact list outline view
-// -----------------------------------
-// required
+// Contact list outline view -----------------------------------------------------------------------------
+//
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
@@ -317,6 +414,7 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     }
 }
 
+//
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
     if([item objectForKey:@"Contents"]){
@@ -326,6 +424,7 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     }
 }
 
+//
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     if(item == nil){
@@ -337,11 +436,13 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     }
 }
 
+//
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
     return([item objectForKey:@"UID"]);
 }
 
+//
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
     int	row = [outlineView_contacts selectedRow];
@@ -349,12 +450,13 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     if(row != NSNotFound){
         NSDictionary	*contactDict = [outlineView_contacts itemAtRow:row];
 
-        [self _makeActiveLogsForServiceID:[contactDict objectForKey:@"ServiceID"]
-                                      UID:[contactDict objectForKey:@"UID"]];
-        
+        [self makeActiveLogsForServiceID:[contactDict objectForKey:@"ServiceID"]
+                                     UID:[contactDict objectForKey:@"UID"]];
+
     }
 }
 
+//
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
@@ -370,6 +472,7 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     [groupStateDict release];
 }
 
+//
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
@@ -388,26 +491,26 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
 }
 
 
-
-// Log Matches table view
-// -----------------------------------
+// Log Matches table view -----------------------------------------------------------------------------
+//
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return([selectedLogArray count]);
 }
 
+//
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
     NSString	*value = nil;
     
-    if([identifier compare:@"to"] == 0){
+    if([identifier compare:@"To"] == 0){
         value = [[selectedLogArray objectAtIndex:row] objectForKey:@"To"];
         
-    }else if([identifier compare:@"from"] == 0){
+    }else if([identifier compare:@"From"] == 0){
         value = [[selectedLogArray objectAtIndex:row] objectForKey:@"From"];
 
-    }else if([identifier compare:@"date"] == 0){
+    }else if([identifier compare:@"Date"] == 0){
         value = [[[selectedLogArray objectAtIndex:row] objectForKey:@"Date"] descriptionWithCalendarFormat:@"%B %d, %Y"];
         
     }
@@ -415,6 +518,7 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     return(value);
 }
 
+//
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     int	row = [tableView_results selectedRow];
@@ -426,17 +530,69 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     }
 }
 
+//
 - (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
-{
-    // check to see if this column was already the selected one and if so invert the sort function.
-    // if there already was a sorted column, remove the indicator image from it.
-    // set the indicator image in the newly selected column.
-    // set the highlighted table column.
-    // set the sort function based on what column was clicked.
-    // deselect all selected rows.
-    // resort the data
-    // reload the data
-    // reapply the selection...
+{    
+    //Sort the log array & reflect the new column
+    [self sortSelectedLogArrayForTableColumn:tableColumn
+                                   direction:(selectedColumn == tableColumn ? !sortDirection : sortDirection)];
 }
 
+
+// Sorting ------------------------------------------------------------------------------------------
+int _sortStringWithKey(id objectA, id objectB, void *key){
+    NSString	*stringA = [objectA objectForKey:key];
+    NSString	*stringB = [objectB objectForKey:key];
+
+    return([stringA compare:stringB]);
+}
+int _sortStringWithKeyBackwards(id objectA, id objectB, void *key){
+    NSString	*stringA = [objectA objectForKey:key];
+    NSString	*stringB = [objectB objectForKey:key];
+
+    return([stringB compare:stringA]);
+}
+int _sortDateWithKey(id objectA, id objectB, void *key){
+    NSDate	*stringA = [objectA objectForKey:key];
+    NSDate	*stringB = [objectB objectForKey:key];
+
+    return([stringB compare:stringA]);
+}
+int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
+    NSDate	*stringA = [objectA objectForKey:key];
+    NSDate	*stringB = [objectB objectForKey:key];
+
+    return([stringA compare:stringB]);
+}
+
+
+
+
+
+
+
+
+
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIAlternatingRowOutlineView;
+@class AIAdium, AIAlternatingRowOutlineView, AIListContact;
 
 @interface AILogViewerWindowController : NSWindowController {
     IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
@@ -26,9 +26,13 @@
 
     NSMutableArray	*availableLogArray;
     NSMutableArray	*selectedLogArray;
+
+    NSTableColumn	*selectedColumn;
+    BOOL		sortDirection;
 }
 
 + (id)logViewerWindowControllerWithOwner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
+- (void)showLogsForContact:(AIListContact *)contact;
 
 @end
