@@ -14,6 +14,9 @@
  
  AIToolbar sends this notification for each item so observers can balance any action taken via
  the NSToolbarWillAddItemNotification notification.
+ 
+ Unfortunately, it also posts the notification when the customization sheet closes, unpaired with an added
+ message, so watch out for that.
  */
 @interface NSToolbar (AIPrivate)
 - (void)_postWillDeallocToolbarNotifications;
