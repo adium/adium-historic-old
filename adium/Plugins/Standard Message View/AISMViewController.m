@@ -122,6 +122,10 @@
 	colorOutgoing = [[NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0] retain];
 	colorOutgoingBorder = [[colorOutgoing adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
 	colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
+
+	//Ignorance
+	ignoreTextColor = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_COLOR] boolValue];
+	ignoreBackgroundColor = [[prefDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue];
 	
 	//Force icons off for side prefixes
         if([prefixIncoming rangeOfString:@"%m"].location != NSNotFound) showUserIcons = NO;
@@ -132,6 +136,7 @@
         //Indentation when combining messages in appropriate modes
         headIndent = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue];
         
+	
         //Old
 	outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
         outgoingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
@@ -463,10 +468,18 @@
     [messageCell setDrawBottom:(inlinePrefixes)];
     [messageCell setDrawSides:(showUserIcons && inlinePrefixes)];
     
-    if([content isOutgoing]){
-	[messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+    //Background coloring
+    NSColor *bodyColor = [[content message] attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil];
+    if(![content isOutgoing]){
+	if(ignoreBackgroundColor || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+	    [messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
+	}else{
+	    [messageCell setFrameBackgroundColor:bodyColor
+				     borderColor:[bodyColor adjustHue:0.0 saturation:+0.3 brightness:-0.3]
+				    dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
+	}
     }else{
-	[messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
+	[messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
     }
     
     return(messageCell);
