@@ -41,22 +41,18 @@
 	if([[[adium preferenceController] preferenceForKey:KEY_IDLE_MESSAGE_ENABLED group:PREF_GROUP_IDLE_MESSAGE] boolValue] ) {
 		
 		//Remove existing content sent/received observer, and install new (if away)
-		[[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-		[[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-		[[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+		[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_RECEIVED object:nil];
+		[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_SENT object:nil];
 		[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
 		
 		//Only install new observers if we're idle
 		if([prefDict objectForKey:@"IdleSince"] != nil ) {
 			[[adium notificationCenter] addObserver:self 
 										   selector:@selector(didReceiveContent:) 
-											   name:Content_DidReceiveContent object:nil];
-			[[adium notificationCenter] addObserver:self
-										   selector:@selector(didReceiveContent:)
-											   name:Content_FirstContentRecieved object:nil];
+											   name:CONTENT_MESSAGE_RECEIVED object:nil];
 			[[adium notificationCenter] addObserver:self
 										   selector:@selector(didSendContent:) 
-											   name:Content_DidSendContent object:nil];
+											   name:CONTENT_MESSAGE_SENT object:nil];
 			[[adium notificationCenter] addObserver:self
 										   selector:@selector(chatWillClose:)
 											   name:Chat_WillClose object:nil];
@@ -70,8 +66,7 @@
 //Called when Adium receives content
 - (void)didReceiveContent:(NSNotification *)notification
 {
-
-    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
             
     NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS]];
     //If the user received a message, send our idle message to them
@@ -100,7 +95,7 @@
 //Called when Adium sends content
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
 
     if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat	*chat = [contentObject chat];
