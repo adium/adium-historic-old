@@ -67,7 +67,6 @@ AIStandardToolbarItemsPlugin,
 AIStatusChangedMessagesPlugin,
 AITabStatusIconsPlugin,
 AITextForcingPlugin,
-AITextToolbarItemsPlugin,
 AITypingNotificationPlugin,
 AIVideoChatInterfacePlugin,
 BGContactNotesPlugin,
@@ -165,7 +164,6 @@ NEHGrowlPlugin;
 	[self _loadComponentClass:[AIStatusChangedMessagesPlugin class]];
 	[self _loadComponentClass:[AITabStatusIconsPlugin class]];
 	[self _loadComponentClass:[AITextForcingPlugin class]];
-	[self _loadComponentClass:[AITextToolbarItemsPlugin class]];
 	[self _loadComponentClass:[AITypingNotificationPlugin class]];
 	[self _loadComponentClass:[AIVideoChatInterfacePlugin class]];
 	[self _loadComponentClass:[BGContactNotesPlugin class]];
