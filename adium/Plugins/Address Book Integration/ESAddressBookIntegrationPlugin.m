@@ -7,6 +7,8 @@
 
 #import "ESAddressBookIntegrationPlugin.h"
 
+#define IMAGE_LOOKUP_INTERVAL   0.1
+
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
 - (void)updateSelf;
@@ -23,7 +25,10 @@
 {
     meTag = -1;
     addressBookDict = nil;
-	
+	listObjectArrayForImageData = nil;
+	personArrayForImageData = nil;
+	imageLookupTimer = nil;
+
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
 	
@@ -86,9 +91,21 @@
         ABPerson *person = [self searchForObject:inObject];
 		
 		if (person) {
-			//Begin the image load
-			int tag = [person beginLoadingImageDataForClient:self];
-			[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
+			//Delayed lookup of image data
+			if (!listObjectArrayForImageData){
+				listObjectArrayForImageData = [[NSMutableArray alloc] init];
+				personArrayForImageData = [[NSMutableArray alloc] init];
+			}
+			
+			[listObjectArrayForImageData addObject:inObject];
+			[personArrayForImageData addObject:person];
+			if (!imageLookupTimer){
+				imageLookupTimer = [[NSTimer scheduledTimerWithTimeInterval:IMAGE_LOOKUP_INTERVAL
+																	 target:self 
+																   selector:@selector(imageFetchTimer:) 
+																   userInfo:nil
+																	repeats:YES] retain];				
+			}
 			
 			//Load the name if appropriate
 			AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
@@ -128,10 +145,12 @@
 			
 			if (person){
 				//Set the person's image to the inObject's serverside User Icon.
-				NSImage	*image = [inObject statusObjectForKey:KEY_USER_ICON];
-				if(image){
-					[person setImageData:[image TIFFRepresentation]];
+				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
+				if(!userIconData){
+					userIconData = [[inObject statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
 				}
+				
+				[person setImageData:userIconData];
 			}
 		}
     }
@@ -209,30 +228,36 @@
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
     if (inData) {
+		if (tag == meTag){
+			[[adium preferenceController] setPreference:inData
+												 forKey:KEY_USER_ICON 
+												  group:GROUP_ACCOUNT_STATUS];
+			meTag = -1;
+			
+		}else if(useABImages){
 			NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
 			
-			if(useABImages){
-				//Apply the image to the appropriate listObject
-				NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
-				
-				//Get the object from our tracking dictionary
-				AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
-				
-				if (listObject){
+			//Apply the image to the appropriate listObject
+			NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
+			
+			//Get the object from our tracking dictionary
+			AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
+			
+			if (listObject){
 				//Apply the image at lowest priority
 				[[listObject displayArrayForKey:KEY_USER_ICON] setObject:image 
-															 withOwner:self
-														 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
-				
+															   withOwner:self
+														   priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
+
 				//Notify
 				[[adium contactController] listObjectAttributesChanged:listObject
 														  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];	
-				}
 				
 			}
+			
 			//No further need for the dictionary entry
 			[trackingDict removeObjectForKey:tagNumber];
-//		}
+		}
 	}
 }
 
@@ -288,16 +313,14 @@
 
 - (void)updateSelf
 {
-    NS_DURING 
+	NS_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if (me = [[ABAddressBook sharedAddressBook] me]) {
 			
 			//Default buddy icon
-			NSData *imageData = [me imageData];
-			if (imageData){
-				[[adium preferenceController] setPreference:imageData forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
-			}
+			//Begin the image load
+			meTag = [me beginLoadingImageDataForClient:self];
 			
 			//Set account display names
 			if (enableImport){
@@ -338,12 +361,11 @@
 #pragma mark Address book caching
 - (void)rebuildAddressBookDict
 {
-	[addressBookDict release];
-	addressBookDict = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *mutableAddressBookDict = [[NSMutableDictionary alloc] init];
 
-	NSEnumerator	*peopleEnumerator = [[[ABAddressBook sharedAddressBook] people] objectEnumerator];
-	ABPerson		*person;
-	NSArray			*allServiceKeys = [serviceDict allKeys];
+	NSEnumerator		*peopleEnumerator = [[[ABAddressBook sharedAddressBook] people] objectEnumerator];
+	NSArray				*allServiceKeys = [serviceDict allKeys];
+	ABPerson			*person;
 	
 	while (person = [peopleEnumerator nextObject]){
 		
@@ -351,10 +373,10 @@
 		NSString		*serviceID;
 		
 		while (serviceID = [servicesEnumerator nextObject]){
-			NSMutableDictionary  *dict = [addressBookDict objectForKey:serviceID];
+			NSMutableDictionary  *dict = [mutableAddressBookDict objectForKey:serviceID];
 			if (!dict){
 				dict = [[[NSMutableDictionary alloc] init] autorelease];
-				[addressBookDict setObject:dict forKey:serviceID];
+				[mutableAddressBookDict setObject:dict forKey:serviceID];
 			}
 			
 			NSString *addressBookKey = [serviceDict objectForKey:serviceID];
@@ -372,6 +394,29 @@
 					//got a record with multiple names
 			}
 		}
+	}
+	
+	//After this point we only need immutable access, so make a copy and keep that around, for efficiency
+	[addressBookDict release]; addressBookDict = [mutableAddressBookDict copy];
+	[mutableAddressBookDict release];
+}
+
+- (void)imageFetchTimer:(NSTimer *)inTimer
+{
+	if ([listObjectArrayForImageData count]){
+		AIListObject	*inObject = [listObjectArrayForImageData objectAtIndex:0];
+		ABPerson		*person = [personArrayForImageData objectAtIndex:0];
+		
+		//Begin the image load
+		int tag = [person beginLoadingImageDataForClient:self];
+		[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
+		
+		[listObjectArrayForImageData removeObjectAtIndex:0];
+		[personArrayForImageData removeObjectAtIndex:0];
+	}else{
+		[listObjectArrayForImageData release]; listObjectArrayForImageData = nil;
+		[personArrayForImageData release]; personArrayForImageData = nil;
+		[imageLookupTimer invalidate]; [imageLookupTimer release]; imageLookupTimer = nil;
 	}
 }
 
