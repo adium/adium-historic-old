@@ -375,6 +375,9 @@
 			fileRef = 340833EA075C3A7900703011;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		340833ED075C3A7900703011 = {
@@ -3895,6 +3898,15 @@
 			settings = {
 			};
 		};
+		3477CAD10776E55800995429 = {
+			fileRef = 4BBF41ED066119A8001D31E1;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 		3479A83B05DC9F2400998B3D = {
 			children = (
 				4BD7D0CA04620D7C00A8010A,
@@ -5823,6 +5835,9 @@
 			fileRef = 34B70340076EDB370016E8BA;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34B70346076EDB370016E8BA = {
@@ -7131,6 +7146,7 @@
 				34E829840766B0FE00EFB3BC,
 				34B70343076EDB370016E8BA,
 				34B70345076EDB370016E8BA,
+				3477CAD10776E55800995429,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8310,6 +8326,9 @@
 			fileRef = 34D1897D076114C00075A380;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34D18980076114C00075A380 = {
@@ -8346,6 +8365,9 @@
 			fileRef = 34D189B1076131850075A380;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34D2E8670758BB0B0054C56D = {
@@ -8674,6 +8696,9 @@
 			fileRef = 34E6D38E0727354600A2643A;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34E6D3910727354600A2643A = {
@@ -8704,6 +8729,9 @@
 			fileRef = 34E829820766B0FE00EFB3BC;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34E829850766B0FE00EFB3BC = {
@@ -20617,14 +20645,6 @@
 			settings = {
 			};
 		};
-		9E23E9E206CC506A00D3C897 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = unviewedContent.png;
-			path = "Plugins/Status Menu Item/unviewedContent.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9E28FDE506ADB30D0041553E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -20775,7 +20795,6 @@
 				6C0FD8C20578D47B00D70FEB,
 				9E28FDE506ADB30D0041553E,
 				9E28FDE606ADB30D0041553E,
-				9E23E9E206CC506A00D3C897,
 				9E217B7706A74CA7002A3F27,
 				9E791D9405768B7A00547562,
 				9E791D9505768B7A00547562,
