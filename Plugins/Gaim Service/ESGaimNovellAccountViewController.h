@@ -6,10 +6,10 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#import "ESGaimAccountViewController.h"
+#import "AIAccountViewController.h"
 #import "ESGaimNovellAccount.h"
 
-@interface ESGaimNovellAccountViewController : ESGaimAccountViewController {
+@interface ESGaimNovellAccountViewController : AIAccountViewController {
 
 }
 
