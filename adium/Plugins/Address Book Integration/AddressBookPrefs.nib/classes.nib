@@ -14,10 +14,15 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {changePreference = id; }; 
+            ACTIONS = {changeSyncMethod = id; }; 
             CLASS = ESAddressBookIntegrationAdvancedPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"format_menu" = NSPopUpButton; "format_textField" = NSTextField; }; 
+            OUTLETS = {
+                "format_menu" = NSPopUpButton; 
+                "format_textField" = NSTextField; 
+                "radioButton_syncAutomatic" = NSButton; 
+                "radioButton_syncNothing" = NSButton; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {
