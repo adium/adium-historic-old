@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.130 2004/05/01 06:09:06 adamiser Exp $
+// $Id: AIContactController.m,v 1.131 2004/05/17 05:33:27 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -161,8 +161,8 @@
 	NSEnumerator	*enumerator = [array objectEnumerator];;
 	NSDictionary	*infoDict;
 	
-	NSString	*serviceID = @"serviceID";
-	NSString	*accountID = @"accountID";
+	NSString	*serviceID = @"ServiceID";
+	NSString	*accountID = @"AccountID";
 	NSString	*UID = @"UID";
 	NSString	*Ordering = @"Ordering";
 	
@@ -202,12 +202,12 @@
 		[(AIListGroup *)object setExpanded:[[infoDict objectForKey:Expanded] boolValue]];
 		
 		//Ordering
-			float orderIndex = [[infoDict objectForKey:Ordering] floatValue];
-			
-			if(orderIndex > largestOrder) largestOrder = orderIndex;
-			if(orderIndex < smallestOrder) smallestOrder = orderIndex;
-			
-			[object setOrderIndex:orderIndex];
+		float orderIndex = [[infoDict objectForKey:Ordering] floatValue];
+		
+		if(orderIndex > largestOrder) largestOrder = orderIndex;
+		if(orderIndex < smallestOrder) smallestOrder = orderIndex;
+		
+		[object setOrderIndex:orderIndex];
 	}
 }
 

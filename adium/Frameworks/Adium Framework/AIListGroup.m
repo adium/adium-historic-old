@@ -154,9 +154,6 @@
 		
 		//Add the object
 		[inObject setContainingGroup:self];
-//		if([inObject orderIndex] == -1){ //Assign an index if necessary
-//			[inObject setOrderIndex:[[adium contactController] largestOrderIndex]];
-//		}
 		[objectArray addObject:inObject];
 		
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
@@ -197,25 +194,6 @@
 		[self removeObject:[objectArray objectAtIndex:0]];
 	}
 }
-
-//Move an object within this group
-//- (void)moveObject:(AIListObject *)inObject toIndex:(int)index
-//{
-//#warning posting the notification really shouldnt be done from here, should it?
-//	float	between;
-//	
-//	if(index == 0){
-//		between = (0 + 
-//				   [[objectArray objectAtIndex:index] orderIndex]) / 2.0;
-//	}else{
-//		between = ([[objectArray objectAtIndex:index-1] orderIndex] + 
-//				   [[objectArray objectAtIndex:index] orderIndex]) / 2.0;
-//	}
-//	
-//	
-//	[inObject setOrderIndex:between];
-//	[[adium contactController] sortListObject:inObject];
-//}
 
 
 //Sorting --------------------------------------------------------------------------------------------------------------
