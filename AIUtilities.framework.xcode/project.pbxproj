@@ -407,6 +407,50 @@
 			settings = {
 			};
 		};
+		07B7AF9A0797A7A7003B71E1 = {
+			children = (
+				07B7AF9D0797A952003B71E1,
+				07B7AF9E0797A952003B71E1,
+			);
+			isa = PBXGroup;
+			name = "Tree (wrapper of CFTree)";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07B7AF9D0797A952003B71E1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITree.h;
+			path = "Frameworks/AIUtilities Framework/AITree.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07B7AF9E0797A952003B71E1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITree.m;
+			path = "Frameworks/AIUtilities Framework/AITree.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07B7AF9F0797A952003B71E1 = {
+			fileRef = 07B7AF9D0797A952003B71E1;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		07B7AFA00797A952003B71E1 = {
+			fileRef = 07B7AF9E0797A952003B71E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //070
 //071
 //072
@@ -5065,6 +5109,7 @@
 				4BD1F3F106D2800900B3975E,
 				4BD1EF7A06D2637800B3975E,
 				0750FF2F073A0562000D8A1F,
+				07B7AF9A0797A7A7003B71E1,
 				4BD1EF8006D2639400B3975E,
 				4BC5A5BE0764F6CB0080ECF7,
 			);
@@ -5704,6 +5749,7 @@
 				079C113B0782FB500048E350,
 				076CAD6F0785B64000250504,
 				3433564E0793699400C84B15,
+				07B7AF9F0797A952003B71E1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5812,6 +5858,7 @@
 				34486CC406D1DF0400DA778C,
 				34486CC606D1DF0400DA778C,
 				34486CC806D1DF0400DA778C,
+				07B7AFA00797A952003B71E1,
 				34486CCB06D1DF0400DA778C,
 				34486CCD06D1DF0400DA778C,
 				34486CCF06D1DF0400DA778C,
