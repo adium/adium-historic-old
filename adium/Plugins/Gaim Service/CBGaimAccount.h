@@ -96,6 +96,7 @@
 - (oneway void)accountConnectionNotice:(NSString *)text;
 - (oneway void)accountConnectionDisconnected;
 - (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
+- (oneway void)accountFinishLogin;
 
 - (oneway void)newContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
