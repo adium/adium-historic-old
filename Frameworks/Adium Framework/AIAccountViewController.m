@@ -15,11 +15,12 @@
  */
 
 #import "AIAccount.h"
+#import "AIService.h"
+#import "AIChat.h"
 #import "AIAccountController.h"
 #import "AIAccountViewController.h"
-#import "AIChat.h"
+#import "AIContentController.h"
 #import "AIContactController.h"
-#import "AIService.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
@@ -90,8 +91,11 @@
  */
 - (void)awakeFromNib
 {
-	if(popUp_encryption) [popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil 
-																								withDefault:NO]];
+	if(popUp_encryption){
+		[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil 
+																			   withDefault:NO]];
+		[[popUp_encryption menu] setAutoenablesItems:NO];
+	}
 }
 
 
