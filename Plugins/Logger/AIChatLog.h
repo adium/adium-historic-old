@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AILog : NSObject {
+@interface AIChatLog : NSObject {
     NSString	    *path;
     NSString	    *from;
     NSString	    *to;
@@ -39,11 +39,11 @@
 
 //Comparisons
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate;
-- (NSComparisonResult)compareTo:(AILog *)inLog;
-- (NSComparisonResult)compareToReverse:(AILog *)inLog;
-- (NSComparisonResult)compareFrom:(AILog *)inLog;
-- (NSComparisonResult)compareFromReverse:(AILog *)inLog;
-- (NSComparisonResult)compareDate:(AILog *)inLog;
-- (NSComparisonResult)compareDateReverse:(AILog *)inLog;
+- (NSComparisonResult)compareTo:(AIChatLog *)inLog;
+- (NSComparisonResult)compareToReverse:(AIChatLog *)inLog;
+- (NSComparisonResult)compareFrom:(AIChatLog *)inLog;
+- (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog;
+- (NSComparisonResult)compareDate:(AIChatLog *)inLog;
+- (NSComparisonResult)compareDateReverse:(AIChatLog *)inLog;
 	
 @end

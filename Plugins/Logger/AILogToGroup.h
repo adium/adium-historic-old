@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AILog;
+@class AIChatLog;
 
 @interface AILogToGroup : NSObject {
     NSString			*path;
@@ -31,6 +31,6 @@
 - (NSEnumerator *)logEnumerator;
 - (NSString *)path;
 - (NSString *)to;
-- (AILog *)logAtPath:(NSString *)path;
+- (AIChatLog *)logAtPath:(NSString *)path;
 
 @end

@@ -21,7 +21,7 @@
 
 #define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
 
-@class AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AILog;
+@class AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AIChatLog;
 
 typedef enum {
     LOG_SEARCH_FROM = 0,
@@ -65,7 +65,7 @@ typedef enum {
 	//Array of selected / displayed logs.  (Locked access)
     NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
     NSLock				*resultsLock;			//Lock before touching the array
-    AILog				*displayedLog;			//Currently selected/displayed log
+    AIChatLog			*displayedLog;			//Currently selected/displayed log
 	
     //Search information
     int					activeSearchID;			//ID of the active search thread, all other threads should quit
