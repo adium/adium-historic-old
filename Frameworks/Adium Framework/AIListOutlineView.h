@@ -36,6 +36,11 @@ typedef enum {
 	AIBackgroundStyle	backgroundStyle;
 	
 	NSColor				*backgroundColor;
+	NSColor				*_backgroundColorWithOpacity;
+	float				backgroundOpacity;
+	
+	NSColor				*rowColor;
+	NSColor				*_rowColorWithOpacity;
 	
 	BOOL				ignoreMinimumWidth;
 }
@@ -59,10 +64,13 @@ typedef enum {
 
 //Backgrounds
 - (void)setBackgroundImage:(NSImage *)inImage;
-- (void)setBackgroundFade:(float)fade;
 - (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle;
+- (void)setBackgroundOpacity:(float)opacity;
+- (void)setBackgroundFade:(float)fade;
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (NSColor *)backgroundColor;
+- (void)setAlternatingRowColor:(NSColor *)color;
+- (NSColor *)alternatingRowColor;
 
 @end
 

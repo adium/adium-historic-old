@@ -16,6 +16,8 @@
                 "popUp_serviceIcons" = NSPopUpButton; 
                 "popUp_statusIcons" = NSPopUpButton; 
                 "popUp_windowStyle" = NSPopUpButton; 
+                "slider_windowOpacity" = NSSlider; 
+                "textField_windowOpacity" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

@@ -65,6 +65,7 @@
 	dragItems = nil;
 	showTooltips = YES;
 	showTooltipsInBackground = NO;
+	backgroundOpacity = 1.0;
 
 	[self configureViewsAndTooltips];
 	
@@ -169,7 +170,6 @@
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
 	LIST_WINDOW_STYLE	windowStyle = [self windowStyle];
-	float				backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 	NSTextAlignment		contentCellAlignment;
 	BOOL				pillowsOrPillowsFittedWindowStyle;
 	
@@ -198,6 +198,9 @@
 	}
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
+	
+	//Re-apply opacity settings for the new cells
+	[self setBackgroundOpacity:backgroundOpacity];
 	
 	//"Preferences" determined by the subclass of AIAbstractListController
 	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
@@ -263,7 +266,7 @@
 	
 	theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont];
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
-	
+
 	//Bubbles special cases
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED);
 	if(pillowsOrPillowsFittedWindowStyle){
@@ -308,16 +311,11 @@
 	}
 	
 	//Background
-	[contentCell setBackgroundOpacity:backgroundAlpha];
 	[contactListView setDrawsAlternatingRows:[[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
-#warning set alpha with a separate call and apply it within the list view...
-#warning do backgroundFade * alpha before use
 	[contactListView setBackgroundFade:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
-#warning do background color set to alpha before use
 	[contactListView setBackgroundColor:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
-#warning do grid color set to alpha before use
 	[contactListView setAlternatingRowColor:[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];
-	
+
 	//Disable background image if we're in mockie or pillows
 	[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
 										 !(pillowsOrPillowsFittedWindowStyle))];
@@ -338,6 +336,25 @@
 	[self contactListDesiredSizeChanged];
 }
 
+//Background opacity is set independently from layout
+- (void)setBackgroundOpacity:(float)opacity
+{
+	backgroundOpacity = opacity;
+
+	//Update our view and content cell for the new opacity.  Group cells are kept opaque.
+	[contentCell setBackgroundOpacity:backgroundOpacity];
+	[contactListView setBackgroundOpacity:backgroundOpacity];
+	
+	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
+	//the user has requested transparency.
+	LIST_WINDOW_STYLE	windowStyle = [self windowStyle];
+	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+		[[contactListView window] setOpaque:NO];
+	}else{
+		[[contactListView window] setOpaque:(backgroundOpacity == 1.0)];
+	}
+}
+
 //Adjust an iconPosition to be valid for a fitted aligned pillow; 
 //aligned left means the iconPosition must be on the left, and aligned right means on the right
 - (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment
@@ -352,27 +369,6 @@
 	}
 	
 	return(iconPosition);
-}
-
-- (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict
-{
-	float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
-	int				windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
-	
-	[contactListView setBackgroundFade:([[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
-	[contactListView setBackgroundColor:[[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-	[contactListView setAlternatingRowColor:[[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-	
-	//Mockie and pillow special cases
-	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
-		backgroundAlpha = 0.0;
-	}
-	
-	//Transparency.  Bye bye CPU cycles, I'll miss you!
-	[[contactListView window] setOpaque:(backgroundAlpha == 1.0)];
-	if ([contactListView respondsToSelector:@selector(setUpdateShadowsWhileDrawing:)]){
-		[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
-	}
 }
 
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict

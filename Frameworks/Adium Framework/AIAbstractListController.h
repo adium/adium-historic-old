@@ -45,7 +45,7 @@
 #define KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE		@"Vertical Autosizing"
 #define KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE		@"Horizontal Autosizing"
 #define KEY_LIST_LAYOUT_HORIZONTAL_WIDTH		@"Horizontal Width"
-#define KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY		@"Window Transparency"
+#define KEY_LIST_LAYOUT_WINDOW_OPACITY			@"Window Opacity"
 
 #define KEY_LIST_LAYOUT_CONTACT_FONT			@"Contact Font"
 #define KEY_LIST_LAYOUT_STATUS_FONT				@"Status Font"
@@ -164,6 +164,8 @@ typedef enum {
     AIListObject <AIContainingObject> 	*contactList;
 	BOOL								hideRoot;
 	
+	float 								backgroundOpacity;
+	
 	BOOL								inDrag;
 	NSArray								*dragItems;
 	
@@ -184,10 +186,11 @@ typedef enum {
 - (void)setHideRoot:(BOOL)inHideRoot;
 - (void)reloadData;
 
+- (void)setBackgroundOpacity:(float)opacity;
+
 - (IBAction)performDefaultActionOnSelectedItem:(id)sender;
 
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict;
-- (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict;
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict;
 
 - (void)contactListDesiredSizeChanged;

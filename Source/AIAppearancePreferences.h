@@ -27,6 +27,9 @@
 	IBOutlet	NSButton		*checkBox_verticalAutosizing;
 	IBOutlet	NSButton		*checkBox_horizontalAutosizing;
 	
+	IBOutlet	NSSlider		*slider_windowOpacity;
+	IBOutlet	NSTextField		*textField_windowOpacity;
+	
 	IBOutlet	NSTextField		*label_serviceIcons;
 	IBOutlet	NSTextField		*label_statusIcons;
 	IBOutlet	NSTextField		*label_dockIcons;

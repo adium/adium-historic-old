@@ -41,6 +41,7 @@
 - (NSMenu *)_iconPackMenuForPacks:(NSArray *)packs class:(Class)iconClass;
 - (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 - (void)_addWindowStyleOption:(NSString *)option withTag:(int)tag toMenu:(NSMenu *)menu;
+- (void)_updateSliderValues;
 @end
 
 @implementation AIAppearancePreferences
@@ -86,11 +87,14 @@
 	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];	
 	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
 	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
+	[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
 	
 	//Localized strings
 	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
 	[label_statusIcons setLocalizedString:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
 	[label_dockIcons setLocalizedString:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
+
+	[self _updateSliderValues];
 }
 
 /*!
@@ -137,7 +141,22 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
                                               group:PREF_GROUP_APPEARANCE];
+
+    }else if(sender == slider_windowOpacity){
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
+                                             forKey:KEY_LIST_LAYOUT_WINDOW_OPACITY
+                                              group:PREF_GROUP_APPEARANCE];
+		[self _updateSliderValues];
+		
 	}
+}
+
+/*!
+ *
+ */
+- (void)_updateSliderValues
+{
+	[textField_windowOpacity setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowOpacity floatValue]]];
 }
 
 /*!
