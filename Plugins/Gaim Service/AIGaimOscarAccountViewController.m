@@ -21,11 +21,16 @@
 
 @implementation AIGaimOscarAccountViewController
 
+/*!
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"ESGaimOscarAccountView");
 }
 
-//Configure controls
+/*!
+ * @brief Configure controls
+ */
 - (void)configureForAccount:(AIAccount *)inAccount
 {
     [super configureForAccount:inAccount];
@@ -44,7 +49,9 @@
 	}
 }
 
-//Save controls
+/*!
+ * @brief Save controls
+ */
 - (void)saveConfiguration
 {
     [super saveConfiguration];

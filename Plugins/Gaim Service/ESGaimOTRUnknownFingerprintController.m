@@ -46,7 +46,7 @@
 															   userInfo:responseInfo];
 }
 
-/*
+/*!
  * @brief Window was closed, either by a button being clicked or the user closing it
  */
 + (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
@@ -76,7 +76,7 @@
 	
 }
 
-/*
+/*!
  * @brief Called on the gaim thread to pass the unknown fingerprint response on to the OTR core
  */
 + (void)gaimThreadUnknownFingerprintResponseInfo:(NSDictionary *)responseInfo wasAccepted:(NSNumber *)fingerprintAcceptedNumber

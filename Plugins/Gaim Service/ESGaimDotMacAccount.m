@@ -34,7 +34,7 @@
 	gaim_account_set_username(account, [userNameWithMacDotCom UTF8String]);
 }
 
-/*
+/*!
  * @brief Set the spacing and capitilization of our formatted UID serverside (from CBGaimOscarAccount)
  *
  * CBGaimOscarAccount calls this to perform spacing/capitilization setting serverside.  This is not supported

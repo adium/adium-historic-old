@@ -1292,7 +1292,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListObject *listObject = nil;
 	
 	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)){
-		listObject = [[adium menuController] contactualMenuObject];
+		listObject = [[adium menuController] currentContextMenuObject];
 	}else{
 		listObject = [self selectedListObject];
 	}
@@ -1398,7 +1398,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
             }            
         }else if ((menuItem == menuItem_getInfoContextualContact) || 
 			  (menuItem == menuItem_getInfoContextualGroup)){
-		return([[adium menuController] contactualMenuObject] != nil);
+		return([[adium menuController] currentContextMenuObject] != nil);
 	}
 	
 	return YES;

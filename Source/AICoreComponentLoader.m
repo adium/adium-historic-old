@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*
+/*!
  * @class AICoreComponentLoader
  * @brief Core - Component Loader
 
@@ -78,7 +78,6 @@ CBContactLastSeenPlugin,
 CBStatusMenuItemPlugin,
 CBURLHandlingPlugin,
 CPFVersionChecker,
-CSDisconnectAllPlugin,
 DCInviteToChatPlugin,
 DCJoinChatPanelPlugin,
 DCMessageContextDisplayPlugin,
@@ -116,7 +115,7 @@ ESSecureMessagingPlugin;
 
 @implementation AICoreComponentLoader
 
-/*
+/*!
  * @brief Load integrated components
  */
 - (void)initController
@@ -173,7 +172,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[CBStatusMenuItemPlugin class]];
 	[self _loadComponentClass:[CBURLHandlingPlugin class]];
 	[self _loadComponentClass:[CPFVersionChecker class]];
-//	[self _loadComponentClass:[CSDisconnectAllPlugin class]];
 	[self _loadComponentClass:[DCInviteToChatPlugin class]];
 	[self _loadComponentClass:[DCJoinChatPanelPlugin class]];
 	[self _loadComponentClass:[DCMessageContextDisplayPlugin class]];
@@ -205,7 +203,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESSecureMessagingPlugin class]];
 }
 
-/*
+/*!
  * @brief Give all components a chance to close
  */
 - (void)closeController
@@ -216,12 +214,19 @@ ESSecureMessagingPlugin;
 	while(plugin = [enumerator nextObject]){
 		[plugin uninstallPlugin];
 	}
-	
-	[components release];
-	components = nil;
 }
 
-/*
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{	
+	[components release]; components = nil;
+	
+	[super dealloc];
+}
+
+/*!
  * @brief Load an integrated component plugin
  *
  * @param inClass The class of the component, which  must inherit from <tt>AIPlugin</tt>

@@ -29,32 +29,19 @@
 
 @implementation ESGaimYahooAccount
 
-static BOOL				didInitYahoo = NO;
-static NSDictionary		*presetStatusesDictionary = nil;
-
 - (const char*)protocolPlugin
 {
+	static BOOL	didInitYahoo = NO;
 	if (!didInitYahoo) didInitYahoo = gaim_init_yahoo_plugin();
     return "prpl-yahoo";
 }
 
-- (void)initAccount
+- (void)configureGaimAccount
 {
-	[super initAccount];
+	[super configureGaimAccount];
 
-	if (!presetStatusesDictionary){
-		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:YAHOO_STATUS_BRB],
-			STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
-			STATUS_DESCRIPTION_NOT_AT_HOME,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
-			STATUS_DESCRIPTION_NOT_AT_DESK,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
-			STATUS_DESCRIPTION_NOT_IN_OFFICE,	[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
-			STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
-			STATUS_DESCRIPTION_VACATION,		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
-			STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
-			STATUS_DESCRIPTION_STEPPED_OUT,		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
-			AILocalizedString(@"Invisible",nil),[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],nil] retain];
-	}
+	gaim_account_set_string(account, "room_list", [[self preferenceForKey:KEY_YAHOO_ROOM_LIST_SERVER
+																   group:GROUP_ACCOUNT_STATUS] UTF8String]);
 }
 
 - (NSSet *)supportedPropertyKeys
@@ -213,6 +200,21 @@ static NSDictionary		*presetStatusesDictionary = nil;
 				statusMsgString = [NSString stringWithUTF8String:f->msg];
 
 			} else if (f->status != YAHOO_STATUS_AVAILABLE) {
+				static NSDictionary		*presetStatusesDictionary = nil;
+				if (!presetStatusesDictionary){
+					presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
+						STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:YAHOO_STATUS_BRB],
+						STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
+						STATUS_DESCRIPTION_NOT_AT_HOME,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
+						STATUS_DESCRIPTION_NOT_AT_DESK,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
+						STATUS_DESCRIPTION_NOT_IN_OFFICE,	[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
+						STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
+						STATUS_DESCRIPTION_VACATION,		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
+						STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
+						STATUS_DESCRIPTION_STEPPED_OUT,		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
+						STATUS_DESCRIPTION_INVISIBLE,		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],nil] retain];
+				}
+				
 				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
 			}
 
@@ -244,7 +246,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 }
 
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

@@ -17,13 +17,13 @@
 #import "AIContentController.h"
 #import "CBActionSupportPlugin.h"
 
-/*
+/*!
  * @class CBActionSupportPlugin
  * @brief Simple outgoing content filter to turn "/me blah" into *blah*
  */
 @implementation CBActionSupportPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -31,7 +31,7 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
 }
 
-/*
+/*!
  * @brief Filter
  */
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
@@ -56,7 +56,7 @@
     return (ourMessage ? ourMessage : inAttributedString);
 }
 
-/*
+/*!
  * @brief Filter priority
  */
 - (float)filterPriority

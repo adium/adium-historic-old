@@ -33,38 +33,38 @@
 - (IBAction)changeFormat:(id)sender;
 @end
 
-/*
+/*!
  * @class ESAddressBookIntegrationAdvancedPreferences
  * @brief Provide advanced preferences for the address book integration
  */
 @implementation ESAddressBookIntegrationAdvancedPreferences
 
-/*
+/*!
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Advanced);
 }
-/*
+/*!
  * @brief Label
  */
 - (NSString *)label{
     return(AILocalizedString(@"Address Book",nil));
 }
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"AddressBookPrefs");
 }
-/*
+/*!
  * @brief Image for advanced preferences
  */
 - (NSImage *)image{
 	return [NSImage imageNamed:@"AddressBook" forClass:[self class]];
 }
 
-/*
+/*!
  * @brief Restorable preferences
  */
 - (NSDictionary *)restorablePreferences
@@ -74,7 +74,7 @@
 	return(defaultsDict);
 }
 
-/*
+/*!
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
@@ -107,7 +107,7 @@
 	[self configureControlDimming];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -115,7 +115,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Configure control dimming
  */
 - (void)configureControlDimming
@@ -140,7 +140,7 @@
 	[checkBox_preferABImages setEnabled:useImages];
 }
 
-/*
+/*!
  * @brief Configure the menu of name formats
  */
 - (void)configureFormatMenu
@@ -183,7 +183,7 @@
     [popUp_formatMenu setFrameOrigin:oldFrame.origin];
 }
 
-/*
+/*!
  * @brief Save changed name format preference
  */
 - (IBAction)changeFormat:(id)sender
@@ -193,7 +193,7 @@
                                             group:PREF_GROUP_ADDRESSBOOK];
 }
 
-/*
+/*!
  * @brief Save changed preference
  */
 - (IBAction)changePreference:(id)sender

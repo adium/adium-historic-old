@@ -52,9 +52,16 @@ DeclareString(KeyOneTimeAlert);
 
 - (void)closeController
 {
+	
+}
+
+- (void)dealloc
+{
 	[globalOnlyEventHandlers release]; globalOnlyEventHandlers = nil;
 	[eventHandlers release]; eventHandlers = nil;
 	[actionHandlers release]; actionHandlers = nil;
+	
+	[super dealloc];
 }
 
 

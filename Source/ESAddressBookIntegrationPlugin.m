@@ -31,14 +31,14 @@
 - (void)updateAllContacts;
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (NSString *)nameForPerson:(ABPerson *)person;
+- (NSString *)nameForPerson:(ABPerson *)person phonetic:(NSString **)phonetic;
 - (ABPerson *)searchForObject:(AIListObject *)inObject;
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
 - (void)rebuildAddressBookDict;
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
 @end
 
-/*
+/*!
  * @class ESAddressBookIntegrationPlugin
  * @brief Provides Apple Address Book integration
  *
@@ -50,7 +50,7 @@
 
 static	ABAddressBook	*sharedAddressBook = nil;
 
-/*
+/*!
  * @brief Install plugin
  *
  * This plugin finishes installing in adiumFinishedLaunching:
@@ -89,23 +89,31 @@ static	ABAddressBook	*sharedAddressBook = nil;
 									 object:nil];
 }
 
-/*
+/*!
  * @brief Uninstall plugin
  */
 - (void)uninstallPlugin
 {
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
-    
+}
+
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
     [serviceDict release]; serviceDict = nil;
     [trackingDict release]; trackingDict = nil;
 	[trackingDictPersonToTagNumber release]; trackingDictPersonToTagNumber = nil;
 	[trackingDictTagNumberToPerson release]; trackingDictTagNumberToPerson = nil;
 	
 	[sharedAddressBook release]; sharedAddressBook = nil;
+	
+	[super dealloc];
 }
 
-/*
+/*!
  * @brief Adium finished launching
  *
  * Register our observers for the address book changing externally and for the account list changing.
@@ -130,7 +138,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 }
 
-/*
+/*!
  * @brief Used as contacts are created and icons are changed.
  *
  * When first created, load a contact's address book information from our dict.
@@ -153,11 +161,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 			[self queueDelayedFetchOfImageForPerson:person object:inObject];
 
-			//Load the name if appropriate
-			AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
-		
 			if (enableImport) {
-				NSString			*displayName = [self nameForPerson:person];
+				//Load the name if appropriate
+				AIMutableOwnerArray *displayNameArray, *phoneticNameArray;
+				NSString			*displayName, *phoneticName = nil;
+				
+				displayNameArray = [inObject displayArrayForKey:@"Display Name"];
+				
+				displayName = [self nameForPerson:person phonetic:&phoneticName];
 				
 				//Apply the values 
 				NSString *oldValue = [displayNameArray objectWithOwner:self];
@@ -165,12 +176,46 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					[displayNameArray setObject:displayName withOwner:self];
 					modifiedAttributes = [NSSet setWithObject:@"Display Name"];
 				}
-			} else {
+				
+				if(phoneticName){
+					phoneticNameArray = [inObject displayArrayForKey:@"Phonetic Name"];
+
+					//Apply the values 
+					oldValue = [phoneticNameArray objectWithOwner:self];
+					if (!oldValue || ![oldValue isEqualToString:phoneticName]) {
+						[phoneticNameArray setObject:phoneticName withOwner:self];
+						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name"];
+					}
+				}else{
+					phoneticNameArray = [inObject displayArrayForKey:@"Phonetic Name"
+															  create:NO];
+					//Clear any stored value
+					if ([phoneticNameArray objectWithOwner:self]) {
+						[displayNameArray setObject:nil withOwner:self];
+						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name"];
+					}					
+				}
+
+			}else{
+				AIMutableOwnerArray *displayNameArray, *phoneticNameArray;
+				
+				displayNameArray = [inObject displayArrayForKey:@"Display Name"
+														 create:NO];
+
 				//Clear any stored value
-				if ([displayNameArray objectWithOwner:self]) {
+				if ([displayNameArray objectWithOwner:self]){
 					[displayNameArray setObject:nil withOwner:self];
 					modifiedAttributes = [NSSet setWithObject:@"Display Name"];
 				}
+				
+				phoneticNameArray = [inObject displayArrayForKey:@"Phonetic Name"
+														  create:NO];
+				//Clear any stored value
+				if ([phoneticNameArray objectWithOwner:self]) {
+					[displayNameArray setObject:nil withOwner:self];
+					modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name"];
+				}					
+				
 			}
 
 			//If we changed anything, request an update of the alias / long display name
@@ -204,39 +249,76 @@ static	ABAddressBook	*sharedAddressBook = nil;
     return(modifiedAttributes);
 }
 
-/*
+/*!
  * @brief Return the name of an ABPerson in the way Adium should display it
  *
  * @param person An <tt>ABPerson</tt>
+ * @param phonetic A pointer to an <tt>NSString</tt> which will be filled with the phonetic display name if available
  * @result A string based on the first name, last name, and/or nickname of the person, as specified via preferences.
  */
-- (NSString *)nameForPerson:(ABPerson *)person
+- (NSString *)nameForPerson:(ABPerson *)person phonetic:(NSString **)phonetic
 {
-	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
-	NSString *lastName = [person valueForProperty:kABLastNameProperty];
+	NSString *firstName, *lastName, *phoneticFirstName, *phoneticLastName;	
 	NSString *nickName;
 	NSString *displayName = nil;
 	
+	firstName = [person valueForProperty:kABFirstNameProperty];
+	lastName = [person valueForProperty:kABLastNameProperty];
+	phoneticFirstName = [person valueForProperty:kABFirstNamePhoneticProperty];
+	phoneticLastName = [person valueForProperty:kABLastNamePhoneticProperty];
+
 	if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
 		displayName = nickName;
-	} else if (!lastName || (displayFormat == First)) {  //If no last name is available, use the first name
+
+	}else if(!lastName || (displayFormat == First)){  
+		/* If no last name is available, use the first name */
 		displayName = firstName;
-	} else if (!firstName) {                    //If no first name is available, use the last name
+		if(phonetic != NULL) *phonetic = phoneticFirstName;
+
+	}else if(!firstName){
+		/* If no first name is available, use the last name */
 		displayName = lastName;
-	} else {                                    //Look to the preference setting
-		if (displayFormat == FirstLast){
-			displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
-		}else if (displayFormat == LastFirst){
-			displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
-		}else if (displayFormat == LastFirstNoComma){
-			displayName = [NSString stringWithFormat:@"%@ %@",lastName,firstName]; 
+		if(phonetic != NULL) *phonetic = phoneticLastName;
+
+	} else {
+		BOOL havePhonetic = ((phonetic != NULL) && (phoneticFirstName || phoneticLastName));
+
+		/* Look to the preference setting */
+		switch(displayFormat){
+			case FirstLast:
+				displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
+				if(havePhonetic){
+					*phonetic = [NSString stringWithFormat:@"%@ %@",
+						(phoneticFirstName ? phoneticFirstName : firstName),
+						(phoneticLastName ? phoneticLastName : lastName)];
+				}
+				break;
+			case LastFirst:
+				displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
+				if(havePhonetic){
+					*phonetic = [NSString stringWithFormat:@"%@, %@",
+						(phoneticLastName ? phoneticLastName : lastName),
+						(phoneticFirstName ? phoneticFirstName : firstName)];
+				}
+				break;
+			case LastFirstNoComma:
+				displayName = [NSString stringWithFormat:@"%@ %@",lastName,firstName]; 
+				if(havePhonetic){
+					*phonetic = [NSString stringWithFormat:@"%@ %@",
+						(phoneticLastName ? phoneticLastName : lastName),
+						(phoneticFirstName ? phoneticFirstName : firstName)];
+				}					
+				break;
+			case First:
+				//No action; handled before we reach the switch statement
+				break;
 		}
 	}
-	
+
 	return displayName;
 }
 
-/*
+/*!
  * @brief Observe preference changes
  *
  * On first call, this method builds the addressBookDict. Subsequently, it rebuilds the dict only if the "create metaContacts"
@@ -311,7 +393,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 #pragma mark Image data
 
-/*
+/*!
  * @brief Called when the address book completes an asynchronous image lookup
  *
  * @param inData NSData representing an NSImage
@@ -394,7 +476,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	}
 }
 
-/*
+/*!
  * @brief Queue an asynchronous image fetch for person associated with inObject
  *
  * Image lookups are done asynchronously.  This allows other processing to be done between image calls, improving the perceived
@@ -452,7 +534,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 #pragma mark Searching
-/*
+/*!
  * @brief Find an ABPerson corresponding to an AIListObject
  *
  * @param inObject The object for which it search
@@ -490,7 +572,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	return person;
 }
 
-/*
+/*!
  * @brief Find an ABPerson for a given UID and serviceID combination
  * 
  * Uses our addressBookDict cache created in rebuildAddressBook.
@@ -521,7 +603,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 #pragma mark Address book changed
-/*
+/*!
  * @brief Address book changed externally
  *
  * As a result we rebuld the address book dictionary cache and update all contacts based on it
@@ -532,7 +614,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
     [self updateAllContacts];
 }
 
-/*
+/*!
  * @brief Update all existing contacts and accounts
  */
 - (void)updateAllContacts
@@ -541,7 +623,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
     [self updateSelfIncludingIcon:YES];
 }
 
-/*
+/*!
  * @brief Account list changed: Update all existing accounts
  */
 - (void)accountListChanged:(NSNotification *)notification
@@ -549,7 +631,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[self updateSelfIncludingIcon:NO];
 }
 
-/*
+/*!
  * @brief Update all existing accounts
  *
  * We use the "me" card to determine the default icon and account display name
@@ -571,7 +653,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			if (enableImport){
 				NSEnumerator	*servicesEnumerator = [[serviceDict allKeys] objectEnumerator];
 				NSString		*serviceID;
-				NSString		*myDisplayName = [self nameForPerson:me];
+				NSString		*myDisplayName, *myPhonetic = nil;
+				
+				myDisplayName = [self nameForPerson:me phonetic:&myPhonetic];
 				
 				//Check for each service the address book supports
 				while(serviceID = [servicesEnumerator nextObject]){
@@ -602,6 +686,11 @@ static	ABAddressBook	*sharedAddressBook = nil;
 																				  withOwner:self
 																			  priorityLevel:Low_Priority];
 									
+									if(myPhonetic){
+										[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
+																					  withOwner:self
+																				  priorityLevel:Low_Priority];										
+									}									
 								}
 							}
 						}
@@ -615,7 +704,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 #pragma mark Address book caching
-/*
+/*!
  * @brief rebuild our address book lookup dictionary
  *
  * Rather than continually searching the address book, a lookup dictionary addressBookDict provides an quick and easy

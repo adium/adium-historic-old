@@ -435,8 +435,12 @@ DeclareString(FormattedUID);
 	return [[self statusObjectForKey:@"StatusMessage"] string];
 }
 
-//Display name.  A listObject attempts to have the same displayName as its containing contact (potentially its metaContact).
-//If it is not in a metaContact, its display name is return by [self ownDisplayName]
+/*!
+ * @brief Display name
+ *
+ * A listObject attempts to have the same displayName as its containing contact (potentially its metaContact).
+ * If it is not in a metaContact, its display name is return by [self ownDisplayName].
+ */
 - (NSString *)displayName
 {
     NSString	*outName;
@@ -453,11 +457,38 @@ DeclareString(FormattedUID);
     return(outName ? outName : [self formattedUID]);
 }
 
-//Display name, drawing first from any externally-provided display name, then falling back to the formatted UID
+/*!
+ * @brief This object's own display name
+ *
+ * Display name, drawing first from any externally-provided display name, then falling back to 
+ * the formatted UID.
+ */
 - (NSString *)ownDisplayName
 {
     NSString	*outName = [[self displayArrayForKey:DisplayName create:NO] objectValue];
     return(outName ? outName : [self formattedUID]);	
+}
+
+- (NSString *)phoneticName
+{
+	NSString	*outName;
+
+	//Look for a parent contact and draw a display name from by default to provide a consistent naming
+	AIListObject	*parentObject = [[adium contactController] parentContactForListObject:self];
+	if (parentObject != self){
+		outName = [parentObject phoneticName];
+	}else{
+		outName = [self ownPhoneticName];
+	}
+	
+	//If a phonetic name was found, return it; otherwise, return the display name
+    return(outName ? outName : [self displayName]);
+}
+
+- (NSString *)ownPhoneticName
+{
+    NSString	*outName = [[self displayArrayForKey:@"Phonetic Name" create:NO] objectValue];
+    return(outName ? outName : [self displayName]);
 }
 
 //Apply an alias

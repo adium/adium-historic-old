@@ -38,13 +38,13 @@
 - (void)configurePreferences;
 @end
 
-/*
+/*!
  * @class AIOfflineContactHidingPlugin
  * @brief Component to handle showing or hiding offline contacts and hiding empty groups
  */
 @implementation AIOfflineContactHidingPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -76,16 +76,25 @@
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
 {
-	[showOfflineMenuItem release]; showOfflineMenuItem = nil;
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
-/*
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
+	[showOfflineMenuItem release]; showOfflineMenuItem = nil;
+	
+	[super dealloc];
+}
+
+/*!
  * @brief Preferences changed
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -107,7 +116,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Toggle the display of offline contacts
  */
 - (IBAction)toggleOfflineContactsMenu:(id)sender
@@ -121,7 +130,7 @@
 	[self configureOfflineContactHiding];
 }
 
-/*
+/*!
  * @brief Set the menu item title for the current offline contact hiding state
  */
 - (void)configureOfflineContactHiding
@@ -130,7 +139,7 @@
 	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
 }
 
-/*
+/*!
  * @brief Update visibility of a list object
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent

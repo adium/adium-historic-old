@@ -196,7 +196,7 @@
 	[[self window] performClose:nil];
 }
 
-/*
+/*!
  * @brief Called as the window closes
  */
 - (void)windowWillClose:(id)sender

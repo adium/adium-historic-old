@@ -76,7 +76,7 @@ typedef enum {
     
     NSMenu                              *contextualMenu;
     NSMutableDictionary					*contextualMenuItemDict;
-    AIListObject						*contactualMenuObject;
+    AIListObject						*currentContextMenuObject;
     
     //disabled until post .53
     NSMenu                              *textViewContextualMenu;
@@ -94,7 +94,7 @@ typedef enum {
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
-- (AIListObject *)contactualMenuObject;
+- (AIListObject *)currentContextMenuObject;
 
 - (NSTextView *)contextualMenuTextView;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;

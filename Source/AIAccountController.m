@@ -154,16 +154,20 @@
     
     //Remove observers (otherwise, every account added will be a duplicate next time around)
     [[adium notificationCenter] removeObserver:self];
-    
-    //Cleanup
+}
+
+- (void)dealloc
+{
+	//Cleanup
     [accountArray release];
 	[unloadableAccounts release];
     [availableServiceDict release];
     [lastAccountIDToSendContent release];
 	
 	[_cachedActiveServices release]; _cachedActiveServices = nil;
+	
+	[super dealloc];
 }
-
 
 //Account Storage ------------------------------------------------------------------------------------------------------
 #pragma mark Account Storage

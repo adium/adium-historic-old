@@ -31,7 +31,7 @@
 - (void)networkConnectivityChanged:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class ESAccountNetworkConnectivityPlugin
  * @brief Handle account connection and disconnection
  *
@@ -46,7 +46,7 @@
 
 static NSMutableSet							*accountsToConnect = nil;
 
-/*
+/*!
  * @brief Install plugin
  */
 - (void)installPlugin
@@ -79,19 +79,27 @@ static NSMutableSet							*accountsToConnect = nil;
                                                object:nil];	
 }
 
-/*
+/*!
  * @brief Uninstall plugin
  */
 - (void)uninstallPlugin
 {
-	[accountsToConnect release]; accountsToConnect = nil;
-	
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-/*
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
+	[accountsToConnect release]; accountsToConnect = nil;
+
+	[super dealloc];
+}
+
+/*!
  * @brief Adium finished launching
  *
  * Attempt to autoconnect accounts if shift is not being pressed
@@ -104,7 +112,7 @@ static NSMutableSet							*accountsToConnect = nil;
 	}
 }
 
-/*
+/*!
  * @brief Network connectivity changed
  *
  * Connect or disconnect accounts as appropriate to the new network state.
@@ -132,7 +140,7 @@ static NSMutableSet							*accountsToConnect = nil;
 }
 
 #pragma mark Connecting/Disconnecting Accounts
-/*
+/*!
  * @brief Connect or disconnect an account as appropriate to a new network reachable state
  *
  * This method uses the accountsToConnect collection to track which accounts were disconnected and should therefore be
@@ -170,7 +178,7 @@ static NSMutableSet							*accountsToConnect = nil;
 }
 
 #pragma mark Update List Object
-/*
+/*!
  * @brief Update our accountsToConnect when an account connects
  *
  * When an account successfully goes online, take it off our list of accounts to connect
@@ -191,7 +199,7 @@ static NSMutableSet							*accountsToConnect = nil;
 
 //Autoconnect
 #pragma mark Autoconnecting Accounts (at startup)
-/*
+/*!
  * @brief Auto connect accounts
  *
  * Automatically connect to accounts flagged with an auto connect property as soon as a network connection is available
@@ -228,7 +236,7 @@ static NSMutableSet							*accountsToConnect = nil;
 
 //Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
 #pragma mark Disconnect/Reconnect On Sleep
-/*
+/*!
  * @brief System is sleeping
  */
 - (void)systemWillSleep:(NSNotification *)notification
@@ -251,7 +259,7 @@ static NSMutableSet							*accountsToConnect = nil;
     }
 }
 
-/*
+/*!
  * @brief System is waking from sleep
  */
 - (void)systemDidWake:(NSNotification *)notification

@@ -393,31 +393,13 @@
 		};
 		34086A1005E5E17B00ABB759 = {
 			children = (
-				34086A7705E5E42500ABB759,
-				34086A7805E5E42600ABB759,
-				342E17EA072869610054D77A,
+				347E781107CA961300350507,
+				347E781207CA961300350507,
+				347E781907CA962100350507,
 			);
 			isa = PBXGroup;
 			name = "User Icon Handling";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34086A7705E5E42500ABB759 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESUserIconHandlingPlugin.h;
-			path = "Plugins/User Icon Handling/ESUserIconHandlingPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34086A7805E5E42600ABB759 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESUserIconHandlingPlugin.m;
-			path = "Plugins/User Icon Handling/ESUserIconHandlingPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1413,20 +1395,6 @@
 			isa = PBXBuildStyle;
 			name = "Deployment-Debug";
 		};
-		342E17EA072869610054D77A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = userIconToolbar.png;
-			path = "Plugins/User Icon Handling/userIconToolbar.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		342E17EB072869610054D77A = {
-			fileRef = 342E17EA072869610054D77A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		342E2B1A072976060054D77A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -1437,7 +1405,6 @@
 		};
 		34306FE3076F53F60025102A = {
 			children = (
-				34E385FF068FAA5100303451,
 				343EAB8306EF857F001CDAFF,
 				346E640C05153395003B2F21,
 				4BAA1B3F0632EDDE00D8B92C,
@@ -3601,9 +3568,6 @@
 		};
 		3470638906010161004F0D20 = {
 			children = (
-				F50CD61C03603BE201A8010A,
-				F53B9AC502CD12AB01A8010A,
-				4B4F5B24042D636A00A8010A,
 				3479A83B05DC9F2400998B3D,
 			);
 			isa = PBXGroup;
@@ -3723,6 +3687,607 @@
 			path = "Plugins/Contact Client/ESContactClientPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		347E778507CA825F00350507 = {
+			children = (
+				9E4CF9D104AA69B000415B22,
+				4B0473B7043E43F200A8010A,
+			);
+			isa = PBXGroup;
+			name = Messaging;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E77A907CA909E00350507 = {
+			children = (
+				34E385FF068FAA5100303451,
+			);
+			isa = PBXGroup;
+			name = Events;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E77CE07CA93B200350507 = {
+			children = (
+				347E791007CAA51400350507,
+				347E791207CAA51400350507,
+				347E782707CA964600350507,
+				347E782507CA964600350507,
+				347E790E07CAA51400350507,
+				347E790D07CAA51400350507,
+				347E792007CAA52300350507,
+				347E792107CAA52300350507,
+				347E782407CA964600350507,
+				347E782607CA964600350507,
+				347E791107CAA51400350507,
+				347E790F07CAA51400350507,
+				347E791D07CAA52300350507,
+				347E783307CA967100350507,
+				347E791F07CAA52300350507,
+				347E791E07CAA52300350507,
+				347E783907CA968400350507,
+			);
+			isa = PBXGroup;
+			name = Sorting;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E77F107CA94FE00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAccountEvents.h;
+			path = Source/ESAccountEvents.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E77F207CA94FE00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAccountEvents.m;
+			path = Source/ESAccountEvents.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E77F307CA94FE00350507 = {
+			fileRef = 347E77F107CA94FE00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E77F407CA94FF00350507 = {
+			fileRef = 347E77F207CA94FE00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E781107CA961300350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESUserIconHandlingPlugin.h;
+			path = Source/ESUserIconHandlingPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E781207CA961300350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESUserIconHandlingPlugin.m;
+			path = Source/ESUserIconHandlingPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E781307CA961300350507 = {
+			fileRef = 347E781107CA961300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E781407CA961300350507 = {
+			fileRef = 347E781207CA961300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E781907CA962100350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = userIconToolbar.png;
+			path = Resources/userIconToolbar.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E781A07CA962100350507 = {
+			fileRef = 347E781907CA962100350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E782407CA964600350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactSortConfigurationWindowController.h;
+			path = Source/ESContactSortConfigurationWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E782507CA964600350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactSortSelectionPlugin.m;
+			path = Source/AIContactSortSelectionPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E782607CA964600350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactSortConfigurationWindowController.m;
+			path = Source/ESContactSortConfigurationWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E782707CA964600350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactSortSelectionPlugin.h;
+			path = Source/AIContactSortSelectionPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E782807CA964600350507 = {
+			fileRef = 347E782407CA964600350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E782907CA964600350507 = {
+			fileRef = 347E782507CA964600350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E782A07CA964700350507 = {
+			fileRef = 347E782607CA964600350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E782B07CA964700350507 = {
+			fileRef = 347E782707CA964600350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E783307CA967100350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = SortingDefaults.plist;
+			path = Resources/SortingDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E783407CA967100350507 = {
+			fileRef = 347E783307CA967100350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E783907CA968400350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = SortConfiguration.nib;
+			path = Resources/SortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E783A07CA968500350507 = {
+			fileRef = 347E783907CA968400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E784A07CA96D600350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactListEditorPlugin.m;
+			path = Source/AIContactListEditorPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E784B07CA96D700350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactListEditorPlugin.h;
+			path = Source/AIContactListEditorPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E784C07CA96D700350507 = {
+			fileRef = 347E784A07CA96D600350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E784D07CA96D700350507 = {
+			fileRef = 347E784B07CA96D700350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E785207CA96E200350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AINewContactWindowController.m;
+			path = Source/AINewContactWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E785307CA96E200350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AINewContactWindowController.h;
+			path = Source/AINewContactWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E785407CA96E200350507 = {
+			fileRef = 347E785207CA96E200350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E785507CA96E200350507 = {
+			fileRef = 347E785307CA96E200350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E785E07CA970500350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AINewGroupWindowController.m;
+			path = Source/AINewGroupWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E785F07CA970500350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AINewGroupWindowController.h;
+			path = Source/AINewGroupWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E786007CA970500350507 = {
+			fileRef = 347E785E07CA970500350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E786107CA970500350507 = {
+			fileRef = 347E785F07CA970500350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E786907CA972100350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AddContact.nib;
+			path = Resources/AddContact.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E786A07CA972100350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AddGroup.nib;
+			path = Resources/AddGroup.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E786B07CA972100350507 = {
+			fileRef = 347E786907CA972100350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E786C07CA972100350507 = {
+			fileRef = 347E786A07CA972100350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E787107CA975900350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = inspect.png;
+			path = Resources/inspect.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E787207CA975900350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = AddContact.png;
+			path = Resources/AddContact.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E787307CA975900350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = addGroup.png;
+			path = Resources/addGroup.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E787407CA975900350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = addHandle.png;
+			path = Resources/addHandle.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E787507CA975900350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = remove.png;
+			path = Resources/remove.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E787607CA975900350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = importContacts.png;
+			path = Resources/importContacts.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E787707CA975900350507 = {
+			fileRef = 347E787107CA975900350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E787807CA975900350507 = {
+			fileRef = 347E787207CA975900350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E787907CA975900350507 = {
+			fileRef = 347E787307CA975900350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E787A07CA975900350507 = {
+			fileRef = 347E787407CA975900350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E787B07CA975900350507 = {
+			fileRef = 347E787507CA975900350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E787C07CA975900350507 = {
+			fileRef = 347E787607CA975900350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E788707CA978D00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBActionSupportPlugin.m;
+			path = Source/CBActionSupportPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E788807CA978D00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBActionSupportPlugin.h;
+			path = Source/CBActionSupportPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E788907CA978E00350507 = {
+			fileRef = 347E788707CA978D00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E788A07CA978E00350507 = {
+			fileRef = 347E788807CA978D00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E790D07CAA51400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIManualSort.m;
+			path = Source/AIManualSort.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E790E07CAA51400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIManualSort.h;
+			path = Source/AIManualSort.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E790F07CAA51400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESStatusSort.m;
+			path = Source/ESStatusSort.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E791007CAA51400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAlphabeticalSort.h;
+			path = Source/AIAlphabeticalSort.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E791107CAA51400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESStatusSort.h;
+			path = Source/ESStatusSort.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E791207CAA51400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAlphabeticalSort.m;
+			path = Source/AIAlphabeticalSort.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E791307CAA51500350507 = {
+			fileRef = 347E790D07CAA51400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E791407CAA51500350507 = {
+			fileRef = 347E790E07CAA51400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E791507CAA51500350507 = {
+			fileRef = 347E790F07CAA51400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E791607CAA51500350507 = {
+			fileRef = 347E791007CAA51400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E791707CAA51500350507 = {
+			fileRef = 347E791107CAA51400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E791807CAA51500350507 = {
+			fileRef = 347E791207CAA51400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E791D07CAA52300350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = SortConfiguration.nib;
+			path = Resources/SortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E791E07CAA52300350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = StatusSortDefaults.plist;
+			path = Resources/StatusSortDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E791F07CAA52300350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = StatusSortConfiguration.nib;
+			path = Resources/StatusSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E792007CAA52300350507 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AlphabeticalSortConfiguration.nib;
+			path = Resources/AlphabeticalSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E792107CAA52300350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = AlphabeticalSortDefaults.plist;
+			path = Resources/AlphabeticalSortDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E792207CAA52300350507 = {
+			fileRef = 347E791D07CAA52300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E792307CAA52300350507 = {
+			fileRef = 347E791E07CAA52300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E792407CAA52300350507 = {
+			fileRef = 347E791F07CAA52300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E792507CAA52300350507 = {
+			fileRef = 347E792007CAA52300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E792607CAA52300350507 = {
+			fileRef = 347E792107CAA52300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		3483928405E68B05002BC6C0 = {
 			fileEncoding = 30;
@@ -4009,24 +4574,6 @@
 			settings = {
 			};
 		};
-		348E54C00539D04C0021E541 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSDisconnectAllPlugin.h;
-			path = "Plugins/Disconnect All/CSDisconnectAllPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348E54C10539D04C0021E541 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSDisconnectAllPlugin.m;
-			path = "Plugins/Disconnect All/CSDisconnectAllPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		348E556A053A188C0021E541 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4177,8 +4724,11 @@
 		};
 		349C6E8207C9728B005EB896 = {
 			children = (
+				347E77CE07CA93B200350507,
 				9E57141405B2168100283CAD,
+				F50CD61C03603BE201A8010A,
 				4BB5CBB006EDF04D009B4517,
+				F53B9AC502CD12AB01A8010A,
 			);
 			isa = PBXGroup;
 			name = "Contact List";
@@ -4310,76 +4860,6 @@
 			path = "Plugins/Away Messages/AwayIcon.png";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		349DDD0D064066B500542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = remove.png;
-			path = "Plugins/Contact List Editor/remove.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD0E064066B500542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = inspect.png;
-			path = "Plugins/Contact List Editor/inspect.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD0F064066B500542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = importContacts.png;
-			path = "Plugins/Contact List Editor/importContacts.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD10064066B500542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = addHandle.png;
-			path = "Plugins/Contact List Editor/addHandle.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD11064066B500542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = addGroup.png;
-			path = "Plugins/Contact List Editor/addGroup.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD12064066B500542726 = {
-			fileRef = 349DDD0D064066B500542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349DDD13064066B500542726 = {
-			fileRef = 349DDD0E064066B500542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349DDD14064066B500542726 = {
-			fileRef = 349DDD0F064066B500542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349DDD15064066B500542726 = {
-			fileRef = 349DDD10064066B500542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349DDD16064066B500542726 = {
-			fileRef = 349DDD11064066B500542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		349DDD1F0640672800542726 = {
 			isa = PBXFileReference;
@@ -6233,7 +6713,6 @@
 				6CF42679057763E200F27FAA,
 				4BD6737306001BF00049CAF7,
 				4BD6737506001BF00049CAF7,
-				4BD6737E06001BF60049CAF7,
 				4BD6739906001C3F0049CAF7,
 				4BD673A206001C4D0049CAF7,
 				4BD673B406001C5D0049CAF7,
@@ -6244,20 +6723,7 @@
 				4BD673DD06001CA40049CAF7,
 				4BD673DE06001CA40049CAF7,
 				4BD673E006001CA50049CAF7,
-				4BD673E206001CAF0049CAF7,
-				4BD673E406001CB40049CAF7,
-				4BD673E606001CB40049CAF7,
-				4BD673E906001CB50049CAF7,
-				4BD673F106001CBE0049CAF7,
-				4BD673F306001CBF0049CAF7,
-				4BD673F706001CC00049CAF7,
-				4BD673F906001CC10049CAF7,
-				4BD673FD06001CC20049CAF7,
-				4BD673FF06001CC30049CAF7,
-				4BD6740306001CC50049CAF7,
-				4BD6740506001CC60049CAF7,
 				4BD6741B06001CEF0049CAF7,
-				4BD6741D06001CF00049CAF7,
 				4BD6741F06001CF00049CAF7,
 				4BD6742106001CF20049CAF7,
 				4BD6742306001CF30049CAF7,
@@ -6322,7 +6788,6 @@
 				4B052CA6067E39BE00A43B4A,
 				4BF3031B068746A8000DCA65,
 				34E38240068F7F2300303451,
-				34E3860C068FAA7900303451,
 				4B2E560A06A33D85008866CF,
 				4B60992406A4485200EC8D78,
 				34A65B0606A5A15300898470,
@@ -6403,6 +6868,17 @@
 				349C6E4A07C96D45005EB896,
 				349C6E8D07C972B2005EB896,
 				349C6F6507C99ACF005EB896,
+				347E77F307CA94FE00350507,
+				347E781307CA961300350507,
+				347E782807CA964600350507,
+				347E782B07CA964700350507,
+				347E784D07CA96D700350507,
+				347E785507CA96E200350507,
+				347E786107CA970500350507,
+				347E788A07CA978E00350507,
+				347E791407CAA51500350507,
+				347E791607CAA51500350507,
+				347E791707CAA51500350507,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6508,16 +6984,11 @@
 			files = (
 				349C7BF307C9A948005EB896,
 				34BD9D3D053146CC000AB133,
-				4BD673E806001CB50049CAF7,
-				4BD673EB06001CB60049CAF7,
-				4BD6740206001CC40049CAF7,
 				34BD9D2A053146CC000AB133,
 				34BD9D28053146CC000AB133,
 				34BD9D27053146CC000AB133,
 				34A1A7970786348F005FA1A5,
 				4BD6739A06001C400049CAF7,
-				4BD673F606001CC00049CAF7,
-				4BD673FC06001CC10049CAF7,
 				4BD6742506001CF40049CAF7,
 				349C7C7A07C9AE1B005EB896,
 				4BD6742F06001D1D0049CAF7,
@@ -6570,9 +7041,6 @@
 				34254F4C05EC0C4300F11AD7,
 				34BD9D29053146CC000AB133,
 				4B29094005F944BF0087D16F,
-				4BD673F506001CC00049CAF7,
-				4BD673FB06001CC10049CAF7,
-				4BD6740106001CC40049CAF7,
 				4BD6742606001CF40049CAF7,
 				4BD6743106001D1E0049CAF7,
 				4BD6743606001D210049CAF7,
@@ -6599,11 +7067,6 @@
 				4B494B45063AB63000E2EF06,
 				34B9BD01064062170097AF93,
 				34B9BD02064062170097AF93,
-				349DDD12064066B500542726,
-				349DDD13064066B500542726,
-				349DDD14064066B500542726,
-				349DDD15064066B500542726,
-				349DDD16064066B500542726,
 				349DDD200640672800542726,
 				349DDD330640680600542726,
 				349DDD340640680600542726,
@@ -6643,14 +7106,12 @@
 				34F6A9330710E20000F485C4,
 				34F6A9340710E20000F485C4,
 				34A273AB0721E58F004F3455,
-				342E17EB072869610054D77A,
 				347797E40729A86100A8CE8C,
 				347797ED0729A89500A8CE8C,
 				34FC6D7107318F6600801C83,
 				9E6A9BF70732CB500032C9F6,
 				9E6A9BF80732CB500032C9F6,
 				C4C63A09073889B2005E076D,
-				C44125540740B4DA003C2C5B,
 				349E602707543E17008ACCED,
 				349E602807543E18008ACCED,
 				349E602907543E18008ACCED,
@@ -6780,7 +7241,6 @@
 				6CF4267A057763E200F27FAA,
 				4BD6737406001BF00049CAF7,
 				4BD6737606001BF10049CAF7,
-				4BD6737D06001BF50049CAF7,
 				4BD6739B06001C410049CAF7,
 				4BD673A306001C4E0049CAF7,
 				4BD673B506001C5E0049CAF7,
@@ -6791,20 +7251,7 @@
 				4BD673DC06001CA40049CAF7,
 				4BD673DF06001CA50049CAF7,
 				4BD673E106001CA60049CAF7,
-				4BD673E306001CB00049CAF7,
-				4BD673E506001CB40049CAF7,
-				4BD673E706001CB40049CAF7,
-				4BD673EA06001CB60049CAF7,
-				4BD673F206001CBE0049CAF7,
-				4BD673F406001CBF0049CAF7,
-				4BD673F806001CC00049CAF7,
-				4BD673FA06001CC10049CAF7,
-				4BD673FE06001CC30049CAF7,
-				4BD6740006001CC30049CAF7,
-				4BD6740406001CC50049CAF7,
-				4BD6740606001CC60049CAF7,
 				4BD6741C06001CEF0049CAF7,
-				4BD6741E06001CF00049CAF7,
 				4BD6742006001CF10049CAF7,
 				4BD6742206001CF30049CAF7,
 				4BD6742406001CF30049CAF7,
@@ -6870,7 +7317,6 @@
 				4B052CA7067E39BE00A43B4A,
 				4BF3031C068746A8000DCA65,
 				34E38241068F7F2300303451,
-				34E3860D068FAA7900303451,
 				4B2E560B06A33D85008866CF,
 				4B60992506A4485200EC8D78,
 				34A65B0706A5A15300898470,
@@ -6950,6 +7396,17 @@
 				349C6E4907C96D45005EB896,
 				349C6E8E07C972B2005EB896,
 				349C6F6607C99ACF005EB896,
+				347E77F407CA94FF00350507,
+				347E781407CA961300350507,
+				347E782907CA964600350507,
+				347E782A07CA964700350507,
+				347E784C07CA96D700350507,
+				347E785407CA96E200350507,
+				347E786007CA970500350507,
+				347E788907CA978E00350507,
+				347E791307CAA51500350507,
+				347E791507CAA51500350507,
+				347E791807CAA51500350507,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7099,6 +7556,22 @@
 				349C6E4807C96D45005EB896,
 				349C6F8B07C99D2C005EB896,
 				349C7BF007C9A8B4005EB896,
+				347E781A07CA962100350507,
+				347E783407CA967100350507,
+				347E783A07CA968500350507,
+				347E786B07CA972100350507,
+				347E786C07CA972100350507,
+				347E787707CA975900350507,
+				347E787807CA975900350507,
+				347E787907CA975900350507,
+				347E787A07CA975900350507,
+				347E787B07CA975900350507,
+				347E787C07CA975900350507,
+				347E792207CAA52300350507,
+				347E792307CAA52300350507,
+				347E792407CAA52300350507,
+				347E792507CAA52300350507,
+				347E792607CAA52300350507,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9271,6 +9744,7 @@
 			children = (
 				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
+				34086A1005E5E17B00ABB759,
 			);
 			isa = PBXGroup;
 			name = Contacts;
@@ -9350,44 +9824,14 @@
 		};
 		34E385FF068FAA5100303451 = {
 			children = (
-				34E3860A068FAA7900303451,
-				34E3860B068FAA7900303451,
+				347E77F107CA94FE00350507,
+				347E77F207CA94FE00350507,
 			);
 			isa = PBXGroup;
 			name = "Account Events";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34E3860A068FAA7900303451 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESAccountEvents.h;
-			path = "Plugins/Account Events/ESAccountEvents.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34E3860B068FAA7900303451 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESAccountEvents.m;
-			path = "Plugins/Account Events/ESAccountEvents.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34E3860C068FAA7900303451 = {
-			fileRef = 34E3860A068FAA7900303451;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34E3860D068FAA7900303451 = {
-			fileRef = 34E3860B068FAA7900303451;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34E3C8870638D40500AA3EF7 = {
 			fileEncoding = 4;
@@ -10426,99 +10870,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34FB515B05FE62D200F0D7D7 = {
-			children = (
-				34FB51A405FE651D00F0D7D7,
-				34FB51A505FE651D00F0D7D7,
-				34FB51D705FE674600F0D7D7,
-				34FB51D805FE674600F0D7D7,
-				34FB55B305FEF48200F0D7D7,
-				34FB552A05FED0D400F0D7D7,
-			);
-			isa = PBXGroup;
-			name = "Status Sort";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB51A405FE651D00F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESStatusSortPlugin.h;
-			path = "Plugins/Status Sort/ESStatusSortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB51A505FE651D00F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESStatusSortPlugin.m;
-			path = "Plugins/Status Sort/ESStatusSortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB51D705FE674600F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESStatusSort.h;
-			path = "Plugins/Status Sort/ESStatusSort.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB51D805FE674600F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESStatusSort.m;
-			path = "Plugins/Status Sort/ESStatusSort.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB523605FE6A4C00F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactSortConfigurationWindowController.h;
-			path = "Plugins/Contact Sort Selection/ESContactSortConfigurationWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB523705FE6A4C00F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactSortConfigurationWindowController.m;
-			path = "Plugins/Contact Sort Selection/ESContactSortConfigurationWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB530D05FE9EB700F0D7D7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = SortConfiguration.nib;
-			path = "Plugins/Contact Sort Selection/SortConfiguration.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB534E05FEA03500F0D7D7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AlphabeticalSortConfiguration.nib;
-			path = "Plugins/Alphabetical Sort/AlphabeticalSortConfiguration.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB541105FEA88800F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = AlphabeticalSortDefaults.plist;
-			path = "Plugins/Alphabetical Sort/AlphabeticalSortDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34FB54DD05FEC73A00F0D7D7 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -10534,23 +10885,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = ESWebFrameViewAdditions.h;
 			path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB552A05FED0D400F0D7D7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = StatusSortConfiguration.nib;
-			path = "Plugins/Status Sort/StatusSortConfiguration.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34FB55B305FEF48200F0D7D7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = StatusSortDefaults.plist;
-			path = "Plugins/Status Sort/StatusSortDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12068,32 +12402,6 @@
 			settings = {
 			};
 		};
-		4B09D5C405D5270B00BC00F0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AINewGroupWindowController.h;
-			path = "Plugins/Contact List Editor/AINewGroupWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B09D5C505D5270B00BC00F0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AINewGroupWindowController.m;
-			path = "Plugins/Contact List Editor/AINewGroupWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B09D5C805D5271A00BC00F0 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AddGroup.nib;
-			path = "Plugins/Contact List Editor/AddGroup.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B0E342E04C4677700A8010A = {
 			children = (
 				4B31E8C004C46A9100A8010A,
@@ -12150,7 +12458,6 @@
 			children = (
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
-				BF7BF5E7052BA0EF00000202,
 				6E97F12F04A94C0100472FFF,
 			);
 			isa = PBXGroup;
@@ -12331,21 +12638,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAccountSelectionView.m;
 			path = "Plugins/Dual Window Interface/AIAccountSelectionView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B254C4803F7073900A8010A = {
-			children = (
-				4B9E73E303F708A800A8010A,
-				4B9E73E403F708A800A8010A,
-				34FB523605FE6A4C00F0D7D7,
-				34FB523705FE6A4C00F0D7D7,
-				4BE4B0E903F9C2AF00A8010A,
-				34FB530D05FE9EB700F0D7D7,
-			);
-			isa = PBXGroup;
-			name = "Contact Sort Selection";
-			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12648,6 +12940,7 @@
 		};
 		4B3717000510D19400A8010A = {
 			children = (
+				4B1332390459BCFA00A8010A,
 				7ECB106D06A4D21700812D5F,
 				BFEBDBF90669025600CBF845,
 			);
@@ -12869,25 +13162,10 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B4F5B24042D636A00A8010A = {
-			children = (
-				4B254C4803F7073900A8010A,
-				4BED5A5303C34F1E00A8010A,
-				34FB515B05FE62D200F0D7D7,
-				4B7BD8690412586500A8010A,
-			);
-			isa = PBXGroup;
-			name = Sorting;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B4F5B25042D637700A8010A = {
 			children = (
 				34C2D31006334A460018E5D2,
 				4B18A51F0459F89300A8010A,
-				4B0473B7043E43F200A8010A,
-				34086A1005E5E17B00ABB759,
 			);
 			isa = PBXGroup;
 			name = Contacts;
@@ -12907,7 +13185,6 @@
 		};
 		4B4F5B2A042D63E200A8010A = {
 			children = (
-				9E4CF9D104AA69B000415B22,
 				34F8A7FA05A8927F00577775,
 				4BF4813B049A802E00A8010A,
 				7E64083B06629DD7006A5552,
@@ -13201,9 +13478,11 @@
 		};
 		4B587C0507ABFC87001832A9 = {
 			children = (
+				347E77A907CA909E00350507,
 				34E29FCE07AF091C006735BC,
 				34E2A2FD07B0193B006735BC,
 				349C6E8207C9728B005EB896,
+				347E778507CA825F00350507,
 				4B587C3707ABFCA8001832A9,
 				4BCAC53407B59F9C006641B9,
 			);
@@ -13214,7 +13493,6 @@
 		};
 		4B587C0807ABFC8E001832A9 = {
 			children = (
-				4B1332390459BCFA00A8010A,
 				4B4F5B25042D637700A8010A,
 				3470638906010161004F0D20,
 				34306FE3076F53F60025102A,
@@ -13923,73 +14201,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B7BD56204123BEB00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAlphabeticalSort.h;
-			path = "Plugins/Alphabetical Sort/AIAlphabeticalSort.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD56304123BEB00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAlphabeticalSort.m;
-			path = "Plugins/Alphabetical Sort/AIAlphabeticalSort.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD8690412586500A8010A = {
-			children = (
-				4B7BD86A0412588A00A8010A,
-				4B7BD86B0412588A00A8010A,
-				4B7BD86E041258F400A8010A,
-				4B7BD86F041258F400A8010A,
-			);
-			isa = PBXGroup;
-			name = "Manual Sort";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD86A0412588A00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIManualSortPlugin.h;
-			path = "Plugins/Manual Sort/AIManualSortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD86B0412588A00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIManualSortPlugin.m;
-			path = "Plugins/Manual Sort/AIManualSortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD86E041258F400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIManualSort.h;
-			path = "Plugins/Manual Sort/AIManualSort.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD86F041258F400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIManualSort.m;
-			path = "Plugins/Manual Sort/AIManualSort.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B7F277E05440C0800CDFC90 = {
 			buildActionMask = 2147483647;
@@ -14932,24 +15143,6 @@
 			settings = {
 			};
 		};
-		4B9E73E303F708A800A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactSortSelectionPlugin.h;
-			path = "Plugins/Contact Sort Selection/AIContactSortSelectionPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B9E73E403F708A800A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactSortSelectionPlugin.m;
-			path = "Plugins/Contact Sort Selection/AIContactSortSelectionPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BA12FFC04C0A12900A8010A = {
 			children = (
 				4B970BF80535B864002F28F9,
@@ -15600,24 +15793,6 @@
 			settings = {
 			};
 		};
-		4BB1BE5505BADB4700E0C9D2 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AINewContactWindowController.h;
-			path = "Plugins/Contact List Editor/AINewContactWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB1BE5605BADB4700E0C9D2 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AINewContactWindowController.m;
-			path = "Plugins/Contact List Editor/AINewContactWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BB1E43E067F2CA100D1DB86 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -15692,14 +15867,6 @@
 			isa = PBXGroup;
 			name = "Text Forcing";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBDE39805B2F2DA00EA51E7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AddContact.nib;
-			path = "Plugins/Contact List Editor/AddContact.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16545,18 +16712,6 @@
 			settings = {
 			};
 		};
-		4BD6737D06001BF50049CAF7 = {
-			fileRef = 348E54C10539D04C0021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6737E06001BF60049CAF7 = {
-			fileRef = 348E54C00539D04C0021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6739906001C3F0049CAF7 = {
 			fileRef = F52707A104E203EA0114B3C0;
 			isa = PBXBuildFile;
@@ -16683,198 +16838,6 @@
 			settings = {
 			};
 		};
-		4BD673E206001CAF0049CAF7 = {
-			fileRef = 34086A7705E5E42500ABB759;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E306001CB00049CAF7 = {
-			fileRef = 34086A7805E5E42600ABB759;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E406001CB40049CAF7 = {
-			fileRef = F570A59C03704B9501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E506001CB40049CAF7 = {
-			fileRef = F570A59D03704B9501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E606001CB40049CAF7 = {
-			fileRef = 4BB1BE5505BADB4700E0C9D2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E706001CB40049CAF7 = {
-			fileRef = 4BB1BE5605BADB4700E0C9D2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E806001CB50049CAF7 = {
-			fileRef = 4BBDE39805B2F2DA00EA51E7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E906001CB50049CAF7 = {
-			fileRef = 4B09D5C405D5270B00BC00F0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673EA06001CB60049CAF7 = {
-			fileRef = 4B09D5C505D5270B00BC00F0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673EB06001CB60049CAF7 = {
-			fileRef = 4B09D5C805D5271A00BC00F0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F106001CBE0049CAF7 = {
-			fileRef = 4B9E73E303F708A800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F206001CBE0049CAF7 = {
-			fileRef = 4B9E73E403F708A800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F306001CBF0049CAF7 = {
-			fileRef = 34FB523605FE6A4C00F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F406001CBF0049CAF7 = {
-			fileRef = 34FB523705FE6A4C00F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F506001CC00049CAF7 = {
-			fileRef = 4BE4B0E903F9C2AF00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F606001CC00049CAF7 = {
-			fileRef = 34FB530D05FE9EB700F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F706001CC00049CAF7 = {
-			fileRef = 34FB51A405FE651D00F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F806001CC00049CAF7 = {
-			fileRef = 34FB51A505FE651D00F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673F906001CC10049CAF7 = {
-			fileRef = 34FB51D705FE674600F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673FA06001CC10049CAF7 = {
-			fileRef = 34FB51D805FE674600F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673FB06001CC10049CAF7 = {
-			fileRef = 34FB55B305FEF48200F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673FC06001CC10049CAF7 = {
-			fileRef = 34FB552A05FED0D400F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673FD06001CC20049CAF7 = {
-			fileRef = 4BED5A5F03C34FFE00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673FE06001CC30049CAF7 = {
-			fileRef = 4BED5A6003C34FFE00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673FF06001CC30049CAF7 = {
-			fileRef = 4B7BD56204123BEB00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740006001CC30049CAF7 = {
-			fileRef = 4B7BD56304123BEB00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740106001CC40049CAF7 = {
-			fileRef = 34FB541105FEA88800F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740206001CC40049CAF7 = {
-			fileRef = 34FB534E05FEA03500F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740306001CC50049CAF7 = {
-			fileRef = 4B7BD86A0412588A00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740406001CC50049CAF7 = {
-			fileRef = 4B7BD86B0412588A00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740506001CC60049CAF7 = {
-			fileRef = 4B7BD86E041258F400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6740606001CC60049CAF7 = {
-			fileRef = 4B7BD86F041258F400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6741B06001CEF0049CAF7 = {
 			fileRef = F11B9621051CDB3B0000000E;
 			isa = PBXBuildFile;
@@ -16883,18 +16846,6 @@
 		};
 		4BD6741C06001CEF0049CAF7 = {
 			fileRef = F11B9622051CDB3B0000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6741D06001CF00049CAF7 = {
-			fileRef = 9E4CF9D704AA6A0700415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6741E06001CF00049CAF7 = {
-			fileRef = 9E4CF9D804AA6A0700415B22;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17697,15 +17648,6 @@
 			settings = {
 			};
 		};
-		4BE4B0E903F9C2AF00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = SortingDefaults.plist;
-			path = "Plugins/Contact Sort Selection/SortingDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BE5AC7F07AFD46800422AD5 = {
 			children = (
 				34E00F7107B92AD0000DF265,
@@ -18042,39 +17984,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BED5A5303C34F1E00A8010A = {
-			children = (
-				4BED5A5F03C34FFE00A8010A,
-				4BED5A6003C34FFE00A8010A,
-				4B7BD56204123BEB00A8010A,
-				4B7BD56304123BEB00A8010A,
-				34FB541105FEA88800F0D7D7,
-				34FB534E05FEA03500F0D7D7,
-			);
-			isa = PBXGroup;
-			name = "Alphabetical Sort";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BED5A5F03C34FFE00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAlphabeticalSortPlugin.h;
-			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BED5A6003C34FFE00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAlphabeticalSortPlugin.m;
-			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4BF2E194067CAE9200743318 = {
 			isa = PBXFileReference;
@@ -20761,30 +20670,12 @@
 		};
 		9E4CF9D104AA69B000415B22 = {
 			children = (
-				9E4CF9D704AA6A0700415B22,
-				9E4CF9D804AA6A0700415B22,
+				347E788807CA978D00350507,
+				347E788707CA978D00350507,
 			);
 			isa = PBXGroup;
 			name = "Action Support";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E4CF9D704AA6A0700415B22 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBActionSupportPlugin.h;
-			path = "Plugins/Action Support/CBActionSupportPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E4CF9D804AA6A0700415B22 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBActionSupportPlugin.m;
-			path = "Plugins/Action Support/CBActionSupportPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21374,17 +21265,6 @@
 			settings = {
 			};
 		};
-		BF7BF5E7052BA0EF00000202 = {
-			children = (
-				348E54C00539D04C0021E541,
-				348E54C10539D04C0021E541,
-			);
-			isa = PBXGroup;
-			name = "Disconnect All";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		BFEBDBF90669025600CBF845 = {
 			children = (
 				BFEBDC010669029900CBF845,
@@ -21821,20 +21701,6 @@
 			path = "Plugins/Contact Notes/BGContactNotesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		C44125530740B4DA003C2C5B = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = AddContact.png;
-			path = "Plugins/Contact List Editor/AddContact.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C44125540740B4DA003C2C5B = {
-			fileRef = C44125530740B4DA003C2C5B;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		C45F7F6206C75E200056B1F2 = {
 			fileEncoding = 30;
@@ -22524,14 +22390,14 @@
 		};
 		F50CD61C03603BE201A8010A = {
 			children = (
-				F570A59C03704B9501A8010A,
-				F570A59D03704B9501A8010A,
-				4BB1BE5505BADB4700E0C9D2,
-				4BB1BE5605BADB4700E0C9D2,
-				4BBDE39805B2F2DA00EA51E7,
-				4B09D5C405D5270B00BC00F0,
-				4B09D5C505D5270B00BC00F0,
-				4B09D5C805D5271A00BC00F0,
+				347E784A07CA96D600350507,
+				347E784B07CA96D700350507,
+				347E785207CA96E200350507,
+				347E785307CA96E200350507,
+				347E785E07CA970500350507,
+				347E785F07CA970500350507,
+				347E786907CA972100350507,
+				347E786A07CA972100350507,
 				F5361E3103058E2A01A8010A,
 			);
 			isa = PBXGroup;
@@ -22640,12 +22506,12 @@
 		};
 		F5361E3103058E2A01A8010A = {
 			children = (
-				C44125530740B4DA003C2C5B,
-				349DDD0D064066B500542726,
-				349DDD0E064066B500542726,
-				349DDD0F064066B500542726,
-				349DDD10064066B500542726,
-				349DDD11064066B500542726,
+				347E787107CA975900350507,
+				347E787207CA975900350507,
+				347E787307CA975900350507,
+				347E787407CA975900350507,
+				347E787507CA975900350507,
+				347E787607CA975900350507,
 			);
 			isa = PBXGroup;
 			name = Images;
@@ -22832,24 +22698,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIContactInfoWindowController.m;
 			path = Source/AIContactInfoWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A59C03704B9501A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactListEditorPlugin.h;
-			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A59D03704B9501A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactListEditorPlugin.m;
-			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};

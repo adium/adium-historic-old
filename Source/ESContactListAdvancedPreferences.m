@@ -19,27 +19,27 @@
 - (void)configureControlDimming;
 @end
 
-/*
+/*!
  * @class ESContactListAdvancedPreferences
  * @brief Advanced contact list preferences
  */
 @implementation ESContactListAdvancedPreferences
 
-/*
+/*!
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Advanced);
 }
 
-/*
+/*!
  * @brief Label
  */
 - (NSString *)label{
     return(AILocalizedString(@"Contact List","Contact List Advanced Preferences category name"));
 }
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
@@ -47,14 +47,14 @@
     return(@"ContactListAdvancedPrefs");
 }
 
-/*
+/*!
  * @brief Image
  */
 - (NSImage *)image{
 	return([NSImage imageNamed:@"pref-contactList" forClass:[AIPreferenceWindowController class]]);
 }
 
-/*
+/*!
  * @brief View loaded; configure it for display
  */
 - (void)viewDidLoad
@@ -87,7 +87,7 @@
 	[self configureControlDimming];
 }
 
-/*
+/*!
  * @brief Called in response to all preference controls, applies new settings
  */
 - (IBAction)changePreference:(id)sender
@@ -121,7 +121,7 @@
     }
 }
 
-/*
+/*!
  * @brief User selected a window level
  */
 - (void)selectedWindowLevel:(id)sender
@@ -131,7 +131,7 @@
 										  group:PREF_GROUP_CONTACT_LIST];
 }
 
-/*
+/*!
  * @brief Restorable preferences
  * @result An NSDictionary of preferences to set when Restore Defaults is clicked
  */
@@ -142,7 +142,7 @@
 	return(defaultsDict);
 }
 
-/*
+/*!
  * @brief Configure control dimming
  */
 - (void)configureControlDimming

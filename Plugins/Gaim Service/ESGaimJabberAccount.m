@@ -32,27 +32,13 @@
 
 @implementation ESGaimJabberAccount
 
-static BOOL				didInitJabber = NO;
-static NSDictionary		*presetStatusesDictionary = nil;
-
 - (const char*)protocolPlugin
 {
-	[super initSSL];
+	[self initSSL];
+
+	static BOOL				didInitJabber = NO;
 	if (!didInitJabber) didInitJabber = gaim_init_jabber_plugin();
     return "prpl-jabber";
-}
-
-- (void)initAccount
-{
-	if (!presetStatusesDictionary){
-		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			STATUS_DESCRIPTION_AWAY,			[NSNumber numberWithInt:JABBER_STATE_AWAY],
-			STATUS_DESCRIPTION_FREE_FOR_CHAT,	[NSNumber numberWithInt:JABBER_STATE_CHAT],
-			STATUS_DESCRIPTION_EXTENDED_AWAY,	[NSNumber numberWithInt:JABBER_STATE_XA],
-			STATUS_DESCRIPTION_DND,				[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
-	}
-	
-	[super initAccount];
 }
 
 - (NSSet *)supportedPropertyKeys
@@ -311,6 +297,16 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			}
 			//If no custom status message, lookup the preset string for the status
 			if (!statusMsgString){
+				static NSDictionary		*presetStatusesDictionary = nil;
+				
+				if (!presetStatusesDictionary){
+					presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
+						STATUS_DESCRIPTION_AWAY,			[NSNumber numberWithInt:JABBER_STATE_AWAY],
+						STATUS_DESCRIPTION_FREE_FOR_CHAT,	[NSNumber numberWithInt:JABBER_STATE_CHAT],
+						STATUS_DESCRIPTION_EXTENDED_AWAY,	[NSNumber numberWithInt:JABBER_STATE_XA],
+						STATUS_DESCRIPTION_DND,				[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
+				}
+				
 				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:buddy->uc]];
 			}
 			
@@ -403,7 +399,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 }
 
 #pragma mark Status
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

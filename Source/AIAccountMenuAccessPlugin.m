@@ -18,13 +18,13 @@
 #import "AIAccountMenuAccessPlugin.h"
 #import "AIMenuController.h"
 
-/*
+/*!
  * @class AIAccountMenuAccessPlugin
  * @brief Provide menu access to account connection/disconnect
  */
 @implementation AIAccountMenuAccessPlugin
 
-/*
+/*!
  * @brief Install the plugin
  */
 - (void)installPlugin
@@ -32,7 +32,7 @@
 	[[adium accountController] registerAccountMenuPlugin:self];
 }
 
-/*
+/*!
  * @brief Add account menu items to our location
  *
  * Implemented as required by the AccountMenuPlugin protocol.
@@ -49,7 +49,7 @@
     }
 }
 
-/*
+/*!
  * @brief Remove account menu items from our location
  *
  * Implemented as required by the AccountMenuPlugin protocol.
@@ -66,7 +66,7 @@
     }
 }
 
-/*
+/*!
  * @brief Uninstall Plugin
  */
 - (void)uninstallPlugin

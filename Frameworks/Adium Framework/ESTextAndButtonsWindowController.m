@@ -25,7 +25,7 @@
 
 @implementation ESTextAndButtonsWindowController
 
-/*
+/*!
  * @brief Show a text and buttons window which will notify a target when a button is clicked or the window is closed.
  *
  * The buttons have titles of defaultButton, alternateButton, and otherButton.
@@ -89,7 +89,7 @@
 	return controller;
 }
 
-/*
+/*!
  * @bref Initialize
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -128,7 +128,7 @@
 	[[[self window] standardWindowButton:NSWindowCloseButton] setEnabled:allowsCloseWithoutResponse];
 }
 
-/*
+/*!
  * @brief Perform behaviors before the window closes
  *
  * If the user did not click a button to get us here, inform the target that the window closed

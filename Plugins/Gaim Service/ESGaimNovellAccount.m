@@ -21,11 +21,11 @@
 
 @implementation ESGaimNovellAccount
 
-static BOOL didInitNovell;
-
 - (const char*)protocolPlugin
 {
-	[super initSSL];
+	static BOOL didInitNovell = NO;
+
+	[self initSSL];
 	if (!didInitNovell) didInitNovell = gaim_init_novell_plugin();
     return "prpl-novell";
 }
@@ -46,7 +46,7 @@ static BOOL didInitNovell;
 }
 
 #pragma mark Status
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

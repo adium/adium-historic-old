@@ -88,7 +88,7 @@ static NSString	*prefsCategory;
     return(self);
 }
 
-/*
+/*!
  * @brief Returns the location of Adium's preference folder
  * 
  * This may be specified in our bundle's info dictionary keyed as PORTABLE_ADIUM_KEY
@@ -507,7 +507,7 @@ static NSString	*prefsCategory;
 	}
 }
 
-/*
+/*!
  * @brief Create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
  *
  * Pass it the name of the folder (e.g. @"Scripts").
@@ -558,7 +558,7 @@ static NSString	*prefsCategory;
     return targetPath;
 }
 
-/*
+/*!
  * @brief Return zero or more resource pathnames to an filename 
  *
  * Searches in the Application Support folders and the Resources/ folder of the Adium.app bundle.
@@ -614,7 +614,7 @@ static NSString	*prefsCategory;
 	return(pathArray);
 }
 
-/*
+/*!
  * @brief Return the path to be used for caching files for this user.
  *
  * @result A cached, tilde-expanded full path.

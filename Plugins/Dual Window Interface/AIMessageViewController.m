@@ -72,7 +72,7 @@
 
 @implementation AIMessageViewController
 
-/*
+/*!
  * @brief Create a new message view controller
  */
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
@@ -80,7 +80,7 @@
     return([[[self alloc] initForChat:inChat] autorelease]);
 }
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)initForChat:(AIChat *)inChat
@@ -137,7 +137,7 @@
     return(self);
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -169,7 +169,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief Invoked before the tab view item closes
  *
  * This method is invoked before our message view controller is closed.  We take the opportunity to save state
@@ -191,7 +191,7 @@
 	[userListController release]; userListController = nil;
 }
 
-/*
+/*!
  * @brief Retrieve the chat represented by this message view
  */
 - (AIChat *)chat
@@ -199,7 +199,7 @@
     return(chat);
 }
 
-/*
+/*!
  * @brief Set the source account associated with this chat
  */
 - (void)setAccount:(AIAccount *)inAccount
@@ -209,7 +209,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Retrieve the source account associated with this chat
  */
 - (AIAccount *)account
@@ -217,7 +217,7 @@
     return([chat account]);
 }
 
-/*
+/*!
  * @brief Set the destination list object associated with this chat
  */
 - (void)setListObject:(AIListContact *)listContact
@@ -227,7 +227,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Retrieve the destination list object associated with this chat
  */
 - (AIListContact *)listObject
@@ -235,7 +235,7 @@
     return([chat listObject]);
 }
 
-/*
+/*!
  * @brief Returns the selected list object in our participants list
  */
 - (AIListObject *)preferredListObject
@@ -247,7 +247,7 @@
 	return nil;
 }
 
-/*
+/*!
  * @brief Invoked when the status of our chat changes
  *
  * The only chat status change we're interested in is one to the disallow account switching flag.  When this flag 
@@ -265,7 +265,7 @@
 
 //Message Display ------------------------------------------------------------------------------------------------------
 #pragma mark Message Display
-/*
+/*!
  * @brief Configure the message display view
  */
 //XXX - This is a mess because of the naming confusion between AIMessageViewController and <AIMessageViewController>, which are actually two completely separate things :x -ai
@@ -281,7 +281,7 @@
 	[controllerView_messages setNextResponder:textView_outgoing];
 }
 
-/*
+/*!
  * @brief Access to our view
  */
 - (NSView *)view
@@ -289,7 +289,7 @@
     return(view_contents);
 }
 
-/*
+/*!
  * @brief Support for printing.  Forward the print command to our message display view
  */
 - (void)adiumPrint:(id)sender
@@ -302,7 +302,7 @@
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 #pragma mark Messaging
-/*
+/*!
  * @brief Send the entered message
  */
 - (IBAction)sendMessage:(id)sender
@@ -345,7 +345,7 @@
     }
 }
 
-/*
+/*!
  * @brief Invoked after our entered message sends
  *
  * This method hides the account selection view and clears the entered message after our message sends
@@ -356,7 +356,7 @@
     [self clearTextEntryView];
 }
 
-/*
+/*!
  * @brief Offline messaging
  */
 //XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
@@ -395,7 +395,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Offline messaging
  */
 //XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
@@ -416,7 +416,7 @@
 	[listObject release];
 }
 
-/*
+/*!
  * @brief Offline messaging
  */
 //XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
@@ -428,7 +428,7 @@
 
 //Account Selection ----------------------------------------------------------------------------------------------------
 #pragma mark Account Selection
-/*
+/*!
  * @brief Redisplay the source/destination account selector
  */
 - (void)redisplaySourceAndDestinationSelector:(NSNotification *)notification
@@ -436,7 +436,7 @@
 	[self setAccountSelectionMenuVisibleIfNeeded:YES];
 }
 
-/*
+/*!
  * @brief Toggle visibility of the account selection menus
  *
  * Invoking this method with NO will hide the account selection menus.  Invoking it with YES will show the account
@@ -458,7 +458,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Show the account selection view
  */
 - (void)_showAccountSelectionView
@@ -489,7 +489,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Hide the account selection view
  */
 - (void)_hideAccountSelectionView
@@ -518,7 +518,7 @@
 
 //Text Entry -----------------------------------------------------------------------------------------------------------
 #pragma mark Text Entry
-/*
+/*!
  * @brief Configure the text entry view
  */
 - (void)_configureTextEntryView
@@ -553,7 +553,7 @@
 											   object:textView_outgoing];
 }
 
-/*
+/*!
  * @brief Sets our text entry view as the first responder
  */
 - (void)makeTextEntryViewFirstResponder
@@ -561,7 +561,7 @@
     [[textView_outgoing window] makeFirstResponder:textView_outgoing];
 }
 
-/*
+/*!
  * @brief Clear the message entry text view
  */
 - (void)clearTextEntryView
@@ -572,7 +572,7 @@
 														object:textView_outgoing];
 }
 
-/*
+/*!
  * @brief Add text to the message entry text view 
  *
  * Adds the passed string to the entry text view at the insertion point.  If there is selected text in the view, it
@@ -584,7 +584,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
 }
 
-/*
+/*!
  * @brief Update the text entry view's height when its desired size changes
  */
 - (void)outgoingTextViewDesiredSizeDidChange:(NSNotification *)notification
@@ -625,7 +625,7 @@
 	[splitView_textEntryHorizontal setNeedsDisplay:YES];
 }
 
-/*
+/*!
  * @brief Returns the height our text entry view should be
  *
  * This method takes into account user preference, the amount of entered text, and the current window size to return
@@ -652,7 +652,7 @@
 
 //User List ------------------------------------------------------------------------------------------------------------
 #pragma mark User List
-/*
+/*!
  * @brief Set visibility of the user list
  */
 - (void)setUserListVisible:(BOOL)inVisible
@@ -664,7 +664,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Returns YES if the user list is currently visible
  */
 - (BOOL)userListVisible
@@ -672,7 +672,7 @@
 	return([[splitView_messages subviews] containsObject:scrollView_userList]);
 }
 
-/*
+/*!
  * @brief Show the user list
  */
 - (void)_showUserListView
@@ -688,7 +688,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Hide the user list
  */
 - (void)_hideUserListView
@@ -699,7 +699,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Configure the user list
  *
  * Configures the user list view and prepares it for display.  If the user list is not being shown, this configuration
@@ -729,7 +729,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update the user list in response to changes
  *
  * This method is invoked when the chat's participating contacts change.  In resopnse, it sets correct visibility of
@@ -747,7 +747,7 @@
     }
 }
 
-/*
+/*!
  * @brief The selection in the user list changed
  *
  * When the user list selection changes, we update the chat's "preferred list object", which is used
@@ -763,7 +763,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Perform default action on the selected user list object
  *
  * Here we could open a private message or display info for the user, however we perform no action
@@ -804,7 +804,7 @@
 	[splitView_messages setNeedsDisplay:YES];
 }
 
-/*
+/*!
  * @brief Returns the width our user list view should be
  *
  * This method takes into account user preference and the current window size to return a width which is most
@@ -865,7 +865,7 @@
 	}
 }
 
-/*
+/*!
  * @brief A split view had its divider position changed
  *
  * Remember the user's choice of text entry view height.

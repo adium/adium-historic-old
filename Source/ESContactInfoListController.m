@@ -82,7 +82,7 @@
     }
 }
 
-/*
+/*!
  * @brief Change the info window as the selection changes
  *
  * We want to configure for contact-specific information when a contact is selected in the drawer
@@ -101,7 +101,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Remove the selected rows from the metaContact
  */
 - (void)outlineViewDeleteSelectedRows:(NSOutlineView *)outlineView
@@ -109,7 +109,7 @@
 	[(AIContactInfoWindowController *)delegate removeContact:outlineView];
 }
 
-/*
+/*!
  * @brief Validate a drag and drop operation
  */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index

@@ -27,11 +27,11 @@
 
 #ifndef MEANWHILE_NOT_AVAILABLE
 
-static BOOL didInitMeanwhile = NO;
-
 - (const char*)protocolPlugin
 {
-	[super initSSL];
+	static BOOL didInitMeanwhile = NO;
+	
+	[self initSSL];
 	if (!didInitMeanwhile) didInitMeanwhile = gaim_init_meanwhile_plugin(); 
     return "prpl-meanwhile";
 }
@@ -115,7 +115,7 @@ static BOOL didInitMeanwhile = NO;
 }
 
 #pragma mark Status
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

@@ -42,13 +42,13 @@
 - (void)updateContactNameLabel;
 @end
 
-/*
+/*!
  * @class AINewContactWindowController
  * @brief Window controller for adding a new contact
  */
 @implementation AINewContactWindowController
 
-/*
+/*!
  * @brief Prompt for adding a new contact.
  *
  * @param parentWindow Window on which to show the prompt as a sheet. Pass nil for a panel prompt. 
@@ -78,7 +78,7 @@
 	
 }
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -91,7 +91,7 @@
     return(self);
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -103,7 +103,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief Setup the window before it is displayed
  */
 - (void)windowDidLoad
@@ -133,7 +133,7 @@
 	[[self window] center];
 }
 
-/*
+/*!
  * @brief Window is closing
  */
 - (BOOL)windowShouldClose:(id)sender
@@ -144,7 +144,7 @@
     return(YES);
 }
 
-/*
+/*!
  * @brief Should cascade windows?
  *
  * Stop automatic window positioning
@@ -154,7 +154,7 @@
     return(NO);
 }
 
-/*
+/*!
  * @brief Called as the user list edit sheet closes, dismisses the sheet
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -162,7 +162,7 @@
     [sheet orderOut:nil];
 }
 
-/*
+/*!
  * @brief Cancel
  */
 - (IBAction)cancel:(id)sender
@@ -174,7 +174,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Perform the addition of the contact
  */
 - (IBAction)addContact:(id)sender
@@ -218,7 +218,7 @@
 
 //Service Type ---------------------------------------------------------------------------------------------------------
 #pragma mark Service Type
-/*
+/*!
  * @brief Build and configure the menu of contact service types
  */
 - (void)buildContactTypeMenu
@@ -245,7 +245,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Select the first valid service type
  *
  * 'valid' in this context means that an account on the appropriate service is online.
@@ -283,7 +283,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Service type was selected from the menu
  */
 - (void)selectServiceType:(id)sender
@@ -293,7 +293,7 @@
 	[self configureForCurrentServiceType];
 }
 
-/*
+/*!
  * @brief Configure for the current service type
  */
 - (void)configureForCurrentServiceType
@@ -305,7 +305,7 @@
 
 //Add to Group ---------------------------------------------------------------------------------------------------------
 #pragma mark Add to Group
-/*
+/*!
  * @brief Build the menu of available destination groups
  */
 - (void)buildGroupMenu
@@ -337,7 +337,7 @@
 
 //Contact Name ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact Name
-/*
+/*!
  * @brief Fill in the name field if we came from a tab
  */
 - (void)configureNameAndService
@@ -361,7 +361,7 @@
 	[self configureForCurrentServiceType];
 }
 
-/*
+/*!
  * @brief Set the contact name
  *
  * This does not perform subsequent validation.
@@ -387,7 +387,7 @@
     }
 }
 
-/*
+/*!
  * @brief Entered name is changing; validate it.
  */
 - (void)controlTextDidChange:(NSNotification *)notification
@@ -397,7 +397,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Validate the entered name, enabling the add button if it is valid
  */
 - (void)validateEnteredName
@@ -441,7 +441,7 @@
 
 //Add to Accounts ------------------------------------------------------------------------------------------------------
 #pragma mark Add to Accounts
-/*
+/*!
  * @brief Update the accounts list
  */
 - (void)updateAccountList
@@ -464,7 +464,7 @@
 	[tableView_accounts reloadData];
 }
 
-/*
+/*!
  * @brief The account list changed
  */
 - (void)accountListChanged:(NSNotification *)notification
@@ -481,7 +481,7 @@
 	[self updateAccountList];
 }
 
-/*
+/*!
  * @brief Update when account connectivity changes
  *
  * If the selected service is still valid, just reload the accounts table view to update it.
@@ -502,7 +502,7 @@
 	return nil;
 }
 
-/*
+/*!
  * @brief Update the contact name label
  *
  * The label is customized for the selected service as well as localized.
@@ -570,7 +570,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Rows in the accounts table view
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -578,7 +578,7 @@
 	return([accounts count]);
 }
 
-/*
+/*!
  * @brief Object value for columns in the accounts table view
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -597,7 +597,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Will display cell
  *
  * Enable/disable account checkbox as appropriate
@@ -607,7 +607,7 @@
 	[cell setEnabled:[[accounts objectAtIndex:row] contactListEditable]];
 }
 
-/*
+/*!
  * @brief Set the enabled/disabled state for an account in the account list
  */
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -644,7 +644,7 @@
 	[tableView_accounts deselectAll:nil];
 }
 
-/*
+/*!
  * @brief Empty selector called by the group popUp menu
  */
 - (void)selectGroup:(id)sender

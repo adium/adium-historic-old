@@ -6,5 +6,7 @@
 	<string>scs.msg.yahoo.com</string>
 	<key>Connect Port</key>
 	<integer>5050</integer>
+	<key>Room List Server</key>
+	<string>http://insider.msg.yahoo.com/ycontent</string>
 </dict>
 </plist>

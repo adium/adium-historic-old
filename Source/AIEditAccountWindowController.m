@@ -37,13 +37,13 @@
 - (void)saveConfiguration;
 @end
 
-/*
+/*!
  * @class AIEditAccountWindowController
  * @brief Window controller for configuring an <tt>AIAccount</tt>
  */
 @implementation AIEditAccountWindowController
 
-/*
+/*!
  * @brief Begin editing
  *
  * @param inAccount The account to edit
@@ -69,7 +69,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Init the window controller
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount deleteIfCanceled:(BOOL)inDeleteIfCanceled
@@ -82,7 +82,7 @@
 	return(self);
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -92,7 +92,7 @@
 	[super dealloc];
 }
 	
-/*
+/*!
  * @brief Setup the window before it is displayed
  */
 - (void)windowDidLoad
@@ -123,7 +123,7 @@
 	[self _addCustomViewAndTabsForAccount:account];
 }
 
-/*
+/*!
  * @brief Window is closing
  */
 - (BOOL)windowShouldClose:(id)sender
@@ -132,7 +132,7 @@
     return(YES);
 }
 
-/*
+/*!
  * @brief Stop automatic window positioning
  *
  * We don't want the system moving our window around
@@ -142,7 +142,7 @@
     return(NO);
 }
 
-/*
+/*!
  * @brief Called as the user list edit sheet closes, dismisses the sheet
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -150,7 +150,7 @@
     [sheet orderOut:nil];
 }
 
-/*
+/*!
  * @brief Cancel
  * 
  * Close without saving changes. If deleteIfCanceled is YES, delete the account at this time.
@@ -166,7 +166,7 @@
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief Okay.
  * 
  * Save changes and close.
@@ -179,7 +179,7 @@
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief Save any configuration managed by the window controller
  *
  * Most configuration is handled by the custom view controllers.  Save any other configuration, such as the user icon.
@@ -197,7 +197,7 @@
 					 group:GROUP_ACCOUNT_STATUS];
 }
 
-/*
+/*!
  * @brief Add the custom views for an account
  */
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount
@@ -259,7 +259,7 @@
 	[tabView_auxiliary selectFirstTabViewItem:nil];
 }
 
-/*
+/*!
  * @brief Used when configuring to add custom views and remove tabs as necessary
  *
  * Add customView to setupView and return the height difference between the two if customView is taller than setupView.
@@ -300,7 +300,7 @@
 	return(heightDifference > 0 ? heightDifference : 0);
 }
 
-/*
+/*!
  * @brief Remove any existing custom views
  */
 - (void)_removeCustomViewAndTabs

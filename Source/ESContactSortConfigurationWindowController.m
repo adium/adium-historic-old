@@ -17,13 +17,13 @@
 #import "ESContactSortConfigurationWindowController.h"
 #import <Adium/AISortController.h>
 
-/*
+/*!
  * @class ESContactSortConfigurationWindowController
  * @brief Window controller for configuring sorting options for an <tt>AISortController</tt>
  */
 @implementation ESContactSortConfigurationWindowController
 
-/*
+/*!
  * @brief Show the sort configuration window for a controller
  *
  * @param controller The controller to configure
@@ -49,7 +49,7 @@
 	return sharedSortConfigInstance;
 }
 
-/*
+/*!
  * @brief Configure our window and view for a passed controller
  */
 - (void)configureForController:(AISortController *)controller
@@ -69,7 +69,7 @@
 	[[self window] setContentSize:newSize];
 }
 
-/*
+/*!
  * @brief Window did load
  */
 - (void)windowDidLoad

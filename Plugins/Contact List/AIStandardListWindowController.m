@@ -76,7 +76,7 @@
 	[[adium contactController] registerListObjectObserver:self];
 }
 
-/*
+/*!
  * @brief Window should close?
  */
 - (BOOL)windowShouldClose:(id)sender
@@ -86,7 +86,7 @@
 	return [super windowShouldClose:sender];
 }
 
-/*
+/*!
  * @brief Add state menu items to our location
  *
  * Implemented as required by the StateMenuPlugin protocol.
@@ -103,7 +103,7 @@
     }
 }
 
-/*
+/*!
  * @brief Remove state menu items from our location
  *
  * Implemented as required by the StateMenuPlugin protocol.

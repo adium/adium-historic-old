@@ -35,13 +35,13 @@
 - (void)_configureSortSelectionMenuItems;
 @end
 
-/*
+/*!
  * @class AIContactSortSelectionPlugin
  * @brief Component to manage contact sorting selection
  */
 @implementation AIContactSortSelectionPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -58,9 +58,13 @@
 								   selector:@selector(adiumFinishedLaunching:)
 									   name:Adium_CompletedApplicationLoad
 									 object:nil];
+	
+	[[adium contactController] registerListSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
+	[[adium contactController] registerListSortController:[[[ESStatusSort alloc] init] autorelease]];
+	[[adium contactController] registerListSortController:[[[AIManualSort alloc] init] autorelease]];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -69,7 +73,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Our available sort controllers changed
  */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
@@ -80,7 +84,7 @@
 	[self _configureSortSelectionMenuItems];
 }
 
-/*
+/*!
  * @brief Set the active sort controller from the preferences
  */
 - (void)_setActiveSortControllerFromPreferences
@@ -90,7 +94,7 @@
 	NSString					*identifier;
 	
 	//
-	identifier = [[adium preferenceController] preferencesForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
+	identifier = [[[adium preferenceController] preferencesForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
 															group:PREF_GROUP_CONTACT_SORTING];
 	
 	//
@@ -108,7 +112,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Configure the sort selection menu items
  */
 - (void)_configureSortSelectionMenuItems
@@ -156,7 +160,7 @@
 	[self _setConfigureSortMenuItemTitleForController:activeSortController];
 }
 
-/*
+/*!
  * @brief Changed sort selection
  *
  * @param sender <tt>NSMenuItem</tt> with an <tt>AISortController</tt> representedObject
@@ -182,7 +186,7 @@
 	[self _setConfigureSortMenuItemTitleForController:controller];
 }
 
-/*
+/*!
  * @brief Update the "configure sort" menu item for controller
  */
 - (void)_setConfigureSortMenuItemTitleForController:(AISortController *)controller
@@ -197,7 +201,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Configure the currently active sort
  */
 - (void)configureSort:(id)sender

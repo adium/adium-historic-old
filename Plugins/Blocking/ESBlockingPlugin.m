@@ -79,7 +79,7 @@
 	if(sender == blockContactMenuItem){
 		object = [[adium contactController] selectedListObject];
 	}else{
-		object = [[adium menuController] contactualMenuObject];
+		object = [[adium menuController] currentContextMenuObject];
 	}
 	
 	[self _blockObject:object unblock:NO];
@@ -92,7 +92,7 @@
 	if(sender == unblockContactMenuItem){
 		object = [[adium contactController] selectedListObject];
 	}else{
-		object = [[adium menuController] contactualMenuObject];
+		object = [[adium menuController] currentContextMenuObject];
 	}
 
 	[self _blockObject:object unblock:YES];
@@ -106,7 +106,7 @@
 		if(menuItem == blockContactMenuItem){
 			object = [[adium contactController] selectedListObject];
 		}else{
-			object = [[adium menuController] contactualMenuObject];
+			object = [[adium menuController] currentContextMenuObject];
 		}
 		return [self _searchPrivacyListsForListObject:object withDesiredResult:NO];
 		
@@ -114,7 +114,7 @@
 		if(menuItem == unblockContactMenuItem){
 			object = [[adium contactController] selectedListObject];
 		}else{
-			object = [[adium menuController] contactualMenuObject];
+			object = [[adium menuController] currentContextMenuObject];
 		}
 		return [self _searchPrivacyListsForListObject:object withDesiredResult:YES];
 	}

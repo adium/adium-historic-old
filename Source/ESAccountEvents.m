@@ -21,13 +21,13 @@
 
 #define ACCOUNT_CONNECTION_STATUS_GROUPING  2.0
 
-/*
+/*!
  * @class ESAccountEvents
  * @brief Component to handle account-related Contact Alerts events
  */
 @implementation ESAccountEvents
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -44,14 +44,14 @@
     [[adium contactController] registerListObjectObserver:self];
 }
 
-/*
+/*!
  * @brief Short description for an event
  *
  * We're global-only, so no short descriptions are needed.
  */
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID { return @""; }
 
-/*
+/*!
  * @brief Global short description for an event
  */
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
@@ -71,7 +71,7 @@
 	return(description);
 }
 
-/*
+/*!
  * @brief English, non-translated global short description for an event
  *
  * This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
@@ -96,7 +96,7 @@
 	return(description);
 }
 
-/*
+/*!
  * @brief Long description for an event
  */
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
@@ -116,7 +116,7 @@
 	return(description);
 }
 
-/*
+/*!
  * @brief Natural language description for an event
  *
  * @param eventID The event identifier
@@ -160,7 +160,7 @@
 
 
 #pragma mark Aggregation and event generation
-/*
+/*!
  * @brief Update list object
  *
  * We aggregate account connection events to avoid a quick sign on/sign off from triggering the event
@@ -197,7 +197,7 @@
 	return(nil);	
 }
 
-/*
+/*!
  * @brief Called an account connects and remains online for ACCOUNT_CONNECTION_STATUS_GROUPING
  */
 - (void)accountConnection:(NSTimer *)timer
@@ -209,7 +209,7 @@
 	[accountConnectionStatusGroupingOnlineTimer release]; accountConnectionStatusGroupingOnlineTimer = nil;
 }
 
-/*
+/*!
  * @brief Called an account disconnects and remains offline for ACCOUNT_CONNECTION_STATUS_GROUPING
  */
 - (void)accountDisconnection:(NSTimer *)timer

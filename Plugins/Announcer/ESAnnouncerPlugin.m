@@ -142,7 +142,7 @@
 				NSString	*senderString;
 				
 				//Get the sender string
-				senderString = [source displayName];
+				senderString = [source phoneticName];
 			
 				//Don't repeat the same sender string for messages twice in a row
 				if(!lastSenderString || ![senderString isEqualToString:lastSenderString]){

@@ -33,14 +33,14 @@
 - (void)accountListChanged:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class AIAccountListWindowController
  * @brief Shows a list of accounts and provides for management of them
  */
 @implementation AIAccountListWindowController
 
 AIAccountListWindowController *sharedAccountWindowInstance = nil;
-/*
+/*!
  * @brief Return a shared instance of AIAccountListWindowController.
  *
  * @result The shared instance, created if necessary
@@ -53,7 +53,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     return(sharedAccountWindowInstance);
 }
 
-/*
+/*!
  * @brief Auto save name for AIWindowController
  */
 - (NSString *)adiumFrameAutosaveName
@@ -61,7 +61,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	return(@"AIAccountListWindow");
 }
 
-/*
+/*!
  * @brief Configure the window initially
  *
  * Center the window on screen and then configure the list and menus
@@ -92,7 +92,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[super windowDidLoad];
 }
 
-/*
+/*!
  * @brief Perform actions before the window closes
  */
 - (BOOL)windowShouldClose:(id)sender
@@ -108,7 +108,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	return(YES);
 }
 
-/*
+/*!
  * @brief Account status changed.
  *
  * Disable the service menu and user name field for connected accounts
@@ -141,7 +141,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 //Actions --------------------------------------------------------------------------------------------------------------
 #pragma mark Actions
-/*
+/*!
  * @brief Create a new account
  *
  * Called when a service type is selected from the Add menu
@@ -164,7 +164,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 							  deleteIfCanceled:YES];
 }
 
-/*
+/*!
  * @brief Edit the currently selected account using <tt>AIEditAccountWindowController</tt>
  */
 - (IBAction)editAccount:(id)sender
@@ -177,7 +177,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-/*
+/*!
  * @brief Delete the selected account
  *
  * Prompts for confirmation first
@@ -203,7 +203,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 					  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
 }
 
-/*
+/*!
  * @brief Finish account deletion
  *
  * Called when the sheet is closed
@@ -234,7 +234,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 //Account List ---------------------------------------------------------------------------------------------------------
 #pragma mark Account List
-/*
+/*!
  * @brief Configure the account list table
  */
 - (void)configureAccountList
@@ -269,7 +269,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [[adium contactController] registerListObjectObserver:self];
 }
 
-/*
+/*!
  * @brief Account list changed, refresh our table
  */
 - (void)accountListChanged:(NSNotification *)notification
@@ -284,7 +284,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[self updateAccountOverview];
 }
 
-/*
+/*!
  * @brief Status icons changed, refresh our table
  */
 - (void)statusIconsChanged:(NSNotification *)notification
@@ -292,7 +292,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[tableView_accountList reloadData];
 }
 
-/*
+/*!
  * @brief Update our account overview
  *
  * The overview indicates the total number of accounts and the number which are online.
@@ -311,7 +311,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online", "Overview of total and online accounts"), [accountArray count], online]];
 }
 
-/*
+/*!
  * @brief Update control availability based on list selection
  */
 - (void)updateControlAvailability
@@ -325,7 +325,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 //Account List Table Delegate ------------------------------------------------------------------------------------------
 #pragma mark Account List (Table Delegate)
-/*
+/*!
  * @brief Delete the selected row
  */
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
@@ -333,7 +333,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [self deleteAccount:nil];
 }
 
-/*
+/*!
  * @brief Number of rows in the table
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -341,7 +341,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	return([accountArray count]);
 }
 
-/*
+/*!
  * @brief Table values
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -365,7 +365,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	return(nil);
 }
 
-/*
+/*!
  * @brief Configure cells before display
  */
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -380,7 +380,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
 }
 
-/*
+/*!
  * @brief Handle a clicked active/inactive checkbox
  *
  * Checking the box both takes the account online and sets it to autoconnect. Unchecking it does the opposite.
@@ -392,7 +392,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	}
 }
 
-/*
+/*!
  * @brief Drag start
  */
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
@@ -405,7 +405,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     return(YES);
 }
 
-/*
+/*!
  * @brief Drag validate
  */
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
@@ -417,7 +417,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-/*
+/*!
  * @brief Drag complete
  */
 - (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
@@ -437,7 +437,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-/*
+/*!
  * @brief Selection change
  */
 - (void)tableViewSelectionDidChange:(NSNotification *)notification

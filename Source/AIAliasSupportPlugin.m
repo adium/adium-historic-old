@@ -39,7 +39,7 @@
 - (NSMenu *)_contactNameMenu;
 @end
 
-/*
+/*!
  * @class AIAliasSupportPlugin
  * @brief Plugin to handle applying aliases to contacts
  *
@@ -48,7 +48,7 @@
  */
 @implementation AIAliasSupportPlugin
 
-/*
+/*!
  * @brief Install plugin
  */
 - (void)installPlugin
@@ -81,7 +81,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];	
 }
 
-/*
+/*!
  * @brief Uninstall plugin
  */
 - (void)uninstallPlugin
@@ -89,11 +89,17 @@
     [[adium contactController] unregisterListObjectObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-
-	[menu_contactSubmenu release];
 }
 
-/*
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+	[menu_contactSubmenu release];
+	[super dealloc];
+}
+
+/*!
  * @brief Change the format for the long display name used in the contact list
  *
  * @param sender An NSMenuItem which was clicked. Its tag should be an AIDisplayNameType.
@@ -105,7 +111,7 @@
 										  group:PREF_GROUP_DISPLAYFORMAT];
 }
 
-/*
+/*!
  * @brief Update list object
  *
  * As contacts are created or a formattedUID is received, update their alias, display name, and long display name
@@ -123,7 +129,7 @@
 	return(nil);
 }
 
-/*
+/*!
  * @brief Preferences changed. Our only preference is for the Long Display Name format
  *
  * Update the checked menu item since this is not done automatically.
@@ -151,7 +157,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Notification was posted to apply a specific alias
  *
  * This is used from elsewhere in Adium to request the alias of the object be updated. It's a bit ugly, really.
@@ -181,7 +187,7 @@
 }
 
 //Private ---------------------------------------------------------------------------------------
-/*
+/*!
  * @brief Apply an alias to an object
  *
  * This does not save any preferences.
@@ -260,7 +266,7 @@
 	return(modifiedAttributes);
 }
 
-/*
+/*!
  * @brief Generate the menu of long display name format choices
  *
  * @result The autoreleased menu

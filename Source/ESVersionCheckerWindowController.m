@@ -31,7 +31,7 @@
 - (void)showWindowFromBuild:(NSDate *)currentDate toBuild:(NSDate *)newestDate;
 @end
 
-/*
+/*!
  * @class ESVersionCheckerWindowController
  * @brief A window that notifies the user of new Adium releases
  *
@@ -42,7 +42,7 @@
 
 static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 
-/*
+/*!
  * @brief Display the 'Up to date' panel
  *
  * This panel tells the user that their release of Adium is the newest available
@@ -54,7 +54,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
-/*
+/*!
  * @brief Display the 'Update available' panel
  *
  * This panel tells the user that a newer release of Adium is available.
@@ -68,7 +68,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[sharedVersionCheckerInstance showWindowFromBuild:currentBuildDate toBuild:latestBuildDate];
 }
 
-/*
+/*!
  * @brief Display the 'Connection error' panel
  *
  * This panel tells the user that we were unable to retrieve version information
@@ -80,7 +80,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
     [sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
-/*
+/*!
  * @brief Configure the window
  */
 - (void)windowDidLoad
@@ -94,7 +94,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	}	
 }
 
-/*
+/*!
  * @brief Called as the window closes, release the shared window controller
  */
 - (BOOL)windowShouldClose:(id)sender
@@ -107,7 +107,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 
 //Window Display -------------------------------------------------------------------------------------------------------
 #pragma mark Window display
-/*
+/*!
  * @brief Display the new version available window for the passed build dates
  *
  * Displays a panel that tells the user that a newer release of Adium is available.  Build dates aren't required for
@@ -145,7 +145,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[self showWindow:nil];
 }
 
-/*
+/*!
  * @brief Update to the new release of Adium
  *
  * Called when the user presses the download button, this method opens the Adium download site.
@@ -156,7 +156,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief Invoked when a preference is changed
  *
  * Toggle auto-checking for new releases.  This option is unavailable for beta releases.

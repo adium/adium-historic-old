@@ -28,7 +28,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class AIExtendedStatusPlugin
  * @brief Manage the 'extended status' shown in the contact list
  *
@@ -37,7 +37,7 @@
  */
 @implementation AIExtendedStatusPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -47,7 +47,7 @@
 	whitespaceAndNewlineCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
 }
 
-/*
+/*!
  * @brief Preferences changes
  *
  * PREF_GROUP_LIST_LAYOUT changed; update our list objects if needed.
@@ -71,7 +71,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update list object's extended status messages
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -142,7 +142,7 @@
 }
 
 
-/*
+/*!
  * @brief Determine the idle string
  *
  * @param seconds Number of seconds idle

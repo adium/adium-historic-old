@@ -41,10 +41,9 @@
 
 @implementation CBGaimOscarAccount
 
-static BOOL didInitOscar = NO;
-
 - (const char*)protocolPlugin
 {
+	static BOOL didInitOscar = NO;
 	if (!didInitOscar){
 		didInitOscar = gaim_init_oscar_plugin();
 		if (!didInitOscar) NSLog(@"CBGaimOscarAccount: Oscar plugin failed to load.");
@@ -305,7 +304,7 @@ static BOOL didInitOscar = NO;
 	return nil;
 }
 
-/*
+/*!
  * @brief We are connected.
  */
 - (oneway void)accountConnectionConnected
@@ -315,7 +314,7 @@ static BOOL didInitOscar = NO;
 	[self setFormattedUID];
 }
 
-/*
+/*!
  * @brief Set the spacing and capitilization of our formatted UID serverside
  */
 - (void)setFormattedUID
@@ -338,7 +337,7 @@ static BOOL didInitOscar = NO;
 }
 
 #pragma mark Status
-/*
+/*!
  * @brief Perform the actual setting a state
  *
  * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
@@ -369,7 +368,7 @@ static BOOL didInitOscar = NO;
 	}
 }
 
-/*
+/*!
  * @brief Encode an attributed string for a status type
  *
  * Away messages are HTML encoded.  Available messages are plaintext.

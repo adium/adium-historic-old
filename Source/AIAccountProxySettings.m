@@ -31,7 +31,7 @@
 
 @implementation AIAccountProxySettings
 
-/*
+/*!
  * @brief Init our account proxy settings
  *
  * Loads AccountProxy.nib and sets up menus
@@ -49,7 +49,7 @@
 	return(self);
 }
 
-/*
+/*!
  * @brief Our view
  */
 - (NSView *)view
@@ -57,7 +57,7 @@
 	return(view_accountProxy);
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -68,7 +68,7 @@
 }
 
 
-/*
+/*!
  * @brief Toggle proxy
  *
  * Called when proxy usage is turned on or off
@@ -78,7 +78,7 @@
 	[self configureControlDimming];
 }
 
-/*
+/*!
  * @brief Change proxy type
  *
  * Called when the proxy type is changed
@@ -88,7 +88,7 @@
 	[self configureControlDimming];
 }
 
-/*
+/*!
  * @brief Configure the proxy view for the passed account
  *
  * @param inAccount The account for which to configure
@@ -121,7 +121,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Save current control values
  */
 - (void)saveConfiguration
@@ -155,7 +155,7 @@
 					forKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 }
 
-/*
+/*!
  * @brief Update password field
  */
 - (void)updatePasswordField
@@ -170,7 +170,7 @@
 	}
 }	
 
-/*
+/*!
  * @brief User changed proxy preference
  *
  * We set to nil instead of the @"" a stringValue would return because we want to return to the global (default) value
@@ -204,7 +204,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Configure dimming of proxy controls
  */
 - (void)configureControlDimming
@@ -225,7 +225,7 @@
 
 //Proxy type menu ------------------------------------------------------------------------------------------------------
 #pragma mark Proxy type menu
-/*
+/*!
  * @brief Build the proxy type menu
  *
  * @result An NSMenu of supported proxy settings
@@ -244,7 +244,7 @@
 	return [proxyMenu autorelease];
 }
 
-/*
+/*!
  * @brief Create a proxy menu menuItem
  *
  * Convenience method for _proxyMenu

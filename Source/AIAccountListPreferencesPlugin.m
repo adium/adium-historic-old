@@ -19,7 +19,7 @@
 #import "AIMenuController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
-/*
+/*!
  * @class AIAccountListPreferencesPlugin
  * @brief Manages the accounts configuration window and provides menu item access to it
  *
@@ -34,7 +34,7 @@
 #define ACCOUNT_MENU_TITLE		@"Accounts..."
 #define ACCOUNT_EDIT_MENU_TITLE	@"Edit Accounts..."
 
-/*
+/*!
  * @brief Install the plugin
  */
 - (void)installPlugin
@@ -57,7 +57,7 @@
 	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Additions];
 }
 
-/*
+/*!
  * @brief Show the accounts management window
  *
  * @param sender The menu item which was clicked to show the window

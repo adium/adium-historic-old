@@ -48,7 +48,7 @@
     //Set up our contextual menu stuff
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
-    contactualMenuObject = nil;
+    currentContextMenuObject = nil;
     textViewContextualMenu = [[NSMenu alloc] init];
     contextualMenu_TextView = nil;
 }
@@ -57,11 +57,6 @@
 - (void)closeController
 {
     //There's no need to remove the menu items, the system will take them out for us.
-}
-
-- (void)dealloc
-{
-    [super dealloc];
 }
 
 //Add a menu item
@@ -171,8 +166,8 @@
 	BOOL		separatorItem;
 	
 	//Remember what our menu is configured for
-    [contactualMenuObject release];
-    contactualMenuObject = [inObject retain];
+    [currentContextMenuObject release];
+    currentContextMenuObject = [inObject retain];
 	
 	//Get the pre-created contextual menu items
 	workingMenu = [self contextualMenuWithLocations:inLocationArray usingMenu:contextualMenu];
@@ -264,9 +259,9 @@
     return(inMenu);
 }
 
-- (AIListObject *)contactualMenuObject
+- (AIListObject *)currentContextMenuObject
 {
-    return(contactualMenuObject);
+    return(currentContextMenuObject);
 }
 
 - (NSTextView *)contextualMenuTextView

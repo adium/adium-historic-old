@@ -21,7 +21,7 @@
 
 @implementation AIStatus
 
-/*
+/*!
  * @brief Create an autoreleased AIStatus
  *
  * @result New autoreleased AIStatus
@@ -36,7 +36,7 @@
 	return(newStatus);
 }
 
-/*
+/*!
  * @brief Crate an AIStatus from a dictionary
  *
  * @param inDictionary A dictionary of keys to use as the new AIStatus's statusDict
@@ -50,7 +50,7 @@
 	return(status); 
 }
 
-/*
+/*!
  * @brief Create an autoreleased AIStatus of a specified type
  *
  * The new AIStatus will have its statusType and statusName set appropriately.
@@ -66,7 +66,7 @@
 	return(status);
 }
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)init
@@ -78,7 +78,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Copy
  */
 - (id)copyWithZone:(NSZone *)zone
@@ -96,7 +96,7 @@
 	return status;
 }
 
-/*
+/*!
  * @brief Encode with Coder
  */
 - (void)encodeWithCoder:(NSCoder *)encoder
@@ -109,7 +109,7 @@
     }
 }
 
-/*
+/*!
  * @brief Initialize with coder
  */
 - (id)initWithCoder:(NSCoder *)decoder
@@ -128,7 +128,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -166,7 +166,7 @@
 	return([AIStatusIcons statusIconForStatusID:statusID type:AIStatusIconList direction:AIIconNormal]);
 }
 
-/*
+/*!
  * @brief The status message for this status
  *
  * @result An NSAttributedString status message, or nil if no status message or a 0-length status message is set
@@ -187,7 +187,7 @@
 	return statusMessage;
 }
 
-/*
+/*!
  * @brief Set the status message
  */
 - (void)setStatusMessage:(NSAttributedString *)statusMessage
@@ -200,7 +200,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set the status message data
  */
 - (void)setStatusMessageData:(NSData *)statusMessageData
@@ -213,7 +213,7 @@
 	}
 }
 
-/*
+/*!
  * @brief The auto reply to send when in this status
  *
  * @result An NSAttributedString auto reply, or nil if no auto reply should be sent
@@ -241,7 +241,7 @@
 	return autoReply;
 }
 
-/*
+/*!
  * @brief Set the autoReply
  */
 - (void)setAutoReply:(NSAttributedString *)autoReply
@@ -254,7 +254,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set the autReply data
  */
 - (void)setAutoReplyData:(NSData *)autoReplyData
@@ -267,7 +267,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Does this status state send an autoReeply?
  */
 - (BOOL)hasAutoReply
@@ -275,7 +275,7 @@
 	return([[statusDict objectForKey:STATUS_HAS_AUTO_REPLY] boolValue]);
 }
 
-/*
+/*!
  * @brief Set if this status sends an autoReply
  */
 - (void)setHasAutoReply:(BOOL)hasAutoReply
@@ -284,7 +284,7 @@
 				   forKey:STATUS_HAS_AUTO_REPLY];
 }
 
-/*
+/*!
  * @brief Is the autoReply the same as the status message?
  */
 - (BOOL)autoReplyIsStatusMessage
@@ -292,7 +292,7 @@
 	return([[statusDict objectForKey:STATUS_AUTO_REPLY_IS_STATUS_MESSAGE] boolValue]);
 }
 
-/*
+/*!
  * @brief Set if the autoReply is the same as the status message
  */
 - (void)setAutoReplyIsStatusMessage:(BOOL)autoReplyIsStatusMessage
@@ -354,7 +354,7 @@
 	return(title);
 }
 
-/*
+/*!
  * @brief Set the title
  */
 - (void)setTitle:(NSString *)inTitle
@@ -367,7 +367,7 @@
 	}
 }
 
-/*
+/*!
  * @brief The general status type
  *
  * @result An AIStatusType broadly indicating the type of state
@@ -377,7 +377,7 @@
 	return([[statusDict objectForKey:STATUS_STATUS_TYPE] intValue]);
 }
 
-/*
+/*!
  * @brief Set the general status type
  *
  * @param statusType An AIStatusType broadly indicating the type of state
@@ -388,7 +388,7 @@
 				   forKey:STATUS_STATUS_TYPE];
 }
 
-/*
+/*!
  * @brief The specific status name
  *
  * This is a name which was added as available by one or more installed AIService objects. Accounts should
@@ -400,7 +400,7 @@
 	return([statusDict objectForKey:STATUS_STATUS_NAME]);
 }
 
-/*
+/*!
  * @brief Set the specific status name
  *
  * Set the name which will be used by accounts to know which specific state to apply when this status is made active.
@@ -439,7 +439,7 @@
 				   forKey:STATUS_FORCED_INITIAL_IDLE_TIME];
 }
 
-/*
+/*!
  * @brief Is this an invisible status?
  */
 - (BOOL)invisible
@@ -447,7 +447,7 @@
 	return([[statusDict objectForKey:STATUS_INVISIBLE] boolValue]);
 }
 
-/*
+/*!
  * @brief Set if this is an invisible status
  *
  * This is treated independently of the status name/status type, even though for many protocols
@@ -461,7 +461,7 @@
 				   forKey:STATUS_INVISIBLE];
 }
 
-/*
+/*!
  * @brief Is this status state mutable?
  *
  * If this method indicates the status state is not mutable,  it should not be presented to the user for editing. 
@@ -474,7 +474,7 @@
 	return([[statusDict objectForKey:STATUS_MUTABILITY_TYPE] intValue]);
 }
 
-/*
+/*!
  * @brief Set the mutability type of this status. The default is AIEditableState
  */
 - (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType

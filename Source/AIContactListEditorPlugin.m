@@ -42,13 +42,13 @@
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact;
 @end
 
-/*
+/*!
  * @class AIContactListEditorPlugin
  * @brief Component for managing adding and deleting contacts and groups
  */
 @implementation AIContactListEditorPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -137,7 +137,7 @@
 	
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -145,7 +145,7 @@
     [[adium notificationCenter] removeObserver:self];
 }
 
-/*
+/*!
  * @brief Validate our menu items
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
@@ -167,7 +167,7 @@
 	return(YES);
 }
 
-/*
+/*!
  * @brief Prompt for a new contact
  */
 - (IBAction)addContact:(id)sender
@@ -188,7 +188,7 @@
 				  strangerListContact:stranger];
 }
 
-/*
+/*!
  * @brief Prompt for a new contact with the current tab's name
  */
 - (IBAction)addContactFromTab:(id)sender
@@ -200,7 +200,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Prompt for a new contact
  *
  * @param inWindow If non-nil, display the new contact prompt as a sheet on inWindow
@@ -213,7 +213,7 @@
 													  service:(inListContact ? [inListContact service] : nil)];
 }
 
-/*
+/*!
  * @brief Add contact request notification
  *
  * Display the add contact window.  Triggered by an incoming Contact_AddNewContact notification 
@@ -229,7 +229,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Prompt for a new group
  */
 - (IBAction)addGroup:(id)sender
@@ -237,7 +237,7 @@
 	[AINewGroupWindowController promptForNewGroupOnWindow:nil];
 }
 
-/*
+/*!
  * @brief Delete the list objects selected in the contact list
  */
 - (IBAction)deleteSelection:(id)sender
@@ -246,7 +246,7 @@
 	[self deleteFromArray:array];
 }
 
-/*
+/*!
  * @brief Delete the list object associated with the current context menu
  */
 - (IBAction)deleteSelectionFromTab:(id)sender
@@ -258,7 +258,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Delete an array of <tt>AIListObject</tt>s
  *
  * After a modal confirmation prompt, the objects in the array are deleted.

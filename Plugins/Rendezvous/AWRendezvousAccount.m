@@ -426,7 +426,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set our user image
  *
  * Pass nil for no image.
