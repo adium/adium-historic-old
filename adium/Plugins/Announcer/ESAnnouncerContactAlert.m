@@ -35,7 +35,8 @@
     NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
     
     //Set the menu to its previous setting if the stored event matches
-    if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:CONTACT_ALERT_IDENTIFIER]) {
+    if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:CONTACT_ALERT_IDENTIFIER] &&
+		[currentDict objectForKey:KEY_EVENT_DETAILS] != nil) {
         [textField_actionDetails setStringValue:[currentDict objectForKey:KEY_EVENT_DETAILS]];
     } else {
         [textField_actionDetails setStringValue:@""];   
