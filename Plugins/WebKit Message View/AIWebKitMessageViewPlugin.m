@@ -21,6 +21,8 @@
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESBundleAdditions.h>
 
+#define WEBKIT_DEFAULT_STYLE	@"Mockie"		//Style used if we cannot find the preferred style
+
 @interface AIWebKitMessageViewPlugin (PRIVATE)
 - (void)_scanAvailableWebkitStyles;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -29,12 +31,15 @@
 
 @implementation AIWebKitMessageViewPlugin
 
+/*!
+ * @brief Install plugin
+ */
 - (void)installPlugin
 {	
 	//This plugin will ONLY work in 10.3 or newer
 	if([NSApp isOnPantherOrBetter]){
 		styleDictionary = nil;
-		[self _scanAvailableWebkitStyles];
+		[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
 		
 		//Setup our preferences
 		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
@@ -49,120 +54,90 @@
 		
 		//Register ourself as a message view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
-		
-		//Register our observers
-//		[[adium contactController] registerListObjectObserver:self];
 	}
-
-	[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
 }
 
-//Return a message view controller
+/*!
+ * @brief Returns a new webkit message view controller
+ */
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
     return([AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self]);
 }
 
-//Available Webkit Styles ----------------------------------------------------------------------------------------------
-#pragma mark Available Webkit Styles
-//Scan for available webkit styles (Call before trying to load/access a style)
-- (void)_scanAvailableWebkitStyles
-{	
-	NSEnumerator	*enumerator, *fileEnumerator;
-	NSString		*filePath, *resourcePath;
-	NSArray			*resourcePaths;
-	
-	//Clear the current dictionary of styles and ready a new mutable dictionary
-	[styleDictionary release];
-	styleDictionary = [[NSMutableDictionary alloc] init];
-	
-	//Get all resource paths to search
-	resourcePaths = [adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
-	enumerator = [resourcePaths objectEnumerator];
-	
-	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
-    while(resourcePath = [enumerator nextObject]) {
-        fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
-        
-        //Find all the message styles
-        while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
-                NSBundle		*style;
-
-				//Load the style and add it to our dictionary
-				style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]];
-				if(style){
-					NSString	*styleName = [style name];
-					if(styleName && [styleName length]) [styleDictionary setObject:style forKey:styleName];
-				}
-            }
-        }
-    }
-}
-
-//Returns a dictionary of available style identifiers and their paths
-//- (NSDictionary *)availableStyles
-- (NSDictionary *)availableStyleDictionary
+/*!
+ * @brief Returns a dictionary of the available message styles
+ */
+- (NSDictionary *)availableMessageStyles
 {
+	if(!styleDictionary){
+		NSString		*AdiumMessageStyle = @"AdiumMessageStyle";
+		NSEnumerator	*enumerator, *fileEnumerator;
+		NSString		*filePath, *resourcePath;
+		NSBundle		*style;
+		
+		//Clear the current dictionary of styles and ready a new mutable dictionary
+		styleDictionary = [[NSMutableDictionary alloc] init];
+		
+		//Get all resource paths to search
+		enumerator = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] objectEnumerator];
+		while(resourcePath = [enumerator nextObject]) {
+			fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
+			
+			//Find all the message styles
+			while((filePath = [fileEnumerator nextObject])){
+				if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
+					if(style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]]){
+						NSString	*styleName = [style name];
+						if(styleName && [styleName length]) [styleDictionary setObject:style forKey:styleName];
+					}
+				}
+			}
+		}
+
+		NSParameterAssert([styleDictionary count]); //Abort if we have no message styles
+	}
+	
 	return(styleDictionary);
 }
 
-//Fetch the bundle for a message style by its bundle identifier
-//- (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)name
-//{
-//	return([NSBundle bundleWithPath:[styleDictionary objectForKey:name]]);
-//}
+/*!
+ * @brief Returns a message style bundle's bundle
+ * @param name Name of the message style
+ */
 - (NSBundle *)messageStyleBundleWithName:(NSString *)name
-{
-	return([styleDictionary objectForKey:name]);
+{	
+	NSDictionary	*styles = [self availableMessageStyles];
+	NSBundle		*bundle = [styles objectForKey:name];
+	
+	//If the style isn't available, use our default.  Or, failing that, any available style
+	if(!bundle) bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
+	if(!bundle){
+		bundle = [[styles allValues] lastObject];
+	}
+
+	return(bundle);
 }
 
-//The default message style bundle
-//- (NSBundle *)defaultMessageStyleBundle
-//{
-//	return([self messageStyleBundleWithIdentifier:MESSAGE_DEFAULT_STYLE]);
-//}
-
-//If the styles have changed, rebuild our list of available styles
+/*!
+ * @brief Rebuild our list of available styles when the installed xtras change
+ */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0){		
-		[self _scanAvailableWebkitStyles];
+	if([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0){		
+		[styleDictionary release]; styleDictionary = nil;
 		[preferences messageStyleXtrasDidChange];
 	}
 }
 
-#pragma mark Available Webkit Styles
-
-- (NSString *)variantKeyForStyle:(NSString *)desiredStyle
+/*!
+ * @brief Returns a preference key which is style specific
+ * @param key The preference key
+ * @param style The style name it will be specific to
+ */
+- (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style
 {
-	return [NSString stringWithFormat:@"%@:Variant",desiredStyle];
-}
-- (NSString *)cachedBackgroundKeyForStyle:(NSString *)desiredStyle
-{
-	return [NSString stringWithFormat:@"%@:CachedBackground",desiredStyle];
-}
-- (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle
-{
-	return [NSString stringWithFormat:@"%@:Background",desiredStyle];	
-}
-- (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle
-{
-	return [NSString stringWithFormat:@"%@:Background Color",desiredStyle];
+	return([NSString stringWithFormat:@"%@:%@", style, key]);
 }
 
-- (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue
-{
-	NSNumber	*value = (NSNumber *)[self valueForKey:key style:style variant:variant];
-	return (value ? [value boolValue] : defaultValue);
-}
-
-- (id)valueForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant
-{
-	id  value = [style objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@:%@",key,variant]];
-	if (!value){
-		value = [style objectForInfoDictionaryKey:key];
-	}
-	return value;
-}
 @end

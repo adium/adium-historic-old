@@ -18,30 +18,24 @@
 #import <WebKit/WebKit.h>
 #import "ESWebKitMessageViewPreferences.h"
 
-#define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY	@"WebKit Message Display"
-#define WEBKIT_DEFAULT_PREFS				@"WebKit Defaults"
+#define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
+#define PREF_GROUP_WEBKIT_BACKGROUND_IMAGES		@"WebKit Custom Backgrounds"
+#define WEBKIT_DEFAULT_PREFS					@"WebKit Defaults"
 
-#define KEY_WEBKIT_VERSION					@"MessageViewVersion"
-#define	KEY_WEBKIT_TIME_STAMP_FORMAT		@"Time Stamp"
-#define KEY_WEBKIT_SHOW_USER_ICONS			@"Show User Icons"
-#define KEY_WEBKIT_NAME_FORMAT				@"Name Format"
-#define KEY_WEBKIT_USE_NAME_FORMAT			@"Use Custom Name Format"
-#define KEY_WEBKIT_STYLE					@"Message Style"
-#define KEY_WEBKIT_COMBINE_CONSECUTIVE		@"Combine Consecutive Messages"
-#define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
-#define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
-#define KEY_WEBKIT_USE_BACKGROUND			@"Use Background Color"
+#define KEY_WEBKIT_SHOW_USER_ICONS				@"Show User Icons"
+#define KEY_WEBKIT_SHOW_HEADER					@"Show Header"
+#define KEY_WEBKIT_SHOW_MESSAGE_COLORS			@"Show Message Colors"
+#define KEY_WEBKIT_SHOW_MESSAGE_FONTS			@"Show Message Fonts"
+#define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
+#define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
+#define KEY_WEBKIT_STYLE						@"Message Style"
+#define KEY_WEBKIT_COMBINE_CONSECUTIVE			@"Combine Consecutive Messages"
+#define KEY_WEBKIT_ALLOW_BACKGROUND_COLORING 	@"Allow Background Coloring"
+#define	KEY_WEBKIT_TIME_STAMP_FORMAT			@"Time Stamp"
+#define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
 
-#define NEW_CONTENT_RETRY_DELAY				0.01
-
+#define NEW_CONTENT_RETRY_DELAY					0.01
 #define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
-
-typedef enum {
-	Display_Name = 1,
-	Display_Name_Screen_Name = 2,
-	Screen_Name_Display_Name = 3,
-	Screen_Name = 4
-} NameFormat;
 
 typedef enum {
 	Fill = 0,
@@ -50,25 +44,16 @@ typedef enum {
 	Center
 } AIImageBackgroundStyle;
 
-@protocol AIMessageViewPlugin;
+@protocol AIMessageViewPlugin, AIMessageViewController;
 
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
-
 	NSMutableDictionary				*styleDictionary;
 }
 
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
-
-- (NSDictionary *)availableStyleDictionary;
+- (NSDictionary *)availableMessageStyles;
 - (NSBundle *)messageStyleBundleWithName:(NSString *)name;
-
-- (NSString *)variantKeyForStyle:(NSString *)desiredStyle;
-- (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle;
-- (NSString *)cachedBackgroundKeyForStyle:(NSString *)desiredStyle;
-- (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
-
-- (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;
-- (id)valueForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant;
+- (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style;
 
 @end
