@@ -52,7 +52,7 @@
 	[self automaticCheckForNewVersion:nil];
 	
 	//Check for updates again every 24 hours (60 seconds * 60 minutes * 24 hours)
-	timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE_EXPIRATION ? BETA_VERSION_CHECK_INTERVAL : VERSION_CHECK_INTERVAL))
+	timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ? BETA_VERSION_CHECK_INTERVAL : VERSION_CHECK_INTERVAL))
 											  target:self
 											selector:@selector(automaticCheckForNewVersion:)
 											userInfo:nil
@@ -82,7 +82,7 @@
 	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																		 group:PREF_GROUP_UPDATING] boolValue];
 
-	if(BETA_RELEASE_EXPIRATION || updateAutomatically){
+	if(BETA_RELEASE || updateAutomatically){
 		if([AINetworkConnectivity networkIsReachable]){
 			//If the network is available, check for updates now
 			checkingManually = NO;
@@ -152,7 +152,7 @@
 	
 	//Beta Expiration (Designed to be annoying)
 	//Beta expiration checking is performed in addition to regular version checking
-	if(BETA_RELEASE_EXPIRATION){
+	if(BETA_RELEASE){
 		NSString	*betaNumber = [versionDict objectForKey:VERSION_BETA_PLIST_KEY];
 		NSDate		*betaDate = nil;
 		
