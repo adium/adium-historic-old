@@ -101,7 +101,7 @@
 	if(inFont && inFont != statusFont){
 		NSDictionary		*attributes;
 		NSAttributedString 	*statusString;
-		
+
 		[statusFont release];
 		statusFont = [inFont retain];
 
@@ -367,6 +367,7 @@
 //User Extended Status
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
+	
 	if(extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)){
 		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
 		

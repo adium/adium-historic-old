@@ -149,7 +149,7 @@ typedef enum {
 - (void)setHideRoot:(BOOL)inHideRoot;
 - (IBAction)performDefaultActionOnSelectedItem:(id)sender;
 
-- (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict;
+- (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict;
 - (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict;
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict;
 

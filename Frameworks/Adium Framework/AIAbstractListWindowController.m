@@ -91,7 +91,7 @@
 
 //Preferences ---------------------------------------------
 #pragma mark Preferences
-- (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict
+- (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
 	int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 	float			backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
@@ -186,6 +186,10 @@
 	
 	//Shadow
 	[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
+	
+	//Theme related cell preferences
+	//We must re-apply these because we've created new cells
+	[self updateCellRelatedThemePreferencesFromDict:themeDict];
 	
 	//Outline View
 	[contactListView setGroupCell:groupCell];
