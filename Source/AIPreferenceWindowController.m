@@ -130,7 +130,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		
 		// Select the correct row in the outline view
 		row = [[self advancedCategoryArray] indexOfObject:pane];
-		[tableView_advanced selectRow:row byExtendingSelection:NO];
+		if([self tableView:tableView_advanced shouldSelectRow:row]){
+			[tableView_advanced selectRow:row byExtendingSelection:NO];
+		}
 	}
 }
 
@@ -440,8 +442,13 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[cell release];
 	
     [scrollView_advanced setAutoHideScrollBar:YES];
-    
 	[tableView_advanced reloadData];
+	
+	//Force select the first row
+	//XXX - Remembering the the selected advanced pane would be nice here -ai
+	if([self tableView:tableView_advanced shouldSelectRow:0]){
+		[tableView_advanced selectRow:0 byExtendingSelection:NO];
+	}
 }
 
 //Return the number of accounts
@@ -464,13 +471,14 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[cell setDrawsGradientHighlight:YES];
 }
 
-- (void)tableViewSelectionDidChange:(NSNotification *)notification
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
 {
-    int	selectedRow = [tableView_advanced selectedRow];
-
-	if(selectedRow >= 0 && selectedRow < [[self advancedCategoryArray] count]){		
-		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray]  objectAtIndex:selectedRow]];
-    }
+	if(row >= 0 && row < [[self advancedCategoryArray] count]){		
+		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray] objectAtIndex:row]];
+		return(YES);
+    }else{
+		return(NO);
+	}
 }
 
 @end
