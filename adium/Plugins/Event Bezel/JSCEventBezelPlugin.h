@@ -25,7 +25,8 @@
 #define KEY_EVENT_BEZEL_IMAGE_BADGES        @"Show Image Badges"
 #define KEY_EVENT_BEZEL_COLOR_LABELS        @"Show Color Labels"
 #define KEY_EVENT_BEZEL_DURATION            @"Duration"
-#define KEY_EVENT_BEZEL_NAME_LABELS          @"Show Name Labels"
+#define KEY_EVENT_BEZEL_NAME_LABELS         @"Show Name Labels"
+#define CONTACT_DISABLE_BEZEL               @"Disable Bezel For Contact"
 
 @class JSCEventBezelPreferences;
 
@@ -36,6 +37,11 @@
     NSMutableArray              *eventArray;
     BOOL                        showEventBezel;
     int                         prefsPosition;
+    
+    IBOutlet    NSView          *view_contactBezelInfoView;
+    IBOutlet    NSButton        *checkBox_disableBezel;
+    AIPreferenceViewController	*contactView;
+    AIListObject                *activeListObject;
 }
 
 @end
