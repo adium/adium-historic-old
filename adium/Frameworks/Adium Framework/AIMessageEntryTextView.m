@@ -42,6 +42,7 @@ static NSImage *pushIndicatorImage = nil;
 	pushPopEnabled = YES;
 	clearOnEscape = NO;
     insertingText = NO;
+	resizing = NO;
 	defaultTypingAttributes = nil;
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
     pushArray = [[NSMutableArray alloc] init];
@@ -319,7 +320,12 @@ static NSImage *pushIndicatorImage = nil;
 //Reset the desired size cache when our frame changes
 - (void)frameDidChange:(NSNotification *)notification
 {
-	[self _resetCacheAndPostSizeChanged];
+	//resetCacheAndPostSizeChanged can get us right back to here, resulting in an infinite loop if we're not careful
+	if (!resizing){
+		resizing = YES;
+		[self _resetCacheAndPostSizeChanged];
+		resizing = NO;
+	}
 }
 
 //Reset the desired size cache and post a size changed notification.  Call after the text's dimensions change
