@@ -196,6 +196,9 @@ static AIInfoWindowController *sharedInstance = nil;
         
         if (status) {
             NSMutableAttributedString * statusString = [[[owner contentController] filteredAttributedString:status] mutableCopy];
+            [statusString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:NSMakeRange(0, [statusString length])];
+            [statusString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:NSMakeRange(0, [statusString length])];
+            
             [infoString appendAttributedString:[statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])]];
         } else {
             [infoString appendString:@"Yes" withAttributes:valueAttributes];
@@ -239,6 +242,8 @@ static AIInfoWindowController *sharedInstance = nil;
         if (textProfile && [textProfile length]) {
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
             NSMutableAttributedString * textProfileString = [[[owner contentController] filteredAttributedString:textProfile] mutableCopy];
+            [textProfileString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:NSMakeRange(0, [textProfileString length])];
+            [textProfileString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:NSMakeRange(0, [textProfileString length])];
             [infoString appendAttributedString:[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])]];
         }
     }
