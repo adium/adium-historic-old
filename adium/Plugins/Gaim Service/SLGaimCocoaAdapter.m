@@ -44,8 +44,8 @@ static NSMutableDictionary *sourceInfoDict;
 static SLGaimCocoaAdapter *myself;
 
 static guint adium_timeout_add_full(gint, guint, GSourceFunc, gpointer, GDestroyNotify);
-static guint adium_io_add_watch_full(GIOChannel*, gint, GIOCondition, GIOFunc, gpointer, GDestroyNotify);
-static gboolean adium_source_remove(guint);
+static gint adium_input_add(int, GaimInputCondition, GaimInputFunction, gpointer);
+static void adium_input_remove(gint);
 
 static GaimEventLoopUiOps adiumEventLoopUiOps = {
     adium_timeout_add_full,
@@ -62,12 +62,11 @@ struct SourceInfo {
     NSTimer *timer;
     CFSocketRef socket;
     CFRunLoopSourceRef rls;
-    GDestroyNotify notify;
     union {
         GSourceFunc sourceFunction;
         GIOFunc ioFunction;
     };
-    GIOChannel *channel;
+    int fd;
     gpointer user_data;
 };
 
@@ -80,12 +79,9 @@ struct SourceInfo {
     return self;
 }
 
-static guint adium_timeout_add_full(gint priority, guint interval,
-        GSourceFunc function, gpointer data, GDestroyNotify notify)
+static guint adium_timeout_add_full(guint interval, GSourceFunc function, gpointer data)
 {
     //NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
-
-    // NSTimer doesn't do priority, so that argument is ignored.
 
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 
@@ -95,7 +91,6 @@ static guint adium_timeout_add_full(gint priority, guint interval,
                                                     userInfo:[NSValue valueWithPointer:info]
                                                      repeats:YES];
     info->tag = sourceId;
-    info->notify = notify;
     info->sourceFunction = function;
     info->timer = timer;
     info->socket = NULL;
@@ -119,22 +114,20 @@ static guint adium_timeout_add_full(gint priority, guint interval,
         adium_source_remove(info->tag);
 }
 
-static guint adium_io_add_watch_full(GIOChannel *channel, gint priority,
-        GIOCondition condition, GIOFunc func, gpointer user_data,
-        GDestroyNotify notify)
+static gint adium_input_add(int fd, GaimInputCondition condition,
+                            GaimInputFunction func, gpointer user_data)
 {
     struct SourceInfo *info = g_new(struct SourceInfo, 1);
 
     // NSRunLoop does not support priority; that argument is ignored
 
-    // Build the CFSocket-style callback flags to use from the glib-style ones
+    // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
-    if ((condition & G_IO_IN ) != 0) callBackTypes |= kCFSocketReadCallBack;
-    if ((condition & G_IO_OUT) != 0) callBackTypes |= kCFSocketWriteCallBack;
+    if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
+    if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;
 
     // And likewise the entire CFSocket
     CFSocketContext context = { 0, info, NULL, NULL, NULL };
-    int fd = g_io_channel_unix_get_fd(channel);
     CFSocketRef socket = CFSocketCreateWithNative(NULL, fd, callBackTypes, socketCallback, &context);
     NSCAssert(socket != NULL, @"CFSocket creation failed");
     info->socket = socket;
@@ -151,10 +144,9 @@ static guint adium_io_add_watch_full(GIOChannel *channel, gint priority,
 
     info->timer = NULL;
     info->tag = sourceId;
-    info->notify = notify;
     info->ioFunction = func;
-    info->channel = channel; g_io_channel_ref(channel);
     info->user_data = user_data;
+    info->fd = fd;
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
     [sourceInfoDict setObject:[NSValue valueWithPointer:info] forKey:[NSNumber numberWithUnsignedInt:sourceId]];
 
@@ -170,16 +162,16 @@ static void socketCallback(CFSocketRef s,
 {
     struct SourceInfo *info = (struct SourceInfo*) infoVoid;
 
-    GIOCondition c = 0;
-    if ((callbackType & kCFSocketReadCallBack) != 0) c |= G_IO_IN;
-    if ((callbackType & kCFSocketWriteCallBack) != 0) c |= G_IO_OUT;
+    GaimInputCondition c = 0;
+    if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
+    if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
 
     //NSLog(@"NSRunLoop reports IO on tag %u", info->tag);
-    if (! info->ioFunction(info->channel, c, info->user_data))
-        adium_source_remove(info->tag);
+    if (! info->ioFunction(c, info->user_data, info->fd, c))
+        adium_input_remove(info->tag);
 }
 
-static gboolean adium_source_remove(guint tag) {
+static void adium_input_remove(gint tag) {
     //NSLog(@"Removing source tag %u", tag);
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
         [[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
@@ -192,11 +184,7 @@ static gboolean adium_source_remove(guint tag) {
     } else { // file handle
         CFRunLoopSourceInvalidate(sourceInfo->rls);
         CFSocketInvalidate(sourceInfo->socket);
-        g_io_channel_unref(sourceInfo->channel);
     }
-
-    if (sourceInfo->notify != NULL)
-        sourceInfo->notify(sourceInfo->user_data);
 
     [sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
     free(sourceInfo);
