@@ -24,59 +24,13 @@
 
 #import "AWRendezvousAccount.h"
 #import "AWRendezvousPlugin.h"
+#import "AWRendezvousService.h"
 
 @implementation AWRendezvousPlugin
 
 - (void)installPlugin
 {
-	NSImage *image = [NSImage imageNamed:@"rendezvous" forClass:[self class]];
-	NSImage *menuImage = [NSImage imageNamed:@"rendezvous-menu" forClass:[self class]];
-	
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:[self identifier]
-                                                      description:[self description]
-                                                            image:image
-														menuImage:menuImage
-                                                    caseSensitive:NO
-                                                allowedCharacters:[[NSCharacterSet illegalCharacterSet] invertedSet]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:999] retain];
-	
-    //Register this service
-    [[adium accountController] registerService:self];
-}
-
-
-//Return a new account with the specified properties
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{
-    return([[[AWRendezvousAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-// Return a view for the connection window
-- (AIAccountViewController *)accountView{
-    return(nil);
-}
-
-// Return a Plugin-specific ID and description
-- (NSString *)identifier
-{
-    return(RENDEZVOUS_SERVICE_IDENTIFIER);
-}
-- (NSString *)description
-{
-    return(@"Rendezvous");
-}
-
-// Return an ID, description, and image for handles owned by accounts of this type
-- (AIServiceType *)handleServiceType
-{
-    return(handleServiceType);
-}
-
-- (DCJoinChatViewController *)joinChatView
-{
-	return([DCJoinChatViewController joinChatView]);
+	[[AWRendezvousService alloc] init];
 }
 
 @end
