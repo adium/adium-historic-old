@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.116 2004/03/13 06:01:17 evands Exp $
+// $Id: AIContactController.m,v 1.117 2004/03/21 04:57:35 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -840,13 +840,13 @@
 		group = contactList;
 	}else{
 		if(!(group = [groupDict objectForKey:groupUID])){
-			NSArray		*groupNest = [groupUID componentsSeparatedByString:@":"];
-			NSString	*groupName = [groupNest lastObject];
-			AIListGroup *targetGroup;	
+			//NSArray		*groupNest = [groupUID componentsSeparatedByString:@":"];
+			//NSString	*groupName = [groupNest lastObject];
+			//AIListGroup *targetGroup;	
 			
 			//Create
 			group = [[[AIListGroup alloc] initWithUID:groupUID] autorelease];
-			[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
+			//[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
 			
 			//Place new groups at the bottom of our list (by giving them the largest ordering index)
 			largestOrder += 1.0;
@@ -857,13 +857,13 @@
 			[groupDict setObject:group forKey:groupUID];
 			
 			//Add to target group
-			if([groupNest count] == 1){
-				targetGroup = contactList;
-			}else{
-				targetGroup = [self groupWithUID:[groupUID substringToIndex:[groupUID length] - ([groupName length] + 1)]];
-			}
-			[targetGroup addObject:group];
-			[self _listChangedGroup:targetGroup object:group];
+			//if([groupNest count] == 1){
+			//	targetGroup = contactList;
+			//}else{
+			//	targetGroup = [self groupWithUID:[groupUID substringToIndex:[groupUID length] - ([groupName length] + 1)]];
+			//}
+			[/*targetGroup*/contactList addObject:group];
+			[self _listChangedGroup:/*targetGroup*/contactList object:group];
 		}
 	}
 	
@@ -946,16 +946,16 @@
 				//Move the object 
 				[self _moveObject:listObject toGroup:group];
 			}else if([listObject isKindOfClass:[AIListGroup class]]){
-				NSString	*newNestName = [[[listObject UID] componentsSeparatedByString:@":"] lastObject];
-				while(group && group != contactList){
-					NSArray		*groupNest = [[group UID] componentsSeparatedByString:@":"];
-					newNestName = [[groupNest lastObject] stringByAppendingFormat:@":%@",newNestName];
-				
-					group = [group containingGroup];
-				}
-				
-				//Rename the group to re-nest it
-				[self _renameGroup:(AIListGroup *)listObject to:newNestName];
+//				NSString	*newNestName = [[[listObject UID] componentsSeparatedByString:@":"] lastObject];
+//				while(group && group != contactList){
+//					NSArray		*groupNest = [[group UID] componentsSeparatedByString:@":"];
+//					newNestName = [[groupNest lastObject] stringByAppendingFormat:@":%@",newNestName];
+//				
+//					group = [group containingGroup];
+//				}
+//				
+//				//Rename the group to re-nest it
+//				[self _renameGroup:(AIListGroup *)listObject to:newNestName];
 			}
 
 		}
