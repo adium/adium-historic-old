@@ -645,7 +645,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	return([menuItems autorelease]);
 }
-#warning still a lot of duplicate code here
+
 //Returns a menu of all accounts available for sending content to a list object
 //- Preferred choices are placed at the top of the menu.
 //- Selector called on account selection is selectAccount:

@@ -1409,7 +1409,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 		GList					*gl, *fl, *field_list;
 		GaimRequestField		*field;
 		GaimRequestFieldGroup	*group;
-		JabberStream			*js = (JabberStream *)userData;
+//		JabberStream			*js = (JabberStream *)userData;
 		
 		for (gl = gaim_request_fields_get_groups(fields);
 			 gl != NULL;
