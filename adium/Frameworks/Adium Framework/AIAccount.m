@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.26 2003/12/26 15:40:10 adamiser Exp $
+// $Id: AIAccount.m,v 1.27 2003/12/26 18:32:32 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -42,7 +42,7 @@
     
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	[self updateStatusForKey:nil];
+	[self updateStatusForKey:@"Handle"];
 	
     //Init the account
     [self initAccount];
@@ -137,7 +137,7 @@
 	//Username formatting changed
 	//Update the display name for this account
 	//
-    if(key == nil || [key compare:@"Handle"] == 0){
+    if([key compare:@"Handle"] == 0){
 		[self setStatusObject:[self preferenceForKey:@"Handle" group:GROUP_ACCOUNT_STATUS]
 					   forKey:@"Display Name"
 					   notify:YES];
