@@ -153,7 +153,7 @@
         cell = [AIFlexibleTableImageCell cellWithImage:awayImage];
         [cell setBackgroundColor:[NSColor whiteColor]];
         [cell setDividerColor:[NSColor lightGrayColor]];
-        [cell setPaddingLeft:1 top:1 right:1 bottom:1];
+        [cell setPaddingLeft:1 top:2 right:1 bottom:1];
         
     }else if(inCol == messageColumn){
         cell = [AIFlexibleTableTextCell cellWithAttributedString:[awayMessageArray objectAtIndex:inRow]];

@@ -67,6 +67,7 @@
 - (void)addColumn:(AIFlexibleTableColumn *)inColumn;
 - (void)loadNewRow;
 - (void)reloadData;
+- (void)reloadRow:(int)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setScrollsOnNewContent:(BOOL)inValue;
 - (void)selectRow:(int)inRow;

@@ -10,7 +10,8 @@
 #import "AIFlexibleTableView.h"
 
 #define FRACTIONAL_PADDING 1.0
-
+#define	EDITOR_X_INSET	-6
+#define	EDITOR_Y_INSET	-1
 
 @implementation AIFlexibleTableTextCell
 
@@ -72,13 +73,6 @@
     [super dealloc];
 }
 
-
-//Return our attributed string
-- (id <NSCopying>)objectValue
-{
-    return(string);
-}
-
 //The desired size of our cell without wrapping
 - (NSSize)cellSize
 {
@@ -107,20 +101,6 @@
 
     //Save the new cell dimensions
     cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
-}
-
-#warning temp method.. we should reload/rebuild row from delegate
-- (void)setString:(NSAttributedString *)inString
-{
-    if(inString != string){
-        [textStorage release]; textStorage = nil;
-        [textContainer release]; textContainer = nil;
-        [layoutManager release]; layoutManager = nil;
-        [string release];
-
-        string = [inString retain];
-        [self sizeCellForWidth:[self frame].size.width];
-    }
 }
 
 //Draw our custom content
@@ -167,6 +147,8 @@
 //Edit this cell
 - (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView
 {
+    NSRect	editorRect;
+    
     //Create the editor
     editor = [[NSTextView alloc] init];
     [editor setDelegate:self];
@@ -183,7 +165,14 @@
     [editorScroll setBorderType:NSBezelBorder];
     [editorScroll setHasVerticalScroller:NO];
     [editorScroll setHasHorizontalScroller:NO];
-    [editorScroll setFrame:[self frame]];
+
+    editorRect = NSInsetRect([self frame], EDITOR_X_INSET, EDITOR_Y_INSET);
+    editorRect.origin.x += leftPadding;
+    editorRect.size.width -= leftPadding + rightPadding;
+    editorRect.origin.y += topPadding;
+    editorRect.size.height -= topPadding + bottomPadding;
+    
+    [editorScroll setFrame:editorRect];
 
     editedColumn = inColumn;
     editedRow = inRow;
@@ -194,20 +183,24 @@
 }
 
 //End editing
-- (void)endEditing
+- (id <NSCopying>)endEditing
 {
-#warning temp call
-    [self setString:[editor textStorage]];
-    
+    NSAttributedString	*newValue = [[editor textStorage] retain]; //We retain this string to make sure it's not released by the editor when it closes.
+
+    //Close the editor
     [editorScroll removeFromSuperview];
     [editorScroll release]; editorScroll = nil;
     [editor release]; editor = nil;
+
+    return([newValue autorelease]);
 }
 
 //Resize our cell (as necessary) when our required frame changes
 - (void)textDidChange:(NSNotification *)notification
 {
     float textHeight = [[editor layoutManager] usedRectForTextContainer:[editor textContainer]].size.height;
+
+    textHeight -= EDITOR_Y_INSET * 2; //We need to offset for the frame
 
     if([self frame].size.height != textHeight){
         [tableView setHeightOfCellAtRow:editedRow column:editedColumn to:textHeight];

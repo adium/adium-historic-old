@@ -25,6 +25,7 @@
     [super init];
 
     image = [inImage retain];
+    [image setFlipped:YES];
 
     return(self);
 }
@@ -34,12 +35,6 @@
     [image release];
 
     [super dealloc];
-}
-
-//Return our image
-- (id <NSCopying>)objectValue
-{
-    return(image);
 }
 
 //The desired size of our cell without wrapping
@@ -55,13 +50,14 @@
 {
     //Draw our image
     if(drawContents){
-        cellFrame.origin.y += cellFrame.size.height;
-//        cellFrame.origin.y -= [image size].height;
+        NSSize	imageSize = [image size];
 
-//        [image drawInRect:cellFrame fromRect:NSMakeRect(0, 0, [image size].width, [image size].height) operation:NSCompositeSourceOver fraction:1.0];
-
-        [image compositeToPoint:cellFrame.origin operation:NSCompositeSourceOver];
+        cellFrame.size.height = imageSize.height;
+        [image drawInRect:cellFrame fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) operation:NSCompositeSourceOver fraction:1.0];
     }
 }
 
 @end
+
+
+

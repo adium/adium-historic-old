@@ -18,11 +18,14 @@
 }
 
 - (NSArray *)cellArray;
-- (BOOL)addCell:(AIFlexibleTableCell *)inCell;
-- (float)width;
+- (BOOL)addCell:(AIFlexibleTableCell *)inCell forRow:(int)inRow;
+- (BOOL)removeCellAtRow:(int)inRow;
+- (void)removeAllCells;
+
 - (void)setWidth:(float)inWidth;
+- (float)width;
+
 - (void)setFlexibleWidth:(BOOL)inFlexible;
 - (BOOL)flexibleWidth;
-- (void)removeAllCells;
 
 @end

@@ -27,6 +27,7 @@
 - (void)frameChanged:(NSNotification *)notification;
 - (void)buildMessageCellArray;
 - (BOOL)addCellsForRow:(int)inRow;
+- (BOOL)removeCellsForRow:(int)inRow;
 - (void)resizeCells;
 - (void)resizeToFillContainerView;
 - (void)_init;
@@ -152,12 +153,38 @@
     [self setNeedsDisplay:YES];
 }
 
+//Reload a single row
+- (void)reloadRow:(int)inRow
+{
+    BOOL	shouldResizeCells = NO;
+    
+    //Remove the row
+    if([self removeCellsForRow:inRow]){
+        shouldResizeCells = YES;
+    }
+    
+    //add the new cells
+    if([self addCellsForRow:inRow]){
+        shouldResizeCells = YES;
+    }
+
+    //Resize and redisplay
+    if(shouldResizeCells){
+        [self resizeCells];
+    }
+    [self resizeToFillContainerView];
+    [self setNeedsDisplay:YES];
+}
+
 //Set the height of a cell
 - (void)setHeightOfCellAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn to:(int)inHeight
 {
     NSEnumerator		*columnEnumerator;
     AIFlexibleTableColumn	*column;
     int				newRowHeight = 0;
+
+    //We subtract this row's height from our total, recalculate the new required row height, then add the new height back the total.
+    contentsHeight -= [[rowHeightArray objectAtIndex:inRow] intValue];
 
     columnEnumerator = [columnArray objectEnumerator];
     while((column = [columnEnumerator nextObject])){
@@ -174,7 +201,10 @@
         }
     }
 
+    contentsHeight += newRowHeight;
     [rowHeightArray replaceObjectAtIndex:inRow withObject:[NSNumber numberWithInt:newRowHeight]];
+
+    [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
 }
 
@@ -330,16 +360,18 @@
     return(selectedRow);
 }
 
-//- (void)moveUpAndModifySelection:(id)sender
 - (void)moveUp:(id)sender
 {
-    [self selectRow:selectedRow - 1];
+    if(selectedRow > 0){
+        [self selectRow:selectedRow - 1];
+    }
 }
 
-//- (void)moveDownAndModifySelection:(id)sender
 - (void)moveDown:(id)sender
 {
-    [self selectRow:selectedRow + 1];
+    if(selectedRow < [rowHeightArray count]){
+        [self selectRow:selectedRow + 1];
+    }
 }
 
 
@@ -369,60 +401,40 @@
 - (void)endEditing
 {
     if(editedCell){
-        //Close
-        [editedCell endEditing];
-
-        //Save
+        //Close & Save
         if(respondsTo_setObjectValue){
-            [(id <AIFlexibleTableViewDelegate_setObjectValue>)delegate setObjectValue:[editedCell objectValue] forTableColumn:editedColumn row:editedRow];
+            [(id <AIFlexibleTableViewDelegate_setObjectValue>)delegate setObjectValue:[editedCell endEditing] forTableColumn:editedColumn row:editedRow];
         }
 
+        //Reload
+        [self reloadRow:editedRow];
+
         editedCell = nil;
+        editedRow = 0;
+        editedColumn = nil;
     }
+}
+
+- (BOOL)needsPanelToBecomeKey
+{
+    return(YES);
 }
 
 - (BOOL)acceptsFirstResponder
 {
-#ifdef DEVELOPMENT_BUILD
-    NSLog(@"acceptsFirstResponder");
-#endif
     return(YES);
 }
 
 - (BOOL)becomeFirstResponder
 {
-#ifdef DEVELOPMENT_BUILD
-    NSLog(@"becomeFirstResponder");
-#endif
     return(YES);
 }
 
 - (BOOL)resignFirstResponder
 {
-#ifdef DEVELOPMENT_BUILD
-    NSLog(@"resignFirstResponder");
-#endif
     [self endEditing];
-    
     return(YES);
 }
-
-
-
-
-
-//Reload a specific row
-/*- (void)reloadRow:(int)inRow
-{
-    //Add the new content
-    if([self addCellsForRow:([delegate numberOfRows] - 1)]){
-        [self resizeCells];
-    }
-
-    //Resize and redisplay
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
-}*/
 
 
 //Private --------------------------------------------------------------------------------
@@ -453,7 +465,7 @@
     [self setNeedsDisplay:YES];
 }
 
-//Add a cell.  Returns YES if the cells should be resized
+//Add a row of cells.  Returns YES if the cells should be resized
 - (BOOL)addCellsForRow:(int)inRow
 {
     BOOL			columnWidthDidChange = NO;
@@ -466,7 +478,7 @@
     while((column = [columnEnumerator nextObject])){
         AIFlexibleTableCell	*cell = [delegate cellForColumn:column row:inRow];
 
-        if([column addCell:cell]){ //Returns YES if the column's width was changed
+        if([column addCell:cell forRow:inRow]){ //Returns YES if the column's width was changed
             columnWidthDidChange = YES;
         }
 
@@ -478,11 +490,33 @@
         }
     }
 
-    [rowHeightArray addObject:[NSNumber numberWithInt:newRowHeight]];
+    [rowHeightArray insertObject:[NSNumber numberWithInt:newRowHeight] atIndex:inRow];
     contentsHeight += newRowHeight;
 
     return(columnWidthDidChange); //Return YES if the cells should be resized
 }
+
+//Removes a row of cells.  Returns YES if the cells should be resized
+- (BOOL)removeCellsForRow:(int)inRow
+{
+    BOOL			columnWidthDidChange = NO;
+    NSEnumerator		*columnEnumerator;
+    AIFlexibleTableColumn	*column;
+
+    //Remove the cell from each column
+    columnEnumerator = [columnArray objectEnumerator];
+    while((column = [columnEnumerator nextObject])){
+        if([column removeCellAtRow:inRow]){ //Returns YES if the column's width was changed
+            columnWidthDidChange = YES;
+        }
+    }
+
+    contentsHeight -= [[rowHeightArray objectAtIndex:inRow] intValue];
+    [rowHeightArray removeObjectAtIndex:inRow];
+
+    return(columnWidthDidChange); //Return YES if the cells should be resized
+}
+
 
 //Recalculate the dimensions of all our cells
 - (void)resizeCells
