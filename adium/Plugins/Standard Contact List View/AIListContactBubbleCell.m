@@ -47,6 +47,13 @@
 	}
 }
 
+//Contact label color
+- (NSColor *)labelColor
+{
+	NSColor	*labelColor = [super labelColor];
+	return(labelColor ? labelColor : [controlView backgroundColor]);
+}
+
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {

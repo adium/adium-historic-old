@@ -21,7 +21,6 @@
 #import "AIListContactBubbleCell.h"
 #import "AIListGroupMockieCell.h"
 #import "AIListContactMockieCell.h"
-#import "AIListContactBrickCell.h"
 #import "AIListContactBubbleToFitCell.h"
 #import "AIListGroupBubbleCell.h"
 #import "AIListGroupBubbleToFitCell.h"
@@ -289,7 +288,7 @@
 		[contentCell release];
 		switch(contactCellStyle){
 			case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
-			case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
+//			case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
 			case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
 			default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListContactBubbleToFitCell class]; break;
 		}
@@ -414,6 +413,8 @@
 	}else{
 		[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED] representedColor]];
 	}
+
+	[contentCell setBackgroundColorIsStatus:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
 }
 
 

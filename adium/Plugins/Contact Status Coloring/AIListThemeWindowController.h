@@ -55,6 +55,7 @@
 #define KEY_LIST_THEME_GROUP_SHADOW_COLOR			@"Group Shadow Color"
 
 #define KEY_LIST_THEME_GRID_ENABLED					@"Grid Enabled"
+#define KEY_LIST_THEME_BACKGROUND_AS_STATUS			@"Background As Status"
 
 @class AITextColorPreviewView;
 
@@ -115,6 +116,7 @@
 	IBOutlet	NSColorWell				*colorWell_grid;
 	IBOutlet	AITextColorPreviewView	*preview_grid;
 	IBOutlet	NSButton				*checkBox_drawGrid;
+	IBOutlet	NSButton				*checkBox_backgroundAsStatus;
 
 	IBOutlet	NSColorWell				*colorWell_groupText;
 	IBOutlet	NSColorWell				*colorWell_groupTextInverted;
@@ -123,7 +125,7 @@
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
 	IBOutlet	AITextColorPreviewView	*preview_group;
 	IBOutlet	AITextColorPreviewView	*preview_groupInverted;
-
+	
 	IBOutlet	NSTextField				*textField_themeName;
 	
 	NSString				*themeName;

@@ -7,6 +7,7 @@
             OUTLETS = {
                 "button_setBackgroundImage" = NSButton; 
                 "checkBox_away" = NSButton; 
+                "checkBox_backgroundAsStatus" = NSButton; 
                 "checkBox_drawGrid" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_idleAndAway" = NSButton; 
