@@ -109,6 +109,22 @@ a { text-decoration: none; }
 
 .buddyicon img[src="Incoming/buddy_icon.png"], .buddyicon img[src="Outgoing/buddy_icon.png"] { display: none; }
 
+.placeholder {
+	margin-left: 30px;
+}
+
+.placeholder[visible="Incoming/buddy_icon.png"], .placeholder[visible="Outgoing/buddy_icon.png"] {
+	margin-left: 0;
+}
+
+.placeholder_next {
+	margin-left: 18px;
+}
+
+.placeholder_next[visible="Incoming/buddy_icon.png"], .placeholder_next[visible="Outgoing/buddy_icon.png"] {
+	margin-left: 0;
+}
+
 img
 {
 	vertical-align: middle;
