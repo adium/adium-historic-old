@@ -13,7 +13,8 @@
 - (void)updateAllContacts;
 - (void)updateSelf;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (NSArray *)searchScreenName:(NSString *)name withService:(NSString *)service;
+- (NSArray *)searchForObject:(AIListObject *)inObject;
+- (NSArray *)_searchForScreenName:(NSString *)name withService:(NSString *)service;
 @end
 
 @implementation ESAddressBookIntegrationPlugin
@@ -55,76 +56,62 @@
 {
     if(inModifiedKeys == nil){ //Only set on contact creation
                                //look up the property for this serviceID
-        NSString * property = [propertyDict objectForKey:[inObject serviceID]];
-        if (property) {
-            NSString *screenName = [inObject UID];
+        
+        NSArray *results = [self searchForObject:inObject];
+        
+        if (results && [results count]) {
+            ABPerson * person = [results objectAtIndex:0];
             
-            //search for the screen name as we have it stored (case insensitive)
-            NSArray * results = [self searchScreenName: screenName withService: property];
-            
-            //If we don't find anything, try again using the compacted version of the screen name (case insensitive)
-            if (!results || ![results count]) {
-                results = [self searchScreenName: [screenName compactedString] withService: property];
-            }
-            
-            //If we don't find anything yet, try again using the ICQ property
-            if ((!results || ![results count]) && [property isEqualToString:kABAIMInstantProperty]) {
-                results = [self searchScreenName: screenName withService: kABICQInstantProperty];
-            }
-            
-            if (results && [results count]) {
-                ABPerson * person = [results objectAtIndex:0];
+            if (person) {
+                //Begin the image load if appropriate
+                int tag = [person beginLoadingImageDataForClient:self];
+                [trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
                 
-                if (person) {
-                    //Begin the image load if appropriate
-                    int tag = [person beginLoadingImageDataForClient:self];
-                    [trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
-                    
-                    //Load the name
+                //Load the name if appropriate
+                if (displayFormat != None) {
                     NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
                     NSString *displayName = nil;
-                    if (!lastName || displayFormat == ADDRESS_BOOK_FIRST) { //If no last name is available, use the first name
+                    if (!lastName || displayFormat == First) { //If no last name is available, use the first name
                         displayName = firstName;
                     } else if (!firstName) {        //If no first name is available, use the last name
                         displayName = lastName;
                     } else {                        //Look to the preference setting
-                        if (displayFormat == ADDRESS_BOOK_FIRST_LAST) {
+                        if (displayFormat == FirstLast) {
                             displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
-                        } else if (displayFormat == ADDRESS_BOOK_LAST_FIRST) {
+                        } else if (displayFormat == LastFirst) {
                             displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
                         }
                     }
-                    
+                    NSLog(@"applying for %@ %@",firstName,lastName);
                     //Apply the values 
-                    AIMutableOwnerArray *displayArray = [inObject displayArrayForKey:@"Display Name"];
-                    NSString *oldValue = [displayArray objectWithOwner:self];
+                    NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
                     if (!oldValue || ![oldValue isEqualToString:displayName]) {
                         [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
                         [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
+                    } 
+                } else {
+                    //Clear any stored value
+                    if ([[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]) {
+                        [[inObject displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
+                        [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];   
                     }
                 }
             }
-            
         }
-    } else if ((syncMethod == ADDRESS_BOOK_SYNC_AUTO) && [inModifiedKeys containsObject: @"BuddyImage"]) {
-        NSString * property = [propertyDict objectForKey:[inObject serviceID]];
-        if (property) {
-            NSString * screenName = [[inObject UID] compactedString];
+    } else if (automaticSync && [inModifiedKeys containsObject: @"BuddyImage"]) {
+        
+        NSArray *results = [self searchForObject:inObject];
+        
+        if (results && [results count]) {
+            ABPerson * person = [results objectAtIndex:0];
             
-            ABSearchElement * searchElement = [ABPerson searchElementForProperty:property label:nil     key:nil value:screenName comparison:kABEqualCaseInsensitive];
-            NSArray * results = [sharedAddressBook recordsMatchingSearchElement:searchElement];
-            
-            if (results && [results count]) {
-                ABPerson * person = [results objectAtIndex:0];
-                
-                if (person) {
-                    AIHandle * handle = [(AIListContact *)inObject handleForAccount:nil];
-                    NSMutableDictionary *statusDict = [handle statusDictionary];
-                    //apply the image
-                    if ([statusDict objectForKey:@"BuddyImage"]) {
-                        [person setImageData: [[statusDict objectForKey:@"BuddyImage"] TIFFRepresentation]];
-                    }
+            if (person) {
+                AIHandle * handle = [(AIListContact *)inObject handleForAccount:nil];
+                NSMutableDictionary *statusDict = [handle statusDictionary];
+                //apply the image
+                if ([statusDict objectForKey:@"BuddyImage"]) {
+                    [person setImageData: [[statusDict objectForKey:@"BuddyImage"] TIFFRepresentation]];
                 }
             }
         }
@@ -136,15 +123,18 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
-        displayFormat = [[[owner preferenceController] preferenceForKey:KEY_AB_DISPLAYFORMAT group:PREF_GROUP_ADDRESSBOOK object:nil] intValue];
-        syncMethod = [[[owner preferenceController] preferenceForKey:KEY_AB_IMAGE_SYNC group:PREF_GROUP_ADDRESSBOOK object:nil] intValue];
+        displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
+        automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
+        NSLog(@"prefs call it");
         [self updateAllContacts];
     }
 }
 
 - (void)addressBookChanged:(NSNotification *)notification
 {
+            NSLog(@"addressBookChanged call it");
     [self updateAllContacts];
 }
 
@@ -203,7 +193,31 @@
     }
 }
 
-- (NSArray *)searchScreenName:(NSString *)name withService:(NSString *)service
+- (NSArray *)searchForObject:(AIListObject *)inObject
+{
+    NSArray             *results = nil;
+    NSString            *property = [propertyDict objectForKey:[inObject serviceID]];
+    if (property) {
+        NSString *screenName = [inObject UID];
+        
+        //search for the screen name as we have it stored (case insensitive)
+        results = [self _searchForScreenName:screenName withService:property];
+        
+        //If we don't find anything, try again using the compacted version of the screen name (case insensitive)
+        if (!results || ![results count]) {
+            results = [self _searchForScreenName:[screenName compactedString] withService:property];
+        }
+        
+        //If we don't find anything yet and are an AIM account, try again using the ICQ property
+        if ((!results || ![results count]) && [property isEqualToString:kABAIMInstantProperty]) {
+            results = [self _searchForScreenName:screenName withService:kABICQInstantProperty];
+        }
+    }
+    
+    return results;
+}
+
+- (NSArray *)_searchForScreenName:(NSString *)name withService:(NSString *)service
 {
     ABSearchElement * searchElement = [ABPerson searchElementForProperty:service 
                                                                    label:nil 
