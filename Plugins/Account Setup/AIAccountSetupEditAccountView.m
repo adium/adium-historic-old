@@ -20,7 +20,7 @@
 	[image_serviceIcon setImage:[AIServiceIcons serviceIconForService:[account service]
 																 type:AIServiceIconLarge
 															direction:AIIconNormal]];
-	[textField_accountName setStringValue:[account UID]];
+	[textField_accountDescription setStringValue:[account UID]];
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	
 	//Fields
@@ -62,13 +62,10 @@
 	//Configure for the account
 	[configuredForAccount release]; configuredForAccount = [inAccount retain];
 	[accountViewController configureForAccount:inAccount];
-	[self enableDisableControls];
-//	[self updateAccountConnectionProgress];
 	
 	//Fill in the account's name and auto-connect status
 	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
 	[textField_accountName setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [inAccount UID])];
-	[button_autoConnect setState:[[inAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
 	//User icon
 	if(iconData = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
@@ -99,14 +96,6 @@
 													  length:[inService allowedLengthForAccountName]
 											   caseSensitive:[inService caseSensitive]
 												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
-	
-	//Hide/show the Register button as appropriate
-	BOOL shouldShowRegisterButton = [inService canRegisterNewAccounts];
-	if ([button_register respondsToSelector:@selector(setHidden:)]){
-		[button_register setHidden:(!shouldShowRegisterButton)];
-	}else{
-		[button_register setEnabled:(!shouldShowRegisterButton)];
-	}
 }
 
 //Add the custom views for a controller
@@ -192,19 +181,5 @@
     [view_accountDetails removeAllSubviews];
     [accountViewController release]; accountViewController = nil;
 }
-
-//Disable controls for account that are connected
-- (void)enableDisableControls
-{
-	BOOL	accountEditable = (![[configuredForAccount statusObjectForKey:@"Online"] boolValue] &&
-							   ![[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] &&
-							   ![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
-	
-	//	[popupMenu_serviceList setEnabled:(configuredForAccount && accountEditable)];
-	[textField_accountName setEnabled:(configuredForAccount && accountEditable)];
-	[button_autoConnect setEnabled:(configuredForAccount != nil)];
-//	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount && accountEditable)];
-}
-
 
 @end

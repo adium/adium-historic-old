@@ -10,7 +10,8 @@
                 "imageView_userIcon" = ESImageViewWithImagePicker; 
                 "image_serviceIcon" = NSImageView; 
                 "tabView_auxiliary" = NSTabView; 
-                "textField_accountName" = NSTextField; 
+                "textField_accountDescription" = NSTextField; 
+                "textField_accountName" = ESDelayedTextField; 
                 "textField_serviceName" = NSTextField; 
                 "textField_userNameLabel" = NSTextField; 
                 "view_accountDetails" = NSView; 
@@ -25,8 +26,11 @@
                 "image_serviceIcon" = NSImageView; 
                 "radio_registerNew" = NSButtonCell; 
                 "radio_useExisting" = NSButtonCell; 
+                "textField_accountName" = ESDelayedTextField; 
                 "textField_serviceHelp" = NSTextField; 
                 "textField_serviceName" = NSTextField; 
+                "textField_userNameLabel" = NSTextField; 
+                "view_accountDetails" = NSView; 
             }; 
             SUPERCLASS = AIAccountSetupView; 
         }, 

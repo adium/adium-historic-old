@@ -27,6 +27,27 @@
 	[radio_registerNew setTitle:[NSString stringWithFormat:@"Register a new %@ account",[service shortDescription]]];
 	[radio_useExisting setTitle:[NSString stringWithFormat:@"Use an existing %@ account",[service shortDescription]]];
 
+	//Custom username string
+	NSString *userNameLabel = [service userNameLabel];
+	[textField_userNameLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
+	
+	//Restrict the account name field to valid characters and length
+    [textField_accountName setFormatter:
+		[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
+													  length:[service allowedLengthForAccountName]
+											   caseSensitive:[service caseSensitive]
+												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+
+	//account view controller
+	accountViewController = [[inService accountView] retain];
+
+	//Swap in the account details view
+	NSView	*accountView = [accountViewController view];
+	float 	accountViewHeight = [accountView frame].size.height;
+	
+    [view_accountDetails removeAllSubviews];
+	[view_accountDetails addSubview:accountView];
+	[accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
 }
 
 - (NSSize)desiredSize
