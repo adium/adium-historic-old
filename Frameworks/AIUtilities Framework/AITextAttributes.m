@@ -36,7 +36,7 @@
 //init
 - (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
 {
-    [super init];
+    [self init];
 
     dictionary = [[NSMutableDictionary alloc] init];
 
@@ -49,6 +49,18 @@
     return(self);
 }
 
+- (id)init
+{
+	[super init];
+	
+	dictionary = nil;
+	fontFamilyName = nil;
+	fontTraitsMask = 0;
+	fontSize = 0;
+	
+	return(self);
+}
+
 //dealloc
 - (void)dealloc
 {
@@ -56,6 +68,18 @@
     [fontFamilyName release];
 
     [super dealloc];
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+	AITextAttributes	*newTextAttributes = [[AITextAttributes alloc] init];
+
+	newTextAttributes->dictionary = [dictionary mutableCopy];
+	newTextAttributes->fontFamilyName = [fontFamilyName retain];
+	newTextAttributes->fontTraitsMask = fontTraitsMask;
+	newTextAttributes->fontSize = fontSize;
+
+	return(newTextAttributes);
 }
 
 //Set the font family (name)
