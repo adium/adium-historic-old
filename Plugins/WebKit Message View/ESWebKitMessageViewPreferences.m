@@ -11,9 +11,9 @@
 
 #define PREVIEW_FILE	@"Preview"
 
-#define NO_BACKGROUND_ITEM_TITLE		NSLocalizedString(@"No Image",nil)
-#define DEFAULT_BACKGROUND_ITEM_TITLE   NSLocalizedString(@"Default Image",nil)
-#define CUSTOM_BACKGROUND_ITEM_TITLE	NSLocalizedString(@"Custom...",nil)
+#define NO_BACKGROUND_ITEM_TITLE		NSLocalizedStringFromTableInBundle(@"No Image",nil,[NSBundle bundleForClass: [self class]],nil)
+#define DEFAULT_BACKGROUND_ITEM_TITLE   NSLocalizedStringFromTableInBundle(@"Default Image",nil,[NSBundle bundleForClass: [self class]],nil)
+#define CUSTOM_BACKGROUND_ITEM_TITLE	NSLocalizedStringFromTableInBundle(@"Custom...",nil,[NSBundle bundleForClass: [self class]],nil)
 
 #define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"  //To watch when the contact name display format changes
 
@@ -288,7 +288,7 @@
 
 		//If the preferred style is unavailable, load the default
 		if (!style){
-			styleName = NSLocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
+			styleName = NSLocalizedStringFromTableInBundle(@"Mockie",nil,[NSBundle bundleForClass: [self class]],"Default message style name. Make sure this matches the localized style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
 	}
@@ -489,7 +489,7 @@
 					//Add the No Variant menu item
 					NSString		*noVariantName = [style objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
 					if (!noVariantName){
-						noVariantName = NSLocalizedString(@"Normal","Normal style variant menu item");
+						noVariantName = NSLocalizedStringFromTableInBundle(@"Normal",nil,[NSBundle bundleForClass: [self class]],"Normal style variant menu item");
 					}
 					subMenuItem = [[[NSMenuItem alloc] initWithTitle:noVariantName 
 															  target:self
