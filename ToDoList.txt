@@ -39,9 +39,7 @@
 - Block/Unblock should change titles dynamically
 
 [OTR]
-- Make OTR dialogs non-modal
 - Fingerprint management? (advanced)
-- Global and per-contact OTR policy settings
 
 [Other]
 - The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
