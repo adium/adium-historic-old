@@ -113,7 +113,7 @@ static NSCharacterSet *skipSet = nil;
         if(localStringLen > 2 && [scanString characterAtIndex:localStringLen - 1] == ','){
             scanString = [NSString stringWithString:[scanString substringToIndex:localStringLen - 1]];
         }
-        SHStringOffset = [preScanner scanLocation] - localStringLen;
+        SHStringOffset = [preScanner scanLocation] - [scanString length];
         
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
