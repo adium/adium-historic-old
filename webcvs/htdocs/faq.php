@@ -13,6 +13,10 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
+<!--[if gte ie 5.5000]>
+<link rel="stylesheet" type="text/css" href="styles/layoutIE.css" />
+<link rel="stylesheet" type="text/css" href="styles/defaultIE.css" />
+<![endif]-->
 <link rel="shortcut icon" href="favicon.ico" />
 </head>
 <body>
@@ -178,5 +182,6 @@
         </div>
         <div id="footer">&nbsp;</div>
     </div>
+<script type="text/javascript" src="PieNG.js"></script>
 </body>
 </html>

@@ -1,0 +1,38 @@
+
+
+/*<group=navbar>*/
+
+#navcontainer ul
+{
+	margin-bottom: -12px;
+}
+
+/*</group>*/
+
+#content {
+	margin-right: 240px;
+}
+
+.boxWideTop {
+	margin-bottom: -8px;
+}
+
+.boxWideContent {
+	margin-right:  5px;
+}
+
+.boxWideBottom {
+	margin-bottom: -8px;
+}
+
+#sidebar-a {
+	margin-right: 15px;
+}
+
+.boxThinTop {
+	margin-bottom: -8px;
+}
+
+.boxThinBottom {
+	margin-bottom: -8px;
+}
