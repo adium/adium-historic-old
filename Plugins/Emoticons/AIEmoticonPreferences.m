@@ -17,7 +17,8 @@
 #import "AIEmoticonsPlugin.h"
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
-#import "AIEmoticonPackCell.h"
+//#import "AIEmoticonPackCell.h"
+#import "AIEmoticonPackPreviewController.h"
 
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
@@ -27,6 +28,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureEmoticonListForSelection;
 - (void)moveSelectedPacksToTrash;
+- (void)configurePreviewControllers;
 @end
 
 @implementation AIEmoticonPreferences
@@ -47,11 +49,17 @@
 {
     //Pack table
     [table_emoticonPacks registerForDraggedTypes:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE]];
-
-    [[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:[[[AIEmoticonPackCell alloc] initWithPlugin:plugin] autorelease]];
-    [table_emoticonPacks selectRow:0 byExtendingSelection:NO];
-    [table_emoticonPacks setToolTip:EMOTICON_PACKS_TOOLTIP];
 	
+	//Configure the outline view
+	BZGenericViewCell	*cell = [[[BZGenericViewCell alloc] init] autorelease];
+	[cell setDrawsGradientHighlight:YES];
+	[[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:cell];
+	[table_emoticonPacks selectRow:0 byExtendingSelection:NO];
+	[table_emoticonPacks setToolTip:EMOTICON_PACKS_TOOLTIP];
+	[table_emoticonPacks setDelegate:self];
+	[table_emoticonPacks setDataSource:self];
+	[self configurePreviewControllers];
+
     //Emoticons table
 	selectedEmoticonPack = nil;
     checkCell = [[NSButtonCell alloc] init];
@@ -83,14 +91,31 @@
 - (void)viewWillClose
 {
 	viewIsOpen = NO;
-	
+
 	[checkCell release]; checkCell = nil;
 	[selectedEmoticonPack release]; selectedEmoticonPack = nil;
-	
+	[emoticonPackPreviewControllers release]; emoticonPackPreviewControllers = nil;
 	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
+
     //Flush all the images we loaded
     [plugin flushEmoticonImageCache];
+}
+
+- (void)configurePreviewControllers
+{
+	NSEnumerator	*enumerator = [[plugin availableEmoticonPacks] objectEnumerator];
+	AIEmoticonPack	*pack;
+
+	[emoticonPackPreviewControllers release];
+	emoticonPackPreviewControllers = [[NSMutableArray alloc] init];
+	while(pack = [enumerator nextObject]){
+		[emoticonPackPreviewControllers addObject:[AIEmoticonPackPreviewController previewControllerForPack:pack
+																								 withPlugin:plugin
+																								preferences:self]];
+	}
+	
+	[[[[table_emoticonPacks subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
+	[table_emoticonPacks reloadData];
 }
 
 //Configure the emoticon table view for the currently selected pack
@@ -145,15 +170,6 @@
 	[self _configureEmoticonListForSelection];
 }
 
-//Emoticon table view
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    if(tableView == table_emoticonPacks){
-        return([[plugin availableEmoticonPacks] count]);
-    }else{
-        return([[selectedEmoticonPack emoticons] count]);
-    }
-}
 
 //Returns a dimmed, attributed version of the passed string
 - (NSAttributedString *)_dimString:(NSString *)inString center:(BOOL)center
@@ -168,10 +184,21 @@
     return([[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease]);
 }
 
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)row
+#pragma mark Table view data source
+//Emoticon table view
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     if(tableView == table_emoticonPacks){
-		[(AIEmoticonPackCell *)aCell setEmoticonPack:[[plugin availableEmoticonPacks] objectAtIndex:row]];
+        return([emoticonPackPreviewControllers count]);
+    }else{
+        return([[selectedEmoticonPack emoticons] count]);
+    }
+}
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    if(tableView == table_emoticonPacks){
+		[cell setEmbeddedView:[[emoticonPackPreviewControllers objectAtIndex:row] view]];
 	}
 }
 
@@ -215,20 +242,18 @@
     }
 }
 
-- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
-{
-	[self moveSelectedPacksToTrash]; 
-}
-
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if (tableView == table_emoticons && [@"Enabled" isEqualToString:[tableColumn identifier]]) {
-			AIEmoticon  *emoticon = [[selectedEmoticonPack emoticons] objectAtIndex:row];
-			
-			[plugin setEmoticon:emoticon inPack:selectedEmoticonPack enabled:[object intValue]];
+		AIEmoticon  *emoticon = [[selectedEmoticonPack emoticons] objectAtIndex:row];
+		
+		[plugin setEmoticon:emoticon inPack:selectedEmoticonPack enabled:[object intValue]];
 	}
 }
+
+#pragma mark Drag and Drop
+
 
 - (BOOL)tableView:(NSTableView *)tableView writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
@@ -256,35 +281,6 @@
     }
 }
 
--(void)moveSelectedPacksToTrash
-{
-	NSString	*name = [[[selectedEmoticonPack name] copy] autorelease];
-    NSBeginAlertSheet(AILocalizedString(@"Delete Emoticon Pack",nil),
-					  AILocalizedString(@"Delete",nil),
-					  AILocalizedString(@"Cancel",nil),
-					  @"",
-					  [[self view] window],
-					  self, 
-                      @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-                      AILocalizedString(@"Are you sure you want to delete the %@ Emoticon Pack? It will be moved to the Trash.",nil), name);
-}
-
-- (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    if(returnCode == NSOKButton) {
-        NSEnumerator *selectedEnum = [table_emoticonPacks selectedRowEnumerator];
-        int object;
-        while(object = [[selectedEnum nextObject] intValue]) {
-            NSString *currentEPPath = [[[plugin availableEmoticonPacks] objectAtIndex:object] path];
-            // the plugin should then update and auto-propagate :)
-            [[NSFileManager defaultManager] trashFileAtPath:currentEPPath];
-		}
-		
-		[table_emoticonPacks deselectAll:nil];
-        [plugin xtrasChanged:nil];
-    }
-}
-
 - (BOOL)tableView:(NSTableView*)tableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op;
 {
     if(tableView == table_emoticonPacks){
@@ -294,22 +290,27 @@
             NSMutableArray  *movedPacks = [NSMutableArray array]; //Keep track of the packs we've moved
             NSEnumerator    *enumerator;
             NSNumber        *dragRow;
-            AIEmoticonPack  *pack;
+			
+            AIEmoticonPackPreviewController  *previewController;
             
             //Move
             enumerator = [dragRows objectEnumerator];
             while(dragRow = [enumerator nextObject]){
-                [movedPacks addObject:[[plugin availableEmoticonPacks] objectAtIndex:[dragRow intValue]]];
+                [movedPacks addObject:[[emoticonPackPreviewControllers objectAtIndex:[dragRow intValue]] emoticonPack]];
             }
             [plugin moveEmoticonPacks:movedPacks toIndex:row];
             
-			[tableView reloadData];
+			[self configurePreviewControllers];
 			
             //Select the moved packs
             [tableView deselectAll:nil];
-            enumerator = [movedPacks objectEnumerator];
-            while(pack = [enumerator nextObject]){
-                [tableView selectRow:[[plugin availableEmoticonPacks] indexOfObject:pack] byExtendingSelection:NO];
+            enumerator = [emoticonPackPreviewControllers objectEnumerator];
+            while(previewController = [enumerator nextObject]){
+				//If the moved packs contains this preview controller's pack, select it, wherever it may be
+				AIEmoticonPack	*emoticonPack = [previewController emoticonPack];
+				if([movedPacks indexOfObjectIdenticalTo:emoticonPack] != NSNotFound){
+					[tableView selectRow:[emoticonPackPreviewControllers indexOfObject:previewController] byExtendingSelection:NO];					
+				}
             }
             
             return(YES);
@@ -336,6 +337,48 @@
 }
 */
 
+#pragma mark Deletion
+
+
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+	[self moveSelectedPacksToTrash]; 
+}
+
+-(void)moveSelectedPacksToTrash
+{
+	NSString	*name = [[[selectedEmoticonPack name] copy] autorelease];
+    NSBeginAlertSheet(AILocalizedString(@"Delete Emoticon Pack",nil),
+					  AILocalizedString(@"Delete",nil),
+					  AILocalizedString(@"Cancel",nil),
+					  @"",
+					  [[self view] window],
+					  self, 
+                      @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+                      AILocalizedString(@"Are you sure you want to delete the %@ Emoticon Pack? It will be moved to the Trash.",nil), name);
+}
+
+- (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton) {
+        NSEnumerator *enumerator = [table_emoticonPacks arrayOfSelectedItemsUsingSourceArray:emoticonPackPreviewControllers];
+        
+		AIEmoticonPackPreviewController		*previewController;
+        while(previewController = [enumerator nextObject]) {
+
+            NSString *currentEPPath = [[previewController emoticonPack] path];
+
+			//trash it
+            [[NSFileManager defaultManager] trashFileAtPath:currentEPPath];
+		}
+
+		[table_emoticonPacks deselectAll:nil];
+		//Note the changed packs
+        [plugin xtrasChanged:nil];
+    }
+}
+
+#pragma mark Selection changes
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     if([notification object] == table_emoticonPacks){
@@ -349,10 +392,15 @@
     }
 }
 
+- (void)toggledPackController:(id)packController
+{
+	[table_emoticonPacks selectRow:[emoticonPackPreviewControllers indexOfObject:packController] byExtendingSelection:NO];					
+}
+
 - (void)emoticonXtrasDidChange
 {
 	if (viewIsOpen){
-		[table_emoticonPacks reloadData];
+		[self configurePreviewControllers];
 		[table_emoticons reloadData];
 	}
 }

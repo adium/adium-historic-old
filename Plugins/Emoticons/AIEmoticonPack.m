@@ -175,7 +175,8 @@
 		
 		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[path stringByAppendingPathComponent:fileName]
 													  equivalents:[dict objectForKey:EMOTICON_EQUIVALENTS]
-															 name:[dict objectForKey:EMOTICON_NAME]]];
+															 name:[dict objectForKey:EMOTICON_NAME]
+															 pack:self]];
 	}
 }
 
@@ -190,7 +191,8 @@
 		
 		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[path stringByAppendingPathComponent:fileName]
 													  equivalents:[dict objectForKey:@"String Representations"]
-															 name:[dict objectForKey:@"Meaning"]]];
+															 name:[dict objectForKey:@"Meaning"]
+															 pack:self]];
 	}
 }
 
