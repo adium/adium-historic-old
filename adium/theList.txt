@@ -39,6 +39,8 @@ Accounts:
 	- Remove account
 	+ Auto-complete aliases in log viewer
     	+ Add account specific proxy fields (Type, host, port) for all libgaim connections
+	# Remove auto-connect checkbox from account preferences
+		dchoby: we may want to keep these, for users who get disconnected or change their signed-on accounts frequently before quitting
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -62,17 +64,6 @@ Other:
 -------------------------------------------------------------------------------------------------------
 Big Stuff
 -------------------------------------------------------------------------------------------------------
-Account auto-connect:
-	Remove the 'auto-connect on launch' feature, and instead restore the accounts which were
-	connected on quit the next time Adium is launched.  Add a preference to disable this behavior.
-
-	Steps:
-	- Remove submenus from accounts in the File menu
-	+ Make selecting an account in the menu connect / disconnect
-	- Remove auto-connect checkbox from account preferences
-	+ Add global 'Restore previously connected accounts on launch' checkbox to account preferences
-	+ Clear account's 'online' flag only if the global restore connection option is off
-
 
 Contact alerts:
 	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
@@ -242,4 +233,14 @@ Features & Changes:
 = Create new account, tab from username->pass->account list.  Next tab should go back to username
 = Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
 = Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
+
+= [DONE] Account auto-connect:
+	Remove the 'auto-connect on launch' feature, and instead restore the accounts which were
+	connected on quit the next time Adium is launched.  Add a preference to disable this behavior.
+
+	Steps:
+	= Remove submenus from accounts in the File menu
+	= Make selecting an account in the menu connect / disconnect
+	= Add global 'Restore previously connected accounts on launch' checkbox to account preferences
+	= Clear account's 'online' flag only if the global restore connection option is off
 
