@@ -35,8 +35,15 @@
 - (void)_configureSortSelectionMenuItems;
 @end
 
+/*
+ * @class AIContactSortSelectionPlugin
+ * @brief Component to manage contact sorting selection
+ */
 @implementation AIContactSortSelectionPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	enableConfigureSort = NO;
@@ -53,7 +60,18 @@
 									 object:nil];
 }
 
-//Our available sort controllers changed
+/*
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
+	[menuItem_configureSort release]; menuItem_configureSort = nil;
+	[super dealloc];
+}
+
+/*
+ * @brief Our available sort controllers changed
+ */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	//Inform the contactController of the active sort controller
@@ -62,12 +80,9 @@
 	[self _configureSortSelectionMenuItems];
 }
 
-- (void)uninstallPlugin
-{
-	[menuItem_configureSort release]; menuItem_configureSort = nil;
-}
-
-//Tell the contactController the currently active sort controller based on the stored NSString* identifier
+/*
+ * @brief Set the active sort controller from the preferences
+ */
 - (void)_setActiveSortControllerFromPreferences
 {
 	NSEnumerator				*enumerator;
@@ -75,7 +90,8 @@
 	NSString					*identifier;
 	
 	//
-	identifier = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];
+	identifier = [[[adium preferenceController] preferencesForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
+															group:PREF_GROUP_CONTACT_SORTING];
 	
 	//
 	enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
@@ -92,6 +108,9 @@
 	}
 }
 
+/*
+ * @brief Configure the sort selection menu items
+ */
 - (void)_configureSortSelectionMenuItems
 {
     NSMenu				*sortSelectionMenu;
@@ -137,7 +156,11 @@
 	[self _setConfigureSortMenuItemTitleForController:activeSortController];
 }
 
-//Must be called by a menu item
+/*
+ * @brief Changed sort selection
+ *
+ * @param sender <tt>NSMenuItem</tt> with an <tt>AISortController</tt> representedObject
+ */
 - (void)changedSortSelection:(id)sender
 {
 	AISortController	*controller = [sender representedObject];
@@ -159,7 +182,9 @@
 	[self _setConfigureSortMenuItemTitleForController:controller];
 }
 
-//Update the "configure sort" menu item for controller
+/*
+ * @brief Update the "configure sort" menu item for controller
+ */
 - (void)_setConfigureSortMenuItemTitleForController:(AISortController *)controller
 {
 	NSString *configureSortMenuItemTitle = [controller configureSortMenuItemTitle];
@@ -172,14 +197,20 @@
 	}
 }
 
-//Configure the currently active sort
+/*
+ * @brief Configure the currently active sort
+ */
 - (void)configureSort:(id)sender
 {
 	AISortController *controller = [[adium contactController] activeSortController];
 	[ESContactSortConfigurationWindowController showSortConfigurationWindowForController:controller];
 }
 
-//All memu items should always be enabled except for menuItem_configureSort, which may be disabled
+/* 
+ * @brief Validate menu items
+ *
+ * All memu items should always be enabled except for menuItem_configureSort, which may be disabled
+ */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if (menuItem == menuItem_configureSort)
@@ -187,4 +218,5 @@
 	else
 		return YES;
 }
+
 @end
