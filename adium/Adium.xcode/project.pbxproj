@@ -4523,7 +4523,6 @@
 				34BD9DC305314751000AB133,
 				34BD9DC405314751000AB133,
 				348862D205645EB6003C9627,
-				6CF426830577648700F27FAA,
 				4BFC33DF058D4430008F7FA2,
 				4BFC3414058D48A8008F7FA2,
 				34B5875D058D801D00E7EF0D,
@@ -4681,7 +4680,6 @@
 				34BD9DD905314751000AB133,
 				34BD9DDA05314751000AB133,
 				348862D105645EB5003C9627,
-				6CF426840577648700F27FAA,
 				4BFC33E0058D4430008F7FA2,
 				4BFC3415058D48A8008F7FA2,
 				34B5875C058D801D00E7EF0D,
@@ -8783,8 +8781,6 @@
 		};
 		4B4F5B2F042D647C00A8010A = {
 			children = (
-				6CF426810577648600F27FAA,
-				6CF426820577648700F27FAA,
 				34503C7F058F96C400FB7AD1,
 				34503C7E058F96C400FB7AD1,
 				34B5875B058D801D00E7EF0D,
@@ -16564,36 +16560,6 @@
 			path = "Plugins/Event Sounds/EventSoundContactAlert.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6CF426810577648600F27FAA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactAlert.h;
-			path = "Frameworks/Adium Framework/ESContactAlert.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6CF426820577648700F27FAA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactAlert.m;
-			path = "Frameworks/Adium Framework/ESContactAlert.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6CF426830577648700F27FAA = {
-			fileRef = 6CF426810577648600F27FAA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6CF426840577648700F27FAA = {
-			fileRef = 6CF426820577648700F27FAA;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //6C0
 //6C1
