@@ -205,42 +205,46 @@ static NSDictionary		*presetStatusesDictionary = nil;
 {
 	if (gaim_account_is_connected(account)){
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
-		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
-		JabberBuddy *jb = jabber_buddy_find(account->gc->proto_data, uidUTF8String, FALSE);	
+		GaimBuddy   *buddy;
+		JabberBuddy *jb;
 		
-		//Retrieve the current status string
-		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
-		NSString		*statusMsgString = nil;
-		
-		//Get the custom jabber status message if one is set
-		const char		*msg = jabber_buddy_get_status_msg(jb);
-		if (msg){
-			statusMsgString = [NSString stringWithUTF8String:msg];
-		}
-		//If no custom status message, but the buddy's uc matches the UC_UNAVAILABLE mask, lookup the preset string for the status
-		if (!statusMsgString && (buddy->uc & UC_UNAVAILABLE)){
-			statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:buddy->uc]];
-		}
-		
-		//Update as necessary
-		if ([statusMsgString length] && ![statusMsgString isEqualToString:@"Online"]) {
-			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-				NSAttributedString *attrStr = [[[NSAttributedString alloc] initWithString:statusMsgString] autorelease];
+		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
+			(jb = jabber_buddy_find(account->gc->proto_data, uidUTF8String, FALSE))){	
+			
+			//Retrieve the current status string
+			NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+			NSString		*statusMsgString = nil;
+			
+			//Get the custom jabber status message if one is set
+			const char		*msg = jabber_buddy_get_status_msg(jb);
+			if (msg){
+				statusMsgString = [NSString stringWithUTF8String:msg];
+			}
+			//If no custom status message, but the buddy's uc matches the UC_UNAVAILABLE mask, lookup the preset string for the status
+			if (!statusMsgString && (buddy->uc & UC_UNAVAILABLE)){
+				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:buddy->uc]];
+			}
+			
+			//Update as necessary
+			if ([statusMsgString length] && ![statusMsgString isEqualToString:@"Online"]) {
+				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+					NSAttributedString *attrStr = [[[NSAttributedString alloc] initWithString:statusMsgString] autorelease];
+					
+					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+					[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
+					
+					//apply changes
+					[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+				}
 				
-				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
+			} else if ([oldStatusMsgString length]) {
+				//If we had a message before, remove it
+				[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+				[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
 				
 				//apply changes
 				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 			}
-			
-		} else if ([oldStatusMsgString length]) {
-			//If we had a message before, remove it
-			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
-			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
-			
-			//apply changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}
 }
