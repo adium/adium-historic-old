@@ -910,8 +910,9 @@ DeclareString(UID);
 			
 		}else{
 			NSDictionary	*serviceDict = [(AIMetaContact *)inContact dictionaryOfServicesAndListContacts];
-			NSArray			*contactArray = [serviceDict objectForKey:service];
-			NSImage			*serviceImage = [AIServiceIcons serviceIconForService:service
+			NSArray			*contactArray = [serviceDict objectForKey:service];			
+			AIService		*theService = [[owner accountController] firstServiceWithServiceID:service];
+			NSImage			*serviceImage = [AIServiceIcons serviceIconForService:theService
 																			 type:AIServiceIconSmall
 																		direction:AIIconNormal];
 			
@@ -1599,13 +1600,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 #warning This is ridiculous.
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
+	AIService		*theService = [[owner accountController] firstServiceWithServiceID:inService];
 	AIListObject	*tempListObject = [[AIListObject alloc] initWithUID:inUID 
-																service:[[owner accountController] firstServiceWithServiceID:inService]];
+																service:theService];
 	AIAccount		*account = [[owner accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
-			toContact:(AIListContact *)tempListObject];
+																					  toContact:(AIListContact *)tempListObject];
 	[tempListObject release];
 	
-	return([self contactWithService:inService account:account UID:inUID]);
+	return([self contactWithService:theService account:account UID:inUID]);
 }
 
 //Retrieve a group from the contact list (Creating if necessary)
@@ -1664,9 +1666,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 		}else if([listObject isKindOfClass:[AIListGroup class]]){
 			AIListObject	*containingObject = [listObject containingObject];
+			NSEnumerator	*enumerator;
+			AIAccount		*account;
 			
 			//If this is a group, delete all the objects within it
 			[self removeListObjects:[(AIListGroup *)listObject containedObjects]];
+			
+			//Delete the list off of all active accounts
+			enumerator = [[[owner accountController] accountArray] objectEnumerator];
+			while (account = [enumerator nextObject]){
+				if ([account online]){
+					[account deleteGroup:(AIListGroup *)listObject];
+				}
+			}
 			
 			//Then, procede to delete the group
 			[listObject retain];
