@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Display Status Circle</key>
-    <true/>
+    <false/>
     <key>Display Status Circle on Left</key>
     <true/>
     <key>Display Idle Time</key>
