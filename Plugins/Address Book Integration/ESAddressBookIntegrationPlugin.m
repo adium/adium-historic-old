@@ -296,20 +296,32 @@
 - (ABPerson *)searchForObject:(AIListObject *)inObject
 {
 	ABPerson		*person = nil;
-	NSString		*UID = [inObject UID];
-	NSString		*serviceID = [[inObject service] serviceID];
-	
-	person = [self _searchForUID:UID serviceID:serviceID];
-	
-	//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
-	if (!person){
-		if ([serviceID isEqualToString:@"AIM"]){
-			person = [self _searchForUID:UID serviceID:@"ICQ"];
-		}else if ([serviceID isEqualToString:@"ICQ"]){
-			person = [self _searchForUID:UID serviceID:@"AIM"];
+	if ([inObject isKindOfClass:[AIMetaContact class]]){
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+		
+		//Search for an ABPerson for each listContact within the metaContact; first one we find is
+		//the lucky winner.
+		enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
+		while((listContact = [enumerator nextObject]) && (person == nil)){
+			person = [self searchForObject:listContact];
+		}
+		
+	}else{
+		NSString		*UID = [inObject UID];
+		NSString		*serviceID = [[inObject service] serviceID];
+		
+		person = [self _searchForUID:UID serviceID:serviceID];
+		
+		//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
+		if (!person){
+			if ([serviceID isEqualToString:@"AIM"]){
+				person = [self _searchForUID:UID serviceID:@"ICQ"];
+			}else if ([serviceID isEqualToString:@"ICQ"]){
+				person = [self _searchForUID:UID serviceID:@"AIM"];
+			}
 		}
 	}
-	
 	return person;
 }
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
@@ -474,42 +486,7 @@
 		
 		if (([UIDsArray count] > 1) && createMetaContacts){
 			/* Got a record with multiple names */
-			AIMetaContact		*metaContact;
-			AIMutableOwnerArray *displayNameArray;
-			NSString			*displayName;
-			
-			metaContact = [[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
-			
-			//Load the name if appropriate
-			displayNameArray = [metaContact displayArrayForKey:@"Display Name"];
-			displayName = [self nameForPerson:person];
-
-			//Apply the values 
-			NSString *oldValue = [displayNameArray objectWithOwner:self];
-			if (!oldValue || ![oldValue isEqualToString:displayName]) {
-				[displayNameArray setObject:displayName withOwner:self];
-				
-				[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-														  object:metaContact
-														userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
-																							 forKey:@"Notify"]];				
-			}
-			
-			//Delayed lookup of image data
-			if (!listObjectArrayForImageData){
-				listObjectArrayForImageData = [[NSMutableArray alloc] init];
-				personArrayForImageData = [[NSMutableArray alloc] init];
-			}
-			
-			[listObjectArrayForImageData addObject:metaContact];
-			[personArrayForImageData addObject:person];
-			if (!imageLookupTimer){
-				imageLookupTimer = [[NSTimer scheduledTimerWithTimeInterval:IMAGE_LOOKUP_INTERVAL
-																	 target:self 
-																   selector:@selector(imageFetchTimer:) 
-																   userInfo:nil
-																	repeats:YES] retain];				
-			}
+			[[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 		}
 	}
 }
