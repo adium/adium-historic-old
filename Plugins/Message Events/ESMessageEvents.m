@@ -152,8 +152,39 @@
 					break;
 					
 				case AIChatUserNotAvailable:
-					message = [NSString stringWithFormat:AILocalizedString(@"Could not send: %@ is not available.",nil),[listObject formattedUID]];
+					message = [NSString stringWithFormat:AILocalizedString(@"Could not send because %@ is not available.",nil),[listObject formattedUID]];
 					type = @"user-unavailable";
+					break;
+				
+				case AIChatMessageSendingTooLarge:
+					message = AILocalizedString(@"Could not send the last message because it was too large.",nil);
+					type = @"sending-tooLarge";
+					break;
+
+				case AIChatMessageReceivingMissedTooLarge:
+					message = AILocalizedString(@"Could not receive the last message because it was too large.",nil);
+					type = @"missed-tooLarge";
+					break;
+					
+				case AIChatMessageReceivingMissedInvalid:
+					message = AILocalizedString(@"Could not receive the last message because it was invalid.",nil);
+					type = @"missed-invalid";
+					break;
+					
+				case AIChatMessageReceivingMissedRateLimitExceeded:
+					message = AILocalizedString(@"Could not receive because the rate limit has been exceeded.",nil);
+					type = @"missed-ratelimit";
+
+					break;
+				case AIChatMessageReceivingMissedRemoteIsTooEvil:
+					message = [NSString stringWithFormat:AILocalizedString(@"Could not receive; %@ is too evil.",nil),[listObject formattedUID]];
+					type = @"missed-remoteTooEvil";
+
+					break;
+				case AIChatMessageReceivingMissedLocalIsTooEvil:
+					message = AILocalizedString(@"Could not receive: you are too evil.",nil);
+					type = @"missed-localTooEvil";
+
 					break;
 			}
 			
