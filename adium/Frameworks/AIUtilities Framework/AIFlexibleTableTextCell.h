@@ -14,7 +14,6 @@
 @interface AIFlexibleTableTextCell : AIFlexibleTableCell {
     NSTextView			*editor;
     NSScrollView		*editorScroll;
-
     AIFlexibleTableColumn	*editedColumn;
     int				editedRow;
 

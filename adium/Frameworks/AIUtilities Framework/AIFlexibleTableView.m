@@ -36,6 +36,7 @@
 - (AIFlexibleTableCell *)cellAtPoint:(NSPoint)inPoint row:(int *)outRow column:(int *)outColumn;
 - (void)deselectAll;
 - (AIFlexibleTableColumn *)columnAtIndex:(int)index;
+- (BOOL)selectRow:(int)inRow;
 
 - (void)_resizeColumns;
 - (void)_resizeRows;
@@ -83,8 +84,6 @@
     scrollsOnNewContent = YES;
 
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:self];
 }
 
 
@@ -149,11 +148,9 @@
     //Give the cell a chance to process the mouse down.  If it returns YES, we ignore the event.
     if(![cell handleMouseDown:theEvent]){
         //Select the row
-        [self selectRow:row];
-    
-        //Text selection
-        {
-            NSPoint			localPoint;
+        if(![self selectRow:row]){
+            //Text selection within the cell
+            NSPoint	localPoint;
     
             //Deselect all text
             [self deselectAll];
@@ -293,48 +290,50 @@
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     cell = [self cellAtPoint:clickLocation row:&row column:&column];
 
-    //Remove all current selections
-    [self deselectAll];
-    
-    //Save the new selection end information
-    selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
-    selection_endRow = row;
-    selection_endColumn = column;
-
-    //Select partial text in the start and end cells
-    startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
-    endCell = [[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];    
-    
-    if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
-        [startCell selectFrom:selection_startIndex to:selection_endIndex];
-
-    }else if(selection_startRow < selection_endRow || selection_startColumn < selection_endColumn){ //The start cell is above or left of the end cell
-        [startCell selectFrom:selection_startIndex to:10000]; //insert generic big number here
-        [endCell selectFrom:0 to:selection_endIndex];
+    if(![self selectRow:row]){    
+        //Remove all current selections
+        [self deselectAll];
         
-    }else if(selection_startRow > selection_endRow || selection_startColumn > selection_endColumn){ //The start cell is below or right of the end cell
-        [startCell selectFrom:selection_startIndex to:0];
-        [endCell selectFrom:10000 to:selection_endIndex]; //insert generic big number here
+        //Save the new selection end information
+        selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
+        selection_endRow = row;
+        selection_endColumn = column;
+    
+        //Select partial text in the start and end cells
+        startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
+        endCell = [[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];    
         
-    }
-
-    //Select all text in every cell between start and end
-    //These loops are conditioned so that they always run top to bottom, left to right (Allowing selection to occur in any direction)
-    //We want to run through every cell within the selection block except the first and last cell (which have already been processed)
-    for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
-        column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
-        column++){
-        for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
-            row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
-            row++){
-
-            if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
-                AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row]; 
-                [cell selectFrom:0 to:10000]; //insert generic big number here
+        if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
+            [startCell selectFrom:selection_startIndex to:selection_endIndex];
+    
+        }else if(selection_startRow < selection_endRow || selection_startColumn < selection_endColumn){ //The start cell is above or left of the end cell
+            [startCell selectFrom:selection_startIndex to:10000]; //insert generic big number here
+            [endCell selectFrom:0 to:selection_endIndex];
+            
+        }else if(selection_startRow > selection_endRow || selection_startColumn > selection_endColumn){ //The start cell is below or right of the end cell
+            [startCell selectFrom:selection_startIndex to:0];
+            [endCell selectFrom:10000 to:selection_endIndex]; //insert generic big number here
+            
+        }
+    
+        //Select all text in every cell between start and end
+        //These loops are conditioned so that they always run top to bottom, left to right (Allowing selection to occur in any direction)
+        //We want to run through every cell within the selection block except the first and last cell (which have already been processed)
+        for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
+            column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
+            column++){
+            for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
+                row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
+                row++){
+    
+                if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
+                    AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row]; 
+                    [cell selectFrom:0 to:10000]; //insert generic big number here
+                }
             }
         }
     }
-
+        
     //Mark our view for redisplay
     [self setNeedsDisplay:YES];
 }
@@ -372,8 +371,25 @@
     return(YES);
 }
 
-//Called when the frame changes.  Adjust to fill the new frame
-- (void)frameChanged:(NSNotification *)notification
+
+- (void)viewDidMoveToSuperview
+{
+    //Remove existing
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
+
+    if([self enclosingScrollView] != nil){
+        //Observe new
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollViewFrameChanged:) name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
+
+        //fit our new view
+        [self resizeToFillContainerView];
+        [self resizeContents];
+        [self setNeedsDisplay:YES];
+    }
+}
+
+//Called when our scroll view's frame changes.  Adjust to fill the new frame
+- (void)scrollViewFrameChanged:(NSNotification *)notification
 {
     //Resize our cells
     //To make things faster, we only resize our contents if the width changed (requiring a column/cell resize), or if our view doesn't fully fill it's containing scrollview vertically (requiring a resize to keep the content bottom-aligned).
@@ -471,18 +487,33 @@
 
     //Resize and redisplay
     [self resizeContents];
+    [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
 }
 
 //Reload the content of a single row
 - (void)reloadRow:(int)inRow
 {
+    BOOL needResize = NO;
+
+    //If either method returns YES, we'll need to resize all the contents
+    needResize |= [self _removeCellsForRow:inRow];
+    needResize |= [self _addCellsForRow:inRow];
+    
     //Remove the row and add the new cells
-    if([self _removeCellsForRow:inRow] || [self _addCellsForRow:inRow]){
+    if(needResize){
         [self resizeContents];
     }
 
     [self resizeToFillContainerView];
+    [self setNeedsDisplay:YES];
+}
+
+//Resize the specified cell's row to the correct height
+- (void)resizeCellHeight:(AIFlexibleTableCell *)inCell
+{
+    //For now just resize everything
+    [self resizeContents];
     [self setNeedsDisplay:YES];
 }
 
@@ -508,14 +539,12 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
     id	responder = [self nextResponder];
-    NSLog(@"keyDown");
+
     //Make the next responder key (When walking the responder chain, we want to skip ScrollViews and ClipViews).
     while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
-        NSLog(@"  %@",responder);
         responder = [responder nextResponder];
     }
 
-    NSLog(@" *%@",responder);
     if(responder){
         [[self window] makeFirstResponder:responder]; //Make it first responder
         [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent]; //Pass it this key event
@@ -527,8 +556,8 @@
 
 
 //Row Selection ---------------------------------------------------------------------------------
-//Open a specified row/column for editing
-- (void)selectRow:(int)inRow
+//Selects the specified row.  Returns YES if the row was selected, NO if it could not be.
+- (BOOL)selectRow:(int)inRow
 {
     if(inRow < 0 || inRow >= [delegate numberOfRows]){
         inRow = -1; //No selection
@@ -544,6 +573,10 @@
         //Select the new row
         if(inRow != -1) [self _setSelected:YES row:inRow];
         selectedRow = inRow;
+
+        return(YES);
+    }else{
+        return(NO);
     }
 
 }
@@ -747,26 +780,29 @@
         }
     }
 
-    //Go back through and correctly set the frames of the cells we just added
-    //This avoids having to call resizeContents when adding new rows, speeding things up quite a bit.
-    cellFrame.origin.x = 0;
-    cellFrame.origin.y = contentsHeight; //Start at the bottom of our view
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        AIFlexibleTableCell	*cell = [column cellAtIndex:inRow];
-
-        cellFrame.size.width = [column width];
-        cellFrame.size.height = newRowHeight;
-        [cell setFrame:cellFrame]; //Set the cell's frame
-
-        cellFrame.origin.x += [column width]; //Move to the next column
-    }
-
-    //Add this row's height to our array, and increase our total contents height to include it
-    [rowHeightArray insertObject:[NSNumber numberWithInt:newRowHeight] atIndex:inRow];
-    contentsHeight += newRowHeight;
+    //If the column width didn't change, and this is the bottom row, we can correctly set the frames of the cells we just added.  This avoids having to call resizeContents when adding new rows, speeding things up quite a bit.
+    if(!columnWidthDidChange && inRow == [rowHeightArray count]){
+        //
+        cellFrame.origin.x = 0;
+        cellFrame.origin.y = contentsHeight; //Start at the bottom of our view
+        columnEnumerator = [columnArray objectEnumerator];
+        while((column = [columnEnumerator nextObject])){
+            AIFlexibleTableCell	*cell = [column cellAtIndex:inRow];
     
-    return(columnWidthDidChange); //Return YES if the other cells should be resized
+            cellFrame.size.width = [column width];
+            cellFrame.size.height = newRowHeight;
+            [cell setFrame:cellFrame]; //Set the cell's frame
+    
+            cellFrame.origin.x += [column width]; //Move to the next column
+        }
+    
+        //Add this row's height to our array, and increase our total contents height to include it
+        [rowHeightArray insertObject:[NSNumber numberWithInt:newRowHeight] atIndex:inRow];
+        contentsHeight += newRowHeight;
+        return(NO); //NO, Cells need not be resized
+    }else{
+        return(YES); //YES, all cells should be resized
+    }
 }
 
 
@@ -779,10 +815,11 @@
     BOOL			autoScroll = NO;
     NSSize			size;
 
+    enclosingScrollView = [self enclosingScrollView];
+    documentVisibleRect = [enclosingScrollView documentVisibleRect];
+
     //Before resizing the view, we decide if the user is close to the bottom of our view.  If they are, we want to keep them at the bottom no matter what happens during the resize.
     if(scrollsOnNewContent){
-        enclosingScrollView = [self enclosingScrollView];
-        documentVisibleRect = [enclosingScrollView documentVisibleRect];
         autoScroll = ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > ([self frame].size.height - AUTOSCROLL_CATCH_SIZE));
     }
 
@@ -819,37 +856,6 @@
 
     //Reset our tracking rects
     [self resetCursorRects];
-}
-
-//Adjust the height of an existing row
-- (void)setHeightOfCellAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn to:(int)inHeight
-{
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-    int				newRowHeight = 0;
-
-    //We subtract this row's height from our total, recalculate the new required row height, then add the new height back the total.
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        int	cellHeight;
-
-        if(column != inColumn){
-            cellHeight = [[[column cellArray] objectAtIndex:inRow] cellSize].height;
-        }else{
-            cellHeight = inHeight;
-        }
-
-        if(cellHeight > newRowHeight){
-            newRowHeight = cellHeight;
-        }
-    }
-
-    [rowHeightArray replaceObjectAtIndex:inRow withObject:[NSNumber numberWithInt:newRowHeight]];
-
-    //Resize and redisplay
-    [self resizeToFillContainerView];
-    [self resizeContents];
-    [self setNeedsDisplay:YES];
 }
 
 //Resize the columns

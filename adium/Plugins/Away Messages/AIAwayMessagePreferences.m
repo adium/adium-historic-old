@@ -89,6 +89,7 @@
     //Setup our table view
     [tableView_aways setDelegate:self];
     [tableView_aways setContentBottomAligned:NO];
+    [tableView_aways setScrollsOnNewContent:NO];
 
     imageColumn = [[AIFlexibleTableColumn alloc] init];
     [tableView_aways addColumn:imageColumn];

@@ -26,6 +26,9 @@
 #define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
 #define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
 
+#define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
+#define SIGN_ON_UPKEEP_INTERVAL	0.4		//Max wait before sign up updates
+
 #define AUTO_RECONNECT_DELAY_PING_FAILURE	2.0	//Delay in seconds
 #define AUTO_RECONNECT_DELAY_SOCKET_DROP	2.0	//Delay in seconds
 #define AUTO_RECONNECT_DELAY_CONNECT_ERROR	5.0	//Delay in seconds
@@ -934,7 +937,7 @@ static char *hash_password(const char * const password);
                 
                 //Parse the information
                 if([type compare:@"m"] == 0){
-                    NSLog(@"Privacy Mode:%@",value);
+                    //NSLog(@"Privacy Mode:%@",value);
                     
                 }else if([type compare:@"g"] == 0){ //GROUP
                     //Save the new group name string
@@ -954,10 +957,13 @@ static char *hash_password(const char * const password);
                     index++;
 
                 }else if([type compare:@"p"] == 0){
+                }else if([type compare:@"d"] == 0){
                 }else if([type compare:@"m"] == 0){
+                }else if([type compare:@"pref"] == 0){
+                }else if([type compare:@"20"] == 0){
                 }else if([type compare:@"done"] == 0){
                 }else{
-                    NSLog(@"Unknown Config Type '%@', value '%@'.",type,value);
+                    //NSLog(@"Unknown Config Type '%@', value '%@'.",type,value);
                 }
             }
         }
@@ -971,7 +977,7 @@ static char *hash_password(const char * const password);
     waitingForFirstUpdate = YES;
     processingSignOnUpdates = YES;
     numberOfSignOnUpdates = 0;
-    [NSTimer scheduledTimerWithTimeInterval:(5.0) //5 Seconds max
+    [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_MAX_WAIT) //5 Seconds max
                                      target:self
                                    selector:@selector(firstSignOnUpdateReceived)
                                    userInfo:nil
@@ -984,13 +990,11 @@ static char *hash_password(const char * const password);
         waitingForFirstUpdate = NO;
 
         if(numberOfSignOnUpdates == 0){
-            NSLog(@"No updates received");
             //No available contacts after 5 seconds, assume noone is online and resume contact list updates
             [self waitForLastSignOnUpdate:nil];
         }else{
-            NSLog(@"First update received");
             //Check every 0.2 seconds for additional updates
-            [NSTimer scheduledTimerWithTimeInterval:(0.2)
+            [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_UPKEEP_INTERVAL)
                                              target:self
                                            selector:@selector(waitForLastSignOnUpdate:)
                                            userInfo:nil
@@ -1002,13 +1006,11 @@ static char *hash_password(const char * const password);
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
-        NSLog(@"Done.");
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
         processingSignOnUpdates = NO;
     }else{
-        NSLog(@"Connecting... (%i)",(int)numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }
