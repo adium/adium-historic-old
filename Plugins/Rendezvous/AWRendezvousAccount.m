@@ -57,12 +57,6 @@
 	return(NO);
 }
 
-//Rendezvous need not disconnect/reconnect as the network changes
-- (BOOL)connectivityBasedOnNetworkReachability
-{
-	return(NO);
-}
-
 - (void)connect
 {
     // Say we're connecting...
