@@ -15,6 +15,7 @@
 - (void)insertBookmark:(SHMarkedHyperlink *)bookmark;
 - (void)insertBookmarks:(NSDictionary *)bookmarks intoMenu:(NSMenu *)inMenu;
 - (void)insertMenuItemForBookmark:(SHMarkedHyperlink *)object intoMenu:(NSMenu *)inMenu;
+- (void)registerToolbarItem;
 @end
 
 @class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter,
@@ -52,7 +53,13 @@
 									   selector:@selector(adiumFinishedLaunching:)
 										   name:Adium_PluginsDidFinishLoading
 										 object:nil];
-	}
+                
+                [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
+                [self registerToolbarItem];
+        }
 }
 
 //Uninstall
@@ -68,6 +75,50 @@
 	[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
 							 toTarget:self
 						   withObject:nil];
+}
+
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
+		NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
+		
+		//Add menu to view
+		[[item view] setMenu:menu];
+		
+		//Add menu to toolbar item (for text mode)
+		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+		[mItem setSubmenu:menu];
+		[mItem setTitle:[menu title]];
+		[item setMenuFormRepresentation:mItem];
+	}
+}
+
+- (void)registerToolbarItem
+{
+	MVMenuButton *button;
+	
+	//Unregister the existing toolbar item first
+	if(toolbarItem){
+		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+		[toolbarItem release]; toolbarItem = nil;
+	}
+	
+	//Register our toolbar item
+	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
+	[button setImage:[NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]]];
+	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertBookmark"
+														   label:@"Bookmarks"
+													paletteLabel:@"Insert Bookmark"
+														 toolTip:@"Insert Bookmark"
+														  target:self
+												 settingSelector:@selector(setView:)
+													 itemContent:button
+														  action:@selector(injectBookmarkFrom:)
+															menu:nil] retain];
+	[button setToolbarItem:toolbarItem];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
 //Returns the importer we'll need to use for the user's default web browser
