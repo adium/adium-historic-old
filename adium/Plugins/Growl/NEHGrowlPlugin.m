@@ -8,6 +8,7 @@
 
 #import "NEHGrowlPlugin.h"
 #import "GrowlDefines.h"
+#import "GrowlApplicationBridge.h"
 
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
@@ -27,18 +28,8 @@
 				@"Adium-NewMessage", Content_FirstContentRecieved,
 				nil];
 	
-	//Register us with Growl
-	
-	NSArray * objects = [[events objectEnumerator] allObjects];
-	NSDictionary * growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
-									@"Adium", GROWL_APP_NAME,
-									objects, GROWL_NOTIFICATIONS_ALL,
-									objects, GROWL_NOTIFICATIONS_DEFAULT,
-									nil];
-	
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION
-																   object:nil
-																 userInfo:growlReg];
+	//Launch Growl if needed
+	[GrowlApplicationBridge launchGrowlIfInstalledNotifyingTarget:self selector:@selector(registerAdium:) context:NULL];
 	
 	NSEnumerator * notes = [events keyEnumerator];
 	NSString	 * note;
@@ -49,6 +40,22 @@
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	
 	[self preferencesChanged:nil];
+}
+
+- (void)registerAdium:(void*)context
+{
+	//Register us with Growl
+	
+	NSArray * objects = [[events objectEnumerator] allObjects];
+	NSDictionary * growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
+		@"Adium", GROWL_APP_NAME,
+		objects, GROWL_NOTIFICATIONS_ALL,
+		objects, GROWL_NOTIFICATIONS_DEFAULT,
+		nil];
+	
+	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION
+																   object:nil
+																 userInfo:growlReg];
 }
 
 - (void)handleEvent:(NSNotification*)notification
@@ -100,6 +107,8 @@
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]) {
 			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
 			description = [NSString stringWithFormat: AILocalizedString(@"%@",nil), message];
+		}else{
+			description = @"OMGWTFBBQ!";
 		}
 		
 		if(buddyIcon = [[contact displayArrayForKey:KEY_USER_ICON] objectValue]){
