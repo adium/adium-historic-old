@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {apply = id; closeWindow = id; configureControls = id; }; 
