@@ -170,4 +170,20 @@
 //	[self selectItemsInArray:selectedItems];
 }
 
+#pragma mark Dragging
+//Draging ------------------------------------------
+//Invoked in the dragging source as the drag ends
+- (void)draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{	
+	if ([[self delegate] respondsToSelector:@selector(outlineView:draggedImage:endedAt:operation:)]){
+		[[self delegate] outlineView:self draggedImage:image endedAt:screenPoint operation:operation];
+	}
+}
+
+//Prevent dragging of items to another application
+- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+{
+    return(isLocal ? NSDragOperationEvery : NSDragOperationNone);
+}
+
 @end
