@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.9 $
- * $Date: 2004/02/23 20:59:17 $
- * $Author: evands $
+ * $Revision: 1.10 $
+ * $Date: 2004/03/01 04:55:24 $
+ * $Author: adamiser $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -41,53 +41,54 @@
 @interface AIAccountController : NSObject{
     IBOutlet	AIAdium		*owner;	
 	
-    NSMutableArray			*accountArray;			//Array of active accounts
-    NSMutableDictionary		*availableServiceDict;
-    NSMutableDictionary		*lastAccountIDToSendContent;
-    NSMutableDictionary		*accountStatusDict;
+    NSMutableArray			*accountArray;				//Array of active accounts
+    NSMutableDictionary		*availableServiceDict;		//Array of available services
+    NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
+    NSMutableDictionary		*accountStatusDict;			//Account status
 	
-    NSMutableArray			*sleepingOnlineAccounts;
-    
-    NSImage					*defaultUserIcon;
-    NSString				*defaultUserIconFilename;
+    NSMutableArray			*sleepingOnlineAccounts;	//Accounts that were connected before we slept
 }
 
-//Access to the account list
+//Services
+- (NSArray *)availableServices;
+- (NSArray *)activeServiceTypes;
+- (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
+- (void)registerService:(id <AIServiceController>)inService;
+
+//Accounts
 - (NSArray *)accountArray;
+- (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID;
 - (AIAccount *)accountWithID:(NSString *)inID;
 - (NSArray *)accountsWithServiceID:(NSString *)serviceID;
-- (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID;
+- (AIAccount *)defaultAccount;
+- (AIAccount *)accountOfType:(NSString *)inType withUID:(NSString *)inUID;
 
-//
+//Account Editing
+- (AIAccount *)newAccountAtIndex:(int)index;
+- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index;
+- (void)deleteAccount:(AIAccount *)inAccount;
+- (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
+- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
+
+//Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
 - (NSMenu *)menuOfAccountsWithTarget:(id)target;
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target;	
 
-//Managing accounts
-- (AIAccount *)newAccountAtIndex:(int)index;
-- (void)deleteAccount:(AIAccount *)inAccount;
-- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
-- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
-- (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
+//Connection convenience methods
+- (void)autoConnectAccounts;
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 
-//Account password storage
+//Password Storage
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
 - (NSString *)passwordForAccount:(AIAccount *)inAccount;
 - (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 
-//Access to services
-- (void)registerService:(id <AIServiceController>)inService;
-- (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
-- (NSArray *)availableServices;
-- (NSArray *)activeServiceTypes;
-
 //Private
 - (void)initController;
 - (void)closeController;
 - (void)finishIniting;
-- (void)disconnectAllAccounts;
 
 @end
