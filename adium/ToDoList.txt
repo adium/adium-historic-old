@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.101 2004/05/07 17:35:18 eevyl Exp $
+$Id: ToDoList.txt,v 1.102 2004/05/07 17:44:02 eevyl Exp $
 
 
 Legend
@@ -43,9 +43,6 @@ Contact List:
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
 -------------------------------------------------------------------------------------------------------
-* Simple webkit style has some bottom redraw/margin issues and is not displaying some of the dividing lines above a status change?
-    (Jorge: The dividing lines are not displaying because that was the way if was in SMV, and it is meant to be a carbon copy of that. The bug AFAIK is not such, please someone provide a way to trigger it, I tried with no success.)
-    
 * Tooltips are flashing when the contact list auto-resizes?
 * Deleting an idle contact may cause a crash when the idle updates next? http://www.visualdistortion.org/crash/view.jsp?crash=10088
 * Empty groups come back on next launch after being deleted?
