@@ -71,14 +71,17 @@
 //Configure the account view
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-    NSString		*savedPassword;
+    NSString		*savedPassword = nil;
 	
 	//Remember the account
 	account = inAccount;
 	
     //Display saved password
-    savedPassword = [[adium accountController] passwordForAccount:account];
-    if(savedPassword != nil && [savedPassword length] != 0){
+	if ([inAccount UID] && [[inAccount UID] length]){
+		savedPassword = [[adium accountController] passwordForAccount:account];
+	}
+	
+    if(savedPassword && [savedPassword length] != 0){
         [textField_password setStringValue:savedPassword];
     }else{
         [textField_password setStringValue:@""];
