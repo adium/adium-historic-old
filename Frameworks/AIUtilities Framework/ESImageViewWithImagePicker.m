@@ -50,6 +50,7 @@
 	shouldDrawFocusRing = NO;
 	
 	useNSImagePickerController = [NSApp isOnPantherOrBetter];
+	[self setImageFrameStyle:NSImageFramePhoto];
 }
 
 - (void)dealloc
