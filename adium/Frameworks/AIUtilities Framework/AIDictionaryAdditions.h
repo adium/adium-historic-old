@@ -17,7 +17,7 @@
 
 + (NSDictionary *)dictionaryNamed:(NSString *)name forClass:(Class)inClass;
 + (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)writeToPath:(NSString *)path withName:(NSString *)name;
+- (BOOL)writeToPath:(NSString *)path withName:(NSString *)name;
 - (BOOL)boolForKey:(NSString *)inKey;
 - (NSString *)stringForKey:(NSString *)inKey;
 - (int)intForKey:(NSString *)inKey;
