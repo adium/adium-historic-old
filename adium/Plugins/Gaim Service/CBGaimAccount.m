@@ -448,7 +448,7 @@ static id<GaimThread> gaimThread = nil;
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
 
 	//Inform gaim that we have opened this chat
-	[gaimThread openChat:chat];
+	[gaimThread openChat:chat onAccount:self];
 	
 	//Created the chat successfully
 	return(YES);
