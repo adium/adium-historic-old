@@ -176,34 +176,41 @@
 
 - (void) userLoggedOut:(AWEzvContact *)contact
 {
-    AIListContact *user;
+    AIListContact *listContact;
     
-    user = [[adium contactController] existingContactWithService:service
-														 account:self 
-															 UID:[contact uniqueID]];
+    listContact = [[adium contactController] existingContactWithService:service
+																account:self 
+																	UID:[contact uniqueID]];
     
-    [user setRemoteGroupName:nil];
+    [listContact setRemoteGroupName:nil];
     [libezvContacts removeObjectForKey:[contact uniqueID]];
 }
 
 //We received a message from an AWEzvContact
 - (void) user:(AWEzvContact *)contact sentMessage:(NSString *)message withHtml:(NSString *)html
 {
-    AIListContact *user;
-    AIContentMessage *msgObj;
-    
-    user = [[adium contactController] existingContactWithService:service
+    AIListContact		*listContact;
+    AIContentMessage	*msgObj;
+    AIChat				*chat;
+	
+    listContact = [[adium contactController] existingContactWithService:service
 														 account:self
 															 UID:[contact uniqueID]];
+	chat = [[adium contentController] chatWithContact:listContact];
 	
-    msgObj = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:user]
-								  withSource:user
+    msgObj = [AIContentMessage messageInChat:chat
+								  withSource:listContact
 								 destination:self
 										date:nil
 									 message:[AIHTMLDecoder decodeHTML:html]
 								   autoreply:NO];
     
     [[adium contentController] receiveContentObject:msgObj];
+	
+	//Clear the typing flag
+	[chat setStatusObject:nil
+				   forKey:KEY_TYPING
+				   notify:YES];
 }
 
 - (void) user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
@@ -215,7 +222,7 @@
 																	UID:[contact uniqueID]];
 	chat = [[adium contentController] existingChatWithContact:listContact];
 		
-    [chat setStatusObject:[NSNumber numberWithInt:((typingStatus == AWEzvIsTyping) ? AITyping : AINotTyping)]
+    [chat setStatusObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)
 					    forKey:KEY_TYPING
 					    notify:YES];
 }
