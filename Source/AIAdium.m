@@ -282,6 +282,7 @@
     [soundController closeController];
     [menuController closeController];
     [applescriptabilityController closeController];
+	[debugController closeController];
 	[toolbarController closeController];
     [preferenceController closeController];
 	

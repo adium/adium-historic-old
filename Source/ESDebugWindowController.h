@@ -11,6 +11,8 @@
 }
 
 + (id)showDebugWindow;
++ (void)closeDebugWindow;
++ (BOOL)debugWindowIsOpen;
 + (void)addedDebugMessage:(NSString *)message;
 
 @end
