@@ -326,16 +326,6 @@
 			settings = {
 			};
 		};
-		3404106C052A207D0012A3D2 = {
-			children = (
-				F519B01304D480C60196D3C4,
-				F519B01404D480C60196D3C4,
-			);
-			isa = PBXGroup;
-			name = "Text-To-Speech";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3404893106173DAB004D0B7E = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -21877,24 +21867,6 @@
 			sourceTree = "<group>";
 			usesTabs = 0;
 		};
-		F519B01304D480C60196D3C4 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SUSpeaker.h;
-			path = Source/SUSpeaker.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F519B01404D480C60196D3C4 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SUSpeaker.m;
-			path = Source/SUSpeaker.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F51DEC0D03262FB501A8010A = {
 			children = (
 				F57938FA033E745F01A8010A,
@@ -22854,7 +22826,6 @@
 				F5CDCE460350758501A8010A,
 				F5D746FA0338D79801A8010A,
 				F51DEC0D03262FB501A8010A,
-				3404106C052A207D0012A3D2,
 			);
 			isa = PBXGroup;
 			name = "Core Controllers";
