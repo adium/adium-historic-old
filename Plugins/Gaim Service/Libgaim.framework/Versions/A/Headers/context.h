@@ -69,6 +69,9 @@ typedef struct context {
 
     time_t lastsent;      /* The last time a Data Message was sent */
     char *lastmessage;    /* The plaintext of the last Data Message sent */
+    int may_retransmit;   /* Is the last message eligible for
+			     retransmission? */
+
     enum {
 	OFFER_NOT,
 	OFFER_SENT,
