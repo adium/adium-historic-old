@@ -6,6 +6,7 @@
 //
 
 #import "AIWebKitMessageViewController.h"
+#import "ESWebFrameViewAdditions.h"
 
 //#define	WEBKIT_DEBUG
 
@@ -180,6 +181,87 @@ DeclareString(AppendNextMessage);
 - (NSView *)messageScrollView
 {
 	return([[webView mainFrame] frameView]);
+}
+
+
+- (void)adiumPrint:(id)sender
+{
+	/*
+	 Apple, in its infinite wisdom, did not implement a webView print method, and implemented
+	 [[webView mainFrame] frameView] to print only the visible portion of the view. We have to get the scrollview
+	 and from there the documentView to have access to all of the webView.
+	 */
+	
+	NSPrintOperation	*op;
+	NSView				*documentView;
+	NSImage				*image;
+	NSImageView			*imageView;
+	NSSize				imageSize;
+	NSRect				originalWebViewFrame, webViewFrame, documentViewFrame, imageViewFrame;
+	NSPrintInfo			*sharedPrintInfo = [NSPrintInfo sharedPrintInfo];
+	
+	//Calculate the page height in points
+    NSSize paperSize = [sharedPrintInfo paperSize];
+    float pageWidth = paperSize.width - [sharedPrintInfo leftMargin] - [sharedPrintInfo rightMargin];
+	
+    //Convert height to the scaled view 
+	float scale = [[[sharedPrintInfo dictionary] objectForKey:NSPrintScalingFactor] floatValue];
+	if(!scale) scale = 1.0;	
+    pageWidth = pageWidth / scale;
+	
+	//Get the HTMLDocumentView which has all the content we want
+	documentView = [[[[[webView mainFrame] frameView] frameScrollView] contentView] documentView];
+	
+	//Get initial frames
+	originalWebViewFrame = [webView frame];
+	documentViewFrame = [documentView frame];
+	
+	//Make the webView the same size as we will be printing so any CSS elements resize themselves properly
+	webViewFrame = originalWebViewFrame;
+	webViewFrame.size.width = pageWidth;
+	webViewFrame.size.height = documentViewFrame.size.height;
+	[webView setFrame:webViewFrame];
+
+	//Ensure the documentView is constrained to the pageWidth
+	documentViewFrame.size.width = pageWidth;
+	
+	//Set up our image
+	image = [[[NSImage alloc] initWithSize:documentViewFrame.size] autorelease];
+	[image setFlipped:YES];
+	
+	//Draw
+	[image lockFocus];
+	[documentView drawRect:documentViewFrame];
+	[image unlockFocus];
+
+	//Restore the webView's frame to its original state
+	[webView setFrame:originalWebViewFrame];
+
+	//Create an NSImageView to hold our image
+	imageSize = [image size];
+	imageViewFrame = NSMakeRect(0,0,imageSize.width,imageSize.height);
+	imageView = [[[NSImageView alloc] initWithFrame:imageViewFrame] autorelease];
+	[imageView setImageAlignment:NSImageAlignTop];
+	[imageView setAnimates:NO];
+	[imageView setImageScaling:NSScaleProportionally];
+	[imageView setImage:image];
+
+	//Pass it to NSPrintOperation
+	op = [NSPrintOperation printOperationWithView:imageView];
+	[op setCanSpawnSeparateThread:YES];
+	
+#warning documentView creates a visual glitch which disappears when the scrollbar or window is changed. odd.
+	[op runOperationModalForWindow:[webView window]
+						  delegate:self
+					didRunSelector:@selector(printOperationDidRun:success:contextInfo:)
+					   contextInfo:NULL];
+	
+}
+
+
+- (void)printOperationDidRun:(NSPrintOperation *)printOperation success:(BOOL)success contextInfo:(void *)info 
+{	
+
 }
 
 - (void)_refreshContent

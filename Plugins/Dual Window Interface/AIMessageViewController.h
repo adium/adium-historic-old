@@ -38,7 +38,7 @@
 
     IBOutlet	AIPlasticButton			*button_send;
 
-    id <AIMessageViewController>		messageViewController;
+    NSObject<AIMessageViewController>	*messageViewController;
 	AIAccountSelectionView				*view_accountSelection;
 
     //Variables
@@ -49,22 +49,27 @@
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
-- (IBAction)sendMessage:(id)sender;
-- (IBAction)inviteUser:(id)sender;
+
+- (void)setDelegate:(id)inDelegate;
+
 - (NSView *)view;
-- (void)setAccountSelectionMenuVisible:(BOOL)visible;
-- (void)makeTextEntryViewFirstResponder;
-- (void)setAccount:(AIAccount *)inAccount;
 - (AIChat *)chat;
 - (AIListContact *)listObject;
 - (AIAccount *)account;
-- (void)setDelegate:(id)inDelegate;
-- (void)addToTextEntryView:(NSAttributedString *)inString;
+- (NSObject<AIMessageViewController> *)messageViewController;
+
+- (void)setAccountSelectionMenuVisible:(BOOL)visible;
 - (void)setShouldSendMessagesToOfflineContacts:(BOOL)should;
+
+- (void)setAccount:(AIAccount *)inAccount;
+- (void)makeTextEntryViewFirstResponder;
+- (void)addToTextEntryView:(NSAttributedString *)inString;
+
 - (IBAction)sendMessageLater:(id)sender;
+- (IBAction)sendMessage:(id)sender;
+- (IBAction)inviteUser:(id)sender;
+
 - (BOOL)userListVisible;
 - (void)tabViewItemWillClose;
 
 @end
-
-
