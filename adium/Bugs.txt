@@ -25,6 +25,10 @@
 	will continue to try and reconnect, displaying the error message over and over
 	and trying its best to get that name blocked for as long as possible.
 
+- User icons occasionally display upside-down
+	We cannot find a pattern to when or why this happens
+	
+
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
@@ -86,12 +90,10 @@
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
-- User icons are still getting flipped (Icons from AIM, apparently)
 - We have issues with preventing the user from sending messages when they might
 	actually be able to send (invisible AIM users, after we get disconnected?)
 - If one tries to change one's idle time to a lower amount, (for example, from 2:32
 	to :36), an update will not occur, and your idle time will stay at 2:32.
-- Unicode (German) messages not working over ICQ ?
 - away messages aren't going away (if we disconnect, then they come back, then we
 	re-connect?)
 - Yahoo ignore list is being ignored?
