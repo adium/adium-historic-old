@@ -52,7 +52,7 @@ DeclareString(AppendNextMessage);
 		
 		//Observe for installation of new styles
 		[[adium notificationCenter] addObserver:self
-									   selector:@selector(stylesChanged:)
+									   selector:@selector(xtrasChanged:)
 										   name:Adium_Xtras_Changed
 										 object:nil];
 		
@@ -134,9 +134,11 @@ DeclareString(AppendNextMessage);
 //}
 
 //If the styles have changed, rebuild our list of available styles
-- (void)stylesChanged:(NSNotification *)notification
+- (void)xtrasChanged:(NSNotification *)notification
 {
-	[self _scanAvailableWebkitStyles];
+	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0){		
+		[self _scanAvailableWebkitStyles];
+	}
 }
 
 
