@@ -45,6 +45,7 @@
 	[self _configureToolbar];
 }
 
+
 //Toolbar --------------------------------------------------------------------------------------------------------------
 #pragma mark Toolbar
 //Install our toolbar
