@@ -51,7 +51,8 @@
 	
 	backgroundOpacity = 1.0;
 	statusFont = [[NSFont systemFontOfSize:12] retain];
-	
+	shouldUseContactTextColors = YES;
+		
 	return(self);
 }
 	
@@ -291,6 +292,10 @@
 	backgroundColorIsStatus = isStatus;
 }
 
+- (void)setShouldUseContactTextColors:(BOOL)flag
+{
+	shouldUseContactTextColors = flag;
+}
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
@@ -493,8 +498,13 @@
 //Contact text color
 - (NSColor *)textColor
 {
-	NSColor	*theTextColor = [listObject displayArrayObjectForKey:@"Text Color"];
-	return(theTextColor ? theTextColor : [super textColor]);
+	NSColor	*theTextColor;
+	
+	if (shouldUseContactTextColors && (theTextColor = [listObject displayArrayObjectForKey:@"Text Color"])){
+		return(theTextColor);
+	}else{
+		return([super textColor]);
+	}
 }
 - (NSColor *)invertedTextColor
 {

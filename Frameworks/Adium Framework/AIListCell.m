@@ -345,6 +345,7 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	NSMutableDictionary	*labelAttributes;
 	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
+
 	NSColor				*currentTextColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
 	
 	if (additionalAttributes){

@@ -152,8 +152,11 @@
 		contentCell = [[cellClass alloc] init];
 	}
 	[contactListView setContentCell:contentCell];
-	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
 	
+	//"Preferences" determined by the subclass of AIAbstractListController
+	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
+	[contentCell setShouldUseContactTextColors:[self shouldUseContactTextColors]];
+		
 	//Alignment
 	[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 	[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
@@ -478,6 +481,9 @@
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification {};
 - (void)updateTransparency {};
 - (BOOL)useAliasesInContactListAsRequested{
+	return YES;
+}
+- (BOOL)shouldUseContactTextColors{
 	return YES;
 }
 - (BOOL)shouldShowTooltips{
