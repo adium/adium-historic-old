@@ -162,7 +162,10 @@ static BOOL didInitSSL = NO;
 				if(!silentAndDelayed){
 					[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed On" notify:NO];
 					[theContact setStatusObject:nil forKey:@"Signed Off" notify:NO];
-					[theContact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
+					[theContact performSelectorOnMainThread:@selector(delayedStatusChange:)
+												 withObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Signed On",@"Key",
+													 [NSNumber numberWithInt:15],@"Delay",nil]
+											  waitUntilDone:YES];
 				}
 			}
 		}   break;
@@ -174,8 +177,11 @@ static BOOL didInitSSL = NO;
 				
 				if(!silentAndDelayed){
 					[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed Off" notify:NO];
-					[theContact setStatusObject:nil forKey:@"Signed On" notify:NO];
-					[theContact setStatusObject:nil forKey:@"Signed Off" afterDelay:15];
+					[theContact setStatusObject:nil forKey:@"Signed On" notify:NO];			
+					[theContact performSelectorOnMainThread:@selector(delayedStatusChange:)
+												 withObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Signed Off",@"Key",
+													 [NSNumber numberWithInt:15],@"Delay",nil]
+											  waitUntilDone:YES];
 				}
 			}
 		}   break;
