@@ -125,7 +125,7 @@
 {    
     while(1)
     {
-        if([self tryToSendReport:[bugReport stringByEncodingURLEscapes]]])
+        if([self tryToSendReport:bugReport])
         {
             [bugReport release];
             [NSApp terminate:nil];
