@@ -73,7 +73,12 @@
     [newItem setLabel:[item label]];
     [newItem setPaletteLabel:[item paletteLabel]];
     if([item view] != NULL){
-        [newItem setView:[item view]/*[[[item view] copy] autorelease]*/];
+		//For a toolbar only used in one window at a time, it's alright for a view to not allow copying
+		if([[item view] respondsToSelector:@selector(copyWithZone:)]){
+			[newItem setView:[[[item view] copy] autorelease]];
+		}else{
+			[newItem setView:[item view]];
+		}
     }else{
         [newItem setImage:[item image]];
     }
