@@ -18,7 +18,12 @@
 #define ACCOUNT_SELECTION_NIB		@"AccountSelectionView"
 
 @interface AIAccountSelectionView (PRIVATE)
-- (void)_addMenusForAccounts:(NSArray *)accounts;
+- (void)configureContactsMenu;
+- (void)configureAccountsMenu;
+
+- (void)updateAccountsMenu;
+- (void)updateContactsMenu;
+- (void)updatePopUp:(NSPopUpButton *)popUpButton toObject:(id)object;
 @end
 
 @implementation AIAccountSelectionView
@@ -32,7 +37,7 @@
 
     [self configureView];
 	[self configureContactsMenu];
-    [self configureAccountMenu];
+    [self configureAccountsMenu];
 	
     //register for notifications
     [[adium notificationCenter] addObserver:self
@@ -117,8 +122,9 @@
 	return ([inObject isKindOfClass:[AIMetaContact class]] && ![(AIMetaContact *)inObject containsOnlyOneUniqueContact]);
 }
 
+#pragma mark Acccounts
 //Configures the account menu (dimming invalid accounts if applicable)
-- (void)configureAccountMenu
+- (void)configureAccountsMenu
 {
     if(delegate){
 	
@@ -138,7 +144,7 @@
 			[[popUp_accounts menu] setAutoenablesItems:NO];
 			
 			//Select our current account
-			[self updateAccountMenu];
+			[self updateAccountsMenu];
 /*		}else{
 			[box_accounts setFrame:NSMakeRect(0,0,0,0)];
 		}
@@ -146,6 +152,15 @@
 	}
 }
 
+
+//User selected a new account from the account menu
+- (IBAction)selectAccount:(id)sender
+{
+	//This will end up triggering a call to updateMenu
+    [delegate setAccount:[sender representedObject]];
+}
+
+#pragma mark Contacts
 - (void)configureContactsMenu
 {
 	if(delegate){
@@ -171,24 +186,20 @@
 			//
 			[[popUp_contacts menu] setAutoenablesItems:NO];
 			
-			//Select our current contact
-			if (isMeta){
-				[delegate setListObject:[(AIMetaContact *)listObject preferredContactWithServiceID:[[delegate account] serviceID]]];
-			}
 			
-			[self updateContactMenu];
+			[self updateContactsMenu];
 			
 //		}else{
 //			[box_contacts setFrame:NSMakeRect(0,0,0,0)];
 //		}
 	}
 	
-	[self configureAccountMenu];
+	[self configureAccountsMenu];
 }
 
 - (void)selectContainedContact:(id)sender
 {
-	AIListObject	*listObject = [sender representedObject];
+	AIListContact	*listObject = [sender representedObject];
 	NSString		*oldServiceID = [[delegate listObject] serviceID];
 	
 	[delegate setListObject:listObject];
@@ -200,15 +211,15 @@
 	}
 	
 	
-	[self updateContactMenu];
-	[self configureAccountMenu];
+	[self updateContactsMenu];
+	[self configureAccountsMenu];
 }
 
+#pragma mark Notifications
 //An account's status changed
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 {
     if([inObject isKindOfClass:[AIAccount class]]){
-		#warning conflict
 		[self configureContactsMenu];
     }
     
@@ -216,38 +227,28 @@
 }
 
 //The account list/status changed
-#warning conflict
 - (void)accountListChanged:(NSNotification *)notification
 {
 	[self configureContactsMenu];
 }
 
-//User selected a new account from the account menu
-- (IBAction)selectAccount:(id)sender
-{
-    [delegate setAccount:[sender representedObject]];
-//    [self updateAccountMenu];
-}
-
+#pragma mark Menu Updating
 - (void)updateMenu
 {
-//	[self updateAccountMenu];
-//	[self updateContactMenu];
-	[self configureContactsMenu];
+	[self updateAccountsMenu];
+	[self updateContactsMenu];
 }
 
-- (void)updateAccountMenu
+- (void)updateAccountsMenu
 {
-    AIAccount		*account = [delegate account];
-	
-    
-    [self updatePopUp:popUp_accounts toObject:account];
+    [self updatePopUp:popUp_accounts 
+			 toObject:[delegate account]];
 }
 
-- (void)updateContactMenu
+- (void)updateContactsMenu
 {
-    AIListObject	*listObject = [delegate listObject];
-    [self updatePopUp:popUp_contacts toObject:listObject];
+    [self updatePopUp:popUp_contacts
+			 toObject:[delegate listObject]];
 }
 
 - (void)updatePopUp:(NSPopUpButton *)popUpButton toObject:(id)object

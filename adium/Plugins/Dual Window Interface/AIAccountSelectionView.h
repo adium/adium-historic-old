@@ -17,8 +17,9 @@
 
 @protocol AIAccountSelectionViewDelegate <NSObject>
 - (void)setAccount:(AIAccount *)inAccount;
+- (void)setListObject:(AIListContact *)listObject;
 - (AIAccount *)account;
-- (AIListObject *)listObject;
+- (AIListContact *)listObject;
 @end
 
 @interface AIAccountSelectionView : NSView <AIListObjectObserver> {
@@ -36,11 +37,13 @@
 }
 
 + (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
++ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
++ (BOOL)multipleContactsForListObject:(AIListObject *)inObject;
+
 - (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
 - (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
 - (id <AIAccountSelectionViewDelegate>)delegate;
 - (void)configureView;
-- (void)configureAccountMenu;
 - (void)updateMenu;
 - (void)accountListChanged:(NSNotification *)notification;
 - (IBAction)selectAccount:(id)sender;

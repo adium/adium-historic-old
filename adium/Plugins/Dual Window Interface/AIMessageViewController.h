@@ -52,7 +52,7 @@
 - (void)makeTextEntryViewFirstResponder;
 - (void)setAccount:(AIAccount *)inAccount;
 - (AIChat *)chat;
-- (AIListObject *)listObject;
+- (AIListContact *)listObject;
 - (AIAccount *)account;
 - (void)setDelegate:(id)inDelegate;
 - (void)addToTextEntryView:(NSAttributedString *)inString;
