@@ -241,6 +241,11 @@
     AIListContact *listContact = (AIListContact*) [chat listObject];
     NSAssert(listContact != nil, @"Conversation with no one?");
     AIHandle *handle = [listContact handleForAccount:self];
+    if (!handle) {
+        handle = [self addHandleWithUID:[[listContact UID] compactedString]
+                            serverGroup:[[listContact containingGroup] UID]
+                              temporary:YES];
+    }
     NSAssert(handle != nil, @"listContact without handle");
     switch (type) {
         case GAIM_CONV_UPDATE_TYPING:

@@ -19,19 +19,34 @@
 @implementation NSEvent (AIEventAdditions)
 
 + (BOOL)cmdKey{
-    return ([[NSApp currentEvent] modifierFlags] | NSCommandKeyMask);
+    return ( ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask) != 0 );
 }
 
 + (BOOL)shiftKey{
-    return ([[NSApp currentEvent] modifierFlags] | NSShiftKeyMask);
+    return ( ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) != 0 );
 }
 
 + (BOOL)optionKey{
-    return ([[NSApp currentEvent] modifierFlags] | NSAlternateKeyMask);
+    return ( ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) != 0 );
 }
 
 + (BOOL)controlKey{
-    return ([[NSApp currentEvent] modifierFlags] | NSControlKeyMask);
+    return ( ([[NSApp currentEvent] modifierFlags] & NSControlKeyMask) != 0 );
 }
 
+- (BOOL)cmdKey{
+    return ( ([self modifierFlags] & NSCommandKeyMask) != 0 );
+}
+
+- (BOOL)shiftKey{
+    return ( ([self modifierFlags] & NSShiftKeyMask) != 0 );
+}
+
+- (BOOL)optionKey{
+    return ( ([self modifierFlags] & NSAlternateKeyMask) != 0);
+}
+
+- (BOOL)controlKey{
+    return ( ([self modifierFlags] & NSControlKeyMask) != 0);
+}
 @end

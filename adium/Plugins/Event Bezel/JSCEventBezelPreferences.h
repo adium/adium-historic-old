@@ -30,24 +30,6 @@
     BOOL                    viewIsLoaded;
 }
 
-- (IBAction)toggleShowBezel:(id)sender;
-- (IBAction)changePosition:(id)sender;
-- (IBAction)toggleOnline:(id)sender;
-- (IBAction)toggleOffline:(id)sender;
-- (IBAction)toggleAvailable:(id)sender;
-- (IBAction)toggleAway:(id)sender;
-- (IBAction)toggleNoIdle:(id)sender;
-- (IBAction)toggleIdle:(id)sender;
-- (IBAction)toggleFirstMessage:(id)sender;
-- (IBAction)toggleImageBadges:(id)sender;
-- (IBAction)toggleColorLabels:(id)sender;
-- (IBAction)toggleNameLabels:(id)sender;
-- (IBAction)changeDuration:(id)sender;
-- (IBAction)changeSize:(id)sender;
-- (IBAction)changeBackground:(id)sender;
-- (IBAction)toggleFadeIn:(id)sender;
-- (IBAction)toggleFadeOut:(id)sender;
-- (IBAction)toggleShowHidden:(id)sender;
-- (IBAction)toggleShowAway:(id)sender;
+- (IBAction)changePreference:(id)sender;
 
 @end
