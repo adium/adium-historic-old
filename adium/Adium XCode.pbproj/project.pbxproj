@@ -21164,6 +21164,48 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		6C271CE30561719200057D9C = {
+			expectedFileType = image.png;
+			isa = PBXFileReference;
+			name = away.png;
+			path = "Plugins/Event Bezel/away.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C271CE40561719200057D9C = {
+			expectedFileType = image.png;
+			isa = PBXFileReference;
+			name = idle.png;
+			path = "Plugins/Event Bezel/idle.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C271CE50561719200057D9C = {
+			fileRef = 6C271CE30561719200057D9C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C271CE60561719200057D9C = {
+			fileRef = 6C271CE40561719200057D9C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C271CEA056177CA00057D9C = {
+			expectedFileType = image.png;
+			isa = PBXFileReference;
+			name = offline.png;
+			path = "Plugins/Event Bezel/offline.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C271CEB056177CA00057D9C = {
+			fileRef = 6C271CEA056177CA00057D9C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6C3E014F054445BA00A4AE2E = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -21231,6 +21273,9 @@
 				6C60B15705605A3800CAD137,
 				6C60B15805605A3800CAD137,
 				6C60B15905605A3800CAD137,
+				6C271CE50561719200057D9C,
+				6C271CE60561719200057D9C,
+				6C271CEB056177CA00057D9C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21319,7 +21364,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		6C60B13D0560594B00CAD137 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Event Bezel.AdiumPlugin";
@@ -21364,6 +21409,9 @@
 		};
 		6C60B147056059ED00CAD137 = {
 			children = (
+				6C271CEA056177CA00057D9C,
+				6C271CE30561719200057D9C,
+				6C271CE40561719200057D9C,
 				6C60B14805605A3500CAD137,
 				6C60B14905605A3500CAD137,
 				6C60B14A05605A3500CAD137,

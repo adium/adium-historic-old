@@ -10,6 +10,7 @@
 @interface JSCEventBezelView : NSView {
     NSImage *backdropImage;
     NSImage *buddyIconImage;
+    NSImage *buddyIconBadge;
     BOOL    defaultBuddyImage;
     NSShadow *textShadow;
     
@@ -21,6 +22,8 @@
 
 - (NSImage *)buddyIconImage;
 - (void)setBuddyIconImage:(NSImage *)newImage;
+- (NSImage *)buddyIconBadge;
+- (void)setBuddyIconBadgeType:(NSString *)badgeName;
 
 - (NSString *)mainBuddyName;
 - (void)setMainBuddyName:(NSString *)newString;

@@ -97,16 +97,22 @@ JSCEventBezelController *sharedInstance = nil;
         
         if ([event isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
             [bezelView setMainBuddyStatus: @"is now online"];
+            [bezelView setBuddyIconBadgeType: @""];
         } else if ([event isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
             [bezelView setMainBuddyStatus: @"has gone offline"];
+            [bezelView setBuddyIconBadgeType: @"offline"];
         } else if ([event isEqualToString: CONTACT_STATUS_AWAY_YES]) {
             [bezelView setMainBuddyStatus: @"has gone away"];
+            [bezelView setBuddyIconBadgeType: @"away"];
         } else if ([event isEqualToString: CONTACT_STATUS_AWAY_NO]) {
             [bezelView setMainBuddyStatus: @"is available"];
+            [bezelView setBuddyIconBadgeType: @""];
         } else if ([event isEqualToString: CONTACT_STATUS_IDLE_YES]) {
             [bezelView setMainBuddyStatus: @"is idle"];
+            [bezelView setBuddyIconBadgeType: @"idle"];
         } else if ([event isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-            [bezelView setMainBuddyStatus: @"no longer is idle"];
+            [bezelView setMainBuddyStatus: @"is no longer idle"];
+            [bezelView setBuddyIconBadgeType: @""];
         }
         
         // This is not working yet, the Plugin class needs to pass the message (away message or new IM)
@@ -127,7 +133,7 @@ JSCEventBezelController *sharedInstance = nil;
             mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
             windowSize = [[self window] frame];
             newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.size.width / 2.0));
-            newOrigin.y = mainScreenOrigin.y + (ceil(mainScreenSize.height*(0.18)));
+            newOrigin.y = mainScreenOrigin.y + 140.0;
             [[self window] setFrameOrigin: newOrigin];
         }
         
