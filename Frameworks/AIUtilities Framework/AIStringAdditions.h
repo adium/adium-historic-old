@@ -27,6 +27,7 @@
 - (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length;
 - (NSString *)string;
 - (NSString *)stringByEscapingForHTML;
+- (NSString *)stringByUnescapingFromHTML;
 //- (BOOL)isURLEncoded;
 
 @end
