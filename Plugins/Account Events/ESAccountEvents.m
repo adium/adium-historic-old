@@ -21,8 +21,15 @@
 
 #define ACCOUNT_CONNECTION_STATUS_GROUPING  2.0
 
+/*
+ * @class ESAccountEvents
+ * @brief Component to handle account-related Contact Alerts events
+ */
 @implementation ESAccountEvents
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	accountConnectionStatusGroupingOnlineTimer = nil;
@@ -37,8 +44,16 @@
     [[adium contactController] registerListObjectObserver:self];
 }
 
+/*
+ * @brief Short description for an event
+ *
+ * We're global-only, so no short descriptions are needed.
+ */
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID { return @""; }
 
+/*
+ * @brief Global short description for an event
+ */
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
@@ -56,8 +71,14 @@
 	return(description);
 }
 
-//Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
-//a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+/*
+ * @brief English, non-translated global short description for an event
+ *
+ * This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
+ * a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+ *
+ * @result English global short description which should only be used internally
+ */
 - (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
@@ -75,6 +96,9 @@
 	return(description);
 }
 
+/*
+ * @brief Long description for an event
+ */
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
 {
 	NSString	*description;
@@ -92,6 +116,15 @@
 	return(description);
 }
 
+/*
+ * @brief Natural language description for an event
+ *
+ * @param eventID The event identifier
+ * @param listObject The listObject triggering the event
+ * @param userInfo Event-specific userInfo
+ * @param includeSubject If YES, return a full sentence.  If not, return a fragment.
+ * @result The natural language description.
+ */
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
@@ -127,7 +160,11 @@
 
 
 #pragma mark Aggregation and event generation
-//
+/*
+ * @brief Update list object
+ *
+ * We aggregate account connection events to avoid a quick sign on/sign off from triggering the event
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if([inObject isKindOfClass:[AIAccount class]]){ //We only care about accounts
@@ -160,6 +197,9 @@
 	return(nil);	
 }
 
+/*
+ * @brief Called an account connects and remains online for ACCOUNT_CONNECTION_STATUS_GROUPING
+ */
 - (void)accountConnection:(NSTimer *)timer
 {
 	[[adium contactAlertsController] generateEvent:ACCOUNT_CONNECTED
@@ -169,6 +209,9 @@
 	[accountConnectionStatusGroupingOnlineTimer release]; accountConnectionStatusGroupingOnlineTimer = nil;
 }
 
+/*
+ * @brief Called an account disconnects and remains offline for ACCOUNT_CONNECTION_STATUS_GROUPING
+ */
 - (void)accountDisconnection:(NSTimer *)timer
 {
 	[[adium contactAlertsController] generateEvent:ACCOUNT_DISCONNECTED
