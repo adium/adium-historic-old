@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIModularPaneCategoryView, ESImageViewWithImagePicker;
+@class ESContactInfoListController, AIModularPaneCategoryView, ESImageViewWithImagePicker;
 
-@interface AIContactInfoWindowController : AIAbstractListWindowController {	
+@interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
 	IBOutlet		NSTabView						*tabView_category;
 	IBOutlet		ESImageViewWithImagePicker		*imageView_userIcon;
 	IBOutlet		NSTextField						*textField_accountName;
@@ -28,8 +28,13 @@
 
 	IBOutlet		NSDrawer						*drawer_metaContact;
 	
-	AIListObject	*displayedObject;
-	NSMutableArray	*loadedPanes;
+	IBOutlet		AIAutoScrollView				*scrollView_contactList;
+    IBOutlet		AIListOutlineView				*contactListView;
+	
+	AIListObject									*displayedObject;
+	NSMutableArray									*loadedPanes;
+	
+	ESContactInfoListController						*contactListController;
 }
 
 + (id)showInfoWindowForListObject:(AIListObject *)listObject;
@@ -37,4 +42,7 @@
 - (void)configureForListObject:(AIListObject *)inObject;
 - (IBAction)closeWindow:(id)sender;
 - (void)configurePanes;
+
+//Internal use
+- (float)drawerTrailingOffset;
 @end
