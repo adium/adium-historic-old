@@ -20,19 +20,21 @@
     NSImage			*image;
     BOOL			caseSensitive;
     NSCharacterSet 	*allowedCharacters;
+    NSCharacterSet 	*ignoredCharacters;
 	int				allowedLength;
 
 }
 
 + (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
 				  caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
-				  allowedLength:(int)inAllowedLength;
+			  ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength;
 - (NSString *)identifier;
 - (NSString *)description;
 - (NSImage *)image;
 - (NSCharacterSet *)allowedCharacters;
+- (NSCharacterSet *)ignoredCharacters;
 - (BOOL)caseSensitive;
-- (NSString *)filterUID:(NSString *)inUID;
+- (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
 - (int)allowedLength;
 
 @end

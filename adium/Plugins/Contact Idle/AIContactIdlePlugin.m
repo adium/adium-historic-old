@@ -15,6 +15,8 @@
 
 #import "AIContactIdlePlugin.h"
 
+#define IDLE_UPDATE_INTERVAL	60.0
+
 @interface AIContactIdlePlugin (PRIVATE)
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent;
 - (void)updateIdleObjectsTimer:(NSTimer *)inTimer;
@@ -50,7 +52,7 @@
             //Track the handle
             if(!idleObjectArray){
                 idleObjectArray = [[NSMutableArray alloc] init];
-                idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 
+                idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:IDLE_UPDATE_INTERVAL
 																	target:self 
 																  selector:@selector(updateIdleObjectsTimer:)
 																  userInfo:nil 
@@ -91,6 +93,7 @@
         [self setIdleForObject:object silent:YES];
     }
 	
+	[[adium contactController] endListObjectNotificationDelay];
 }
 
 //Give a contact its correct idle value

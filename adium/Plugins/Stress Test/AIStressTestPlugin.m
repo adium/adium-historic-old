@@ -19,6 +19,7 @@
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]
+												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
 													allowedLength:20] retain];
 
     //Register this service

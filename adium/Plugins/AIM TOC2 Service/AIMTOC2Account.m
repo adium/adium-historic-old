@@ -119,7 +119,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path] forGroup:GROUP_ACCOUNT_STATUS];
 }
 
-
 // AIAccount_Handles ---------------------------------------------------------------------------
 - (void)removeContacts:(NSArray *)objects
 {
@@ -553,7 +552,7 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	
     //Flush all our handle status flags
-	[[adium contactController] delayListObjectNotifications];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 #warning Adam: This is dreadfully inefficient.  Is there a faster solution to disconnecting?
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
@@ -661,7 +660,8 @@
 					
 					//Format our nickname as it was entered for the account
 					if(!connectedWithICQ){
-						[self AIM_SetNick:[self UID]];
+						NSString *nick = [self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
+						if(nick && [nick length]) [self AIM_SetNick:nick];
 					}
                     
                     //Send AIM the init done message (at this point we become visible to other buddies)
@@ -759,7 +759,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.124 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.125 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1136,9 +1136,9 @@
         }
         
         //Formatted UID
-        storedString = [contact statusObjectForKey:@"Formatted UID"];
+        storedString = [contact statusObjectForKey:@"FormattedUID"];
         if(storedString == nil || [name compare:storedString] != 0){
-			[contact setStatusObject:name forKey:@"Formatted UID" notify:NO];
+			[contact setStatusObject:name forKey:@"FormattedUID" notify:NO];
         }
 		
         //Let the contact list know a contact's status changed
@@ -1242,7 +1242,7 @@
     NSString		*currentGroup = @"New Group";
     
 	//
-	[[adium contactController] delayListObjectNotifications];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];

@@ -18,7 +18,7 @@
 
 #import "AIListObject.h"
 
-#define GROUP_ACCOUNT_STATUS    @"Account Status"
+#define GROUP_ACCOUNT_STATUS    	@"Account Status"
 
 typedef enum {
     STATUS_NA = -1,
@@ -128,6 +128,7 @@ typedef enum {
 
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
+
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
 

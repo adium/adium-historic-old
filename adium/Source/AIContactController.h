@@ -61,6 +61,7 @@ typedef enum {
     int						delayedStatusChanges;
     int						delayedAttributeChanges;
     int						delayedContentChanges;
+	int						delayedUpdateRequests;
 	BOOL					updatesAreDelayed;
 	
     NSMutableArray			*sortControllerArray;
@@ -99,6 +100,8 @@ typedef enum {
 
 //
 - (void)delayListObjectNotifications;
+- (void)endListObjectNotificationDelay;
+- (void)delayListObjectNotificationsUntilInactivity;
 - (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject;
 - (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 - (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
@@ -110,7 +113,6 @@ typedef enum {
 - (AISortController *)activeSortController;
 - (void)sortContactList;
 - (void)sortListObject:(AIListObject *)inObject;
-//- (float)largestOrderIndex;
 
 //
 - (AIListContact *)preferredContactForReceivingContentType:(NSString *)inType forListObject:(AIListObject *)inObject;

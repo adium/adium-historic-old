@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.111 2004/03/05 23:50:33 adamiser Exp $
+// $Id: AIContactController.m,v 1.112 2004/03/06 18:36:32 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -74,6 +74,7 @@
     delayedStatusChanges = 0;
 	delayedAttributeChanges = 0;
     delayedContentChanges = 0;
+	delayedUpdateRequests = 0;
 	updatesAreDelayed = NO;
 	contactDict = [[NSMutableDictionary alloc] init];
 	groupDict = [[NSMutableDictionary alloc] init];
@@ -215,49 +216,30 @@
 	return(array);
 }
 
-//Flattened array of ordering information
-//- (NSDictionary *)_compressedOrderingOfObject:(AIListObject *)inObject
-//{
-//	NSMutableDictionary		*compressedOrder = [NSMutableDictionary dictionary];
-//	AIMutableOwnerArray		*orderArray = [inObject orderIndexArray];
-//	NSEnumerator			*orderEnumerator = [orderArray objectEnumerator];
-//	NSNumber				*index;
-//	
-//	//Compress the ordering information
-//	while(index = [orderEnumerator nextObject]){
-//		[compressedOrder setObject:index forKey:[[orderArray ownerWithObject:index] UID]];
-//	}
-//	
-//	return(compressedOrder);
-//}
-//
-////Restore ordering from a flattened array
-//- (void)_applyCompressedOrdering:(NSDictionary *)orderDict toObject:(AIListObject *)inObject
-//{
-//	NSEnumerator	*enumerator = [orderDict keyEnumerator];
-//	NSString		*groupName;
-//	
-//	while(groupName = [enumerator nextObject]){
-//		AIListGroup	*group = [groupDict objectForKey:groupName];
-//		
-//		if(group){
-//			float index = [[orderDict objectForKey:groupName] floatValue];
-//			
-//			if(index > largestOrder) largestOrder = index; //Keep track or largest index
-//
-//			
-//			[inObject setOrderIndex:index forGroup:group];
-//		}
-//	}
-//}
-
 
 //Status and Display updates -------------------------------------------------------------------------------------------
 #pragma mark Status and Display updates
-//Delay all list object notifications until a period of inactivity occurs
-//This delays Contact_ListChanged, ListObject_AttributesChanged, and Contact_OrderChanged notifications
-// Delayed: Delays sorting and redrawing to prevent redundancy when making a large number of changes
+//These delay Contact_ListChanged, ListObject_AttributesChanged, Contact_OrderChanged notificationsDelays, 
+//sorting and redrawing to prevent redundancy when making a large number of changes
+//Explicit delay.  Call endListObjectNotificationDelay to end
 - (void)delayListObjectNotifications
+{
+	delayedUpdateRequests++;
+	updatesAreDelayed = YES;
+}
+
+//End an explicit delay
+- (void)endListObjectNotificationDelay
+{
+	delayedUpdateRequests--;
+	if(delayedUpdateTimer == 0 && !delayedUpdateTimer){
+		[self _performDelayedUpdates:nil];
+	}
+}
+
+//Delay all list object notifications until a period of inactivity occurs.  This is useful for accounts that do not
+//know when they have finished connecting but still want to mute events.
+- (void)delayListObjectNotificationsUntilInactivity
 {
     if(!delayedUpdateTimer){
 		updatesAreDelayed = YES;
@@ -466,9 +448,15 @@
 		delayedContentChanges = 0;
 		
     }else{
-        //Disable the delayed update timer (it is no longer needed).
-        [delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
-		updatesAreDelayed = NO;
+		//Disable any delayed update timer
+		if(delayedUpdateTimer){
+			[delayedUpdateTimer invalidate];
+			[delayedUpdateTimer release];
+			delayedUpdateTimer = nil;
+		}
+		if(delayedUpdateRequests == 0){
+			updatesAreDelayed = NO;
+		}		
     }
 }
 
@@ -619,8 +607,8 @@
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 	}
 	
-	//Sort the entire list
-	//[self sortContactList];
+	//
+	[self endListObjectNotificationDelay];
 }
 
 //Notify observers of a status change.  Returns the modified attribute keys
@@ -827,7 +815,7 @@
 			
 			//Create
 			group = [[[AIListGroup alloc] initWithUID:groupUID] autorelease];
-			[group setStatusObject:groupName forKey:@"Formatted UID" notify:YES];
+			[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
 			
 			//Place new groups at the bottom of our list (by giving them the largest ordering index)
 			largestOrder += 1.0;

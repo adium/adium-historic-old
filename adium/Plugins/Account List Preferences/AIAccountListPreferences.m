@@ -109,7 +109,8 @@
 	[self enableDisableControls];
 
 	//Fill in the account's name and auto-connect status
-	[textField_accountName setStringValue:[inAccount UID]];
+	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
+	[textField_accountName setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [inAccount UID])];
     [button_autoConnect setState:[[inAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 

@@ -107,9 +107,9 @@
 	{
 		NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
 		if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-			if (![[theContact statusObjectForKey:@"Formatted UID"] isEqualToString:gaimAlias]) {
+			if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
 				[theContact setStatusObject:gaimAlias
-									 forKey:@"Formatted UID"
+									 forKey:@"FormattedUID"
 									 notify:NO];
 			}
 		} else {
@@ -167,9 +167,9 @@
 				{
 					NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
 					if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-						if (![[theContact statusObjectForKey:@"Formatted UID"] isEqualToString:gaimAlias]) {
+						if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
 							[theContact setStatusObject:gaimAlias
-												 forKey:@"Formatted UID"
+												 forKey:@"FormattedUID"
 												 notify:NO];
 						}
 					} else {
@@ -538,10 +538,6 @@
     [filesToSendArray release];
 
     [super dealloc];
-}
-
-- (NSString *)accountID {
-    return [NSString stringWithFormat:@"GAIM-%@.%@", [self serviceID], [self UID]];
 }
 
 - (NSString *)accountDescription {
@@ -1273,7 +1269,7 @@
 {
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-	[[adium contactController] delayListObjectNotifications];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
@@ -1336,11 +1332,11 @@
     
     //Silence updates
     [self silenceAllHandleUpdatesForInterval:18.0];
-	[[adium contactController] delayListObjectNotifications];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
     
     //Set our initial status
     [self updateAllStatusKeys];
-    
+	
     //Reset reconnection attempts
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 }
@@ -1419,27 +1415,27 @@
 	[super updateStatusForKey:key];
 
     //Now look at keys which only make sense while online
-        if([[self statusObjectForKey:@"Online"] boolValue]){
-                NSData  *data;
-                if([key compare:@"IdleSince"] == 0){
-                    NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-                    [self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
-                    
-                } else if ( ([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0) ){
-                    NSAttributedString	*attributedString = nil;
-                    
-                    if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
-                        attributedString = [NSAttributedString stringWithData:data];
-                    }
-                    
-                    [self updateAttributedStatusString:attributedString forKey:key];
-                    
-                } else if([key compare:@"UserIcon"] == 0) {
-					if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
-						[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
-					}
-				}
-        }
+	if([[self statusObjectForKey:@"Online"] boolValue]){
+		NSData  *data;
+		if([key compare:@"IdleSince"] == 0){
+			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
+			
+		} else if ( ([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0) ){
+			NSAttributedString	*attributedString = nil;
+			
+			if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
+				attributedString = [NSAttributedString stringWithData:data];
+			}
+			
+			[self updateAttributedStatusString:attributedString forKey:key];
+			
+		} else if([key compare:@"UserIcon"] == 0) {
+			if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
+				[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
+			}
+		}
+	}
 }
 - (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
 {

@@ -16,7 +16,7 @@ Don't delete things from this list. Just use `=' to indicate it's done. We'll cu
 ----
 Bugs
 ----
-* Account name not displaying correctly after service switch
+= Account name not displaying correctly after service switch
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 
 * Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.

@@ -20,7 +20,7 @@
 @interface AIServiceType (PRIVATE)
 - (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
 		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
-		   allowedLength:(int)inAllowedLength;
+	   ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength;
 @end
 
 @implementation AIServiceType
@@ -28,13 +28,14 @@
 //Create a new service type
 + (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
 				  caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
-				  allowedLength:(int)inAllowedLength
+			  ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength
 {
     return([[[self alloc] initWithIdentifier:inIdentifier
 								 description:inDescription
 									   image:inImage
 							   caseSensitive:inCaseSensitive
 						   allowedCharacters:inAllowedCharacters
+						   ignoredCharacters:inIgnoredCharacters
 							   allowedLength:inAllowedLength] autorelease]);
 }
 
@@ -55,6 +56,11 @@
     return(allowedCharacters);
 }
 
+- (NSCharacterSet *)ignoredCharacters
+{
+    return(ignoredCharacters);
+}
+
 - (int)allowedLength
 {
     return(allowedLength);
@@ -70,49 +76,37 @@
 //When changing ownership of a handle, a filter is not necessary, since all the accounts should have the same service types and requirements.
 //When account code retrieves handles from the contact list, filtering is NOT done.  It is up to the account to ensure it passes UID's in the proper format for it's service type.
 //Filter UID's only when the user has entered or mucked with them in some way... UID's TO and FROM account code SHOULD ALWAYS BE VALID.
-
-//Filters a UID for invalid characters (assuming it belongs to this service type)
-- (NSString *)filterUID:(NSString *)inUID
+//Filters a UID.  All invalid characters and ignored characters are removed.
+- (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
 {
-    int			nameLength;
-    unichar		*source;
-    unichar		*dest;
-    int			destLength;
-    int			loop;
-    NSString		*filteredString;
+	NSString	*workingString = (caseSensitive ? inUID : [inUID lowercaseString]);
+	
+	//Prepare a little buffer for our filtered UID
+	int		destLength = 0;
+	unichar *dest = malloc([workingString length] * sizeof(unichar));
+	
+	//Filter the UID
+	int pos;
+	for(pos = 0; pos < [workingString length]; pos++){
+		unichar c = [workingString characterAtIndex:pos];
+		
+        if([allowedCharacters characterIsMember:c] && (!removeIgnored || ![ignoredCharacters characterIsMember:c])){
+            dest[destLength] = (removeIgnored ? [workingString characterAtIndex:pos] : [inUID characterAtIndex:pos]);
+			destLength++;
+		}
+	}
 
-    //Force lowercase
-    if(!caseSensitive){
-        inUID = [inUID lowercaseString];
-    }
-
-    //Get the characters
-    nameLength = [inUID length];
-    source = malloc( nameLength * sizeof(unichar) );
-    dest = malloc( nameLength * sizeof(unichar) );
-    [inUID getCharacters:source];
-
-    //Filter them
-    destLength = 0;
-    for(loop = 0;loop < nameLength;loop++){
-        if([allowedCharacters characterIsMember:source[loop]]){
-            dest[destLength] = source[loop];
-            destLength++;
-        }
-    }
-
-    //Put them back into a string and return
-    filteredString = [NSString stringWithCharacters:dest length:destLength];
-    free(source);
-    free(dest);
-    return(filteredString);
+	//Turn it back into a string and return
+    NSString *filteredString = [NSString stringWithCharacters:dest length:destLength];
+	free(dest);
+	return(filteredString);
 }
 
 
 //Private ---------------------------------------------------------------------------
 - (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
 		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
-		   allowedLength:(int)inAllowedLength
+		   ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength
 {
     [super init];
 
@@ -121,6 +115,7 @@
     image = [inImage retain];
     caseSensitive = inCaseSensitive;
     allowedCharacters = [inAllowedCharacters retain];
+    ignoredCharacters = [inIgnoredCharacters retain];
 	allowedLength = inAllowedLength;
 
     return(self);
@@ -132,6 +127,7 @@
     [description release];
     [image release];
     [allowedCharacters release];
+    [ignoredCharacters release];
 
     [super dealloc];
 }

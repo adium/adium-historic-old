@@ -62,7 +62,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     //Get the service type and UID
     account = [[popUp_service selectedItem] representedObject];
     serviceType = [[account service] handleServiceType];
-    UID = [serviceType filterUID:[textField_handle stringValue]];
+    UID = [serviceType filterUID:[textField_handle stringValue] removeIgnoredCharacters:YES];
         
     //Find the contact
 	contact = [[adium contactController] contactWithService:[serviceType identifier] accountID:[account uniqueObjectID] UID:UID];
