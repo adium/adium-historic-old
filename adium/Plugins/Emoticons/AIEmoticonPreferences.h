@@ -17,12 +17,16 @@
 #import "AICheckboxList.h"
 
 @class AIAdium;
+@class AIEmoticonsPlugin;
 
 @interface AIEmoticonPreferences : NSObject
 {
 	AIAdium			*owner;
+	AIEmoticonsPlugin	*plugin;
 	
 	NSDictionary	*preferenceDict;
+	
+	NSMutableArray	*packs;
 	
 	IBOutlet NSView         *view_prefView;
     IBOutlet NSButton       *checkBox_enable;
@@ -30,7 +34,7 @@
     //IBOutlet AICheckboxList    *checkList_packList;
 }
 
-+ (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner;
++ (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;
 - (IBAction)preferenceChanged:(id)sender;
 
 @end
