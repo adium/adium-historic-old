@@ -11,8 +11,6 @@
 - [ICQ] Encoding problems
 - 10.2 users are losing color in their profiles & away messages (colors not
     saving)
-- Double clicking two names in succession causes the first name to highlight
-    the second time.
 - 10.2 users are losing color in their profiles & away messages (colors not
     saving)
 - First Message Received triggered multiple times
@@ -39,6 +37,8 @@
     focus on another window, the selected cell is redrawn with the normal
     background color instead of the alternate background color.
 - Deleting groups doesn't seem to do anything
+- Double clicking two names in succession causes the first name to highlight
+    the second time. (wordsaboutmehere)
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
