@@ -354,8 +354,9 @@
 	unsigned curLocation = 0, maxLocation = [self length];
 
 	while(1) {
-		[scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk];
-		[result appendString:lastChunk];
+		if ([scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk]){
+			[result appendString:lastChunk];
+		}
 		curLocation = [scanner scanLocation];
 		if(curLocation >= maxLocation)
 			break;
