@@ -92,17 +92,6 @@ static BOOL didInitMSN = NO;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	NSLog(@"I'm sending %@",[AIHTMLDecoder encodeHTML:inAttributedString
-											  headers:NO
-											 fontTags:YES
-								   includingColorTags:YES
-										closeFontTags:YES
-											styleTags:YES
-						   closeStyleTagsOnFontChange:YES
-									   encodeNonASCII:NO
-										   imagesPath:nil
-									attachmentsAsText:YES
-									   simpleTagsOnly:YES]);
 	return([AIHTMLDecoder encodeHTML:inAttributedString
 							 headers:NO
 							fontTags:YES
