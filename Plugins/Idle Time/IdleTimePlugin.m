@@ -414,7 +414,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         }
 
     }
-    
 }
 
 //Returns the current # of seconds the user has been idle
