@@ -365,6 +365,7 @@
 {
 	NSMutableArray *listObjectArray = [NSMutableArray array];
 	
+	//selectedRowIndexes is recommended in 10.3 or better; selectedRowEnumerator is deprecated as of 10.3
 	if ([NSApp isOnPantherOrBetter]){
 		NSIndexSet *indices = [self selectedRowIndexes];
 		unsigned int bufSize = [indices count];
