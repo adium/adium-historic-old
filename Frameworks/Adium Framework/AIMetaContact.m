@@ -167,7 +167,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 {
 	BOOL	success = NO;
 
-	if(![containedObjects containsObject:inObject]){
+	if(![containedObjects containsObjectIdenticalTo:inObject]){
 
 		//Before we add our first object, restore our grouping
 		if([containedObjects count] == 0){
