@@ -18,6 +18,16 @@ static BOOL didInitTrepia = NO;
     return "prpl-trepia";
 }
 
+- (NSString *)hostKey
+{
+	return KEY_TREPIA_HOST;
+}
+
+- (NSString *)portKey
+{
+	return KEY_TREPIA_PORT;
+}
+
 - (NSString *)connectionStringForStep:(int)step
 {
 	switch (step)

@@ -6,6 +6,9 @@
 
 #import "CBGaimAccount.h"
 
+#define KEY_TREPIA_HOST				@"Trepia:Host"
+#define KEY_TREPIA_PORT				@"Trepia:Port"
+
 @interface ESGaimTrepiaAccount : CBGaimAccount {
 
 }
