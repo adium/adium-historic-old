@@ -25,7 +25,7 @@
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
 #define	HANDLE_DELETE_KEY			@"Handles"
 #define	GROUP_DELETE_KEY			@"Groups"
-
+#define KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME	@"Contact List Editor Frame"
 
 @interface AIContactListEditorWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
@@ -104,6 +104,15 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (void)windowDidLoad
 {
     AIImageTextCell	*newCell;
+    NSString		*savedFrame;
+    
+    //Restore the window position
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME];
+    if(savedFrame){
+        [[self window] setFrameFromString:savedFrame];
+    }else{
+        [[self window] center];
+    }
 
     //Install our custom outline view cell
     newCell = [[[AIImageTextCell alloc] init] autorelease];    
@@ -126,6 +135,16 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [outlineView_contactList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
 
     [outlineView_contactList setNeedsDisplay:YES];
+}
+
+- (BOOL)windowShouldClose:(id)sender
+{
+    //Save the window position
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
+
+    return(YES);
 }
 
 //Build the outline view's account columns
