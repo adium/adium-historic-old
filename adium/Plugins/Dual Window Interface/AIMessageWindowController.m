@@ -24,6 +24,9 @@
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
 
+
+#define TABS_HEIGHT_CHANGE	12
+
 //The tabbed window that contains messages
 @interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
 - (void)setBottomCornerRounded:(BOOL)rounded;
@@ -228,7 +231,34 @@
 
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView
 {
-    //Ignored?
+    NSSize newSize = [TabView frame].size;
+    
+    if ([tabView_messages numberOfTabViewItems] == 1) {
+	newSize.height = 0;
+	[TabView setFrameSize:newSize];
+
+	NSRect newFrame = [tabView_messages frame];
+	newFrame.size.height += TABS_HEIGHT_CHANGE;
+	newFrame.origin.y -= TABS_HEIGHT_CHANGE;
+	[tabView_messages setFrame:newFrame];
+
+	[[self window] setTitle:[NSString stringWithFormat:@"Adium : %@",
+	    [[[[[[self messageContainerArray] objectAtIndex:0] messageViewController] chat] listObject] displayName]]];
+	
+	[[self window] display];
+	
+    } else if ([tabView_messages numberOfTabViewItems] == 2) {
+	newSize.height = 22;
+	[TabView setFrameSize:newSize];
+	
+	NSRect newFrame = [tabView_messages frame];
+	newFrame.size.height -= TABS_HEIGHT_CHANGE;
+	newFrame.origin.y += TABS_HEIGHT_CHANGE;
+	[tabView_messages setFrame:newFrame];
+
+	[[self window] setTitle:@"Adium : Messages"];
+	[[self window] display];
+    } 
 }
 
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView
