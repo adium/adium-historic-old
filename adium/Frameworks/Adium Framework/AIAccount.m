@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.36 2004/01/17 22:15:15 adamiser Exp $
+// $Id: AIAccount.m,v 1.37 2004/01/20 18:01:23 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -51,6 +51,11 @@
     
     refreshDict = [[NSMutableDictionary alloc] init];
     refreshTimer = nil;
+	
+	reconnectTimer = nil;
+
+	delayedUpdateStatusTimer = nil;
+	delayedUpdateStatusTarget = nil;
     
     //Init the account
     [self initAccount];
@@ -61,10 +66,14 @@
 //Dealloc
 - (void)dealloc
 {
+	[delayedUpdateStatusTarget release];
+	[delayedUpdateStatusTimer invalidate]; [delayedUpdateStatusTimer release];
+	[reconnectTimer invalidate]; [reconnectTimer release];
+	[self _stopRefreshTimer];
+	
     [[adium notificationCenter] removeObserver:self];
     [service release];
-//    [userIcon release]; userIcon = nil;
-    
+	    
     [super dealloc];
 }
 
@@ -198,7 +207,6 @@
     }
 }
 
-
 - (void)_startRefreshTimer
 {
 	if(!refreshTimer){
@@ -241,7 +249,6 @@
 - (NSView *)accountView{return(nil);};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
 - (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key{};
-- (void)updateContactStatus:(AIListContact *)inContact{};
 
 //Functions subclasses may choose to override
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
@@ -257,17 +264,67 @@
 }
 
 
+//Contact Status -------------------------------------------------------------------------------------
+#pragma mark Contact Status
+//If an account wants to, it can implement delayedUpdateContactStatus to protect itself from flooding
+//While updateContactStatus may be called rapidly, delayedUpdateContactStatus will be called no quicker
+//than the delay specified by delayedUpdateStatusInterval.
+- (void)updateContactStatus:(AIListContact *)inContact
+{
+	//If there is no outstanding delay
+	if(!delayedUpdateStatusTimer){
+		//Update this contact's status immediately.
+		[self delayedUpdateContactStatus:inContact];
+		
+		//Guard against subsequent updates
+		delayedUpdateStatusTarget = nil;
+		delayedUpdateStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[self delayedUpdateStatusInterval]
+																	 target:self
+																   selector:@selector(_delayedUpdateStatusTimer:)
+																   userInfo:nil
+																	repeats:NO] retain];
+	}else{
+		//If there is an outstanding delay, set this contact as the target
+		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = [inContact retain];
+	}
+}
+
+- (void)_delayedUpdateStatusTimer:(NSTimer *)inTimer
+{
+	if(delayedUpdateStatusTarget){
+		[self delayedUpdateContactStatus:delayedUpdateStatusTarget];
+		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = nil;
+	}
+	[delayedUpdateStatusTimer invalidate];
+	[delayedUpdateStatusTimer release];
+	delayedUpdateStatusTimer = nil;
+}
+
+//Implement these methods instead of updateContactStatus: if rapid updates are a problem
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact{
+	//Guarded update
+}
+- (float)delayedUpdateStatusInterval{
+	return(3.0); //5 Seconds default
+}
+
+
+
+
+
+
 //Auto-Reconnect -------------------------------------------------------------------------------------
 #pragma mark Auto-Reconnect
 //Attempts to auto-reconnect (after an X second delay)
 - (void)autoReconnectAfterDelay:(int)delay
 {
     //Install a timer to autoreconnect after a delay
-    [NSTimer scheduledTimerWithTimeInterval:delay
-                                     target:self
-                                   selector:@selector(autoReconnectTimer:)
-                                   userInfo:nil
-                                    repeats:NO];
+	[reconnectTimer invalidate]; [reconnectTimer release];
+    reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:delay
+													   target:self
+													 selector:@selector(autoReconnectTimer:)
+													 userInfo:nil
+													  repeats:NO] retain];
 	
     NSLog(@"Auto-Reconnect in %i seconds",delay);
 }
@@ -275,6 +332,11 @@
 //Perform the auto-reconnect
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
+	//Clean up the timer
+	[reconnectTimer invalidate];
+	[reconnectTimer release];
+	reconnectTimer = nil;
+
     //If we still want to be online, and we're not yet online, continue with the reconnect
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
 	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
@@ -291,11 +353,11 @@
 {
     silentAndDelayed = YES;
 	
-    [NSTimer scheduledTimerWithTimeInterval:interval
-                                     target:self
-                                   selector:@selector(_endSilenceAllUpdates)
-                                   userInfo:nil
-                                    repeats:NO];
+    [[NSTimer scheduledTimerWithTimeInterval:interval
+									  target:self
+									selector:@selector(_endSilenceAllUpdates)
+									userInfo:nil
+									 repeats:NO] retain];
 }
 
 //Stop silencing 

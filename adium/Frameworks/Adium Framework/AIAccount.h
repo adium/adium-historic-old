@@ -104,11 +104,18 @@ typedef enum {
 @interface AIAccount : AIListObject {
     id <AIServiceController>	service;                            //The service controller that spawned us
     NSString                    *password;                          //Password of this account
-    
     BOOL                        silentAndDelayed;                   //We are waiting for and processing our sign on updates
     
+	//Auto-reconnect
+	NSTimer						*reconnectTimer;
+
+	//Attributed string refreshing
     NSTimer                     *refreshTimer;
     NSMutableDictionary         *refreshDict;
+
+	//Contact update guarding
+	NSTimer						*delayedUpdateStatusTimer;
+	AIListContact				*delayedUpdateStatusTarget;
 }
 
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
@@ -146,6 +153,9 @@ typedef enum {
 
 //Methods that might be subclassed
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
-- (void)updateContactStatus:(AIListContact *)inContact;
 
+- (void)updateContactStatus:(AIListContact *)inContact;
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact;
+- (float)delayedUpdateStatusInterval;
+		
 @end
