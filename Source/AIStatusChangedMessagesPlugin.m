@@ -70,15 +70,17 @@ static	NSDictionary	*statusTypeDict = nil;
 	
 	allChats = [[adium contentController] allChatsWithContact:contact];
 	if([allChats count]){	
-		NSString		*statusMessage = [[[contact statusState] statusMessage] string];
-		NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
-
-		if(statusMessage && [statusMessage length] != 0){
-#warning Away message or status message as appropriate
-			[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
-					 forContact:contact
-					   withType:statusType
-						inChats:allChats];
+		AIStatus		*statusState = [contact statusState];
+		if([statusState statusType] != AIAvailableStatusType){
+			NSString		*statusMessage = [[statusState statusMessage] string];
+			NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
+			
+			if(statusMessage && [statusMessage length] != 0){
+				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
+						 forContact:contact
+						   withType:statusType
+							inChats:allChats];
+			}
 		}
 	}
 }
