@@ -282,14 +282,16 @@
     BOOL isFirst = YES;
     while((tooltipEntry = [enumerator nextObject])){
         NSString	*entryString = [tooltipEntry entryForObject:object];
-        if (entryString && [entryString length]) {
+        NSString	*labelString = [tooltipEntry labelForObject:object];
+        
+        if(entryString && [entryString length] && labelString && [labelString length]) {
             if (isFirst) {
                 [titleString appendString:@"\r\r" withAttributes:labelEndLineDict];
-                [titleString appendString:[NSString stringWithFormat:@"%@: ",[tooltipEntry labelForObject:object]] withAttributes:labelDict];
+                [titleString appendString:[NSString stringWithFormat:@"%@: ",labelString] withAttributes:labelDict];
                 isFirst = NO;
             } else {
                 //Add a carriage return and the label
-                [titleString appendString:[NSString stringWithFormat:@"\r%@: ",[tooltipEntry labelForObject:object]] withAttributes:labelDict];
+                [titleString appendString:[NSString stringWithFormat:@"\r%@: ",labelString] withAttributes:labelDict];
             }
             [titleString appendString:entryString withAttributes:entryDict];
         }

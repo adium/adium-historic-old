@@ -21,13 +21,17 @@
 - (void)installPlugin
 {
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self];
+    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
 //Tooltip entry ---------------------------------------------------------------------------------------
-- (NSString *)label
+- (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Online For");
+    if([inObject isKindOfClass:[AIListContact class]]){
+        return(@"Online For");
+    }
+
+    return(nil);
 }
 
 - (NSString *)entryForObject:(AIListObject *)inObject
@@ -41,7 +45,6 @@
         if(signonDate){
             return([NSDateFormatter stringForTimeIntervalSinceDate:signonDate]);
         }
-
     }
 
     return(nil);
