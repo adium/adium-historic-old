@@ -21,6 +21,7 @@
 - (id)source;
 - (id)destination;
 - (AIChat *)chat;
+- (void)setChat:(AIChat *)inChat;
 - (BOOL)filterContent;
 - (BOOL)trackContent;
 - (BOOL)displayContent;

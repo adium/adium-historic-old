@@ -241,7 +241,7 @@
     //if there are no accounts, open the prefs and create one
     if([[[owner accountController] accountArray] count] == 0){
         //open
-#warning        [[owner preferenceController] openPreferencesToView:preferenceView];
+        //[[owner preferenceController] openPreferencesToView:preferenceView];
 
         //create
         [[owner accountController] newAccountAtIndex:0];

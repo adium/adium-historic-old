@@ -84,7 +84,6 @@
         [inModifiedKeys containsObject:@"Away"] ||
         [inModifiedKeys containsObject:@"Idle"] ||
         [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"Open Tab"] || 
         [inModifiedKeys containsObject:@"Signed On"] || 
         [inModifiedKeys containsObject:@"Signed Off"] || 
         [inModifiedKeys containsObject:@"Typing"] || 
@@ -116,7 +115,7 @@
     AIMutableOwnerArray		*invertedColorArray = [inObject displayArrayForKey:@"Inverted Text Color"];
     AIMutableOwnerArray		*statusLabelColorArray = [inObject displayArrayForKey:@"Label Color"];
     AIMutableOwnerArray		*tabBackColorArray = [inObject displayArrayForKey:@"Tab Color"];
-    int				away, online, unviewedContent, signedOn, signedOff, typing, openTab;
+    int				away, online, unviewedContent, signedOn, signedOff, typing;
     double			idle;
     NSColor			*color = nil, *invertedColor = nil, *tabBackColor = nil, *labelColor = nil;
 
@@ -128,7 +127,6 @@
     signedOff = [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue];
     typing = [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue];
     unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-    openTab = [[inObject statusArrayForKey:@"Open Tab"] greatestIntegerValue];
 
     //Determine the correct color
     if(unviewedContentEnabled && unviewedContent && !([[owner interfaceController] flashState] % 2)){
@@ -143,7 +141,7 @@
 	color = signedOnColor;
 	invertedColor = signedOnInvertedColor;
         labelColor = signedOnLabelColor;
-    }else if(typingEnabled && openTab && typing && (!unviewedContentEnabled || !unviewedContent)){
+    }else if(typingEnabled && typing && (!unviewedContentEnabled || !unviewedContent)){
 	color = typingColor;
 	invertedColor = typingInvertedColor;
         labelColor = typingLabelColor;

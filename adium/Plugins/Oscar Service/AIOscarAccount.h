@@ -41,6 +41,7 @@
 @interface AIOscarAccount : AIAccount <AIAccount_Content, AIAccount_Handles> {
     NSMutableDictionary		*handleDict;			//Known handles
     NSMutableDictionary		*moduleDict;			//Avaiable modules
+    NSMutableDictionary		*chatDict;			//Active chats
     NSMutableArray		*connectionArray;		//Open connections
     BOOL			silenceAndDelayBuddyUpdates; 	//Mute and delay updates
     NSTimer			*iconRequestTimer; 		//Used to spread out icon requests

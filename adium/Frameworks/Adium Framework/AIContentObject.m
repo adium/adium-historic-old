@@ -19,7 +19,7 @@
     //Store source, dest, and chat
     source = [inSource retain];
     destination = [inDest retain];
-    chat = [inChat retain];
+    chat = inChat; //Not retained.  Chats hold onto, and store content.  Content need not hold onto chats.
 
     return(self);
 }
@@ -28,7 +28,6 @@
 {
     [source release];
     [destination release];
-    [chat release];
 
     [super dealloc];
 }
@@ -49,6 +48,10 @@
 - (AIChat *)chat
 {
     return(chat);
+}
+- (void)setChat:(AIChat *)inChat
+{
+    chat = inChat;
 }
 
 //Return the type ID of this content

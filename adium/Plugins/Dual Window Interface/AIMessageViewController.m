@@ -38,9 +38,9 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (float)textHeight;
 - (void)clearTextEntryView;
-- (void)setChat:(AIChat *)inChat;
-- (void)chatStatusChanged:(NSNotification *)notification;
+- (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
 - (void)listObjectStatusChanged:(NSNotification *)notification;
+- (void)chatStatusChanged:(NSNotification *)notification;
 @end
 
 @implementation AIMessageViewController
@@ -61,21 +61,11 @@
     return(chat);
 }
 
-//Return the destination object of this message
-- (AIListObject *)listObject{
-    return(object);
-}
-
 //For our account selector view
-- (AIListContact *)contact
+- (AIListObject *)listObject
 {
-    if([object isKindOfClass:[AIListContact class]]){ //Account selector is only valid for contacts
-        return((AIListContact *)object);
-    }else{
-        return(nil);
-    }
+    return([chat listObject]);
 }
-
 
 //The source account of this message
 - (AIAccount *)account{
@@ -90,9 +80,10 @@
 
         //Send the message
         [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
+
         message = [AIContentMessage messageInChat:chat
                                        withSource:account
-                                      destination:object
+                                      destination:nil
                                              date:nil
                                           message:[[[textView_outgoing attributedString] copy] autorelease]];
 
@@ -113,38 +104,44 @@
 //Set the sounce account of this message
 - (void)setAccount:(AIAccount *)inAccount
 {
-    if([object isKindOfClass:[AIListContact class]]){ //Don't let them do this if the object isn't a contact
-        if(account != inAccount){
-            //NSArray	*existingContent = [[chat contentObjectArray] retain];
-
-            //Set the account
-            [account release]; account = nil;
-            account = [inAccount retain];
-
-            //Reconfigure our view for the new chat
-            [self setChat:[[owner contentController] chatWithListObject:object onAccount:account]];
-            //[chat appendContentArray:existingContent];
-            //If I decide to go this route, care must be taken to:
-            // - "Reload data" the message view
-            // - Convert all content objects to the new chat
-        }
-    }
+    //Initiate a new chat with the specified account.  The interface will automatically recycle this message view, switching it to the new account.
+    [[owner contentController] openChatOnAccount:inAccount withListObject:[chat listObject]];
 }
 
 //Set the chat represented by this view
 - (void)setChat:(AIChat *)inChat
 {
     if(inChat != chat){
-        //Close our existing chat, and hold onto the new one
+        NSArray	*savedContent = nil;
+
         if(chat){
+            NSEnumerator	*enumerator;
+            AIContentObject	*contentObject;
+            
+            //Extract the content from our existing chat
+            savedContent = [[[chat contentObjectArray] retain] autorelease];
+
+            //Convert the content to our new chat
+            enumerator = [savedContent objectEnumerator];
+            while(contentObject = [enumerator nextObject]){
+                [contentObject setChat:inChat];
+            }
+            
+            //Close our existing chat
             [[owner contentController] closeChat:chat];
             [chat release]; chat = nil;
         }
+
+        //Hold onto the new chat
         chat = [inChat retain];
+
+        //Transfer over the content from our old chat
+        if(savedContent){
+            [chat setContentArray:savedContent];
+        }
     
-        //Get our new account and contact
+        //Get our new account
         [account release]; account = [[inChat account] retain];
-        [object release]; object = [[inChat object] retain];
 
         //Config the outgoing text view
         [textView_outgoing setChat:chat];
@@ -170,9 +167,16 @@
         
         //Observe the chat
         [[owner notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:nil];
-
+        [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
         [self chatStatusChanged:nil];
+        
+        //Update our participating list objects list
+        [[owner notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
+        [self chatParticipatingListObjectsChanged:nil];
+
+        //Notify our delegate of the change
+        [delegate messageViewController:self chatChangedTo:inChat];
     }
 }
 
@@ -188,6 +192,9 @@
         [view_accountSelection removeFromSuperview];
         [view_accountSelection release]; view_accountSelection = nil;
     }
+
+    //Update the selected account
+    [view_accountSelection updateMenu];
 
     //
     [self sizeAndArrangeSubviews];
@@ -217,7 +224,7 @@
     currentTextEntryHeight = 0;
     view_accountSelection = nil;
     account = nil;
-    object = nil;
+    delegate = nil;
     chat = nil;
     owner = [inOwner retain];
     showUserList = NO;
@@ -235,19 +242,15 @@
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];    
-    [self listObjectStatusChanged:nil];
+    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
 
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
 
     //Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
-    [[owner notificationCenter] addObserver:self selector:@selector(listObjectStatusChanged:) name:ListObject_StatusChanged object:object];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-        
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];        
     [self preferencesChanged:nil];
-    
     
     return(self);
 }
@@ -288,57 +291,77 @@
     //nib
     [view_contents removeAllSubviews];
     [view_contents release]; view_contents = nil;
-
-
-
     [view_accountSelection release];
     [messageViewController release];
-
     [owner release]; owner = nil;
     [interface release]; interface = nil;
     [account release]; account = nil;
-    [object release]; object = nil;
 
     [super dealloc];
+}
+
+//
+- (void)setDelegate:(id)inDelegate
+{
+    delegate = inDelegate;
+}
+
+//Our chat's participating list objects did change
+- (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
+{
+    NSArray	*participatingListObjects = [chat participatingListObjects];
+    BOOL	listVisible;
+    
+    //We display the user list if it contains more than one user, or if someone has specified that it be visible.
+    if([[[chat statusDictionary] objectForKey:@"AlwaysShowUserList"] boolValue] ||
+       [participatingListObjects count] > 1){
+        listVisible = YES;
+    }else{
+        listVisible = NO;
+    }
+
+    //Show/hide the userlist
+    if(listVisible != showUserList){
+        showUserList = listVisible;
+        [self sizeAndArrangeSubviews];
+    }
+
+    //Update the user list
+    if(showUserList){
+        [tableView_userList reloadData];
+    }
 }
 
 //Our chat's status did change
 - (void)chatStatusChanged:(NSNotification *)notification
 {
-    if(notification == nil || [[[notification userInfo] objectForKey:@"Keys"] containsObject:@"User List"]){
-        NSArray	*userArray = [[chat statusDictionary] objectForKey:@"User List"];
+    NSArray	*modifiedKeys = [[notification userInfo] objectForKey:@"Keys"];
 
-        //Correctly show/hide the userlist
-        if((userArray != nil && showUserList == NO) || (userArray == nil && showUserList == YES)){
-            showUserList = (userArray != nil);
-            [self sizeAndArrangeSubviews];
-        }
+    if(notification == nil || [modifiedKeys containsObject:@"Enabled"]){
+        //Update our available for sending
+        availableForSending = [[[chat statusDictionary] objectForKey:@"Enabled"] boolValue];
 
-        //Update the user list
-        if(showUserList){
-            [tableView_userList reloadData];
+        //Enable/Disable our text view sending, and send button
+        [textView_outgoing setAvailableForSending:availableForSending];
+        [button_send setEnabled:(availableForSending && [[textView_outgoing string] length] != 0)];
+    }
+
+    if(notification == nil || [modifiedKeys containsObject:@"DisallowAccountSwitching"]){
+        BOOL disallowAccountChanging = [[[chat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue];
+
+        //Disallow source account switching
+        if(disallowAccountChanging){
+            [self setAccountSelectionMenuVisible:NO];
         }
     }
-}
-
-//Our contact's status did change
-- (void)listObjectStatusChanged:(NSNotification *)notification
-{
-    //Update our available for sending (we cache this to avoid calling it every time a key is pressed)
-    availableForSending = [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:chat onAccount:account];
-    
-    //Enable/Disable our text view sending, and send button
-    [textView_outgoing setAvailableForSending:availableForSending];
-    [button_send setEnabled:(availableForSending && [[textView_outgoing string] length] != 0)];
-    
 }
 
 //A preference did change
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Configure the message sending keys
-    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"Send On Enter" group:PREF_GROUP_GENERAL object:object] boolValue]];
-    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"Send On Return" group:PREF_GROUP_GENERAL object:object] boolValue]];
+    [textView_outgoing setSendOnEnter:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
+    [textView_outgoing setSendOnReturn:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
 
     //Configure spellchecking
     [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
@@ -399,9 +422,10 @@
     //UserList
     if(showUserList){
 #define fixed_width 100
-        [scrollView_userList setFrame:NSMakeRect(superFrame.size.width - fixed_width, superFrame.origin.y, fixed_width, superFrame.size.height + 1)];
+#define fixed_padding 4
+        [scrollView_userList setFrame:NSMakeRect(superFrame.size.width - fixed_width, superFrame.origin.y, fixed_width - 1, superFrame.size.height)];
 
-        superFrame.size.width -= fixed_width + 6;
+        superFrame.size.width -= fixed_width + fixed_padding;
     }else{
         [scrollView_userList setFrame:NSMakeRect(10000, 10000, 0, 0)]; //Shove it way off screen for now
     }
@@ -440,19 +464,13 @@
 //User List
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    NSArray	*userArray = [[chat statusDictionary] objectForKey:@"User List"];
-    
-    return([userArray count]);
+    return([[chat participatingListObjects] count]);
 }
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSArray	*userArray = [[chat statusDictionary] objectForKey:@"User List"];
-
-    return([[userArray objectAtIndex:row] UID]);
+    return([[[chat participatingListObjects] objectAtIndex:row] displayName]);
 }
 
 
-
 @end
-
 

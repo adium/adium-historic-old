@@ -54,35 +54,37 @@ static AINewMessagePrompt *sharedInstance = nil;
     }
 }
 
-//New Mesasge
+//New Message
 - (IBAction)newMessage:(id)sender
 {
     AIListContact	*contact;
-    AIServiceType	*serviceType;
+    AIAccount		*account;
     NSString		*UID;
+    AIServiceType	*serviceType;
 
     //Get the service type and UID
-    serviceType = [[popUp_service selectedItem] representedObject];
+    account = [[popUp_service selectedItem] representedObject];
+    serviceType = [[account service] handleServiceType];
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
     contact = [[owner contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID serverGroup:nil create:YES];
     if(contact){
+        AIChat	*chat;
+        
         //Close the prompt
         [AINewMessagePrompt closeSharedInstance];
 
         //Initiate the message
-        [[owner notificationCenter] postNotificationName:Interface_InitiateMessage
-                                                  object:nil
-                                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:contact, @"To", nil]];
+        chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
+        [[owner interfaceController] setActiveChat:chat];
     }
 }
 
-- (IBAction)selectService:(id)sender
+- (IBAction)selectAccount:(id)sender
 {
 
 }
-
 
 
 // Private --------------------------------------------------------------------------------
@@ -108,8 +110,7 @@ static AINewMessagePrompt *sharedInstance = nil;
 {
     NSEnumerator		*enumerator;
     AIListContact		*contact;
-    id <AIServiceController>	service;
-    NSMenu			*menu = [popUp_service menu];
+    AIAccount			*account;
     
     //Configure the auto-complete view
     enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
@@ -119,30 +120,30 @@ static AINewMessagePrompt *sharedInstance = nil;
 
     //Configure the handle type menu
     [popUp_service removeAllItems];
+    [[popUp_service menu] setAutoenablesItems:NO];
 
-    //Insert a menu item for each available service type
-    enumerator = [[[owner accountController] availableServiceArray] objectEnumerator];
-    while((service = [enumerator nextObject])){
-        AIServiceType	*serviceType = [service handleServiceType];
+    //Insert a menu item for each available account
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
         NSMenuItem	*menuItem;
-        BOOL		menuExists = NO;
-        int		i;
         
-        //Make sure a menu item for this type doesn't already exist in our menu
-        for(i = 0;i < [menu numberOfItems]; i++){
-            if([[serviceType identifier] compare:[[[menu itemAtIndex:i] representedObject] identifier]] == 0){
-                menuExists = YES;
-            }
-        }
-        
-        //Add the menu item
-        if(!menuExists){
-            menuItem = [[NSMenuItem alloc] initWithTitle:[serviceType description] target:self action:@selector(selectService:) keyEquivalent:@""];
-            [menuItem setRepresentedObject:serviceType];
+        //Create the menu item
+        menuItem = [[NSMenuItem alloc] initWithTitle:[account accountDescription] target:self action:@selector(selectAccount:) keyEquivalent:@""];
+        [menuItem setRepresentedObject:account];
 
-            [[popUp_service menu] addItem:menuItem];
+        //Disabled the menu item if the account is offline
+        if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
+            [menuItem setEnabled:NO];
+        }else{
+            [menuItem setEnabled:YES];
         }
+
+        //add the menu item
+        [[popUp_service menu] addItem:menuItem];
     }
+
+    //Select the last used account / Available online account
+    [popUp_service selectItemAtIndex:[popUp_service indexOfItemWithRepresentedObject:[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]]];
 
     //Center the window
     [[self window] center];

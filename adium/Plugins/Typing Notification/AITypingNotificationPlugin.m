@@ -13,9 +13,10 @@
 - (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat;
 @end
 
-@implementation AITypingNotificationPlugin
+#define CAN_RECEIVE_TYPING	@"CanReceiveTyping"
+#define WE_ARE_TYPING		@"WeAreTyping"
 
-//..Don't sent typing notifications until the contact has messaged us..
+@implementation AITypingNotificationPlugin
 
 - (void)installPlugin
 {
@@ -23,7 +24,7 @@
     [[owner contentController] registerTextEntryFilter:self];
 
     typingDict = [[NSMutableDictionary alloc] init];
-    messagedDict = [[NSMutableDictionary alloc] init];
+    //messagedDict = [[NSMutableDictionary alloc] init];
 
     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
 }
@@ -31,18 +32,14 @@
 //Watch incoming content.  Once we are messaged by a contact, that contact may receive typing notifications
 - (void)didReceiveContent:(NSNotification *)notification
 {
-    id			object = [[notification userInfo] objectForKey:@"Object"];
-    AIListContact	*contact = (AIListContact *)[object source];
-    AIAccount		*account = (AIAccount *)[object destination];
-    NSString		*key;
+    AIChat		*chat = [notification object];
     NSNumber		*cleared;
 
-    key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[contact UIDAndServiceID]];
-    cleared = [messagedDict objectForKey:key];
+    cleared = [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING];
 
     //Clear this contact for receiving typing notifications
     if(!cleared){
-        [messagedDict setObject:[NSNumber numberWithBool:1] forKey:key];
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:1] forKey:CAN_RECEIVE_TYPING];
     }
 }
 
@@ -54,16 +51,13 @@
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     AIChat		*chat = [inTextEntryView chat];
-    AIAccount		*account = [chat account];
-    AIListObject	*object = [chat object];
-    NSString		*key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[object UIDAndServiceID]];
 
-    if(object && account){
-        if([[inTextEntryView attributedString] length] == 0 && [messagedDict objectForKey:key] != nil){
+    if(chat){
+        if([[inTextEntryView attributedString] length] == 0 && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
             [self _sendTyping:NO toChat:chat]; //Not typing
             
         }else{
-            if(![[typingDict objectForKey:key] boolValue] && [messagedDict objectForKey:key] != nil){
+            if(![[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue] && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
                 [self _sendTyping:YES toChat:chat]; //Typing
             }
             
@@ -74,26 +68,21 @@
 - (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat
 {
     AIAccount		*account = [chat account];
-    AIListObject	*object = [chat object];
     AIContentTyping	*contentObject;
-    NSString		*key;
  
     //Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
     contentObject = [AIContentTyping typingContentInChat:chat
                                               withSource:account
-                                             destination:object
+                                             destination:nil
                                                   typing:typing];
     [[owner contentController] sendContentObject:contentObject];
     
     //Remember the state
-    key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[object UIDAndServiceID]];
-    if(typing){
-        //Add 'typing' for this contact
-        [typingDict setObject:[NSNumber numberWithBool:YES] forKey:key];
+    if(typing){ //Add 'typing' for this contact
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:1] forKey:WE_ARE_TYPING];
 
-    }else{
-        //Remove 'typing' for this contact
-        [typingDict removeObjectForKey:key];
+    }else{ //Remove 'typing' for this contact
+        [[chat statusDictionary] removeObjectForKey:WE_ARE_TYPING];
 
     }
 }

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject;
+@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject;
 @protocol AIServiceController, AIAccountViewController;
 
 typedef enum {
@@ -32,11 +32,11 @@ typedef enum {
 @protocol AIAccount_Content
     // Send a message object to its destination
     - (BOOL)sendContentObject:(AIContentObject *)object;
-    // Returns YES if the handle is available for receiving content of the specified type
-    - (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat;
+    // Returns YES if the object is available for receiving content of the specified type.  Pass a nil object to check the account's ability to send any content of the given type.  Pass YES for absolute and the account will only return YES if it's absolutely certain that it can send content to the specified object.
+    - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject;
 
     //Open a chat instance
-    - (BOOL)openChat:(AIChat *)inChat;
+    - (AIChat *)openChatWithListObject:(AIListObject *)inListObject;
     //Close a chat instance
     - (BOOL)closeChat:(AIChat *)inChat;
 

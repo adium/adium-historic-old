@@ -190,12 +190,10 @@
     AIListContact	*contact;
     BOOL		updateList = NO;
 
-//attempt at simple dynamic temp group
+    //attempt at simple dynamic temp group
     if([handle temporary]){
         serverGroup = @"Strangers";
-        NSLog(@"%@ temporary",handleUID);
     }
-       
 
     //Does a contact for this handle already exist on our list?
     contact = [[owner contactController] contactInGroup:contactList withService:[handle serviceID] UID:handleUID serverGroup:nil];

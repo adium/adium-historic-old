@@ -43,7 +43,8 @@
     NSDictionary	*preferencesDict;	// Our preferences dictionary
 
     NSMutableDictionary	*handleDict;		// A dictionary of all available handles
-    NSMutableDictionary	*chatDict;
+    NSMutableDictionary	*chatDict;		// AIChats for instant messages
+    NSMutableDictionary	*chatRoomDict;		// AIChats for chat rooms
     
     NSTimer		*pingTimer;
     NSTimeInterval	pingInterval;
@@ -62,5 +63,7 @@
 - (NSString *)accountID;
 - (NSString *)accountDescription;
 - (void)dealloc;
+- (void)acceptInvitationForChatID:(NSString *)chatID;
+- (void)declineInvitationForChatID:(NSString *)chatID;
 
 @end

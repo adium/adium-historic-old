@@ -19,7 +19,7 @@
 #import "AILogViewerWindowController.h"
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(AIListObject *)object onDate:(NSDate *)date;
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
 @end
 
 @implementation AILoggerPlugin
@@ -74,38 +74,42 @@
     AIChat		*chat = nil;
     NSString		*message = nil;
     AIAccount		*account = nil;
-    AIListObject	*object = nil;
+    NSString		*object = nil;
     AIListObject	*source = nil;
+    NSDate		*date = nil;
+    NSString		*dateString = nil;
+    NSString		*logMessage = nil;
 
-    NSDate	*date = [content date];
-    NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
 
-    NSString	*logMessage = nil;
-
+    
+    
+    
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-	chat	= [notification object];
-	account	= [chat account];
-	object	= [chat object];
+        date = [content date];
+        dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+        chat	= [notification object];
+        object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
+           if(!object) object = [[chat listObject] UID];
+        account	= [chat account];
 	source	= [content source];
-	
 	message = (NSString *)[[[content message] safeString] string];
 	
-        if(account && object && source){
+        if(account &&/* object && */source){
 	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [source UID], message];
 	}
 
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
-	chat	= [notification object];
+        date = [content date];
+        dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+        chat	= [notification object];
+        object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
+           if(!object) object = [[chat listObject] UID];
 	account	= [chat account];
-	object	= [chat object];
 	source	= [content source];
-	
-	message = (NSString *)[content message];
+        message = (NSString *)[content message];
 
-	//only log the status change if the contact has a currently open tab
-	//this doesn't match the actual status notification of adium, but it does match the logging of 1.x
-        if(account && object && source && [[object statusArrayForKey:@"Open Tab"] greatestIntegerValue]){
+        if(account && source){
 	    logMessage = [NSString stringWithFormat:@"<%@ (%@)>\n", message, dateString];
 	}
     }
@@ -137,15 +141,15 @@
 }
 
 //Add a message to the specified log file
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(AIListObject *)object onDate:(NSDate *)date
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date
 {
     NSString	*logPath;
     NSString	*logFileName;
     FILE	*file;
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
-    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:[object UID]];
-    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", [object UID], [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:object];
+    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
 
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];

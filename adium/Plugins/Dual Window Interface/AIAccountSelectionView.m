@@ -81,7 +81,7 @@
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
-    AIListObject	*contact = [delegate contact];
+    AIListObject	*listObject = [delegate listObject];
     NSEnumerator	*enumerator;
     AIAccount		*anAccount;
     int			selectedIndex;
@@ -94,14 +94,14 @@
     while((anAccount = [enumerator nextObject])){
 
         //Accounts only show up in the menu if they're the correct handle type.
-        if(!contact || [[contact serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
+        if(!listObject || [[listObject serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
             NSMenuItem	*menuItem;
 
             menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount accountDescription] target:nil action:nil keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
-            if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil onAccount:anAccount]){
+            if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:anAccount]){
                 [menuItem setEnabled:NO];
             }
 
@@ -137,7 +137,10 @@
     NSMenuItem		*menuItem;
     AIAccount		*account = [delegate account];
 
-    //Update the 'Checked' menu item
+    //Select the correct item
+    [popUp_accounts selectItemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:account]];
+
+    //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
     enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
     while(menuItem = [enumerator nextObject]){
         if([menuItem representedObject] == account){

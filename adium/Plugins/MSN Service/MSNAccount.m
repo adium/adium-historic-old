@@ -28,6 +28,7 @@
 - (void)startSBSessionHelper:(NSTimer *)timer;
 - (unsigned long)getTrid:(BOOL)increment;
 - (void)manageSBSocket:(NSMutableDictionary *)socketDict withHandle:(NSString *)handle;
+- (AIChat *)_openChatWithHandle:(AIHandle *)handle;
 @end
 
 @implementation MSNAccount
@@ -47,7 +48,7 @@
         
         //message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
         message = [[(AIContentMessage *)object message] string];
-        handle = [[object destination] handleForAccount:self];
+        handle = [(AIListContact *)[[object chat] listObject] handleForAccount:self];
         sbSocket = [[switchBoardDict objectForKey:[handle UID]] objectForKey:@"Socket"];
 
         //create the payload
@@ -86,7 +87,8 @@
         AIHandle	*handle;
         AISocket	*sbSocket;
 
-        handle = [[object destination] handleForAccount:self];
+        handle = [(AIListContact *)[[object chat] listObject] handleForAccount:self];
+       
         sbSocket = [[switchBoardDict objectForKey:[handle UID]] objectForKey:@"Socket"];
 
         //create the payload
@@ -124,30 +126,24 @@
 }
 
 // Returns YES if the contact is available for receiving content of the specified type
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    AIListObject 	*listObject = [inChat object];
-    BOOL 		available = NO;
+    BOOL 	available = NO;
+    BOOL	weAreOnline = ([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
-    if([inType compare:CONTENT_MESSAGE_TYPE] == 0 || [inType isEqual:CONTENT_TYPING_TYPE]){
-        //If we are online
-        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
-            if(!inChat || !listObject){
-                available = YES;
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        if(weAreOnline){
+            if(inListObject == nil){
+                available = YES; //If we're online, we're most likely available to message this object
 
             }else{
-                if([listObject isKindOfClass:[AIListContact class]]){
-                    AIHandle	*handle = [(AIListContact *)listObject handleForAccount:self];
+                if([inListObject isKindOfClass:[AIListContact class]]){
+                    AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
 
-                    if(![[handleDict allValues] containsObject:handle] || [[[handle statusDictionary] objectForKey:@"Online"] intValue]){
-                        available = YES;
+                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+                        available = YES; //This handle is online and on our list
+
                     }
-                /*}else if([listObject isKindOfClass:[AIListChat class]]){
-                    AIChat	*chat = [chatDict objectForKey:[listObject UID]];
-
-                    if(!chat || [[listObject statusArrayForKey:@"Online"] greatestIntegerValue]){
-                        available = YES;
-                    }*/
                 }
             }
         }
@@ -156,12 +152,16 @@
     return(available);
 }
 
-- (BOOL)openChat:(AIChat *)inChat
+- (AIChat *)openChatWithListObject:(AIListObject *)inListObject
 {
-    if([[inChat object] isKindOfClass:[AIListContact class]])
+    AIChat		*chat = nil;
+
+    if([inListObject isKindOfClass:[AIListContact class]])
     {
-        AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
-                
+        AIHandle *handle = [(AIListContact *)inListObject handleForAccount:self];
+
+        chat = [self _openChatWithHandle:handle];
+        
         [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
             target:self
             selector:@selector(startSBSessionHelper:)
@@ -172,16 +172,55 @@
                 [NSNumber numberWithInt:0], @"Trid", nil]
             repeats:YES];
             
-            return YES;
     }
-    return(NO);
+
+    return(chat);
+}
+
+//
+- (AIChat *)_openChatWithHandle:(AIHandle *)handle
+{
+    AIChat	*chat;
+
+    //Create chat
+    if(!(chat = [chatDict objectForKey:[handle UID]])){
+        BOOL		handleIsOnline;
+        AIListContact	*containingContact;
+
+        //The account code is now responsible for creating the AIChat instance for communicating with this list object.  You need to create it:
+        chat = [AIChat chatWithOwner:owner forAccount:self];
+
+        //Then, you need to set the chat participants...  (You can add and remove participants later on and it will all work as expected :) )
+        containingContact = [handle containingContact];
+        [chat addParticipatingListObject:containingContact];
+
+        //And finally you need to set the chat as enabled when it is possible to send messages across it.
+        //You can toggle the Enabled status flag anytime you want as well, but you need to post a Content_ChatStatusChanged notification after doing so.  We don't have to post it here since the chat hasn't been noted yet.
+        handleIsOnline = [[[handle statusDictionary] objectForKey:@"Online"] boolValue];
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
+
+        //The final step is telling the content controller about the chat.  This method will cause a chat window to open.  It's probably best to open the chat window right away no matter what, and just not enable it in the event of error or until the chat is available for sending.
+        [[owner contentController] noteChat:chat forAccount:self];
+    }
+
+    return(chat);
 }
 
 - (BOOL)closeChat:(AIChat *)inChat
 {
-    if([[inChat object] isKindOfClass:[AIListContact class]])
+    if([[inChat listObject] isKindOfClass:[AIListContact class]])
     {
-        AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
+        NSEnumerator	*enumerator;
+        NSString	*key;
+        AIHandle 	*handle = [(AIListContact *)[inChat listObject] handleForAccount:self];        
+
+        //Remove the chat from our chat dict
+        enumerator = [[chatDict allKeys] objectEnumerator];
+        while(key = [enumerator nextObject]){
+            if([chatDict objectForKey:key] == inChat){
+                [chatDict removeObjectForKey:key]; break;
+            }
+        }
         
         //[switchBoardDict removeObjectForKey:[handle UID]];
         
@@ -273,14 +312,16 @@
       
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
-    
+
+    chatDict = [[NSMutableDictionary alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
-	switchBoardDict = [[NSMutableDictionary alloc] init];
+        switchBoardDict = [[NSMutableDictionary alloc] init];
     messageDict = [[NSMutableDictionary alloc] init];
 }
 
 - (void)dealloc
 {
+    [chatDict release];
     [handleDict release];
 	[switchBoardDict release];
     [messageDict release];
@@ -1446,6 +1487,8 @@
                     {	// Received a message
                         AIContentMessage	*messageObject = nil;
                         AIListObject		*contact = [[handleDict objectForKey:handle] containingContact];
+                        AIChat			*chat;
+                        
                         // (Do cool formatting stuff here)
                         NSLog (@"MSN Got message, sending to interface"); 
                         
@@ -1457,9 +1500,12 @@
                                                     modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]
                                                                delayed:NO
                                                                 silent:NO];
-                        
+
+                        //Get the chat for this handle
+                        chat = [self _openChatWithHandle:Handle];
+
                         //Add a content object for the message
-                        messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:contact onAccount:self]
+                        messageObject = [AIContentMessage messageInChat:chat
                                          withSource:contact
                                         destination:self
                                                date:nil
@@ -1499,6 +1545,8 @@
         [switchBoardDict removeObjectForKey:handle];
     }
 }
+
+
 
 /*************************/
 /* SPECIAL SHINY METHODS */

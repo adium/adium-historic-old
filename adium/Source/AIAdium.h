@@ -144,8 +144,6 @@ typedef enum {
 //Whenever possible, accounts should keep their contact's status up to date.  However, sometimes this ideal situation cannot be achieved, and the account needs to be told when 'more expensive' status keys are required so it can fetch them.  This notification instructs the accounts to do just that.  It is currently used for profiles, but may be used for more information in the future.
 
 #define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
-#define Interface_InitiateMessage				@"Interface_InitiateMessage"
-#define Interface_CloseMessage					@"Interface_CloseMessage"
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
@@ -157,6 +155,7 @@ typedef enum {
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
 #define Content_ChatStatusChanged				@"Content_ChatStatusChanged"
+#define Content_ChatParticipatingListObjectsChanged		@"Content_ChatParticipatingListObjectsChanged"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
 #define Preference_WindowWillOpen				@"Preference_WindowWillOpen"
 #define Preference_WindowDidClose				@"Preference_WindowDidClose"
@@ -246,6 +245,10 @@ typedef enum {
 @protocol AIInterfaceController <NSObject>
 - (void)openInterface;
 - (void)closeInterface;
+- (void)initiateNewMessage;
+- (void)openChat:(AIChat *)inChat;
+- (void)closeChat:(AIChat *)inChat;
+- (void)setActiveChat:(AIChat *)inChat;
 @end
 
 @protocol AIFlashObserver <NSObject>
@@ -318,7 +321,7 @@ typedef enum {
     NSMutableArray		*incomingContentFilterArray;
     NSMutableArray		*displayingContentFilterArray;
 
-    NSMutableDictionary		*chatDict;
+    NSMutableArray		*chatArray;
 }
 
 //Content default handlers
@@ -329,20 +332,13 @@ typedef enum {
 - (void)addIncomingContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject;
-
-- (BOOL)closeChat:(AIChat *)inChat;
-- (AIChat *)chatWithListObject:(AIListObject *)inObject onAccount:(AIAccount *)inAccount;
+- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject;
+- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
 - (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
-
-
-
-
-//- (AIChat *)chatForSendingToContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
-//- (BOOL)closeChat:(AIChat *)inChat;
-//- (BOOL)inviteContact:(AIListContact *)inContact toChat:(AIChat *)inChat;
+- (BOOL)closeChat:(AIChat *)inChat;
 
 //Sending / Receiving content
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat onAccount:(AIAccount *)inAccount;
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
 - (void)addIncomingContentObject:(AIContentObject *)inObject;
 
 //Filtering text entry
@@ -461,6 +457,9 @@ typedef enum {
 
 //Messaging
 - (IBAction)initiateMessage:(id)sender;
+- (void)openChat:(AIChat *)inChat;
+- (void)closeChat:(AIChat *)inChat;
+- (void)setActiveChat:(AIChat *)inChat;
 
 //Error messages
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;

@@ -24,11 +24,13 @@
     int			connectionPhase;	// Steps involved in signing on
     NSTimer		*stepTimer;		// Keep track of a Timer
 
+
     NSString		*email;		// Current signed on actualSN
     NSString		*password;		// Current signed on password
     NSString		*friendlyName;		// Current Friendly name
     
     NSMutableDictionary	*handleDict;	   // Dict of all our handles.
+    NSMutableDictionary	*chatDict;	//Dict of all our active chats
     NSMutableDictionary *switchBoardDict;  // Dict containing AIHandles and sub-dictionaries w/ their SBSockets and other info
     NSMutableDictionary	*messageDict; 	   // Dict of messages waiting for an ACK or NAK message
 }
@@ -37,7 +39,7 @@
 // Send a message object to its destination
 - (BOOL)sendContentObject:(AIContentObject *)object;
 // Returns YES if the contact is available for receiving content of the specified type
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat;
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject;
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account

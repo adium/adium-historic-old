@@ -164,9 +164,7 @@
     //Close all our tabs
     enumerator = [viewArrayCopy objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
-        [[owner notificationCenter] postNotificationName:Interface_CloseMessage
-                                                  object:[[tabViewItem messageViewController] chat]
-                                                userInfo:nil];
+        [[owner interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
     }
 
     //Save the window position
@@ -197,9 +195,9 @@
 //Tabs Delegate ---------------------------------------------------------------
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    AIListObject	*selectedContact = [[(AIMessageTabViewItem *)tabViewItem messageViewController] listObject];
-
-    if([selectedContact isKindOfClass:[AIListContact class]]){
+    AIListObject	*selectedContact = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
+    
+    if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
         return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
@@ -209,9 +207,8 @@
         
     }else{
         return(nil);
-        
+
     }
-    
 }
 
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
@@ -239,9 +236,7 @@
 - (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
     //Close the message tab
-    [[owner notificationCenter] postNotificationName:Interface_CloseMessage
-                                              object:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]
-                                            userInfo:nil];
+    [[owner interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
 }
 
 @end

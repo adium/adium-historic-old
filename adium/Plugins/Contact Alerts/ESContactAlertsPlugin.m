@@ -117,7 +117,7 @@
                 NSString * service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
                 AIListContact * contact = [[owner contactController] contactInGroup:nil withService:service UID:uid];
 
-                if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) //desired account not available
+                if (![(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]) //desired account not available
                 {
                     if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
                     {
@@ -127,7 +127,7 @@
                         //use first acccount on the same service as the handle and available to send content
                         while(account = [accountEnumerator nextObject]){
                             if ( [[contact serviceID] compare:[[[account service] handleServiceType] identifier]] == 0 &&
-                                 [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil])
+                                 [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil])
                             {
                                 [onlineAccounts addObject:account];
                             }
@@ -153,12 +153,16 @@
                 {
                     if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue])
                     {
-                        responseContent = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:inObject onAccount:account]
+                        AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
+
+                        [[owner interfaceController] setActiveChat:chat];
+                        responseContent = [AIContentMessage messageInChat:chat
                                                                withSource:account
                                                               destination:contact
                                                                      date:nil
                                                                   message:message];
                         success = [[owner contentController] sendContentObject:responseContent];
+
                         if (!success)
                             errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"failed while sending the message."]];
                     }
@@ -199,7 +203,7 @@
                 NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
                 AIAccount * account = [[owner accountController] accountWithID:details];
 
-                if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) //desired account not available
+                if (![(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]) //desired account not available
                 {
                     success = NO; //as of now, we can't open our window
                     if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
@@ -209,7 +213,7 @@
                         accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
                         //use first acccount on the same service as the handle and available to send content
                         while(account = [accountEnumerator nextObject]){
-                            if ( [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil])
+                            if ( [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil])
                             {
                                 [onlineAccounts addObject:account];
                             }
@@ -223,9 +227,8 @@
                 }
                 if (success)
                 {
-                    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage
-                                                              object:nil
-                                                            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"To", account, @"From",nil]];
+                    AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:inObject];
+                    [[owner interfaceController] setActiveChat:chat];
                 }
             }
             else

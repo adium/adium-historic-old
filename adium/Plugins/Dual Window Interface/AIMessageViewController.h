@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMiniToolbar, AIListObject, AIAdium, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton;
+@class AIMiniToolbar, AIListObject, AIAdium, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView;
 @protocol AIContainerInterface, AIAccountSelectionViewDelegate, AIMessageViewController;
 
 @interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
@@ -31,12 +31,12 @@
     IBOutlet	AIPlasticButton		*button_send;
 
     id <AIMessageViewController>	messageViewController;
-    NSView				*view_accountSelection;
+    AIAccountSelectionView		*view_accountSelection;
 
     //Variables
+    id				delegate;
     AIAdium			*owner;
     id <AIContainerInterface> 	interface;
-    AIListObject		*object;
     AIAccount			*account;
     AIChat			*chat;
     float			currentTextEntryHeight;
@@ -51,9 +51,15 @@
 - (void)makeTextEntryViewFirstResponder;
 - (void)setAccount:(AIAccount *)inAccount;
 - (void)closeMessageView;
-
 - (AIChat *)chat;
 - (AIAccount *)account;
-- (AIListObject *)listObject;
+- (void)setDelegate:(id)inDelegate;
+- (void)setChat:(AIChat *)inChat;
 
 @end
+
+@interface NSObject (AIMessageViewControllerDelegate)
+- (void)messageViewController:(AIMessageViewController *)messageView chatChangedTo:(AIChat *)chat;
+@end
+
+

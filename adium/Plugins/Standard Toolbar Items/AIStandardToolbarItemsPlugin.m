@@ -113,8 +113,10 @@
 {
     NSDictionary	*objects = [toolbarItem configurationObjects];
     AIListObject	*object = [objects objectForKey:@"ContactObject"];
+    AIChat		*chat;
 
-    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:object,@"To",nil]];
+    chat = [[owner contentController] openChatOnAccount:nil withListObject:object];
+    [[owner interfaceController] setActiveChat:chat];
 }
 
 - (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
@@ -133,7 +135,7 @@
     AIChat		*chat = [objects objectForKey:@"Chat"];
 
     if(chat){
-        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:chat userInfo:nil];
+        [[owner interfaceController] closeChat:chat];
     }
 }
 
