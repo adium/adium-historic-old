@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.84 2004/06/13 19:01:26 evands Exp $
+// $Id: AIContentController.m,v 1.85 2004/06/17 23:31:42 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -254,9 +254,12 @@
 		if([inObject trackContent]) {
 			int		contentLength = [contentObjectArray count];
 			
+			// Dave's patented super-duper-uber-convoluted check for first-message-ness:
+			// If (it is literally the first message in this view) OR (the previous message is context AND this one is not context)
+			// Then, and only then, should we consider this a first message
 			if(contentLength <= 1 || 
-			   ![[(AIContentObject *)[contentObjectArray objectAtIndex:0] type] isEqualToString:[inObject type]]){
-			
+			   ([[(AIContentObject *)[contentObjectArray objectAtIndex:0] type] isEqualToString:CONTENT_CONTEXT_TYPE] &&
+				![[inObject type] isEqualToString:CONTENT_CONTEXT_TYPE]) ){
 				shouldBeFirstMessage = YES;
 			}
 		}
