@@ -231,11 +231,6 @@ const int STARTUP_TIME = 20;
     return @"Jabber";
 }
 
-- (NSString *)accountDescription
-{
-    return [self UID];
-}
-
 - (NSArray *)supportedPropertyKeys
 {
     return([NSArray arrayWithObjects:@"Online", nil]);

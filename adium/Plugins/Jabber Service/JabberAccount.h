@@ -71,7 +71,6 @@
 - (NSString *)accountID; 		//Specific to THIS account plugin, and the user's account name
 - (NSString *)UID;			//The user's account name
 - (NSString *)serviceID;		//The service ID (shared by any account code accessing this service)
-- (NSString *)accountDescription;	//Return a readable description of this account's username
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
 
