@@ -10,6 +10,7 @@ Version 0.53 (4/27/2004)
 - Added support for deleting emoticon packs
 - Added an 'add contact' menu item for message tabs
 - Added the ability to cancel connecting accounts
+- Added support for deleting multiple contacts simultaneously
 - Added hourly level preferences for message history
 - Added custom hyperlink insertion and editing
 - Added the ability to add messages sent to offline contacts as alerts
@@ -28,6 +29,7 @@ Version 0.53 (4/27/2004)
 - Improved error handling for all services
 - Improved detection of URLs for autolinking
 - Improved behavior when reconnecting accounts
+- Improved appearance of Password Prompt window
 - Cleaned up alert interface in preparation for upcoming changes to 'Get Info' window.
 - Cleaned up address book integration advanced preferences
 - Cleaned up sound preferences
@@ -43,13 +45,15 @@ Version 0.53 (4/27/2004)
 - Fixed an issue preventing the version checker from saying how old the current version is
 - Fixed cosmetic issue with away message menu
 - Fixed an issue with the contact list position when a multiscreen configuration changed
+- Fixed an issue causing Away autoresponses to be sent in response to other users' autoresponses
 - Fixed several memory leaks
-- Fixed a bug with Japanese and Chinese text in the webkit message view
 - Fixed an SQL Logger crash when opening the preferences
 - Fixed an SQL Logger issue with the same screenname on multiple services.
+- Fixed a bug with Japanese and Chinese text in the webkit message view
 - Scripts, themes, and sounds can be put in all three Library/Application Support folders (Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0).
 - Scripts, themes, sounds in the Adium application bundle no longer override those in the Application Support folders
 - Performance and launch time improvements
+- Decreased binary size
 
 Version 0.52 (4/16/2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
