@@ -19,13 +19,17 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
-#define AWAY_STATUS_WINDOW_NIB		@"AwayStatusWindow"
-#define	KEY_AWAY_STATUS_WINDOW_FRAME	@"Away Status Frame"
+#define AWAY_STATUS_WINDOW_NIB			@"AwayStatusWindow"
+#define	KEY_AWAY_STATUS_WINDOW_FRAME		@"Away Status Frame"
+#define KEY_SMV_SHOW_AMPM      	                @"Show AM-PM"
+#define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
+
 
 @interface AIAwayStatusWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)updateAwayTime:(id)userInfo;
 - (NSString *)getTheTime:(time_t)secs;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAwayStatusWindowController
@@ -134,6 +138,11 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
         userInfo:nil
         repeats:YES]
     retain];
+    
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    
+    [self preferencesChanged:nil];
+    
     return(self);
 }
 
@@ -144,6 +153,10 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     
     [awayDate release];
     [awayTimer release];
+
+    [[owner notificationCenter] removeObserver:self];
+
+    [timeStampFormat release];
 
     [super dealloc];
 }
@@ -162,6 +175,8 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     
     // Put the current away message in the text field
     [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]]];
+    
+    [self updateAwayTime:nil];
 
     // Still to Add:
     // Put the time we went away in the text field
@@ -190,8 +205,6 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     [mySharedInstance autorelease]; mySharedInstance = nil;
 
     return(YES);
-
-    
 }
 
 - (BOOL)shouldCascadeWindows
@@ -199,11 +212,25 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     return(NO);
 }
 
+- (void)preferencesChanged:(NSNotification *)notification
+{
+            NSDictionary *prefDict = [[owner preferenceController]
+                preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+            
+            //release the old one
+            [timeStampFormat release];
+            
+            //get the new one
+            timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:NO
+                showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
+
+}
+
 - (void)updateAwayTime:(id)userInfo
 {    
     [textField_awayTime setStringValue:
         [NSString stringWithFormat:@"Since %@ (%@)",
-            [awayDate descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:nil], 
+            [awayDate descriptionWithCalendarFormat:timeStampFormat timeZone:nil locale:nil], 
             [self getTheTime:(time_t)[awayDate timeIntervalSince1970]]]];
 }
 
