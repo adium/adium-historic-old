@@ -58,7 +58,7 @@ static BOOL didInitYahoo = NO;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
     //gaim's yahoo_html_to_codes seems to be messed up...
-	return ([AIHTMLDecoder encodeHTML:inAttributedString
+	/*return ([AIHTMLDecoder encodeHTML:inAttributedString
 							  headers:NO
 							 fontTags:NO
 				   includingColorTags:NO
@@ -67,7 +67,20 @@ static BOOL didInitYahoo = NO;
 		   closeStyleTagsOnFontChange:NO
 					   encodeNonASCII:NO
 						   imagesPath:nil
-					attachmentsAsText:YES]);
+					attachmentsAsText:YES
+						   simpleTagsOnly:YES]);*/
+	
+	return([AIHTMLDecoder encodeHTML:inAttributedString
+							 headers:NO
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES
+						  simpleTagsOnly:YES]);
 }
 
 #pragma mark File transfer
