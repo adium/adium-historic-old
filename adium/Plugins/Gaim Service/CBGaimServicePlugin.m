@@ -495,7 +495,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 - (void)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 {
     NSString *primaryString = [NSString stringWithUTF8String:primary];
-	NSString *secondaryString = [NSString stringWithUTF8String:secondary];
+	NSString *secondaryString = secondary ? [NSString stringWithUTF8String:secondary] : nil;
+	
 	NSString *titleString;
 	if (title){
 		titleString = [NSString stringWithFormat:@"Adium Notice: %@",[NSString stringWithUTF8String:title]];
@@ -506,7 +507,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	NSString *errorMessage = nil;
 	NSString *description = nil;
 			
-	if ([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound){
+	if (secondaryString && [secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound){
 		return;
 	}
 	
