@@ -7,12 +7,13 @@
 //
 
 @interface AIContactProfilePane : AIContactInfoPane <AIListObjectObserver> {
-	IBOutlet		NSImageView			*imageView_userIcon;
-	IBOutlet		NSTextField			*textField_accountName;
-	IBOutlet		NSTextField			*textField_status;
 	IBOutlet		NSTextView			*textView_profile;
+	IBOutlet		NSTextView			*textView_status;
 
 	AIListObject				*listObject;
 }
+
+- (void)updatePane;
+- (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView;
 
 @end

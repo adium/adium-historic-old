@@ -5,7 +5,10 @@
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "imageView_userIcon" = NSImageView; 
                 "tabView_category" = NSTabView; 
+                "textField_accountName" = NSTextField; 
+                "textField_service" = NSTextField; 
                 "view_Accounts" = AIModularPaneCategoryView; 
                 "view_Alerts" = AIModularPaneCategoryView; 
                 "view_Profile" = AIModularPaneCategoryView; 

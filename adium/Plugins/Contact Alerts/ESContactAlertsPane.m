@@ -41,6 +41,7 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions setDoubleAction:@selector(editAlert:)];
 	actionsCell = [[[AIImageTextCell alloc] init] autorelease];
     [actionsCell setFont:[NSFont systemFontOfSize:12]];
+	[actionsCell setIgnoresFocus:YES];
 	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
 }
 

@@ -17,6 +17,9 @@
 
 @interface AIContactInfoWindowController : AIWindowController {	
 	IBOutlet		NSTabView						*tabView_category;
+	IBOutlet		NSImageView						*imageView_userIcon;
+	IBOutlet		NSTextField						*textField_accountName;
+	IBOutlet		NSTextField						*textField_service;
 	
 	IBOutlet		AIModularPaneCategoryView		*view_Profile;
 	IBOutlet		AIModularPaneCategoryView		*view_Accounts;

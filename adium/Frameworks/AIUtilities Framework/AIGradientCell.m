@@ -12,50 +12,59 @@
 
 - (id)init
 {
-	if (self = [super init]) {
-		drawsGradient = NO;
-	}
+	[super init];
+	
+	drawsGradient = NO;
+	ignoresFocus = NO;
+
 	return self;
 }
 
-- (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient
-{
+//Draw Gradient
+- (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient{
 	drawsGradient = inDrawsGradient;
 }
-
-- (BOOL)drawsGradientHighlight
-{
-	return drawsGradient;
+- (BOOL)drawsGradientHighlight{
+	return(drawsGradient);
 }
 
+//Ignore focus (Draw as active regardless of focus)
+- (void)setIgnoresFocus:(BOOL)inIgnoresFocus{
+	ignoresFocus = inIgnoresFocus;
+}
+- (BOOL)ignoresFocus{
+	return(ignoresFocus);
+}
+
+//Draw
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if ([self drawsGradientHighlight]) {
-		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-		NSRect goodRect = cellFrame;
-		goodRect.size.height += 2;
-		goodRect.size.width += 4;
-		goodRect.origin.x -= 2;
-		goodRect.origin.y -= 1;
+	NSRect goodRect = cellFrame;
+	goodRect.size.height += 2;
+	goodRect.size.width += 4;
+	goodRect.origin.x -= 2;
+	goodRect.origin.y -= 1;
 
-		/* The following code changes the color to gray if the view isn't key.
-		 
-		 NSColor *highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
-		AIGradient *gradient;
-		if ([highlightColor isEqual:[NSColor alternateSelectedControlColor]])
-			gradient = [AIGradient gradientWithFirstColor:[highlightColor darkenAndAdjustSaturationBy:-0.1] secondColor:[highlightColor darkenAndAdjustSaturationBy:0.1] direction:AIVertical];
-		else
-			gradient = [AIGradient gradientWithFirstColor:[highlightColor darkenAndAdjustSaturationBy:0.15] secondColor:[highlightColor darkenAndAdjustSaturationBy:0.4] direction:AIVertical];
-		[gradient drawInRect:cellFrame];
-		*/
-		
+	if([self drawsGradientHighlight]){
+		//Draw the gradient
+		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		[gradient drawInRect:goodRect];
+	
+		//Draw a line at the light side, to make it look a lot cleaner
 		goodRect.size.height = 1;
 		[[NSColor alternateSelectedControlColor] set];
 		NSRectFillUsingOperation(goodRect,NSCompositeSourceOver);
-	} else {
-		[(id)super _drawHighlightWithFrame:cellFrame inView:controlView]; 
+		
+	}else{
+		//Draw the regular selection, ignoring focus if desired
+		if(ignoresFocus){
+			[[NSColor alternateSelectedControlColor] set];
+			NSRectFillUsingOperation(goodRect,NSCompositeSourceOver);
+		}else{
+			[(id)super _drawHighlightWithFrame:cellFrame inView:controlView]; 
+		}
 	}
+	
 }
 
 @end
