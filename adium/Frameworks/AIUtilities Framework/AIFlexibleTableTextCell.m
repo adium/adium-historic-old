@@ -40,6 +40,29 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 @implementation AIFlexibleTableTextCell
 
+//Create a new cell with the string/color/text
++ (AIFlexibleTableTextCell *)cellWithString:(NSString *)inString color:(NSColor *)inTextColor font:(NSFont *)inFont alignment:(NSTextAlignment)inAlignment
+{
+    AIFlexibleTableTextCell	*cell;
+    NSDictionary		*attributes;
+    NSMutableParagraphStyle	*paragraphStyle;
+    NSAttributedString		*attributedString;
+    
+    //Create a paragraph style with the correct alignment
+    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    [paragraphStyle setAlignment:inAlignment];
+    
+    //Create the attributed string
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName, inFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+    attributedString = [[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease];
+    
+    //Build the cell
+    cell = [AIFlexibleTableTextCell cellWithAttributedString:attributedString];
+    [cell setType:NSTextCellType];
+    
+    return(cell);
+}
+
 //Create a new cell from an attributed string
 + (AIFlexibleTableTextCell *)cellWithAttributedString:(NSAttributedString *)inString
 {

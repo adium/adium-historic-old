@@ -315,10 +315,10 @@
     AIFlexibleTableCell	*statusCell;
     
     //Create the status text cell
-    statusCell = [AIFlexibleTableStringCell cellWithString:[NSString stringWithFormat:@"%@ (%@)", [content message], dateString]
-                                                     color:[NSColor grayColor]
-                                                      font:[NSFont cachedFontWithName:@"Helvetica" size:11]
-                                                 alignment:NSCenterTextAlignment];
+    statusCell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:@"%@ (%@)", [content message], dateString]
+						   color:[NSColor grayColor]
+						    font:[NSFont cachedFontWithName:@"Helvetica" size:11]
+					       alignment:NSCenterTextAlignment];
     [statusCell setPaddingLeft:1 top:0 right:1 bottom:0];
     [statusCell setVariableWidth:YES];
 
