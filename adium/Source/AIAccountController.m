@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.94 2004/07/22 16:46:26 adamiser Exp $
+// $Id: AIAccountController.m,v 1.95 2004/07/27 19:17:58 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -784,6 +784,22 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     }
 }
 
+- (BOOL)oneOrMoreConnectedAccounts
+{
+	NSEnumerator		*enumerator;
+    AIAccount			*account;
+    
+	NSString			*ONLINE = @"Online";
+	
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([[account preferenceForKey:ONLINE group:GROUP_ACCOUNT_STATUS] boolValue]){
+			return YES;
+        }
+    }	
+	
+	return NO;
+}
 
 //Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
 #pragma mark Disconnect/Reconnect On Sleep
@@ -986,15 +1002,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     enumerator = [[self accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
 		
-		//Create the account's menu item (the title will be set by_updateMenuItem:forAccount:
-        menuItem = [[[NSMenuItem alloc] initWithTitle:@""
-											   target:self
-											   action:@selector(toggleConnection:)
-										keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-        [menuItemArray addObject:menuItem];
-        
-        [self _updateMenuItem:menuItem forAccount:account];
+		if([[account supportedPropertyKeys] containsObject:@"Online"]){
+			//Create the account's menu item (the title will be set by_updateMenuItem:forAccount:
+			menuItem = [[[NSMenuItem alloc] initWithTitle:@""
+												   target:self
+												   action:@selector(toggleConnection:)
+											keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:account];
+			[menuItemArray addObject:menuItem];
+			
+			[self _updateMenuItem:menuItem forAccount:account];
+		}
     }
 	
 	//Now that we are done creating the menu items, tell the plugin about them
@@ -1018,40 +1036,37 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account
 {
 	if(menuItem){
-        if([[account supportedPropertyKeys] containsObject:@"Online"]){
-            //Update the 'connect / disconnect' menu item
-			
-			BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
-			
-			NSString	*accountTitle = (multipleServices ? ACCOUNT_TITLE_WITH_SERVICE : ACCOUNT_TITLE_NO_SERVICE);
-			
-			[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
-			
-			if([[account statusObjectForKey:@"Online"] boolValue]){
-				[menuItem setImage:[account onlineMenuImage]];
-				[menuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
-				[menuItem setKeyEquivalent:@""];
-				[menuItem setEnabled:YES];
-			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
-				[menuItem setImage:[account connectingMenuImage]];
-				[menuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
-				[menuItem setKeyEquivalent:@"."];
-				[menuItem setEnabled:YES];
-			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-				[menuItem setImage:[account connectingMenuImage]];
-				[menuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
-				[menuItem setKeyEquivalent:@""];
-				[menuItem setEnabled:NO];
-			}else{
-				[menuItem setImage:[account offlineMenuImage]];
-				[menuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
-				[menuItem setKeyEquivalent:@""];
-				[menuItem setEnabled:YES];
-			}
-			
-			[[menuItem menu] setMenuChangedMessagesEnabled:YES];
-        }        
+		//Update the 'connect / disconnect' menu item
 		
+		BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
+		
+		NSString	*accountTitle = (multipleServices ? ACCOUNT_TITLE_WITH_SERVICE : ACCOUNT_TITLE_NO_SERVICE);
+		
+		[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
+		
+		if([[account statusObjectForKey:@"Online"] boolValue]){
+			[menuItem setImage:[account onlineMenuImage]];
+			[menuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
+			[menuItem setKeyEquivalent:@""];
+			[menuItem setEnabled:YES];
+		}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
+			[menuItem setImage:[account connectingMenuImage]];
+			[menuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
+			[menuItem setKeyEquivalent:@"."];
+			[menuItem setEnabled:YES];
+		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
+			[menuItem setImage:[account connectingMenuImage]];
+			[menuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
+			[menuItem setKeyEquivalent:@""];
+			[menuItem setEnabled:NO];
+		}else{
+			[menuItem setImage:[account offlineMenuImage]];
+			[menuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
+			[menuItem setKeyEquivalent:@""];
+			[menuItem setEnabled:YES];
+		}
+		
+		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
     }	
 }
 
@@ -1114,4 +1129,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return(YES);
 }
 
+@end
+
+@implementation AIAccountController (AIAccountControllerObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
+	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"accountController"] autorelease];
+}
 @end
