@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = ESDualWindowMessageWindowPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                lastUsedWindow = NSButtonCell; 
+                "matrix_tabPref" = NSMatrix; 
+                "matrix_windowMode" = NSMatrix; 
+                modeTab = NSButtonCell; 
+                modeWindow = NSButtonCell; 
+                primaryWindow = NSButtonCell; 
+                "view_pref" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -85,22 +85,26 @@
 //Remove a tab view item container
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    if([(AIMessageTabViewItem *)inTabViewItem tabShouldClose:nil]){
-        //If the tab is selected, select the tab to it's right.
-        if(inTabViewItem == [tabView_messages selectedTabViewItem]){
-            [tabView_messages selectNextTabViewItem:nil];
-        }
+    [self removeTabViewItemContainer:inTabViewItem removingChat:YES];
+}
 
-        [tabView_messages removeTabViewItem:inTabViewItem];
-        [interface containerDidClose:inTabViewItem];
+- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem removingChat:(BOOL)remove
+{
+    [(AIMessageTabViewItem *)inTabViewItem tabShouldClose:nil closingChat:remove];
+    //If the tab is selected, select the next tab.
+    if(inTabViewItem == [tabView_messages selectedTabViewItem]){
+	[tabView_messages selectNextTabViewItem:nil];
     }
+    
+    [tabView_messages removeTabViewItem:inTabViewItem];
+
+    [interface containerDidClose:inTabViewItem];
 
     //If that was our last container, close the window (unless we're already closing)
     if(!windowIsClosing && [tabView_messages numberOfTabViewItems] == 0){
         [self closeWindow:nil];
     }
 }
-
 
 //Private -----------------------------------------------------------------------------
 //init

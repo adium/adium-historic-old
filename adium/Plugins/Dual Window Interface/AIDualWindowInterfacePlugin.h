@@ -16,12 +16,16 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
 #define KEY_DUAL_RESIZE_VERTICAL	@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL	@"Autoresize Horizontal"
 
-@class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences;
+#define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
+#define KEY_USE_LAST_WINDOW			@"Use Last Window"
+
+@class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, ESDualWindowMessageWindowPreferences;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
 @protocol AIInterfaceContainer <NSObject>
@@ -43,6 +47,10 @@
     NSMenuItem				*menuItem_nextMessage;
     NSMenuItem				*menuItem_previousMessage;
 
+    NSMenuItem				*menuItem_openInNewWindow;
+    NSMenuItem				*menuItem_openInPrimaryWindow;
+    NSMenuItem				*menuItem_consolidate;
+    
     //Containers
     AIContactListWindowController 	*contactListWindowController;
     id <AIInterfaceContainer>		activeContainer;
@@ -50,10 +58,13 @@
     //messageWindow stuff
     NSMutableArray			*messageWindowControllerArray;
     int					activeWindowControllerIndex;
-    BOOL				alwaysCreateNewWindows;
-    
+    int					lastUsedMessageWindowControllerIndex;
+
     //Preferences
     AIDualWindowPreferences		*preferenceController;
+    ESDualWindowMessageWindowPreferences *preferenceMessageController;
+    BOOL				alwaysCreateNewWindows;
+    BOOL				useLastWindow;
 }
 
 - (IBAction)showContactList:(id)sender;

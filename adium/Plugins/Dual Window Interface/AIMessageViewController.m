@@ -266,11 +266,16 @@
 
 - (void)closeMessageView
 {
+    [self closeMessageViewClosingChat:YES];
+}
+
+- (void)closeMessageViewClosingChat:(BOOL)closeChat
+{
     //Close the message entry text view
     [[owner contentController] willCloseTextEntryView:textView_outgoing];
 
     //Close our chat
-    if(chat){
+    if(closeChat && chat){
         [[owner contentController] closeChat:chat];
         [chat release]; chat = nil;
     }
