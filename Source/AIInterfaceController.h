@@ -93,6 +93,7 @@ typedef enum {
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
 - (NSString *)containerIDForChat:(AIChat *)chat;
+- (NSWindow *)windowForChat:(AIChat *)chat;
 @end
 
 @protocol AIContactListController <NSObject>
@@ -184,9 +185,11 @@ typedef enum {
 //Interface plugin callbacks
 - (void)chatDidOpen:(AIChat *)inChat;
 - (void)chatDidBecomeActive:(AIChat *)inChat;
+- (void)chatDidBecomeVisible:(AIChat *)inChat inWindow:(NSWindow *)inWindow;
 - (void)chatDidClose:(AIChat *)inChat;
 - (void)chatOrderDidChange;
 - (void)clearUnviewedContentOfChat:(AIChat *)inChat;
+- (NSWindow *)windowForChat:(AIChat *)inChat;
 
 //Chat close menus
 - (IBAction)closeMenu:(id)sender;
