@@ -124,9 +124,9 @@
 		}
 		
 		newRect = NSMakeRect(0,0,size.width,size.height);
-		if(flipImage) [newImage setFlipped:YES];
-		
 		newImage = [[NSImage alloc] initWithSize:size];
+
+		if(flipImage) [newImage setFlipped:YES];		
 		
 		[newImage lockFocus];
 		//Highest quality interpolation
