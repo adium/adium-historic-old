@@ -1993,8 +1993,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 	while(listObject = [enumerator nextObject]){
 		if([listObject isKindOfClass:[AIMetaContact class]]){
-#warning What do we want to do when a metaContact is deleted from the contact list?
+			NSArray	*objectsToRemove = nil;
+			
+			//If the metaContact only has one listContact, we will remove that contact from all accounts
+			if([[(AIMetaContact *)listObject listContacts] count] == 1){
+				objectsToRemove = [[[(AIMetaContact *)listObject containedObjects] copy] autorelease];
+			}
+			
+			//Now break the metaContact down, taking out all contacts and putting them back in the main list
 			[self breakdownAndRemoveMetaContact:(AIMetaContact *)listObject];
+			
+			//And actually remove the single contact if applicable
+			if(objectsToRemove){
+				[self removeListObjects:objectsToRemove];
+			}
 
 		}else if([listObject isKindOfClass:[AIListGroup class]]){
 			AIListObject	*containingObject = [listObject containingObject];
