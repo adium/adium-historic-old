@@ -24,8 +24,10 @@ typedef enum {
 } AITextAndButtonsReturnCode;
 
 @interface ESTextAndButtonsWindowController : AIWindowController {
-    IBOutlet	NSTextField		*textField_messageHeader;
-    IBOutlet	NSTextView		*textView_message;
+    IBOutlet	NSTextView		*textView_messageHeader;
+    IBOutlet	NSScrollView	*scrollView_messageHeader;
+    
+	IBOutlet	NSTextView		*textView_message;
     IBOutlet	NSScrollView	*scrollView_message;
 	IBOutlet	NSButton		*button_default;
 	IBOutlet	NSButton		*button_alternate;
