@@ -231,6 +231,11 @@ static AIChat* chatLookupFromConv(GaimConversation *conv)
 }
 
 
+static AIChat* existingChatLookupFromConv(GaimConversation *conv)
+{
+	return((conv ? conv->ui_data : nil));
+}
+
 static AIChat* imChatLookupFromConv(GaimConversation *conv)
 {
 	AIChat			*chat;
@@ -795,10 +800,16 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 	AIChat *chat;
 	
 	chat = (AIChat *)conv->ui_data;
+
+	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
 	if (chat){
-		[chatDict removeObjectForKey:[chat uniqueChatID]];
+		//The chat's uniqueChatID may have changed before we got here.  Make sure we are talking about the proper conv
+		//before removing its NSValue from the chatDict
+		if (conv == [[chatDict objectForKey:[chat uniqueChatID]] pointerValue]){
+			[chatDict removeObjectForKey:[chat uniqueChatID]];
+		}			
+
 		[chat release];
-		
 		conv->ui_data = nil;
 	}
 }
@@ -807,7 +818,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 {
 	NSDictionary	*messageDict;
 	NSString		*messageString;
-	
+
 	messageString = [NSString stringWithUTF8String:message];
 	
 	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
@@ -846,7 +857,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 {
 	AIChat	*chat = nil;
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		chat = chatLookupFromConv(conv);
+		chat = existingChatLookupFromConv(conv);
 	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
 		chat = imChatLookupFromConv(conv);
 	}
@@ -936,9 +947,11 @@ static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, g
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 		GaimDebug (@"adiumGaimConvChatAddUser: CHAT: add %s",user);
+		//We pass the name as given, not normalized, so we can use its formatting as a formattedUID.
+		//The account is responsible for normalization if needed.
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
 											   withObject:[NSString stringWithUTF8String:user]
-											   withObject:chatLookupFromConv(conv)];
+											   withObject:existingChatLookupFromConv(conv)];
 	}else{
 		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}
@@ -961,8 +974,8 @@ static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user
 		GaimDebug (@"adiumGaimConvChatRemoveUser: CHAT: remove %s",user);
 
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
-											   withObject:[NSString stringWithUTF8String:user]
-											   withObject:chatLookupFromConv(conv)];
+											   withObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, user)]
+											   withObject:existingChatLookupFromConv(conv)];
 	}else{
 		GaimDebug (@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
 	}
@@ -999,7 +1012,7 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 		[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
-											withObject:chatLookupFromConv(conv)
+											withObject:existingChatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
 		
 	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
@@ -1691,22 +1704,22 @@ static GaimXferUiOps adiumGaimFileTransferOps = {
 static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
 {
 	[accountLookup(account)	mainPerformSelector:@selector(privacyPermitListAdded:)
-									 withObject:[NSString stringWithUTF8String:name]];
+									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 static void adiumGaimPermitRemoved(GaimAccount *account, const char *name)
 {
 	[accountLookup(account)	mainPerformSelector:@selector(privacyPermitListRemoved:)
-									 withObject:[NSString stringWithUTF8String:name]];
+									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 static void adiumGaimDenyAdded(GaimAccount *account, const char *name)
 {
 	[accountLookup(account)	mainPerformSelector:@selector(privacyDenyListAdded:)
-									 withObject:[NSString stringWithUTF8String:name]];
+									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 static void adiumGaimDenyRemoved(GaimAccount *account, const char *name)
 {
 	[accountLookup(account)	mainPerformSelector:@selector(privacyDenyListRemoved:)
-									 withObject:[NSString stringWithUTF8String:name]];
+									 withObject:[NSString stringWithUTF8String:gaim_normalize(account, name)]];
 }
 
 static GaimPrivacyUiOps adiumGaimPrivacyOps = {
@@ -2368,26 +2381,37 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)gaimThreadOpenChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
-	//Looking up the conv from the chat will create the GaimConversation gaimside, joining the chat, opening th eserver
+	//Looking up the conv from the chat will create the GaimConversation gaimside, joining the chat, opening the server
 	//connection, or whatever else is done when a chat is opened.
 	convLookupFromChat(chat,adiumAccount);
 }
 
 - (oneway void)closeChat:(AIChat *)chat
 {
+	//We look up the conv and the chat's uniqueChatID now since threading may make them change before
+	//the gaimThread actually utilizes them
 	[runLoopMessenger target:self
 			 performSelector:@selector(gaimThreadCloseGaimConversation:withChatID:)
 				  withObject:[NSValue valueWithPointer:existingConvLookupFromChat(chat)]
 				  withObject:[chat uniqueChatID]];
 }
-- (oneway void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueUD
+- (oneway void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueID
 {
 	GaimConversation *conv = [convValue pointerValue];
 
 	if(conv){
-		//Tell gaim to destroy the conversation.  We don't clean up here, but in adiumGaimConvDestroy()
+		//We use chatDict's objectfor the passed chatUniqueID because we can no longer trust any other
+		//values due to threading potentially letting them have changed on us.
+		[chatDict removeObjectForKey:chatUniqueID];
+			
+		//We retained the chat when setting it as the ui_data; we are releasing here, so be sure to set conv->ui_data
+		//to nil so we don't try to do it again.
+		[(AIChat *)conv->ui_data release];
+		conv->ui_data = nil;
+		
+		//Tell gaim to destroy the conversation.
 		gaim_conversation_destroy(conv);
-	}
+	}	
 }
 
 - (oneway void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
@@ -2412,7 +2436,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	   (gaimChat = gaim_conversation_get_chat_data(conv))){
 
 		//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
-		GaimDebug (@"#### gaimThreadAddChatUser chat: %d buddy: %@",chat==nil,[listContact UID]);
+		GaimDebug (@"#### gaimThreadAddChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
 		serv_chat_invite(gaim_conversation_get_gc(conv),
 						 gaim_conv_chat_get_id(gaimChat),
 						 (inviteMessage ? [inviteMessage UTF8String] : ""),
