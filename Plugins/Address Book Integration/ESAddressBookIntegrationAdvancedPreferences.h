@@ -7,7 +7,7 @@
 
 @interface ESAddressBookIntegrationAdvancedPreferences : AIPreferencePane {
     IBOutlet    NSTextField             *format_textField;
-    IBOutlet	NSPopUpButton           *format_menu;
+    IBOutlet	NSPopUpButton           *popUp_formatMenu;
     IBOutlet    NSButton                *checkBox_syncAutomatic;
     IBOutlet	NSButton                *checkBox_useABImages;
     IBOutlet	NSButton				*checkBox_preferABImages;
@@ -17,6 +17,8 @@
     IBOutlet    NSButton                *checkBox_enableNoteSync;
 	
 	IBOutlet	NSButton				*checkBox_metaContacts;
+	
+	IBOutlet	AILocalizationTextField	*textField_formatNamesAs;
 }
 
 - (IBAction)changePreference:(id)sender;
