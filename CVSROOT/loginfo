@@ -29,4 +29,4 @@
 
 CVSROOT $CVSROOT/CVSROOT/syncmail -u %{sVv} adamiser@users.sourceforge.net
 DEFAULT $CVSROOT/CVSROOT/syncmail -u %{sVv} adium-cvs@lists.sourceforge.net
-ALL /usr/bin/perl $CVSROOT/CVSROOT/ciabot.pl %{,,,%s} $USER
+ALL /usr/bin/perl $CVSROOT/CVSROOT/ciabot.pl %{,,,s} $USER

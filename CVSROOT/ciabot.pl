@@ -119,7 +119,7 @@ $" = "\7";
 # These arguments are from %s; first the relative path in the repository
 # and then the list of files modified.
 
-@files = split (' ,,,,', ($ARGV[0] or ''));
+@files = split (' ,,,', ($ARGV[0] or ''));
 $dir[0] = shift @files or die "$0: no directory specified\n";
 $dirfiles[0] = "@files" or die "$0: no files specified\n";
 
