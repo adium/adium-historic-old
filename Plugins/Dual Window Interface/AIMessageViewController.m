@@ -716,7 +716,6 @@
 																		  inScrollView:scrollView_userList 
 																			  delegate:self];
 		[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-		[userListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
 		[userListController setContactListRoot:chat];
 		[userListController setHideRoot:YES];
 

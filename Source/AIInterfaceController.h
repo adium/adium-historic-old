@@ -38,6 +38,7 @@
 #define KEY_CL_SHOW_TRANSITIONS				@"Show Transitions"
 #define KEY_CL_SHOW_TOOLTIPS				@"Show Tooltips"
 #define KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND	@"Show Tooltips in Background"
+#define KEY_CL_WINDOW_HAS_SHADOW			@"Window Has Shadow"
 
 #define CONTACT_LIST_TITLE					AILocalizedString(@"Contact List","Name of the window which lists contacts")
 

@@ -50,6 +50,7 @@
                 "checkBox_showTooltips" = NSButton; 
                 "checkBox_showTooltipsInBackground" = NSButton; 
                 "checkBox_showTransitions" = NSButton; 
+                "checkBox_windowHasShadow" = NSButton; 
                 "label_effects" = NSTextField; 
                 "label_orderTheContactList" = NSTextField; 
                 "label_tooltips" = NSTextField; 

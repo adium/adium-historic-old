@@ -150,8 +150,8 @@
 		}
 		[[self window] setLevel:level];
 		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
-
 		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CL_HIDE] boolValue]];
+		[[self window] setHasShadow:[[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 
 		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
 		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
@@ -239,6 +239,28 @@
 		[contactListController contactListDesiredSizeChanged];
 	}
 
+	//Window opacity
+#warning moo
+//	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
+//		float			backgroundAlpha	= [[prefDict objectForKey:KEY_CL_OPACITY] floatValue];
+//		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+//		
+//		//	[contactListView setBackgroundFade:([[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
+//		//	[contactListView setBackgroundColor:[[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+//		//	[contactListView setAlternatingRowColor:[[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+//		
+//		//Mockie and pillow special cases
+//		if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+//			backgroundAlpha = 0.0;
+//		}
+//		
+//		//Transparency.  Bye bye CPU cycles, I'll miss you!
+//		[[contactListView window] setOpaque:(backgroundAlpha == 1.0)];
+//		if([contactListView respondsToSelector:@selector(setUpdateShadowsWhileDrawing:)]){
+//			[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
+//		}
+//	}		
+	
 	//Layout and Theme ------------
 	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
 	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
@@ -266,7 +288,6 @@
 
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-		[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 	}
 }
 

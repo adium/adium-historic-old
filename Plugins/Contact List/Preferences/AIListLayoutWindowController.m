@@ -190,8 +190,6 @@
 	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
 	[self updateSliderValues];
 	
-	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
-	
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
 	[fontField_status setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
 	[fontField_group setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
@@ -291,11 +289,6 @@
 											 forKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS
 											  group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
-		
-	}else if(sender == checkBox_windowHasShadow){
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
-											  group:PREF_GROUP_LIST_LAYOUT];
 		
     }else if (sender == checkBox_outlineBubbles){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]

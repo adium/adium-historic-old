@@ -16,7 +16,8 @@
 	IBOutlet	NSButton		*checkBox_showTransitions;
 	IBOutlet	NSButton		*checkBox_showTooltips;
 	IBOutlet	NSButton		*checkBox_showTooltipsInBackground;
-	
+	IBOutlet	NSButton		*checkBox_windowHasShadow;
+
 	IBOutlet	NSTextField		*label_effects;
 	IBOutlet	NSTextField		*label_tooltips;
 	IBOutlet	NSTextField		*label_windowHandling;

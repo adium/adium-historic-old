@@ -310,15 +310,19 @@
 	//Background
 	[contentCell setBackgroundOpacity:backgroundAlpha];
 	[contactListView setDrawsAlternatingRows:[[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+#warning set alpha with a separate call and apply it within the list view...
+#warning do backgroundFade * alpha before use
+	[contactListView setBackgroundFade:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
+#warning do background color set to alpha before use
+	[contactListView setBackgroundColor:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+#warning do grid color set to alpha before use
+	[contactListView setAlternatingRowColor:[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];
 	
 	//Disable background image if we're in mockie or pillows
 	[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
 										 !(pillowsOrPillowsFittedWindowStyle))];
 	[contactListView setBackgroundStyle:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE] intValue]];
 
-	//Shadow
-	[[contactListView window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
-	
 	//Desired Size determination.  For non-standard (borderless) styles, ignore the minimum width.
 	[contactListView setIgnoreMinimumWidth:(windowStyle != WINDOW_STYLE_STANDARD)];
 
