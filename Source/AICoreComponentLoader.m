@@ -275,11 +275,11 @@
 {
 	id object;
 
-	if (object = [inClass newInstanceOfPlugin]) {
+	if(object = [inClass newInstanceOfPlugin]){
 		[components addObject:object];
-	} else {
-		NSString	*error = [NSString stringWithFormat:@"Failed to load %@", NSStringFromClass(inClass)];
-		NSAssert(object, error);
+
+	}else{
+		NSAssert1(object, @"Failed to load %@", NSStringFromClass(inClass));
 	}
 }
 
