@@ -46,14 +46,11 @@
 
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged 
-									 object:nil];
-    [[adium notificationCenter] addObserver:self
 								   selector:@selector(applyAliasRequested:)
 									   name:Contact_ApplyDisplayName
 									 object:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];
+	
 	//Create the menu item
 	menuItem_contactName = [[[NSMenuItem alloc] initWithTitle:CONTACT_NAME_MENU_TITLE
 												target:nil
@@ -65,13 +62,12 @@
 	
 	menu_contactSubmenu = [[self _contactNameMenu] retain];
 	[menuItem_contactName setSubmenu:menu_contactSubmenu];
-	
-	[self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
     [[adium contactController] unregisterListObjectObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
 	[menu_contactSubmenu release];
 }
@@ -95,28 +91,25 @@
 	return(nil);
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DISPLAYFORMAT]){
-		
-		// Clear old checkmark
-		[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOffState];
-		
-        //load new displayFormat
-        displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]; 
-		
-		// Set new checkmark
-		[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
-					
-		if (notification){
-			//Update all existing contacts
-			[[adium contactController] updateAllListObjectsForObserver:self];
-		}else{
-			//Register ourself as a handle observer
-			[[adium contactController] registerListObjectObserver:self];
-		}
-			
-    }
+	// Clear old checkmark
+	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOffState];
+	
+	//load new displayFormat
+	displayFormat = [[prefDict objectForKey:@"Long Display Format"] intValue]; 
+	
+	// Set new checkmark
+	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
+	
+	if(group){
+		//Update all existing contacts
+		[[adium contactController] updateAllListObjectsForObserver:self];
+	}else{
+		//Register ourself as a handle observer
+		[[adium contactController] registerListObjectObserver:self];
+	}
 }
 
 - (void)applyAliasRequested:(NSNotification *)notification
