@@ -76,12 +76,12 @@ static	NSMutableDictionary	*controllerDict = nil;
 		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forType:inStatusType andAccount:inAccount customState:inStatusState notifyingTarget:inTarget];
 		if(!controllerDict) controllerDict = [[NSMutableDictionary alloc] init];
 		[controllerDict setObject:controller forKey:targetHash];
+
+		if(!allowSave){
+			[controller hideSaveCheckbox];
+		}		
 	}
 	
-	if(!allowSave){
-		[controller hideSaveCheckbox];
-	}
-
 	if(parentWindow){
 		[NSApp beginSheet:[controller window]
 		   modalForWindow:parentWindow
@@ -472,8 +472,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
-	[textField_idleMinutes setStringValue:[NSString stringWithFormat:@"%i",(int)(idleStart/60)]];
-	[textField_idleHours setStringValue:[NSString stringWithFormat:@"%i",(int)(idleStart/3600)]];
+	[textField_idleMinutes setIntValue:(int)((((int)idleStart)%3600)/60)];
+	[textField_idleHours setIntValue:(int)(idleStart/3600)];
 
 	//Update visiblity and size
 	[self updateControlVisibilityAndResizeWindow];
