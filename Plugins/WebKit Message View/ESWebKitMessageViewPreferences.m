@@ -618,9 +618,10 @@
 	
 	enumerator = [chatArray objectEnumerator];
 	while(messageDict = [enumerator nextObject]){
-		AIContentObject	*content = nil;
-		AIListObject	*source;
-		NSString 		*from, *msgType;
+		AIContentObject		*content = nil;
+		AIListObject		*source;
+		NSString			*from, *msgType;
+		NSAttributedString  *message;
 		
 		msgType = [messageDict objectForKey:@"Type"];
 		from = [messageDict objectForKey:@"From"];
@@ -628,12 +629,10 @@
 		source = (from ? [participants objectForKey:from] : nil);
 
 		if([msgType isEqualToString:CONTENT_MESSAGE_TYPE]){
+			//Create message content object
 			AIListObject		*dest;
-			NSAttributedString  *message;
 			NSString			*to;
 			BOOL				outgoing;
-			
-			//Create message content object
 			
 			message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
 			to = [messageDict objectForKey:@"To"];
@@ -654,9 +653,7 @@
 
 		}else if([msgType isEqualToString:CONTENT_STATUS_TYPE]){
 			//Create status content object
-			NSAttributedString	*message;
 			NSString			*statusMessageType;
-			AIListObject		*source;
 			
 			message = [[[NSAttributedString alloc] initWithString:[messageDict objectForKey:@"Message"]
 													   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
