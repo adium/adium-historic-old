@@ -345,7 +345,39 @@
 	return self;
 }
 
+- (NSString *)stringByEscapingForHTML
+{
+	NSCharacterSet *mustBeEscaped = [NSCharacterSet characterSetWithCharactersInString:@"&<>\""];
+	NSMutableString *result = [NSMutableString string];
+	NSString *lastChunk = nil;
+	NSScanner *scanner = [NSScanner scannerWithString:self];
+	unsigned curLocation = 0, maxLocation = [self length];
 
-
+	while(1) {
+		[scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk];
+		[result appendString:lastChunk];
+		curLocation = [scanner scanLocation];
+		if(curLocation >= maxLocation)
+			break;
+		else {
+			switch([self characterAtIndex:curLocation]) {
+				case '&':
+					[result appendString:@"&amp;"];
+					break;
+				case '"':
+					[result appendString:@"&quot;"];
+					break;
+				case '<':
+					[result appendString:@"&lt;"];
+					break;
+				case '>':
+					[result appendString:@"&gt;"];
+					break;
+			}
+			[scanner setScanLocation:++curLocation];
+		}
+	}
+	return result;
+}
 
 @end

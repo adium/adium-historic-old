@@ -26,6 +26,7 @@
 - (NSString *)safeFilenameString;
 - (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length;
 - (NSString *)string;
+- (NSString *)stringByEscapingForHTML;
 //- (BOOL)isURLEncoded;
 
 @end
