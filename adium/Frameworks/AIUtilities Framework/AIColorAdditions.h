@@ -25,6 +25,7 @@
 
 @interface NSColor (AIColorAdditions)
 
+- (BOOL)equalToRGBColor:(NSColor *)inColor;
 - (BOOL)colorIsDark;
 - (NSColor *)darkenBy:(float)amount;
 - (NSString *)hexString;

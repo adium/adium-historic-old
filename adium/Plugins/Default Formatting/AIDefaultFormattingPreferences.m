@@ -19,21 +19,35 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 
-#define	DEFAULT_FORMATTING_PREF_NIB		@"DefaultFormattingPrefs"
-#define DEFAULT_FORMATTING_PREF_TITLE		@"Default Message Style"
-
 @interface AIDefaultFormattingPreferences (PRIVATE)
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
-- (void)configureView;
-- (id)initWithOwner:(id)inOwner;
 - (void)changeFont:(id)sender;
 @end
 
 @implementation AIDefaultFormattingPreferences
-//
-+ (AIDefaultFormattingPreferences *)defaultFormattingPreferencesWithOwner:(id)inOwner
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Messages_Sending);
+}
+- (NSString *)label{
+    return(@"V");
+}
+- (NSString *)nibName{
+    return(@"DefaultFormattingPrefs");
+}
+
+//Configure the preference view
+- (void)viewDidLoad
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+    
+    //Font
+    [self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
+    
+    //Text and background
+    [colorPopUp_textColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor]];
+    [colorPopUp_backgroundColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor]];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -52,52 +66,17 @@
         [fontManager setSelectedFont:selectedFont isMultiple:NO];
         [fontManager orderFrontFontPanel:self];
     
-    }else if(sender == colorWell_textColor){
-        [[owner preferenceController] setPreference:[[colorWell_textColor color] stringRepresentation]
-                                            forKey:KEY_FORMATTING_TEXT_COLOR
-                                            group:PREF_GROUP_FORMATTING];
-    
-    }else if(sender == colorWell_backgroundColor){
-        [[owner preferenceController] setPreference:[[colorWell_backgroundColor color] stringRepresentation]
-                                            forKey:KEY_FORMATTING_BACKGROUND_COLOR
-                                            group:PREF_GROUP_FORMATTING];
-    
+    }else if(sender == colorPopUp_textColor){
+        [[owner preferenceController] setPreference:[[colorPopUp_textColor color] stringRepresentation]
+                                             forKey:KEY_FORMATTING_TEXT_COLOR
+                                              group:PREF_GROUP_FORMATTING];
+        
+    }else if(sender == colorPopUp_backgroundColor){
+        [[owner preferenceController] setPreference:[[colorPopUp_backgroundColor color] stringRepresentation]
+                                             forKey:KEY_FORMATTING_BACKGROUND_COLOR
+                                              group:PREF_GROUP_FORMATTING];
+        
     }
-}
-
-//Private ---------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Sending withDelegate:self label:DEFAULT_FORMATTING_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:DEFAULT_FORMATTING_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-
 }
 
 //Called in response to a font panel change
@@ -121,20 +100,6 @@
     }
 }
 
-//Configures our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-
-    //Font
-    [self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
-
-    //Text
-    [colorWell_textColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor]];
-
-    //Background
-    [colorWell_backgroundColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor]];
-}
 
 
 @end

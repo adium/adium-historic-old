@@ -14,20 +14,15 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium;
+@class AIColorSelectionPopUpButton;
 
-@interface AIDefaultFormattingPreferences : NSObject {
-    AIAdium			*owner;
-
-    IBOutlet	NSView			*view_prefView;
-    IBOutlet	NSTextField		*textField_desiredFont;
-    IBOutlet	NSButton		*button_setFont;
-    IBOutlet	NSColorWell		*colorWell_textColor;
-    IBOutlet	NSColorWell		*colorWell_backgroundColor;
+@interface AIDefaultFormattingPreferences : AIPreferencePane {
+    IBOutlet	NSTextField                     *textField_desiredFont;
+    IBOutlet	NSButton                        *button_setFont;
+    IBOutlet	AIColorSelectionPopUpButton	*colorPopUp_textColor;
+    IBOutlet	AIColorSelectionPopUpButton	*colorPopUp_backgroundColor;
 }
-
-+ (AIDefaultFormattingPreferences *)defaultFormattingPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end

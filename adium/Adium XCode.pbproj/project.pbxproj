@@ -7771,6 +7771,7 @@
 				34BD9E2305314755000AB133,
 				34BD9E2405314755000AB133,
 				34BD9E2505314755000AB133,
+				4B910DC1053588A900846781,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8494,6 +8495,7 @@
 				34BD9E8905314755000AB133,
 				34BD9E8A05314755000AB133,
 				34BD9E8B05314755000AB133,
+				4B910DC2053588A900846781,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17602,6 +17604,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B910DBF053588A900846781 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIColorSelectionPopUpButton.h;
+			path = "Frameworks/AIUtilities Framework/AIColorSelectionPopUpButton.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B910DC0053588A900846781 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIColorSelectionPopUpButton.m;
+			path = "Frameworks/AIUtilities Framework/AIColorSelectionPopUpButton.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B910DC1053588A900846781 = {
+			fileRef = 4B910DBF053588A900846781;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B910DC2053588A900846781 = {
+			fileRef = 4B910DC0053588A900846781;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B9267C104A7541200A8010A = {
 			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
@@ -21475,6 +21507,8 @@
 				4B3E502303EC538D00A8010A,
 				4BC0304B0453388C00A8010A,
 				4BC0304C0453388C00A8010A,
+				4B910DBF053588A900846781,
+				4B910DC0053588A900846781,
 				F570A59003704AB901A8010A,
 				F570A59103704AB901A8010A,
 				F57938F8033E745F01A8010A,
