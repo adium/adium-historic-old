@@ -188,7 +188,7 @@
 			}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]){
 				tempEvent = AILocalizedString(@"has gone offline",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
-				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
 			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]){
 				tempEvent = AILocalizedString(@"has gone away",nil);
 				if ([contact statusObjectForKey:@"IdleSince"]) {

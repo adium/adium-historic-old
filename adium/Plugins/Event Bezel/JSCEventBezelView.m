@@ -31,12 +31,12 @@
 				[NSFont systemFontOfSize:14.0], NSFontAttributeName, nil] retain];
 
 	innerSize = BEZEL_SIZE - (OUTER_BORDER*2.0);	
-	backgroundContent = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(OUTER_BORDER,OUTER_BORDER,innerSize,innerSize) radius:(BORDER_RADIUS - OUTER_BORDER)] retain];
-	tempPath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) radius:BORDER_RADIUS];
+	tempPath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(OUTER_BORDER,OUTER_BORDER,innerSize,innerSize) radius:(BORDER_RADIUS - OUTER_BORDER)];
+	backgroundContent = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) radius:BORDER_RADIUS] retain];
 	backgroundBorder = [[NSBezierPath bezierPath] retain];
-	[backgroundBorder appendBezierPath: [backgroundContent bezierPathByReversingPath]];
-	[backgroundBorder appendBezierPath: tempPath];
-	[self addTrackingRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) owner:self userData: nil assumeInside:NO]; 
+	[backgroundBorder appendBezierPath: [tempPath bezierPathByReversingPath]];
+	[backgroundBorder appendBezierPath: backgroundContent];
+	[self addTrackingRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) owner:self userData: nil assumeInside:YES]; 
 }
 
 - (void)dealloc
@@ -72,14 +72,15 @@
 			green: [buddyIconLabelColor greenComponent]
 			blue: [buddyIconLabelColor blueComponent]
 			alpha: 0.8] set];
+		[backgroundContent fill];
 	} else {
+		// Paint the opaque colored background
+		[buddyIconLabelColor set];
+		[backgroundContent fill];
 		// Paint the white border
 		[[NSColor whiteColor] set];
 		[backgroundBorder fill];
-		// Paint the opaque colored background
-		[buddyIconLabelColor set];
 	}
-	[backgroundContent fill];
     // Resize the buddy icon if needed
 	buddyIconSize = NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION);
     
