@@ -46,5 +46,6 @@ typedef enum {
 
 //Attributes
 - (BOOL)canCreateGroupChats;
+- (BOOL)canRegisterNewAccounts;
 
 @end
