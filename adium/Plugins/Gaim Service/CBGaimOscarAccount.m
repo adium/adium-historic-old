@@ -372,17 +372,23 @@ static BOOL didInitOscar = NO;
 		bi = g_hash_table_lookup(od->buddyinfo, buddyName);
 		
 		if ((bi != NULL) && (bi->availmsg != NULL) && !(userinfo->flags & AIM_FLAG_AWAY)) {
-			
-			//Available status message
+
+			//Available status message - bi->availmsg has already been converted to UTF8 if needed for us.
 			statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
 			
-		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && 
-				   (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
+		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away != NULL)){
 			
-			//Away message
-			statusMsgString = [self stringWithBytes:userinfo->away
-											 length:userinfo->away_len
-										   encoding:userinfo->away_encoding];
+			if ((userinfo->away_len > 0) && 
+				(userinfo->away_encoding != NULL)) {
+				
+				//Away message using specified encoding
+				statusMsgString = [self stringWithBytes:userinfo->away
+												 length:userinfo->away_len
+											   encoding:userinfo->away_encoding];
+			}else{
+				//Away message, no encoding provided, assume UTF8
+				statusMsgString = [NSString stringWithUTF8String:userinfo->away];
+			}
 			
 			//If the away message changed, make sure the contact is marked as away
 			/*
@@ -759,25 +765,29 @@ aim_srv_setavailmsg(od->sess, text);
 	
 	if (gaim_account_is_connected(account)){
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
-		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
-		GaimGroup   *g;
-		char		*comment;
-		OscarData   *od;
+		GaimBuddy   *buddy;
 		
-		if (!(g = gaim_find_buddys_group(buddy)))
-			return nil;
-
-		od = account->gc->proto_data;
-
-		comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name);
-		if (comment){
-			gchar		*comment_utf8;
-
-			comment_utf8 = gaim_utf8_try_convert(comment);
-			serversideComment = [NSString stringWithUTF8String:comment_utf8];
-			g_free(comment_utf8);
+		if (buddy = gaim_find_buddy(account, uidUTF8String)){
+			GaimGroup   *g;
+			char		*comment;
+			OscarData   *od;
+			
+			if (g = gaim_find_buddys_group(buddy)){
+				
+				od = account->gc->proto_data;
+				
+				comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name);
+				if (comment){
+					gchar		*comment_utf8;
+					
+					comment_utf8 = gaim_utf8_try_convert(comment);
+					serversideComment = [NSString stringWithUTF8String:comment_utf8];
+					g_free(comment_utf8);
+				}
+				
+				free(comment);
+			}
 		}
-		free(comment);
 	}
 	
 	return serversideComment;

@@ -469,31 +469,34 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
-//    NSCAssert(node != nil, @"BlistUpdate on null node");
-//		NSLog(@"Blist update %s",((GaimBuddy*) node)->name);
+	//    NSCAssert(node != nil, @"BlistUpdate on null node");
+	//		NSLog(@"Blist update %s",((GaimBuddy*) node)->name);
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy *buddy = (GaimBuddy*) node;
-
-		AIListContact *theContact = contactLookupFromBuddy(buddy);
+		GaimBuddy *buddy;
 		
-		//Group changes - gaim buddies start off in no group, so this is an important update for us
-		if(![theContact remoteGroupName]){
-			GaimGroup *g = gaim_find_buddys_group(buddy);
-			if(g && g->name){
-				NSString *groupName = [NSString stringWithUTF8String:g->name];
-				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
-														withObject:theContact
-														withObject:groupName];
-			}
-		}
-		
-		const char *alias = gaim_get_buddy_alias(buddy);
-		if (alias){
-			NSString *aliasString = [NSString stringWithUTF8String:alias];
+		if (buddy = (GaimBuddy*) node){
 			
-			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
-													withObject:theContact
-													withObject:aliasString];
+			AIListContact *theContact = contactLookupFromBuddy(buddy);
+			
+			//Group changes - gaim buddies start off in no group, so this is an important update for us
+			if(![theContact remoteGroupName]){
+				GaimGroup *g = gaim_find_buddys_group(buddy);
+				if(g && g->name){
+					NSString *groupName = [NSString stringWithUTF8String:g->name];
+					[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
+															withObject:theContact
+															withObject:groupName];
+				}
+			}
+			
+			const char *alias = gaim_get_buddy_alias(buddy);
+			if (alias){
+				NSString *aliasString = [NSString stringWithUTF8String:alias];
+				
+				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+														withObject:theContact
+														withObject:aliasString];
+			}
 		}
     }
 }
@@ -2169,8 +2172,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
 	//Get the gaim buddy and group for this move
 	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
-	GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
 	if(buddy){
+		GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
 		if (oldGroup) {
 			//Procede to move the buddy gaim-side and locally
 			serv_move_buddy(buddy, oldGroup, destGroup);
@@ -2178,7 +2181,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 			//The buddy was not in any group before; add the buddy to the desired group
 			serv_add_buddy(account->gc, buddy);
 		}
-	}	
+	}else{
+		//No GaimBuddy was found, so despite all appearances this 'move' is really an add.
+		[self gaimThreadAddUID:objectUID onAccount:adiumAccount toGroup:groupName];
+	
+	}
 }
 
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
@@ -2466,13 +2473,15 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)){
+		GaimBuddy   *buddy;
 		GaimGroup   *g;
 		OscarData   *od;
 
 		const char  *uidUTF8String = [inUID UTF8String];
-		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 
-		if ((g = gaim_find_buddys_group(buddy)) && (od = account->gc->proto_data)){
+		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
+			(g = gaim_find_buddys_group(buddy)) && 
+			(od = account->gc->proto_data)){
 			aim_ssi_editcomment(od->sess, g->name, uidUTF8String, [comment UTF8String]);	
 		}
 	}
