@@ -119,8 +119,6 @@
 //Returns the image for this emoticon (cached)
 - (NSImage *)image
 {
-    
-    
     if(!_cachedImage){
         _cachedImage = [[NSImage alloc] initWithContentsOfFile:[self _pathToEmoticonImage]];
     }
@@ -161,7 +159,7 @@
     //Search for the file named Emoticon in our bundle (It can be in any image format)
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:path];
     while(fileName = [enumerator nextObject]){
-	if([fileName hasPrefix:@"Emoticon"]) return([path stringByAppendingPathComponent:fileName]);
+		if([fileName hasPrefix:@"Emoticon"]) return([path stringByAppendingPathComponent:fileName]);
     }
     
     return(nil);

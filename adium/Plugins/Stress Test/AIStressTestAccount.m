@@ -128,16 +128,31 @@
         }else if([type compare:@"msgin"] == 0){
             int 		count = [[commands objectAtIndex:1] intValue];
             int 		spread = [[commands objectAtIndex:2] intValue];
-            NSString	*message = [commands objectAtIndex:3];
+            NSString	*messageIn = [commands objectAtIndex:3];
 
-            [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_msgin:) userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",[NSNumber numberWithInt:count],@"count",[NSNumber numberWithInt:spread],@"spread",message,@"message",nil] repeats:YES];
+            [NSTimer scheduledTimerWithTimeInterval:0.00001
+											 target:self
+										   selector:@selector(timer_msgin:)
+										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
+																									[NSNumber numberWithInt:count],@"count",
+																									[NSNumber numberWithInt:spread],@"spread",
+																									messageIn,@"message",nil] 
+											repeats:YES];
 
         }else if([type compare:@"msginout"] == 0){
             int 		count = [[commands objectAtIndex:1] intValue];
             int 		spread = [[commands objectAtIndex:2] intValue];
-            NSString	*message = [commands objectAtIndex:3];
+            NSString	*messageOut = [commands objectAtIndex:3];
 
-            [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_msginout:) userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",[NSNumber numberWithInt:count],@"count",[NSNumber numberWithInt:spread],@"spread",message,@"message",[NSNumber numberWithBool:NO],@"in",nil] repeats:YES];
+            [NSTimer scheduledTimerWithTimeInterval:0.00001 
+											 target:self 
+										   selector:@selector(timer_msginout:)
+										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
+																									[NSNumber numberWithInt:count],@"count",
+																									[NSNumber numberWithInt:spread],@"spread",
+																									messageOut,@"message",
+																									[NSNumber numberWithBool:NO],@"in",nil] 
+											repeats:YES];
             
         }else if ([type compare:@"crash"] == 0){
             NSMutableArray *help = [[NSMutableArray alloc] init];
@@ -170,13 +185,13 @@
     int				i = [[userInfo objectForKey:@"i"] intValue];
     int				count = [[userInfo objectForKey:@"count"] intValue];
     int				spread = [[userInfo objectForKey:@"spread"] intValue];
-
+	
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
-
-    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													 accountID:[self uniqueObjectID]
-														   UID:buddyUID]){
+	
+    if((contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													  accountID:[self uniqueObjectID]
+															UID:buddyUID])){
 		NSLog(@"%@ (%@) chat:%@",contact, buddyUID, [[adium contentController] chatWithContact:contact initialStatus:nil]);
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
@@ -206,10 +221,10 @@
     
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
-
-    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													 accountID:[self uniqueObjectID]
-														   UID:buddyUID]){
+	
+    if((contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													  accountID:[self uniqueObjectID]
+															UID:buddyUID])){
         AIContentMessage *messageObject;
         if(msgIn){
             messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]

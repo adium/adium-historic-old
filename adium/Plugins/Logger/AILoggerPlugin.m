@@ -448,11 +448,11 @@ this problem is along the lines of:
 - (void)_dirtyAllLogsThread
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    NSEnumerator	*fromEnumerator, *toEnumerator, *logEnumerator;
-    NSString		*fromName;
+    NSEnumerator		*fromEnumerator, *toEnumerator, *logEnumerator;
+    NSString			*fromName;
     AILogFromGroup      *fromGroup;
-    AILogToGroup	*toGroup;
-    AILog		*log;
+    AILogToGroup		*toGroup;
+    AILog				*theLog;
     
     [indexingThreadLock lock];      //Prevent anything from closing until this thread is complete.
     suspendDirtyArraySave = YES;    //Prevent saving of the dirty array until we're finished building it
@@ -461,46 +461,46 @@ this problem is along the lines of:
     [dirtyLogLock lock];
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
     [dirtyLogLock unlock];
-
+	
     //Process each from folder
     fromEnumerator = [[[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator] retain];
     while((fromName = [[fromEnumerator nextObject] retain])){
-	fromGroup = [[AILogFromGroup alloc] initWithPath:fromName from:fromName];
-
-	//Walk through every 'to' group
-	toEnumerator = [[[fromGroup toGroupArray] objectEnumerator] retain];
-	while(!stopIndexingThreads && (toGroup = [[toEnumerator nextObject] retain])){
-	    //Walk through every log
-	    logEnumerator = [[toGroup logArray] objectEnumerator];
-	    while((log = [logEnumerator nextObject]) && !stopIndexingThreads){
-		//Add this log's path to our dirty array.  The dirty array is guared with a lock
-		//since it will be access from outside this thread as well
-		[dirtyLogLock lock];
-		[dirtyLogArray addObject:[log path]];
-		[dirtyLogLock unlock];
-	    }
-	    
-	    //Flush our pool
-	    [pool release]; pool = [[NSAutoreleasePool alloc] init];
-	    
-	    [toGroup release];
-	}
-	[toEnumerator release];
-	
-	[fromGroup release];
-	[fromName release];
+		fromGroup = [[AILogFromGroup alloc] initWithPath:fromName from:fromName];
+		
+		//Walk through every 'to' group
+		toEnumerator = [[[fromGroup toGroupArray] objectEnumerator] retain];
+		while(!stopIndexingThreads && (toGroup = [[toEnumerator nextObject] retain])){
+			//Walk through every log
+			logEnumerator = [[toGroup logArray] objectEnumerator];
+			while((theLog = [logEnumerator nextObject]) && !stopIndexingThreads){
+				//Add this log's path to our dirty array.  The dirty array is guared with a lock
+				//since it will be access from outside this thread as well
+				[dirtyLogLock lock];
+				[dirtyLogArray addObject:[theLog path]];
+				[dirtyLogLock unlock];
+			}
+			
+			//Flush our pool
+			[pool release]; pool = [[NSAutoreleasePool alloc] init];
+			
+			[toGroup release];
+		}
+		[toEnumerator release];
+		
+		[fromGroup release];
+		[fromName release];
     }
     [fromEnumerator release];
-
+	
     //Save the dirty array we just built
     if(!stopIndexingThreads){
-	[self _saveDirtyLogArray];
-	suspendDirtyArraySave = NO; //Re-allow saving of the dirty array
+		[self _saveDirtyLogArray];
+		suspendDirtyArraySave = NO; //Re-allow saving of the dirty array
     }
     
     //Begin cleaning the logs (If the log viewer is open)
     if([AILogViewerWindowController existingWindowController]){
-	[self cleanDirtyLogs];
+		[self cleanDirtyLogs];
     }
     
     [indexingThreadLock unlock];

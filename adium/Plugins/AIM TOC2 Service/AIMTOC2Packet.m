@@ -142,7 +142,7 @@
 {
     NSData		*headerData;
     NSData		*packetData;
-    const char		*bytes;
+    const char  *bytes;
     int			length;
 
     [super init];
@@ -165,7 +165,7 @@
 
         //Get the packet contents
         if([inSocket getData:&packetData ofLength:(HEADER_LENGTH + length) remove:NO]){
-            const char	*bytes = [packetData bytes];
+            bytes = [packetData bytes];
 
             //Remove the data from the socket
             [inSocket removeDataBytes:HEADER_LENGTH + length];

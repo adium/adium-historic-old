@@ -148,7 +148,9 @@
 {
 	if(![objectArray containsObject:inObject]){
 		//Update our visible count
-		if([inObject isVisible]) [self _setVisibleCount:visibleCount+1];
+		if([inObject isVisible]){
+			[self _setVisibleCount:visibleCount+1];
+		}
 		
 		//Add the object
 		[inObject setContainingGroup:self];
@@ -160,7 +162,9 @@
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
 		//sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
 		//since it will add to the bottom/non-visible section of our array.
-		if([inObject isVisible]) [self sortListObject:inObject sortController:[[adium contactController] activeSortController]];
+		if([inObject isVisible]){
+			[self sortListObject:inObject sortController:[[adium contactController] activeSortController]];
+		}
 		
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
@@ -172,7 +176,9 @@
 {	
 	if([objectArray containsObject:inObject]){
 		//Update our visible count
-		if([inObject isVisible]) [self _setVisibleCount:visibleCount-1];
+		if([inObject isVisible]){
+			[self _setVisibleCount:visibleCount-1];
+		}
 		
 		//Remove the object
 		[inObject setContainingGroup:nil];

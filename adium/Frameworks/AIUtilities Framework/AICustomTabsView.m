@@ -389,9 +389,8 @@ static  NSImage			*tabDivider = nil;
     tabExtraWidth = totalTabWidth - [self frame].size.width;
     if(tabExtraWidth > 0){
         NSArray			*sortedTabArray;
-        NSEnumerator	*enumerator;
         int				tabCount = 0;
-        int				totalTabWidth = 0;
+        int				totalTabWidthForShrinking = 0;
 
         //Make a copy of the tabArray sorted by width
         sortedTabArray = [tabCellArray sortedArrayUsingSelector:@selector(compareWidth:)];
@@ -401,10 +400,10 @@ static  NSImage			*tabDivider = nil;
         tabCell = [enumerator nextObject];
         do{
             tabCount++;
-            totalTabWidth += [tabCell size].width;
-            reducedWidth = (totalTabWidth - tabExtraWidth) / tabCount;
+            totalTabWidthForShrinking += [tabCell size].width;
+            reducedWidth = (totalTabWidthForShrinking - tabExtraWidth) / tabCount;
 
-        }while((tabCell = [enumerator nextObject]) && reducedWidth <= [tabCell size].width);
+        }while((tabCell = [enumerator nextObject]) && (reducedWidth <= [tabCell size].width));
 
         //Remember the treshold at which tabs are squished
         reduceThreshold = (tabCell ? [tabCell size].width : 0);
@@ -468,7 +467,6 @@ static  NSImage			*tabDivider = nil;
     static  BOOL	haveLoadedImages = NO;
     NSEnumerator	*enumerator;
     AICustomTabCell	*tabCell, *nextTabCell;
-    NSRect			tabFrame;
 
 	[[NSColor windowBackgroundColor] set];
 	[NSBezierPath fillRect:rect];

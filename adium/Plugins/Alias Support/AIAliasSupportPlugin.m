@@ -89,6 +89,7 @@
 {
 	NSString	*alias;
 	
+	NSLog(@"blah? %@",[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]);
     //Be sure we've set the last changes before changing which object we are editing
 	[textField_alias fireImmediately];
     
@@ -99,6 +100,7 @@
     //Fill in the current alias
     if(alias = [inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
         [textField_alias setStringValue:alias];
+		NSLog(@"after setting to %@ it's now %@",alias,[textField_alias stringValue]);
     }else{
         [textField_alias setStringValue:@""];
     }

@@ -549,7 +549,7 @@ static NSImage *pushIndicatorImage = nil;
 				if( pushPop ) {
 					// Is there text?
 					NSAttributedString *tempMessage = nil;
-					NSAttributedString *tempPush = nil;
+//					NSAttributedString *tempPush = nil;
 					
 					if( [[self textStorage] length] != 0 ){
 						tempMessage = [[self textStorage] copy];

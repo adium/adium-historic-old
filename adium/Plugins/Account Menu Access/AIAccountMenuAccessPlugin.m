@@ -208,7 +208,6 @@
     enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
         NSMenu		*subMenu;
-        NSMenuItem	*menuItem;
         
         //Create the submenu
         subMenu = [[[NSMenu alloc] init] autorelease];

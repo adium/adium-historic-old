@@ -727,8 +727,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
 	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
+    YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
 	
-    YahooService	= nil  /* [[[ESYahooService alloc] initWithService:self] retain] */;
     JabberService   = nil /* [[[ESJabberService alloc] initWithService:self] retain] */;
 }
 
@@ -772,6 +772,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [_accountDict removeObjectForKey:[NSValue valueWithPointer:gaimAcct]];
 }
 
+- (void)removeAccountWithPointerValue:(NSValue *)inPointer
+{
+    [_accountDict removeObjectForKey:inPointer];	
+}
 
 #pragma mark Proxy
 // Proxy ------------------------------------------------------------------------------------------------------

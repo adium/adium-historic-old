@@ -728,7 +728,7 @@
     //Send any packets in the outQue
     BOOL packetProcessed = YES;
     while([outQue count] && packetProcessed){ //When a packet fails to send, we stop trying until the next update timer fires.
-        AIMTOC2Packet	*packet = [outQue objectAtIndex:0];
+        packet = [outQue objectAtIndex:0];
 		
         if([packet length] <= 2048){
             packetProcessed = [[outQue objectAtIndex:0] sendToSocket:socket];
@@ -764,7 +764,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.126 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.127 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

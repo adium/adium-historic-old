@@ -200,7 +200,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 - (int)_characterIndexAtPoint:(NSPoint)point fractionOffset:(float)offset
 {
     int 	glyphIndex;
-    float	fraction;
+    float	fractionOfDistanceThroughGlyph;
 
     //Factor in view padding
     point.x -= [self paddingInset].width;
@@ -209,8 +209,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     //Get the character index
     glyphIndex = [layoutManager glyphIndexForPoint:point 
 								   inTextContainer:textContainer 
-					fractionOfDistanceThroughGlyph:&fraction];
-    if(fraction >= offset){
+					fractionOfDistanceThroughGlyph:&fractionOfDistanceThroughGlyph];
+    if(fractionOfDistanceThroughGlyph >= offset){
         glyphIndex += 1;
     }
 

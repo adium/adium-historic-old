@@ -50,9 +50,9 @@
 //Validate our menu items
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	//Disable 'delete selection' if nothing is selected
+	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
-		return([[adium contactController] selectedListObject] != nil);
+		return([[adium contactController] selectedListObjectInContactList] != nil);
 	}
 	
 	return(YES);
@@ -73,7 +73,7 @@
 //Delete the selection
 - (IBAction)deleteSelection:(id)sender
 {	
-	AIListObject	*object = [[adium contactController] selectedListObject];
+	AIListObject	*object = [[adium contactController] selectedListObjectInContactList];
 	
 	if(object){
 		//Guard deletion with a warning prompt

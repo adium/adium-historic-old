@@ -26,9 +26,9 @@
     [progressIndicator setIndeterminate:NO];
     [progressIndicator setUsesThreadedAnimation:YES];
     
-    NSString *file;
-    NSString *dirPath = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
-    NSDirectoryEnumerator *enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
+    NSString				*file;
+    NSString				*dirPath = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
+    NSDirectoryEnumerator   *enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
         
     while(file = [enumer nextObject])
     {
@@ -154,7 +154,9 @@
 		
 		//Copy the file
 		[AIFileUtilities createDirectory:newPath];
-		[[NSFileManager defaultManager] copyPath:[subFolderPath stringByAppendingPathComponent:fileName] toPath:[newPath stringByAppendingPathComponent:fileName] handler:nil];
+		[[NSFileManager defaultManager] copyPath:[subFolderPath stringByAppendingPathComponent:fileName] 
+										  toPath:[newPath stringByAppendingPathComponent:fileName] 
+										 handler:nil];
 	    }
 	}
 	
@@ -202,16 +204,16 @@
 		    [progressIndicator display];
 		    
 		    //Open the 2.0 object specific preference file for this contact
-		    NSString	    *path = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/ByObject/AIM.%@.plist", importingForAccount, screenname] stringByExpandingTildeInPath];
-		    NSMutableDictionary *prefDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+		    NSString			*prefPath = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/ByObject/AIM.%@.plist", importingForAccount, screenname] stringByExpandingTildeInPath];
+		    NSMutableDictionary *prefDict = [NSMutableDictionary dictionaryWithContentsOfFile:prefPath];
 		    if(!prefDict) prefDict = [NSMutableDictionary dictionary];
 		    
 		    //Add the alias key to it
 		    [prefDict setObject:[group objectForKey:[NSString stringWithFormat:@"alias %d", j]] forKey:@"Alias"];
 		    
 		    //Save our changes
-		    [AIFileUtilities createDirectory:[path stringByDeletingLastPathComponent]];
-		    [prefDict writeToFile:path atomically:YES];
+		    [AIFileUtilities createDirectory:[prefPath stringByDeletingLastPathComponent]];
+		    [prefDict writeToFile:prefPath atomically:YES];
 		}
 	    }
 	}

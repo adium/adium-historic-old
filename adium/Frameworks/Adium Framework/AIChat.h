@@ -7,10 +7,10 @@
 @class AIAccount, AIContentObject, AIListObject;
 
 @interface AIChat : AIObject {
-    AIAccount		*account;
+    AIAccount			*account;
     NSMutableDictionary *statusDictionary;
-    NSMutableArray	*contentObjectArray;
-    NSMutableArray	*participatingListObjects;
+    NSMutableArray		*contentObjectArray;
+    NSMutableArray		*participatingListObjects;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;
@@ -27,7 +27,7 @@
 - (BOOL)hasContent;
 - (void)setContentArray:(NSArray *)inContentArray;
 - (void)addContentObject:(AIContentObject *)inObject;
-- (void)appendContentArray:(NSArray *)inContent;
+- (void)appendContentArray:(NSArray *)inContentArray;
 - (void)removeAllContent;
 
 

@@ -228,33 +228,33 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     NSMutableString     *progress;
     int			indexComplete, indexTotal;
     BOOL		indexing;
-
+	
     //We always convey the number of logs being displayed
     [resultsLock lock];
     if(activeSearchString && [activeSearchString length]){
-	progress = [NSMutableString stringWithFormat:@"Found %i matches for search",[selectedLogArray count]];
+		progress = [NSMutableString stringWithFormat:@"Found %i matches for search",[selectedLogArray count]];
     }else if(searching){
-	progress = [NSMutableString stringWithString:@"Opening logs..."];
+		progress = [NSMutableString stringWithString:@"Opening logs..."];
     }else{
-	progress = [NSMutableString stringWithFormat:@"%i logs",[selectedLogArray count]];
+		progress = [NSMutableString stringWithFormat:@"%i logs",[selectedLogArray count]];
     }
     [resultsLock unlock];
     
     //Append search progress
     if(searching && activeSearchString && [activeSearchString length]){
-	[progress appendString:[NSString stringWithFormat:@" - Searching for '%@'",activeSearchString]];
+		[progress appendString:[NSString stringWithFormat:@" - Searching for '%@'",activeSearchString]];
     }
     
     //Append indexing progress
     if(indexing = [plugin getIndexingProgress:&indexComplete outOf:&indexTotal]){
-	[progress appendString:[NSString stringWithFormat:@" - Indexing %i of %i",indexComplete, indexTotal]];
+		[progress appendString:[NSString stringWithFormat:@" - Indexing %i of %i",indexComplete, indexTotal]];
     }
     
     //Enable/disable the searching animation
     if(searching || indexing){
-	[progressIndicator startAnimation:nil];
+		[progressIndicator startAnimation:nil];
     }else{
-	[progressIndicator stopAnimation:nil];
+		[progressIndicator stopAnimation:nil];
     }
     
     [textField_progress setStringValue:progress];
@@ -266,16 +266,16 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [resultsLock lock];
     int count = [selectedLogArray count];
     [resultsLock unlock];
-
-    if(!searching || count < MAX_LOGS_TO_SORT_WHILE_SEARCHING){
-	//Sort the logs correctly
-	[self sortSelectedLogArrayForTableColumn:selectedColumn direction:sortDirection];
-
-	//Refresh the table
-	[tableView_results reloadData];
 	
-	//Re-select displayed log, or display another one
-	[self selectDisplayedLog];
+    if(!searching || count < MAX_LOGS_TO_SORT_WHILE_SEARCHING){
+		//Sort the logs correctly
+		[self sortSelectedLogArrayForTableColumn:selectedColumn direction:sortDirection];
+		
+		//Refresh the table
+		[tableView_results reloadData];
+		
+		//Re-select displayed log, or display another one
+		[self selectDisplayedLog];
     }
     
     //Update status
@@ -283,21 +283,21 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 }
 
 //Displays the contents of the specified log in our window
-- (void)displayLog:(AILog *)log
+- (void)displayLog:(AILog *)theLog
 {
     NSAttributedString	*logText = nil;
     NSString			*logFileText = nil;
 	
-    if(displayedLog != log){
+    if(displayedLog != theLog){
 		[displayedLog release];
 		displayedLog = [log retain];
 		
-		if(log){	    
+		if(theLog){	    
 			//Open the log
-			logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[log path]]];                
+			logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];                
 			
 			if(logFileText && [logFileText length]){
-				if([[log path] hasSuffix:@".html"] || [[log path] hasSuffix:@".html.bak"]) {
+				if([[theLog path] hasSuffix:@".html"] || [[theLog path] hasSuffix:@".html.bak"]) {
 					logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
 				}else{
 					AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -353,36 +353,36 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     //(When performing an automatic search, we ignore the previous selection.  This ensures that we always
     // end up with the newest log selected, even when a search takes multiple passes/refreshes to complete).
     if(!automaticSearch){
-	[resultsLock lock];
-	index = [selectedLogArray indexOfObject:displayedLog];
-	[resultsLock unlock];
+		[resultsLock lock];
+		index = [selectedLogArray indexOfObject:displayedLog];
+		[resultsLock unlock];
     }
-
-    if(index != NSNotFound){
-	//If our selected log is still around, re-select it
-	[tableView_results selectRow:index byExtendingSelection:NO];
-	[tableView_results scrollRowToVisible:index];
-
-    }else{
-	AILog   *log = nil;
 	
-	//If our selected log is no more, select the first one in the list
-	[resultsLock lock];
-	if([selectedLogArray count] != 0){
-	    log = [selectedLogArray objectAtIndex:0];
-	}
-	[resultsLock unlock];
-
-	//Change the table selection to this new log
-	//We need a little trickery here.  When we change the row, the table view will call our tableViewSelectionDidChange: method.
-	//This method will clear the automaticSearch flag, and break any scroll-to-bottom behavior we have going on for the custom
-	//search.  As a quick hack, I've added an ignoreSelectionChange flag that can be set to inform our selectionDidChange method
-	//that we instanciated this selection change, and not the user.
-	ignoreSelectionChange = YES;
-	[tableView_results selectRow:0 byExtendingSelection:NO];
-	[tableView_results scrollRowToVisible:0];
-	ignoreSelectionChange = NO;
-	[self displayLog:log];  //Manually update the displayed log
+    if(index != NSNotFound){
+		//If our selected log is still around, re-select it
+		[tableView_results selectRow:index byExtendingSelection:NO];
+		[tableView_results scrollRowToVisible:index];
+		
+    }else{
+		AILog   *theLog = nil;
+		
+		//If our selected log is no more, select the first one in the list
+		[resultsLock lock];
+		if([selectedLogArray count] != 0){
+			theLog = [selectedLogArray objectAtIndex:0];
+		}
+		[resultsLock unlock];
+		
+		//Change the table selection to this new log
+		//We need a little trickery here.  When we change the row, the table view will call our tableViewSelectionDidChange: method.
+		//This method will clear the automaticSearch flag, and break any scroll-to-bottom behavior we have going on for the custom
+		//search.  As a quick hack, I've added an ignoreSelectionChange flag that can be set to inform our selectionDidChange method
+		//that we instanciated this selection change, and not the user.
+		ignoreSelectionChange = YES;
+		[tableView_results selectRow:0 byExtendingSelection:NO];
+		[tableView_results scrollRowToVisible:0];
+		ignoreSelectionChange = NO;
+		[self displayLog:theLog];  //Manually update the displayed log
     }    
 }
 
@@ -645,49 +645,56 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     NSEnumerator    *fromEnumerator, *toEnumerator, *logEnumerator;
     AILogToGroup    *toGroup;
     AILogFromGroup  *fromGroup;
-    AILog	    *log;
-    UInt32	    lastUpdate = TickCount();
+    AILog			*theLog;
+    UInt32			lastUpdate = TickCount();
     
     //Walk through every 'from' group
     fromEnumerator = [availableLogArray objectEnumerator];
     while((fromGroup = [fromEnumerator nextObject]) && (searchID == activeSearchID)){
-
-	//When searching in LOG_SEARCH_FROM, we only proceed into matching groups
-	//For all other search modes, we always proceed here
-	if((mode != LOG_SEARCH_FROM) || !searchString || [[fromGroup from] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound){
-	    
-	    //Walk through every 'to' group
-	    toEnumerator = [[fromGroup toGroupArray] objectEnumerator];
-	    while((toGroup = [toEnumerator nextObject]) && (searchID == activeSearchID)){
 		
-		//When searching in LOG_SEARCH_TO, we only proceed into matching groups
-  		//For all other search modes, we always proceed here
-		if((mode != LOG_SEARCH_TO) || !searchString || [[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound){
-		    
-		    //Walk through every log
-		    logEnumerator = [[toGroup logArray] objectEnumerator];
-		    while((log = [logEnumerator nextObject]) && (searchID == activeSearchID)){
-
-			//When searching in LOG_SEARCH_DATE, we must have matching dates
-   			//For all other search modes, we always proceed here
-			if((mode != LOG_SEARCH_DATE) || !searchString || [[log dateSearchString] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound){
-
-			    //Add the log
-			    [resultsLock lock];
-			    [selectedLogArray addObject:log];
-			    [resultsLock unlock];
-			    
-			    //Update our status
-			    if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL){
-				[self updateProgressDisplay];
-				lastUpdate = TickCount();
-			    }
-			}
+		//When searching in LOG_SEARCH_FROM, we only proceed into matching groups
+		//For all other search modes, we always proceed here
+		if((mode != LOG_SEARCH_FROM) ||
+		   (!searchString) || 
+		   ([[fromGroup from] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)){
 			
-		    }
+			//Walk through every 'to' group
+			toEnumerator = [[fromGroup toGroupArray] objectEnumerator];
+			while((toGroup = [toEnumerator nextObject]) && (searchID == activeSearchID)){
+				
+				//When searching in LOG_SEARCH_TO, we only proceed into matching groups
+				//For all other search modes, we always proceed here
+				if((mode != LOG_SEARCH_TO) ||
+				   (!searchString) || 
+				   ([[toGroup to] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)){
+					
+					//Walk through every log
+					logEnumerator = [[toGroup logArray] objectEnumerator];
+					while((theLog = [logEnumerator nextObject]) && (searchID == activeSearchID)){
+						
+						//When searching in LOG_SEARCH_DATE, we must have matching dates
+						//For all other search modes, we always proceed here
+						if((mode != LOG_SEARCH_DATE) ||
+						   (!searchString) ||
+						   ([[theLog dateSearchString] rangeOfString:searchString 
+															 options:NSCaseInsensitiveSearch].location != NSNotFound)){
+							
+							//Add the log
+							[resultsLock lock];
+							[selectedLogArray addObject:log];
+							[resultsLock unlock];
+							
+							//Update our status
+							if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL){
+								[self updateProgressDisplay];
+								lastUpdate = TickCount();
+							}
+						}
+						
+					}
+				}
+			}	    
 		}
-	    }	    
-	}
     }
 }
 
@@ -695,69 +702,69 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
     SKSearchGroupRef    searchGroup;
-    CFArrayRef		indexArray;
+    CFArrayRef			indexArray;
     SKSearchResultsRef  searchResults;
-    int			resultCount;    
-    UInt32		lastUpdate = TickCount();
-    SKIndexRef		logSearchIndex = [plugin logContentIndex];
-    void		*indexPtr = &logSearchIndex;
-   
+    int					resultCount;    
+    UInt32				lastUpdate = TickCount();
+    SKIndexRef			logSearchIndex = [plugin logContentIndex];
+    void				*indexPtr = &logSearchIndex;
+	
     //Perform the content search
     indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
     searchGroup = SKSearchGroupCreate(indexArray);
     searchResults = SKSearchResultsCreateWithQuery(searchGroup,
-						   (CFStringRef)searchString,
-						   kSKSearchRanked,
-						   LOG_CONTENT_SEARCH_MAX_RESULTS,
-						   NULL,
-						   NULL);
+												   (CFStringRef)searchString,
+												   kSKSearchRanked,
+												   LOG_CONTENT_SEARCH_MAX_RESULTS,
+												   NULL,
+												   NULL);
     
     //Process the results
     if(resultCount = SKSearchResultsGetCount(searchResults)){
-	SKDocumentRef   *outDocumentsArray = malloc(sizeof(SKDocumentRef) * LOG_RESULT_CLUMP_SIZE);
-	float		*outScoresArray = malloc(sizeof(float) * LOG_RESULT_CLUMP_SIZE);
-	NSRange		resultRange = NSMakeRange(0, resultCount);
-	
-	//Read the results in 10 at a time
-	while(resultRange.location < resultCount && (searchID == activeSearchID)){
-	    int		count;
-	    int		i;
-	    
-	    //Get the next 10 results
-	    count = SKSearchResultsGetInfoInRange(searchResults,
-					  CFRangeMake(resultRange.location, LOG_RESULT_CLUMP_SIZE),
-					  outDocumentsArray,
-					  NULL,
-					  outScoresArray);
-	    
-	    //Process the results
-	    for(i = 0; (i < count) && (searchID == activeSearchID); i++){
-		NSString *path = (NSString *)SKDocumentGetName(outDocumentsArray[i]);
-		NSString *toPath = [path stringByDeletingLastPathComponent];
-		NSString *fromPath = [toPath stringByDeletingLastPathComponent];
+		SKDocumentRef   *outDocumentsArray = malloc(sizeof(SKDocumentRef) * LOG_RESULT_CLUMP_SIZE);
+		float		*outScoresArray = malloc(sizeof(float) * LOG_RESULT_CLUMP_SIZE);
+		NSRange		resultRange = NSMakeRange(0, resultCount);
 		
-		AILog   *log = [[AILog alloc] initWithPath:path
-					              from:[fromPath lastPathComponent]
-					                to:[toPath lastPathComponent]
-						      date:[AILog dateFromFileName:[path lastPathComponent]]];
-
-		//Add the log
-		[resultsLock lock];
-		[selectedLogArray addObject:log];
-		[resultsLock unlock];
-
-		[log release];
-	    }	 
-	    
-	    //Update our status
-	    if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL){
-		[self updateProgressDisplay];
-		lastUpdate = TickCount();
-	    }
-
-	    resultRange.location += LOG_RESULT_CLUMP_SIZE;
-	    resultRange.length -= LOG_RESULT_CLUMP_SIZE;
-	}
+		//Read the results in 10 at a time
+		while(resultRange.location < resultCount && (searchID == activeSearchID)){
+			int		count;
+			int		i;
+			
+			//Get the next 10 results
+			count = SKSearchResultsGetInfoInRange(searchResults,
+												  CFRangeMake(resultRange.location, LOG_RESULT_CLUMP_SIZE),
+												  outDocumentsArray,
+												  NULL,
+												  outScoresArray);
+			
+			//Process the results
+			for(i = 0; (i < count) && (searchID == activeSearchID); i++){
+				NSString	*path = (NSString *)SKDocumentGetName(outDocumentsArray[i]);
+				NSString	*toPath = [path stringByDeletingLastPathComponent];
+				NSString	*fromPath = [toPath stringByDeletingLastPathComponent];
+				
+				AILog		*theLog = [[AILog alloc] initWithPath:path
+														 from:[fromPath lastPathComponent]
+														   to:[toPath lastPathComponent]
+														 date:[AILog dateFromFileName:[path lastPathComponent]]];
+				
+				//Add the log
+				[resultsLock lock];
+				[selectedLogArray addObject:theLog];
+				[resultsLock unlock];
+				
+				[theLog release];
+			}	 
+			
+			//Update our status
+			if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL){
+				[self updateProgressDisplay];
+				lastUpdate = TickCount();
+			}
+			
+			resultRange.location += LOG_RESULT_CLUMP_SIZE;
+			resultRange.length -= LOG_RESULT_CLUMP_SIZE;
+		}
     }
     
     CFRelease(indexArray);
@@ -789,17 +796,17 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     
     [resultsLock lock];
     if(row < 0 || row >= [selectedLogArray count]){
-	value = @"";
+		value = @"";
     }else{
-	AILog   *log = [selectedLogArray objectAtIndex:row];
-	
-	if([identifier compare:@"To"] == 0){
-	    value = [log to];
-	}else if([identifier compare:@"From"] == 0){
-	    value = [log from];
-	}else if([identifier compare:@"Date"] == 0){
-	    value = [dateFormatter stringForObjectValue:[log date]];
-	}
+		AILog   *theLog = [selectedLogArray objectAtIndex:row];
+		
+		if([identifier compare:@"To"] == 0){
+			value = [theLog to];
+		}else if([identifier compare:@"From"] == 0){
+			value = [theLog from];
+		}else if([identifier compare:@"Date"] == 0){
+			value = [dateFormatter stringForObjectValue:[theLog date]];
+		}
     }
     [resultsLock unlock];
     
@@ -810,15 +817,19 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     if(!ignoreSelectionChange){
-	AILog   *log = nil;
-	int     row = [tableView_results selectedRow];
-
-	//Update the displayed log
-	automaticSearch = NO;
-	[resultsLock lock];
-	if(row >= 0 && row < [selectedLogArray count]) log = [selectedLogArray objectAtIndex:row];
-	[resultsLock unlock];
-	[self displayLog:log];
+		AILog   *theLog = nil;
+		int     row = [tableView_results selectedRow];
+		
+		//Update the displayed log
+		automaticSearch = NO;
+		
+		[resultsLock lock];
+		if(row >= 0 && row < [selectedLogArray count]){
+			theLog = [selectedLogArray objectAtIndex:row];
+		}
+		[resultsLock unlock];
+		
+		[self displayLog:log];
     }
 }
 

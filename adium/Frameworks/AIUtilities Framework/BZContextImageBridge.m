@@ -55,7 +55,10 @@ const BOOL defaultHasAlpha = YES;
 
 + (id)bridgeWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
-	return [[[self alloc] initWithSize:size bitsPerComponent:defaultBitsPerComponent componentsPerPixel:defaultComponentsPerPixel hasAlpha:defaultHasAlpha] autorelease];
+	return [[[self alloc] initWithSize:size
+					  bitsPerComponent:defaultBitsPerComponent
+					componentsPerPixel:defaultComponentsPerPixel
+							  hasAlpha:defaultHasAlpha] autorelease];
 }
 
 - (void)dealloc
@@ -226,7 +229,7 @@ const BOOL defaultHasAlpha = YES;
 	if(icon == NULL) {
 		err = noSuchIconErr;
 	} else {
-		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
+		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
 
@@ -243,7 +246,7 @@ const BOOL defaultHasAlpha = YES;
 	if(icon == NULL) {
 		err = noSuchIconErr;
 	} else {
-		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
+		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
 		ReleaseIconRef(icon);
 	}
 
@@ -258,7 +261,7 @@ const BOOL defaultHasAlpha = YES;
 	if(icon == NULL) {
 		err = noSuchIconErr;
 	} else {
-		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
+		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
 
@@ -290,7 +293,7 @@ const BOOL defaultHasAlpha = YES;
 	if(icon == NULL) {
 		err = noSuchIconErr;
 	} else {
-		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
+		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
 
@@ -307,7 +310,7 @@ const BOOL defaultHasAlpha = YES;
 	if(icon == NULL) {
 		err = noSuchIconErr;
 	} else {
-		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
+		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
 		ReleaseIconRef(icon);
 	}
 
@@ -322,7 +325,7 @@ const BOOL defaultHasAlpha = YES;
 	if(icon == NULL) {
 		err = noSuchIconErr;
 	} else {
-		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
+		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
 

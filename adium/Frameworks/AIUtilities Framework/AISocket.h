@@ -15,18 +15,18 @@
 
 @interface AISocket : NSObject {
     
-    int				theSocket;
+    int					theSocket;
     NSMutableData		*readBuffer;
 
-    BOOL			isValid;
+    BOOL				isValid;
     NSString			*hostIP;
-    int				hostPort;
+    int					hostPort;
 }
 
 + (AISocket *)socketWithHost:(NSString *)host port:(int)port;
 - (BOOL)sendData:(NSData *)inData;
-- (BOOL)getData:(NSData **)outData ofLength:(int)inLength remove:(BOOL)remove;
-- (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)remove;
+- (BOOL)getData:(NSData **)outData ofLength:(int)inLength remove:(BOOL)shouldRemove;
+- (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)shouldRemove;
 - (void)removeDataBytes:(int)inLength;
 - (BOOL)isValid;
 - (NSString *)hostIP;

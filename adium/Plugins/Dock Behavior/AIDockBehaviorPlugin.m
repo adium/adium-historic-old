@@ -95,17 +95,17 @@
         [behaviorDict release]; behaviorDict = [[NSMutableDictionary alloc] init];
         enumerator = [behaviorArray objectEnumerator];
         while((dictionary = [enumerator nextObject])){
-            NSString	*notification = [dictionary objectForKey:KEY_DOCK_EVENT_NOTIFICATION];
+            NSString	*notificationName = [dictionary objectForKey:KEY_DOCK_EVENT_NOTIFICATION];
             NSNumber	*behavior = [dictionary objectForKey:KEY_DOCK_EVENT_BEHAVIOR];
 
             //Observe the notification
             [[adium notificationCenter] addObserver:self
                                            selector:@selector(eventNotification:)
-                                               name:notification
+                                               name:notificationName
                                              object:nil];
 
             //Add the sound path to our dictionary
-            [behaviorDict setObject:behavior forKey:notification];
+            [behaviorDict setObject:behavior forKey:notificationName];
         }
 
     }
