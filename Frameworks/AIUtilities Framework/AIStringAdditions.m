@@ -145,7 +145,7 @@
 		returnString = [[self substringToIndex:length-1] stringByAppendingString:[NSString stringWithUTF8String:"\xE2\x80\xA6"]];
 	} else {
 		//We don't need to truncate, so don't append an ellipsis
-		returnString = self;
+		returnString = [[self retain] autorelease];
 	}
 	
 	return (returnString);
