@@ -1345,7 +1345,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
-	if([[awayMessage string] compare:[[self statusObjectForKey:@"StatusMessage"] string]] != 0){
+	if(!awayMessage || [[awayMessage string] compare:[[self statusObjectForKey:@"StatusMessage"] string]] != 0){
 		char	*awayHTML = nil;
 		
 		//Convert the away message to HTML, and pass it to libgaim
@@ -1365,7 +1365,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
-	if([[profile string] compare:[[self statusObjectForKey:@"TextProfile"] string]] != 0){
+	if(!profile || [[profile string] compare:[[self statusObjectForKey:@"TextProfile"] string]] != 0){
 		char 	*profileHTML = nil;
 		
 		//Convert the profile to HTML, and pass it to libgaim
