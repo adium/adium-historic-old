@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: cia_mailbucket.pl,v 1.2 2003/12/08 04:14:46 jmelloy Exp $
+# $Id: cia_mailbucket.pl,v 1.3 2003/12/08 04:37:29 jmelloy Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
@@ -76,7 +76,7 @@ $xml = 0;
 #  %trimmed%- a notice about the log message being trimmed, if it is
 #             ($trimmed_template)
 #  %logmsg% - the log message
-$commit_template = '%user% %tag% \n\n %module% \n\n%path% (%file%): \n\n%logmsg%';
+$commit_template = '%user% %tag% <br /><br /> %module% <br /><br />%path% (%file%): <br /><br />%logmsg%';
 
 # The template string describing how the branch tag name should look like.
 # Expansions:
