@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.37 2004/01/11 09:40:43 evands Exp $
+// $Id: AIPreferenceController.m,v 1.38 2004/01/28 17:53:27 evands Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -278,8 +278,12 @@
     }
     [self savePreferences:prefDict forGroup:groupName];
 
-    //Broadcast a group changed notification
-    [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+	if (shouldDelay) {
+        [delayedNotificationGroups addObject:groupName];
+    } else {
+        //Broadcast a group changed notification
+        [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+    }
 }
 
 //Internal ----------------------------------------------------------------------
