@@ -160,6 +160,8 @@ typedef enum {
 - (void)requestSecureMessaging:(BOOL)inSecureMessaging
 						inChat:(AIChat *)inChat;
 
+- (BOOL)canSendImagesForChat:(AIChat *)inChat;
+
 @end
 
 #import "AIAbstractAccount.h"

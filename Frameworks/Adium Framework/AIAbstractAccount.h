@@ -49,9 +49,13 @@
 //Contacts
 - (NSArray *)contacts;
 - (AIListContact *)contactWithUID:(NSString *)sourceUID;
+- (void)removeAllContacts;
+- (void)removeStatusObjectsFromContact:(AIListContact *)listContact silently:(BOOL)silent;
 
 //Connectivity
-- (void)accountDidConnect;
+- (void)didConnect;
+- (NSSet *)contactStatusObjectKeys;
+- (void)didDisconnect;
 - (void)connectScriptCommand:(NSScriptCommand *)command;
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;
 
