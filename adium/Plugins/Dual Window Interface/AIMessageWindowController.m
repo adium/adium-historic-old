@@ -132,14 +132,6 @@
 	[[self window] addDocumentIconButton];
 }
 
-//Close the message window
-- (IBAction)closeWindow:(id)sender
-{
-	//Hide our window now, and close it in a little bit (to ensure tabs have time to cleanup and finish drag operations)
-	//This will create a smoother close, as the user won't see the individual tabs closing
-	[[self window] orderOut:nil];
-	[[self window] performSelector:@selector(performClose:) withObject:nil afterDelay:0.0001];}
-
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
@@ -148,6 +140,21 @@
 	}else{
 		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
+}
+
+//Close the message window
+- (IBAction)closeWindow:(id)sender
+{
+	windowIsClosing = YES;
+
+	//Hide our window now, making sure we set active chat to nil before ordering out.  When we order out, another window
+	//may become key and set itself active.  Setting active to nil after that happened would cause problems.
+	[[adium interfaceController] chatDidBecomeActive:nil];
+	[[self window] orderOut:nil];
+
+	//Now we close our window for real.  By hiding first, we get a smoother close as the user won't see each tab closing
+	//individually.  The close will also be quicker, since it avoids a lot of redrawing.
+	[[self window] performClose:nil];
 }
 
 //called as the window closes
@@ -164,8 +171,9 @@
 		[[adium interfaceController] closeChat:[tabViewItem chat]];
     }
 	
-	//Chats have all closed, set active to nil, let the interface know we closed
-	[[adium interfaceController] chatDidBecomeActive:nil];
+	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
+	//window is no longer visible, since in that case another window will have already became active.
+	if([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
 	[interface containerDidClose:self];
 
     return(YES);
