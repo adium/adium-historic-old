@@ -415,7 +415,7 @@ static BOOL didInitOscar = NO;
 	OscarData			*od;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
-	
+
 	if (gc &&
 		(od = gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
@@ -448,7 +448,7 @@ static BOOL didInitOscar = NO;
 		}
 		
 		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		[theContact notifyOfChangedStatusSilently:NO];
 	}
 }	
 
