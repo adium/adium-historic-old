@@ -76,6 +76,7 @@
 	chat = [inChat retain];
 	plugin = [inPlugin retain];
 	contentQueue = [[NSMutableArray alloc] init];
+	shouldReflectPreferenceChanges = NO;
 
 	//Observe preference changes.
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
@@ -152,6 +153,16 @@
 	}
 	
 	return responder;
+}
+
+/*!
+ * @brief Enable or disable updating to reflect preference changes
+ *
+ * When disabled, the view will not update when a preferece changes that would require rebuilding the views content
+ */
+- (void)setShouldReflectPreferenceChanges:(BOOL)inValue
+{
+	shouldReflectPreferenceChanges = inValue;
 }
 
 /*!
@@ -273,11 +284,11 @@
 	
 	if([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
 		//Variant changes we can apply immediately.  All other changes require us to reload the view
-		if([key isEqualToString:variantKey]){
+		if(!firstTime && [key isEqualToString:variantKey]){
 			[activeVariant release]; activeVariant = [[prefDict objectForKey:variantKey] retain];
 			[self _updateVariantWithoutPrimingView];
 			
-		}else{
+		}else if(firstTime || shouldReflectPreferenceChanges){
 			//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
 			//something we need to update in response to.  All other display changes we update our view for.
 			if(![key isEqualToString:@"BackgroundCacheUniqueID"] &&
@@ -286,7 +297,9 @@
 				[self _updateWebViewForCurrentPreferences];
 			}
 		}
-	}else if([group isEqualToString:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]){
+	}
+	
+	if(([group isEqualToString:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] && shouldReflectPreferenceChanges)){
 		//If the background image changes, wipe the cache and update for the new image
 		[[adium preferenceController] setPreference:nil
 											 forKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]

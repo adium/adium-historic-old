@@ -24,6 +24,7 @@
 	id							plugin;
 	ESWebView					*webView;
 	AIChat						*chat;
+	BOOL						shouldReflectPreferenceChanges;
 
 	//Content processing
 	AIContentObject				*previousContent;
