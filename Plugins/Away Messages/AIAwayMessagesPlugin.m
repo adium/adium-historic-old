@@ -19,7 +19,7 @@
 #import "AIEnterAwayWindowController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <Adium/AIAccount.h>
 
