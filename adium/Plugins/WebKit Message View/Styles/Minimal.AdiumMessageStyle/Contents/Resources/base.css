@@ -66,8 +66,8 @@
 		.sender, .next_label {
 			width: 46px;	
 			text-align: right;
-			overflow: hidden;
 			float:left;
+	overflow: hidden;
 }
 
 		.time_initial		
