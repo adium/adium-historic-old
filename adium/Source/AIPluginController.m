@@ -63,8 +63,9 @@
 	//Get the plugin path
 	if (counter == 0) { //bundle
 	    pluginPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath];
-	}else {  //user's folder
-	    pluginPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath];
+	}else {  //user's folder, creating if necessary
+	    NSString *pluginPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath];
+	    [AIFileUtilities createDirectory:pluginPath];
 	}
 	
 	//Get the directory listing of plugins
