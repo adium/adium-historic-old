@@ -15,7 +15,7 @@
 
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
-#import "AIDualWindowInterfacePlugin.h"
+//#import "AIDualWindowInterfacePlugin.h"
 #import "AIAccountSelectionView.h"
 
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib

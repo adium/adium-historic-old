@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView;
-@protocol AIContainerInterface, AIAccountSelectionViewDelegate, AIMessageViewController;
+@protocol AIAccountSelectionViewDelegate, AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {
     IBOutlet	NSView			*view_contents;

@@ -13,7 +13,7 @@
 					      | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 					      \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.13 2003/12/15 03:25:00 adamiser Exp $
+//$Id: AIPluginController.m,v 1.14 2004/01/01 22:04:31 overmind911 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -77,7 +77,7 @@
 
 	    pluginName = [pluginList objectAtIndex:loop];
 	    //NSLog (@"Loading plugin: \"%@\"", pluginName);
-	    if([[pluginName pathExtension] compare:EXTENSION_ADIUM_PLUGIN] == 0){
+	    if([[pluginName pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0){
 		NS_DURING
 		    //Load the plugin
 		    pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
