@@ -158,7 +158,7 @@
 
 	unsigned length = [self length];
 	if(length > NAME_MAX) {
-		NSLog(@"-safeFilenameString called on a string longer than %zu characters (it will be truncated): @\"%@\"", NAME_MAX, self);
+		NSLog(@"-safeFilenameString called on a string longer than %u characters (it will be truncated): @\"%@\"", NAME_MAX, self);
 		length = NAME_MAX;
 	}
 	NSRange range = { 0, length };
