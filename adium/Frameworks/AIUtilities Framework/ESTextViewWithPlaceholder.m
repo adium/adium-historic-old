@@ -15,6 +15,11 @@
 {
     [placeholder release];
     placeholder = [inPlaceholder copy];
+    
+    if ([[self string] isEqualToString:@""]){
+        [self setString:placeholder];
+        [self setTextColor:[NSColor disabledControlTextColor]];
+    }
 }
 
 -(NSString *)placeholder
