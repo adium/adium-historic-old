@@ -25,7 +25,7 @@ Adium, Copyright 2001-2005, Adam Iser
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @interface AIStatusController (PRIVATE)
-- (void)_saveStateArray;
+- (void)_saveStateArrayAndNotifyOfChanges;
 - (void)_applyStateToAllAccounts:(NSDictionary *)state;
 - (void)_upgradeSavedAwaysToSavedStates;
 - (void)_setMachineIsIdle:(BOOL)inIdle;
@@ -323,7 +323,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		}
 		
 		//Save these changes and delete the old aways so we don't need to do this again
-		[self _saveStateArray];
+		[self _saveStateArrayAndNotifyOfChanges];
 		[[adium preferenceController] setPreference:nil
 											 forKey:OLD_KEY_SAVED_AWAYS
 											  group:OLD_GROUP_AWAY_MESSAGES];
