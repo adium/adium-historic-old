@@ -9,9 +9,12 @@
 - Group chats are logging as (null)
 - Autolinking overwrites custom titled links with domain names in them.
 - [ICQ] Encoding problems
-- 10.2 users are losing color in their profiles & away messages (colors not saving)
-- Double clicking two names in succession causes the first name to highlight the second time.
-- 10.2 users are losing color in their profiles & away messages (colors not saving)
+- 10.2 users are losing color in their profiles & away messages (colors not
+    saving)
+- Double clicking two names in succession causes the first name to highlight
+    the second time.
+- 10.2 users are losing color in their profiles & away messages (colors not
+    saving)
 - First Message Received triggered multiple times
 - [GaduGadu] Contacts not saving to the server-list
 
@@ -19,33 +22,41 @@
 // Adium X 0.70 remaining issues
 //------------------------------------------------------------------------------------
 [Contact List]
-- Bubble-to-fit cells don't work with any new list additions (disable when bubble is selected)
+- Bubble-to-fit cells don't work with any new list additions (disable when
+    bubble is selected)
 - Create default layouts & styles for the contact list preferences
 - Status labels are covering selected cells
 - Extended status doesn't update on the list when it changes
-- Extended status sometimes draws outside the cell (and is therefore cropped) instead of increasing cell height
+- Extended status sometimes draws outside the cell (and is therefore cropped)
+    instead of increasing cell height
 - Extended status should be able to be forced below the name
-- Horizontal sizing doesn't work properly - if window is on right edge, resize leftward.  Add slider for max width and
-	allow sizing based on status.
+- Horizontal sizing doesn't work properly - if window is on right edge, resize
+    leftward.  Add slider for max width and
+    allow sizing based on status.
 - Selected cells need to draw with inverted text
-- Manual ordering is most likely screwed up, because I've turned off loading of old contacts on launch :)
+- Manual ordering is most likely screwed up, because I've turned off loading
+    of old contacts on launch :)
 - Metacontacts display no service icon
-- (from Meron at #adium) if you have the alternating grid turned on in the contact list, and you select a cell that's the alternate color and then focus on another window, the selected cell is redrawn with the normal background color instead of the alternate background color.
+- (from Meron at #adium) if you have the alternating grid turned on in the
+    contact list, and you select a cell that's the alternate color and then
+    focus on another window, the selected cell is redrawn with the normal
+    background color instead of the alternate background color.
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
-- Team decision on contact list bottom bar (Remove and restore the regular sized scroller?)
+- Team decision on contact list bottom bar (Remove and restore the regular
+    sized scroller?)
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
 - Adding contact that already exists
-	Adding an existing contact causes issues.  It may result in duplicate contacts on
-	the user's list, and will make the contact appear offline.  Sometimes they will
-	appear on the list twice until Adium is restarted.
+    Adding an existing contact causes issues.  It may result in duplicate contacts on
+    the user's list, and will make the contact appear offline.  Sometimes they will
+    appear on the list twice until Adium is restarted.
 
 - User icons occasionally display upside-down
-	We cannot find a pattern to when or why this happens
+    We cannot find a pattern to when or why this happens
 
 - Tooltips are not appearing for links in profile text.
 
@@ -57,74 +68,79 @@
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
 - [AIM / Jabber] File transfer limitations
-	File transfers often fail to navigate firewalls and routers
+    File transfers often fail to navigate firewalls and routers
 
 - [Yahoo] File transfer limitations
-	Files over 1 MB in size fail to send
+    Files over 1 MB in size fail to send
 
 //------------------------------------------------------------------------------------
 // Bugs - Resources
 //------------------------------------------------------------------------------------
 - Webkit styles rendering incorrectly in very wide windows
-	The included style with problems is Smooth Operator
+    The included style with problems is Smooth Operator
 
 - Webkit styles must support multi-line status messages
-	The included style with problems is Smooth Operator
+    The included style with problems is Smooth Operator
 
 - Webkit header/footer information animates buddy icons
-	This is considered a bug but could be a worthwhile option for webkit authors
-	
+    This is considered a bug but could be a worthwhile option for webkit authors
+
 - Bottom alignment issues
-	The simple message style has a bottom alignment issue.  Send a few messages, but
-	not enough to make the scrollbar visible, then type a two line message into the
-	entry field.  The message view will incorrectly render extra bottom margin.
+    The simple message style has a bottom alignment issue.  Send a few messages, but
+    not enough to make the scrollbar visible, then type a two line message into the
+    entry field.  The message view will incorrectly render extra bottom margin.
 
 - MSN Emoticons
-	Not all MSN emoticons are supported by our default pack [see its plist]
+    Not all MSN emoticons are supported by our default pack [see its plist]
 
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
 //------------------------------------------------------------------------------------
 - Event Notification window moves out of place between resolution changes.
-	Will be replaced by growl
+    Will be replaced by growl
 
 - MSN display names shorten incorrectly
-	MSN display names are always shortened to the same length, regardless of the
-	contact list's current width.  Will be sweeped in the contact list revamp
+    MSN display names are always shortened to the same length, regardless of the
+    contact list's current width.  Will be sweeped in the contact list revamp
 
 - [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
-	Tiger is coming
+    Tiger is coming
 
 
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
 - Inserting a command which runs an AppleScript which opens a dialog box causes the next
-	messages to appear to be from the wrong person (reported by reikonmusha on AIM)
-	(Example: have someone else send you messages, then use
-	http://mywebpage.netscape.com/EterNal%20x%20OI%20x/AiTC_2_2.zip and
-	call the /help script, then send more messages of your own)
+    messages to appear to be from the wrong person (reported by reikonmusha on AIM)
+    (Example: have someone else send you messages, then use
+    http://mywebpage.netscape.com/EterNal%20x%20OI%20x/AiTC_2_2.zip and
+    call the /help script, then send more messages of your own)
 - We have issues with preventing the user from sending messages when they might
-	actually be able to send (invisible AIM users, after we get disconnected?)
+    actually be able to send (invisible AIM users, after we get disconnected?)
 - If one tries to change one's idle time to a lower amount, (for example, from 2:32
-	to :36), an update will not occur, and your idle time will stay at 2:32.
+    to :36), an update will not occur, and your idle time will stay at 2:32.
 - Yahoo ignore list is being ignored?
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
-	transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?)
+    transport), the invalid tags are being eaten? (Our HTML decoder isn't
+    eating them, is libgaim?)
 - We aren't fetching the display names of some ICQ users when over AIM?
-	(They still show up in the info, apparently)
+    (They still show up in the info, apparently)
 - AIM Passwords with question marks in them prevent libgaim from connecting?
 - Out of curiosity - is there a reason we use .adiumEmoticonset instead of
-	.adiumEmoticonSet (call me a capitalization nut :)?
-	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
-	[Adam] Need to be careful.. some users are running on case-sensitive file systems
+    .adiumEmoticonSet (call me a capitalization nut :)?
+    [Dave] Since we do case-insensitive compares, and the Finder doesn't seem
+    to care, we COULD use AdiumEmoticonSet
+    [Adam] Need to be careful.. some users are running on case-sensitive file systems
 - Adium will remain invisible to 2nd party after a Jabber authorization confirmation (from xtapo on IRC)
-	"Well, I hit grant to his auth request, and he still won't be able to see me." -- xtapo
-	previously authorized contacts work as expected.
+    "Well, I hit grant to his auth request, and he still won't be able to see
+    me." -- xtapo
+    previously authorized contacts work as expected.
 
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
 - Apple scripts stall Adium when iTunes 4.5's Print dialogue is open (the same bug exists in Script Editor)
 
-	[Chris] - We could use a seperate app/daemon that is polling itunes. blacktree.com has something for that, and GrowlTunes could also be made to do what is needed, if we are going to just look for current playing track.
+    [Chris] - We could use a seperate app/daemon that is polling itunes.
+    blacktree.com has something for that, and GrowlTunes could also be made to
+    do what is needed, if we are going to just look for current playing track.
