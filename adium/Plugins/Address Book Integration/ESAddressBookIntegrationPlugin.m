@@ -91,7 +91,7 @@
 				
 				//Apply the values 
 				NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
-				if ([oldValue isEqualToString:displayName]) {
+				if (!oldValue || ![oldValue isEqualToString:displayName]) {
 					[[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
 				}
