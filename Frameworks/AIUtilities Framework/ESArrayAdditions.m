@@ -30,13 +30,17 @@
 
 @implementation NSMutableArray (ESArrayAdditions)
 
-- (void)moveObject:(id)object toIndex:(int)newIndex
+- (void)moveObject:(id)object toIndex:(unsigned)newIndex
 {
-	int	currentIndex = [self indexOfObject:object];
-	
+	unsigned	currentIndex = [self indexOfObject:object];
+	NSAssert3(currentIndex != NSNotFound, @"%@ %p does not contain object %p", NSStringFromClass([self class]), self, object);
+
+	//if we're already there, do no work
+	if(currentIndex == newIndex) return;
+
 	//Account for shifting
-	if(currentIndex < newIndex) newIndex--;
-	
+	if(currentIndex <  newIndex) newIndex--;
+
 	//Move via a remove and add :(
 	[object retain];
 	[self removeObject:object];
