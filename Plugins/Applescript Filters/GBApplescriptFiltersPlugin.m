@@ -381,7 +381,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 				NSNumber	*shouldSendNumber;
 				
-				if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
+				if(!filteredMessage) filteredMessage = [inAttributedString mutableCopy];
 				[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
 				stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
 				
@@ -395,7 +395,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		}
 	}
 	
-    return(filteredMessage ? filteredMessage : inAttributedString);
+    return(filteredMessage ? [filteredMessage autorelease] : inAttributedString);
 }
 
 //Perform a thorough variable replacing scan
@@ -511,6 +511,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	script = [[NSAppleScript alloc] initWithContentsOfURL:[infoDict objectForKey:@"Path"]
 													error:nil];
 	
+	//Running an applescript will take multiple run loops; it is not acceptable for our autorelease pool
+	//to be released between these loops as we have autoreleased objects upon which we are depending
+	[[adium contentController] setAllowFilterThreadAutoreleasePoolRefresh:NO];
+	
 	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
 		NSAppleEventDescriptor	*eventDescriptor;
 		NSInvocation			*invocation;
@@ -528,15 +532,17 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 								  waitUntilDone:YES];
 		
 		[invocation getReturnValue:&eventDescriptor];
-		returnValue = [eventDescriptor stringValue];
+		returnValue = [[eventDescriptor stringValue] retain];
 		
 	}else{
-		returnValue = [[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue];		
+		returnValue = [[[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue] retain];	
 	}
 
 	[script release];
 	
-	return(returnValue);
+	[[adium contentController] setAllowFilterThreadAutoreleasePoolRefresh:YES];
+		
+	return([returnValue autorelease]);
 }
 
 @end
