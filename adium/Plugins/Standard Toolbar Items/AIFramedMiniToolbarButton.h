@@ -15,11 +15,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMiniToolbarItem;
+@class AIMiniToolbarItem, AIMiniToolbar;
 
 @interface AIFramedMiniToolbarButton : NSButton {
     AIMiniToolbarItem	*toolbarItem;
-
+    AIMiniToolbar	*toolbar;
 }
 
 + (AIFramedMiniToolbarButton *)framedMiniToolbarButtonWithImage:(NSImage *)inImage forToolbarItem:(AIMiniToolbarItem *)inToolbarItem;
