@@ -14,6 +14,7 @@
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
 - (void)clearUniqueChatID;
+- (void)clearListObjectStatuses;
 @end
 
 @implementation AIChat
@@ -144,6 +145,18 @@
 	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
 }
 
+- (void)clearListObjectStatuses
+{
+	AIListObject	*listObject = [self listObject];
+	
+	if (listObject){
+		[listObject setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:NotifyLater];
+		[listObject setStatusObject:nil forKey:KEY_TYPING notify:NotifyLater];
+	
+		[listObject notifyOfChangedStatusSilently:NO];
+	}
+	
+}
 //Name  ----------------------------------------------------------------------------------------------------------------
 #pragma mark Name
 - (NSString *)name
@@ -212,12 +225,17 @@
 }
 - (void)setListObject:(AIListContact *)inListObject
 {
-	if([participatingListObjects count] == 1){
+	if(inListObject != [self listObject]){
 		
+		[self clearListObjectStatuses];
+
 		//The uniqueChatID may depend upon the listObject, so clear it
 		[self clearUniqueChatID];
 		
-		[participatingListObjects removeObjectAtIndex:0];
+		if ([participatingListObjects count]){
+			[participatingListObjects removeObjectAtIndex:0];
+		}
+		
 		[self addParticipatingListObject:inListObject];
 	}
 }
