@@ -44,6 +44,7 @@ extern "C" {
 GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn);
 void oscar_direct_im_initiate_immediately(GaimConnection *gc, const char *who);
 void *oscar_find_direct_im(GaimConnection *gc, const char *who);
+void oscar_set_format_screenname(GaimConnection *gc, const char *alias);
 
 /* XXX adjust these based on autoconf-detected platform */
 typedef unsigned char fu8_t;
