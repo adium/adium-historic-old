@@ -27,10 +27,11 @@
     if ((![self reason]) || ([[self reason] isEqualToString:@"_sharedInstance is invalid."])) {
     
 	    [super raise];
-    
+		
     } if ((![self name]) || 
-	  ([[self name] isEqualToString:@"GIFReadingException"]) || 
-	  ([[self name] isEqualToString:@"NSPortTimeoutException"]) ){
+		  ([[self name] isEqualToString:@"GIFReadingException"]) || 
+		  ([[self name] isEqualToString:@"NSPortTimeoutException"]) ||
+		  ([[self name] isEqualToString:@"NSAccessibilityException"]) ){
 	
 	    [super raise];
 	
