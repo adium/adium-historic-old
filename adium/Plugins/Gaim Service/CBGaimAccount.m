@@ -207,8 +207,7 @@
     AIChat *chat = (AIChat*) conv->ui_data;
     GaimConvIm *im = gaim_conversation_get_im_data(conv);
     //We don't do anything yet with updates for conversations that aren't IM conversations 
-    if (im) {
-        NSAssert(chat != nil, @"Conversation update with no AIChat");
+    if (chat && im) {
         AIListContact *listContact = (AIListContact*) [chat listObject];
         NSAssert(listContact != nil, @"Conversation with no one?");
 
