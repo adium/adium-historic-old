@@ -16,7 +16,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-#define	GROUP_CONTACT_LIST		@"Contact List Display"
+#define	PREF_GROUP_CONTACT_LIST		@"Contact List Display"
 
 #define SCL_DEFAULT_PREFS		@"SCL Defaults"
 

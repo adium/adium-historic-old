@@ -12,6 +12,8 @@
 #import "AIAwayMessagePreferences.h"
 #import "AIEnterAwayWindowController.h"
 
+#define AWAY_SPELLING_DEFAULT_PREFS		@"AwaySpellingDefaults"
+
 #define AWAY_MESSAGE_MENU_TITLE			@"Set Away Message"
 #define	REMOVE_AWAY_MESSAGE_MENU_TITLE		@"Remove Away Message"
 #define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		@"Custom Message…"
@@ -31,6 +33,9 @@
 - (void)installPlugin
 {
     menuConfiguredForAway = NO;
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
     preferences = [[AIAwayMessagePreferences awayMessagePreferencesWithOwner:owner] retain];

@@ -108,7 +108,7 @@
 {
     //Draw our string contents
     if(drawContents){
-        if(!selected){
+        if(!selected || ![[tableView window] isKeyWindow] || [[tableView window] firstResponder] != tableView){
             if(layoutManager){ //Draw our string with wrapping (slower)
                 [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
             }else{
@@ -117,7 +117,7 @@
         }else{
             NSMutableAttributedString *mutableString = [string mutableCopy];
 
-            [mutableString addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:NSMakeRange(0,[mutableString length])];
+            [mutableString addAttribute:NSForegroundColorAttributeName value:[NSColor alternateSelectedControlTextColor] range:NSMakeRange(0,[mutableString length])];
 
             if(layoutManager){ //Draw our string with wrapping (slower)
                 NSTextStorage	*whiteTextStorage = [[NSTextStorage alloc] initWithAttributedString:mutableString];

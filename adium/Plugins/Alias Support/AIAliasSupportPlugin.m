@@ -12,7 +12,7 @@
 #import <Adium/Adium.h>
 
 #define	CONTACT_ALIAS_NIB		@"ContactAlias"		//Filename of the alias info view
-#define	GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
+#define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 
 @interface AIAliasSupportPlugin (PRIVATE)
@@ -24,7 +24,7 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS forClass:[self class]] forGroup:GROUP_ALIASES];
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ALIASES];
 
     //Register ourself as a handle observer
     [[owner contactController] registerHandleObserver:self];
@@ -50,7 +50,7 @@
     [self applyAlias:alias toObject:activeContactObject];
 
     //Save the alias
-    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:GROUP_ALIASES object:activeContactObject];
+    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeContactObject];
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
@@ -63,7 +63,7 @@
         activeContactObject = [inObject retain];
 
         //Fill in the current alias
-        alias = [[owner preferenceController] preferenceForKey:@"Alias" group:GROUP_ALIASES object:inObject];
+        alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject];
         if(alias){
             [textField_alias setStringValue:alias];
         }else{
@@ -77,7 +77,7 @@
 - (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
 {
     if(inModifiedKeys == nil){ //Only set an alias on handle creation
-        NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:GROUP_ALIASES object:inHandle];
+        NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inHandle];
 
         if(alias != nil && [alias length] != 0){
             [self applyAlias:alias toObject:inHandle];

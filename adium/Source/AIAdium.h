@@ -73,6 +73,7 @@ typedef enum {
 #define PREF_GROUP_ACCOUNTS	 	@"Accounts"
 #define PREF_GROUP_TOOLBARS 		@"Toolbars"
 #define PREF_GROUP_WINDOW_POSITIONS 	@"Window Positions"
+#define PREF_GROUP_SPELLING 		@"Spelling"
 
 
 //Notifications

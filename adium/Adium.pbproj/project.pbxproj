@@ -1245,6 +1245,32 @@
 			isa = PBXTargetDependency;
 			target = 9EDAC4EC03D5160100415B22;
 		};
+		4B64797803DC29B200A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DualSpellingDefaults.plist;
+			path = "Plugins/Dual Window Interface/DualSpellingDefaults.plist";
+			refType = 4;
+		};
+		4B64797903DC29B200A8010A = {
+			fileRef = 4B64797803DC29B200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B64797A03DC321800A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AwaySpellingDefaults.plist;
+			path = "Plugins/Away Messages/AwaySpellingDefaults.plist";
+			refType = 4;
+		};
+		4B64797B03DC321800A8010A = {
+			fileRef = 4B64797A03DC321800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B70F28803D1C55C00A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -1708,6 +1734,7 @@
 				4BF1F04503D7B92D00A8010A,
 				4B187A0703D5E95500A8010A,
 				4B187A0803D5E95500A8010A,
+				4B64797A03DC321800A8010A,
 			);
 			isa = PBXGroup;
 			name = "Away Messages";
@@ -1732,6 +1759,7 @@
 				4B187A0903D5E95500A8010A,
 				4B187A0A03D5E95500A8010A,
 				4BF1F04603D7B92D00A8010A,
+				4B64797B03DC321800A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1767,7 +1795,6 @@
 		4B81631803D1C27500A8010A = {
 			buildPhases = (
 				4B81631303D1C27500A8010A,
-				4BF1F0EA03D88B7500A8010A,
 				4B81631403D1C27500A8010A,
 				4B81631503D1C27500A8010A,
 				4B81631603D1C27500A8010A,
@@ -2762,15 +2789,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BF1F0EA03D88B7500A8010A = {
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 //4B0
 //4B1
@@ -6032,6 +6050,7 @@
 				F5793980033E756E01A8010A,
 				F549EF1B036B1A0801A8010A,
 				F549EF1C036B1A0A01A8010A,
+				4B64797803DC29B200A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dual Window Interface";
@@ -6056,6 +6075,7 @@
 				F579398B033E756E01A8010A,
 				F579398C033E756E01A8010A,
 				F570A60603704E7201A8010A,
+				4B64797903DC29B200A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

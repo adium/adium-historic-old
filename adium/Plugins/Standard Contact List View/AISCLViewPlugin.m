@@ -37,7 +37,7 @@
     [[owner interfaceController] registerContactListViewController: self];
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:GROUP_CONTACT_LIST];
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
 
     //Install the preference view
     preferences = [[AICLPreferences contactListPreferencesWithOwner:owner] retain];
@@ -166,8 +166,8 @@
 //A contact list preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:GROUP_CONTACT_LIST] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
         NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
         AISCLOutlineView	*SCLView;
     
