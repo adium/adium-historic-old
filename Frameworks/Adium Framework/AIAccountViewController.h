@@ -48,7 +48,6 @@
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)changedPreference:(id)sender;
 - (NSString *)nibName;
-- (void)updatePasswordField;
 - (void)saveConfiguration;
 
 @end
