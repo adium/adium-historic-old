@@ -12,6 +12,9 @@
 	NSColor		*backgroundColor;
 	NSColor		*gradientColor;
 	NSColor		*shadowColor;
+
+	NSImage		*_gradient;
+	NSSize		_gradientSize;
 }
 
 - (AIGradient *)backgroundGradient;
