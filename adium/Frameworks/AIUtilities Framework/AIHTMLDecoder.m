@@ -143,18 +143,24 @@ int HTMLEquivalentForFontSize(int fontSize);
         //Escape special HTML characters.
         
         [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
-            options:NSCaseInsensitiveSearch range:NSMakeRange(0, [chunk length])];
+            options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
         
         [chunk replaceOccurrencesOfString:@"<" withString:@"&lt;"
-            options:NSCaseInsensitiveSearch range:NSMakeRange(0, [chunk length])];
+            options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
         
         [chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
-            options:NSCaseInsensitiveSearch range:NSMakeRange(0, [chunk length])];
-        
-        //append string
-        
-        [string appendString:(NSString *)chunk];
- 
+            options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+
+        //Append string character by character, replacing any non-ascii characters with the designated unicode
+        //escape sequence.
+        int i;
+        for(i = 0; i < [chunk length]; i++) {
+            if([chunk characterAtIndex:i] > 127) {
+                [string appendFormat:@"&#%d;", [chunk characterAtIndex:i]];
+            } else {
+                [string appendFormat:@"%c", [chunk characterAtIndex:i]];
+            }
+        }
         
         //Disable bold/italic/underline
         if(italic){
@@ -165,7 +171,7 @@ int HTMLEquivalentForFontSize(int fontSize);
         }
         if(underline){
             [string appendString:@"</U>"];
-        }        
+        }
         
         searchRange.location += searchRange.length;
     }
@@ -209,7 +215,6 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSString			*chunkString, *tagOpen;
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
-    int				asciiChar;
     
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -312,7 +317,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 
             }else if([tagOpen compare:@"&"] == 0){ // escape character, eg &gt;
                 BOOL validTag = [scanner scanUpToCharactersFromSet:charEnd intoString:&chunkString];
-
+                
                 if(validTag){
                     // We could upgrade this to use an NSDictionary with lots of chars
                     // but for now, if-blocks will do
@@ -330,11 +335,14 @@ int HTMLEquivalentForFontSize(int fontSize)
 
                     }else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
                         [attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
-                        
-                    }else if ((sscanf([chunkString cString], "#%i", &asciiChar)) == 1){//Using scanf for now; I don't know a good Cocoa way to quickly do this
-                        [attrString appendString:[NSString stringWithFormat:@"%c", asciiChar] withAttributes:[textAttributes dictionary]];
-                        
-                    }else{ //Invalid
+                    
+                    }
+                    else if ([chunkString hasPrefix:@"#"]) {
+                        [attrString appendString:[NSString stringWithFormat:@"%C", 
+                            [[chunkString substringFromIndex:1] intValue]] 
+                            withAttributes:[textAttributes dictionary]];
+                    }
+                    else{ //Invalid
                         validTag = NO;
                     }                    
                 }
