@@ -440,6 +440,8 @@
 				B7AE6657046578640051E914,
 				9E2E306E046CA9BF00415B22,
 				115C72070470BD91007DDD3A,
+				4B304912047FBD8200A8010A,
+				4BC2C6E80480540A00A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -506,6 +508,8 @@
 				B7AE6656046578640051E914,
 				9E2E306D046CA9BF00415B22,
 				115C72060470BD91007DDD3A,
+				4B304911047FBD8200A8010A,
+				4BC2C6E70480540A00A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -604,6 +608,8 @@
 				4BD7D0D304620DAC00A8010A,
 				4BD7D0E204620E7300A8010A,
 				115C72080470BD91007DDD3A,
+				4B304913047FBD8200A8010A,
+				4BC2C6E90480540A00A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -712,7 +718,8 @@
 				9C82689F03D9B26500F1D4AF,
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
-				4B1CA9D80458D76E00A8010A,
+				4B333F74048144D900A8010A,
+				4B24A26B0482B34B00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2071,15 +2078,15 @@
 			settings = {
 			};
 		};
-		4B1CA9AA0458D76E00A8010A = {
+		4B24A2330482B34B00A8010A = {
 			includeInIndex = 1;
 			isa = PBXFolderReference;
-			name = "Adiumy Icons";
-			path = "Source/Adiumy Icons";
+			name = "Dock Icons";
+			path = "Source/Dock Icons";
 			refType = 4;
 		};
-		4B1CA9D80458D76E00A8010A = {
-			fileRef = 4B1CA9AA0458D76E00A8010A;
+		4B24A26B0482B34B00A8010A = {
+			fileRef = 4B24A2330482B34B00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2368,6 +2375,208 @@
 			settings = {
 			};
 		};
+		4B30490B047FBD6A00A8010A = {
+			children = (
+				4B30491A047FBDCE00A8010A,
+				4B30491B047FBDCE00A8010A,
+				4B30491E047FBED400A8010A,
+				4B30491F047FBED400A8010A,
+				4B33401104815A0600A8010A,
+				4BDD982D047FC48B00A8010A,
+			);
+			isa = PBXGroup;
+			name = "Dock Icon Selection";
+			refType = 4;
+		};
+		4B30490C047FBD8200A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B30491C047FBDCE00A8010A,
+				4B304920047FBED400A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B30490D047FBD8200A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BDD982E047FC48B00A8010A,
+				4B33401304815A0B00A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B30490E047FBD8200A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B30491D047FBDCE00A8010A,
+				4B304921047FBED400A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B30490F047FBD8200A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B304917047FBDAC00A8010A,
+				4B304918047FBDAC00A8010A,
+				4B304919047FBDAD00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B304910047FBD8200A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B304911047FBD8200A8010A = {
+			buildPhases = (
+				4B30490C047FBD8200A8010A,
+				4B30490D047FBD8200A8010A,
+				4B30490E047FBD8200A8010A,
+				4B30490F047FBD8200A8010A,
+				4B304910047FBD8200A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Dock Icon Selection";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B304915047FBD9900A8010A,
+				4B304916047FBD9900A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Dock Icon Selection";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Dock Icon Selection";
+			productReference = 4B304912047FBD8200A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIDockIconSelectionPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B304912047FBD8200A8010A = {
+			isa = PBXBundleReference;
+			path = "Dock Icon Selection.AdiumPlugin";
+			refType = 3;
+		};
+		4B304913047FBD8200A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B304911047FBD8200A8010A;
+		};
+		4B304915047FBD9900A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B304916047FBD9900A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B304917047FBDAC00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B304918047FBDAC00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B304919047FBDAD00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30491A047FBDCE00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDockIconSelectionPlugin.h;
+			path = "Plugins/Dock Icon Selection/AIDockIconSelectionPlugin.h";
+			refType = 4;
+		};
+		4B30491B047FBDCE00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDockIconSelectionPlugin.m;
+			path = "Plugins/Dock Icon Selection/AIDockIconSelectionPlugin.m";
+			refType = 4;
+		};
+		4B30491C047FBDCE00A8010A = {
+			fileRef = 4B30491A047FBDCE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30491D047FBDCE00A8010A = {
+			fileRef = 4B30491B047FBDCE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30491E047FBED400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDockIconPreferences.h;
+			path = "Plugins/Dock Icon Selection/AIDockIconPreferences.h";
+			refType = 4;
+		};
+		4B30491F047FBED400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDockIconPreferences.m;
+			path = "Plugins/Dock Icon Selection/AIDockIconPreferences.m";
+			refType = 4;
+		};
+		4B304920047FBED400A8010A = {
+			fileRef = 4B30491E047FBED400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B304921047FBED400A8010A = {
+			fileRef = 4B30491F047FBED400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B30ADFA044228BA00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2416,6 +2625,32 @@
 		};
 		4B30AE0B0442680000A8010A = {
 			fileRef = 4B30AE090442680000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B333F73048144D900A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = DockPrefs.plist;
+			path = Source/DockPrefs.plist;
+			refType = 4;
+		};
+		4B333F74048144D900A8010A = {
+			fileRef = 4B333F73048144D900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B33401104815A0600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = IconPreviewList.plist;
+			path = "Plugins/Dock Icon Selection/IconPreviewList.plist";
+			refType = 4;
+		};
+		4B33401304815A0B00A8010A = {
+			fileRef = 4B33401104815A0600A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2521,6 +2756,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4BC2C6EA0480540A00A8010A,
+				4BDD982C047FC45100A8010A,
 				4BD7D0E304620E7300A8010A,
 				4BD7D0D404620DAC00A8010A,
 				4B18A5280459F8B000A8010A,
@@ -2785,6 +3022,7 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
+				4B30490B047FBD6A00A8010A,
 				4B52A58603EDB9D200A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				F501BB0D03882A0201A8010A,
@@ -5455,6 +5693,131 @@
 			settings = {
 			};
 		};
+		4BC2C6E20480540A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC6A4180480549500A8010A,
+				4BC6A41A0480549600A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC2C6E30480540A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC6A41C0480549700A8010A,
+				4BC6A41D0480549800A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC2C6E40480540A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC6A4190480549600A8010A,
+				4BC6A41B0480549600A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC2C6E50480540A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC6A41E048054CB00A8010A,
+				4BC6A41F048054CB00A8010A,
+				4BC6A420048054CC00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC2C6E60480540A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC2C6E70480540A00A8010A = {
+			buildPhases = (
+				4BC2C6E20480540A00A8010A,
+				4BC2C6E30480540A00A8010A,
+				4BC2C6E40480540A00A8010A,
+				4BC2C6E50480540A00A8010A,
+				4BC2C6E60480540A00A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Default Formatting";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BC2C6EB0480542B00A8010A,
+				4BC2C6EC0480542B00A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Default Formatting";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Default Formatting";
+			productReference = 4BC2C6E80480540A00A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIDefaultFormattingPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BC2C6E80480540A00A8010A = {
+			isa = PBXBundleReference;
+			path = "Default Formatting.AdiumPlugin";
+			refType = 3;
+		};
+		4BC2C6E90480540A00A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BC2C6E70480540A00A8010A;
+		};
+		4BC2C6EA0480540A00A8010A = {
+			fileRef = 4BC2C6E80480540A00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC2C6EB0480542B00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BC2C6EC0480542B00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
 			isa = PBXBuildFile;
@@ -5469,6 +5832,60 @@
 		};
 		4BC5DDA903D059D200A8010A = {
 			fileRef = 4BC5DDA803D059D200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A4180480549500A8010A = {
+			fileRef = 4B7FAEA1047D6A3400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A4190480549600A8010A = {
+			fileRef = 4B7FAEA2047D6A3400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A41A0480549600A8010A = {
+			fileRef = 4BCD96A5047E40A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A41B0480549600A8010A = {
+			fileRef = 4BCD96A6047E40A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A41C0480549700A8010A = {
+			fileRef = 4BCD96A9047E40CA00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A41D0480549800A8010A = {
+			fileRef = 4B7FAEA5047D6E2E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A41E048054CB00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A41F048054CB00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC6A420048054CC00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6001,6 +6418,24 @@
 		};
 		4BD7D0E904620EA200A8010A = {
 			fileRef = 4BD7D0E704620EA200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDD982C047FC45100A8010A = {
+			fileRef = 4B304912047FBD8200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDD982D047FC48B00A8010A = {
+			isa = PBXFileReference;
+			name = IconSelectionPrefs.nib;
+			path = "Plugins/Dock Icon Selection/IconSelectionPrefs.nib";
+			refType = 4;
+		};
+		4BDD982E047FC48B00A8010A = {
+			fileRef = 4BDD982D047FC48B00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9078,12 +9513,12 @@
 		};
 		F5370C9202D76F1F01A8010A = {
 			children = (
-				F59DB3AC033EA8EC01A8010A,
-				F59DB3AD033EA8EC01A8010A,
 				F59DB3AE033EA8EC01A8010A,
 				F59DB3AF033EA8EC01A8010A,
 				112F94040476EBE1001277FE,
 				112F94050476EBE1001277FE,
+				F59DB3AC033EA8EC01A8010A,
+				F59DB3AD033EA8EC01A8010A,
 				11F2C7FD047ACDD50021C483,
 				117ED00F0475BC1A00733160,
 			);
@@ -9205,7 +9640,7 @@
 		};
 		F5385CF601BEB9F901A80165 = {
 			children = (
-				4B1CA9AA0458D76E00A8010A,
+				4B24A2330482B34B00A8010A,
 				F5E6713603B4D12601A8010A,
 				F552078B033F727F01A8010A,
 				4BF1F0E803D888EB00A8010A,
@@ -13858,6 +14293,7 @@
 				F570A60803704E9701A8010A,
 				F55B416003AB8BE301A8010A,
 				4BDF17240450CBDE00A8010A,
+				4B333F73048144D900A8010A,
 				F5A3C2DD039A516E01A8010A,
 				F5CDCE460350758501A8010A,
 				F5D746FA0338D79801A8010A,

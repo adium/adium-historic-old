@@ -107,6 +107,10 @@ typedef enum {
 #define KEY_SOUND_USE_CUSTOM_VOLUME	@"Use Custom Volume"
 #define KEY_SOUND_CUSTOM_VOLUME_LEVEL	@"Custom Volume Level"
 
+//Dock Controller
+#define KEY_ACTIVE_DOCK_ICON		@"Dock Icon"
+#define FOLDER_DOCK_ICONS		@"Dock Icons"
+
 //Notifications
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
@@ -134,6 +138,8 @@ typedef enum {
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
+#define Preference_WindowWillOpen				@"Preference_WindowWillOpen"
+#define Preference_WindowDidClose				@"Preference_WindowDidClose"
 #define Dock_IconWillChange					@"Dock_IconWillChange"
 #define Dock_IconDidChange					@"Dock_IconDidChange"
 
@@ -144,7 +150,7 @@ typedef enum {
 
 @protocol AIContactLeftView //Draws to the left of a handle
     - (void)drawInRect:(NSRect)inRect;
-    - (float)widthForHeight:(int)inHeight;
+    - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
 @end
 
 @protocol AIContactRightView //Draws to the right of a handle
@@ -477,16 +483,14 @@ typedef enum {
 
 @interface AIDockController: NSObject {
     IBOutlet	AIAdium 	*owner;
-    
-    int				animationFrames;
-    int				currentFrame;
 
     NSTimer 			*animationTimer;
     NSTimer			*bounceTimer;
+    
     NSMutableDictionary		*availableIconStateDict;
     NSMutableArray		*activeIconStateArray;
-    NSMutableArray		*dockImageArray;
-
+    AIIconState			*currentIconState;
+    
     int				currentAttentionRequest;
 }
 
@@ -495,6 +499,7 @@ typedef enum {
 - (void)removeIconState:(AIIconState *)inState;
 - (float)dockIconScale;
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;
+- (NSDictionary *)iconPackAtPath:(NSString *)folderPath;
 
 @end
 

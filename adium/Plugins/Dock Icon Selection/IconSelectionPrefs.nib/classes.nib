@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIDockIconPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "matrix_iconPreview" = NSMatrix; 
+                "tableView_icons" = NSTableView; 
+                "textField_creator" = NSTextField; 
+                "textField_title" = NSTextField; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

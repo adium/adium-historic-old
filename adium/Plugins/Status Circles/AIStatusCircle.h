@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "AIAdium.h"
 
 @protocol AIHandleLeftView;
 
@@ -24,17 +25,17 @@ typedef enum {
     AICircleFlashB
 } AICircleState;
 
-@interface AIStatusCircle : NSObject <AIHandleLeftView> {
+@interface AIStatusCircle : NSObject <AIContactLeftView> {
     NSColor		*color;
     NSColor		*flashColor;
     AICircleState	state;
     NSString		*string;
 
     //Drawing Cache
-    NSAttributedString	*attributedString;
-    NSSize		attributedStringSize;
+    NSAttributedString	*_attributedString;
+    NSSize		_attributedStringSize;
+    float		_maxWidth;
     float		cachedHeight;
-    float		maxWidth;
 }
 
 + (id)statusCircle;
@@ -45,6 +46,6 @@ typedef enum {
 - (void)setStringContent:(NSString *)inString;
 
 - (void)drawInRect:(NSRect)inRect;
-- (float)widthForHeight:(int)inHeight;
+- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
 
 @end

@@ -83,7 +83,7 @@
 //Show the preference window
 - (IBAction)showPreferenceWindow:(id)sender
 {
-    [[AIPreferenceWindowController preferenceWindowControllerWithOwner:self] showWindow:nil];
+    [[AIPreferenceWindowController preferenceWindowControllerWithOwner:owner] showWindow:nil];
 }
 
 

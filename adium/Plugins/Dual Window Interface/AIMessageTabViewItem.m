@@ -11,6 +11,10 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+#define LEFT_VIEW_PADDING 	2
+#define LEFT_VIEW_HEIGHT 	13
+#define LEFT_MARGIN		4
+
 @interface AIMessageTabViewItem (PRIVATE)
 - (id)initWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect;
@@ -19,6 +23,7 @@
 @end
 
 @implementation AIMessageTabViewItem
+
 //
 + (AIMessageTabViewItem *)messageTabViewItemWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner
 {
@@ -97,13 +102,67 @@
 
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
-{    
+{
+    AIMutableOwnerArray	*leftViewArray;
+    
+    //Draw icon
+    leftViewArray = [[messageView contact] displayArrayForKey:@"Tab Left View"];
+
+    //If a left view is present
+    if(leftViewArray && [leftViewArray count]){
+        int			loop;
+
+        //indent into the margin to save space
+        labelRect.origin.x -= LEFT_MARGIN;
+        labelRect.size.width += LEFT_MARGIN;
+
+        //Draw all icons
+        for(loop = 0;loop < [leftViewArray count];loop++){
+            id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
+            NSRect			drawRect = labelRect;
+
+            //Get the icon's dest drawing rect
+            drawRect.size.height = LEFT_VIEW_HEIGHT;
+            drawRect.size.width = [handler widthForHeight:drawRect.size.height computeMax:NO];
+
+            //Draw the icon
+            [handler drawInRect:drawRect];
+
+            //Subtract the drawn area from the rect
+            labelRect.origin.x += (drawRect.size.width + LEFT_VIEW_PADDING);
+            labelRect.size.width -= (drawRect.size.width + LEFT_VIEW_PADDING);
+        }
+    }
+
+    //Draw name    
     [[self attributedLabelString] drawInRect:labelRect];
 }
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
 {
-    return([[self attributedLabelString] size]);
+    AIMutableOwnerArray	*leftViewArray;
+    NSSize		size;
+
+    //Name width
+    size = [[self attributedLabelString] size];
+
+    //Icon widths
+    leftViewArray = [[messageView contact] displayArrayForKey:@"Tab Left View"];
+    if(leftViewArray && [leftViewArray count]){ //If a left view is present
+        int	loop;
+
+        //indent into the margin to save space
+        size.width -= LEFT_MARGIN;
+
+        //Account for the width of each icon
+        for(loop = 0;loop < [leftViewArray count];loop++){
+            id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
+
+            size.width += [handler widthForHeight:LEFT_VIEW_HEIGHT computeMax:NO] + LEFT_VIEW_PADDING;
+        }
+    }
+
+    return(size);
 }
 
 //

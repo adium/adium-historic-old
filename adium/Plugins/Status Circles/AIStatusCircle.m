@@ -21,8 +21,12 @@
 
 @interface AIStatusCircle (PRIVATE)
 - (id)init;
-- (NSAttributedString *)attributedString:(NSString *)inString forHeight:(float)height;
+- (NSAttributedString *)_attributedString:(NSString *)inString forHeight:(float)height;
+- (NSAttributedString *)attributedStringForHeight:(float)height;
+- (NSSize)attributedStringSizeForHeight:(float)height;
+- (float)maxWidthForHeight:(float)height;
 - (void)_flushDrawingCache;
+- (float)_circleWidthForRadius:(float)circleRadius;
 @end
 
 @implementation AIStatusCircle
@@ -41,9 +45,9 @@
     string = nil;
     state = AICircleNormal;
 
-    attributedString = nil;
-    attributedStringSize = NSMakeSize(0,0);
-    maxWidth = 0;
+    _attributedString = nil;
+    _attributedStringSize = NSMakeSize(0,0);
+    _maxWidth = 0;
     cachedHeight = 0;
     
     return(self);
@@ -91,91 +95,55 @@
     }
 }
 
-
 //Returns our desired width
-- (float)widthForHeight:(int)inHeight
+- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax
 {
-    if(cachedHeight != inHeight){
-        [self _flushDrawingCache];
-    }
-    
-    if(!maxWidth){
-        maxWidth = [[self attributedString:@"8:88" forHeight:(inHeight + CIRCLE_SIZE_OFFSET)] size].width;
-    }
-    
-/*    if(string){
-        NSSize	stringSize = 
-        
-        return(stringSize.width + (inHeight + CIRCLE_SIZE_OFFSET) / 2.0);
+    //If our height has changed, flush the string/rect cache
+    if(cachedHeight != inHeight) [self _flushDrawingCache];
+
+    //Return the requested width
+    if(computeMax){
+        return([self maxWidthForHeight:inHeight]);
     }else{
-        return(inHeight + CIRCLE_SIZE_OFFSET);
-    }*/
-    return(maxWidth);
+        return([self _circleWidthForRadius:(inHeight / 2.0)]);
+    }    
 }
 
 //Draw
 - (void)drawInRect:(NSRect)inRect
 {
     NSBezierPath 		*pillPath;
-    float 			innerLeft, innerRight, innerTop, innerBottom, centerY, insideWidth, circleRadius, lineWidth;
-
-/*
-  innerLeft     innerRight
-       |           |
-       |           |
-      ** ********* **      - innerTop
-    **               **
-   *                   *   - centerY
-    **               **
-      ** ********* **      - innerBottom
-       |----   ----|
-        insideWidth
-*/
-
-    if(cachedHeight != inRect.size.height){
-        [self _flushDrawingCache];
-    }
-
-    //Calculate
-    circleRadius = (inRect.size.height + CIRCLE_SIZE_OFFSET) / 2.0;    
-
-    //Circle width
-    if(string){
-        //Get our attributed string and its dimensions
-        if(!attributedString){
-            attributedString = [[self attributedString:string forHeight:(inRect.size.height + CIRCLE_SIZE_OFFSET)] retain];
-            attributedStringSize = [attributedString size];
-        }
-        
-        //The string is inset 1/4 into each endcap
-        insideWidth = (attributedStringSize.width - circleRadius) + 1.0;
-
-        //Prevent the pill from shrinking any smaller than a perfect circle
-        if(insideWidth < 0){
-            insideWidth = 0;
-        }
-    }else{
-        insideWidth = 0;
-    }
-
+    float			stringHeight, circleRadius, circleWidth, lineWidth;
+    float 			innerLeft, innerRight, innerTop, innerBottom, centerY;
+    
+    //Calculate Circle Dimensions
+    stringHeight = (inRect.size.height + CIRCLE_SIZE_OFFSET);
+    circleRadius = stringHeight / 2.0;
+    circleWidth = [self _circleWidthForRadius:circleRadius];
     lineWidth = (circleRadius * (2.0/15.0));
-    innerLeft = inRect.origin.x + inRect.size.width - circleRadius - insideWidth;
-    innerRight = inRect.origin.x + inRect.size.width - circleRadius;
-    innerTop = inRect.origin.y + CIRCLE_Y_OFFSET + circleRadius * 2;
+
+    //Right align
+    inRect.origin.x += inRect.size.width - circleWidth;
+    inRect.size.width = circleWidth;
+
+    //Pre-calculate some key points
+    innerLeft = inRect.origin.x + circleRadius;
+    innerRight = inRect.origin.x + circleWidth - circleRadius;
+    innerTop = inRect.origin.y + CIRCLE_Y_OFFSET + (circleRadius * 2.0);
     innerBottom = inRect.origin.y + CIRCLE_Y_OFFSET;
     centerY = inRect.origin.y + CIRCLE_Y_OFFSET + circleRadius;
 
     //Create the circle path
     pillPath = [NSBezierPath bezierPath];
         //top line (if our pill is not a circle)
-        if(insideWidth != 0){
+        if((innerRight - innerLeft) != 0){
             [pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
             [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
         }
         //right cap
         [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:270 clockwise:YES];
         //bottom line (if our pill is not a circle)
-        if(insideWidth != 0){
+        if((innerRight - innerLeft) != 0){
             [pillPath moveToPoint: NSMakePoint(innerRight, innerBottom)];
             [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
         }
@@ -188,11 +156,14 @@
     [pillPath fill];
 
     if(string){
+        NSAttributedString	*attrString = [self attributedStringForHeight:stringHeight];
+        NSSize			stringSize = [self attributedStringSizeForHeight:stringHeight];
+        
         //Draw the string content
-        [attributedString drawInRect:NSMakeRect(innerLeft - circleRadius + 1, //The string is already centered horizontally
-                                                inRect.origin.y - 1 + CIRCLE_Y_OFFSET + (inRect.size.height - attributedStringSize.height) / 2.0, //Center vertically
-                                                innerRight - innerLeft + circleRadius * 2,
-                                                attributedStringSize.height)];
+        [attrString drawInRect:NSMakeRect(innerLeft - circleRadius + 1, //The string is already centered horizontally
+                                          inRect.origin.y - 1 + CIRCLE_Y_OFFSET + (inRect.size.height - stringSize.height) / 2.0, //Center vertically
+                                          innerRight - innerLeft + circleRadius * 2,
+                                          stringSize.height)];
         
     }else{
         //draw the dot (for unreplied messages)
@@ -236,15 +207,83 @@
 
 }
 
-- (void)_flushDrawingCache
+- (float)_circleWidthForRadius:(float)circleRadius
 {
-    [attributedString release]; attributedString = nil;
-    attributedStringSize = NSMakeSize(0,0);
-    maxWidth = 0;
+    float	insideWidth;
+
+    //Calculate Circle Dimensions
+    if(string){
+        //The string is inset 1/4 into each endcap
+        insideWidth = ([self attributedStringSizeForHeight:(circleRadius * 2.0)].width - circleRadius) + 1.0;
+
+        //Prevent the pill from shrinking any smaller than a perfect circle
+        if(insideWidth < 0) insideWidth = 0;
+
+    }else{
+        insideWidth = 0;
+    }
+
+    return(insideWidth + circleRadius * 2);
 }
 
-//
-- (NSAttributedString *)attributedString:(NSString *)inString forHeight:(float)height
+
+//(inRect.size.height + CIRCLE_SIZE_OFFSET) ((inHeight + CIRCLE_SIZE_OFFSET))
+//Cached ------------------------------------------------------------------------
+//Returns our content attributed string (Cached)
+- (NSAttributedString *)attributedStringForHeight:(float)height
+{
+    //If our height has changed, flush the string/rect cache
+    if(cachedHeight != height) [self _flushDrawingCache];
+
+    //Get our attributed string and its dimensions
+    if(!_attributedString){
+        _attributedString = [[self _attributedString:string forHeight:height] retain];
+    }
+
+    return(_attributedString);
+}
+
+//Return our content string's size (Cached)
+- (NSSize)attributedStringSizeForHeight:(float)height
+{
+    //If our height has changed, flush the string/rect cache
+    if(cachedHeight != height) [self _flushDrawingCache];
+
+    //
+    if(!_attributedStringSize.width || !_attributedStringSize.height){
+        _attributedStringSize = [[self attributedStringForHeight:height] size];
+    }
+
+    return(_attributedStringSize);
+}
+
+//Return our max width (Cached)
+- (float)maxWidthForHeight:(float)height
+{
+    //If our height has changed, flush the string/rect cache
+    if(cachedHeight != height) [self _flushDrawingCache];
+
+    //
+    if(!_maxWidth){
+        _maxWidth = [[self _attributedString:@"8:88" forHeight:height] size].width;
+    }
+
+    return(_maxWidth);
+}
+
+//Flush the cached strings and sizes
+- (void)_flushDrawingCache
+{
+    [_attributedString release]; _attributedString = nil;
+    _attributedStringSize = NSMakeSize(0,0);
+    _maxWidth = 0;
+}
+
+
+
+//Private ---------------------------------------------------------------------------
+//Returns the correct attributed string for our view
+- (NSAttributedString *)_attributedString:(NSString *)inString forHeight:(float)height
 {
     NSMutableParagraphStyle	*paragraphStyle;
     NSDictionary		*attributes;

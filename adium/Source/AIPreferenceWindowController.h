@@ -15,12 +15,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIPreferenceController, AIPreferenceViewController;
+@class AIAdium, AIPreferenceViewController;
 
 @interface AIPreferenceWindowController : NSWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
 
-    AIPreferenceController	*owner;
+    AIAdium			*owner;
     NSMutableDictionary		*toolbarItems;
 }
 

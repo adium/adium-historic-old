@@ -19,7 +19,7 @@
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 
-//#define LEFT_MARGIN		0 //9
+#define LEFT_MARGIN		14
 //#define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
 #define LEFT_VIEW_PADDING	3
 
@@ -41,50 +41,44 @@
         AIMutableOwnerArray	*leftViewArray;
         int			loop;
 
-//        [[NSColor lightGrayColor] set];
-//        [NSBezierPath fillRect:cellFrame];
-        
-        //Indent into the left margin
-//        cellFrame.origin.x -= LEFT_MARGIN;
-//        cellFrame.size.width += LEFT_MARGIN;
-
-        //Left aligned icon
+        //If a left view is present
         leftViewArray = [listObject displayArrayForKey:@"Left View"];
-        for(loop = 0;loop < [leftViewArray count];loop++){
-            id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
-            NSRect			drawRect = cellFrame;
-//            float			width = [handler widthForHeight:drawRect.size.height];
-//            float			push;
-//            float			leftViewIndent = (drawRect.size.height * LEFT_VIEW_INDENT_SIZE);
-        
-/*            if(width <= leftViewIndent){ //Right Aligned
-                drawRect.origin.x = (drawRect.origin.x + leftViewIndent) - width;
-                drawRect.size.width = width;
-                push = leftViewIndent;
-                
-            }else if(width <= (leftViewIndent * 2)){ //Into the margin, right aligned
-                drawRect.origin.x = (drawRect.origin.x + leftViewIndent) - width;
-                drawRect.size.width = width;
-                push = leftViewIndent;
+        if(leftViewArray && [leftViewArray count]){
+            //Indent into the margin to save space
+            cellFrame.origin.x -= LEFT_MARGIN;
+            cellFrame.size.width += LEFT_MARGIN;
 
-            }else{ //Into the margin, indent text to make space
-                drawRect.origin.x -= leftViewIndent;
+            //Left aligned icon
+            for(loop = 0;loop < [leftViewArray count];loop++){
+                id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
+                NSRect			drawRect;
+                float			width, maxWidth;
+    
+                //Calculate the icon size
+                maxWidth = [handler widthForHeight:cellFrame.size.height computeMax:YES];
+                width = [handler widthForHeight:cellFrame.size.height computeMax:NO];
+    
+                //Create a destination rect for the icon
+                drawRect = cellFrame;
+                drawRect.origin.x += (maxWidth - width);
                 drawRect.size.width = width;
-                push = width - leftViewIndent;
-            }*/
-
-            drawRect.size.width = [handler widthForHeight:drawRect.size.height];
-        
-            //Draw the icon
-            [handler drawInRect:drawRect];
             
-            //Subtract the drawn area from the rect
-            cellFrame.origin.x += (drawRect.size.width + LEFT_VIEW_PADDING);
-            cellFrame.size.width -= (drawRect.size.width + LEFT_VIEW_PADDING);
+                //Draw the icon
+                [handler drawInRect:drawRect];
+                
+                //Subtract the drawn area from the remaining rect
+                cellFrame.origin.x += (maxWidth + LEFT_VIEW_PADDING);
+                cellFrame.size.width -= (maxWidth + LEFT_VIEW_PADDING);
+                
+            }
+        }else{
+            //If no left views are present, insert padding to move text away from flippy triangle
+            cellFrame.origin.x += LEFT_VIEW_PADDING;
+            cellFrame.size.width -= LEFT_VIEW_PADDING;
+            
         }
-
-        //Color
-        //If this cell is selected, use the inverted color, or white
+    
+        //Color (If this cell is selected, use the inverted color, or white)
         if([self isHighlighted] && [[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView){
             textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
             if(!textColor) textColor = [NSColor whiteColor];
@@ -102,6 +96,7 @@
         [displayName drawAtPoint:cellFrame.origin];
 
         [displayName release];
+
         
 /*    }else{
         NSAttributedString	*displayName;
