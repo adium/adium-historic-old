@@ -152,6 +152,7 @@
 - (void)gotGroupForContact:(AIListContact *)contact;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage;
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact;
