@@ -172,9 +172,6 @@
 	}else{
 		[contactListView reloadItem:object reloadChildren:YES];
 	}
-	
-#warning This is inefficient.  It works for now.
-    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
 }
 
 //Redisplay the modified object (Attribute change)
@@ -189,11 +186,15 @@
     
     //Resize the contact list horizontally
     if(horizontalResizingEnabled){
-        if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] ||
-		   [keys containsObject:@"Right View"] || [keys containsObject:@"Right Text"] ||
-		   [keys containsObject:@"Left Text"]){
-            [contactListView updateHorizontalSizeForObject:object];
-        }
+		if (object){
+			if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] ||
+			   [keys containsObject:@"Right View"] || [keys containsObject:@"Right Text"] ||
+			   [keys containsObject:@"Left Text"]){
+				[contactListView updateHorizontalSizeForObject:object];
+			}
+		}else{
+			[contactListView _performFullRecalculation];	
+		}
     }
 }
 
@@ -435,12 +436,24 @@
     [self hideTooltip];
 
     //Return the context menu
-    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
-        [NSNumber numberWithInt:Context_Contact_Manage],
-        [NSNumber numberWithInt:Context_Contact_Action],
-        [NSNumber numberWithInt:Context_Contact_NegativeAction],
-        [NSNumber numberWithInt:Context_Contact_Additions], nil]
-												 forListObject:[contactListView listObject]]);
+	AIListObject	*listObject = [contactListView listObject];
+	NSArray			*locationsArray;
+	if ([listObject isKindOfClass:[AIListGroup class]]){
+		locationsArray = [NSArray arrayWithObjects:
+			[NSNumber numberWithInt:Context_Group_Manage],
+			[NSNumber numberWithInt:Context_Contact_Action],
+			[NSNumber numberWithInt:Context_Contact_NegativeAction],
+			[NSNumber numberWithInt:Context_Contact_Additions], nil];
+	}else{
+		locationsArray = [NSArray arrayWithObjects:
+			[NSNumber numberWithInt:Context_Contact_Manage],
+			[NSNumber numberWithInt:Context_Contact_Action],
+			[NSNumber numberWithInt:Context_Contact_NegativeAction],
+			[NSNumber numberWithInt:Context_Contact_Additions], nil];	
+	}
+	
+    return([[adium menuController] contextualMenuWithLocations:locationsArray
+												 forListObject:listObject]);
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
@@ -614,8 +627,8 @@
 
 //Tooltips (Cursor movement) -------------------------------------------------------------------------------------------
 //We use a timer to poll the location of the mouse.  Why do this instead of using mouseMoved: events?
-// - Webkit eats mousemoved events, even when those events occur elsewhere on the screen
-// - Mousemoved events do not work when Adium is in the background
+// - Webkit eats mouseMoved: events, even when those events occur elsewhere on the screen
+// - mouseMoved: events do not work when Adium is in the background
 #pragma mark Tooltips (Cursor movement)
 //Mouse entered our list, begin tracking it's movement
 - (void)mouseEntered:(NSEvent *)theEvent
