@@ -121,11 +121,12 @@ int HTMLEquivalentForFontSize(int fontSize);
             if([familyName caseInsensitiveCompare:currentFamily] != 0){
                 int langNum = 0; 
         
-                //( NSNonstandardCharacterSetFontMask = 0x00000008 ) is defined internally but not externally
+                //(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
+                //NSMacOSRomanStringEncoding seems to be the encoding of all standard Roman fonts... and langNum="11" seems to make the others send properly.
                 //It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
-                if (traits && 0x00000008) {
+                if ([font mostCompatibleStringEncoding] != NSMacOSRomanStringEncoding) {
                     langNum = 11;
-                }
+                }   
                 
                 [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
 
