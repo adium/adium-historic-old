@@ -119,7 +119,7 @@ static NSMenu   *firefoxTopMenu;
             [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
             [linkScanner scanUpToString:@"</A" intoString:&titleString];
                 
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
+            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
                                                                   withValidationStatus:SH_URL_VALID
                                                                           parentString:titleString
                                                                               andRange:NSMakeRange(0,[titleString length])] autorelease];
