@@ -134,7 +134,7 @@ typedef enum {
 	AIListContactCell					*contentCell;
 	AIListGroupCell						*groupCell;
 	
-    AIListObject						*contactList;
+    AIListObject <AIContainingObject> 	*contactList;
 	BOOL								hideRoot;
 	
 	BOOL								inDrag;
