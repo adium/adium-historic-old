@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 684 $ $Date: 2004/04/23 04:26:27 $ -->
+<!--$Rev: 691 $ $Date: 2004/04/28 15:00:09 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -379,16 +379,16 @@ searchKey = searchString;
         
         Timestamp dateTime = rset.getTimestamp("message_date");
         long time = dateTime.getTime();
-        long beforeTime = time + 15*60*1000;
-        long afterTime = time - 15*60*1000;
-        long beforeThirty = time + 30*60*1000;
-        long afterThirty = time - 30*60*1000;
+        long finishTime = time + 15*60*1000;
+        long startTime = time - 15*60*1000;
+        long finishThirty = time + 30*60*1000;
+        long startThirty = time - 30*60*1000;
 
-        Timestamp before = new Timestamp(beforeTime);
-        Timestamp after = new Timestamp(afterTime);
+        Timestamp finish = new Timestamp(finishTime);
+        Timestamp start = new Timestamp(startTime);
 
-        Timestamp thirtyBefore = new Timestamp(beforeThirty);
-        Timestamp thirtyAfter = new Timestamp(afterThirty);
+        Timestamp thirtyFinish = new Timestamp(finishThirty);
+        Timestamp thirtyStart = new Timestamp(startThirty);
 
         String cleanString = searchKey;
         cleanString = cleanString.replaceAll("&", " ");
@@ -398,8 +398,8 @@ searchKey = searchString;
         out.print("<td><a href=\"index.jsp?from=" +
         rset.getString("sender_sn") +
         "&to=" + rset.getString("recipient_sn") +
-        "&before=" + before.toString() +
-        "&after=" + after.toString() + 
+        "&finish=" + finish.toString() +
+        "&start=" + start.toString() + 
         "&hl=" + cleanString +
         "#" + rset.getInt("message_id") + "\">");
         out.print("+/-&nbsp;15&nbsp;");
@@ -408,8 +408,8 @@ searchKey = searchString;
         out.print("<a href=\"index.jsp?from=" +
         rset.getString("sender_sn") +
         "&to=" + rset.getString("recipient_sn") +
-        "&before=" + thirtyBefore.toString() +
-        "&after=" + thirtyAfter.toString() + 
+        "&finish=" + thirtyFinish.toString() +
+        "&start=" + thirtyStart.toString() + 
         "&hl=" + cleanString +
         "#" + rset.getInt("message_id") + "\">");
         out.print("+/-&nbsp;30&nbsp;");
