@@ -11,6 +11,8 @@
 
 #define EVENT_BEZEL_NIB         @"EventBezel"
 
+BOOL pantherOrLater;
+
 @interface JSCEventBezelController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (BOOL)windowShouldClose:(id)sender;
@@ -33,13 +35,15 @@ JSCEventBezelController *sharedInstance = nil;
     [super initWithWindowNibName:windowNibName owner:self];
     
     owner = [inOwner retain];
-        
+    
+    pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
+            
     return(self);
 }
 
 - (void)dealloc
 {
-    [owner release];    
+    [owner release];
     [super dealloc];
 }
 
@@ -50,7 +54,11 @@ JSCEventBezelController *sharedInstance = nil;
     [[self window] setIgnoresMouseEvents:YES];
     [[self window] setAlphaValue:1.0];
     [[self window] setOpaque:NO];
-    [[self window] setHasShadow:YES];
+    if (pantherOrLater) {
+        [[self window] setHasShadow:NO];
+    } else {
+        [[self window] setHasShadow:YES];
+    }
 }
 
 - (BOOL)windowShouldClose:(id)sender
@@ -69,20 +77,7 @@ JSCEventBezelController *sharedInstance = nil;
 - (void)showBezelWithContact:(AIListContact *)contact forEvent:(NSString *)event withMessage:(NSString *)message
 {
     if ([self window]) {
-        NSAttributedString      *tempString;
         AIMutableOwnerArray     *ownerArray;
-        
-        if ([bezelWindow fadingOut]) {
-            [queueField setStringValue: [NSString stringWithFormat:@"%@ %@ %@\n%@",
-                [mainName stringValue], [mainStatus stringValue], [mainAwayMessage stringValue], [queueField stringValue]]];
-        } else {
-            [queueField setStringValue: @""];
-        }
-        
-        tempString = [[[NSAttributedString alloc] initWithString: [NSString stringWithFormat: @"%@ (%@)",[contact displayName],[contact UID]]
-                attributes: [NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager]
-                    convertFont:[NSFont systemFontOfSize:0.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, nil]] autorelease];
-        [mainName setAttributedStringValue: tempString];
         
         ownerArray = [contact statusArrayForKey:@"BuddyImage"];
         if(ownerArray && [ownerArray count]){
@@ -90,31 +85,56 @@ JSCEventBezelController *sharedInstance = nil;
         }else{
             [bezelView setBuddyIconImage:nil];
         }
+                
+        if ([bezelWindow fadingOut]) {
+            [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@ %@\n%@",
+                [bezelView mainBuddyName], [bezelView mainBuddyStatus], [bezelView mainAwayMessage], [bezelView queueField]]];
+        } else {
+            [bezelView setQueueField: @""];
+        }
+        
+        [bezelView setMainBuddyName: [NSString stringWithFormat: @"%@ (%@)",[contact displayName],[contact UID]]];
         
         if ([event isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-            [mainStatus setStringValue:@"is now online"];
+            [bezelView setMainBuddyStatus: @"is now online"];
         } else if ([event isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-            [mainStatus setStringValue:@"has gone offline"];
+            [bezelView setMainBuddyStatus: @"has gone offline"];
         } else if ([event isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-            [mainStatus setStringValue:@"has gone away"];
+            [bezelView setMainBuddyStatus: @"has gone away"];
         } else if ([event isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-            [mainStatus setStringValue:@"is available"];
+            [bezelView setMainBuddyStatus: @"is available"];
         } else if ([event isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-            [mainStatus setStringValue:@"is idle"];
+            [bezelView setMainBuddyStatus: @"is idle"];
         } else if ([event isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-            [mainStatus setStringValue:@"no longer is idle"];
+            [bezelView setMainBuddyStatus: @"no longer is idle"];
         }
         
+        // This is not working yet, the Plugin class needs to pass the message (away message or new IM)
         if (message) {
-            [mainAwayMessage setStringValue: message];
+            [bezelView setMainAwayMessage: message];
         } else {
-            [mainAwayMessage setStringValue: @""];
+            [bezelView setMainAwayMessage: @""];
         }
         
-        // To do: correct bezel position and more options using preferences
-        [[self window] center];
+        [bezelView setNeedsDisplay:YES];
+        // To do: add more placement options using preferences
+        if (true) {
+            NSSize mainScreenSize;
+            NSRect windowSize;
+            NSPoint mainScreenOrigin, newOrigin;
+            
+            mainScreenSize = [[NSScreen mainScreen] frame].size;
+            mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
+            windowSize = [[self window] frame];
+            newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.size.width / 2.0));
+            newOrigin.y = mainScreenOrigin.y + (ceil(mainScreenSize.height*(0.18)));
+            [[self window] setFrameOrigin: newOrigin];
+        }
+        
+        if (pantherOrLater) {
+            [[self window] invalidateShadow];
+        }
         [self showWindow:nil];
-        [[self window] invalidateShadow];
         [[self window] orderFront:nil];
         
     }
