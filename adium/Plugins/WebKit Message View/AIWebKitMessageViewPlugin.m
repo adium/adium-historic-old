@@ -77,8 +77,10 @@
 {	
 	NSEnumerator	*enumerator, *fileEnumerator;
 	NSString		*filePath, *resourcePath;
+	NSArray			*resourcePaths;
 	
-	enumerator = [[adium resourcePathsForName:@"Message Styles"] objectEnumerator];
+	resourcePaths = [[adium resourcePathsForName:@"Message Styles"] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
+	enumerator = [resourcePaths objectEnumerator];
 	
     while(resourcePath = [enumerator nextObject]) {
         fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:resourcePath];
