@@ -34,6 +34,7 @@
 
 //10.3 and above
 + (void)scheduleReachabilityCheckFor:(const char *)nodename context:(void *)context;
+
 @end
 
 @implementation AINetworkConnectivity
@@ -81,16 +82,18 @@ static BOOL									networkIsReachable = NO;
 	}
 }
 
+#pragma mark -
+
 //Here's where the magic happens.  The timer is called after a clump of network updates culminating in a valid
 //network state.  Handle connectivity and post a notification for all the other kids who want to play.
 + (void)aggregatedNetworkReachabilityChanged:(NSTimer *)inTimer
 {
 #if CONNECTIVITY_DEBUG
-	NSLog(@"aggregatedNetworkReachabilityChanged: %i",networkIsReachable);
+	NSLog(@"aggregatedNetworkReachabilityChanged: %u",networkIsReachable);
 #endif
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:AINetwork_ConnectivityChanged
-														object:[NSNumber numberWithInt:networkIsReachable]];
+														object:[NSNumber numberWithBool:networkIsReachable]];
 	
 	[aggregatedChangesTimer release]; aggregatedChangesTimer = nil;
 }
@@ -157,9 +160,15 @@ static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, 
 + (void)scheduleReachabilityCheckFor:(const char *)nodename context:(void *)context
 {
 	SCNetworkReachabilityRef		reachabilityRef;
-	SCNetworkReachabilityContext	reachabilityContext = { 0, context, NULL, NULL, NULL };
+	SCNetworkReachabilityContext	reachabilityContext = {
+		.version = 0,
+		.info = context,
+		.retain = NULL,
+		.release = NULL,
+		.copyDescription = NULL,
+	};
 
-	reachabilityRef = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(),
+	reachabilityRef = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault,
 														  nodename);
 
 	//Add it to the run loop so we will receive the notifications
