@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.20 2004/02/28 03:26:39 evands Exp $
+//$Id: AIPluginController.m,v 1.21 2004/02/28 22:39:07 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -114,7 +114,6 @@
 			NS_ENDHANDLER
 	    }
 	}
-		NSLog(@"Done with plugins!!!");
 }
 
 //Unload all the plugins
