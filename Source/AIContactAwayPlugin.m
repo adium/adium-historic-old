@@ -48,13 +48,16 @@
 {
     NSString			*entry = nil;
     NSAttributedString 	*statusMessage = nil;
+	AIStatus			*statusState;
     BOOL				away;
     
-    //Get the away state
-    away = [inObject integerStatusObjectForKey:@"Away"];
+    //Get the status state
+	statusState = [inObject statusState];
+
+    away = ([statusState statusType] == AIAwayStatusType);
     
     //Get the status message
-    statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
+    statusMessage = [[inObject statusState] statusMessage];
     
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){
@@ -90,14 +93,16 @@
     NSAttributedString	*entry = nil;
     NSAttributedString 	*statusMessage = nil;
 	NSString			*serverDisplayName = nil;
-	
+	AIStatus			*statusState;
     BOOL				away;
+    
+    //Get the status state
+	statusState = [inObject statusState];
 	
-    //Get the away state
-    away = [inObject integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
-	
+    away = ([statusState statusType] == AIAwayStatusType);
+    
     //Get the status message
-    statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
+    statusMessage = [[inObject statusState] statusMessage];
 
 	//Check to make sure we're not duplicating server display name information
 	serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
