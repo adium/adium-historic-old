@@ -16,7 +16,7 @@
     
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Gadu-Gadu"
-                                                      description:@"Gadu-Gadu c/o Libgaim"
+                                                      description:@"Gadu-Gadu"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]

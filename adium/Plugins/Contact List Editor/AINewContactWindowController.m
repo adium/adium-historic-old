@@ -13,6 +13,7 @@
 - (void)buildContactTypeMenu;
 - (void)buildGroupMenu;
 - (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
+- (void)validateEnteredName;
 @end
 
 @implementation AINewContactWindowController
@@ -45,11 +46,16 @@
 		AIServiceType 	*serviceType = [service handleServiceType];
 		
 		[[popUp_contactType menu] addItemWithTitle:[serviceType description]
-											target:nil
-											action:nil
+											target:self
+											action:@selector(selectServiceType:)
 									 keyEquivalent:@""
 								 representedObject:serviceType];
 	}
+}
+
+- (void)selectServiceType:(id)sender
+{
+	[self validateEnteredName];
 }
 
 //Build the menu of available destination groups
@@ -79,7 +85,7 @@
 			[menuItem setIndentationLevel:level];
 			[menu addItem:menuItem];
 			
-			[self _buildGroupMenu:menu forGroup:object level:level+1];
+			[self _buildGroupMenu:menu forGroup:(AIListGroup *)object level:level+1];
 		}
 	}
 }
@@ -114,6 +120,38 @@
 	
     [NSApp endSheet:[self window]];
 }
+
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+	if([notification object] == textField_contactName){
+		[self validateEnteredName];
+	}
+}
+
+- (void)validateEnteredName
+{
+	NSString		*name = [textField_contactName stringValue];
+	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
+	int				length;
+	BOOL			enabled = YES;
+	
+	if([name length] != 0 && [name length] < [serviceType allowedLength]){
+		BOOL		caseSensitive = [serviceType caseSensitive];
+		NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? name : [name lowercaseString])];
+		NSString	*validSegment = nil;
+		
+		[scanner scanCharactersFromSet:[serviceType allowedCharacters] intoString:&validSegment];
+		if(!validSegment || [validSegment length] != [name length]){
+			enabled = NO;
+		}
+	}else{
+		enabled = NO;
+	}
+	
+	[button_add setEnabled:enabled];
+}
+
+
 
 
 - (id)initWithWindowNibName:(NSString *)windowNibName

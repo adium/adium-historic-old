@@ -18,7 +18,7 @@
     
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"MSN"
-                                                      description:@"MSN c/o Libgaim"
+                                                      description:@"MSN"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"]

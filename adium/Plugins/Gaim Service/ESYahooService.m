@@ -15,7 +15,7 @@
     
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Yahoo!"
-                                                      description:@"Yahoo! c/o Libgaim"
+                                                      description:@"Yahoo!"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@"]

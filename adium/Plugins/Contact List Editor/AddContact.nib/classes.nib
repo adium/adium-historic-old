@@ -12,6 +12,7 @@
             CLASS = AINewContactWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_add" = NSButton; 
                 "popUp_contactType" = NSPopUpButton; 
                 "popUp_targetGroup" = NSPopUpButton; 
                 "textField_contactName" = NSTextField; 
