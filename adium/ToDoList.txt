@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.99 2004/05/06 23:07:06 evands Exp $
+$Id: ToDoList.txt,v 1.100 2004/05/06 23:09:19 evands Exp $
 
 
 Legend
@@ -18,9 +18,6 @@ Bugs
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
-* When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
-   - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
-   - (Evan: We shouldn't need to write to the keychain when the uid changes now since we're using the uniqueObjectID. Maybe an observer doing something dumb?)
 * Clicking the info button with nothing selected (1 group, 0 contacts defined) shows a blank window titled "Window"
 * Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
@@ -42,7 +39,6 @@ Contact List:
 * Adding a group makes the contact list window reappear.
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
 * Offline contacts are not always displaying
-
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -267,6 +263,8 @@ http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0
 
 * Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
 
+* WebKit caching is meaning that buddy icons don't update until Adium restarts.
+
 -------------------------------------------------------------------------------------------------------
 Waiting On
 -------------------------------------------------------------------------------------------------------
@@ -326,6 +324,7 @@ ced preference panes.
 = Adding a contact that already exists on the list seems to cause problems
 = Can "add" a contact with no accounts (the button should dim with no accounts checked)
 = Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
+= When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
