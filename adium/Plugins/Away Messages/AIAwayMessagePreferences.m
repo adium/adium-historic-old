@@ -328,6 +328,8 @@
     //Delete the selected away
     selectedRow = [outlineView_aways selectedRow];
     selectedAway = [outlineView_aways itemAtRow:selectedRow];
+	
+#warning The arrayOfSelectedItems crashes if the away message was selected... easy way to test on that.  This is a note to disable arrayOfSelectedItems if it is not fixed by next release.
     [self removeObject:selectedAway fromArray:awayMessageArray]; //We can't use removeObject, since it will treat similar aways as identical and remove them all!
 	
     //reload and save changes 
