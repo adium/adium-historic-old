@@ -28,6 +28,10 @@
 - (unsigned long)getTrid:(BOOL)increment;
 @end
 
+/* note to self: How to fix the crashes:
+    don't install the socket into the dict when it connects. instead, pass it around in userInfo until we are ready to send, and then add it to switchBoardDict. this will keep improperly connected sockets from being used. */
+
+
 @implementation MSNAccount
 
 /*********************/
@@ -52,7 +56,7 @@
             @"MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n%@",
             message];
         
-        if(sbSocket)//there's already an SB session
+        if(sbSocket && [sbSocket isValid])//there's already an SB session
         {
             [self sendMessage:payload onSocket:sbSocket];
         }
@@ -745,18 +749,6 @@
                                 modifiedStatusKeys:
                                     [NSArray arrayWithObject:@"Online"]];
                         }
-                        else if([command isEqual:@"ACK"])
-                        {
-                            [messageArray removeObjectAtIndex:[[message objectAtIndex:1] intValue]];
-                        }
-                        else if([command isEqual:@"NAK"])
-                        {
-                            //Shout at the user somehow, NSLog for now. Should be a dialog later.
-                            NSLog(@"Faiure to send message %@", 
-                                [messageArray objectAtIndex:[[message objectAtIndex:1] intValue]]);
-                            
-                            [messageArray removeObjectAtIndex:[[message objectAtIndex:1] intValue]];
-                        }
                         else if([command isEqual:@""])
                         {
                             //do stuff...
@@ -869,23 +861,27 @@
 - (void)update:(NSTimer *)timer
 {
     ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+	//NSData *inData = nil;
 	
-	switch (status)
+    switch (status)
 	{
         case STATUS_ONLINE:
             [self getPackets:timer];
             //now enumerate over each SB socket, and check for packets on each one.
             //if there is a packet, go to some kind of handling method
             
-          //  NSEnumerator	*numer = [switchBoardDict objectEnumerator];
-          //  AISocket		*sbSocket = nil;
+           /* NSEnumerator	*numer = [switchBoardDict objectEnumerator];
+            AISocket		*sbSocket = nil;
             
-            //while (sbSocket = [numer nextObject])
+            while (sbSocket = [numer nextObject]) 
             {
-                //CODE GO HERE, MONKEY!
+                if([sbSocket getDataToNewline:&inData remove:YES])
+                {
+                    [self handleSBMessage:inData];
+                }
             }
             
-            break;
+            break;*/
         case STATUS_OFFLINE:
         case STATUS_NA:
             break;
@@ -1138,9 +1134,8 @@
                     AISocket *sbSocket = [AISocket socketWithHost:[hostAndPort objectAtIndex:0]
                                                 port:[[hostAndPort objectAtIndex:1] intValue]];
                     
-                    //add it to the dict
-                    [switchBoardDict setObject:sbSocket 
-                        forKey:[[timer userInfo] objectForKey:@"Handle"]];
+                    //add it to userInfo
+                    [[timer userInfo] setObject:sbSocket forKey:@"Socket"];
                         
                     //now, setup the command for the next phase
                     [[timer userInfo] 
@@ -1154,9 +1149,9 @@
                 }
             }
             break;
-            
+
         case 2:
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[[timer userInfo] objectForKey:@"Socket"]
                     sendData:[[[timer userInfo] objectForKey:@"IDString"]
                         dataUsingEncoding:NSUTF8StringEncoding]])
             {
@@ -1171,7 +1166,7 @@
             break;
             
         case 3:
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[[timer userInfo] objectForKey:@"Socket"]
                     getDataToNewline:&inData remove:YES])
             {
                 //uhoh! error!
@@ -1180,10 +1175,6 @@
                 {
                     //shout at the user
                     NSLog(@"Uhoh! Server killed the connection!");
-                    
-                    //remove the socket
-                    [switchBoardDict removeObjectForKey:
-                        [[timer userInfo] objectForKey:@"Handle"]];
                     
                     //stop this madness!
                     [timer invalidate];
@@ -1194,7 +1185,7 @@
                         [NSString stringWithCString:[inData bytes] length:[inData length]]);
                         
                     //prepare the message!
-                    [[timer userInfo] setObject:[NSString stringWithFormat:@"CAL 2 RINGING %@\r\n",
+                    [[timer userInfo] setObject:[NSString stringWithFormat:@"CAL 2 %@\r\n",
                             [[timer userInfo] objectForKey:@"Handle"]]
                         forKey:@"Ring"];
                     
@@ -1206,12 +1197,12 @@
             
         case 4:
             //send the thing out
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[[timer userInfo] objectForKey:@"Socket"]
                     sendData:[[[timer userInfo] objectForKey:@"Ring"]
                         dataUsingEncoding:NSUTF8StringEncoding]])
             {
                 NSLog(@">>> %@", [[timer userInfo] objectForKey:@"Ring"]);
-                
+
                 //remove the temp variable
                 [[timer userInfo] removeObjectForKey:@"Ring"];
                 
@@ -1221,7 +1212,7 @@
             break;
             
         case 5:
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[[timer userInfo] objectForKey:@"Socket"]
                     getDataToNewline:&inData remove:YES])
             {
                 //uhoh! error!
@@ -1231,10 +1222,6 @@
                     //shout at the user
                     NSLog(@"Uhoh! Error!"); // for now assume all errors are fatal
                     
-                    //remove the socket
-                    [switchBoardDict 
-                        removeObjectForKey:[[timer userInfo] objectForKey:@"Handle"]];
-                    
                     //stop this madness!
                     [timer invalidate];
                 }
@@ -1242,33 +1229,22 @@
                 {
                     NSLog(@"<<< %@", 
                         [NSString stringWithCString:[inData bytes] length:[inData length]]);
-                        
-                    //move on
-                    [[timer userInfo] setObject:[NSNumber numberWithInt:6] forKey:@"Phase"];
-                }
-            }
-            break;
-        
-        case 6:
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
-                    getDataToNewline:&inData remove:YES])
-            {
-                if([[NSString stringWithCString:[inData bytes] length:[inData length]] 
-                        hasPrefix:@"JOI"])
-                {
-                    NSLog(@"<<< %@", 
-                        [NSString stringWithCString:[inData bytes] length:[inData length]]);
+
+                    //finally add it to the dict
+                    [switchBoardDict setObject:[[timer userInfo] objectForKey:@"Socket"] 
+                        forKey:[[timer userInfo] objectForKey:@"Handle"]];
                         
                     if(![[[timer userInfo] objectForKey:@"Type"] isEqual:@"Empty"])
                     {
                         [self sendMessage:[[timer userInfo] objectForKey:@"Message"]
-                            onSocket:[switchBoardDict objectForKey:[[timer userInfo]
-                                objectForKey:@"Handle"]]];
+                            onSocket:[[timer userInfo] objectForKey:@"Socket"]];
                     }
                     [timer invalidate];
+
                 }
             }
             break;
+        
     }
 }
 
@@ -1285,5 +1261,30 @@
     }
     return lastTrid;
 }
+
+/*- (void)handleSBMessage:(NSDatat *)inData
+{
+    NSArray *message = [[NSString stringWithCString:[inData bytes] length:[inData length]-2] 
+        componentsSeparatedByString:@" "];
+        
+    NSString *command = [message objectAtIndex:0];
+    
+    if([command isEqual:@"MSG"])
+    {
+        
+    }
+    else if([command isEqual:@"ACK"])
+    {
+        [messageArray removeObjectAtIndex:[[message objectAtIndex:1] intValue]];
+    }
+    else if([command isEqual:@"NAK"])
+    {
+        //Shout at the user somehow, NSLog for now. Should be a dialog later.
+        NSLog(@"Faiure to send message %@", 
+            [messageArray objectAtIndex:[[message objectAtIndex:1] intValue]]);
+        
+        [messageArray removeObjectAtIndex:[[message objectAtIndex:1] intValue]];
+    }
+}*/
 
 @end
