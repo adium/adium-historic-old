@@ -20,14 +20,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		07CE05590661D7E600C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = FileTransferProgressWindow.nib;
-			path = Source/FileTransferProgressWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		07CE058E0661D7FE00C50929 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4701,129 +4693,11 @@
 			children = (
 				34FDD6E305632BFD00F5B30F,
 				34FDD6E405632BFD00F5B30F,
-				349FE301074D01D300E36B3B,
-				349FE300074D01D300E36B3B,
-				349FE2FF074D01D300E36B3B,
-				349FE2FE074D01D300E36B3B,
-				349FE302074D01D300E36B3B,
-				349FE2FD074D01D300E36B3B,
-				349FE2FC074D01D200E36B3B,
-				07CE05590661D7E600C50929,
 			);
 			isa = PBXGroup;
 			name = "File Transfer";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		349FE2FC074D01D200E36B3B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESFileTransferProgressWindowController.m;
-			path = Source/ESFileTransferProgressWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE2FD074D01D300E36B3B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESFileTransferProgressWindowController.h;
-			path = Source/ESFileTransferProgressWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE2FE074D01D300E36B3B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESFileTransferProgressView.m;
-			path = Source/ESFileTransferProgressView.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE2FF074D01D300E36B3B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESFileTransferProgressView.h;
-			path = Source/ESFileTransferProgressView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE300074D01D300E36B3B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESFileTransferProgressRow.m;
-			path = Source/ESFileTransferProgressRow.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE301074D01D300E36B3B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESFileTransferProgressRow.h;
-			path = Source/ESFileTransferProgressRow.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE302074D01D300E36B3B = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ESFileTransferProgressView.nib;
-			path = Source/ESFileTransferProgressView.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE303074D01D300E36B3B = {
-			fileRef = 349FE2FC074D01D200E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE304074D01D300E36B3B = {
-			fileRef = 349FE2FD074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE305074D01D300E36B3B = {
-			fileRef = 349FE2FE074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE306074D01D300E36B3B = {
-			fileRef = 349FE2FF074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE307074D01D300E36B3B = {
-			fileRef = 349FE300074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE308074D01D300E36B3B = {
-			fileRef = 349FE301074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE309074D01D300E36B3B = {
-			fileRef = 349FE302074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FF5E5074D6D6400E36B3B = {
-			fileRef = 07CE05590661D7E600C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		349FF9F90750751500E36B3B = {
 			fileEncoding = 4;
@@ -6017,9 +5891,6 @@
 				340EC2280736BF32001653BF,
 				4B5323EC0747BDED0073DF4D,
 				4B53245A0747C82B0073DF4D,
-				349FE304074D01D300E36B3B,
-				349FE306074D01D300E36B3B,
-				349FE308074D01D300E36B3B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6335,8 +6206,6 @@
 				34F1022F0734499700890D3B,
 				C4C63A09073889B2005E076D,
 				C44125540740B4DA003C2C5B,
-				349FE309074D01D300E36B3B,
-				349FF5E5074D6D6400E36B3B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6620,9 +6489,6 @@
 				340EC2290736BF32001653BF,
 				4B5323ED0747BDED0073DF4D,
 				4B53245B0747C82B0073DF4D,
-				349FE303074D01D300E36B3B,
-				349FE305074D01D300E36B3B,
-				349FE307074D01D300E36B3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
