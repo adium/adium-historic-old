@@ -28,7 +28,7 @@
 # If it does not work, try to disable $xml_rpc in the configuration section
 # below.
 #
-# $Id: ciabot.pl,v 1.20 2004/01/23 03:36:09 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.21 2004/01/23 03:39:58 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
@@ -249,7 +249,7 @@ for (my $dirnum = 0; $dirnum < @dir; $dirnum++) {
     s/</&lt;/g;
     s/>/&gt;/g;
     $message .= "  <file>$_</file>\n";
-  } split(' ,,,', $dirfiles[$dirnum]);
+  } split(' ,,,,', $dirfiles[$dirnum]);
 }
 
 $message .= <<EM
