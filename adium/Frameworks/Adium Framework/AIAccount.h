@@ -16,7 +16,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIAdium, AIContactHandle, AIContactGroup, AIHandleIdentifier, AIServiceType, AIMessageObject;
-@protocol AIContentObject, AIServiceController;
+@protocol AIContentObject, AIServiceController, AIAccountViewController;
 
 typedef enum {
     STATUS_NA = -1,
@@ -32,8 +32,8 @@ typedef enum {
 @protocol AIAccount_Required
     // Init anything relating to the account
     - (void)initAccount;
-    // Return a view for the connection window
-    - (NSView *)accountView;
+    // Return a view controller for the connection window
+    - (id <AIAccountViewController>)accountView;
     // Return a unique ID for this account type and username
     - (NSString *)accountID;
     // Return a readable description of this account's username

@@ -134,10 +134,21 @@ typedef enum {
 @end
 
 @protocol AIServiceController
+- (id)retain;
+- (oneway void)release;
+- (id)autorelease;
 - (NSString *)identifier;
 - (NSString *)description;
 - (AIServiceType *)handleServiceType;
 - (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner;
+@end
+
+@protocol AIAccountViewController
+- (id)retain;
+- (oneway void)release;
+- (id)autorelease;
+- (NSView *)view;
+- (void)saveChanges;
 @end
 
 

@@ -63,12 +63,9 @@ static char *hash_password(const char * const password);
 }
 
 // Return a view for the connection window
-- (NSView *)accountView
+- (id <AIAccountViewController>)accountView
 {
-    if(!accountViewController){
-        accountViewController = [[AIMTOC2AccountViewController accountViewForOwner:owner account:self] retain];
-    }
-    return([accountViewController view]);
+    return([AIMTOC2AccountViewController accountViewForOwner:owner account:self]);
 }
 
 // Return a unique ID for this account type and username
@@ -817,6 +814,13 @@ static char *hash_password(const char * const password);
         case 980:
             NSLog(@"ERROR: Invalid username or password");
             [self disconnect];
+
+            APPKIT_EXTERN int NSRunAlertPanel(NSString *title, NSString *msg, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...);
+            
+            
+            //Prompt error
+            //choices to -reenter pass, cancel, try again
+            
         break;
         case 981:
             NSLog(@"ERROR: Unknown error (Service temporarily unavailable)");

@@ -16,6 +16,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIAccount, AIAdium;
+@protocol AIAccountViewController;
 
 @interface AIAccountListEditSheetController : NSWindowController {
     IBOutlet		NSPopUpButton	*popupMenu_serviceList;
@@ -23,15 +24,15 @@
     IBOutlet		NSButton	*button_savePassword;
     IBOutlet		NSButton	*button_autoConnect;
 
-    AIAccount		*account;
-    AIAdium		*owner;
+    AIAccount			*account;
+    AIAdium			*owner;
 
+    id <AIAccountViewController>	accountViewController;
 }
 
 + (void)showAccountListEditSheetForAccount:(AIAccount *)inAccount onWindow:(NSWindow *)inWindow owner:(id)inOwner;
-- (IBAction)togglePasswordStorage:(id)sender;
 - (IBAction)selectServiceType:(id)sender;
 - (IBAction)closeWindow:(id)sender;
-- (IBAction)toggleAutoConnect:(id)sender;
+- (IBAction)okay:(id)sender;
 
 @end

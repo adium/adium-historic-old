@@ -3341,6 +3341,30 @@
 			settings = {
 			};
 		};
+		F56621A503AD02AC01A8010A = {
+			isa = PBXFileReference;
+			name = AIMiChatAccount.h;
+			path = "Plugins/AIM iChat Service/AIMiChatAccount.h";
+			refType = 4;
+		};
+		F56621A603AD02AC01A8010A = {
+			isa = PBXFileReference;
+			name = AIMiChatAccount.m;
+			path = "Plugins/AIM iChat Service/AIMiChatAccount.m";
+			refType = 4;
+		};
+		F56621A703AD02AC01A8010A = {
+			isa = PBXFileReference;
+			name = AIMiChatService.h;
+			path = "Plugins/AIM iChat Service/AIMiChatService.h";
+			refType = 4;
+		};
+		F56621A803AD02AC01A8010A = {
+			isa = PBXFileReference;
+			name = AIMiChatService.m;
+			path = "Plugins/AIM iChat Service/AIMiChatService.m";
+			refType = 4;
+		};
 		F567DD510306A43A01A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
@@ -5988,8 +6012,8 @@
 		F5A01D85037980F201A8010A = {
 			children = (
 				F5AD9BAD0381EA4501A8010A,
-				F5A01D8F0379818101A8010A,
-				F5A01D930379818F01A8010A,
+				F56621A803AD02AC01A8010A,
+				F56621A603AD02AC01A8010A,
 				F54441AC0378A36A01A8010A,
 			);
 			isa = PBXGroup;
@@ -6101,26 +6125,6 @@
 		F5A01D8D0379813F01A8010A = {
 			isa = PBXTargetDependency;
 			target = F5A01D8B0379813301A8010A;
-		};
-		F5A01D8E0379818101A8010A = {
-			isa = PBXFileReference;
-			path = AIMiChatService.h;
-			refType = 4;
-		};
-		F5A01D8F0379818101A8010A = {
-			isa = PBXFileReference;
-			path = AIMiChatService.m;
-			refType = 4;
-		};
-		F5A01D920379818F01A8010A = {
-			isa = PBXFileReference;
-			path = AIMiChatAccount.h;
-			refType = 4;
-		};
-		F5A01D930379818F01A8010A = {
-			isa = PBXFileReference;
-			path = AIMiChatAccount.m;
-			refType = 4;
 		};
 		F5A025050363395F01A8010A = {
 			fileRef = F57938AD033E737001A8010A;
@@ -6328,8 +6332,8 @@
 		};
 		F5AD9BAD0381EA4501A8010A = {
 			children = (
-				F5A01D8E0379818101A8010A,
-				F5A01D920379818F01A8010A,
+				F56621A503AD02AC01A8010A,
+				F56621A703AD02AC01A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;

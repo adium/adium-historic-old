@@ -56,8 +56,6 @@
     return(view_accountView);
 }
 
-// Save & lock (or un-save and unlock) the password
-
 - (void)configureViewForStatus:(ACCOUNT_STATUS)inStatus
 {
     //Dim unavailable controls
@@ -68,15 +66,15 @@
     }
 }
 
-// Save the entered screenName, and check for saved passwords
-- (void)controlTextDidChange:(NSNotification *)notification
-{    
+//Save the changed properties
+- (void)saveChanges
+{
     [[account properties] setObject:[textField_handle stringValue] forKey:@"Handle"];
 
     //Broadcast a properties changed message
     [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
-                                                      object:self
-                                                    userInfo:nil];    
+                                                                         object:self
+                                                                       userInfo:nil];
 }
 
 // Set up the connect view using the saved properties
@@ -95,5 +93,10 @@
     //Configure the control dimming for the current status
     [self configureViewForStatus:[account status]];
 }
+
+//Is there any way to squelch the 'does not fully implement protocol' warnings besided this:?
+- (id)retain{ return([super retain]); }
+- (oneway void)release{ [super release]; }
+- (id)autorelease { return([super autorelease]); }
 
 @end

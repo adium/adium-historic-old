@@ -199,7 +199,10 @@
 
     menuItem_closeTab = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@"r"];
     [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
-    
+
+    //Add our other menu items
+//   menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@"r"];
+//    [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
     
 
     return(self);

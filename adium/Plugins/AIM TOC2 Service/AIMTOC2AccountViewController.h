@@ -15,25 +15,21 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
+#import "AIAdium.h"
 
 @class AIAdium, AIMTOC2Account;
 
-@interface AIMTOC2AccountViewController : NSObject {
+@interface AIMTOC2AccountViewController : NSObject <AIAccountViewController> {
     AIAdium		*owner;
     AIMTOC2Account	*account;
 
     IBOutlet		NSView		*view_accountView;
     IBOutlet		NSTextField	*textField_handle;
-//    IBOutlet		NSTextField	*textField_password;
-//    IBOutlet		NSButton	*button_savePassword;
-
 }
 
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
 - (id)initForOwner:(id)inOwner account:(id)inAccount;
-//- (IBAction)togglePasswordStorage:(id)sender;
 - (void)configureViewForStatus:(ACCOUNT_STATUS)inStatus;
-- (void)controlTextDidChange:(NSNotification *)notification;
 - (void)initAccountView;
 - (NSView *)view;
 

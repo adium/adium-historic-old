@@ -1,15 +1,11 @@
 {
     IBClasses = (
         {
-            ACTIONS = {
-                closeWindow = id; 
-                selectServiceType = id; 
-                toggleAutoConnect = id; 
-                togglePasswordStorage = id; 
-            }; 
+            ACTIONS = {closeWindow = id; okay = id; selectServiceType = id; }; 
             CLASS = AIAccountListEditSheetController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountViewController = id; 
                 "button_autoConnect" = NSButton; 
                 "button_savePassword" = NSButton; 
                 "popupMenu_serviceList" = NSPopUpButton; 

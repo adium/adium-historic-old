@@ -39,29 +39,6 @@
     [NSApp beginSheet:[controller window] modalForWindow:inWindow modalDelegate:controller didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
 }
 
-- (IBAction)toggleAutoConnect:(id)sender
-{
-    //Change the account's value
-    [[account properties] setObject:[NSNumber numberWithBool:(BOOL)[button_autoConnect intValue]] forKey:@"AutoConnect"];
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
-                                                    object:account
-                                                userInfo:nil];    
-}
-
-- (IBAction)togglePasswordStorage:(id)sender
-{
-    if([button_savePassword state] != NSOnState){
-        //remove password from keychain
-        [[owner accountController] forgetPasswordForAccount:account];
-    }
-
-    //Change the account's value
-    [[account properties] setObject:[NSNumber numberWithBool:(BOOL)[button_savePassword intValue]] forKey:@"SavedPassword"];
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
-                                                    object:account
-                                                userInfo:nil];
-}
-
 // User selected a service type from the menu
 - (IBAction)selectServiceType:(id)sender
 {
@@ -74,6 +51,33 @@
     //reconfigure
     [self configureAccountOptionsView];
 }
+
+// Save changes and close the sheet
+- (IBAction)okay:(id)sender
+{
+    BOOL	autoConnect = [button_autoConnect intValue];
+    BOOL	savePassword = [button_savePassword state];
+    
+    //Let the account save
+    if(accountViewController) [accountViewController saveChanges];
+
+    //Autoconnect
+    [[account properties] setObject:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect"];
+
+    //Save Password
+    //If the user unchecked 'savePassword', we tell Adium to forget it
+    if([[[account properties] objectForKey:@"SavedPassword"] boolValue] && !savePassword){
+        [[owner accountController] forgetPasswordForAccount:account];
+    }
+    [[account properties] setObject:[NSNumber numberWithBool:savePassword] forKey:@"SavedPassword"];
+    
+    //Broadcast a properties changed notification so everyone can update
+    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
+                                                                         object:account
+                                                                       userInfo:nil];
+    
+    [self closeWindow:nil];
+}    
 
 // closes this window
 - (IBAction)closeWindow:(id)sender
@@ -103,6 +107,7 @@
     [[[owner accountController] accountNotificationCenter] removeObserver:self];
     [account release];
     [owner release];
+    [accountViewController release];
 
     [super dealloc];
 }
@@ -134,36 +139,38 @@
     BOOL	autoConnect = ([[[account properties] objectForKey:@"AutoConnect"] boolValue]);
 
     [button_savePassword setState:savedPassword];
-//    [button_autoConnect setEnabled:savedPassword];
     [button_autoConnect setState:autoConnect];
 }
 
 //configure the account specific options
 - (void)configureAccountOptionsView
 {
+    NSWindow		*window = [self window];
     NSView		*accountView;
     NSRect		containerFrame;
     NSRect		newFrame;
-    NSWindow		*window = [self window];
 
-    //remove the existing account view
+    //Close any currently open controllers, saving changes(?)
+    if(accountViewController){ 
+        [accountViewController saveChanges];
+        [accountViewController release]; accountViewController = nil;
+    }
     [view_accountDetails removeAllSubviews];
 
     //select the correct service in the service menu
     [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[account service]]];
 
     //Correctly size the sheet for the account details view
-    accountView = [account accountView];
+    accountViewController = [[account accountView] retain];
+    accountView = [accountViewController view];
     containerFrame = [window frame];
     containerFrame.size.height -= [view_accountDetails frame].size.height;
     containerFrame.size.height += [accountView frame].size.height;
-//    [window setFrame:[NSWindow frameRectForContentRect:containerFrame styleMask:[window styleMask]] display:NO];            
     
     newFrame = [window frame];
     newFrame.size.height = containerFrame.size.height;
     newFrame.origin.y += ([window frame].size.height - containerFrame.size.height);
     [window setFrame:newFrame display:YES animate:YES];
-
 
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
@@ -189,5 +196,5 @@
 {
     [sheet orderOut:nil];
 }
-    
+
 @end
