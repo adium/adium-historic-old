@@ -298,7 +298,9 @@
 			if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
 				//Special hack for all the incorrectly made icon packs we have floating around out there :P
 				imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
-				imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:@"" inDirectory:@"Shared Dock Icon Images"];\
+				imagePath = [[NSBundle mainBundle] pathForResource:imageName
+															ofType:@""
+													   inDirectory:@"Shared Dock Icon Images"];
 			}else{
 				imagePath = [folderPath stringByAppendingPathComponent:imageName];
 			}
@@ -333,7 +335,9 @@
 		if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
 			//Special hack for all the incorrectly made icon packs we have floating around out there :P
 			imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
-			imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:@"" inDirectory:@"Shared Dock Icon Images"];\
+			imagePath = [[NSBundle mainBundle] pathForResource:imageName
+														ofType:@"" 
+												   inDirectory:@"Shared Dock Icon Images"];
 		}else{
 			imagePath = [folderPath stringByAppendingPathComponent:imageName];
 		}
