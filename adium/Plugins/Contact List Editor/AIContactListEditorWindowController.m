@@ -788,8 +788,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //}
 //
 ////Inspect the selected contact
-//- (IBAction)inspect:(id)sender
-//{
+- (IBAction)inspect:(id)sender
+{
 ///*    AIEditorListHandle	*selectedObject = [outlineView_contactList itemAtRow:[outlineView_contactList selectedRow]];
 //
 //    if([selectedObject isKindOfClass:[AIEditorListHandle class]]){
@@ -805,11 +805,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //        //Show its info
 //        [[adium contactController] showInfoForContact:contact];
 //    }*/
-//}
-//
-////Delete the selection
-//- (IBAction)delete:(id)sender
-//{
+}
+
+//Delete the selection
+- (IBAction)delete:(id)sender
+{
 //    NSDictionary	*contextInfo;
 //    NSMutableArray	*handles;
 //    NSMutableArray 	*groups;
@@ -854,10 +854,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //
 //    //De-select everything
 //    [outlineView_contactList deselectAll:nil];
-//}
-//
-//- (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-//{
+}
+
+- (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
 //    NSDictionary	*targetDict = contextInfo;
 //    
 //    if(returnCode == NSAlertDefaultReturn){
@@ -880,11 +880,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    
 //    [targetDict release];
 //    [outlineView_contactList reloadData]; //Refresh
-//}
-//
-////Create a new group
-//- (IBAction)group:(id)sender
-//{
+}
+
+//Create a new group
+- (IBAction)group:(id)sender
+{
 //    AIEditorListGroup	*newGroup;
 //
 //    //End any editing
@@ -896,12 +896,12 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    
 //    //Select, scroll to, and edit the new group
 //    [self scrollToAndEditObject:newGroup column:[outlineView_contactList tableColumnWithIdentifier:@"handle"]];
-//
-//}
+
+}
 
 //Create a new handle
-//- (IBAction)handle:(id)sender
-//{
+- (IBAction)handle:(id)sender
+{
 //    AIEditorListHandle	*newHandle;
 //    AIEditorListGroup	*selectedGroup;
 //    int			selectedIndex;
@@ -926,9 +926,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    [outlineView_contactList reloadData];
 //    [outlineView_contactList expandItem:[newHandle containingGroup]]; //make sure it's expanded
 //    [self scrollToAndEditObject:newHandle column:[outlineView_contactList tableColumnWithIdentifier:@"handle"]];
-//
-//}
-//
+
+}
+
 ////End any editing in our outline view
 //- (void)endEditing
 //{
@@ -936,9 +936,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    [[outlineView_contactList window] makeFirstResponder:outlineView_contactList];
 //}
 //
-////Import contacts from a .blt file
-//- (IBAction)import:(id)sender
-//{
+//Import contacts from a .blt file
+- (IBAction)import:(id)sender
+{
 //    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 //    
 //    [openPanel 
@@ -949,82 +949,82 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //            modalDelegate:self
 //            didEndSelector:@selector(concludeImportPanel:returnCode:contextInfo:)
 //            contextInfo:nil];
-//}
-//
+}
+
 ////Finish up the importing panel
-//- (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
-//{
+- (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
 //    if(returnCode == NSOKButton){
 //        [plugin importFile:[[panel filenames] objectAtIndex:0]];
 //    }
-//}
-//
+}
+
 //
 //// Window toolbar ---------------------------------------------------------------
-//- (void)installToolbar
-//{
-//    NSToolbar *toolbar;
-//
-//    //Setup the toolbar
-//    toolbar = [[[NSToolbar alloc] initWithIdentifier:@"UserSelectionPanel"] autorelease];
-//    toolbarItems = [[NSMutableDictionary dictionary] retain];
-//
-//    //Add the items
-//    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-//                                    withIdentifier:@"Group"
-//                                             label:@"Group"
-//                                      paletteLabel:@"Group"
-//                                           toolTip:@"Create a new group"
-//                                            target:self
-//                                   settingSelector:@selector(setImage:)
-//                                       itemContent:[AIImageUtilities imageNamed:@"addGroup" forClass:[self class]]
-//                                            action:@selector(group:)
-//                                              menu:NULL];
-//
-//    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-//                                    withIdentifier:@"Handle"
-//                                             label:@"Handle"
-//                                      paletteLabel:@"Handle"
-//                                           toolTip:@"Add a handle to your contact list"
-//                                            target:self
-//                                   settingSelector:@selector(setImage:)
-//                                       itemContent:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]
-//                                            action:@selector(handle:)
-//                                              menu:NULL];
-//
-//    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-//                                    withIdentifier:@"Delete"
-//                                             label:@"Delete"
-//                                      paletteLabel:@"Delete"
-//                                           toolTip:@"Remove an item from your contact list"
-//                                            target:self
-//                                   settingSelector:@selector(setImage:)
-//                                       itemContent:[AIImageUtilities imageNamed:@"remove" forClass:[self class]]
-//                                            action:@selector(delete:)
-//                                              menu:NULL];
-//                                            
-//        [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-//                                    withIdentifier:@"Import"
-//                                             label:@"Import"
-//                                      paletteLabel:@"Import"
-//                                           toolTip:@"Load buddies from a .blt file"
-//                                            target:self
-//                                   settingSelector:@selector(setImage:)
-//                                       itemContent:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]
-//                                            action:@selector(import:)
-//                                              menu:NULL];
-//
-//    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-//                                    withIdentifier:@"Inspector"
-//                                             label:@"Inspector"
-//                                      paletteLabel:@"Inspector"
-//                                           toolTip:@"Inspector"
-//                                            target:self
-//                                   settingSelector:@selector(setImage:)
-//                                       itemContent:[AIImageUtilities imageNamed:@"inspect" forClass:[self class]]
-//                                            action:@selector(inspect:)
-//                                              menu:NULL];
-//
+- (void)installToolbar
+{
+    NSToolbar *toolbar;
+
+    //Setup the toolbar
+    toolbar = [[[NSToolbar alloc] initWithIdentifier:@"UserSelectionPanel"] autorelease];
+    toolbarItems = [[NSMutableDictionary dictionary] retain];
+
+    //Add the items
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Group"
+                                             label:@"Group"
+                                      paletteLabel:@"Group"
+                                           toolTip:@"Create a new group"
+                                            target:self
+                                   settingSelector:@selector(setImage:)
+                                       itemContent:[AIImageUtilities imageNamed:@"addGroup" forClass:[self class]]
+                                            action:@selector(group:)
+                                              menu:NULL];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Handle"
+                                             label:@"Handle"
+                                      paletteLabel:@"Handle"
+                                           toolTip:@"Add a handle to your contact list"
+                                            target:self
+                                   settingSelector:@selector(setImage:)
+                                       itemContent:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]
+                                            action:@selector(handle:)
+                                              menu:NULL];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Delete"
+                                             label:@"Delete"
+                                      paletteLabel:@"Delete"
+                                           toolTip:@"Remove an item from your contact list"
+                                            target:self
+                                   settingSelector:@selector(setImage:)
+                                       itemContent:[AIImageUtilities imageNamed:@"remove" forClass:[self class]]
+                                            action:@selector(delete:)
+                                              menu:NULL];
+                                            
+        [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Import"
+                                             label:@"Import"
+                                      paletteLabel:@"Import"
+                                           toolTip:@"Load buddies from a .blt file"
+                                            target:self
+                                   settingSelector:@selector(setImage:)
+                                       itemContent:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]
+                                            action:@selector(import:)
+                                              menu:NULL];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Inspector"
+                                             label:@"Inspector"
+                                      paletteLabel:@"Inspector"
+                                           toolTip:@"Inspector"
+                                            target:self
+                                   settingSelector:@selector(setImage:)
+                                       itemContent:[AIImageUtilities imageNamed:@"inspect" forClass:[self class]]
+                                            action:@selector(inspect:)
+                                              menu:NULL];
+
 //    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 //                                    withIdentifier:@"ToggleDrawer"
 //                                             label:@"ToggleDrawer"
@@ -1035,20 +1035,20 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //                                       itemContent:[AIImageUtilities imageNamed:@"AccountLarge" forClass:[self class]]
 //                                            action:@selector(toggleDrawer:)
 //                                              menu:NULL];
-//    
-//    //Configure the toolbar
-//    [toolbar setDelegate:self];
-//    [toolbar setAllowsUserCustomization:YES];
-//    [toolbar setAutosavesConfiguration:YES];
-//    [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
-//
-//    //Install it
-//    [[self window] setToolbar:toolbar];
-//}
+    
+    //Configure the toolbar
+    [toolbar setDelegate:self];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration:YES];
+    [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
+
+    //Install it
+    [[self window] setToolbar:toolbar];
+}
 
 //Validate a toolbar item
-//- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
-//{
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
 //    if(([[theItem itemIdentifier] compare:@"Delete"] == 0) || ([[theItem itemIdentifier] compare:@"Inspector"] == 0)){
 //        if([outlineView_contactList selectedRow] != -1 && [[self window] firstResponder] == outlineView_contactList){
 //            return(YES);
@@ -1063,28 +1063,28 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //        }
 //    }
 //
-//    return(YES);
-//}
-//
+    return(YES);
+}
+
 ////Return the requested toolbar item
-//- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
-//{
-//    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
-//}
-//
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+{
+    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+}
+
 ////Return the default toolbar set
-//- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
-//{
-//    return [NSArray arrayWithObjects:@"Group",@"Handle",NSToolbarSeparatorItemIdentifier,@"Delete",@"Import",NSToolbarFlexibleSpaceItemIdentifier,@"Inspector",nil];
-//}
-//
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [NSArray arrayWithObjects:@"Group",@"Handle",NSToolbarSeparatorItemIdentifier,@"Delete",@"Import",NSToolbarFlexibleSpaceItemIdentifier,@"Inspector",nil];
+}
+
 ////Return a list of allowed toolbar items
-//- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
-//{
-//    return [NSArray arrayWithObjects:@"Group",@"Handle",@"Delete",@"Import",@"Inspector",@"ToggleDrawer",NSToolbarSeparatorItemIdentifier, NSToolbarSpaceItemIdentifier,NSToolbarFlexibleSpaceItemIdentifier,nil];
-//}
-//
-//
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [NSArray arrayWithObjects:@"Group",@"Handle",@"Delete",@"Import",@"Inspector",@"ToggleDrawer",NSToolbarSeparatorItemIdentifier, NSToolbarSpaceItemIdentifier,NSToolbarFlexibleSpaceItemIdentifier,nil];
+}
+
+
 //
 //
 //// Private ------------------------------------------------------------------

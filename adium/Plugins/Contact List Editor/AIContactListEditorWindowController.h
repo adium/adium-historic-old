@@ -43,7 +43,7 @@
 //    
     AIContactListEditorPlugin	*plugin;			//Our owning plugin
 //
-//    NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
+    NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
 //    NSMutableArray		*dragItems;
 //    AIEditorCollection		*dragSourceCollection;
 //    
