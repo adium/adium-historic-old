@@ -835,7 +835,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		NSTabViewItem		*tabViewItem = [[AICustomTabDragging sharedInstance] draggedTabViewItem];
 		int					hover;
 		
-		//If dragging is disallowed, ask our delegate where this tab should go		//Desired index
+		//If dragging is disallowed, ask our delegate where this tab should go
 		int	desiredIndex = [delegate customTabView:self indexForInsertingTabViewItem:tabViewItem];		
 		if(outIndex) *outIndex = desiredIndex;
 		
@@ -845,14 +845,12 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		if(desiredIndex == 0){
 			hover = CUSTOM_TABS_INDENT;
 		}else{
-			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]);
+			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
 		}
 		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
 	}
 }
 
-	
-	
 
 //Cursor tracking ------------------------------------------------------------------------------------------------------
 #pragma mark Cursor Tracking

@@ -36,10 +36,6 @@ static NSImage		*tabCloseFrontRollover = nil;
 #define TAB_RIGHT_PAD			5       //Tab right edge padding
 #define TAB_LABEL_Y_OFFSET		2       //Vertical offset of label text from center
 
-
-
-
-
 #define TAB_MIN_WIDTH			16      //(Could be used to) Enforce a mininum tab size safari style
 #define TAB_SELECTED_HIGHER     NO     	//Draw the selected tab higher?
 
@@ -202,6 +198,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
+	NSPoint destPoint;
     
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
@@ -236,101 +233,39 @@ static NSImage		*tabCloseFrontRollover = nil;
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
     }
 	
-    //
+    //Offset for icon
     rect.origin.x += leftCapWidth;
     rect.size.width -= leftCapWidth + rightCapWidth;
     
-
-	//Left Icon
+	//We'll display our close icon if the user is hovering.  Otherwise, we display the tab specified icon
 	NSImage *leftIcon = [tabViewItem icon];
-	
 	if((hoveringClose && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])) || !leftIcon){		
 		if(hoveringClose){
 			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
 		}else{
 			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
 		}
-		
-		NSRect	closeRect = [self _closeButtonRect];
-		NSSize leftIconSize = closeRect.size;
-		NSPoint destPoint = closeRect.origin;
-		
-		[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
-		
-		leftIconSize = [[tabViewItem icon] size];
-		
-		rect.origin.x += TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD;
-		rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
-		
+		destPoint = [self _closeButtonRect].origin;
+
 	}else{
-		NSSize	leftIconSize = [leftIcon size];
-		NSPoint destPoint = NSMakePoint(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
-										((frame.size.height - leftIconSize.height) / 2.0) + TAB_CLOSE_Y_OFFSET);
-		
-		[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
-		
-		rect.origin.x += TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD;
-		rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
-		
+		destPoint = NSMakePoint(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
+								((frame.size.height - [leftIcon size].height) / 2.0) + TAB_CLOSE_Y_OFFSET);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	//Right Icon
-//	NSImage *rightIcon = [tabViewItem rightIcon];
-//	NSSize	rightIconSize = [rightIcon size];
-//	
-//	destPoint = NSMakePoint(frame.origin.x + frame.size.width - [tabFrontRight size].width - TAB_RIGHT_RIGHTPAD - TAB_RIGHT_LEFTPAD - rightIconSize.width,
-//									((frame.size.height - rightIconSize.height) / 2.0) + TAB_CLOSE_Y_OFFSET);
-//
-////	[rightIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
-//	
-//	rect.size.width -= (TAB_RIGHT_LEFTPAD + rightIconSize.width + TAB_RIGHT_RIGHTPAD);
-	
+	//Draw our icon
+	NSSize leftIconSize = [leftIcon size];
+	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
+	rect.origin.x += TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD;
+	rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
 
 	
-	//Title
-	
-    //Close Button
-//	NSPoint destPoint = [self _closeButtonRect].origin;
-//	NSImage	*tabIcon = nil;
-//	
-//	if(TAB_SELECTED_HIGHER && !ignoreSelection && selected) destPoint.y += 1;
-//
-//	[tabIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
-//	rect.origin.x += TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD;
-//	rect.size.width -= (TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
-
-    //Draw the title
-
-	//Draw the title
-//    destRect = NSMakeRect(rect.origin.x,
-//						  rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0) + TAB_LABEL_Y_OFFSET, //center it vertically
-//						  rect.size.width,
-//						  rect.size..height);
-//    if(TAB_SELECTED_HIGHER && !ignoreSelection && selected) destRect.origin.y += 1.0;
-	
-	int labelOffset = ((rect.size.height - labelSize.height) / 2.0);
-	
+	//Draw our label
 	destRect = NSMakeRect(rect.origin.x,
 						  rect.origin.y + TAB_LABEL_Y_OFFSET,
 						  rect.size.width,
-						  rect.size.height - labelOffset);
+						  rect.size.height - ((rect.size.height - labelSize.height) / 2.0));
     if(TAB_SELECTED_HIGHER && !ignoreSelection && selected) destRect.origin.y += 1.0;
-//    [tabViewItem drawLabel:YES inRect:destRect];
-	
-
-//	destRect.origin.y += 2;
-//	[[NSColor whiteColor] set];
-//	[NSBezierPath fillRect:destRect];
-    //Name
 	[[self attributedLabel] drawInRect:destRect];	
-	
 }
 
 //Returns the attributed form of our label for drawing (cached)
@@ -358,14 +293,11 @@ static NSImage		*tabCloseFrontRollover = nil;
 }
 
 
-
-
 //Cursor tracking ------------------------------------------------------------------------------------------------------
 #pragma mark Cursor tracking
 //Install tracking rects for our tab and its close button
 - (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation
 {
-	NSLog(@"ADD TRACK RECTS");
     userData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", nil] retain]; //We have to retain and release the userData ourself
     trackingTag = [view addTrackingRect:trackRect
                                   owner:self
@@ -384,7 +316,6 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Remove our tracking rects
 - (void)removeTrackingRectsFromView:(NSView *)view
 {
-	NSLog(@"REMOVE TRACK RECTS");
     [view removeTrackingRect:trackingTag]; trackingTag = 0;
     [userData release]; userData = nil;
     
