@@ -44,9 +44,9 @@
     [super dealloc];
 }
 
-- (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
-    BOOL	handleChanged = NO;
+    NSArray		*modifiedAttributes = nil;
     
     if(	inModifiedKeys == nil || 
         [inModifiedKeys containsObject:@"Away"] || 
@@ -77,11 +77,11 @@
         }else{
             [iconArray addObject:circleEmpty withOwner:self];
         }
- 
-        handleChanged = YES;
+
+        modifiedAttributes = [NSArray arrayWithObject:@"Left View"];
     }
 
-    return(handleChanged);
+    return(modifiedAttributes);
 }
 
 @end

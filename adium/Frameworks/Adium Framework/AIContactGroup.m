@@ -23,13 +23,12 @@
 */
 
 #import <AIUtilities/AIUtilities.h>
+#import "AIAdium.h"
 #import "AIContactGroup.h"
 #import "AIContactHandle.h"
 
 @interface AIContactGroup (PRIVATE)
 - (id)initWithUID:(NSString *)inUID;
-- (void)flushSortedArray;
-- (NSMutableArray *)sortedContactArray;
 @end
 
 @implementation AIContactGroup
@@ -39,15 +38,6 @@
 {
     return([[[self alloc] initWithUID:inUID] autorelease]);
 }
-
-//Set the group name
-/*- (void)setName:(NSString *)inName
-{
-    NSParameterAssert(inName != nil); NSParameterAssert([inName length] != nil);
-
-    [name release]; name = nil;
-    name = [inName retain];
-}*/
 
 //Returns the group name
 - (NSString *)displayName
@@ -83,11 +73,9 @@
 //Returns the specified visible/sorted object
 - (id)sortedObjectAtIndex:(unsigned)index
 {
-    NSArray	*sortedArray = [self sortedContactArray];
+    NSParameterAssert(index >= 0 && index < [sortedContactArray count]);
 
-    NSParameterAssert(index >= 0 && index < [sortedArray count]);
-
-    return([sortedArray objectAtIndex:index]);
+    return([sortedContactArray objectAtIndex:index]);
 }
 
 //Returns 0 if no handle in this group belongs, 1 if they all belong, and -1 if some belong
@@ -114,25 +102,24 @@
 }
 
 //Resorts the group contents
-- (void)sortGroupAndSubGroups:(BOOL)subGroups
+- (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIContactSortController>)sortController
 {
     AIMutableOwnerArray		*visibleArray;
     NSEnumerator		*enumerator;
     AIContactObject		*object;
     
-    //Sort any groups within this group
+    //Sort the contents of any groups within this group
     if(subGroups){
         enumerator = [contactArray objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isMemberOfClass:[AIContactGroup class]]){
-                [(AIContactGroup *)object sortGroupAndSubGroups:YES];
+                [(AIContactGroup *)object sortGroupAndSubGroups:YES sortController:sortController];
             }
         }
     }
 
-    //Make sure a contact array exists, and sort it
-    if(!sortedContactArray) sortedContactArray = [contactArray mutableCopy];
-    [sortedContactArray sortUsingSelector:@selector(compare:)];
+    //Sort this group
+    [sortController sortContactObjects:sortedContactArray];
     
     //Count the number of visible items in this group
     sortedCount = 0;
@@ -155,7 +142,7 @@
 {
     [inObject setContainingGroup:self];
     [contactArray addObject:inObject];
-    [self flushSortedArray];
+    [sortedContactArray addObject:inObject];
 }
 
 //Add an object to this group
@@ -163,16 +150,19 @@
 {
     [inObject setContainingGroup:self];
     [contactArray insertObject:inObject atIndex:index];
-    [self flushSortedArray];
+    [sortedContactArray addObject:inObject]; //since the array is sorted, placement makes no difference
 }
 
 //Replace an object in this group
 - (void)replaceObject:(AIContactObject *)oldObject with:(AIContactObject *)newObject
 {
-    int index = [contactArray indexOfObject:oldObject];
+    int index;
 
+    index = [contactArray indexOfObject:oldObject];
     [contactArray replaceObjectAtIndex:index withObject:newObject];
-    [self flushSortedArray];
+
+    index = [sortedContactArray indexOfObject:oldObject];
+    [sortedContactArray replaceObjectAtIndex:index withObject:newObject];
 }
 
 //Removes an object to this group
@@ -180,7 +170,7 @@
 {
     [inObject setContainingGroup:nil];
     [contactArray removeObject:inObject];
-    [self flushSortedArray];
+    [sortedContactArray removeObject:inObject];
 }
 
 //Returns the index of an object
@@ -188,6 +178,13 @@
 {
     return([contactArray indexOfObject:inObject]);    
 }
+
+//returns the sorted contact array
+- (NSMutableArray *)sortedContactArray
+{
+    return(sortedContactArray);
+}
+
 
 
 // Private ---------------------------------------------------------------------------------
@@ -198,6 +195,7 @@
 
     //Create object array
     contactArray = [[NSMutableArray alloc] init];
+    sortedContactArray = [[NSMutableArray alloc] init];
 
     return(self);
 }
@@ -208,26 +206,6 @@
     [sortedContactArray release];
 
     [super dealloc];
-}
-
-//deallocates/flushes the sorted array.  Call after adding/removing/replacing contents.
-- (void)flushSortedArray
-{
-    if(sortedContactArray){
-        [sortedContactArray release]; sortedContactArray = nil;
-    }
-}
-
-//returns the sorted contact array (building if necessary)
-- (NSMutableArray *)sortedContactArray
-{
-    if(!sortedContactArray){
-        //Create a fresh array and sort it
-        sortedContactArray = [contactArray mutableCopy];
-        [self sortGroupAndSubGroups:NO];
-    }
-    
-    return(sortedContactArray);
 }
 
 @end

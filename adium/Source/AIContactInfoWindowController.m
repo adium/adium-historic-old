@@ -21,7 +21,7 @@
 #define	CONTACT_INFO_NIB	@"ContactInfoWindow"		//Filename of the contact info nib
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner category:(AIPreferenceCategory *)inCategory contact:(AIContactHandle *)inContact;
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIContactHandle *)inContact;
 - (void)configureForContact:(AIContactHandle *)inContact;
 @end
 
@@ -29,11 +29,11 @@
 
 //Return the shared contact info window
 static AIContactInfoWindowController *sharedInstance = nil;
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithOwner:(id)inOwner category:(AIPreferenceCategory *)inCategory forContact:(AIContactHandle *)inContact
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIContactHandle *)inContact
 {
     //Create the window
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB owner:inOwner category:inCategory contact:inContact];
+        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory contact:inContact];
     }
     
     //Configure
@@ -53,12 +53,11 @@ static AIContactInfoWindowController *sharedInstance = nil;
 
 // Internal --------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner category:(AIPreferenceCategory *)inCategory contact:(AIContactHandle *)inContact
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIContactHandle *)inContact
 {
     [super initWithWindowNibName:windowNibName owner:self];
 
     //Retain our owner
-    owner = [inOwner retain]; //do we need owner?
     mainCategory = [inCategory retain];
 
     return(self);    
@@ -66,7 +65,6 @@ static AIContactInfoWindowController *sharedInstance = nil;
 
 - (void)dealloc
 {
-    [owner release];
     [mainCategory release];
 
     [super dealloc];
@@ -77,6 +75,8 @@ static AIContactInfoWindowController *sharedInstance = nil;
 {
     //Configure the preference views
     [mainCategory configureForObject:inContact];
+
+    [[self window] setTitle:[inContact UID]];
 }
 
 //Setup the window before it is displayed

@@ -62,7 +62,10 @@
 
     //Install the necessary observers
     [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactChanged:) name:Contact_ObjectChanged object:nil];
+    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactObjectChanged:) name:Contact_ObjectChanged object:nil];
+    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
+
+
     [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpandOrCollapse:) name:NSOutlineViewItemDidExpandNotification object:SCLView];
@@ -80,6 +83,7 @@
 }
 
 //Notifications
+//Reload the contact list
 - (void)contactListChanged:(NSNotification *)notification
 {
     NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
@@ -90,10 +94,11 @@
     }
 }
 
-- (void)contactChanged:(NSNotification *)notification
+//Reload the contact list (if updates aren't delayed)
+- (void)contactObjectChanged:(NSNotification *)notification
 {
     if(![[owner contactController] contactListUpdatesDelayed]){
-        NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+        NSEnumerator		*enumerator = [SCLViewArray objectEnumerator];
         AISCLOutlineView	*SCLView;
 
         while((SCLView = [enumerator nextObject])){
@@ -101,6 +106,19 @@
         }
     }
 }
+
+//Redisplay the modified object
+- (void)contactAttributesChanged:(NSNotification *)notification
+{
+    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+    AISCLOutlineView	*SCLView;
+
+    while((SCLView = [enumerator nextObject])){
+        [SCLView setNeedsDisplay:YES];
+    }
+}
+
+
 
 - (void)preferencesChanged:(NSNotification *)notification
 {

@@ -25,9 +25,9 @@
     [[owner contactController] registerHandleObserver:self];
 }
 
-- (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
-    BOOL	handleChanged = NO;
+    NSArray		*modifiedAttributes = nil;
 
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
         AIMutableOwnerArray	*hiddenArray = [inHandle displayArrayForKey:@"Hidden"];
@@ -39,11 +39,11 @@
         //Insert an updated value
         if(hidden){
             [hiddenArray addObject:[NSNumber numberWithInt:hidden] withOwner:self];
-            handleChanged = YES;
+            modifiedAttributes = [NSArray arrayWithObject:@"Hidden"];
         }
     }
 
-    return(handleChanged);
+    return(modifiedAttributes);
 }
 
 @end

@@ -37,6 +37,7 @@
 - (AIContactGroup *)loadContactList;
 - (AIContactGroup *)createGroupFromDict:(NSDictionary *)groupDict;
 - (NSDictionary *)saveDictForGroup:(AIContactGroup *)inGroup;
+- (id <AIContactSortController>)activeSortController;
 @end
 
 @implementation AIContactController
@@ -54,6 +55,7 @@
 
     //
     handleObserverArray = [[NSMutableArray alloc] init];
+    sortControllerArray = [[NSMutableArray alloc] init];
     delayedUpdating = 0;
     
     //
@@ -85,7 +87,7 @@
 //Show the info window for a contact
 - (void)showInfoForContact:(AIContactHandle *)inContact
 {
-    [[AIContactInfoWindowController contactInfoWindowControllerWithOwner:owner category:contactInfoCategory forContact:inContact] showWindow:nil];
+    [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory forContact:inContact] showWindow:nil];
 }
 
 //Add a contact info view
@@ -100,16 +102,9 @@
 - (void)addAccount:(AIAccount *)inAccount toObject:(AIContactObject *)inObject
 {
     if([inAccount conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){ //Account supports groups
-        AIContactGroup *containingGroup = [inObject containingGroup];
-
-        //Add the containing group (if it's not yet on the account)
-/*        if(containingGroup != contactList && ![containingGroup belongsToAccount:inAccount]){
-            [self addAccount:inAccount toObject:containingGroup];
-        }*/
-
         //Add the account to the object
         [inObject registerOwner:inAccount];
-        [(AIAccount<AIAccount_GroupedContacts> *)inAccount addObject:inObject toGroup:containingGroup];
+        [(AIAccount<AIAccount_GroupedContacts> *)inAccount addObject:inObject toGroup:[inObject containingGroup]];
 
     }else if([inAccount conformsToProtocol:@protocol(AIAccount_Contacts)]){ //..doesn't support groups
         //Add the account to the handle
@@ -127,16 +122,9 @@
 - (void)removeAccount:(AIAccount *)inAccount fromObject:(AIContactObject *)inObject
 {
     if([inAccount conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){ //Account supports groups
-        AIContactGroup *containingGroup = [inObject containingGroup];
-
         //Remove the object from the account
         [inObject unregisterOwner:inAccount];
-        [(AIAccount<AIAccount_GroupedContacts> *)inAccount removeObject:inObject fromGroup:containingGroup];
-
-        //If the containing group no longer contains anything on this account, remove it as well
-/*        if(containingGroup != contactList && [containingGroup contentsBelongToAccount:inAccount] == 0){
-            [self removeAccount:inAccount fromObject:containingGroup];
-        }*/
+        [(AIAccount<AIAccount_GroupedContacts> *)inAccount removeObject:inObject fromGroup:[inObject containingGroup]];
 
     }else if([inAccount conformsToProtocol:@protocol(AIAccount_Contacts)]){ //..doesn't support groups
         //Remove the handle
@@ -163,7 +151,6 @@
     [inGroup addObject:newGroup];
     
     //Re-order and update the list
-    [newGroup sortGroupAndSubGroups:NO]; //update the group
     [self updateListForObject:newGroup saveChanges:YES]; //update the list
     
     return(newGroup);
@@ -278,7 +265,6 @@
     return([self groupInGroup:contactList withName:inName]);
 }
 
-
 /* Finds a handle on the contact list with the specified service and UID
     - If the handle does not exist, it will be created as a stranger (temporary handle)
     - Account is only used when a stranger is created, but must be valid
@@ -345,6 +331,7 @@
     return(handle);
 }
 
+
 // Handle status --------------------------------------------------------------------------------
 //Registers code to observe handle status changes
 - (void)registerHandleObserver:(id <AIHandleObserver>)inObserver
@@ -364,23 +351,83 @@
 
 }
 
-//Called when a handle's status changes
-- (void)handleStatusChanged:(AIContactHandle *)inHandle modifiedStatusKeys:(NSArray *)InModifiedKeys
+//Called after modifying a handle's status
+- (void)handleStatusChanged:(AIContactHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys
 {
-    int	handleAltered = 0;
+    NSMutableArray	*modifiedAttributeKeys = [NSMutableArray array];
     int loop;
 
     //Let all the observers know it changed
     for(loop = 0;loop < [handleObserverArray count];loop++){
-        handleAltered += [[handleObserverArray objectAtIndex:loop] updateHandle:inHandle keys:InModifiedKeys];
+        NSArray	*newKeys;
+        if((newKeys = [[handleObserverArray objectAtIndex:loop] updateHandle:inHandle keys:inModifiedKeys])){
+            [modifiedAttributeKeys addObjectsFromArray:newKeys];
+        }
     }
-    
-    if(handleAltered){ //If the handle was modified
-        [self updateListForObject:inHandle saveChanges:NO];
+
+    //Resort the contact list (If necessary)
+    if(!delayedUpdating && //Skip sorting when updates are delayed
+       ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
+       [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
+
+        [self sortContactGroup:[inHandle containingGroup] mode:AISortGroupAndSuperGroups];
+    }
+
+    //Post a 'status' changed message, signaling that the object's status has changed.
+    if(inModifiedKeys){
+        [[self contactNotificationCenter] postNotificationName:Contact_StatusChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+    }else{
+        [[self contactNotificationCenter] postNotificationName:Contact_StatusChanged object:inHandle];
+    }
+
+    //Post an attributes changed message (if necessary)
+    if([modifiedAttributeKeys count] != 0){
+        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
+    }
+}
+
+//Call after modifying an object's display attributes
+- (void)objectAttributesChanged:(AIContactObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
+{
+    //Resort the contact list (If necessary)
+    if(!delayedUpdating && //Skip sorting when updates are delayed
+        [[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
+
+        [self sortContactGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
+    }
+
+    //Post an attributes changed message (if necessary)
+    if(inModifiedKeys){
+        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+    }else{
+        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
     }
 }
 
 
+// Contact Sorting --------------------------------------------------------------------------------
+//Register code to sort contacts
+- (void)registerContactSortController:(id <AIContactSortController>)inController
+{
+    [sortControllerArray addObject:inController];
+}
+
+//Sort a group
+- (void)sortContactGroup:(AIContactGroup *)inGroup mode:(AISortMode)sortMode
+{
+    //Sort the group (and subgroups)
+    [inGroup sortGroupAndSubGroups:(sortMode == AISortGroupAndSubGroups)
+                    sortController:[self activeSortController]];
+
+    //Sort any groups above it
+    if(sortMode == AISortGroupAndSuperGroups){
+        AIContactGroup	*group = inGroup;
+
+        while((group = [group containingGroup])){
+            [group sortGroupAndSubGroups:NO sortController:[self activeSortController]];
+        }
+    }
+}
 
 
 // Contact Access --------------------------------------------------------------------------------
@@ -437,23 +484,35 @@
     }
 }
 
+//Returns YES if the contact list updates are currently delayed
 - (BOOL)contactListUpdatesDelayed
 {
     return(delayedUpdating != 0);
 }
 
 
+
+
+
+
+
 // Internal --------------------------------------------------------------------------------
 //Call after making changes to an object on the contact list
+
+// Save list and update?
+
+//
+
+//
 - (void)updateListForObject:(AIContactObject *)inObject saveChanges:(BOOL)saveChanges
 {
-    AIContactObject	*object = inObject;
-
     //Resort its group, and any groups above it
     if(!delayedUpdating){ //Skip sorting when updates are delayed
-        while((object = [object containingGroup])){
-            [(AIContactGroup *)object sortGroupAndSubGroups:NO];
+        if([inObject isKindOfClass:[AIContactGroup class]]){ //If a group is passed, sort it
+            [self sortContactGroup:(AIContactGroup *)inObject mode:AISortGroup];
         }
+        
+        [self sortContactGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
     }
 
     //Post an 'object' changed message, signaling that the object's status has changed.
@@ -463,7 +522,6 @@
     if(saveChanges && !delayedUpdating){ //Skip saving when updates are delayed
         [self saveContactList];
     }
-
 }
 
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
@@ -521,7 +579,7 @@
 - (void)delayedUpdateTimer:(NSTimer *)inTimer
 {
     //Resort and redisplay the entire list at once (since sorting has been skipped while delayed)
-    [contactList sortGroupAndSubGroups:YES];
+    [self sortContactGroup:contactList mode:AISortGroupAndSubGroups];
     [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
 
     //decrease the counter
@@ -555,7 +613,7 @@
     }
 
     //Sort the list
-    [contactListGroup sortGroupAndSubGroups:YES];
+    [self sortContactGroup:contactListGroup mode:AISortGroupAndSubGroups];
 
     return(contactListGroup);
 }
@@ -629,6 +687,12 @@
     [saveDict setObject:objectArray forKey:@"Contents"];
 
     return([saveDict autorelease]);
+}
+
+//Returns the active sort controller
+- (id <AIContactSortController>)activeSortController
+{
+    return([sortControllerArray objectAtIndex:0]);
 }
 
 

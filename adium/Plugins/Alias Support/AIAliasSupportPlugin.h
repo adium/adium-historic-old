@@ -14,6 +14,7 @@
     IBOutlet	NSTextField	*textField_alias;
 
     AIPreferenceViewController		*contactView;
+    AIContactObject			*activeContactObject;
 }
 
 - (IBAction)setAlias:(id)sender;

@@ -113,7 +113,7 @@
 
 // Sorting ------------------------------------------------------------
 //If we come first, result is -1.  If object comes first, the result is 1.
-- (NSComparisonResult)compare:(AIContactObject *)object
+/*- (NSComparisonResult)compare:(AIContactObject *)object
 {
     NSComparisonResult 	result;
     BOOL		weAreInvisible = NO;
@@ -137,7 +137,7 @@
     }
 
     return(result);
-}
+}*/
 
 
 // Private -------------------------------------------------
