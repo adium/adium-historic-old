@@ -60,13 +60,17 @@
 /*
  * @brief Preferences changed
  *
- * Note whether we are supposed to report idle time, and, if so, after how much time.
+ * Note whether we are supposed to change states after a specified time.
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	autoAway = [[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue];
 	autoAwayID = [prefDict objectForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID];
+
+	autoAway = (autoAwayID ? 
+				[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue] :
+				NO);
+
 	autoAwayInterval = [[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_INTERVAL] doubleValue];
 }
 
