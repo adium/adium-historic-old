@@ -16,17 +16,7 @@ Don't delete things from this list. Just use `=' to indicate it's done. We'll cu
 ---------------------------------------
 Stuff for Adam to do right this instant
 ---------------------------------------
-- MAKE [Evan] A SAMMICH, WOMAN.
 - Move user name field out of account code and into account list preferences code
-- MAKE ME ANOTHER SANDWICH.
-- This gets my vote.  I would love a sandwhich.
-- Magically make display names work however the user intends, using notifications to change if they change their mind.  Note: Distributed notification center probably best for this task.
-- Similarly, implement PSI-UI (Copyright The Adium Team) for all preferences, removing the preference window entirely.
-
-- Evan, look into that assertion you put into the code that's crashing on new messages randomly :)
-- I have to stop bitching and be productive? :P
-- You can bitch while you're being productive !:D  *grumbles about preferences and starts at the account views*
-- *boggles at evalU8rs*
 
 ----
 Bugs
