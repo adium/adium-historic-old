@@ -24,6 +24,7 @@
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
 
+#define AUTOHIDE_TABBAR		NO
 //The tabbed window that contains messages
 @interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
 - (void)setBottomCornerRounded:(BOOL)rounded;
@@ -36,6 +37,7 @@
 - (BOOL)shouldCascadeWindows;
 - (void)windowDidLoad;
 - (void)installToolbar;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIMessageWindowController
@@ -116,6 +118,10 @@
     interface = [inInterface retain];
     windowIsClosing = NO;
     tabIsShowing = YES;
+
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    
+    [self preferencesChanged:nil];
     
     [super initWithWindowNibName:windowNibName owner:self];
     [self window];	//Load our window
@@ -154,6 +160,15 @@
 //    [[self window] setShowsResizeIndicator:NO];
     [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
 
+    [[self window] useOptimizedDrawing:YES]; //should be set to YES unless subview overlap... we should be good to go.  check the docs on this for more info.
+
+    #warning The below doesn't fix the no shadows on initial display problem.  Thoughts?
+
+/*
+    [[self window] setHasShadow:YES];
+    [[self window] invalidateShadow];
+    [[self window] display];
+*/
 }
 
 //called as the window closes
@@ -196,6 +211,17 @@
     [interface containerDidBecomeActive:nil];
 }
 
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
+    autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+
+    //This is ridiculously indirect, but I can't find a better way to let the notification be posted with the proper object
+    [[[[[self messageContainerArray] objectAtIndex:0] tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[[[self messageContainerArray] objectAtIndex:0] tabView]];
+    }
+}
 
 //Tabs Delegate ---------------------------------------------------------------
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
@@ -231,10 +257,9 @@
 {
 
 #define TABS_HEIGHT_CHANGE	18
-    
-    NSSize newSize = [TabView frame].size;
-    
-    if (([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing) {
+
+    if (autohide_tabBar && ([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing) {
+	NSSize newSize = [TabView frame].size;
 	newSize.height = 0;
 	[TabView setFrameSize:newSize];
 
@@ -248,7 +273,11 @@
 	[[self window] display];
 
 	tabIsShowing = NO;
-    } else if (([tabView_messages numberOfTabViewItems] == 2) && !tabIsShowing) {
+    }
+
+    //at 2 items or if we're not supposed to hide the bar, unhide it if it's not currently showing
+    if ((([tabView_messages numberOfTabViewItems] == 2) || !autohide_tabBar) && !tabIsShowing) {
+	NSSize newSize = [TabView frame].size;
 	newSize.height = 22;
 	[TabView setFrameSize:newSize];
 	
@@ -262,7 +291,7 @@
 	[[self window] display];
 
 	tabIsShowing = YES;
-    } 
+    }
 }
 
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView

@@ -32,6 +32,7 @@
     NSMutableDictionary		*toolbarItems;
 
     BOOL			tabIsShowing;
+    BOOL			autohide_tabBar;
 }
 
 + (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;

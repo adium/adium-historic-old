@@ -6,5 +6,7 @@
 	<false/>
 	<key>Use Last Window</key>
 	<false/>
+	<key>Autohide Tab Bar</key>
+	<true/>
 </dict>
 </plist>

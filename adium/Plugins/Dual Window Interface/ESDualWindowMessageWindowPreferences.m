@@ -12,7 +12,7 @@
 #import <AIUtilities/AIUtilities.h>
 
 #define ESDUAL_MESSAGE_PREF_NIB			@"DualWindowMessageWindowPrefs"
-#define ESDUAL_PREF_TITLE_WINDOW		@"New Chat Window Handling"
+#define ESDUAL_PREF_TITLE_WINDOW		@"Message Window Handling"
 
 @interface ESDualWindowMessageWindowPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -74,6 +74,10 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:([matrix_tabPref selectedCell] == lastUsedWindow)]
                                              forKey:KEY_USE_LAST_WINDOW
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+    }else if (sender == autohide_tabBar){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[autohide_tabBar state]]
+				      forKey:KEY_AUTOHIDE_TABBAR
+				       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }
 
     [self configureControlDimming];
@@ -94,11 +98,13 @@
 
 
     BOOL lastUsedWindowPref = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
-	if (lastUsedWindowPref)
-	    [matrix_tabPref selectCell:lastUsedWindow];
-	else
-	    [matrix_tabPref selectCell:primaryWindow];
+    if (lastUsedWindowPref)
+	[matrix_tabPref selectCell:lastUsedWindow];
+    else
+	[matrix_tabPref selectCell:primaryWindow];
 
+    [autohide_tabBar setState:[[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
+    
     [self configureControlDimming];
 }
 

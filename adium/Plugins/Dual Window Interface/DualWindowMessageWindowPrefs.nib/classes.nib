@@ -5,6 +5,7 @@
             CLASS = ESDualWindowMessageWindowPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "autohide_tabBar" = NSButton; 
                 lastUsedWindow = NSButtonCell; 
                 "matrix_tabPref" = NSMatrix; 
                 "matrix_windowMode" = NSMatrix; 
