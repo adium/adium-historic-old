@@ -19,6 +19,7 @@
 #import "AIViewAdditions.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
+#import "AIMessageWindowController.h"
 #import "AIMessageViewController.h"
 #import "AIMessageTabViewItem.h"
 #import "AIEventAdditions.h"
@@ -749,7 +750,7 @@ static  AICustomTabCell	*dragTabCell;
         if (doNotSelect) {
             previouslySelectedTabViewItem = [tabView selectedTabViewItem];
         }
-        
+        [(AIMessageWindowController *)[[self window] windowController] supressTabBarHiding:YES];
         //Exchange the "tabs" (actually views... we leave the origional tabs in their place)
         if(index >= 0 && index <= [tabCellArray count]){
             int existingIndex = [tabCellArray indexOfObject:dragTabCell];
@@ -781,7 +782,7 @@ static  AICustomTabCell	*dragTabCell;
             }
             rearrangeIndex++;
         }
-        
+        [(AIMessageWindowController *)[[self window] windowController] supressTabBarHiding:NO];
     } else { //not already in this window - just let the interfaceController handle it
         [[owner interfaceController] transferMessageTabContainer:[dragTabCell tabViewItem] toWindow:[[self window] windowController] atIndex:index withTabBarAtPoint:NSMakePoint(0,0)];
     }            
