@@ -690,70 +690,50 @@
  */
 - (NSString *) userPreferredDownloadFolder
 {
-	OSStatus		err = noErr;
-	ICInstance		inst = NULL;
-	ICFileSpec		folder;
-	unsigned long	length = kICFileSpecHeaderSize;
-	FSRef			ref;
-	unsigned char	path[1024];
+	NSString	*userPreferredDownloadFolder;
 	
-	memset( path, 0, 1024 ); //clear path's memory range
+	userPreferredDownloadFolder = [self preferenceForKey:@"UserPreferredDownloadFolder"
+												   group:PREF_GROUP_GENERAL];
 	
-	if( ( err = ICStart( &inst, 'AdiM' ) ) != noErr )
-		goto finish;
+	if(!userPreferredDownloadFolder){
+		OSStatus		err = noErr;
+		ICInstance		inst = NULL;
+		ICFileSpec		folder;
+		unsigned long	length = kICFileSpecHeaderSize;
+		FSRef			ref;
+		unsigned char	path[1024];
+		
+		memset( path, 0, 1024 ); //clear path's memory range
+		
+		if((err = ICStart(&inst, 'AdiM')) == noErr){
+			ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
+			ICStop( inst );
+			
+			if(((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
+			   ((err = FSRefMakePath(&ref, path, 1024)) == noErr) &&
+			   ((path != NULL) && (strlen(path) > 0))){
+				userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
+			}
+		}
+	}
 	
-	ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
-	ICStop( inst );
-	
-	if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
-		goto finish;
-	
-	if( ( err = FSRefMakePath( &ref, path, 1024 ) ) != noErr )
-		goto finish;
-	
-finish:
-		if( ! strlen( path ) )
-			return [@"~/Desktop" stringByExpandingTildeInPath];
-	
-	return [NSString stringWithUTF8String:path];
+	if(!userPreferredDownloadFolder){
+		userPreferredDownloadFolder = @"~/Desktop";
+	}
+
+	return [userPreferredDownloadFolder stringByExpandingTildeInPath];
 }
 
 /*!
  * @brief Set the location Adium should use for saving files
  *
- * @param A full path to an existing folder
+ * @param A path to an existing folder
  */
-- (void)setUserPreferredDownloadFolder:(NSString *)path {
-	OSStatus		err = noErr;
-	ICInstance		inst = NULL;
-	ICFileSpec		*dir = NULL;
-	FSRef			ref;
-	AliasHandle		alias;
-	unsigned long	length = 0;
-	
-	if( ( err = FSPathMakeRef( [path UTF8String], &ref, NULL ) ) != noErr )
-		return;
-	
-	if( ( err = FSNewAliasMinimal( &ref, &alias ) ) != noErr )
- 		return;
-	
-	length = ( kICFileSpecHeaderSize + GetHandleSize( (Handle) alias ) );
-	dir = malloc( length );
-	memset( dir, 0, length );
-	
-	if( ( err = FSGetCatalogInfo( &ref, kFSCatInfoNone, NULL, NULL, &dir -> fss, NULL ) ) != noErr )
-		return;
-	
-	memcpy( &dir -> alias, *alias, length - kICFileSpecHeaderSize );
-	
-	if( ( err = ICStart( &inst, 'AdiM' ) ) != noErr )
-		return;
-	
-	ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
-	ICStop( inst );
-	
-	free( dir );
-	DisposeHandle( (Handle) alias );
+- (void)setUserPreferredDownloadFolder:(NSString *)path
+{
+	[self setPreference:[path stringByAbbreviatingWithTildeInPath]
+				 forKey:@"UserPreferredDownloadFolder"
+				  group:PREF_GROUP_GENERAL];
 }
 
 
