@@ -203,7 +203,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
     while((tabViewItem = [enumerator nextObject])){
         NSString 	*identifier = [tabViewItem identifier];
         NSString	*label = [tabViewItem label];
-    
+
+        NSLog(@"%@",identifier);
         if(![toolbarItems objectForKey:identifier]){
             [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
                                     withIdentifier:identifier
@@ -212,7 +213,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
                                            toolTip:label
                                             target:self
                                    settingSelector:@selector(setImage:)
-                                       itemContent:[AIImageUtilities imageNamed:@"Placeholder" forClass:[self class]]
+                                               itemContent:[AIImageUtilities imageNamed:[NSString stringWithFormat:@"pref%@",identifier] forClass:[self class]]
                                             action:@selector(selectCategory:)
                                               menu:NULL];
         }
