@@ -849,6 +849,7 @@
 				F53B4A6B04991CB601803884,
 				4BF48142049A804500A8010A,
 				11B96D92049AF87D00C6304D,
+				4B6688FF04A60CD800A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -877,6 +878,7 @@
 				29B97326FDCFA39411CA2CEA,
 				F53B9A0E02CCED8B01A8010A,
 				F53B9A0602CCED6401A8010A,
+				4B6688FE04A60CD800A8010A,
 				4BF48141049A804500A8010A,
 				4BAE85AA0498195800A8010A,
 				4B5B15280493BFB100A8010A,
@@ -1032,6 +1034,7 @@
 				F53B4AFC04995BE001803884,
 				4BF48143049A804500A8010A,
 				11B96D93049AF8BD00C6304D,
+				4B66890004A60CD900A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1759,6 +1762,24 @@
 			settings = {
 			};
 		};
+		4B12DF9104A6114500A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B12DF9204A6114500A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B12DF9304A6114600A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B1332130459B98E00A8010A = {
 			children = (
 				4B13322B0459BAB800A8010A,
@@ -2086,6 +2107,7 @@
 			children = (
 				4BAE85A40498194200A8010A,
 				4B28907503C1D14200A8010A,
+				4B6688F804A60CC300A8010A,
 				4BD7D0CA04620D7C00A8010A,
 				4BD7D0CB04620D8800A8010A,
 				11B96D81049AF85900C6304D,
@@ -3266,6 +3288,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4B66890104A60CD900A8010A,
 				4BF48144049A804500A8010A,
 				F5D703B204995C9701BAF553,
 				4BAE85AD0498195800A8010A,
@@ -4528,6 +4551,163 @@
 		};
 		4B64797B03DC321800A8010A = {
 			fileRef = 4B64797A03DC321800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B6688F804A60CC300A8010A = {
+			children = (
+				4B66890404A60D3300A8010A,
+				4B66890504A60D3300A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Online Since";
+			path = "";
+			refType = 4;
+		};
+		4B6688F904A60CD800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B66890604A60D3300A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B6688FA04A60CD800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B6688FB04A60CD800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B66890704A60D3300A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B6688FC04A60CD800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B12DF9104A6114500A8010A,
+				4B12DF9204A6114500A8010A,
+				4B12DF9304A6114600A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B6688FD04A60CD800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B6688FE04A60CD800A8010A = {
+			buildPhases = (
+				4B6688F904A60CD800A8010A,
+				4B6688FA04A60CD800A8010A,
+				4B6688FB04A60CD800A8010A,
+				4B6688FC04A60CD800A8010A,
+				4B6688FD04A60CD800A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Online Since";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B66890204A60CF800A8010A,
+				4B66890304A60CF800A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Online Since";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact Online Since";
+			productReference = 4B6688FF04A60CD800A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactOnlineSincePlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B6688FF04A60CD800A8010A = {
+			isa = PBXBundleReference;
+			path = "Contact Online Since.AdiumPlugin";
+			refType = 3;
+		};
+		4B66890004A60CD900A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B6688FE04A60CD800A8010A;
+		};
+		4B66890104A60CD900A8010A = {
+			fileRef = 4B6688FF04A60CD800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B66890204A60CF800A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B66890304A60CF800A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B66890404A60D3300A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactOnlineSincePlugin.h;
+			path = "Plugins/Contact Online Since/AIContactOnlineSincePlugin.h";
+			refType = 4;
+		};
+		4B66890504A60D3300A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactOnlineSincePlugin.m;
+			path = "Plugins/Contact Online Since/AIContactOnlineSincePlugin.m";
+			refType = 4;
+		};
+		4B66890604A60D3300A8010A = {
+			fileRef = 4B66890404A60D3300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B66890704A60D3300A8010A = {
+			fileRef = 4B66890504A60D3300A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};

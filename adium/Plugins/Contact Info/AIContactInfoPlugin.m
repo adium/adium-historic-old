@@ -37,7 +37,7 @@
     [toolbarItem setToolTip:@"Show Info"];
     [toolbarItem setPaletteLabel:@"Show Info"];
     [toolbarItem setDelegate:self];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];    
 }
 
 - (IBAction)toolbarShowInfo:(AIMiniToolbarItem *)toolbarItem
