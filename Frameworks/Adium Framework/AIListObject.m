@@ -543,7 +543,7 @@ DeclareString(FormattedUID);
  */
 - (NSAttributedString *)contactListStatusMessage
 {
-	NSString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
+	NSAttributedString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
 	if(!contactListStatusMessage){
 		contactListStatusMessage = [[self statusState] statusMessage];
 	}
