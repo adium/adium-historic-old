@@ -23,16 +23,27 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIListObject.h>
 
+#define MESSAGE	AILocalizedString(@"Message", nil)
+
+/*
+ * @class AIStandardToolbarItemsPlugin
+ * @brief Component to provide general-use toolbar items
+ *
+ * Just provides a Message toolbar item at present.
+ */
 @implementation AIStandardToolbarItemsPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //New Message
     NSToolbarItem   *toolbarItem = 
 	[AIToolbarUtilities toolbarItemWithIdentifier:@"NewMessage"
-											label:@"Message"
-									 paletteLabel:@"Message"
-										  toolTip:@"Message"
+											label:MESSAGE
+									 paletteLabel:MESSAGE
+										  toolTip:MESSAGE
 										   target:self
 								  settingSelector:@selector(setImage:)
 									  itemContent:[NSImage imageNamed:@"message" forClass:[self class]]
@@ -41,11 +52,9 @@
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 
-- (void)uninstallPlugin
-{
-    //unregister items
-}
-
+/*
+ * @brief New chat with the selected list object
+ */
 - (IBAction)newMessage:(NSToolbarItem *)toolbarItem
 {
     AIListObject	*object = [[adium contactController] selectedListObject];
