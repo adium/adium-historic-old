@@ -573,12 +573,35 @@
 - (NSString *)cachesPath
 {
 	static NSString *cachesPath = nil;
+
 	if(!cachesPath){
-		cachesPath = [[[[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Caches"] stringByAppendingPathComponent:@"Adium"] stringByAppendingPathComponent:[[self loginController] currentUser]] stringByExpandingTildeInPath] retain];
+		NSString		*generalAdiumCachesPath;
+		NSFileManager	*defaultManager = [NSFileManager defaultManager];
+
+		generalAdiumCachesPath = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Caches"] stringByAppendingPathComponent:@"Adium"] stringByExpandingTildeInPath];
+		cachesPath = [[generalAdiumCachesPath stringByAppendingPathComponent:[[self loginController] currentUser]] retain];
 
 		//Ensure our cache path exists
-		[[NSFileManager defaultManager] createDirectoriesForPath:cachesPath];
+		if([defaultManager createDirectoriesForPath:cachesPath]){
+			//If we have to make directories, try to move old cache files into the new directory
+			NSEnumerator	*enumerator;
+			NSString		*filename;
+			BOOL			isDir;
+
+			enumerator = [[defaultManager directoryContentsAtPath:generalAdiumCachesPath] objectEnumerator];
+			while(filename = [enumerator nextObject]){
+				NSString	*fullPath = [generalAdiumCachesPath stringByAppendingPathComponent:filename];
+				
+				if(([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
+				   (!isDir)){
+					[defaultManager movePath:fullPath
+									  toPath:[cachesPath stringByAppendingPathComponent:filename]
+									 handler:nil];
+				}
+			}
+		}
 	}
+	
 	return cachesPath;
 }
 

@@ -121,6 +121,13 @@
 
 - (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName;
 
+/*
+ * Return the path to be used for caching files for this user. It will be something like:
+ * ~/Library/Caches/Adium/UserName
+ * It is already tilde-expanded and is cached by AIAdium.
+ */
+- (NSString *)cachesPath;
+
 @end
 
 //Crash Reporter
@@ -155,29 +162,29 @@
 #define KEY_EVENT_NOTIFICATION		@"Notification"
 
 //Adium Notifications
-#define CONTACT_STATUS_ONLINE_YES		@"Contact_StatusOnlineYes"
-#define CONTACT_STATUS_ONLINE_NO		@"Contact_StatusOnlineNo"
-#define CONTACT_STATUS_AWAY_YES			@"Contact_StatusAwayYes"
-#define CONTACT_STATUS_AWAY_NO			@"Contact_StatusAwayNo"
-#define CONTACT_STATUS_IDLE_YES			@"Contact_StatusIdleYes"
-#define CONTACT_STATUS_IDLE_NO			@"Contact_StatusIdleNo"
-#define CONTACT_STATUS_MESSAGE			@"Contact_StatusMessage"
-#define CONTACT_SEEN_ONLINE_YES			@"Contact_SeenOnlineYes"
-#define CONTACT_SEEN_ONLINE_NO			@"Contact_SeenOnlineNo"
-#define CONTENT_MESSAGE_SENT			@"Content_MessageSent"
-#define CONTENT_MESSAGE_RECEIVED		@"Content_MessageReceived"
-#define CONTENT_MESSAGE_RECEIVED_FIRST	@"Content_MessageReceivedFirst"
+#define CONTACT_STATUS_ONLINE_YES			@"Contact_StatusOnlineYes"
+#define CONTACT_STATUS_ONLINE_NO			@"Contact_StatusOnlineNo"
+#define CONTACT_STATUS_AWAY_YES				@"Contact_StatusAwayYes"
+#define CONTACT_STATUS_AWAY_NO				@"Contact_StatusAwayNo"
+#define CONTACT_STATUS_IDLE_YES				@"Contact_StatusIdleYes"
+#define CONTACT_STATUS_IDLE_NO				@"Contact_StatusIdleNo"
+#define CONTACT_STATUS_MESSAGE				@"Contact_StatusMessage"
+#define CONTACT_SEEN_ONLINE_YES				@"Contact_SeenOnlineYes"
+#define CONTACT_SEEN_ONLINE_NO				@"Contact_SeenOnlineNo"
+#define CONTENT_MESSAGE_SENT				@"Content_MessageSent"
+#define CONTENT_MESSAGE_RECEIVED			@"Content_MessageReceived"
+#define CONTENT_MESSAGE_RECEIVED_FIRST		@"Content_MessageReceivedFirst"
 #define CONTENT_MESSAGE_RECEIVED_BACKGROUND	@"Content_MessageReceivedBackground"
-#define INTERFACE_ERROR_MESSAGE			@"Interface_ErrorMessageReceived"
-#define ACCOUNT_CONNECTED				@"Account_Connected"
-#define ACCOUNT_DISCONNECTED			@"Account_Disconnected"
-#define	ACCOUNT_RECEIVED_EMAIL			@"Account_NewMailReceived"
-#define FILE_TRANSFER_REQUEST			@"FileTransfer_Request"
-#define FILE_TRANSFER_BEGAN				@"FileTransfer_Began"
-#define FILE_TRANSFER_CANCELED			@"FileTransfer_Canceled"
-#define FILE_TRANSFER_COMPLETE			@"FileTransfer_Complete"
+#define INTERFACE_ERROR_MESSAGE				@"Interface_ErrorMessageReceived"
+#define ACCOUNT_CONNECTED					@"Account_Connected"
+#define ACCOUNT_DISCONNECTED				@"Account_Disconnected"
+#define	ACCOUNT_RECEIVED_EMAIL				@"Account_NewMailReceived"
+#define FILE_TRANSFER_REQUEST				@"FileTransfer_Request"
+#define FILE_TRANSFER_BEGAN					@"FileTransfer_Began"
+#define FILE_TRANSFER_CANCELED				@"FileTransfer_Canceled"
+#define FILE_TRANSFER_COMPLETE				@"FileTransfer_Complete"
 
 #define Adium_Xtras_Changed					@"Adium_Xtras_Changed"
 #define Adium_CompletedApplicationLoad		@"Adium_CompletedApplicationLoad"
-//#define	Adium_VersionWillBeUpgraded			@"Adium_VersionWillBeUpgraded"
-//#define	Adium_VersionUpgraded				@"Adium_VersionUpgraded"
+//#define	Adium_VersionWillBeUpgraded		@"Adium_VersionWillBeUpgraded"
+//#define	Adium_VersionUpgraded			@"Adium_VersionUpgraded"
