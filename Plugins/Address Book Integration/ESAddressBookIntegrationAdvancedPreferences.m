@@ -161,7 +161,14 @@
                                               group:PREF_GROUP_ADDRESSBOOK];
 		
     }else if (sender == checkBox_metaContacts){
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+		BOOL shouldCreateMetaContacts = ([sender state] == NSOnState);
+		
+		//XXX - If we now shouldn't create metaContacts, clear 'em all... not pretty, but effective.
+		if (!shouldCreateMetaContacts){
+			[[adium contactController] clearAllMetaContactData];
+		}
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:shouldCreateMetaContacts]
                                              forKey:KEY_AB_CREATE_METACONTACTS
                                               group:PREF_GROUP_ADDRESSBOOK];
 	}
