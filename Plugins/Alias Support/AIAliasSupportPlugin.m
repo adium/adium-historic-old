@@ -78,9 +78,7 @@
 
 -(IBAction)changeFormat:(id)sender
 {
-	
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
-	
 }
 
 //Called as contacts are created, load their alias
