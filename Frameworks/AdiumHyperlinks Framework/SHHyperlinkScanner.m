@@ -17,20 +17,16 @@ static NSMutableCharacterSet *endSet = nil;
 //default initializer - use strict checking by default
 -(id)init
 {
-    useStrictChecking = YES;
-    SHStringOffset = 0;
-    [super init];
-    
-    return self;
+    return [self initWithStrictChecking:YES];
 }
 
 //init with a user specified value for strict checking
 -(id)initWithStrictChecking:(BOOL)flag
 {
-    useStrictChecking = flag;
-    SHStringOffset = 0;
-    [super init];
-    
+    if(self = [super init]) {
+        useStrictChecking = flag;
+        SHStringOffset = 0;
+    }
     return self;
 }
 
