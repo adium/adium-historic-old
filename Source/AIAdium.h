@@ -24,7 +24,7 @@
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "AIMenuController.h"
-#import "AIPluginController.h"
+#import "AICorePluginLoader.h"
 #import "AIPreferenceController.h"
 #import "AISoundController.h"
 #import "AIToolbarController.h"
@@ -33,7 +33,7 @@
 #import "ESDebugController.h"
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
-		AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
+		AICorePluginLoader, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
 		AIAccountWindowController, AIAccount, AIMessageObject, AIContactInfoView, AICoreComponentLoader,
 		AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup,
@@ -48,7 +48,6 @@
     IBOutlet	AIInterfaceController                           *interfaceController;
     IBOutlet	AIContactController				*contactController;
     IBOutlet	AIContentController				*contentController;
-    IBOutlet	AIPluginController				*pluginController;
     IBOutlet	AIPreferenceController                          *preferenceController;
     IBOutlet	AIToolbarController				*toolbarController;
     IBOutlet	AISoundController				*soundController;
@@ -57,8 +56,10 @@
     IBOutlet    ESContactAlertsController                       *contactAlertsController;
     IBOutlet	ESApplescriptabilityController                  *applescriptabilityController;
 	IBOutlet	ESDebugController				*debugController;
+
 	IBOutlet	AICoreComponentLoader			*componentLoader;
-	
+	IBOutlet	AICorePluginLoader				*pluginLoader;
+
 //    IBOutlet    BZActivityWindowController  *activityWindowController;
     
     NSNotificationCenter                    *notificationCenter;
@@ -87,7 +88,6 @@
 - (ESFileTransferController *)fileTransferController;
 - (ESContactAlertsController *)contactAlertsController;
 - (ESDebugController *)debugController;
-- (AIPluginController *)pluginController;
 //- (BZActivityWindowController *)activityWindowController;
 
 - (NSNotificationCenter *)notificationCenter;
@@ -127,9 +127,6 @@
 #define PATH_TO_CRASH_REPORTER        [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium Crash Reporter.app"] stringByExpandingTildeInPath]
 #define EXCEPTIONS_PATH               [@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH                  [@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
-
-//Webkit-- Controls whether Webkit or SMV plugins work
-#define USE_WEBKIT_PLUGIN		TRUE
 
 //Localization
 #define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key,nil,[NSBundle bundleForClass: [self class]],comment)

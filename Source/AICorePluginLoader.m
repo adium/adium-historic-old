@@ -25,6 +25,7 @@ Adium, Copyright 2001-2004, Adam Iser
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
 #define EXTERNAL_PLUGIN_FOLDER			@"PlugIns"				//Folder name of external plugins
+#define EXTERNAL_DISABLED_PLUGIN_FOLDER	@"PlugIns (Disabled)"	//Folder name for disabled external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
@@ -33,32 +34,31 @@ Adium, Copyright 2001-2004, Adam Iser
 
 @interface AICorePluginLoader (PRIVATE)
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading;
+- (BOOL)confirmPlugin:(NSString *)pluginName;
+- (void)disablePlugin:(NSString *)pluginPath;
 @end
 
-@implementation AIPluginController
+@implementation AICorePluginLoader
 
 //init
 - (void)initController
 {
+	NSEnumerator	*enumerator = [[owner resourcePathsForName:EXTERNAL_PLUGIN_FOLDER] objectEnumerator];
+	NSString		*path;
+
+	//Init
     pluginArray = [[NSMutableArray alloc] init];
+	[owner createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
 
 	[[owner notificationCenter] addObserver:self 
 								   selector:@selector(adiumVersionWillBeUpgraded:) 
 									   name:Adium_VersionWillBeUpgraded
 									 object:nil];
-	[owner createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
-}
-
-//
-- (void)finishIniting
-{
-	NSEnumerator	*enumerator = [[owner resourcePathsForName:EXTERNAL_PLUGIN_FOLDER] objectEnumerator];
-	NSString		*path;
 	
 	//Load the plugins in our bundle
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]
 			   confirmLoading:NO];
-
+	
 	//Load any external plugins the user has installed
 	while(path = [enumerator nextObject]){
 		[self loadPluginsFromPath:path confirmLoading:YES];
@@ -79,141 +79,107 @@ Adium, Copyright 2001-2004, Adam Iser
 	pluginArray = nil;
 }
 
-//Load all the plugins
+//Load plugins from the specified path
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading
 {
-    NSArray		*pluginList = [[NSFileManager defaultManager] directoryContentsAtPath:pluginPath];
-    int			loop;
-
-	for(loop = 0;loop < [pluginList count];loop++){
-	    NSString 		*pluginName;
-	    NSBundle		*pluginBundle;
-	    AIPlugin		*plugin = nil;
-
-	    pluginName = [pluginList objectAtIndex:loop];
-
+	NSEnumerator	*enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:pluginPath] objectEnumerator];
+	NSString		*pluginName;
+	
+	while(pluginName = [enumerator nextObject]){
 	    if([[pluginName pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0){
-
-			//
+			BOOL			loadPlugin = YES;
+			
+			//Confirm the presence of external plugins with the user
 			if(confirmLoading){
-				NSArray	*confirmed = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS];
-				
-				if(![confirmed containsObject:pluginName]){
-					//If we haven't prompted for this plugin yet
-					if(NSRunInformationalAlertPanel([NSString stringWithFormat:@"Disable %@?",[pluginName stringByDeletingPathExtension]],
-													@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
-													@"Disable", 
-													@"Cancel",
-													nil) == NSAlertDefaultReturn){
-						
-						//Disable the plugin
-						NSString	*disabledPath = [[pluginPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Plugins (Disabled)"];
-						NSString	*sourcePath = [pluginPath stringByAppendingPathComponent:pluginName];
-						NSString	*destPath = [disabledPath stringByAppendingPathComponent:pluginName];
-						
-						[[NSFileManager defaultManager] createDirectoriesForPath:disabledPath];
-						[[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil];
-
-					}else{
-						//Add this plugin to our confirmed list
-						NSMutableArray	*newConfirmed;
-						
-						if(!(newConfirmed = [confirmed mutableCopy])) newConfirmed = [[NSMutableArray alloc] init];
-						
-						[newConfirmed addObject:pluginName];
-						[[NSUserDefaults standardUserDefaults] setObject:newConfirmed forKey:CONFIRMED_PLUGINS];
-						
-						[newConfirmed release];
-					}
-				}
+				loadPlugin = [self confirmPlugin:pluginName fromPath:pluginPath];
 			}
-			
-			
-			NS_DURING
-				//Load the plugin if the user didn't tell us to disable it
-				if( !confirmLoading || [[[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS] containsObject:pluginName] ) {
 
-					//...unless it's the WebKit plugin, in which case we test for WebKit first
-					if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
-						pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-						if(pluginBundle != nil){						
-#if 1
-							//Create an instance of the plugin
-							Class principalClass = [pluginBundle principalClass];
-							if (principalClass != nil){
-								plugin = [principalClass newInstanceOfPlugin];
-							}else{
-								NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
-							}
-#else
-							//Plugin load timing
-							
-							NSString	*compactedName = [pluginName compactedString];
-							double		timeInterval;
-							NSDate		*startTime = [NSDate date];
-							
-							plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
-							
-							timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
-							NSLog(@"Plugin Timing: %@ %f",compactedName, timeInterval);
-#endif
-							
-							if(plugin != nil){
-								//Add the instance to our list
-								[pluginArray addObject:plugin];
-							}else{
-								NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
-							}
-						}else{
-							NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
-						}
-					} else {
-						NSLog(AILocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
+			//Special case for webkit.  Trying to load the webkit plugin on a 10.2 system will get us into trouble
+			//with linking (because webkit may not be present).  This special case code recognizes the webkit plugin
+			//and skips it if webkit is not available.
+			if([pluginName isEqualToString:WEBKIT_PLUGIN] && ![NSApp isWebKitAvailable]){
+				loadPlugin = NO;
+			}
+				
+			//Load the plugin
+			if(loadPlugin){
+				NSBundle		*pluginBundle;
+				AIPlugin		*plugin = nil;
+
+				NS_DURING
+				if(pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]]){						
+					Class principalClass = [pluginBundle principalClass];
+					if(principalClass){
+						plugin = [principalClass newInstanceOfPlugin];
+					}else{
+						NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
 					}
+					
+					if(plugin){
+						[pluginArray addObject:plugin];
+					}else{
+						NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
+					}
+				}else{
+					NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
 				}
 				
-				NS_HANDLER	// Handle a raised exception
-					NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
-					if (plugin != nil) {
-						NSLog (@"Cleaning up using plugin's pointer");
-						// Make sure the plugin was not stored in the pluginArray, since it failed to successfully initialize
-						long index = [pluginArray indexOfObject:plugin];
-						if (index != NSNotFound) {
-							[pluginArray removeObjectAtIndex:index];
-						}
-						
-						//Remove observers
-						[[owner notificationCenter] removeObserver:plugin];
-						[[NSNotificationCenter defaultCenter] removeObserver:plugin];
-					}
-					NSString	*errorPartOne = AILocalizedString(@"The","definite article");
-					NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium's plugin directory","part of the plugin error message");
-					NSString	*errorPartThree = AILocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
-					[[owner interfaceController] handleErrorMessage:(AILocalizedString(@"Plugin load error",nil))
-													withDescription:[NSString stringWithFormat:@"%@ \"%@\" %@ (\"%@\")%@.", errorPartOne,
-														[pluginName stringByDeletingPathExtension],
-														errorPartTwo,
-														pluginPath,
-														errorPartThree]];
-					// It would probably be unsafe to call the plugin's uninstall
+				NS_HANDLER	
+				if(confirmLoading){
+					//The plugin encountered an exception while it was loading.  There is no reason to leave this old
+					//or poorly coded plugin enabled so that it can cause more problems, so disable it and inform
+					//the user that they'll need to restart.
+					[self disablePlugin:[pluginPath stringByAppendingPathComponent:pluginName]];
+					NSRunCriticalAlertPanel([NSString stringWithFormat:@"Error loading %@",[pluginName stringByDeletingPathExtension]],
+											@"An external plugin failed to load and has been disabled.  Please relaunch Adium",
+											@"Quit",
+											nil,
+											nil);
+					[NSApp terminate:nil];					
+				}
 				NS_ENDHANDLER
-	    }
+			}
+		}
 	}
 }
 
-
-// Returns YES if the named plugin exists. Does not imply that the plugin actually loaded or is functioning.
-- (BOOL)pluginEnabled:(NSString *)pluginName
+//Confirm the presence of an external plugin with the user.  Returns YES if the plugin should be loaded.
+- (BOOL)confirmPlugin:(NSString *)pluginName fromPath:(NSString *)pluginPath
 {
-//	BOOL inBundle = NO;
-//	BOOL inExternal = NO;
-//	
-//	inBundle = [[NSFileManager defaultManager] fileExistsAtPath:[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
-//	if(!inBundle)
-//		inExternal = [[NSFileManager defaultManager] fileExistsAtPath:[[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
-//	
-//	AILog(@"#### %@ enabled: in %d, out %d",pluginName,inBundle,inExternal);
-	return(YES/*inBundle || inExternal*/);	
+	BOOL	loadPlugin = YES;
+	NSArray	*confirmed = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS];
+	
+	if(![confirmed containsObject:pluginName]){
+		if(NSRunInformationalAlertPanel([NSString stringWithFormat:@"Disable %@?",[pluginName stringByDeletingPathExtension]],
+										@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
+										@"Disable", 
+										@"Cancel",
+										nil) == NSAlertDefaultReturn){
+			//Disable this plugin
+			[self disablePlugin:[pluginPath stringByAppendingPathComponent:pluginName]];
+			loadPlugin = NO;
+			
+		}else{
+			//Add this plugin to our confirmed list
+			[[NSUserDefaults standardUserDefaults] setObject:[confirmed arrayByAddingObject:pluginName]
+													  forKey:CONFIRMED_PLUGINS];
+		}
+	}
+	
+	return(loadPlugin);
+}
+
+//Move a plugin to the disabled plugins folder
+- (void)disablePlugin:(NSString *)pluginPath
+{
+	NSString	*pluginName = [pluginPath lastPathComponent];
+	NSString	*basePath = [pluginPath stringByDeletingLastPathComponent];
+	NSString	*disabledPath = [[basePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:EXTERNAL_DISABLED_PLUGIN_FOLDER];
+	
+	[[NSFileManager defaultManager] createDirectoriesForPath:disabledPath];
+	[[NSFileManager defaultManager] movePath:[basePath stringByAppendingPathComponent:pluginName]
+									  toPath:[disabledPath stringByAppendingPathComponent:pluginName]
+									 handler:nil];
 }
 
 //When the user upgrades to a new version, re-request confirmation of external plugins.
