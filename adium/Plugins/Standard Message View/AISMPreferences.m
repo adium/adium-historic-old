@@ -55,7 +55,7 @@
 //Reflect new preferences in view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
 		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 		
 		//Disable and uncheck show user icons when not using an inline prefix
