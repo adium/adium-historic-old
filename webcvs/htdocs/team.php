@@ -66,6 +66,8 @@
                     <span class="tiny">Interface Icons</span></p>
                     <p><a href="mailto:maran@mac.com">Benjamin Costello</a><br />
                     <span class="tiny">Site design, Xtras site</span></p>
+                    <p><a href="mailto:4N01@simplstick.com">Steve Holt</a><br />
+                    <span class="tiny">Code Contributions</span></p>
                     <p>Mac-arena the Bored Zo<br />
                     <span class="tiny">Code Contributions</span></p>
                     <p>Asher Haig<br />
