@@ -1663,6 +1663,7 @@
 				343EAB8806EF859C001CDAFF,
 				343EAB8906EF859C001CDAFF,
 				343EAB8606EF859C001CDAFF,
+				347797EC0729A89500A8CE8C,
 				343EAB8A06EF859C001CDAFF,
 			);
 			isa = PBXGroup;
@@ -3757,6 +3758,34 @@
 			name = "WebKit Additions";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		347797E30729A86100A8CE8C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = scriptToolbar.png;
+			path = "Plugins/Applescript Filters/scriptToolbar.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347797E40729A86100A8CE8C = {
+			fileRef = 347797E30729A86100A8CE8C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347797EC0729A89500A8CE8C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = ApplescriptAlert.png;
+			path = "Plugins/Applescript Contact Alert/ApplescriptAlert.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347797ED0729A89500A8CE8C = {
+			fileRef = 347797EC0729A89500A8CE8C;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		3479A83B05DC9F2400998B3D = {
 			children = (
@@ -6122,6 +6151,8 @@
 				34A273AB0721E58F004F3455,
 				342E17EB072869610054D77A,
 				342E2B1B072976060054D77A,
+				347797E40729A86100A8CE8C,
+				347797ED0729A89500A8CE8C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8354,6 +8385,7 @@
 		};
 		34F8A7FA05A8927F00577775 = {
 			children = (
+				347797E30729A86100A8CE8C,
 				343EAB9006EF8604001CDAFF,
 				343EAB9106EF8604001CDAFF,
 			);
