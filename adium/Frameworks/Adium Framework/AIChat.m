@@ -132,9 +132,9 @@
 	return (uniqueChatID);
 }
 
-+ (NSString *)uniqueChatIDForChatWithName:(NSString *)name onAccount:(AIAccount *)account
++ (NSString *)uniqueChatIDForChatWithName:(NSString *)inName onAccount:(AIAccount *)inAccount
 {
-	return [NSString stringWithFormat:@"%@.%@",name,[account uniqueObjectID]];
+	return [NSString stringWithFormat:@"%@.%@", inName, [inAccount uniqueObjectID]];
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
