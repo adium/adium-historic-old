@@ -14,6 +14,8 @@
 @interface AIBrowser (PRIVATE)
 - (void)_init;
 - (AIBrowserColumn *)newColumnForObject:(id)object;
+- (void)addColumn:(AIBrowserColumn *)column;
+- (void)removeLastColumn;
 @end
 
 @implementation AIBrowser
@@ -102,6 +104,26 @@
 	return(nil);
 }
 
+- (void)addColumn:(AIBrowserColumn *)column
+{
+	NSPoint		position = NSMakePoint((([columnArray count] + 1) * (COLUMN_WIDTH + 4)), 0);
+	
+	[[column scrollView] setFrameOrigin:position];
+	[self addSubview:[column scrollView]];
+	[columnArray addObject:column];
+}
+				   
+- (void)removeLastColumn
+{
+	AIBrowserColumn	*column = [columnArray lastObject];
+	
+	[[column scrollView] removeFromSuperview];
+	[columnArray removeObject:column];
+}
+
+
+
+
 
 
 - (void)setDataSource:(id)inDataSource
@@ -127,29 +149,19 @@
 	id 				selectedItem;
 		
 	//Get this column's index and the selected item
-	columnIndex = [columnArray indexOfObject:table];
-	if(columnIndex < 0) columnIndex = 0;
+	columnIndex = [columnArray indexOfObject:[self columnForTableView:table]];
+	if(columnIndex == NSNotFound) columnIndex = 0;
 	selectedItem = [dataSource browserView:self
 									 child:[table selectedRow]
 									ofItem:[[self columnForTableView:table] representedObject]];
-	
+	NSLog(@"%i >= %i",(int)columnIndex, [columnArray count]);
 	//Close down all table views after this one
-	
-	
-	
-	
-
-	
+	while(columnIndex < [columnArray count]){
+		[self removeLastColumn];
+	}
 	
 	//Add table view for the selected item
-	AIBrowserColumn *column;
-	
-	column = [self newColumnForObject:selectedItem];
-	[[column scrollView] setFrameOrigin:NSMakePoint((([columnArray count] + 1) * (COLUMN_WIDTH + 4)), 0)];
-	[self addSubview:[column scrollView]];
-	[columnArray addObject:column];
-
-	
+	[self addColumn:[self newColumnForObject:selectedItem]];
 }
 
 
