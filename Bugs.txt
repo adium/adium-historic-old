@@ -6,13 +6,8 @@
 // Adium X Known Issues
 //------------------------------------------------------------------------------------
 [HIGH]
-Meta Contacts
-  - MetaContact ordering does not always restore properly
 
 [MEDIUM]
-    - Plugins always prompt to disable.  I realize this is Adam's preferred
-      behavior, but some people actually use plugins :)
-
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
 Logs
@@ -23,20 +18,16 @@ Logs
     Adding an existing contact causes issues.  It may result in duplicate contacts on
     the user's list, and will make the contact appear offline.  Sometimes they will
     appear on the list twice until Adium is restarted.
-  - Tooltips are not appearing for links in profile text.
   - Tooltip alignment fails in long away messages and other large blocks of text.
   - Double clicking two names in succession causes the first name to highlight
     the second time.
   - An incoming message which opens a new tab will also unminimize the associated window
-  - Error message window doesn't wrap & resize properly for long titles (Gaim often
-	sends messages with longer titles than we expect)
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
 //------------------------------------------------------------------------------------
 - (AIM / Jabber) File transfers often fail to navigate firewalls and routers
 - (Yahoo) Files over 1 MB in size fail to send
-- (Jabber) Authorization problems
 - (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
 - (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly,
 	but can be received - only with certain default languages. English default language
@@ -50,7 +41,6 @@ Logs
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
 - Pasted content with line breaks may fail to send via Rendezvous
-- Yahoo ignore list is being ignored?
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
     transport), the invalid tags are being eaten? (Our HTML decoder isn't
     eating them, is libgaim?)
@@ -64,8 +54,3 @@ Logs
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
-- AppleScripts stall Adium when iTunes 4.5's Print dialogue is open (the same bug exists in Script Editor)
-
-    [Chris] - We could use a seperate app/daemon that is polling itunes.
-    blacktree.com has something for that, and GrowlTunes could also be made to
-    do what is needed, if we are going to just look for current playing track.
