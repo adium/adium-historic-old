@@ -96,6 +96,7 @@
     [format_menu setMenu:choicesMenu];
 
     [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[owner preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]]];
+
 }
 
 -(IBAction)changeFormat:(id) sender
