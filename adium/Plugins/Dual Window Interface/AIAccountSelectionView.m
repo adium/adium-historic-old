@@ -117,7 +117,7 @@
 		
 		//Select our current account
 		selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
-		if ((selectedIndex != NSNotFound) && (selectedIndex >= 0 && selectedIndex < [popUp_accounts count])){
+		if ((selectedIndex != NSNotFound) && (selectedIndex >= 0 && selectedIndex < [popUp_accounts numberOfItems])){
 			[popUp_accounts selectItemAtIndex:selectedIndex];
 		}
 		[self updateMenu];
