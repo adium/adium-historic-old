@@ -15,15 +15,16 @@
 // Adium X 0.70 remaining issues
 //------------------------------------------------------------------------------------
 [Contact List]
-- Auto-resizing isn't restricting itself to the screen frame
-- Canceling a list edit sheet needs to re-apply the currently selected prefs
 - Bubble-to-fit cells don't work with any new list additions (disable when bubble is selected)
+- Canceling a list edit sheet needs to re-apply the currently selected prefs
+- Create default layouts & styles for the contact list preferences
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
 - Extended status doesn't update on the list when it changes
 - Extended status sometimes draws outside the cell (and is therefore cropped) instead of increasing cell height
 - Selected cells need to draw with inverted text
-- Create default layouts & styles for the contact list preferences
+- Status labels are ignoring window transparency
+- Status labels are covering selected cells
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
