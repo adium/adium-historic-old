@@ -43,7 +43,7 @@
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
-#define	ENABLE_WEBCAM	FALSE
+#define	ENABLE_WEBCAM	TRUE
 
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
@@ -66,9 +66,10 @@ NSMutableDictionary *accountDict = nil;
 NSMutableDictionary *chatDict = nil;
 
 //Event loop static variables
-static guint				sourceId = nil;		//The next source key; continuously incrementing
-static NSMutableDictionary  *sourceInfoDict = nil;
-static NDRunLoopMessenger   *runLoopMessenger = nil;
+static guint					sourceId = nil;		//The next source key; continuously incrementing
+static NSMutableDictionary		*sourceInfoDict = nil;
+static NDRunLoopMessenger	*gaimThreadMessenger = nil;
+static NDRunLoopMessenger	*mainThreadMesesnger = nil;
 static BOOL					isOnTigerOrBetter = NO;
 
 void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
@@ -102,14 +103,20 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return myself;
 }
 
+
+- (void)setMainThreadMessenger:(NDRunLoopMessenger *)inMainThreadMessenger
+{
+	mainThreadMesesnger = [inMainThreadMessenger retain];
+}
+
 - (void)addAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	account->ui_data = [adiumAccount retain];
 	
-	[runLoopMessenger target:self 
-			 performSelector:@selector(gaimThreadAddAdiumAccount:)
-				  withObject:adiumAccount];
+	[gaimThreadMessenger target:self 
+				performSelector:@selector(gaimThreadAddAdiumAccount:)
+					 withObject:adiumAccount];
 }
 
 //Register the account gaimside in the gaim thread to avoid a conflict on the g_hash_table containing accounts
@@ -145,18 +152,18 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 												 name:@"AddAccount"
 											   object:nil];
 	
-	runLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
+	gaimThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 
 	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
 														 target:self
 													   selector:@selector(refreshAutoreleasePool:)
 													   userInfo:nil
 														repeats:YES] retain];
-		
+
 	CFRunLoopRun();
 
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-	[runLoopMessenger release]; runLoopMessenger = nil;
+	[gaimThreadMessenger release]; gaimThreadMessenger = nil;
     [currentAutoreleasePool release];
 	
     return self;
@@ -465,9 +472,10 @@ static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, cons
 {
 	gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
 	
+/*	AILog(@"%x: (Debug: %s) %s",[NSRunLoop currentRunLoop], category, arg_s); */
 	//Log error
 	if(!category) category = "general"; //Category can be nil
-/*	AILog(@"%x: (Debug: %s) %s",[NSRunLoop currentRunLoop], category, arg_s); */
+
 	AILog(@"(Libgaim: %s) %s",category, arg_s);
 	
 	g_free(arg_s);
@@ -1484,12 +1492,14 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		return;
 	}
 	
+	//Suppress notification warnings we have no interest in seeing
 	if (secondaryString){
 		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound)){
+			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound)){
 			return;
 		}
 	}
@@ -1790,10 +1800,10 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 			
 			//Ask the account for an ESFileTransfer* object
 			fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
-																			  size:gaim_xfer_get_size(xfer)];
+																			  size:gaim_xfer_get_size(xfer)
+																	remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
 			
 			//Configure the new object for the transfer
-			[fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
 			[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
 			
 			xfer->ui_data = [fileTransfer retain];
@@ -2235,7 +2245,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)connectAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self 
+	[gaimThreadMessenger target:self 
 			 performSelector:@selector(gaimThreadConnectAccount:) 
 				  withObject:adiumAccount];
 }
@@ -2246,7 +2256,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)disconnectAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self 
+	[gaimThreadMessenger target:self 
 			 performSelector:@selector(gaimThreadDisconnectAccount:) 
 				  withObject:adiumAccount];
 }
@@ -2261,7 +2271,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)registerAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self 
+	[gaimThreadMessenger target:self 
 			 performSelector:@selector(gaimThreadRegisterAccount:) 
 				  withObject:adiumAccount];
 }
@@ -2292,7 +2302,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 	if(sendMessage){
 		AILog(@"Sending %@ from %@ to %@",encodedMessage,sourceAccount,chat);
-		[runLoopMessenger target:self 
+		[gaimThreadMessenger target:self 
 				 performSelector:@selector(gaimThreadSendEncodedMessage:originalMessage:fromAccount:inChat:withFlags:) 
 					  withObject:encodedMessage
 					  withObject:originalMessage
@@ -2328,7 +2338,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 			sendMessage = NO;
 			//We're good to go (the arguments may be wrong, or it may fail, but it is an account-appropriate command);
 			//perform the command on the gaim thread.
-			[runLoopMessenger target:self 
+			[gaimThreadMessenger target:self 
 					 performSelector:@selector(gaimThreadDoCommand:fromAccount:inChat:) 
 						  withObject:originalMessage
 						  withObject:sourceAccount
@@ -2437,7 +2447,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
-	[runLoopMessenger target:self 
+	[gaimThreadMessenger target:self 
 			 performSelector:@selector(gaimThreadSendTyping:inChat:)
 				  withObject:[NSNumber numberWithInt:typingState]
 				  withObject:chat];
@@ -2470,7 +2480,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	[runLoopMessenger target:self 
+	[gaimThreadMessenger target:self 
 			 performSelector:@selector(gaimThreadAddUID:onAccount:toGroup:)
 				  withObject:objectUID
 				  withObject:adiumAccount
@@ -2526,7 +2536,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadRemoveUID:onAccount:fromGroup:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadRemoveUID:onAccount:fromGroup:)
 				  withObject:objectUID
 				  withObject:adiumAccount
 				  withObject:groupName];
@@ -2555,7 +2565,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadMoveUID:onAccount:toGroup:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadMoveUID:onAccount:toGroup:)
 				  withObject:objectUID
 				  withObject:adiumAccount
 				  withObject:groupName];
@@ -2598,7 +2608,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {	
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadRenameGroup:onAccount:to:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadRenameGroup:onAccount:to:)
 				  withObject:oldGroupName
 				  withObject:adiumAccount
 				  withObject:newGroupName];
@@ -2616,7 +2626,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadDeleteGroup:onAccount:)
 				  withObject:groupName
 				  withObject:adiumAccount];
@@ -2634,7 +2644,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Alias
 - (oneway void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadSetAlias:forUID:onAccount:)
 				  withObject:alias
 				  withObject:UID
@@ -2672,7 +2682,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Chats
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadOpenChat:onAccount:)
 				  withObject:chat
 				  withObject:adiumAccount];
@@ -2688,7 +2698,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	//We look up the conv and the chat's uniqueChatID now since threading may make them change before
 	//the gaimThread actually utilizes them
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadCloseGaimConversation:withChatID:)
 				  withObject:[NSValue valueWithPointer:existingConvLookupFromChat(chat)]
 				  withObject:[chat uniqueChatID]];
@@ -2714,7 +2724,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadInviteContact:toChat:withMessage:)
 				  withObject:contact
 				  withObject:chat
@@ -2745,7 +2755,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)createNewGroupChat:(AIChat *)chat withListObject:(AIListObject *)contact
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadCreateNewChat:withListObject:)
 				  withObject:chat
 				  withObject:contact];
@@ -2764,7 +2774,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Account Status
 - (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadSetAway:onAccount:)
 				  withObject:awayHTML
 				  withObject:adiumAccount];
@@ -2780,7 +2790,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadSetInfo:onAccount:)
 				  withObject:profileHTML
 				  withObject:adiumAccount];
@@ -2798,7 +2808,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadSetBuddyIcon:onAccount:)
 				  withObject:buddyImageFilename
 				  withObject:adiumAccount];
@@ -2813,7 +2823,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadSetIdleSinceTo:onAccount:)
 				  withObject:idleSince
 				  withObject:adiumAccount];
@@ -2838,7 +2848,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Get Info
 - (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadGetInfoFor:onAccount:)
 				  withObject:inUID
 				  withObject:adiumAccount];
@@ -2855,7 +2865,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Xfer
 - (oneway void)xferRequest:(GaimXfer *)xfer
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequest:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadXferRequest:)
 				  withObject:[NSValue valueWithPointer:xfer]];
 }
 - (oneway void)gaimThreadXferRequest:(NSValue *)xferValue
@@ -2866,7 +2876,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequestAccepted:withFileName:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadXferRequestAccepted:withFileName:)
 				  withObject:[NSValue valueWithPointer:xfer]
 				  withObject:xferFileName];	
 }
@@ -2877,7 +2887,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequestRejected:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadXferRequestRejected:)
 				  withObject:[NSValue valueWithPointer:xfer]];
 }
 - (oneway void)gaimThreadXferRequestRejected:(NSValue *)xferValue
@@ -2887,7 +2897,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)xferCancel:(GaimXfer *)xfer
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferCancel:)
+	[gaimThreadMessenger target:self performSelector:@selector(gaimThreadXferCancel:)
 				  withObject:[NSValue valueWithPointer:xfer]];	
 }
 - (oneway void)gaimThreadXferCancel:(NSValue *)xferValue
@@ -2899,7 +2909,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Account settings
 - (oneway void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadSetCheckMail:forAccount:)
 				  withObject:checkMail
 				  withObject:adiumAccount];
@@ -2915,7 +2925,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Protocol specific accessors
 - (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadOSCAREditComment:forUID:onAccount:)
 				  withObject:comment
 				  withObject:inUID
@@ -2941,7 +2951,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadOSCARSetFormatTo:onAccount:)
 				  withObject:inFormattedUID
 				  withObject:adiumAccount];
@@ -2964,7 +2974,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 				   withUserDataValue:(NSValue *)userDataValue 
 						 inputString:(NSString *)string
 {	
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
 				  withObject:callBackValue
 				  withObject:userDataValue
@@ -2984,7 +2994,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 					withUserDataValue:(NSValue *)userDataValue
 						callBackIndex:(NSNumber *)callBackIndexNumber
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:callBackIndex:)
 				  withObject:callBackValue
 				  withObject:userDataValue
@@ -3069,7 +3079,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict 
 {
-	[runLoopMessenger target:self
+	[gaimThreadMessenger target:self
 			 performSelector:@selector(gaimThreadPerformContactMenuActionFromDict:)
 				  withObject:dict];	
 }

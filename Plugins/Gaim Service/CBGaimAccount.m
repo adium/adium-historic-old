@@ -430,9 +430,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if ([inContact online] || [inContact isStranger]){
+	AILog(@"%@: Update %@ : %i %i",self,inContact,[inContact online],[inContact isStranger]);
+//    if ([inContact online] || [inContact isStranger]){
 		[gaimThread getInfoFor:[inContact UID] onAccount:self];
-    }
+//    }
 }
 
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID
@@ -803,8 +804,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																		   toContact:(AIListContact *)[chat listObject]];
 							}
 							
-							AILog(@"sendContentObject: %@",encodedMessage);
-
 							sent = [gaimThread sendEncodedMessage:encodedMessage
 										   originalMessage:thisPartString
 											   fromAccount:self
@@ -833,7 +832,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																   toContact:(AIListContact *)[chat listObject]];
 					}
 					
-					AILog(@"sendContentObject: %@",encodedMessage);
 					messageString = [message string];
 					
 					sent = [gaimThread sendEncodedMessage:encodedMessage
@@ -1109,14 +1107,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 //Create an ESFileTransfer object from an xfer
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
+										 size:(unsigned long long)inSize
+							   remoteFilename:(NSString *)remoteFilename
 {
-	return([self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:)
+	return([self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFileName:)
 						  withObject:destinationUID
 						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
+						  withObject:remoteFilename
 						 returnValue:YES]);
 }
-- (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID size:(NSNumber *)inSize
+- (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID
+													size:(NSNumber *)inSize
+										  remoteFilename:remoteFilename
 {
 	AIListContact   *contact = [self _contactWithUID:destinationUID];
     ESFileTransfer	*fileTransfer;
@@ -1124,6 +1127,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
 																   forAccount:self]; 
 	[fileTransfer setSize:[inSize unsignedLongLongValue]];
+	[fileTransfer setRemoteFilename:remoteFilename];
 
     return(fileTransfer);
 }
@@ -1484,7 +1488,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 
 	if (!gaimThread){
+		NDRunLoopMessenger *mainThreadMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
+	
+		[gaimThread setMainThreadMessenger:mainThreadMessenger];
 	}
 	
 	[gaimThread addAdiumAccount:self];
