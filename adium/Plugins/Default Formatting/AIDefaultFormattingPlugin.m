@@ -82,9 +82,14 @@
 
     //Setup the attributes
     if(!subBackgroundColor){
-        attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, 
+																textColor, NSForegroundColorAttributeName, 
+																backgroundColor, AIBodyColorAttributeName, nil];
     }else{
-        attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName,
+																textColor, NSForegroundColorAttributeName,
+																backgroundColor, AIBodyColorAttributeName,
+																subBackgroundColor, NSBackgroundColorAttributeName, nil];
     }
 
     //Set them as the typing attributes for all new text
@@ -94,6 +99,9 @@
     contents = [[[inTextEntryView attributedString] mutableCopy] autorelease];
     [contents setAttributes:attributes range:NSMakeRange(0,[contents length])];
     [inTextEntryView setAttributedString:contents];
+	
+	//Let the inTextEntryView know about its defaults
+	[inTextEntryView setDefaultTypingAttributes:attributes];
 }
 
 
