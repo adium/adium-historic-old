@@ -38,7 +38,7 @@
 //its count must be the same as the number of rows
 - (NSArray *)arrayOfSelectedItemsUsingSourceArray:(NSArray *)sourceArray
 {
-	NSParameterAssert([sourceArray count] == ([self numberOfRows] - 1));
+	NSParameterAssert([sourceArray count] == [self numberOfRows]);
 
 	NSMutableArray 	*itemArray = [NSMutableArray array];
 	id 				item;
