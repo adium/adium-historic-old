@@ -62,6 +62,8 @@
 	
 	delegate = nil;
 	[title release];
+	
+	[super dealloc];
 }
 
 // Getters and Setters ----------------------------------------------------------------
