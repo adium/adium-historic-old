@@ -596,17 +596,25 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a menu of all accounts returned by menuItemsForAccountsWithTarget
 - (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline
 {
+	return ([self menuOfAccountsWithTarget:target includeOffline:includeOffline onlyIfCreatingGroupChatIsSupported:NO]);
+}
+
+//Returns a menu of all accounts (optionally, which can create a group chat) returned by menuItemsForAccountsWithTarget
+- (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline onlyIfCreatingGroupChatIsSupported:(BOOL)groupChatCreator
+{
 	NSMenu			*menu = [[NSMenu alloc] init];
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 	
 	enumerator = [[self menuItemsForAccountsWithTarget:target includeOffline:includeOffline] objectEnumerator];
 	while(menuItem = [enumerator nextObject]){
-		[menu addItem:menuItem];
+		if (!groupChatCreator || [[[menuItem representedObject] service] canCreateGroupChats]){
+			[menu addItem:menuItem];
+		}
 	}
 	
 	return([menu autorelease]);
-}	
+}
 
 //Returns an array containing menu items for all accounts. 
 //- Accounts not available for sending content are disabled.
