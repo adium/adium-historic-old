@@ -293,15 +293,19 @@ float ToolbarHeightForWindow(NSWindow *window)
 	}
 
 	if(useDesiredWidth){
-		//If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
-		//expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
-		//windows... I'm not sure why it's needed, but it doesn't hurt anything.
-		if(desiredHeight + toolbarHeight > newWindowFrame.size.height + 2){
-			float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
-			newWindowFrame.size.width += scrollerWidth;
-			
-			if(anchorToRightEdge){
-				newWindowFrame.origin.x -= scrollerWidth;
+		//We only want to account for the scrollbar if we are dynamically sizing (i.e. autoResizeHorizontally is YES).
+		//useDesiredWidth could be YES because of a forcedWidth; we shouldn't change based on the scrollbar in that case.
+		if(autoResizeHorizontally){
+			//If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
+			//expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
+			//windows... I'm not sure why it's needed, but it doesn't hurt anything.
+			if(desiredHeight + toolbarHeight > newWindowFrame.size.height + 2){
+				float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
+				newWindowFrame.size.width += scrollerWidth;
+				
+				if(anchorToRightEdge){
+					newWindowFrame.origin.x -= scrollerWidth;
+				}
 			}
 		}
 		
