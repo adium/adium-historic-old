@@ -22,6 +22,8 @@
 
 @implementation ESAddressBookIntegrationPlugin
 
+static	ABAddressBook	*sharedAddressBook = nil;
+
 - (void)installPlugin
 {
     meTag = -1;
@@ -30,7 +32,7 @@
 	personArrayForImageData = nil;
 	imageLookupTimer = nil;
 	createMetaContacts = NO;
-	
+
 	//Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
     trackingDictPersonToTagNumber = [[NSMutableDictionary alloc] init];
@@ -65,6 +67,8 @@
     [trackingDict release]; trackingDict = nil;
 	[trackingDictPersonToTagNumber release]; trackingDictPersonToTagNumber = nil;
 	[trackingDictTagNumberToPerson release]; trackingDictTagNumberToPerson = nil;
+	
+	[sharedAddressBook release]; sharedAddressBook = nil;
 }
 
 //Adium is ready to receive our glory.
@@ -220,8 +224,13 @@
 
 			//If we weren't creating meta contacts before but we are now
 			if (!oldCreateMetaContacts && createMetaContacts){
-				//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
-				[self rebuildAddressBookDict];
+				/*
+				 Build the address book dictionary, which will also trigger metacontact grouping as appropriate
+				 Delay to the next run loop to give better UI responsiveness
+				 */
+				[self performSelector:@selector(rebuildAddressBookDict)
+						   withObject:nil
+						   afterDelay:0.0001];
 			}
 			
 			//Update all contacts, which will update objects and then our "me" card information
@@ -393,7 +402,7 @@
 	if (dict){
 		NSString *uniqueID = [dict objectForKey:[UID compactedString]];
 		if (uniqueID){
-			person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:uniqueID];
+			person = (ABPerson *)[sharedAddressBook recordForUniqueId:uniqueID];
 		}
 	}
 	
@@ -424,7 +433,7 @@
 	NS_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
-        if (me = [[ABAddressBook sharedAddressBook] me]) {
+        if (me = [sharedAddressBook me]) {
 			
 			//Default buddy icon
 			if (includeIcon){
@@ -482,12 +491,19 @@
 #pragma mark Address book caching
 - (void)rebuildAddressBookDict
 {
-	NSEnumerator		*peopleEnumerator = [[[ABAddressBook sharedAddressBook] people] objectEnumerator];
-	NSArray				*allServiceKeys = [serviceDict allKeys];
+	NSEnumerator		*peopleEnumerator;
+	NSArray				*allServiceKeys;
 	ABPerson			*person;
 	
+	//Delay listObjectNotifications to speed up metaContact creation
+	[[adium contactController] delayListObjectNotifications];
+
+	[sharedAddressBook release]; sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 	[addressBookDict release]; addressBookDict = [[NSMutableDictionary alloc] init];
 	
+	allServiceKeys = [serviceDict allKeys];
+	
+	peopleEnumerator = [[sharedAddressBook people] objectEnumerator];
 	while (person = [peopleEnumerator nextObject]){
 		
 		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
@@ -544,6 +560,9 @@
 			[[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 		}
 	}
+	
+	//Stop delaying list object notifications since we are done
+	[[adium contactController] endListObjectNotificationsDelay];
 }
 
 @end
