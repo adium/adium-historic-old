@@ -30,8 +30,18 @@
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 
+#define KEY_TAB_SWITCH_KEYS					@"Tab Switching Keys"
 
-@class AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, AIDualWindowAdvancedPrefs, ESDualWindowMessageWindowPreferences, ESDualWindowMessageAdvancedPreferences;
+typedef enum {
+	AISwitchArrows = 0,
+	AISwitchShiftArrows,
+	AIBrackets
+} AITabKeys;
+
+@class AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences,
+AIDualWindowAdvancedPrefs, ESDualWindowMessageWindowPreferences, ESDualWindowMessageAdvancedPreferences,
+AITabSwitchingPreferences;
+
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
 @protocol AIInterfaceContainer <NSObject>
@@ -78,6 +88,7 @@
     AIDualWindowAdvancedPrefs               *preferenceAdvController;
     ESDualWindowMessageWindowPreferences    *preferenceMessageController;
     ESDualWindowMessageAdvancedPreferences  *preferenceMessageAdvController;
+    AITabSwitchingPreferences				*preferenceTabKeysController;
     
     BOOL				alwaysCreateNewWindows;
     BOOL				useLastWindow;
