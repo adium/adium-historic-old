@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.78 2004/06/07 16:25:48 evands Exp $
+// $Id: AIContentController.m,v 1.79 2004/06/08 19:54:45 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -232,7 +232,7 @@
     AIChat			*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
 	BOOL			shouldBeFirstMessage = NO;
-
+	
     if(object){
         //Notify: Will Receive Content
         if([inObject trackContent]){
@@ -249,8 +249,18 @@
 													  context:inObject]];
         }
 		
-		if([inObject trackContent] && [[chat contentObjectArray] count] <= 1) {
-			shouldBeFirstMessage = YES;
+		if([inObject trackContent]) {
+			
+			int		contentLength = [[chat contentObjectArray] count];
+			BOOL	isFirstAfterContext = NO;
+			
+			if( contentLength > 1 ) {
+				isFirstAfterContext = ![[(AIContentObject *)[[chat contentObjectArray] objectAtIndex:0] type] isEqualToString:[inObject type]];
+			}
+			
+			if( contentLength <= 1 || ( (contentLength > 1) && isFirstAfterContext ) )
+				shouldBeFirstMessage = YES;
+				
 		}
 
 		//Display the content
