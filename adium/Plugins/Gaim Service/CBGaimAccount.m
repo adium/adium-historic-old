@@ -96,7 +96,7 @@
     //Group changes - gaim buddies start off in no group, so this is an important update for us
     if(theContact && ![theContact remoteGroupName]){
         GaimGroup *g = gaim_find_buddys_group(buddy);
-		if(g){
+		if(g && g->name){
 		    NSString *groupName = [NSString stringWithUTF8String:g->name];
 			if(groupName && [groupName length] != 0){
 				[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
