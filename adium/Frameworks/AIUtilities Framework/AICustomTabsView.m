@@ -76,7 +76,8 @@
     [tabCellArray release];
     [tabDivider release];
     [selectedCustomTabCell release];
-
+    [dragTabCell release];
+    
     [super dealloc];
 }
 
@@ -404,6 +405,7 @@
     BOOL		tabsChanged = NO;
 
     draggingATabCell = NO;
+    [dragTabCell release]; dragTabCell = nil;
 
     //Rearrange the tab views
     enumerator = [tabCellArray objectEnumerator];

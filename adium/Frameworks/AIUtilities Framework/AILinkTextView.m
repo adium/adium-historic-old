@@ -63,4 +63,12 @@
     [linkTrackingController trackLinksInRect:visibleRect withOffset:NSMakeSize(0,0)];
 }
 
+//If we're being removed from the window, we need to remove our tracking rects
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+    if(newWindow == nil){ //pass an empty visible rect to end any tracking
+        [linkTrackingController trackLinksInRect:NSMakeRect(0,0,0,0) withOffset:NSMakeSize(0,0)];
+    }
+}
+
 @end

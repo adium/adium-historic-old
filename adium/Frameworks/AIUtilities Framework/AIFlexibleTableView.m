@@ -482,6 +482,20 @@
     }
 }
 
+//If we're being removed from the window, we need to remove our tracking rects
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+    if(newWindow == nil){
+        NSEnumerator		*enumerator;
+        AIFlexibleTableCell	*cell;
+
+        //Loop through all cursor tracking cells, and pass them an empty visible rect (to end any tracking).
+        enumerator = [cursorTrackingCellArray objectEnumerator];
+        while((cell = [enumerator nextObject])){
+            [cell resetCursorRectsInView:self visibleRect:NSMakeRect(0,0,0,0)];
+        }
+    }
+}
 
 //Key Forwarding ---------------------------------------------------------------------------------
 //When the user attempts to type into the table view, we push the keystroke to the next responder, and make it key.  This isn't required, but convienent behavior since one will never want to type into this view.

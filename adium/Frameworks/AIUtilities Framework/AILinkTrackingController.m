@@ -50,7 +50,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return([[[self alloc] initForView:inTextView withTextStorage:[inTextView textStorage] layoutManager:[inTextView layoutManager] textContainer:[inTextView textContainer]] autorelease]);
 }
 
-//Track links in the passed rect.  Returns YES if links exist within our text.
+//Track links in the passed rect.  Returns YES if links exist within our text.  Pass a 0 width/height visible rect to stop any link tracking.
 - (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSSize)offset
 {
     //remove any existing tooltips
@@ -58,7 +58,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Reset the cursor tracking rects
     [self _endCursorTracking];
-    [self _beginCursorTrackingInRect:visibleRect withOffset:offset];
+    if(visibleRect.size.width && visibleRect.size.height){
+        [self _beginCursorTrackingInRect:visibleRect withOffset:offset];
+    }
 }
 
 //Called when the mouse enters the link
