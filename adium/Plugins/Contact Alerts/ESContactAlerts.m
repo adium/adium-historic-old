@@ -18,7 +18,6 @@
 - (void)configureForTextDetails:(NSString *)instructions;
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
 - (void)configureWithSubview:(NSView *)view_inView;
-- (void)saveEventActionArray;
 - (void)testSelectedEvent;
 
 - (NSMenu *)accountMenu;
@@ -33,6 +32,7 @@
 
 
 int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context);
+int eventActionSort_contactAlerts(id objectA, id objectB, void *context);
 
 @implementation ESContactAlerts
 
@@ -52,17 +52,13 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [tableView_actions retain];
     //    [tableView_actions setDoubleAction:@selector(testSelectedEvent)];
     
-    view_main = inView;
-    [view_main retain];
-    
     view_pref = inPrefView;
     [view_pref retain];
     
     view_blank = [[NSView alloc] init];
     
-    if ( view_main && [[view_main subviews] count] == 0 ) //there are no subviews yet
-        [view_main addSubview:view_blank];
-    
+	[self setMainView:inView];
+	
     //nothing's selected, obviously, so row = -1
     row = -1;
     
@@ -147,7 +143,8 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
             }
             [eventActionArray release]; eventActionArray = [newActionArray retain];
             
-            //inform the controller
+            [eventActionArray sortUsingFunction:eventActionSort_contactAlerts context:nil];
+			//inform the controller
             [[adium contactAlertsController] updateOwner:self toArray:eventActionArray forObject:object];
         }
     }
@@ -178,6 +175,16 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     return actionListMenu_cached;
 }
 
+- (void)actionChangedTo:(NSString *)inAction
+{
+	NSMutableDictionary     *actionDict;
+	
+	actionDict = [[self dictAtIndex:row] mutableCopy];
+	
+	[actionDict setObject:inAction forKey:KEY_EVENT_ACTION];
+	[self replaceDictAtIndex:row withDict:actionDict];	
+}
+
 #pragma mark Saving
 //Save the event actions (contact context sensitive)
 - (void)saveEventActionArray
@@ -193,19 +200,16 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     {
         NSMenu		*eventMenu = [[NSMenu alloc] init];
         
-        //Add the static/display menu item
-        [eventMenu addItemWithTitle:AILocalizedString(@"Add Event…",nil) target:nil action:nil keyEquivalent:@""];
-        
         //Add a menu item for each event
-        [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:AILocalizedString(@"Signed On",nil)]];
-        [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:AILocalizedString(@"Signed Off",nil)]];
-        [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:AILocalizedString(@"Went Away",nil)]];
-        [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:AILocalizedString(@"Came Back From Away",nil)]];
-        [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:AILocalizedString(@"Became Idle",nil)]];
-        [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:AILocalizedString(@"Became Unidle",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:AILocalizedString(@"Signs On",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:AILocalizedString(@"Signs Off",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:AILocalizedString(@"Goes Away",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:AILocalizedString(@"Comes Back From Away",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:AILocalizedString(@"Becomes Idle",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:AILocalizedString(@"Becomes Unidle",nil)]];
         [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:AILocalizedString(@"Is Typing",nil)]];
         [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:AILocalizedString(@"Has Unviewed Content",nil)]];
-        [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:AILocalizedString(@"Was Warned",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:AILocalizedString(@"Is Warned",nil)]];
         eventMenu_cached = eventMenu;
     }
     return(eventMenu_cached);
@@ -218,7 +222,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     
     menuItem = [[[NSMenuItem alloc] initWithTitle:displayName
                                            target:self
-                                           action:@selector(newEvent:)
+                                           action:@selector(changeEvent:)
                                     keyEquivalent:@""] autorelease];
     //EDS    menuDict = [[[NSMutableDictionary alloc] init] retain];
     menuDict = [[[NSMutableDictionary alloc] init] autorelease];
@@ -227,7 +231,39 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [menuItem setRepresentedObject:menuDict];
     return menuItem;
 }
-//Called by the event popUp menu (Inserts a new event)
+
+//Readies the New Alert pane
+- (IBAction)newEvent:(id)sender
+{
+    NSMutableDictionary	*actionDict = [[NSMutableDictionary alloc] init];
+
+	NSLog(@"Creating a new event for %@", [[self activeObject] UID]);
+	
+    //Add the new event
+    [actionDict setObject:AILocalizedString(@"Signs On",nil) forKey:KEY_EVENT_DISPLAYNAME];
+    [actionDict setObject:@"Signed On" forKey:KEY_EVENT_NOTIFICATION];
+    [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
+    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
+    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_ACTIVE]; //default to ignore active/inactive
+    [eventActionArray addObject:actionDict];
+    [actionDict release];
+	
+	[self currentRowIs:[self count] - 1];
+	
+	[self saveEventActionArray];
+}
+
+- (IBAction)changeEvent:(id)sender
+{
+	NSMutableDictionary	*actionDict = [self dictAtIndex:[self currentRow]];
+	
+	[actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_NOTIFICATION] forKey:KEY_EVENT_NOTIFICATION];
+	[actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_DISPLAYNAME] forKey:KEY_EVENT_DISPLAYNAME];
+
+	[self saveEventActionArray];
+}
+
+/*//Called by the event popUp menu (Inserts a new event)
 - (IBAction)newEvent:(id)sender
 {
     NSMutableDictionary	*actionDict = [[NSMutableDictionary alloc] init];
@@ -254,7 +290,24 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
         [[tableView_actions dataSource] performSelector:@selector(addedEvent:) withObject:self];
 }
+*/
+#pragma mark Views
 
+- (void)setMainView:(NSView *)inView
+{
+	if (view_main) {
+		[view_main release];
+		view_main = nil;
+	}
+	view_main = [inView retain];
+	
+	if ( view_main && [[view_main subviews] count] == 0 ) //there are no subviews yet
+        [view_main addSubview:view_blank];
+}
+- (NSView *)mainView
+{
+	return view_main;
+}
 
 #pragma mark Subview Management
 
@@ -383,6 +436,16 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 - (unsigned)hash
 {
     return ( [[activeContactObject uniqueObjectID] hash] );
+}
+
+//sorts the event action array by event, then action
+int eventActionSort_contactAlerts(id objectA, id objectB, void *context)
+{
+	int sorter = [(NSString *)[objectA objectForKey:KEY_EVENT_NOTIFICATION] compare:(NSString *)[objectB objectForKey:KEY_EVENT_NOTIFICATION]];
+	if (sorter != 0) {
+		return(sorter);
+	}
+	return ([(NSString *)[objectA objectForKey:KEY_EVENT_ACTION] compare:(NSString *)[objectB objectForKey:KEY_EVENT_ACTION]]);
 }
 
 #warning This sort function no longer works properly after the group changes

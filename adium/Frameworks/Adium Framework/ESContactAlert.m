@@ -59,6 +59,23 @@
 {
     return nil;   
 }
+
+- (IBAction)selectedAlert:(id)sender
+{
+	[self configureView];
+	[[adium contactAlertsController] actionChangedTo:[sender representedObject] forContactAlert:self];
+}
+
+- (void)configureView
+{
+	
+}
+
+- (NSImage *)icon
+{
+	return nil;
+}
+
 - (NSString *)nibName
 {
     return nil;   

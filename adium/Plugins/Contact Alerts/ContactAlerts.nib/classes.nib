@@ -5,6 +5,12 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
         }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {
             ACTIONS = {
                 addedEvent = id; 
@@ -15,16 +21,8 @@
             }; 
             CLASS = ESContactAlertsWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_active" = NSButton; 
-                "button_delete" = NSButton; 
-                "button_oneTime" = NSButton; 
-                "popUp_addEvent" = NSPopUpButton; 
-                "popUp_contactList" = NSPopUpButton; 
-                "tableView_actions" = AIAlternatingRowTableView; 
-                "view_main" = NSView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
+            OUTLETS = {"tableView_actions" = NSTableView; "tableView_source" = NSTableView; }; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

@@ -30,7 +30,7 @@
 }
 
 //setup display for playing a sound
-- (IBAction)selectedAlert:(id)sender
+- (void)configureView
 {   
     //Get the current dictionary
     NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
@@ -42,9 +42,9 @@
     } else {
         [textField_actionDetails setStringValue:@""];   
     }
-        
+	
     [textField_actionDetails setDelegate:self];
-        
+	
     [self configureWithSubview:view_details_text];
     [[view_details_text window] makeFirstResponder:textField_actionDetails];
 }

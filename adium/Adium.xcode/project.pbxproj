@@ -3729,6 +3729,7 @@
 				34D5B281061263B300B98336,
 				9E6417070613C55D006AF387,
 				3404893306173DAB004D0B7E,
+				BF99B529061D74EE00BF2252,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3912,7 +3913,6 @@
 				4BD6739806001C340049CAF7,
 				4BD6739A06001C400049CAF7,
 				4BD673A006001C460049CAF7,
-				4BD673A106001C460049CAF7,
 				4BD673A606001C4E0049CAF7,
 				4BD673AB06001C510049CAF7,
 				4BD673AC06001C510049CAF7,
@@ -4035,6 +4035,10 @@
 				4B5829E60613D0BD0004BD25,
 				34F58F34061A76C500B4B5D6,
 				34F58F35061A76C500B4B5D6,
+				BF99B520061D74C300BF2252,
+				BF99B524061D74DA00BF2252,
+				BF99B525061D74DA00BF2252,
+				BF99B526061D74DA00BF2252,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4353,6 +4357,7 @@
 				34D5B262061260AE00B98336,
 				9E6417080613C55D006AF387,
 				3404893406173DAB004D0B7E,
+				BF99B52A061D74EE00BF2252,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12545,12 +12550,6 @@
 			settings = {
 			};
 		};
-		4BD673A106001C460049CAF7 = {
-			fileRef = F5319C3704CF3900015DA2B6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD673A206001C4D0049CAF7 = {
 			fileRef = 4BD7D0D704620DF900A8010A;
 			isa = PBXBuildFile;
@@ -19065,6 +19064,92 @@
 			settings = {
 			};
 		};
+		BF99B51F061D74C300BF2252 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = NewAlert.nib;
+			path = "Plugins/Contact Alerts/NewAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF99B520061D74C300BF2252 = {
+			fileRef = BF99B51F061D74C300BF2252;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF99B521061D74DA00BF2252 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = deleteAlert.tif;
+			path = "Plugins/Contact Alerts/deleteAlert.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF99B522061D74DA00BF2252 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = editAlert.tif;
+			path = "Plugins/Contact Alerts/editAlert.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF99B523061D74DA00BF2252 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = newAlert.tif;
+			path = "Plugins/Contact Alerts/newAlert.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF99B524061D74DA00BF2252 = {
+			fileRef = BF99B521061D74DA00BF2252;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF99B525061D74DA00BF2252 = {
+			fileRef = BF99B522061D74DA00BF2252;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF99B526061D74DA00BF2252 = {
+			fileRef = BF99B523061D74DA00BF2252;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF99B527061D74EE00BF2252 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSNewContactAlertWindowController.h;
+			path = "Plugins/Contact Alerts/CSNewContactAlertWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF99B528061D74EE00BF2252 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSNewContactAlertWindowController.m;
+			path = "Plugins/Contact Alerts/CSNewContactAlertWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF99B529061D74EE00BF2252 = {
+			fileRef = BF99B527061D74EE00BF2252;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF99B52A061D74EE00BF2252 = {
+			fileRef = BF99B528061D74EE00BF2252;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		BFD02C9105A6B27900C7857F = {
 			children = (
 				BF318EC205A5015C00D07184,
@@ -19606,12 +19691,17 @@
 			children = (
 				F59C2EEA04DDF4DB01496213,
 				F59C2EE904DDF4D301496213,
+				BF99B527061D74EE00BF2252,
+				BF99B528061D74EE00BF2252,
 				F527079504E203BB0114B3C0,
 				F527079604E203BB0114B3C0,
 				F527079704E203BB0114B3C0,
 				F527079404E203BB0114B3C0,
+				BF99B521061D74DA00BF2252,
+				BF99B522061D74DA00BF2252,
+				BF99B523061D74DA00BF2252,
 				F59C2E6104DDC8C201496213,
-				F5319C3704CF3900015DA2B6,
+				BF99B51F061D74C300BF2252,
 			);
 			isa = PBXGroup;
 			name = "Contact Alerts";
@@ -19794,14 +19884,6 @@
 			path = /System/Library/Frameworks/Carbon.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
-		};
-		F5319C3704CF3900015DA2B6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = alerts.tif;
-			path = "Plugins/Contact Alerts/alerts.tif";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		F5361E3103058E2A01A8010A = {
 			children = (

@@ -5,7 +5,6 @@
 //  Created by Evan Schoenberg on Mon Jul 14 2003.
 //
 
-#define PREF_GROUP_ALERTS		@"Alerts"
 #define KEY_EVENT_ACTIONSET		@"Contact Actions"	//storage of a set of events and associated actions
 
 #define	KEY_EVENT_NOTIFICATION		@"Notification"  	//event, actually
@@ -21,17 +20,15 @@
 #define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"	//additional options storage
 
 
-#define Pref_Changed_Alerts		@"Alerts Changed in Pref Pane"
 #define Window_Changed_Alerts		@"Alerts Changed in Window"
 #define One_Time_Event_Fired 		@"One Time Event Fired"
 
 @protocol AIMiniToolbarItemDelegate;
-@class ESContactAlertsPlugin, ESContactAlertsPreferences;
+@class ESContactAlertsPlugin;
 
 @interface ESContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate> {
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
-    ESContactAlertsPreferences		*prefs;
     
     BOOL                                processedForUser;
 }

@@ -40,7 +40,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 }
 
 //setup display for the sending message details
--(IBAction)selectedAlert:(id)sender
+- (void)configureView
 {  	
     //Get the current dictionary
     NSDictionary *currentDict = [[[adium contactAlertsController] currentDictForContactAlert:self] retain];

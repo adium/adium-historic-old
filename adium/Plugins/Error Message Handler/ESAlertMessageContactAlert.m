@@ -31,7 +31,7 @@
 }
 
 //setup display for playing a sound
-- (IBAction)selectedAlert:(id)sender
+- (void)configureView
 {   
     //Get the current dictionary
     NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];

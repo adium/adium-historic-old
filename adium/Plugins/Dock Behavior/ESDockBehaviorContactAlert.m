@@ -44,8 +44,14 @@
 
     return (menuItem);
 }
+
+- (NSImage *)icon
+{
+	return [NSImage imageNamed:@"dockalert" forClass:[self class]];
+}
+
 //setup display for bouncing the dock
-- (IBAction)selectedAlert:(id)sender
+- (void)configureView
 {   
     //Get the current dictionary
     NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];

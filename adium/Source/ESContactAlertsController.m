@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.19 2004/03/17 04:33:24 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.20 2004/04/02 10:07:27 overmind911 Exp $
 
 
 /*
@@ -120,6 +120,7 @@ Methods used by ESContactAlert instances
     NSMutableDictionary *stateDictionary = [arrayOfStateDictionaries objectWithOwner:inOwner];
     return [stateDictionary objectForKey:EVENT_ACTION_ARRAY];
 }
+
 //The details dict for the selected action of contactAlert->owner
 - (NSDictionary *)currentDictForContactAlert:(ESContactAlert *)contactAlert
 {
@@ -162,6 +163,13 @@ Methods used by ESContactAlert instances
     id inOwner = [self _ownerOfContactAlert:contactAlert];
     [inOwner saveEventActionArray];
 }
+
+- (void)actionChangedTo:(NSString *)inAction forContactAlert:(ESContactAlert *)contactAlert
+{
+	id inOwner = [self _ownerOfContactAlert:contactAlert];
+    [inOwner actionChangedTo:inAction];
+}
+
 /*******
 Methods used by ESContactAlerts
 *******/
@@ -178,6 +186,11 @@ Methods used by ESContactAlerts
         [actionListMenu addItem:[contactAlert alertMenuItem]];   
     }
     return([actionListMenu autorelease]);
+}
+
+- (NSImage *)iconForAction:(NSString *)action
+{
+	return ([[[contactAlertProviderDictionary objectForKey:action] contactAlert] icon]);
 }
 
 //an ESContactAlerts instance notifying the controller that its array or object changed

@@ -45,8 +45,10 @@
 - (NSWindow *)currentWindowForContactAlert:(ESContactAlert *)contactAlert;
 - (int)rowForContactAlert:(ESContactAlert *)contactAlert;
 - (void)saveEventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
+- (void)actionChangedTo:(NSString *)inAction forContactAlert:(ESContactAlert *)contactAlert;
 //
 - (NSMenu *)actionListMenuWithOwner:(id <ESContactAlerts>)owner;
+- (NSImage *)iconForAction:(NSString *)action;
 - (void)updateOwner:(id <ESContactAlerts>)inOwner toArray:(NSArray *)eventActionArray forObject:(AIListObject *)inObject;
 - (void)updateOwner:(id <ESContactAlerts>)inOwner toRow:(int)row;
 //list object observer

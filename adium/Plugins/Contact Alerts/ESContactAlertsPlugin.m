@@ -7,10 +7,10 @@
 
 #import "ESContactAlertsPlugin.h"
 #import "ESContactAlertsWindowController.h"
-#import "ESContactAlertsPreferences.h"
+#import "CSNewContactAlertWindowController.h"
 
-#define EDIT_CONTACTS_ALERTS    AILocalizedString(@"Edit Contact's Alerts",nil)
-#define EDIT_ALERTS		AILocalizedString(@"Edit Alerts",nil)
+#define EDIT_CONTACTS_ALERTS    AILocalizedString(@"Edit Alerts",nil)
+#define EDIT_ALERTS		AILocalizedString(@"Add Alert",nil)
 
 @interface ESContactAlertsPlugin(PRIVATE)
 - (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
@@ -20,16 +20,16 @@
 
 - (void)installPlugin
 {
-    AIMiniToolbarItem *toolbarItem;
-
+	AIMiniToolbarItem *toolbarItem;
     //Install the 'contact alerts' menu item
     editContactAlertsMenuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_CONTACTS_ALERTS target:self action:@selector(editContactAlerts:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
-
+	
+	
     //Add our 'contact alerts' contextual menu item
-    contactAlertsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_ALERTS target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""] autorelease];
+    contactAlertsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_ALERTS target:self action:@selector(addContactAlert:) keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Action];
-
+	
     //Add our 'contact alerts' toolbar item
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"ContactAlerts"];
     [toolbarItem setImage:[NSImage imageNamed:@"alerts" forClass:[self class]]];
@@ -40,9 +40,6 @@
     [toolbarItem setPaletteLabel:@"Edit Contact Alerts"];
     [toolbarItem setDelegate:self];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
-    //Install the preference pane
-    prefs = [[ESContactAlertsPreferences contactAlertsPreferences] retain];
 }
 
 - (void)uninstallPlugin
@@ -54,14 +51,6 @@
 {
     BOOL valid = YES;
     if(menuItem == editContactAlertsMenuItem) {
-        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
-
-        if(selectedObject){
-            [editContactAlertsMenuItem setTitle:[NSString stringWithFormat:@"Edit %@'s Alerts",[selectedObject displayName]]];
-        }else{
-            [editContactAlertsMenuItem setTitle:@"Edit Contact's Alerts"];
-            valid = NO;
-        }
     }else if(menuItem == contactAlertsContextMenuItem) {
         return([[adium menuController] contactualMenuContact] != nil);
     }
@@ -73,9 +62,23 @@
     [ESContactAlertsWindowController showContactAlertsWindowForObject:[[adium contactController] selectedListObject]];
 }
 
-- (IBAction)editContextContactAlerts:(id)sender
+- (IBAction)addContactAlert:(id)sender
 {
-    [ESContactAlertsWindowController showContactAlertsWindowForObject:[[adium menuController] contactualMenuContact]];
+	ESContactAlerts *instance = [[[ESContactAlerts alloc] initWithDetailsView:nil withTable:nil withPrefView:nil] autorelease];
+	CSNewContactAlertWindowController *windowController;
+	[instance configForObject:[[adium menuController] contactualMenuContact]];
+	windowController = [[CSNewContactAlertWindowController alloc] initWithInstance:instance editing:NO];
+	[windowController setDelegate:self];
+	[windowController showWindow:nil];
+}
+
+- (void)contactAlertWindowFinished:(id)sender didCreate:(BOOL)created
+{
+	if (created)
+	{
+		[[adium notificationCenter] postNotificationName:One_Time_Event_Fired 
+												  object:[[sender contactAlertsInstance] activeObject]];
+	}
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
