@@ -16,7 +16,7 @@
 
 #import <AIUtilities/AISendingTextView.h>
 
-@class AIListObject, AIAdium, AIAccount, AIChat;
+@class AIListContact, AIAdium, AIAccount, AIChat;
 @protocol AITextEntryView;
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
@@ -63,7 +63,7 @@
 //Context
 - (void)setChat:(AIChat *)inChat;
 - (AIChat *)chat;
-- (AIListObject *)listObject;
+- (AIListContact *)listObject;
 
 //Paging
 - (void)scrollPageUp:(id)sender;

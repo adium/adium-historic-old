@@ -21,6 +21,7 @@
  */
 
 #import "AIImageCellAnimationFix.h"
+#import <AIUtilities/ESImageAdditions.h>
 
 @implementation AIImageCellAnimationFix
 

@@ -16,7 +16,7 @@
 
 #import "AIWindowController.h"
 
-@class ESTextViewWithPlaceholder, AIStatus, AIService, AIAutoScrollView;
+@class ESTextViewWithPlaceholder, AIStatus, AIService, AIAutoScrollView, AISendingTextView;
 
 @interface AIEditStateWindowController : AIWindowController {
 	IBOutlet	NSTextField		*label_state;
@@ -25,13 +25,13 @@
 	
 	IBOutlet	NSTextField		*label_statusMessage;
 	IBOutlet	NSBox			*box_statusMessage;
-	IBOutlet	NSTextView		*textView_statusMessage;
-	IBOutlet	AIAutoScrollView *scrollView_statusMessage;
+	IBOutlet	AISendingTextView	*textView_statusMessage;
+	IBOutlet	AIAutoScrollView	*scrollView_statusMessage;
 
 	IBOutlet	NSButton		*checkbox_autoReply;
 	IBOutlet	NSButton		*checkbox_customAutoReply;
 	IBOutlet	AIAutoScrollView	*scrollView_autoReply;
-	IBOutlet	NSTextView		*textView_autoReply;
+	IBOutlet	AISendingTextView	*textView_autoReply;
 
 	IBOutlet	NSButton		*checkbox_idle;
 	IBOutlet	NSBox			*box_idle;
