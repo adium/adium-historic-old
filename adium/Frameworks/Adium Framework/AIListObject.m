@@ -204,26 +204,35 @@ DeclareString(FormattedUID);
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
 	if(key){
+		BOOL changedStatusDict = YES;
+		
 		if(value){
 			[statusDictionary setObject:value forKey:key];
 		}else{
-			[statusDictionary removeObjectForKey:key];
+			//If we are already nil and being told to set nil, we don't need to do anything at all
+			if ([statusDictionary objectForKey:key]){
+				[statusDictionary removeObjectForKey:key];
+			}else{
+				changedStatusDict = NO;
+			}
 		}
 		
-		//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
-		if (containingGroup)
-			[containingGroup listObject:self didSetStatusObject:value forKey:key];
-		[self listObject:self didSetStatusObject:value forKey:key];
-		
-		//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
-		if (notify){
-			[[adium contactController] listObjectStatusChanged:self
-											modifiedStatusKeys:[NSArray arrayWithObject:key]
-														silent:NO];
-		}else{
-			if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
-			[changedStatusKeys addObject:key];
+		if (changedStatusDict){
+			//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
+			if (containingGroup)
+				[containingGroup listObject:self didSetStatusObject:value forKey:key];
+			[self listObject:self didSetStatusObject:value forKey:key];
 			
+			//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
+			if (notify){
+				[[adium contactController] listObjectStatusChanged:self
+												modifiedStatusKeys:[NSArray arrayWithObject:key]
+															silent:NO];
+			}else{
+				if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
+				[changedStatusKeys addObject:key];
+				
+			}
 		}
 	}
 }
