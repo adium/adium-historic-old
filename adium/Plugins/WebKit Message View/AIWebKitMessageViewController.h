@@ -3,12 +3,17 @@
 
 
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
-	WebView		*webView;
+	WebView				*webView;
+	BOOL				webViewIsReady;
+	
 
-    NSMutableString             *timeStampFormat;
+    NSMutableString		*timeStampFormat;
     NSDateFormatter		*timeStampFormatter;
 	
-	AIContentObject	*previousContent;
+	AIContentObject		*previousContent;
+	NSMutableArray		*newContent;
+	NSTimer				*newContentTimer;
+	
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
