@@ -81,8 +81,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
     [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
     
     //Configure the 'Sound' table column
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
@@ -107,7 +106,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 
     //Clean up shared instance
     [self autorelease];
@@ -162,19 +161,16 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 }
 
 //Called when the preferences change, update our preference display
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-
-        //Load the user's custom set
-        [eventSoundArray release];
-        eventSoundArray = [[preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] mutableCopy];
-        if(!eventSoundArray) eventSoundArray = [[NSMutableArray alloc] init];
-
-        //Update the outline view
-        [tableView_sounds reloadData];
-    }
+	//Load the user's custom set
+	[eventSoundArray release];
+	eventSoundArray = [[prefDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] mutableCopy];
+	if(!eventSoundArray) eventSoundArray = [[NSMutableArray alloc] init];
+	
+	//Update the outline view
+	[tableView_sounds reloadData];
 }
 
 //Save the event sounds
