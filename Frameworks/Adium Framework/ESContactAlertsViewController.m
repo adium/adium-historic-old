@@ -54,7 +54,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	//Manually size and position our buttons
 	{
 		NSRect	newFrame, oldFrame;
-		float	horizontalShift = 0;
+//		float	horizontalShift = 0;
 		
 		//Add
 //		oldFrame = [button_add frame];
