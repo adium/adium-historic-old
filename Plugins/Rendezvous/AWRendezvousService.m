@@ -16,7 +16,7 @@
 	return([AWRendezvousAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return(nil);
 }
 
