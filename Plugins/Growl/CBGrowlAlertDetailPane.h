@@ -14,15 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import <Adium/AIActionDetailsPane.h>
 
-#define KEY_GROWL_ALERT_STICKY @"Growl Sticky"
-
-@protocol AIActionHandler;
-@protocol GrowlAppBridgeDelegate;
-
-@interface NEHGrowlPlugin : AIPlugin <AIActionHandler, GrowlAppBridgeDelegate> {
-	BOOL			 showWhileAway;
+@interface CBGrowlAlertDetailPane : AIActionDetailsPane {
+	IBOutlet	NSButton	*checkBox_sticky;
 }
 
 @end
