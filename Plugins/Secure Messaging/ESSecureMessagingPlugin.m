@@ -146,7 +146,7 @@
 		
 		/* Add a status message to the chat */
 		NSNumber	*lastEncryptedNumber = [inChat statusObjectForKey:@"secureMessagingLastEncryptedState"];
-		BOOL		chatIsSecure = [chat isSecure];
+		BOOL		chatIsSecure = [inChat isSecure];
 		if(!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])){
 			NSString	*message;
 			
@@ -154,7 +154,7 @@
 							 forKey:@"secureMessagingLastEncryptedState"
 							 notify:NotifyNever];
 			
-			message = (chatIsSecure ? CHAT_NOW_SECURE ? CHAT_NO_LONGER_SECURE);
+			message = (chatIsSecure ? CHAT_NOW_SECURE : CHAT_NO_LONGER_SECURE);
 			
 			[[adium contentController] displayStatusMessage:message
 													 ofType:@"encryption"
