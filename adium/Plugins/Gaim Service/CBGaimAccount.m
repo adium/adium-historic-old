@@ -482,7 +482,7 @@
 		 */
 		
 		//We must also update the remote grouping of all our contacts in that group
-		NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup onAccount:self] objectEnumerator];
+		NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup subgroups:YES onAccount:self] objectEnumerator];
 		AIListContact	*contact;
 		
 		while(contact = [enumerator nextObject]){
@@ -1307,7 +1307,7 @@
 	[[adium contactController] delayListObjectNotifications];
 	
 	//Remove all gaim buddies (which will call accountRemoveBuddy for each one)
-	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil onAccount:self] objectEnumerator];
+	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while (contact = [enumerator nextObject]){
