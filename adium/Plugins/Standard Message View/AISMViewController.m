@@ -811,7 +811,7 @@
 				switch(nextChar){
 					case '%': [string appendString:@"%"]; break;
 					case 'a': [string appendString:[[content source] displayName]]; break;
-					case 'n': [string appendString:[[content source] serverDisplayName]]; break;
+					case 'n': [string appendString:[[content source] formattedUID]]; break;
 					case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
 					default: break;
 				}
@@ -833,7 +833,7 @@
 					
 					//Is this value present?
 					switch(nextChar){
-						case 'a': present = ([[[content source] displayName] compare:[[content source] serverDisplayName]] != 0); break;
+						case 'a': present = ([[[content source] displayName] compare:[[content source] formattedUID]] != 0); break;
 						case 'n': present = YES; break;
 						case 't': present = YES; break;
 						default: present = NO; break;

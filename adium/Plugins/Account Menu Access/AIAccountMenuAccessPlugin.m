@@ -21,7 +21,7 @@
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting…",nil)	//Menu item title
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)   //Menu item title for the auto-connect item
 
-#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",[account serverDisplayName],[account serviceID]]
+#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]]
 
 @interface AIAccountMenuAccessPlugin (PRIVATE)
 - (void)buildAccountMenus;

@@ -56,6 +56,12 @@
 	msn_set_friendly_name(gc,[inAlias UTF8String]);
 }
 
+//Update all our status keys
+- (void)updateAllStatusKeys
+{
+	[super updateAllStatusKeys];
+	[self updateStatusForKey:@"FullName"];
+}
 /*
  //Added to msn.c
 //**ADIUM

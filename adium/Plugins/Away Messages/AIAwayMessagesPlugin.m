@@ -44,7 +44,8 @@
     menuConfiguredForAway = NO;
     
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]]
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS 
+																		forClass:[self class]]
 					  forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
