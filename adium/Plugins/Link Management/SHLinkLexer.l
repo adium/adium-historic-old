@@ -14,7 +14,7 @@
 #include <stdlib.h>
 %}
 
-domains                 (com|edu|gov|net|org|us|co\.uk|org\.uk|museum|aero|biz|coop|info|int|mil|pro|com\.jp|com\.ar|au|de|es|gb|cl|cn|ie|mx) 
+domains                 (com|edu|gov|net|org|us|ca|co\.uk|org\.uk|museum|aero|biz|coop|info|int|mil|pro|com\.jp|com\.ar|au|de|es|gb|cl|cn|ie|mx) 
 urlSpecifier            [^\/]+(.*\/)*\.{domains}(:\d+)?(\/.*)?
 mailSpecifier           [^:].+\@.+\.{domains}
 
