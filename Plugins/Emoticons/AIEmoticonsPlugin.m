@@ -30,7 +30,6 @@
 #define EMOTICON_PACK_PATH_EXTENSION		@"emoticonPack"
 #define PROTEUS_EMOTICON_SET_PATH_EXTENSION @"emoticons"
 
-
 @interface AIEmoticonsPlugin (PRIVATE)
 - (NSDictionary *)emoticonIndex;
 - (NSCharacterSet *)emoticonHintCharacterSet;
@@ -43,6 +42,7 @@
 - (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
 							   withEquivalents:(NSArray *)candidateEmoticonTextEquivalents
 									   context:(id)context
+									equivalent:(NSString **)replacementString
 							  equivalentLength:(int *)textLength;
 - (void)_buildCharacterSetsAndIndexEmoticons;
 - (void)_saveActiveEmoticonPacks;
@@ -51,7 +51,7 @@
 - (void)_sortArrayOfEmoticonPacks:(NSMutableArray *)packArray;
 @end
 
-int packSortFunction(id packA, id packB, void *packOrderingArray);
+int packSortFunction(AIEmoticonPack *packA, AIEmoticonPack *packB, NSArray *packOrderingArray);
 
 @implementation AIEmoticonsPlugin
 
@@ -205,6 +205,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				emoticon = [self _bestReplacementFromEmoticons:candidateEmoticons
 											   withEquivalents:candidateEmoticonTextEquivalents
 													   context:context
+													equivalent:&replacementString
 											  equivalentLength:&textLength];
 				replacement = [emoticon attributedStringWithTextEquivalent:replacementString];
                                     
@@ -238,6 +239,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
 							   withEquivalents:(NSArray *)candidateEmoticonTextEquivalents
 									   context:(id)context
+									equivalent:(NSString **)replacementString
 							  equivalentLength:(int *)textLength
 {
 	unsigned		i = 0, bestIndex = 0, bestLength = 0;
@@ -245,10 +247,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	
 	count = [candidateEmoticonTextEquivalents count];
 	while(i < count){
-		unsigned thisLength = [(NSString *)[candidateEmoticonTextEquivalents objectAtIndex:i] length];
+		NSString	*thisString = [candidateEmoticonTextEquivalents objectAtIndex:i];
+		unsigned thisLength = [thisString length];
 		if(thisLength > bestLength){
 			bestLength = thisLength;
 			bestIndex = i;
+			*replacementString = thisString;
 		}
 		
 		i++;
@@ -532,7 +536,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	[packArray sortUsingFunction:packSortFunction context:packOrderingArray];
 }
 
-int packSortFunction(id packA, id packB, void *packOrderingArray)
+int packSortFunction(AIEmoticonPack *packA, AIEmoticonPack *packB, NSArray *packOrderingArray)
 {
 	int packAIndex = [(NSArray *)packOrderingArray indexOfObject:[packA name]];
 	int packBIndex = [(NSArray *)packOrderingArray indexOfObject:[packB name]];
