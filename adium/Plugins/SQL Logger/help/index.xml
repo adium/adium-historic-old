@@ -240,19 +240,15 @@ bare-bones: the sending and receiving screennames, the message, and a date.</p>
   Alternately, you can download a compiled binary from <a
     href="http://adium.sourceforge.net"
     class="offsite">http://adium.sourceforge.net</a>.  Currently, the binary
-  is updated about once a week.
+  is updated approximately daily.
   </p>
   <p>You can also download a compiled plugin here: <a
       href="http://www.visualdistortion.org/adium/sql-logger.tar.gz" class="offsite">sql-logger.tar.gz</a>, uncompress it, and drop it
   in the Adium application as discussed above.  This will not work without
   PostgreSQL installed on your system, and the proper database setup.</p>
 
-<p>Currently, the plugin doesn't have any preferences.  If your database setup is
-  non-standard, you need to set an environmental variable (PGHOST, PGUSER,
-  etc) as described in the PostgreSQL docs.  If the plugin is installed correctly, it works very unobtrusively.  It
-  never does anything unless there is a problem, so if you start it up and
-  don't get an "Unable to Connect to Database" dialog, it's probably
-  working.</p>
+  <p>If you would like to log to another machine or require a password, there
+    is a preference pane.</p>
 
   <p>To check that either parser.pl worked correctly, and/or it's correctly
   logging, type <code>psql</code>.  To view messages:</p> 
