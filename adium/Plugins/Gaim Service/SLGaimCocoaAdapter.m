@@ -5,7 +5,6 @@
 //  Requires Mac OS X 10.2.
 //
 //  Created by Scott Lamb on Sun Nov 2 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -136,7 +135,7 @@ static guint adium_input_add(int fd, GaimInputCondition condition,
 
     // Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopCommonModes);
 
     sourceId++;
 	
