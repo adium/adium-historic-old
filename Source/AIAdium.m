@@ -530,6 +530,7 @@ void Adium_HandleSignal(int i){
 			case AIPref_Advanced_Messages:
 			case AIPref_Advanced_ContactList:
 			case AIPref_Advanced_Status:
+			case AIPref_Advanced_Service:
 			case AIPref_Advanced_Other:
 				[preferenceController openPreferencesToAdvancedPane:advancedPrefsName inCategory:prefsCategory];
 				[advancedPrefsName release]; advancedPrefsName = nil;

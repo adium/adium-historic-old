@@ -10,8 +10,20 @@
 #import "ESGaimMSNAccount.h"
 #import "ESGaimMSNAccountViewController.h"
 #import "DCGaimMSNJoinChatViewController.h"
+#import "AIMSNServicePreferences.h"
 
 @implementation ESMSNService
+
+//Service specific preferences
+- (id)init
+{
+	[super init];
+	
+	MSNServicePrefs = [[AIMSNServicePreferences preferencePane] retain];
+
+	return(self);
+}
+
 
 //Account Creation
 - (Class)accountClass{

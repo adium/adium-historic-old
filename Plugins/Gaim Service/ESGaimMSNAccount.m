@@ -202,12 +202,12 @@ static BOOL didInitMSN = NO;
 	NSDictionary	*userInfo = [notification userInfo];
 	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
 	
-	if (notification == nil || 
-		([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
+	if (notification == nil || [prefGroup isEqualToString:PREF_GROUP_MSN_SERVICE]){
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_MSN_SERVICE];
 		
-		displayNamesAsStatus = [[self preferenceForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS group:GROUP_ACCOUNT_STATUS] boolValue];
-		displayConversationClosed = [[self preferenceForKey:KEY_MSN_CONVERSATION_CLOSED group:GROUP_ACCOUNT_STATUS] boolValue];
-		displayConversationTimedOut = [[self preferenceForKey:KEY_MSN_CONVERSATION_TIMED_OUT group:GROUP_ACCOUNT_STATUS] boolValue];
+		displayNamesAsStatus = [[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue];
+		displayConversationClosed = [[prefDict objectForKey:KEY_MSN_CONVERSATION_CLOSED] boolValue];
+		displayConversationTimedOut = [[prefDict objectForKey:KEY_MSN_CONVERSATION_TIMED_OUT] boolValue];
 	}
 	
 	[super preferencesChanged:notification];
