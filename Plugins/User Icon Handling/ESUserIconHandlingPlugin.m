@@ -14,6 +14,8 @@
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject;
 - (BOOL)destroyCacheForListObject:(AIListObject *)inObject;
 - (void)registerToolbarItem;
+
+- (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
 @end
 
 @implementation ESUserIconHandlingPlugin
@@ -32,14 +34,11 @@
 											 selector:@selector(toolbarWillAddItem:)
 												 name:NSToolbarWillAddItemNotification
 											   object:nil];
-	toolbarItem = nil;
 	[self registerToolbarItem];
 }
 
 - (void)dealloc
 {
-	[toolbarItem release]; toolbarItem = nil;
-
 	[super dealloc];
 }
 
@@ -122,7 +121,17 @@
 		//If the new user icon is not the same as the one we set in updateListObject: 
 		//(either cached or not), update the cache
 		if (userIcon != ownedUserIcon){
+			AIChat	*chat;
+			
 			[self _cacheUserIconData:[userIcon TIFFRepresentation] forObject:inObject];
+
+			//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
+			if(([toolbarItems count] > 0) &&
+			   [inObject isKindOfClass:[AIListContact class]] &&
+			   (chat = [[adium contentController] existingChatWithContact:(AIListContact *)inObject])){
+				[self _updateToolbarIconOfChat:chat 
+									  inWindow:[[adium interfaceController] windowForChat:chat]];
+			}
 		}
 	}
 }
@@ -227,60 +236,120 @@
 }
 
 #pragma mark Toolbar Item
+
 - (void)registerToolbarItem
 {
-	ESImageButton *button;
+	ESImageButton	*button;
+	NSToolbarItem	*toolbarItem;
 	
-	//Unregister the existing toolbar item first
-	if(toolbarItem){
-		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
-		[toolbarItem release]; toolbarItem = nil;
-	}
+	toolbarItems = [[NSMutableSet alloc] init];
 	
-	//Register our toolbar item
-	button = [[[ESImageButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
-	[button setImage:nil];
-	
-	toolbarItem = [[ESFlexibleToolbarItem alloc] initWithItemIdentifier:@"UserIcon"];
-    [toolbarItem setLabel:AILocalizedString(@"Icon",nil)];
-    [toolbarItem setPaletteLabel:AILocalizedString(@"Contact Icon",nil)];
-    [toolbarItem setToolTip:AILocalizedString(@"Show this contact's icon",nil)];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(dummyAction:)];
-	[toolbarItem performSelector:@selector(setView:) withObject:button];
+	//Toolbar item registration
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarDidRemoveItem:)
+												 name:NSToolbarDidRemoveItemNotification
+											   object:nil];
+
+	button = [[ESImageButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
+	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"UserIcon"
+														  label:AILocalizedString(@"Icon",nil)
+												   paletteLabel:AILocalizedString(@"Contact Icon",nil)
+														toolTip:AILocalizedString(@"Show this contact's icon",nil)
+														 target:self
+												settingSelector:@selector(setView:)
+													itemContent:button
+														 action:@selector(dummyAction:)
+														   menu:nil];
 
 	[toolbarItem setMinSize:NSMakeSize(32,32)];
 	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
 	[button setImage:[NSImage imageNamed:@"userIconToolbar" forClass:[self class]]];
+	[button release];
 
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
+	//Register our toolbar item
+	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
+
 
 //After the toolbar has added the item we can set up the submenus
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
-	if(!notification || ([[item itemIdentifier] isEqualToString:@"UserIcon"])){
-		[toolbarItem setEnabled:YES];
+	if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
+		[item setEnabled:YES];
 		
-#if 0
-		/* XXX Tiger thought */
-		// Autovalidation
-		// NSToolbar relies on window update to drive its auto-validation mechanism to enable/disable NSToolbarItems. Unfortunately, window update may not happen at the exact moment a developer needs to update their UI. Also, window update happens very frequently, and can cause performance problems for validators that need to do a lot of work. Therefore, we now provide a way to turn off the default auto validation on a per-item basis.
-		 /* By default NSToolbar automatically invokes its items validate method on a regular basis.
-		 To be in complete control of when the -validate method is invoked, you can disable automatic validation
-		 on a per-item basis.  In particular, if your validation code is slow, you may want to do this for performance reasons.
-		 */
-		 - (void)setAutovalidates:(BOOL)autovalidates;
-		 - (BOOL)autovalidates;
-#endif
+		//If this is the first item added, start observing for chats becoming visible so we can update the icon
+		if([toolbarItems count] == 0){
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatDidBecomeVisible:)
+											   name:@"AIChatDidBecomeVisible"
+											 object:nil];
+		}
+		
+		[toolbarItems addObject:item];
 	}
 }
 
-- (IBAction)dummyAction:(id)sender
+- (void)toolbarDidRemoveItem: (NSNotification *)notification
 {
-	NSLog(@"action");
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	if([toolbarItems containsObject:item]){
+		[toolbarItems removeObject:item];
+		
+		if([toolbarItems count] == 0){
+			[[adium notificationCenter] removeObserver:self
+												  name:@"AIChatDidBecomeVisible"
+												object:nil];
+		}
+	}
 }
+
+//A chat became visible in a window.  Update the item with the @"UserIcon" identifier if necessary
+- (void)chatDidBecomeVisible:(NSNotification *)notification
+{
+	[self _updateToolbarIconOfChat:[notification object]
+						  inWindow:[[notification userInfo] objectForKey:@"NSWindow"]];
+}
+
+- (void)_updateToolbarIconOfChat:(AIChat *)chat inWindow:(NSWindow *)window
+{
+	NSToolbar		*toolbar = [window toolbar];
+	NSEnumerator	*enumerator = [[toolbar items] objectEnumerator];
+	NSToolbarItem	*item;
+	
+	while(item = [enumerator nextObject]){
+		if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
+			AIListObject	*listObject;
+			NSImage			*image;
+			
+			if((listObject = [chat listObject]) && ![chat name]){
+				image = [listObject userIcon];
+				
+				//Use the serviceIcon if no image can be found
+				if(!image) image = [AIServiceIcons serviceIconForObject:listObject
+																   type:AIServiceIconLarge
+															  direction:AIIconNormal];
+			}else{
+				//If we have no listObject or we have a name, we are a group chat and
+				//should use the account's service icon
+				image = [AIServiceIcons serviceIconForObject:[chat account]
+														type:AIServiceIconLarge
+												   direction:AIIconNormal];
+			}
+			
+			[(ESImageButton *)[item view] setImage:image];
+			
+			break;
+		}
+	}	
+}
+
+- (IBAction)dummyAction:(id)sender {};
+
 @end

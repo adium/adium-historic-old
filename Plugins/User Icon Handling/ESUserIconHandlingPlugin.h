@@ -7,7 +7,7 @@
 //
 
 @interface ESUserIconHandlingPlugin : AIPlugin <AIListObjectObserver> {
-	NSToolbarItem	*toolbarItem;
+	NSMutableSet	*toolbarItems;
 }
 
 @end
