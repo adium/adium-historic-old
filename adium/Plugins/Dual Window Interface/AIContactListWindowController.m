@@ -147,8 +147,10 @@
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification
 {
     if(autoResizeVertically || autoResizeHorizontal){
-        NSRect	newFrame = [self _desiredWindowFrame];
+        NSRect	desiredFrame = [self _desiredWindowFrame];
+        NSRect  newFrame = desiredFrame;
         NSRect  oldFrame = [[self window] frame];
+
         if (!NSEqualRects(oldFrame, newFrame)) {
             NSSize targetMin = minWindowSize;
             NSSize targetMax = NSMakeSize(10000, 10000);
@@ -167,19 +169,34 @@
                 newFrame.size.height = oldFrame.size.height; //no vertical resize so use old height
                 newFrame.origin.y = oldFrame.origin.y;
             }
-            
-            [[self window] setMinSize:targetMin];
-            [[self window] setMaxSize:targetMax];
-            
+                        
             //Resize the window (We animate only if the window is main)
             if([[self window] isMainWindow]){
+                
                 [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
-                [scrollView_contactList setHasVerticalScroller:NO];
+                
+                //Force the scrollbar to disappear if the target frame is such that it will not be desired
+                //This prevents some odd flickering at the view and window sync up
+                if (autoResizeVertically) {
+                    //Hide the scrollbar if the new frame is smaller than the maximum allowable height
+                    if (newFrame.size.height < [[[self window] screen] visibleFrame].size.height) { 
+                        [scrollView_contactList setHasVerticalScroller:NO]; 
+                    }
+                } else {
+                    //Hide the scrollbar if the required frame is smaller than the user-set one, as a scrollbar will not be needed
+                    if (desiredFrame.size.height < newFrame.size.height) {
+                        [scrollView_contactList setHasVerticalScroller:NO]; 
+                    }
+                }
+                
                 [[self window] setFrame:newFrame display:YES animate:YES];
                 [scrollView_contactList setAutoHideScrollBar:YES];
             }else{
                 [[self window] setFrame:newFrame display:YES animate:NO];
             }
+            
+            [[self window] setMinSize:targetMin];
+            [[self window] setMaxSize:targetMax];
         }
     }
 }
