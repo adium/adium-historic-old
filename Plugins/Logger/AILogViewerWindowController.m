@@ -323,7 +323,8 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 	
 	if (theLog){
 		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		NSLock	*logAccessLock = [plugin logAccessLock];
+		NSLock		*logAccessLock = [plugin logAccessLock];
+		SKIndexRef	logSearchIndex = [plugin logContentIndex];
 
 		[theLog retain];
 
@@ -333,13 +334,8 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
 		[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
 
-		//Visible updating
-		[self updateProgressDisplay];
-//		[textView_content setString:@""];
-
 		//Update the log index
 		[logAccessLock lock];
-		SKIndexRef		logSearchIndex = [plugin logContentIndex];
 		SKDocumentRef document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
 		SKIndexRemoveDocument(logSearchIndex, document);
 		CFRelease(document);
@@ -352,6 +348,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 		[toServiceArray removeAllObjects];
 		[fromArray removeAllObjects];
 		[fromServiceArray removeAllObjects];
+	
 		[self initLogFiltering];
 
 		[tableView_results reloadData];
