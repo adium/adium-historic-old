@@ -24,6 +24,8 @@
  Note: ESImageViewWithImagePicker requires Panther or better for the Address book-style image picker to work.
  */
 
+#define DRAGGING_THRESHOLD 6.0*6.0
+
 @interface ESImageViewWithImagePicker (PRIVATE)
 - (void)_initImageViewWithImagePicker;
 - (void)showPickerController;
@@ -60,6 +62,8 @@
 	
 	lastResp = nil;
 	shouldDrawFocusRing = NO;
+
+	mouseDownPos = NSZeroPoint;
 	
 	useNSImagePickerController = YES;
 	imagePickerClassIsAvailable = ([NSApp isOnPantherOrBetter] &&
@@ -120,8 +124,24 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	[super mouseDown:theEvent];
-	
+	NSEvent *nextEvent;
+
+	//Wait for the next event
+	nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
+										   untilDate:[NSDate distantFuture]
+											  inMode:NSEventTrackingRunLoopMode
+											 dequeue:NO];
+
+	mouseDownPos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+	/* If the user starts dragging, don't call mouse down as we won't receive mouse dragged events, as it seems that
+	 * NSImageView does some sort of event loop modification in response to a click. We didn't dequeue the event, so
+	 * we don't have to handle it ourselves -- instead, the event loop will handle it after this invocation is complete. 
+	 */
+	if([nextEvent type] != NSLeftMouseDragged){
+		[super mouseDown:theEvent];   
+	}
+
 	if ([theEvent clickCount] == 2){
 		[self showPickerController];
 	}
@@ -137,6 +157,86 @@
 		[self showPickerController];
 	}else{
 		[super keyDown:theEvent];
+	}
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+	// Work out if the mouse has been dragged far enough - it stops accidental drags
+	NSPoint mousePos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	float dx = mousePos.x-mouseDownPos.x;
+	float dy = mousePos.y-mouseDownPos.y;	
+	if ((dx*dx) * (dy*dy) < DRAGGING_THRESHOLD){
+		return;
+	}
+	
+	NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+	
+	//Add the images we can send data as (when requested)
+	[pboard declareTypes:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,nil]
+				   owner:self];
+	
+	NSImage *dragImage = [[NSImage alloc] initWithSize:[[self image] size]];
+	
+	//Draw our original image as 50% transparent
+	[dragImage lockFocus];
+	[[self image] dissolveToPoint: NSZeroPoint fraction: .5];
+	[dragImage unlockFocus];
+	
+	//We want the image to resize
+	[dragImage setScalesWhenResized:YES];
+	//Change to the size we are displaying
+	[dragImage setSize:[self bounds].size];
+	
+	//Start the drag
+	[self dragImage:dragImage
+				 at:[self bounds].origin
+			 offset:NSZeroSize
+			  event:theEvent
+		 pasteboard:pboard
+			 source:self
+		  slideBack:YES];
+	[dragImage release];
+}
+
+//Declare what operations we can participate in as a drag and drop source
+- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)flag
+{
+	return NSDragOperationCopy;
+}
+
+// Method called to support drag types we said we could offer
+- (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
+{
+    //sender has accepted the drag and now we need to send the data for the type we promised
+    if([type isEqualToString:NSTIFFPboardType]){
+		//set data for TIFF type on the pasteboard as requested
+		[sender setData:[[self image] TIFFRepresentation] 
+				forType:NSTIFFPboardType];
+		
+    }else if([type isEqualToString:NSPDFPboardType]){
+		[sender setData:[self dataWithPDFInsideRect:[self bounds]] 
+				forType:NSPDFPboardType];
+    }
+}
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	NSLog(@"draggingEntered: %@ : %@",[sender draggingSource],self);
+	if([sender draggingSource] == self){
+		return NSDragOperationNone;
+	}else{
+		return [super draggingEntered:sender];
+	}
+}
+
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
+{
+		NSLog(@"draggingUpdated: %@ : %@",[sender draggingSource],self);
+	if([sender draggingSource] == self){
+		return NSDragOperationNone;
+	}else{
+		return [super draggingUpdated:sender];
 	}
 }
 
