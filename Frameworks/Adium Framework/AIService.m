@@ -24,7 +24,7 @@ Adium, Copyright 2001-2005, Adam Iser
 @implementation AIService
 
 /*!
- * Init
+ * @brief Init
  */
 - (id)init
 {
