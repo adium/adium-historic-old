@@ -556,8 +556,12 @@ DeclareString(UID);
 	metaContact = [metaContactDict objectForKey:metaContactDictKey];
 	if (!metaContact){
 		metaContact = [[[AIMetaContact alloc] initWithObjectID:inObjectID] autorelease];
+		//Keep track of it in our metaContactDict for retrieval by objectID
 		[metaContactDict setObject:metaContact forKey:metaContactDictKey];
-
+		
+		//Add it to our more general contactDict, as well
+		[contactDict setObject:metaContact forKey:[metaContact internalUniqueObjectID]];
+		
 		if (shouldRestoreContacts){
 			[self _restoreContactsToMetaContact:metaContact];
 		}
@@ -1475,7 +1479,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListContact	*contact = nil;
 
 	if(inUID && [inUID length] && inService){ //Ignore invalid requests
-		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService account:inAccount UID:inUID];
+		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
+																	   account:inAccount
+																		   UID:inUID];
 		
 		contact = [contactDict objectForKey:key];
 		if(!contact){
@@ -1754,7 +1760,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
 				NSEnumerator	*metaEnumerator;
 				AIListContact	*aContainedContact;
-				AIListObject	*listContactContainingObject;
 				
 				metaEnumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
 				while(aContainedContact = [metaEnumerator nextObject]){
@@ -1769,7 +1774,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 					}
 				}
 				
-				[self _moveContactLocally:listContact toGroup:group];
+				[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
 				
 			}else if([listContact isKindOfClass:[AIListContact class]]){
 				//Move the object 
