@@ -7,7 +7,8 @@
 #import "AIListGroup.h"
 
 @interface AIMetaContact : AIListContact {
-	NSMutableArray		*objectArray;
+	NSMutableArray			*objectArray;		//Objects we contain
+	NSMutableDictionary		*statusCacheDict;	//Cache of the status of our contained objects
 }
 
 - (unsigned)count;
@@ -17,5 +18,5 @@
 - (void)removeObject:(AIListContact *)inObject;
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
 - (NSArray *)containedObjects;
-- (void)_updateStatusArrayDictionaryWithObject:(id)inObject andOwner:(id)inOwner forKey:(NSString *)key;
+
 @end
