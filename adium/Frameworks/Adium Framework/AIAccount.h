@@ -105,6 +105,8 @@ typedef enum {
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;
 	AIListContact				*delayedUpdateStatusTarget;
+	
+	NSTimer						*silenceAllContactUpdatesTimer;
 }
 
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID;
