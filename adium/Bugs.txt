@@ -2,7 +2,7 @@
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
 - Crash when re-arranging emoticon packs
-
+- Crash when displaying/dismissing certain error messages
 
 
 //------------------------------------------------------------------------------------
