@@ -160,8 +160,11 @@
     enumerator = [awayArray objectEnumerator];
     while((awayDict = [enumerator nextObject])){
         if([(NSString *)[awayDict objectForKey:@"Type"] compare:@"Away"] == 0){
-            NSString		*away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
             NSMenuItem		*menuItem;
+	    
+            NSString *away = [awayDict objectForKey:@"Title"]; 
+	    if (!away) //no title found, then use the message
+		away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
 
             //Cap the away menu title (so they're not incredibly long)
             if([away length] > MENU_AWAY_DISPLAY_LENGTH){
