@@ -21,11 +21,12 @@
 #import "ESContactAlertsController.h"
 #import "ESContactAlertsViewController.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
+#import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/ESImageAdditions.h>
 
 @interface ESContactAlertsViewController (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
+- (void)configureActionsCell;
 @end
 
 int alertAlphabeticalSort(id objectA, id objectB, void *context);
@@ -36,8 +37,6 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 //Configure the preference view
 - (void)awakeFromNib
 {
-	AIImageTextCell *actionsCell;
-	
 	//Configure Table view
 	[tableView_actions setDrawsAlternatingRows:YES];
     [tableView_actions setTarget:self];
@@ -45,36 +44,14 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[tableView_actions setDelegate:self];
 	[tableView_actions setDataSource:self];
 	
-	actionsCell = [[AIImageTextCell alloc] init];
-    [actionsCell setFont:[NSFont systemFontOfSize:12]];
-	[actionsCell setIgnoresFocus:YES];
-	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
-	[actionsCell release];
+	[scrollView_actions setAlwaysDrawFocusRingIfFocused:YES];
+	
+	[self configureActionsCell];
 	
 	//Manually size and position our buttons
 	{
 		NSRect	newFrame, oldFrame;
-//		float	horizontalShift = 0;
-		
-		//Add
-//		oldFrame = [button_add frame];
-//		[button_add setTitle:AILocalizedString(@"Add Event",nil)];
-//		[button_add sizeToFit];
-//		newFrame = [button_add frame];
-//		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
-//		newFrame.origin.x = oldFrame.origin.x;
-//		[button_add setFrame:newFrame];
-//		horizontalShift += newFrame.size.width - oldFrame.size.width;
-//		
-//		//Remove, to the right of Add
-//		oldFrame = [button_delete frame];
-//		[button_delete setTitle:AILocalizedString(@"Remove Event",nil)];
-//		[button_delete sizeToFit];
-//		newFrame = [button_delete frame];
-//		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
-//		newFrame.origin.x = oldFrame.origin.x + horizontalShift;
-//		[button_delete setFrame:newFrame];
-		
+
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_edit frame];
 		[button_edit setTitle:AILocalizedString(@"Edit",nil)];
@@ -125,9 +102,17 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
+	[self configureForListObject:inObject showingAlertsForEventID:nil];
+}
+
+- (void)configureForListObject:(AIListObject *)inObject showingAlertsForEventID:(NSString *)inTargetEventID
+{
 	//Configure for the list object, using the highest-up metacontact if necessary
 	[listObject release];
 	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
+	
+	[targetEventID release];
+	targetEventID = [inTargetEventID retain];
 	
 	//
 	[self preferencesChangedForGroup:nil key:nil object:nil preferenceDict:nil firstTime:NO];
@@ -137,11 +122,13 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!object || object == listObject){
+	if(!firstTime && (!object || object == listObject)){
 		//Update our list of alerts
 		[alertArray release];
-		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject] mutableCopy];
-		
+		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject 
+															   withEventID:targetEventID
+																  actionID:nil] mutableCopy];
+
 		//Sort them
 		[alertArray sortUsingFunction:(configureForGlobal ? globalAlertAlphabeticalSort : alertAlphabeticalSort)
 							  context:nil];
@@ -182,8 +169,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 								   forListObject:listObject
 										onWindow:[view window]
 								 notifyingTarget:self
+										delegate:delegate
 										oldAlert:nil
-							  configureForGlobal:configureForGlobal];
+							  configureForGlobal:configureForGlobal
+						   showEventsInEditSheet:showEventsInEditSheet];
 }
 
 //Edit existing alert
@@ -197,8 +186,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 									   forListObject:listObject
 											onWindow:[view window]
 									 notifyingTarget:self
+											delegate:delegate
 											oldAlert:alert
-								  configureForGlobal:configureForGlobal];
+								  configureForGlobal:configureForGlobal
+							   showEventsInEditSheet:showEventsInEditSheet];
 	}
 }
 
@@ -266,10 +257,18 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 	id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 	
 	if(actionHandler && eventDescription){
-		[cell setStringValue:eventDescription];
+		if(configureForGlobal){
+			//Just show the action description for global
+			[cell setObjectValue:[actionHandler longDescriptionForActionID:actionID
+															   withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]];						
+		}else{
+			//Show event and action descriptions for object-specific
+			[cell setObjectValue:eventDescription];
+			[cell setSubString:[actionHandler longDescriptionForActionID:actionID
+															 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]];			
+		}
+		
 		[cell setImage:[actionHandler imageForActionID:actionID]];
-		[cell setSubString:[actionHandler longDescriptionForActionID:actionID
-														 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]];
 	}
 }
 
@@ -287,8 +286,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 		NSString					*actionID = [alert objectForKey:KEY_ACTION_ID];
 		NSObject<AIActionHandler>	*actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 
-		if([actionHandler respondsToSelector:@selector(didSelectAlert:)]){
-			[actionHandler didSelectAlert:alert];
+		if([actionHandler respondsToSelector:@selector(performPreviewForAlert:)]){
+			[actionHandler performPreviewForAlert:alert];
 		}
 	}
 }
@@ -303,6 +302,35 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 - (void)setConfigureForGlobal:(BOOL)inConfigureForGlobal
 {
 	configureForGlobal = inConfigureForGlobal;
+	[self configureActionsCell];
 }
 
+- (void)setShowEventsInEditSheet:(BOOL)inShowEventsInEditSheet
+{
+	showEventsInEditSheet = inShowEventsInEditSheet;
+}
+
+- (void)configureActionsCell
+{
+	AIImageTextCell *actionsCell;
+
+	actionsCell = [[AIImageTextCell alloc] init];
+	[actionsCell setIgnoresFocus:YES];
+	[actionsCell setDrawsGradientHighlight:YES];
+
+	if(configureForGlobal){
+		[actionsCell setFont:[NSFont boldSystemFontOfSize:13]];
+
+		[tableView_actions setRowHeight:38];
+		[actionsCell setMaxImageWidth:36];
+		[actionsCell setImageTextPadding:14];
+
+	}else{
+		[actionsCell setFont:[NSFont systemFontOfSize:12]];
+		[tableView_actions setRowHeight:30];		
+	}
+
+	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
+	[actionsCell release];
+}
 @end

@@ -35,8 +35,9 @@
 	NSMutableDictionary				*alert;
 
 	id								target;
+	id								delegate;
 	NSDictionary					*oldAlert;
-
+	
 	AIListObject					*listObject;
 	
 	BOOL							configureForGlobal;
@@ -48,8 +49,10 @@
 	forListObject:(AIListObject *)inObject
 		 onWindow:(NSWindow *)parentWindow
   notifyingTarget:(id)inTarget 
+		 delegate:(id)inDelegate
 		 oldAlert:(NSDictionary *)inOldAlert
-	configureForGlobal:(BOOL)inConfigureForGlobal;
+	configureForGlobal:(BOOL)inConfigureForGlobal
+ showEventsInEditSheet:(BOOL)showEventsInEditSheet;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)save:(id)sender;

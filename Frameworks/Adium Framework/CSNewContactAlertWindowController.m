@@ -21,13 +21,15 @@
 #import "ESContactAlertsController.h"
 #import "ESContactAlertsViewController.h"
 
-#define NEW_ALERT_NIB @"NewAlert"
+#define NEW_ALERT_NIB			@"NewAlert"
+#define NEW_ALERT_NO_EVENTS_NIB @"NewAlertNoEvents"
 
 @interface CSNewContactAlertWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName 
 					  alert:(NSDictionary *)inAlert
-			  forListObject:(AIListObject *)inObject
+			  forListObject:(AIListObject *)inListObject
 			notifyingTarget:(id)inTarget
+				   delegate:(id)inDelegate 
 				   oldAlert:(id)inOldAlert
 		 configureForGlobal:(BOOL)inConfigureForGlobal;
 - (void)configureForEvent;
@@ -41,12 +43,15 @@
 @implementation CSNewContactAlertWindowController
 
 //Prompt for a new alert.  Pass nil for a panel prompt.
-+ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget oldAlert:(id)inOldAlert configureForGlobal:(BOOL)inConfigureForGlobal
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget delegate:(id)inDelegate oldAlert:(id)inOldAlert configureForGlobal:(BOOL)inConfigureForGlobal showEventsInEditSheet:(BOOL)showEventsInEditSheet
 {
-	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB
+	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:(showEventsInEditSheet ? 
+																							   NEW_ALERT_NIB :
+																							   NEW_ALERT_NO_EVENTS_NIB)
 																						alert:inAlert
 																				forListObject:inObject
 																			  notifyingTarget:inTarget
+																					 delegate:inDelegate
 																					 oldAlert:inOldAlert
 																		   configureForGlobal:inConfigureForGlobal];
 	
@@ -66,6 +71,7 @@
 					  alert:(NSDictionary *)inAlert
 			  forListObject:(AIListObject *)inListObject
 			notifyingTarget:(id)inTarget
+				   delegate:(id)inDelegate 
 				   oldAlert:(id)inOldAlert
 		 configureForGlobal:(BOOL)inConfigureForGlobal
 {
@@ -75,13 +81,25 @@
 	oldAlert = [inOldAlert retain];
 	listObject = [inListObject retain];
 	target = inTarget;
+	delegate = inDelegate;
 	detailsPane = nil;
 	configureForGlobal = inConfigureForGlobal;
 	
 	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
 	alert = [inAlert mutableCopy];
 	if(!alert){
-		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[[adium contactAlertsController] defaultEventID], KEY_EVENT_ID,
+		NSString	*defaultEventID = nil;
+		
+		//The delegate can optionally specify what it desires as an initial event ID
+		if([delegate respondsToSelector:@selector(initialEventIDForNewContactAlert)]){
+			defaultEventID = [delegate initialEventIDForNewContactAlert];
+		}
+	
+		if(!defaultEventID){
+			defaultEventID = [[adium contactAlertsController] defaultEventID];
+		}
+
+		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:defaultEventID, KEY_EVENT_ID,
 																	[[adium contactAlertsController] defaultActionID], KEY_ACTION_ID, nil];
 	}
 
@@ -112,7 +130,7 @@
 	if ([[self superclass] instancesRespondToSelector:@selector(windowDidLoad)]){
 		   [super windowDidLoad];
 	}
-	
+
 	//Configure window
 	[[self window] center];
 	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:configureForGlobal]];
@@ -127,6 +145,15 @@
 	[label_Event setLocalizedString:AILocalizedString(@"Event:","Label for contact alert event (e.g. Contact signed on, Message received, etc.)")];
 	[label_Action setLocalizedString:AILocalizedString(@"Action:","Label for contact alert action (e.g. Send message, Play sound, etc.)")];	
 
+	//Remove the single-fire option for global
+	if(configureForGlobal){
+		if([checkbox_oneTime respondsToSelector:@selector(setHidden:)]){
+			[checkbox_oneTime setHidden:YES];
+		}else{
+			[checkbox_oneTime setFrame:NSZeroRect];
+		}
+	}
+	
 	//Set things up for the current event
 	[self configureForEvent];
 }
@@ -194,13 +221,7 @@
 	}
 	
 	//Setup our single-fire option
-	if(configureForGlobal){
-		if([checkbox_oneTime respondsToSelector:@selector(setHidden:)]){
-			[checkbox_oneTime setHidden:YES];
-		}else{
-			[checkbox_oneTime setFrame:NSZeroRect];
-		}
-	}else{
+	if(!configureForGlobal){
 		[checkbox_oneTime setState:[[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]];
 	}
 	
