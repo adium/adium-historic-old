@@ -99,24 +99,24 @@
 //Preferences have changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+    if( (notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0) ){
+	//Handle window ordering
+	NSDictionary * prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+
+	if ([[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]) {
+	    [[self window] setLevel:NSFloatingWindowLevel]; //always on top
+	}else {
+	    [[self window] setLevel:NSNormalWindowLevel]; //normal
+	}
+	[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];  //hides in background
+	
+    } else if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
         autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
         autoResizeHorizontal = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
 
         [self _configureAutoResizing];
-    } else if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
-	//Handle window ordering
-	NSDictionary * prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-
-	if ([[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]) {
-	    [[self window] setLevel:NSFloatingWindowLevel]; //always on top
-	} else {
-	    [[self window] setLevel:NSNormalWindowLevel]; //normal
-	}
-
-	[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];  //hides in background
     }
 }
 
@@ -268,6 +268,7 @@
     //
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
 
+    //apply initial preference-based settings
     [self preferencesChanged:nil];
 }
 
