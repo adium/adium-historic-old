@@ -7,6 +7,7 @@
 
 #import "ESMetaContactContentsPlugin.h"
 
+#define META_TOOLTIP_ICON_SIZE NSMakeSize(10,10)
 
 @implementation ESMetaContactContentsPlugin
 
@@ -58,7 +59,7 @@
 					shouldAppendString = YES;
 				}
 				
-				statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
+				statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:META_TOOLTIP_ICON_SIZE];
 				
 				if(statusIcon){
 					NSTextAttachment		*attachment;
@@ -76,7 +77,7 @@
 				[entryString appendString:[contact formattedUID]];
 				
 				serviceIcon = [[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal]
-									imageByScalingToSize:NSMakeSize(9,9)];
+									imageByScalingToSize:META_TOOLTIP_ICON_SIZE];
 				if (serviceIcon){
 					NSTextAttachment		*attachment;
 					NSTextAttachmentCell	*cell;
