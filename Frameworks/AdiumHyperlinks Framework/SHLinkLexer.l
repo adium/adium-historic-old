@@ -78,5 +78,7 @@ mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {aolIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
+https?:\/\/[^.]+\/	    {SHStringOffset += SHleng; return SH_URL_VALID;}
+
 .			    {return SH_URL_INVALID;}
 %%
