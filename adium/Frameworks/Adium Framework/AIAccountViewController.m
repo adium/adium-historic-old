@@ -35,6 +35,7 @@
     }
     
     [self loadAuxiliaryTabsFromTabView:view_auxiliaryTabView];
+
     
     //Observer account changes
     [[adium notificationCenter] addObserver:self
@@ -67,6 +68,7 @@
 - (void)configureViewAfterLoad
 {
     NSString		*accountName, *savedPassword;
+	AIServiceType	*serviceType = [[account service] handleServiceType];
     
     //Display formatted account name
     accountName = [account preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
@@ -75,6 +77,13 @@
     }else{
         [textField_accountName setStringValue:[account UID]];
     }
+	
+	//Restrict the account name field to valid characters and length
+    [textField_accountName setFormatter:
+		[AIStringFormatter stringFormatterAllowingCharacters:[serviceType allowedCharacters]
+													  length:[serviceType allowedLength]
+											   caseSensitive:[serviceType caseSensitive]
+												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
     
     //Display saved password
     savedPassword = [[adium accountController] passwordForAccount:account];

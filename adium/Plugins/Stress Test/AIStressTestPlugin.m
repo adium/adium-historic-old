@@ -17,7 +17,8 @@
                                                       description:@"Stress Test (Do not use)"
                                                             image:nil
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]
+													allowedLength:20] retain];
 
     //Register this service
     [[adium accountController] registerService:self];

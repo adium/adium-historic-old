@@ -8,9 +8,6 @@
     IBOutlet    NSTabView       *view_auxiliaryGaimAccountTabView;
 }
 
--(NSString *)validScreenNameCharacters;
--(int)maximumScreenNameLength;
--(NSString *)errorMessage;
 -(NSString *)auxiliaryGaimAccountViewTabsNib;
 
 @end

@@ -18,9 +18,4 @@
     
 }
 
--(NSString *)validScreenNameCharacters
-{
-    return ([[super validScreenNameCharacters] stringByAppendingString:@"_ "]);
-}
-
 @end

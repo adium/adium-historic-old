@@ -26,10 +26,11 @@
 {
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
-                          description:@"AIM, AOL, and .Mac"
-                          image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
-                          caseSensitive:NO
-                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
+													  description:@"AIM, AOL, and .Mac"
+															image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
+													caseSensitive:NO
+												allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@. "]
+													allowedLength:24] retain];
     
     //Register this service
     [[adium accountController] registerService:self];

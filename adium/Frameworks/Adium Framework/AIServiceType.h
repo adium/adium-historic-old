@@ -17,18 +17,22 @@
 
     NSString		*identifier;
     NSString		*description;
-    NSImage		*image;
-    BOOL		caseSensitive;
+    NSImage			*image;
+    BOOL			caseSensitive;
     NSCharacterSet 	*allowedCharacters;
+	int				allowedLength;
 
 }
 
-+ (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters;
++ (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+				  caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
+				  allowedLength:(int)inAllowedLength;
 - (NSString *)identifier;
 - (NSString *)description;
 - (NSImage *)image;
 - (NSCharacterSet *)allowedCharacters;
 - (BOOL)caseSensitive;
 - (NSString *)filterUID:(NSString *)inUID;
+- (int)allowedLength;
 
 @end
