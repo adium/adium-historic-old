@@ -112,14 +112,20 @@
 		if([inObject isKindOfClass:[AIListContact class]]){
 			int		online = [inObject online];
 			int		justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
-//			NSLog(@"%@ Visible? %i || %i || %i == %i",inObject,showOfflineContacts,online,justSignedOff,(showOfflineContacts || online || justSignedOff));
-			[inObject setVisible:(showOfflineContacts || online || justSignedOff)];
-			
+
+			if([inObject isKindOfClass:[AIMetaContact class]]){
+				[inObject setVisible:((online) || 
+									  (justSignedOff) || 
+									  (showOfflineContacts && ([(AIMetaContact *)inObject visibleCount] > 0)))];
+				
+			}else{
+				[inObject setVisible:(showOfflineContacts || online || justSignedOff)];
+			}
+
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
 			int visibleCount = [(AIListGroup *)inObject visibleCount];
-			
+
 			[inObject setVisible:(showOfflineContacts || visibleCount > 0)];
-			
 		}
 	}
 	

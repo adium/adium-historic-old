@@ -307,7 +307,7 @@ DeclareString(FormattedUID);
 //Long display name, influenced by plugins
 - (NSString *)longDisplayName
 {
-    NSString	*outName = [[self displayArrayForKey:LongDisplayName] objectValue];
+    NSString	*outName = [[self displayArrayForKey:LongDisplayName create:NO] objectValue];
 	
     return(outName ? outName : [self displayName]);
 }
@@ -442,7 +442,7 @@ DeclareString(FormattedUID);
 //Display name, drawing first from any externally-provided display name, then falling back to the formatted UID
 - (NSString *)ownDisplayName
 {
-    NSString	*outName = [[self displayArrayForKey:DisplayName] objectValue];
+    NSString	*outName = [[self displayArrayForKey:DisplayName create:NO] objectValue];
     return(outName ? outName : [self formattedUID]);	
 }
 

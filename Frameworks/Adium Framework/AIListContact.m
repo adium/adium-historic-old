@@ -84,8 +84,13 @@
 	//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
 	[remoteGroupName autorelease];
 	remoteGroupName = [inName retain];
-	
+
 	[[adium contactController] listObjectRemoteGroupingChanged:self];
+	
+	AIListObject	*myContainingObject = [self containingObject];
+	if([myContainingObject isKindOfClass:[AIMetaContact class]]){
+		[(AIMetaContact *)myContainingObject remoteGroupingOfContainedObject:self changedTo:remoteGroupName];
+	}
 }
 
 //The current desired group of this contact

@@ -42,7 +42,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 	_preferredContact = nil;
 	_listContacts = nil;
-	
+
 	[super initWithUID:[objectID stringValue] service:nil];
 
 	containedObjects = [[NSMutableArray alloc] init];
@@ -57,9 +57,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
 		
-	//Restore the previous containedObject so we don't depend on serverside information
-	[self restoreGrouping];
-
 	return(self);
 }
 
@@ -111,12 +108,14 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //When called, cache the internalObjectID of the new group so we can restore it immediately next time.
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
+	NSString	*inGroupInternalObjectID = [inGroup internalObjectID];
+	
 	//Save the change of containing object so it can be restored on launch next time if we are using groups.
 	//We don't save if we are not using groups as this set will be for the contact list root and probably not desired permanently.
 	if ([[adium contactController] useContactListGroups] &&
-		![[inGroup internalObjectID] isEqualToString:[[self containingObject] internalObjectID]]){
+		![inGroupInternalObjectID isEqualToString:[[self containingObject] internalObjectID]]){
 
-		[self setPreference:[inGroup internalObjectID]
+		[self setPreference:inGroupInternalObjectID
 					 forKey:KEY_CONTAINING_OBJECT_ID
 					  group:OBJECT_STATUS_CACHE];
 	}
@@ -167,44 +166,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	BOOL	success = NO;
 
 	if(![containedObjects containsObject:inObject]){
-		
-		//Check if we will still be unique after adding this contact
-		if (containsOnlyOneUniqueContact){
-			//If the new object's formattedUID isn't the same as ours, we no longer can claim to only have one
-			//unique contact
-			NSString	*currentUID = [self formattedUID];
-			NSString	*currentService = [[self service] serviceID];
-			
-			NSString	*newUID = [inObject formattedUID];
-			NSString	*newService = [[inObject service] serviceID];
-			
-			//If newUID is nil, then the containedContact is a metaContact with multiple unique contacts... 
-			//so we are no longer unique.
-			//If we have a currentUID, and it's not the same as the new one, we are no longer unique.
-			//Similarly, if we have a currentUID and our serviceID isn't the same as the new one, we are no longer unique.
-			if (([inObject online] || ![self online]) &&
-				((newUID == nil)||
-				(currentUID && (![currentUID isEqualToString:newUID] || ![currentService isEqualToString:newService])))){
-				
-				if (![currentService isEqualToString:newService]){
-					containsOnlyOneService = NO;
-				}
-				
-				containsOnlyOneUniqueContact = NO;
-				
-				//We're no longer positive of our preferredContact, so clear the cache
-				_preferredContact = nil;
 
-				if ([containingObject isKindOfClass:[AIMetaContact class]]){
-					[(AIMetaContact *)containingObject containedMetaContact:self
-									  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
-				}else{
-					[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-															  object:self
-															userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																								 forKey:@"Notify"]];
-				}
-			}
+		//Before we add our first object, restore our grouping
+		if([containedObjects count] == 0){
+			[self restoreGrouping];	
 		}
 		
 		[inObject setContainingObject:self];
@@ -212,7 +177,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		containedObjectsNeedsSort = YES;
 		
 		[_listContacts release]; _listContacts = nil;
-
+		
+		//If we were unique before, check if we will still be unique after adding this contact.
+		//If we were not, no checking needed.
+		if (containsOnlyOneUniqueContact){
+			[self _determineIfWeShouldAppearToContainOnlyOneContact];
+		}
+		
 		[self _updateCachedStatusOfObject:inObject];
 		
 		success = YES;
@@ -258,7 +229,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (AIListContact *)preferredContact
 {
 	if (!_preferredContact){
-		NSArray			*theContainedObjects = [self containedObjects];
+		NSArray			*theContainedObjects = [self listContacts];
 		AIListContact   *preferredContact = nil;
 		AIListContact   *thisContact;
 		unsigned		index;
@@ -349,8 +320,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
 		NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
 		[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
-		
+
 		_listContacts = listContacts;
+
+		//
+		[self setStatusObject:[NSNumber numberWithInt:[listContacts count]]
+					   forKey:@"VisibleObjectCount"
+					   notify:YES];
 	}
 	
 	return _listContacts;
@@ -410,7 +386,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 						   toArray:listContacts
 				   uniqueObjectIDs:uniqueObjectIDs];
 			
-		}else{
+		}else if(([listObject isKindOfClass:[AIListContact class]]) &&
+				 ([(AIListContact *)listObject remoteGroupName] != nil)){
 			NSString	*listObjectInternalObjectID = [listObject internalObjectID];
 			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID];
 			
@@ -445,124 +422,33 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact
 {
-	//If the contained meta contact's status isn't the same as our current one - i.e.
-	//It now contains multiple contacts, but we currently think we are unique
-	//--OR--
-	//It now contains only one contact, but currently think we are not unique
-	//
-	//then we need to redetermine our uniqueness.
-//	NSLog(@"%i: %@ changed to %i",containsOnlyOneUniqueContact,containedMetaContact,inContainsOnlyOneUniqueContact);
 	if (inContainsOnlyOneUniqueContact != containsOnlyOneUniqueContact){
 		[self _determineIfWeShouldAppearToContainOnlyOneContact];
 	}
 }
 
-//When do we claim to contain only one contact?
-//		- When all online contacts within the metaContact have the same UID and service
-//			-OR-
-//		- When all contacts within the metaContact are offline and have the same UID and service
-//This makes the UID and service information presented to the user as accurate as possible for at-a-glance
-//knowlege of the metaContact's effective contents
-
-// XXX - rework to handle containsOnlyOneService checking simultaneously
+//When the listContacts array has a single member, we only contain one unique contact.
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {
 	BOOL oldOnlyOne = containsOnlyOneUniqueContact;
-	
-	unsigned int count = [containedObjects count];
-	
-	if (count > 1){
-		NSString	*formattedUIDToMatch = nil;
-		NSString	*serviceIDToMatch = nil;
-		
-		NSString	*offline_formattedUIDToMatch = nil;
-		NSString	*offline_serviceIDToMatch = nil;
-		
-		unsigned int i;
-		for (i = 0; i < count; i++){
-			AIListContact   *thisContact = [containedObjects objectAtIndex:i];
-			
-			NSString	*thisContactFormattedUID;
-			NSString	*thisContactServiceID;
-			
-			thisContactFormattedUID = [thisContact formattedUID];
-			thisContactServiceID = [[thisContact service] serviceID];
-			
-			if ([thisContact online]){
-//				NSLog(@"%@ is online (%@)",thisContact,thisContactFormattedUID);
-				//If this contact has no formattedUID, it isn't unique, so break
-				if (!thisContactFormattedUID)
-					break;
-				
-				//If we don't have a set of data to match yet, this contact is our target
-				if (!formattedUIDToMatch){
-					formattedUIDToMatch = thisContactFormattedUID;
-					serviceIDToMatch = thisContactServiceID;
-//					NSLog(@"ONLINE: Going to match %@",formattedUIDToMatch);
-				}else{
-					//Otherwise, compare this contact to our target
-					if ((![thisContactFormattedUID isEqualToString:formattedUIDToMatch]) ||
-						(![thisContactServiceID isEqualToString:serviceIDToMatch])){
-//						NSLog(@"%@ doesn't match %@ so breaking",thisContactFormattedUID,thisContactServiceID);
-						break;
-					}
-				}
-			}else{
-//				NSLog(@"%@ is offline",thisContact);
-				//If we're not searching for a match, we haven't found an online contact yet
-				if (!formattedUIDToMatch){
-					//If we don't have a set of data for an offline contact to match yet,
-					//this offline contact is our target, which will be needed only if we find no
-					//online targets
-					if (!offline_formattedUIDToMatch){
-						offline_formattedUIDToMatch = thisContactFormattedUID;
-						offline_serviceIDToMatch = thisContactServiceID;
-//						NSLog(@"OFFLINE: Going to match %@",offline_formattedUIDToMatch);
+	unsigned listContactsCount;
 
-					}else{
-						//Otherwise, compare this contact to our target
-						if ((![thisContactFormattedUID isEqualToString:offline_formattedUIDToMatch]) ||
-							(![thisContactServiceID isEqualToString:offline_serviceIDToMatch])){
-							
-							//This offline contact does not match our previous offline contact.
-							//We will no work on the assumption that we do not contain only one unique contact.
-							//If all the online contacts match, however, this flag will be changed to YES
-							//once the search is complete.
-							containsOnlyOneUniqueContact = NO;
-						}
-					}		
-				}
-			}
-		}
-		
-		/*
-		 If we made it all the way through the loop, and we were looking at online contacts
-		 (and hence formattedUIDToMatch != nil), all our contacts have the same formattedUID
-		 */
-//		NSLog(@"i: %i, count: %i, formattedUIDToMatch: %@, was %i",i,count,formattedUIDToMatch,containsOnlyOneUniqueContact);
-		if ((i == count) && formattedUIDToMatch){
-			containsOnlyOneUniqueContact = YES;
-		}else{
-			containsOnlyOneUniqueContact = NO;	
-		}
-//		NSLog(@"Now %i",containsOnlyOneUniqueContact);
-		
-	}else{
-		
-		if (count == 1) {
-			//With only one contact, we are as unique as the contact we contain...
-			containsOnlyOneUniqueContact = ([[containedObjects objectAtIndex:0] formattedUID] != nil);
-		}else{
-			containsOnlyOneUniqueContact = YES;
-		}
-	}	
-	
 	//Clear our preferred contact so the next call to it will update the preferred contact
 	_preferredContact = nil;
 	
 	[_listContacts release]; _listContacts = nil;
+	listContactsCount = [[self listContacts] count];
 
+	containsOnlyOneUniqueContact = (listContactsCount < 2);
+
+	//If it changed, do stuff
 	if (oldOnlyOne != containsOnlyOneUniqueContact){
+		if ([containingObject isKindOfClass:[AIMetaContact class]]){
+			//Shouldn't be needed as of 0.8
+			[(AIMetaContact *)containingObject containedMetaContact:self
+							  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
+		}
+
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:self
 												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
@@ -570,6 +456,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 }
 
+- (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName
+{
+	//When a contact has its remote grouping changed, this may mean it is now listed on an online account.
+	//We therefore update our containsOnlyOneContact boolean.
+	[self _determineIfWeShouldAppearToContainOnlyOneContact];
+}
 
 //Status Object Handling -----------------------------------------------------------------------------------------------
 #pragma mark Status Object Handling
@@ -581,17 +473,15 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//If the online status of a contained object changed, we should also check if our one-contact-only
 		//in terms of online contacts has changed
 		if ([key isEqualToString:@"Online"]){
-//			NSLog(@"%@ is %@",[inObject formattedUID],([value boolValue] ? @"** Online" : @"== Offline"));
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
 		
 		if([key isEqualToString:@"Away"] ||
 		   [key isEqualToString:@"IdleSince"]){
-//			NSLog(@"%@: Clear preferred contact",self);
 			_preferredContact = nil;
 		}
 	}
-//	NSLog(@"%@: %@ set %@ for %@ (%i)",self,inObject,value,key,notify);
+
 	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
 		[super object:self didSetStatusObject:value forKey:key notify:notify];
@@ -765,6 +655,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//Look to our first contained object
 		if (!returnValue && [containedObjects count]){
 			returnValue = [[self preferredContact] preferenceForKey:inKey group:groupName ignoreInheritedValues:YES];
+
+			//Move the preference to us so we will have it next time and the contact won't (lazy migration)
+			if(returnValue){
+				[self setPreference:returnValue forKey:inKey group:groupName];
+				[[self preferredContact] setPreference:nil forKey:inKey group:groupName];
+			}
 		}
 	}
 	
@@ -823,15 +719,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (NSString *)displayName
 {
-	NSString	*displayName = [super displayName];
+	NSString	*displayName = [[self displayArrayForKey:@"Display Name"] objectValue];
 	
-	//If we have no alias, and we contain more than one UID, [super displayName] will return nil due to the overriding
-	//of formattedUID below.
 	if (!displayName){
 		displayName = [[self preferredContact] ownDisplayName];
 	}
-	
-	//	return [displayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+
 	return(displayName);
 }
 
@@ -1002,10 +895,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  The visible objects contained in a group are always sorted to the top.  This allows us to easily retrieve only visible
  objects without having to physically remove invisible objects from the group.
  */
-//Returns the number of visible objects in this group
+//Returns the number of visible objects in this metaContact, which is the same as the count of listContacts
 - (unsigned)visibleCount
 {
-    return([self containedObjectsCount]);
+    return([[self listContacts] count]);
 }
 
 @end
