@@ -1,12 +1,11 @@
 
 #import <WebKit/WebKit.h>
-
+#import "AIWebKitMessageViewPlugin.h"
 
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	WebView				*webView;
 	BOOL				webViewIsReady;
 	
-
     NSMutableString		*timeStampFormat;
     NSDateFormatter		*timeStampFormatter;
 	NSDateFormatter		*timeStampFormatterMinutesSeconds;
