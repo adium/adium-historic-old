@@ -66,7 +66,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SetStatus;
 - (void)AIM_GetProfile:(NSString *)handleUID;
 - (void)AIM_GetStatus:(NSString *)handleUID;
-- (void)AIM_SendWarning:(NSString *)handleUID anonymous:(BOOL)anonymous;
+- (void)AIM_SendWarningToHandle:(NSString *)handleUID anonymous:(BOOL)anonymous;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
@@ -306,7 +306,7 @@ static char *hash_password(const char * const password);
 
     }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
         BOOL	typing;
-        
+
         //Get the handle for receiving this content
         handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_TYPING_TYPE fromAccount:self];
         typing = [(AIContentTyping *)object typing];
@@ -314,6 +314,20 @@ static char *hash_password(const char * const password);
         //Send the typing client event
         if(handle){
             [self AIM_SendClientEvent:(typing ? 2 : 0) toHandle:[handle UID]];
+            sent = YES;
+	    
+        }
+	
+    }else if([[object type] compare:CONTENT_WARNING_TYPE] == 0){
+        BOOL	anonymous;
+
+        //Get the handle for receiving this content
+        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_WARNING_TYPE fromAccount:self];
+        anonymous = [(AIContentWarning *)object anonymous];
+
+        //Send the typing client event
+        if(handle){
+            [self AIM_SendWarningToHandle:[handle UID] anonymous:anonymous];
             sent = YES;
         }
     }
@@ -558,7 +572,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.68 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.69 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -1062,6 +1076,14 @@ static char *hash_password(const char * const password);
         if(storedValue == nil || warning != [storedValue intValue]){
             [handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Warning"];
             [alteredStatusKeys addObject:@"Warning"];
+
+	    if(warning < [storedValue intValue]){
+		[handleStatusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Cooldown"];
+		[alteredStatusKeys addObject:@"Cooldown"];
+	    }else{
+		[handleStatusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Cooldown"];
+		[alteredStatusKeys addObject:@"Cooldown"];
+	    }
         }
 
         //Idle time (seconds)
@@ -1338,34 +1360,44 @@ static char *hash_password(const char * const password);
 
 - (void)URLHandle:(NSURLHandle *)sender resourceDataDidBecomeAvailable:(NSData *)newBytes
 {
-//    NSLog(@"resourceDataDidBecomeAvailable");
+    //NSLog(@"resourceDataDidBecomeAvailable");
 }
 - (void)URLHandleResourceDidBeginLoading:(NSURLHandle *)sender
 {
-//    NSLog(@"URLHandleResourceDidBeginLoading");
+    //NSLog(@"URLHandleResourceDidBeginLoading");
 }
 - (void)URLHandleResourceDidCancelLoading:(NSURLHandle *)sender
 {
     if(profileURLHandle){
         [profileURLHandle release]; profileURLHandle = nil;
     }
-//    NSLog(@"URLResourceDidCancelLoading");
+    //NSLog(@"URLResourceDidCancelLoading");
 }
 - (void)URLHandle:(NSURLHandle *)sender resourceDidFailLoadingWithReason:(NSString *)reason
 {
     if(profileURLHandle){
         [profileURLHandle release]; profileURLHandle = nil;
     }
-    //    NSLog(@"resourceDidFailLoadingWithReason: %@",reason);    
+    //NSLog(@"resourceDidFailLoadingWithReason: %@",reason);    
 }
 
 - (void)AIM_HandleEviled:(NSString *)message
 {
-    NSString *level = [message TOCStringArgumentAtIndex:1];
-    NSString *enemy = [message TOCStringArgumentAtIndex:2];
+    NSString		*compactedName = [[self UID] compactedString];
+    AIHandle		*handle = [handleDict objectForKey:compactedName];
+    NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
+	
+    NSString	*level = [message TOCStringArgumentAtIndex:1];
+    NSString	*enemy = [message TOCStringArgumentAtIndex:2];
+    BOOL	cooldown = [[handleStatusDict objectForKey:@"Cooldown"] boolValue];
 
-    if(enemy == nil){
-	[[owner interfaceController] handleErrorMessage:@"Warning Level (Cooldown or Anonymous)" withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+    NSLog(@"%s",cooldown);
+    
+    if((enemy == nil) && (!cooldown)){
+	[[owner interfaceController] handleErrorMessage:@"Warning Level (Anonymous)" withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+
+    }if((cooldown) && ([level compare:@"0"])){
+	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"Warning Level Cleared"] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
 	
     }else{
 	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"Warning Level (%@)",enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
@@ -1463,7 +1495,7 @@ static char *hash_password(const char * const password);
 
 }
 
-- (void)AIM_SendWarning:(NSString *)handleUID anonymous:(BOOL)anonymous
+- (void)AIM_SendWarningToHandle:(NSString *)handleUID anonymous:(BOOL)anonymous;
 {
     NSString	*message;
 
