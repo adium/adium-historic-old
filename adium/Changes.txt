@@ -3,8 +3,11 @@
 
 Version 0.51 (4/08/2004)
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
-- Fixed crash when opening preference window
+- Fixed a crash when opening preference window
+- Fixed a crash in the theme preferences
 - Fixed resizing issues with the advanced preferences
+- Fixed a crash in the contact alert window
+- Fixed a crash when completing file transfers
 - Cleaned up the 'auto-away' preferences
 
 Version 0.50 (4/06/2004)
