@@ -501,7 +501,7 @@ int contactAlerts_alphabeticalSort(id objectA, id objectB, void *context);
 */
             if (firstOfflineSearch)
             {
-                if ( !([contact integerStatusObjectForKey:@"Online"]) ) //look for the first offline contact
+                if ( !([[contact numberStatusObjectForKey:@"Online"] boolValue]) ) //look for the first offline contact
                 {
                     NSMenuItem	*separatorItem;
                     separatorItem = [[[NSMenuItem alloc] initWithTitle:OFFLINE
