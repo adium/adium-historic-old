@@ -167,18 +167,15 @@ static BOOL didInitMSN = NO;
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
-	[super updateStatusForKey:key];
-	
-    //Now look at keys which only make sense while online
-	if([[self statusObjectForKey:@"Online"] boolValue]){
-
-		if([key isEqualToString:@"FullNameAttr"]){
-			
+	//We'll handle FullNameAttr, the rest we let AIAccount handle for us
+	if([key isEqualToString:@"FullNameAttr"]){
+		if([[self statusObjectForKey:@"Online"] boolValue]){
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(_setFriendlyNameTo:)];
 		}
+	}else{
+		[super updateStatusForKey:key];
 	}
 }
-
 
 /*
  gaim_connection_get_display_name(gc) will get the current display name... which is stored serverside so
@@ -204,13 +201,6 @@ static BOOL didInitMSN = NO;
 													  modifiedKeys:[NSSet setWithObject:@"Display Name"]];			
 		}
 	}
-}
-
-//Return YES if the display name (in the preference key @"FullNameAttr") should be managed by AIAccount.
-//Return NO if a subclass will handle making it visible to the user (for example, if it should be filtered, first).
-- (BOOL)superclassManagesDisplayName
-{
-	return NO;
 }
 
 - (BOOL)useDisplayNameAsStatusMessage

@@ -381,25 +381,4 @@ Adium, Copyright 2001-2005, Adam Iser
 	return(nil);
 }
 
-
-
-
-
-
-
-#warning ??? Whats this for?  - ai
-- (void)updateStatusForAutoRefreshingKey:(NSString *)key
-{
-	//
-}
-#warning ??? Whats this for? Get in mah bellah! - ai
-//Return YES if the display name (in the preference key @"FullNameAttr") should be managed by AIAccount.
-//Return NO if a subclass will handle making it visible to the user (for example, if it should be filtered, first).
-- (BOOL)superclassManagesDisplayName
-{
-	return YES;
-}
-
-
-
 @end
