@@ -24,6 +24,7 @@
 - (void)validateEnteredName;
 - (void)updateAccountList;
 - (void)configureNameAndService;
+- (void)configureForCurrentServiceType;
 - (void)setContactName:(NSString *)contact;
 - (void)setService:(AIService *)inService;
 - (void)selectGroup:(id)sender;
@@ -196,6 +197,9 @@
 	if (!(selectedItem = (NSMenuItem *)[popUp_contactType selectedItem]) ||
 		(![selectedItem isEnabled])){
 		[self selectFirstValidServiceType];
+	}else{
+		//Otherwise, just perform needed configuration for the current selection
+		[self configureForCurrentServiceType];
 	}
 }
 
@@ -234,10 +238,14 @@
 {	
 	service = [[popUp_contactType selectedItem] representedObject];
 
+	[self configureForCurrentServiceType];
+}
+
+- (void)configureForCurrentServiceType
+{
 	[self updateAccountList];
 	[self validateEnteredName];
 }
-
 
 //Add to Group ---------------------------------------------------------------------------------------------------------
 #pragma mark Add to Group
