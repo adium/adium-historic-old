@@ -13707,7 +13707,7 @@
 				4BA1300304C0A4E300A8010A,
 			);
 			isa = PBXGroup;
-			name = "Chat Grouping/Odering? [Tied to DWI]";
+			name = "Chat Grouping/Odering? [Tied to Core]";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";

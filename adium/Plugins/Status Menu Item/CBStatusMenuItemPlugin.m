@@ -6,6 +6,7 @@
 //
 
 #import "CBStatusMenuItemPlugin.h"
+#import "CBStatusMenuItemPreferences.h"
 
 @interface CBStatusMenuItemPlugin(PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
