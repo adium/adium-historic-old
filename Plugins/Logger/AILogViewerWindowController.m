@@ -56,8 +56,6 @@
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
 - (void)startSearching;
 - (void)stopSearching;
-- (void)setSearchMode:(LogSearchMode)inMode;
-- (void)setSearchString:(NSString *)inString;
 - (void)buildSearchMenu;
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
@@ -1002,7 +1000,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 #pragma mark Window Toolbar
 - (void)installToolbar
 {	
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_LOG_VIEWER] autorelease];
+    NSToolbar 		*toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_LOG_VIEWER] autorelease];
+	NSToolbarItem	*toolbarItem;
 	
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
@@ -1035,18 +1034,19 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 											action:@selector(deleteSelectedLogs:)
 											  menu:nil];
 	//Search
-//	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-//									withIdentifier:@"search"
-//											 label:@"Search"
-//									  paletteLabel:@"Search"
-//										   toolTip:@"Search or filter logs"
-//											target:self
-//								   settingSelector:@selector(setView:)
-//									   itemContent:view_SearchField
-//											action:@selector(updateSearch:)
-//											  menu:nil];
-	//[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
-	//[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
+	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
+	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"search"
+														  label:@"Search"
+												   paletteLabel:@"Search"
+														toolTip:@"Search or filter logs"
+														 target:self
+												settingSelector:@selector(setView:)
+													itemContent:view_SearchField
+														 action:@selector(updateSearch:)
+														   menu:nil];
+	[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
+	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
+	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
 	//Toggle Emoticons
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
