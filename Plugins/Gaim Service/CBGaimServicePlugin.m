@@ -31,8 +31,7 @@
 - (void)installPlugin
 {
 	//Register our defaults
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS 
-																		forClass:[self class]]
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
 	[self _initGaim];
 	
