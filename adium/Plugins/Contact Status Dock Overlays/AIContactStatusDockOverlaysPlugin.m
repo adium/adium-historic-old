@@ -15,7 +15,6 @@
 
 #import "AIContactStatusDockOverlaysPlugin.h"
 #import "AIStatusOverlayPreferences.h"
-#import "AIStatusOverlayAdvancedPreferences.h"
 
 #define SMALLESTRADIUS				15
 #define RADIUSRANGE					36
@@ -39,7 +38,6 @@
     //Install our preference view and register our default prefs
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
     preferences = [[AIStatusOverlayPreferences preferencePane] retain];
-    advancedPrefs = [[AIStatusOverlayAdvancedPreferences preferencePane] retain];
 	
     //Register as a contact observer (So we can catch the unviewed content status flag)
     [[adium contactController] registerListObjectObserver:self];
