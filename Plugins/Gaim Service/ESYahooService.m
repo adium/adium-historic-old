@@ -11,53 +11,46 @@
 
 @implementation ESYahooService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-	NSImage *image = [NSImage imageNamed:@"yahoo" forClass:[self class]];
-	NSImage *menuImage = [NSImage imageNamed:@"yahoo-menu" forClass:[self class]];
-	
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Yahoo!"
-                                                      description:@"Yahoo!"
-                                                            image:image
-														menuImage:menuImage
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:30] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimYahooAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"Yahoo-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Yahoo!";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimYahooAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimYahooAccountViewController accountView]);
 }
 
-
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimYahooJoinChatViewController joinChatView]);
 }
 
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-Yahoo!");
+}
+- (NSString *)serviceID{
+	return(@"Yahoo!");
+}
+- (NSString *)serviceClass{
+	return(@"Yahoo!");
+}
+- (NSString *)shortDescription{
+	return(@"Yahoo!");
+}
+- (NSString *)longDescription{
+	return(@"Yahoo!");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(30);
+}
+- (BOOL)caseSensitive{
+	return(NO);
+}
 
 @end
