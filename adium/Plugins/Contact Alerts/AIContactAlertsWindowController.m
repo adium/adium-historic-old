@@ -122,12 +122,13 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [textField_description_popUp setStringValue:@""];
     [textField_description_textField setStringValue:@""];
 
-    eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
+    [eventActionArray release];
+    eventActionArray =  [[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject] retain];
 
-    if(eventActionArray) //saved array
-        if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
+    if (!eventActionArray)
+         eventActionArray = [[NSMutableArray alloc] init];
     else
-        eventActionArray = [[NSMutableArray alloc] init]; 
+        if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
    
     //Update the outline view
     [tableView_actions reloadData];
@@ -239,10 +240,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
     [actionDict setObject:@"NO" forKey:KEY_EVENT_DELETE]; //default to recurring events
     [eventActionArray addObject:actionDict];
-
     //Save event preferences
     [self saveEventActionArray];
 
+    [tableView_actions selectRow:([eventActionArray count]-1) byExtendingSelection:NO]; //select the new event
+    
     //Update the outline view
     [tableView_actions reloadData];
 
@@ -297,7 +299,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
                                            target:self
                                            action:@selector(newEvent:)
                                     keyEquivalent:@""] autorelease];
-    menuDict = [[NSMutableDictionary alloc] init];
+    menuDict = [[[NSMutableDictionary alloc] init] retain];
     [menuDict setObject:displayName 	forKey:KEY_EVENT_DISPLAYNAME];
     [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
     [menuItem setRepresentedObject:menuDict];
@@ -307,20 +309,38 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 //Delete the selected action
 - (IBAction)deleteEventAction:(id)sender
 {
-    //Remove the event
-    [eventActionArray removeObjectAtIndex:[tableView_actions selectedRow]];
+    int row = [tableView_actions selectedRow];
+    if (row != -1)
+    {
+        //Remove the event
+        [eventActionArray removeObjectAtIndex:[tableView_actions selectedRow]];
 
-    //Save event sound preferences
-    [self saveEventActionArray];
+        //Save event sound preferences
+        [self saveEventActionArray];
 
-    //Update the outline view
-    [tableView_actions reloadData];
+        //Update the outline view
+        [tableView_actions reloadData];
+    }
 }
-
 
 //Save the event actions (contact context sensitive)
 - (void)saveEventActionArray
 {
+    //Display eventActionArray contents
+    /* NSDictionary * actionDict;
+    NSEnumerator * actionsEnumerator = [eventActionArray objectEnumerator];
+    while(actionDict = [actionsEnumerator nextObject])
+    {
+        NSString * event_status = [actionDict objectForKey:KEY_EVENT_STATUS];
+            NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
+            NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
+            NSString * event= [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
+            NSString * delete = [actionDict objectForKey:KEY_EVENT_DELETE];
+            NSString * displayName = [actionDict objectForKey:KEY_EVENT_DISPLAYNAME];
+            NSLog (@"action %@ details %@ delete %@ event %@ displayName %@ status %@",action,details,delete,event,displayName,event_status);
+            
+    }
+    */
     [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 }
 
@@ -596,7 +616,8 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 {
     [owner release];
     [activeContactObject release];
-
+    [eventActionArray release];
+    [popUp_addEvent release];
     [super dealloc];
 }
 
