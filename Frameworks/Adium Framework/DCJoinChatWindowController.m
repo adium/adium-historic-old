@@ -89,24 +89,26 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+	unsigned numberOfServiceMenuItems = [popUp_service numberOfItems];
 	
     //Configure the handle type menu
     [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self
 																includeOffline:NO 
 											onlyIfCreatingGroupChatIsSupported:YES]];
-
-    //Select the last used account / Available online account
-	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																						   toContact:nil];
-	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
-
-    if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
-		[popUp_service selectItemAtIndex:serviceIndex];
+	if (numberOfServiceMenuItems > 0){
+		//Select the last used account / Available online account
+		AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																							   toContact:nil];
+		int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
+		
+		if(serviceIndex < numberOfServiceMenuItems && serviceIndex >= 0){
+			[popUp_service selectItemAtIndex:serviceIndex];
+		}
+		
+		AIAccount *account = [[popUp_service selectedItem] representedObject];
+		[self configureForAccount:account];
 	}
-
-	AIAccount *account = [[popUp_service selectedItem] representedObject];
-	[self configureForAccount:account];
-
+	
     //Center the window
     [[self window] center];
 }
