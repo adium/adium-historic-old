@@ -113,6 +113,7 @@
 {
 	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0){		
 		[self _scanAvailableWebkitStyles];
+		[preferences messageStyleXtrasDidChange];
 	}
 }
 

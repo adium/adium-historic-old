@@ -92,6 +92,21 @@
 									   name:Preference_GroupChanged
 									 object:nil];
 	[self preferencesChanged:nil];
+	
+	viewIsOpen = YES;
+}
+
+
+- (void)messageStyleXtrasDidChange
+{
+	if (viewIsOpen){
+		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		[popUp_styles setMenu:[self _stylesMenu]];
+		
+		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+		
+		[self preferencesChanged:nil];
+	}
 }
 
 
@@ -129,6 +144,8 @@
 //Close the preference view
 - (void)viewWillClose
 {
+	viewIsOpen = NO;
+	
     [[adium notificationCenter] removeObserver:self];
 	
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
