@@ -28,16 +28,18 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {fontPopUps = id; }; 
+            ACTIONS = {colorAndOpacity = id; fontPopUps = id; gridOptions = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                alternatingColorWell = id; 
                 alternatingGridSwitch = id; 
                 backgroundColorWell = id; 
                 enableGridSwitch = id; 
                 facePopUp = id; 
                 fontPopUp = id; 
+                gridColorLabel = id; 
+                gridColorWell = id; 
+                opacityPercentLabel = id; 
                 opacitySlider = id; 
                 prefView = id; 
                 sizePopUp = id; 
