@@ -72,7 +72,7 @@
 	return(groupCell);
 }
 
-- (NSCell *)cellForItem:(id)item
+- (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	return([self isExpandable:item] ? groupCell : contentCell);
 }
