@@ -176,7 +176,11 @@ struct buddyinfo {
 					
 					//Update the status message if necessary
 					if (statusMsgString && [statusMsgString length]) {
-						if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+						NSAttributedString *oldStatusMsg = [theContact statusObjectForKey:@"StatusMessage" 
+																			  withOwner:self];
+						
+						//If no status message is currently set, it doesn't matter if the previous strings match - we need to set the message. (This occurs between connects).
+						if (!oldStatusMsg || ![statusMsgString isEqualToString:oldStatusMsgString]) {
 							[theContact setStatusObject:statusMsgString withOwner:self forKey:@"StatusMessageString" notify:NO];
 							[theContact setStatusObject:[AIHTMLDecoder decodeHTML:statusMsgString]
 											  withOwner:self 
@@ -202,7 +206,11 @@ struct buddyinfo {
 																			  withOwner:self];
 							
 							if (profileString && [profileString length]) {
-								if (![profileString isEqualToString:oldProfileString]) {
+								NSAttributedString *oldProfile = [theContact statusObjectForKey:@"TextProfile" 
+																					  withOwner:self];
+								
+								//If no profile is currently set, it doesn't matter if the previous strings match - we need to set the profile. (This occurs between connects).
+								if (!oldProfile || ![profileString isEqualToString:oldProfileString]) {
 									[theContact setStatusObject:profileString withOwner:self 
 														 forKey:@"TextProfileString" 
 														 notify:NO];
