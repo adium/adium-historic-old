@@ -66,7 +66,7 @@
     NSArray            *resourcesPaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
     NSEnumerator       *tempEnum       = [resourcesPaths objectEnumerator];
     NSString           *curPath;
-    NSAutoreleasePool  *pool           = [[NSAutoreleasePool alloc] init];
+
     while(curPath = [tempEnum nextObject]) {
         NSMutableArray *subpaths       = [[[mgr subpathsAtPath:curPath] mutableCopy] autorelease];
         NSEnumerator   *themeEnum      = [subpaths objectEnumerator];
@@ -80,7 +80,6 @@
 
         [tempThemesList addObjectsFromArray:subpaths];
     }
-    [pool release];
 
     themeCount = [tempThemesList count];
     [themes release]; themes = [tempThemesList retain];  // sync cleaned themes list to global variable
