@@ -13,7 +13,7 @@ Version 0.53 (4/  /2004)
 - Added hourly level preferences for message history
 - Added custom hyperlink insertion and editing
 - Added the ability to add messages sent to offline contacts as alerts
-- Added the new WebKit Message View, full with preferences. There are seven built-in styles to choose from, including two resembling the old message view (Retro and Simple). Custom text and background colors (both incoming and outgoing) are not supported yet. For the style designers out there check this forum thread by Evan: http://www.funmac.com/showthread.php?t=6519. Here is a list of the built-in styles:
+- Added the new WebKit Message View along with preferences. There are seven built-in styles to choose from, including two resembling the old message view (Retro and Simple). Custom text and background colors (both incoming and outgoing) are not supported yet but will be. If you are interested in designing styles, please read this forum thread by Evan: http://www.funmac.com/showthread.php?t=6519. The current built-in styles are:
     Minimal by pss from #adium
     Mockie by Jorge Salvador Caffarena (aka eevyl)
     Retro by Synotic
@@ -21,7 +21,7 @@ Version 0.53 (4/  /2004)
     Simple by Jorge Salvador Caffarena
     Smooth Operator by Brad Smith
     Synapse by Scott Meizner
-- Updated /music script to work with mp3 streams
+- Updated /music script to work with Internet streams
 - Improved the 'Add Contact' window
 - Improved appearance of source list gradients
 - Improved error handling for all services
@@ -30,7 +30,7 @@ Version 0.53 (4/  /2004)
 - Cleaned up alert interface in preparation for upcoming changes to 'Get Info' window.
 - Cleaned up address book integration advanced preferences
 - Cleaned up sound preferences
-- Cleaned up contact list name display format preferences - moved to the View menu
+- Cleaned up contact list name display format preferences (moved to the View menu)
 - Fixed several MSN crashes [libgaim]
 - Fixed a crash when arranging away messages
 - Fixed odd behavior and crashes in Alert window
@@ -41,10 +41,10 @@ Version 0.53 (4/  /2004)
 - Fixed an issue preventing the version checker from saying how old the current version is
 - Fixed cosmetic issue with away message menu
 - Fixed several memory leaks
-- Fixed a bug with japanese text in the webkit message view
+- Fixed a bug with Japanese and Chinese text in the webkit message view
+- Scripts, themes, and sounds can be put in all three Library/Application Support folders (Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0).
+- Scripts, themes, sounds in the Adium application bundle no longer override those in the Application Support folders.
 - Performance and launch time improvements
-- Themes and sounds can be put in more places now - specifically, all three Library/Application Support folders (Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0). You can already do this with scripts.
-- Scripts (and themes and sounds) in the Adium application bundle no longer override those in the Application Support folders.
 
 Version 0.52 (4/16/2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
