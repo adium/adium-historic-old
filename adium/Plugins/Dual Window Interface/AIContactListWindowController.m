@@ -299,14 +299,24 @@
         }
         
         //Adjust the Y Origin: Maintain the upper lefthand corner if possible
-        newFrame.origin.y = currentFrame.origin.y + currentFrame.size.height - newFrame.size.height;
-        //For configurations with the dock on the bottom, allow a "grace" region in which we allow the contact list to be in the extreme corner; otherwise, account for the dock in checking our positioning
-        if (((newFrame.origin.x < EDGE_CATCH_X) || (newFrame.origin.x+newFrame.size.width) > (screenFrame.size.width-EDGE_CATCH_X)) && (screenFrame.size.width == totalScreenFrame.size.width)) {
-            if (newFrame.origin.y < totalScreenFrame.origin.y)
-                newFrame.origin.y = totalScreenFrame.origin.y;
-        } else {
-            if (newFrame.origin.y < screenFrame.origin.y)
-                newFrame.origin.y = screenFrame.origin.y;   
+        BOOL useTotalScreenFrame = ((newFrame.origin.x < EDGE_CATCH_X) || (newFrame.origin.x+newFrame.size.width) > (screenFrame.size.width-EDGE_CATCH_X)) && (screenFrame.size.width == totalScreenFrame.size.width);
+        float screenOriginY;
+        
+        //Use the full screen if the x origin is along the edges and the dock is at the bottom; otherwise use the system-provided screen frame which does not include the dock and menubar
+        if (useTotalScreenFrame){
+            screenOriginY = totalScreenFrame.origin.y;
+        }else{
+            screenOriginY = screenFrame.origin.y;
+        }
+        //Only adjust the origin (bottom lefthand corner) if the contact list isn't currently resting on the origin
+        if (currentFrame.origin.y > screenOriginY){
+            newFrame.origin.y = currentFrame.origin.y + currentFrame.size.height - newFrame.size.height;
+            //keep it on screen
+            if (newFrame.origin.y < screenOriginY){
+                newFrame.origin.y = screenOriginY; 
+            }
+        }else{
+            newFrame.origin.y = currentFrame.origin.y;
         }
     }
 //    NSLog(@"%f %f %f %f",newFrame.origin.x,newFrame.origin.y,newFrame.size.width,newFrame.size.height);
@@ -317,22 +327,14 @@
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-//    NSRect	contactListFrame;
+    //    NSRect	contactListFrame;
     
     //Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
     if(savedFrame){
-        NSRect savedFrameRect = NSRectFromString(savedFrame);
-  //      savedFrameRect.origin.y -= savedFrameRect.size.height;
-//        if (borderless) {
- //       NSLog(@"Restoring window to:(%f,%f) %f by %f ; screen is ",savedFrameRect.origin.x,savedFrameRect.origin.y,savedFrameRect.size.width,savedFrameRect.size.height);
-//            [[self window] setFrameOrigin:savedFrameRect.origin];
-//        } else {
-            [[self window] setFrame:savedFrameRect display:YES];            
-//        }
-
+        [[self window] setFrame:NSRectFromString(savedFrame) display:YES];            
     }
-
+    
     //Remember the mininum size set for our list within interface builder
     minWindowSize = [[self window] minSize];
     
