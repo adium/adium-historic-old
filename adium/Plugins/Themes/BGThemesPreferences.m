@@ -31,7 +31,7 @@
     [nameField setObjectValue:@""];
     [createStatus setObjectValue:@""];
     [manageStatus setObjectValue:@"Double click a theme to open a preview."];
-    
+    [generatePreviewButton setEnabled:NO];
     [themesList setPlugin:themePlugin];
 }
 
@@ -46,6 +46,7 @@
     {
         [themePlugin createThemeNamed:[nameField objectValue] by:[authorField objectValue] version:[versionField objectValue]];
     }
+    [self configureControlDimming];
 }
 
 -(void)createDone

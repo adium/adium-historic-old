@@ -11,6 +11,10 @@
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
 #define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Themes"]
 
+@interface BGThemeManageView (PRIVATE)
+- (void)configureControlDimming;
+@end
+
 @implementation BGThemeManageView
 
 -(void)awakeFromNib
@@ -21,11 +25,13 @@
     [table setDoubleAction:@selector(showPreview:)];   
     [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
     [table reloadData];
+    [self configureControlDimming];
 }
 
 -(void)themesChanged:(NSNotification *)notification
 {
     [self buildThemesList];
+    [self configureControlDimming];
 }
 
 -(void)buildThemesList
@@ -98,6 +104,7 @@
 		[[NSFileManager defaultManager] removeFileAtPath:selectedThemePath handler:self];
 		[self buildThemesList];
 		[table reloadData];
+                [self configureControlDimming];
 	}
 }
 
@@ -105,12 +112,12 @@
 {
     if([themes count] == 0)
     {
-        NSRunAlertPanel(@"No themes present",@"To apply a theme please install one and select it first.",@"Return",nil,nil);
+        NSRunAlertPanel(@"No themes present",@"To apply a theme please install one and select it first.",@"OK",nil,nil);
     }
     else
     {  
         // pass the plugin the selected theme's name and it will go from there
-        [themesPlugin createThemeNamed:@"Last Theme Used" by:@"Adium" version:@"1.0"];
+        [themesPlugin createThemeNamed:@"Last Theme Used" by:@"Adium" version:@""];
         [themesPlugin applyTheme:[self selectedTheme]];
     }
 }
@@ -120,6 +127,19 @@
     themesPlugin = newPlugin;
 }
 
-#warning Controls should dim (setEnabled:NO) when no theme is selected.
+// -------- private -------------
+
+// Enable/disable controls depending on presence of themes
+- (void)configureControlDimming
+{
+    if ([themes count] == 0) { // themes aren't present
+        [removeButton setEnabled:NO];
+        [applyButton setEnabled:NO];
+    }
+    else {
+        [removeButton setEnabled:YES];
+        [applyButton setEnabled:YES];
+    }
+}
 
 @end
