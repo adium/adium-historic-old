@@ -72,7 +72,6 @@
 - (NSString *)accountID; 		//Specific to THIS account plugin, and the user's account name
 - (NSString *)UID;			//The user's account name
 - (NSString *)serviceID;		//The service ID (shared by any account code accessing this service)
-- (NSString *)UIDAndServiceID; 		//ServiceID.UID
 - (NSString *)accountDescription;	//Return a readable description of this account's username
 
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
