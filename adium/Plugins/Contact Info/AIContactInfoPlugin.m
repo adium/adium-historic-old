@@ -22,7 +22,7 @@
 
     //Install the 'view profile' menu item
     viewContactInfoMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Info" target:self action:@selector(showContactInfo:) keyEquivalent:@"I"];
-    [[owner menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Action];
+    [[owner menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Manage];
 
     //Add our get info contextual menu item
     getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Info" target:self action:@selector(showContextContactInfo:) keyEquivalent:@""];
