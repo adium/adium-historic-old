@@ -212,11 +212,18 @@
 	selectedObject = [[adium contactController] selectedListObject];
 
 	if(selectedObject != nil) {
-		if([selectedObject isKindOfClass:[AIListGroup class]])
+		if([selectedObject isKindOfClass:[AIListGroup class]]){
 			group = (AIListGroup*)selectedObject;
-		else
+		}else{
 			group = [selectedObject containingGroup];
-		[popUp_targetGroup selectItemWithRepresentedObject:group];			
+		}
+		
+		if(group){
+			[popUp_targetGroup selectItemWithRepresentedObject:group];			
+		}else if([popUp_targetGroup numberOfItems] > 0){
+			[popUp_targetGroup selectItemAtIndex:0];
+		}
+		
 	}
 }
 
