@@ -1149,6 +1149,19 @@
 	NSArray *tempArray;
 	dictionaryEnumerator = [arrangeByGroupCache objectEnumerator];
 	
+	// Pre-process the controller list to use as many existing windows as possible
+	// This should be made smarter in the future
+	while( splitArray = [dictionaryEnumerator nextObject] ) {
+		tempArray = [splitArray objectAtIndex:0];
+		if( [[arrangeByGroupWindowList allValues] indexOfObject:[tempArray objectAtIndex:1]] == NSNotFound )
+			[arrangeByGroupWindowList
+				setObject:[tempArray objectAtIndex:1]
+				   forKey:[[[[[[tempArray objectAtIndex:0] messageViewController] chat] listObject] containingGroup] uniqueObjectID]];
+		
+	}
+	
+	dictionaryEnumerator = [arrangeByGroupCache objectEnumerator];
+	
 	// If we split into more than one group or groups are spread among multiple windows, create the windows with the appropriate tabs
 	if( shouldSplit || ([arrangeByGroupCache count] > [messageWindowControllerArray count]) ) {
 				
@@ -1156,14 +1169,18 @@
 			
 			arrayEnumerator = [splitArray objectEnumerator];
 			tabViewItem = [[arrayEnumerator nextObject] objectAtIndex:0];
-			
-			[self _transferMessageTabContainer:tabViewItem toWindow:nil];
-			controller = [self _messageWindowForContainer:tabViewItem];
-			
-			[arrangeByGroupWindowList
-				setObject:controller
-				   forKey:[[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID]];
+			listGroupID = [[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID];
 
+			// This MAY return nil, but that's ok: it means we need to open in a new window anyhow
+			controller = [arrangeByGroupWindowList objectForKey:listGroupID];
+			[self _transferMessageTabContainer:tabViewItem toWindow:controller];
+
+			if( controller == nil ) {
+				controller = [self _messageWindowForContainer:tabViewItem];
+				[arrangeByGroupWindowList
+				setObject:controller
+				   forKey:[[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID]];				
+			}
 			
 			while( tempArray = [arrayEnumerator nextObject] ) {
 				tabViewItem = [tempArray objectAtIndex:0];
