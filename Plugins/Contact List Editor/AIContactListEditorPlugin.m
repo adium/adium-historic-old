@@ -106,7 +106,7 @@
 //Prompt for a new contact
 - (IBAction)addContact:(id)sender
 {
-	[AINewContactWindowController promptForNewContactOnWindow:nil name:nil serviceID:nil];
+	[AINewContactWindowController promptForNewContactOnWindow:nil name:nil service:nil];
 }
 
 //Prompt for a new contact with the current tab's name
@@ -115,7 +115,7 @@
 	AIListContact *listContact = [[adium menuController] contactualMenuContact];
 	[AINewContactWindowController promptForNewContactOnWindow:nil
 														 name:[listContact UID] 
-													serviceID:[listContact serviceID]];
+													  service:[listContact service]];
 }
 
 - (void)addContactRequest:(NSNotification *)notification
@@ -124,7 +124,7 @@
 	if (userInfo){
 		[AINewContactWindowController promptForNewContactOnWindow:nil
 															 name:[userInfo objectForKey:@"UID"]
-														serviceID:[userInfo objectForKey:@"serviceID"]];
+														  service:[userInfo objectForKey:@"service"]];
 	}
 }
 
