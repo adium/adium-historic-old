@@ -77,7 +77,8 @@
 
     //Store the date and message
     if(!inDate){
-        date = [[NSDate date] retain];
+		// dchoby98: I removed this to allow status messages without timestamps (for message history)
+        //date = [[NSDate date] retain];
     }else{
         date = [inDate retain];
     }
