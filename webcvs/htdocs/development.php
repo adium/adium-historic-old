@@ -85,7 +85,7 @@
 </p>
                     <p>Requirements</p>
                     <ul>
-                        <li><a href="http://www.apple.com/xcode">XCode</a> (Available with a free account from Apple)</li>
+                        <li><a href="http://www.apple.com/xcode">XCode 1.5</a> (Available with a free account from Apple)</li>
                         <li><a href="http://www.apple.com/macosx">Mac OS X 10.3</a></li>
                     </ul>
                     <p>Instructions</p>
