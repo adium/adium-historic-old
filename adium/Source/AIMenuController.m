@@ -187,11 +187,11 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     //Remove the item
     [targetMenu removeItem:targetItem];
 
-    //Remove any double dividers
-    for(loop = 0;loop < [targetMenu numberOfItems]-1;loop++){
-        if([[targetMenu itemAtIndex:loop] isSeparatorItem] && [[targetMenu itemAtIndex:loop+1] isSeparatorItem]){
+    //Remove any double dividers (And dividers at the bottom)
+    for(loop = 0;loop < [targetMenu numberOfItems];loop++){
+        if([[targetMenu itemAtIndex:loop] isSeparatorItem] && (loop == [targetMenu numberOfItems]-1 || [[targetMenu itemAtIndex:loop+1] isSeparatorItem])){
             [targetMenu removeItemAtIndex:loop];
-            loop--;//research the location
+            loop--;//re-search the location
         }
     }
 }
