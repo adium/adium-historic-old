@@ -126,6 +126,7 @@
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -304,7 +305,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		29B97327FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -502,7 +502,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		40AC0EE703B5BEAF00A80202 = {
 			isa = PBXBundleReference;
@@ -798,7 +797,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		4B28907C03C1D17500A8010A = {
 			isa = PBXBundleReference;
@@ -998,10 +996,50 @@
 			settings = {
 			};
 		};
+		4B53714903CEF16D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITextProfilePreferences.h;
+			path = "Plugins/Text Profiles/AITextProfilePreferences.h";
+			refType = 4;
+		};
+		4B53714A03CEF16D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITextProfilePreferences.m;
+			path = "Plugins/Text Profiles/AITextProfilePreferences.m";
+			refType = 4;
+		};
+		4B53714B03CEF16D00A8010A = {
+			fileRef = 4B53714903CEF16D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B53714C03CEF16D00A8010A = {
+			fileRef = 4B53714A03CEF16D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B53714D03CEF61200A8010A = {
+			isa = PBXFileReference;
+			name = TextProfilePrefs.nib;
+			path = "Plugins/Text Profiles/TextProfilePrefs.nib";
+			refType = 4;
+		};
+		4B53714E03CEF61200A8010A = {
+			fileRef = 4B53714D03CEF61200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B71CD4E03CBCA2600A8010A = {
 			children = (
 				4B71CD6303CBCB0300A8010A,
 				4B71CD5B03CBCAE200A8010A,
+				4B53714A03CEF16D00A8010A,
+				4B53714D03CEF61200A8010A,
 			);
 			isa = PBXGroup;
 			name = "Text Profiles";
@@ -1012,6 +1050,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B71CD5C03CBCAE200A8010A,
+				4B53714B03CEF16D00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1019,6 +1058,7 @@
 		4B71CD5003CBCA7E00A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B53714E03CEF61200A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1027,6 +1067,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B71CD5D03CBCAE200A8010A,
+				4B53714C03CEF16D00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1107,7 +1148,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		4B71CD5503CBCA7E00A8010A = {
 			isa = PBXBundleReference;
@@ -1179,6 +1219,7 @@
 		4B71CD6303CBCB0300A8010A = {
 			children = (
 				4B71CD5A03CBCAE200A8010A,
+				4B53714903CEF16D00A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -1674,7 +1715,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		4BED5A5A03C34F4800A8010A = {
 			isa = PBXBundleReference;
@@ -1887,7 +1927,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		9C8C7F9D03CBA08400267226 = {
 			isa = PBXBundleReference;
@@ -2148,7 +2187,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F501BB1403882A2901A8010A = {
 			isa = PBXBundleReference;
@@ -2441,7 +2479,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F50CD62903603C7201A8010A = {
 			isa = PBXBundleReference;
@@ -2535,7 +2572,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F50F252E03B0425301A80202 = {
 			isa = PBXTargetDependency;
@@ -2820,7 +2856,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F510B77403339F1C01A8010A = {
 			isa = PBXBundleReference;
@@ -3004,7 +3039,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F51DEFAF032633E301A8010A = {
 			isa = PBXBundleReference;
@@ -3208,7 +3242,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5370C9902D76F3B01A8010A = {
 			isa = PBXBundleReference;
@@ -3418,7 +3451,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9A0702CCED6401A8010A = {
 			isa = PBXFrameworkReference;
@@ -3549,7 +3581,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9A0F02CCED8B01A8010A = {
 			isa = PBXFrameworkReference;
@@ -3757,7 +3788,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9ACC02CD12CB01A8010A = {
 			isa = PBXBundleReference;
@@ -3926,7 +3956,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53EA2CE02C803C101A8010A = {
 			isa = PBXBundleReference;
@@ -5162,7 +5191,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F569E39202CA88C701A8010A = {
 			isa = PBXBundleReference;
@@ -7731,7 +7759,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F59F9A8A032BE6B101A8010A = {
 			isa = PBXBundleReference;
@@ -7850,7 +7877,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5A01D8C0379813301A8010A = {
 			isa = PBXBundleReference;
@@ -8032,7 +8058,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5AAD090039BA10901A8010A = {
 			isa = PBXBundleReference;
@@ -8221,7 +8246,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5B53FC70333AFB501A8010A = {
 			isa = PBXBundleReference;
@@ -8396,7 +8420,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5BD46CF02D0789901A8010A = {
 			isa = PBXBundleReference;
@@ -8686,7 +8709,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5D2FB7D03B6643B01A8010A = {
 			isa = PBXBundleReference;
