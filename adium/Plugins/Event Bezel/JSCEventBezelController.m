@@ -124,6 +124,8 @@ withMessage:(NSString *)message
         if ([NSApp isHidden]) {
             [bezelWindow setAppWasHidden:YES];
             [NSApp unhideWithoutActivation];
+        } else {
+            [bezelWindow setAppWasHidden:NO];
         }
         
         [[self window] setFrame: bezelFrame display:NO];

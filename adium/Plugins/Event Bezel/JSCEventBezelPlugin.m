@@ -183,9 +183,7 @@
         || ([[owner accountController] propertyForKey:@"AwayMessage" account:nil] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
     
     if (contactEnabled && groupEnabled && showIfHidden && showIfAway){
-        BOOL wasHidden = NO;
         if ([NSApp isHidden]) {
-            wasHidden = YES;
             [NSApp unhideWithoutActivation];
         }
         
