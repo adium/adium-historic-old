@@ -54,6 +54,7 @@
 - (NSString *)unknownGroupName;
 - (NSArray *)contactStatusFlags;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError;
+- (BOOL)useAliasAsStatusMessage;
 
 	//AIAccount_Files
 	//Instructs the account to accept a file transfer request
