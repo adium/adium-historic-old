@@ -200,7 +200,9 @@
 
     while(currentLocation != NSNotFound && currentLocation < [messageString length]){
         //Find the next occurence of a suspected emoticon
-        currentLocation = [messageString rangeOfCharacterFromSet:emoticonStartCharacterSet options:0 range:NSMakeRange(currentLocation, [messageString length] - currentLocation)].location;
+        currentLocation = [messageString rangeOfCharacterFromSet:emoticonStartCharacterSet
+														 options:0 
+														   range:NSMakeRange(currentLocation, [messageString length] - currentLocation)].location;
         if(currentLocation != NSNotFound){
             unichar         currentCharacter = [messageString characterAtIndex:currentLocation];
             NSString        *currentCharacterString = [NSString stringWithFormat:@"%C", currentCharacter];
@@ -226,11 +228,14 @@
                                     NSMutableAttributedString   *replacement = [emoticon attributedStringWithTextEquivalent:text];
                                     
                                     //grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
-                                    [replacement addAttributes:[inMessage attributesAtIndex:currentLocation effectiveRange:nil] range:NSMakeRange(0,1)];
+                                    [replacement addAttributes:[inMessage attributesAtIndex:currentLocation 
+																			 effectiveRange:nil] 
+														 range:NSMakeRange(0,1)];
                                     
                                     //insert the emoticon
                                     if(!newMessage) newMessage = [[inMessage mutableCopy] autorelease];
-                                    [newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength) withAttributedString:replacement];
+                                    [newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength)
+													withAttributedString:replacement];
                                     
                                     //Update where we are in the original and replacement messages
                                     replacementCount += textLength-1;
