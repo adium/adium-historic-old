@@ -2755,7 +2755,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#Versions\ncd \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework\"\nif ([ -e Versions/Current ]); then\n\trm -rf Versions/Current\nfi\n\ncd Versions\nln -sf $FRAMEWORK_VERSION Current\ncd \"$OLDPWD\"\n\n#Root\nln -sf Versions/Current/Headers   Headers\nln -sf Versions/Current/Libgaim   Libgaim\nln -sf Versions/Current/Resources Resources\n";
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Libgaim ]); then\n\tln -sf Versions/Current/Libgaim   Libgaim\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
 		};
 		344EE9210574504B000F342B = {
 			children = (
@@ -11298,7 +11298,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\nif ([ -e Versions/Current ]); then\n\trm -rf Versions/Current\nfi\n\ncd Versions\nln -sf $FRAMEWORK_VERSION Current\ncd \"$OLDPWD\"\n\n#Root\nln -sf Versions/Current/Headers   Headers\nln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nln -sf Versions/Current/Resources Resources\n";
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
 		};
 		34EF54A107CE8E4700A685F1 = {
 			isa = PBXFileReference;
