@@ -135,6 +135,8 @@ BOOL pantherOrLater;
     if (buddyIconLabelColor) {
         [buddyIconLabelColor set];
         [NSBezierPath fillRect:buddyIconLabelRect];
+        [[NSColor whiteColor] set];
+        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
 	
 	if(pantherOrLater) {
             NSSize      shadowSize;
