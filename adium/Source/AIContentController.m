@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.43 2004/01/13 20:37:37 evands Exp $
+// $Id: AIContentController.m,v 1.44 2004/01/14 01:24:32 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -349,14 +349,13 @@
 		//Add the content to the chat
 		[chat addContentObject:inObject];
 		
+		//Content object added
+		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 		//If the chat didn't have content yet, open it
 		if(!chatHadContent){
 			[[owner interfaceController] openChat:chat]; 
 		}
-
-		//Content object added
-		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat
-												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 }
 
