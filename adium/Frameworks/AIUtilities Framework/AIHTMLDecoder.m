@@ -28,6 +28,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (NSDictionary *)parseArguments:(NSString *)arguments;
 + (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
++ (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 @end
 
 @implementation AIHTMLDecoder
@@ -245,12 +246,11 @@ int HTMLEquivalentForFontSize(int fontSize)
 
                     //LINK
                     }else if([chunkString caseInsensitiveCompare:@"A"] == 0){
-                        [textAttributes setLinkURL:@"http://www.adiumx.com"];
                         [textAttributes setUnderline:YES];
                         [textAttributes setTextColor:[NSColor blueColor]];
-
-                        //Ignore any arguments (for now)
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+                            [self processLinkTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the linktag's contents
+                        }
 
                     }else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
                         [textAttributes setLinkURL:nil];
@@ -416,7 +416,19 @@ int HTMLEquivalentForFontSize(int fontSize)
             [textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
         }
     }
+}
 
++ (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+    NSEnumerator 	*enumerator;
+    NSString		*arg;
+
+    enumerator = [[inArgs allKeys] objectEnumerator];
+    while((arg = [enumerator nextObject])){
+        if([arg caseInsensitiveCompare:@"HREF"] == 0){
+            [textAttributes setLinkURL:[inArgs objectForKey:arg]];
+        }
+    }
 }
 
 
