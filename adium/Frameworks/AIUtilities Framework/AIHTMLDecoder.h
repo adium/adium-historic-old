@@ -21,7 +21,7 @@
 
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage;
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString;
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags includingColorTags:(BOOL)includeColorTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath attachmentsAsText:(BOOL)attachmentsAsText simpleTagsOnly:(BOOL)simpleOnly;
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags includingColorTags:(BOOL)includeColorTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath attachmentsAsText:(BOOL)attachmentsAsText attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending simpleTagsOnly:(BOOL)simpleOnly;
 
 + (NSDictionary *)parseArguments:(NSString *)arguments;
 

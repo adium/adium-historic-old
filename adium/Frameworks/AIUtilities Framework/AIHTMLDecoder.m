@@ -131,11 +131,11 @@ DeclareString(TagCharStartString);
     if(encodeFullString){
         return([self encodeHTML:inMessage headers:YES fontTags:YES includingColorTags:YES closeFontTags:YES
 					  styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil 
-			  attachmentsAsText:YES simpleTagsOnly:NO]);
+			  attachmentsAsText:YES attachmentImagesOnlyForSending:NO simpleTagsOnly:NO]);
     }else{
         return([self encodeHTML:inMessage headers:NO fontTags:NO includingColorTags:NO closeFontTags:NO 
 					  styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO imagesPath:nil
-			  attachmentsAsText:YES simpleTagsOnly:NO]);
+			  attachmentsAsText:YES attachmentImagesOnlyForSending:NO simpleTagsOnly:NO]);
     }
 }
 
@@ -146,6 +146,8 @@ DeclareString(TagCharStartString);
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
+// attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
+// attachmentImagesOnlyForSending: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
 // simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
@@ -157,6 +159,7 @@ DeclareString(TagCharStartString);
 		  encodeNonASCII:(BOOL)encodeNonASCII 
 			  imagesPath:(NSString *)imagesPath
 	   attachmentsAsText:(BOOL)attachmentsAsText
+attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		  simpleTagsOnly:(BOOL)simpleOnly
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
@@ -309,40 +312,57 @@ DeclareString(TagCharStartString);
         //Image Attachments
 		if([attributes objectForKey:NSAttachmentAttributeName]){
 			int i;
-			for(i = 0; i < searchRange.length;i++){ //Each attachment takes a character.. they are grouped by the attribute scan
+			for(i = 0; ((i < searchRange.length) && (chunk)); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
 				AITextAttachmentExtension *attachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 				
-				if(attachment && [attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
-					NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
-					NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
-					NSString *fileSafeChunk = [[attachment string] safeFilenameString];
-					NSString *shortFileName;
-					NSString *fileName;
-					NSString *fileURL;
-                                        
-					shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
-					fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
-					fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
-					//create the images directory if it doesn't exist
-					[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
+				if (attachment){
 					
-					if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
-						[string appendString:@"<img src=\"%@\" alt=\"%@\">",fileURL,[attachment string]]];
-						[chunk release]; chunk = nil;
-					}
-					else
-						NSLog(@"failed to write log image");
-					
-				}else if(!attachmentsAsText && attachment && [attachment respondsToSelector:@selector(imagePath)]){
-					if([attachment imagePath]){
+					if([attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
+						//We have an NSImage but no file at which to point the img tag
+						
+						NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
+						NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
+						NSString *fileSafeChunk = [[attachment string] safeFilenameString];
+						NSString *shortFileName;
+						NSString *fileName;
+						NSString *fileURL;
+						
+						shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
+						fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
+						fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
+						//create the images directory if it doesn't exist
+						[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
+						
+						if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
+							[string appendFormat:@"<img src=\"%@\" alt=\"%@\">",fileURL,[attachment string]];
+							
+							[chunk release]; chunk = nil;
+						}
+						else
+							NSLog(@"failed to write log image");
+						
+					}else if(!attachmentsAsText &&
+							 [attachment respondsToSelector:@selector(imagePath)] &&
+							 [attachment imagePath] &&
+							 (!attachmentImagesOnlyForSending || ![attachment shouldAlwaysSendAsText])){
+						//We have a file and should link to it with an img tag
+						
 						[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
 							[attachment imagePath], [attachment string],
 							(int)[attachment imageSize].width, (int)[attachment imageSize].height];
+						
+						[chunk release]; chunk = nil;
+					}else{
+						//We should replace the attachment with its textual equivalent if possible
+						NSString	*attachmentString = [attachment string];
+						if (attachmentString){
+							[string appendString:attachmentString];
+						}
+						
 						[chunk release]; chunk = nil;
 					}
 				}
-			}
-			
+			}			
 		}
 		
        
