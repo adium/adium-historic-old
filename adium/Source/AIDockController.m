@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.58 2004/06/08 21:15:58 evands Exp $
+// $Id: AIDockController.m,v 1.59 2004/06/13 21:06:37 adamiser Exp $
 
 #import "AIDockController.h"
 
@@ -226,7 +226,7 @@
 				if(image) [tempIconCache setObject:image forKey:imagePath];
 			}
 			
-			if(image){
+			if(image && [image isValid] && [image size].width != 0 && [image size].height != 0){
 				[imageArray addObject:image];
 			}else{
 				NSLog(@"Failed to load image %@",imagePath);
@@ -254,7 +254,7 @@
 		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
 		
 		//Create the state
-		if(image){
+		if(image && [image isValid] && [image size].width != 0 && [image size].height != 0){
 			iconState = [[AIIconState alloc] initWithImage:image overlay:overlay];
 		}else{
 			NSLog(@"Invalid static icon state (%@)",imagePath);
