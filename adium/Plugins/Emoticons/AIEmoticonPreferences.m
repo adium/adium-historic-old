@@ -153,6 +153,7 @@
     [[[table_packList tableColumns] objectAtIndex:1] setIdentifier:@"packname"];
 
     [table_packList setDataSource:self];
+    [table_curEmoticonTexts setDataSource:self];
     
     //Emoticon Packs
     [plugin allEmoticonPacks:packs];
@@ -252,6 +253,7 @@
             //[text_emoticonPack  setStringValue:[NSString stringWithFormat:@"from pack %@", [emoPack title]]];
             [text_emoticonName  setStringValue:[NSString stringWithFormat:@"\"%@\" from pack \"%@\"", [emoPack emoticonName:emoID], [emoPack title]]];
             [checkBox_enableEmoticon setIntValue:[emoPack emoticonEnabled:emoID]];
+            [table_curEmoticonTexts reloadData];
         }else{
             NSLog (@"Emoticon Dict or Pack NIL");
             [self enableIndividualEmoticonControls:FALSE];
@@ -324,7 +326,20 @@
     {
         return(([curEmoticons count] / [tableView numberOfColumns]) + 1);	// Should check remainder, I am assuming there is one and adding one.
     }
-    else
+    else if (tableView == table_curEmoticonTexts)
+    {
+        //Checks if there's a selected emoticon to look at, then finds out how many represented texts there are from that
+        NSMutableDictionary	*emoDict = [curEmoticons objectAtIndex:selectedEmoticon];
+        if (emoticonIsSelected && emoDict) {
+            id			emoID = [emoDict objectForKey:@"Emoticon"];
+            AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
+
+            return ([[emoPack emoticonAllTextRepresentationsAsArray:emoID] count] - 1);
+        }else{
+            return nil;
+        }
+    }
+else
     {
         NSLog (@"Emoticon prefs Rowcount request: Unrecognized table %@", tableView);
         return 0;
@@ -348,6 +363,18 @@
         
         if (index < [curEmoticons count])
             return [[curEmoticons objectAtIndex:index] objectForKey:@"Image"];
+        else
+            return nil;
+    }
+    else if (tableView == table_curEmoticonTexts)
+    {
+        NSMutableDictionary	*emoDict = [curEmoticons objectAtIndex:selectedEmoticon];
+        if (emoticonIsSelected && emoDict) {
+            id			emoID = [emoDict objectForKey:@"Emoticon"];
+            AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
+
+            return [[emoPack emoticonAllTextRepresentationsAsArray:emoID] objectAtIndex:row];
+        }
         else
             return nil;
     }
