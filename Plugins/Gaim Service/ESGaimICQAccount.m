@@ -59,63 +59,76 @@
 
 #pragma mark Contact updates
 /*!
- * @brief Get the ICQ status message when going away and coming back
- *
  * We really should have a buddy-status-message signal from libgaim, but I can't figure out where to
  * add it to the libgaim code.... so this ghetto fix will do for now, pending the status rewrite for gaim
  * when we'll revisit this.  Only problem with this method is that an ICQ user going from one away state
  * to another isn't going to get updated properly... so this should be fixed eventually. -eds
  */
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
-{
-	GaimBuddy	*buddy;
-	const char	*uidUTF8String = [[theContact UID] UTF8String];
-	
-	if ((gaim_account_is_connected(account)) &&
-		(buddy = gaim_find_buddy(account, uidUTF8String))) {
-		
-		NSString		*statusName = nil;
-		NSString		*statusMessage = nil;
-		AIStatusType	statusType = (newAway ? AIAwayStatusType : AIAvailableStatusType);
 
-		/* ((buddy->uc & 0xffff0000) >> 16) is nicely undocumented magic from oscar.c.  It turns out that real
-		 * men don't document their code. */
-		int state = ((buddy->uc & 0xffff0000) >> 16);
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
+{
+	NSAttributedString	*statusMessage;
+	
+	statusMessage = [super statusMessageForGaimBuddy:b];
+
+	//If we don't get a status message from super, try to generate a generic one based on the state
+	if(!statusMessage || ![statusMessage length]){
+					
+		/* ((b->uc & 0xffff0000) >> 16) is nicely undocumented magic from oscar.c.  It turns out that real
+		* men don't document their code. */
+		int			state = ((b->uc & 0xffff0000) >> 16);
+		NSString	*statusMessageString = nil;
 		
 		if (state & AIM_ICQ_STATE_CHAT){
-			statusName = STATUS_NAME_FREE_FOR_CHAT;
-			statusMessage = STATUS_DESCRIPTION_FREE_FOR_CHAT;
-			statusType = AIAvailableStatusType;
-	
+			statusMessageString = STATUS_DESCRIPTION_FREE_FOR_CHAT;
+			
 		}else if (state & AIM_ICQ_STATE_DND){
-			statusName = STATUS_NAME_DND;
-			statusMessage = STATUS_DESCRIPTION_DND;
-
+			statusMessageString = STATUS_DESCRIPTION_DND;
+			
 		}else if (state & AIM_ICQ_STATE_OUT){
-			statusName = STATUS_NAME_NOT_AVAILABLE;
-			statusMessage = STATUS_DESCRIPTION_NOT_AVAILABLE;
+			statusMessageString = STATUS_DESCRIPTION_NOT_AVAILABLE;
 			
 		}else if (state & AIM_ICQ_STATE_BUSY){
-			statusName = STATUS_NAME_OCCUPIED;
-			statusMessage = STATUS_DESCRIPTION_OCCUPIED;
+			statusMessageString = STATUS_DESCRIPTION_OCCUPIED;
 			
 		}else if (state & AIM_ICQ_STATE_INVISIBLE){
-			statusName = STATUS_NAME_INVISIBLE;
-			statusMessage = STATUS_DESCRIPTION_INVISIBLE;
+			statusMessageString = STATUS_DESCRIPTION_INVISIBLE;
 		}
-				
 		
-		[theContact setStatusWithName:statusName
-						   statusType:statusType
-							   notify:NotifyLater];
-		[theContact setStatusMessage:(statusMessage ?
-									  [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
-									  nil)
-							  notify:NotifyLater];
-		
-		//Apply the change
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		if(statusMessageString){
+			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
+															 attributes:nil] autorelease];
+		}
 	}
+
+	return statusMessage;
+}
+
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
+{
+	NSString		*statusName = nil;
+	
+	/* ((b->uc & 0xffff0000) >> 16) is nicely undocumented magic from oscar.c.  It turns out that real
+		* men don't document their code. */
+	int state = ((b->uc & 0xffff0000) >> 16);
+	
+	if (state & AIM_ICQ_STATE_CHAT){
+		statusName = STATUS_NAME_FREE_FOR_CHAT;
+		
+	}else if (state & AIM_ICQ_STATE_DND){
+		statusName = STATUS_NAME_DND;
+		
+	}else if (state & AIM_ICQ_STATE_OUT){
+		statusName = STATUS_NAME_NOT_AVAILABLE;
+		
+	}else if (state & AIM_ICQ_STATE_BUSY){
+		statusName = STATUS_NAME_OCCUPIED;
+		
+	}else if (state & AIM_ICQ_STATE_INVISIBLE){
+		statusName = STATUS_NAME_INVISIBLE;
+	}
+				
+	return statusName;
 }
 
 /*!

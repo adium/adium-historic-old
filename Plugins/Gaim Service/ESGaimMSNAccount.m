@@ -297,57 +297,62 @@
 	[super updateContact:theContact forEvent:event];
 }
 
-- (void)updateStatusMessage:(AIListContact *)theContact
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
-	GaimBuddy	*buddy;
-	const char	*uidUTF8String = [[theContact UID] UTF8String];
-
-	if ((gaim_account_is_connected(account)) &&
-		(buddy = gaim_find_buddy(account, uidUTF8String))) {
-
-		//Retrieve the current status string
-		NSString		*statusName = nil;
-		NSString		*statusMessage = nil;
-		AIStatusType	statusType = ((buddy->uc & UC_UNAVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);		
-		MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(buddy->uc);
-
-		switch(gaimMsnAwayType){
-			case MSN_BRB:
-				statusName = STATUS_NAME_BRB;
-				statusMessage = STATUS_DESCRIPTION_BRB;
-				break;
-			case MSN_BUSY:
-				statusName = STATUS_NAME_BUSY;
-				statusMessage = STATUS_DESCRIPTION_BUSY;
-				break;
-				
-			case MSN_PHONE:
-				statusName = STATUS_NAME_PHONE;
-				statusMessage = STATUS_DESCRIPTION_PHONE;
-				break;
-				
-			case MSN_LUNCH:
-				statusName = STATUS_NAME_LUNCH;
-				statusMessage = STATUS_DESCRIPTION_LUNCH;
-				break;
-		}
-		
-		[theContact setStatusWithName:statusName
-						   statusType:statusType
-							   notify:NotifyLater];
-		[theContact setStatusMessage:(statusMessage ?
-									  [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
-									  nil)
-							  notify:NotifyLater];
-		
-		//Apply the change
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	NSAttributedString  *statusMessage = nil;
+	NSString			*statusMessageString = nil;
+	
+	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
+	
+	switch(gaimMsnAwayType){
+		case MSN_BRB:
+			statusMessageString = STATUS_DESCRIPTION_BRB;
+			break;
+		case MSN_BUSY:
+			statusMessageString = STATUS_DESCRIPTION_BUSY;
+			break;
+			
+		case MSN_PHONE:
+			statusMessageString = STATUS_DESCRIPTION_PHONE;
+			break;
+			
+		case MSN_LUNCH:
+			statusMessageString = STATUS_DESCRIPTION_LUNCH;
+			break;
 	}
+	
+	if (statusMessageString && [statusMessageString length]){
+		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
+														 attributes:nil] autorelease];
+	}
+	
+	return (statusMessage);
 }
 
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
 {
-	[self updateStatusMessage:theContact];
+	NSString			*statusName = nil;
+	
+	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
+	
+	switch(gaimMsnAwayType){
+		case MSN_BRB:
+			statusName = STATUS_NAME_BRB;
+			break;
+		case MSN_BUSY:
+			statusName = STATUS_NAME_BUSY;
+			break;
+			
+		case MSN_PHONE:
+			statusName = STATUS_NAME_PHONE;
+			break;
+			
+		case MSN_LUNCH:
+			statusName = STATUS_NAME_LUNCH;
+			break;
+	}
+	
+	return (statusName);
 }
 
 /*!

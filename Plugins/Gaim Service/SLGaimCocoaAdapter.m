@@ -215,16 +215,12 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 
 	//If the node does not have ui_data yet, we need to create a contact and associate it
 	if (!theContact && buddy){
-		NSString	*name;
+		NSString	*UID;
 		GaimAccount	*account;
-		const char	*normalized;
+	
+		UID = [NSString stringWithUTF8String:gaim_normalize(buddy->account, buddy->name)];
 		
-		account = buddy->account;
-		normalized = gaim_normalize(account, buddy->name);
-//		GaimDebug(@"contactLookupfromBuddy: Normalized %s to %s",buddy->name,normalized);
-		name  = [NSString stringWithUTF8String:normalized];
-
-		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:name];
+		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:UID];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];

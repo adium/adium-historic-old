@@ -66,43 +66,14 @@
 	[super updateContact:theContact forEvent:event];
 }
 
-- (void)updateStatusMessage:(AIListContact *)theContact
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
-	if (gaim_account_is_connected(account)){
-		const char  *uidUTF8String = [[theContact UID] UTF8String];
-		GaimBuddy   *buddy;
-		
-		NSLog(@"%@: update %@ gives %x",self, theContact, gaim_find_buddy(account, uidUTF8String));
-	
-		if (buddy = gaim_find_buddy(account, uidUTF8String)){			
-			AIStatusType	statusType = ((buddy->uc & UC_UNAVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);
-			
-			[theContact setStatusWithName:nil
-							   statusType:statusType
-								   notify:NotifyLater];
-			[theContact setStatusMessage:[self statusMessageForContact:theContact]
-								  notify:NotifyLater];
-			
-			//Apply the change
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-		}
-	}
-}
+	NSAttributedString	*statusMessage = nil;
+	GaimConnection		*gc = b->account->gc;
+	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
 
-//Away and away return
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
-{
-	NSLog(@"update away");
-	[self updateStatusMessage:theContact];
-}
-
-- (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
-{
-	NSAttributedString		*statusMessage = nil;
-	GaimConnection			*gc = [self gaimAccount]->gc;
-		
 	struct mw_plugin_data	*pd = ((struct mw_plugin_data *)(gc->proto_data));
-	struct mwAwareIdBlock	t = { mwAware_USER, (char *)[[theContact UID] UTF8String], NULL };
+	struct mwAwareIdBlock	t = { mwAware_USER, (char *)normalized, NULL };
 	
 	const char				*statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);
 	NSString				*statusMessageString = (statusMessageText ? [NSString stringWithUTF8String:statusMessageText] : nil);
@@ -111,7 +82,10 @@
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 														 attributes:nil] autorelease];
 	}
-	NSLog(@"%@ stauts message is %@",theContact,statusMessage);
+
+	g_free(normalized);
+	
+	NSLog(@"%s status message is %@",b->name,statusMessage);
 	
 	return statusMessage;
 }
