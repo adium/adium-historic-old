@@ -174,7 +174,6 @@
 	[self closeWindow:nil];
 
 	//Put new accounts online by default
-#warning this doesnt work because accounts are cheesing UID changes, fix the account cheese rather than this code -ai
 	if(isNewAccount){
 		[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	}
