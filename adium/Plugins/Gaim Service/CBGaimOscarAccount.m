@@ -222,7 +222,6 @@ struct buddyinfo {
 					 userinfo->membersince;
 					 userinfo->capabilities;
 					 */
-					if (GAIM_DEBUG) NSLog(@"Got a miscellaneous update for %s",buddy->name);
 					
 					//Client
 					NSString *storedString = [theContact statusObjectForKey:@"Client"];
@@ -282,7 +281,7 @@ struct buddyinfo {
 					
 					if(client) {
 						//Set the client if necessary
-						if (storedString == nil || [client compare:storedString] != 0){
+						if (storedString == nil || ![client isEqualToString:storedString]){
 							[theContact setStatusObject:client forKey:@"Client" notify:NO];
 						}
 					} else {
