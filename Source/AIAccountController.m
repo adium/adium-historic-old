@@ -61,7 +61,7 @@
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
 	accountMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 	accountMenuPluginsArray = [[NSMutableArray alloc] init];
-	_cachedActiveServiceTypes = nil;
+	_cachedActiveServices = nil;
 
 	//Default account preferences
 	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
@@ -109,7 +109,7 @@
     [availableServiceDict release];
     [lastAccountIDToSendContent release];
 	
-	[_cachedActiveServiceTypes release]; _cachedActiveServiceTypes = nil;
+	[_cachedActiveServices release]; _cachedActiveServices = nil;
 }
 
 
@@ -132,18 +132,18 @@
 	enumerator = [accountList objectEnumerator];
 	while(accountDict = [enumerator nextObject]){
         AIAccount		*newAccount;
-        NSString		*serviceType;
+        AIService		*service;
 		NSString		*accountUID;
-		int				objectID;
+		int				accountNumber;
 		
 		//Fetch the account service, UID, and ID
-		serviceType = [accountDict objectForKey:ACCOUNT_TYPE];
+		service = [self serviceWithUniqueID:[accountDict objectForKey:ACCOUNT_TYPE]];
 		accountUID = [accountDict objectForKey:ACCOUNT_UID];
-		objectID = [[accountDict objectForKey:ACCOUNT_OBJECT_ID] intValue];
+		accountNumber = [[accountDict objectForKey:ACCOUNT_OBJECT_ID] intValue];
 		
         //Create the account and add it to our array
-        if(serviceType && [serviceType length] && accountUID && [accountUID length]){
-            if(newAccount = [self createAccountOfType:serviceType withUID:accountUID objectID:objectID]){
+        if(service && accountUID && [accountUID length]){
+			if(newAccount = [self createAccountWithService:service UID:accountUID accountNumber:accountNumber]){
                 [accountArray addObject:newAccount];
             }else{
 				[unloadableAccounts addObject:accountDict];
@@ -167,10 +167,10 @@
 	while(account = [enumerator nextObject]){
 		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
 		
-		[flatAccount setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
-		[flatAccount setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
-		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    		//Account UID
-		[flatAccount setObject:[account uniqueObjectID] forKey:ACCOUNT_OBJECT_ID];  //Account Object ID
+		[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
+		[flatAccount setObject:[[account service] serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
+		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    					//Account UID
+		[flatAccount setObject:[account internalObjectID] forKey:ACCOUNT_OBJECT_ID];  			//Account Object ID
 		
 		[flatAccounts addObject:flatAccount];
 	}
@@ -186,25 +186,21 @@
 }
 
 //Returns a new account of the specified type (Unique service plugin ID)
-- (AIAccount *)createAccountOfType:(NSString *)inType withUID:(NSString *)inUID objectID:(int)inObjectID
-{
-	id <AIServiceController>    serviceController;
+- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber
+{	
+	//Filter the UID
+	inUID = [service filterUID:inUID removeIgnoredCharacters:YES];
 	
 	//If no object ID is provided, use the next largest
-	if(!inObjectID){
-		inObjectID = [[[owner preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
-		[[owner preferenceController] setPreference:[NSNumber numberWithInt:inObjectID + 1]
+	if(!inAccountNumber){
+		inAccountNumber = [[[owner preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
+		[[owner preferenceController] setPreference:[NSNumber numberWithInt:inAccountNumber + 1]
 											 forKey:TOP_ACCOUNT_ID
 											  group:PREF_GROUP_ACCOUNTS];
 	}
 	
 	//Create the account
-    if(serviceController = [self serviceControllerWithIdentifier:inType]){
-        return([serviceController accountWithUID:[[serviceController handleServiceType] filterUID:inUID removeIgnoredCharacters:YES]
-										objectID:inObjectID]);
-    }else{
-        return(nil);
-    }
+	return([service accountWithUID:inUID accountNumber:inAccountNumber]);
 }
 
 
@@ -222,50 +218,58 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return([[availableServiceDict allValues] sortedArrayUsingFunction:_alphabeticalServiceSort context:nil]);
 }
 
-//Return the active service types (service types for which there is an account).  These are used for contact creation and determining if
+//Return the active services (services for which there is an account).  These are used for contact creation and determining if
 //the service of accounts and contacts should be presented to the user.
-- (NSArray *)activeServiceTypes
+- (NSArray *)activeServices
 {
-	if(!_cachedActiveServiceTypes){
+	if(!_cachedActiveServices){
 		NSMutableArray	*serviceArray = [NSMutableArray array];
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		AIAccount		*account;
 		
 		//Build an array of all currently used services
 		while(account = [enumerator nextObject]){
-			AIServiceType		*accountServiceType = [[account service] handleServiceType];
+			AIService	*accountService = [account service];
 			
 			//Prevent any service from going in twice
-			if (![serviceArray containsObject:accountServiceType]){
-				[serviceArray addObject:accountServiceType];
+			if(![serviceArray containsObject:accountService]){
+				[serviceArray addObject:accountService];
 			}
 		}
 		
 		//Sort
-		_cachedActiveServiceTypes = [[serviceArray sortedArrayUsingFunction:_alphabeticalServiceSort context:nil] retain];
+		_cachedActiveServices = [[serviceArray sortedArrayUsingFunction:_alphabeticalServiceSort context:nil] retain];
 	}
 	
-	return(_cachedActiveServiceTypes);
+	return(_cachedActiveServices);
 }
 
 //Returns the specified service controller
-- (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType
+- (AIService *)serviceWithUniqueID:(NSString *)identifier
 {
-    return([availableServiceDict objectForKey:inType]);
-}
-
-//Register service code
-- (void)registerService:(id <AIServiceController>)inService
-{
-    [availableServiceDict setObject:inService forKey:[inService identifier]];
-	
-	[availableServiceTypeDict setObject:[inService handleServiceType] forKey:[[inService handleServiceType] identifier]];
+	NSLog(@"availableServiceDict:%@",availableServiceDict);
+    return([availableServiceDict objectForKey:identifier]);
 }
 
 //Return the first AIServiceType with the specified serviceID
-- (AIServiceType *)firstServiceTypeWithServiceID:(NSString *)serviceID
+- (AIService *)firstServiceWithServiceID:(NSString *)serviceID
 {
-	return([availableServiceTypeDict objectForKey:serviceID]);
+	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
+	AIService		*service;
+	
+	while(service = [enumerator nextObject]){
+		if([[service serviceID] isEqualToString:serviceID]) break;
+	}
+	
+	return(service);
+}
+
+//Register service code
+- (void)registerService:(AIService *)inService
+{
+    [availableServiceDict setObject:inService forKey:[inService serviceCodeUniqueID]];
+	
+	[availableServiceTypeDict setObject:inService forKey:[inService serviceID]];
 }
 
 //Returns a menu of all services.
@@ -273,8 +277,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //- The menu item's represented objects are the service controllers they represent
 - (NSMenu *)menuOfServicesWithTarget:(id)target
 {	
-    NSEnumerator				*enumerator;
-    id <AIServiceController>	service;
+    NSEnumerator	*enumerator;
+    AIService		*service;
 	
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
@@ -283,12 +287,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     //Insert a menu item for each available service
 	enumerator = [[self availableServices] objectEnumerator];
 	while((service = [enumerator nextObject])){
-        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description]
+        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service longDescription]
 														target:target 
 														action:@selector(selectServiceType:) 
 												 keyEquivalent:@""] autorelease];
         [item setRepresentedObject:service];
-		[item setImage:[[service handleServiceType] menuImage]];
+		[item setImage:[AIServiceIcons serviceIconForService:service  type:AIServiceIconSmall direction:AIIconNormal]];
         [menu addItem:item];
     }
 	
@@ -304,42 +308,39 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Searches the account list for the specified account
-- (AIAccount *)accountWithObjectID:(NSString *)inID
+- (AIAccount *)accountWithAccountNumber:(int)accountNumber
 {
-    NSEnumerator	*enumerator;
+    NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
     
-    enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([inID isEqualToString:[account uniqueObjectID]]){
-            return(account);
-        }
+        if([account accountNumber] == accountNumber) break;
     }
     
-    return(nil);
+    return(account);
 }
 
 //Searches the account list for accounts with the specified service ID
-- (NSArray *)accountsWithServiceID:(NSString *)serviceID
+- (NSArray *)accountsWithService:(AIService *)service
 {
 	NSMutableArray	*array = [NSMutableArray array];
     NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
     
     while((account = [enumerator nextObject])){
-		if([serviceID isEqualToString:[account serviceID]]) [array addObject:account];
+		if([account service] == service) [array addObject:account];
     }
     
     return(array);
 }
 
-- (AIAccount *)firstAccountWithServiceID:(NSString *)serviceID
+- (AIAccount *)firstAccountWithService:(AIService *)service
 {
     NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
     
     while((account = [enumerator nextObject])){
-		if([serviceID isEqualToString:[account serviceID]]) break;
+		if([account service] == service) break;
     }
     
     return(account);
@@ -348,7 +349,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a new default account
 - (AIAccount *)defaultAccount
 {
-	return([self createAccountOfType:@"AIM-LIBGAIM" withUID:@"" objectID:0]);
+	return([self createAccountWithService:[self serviceWithUniqueID:@"libgaim-oscar-AIM"] UID:@"" accountNumber:0]);
 }
 
 
@@ -402,12 +403,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Switches the service of the specified account
-- (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService
+- (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(AIService *)inService
 {
     //Add an account with the new service
-	AIAccount	*newAccount = [self createAccountOfType:[inService identifier]
-												withUID:[inAccount UID]
-											   objectID:[[inAccount uniqueObjectID] intValue]];
+	AIAccount	*newAccount = [self createAccountWithService:inService
+														 UID:[inAccount UID]
+											   accountNumber:[inAccount accountNumber]];
     [self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount] save:NO];
     
     //Delete the old account
@@ -419,13 +420,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Change the UID of an existing account
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
 {
-	AIServiceType	*serviceType = [[inAccount service] handleServiceType];
-
 	//Add an account with the new UID
-	AIAccount	*newAccount = [self createAccountOfType:[[inAccount service] identifier]
-												withUID:[serviceType filterUID:inUID removeIgnoredCharacters:YES]
-											   objectID:[[inAccount uniqueObjectID] intValue]];
-	[newAccount setPreference:[serviceType filterUID:inUID removeIgnoredCharacters:NO]
+	AIAccount	*newAccount = [self createAccountWithService:[inAccount service]
+														 UID:inUID
+											   accountNumber:[inAccount accountNumber]];
+	[newAccount setPreference:[[inAccount service] filterUID:inUID removeIgnoredCharacters:NO]
 					   forKey:@"FormattedUID"
 						group:GROUP_ACCOUNT_STATUS];
 	
@@ -468,7 +467,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (void)accountListChanged:(NSNotification *)notification
 {
 	//Clear our cached active service types
-	[_cachedActiveServiceTypes release]; _cachedActiveServiceTypes = nil;
+	[_cachedActiveServices release]; _cachedActiveServices = nil;
 
 	// Perform a full rebuild rather than trying to figure out what is different.
 	[self rebuildAllAccountMenuItems];
@@ -478,33 +477,31 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 #pragma mark Preferred Source Accounts
 //Returns the preferred choice for sending content to the passed list object
 //When presenting the user with a list of accounts, this should be the one selected by default
-- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	NSString    *accountID;
 	AIAccount	*account;
 	
-    if(inObject){
+    if(inContact){
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
-        accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        if(accountID && (account = [self accountWithObjectID:accountID])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:inObject]){
+        int accountID = [[inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
+											   group:PREF_GROUP_PREFERRED_ACCOUNTS] intValue];
+        if(accountID && (account = [self accountWithAccountNumber:accountID])){
+            if([account availableForSendingContentType:inType toContact:inContact]){
                 return(account);
             }
         }
 		
 		//If inObject is an AIListContact return the account the object is on
-		if([inObject isKindOfClass:[AIListContact class]]){ 
-			if(account = [self accountWithObjectID:[(AIListContact *)inObject accountID]]){
-				if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:inObject]){
-					return(account);
-				}
+		if(account = [inContact account]){
+			if([account availableForSendingContentType:inType toContact:inContact]){
+				return(account);
 			}
 		}
 		
 		//Return the last account used to message someone on this service
-		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
-		if(lastAccountID && (account = [self accountWithObjectID:lastAccountID])){
-			if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
+		if(lastAccountID && (account = [self accountWithAccountNumber:[lastAccountID intValue]])){
+			if([account availableForSendingContentType:inType toContact:nil]){
 				return(account);
 			}
 		}
@@ -512,16 +509,16 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//First available account in our list of the correct service type
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
-			if([[account serviceID] isEqualToString:[inObject serviceID]] &&
-			   [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+			if([inContact service] == [account service] &&
+			   [account availableForSendingContentType:inType toContact:nil]){
 				return(account);
 			}
 		}
-	} else {
+	}else{
 		//First available account in our list
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
-			if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+			if([account availableForSendingContentType:inType toContact:nil]){
 				return(account);
 			}
 		}
@@ -531,47 +528,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return(nil);
 }
 
-//Returns a menu of all accounts.  Accounts not available for sending content are disabled.
-//- Selector called on account selection is selectAccount:
-//- The menu item's represented objects are the AIAccounts they represent
+//Returns a menu of all accounts returned by menuItemsForAccountsWithTarget
 - (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline
 {
+	NSMenu			*menu = [[NSMenu alloc] init];
 	NSEnumerator	*enumerator;
-	AIAccount		*account;
-	NSMenu			*menu;
+	NSMenuItem		*menuItem;
 	
-	//Prepare our menu
-	menu = [[NSMenu alloc] init];
-	[menu setAutoenablesItems:NO];
-	
-	BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
-	
-    //Insert a menu item for each available account
-    enumerator = [accountArray objectEnumerator];
-    while(account = [enumerator nextObject]){
-        NSMenuItem	*menuItem;
-        
-		BOOL available = [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
-																	  toListObject:nil 
-																		 onAccount:account];
-		if (available || includeOffline){
-			//Create
-			menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
-														   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]] :
-														   [account formattedUID])
-												   target:target
-												   action:@selector(selectAccount:)
-											keyEquivalent:@""] autorelease];
-			[menuItem setRepresentedObject:account];
-			[menuItem setImage:[account menuImage]];
-			
-			//Disabled if the account is offline
-			[menuItem setEnabled:available];
-			
-			//Add
-			[menu addItem:menuItem];
-		}
-    }
+	enumerator = [[self menuItemsForAccountsWithTarget:target includeOffline:includeOffline] objectEnumerator];
+	while(menuItem = [enumerator nextObject]){
+		[menu addItem:menuItem];
+	}
 	
 	return([menu autorelease]);
 }	
@@ -580,46 +547,40 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //- Accounts not available for sending content are disabled.
 //- Selector called on account selection is selectAccount:
 //- The menu item's represented objects are the AIAccounts they represent
-- (NSArray *)menuItemsForAccountsWithTarget:(id)target;
+- (NSArray *)menuItemsForAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline
 {
+	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
-	NSMutableArray  *array;
 	
-	//Prepare our menu
-	array = [[NSMutableArray alloc] init];
-	
-	BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
+	//We don't show service types unless the user is using multiple services
+	BOOL 	multipleServices = ([[self activeServices] count] > 1);
 	
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];
     while(account = [enumerator nextObject]){
-        NSMenuItem	*menuItem;
-        
-        //Create
-        menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
-													   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]] :
-													   [account formattedUID])
-											   target:target
-											   action:@selector(selectAccount:)
-										keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-		[menuItem setImage:[account menuImage]];
+		BOOL available = [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+																		 toContact:nil 
+																		 onAccount:account];
 		
-        //Disabled if the account is offline
-        if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
-            [menuItem setEnabled:NO];
-        }else{
-            [menuItem setEnabled:YES];
-        }
-		
-        //Add
-        [array addObject:menuItem];
+		if(available || includeOffline){
+			NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
+																		[NSString stringWithFormat:@"%@ (%@)", [account formattedUID], [[account service] shortDescription]] :
+																		[account formattedUID])
+																target:target
+																action:@selector(selectAccount:)
+														 keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:account];
+			[menuItem setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal]];
+			[menuItem setEnabled:available];
+			
+			[menuItems addObject:menuItem];
+		}
     }
 	
-	return((NSArray *)[array autorelease]);
+	return([menuItems autorelease]);
 }
-
+#warning still a lot of duplicate code here
 //Returns a menu of all accounts available for sending content to a list object
 //- Preferred choices are placed at the top of the menu.
 //- Selector called on account selection is selectAccount:
@@ -655,15 +616,15 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts
 {
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
-	AIAccount		*anAccount;
+	AIAccount		*account;
 	
-	while(anAccount = [enumerator nextObject]){
-		NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount formattedUID]
+	while(account = [enumerator nextObject]){
+		NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[account formattedUID]
 															target:target
 															action:@selector(selectAccount:)
 													 keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:anAccount];
-		[menuItem setImage:[anAccount menuImage]];
+		[menuItem setRepresentedObject:account];
+		[menuItem setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal]];
 		[menu addItem:menuItem];
 	}
 }
@@ -675,34 +636,31 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
-			if(!inObject && !inPreferred){
-				[sourceAccounts addObject:account];
-
-			}else if([[inObject serviceID] isEqualToString:[[[account service] handleServiceType] identifier]]){
-				BOOL			knowsObject = NO;
-				BOOL			canFindObject = NO;
-				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
-																								 accountID:[account uniqueObjectID]
-																									   UID:[inObject UID]];
-				
-				//Does the account know this object?
-				if(contactForAccount){
-					knowsObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
-																							 toListObject:contactForAccount];
-				}
-				
-				//Could the account find this object?
-				canFindObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
-																						   toListObject:nil];
-				
-				if((inPreferred && knowsObject) ||						//Online and can see the object
-				   (!inPreferred && !knowsObject && canFindObject) ||	//Online and may be able to see the object
-				   (!inPreferred && !knowsObject && includeOffline)){	//Offline, but may be able to see the object if online
-					[sourceAccounts addObject:account];
-				}
-				
+		if(!inObject && !inPreferred){
+			[sourceAccounts addObject:account];
+			
+		}else if([inObject service] == [account service]){
+			BOOL			knowsObject = NO;
+			BOOL			canFindObject = NO;
+			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject service]
+																							   account:account
+																								   UID:[inObject UID]];
+			
+			//Does the account know this object?
+			if(contactForAccount){
+				knowsObject = [account availableForSendingContentType:CONTENT_MESSAGE_TYPE
+															toContact:contactForAccount];
 			}
+			
+			//Could the account find this object?
+			canFindObject = [account availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:nil];
+			
+			if((inPreferred && knowsObject) ||						//Online and can see the object
+			   (!inPreferred && !knowsObject && canFindObject) ||	//Online and may be able to see the object
+			   (!inPreferred && !knowsObject && includeOffline)){	//Offline, but may be able to see the object if online
+				[sourceAccounts addObject:account];
+			}
+			
 		}
 	}
 			
@@ -719,11 +677,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         AIContentObject *contentObject = [[notification userInfo] objectForKey:@"Object"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
-        [destObject setPreference:[sourceAccount uniqueObjectID]
+        [destObject setPreference:[NSNumber numberWithInt:[sourceAccount accountNumber]]
                            forKey:KEY_PREFERRED_SOURCE_ACCOUNT
                             group:PREF_GROUP_PREFERRED_ACCOUNTS];
         
-        [lastAccountIDToSendContent setObject:[sourceAccount uniqueObjectID] forKey:[destObject serviceID]];
+        [lastAccountIDToSendContent setObject:[sourceAccount internalObjectID] forKey:[[destObject service] serviceID]];
     }
 }
 
@@ -781,7 +739,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Password Storage -----------------------------------------------------------------------------------------------------
 #pragma mark Password Storage
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
-	return([NSString stringWithFormat:@"%@.%@",[inAccount serviceID],[inAccount uniqueObjectID]]);
+	return([NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]]);
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
 	return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
@@ -879,14 +837,15 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 // Account Connection menus -----------------------------------------------
 #pragma mark Account Connection menus
 
-#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect:","Connect account prefix")
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect:","Disconnect account prefix")
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Cancel Connect:","Connecting an account prefix")
-#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting","Disconnecting an account prefix")
-#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
+#define MENU_IMAGE_FRACTION_ONLINE  		1.00
+#define MENU_IMAGE_FRACTION_CONNECTING  	0.60
+#define MENU_IMAGE_FRACTION_OFFLINE  		0.30
 
-#define ACCOUNT_TITLE_NO_SERVICE	[NSString stringWithFormat:@" %@",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)]
-#define ACCOUNT_TITLE_WITH_SERVICE  [NSString stringWithFormat:@" %@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account displayServiceID]]
+#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect: %@","Connect account prefix")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect: %@","Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Cancel: %@","Connecting an account prefix")
+#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Cancel: %@","Disconnecting an account prefix")
+#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
 
 - (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
@@ -970,38 +929,40 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account
 {
 	if(menuItem){
-		//Update the 'connect / disconnect' menu item
+		NSString	*accountTitle = [account formattedUID];
+		NSImage		*serviceImage;
+		float		fraction;
+		NSString	*titleFormat;
 		
-		BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
+		//Default to <New Account> if a name is not available
+		if(!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
 		
-		NSString	*accountTitle = (multipleServices ? ACCOUNT_TITLE_WITH_SERVICE : ACCOUNT_TITLE_NO_SERVICE);
-		
-		[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
-		
+		//Dim image depending on connectivity
+		serviceImage = [AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal];
 		if([[account statusObjectForKey:@"Online"] boolValue]){
-			[menuItem setImage:[account onlineMenuImage]];
-			[menuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
-			[menuItem setKeyEquivalent:@""];
-			[menuItem setEnabled:YES];
+			fraction = MENU_IMAGE_FRACTION_ONLINE;
+			titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
 		}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
-			[menuItem setImage:[account connectingMenuImage]];
-			[menuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
-			[menuItem setKeyEquivalent:@"."];
-			[menuItem setEnabled:YES];
+			fraction = MENU_IMAGE_FRACTION_CONNECTING;
+			titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
+			
 		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-			[menuItem setImage:[account connectingMenuImage]];
-			[menuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
-			[menuItem setKeyEquivalent:@""];
-			[menuItem setEnabled:NO];
+			fraction = MENU_IMAGE_FRACTION_CONNECTING;
+			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
 		}else{
-			[menuItem setImage:[account offlineMenuImage]];
-			[menuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
-			[menuItem setKeyEquivalent:@""];
-			[menuItem setEnabled:YES];
+			fraction = MENU_IMAGE_FRACTION_OFFLINE;
+			titleFormat = ACCOUNT_CONNECT_MENU_TITLE;
 		}
-		
+
+		//Update the menu item
+		[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
+		[menuItem setTitle:[[NSString stringWithFormat:titleFormat,accountTitle] stringByAppendingFormat:@" (%@)",[[account service] shortDescription]]];
+		[menuItem setImage:[serviceImage imageByFadingToFraction:fraction]];
+		[menuItem setEnabled:(![[account statusObjectForKey:@"Connecting"] boolValue] &&
+							  ![[account statusObjectForKey:@"Disconnecting"] boolValue])];
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
-    }	
+
+	}
 }
 
 //Remove all current account menu items for all account menu item plugins, then create a new, current set.
