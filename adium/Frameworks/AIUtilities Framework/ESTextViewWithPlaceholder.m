@@ -42,7 +42,6 @@
             [self setTextColor:[NSColor disabledControlTextColor]];
         }
     }
-    NSLog(@"%i",shouldResignFirstResponder);
     return shouldResignFirstResponder;
 }
 @end

@@ -141,7 +141,6 @@
 
 - (void)_updateColorsWithAlpha
 {
-    NSLog(@"updating with alpha",opacity);
     [borderColor release];
     borderColor = [[borderColorOpaque colorWithAlphaComponent:opacity] retain];
     
