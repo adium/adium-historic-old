@@ -9726,6 +9726,8 @@
 				34A7DA6105E34C3B00FFAC63,
 				9EEDAD9D05E7463E00CB537D,
 				07A07AE605F9335A00179FDC,
+				4BC5216A05FF5D8D00B03139,
+				4BC5216C05FF5D8D00B03139,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10141,15 +10143,6 @@
 				34BD9E3005314755000AB133,
 				34BD9E3105314755000AB133,
 				34BD9E3205314755000AB133,
-				34BD9E3305314755000AB133,
-				34BD9E3405314755000AB133,
-				34BD9E3505314755000AB133,
-				34BD9E3605314755000AB133,
-				34BD9E3705314755000AB133,
-				34BD9E3805314755000AB133,
-				34BD9E3905314755000AB133,
-				34BD9E3A05314755000AB133,
-				34BD9E3B05314755000AB133,
 				34BD9E3C05314755000AB133,
 				34BD9E3D05314755000AB133,
 				34BD9E3E05314755000AB133,
@@ -10163,17 +10156,11 @@
 				34BD9E4605314755000AB133,
 				34BD9E4705314755000AB133,
 				34BD9E4805314755000AB133,
-				34BD9E4905314755000AB133,
-				4B863DFA055297D000814AEF,
 				4B37AEFA058A8D8800E266A7,
 				4B37AEFB058A8D8800E266A7,
 				4B37AEFC058A8D8800E266A7,
 				4B37AEFD058A8D8800E266A7,
 				4B37AEFE058A8D8800E266A7,
-				4B37AEFF058A8D8800E266A7,
-				4B37AF00058A8D8800E266A7,
-				4B37AF01058A8D8800E266A7,
-				4B37AF03058A8D9F00E266A7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10228,60 +10215,6 @@
 		};
 		34BD9E3205314755000AB133 = {
 			fileRef = 4B6660AB04ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3305314755000AB133 = {
-			fileRef = 4B6660AC04ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3405314755000AB133 = {
-			fileRef = 4B6660AD04ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3505314755000AB133 = {
-			fileRef = 4B6660AE04ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3605314755000AB133 = {
-			fileRef = 4B6660AF04ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3705314755000AB133 = {
-			fileRef = 4B6660B004ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3805314755000AB133 = {
-			fileRef = 4B6660B104ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3905314755000AB133 = {
-			fileRef = 4B6660B204ADF2F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3A05314755000AB133 = {
-			fileRef = 4BF3F78104B3E14C00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E3B05314755000AB133 = {
-			fileRef = 4B9C09A704B618C000A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10360,12 +10293,6 @@
 		};
 		34BD9E4805314755000AB133 = {
 			fileRef = F5907C1B050C60D6013B2F1D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E4905314755000AB133 = {
-			fileRef = 4BA59D26050D82EF00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10457,6 +10384,8 @@
 				34A7DA6005E34C3B00FFAC63,
 				9EEDAD9C05E7463E00CB537D,
 				07A07AE705F9335C00179FDC,
+				4BC5216B05FF5D8D00B03139,
+				4BC5216D05FF5D8D00B03139,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18169,30 +18098,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B37AEF7058A8D8700E266A7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Aqua_TabMask_Left.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Aqua_TabMask_Left.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B37AEF8058A8D8700E266A7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Aqua_TabMask_Middle.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Aqua_TabMask_Middle.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B37AEF9058A8D8700E266A7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Aqua_TabMask_Right.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Aqua_TabMask_Right.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B37AEFA058A8D8800E266A7 = {
 			fileRef = 4B37AEF2058A8D8700E266A7;
 			isa = PBXBuildFile;
@@ -18219,38 +18124,6 @@
 		};
 		4B37AEFE058A8D8800E266A7 = {
 			fileRef = 4B37AEF6058A8D8700E266A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B37AEFF058A8D8800E266A7 = {
-			fileRef = 4B37AEF7058A8D8700E266A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B37AF00058A8D8800E266A7 = {
-			fileRef = 4B37AEF8058A8D8700E266A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B37AF01058A8D8800E266A7 = {
-			fileRef = 4B37AEF9058A8D8700E266A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B37AF02058A8D9F00E266A7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Tab_Background.tif;
-			path = "Frameworks/AIUtilities Framework/Images/Tab_Background.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B37AF03058A8D9F00E266A7 = {
-			fileRef = 4B37AF02058A8D9F00E266A7;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19231,62 +19104,6 @@
 			lastKnownFileType = image.tiff;
 			name = PlasticButtonPressed_Middle.tiff;
 			path = "Frameworks/AIUtilities Framework/Images/PlasticButtonPressed_Middle.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660AC04ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Tab_Divider.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Tab_Divider.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660AD04ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Tab_Left.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Tab_Left.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660AE04ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Tab_Middle.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Tab_Middle.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660AF04ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Tab_Right.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/Tab_Right.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660B004ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabMask_Left.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/TabMask_Left.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660B104ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabMask_Middle.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/TabMask_Middle.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6660B204ADF2F200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabMask_Right.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/TabMask_Right.tiff";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20540,20 +20357,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B863DF9055297D000814AEF = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabClose_Front_Rollover.tif;
-			path = "Frameworks/AIUtilities Framework/Images/TabClose_Front_Rollover.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B863DFA055297D000814AEF = {
-			fileRef = 4B863DF9055297D000814AEF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -20811,14 +20614,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B9C09A704B618C000A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabClose_Front_Pressed.tif;
-			path = "Frameworks/AIUtilities Framework/Images/TabClose_Front_Pressed.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B9E73E303F708A800A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -20923,14 +20718,6 @@
 			lastKnownFileType = text.plist;
 			name = EventSoundDefaults.plist;
 			path = "Plugins/Event Sounds/EventSoundDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA59D26050D82EF00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabClose_Back.tif;
-			path = "Frameworks/AIUtilities Framework/Images/TabClose_Back.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21491,6 +21278,66 @@
 			path = "Plugins/Stress Test/AIStressTestPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BC5216605FF5D8C00B03139 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AICustomTabDragging.h;
+			path = "Frameworks/AIUtilities Framework/AICustomTabDragging.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5216705FF5D8C00B03139 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AICustomTabDragging.m;
+			path = "Frameworks/AIUtilities Framework/AICustomTabDragging.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5216805FF5D8D00B03139 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AICustomTabDragWindow.h;
+			path = "Frameworks/AIUtilities Framework/AICustomTabDragWindow.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5216905FF5D8D00B03139 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AICustomTabDragWindow.m;
+			path = "Frameworks/AIUtilities Framework/AICustomTabDragWindow.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5216A05FF5D8D00B03139 = {
+			fileRef = 4BC5216605FF5D8C00B03139;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5216B05FF5D8D00B03139 = {
+			fileRef = 4BC5216705FF5D8C00B03139;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5216C05FF5D8D00B03139 = {
+			fileRef = 4BC5216805FF5D8D00B03139;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5216D05FF5D8D00B03139 = {
+			fileRef = 4BC5216905FF5D8D00B03139;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BC8AAB0059A2D5500F940E1 = {
 			fileRef = 4B7F78B50597F42400162728;
@@ -22629,14 +22476,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = TrafficWatch.nib;
 			path = "Plugins/AIM TOC2 Service/TrafficWatch.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BF3F78104B3E14C00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = TabClose_Front.tif;
-			path = "Frameworks/AIUtilities Framework/Images/TabClose_Front.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -28700,6 +28539,10 @@
 				F570A5A803704BED01A8010A,
 				F570A5A503704BED01A8010A,
 				F570A5A603704BED01A8010A,
+				4BC5216605FF5D8C00B03139,
+				4BC5216705FF5D8C00B03139,
+				4BC5216805FF5D8D00B03139,
+				4BC5216905FF5D8D00B03139,
 			);
 			isa = PBXGroup;
 			name = "Custom Tabs";
@@ -28848,15 +28691,11 @@
 		};
 		F549EF15036B10F701A8010A = {
 			children = (
-				4B37AF02058A8D9F00E266A7,
 				4B37AEF2058A8D8700E266A7,
 				4B37AEF3058A8D8700E266A7,
 				4B37AEF4058A8D8700E266A7,
 				4B37AEF5058A8D8700E266A7,
 				4B37AEF6058A8D8700E266A7,
-				4B37AEF7058A8D8700E266A7,
-				4B37AEF8058A8D8700E266A7,
-				4B37AEF9058A8D8700E266A7,
 				F5907C1B050C60D6013B2F1D,
 				4B95210704C049F600A8010A,
 				4B95210804C049F600A8010A,
@@ -28877,17 +28716,6 @@
 				4B6660A904ADF2F200A8010A,
 				4B6660AA04ADF2F200A8010A,
 				4B6660AB04ADF2F200A8010A,
-				4B6660AC04ADF2F200A8010A,
-				4B6660AD04ADF2F200A8010A,
-				4B6660AE04ADF2F200A8010A,
-				4B6660AF04ADF2F200A8010A,
-				4B6660B004ADF2F200A8010A,
-				4B6660B104ADF2F200A8010A,
-				4B6660B204ADF2F200A8010A,
-				4BA59D26050D82EF00A8010A,
-				4BF3F78104B3E14C00A8010A,
-				4B9C09A704B618C000A8010A,
-				4B863DF9055297D000814AEF,
 			);
 			isa = PBXGroup;
 			name = Images;
