@@ -40,6 +40,11 @@
     [self preferencesChanged:nil];
 }
 
+- (void)viewWillClose
+{
+    [[adium notificationCenter] removeObserver:self];
+}
+
 - (void)configureFormatMenu
 {
     NSMenu		*choicesMenu = [[[NSMenu alloc] init] autorelease];
