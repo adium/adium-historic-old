@@ -16,10 +16,11 @@
 
 #import <Adium/AIPlugin.h>
 
-#define PREF_GROUP_EMOTICONS			@"Emoticons"
-#define KEY_EMOTICON_ACTIVE_PACKS		@"Active Emoticon Packs"
-#define KEY_EMOTICON_DISABLED			@"Disabled Emoticons"
-#define KEY_EMOTICON_PACK_ORDERING		@"Emoticon Pack Ordering"
+#define PREF_GROUP_EMOTICONS				@"Emoticons"
+#define KEY_EMOTICON_ACTIVE_PACKS			@"Active Emoticon Packs"
+#define KEY_EMOTICON_DISABLED				@"Disabled Emoticons"
+#define KEY_EMOTICON_PACK_ORDERING			@"Emoticon Pack Ordering"
+#define KEY_EMOTICON_SERVICE_APPROPRIATE	@"Service Appropriate Emoticons"
 
 @protocol AIContentFilter;
 @class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
@@ -36,6 +37,8 @@
     NSMutableCharacterSet       *_emoticonHintCharacterSet;
     NSMutableCharacterSet       *_emoticonStartCharacterSet;
     NSMutableDictionary         *_emoticonIndexDict;
+	
+	BOOL						serviceAppropriateEmoticons;
 }
 
 - (void)initController;

@@ -19,8 +19,15 @@
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
-#import "AIPreferenceController.h"
+#import "AIContentObject.h"
+#import "AIContentMessage.h"
+#import "AIAccountController.h"
 #import "AIContentController.h"
+#import "AIPreferenceController.h"
+#import "AIAccount.h"
+#import "AIListObject.h"
+#import "AIListContact.h"
+#import "AIService.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 
 #define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
@@ -41,12 +48,11 @@
 - (NSCharacterSet *)emoticonStartCharacterSet;
 - (void)resetActiveEmoticons;
 - (void)resetAvailableEmoticons;
-- (void)preferencesChanged:(NSNotification *)notification;
 - (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath;
 - (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage context:(id)context;
 - (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
 							   withEquivalents:(NSArray *)candidateEmoticonTextEquivalents
-									   context:(id)context
+									   context:(NSString *)serviceClassContext
 									equivalent:(NSString **)replacementString
 							  equivalentLength:(int *)textLength;
 - (void)_buildCharacterSetsAndIndexEmoticons;
@@ -100,6 +106,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	/*
+	serviceAppropriateEmoticons = [[[adium preferenceController] preferenceForKey:KEY_EMOTICON_SERVICE_APPROPRIATE
+																			group:PREF_GROUP_EMOTICONS] boolValue];
+
+	 */
+	serviceAppropriateEmoticons = YES;
+
 	//Flush our cached active emoticons
 	[self resetActiveEmoticons];
 	
@@ -149,8 +162,26 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSDictionary                *emoticonIndex = [self emoticonIndex];
     NSString                    *messageString = [inMessage string];
     NSMutableAttributedString   *newMessage = nil; //We avoid creating a new string unless necessary
+	NSString					*serviceClassContext = nil;
     int                         currentLocation = 0;
 
+	NSLog(@"Converting emoticons in %@ ; context %@",inMessage, context);
+	
+	if(serviceAppropriateEmoticons){
+		if([context isKindOfClass:[AIContentObject class]]){
+			NSLog(@"content object %@ : destination %@ service %@ class %@",context,
+				  [(AIContentObject *)context destination],
+				  [[(AIContentObject *)context destination] service],
+				  [[[(AIContentObject *)context destination] service] serviceClass]);
+			serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
+		}else if([context isKindOfClass:[AIListContact class]]){
+			serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																						   toContact:(AIListContact *)context] service] serviceClass];
+		}else if([context isKindOfClass:[AIListObject class]] && [context respondsToSelector:@selector(service)]){
+			serviceClassContext = [[(AIListObject *)context service] serviceClass];
+		}
+	}
+	
     //Number of characters we've replaced so far (used to calcluate placement in the destination string)
 	int                         replacementCount = 0; 
 
@@ -168,7 +199,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
             unichar         currentCharacter = [messageString characterAtIndex:currentLocation];
             NSString        *currentCharacterString = [NSString stringWithFormat:@"%C", currentCharacter];
             NSEnumerator    *emoticonEnumerator;
-            AIEmoticon      *emoticon;        
+            AIEmoticon      *emoticon;     
 
             //Check for the presence of all emoticons starting with this character
             emoticonEnumerator = [[emoticonIndex objectForKey:currentCharacterString] objectEnumerator];
@@ -209,7 +240,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				//Use the most appropriate, longest string of those which could be used for the emoticon text we found here
 				emoticon = [self _bestReplacementFromEmoticons:candidateEmoticons
 											   withEquivalents:candidateEmoticonTextEquivalents
-													   context:context
+													   context:serviceClassContext
 													equivalent:&replacementString
 											  equivalentLength:&textLength];
 				replacement = [emoticon attributedStringWithTextEquivalent:replacementString];
@@ -243,12 +274,15 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 - (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
 							   withEquivalents:(NSArray *)candidateEmoticonTextEquivalents
-									   context:(id)context
+									   context:(NSString *)serviceClassContext
 									equivalent:(NSString **)replacementString
 							  equivalentLength:(int *)textLength
 {
-	unsigned		i = 0, bestIndex = 0, bestLength = 0;
-	unsigned		count;
+	unsigned	i = 0;
+	unsigned	bestIndex = 0, bestLength = 0;
+	unsigned	bestServiceAppropriateIndex = 0, bestServiceAppropriateLength = 0;
+	NSString	*serviceAppropriateReplacementString = nil;
+	unsigned	count;
 	
 	count = [candidateEmoticonTextEquivalents count];
 	while(i < count){
@@ -259,10 +293,31 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			bestIndex = i;
 			*replacementString = thisString;
 		}
+
+		//If we are using service appropriate emoticons, check if this is on the right service and, if so, compare.
+		if(serviceAppropriateEmoticons){
+			AIEmoticon	*thisEmoticon = [candidateEmoticons objectAtIndex:i];
+			NSLog(@"%@; serviceClassContext %@; isAppropriate? %i",thisEmoticon,
+				  serviceClassContext,
+				  [thisEmoticon isAppropriateForServiceClass:serviceClassContext]);
+			if([thisEmoticon isAppropriateForServiceClass:serviceClassContext]){
+				bestServiceAppropriateLength = thisLength;
+				bestServiceAppropriateIndex = i;
+				serviceAppropriateReplacementString = thisString;
+			}
+		}
 		
 		i++;
 	}
 
+	/* Did we get a service appropriate replacement? If so, use that rather than the current replacementString if it
+	 * differs. */
+	if(serviceAppropriateReplacementString != *replacementString){
+		bestLength = bestServiceAppropriateLength;
+		bestIndex = bestServiceAppropriateIndex;
+		*replacementString = serviceAppropriateReplacementString;
+	}
+	
 	//Return the length by reference
 	*textLength = bestLength;
 
