@@ -39,7 +39,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     enumerator = [cellArray objectEnumerator];
     while(cell = [enumerator nextObject]){
         [cell setTableRow:self];
-        if([cell rowSpan] != 0) spansRows = YES;
+        if([cell rowSpan] != 1) spansRows = YES;
     }
 
     return(self);

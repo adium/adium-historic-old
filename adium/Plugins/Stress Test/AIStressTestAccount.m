@@ -34,7 +34,7 @@
     commandChat = [[self chatForHandle:commandHandle] retain];
 
     //
-    [self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\r"];
+    [self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\r"];
 }
 
 - (AIChat *)chatForHandle:(AIHandle *)inHandle
@@ -97,7 +97,7 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0 && ![(AIContentMessage *)object autoreply]){
         NSString	*message = [[(AIContentMessage *)object message] string];
         NSArray		*commands = [message componentsSeparatedByString:@" "];
         NSString	*type = [commands objectAtIndex:0];
@@ -167,6 +167,13 @@
             NSString	*message = [commands objectAtIndex:3];
 
             [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_msgin:) userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",[NSNumber numberWithInt:count],@"count",[NSNumber numberWithInt:spread],@"spread",message,@"message",nil] repeats:YES];
+
+        }else if([type compare:@"msginout"] == 0){
+            int 	count = [[commands objectAtIndex:1] intValue];
+            int 	spread = [[commands objectAtIndex:2] intValue];
+            NSString	*message = [commands objectAtIndex:3];
+
+            [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_msginout:) userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",[NSNumber numberWithInt:count],@"count",[NSNumber numberWithInt:spread],@"spread",message,@"message",[NSNumber numberWithBool:NO],@"in",nil] repeats:YES];
             
         }else{
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
@@ -219,6 +226,46 @@
     if(i == count) [inTimer invalidate];
 }
 
+
+- (void)timer_msginout:(NSTimer *)inTimer
+{
+    NSMutableDictionary *userInfo = [inTimer userInfo];
+    NSString		*message = [userInfo objectForKey:@"message"];
+    int			i = [[userInfo objectForKey:@"i"] intValue];
+    int			count = [[userInfo objectForKey:@"count"] intValue];
+    int			spread = [[userInfo objectForKey:@"spread"] intValue];
+    BOOL		msgIn = [[userInfo objectForKey:@"in"] boolValue];
+    
+    AIHandle	*handle;
+    NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i%spread];
+
+    if(handle = [handleDict objectForKey:UID]){
+        AIContentMessage *messageObject;
+        if(msgIn){
+            messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
+                                                 withSource:self
+                                                destination:[commandHandle containingContact]
+                                                       date:nil
+                                                    message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                  autoreply:YES];
+            [[owner contentController] sendContentObject:messageObject];
+        }else{
+            messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
+                                                 withSource:[commandHandle containingContact]
+                                                destination:self
+                                                       date:nil
+                                                    message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                  autoreply:NO];
+            [[owner contentController] addIncomingContentObject:messageObject];
+        }
+
+        [userInfo setObject:[NSNumber numberWithBool:!msgIn] forKey:@"in"];
+    }
+
+    i++;
+    [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
+    if(i == count) [inTimer invalidate];
+}
 
 
 
