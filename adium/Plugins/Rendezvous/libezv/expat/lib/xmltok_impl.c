@@ -6,6 +6,7 @@
 #define IS_INVALID_CHAR(enc, ptr, n) (0)
 #endif
 
+#ifndef INVALID_LEAD_CASE
 #define INVALID_LEAD_CASE(n, ptr, nextTokPtr) \
     case BT_LEAD ## n: \
       if (end - ptr < n) \
@@ -16,6 +17,7 @@
       } \
       ptr += n; \
       break;
+#endif
 
 #define INVALID_CASES(ptr, nextTokPtr) \
   INVALID_LEAD_CASE(2, ptr, nextTokPtr) \
