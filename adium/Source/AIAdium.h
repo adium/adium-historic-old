@@ -56,34 +56,35 @@ typedef enum {
 } MENU_LOCATION;
 
 //Preference Categories
-#define PREFERENCE_CATEGORY_CONNECTIONS @"Connections"
+#define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
+#define PREFERENCE_CATEGORY_INTERFACE		@"Interface"
 
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
 #define PREF_GROUP_ACCOUNTS	 	@"Accounts"
-#define PREF_GROUP_TOOLBARS 		@"Toolbars"
+#define PREF_GROUP_TOOLBARS 	@"Toolbars"
 
 
 
 //Notifications
-#define	Adium_LaunchComplete			@"Adium_LaunchComplete"
-#define Account_ListChanged 			@"Account_ListChanged"
-#define Account_PropertiesChanged		@"Account_PropertiesChanged"
-#define Account_StatusChanged			@"Account_StatusChanged"
-#define Contact_ObjectChanged			@"Contact_ObjectChanged"
-#define Contact_ListChanged			@"Contact_ListChanged"
-#define Interface_ContactSelectionChanged	@"Interface_ContactSelectionChanged"
+#define	Adium_LaunchComplete					@"Adium_LaunchComplete"
+#define Account_ListChanged 					@"Account_ListChanged"
+#define Account_PropertiesChanged				@"Account_PropertiesChanged"
+#define Account_StatusChanged					@"Account_StatusChanged"
+#define Contact_ObjectChanged					@"Contact_ObjectChanged"
+#define Contact_ListChanged						@"Contact_ListChanged"
+#define Interface_ContactSelectionChanged		@"Interface_ContactSelectionChanged"
 // Interface_ContactDefaultAction ... make double click generic?
-#define Interface_InitiateMessage		@"Interface_InitiateMessage"
-#define Interface_CloseMessage			@"Interface_CloseMessage"
-#define Interface_SendEnteredMessage		@"Interface_SendEnteredMessage"
-#define Interface_WillSendEnteredMessage 	@"Interface_WillSendEnteredMessage"
+#define Interface_InitiateMessage				@"Interface_InitiateMessage"
+#define Interface_CloseMessage					@"Interface_CloseMessage"
+#define Interface_SendEnteredMessage			@"Interface_SendEnteredMessage"
+#define Interface_WillSendEnteredMessage 		@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage		@"Interface_DidSendEnteredMessage"
-#define Content_ContentObjectAdded		@"Content_ContentObjectAdded"
-#define Content_WillSendContent			@"Content_WillSendContent"
-#define Content_DidSendContent			@"Content_DidSendContent"
-#define Content_WillReceiveContent		@"Content_WillReceiveContent"
-#define Content_DidReceiveContent		@"Content_DidReceiveContent"
+#define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
+#define Content_WillSendContent				@"Content_WillSendContent"
+#define Content_DidSendContent					@"Content_DidSendContent"
+#define Content_WillReceiveContent				@"Content_WillReceiveContent"
+#define Content_DidReceiveContent				@"Content_DidReceiveContent"
 
 
 
