@@ -35,6 +35,8 @@ typedef enum {
 - (NSEnumerator *)objectEnumerator;
 - (void)removeAllObjects;
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
+- (void)setExpanded:(BOOL)inExpanded;
+- (BOOL)isExpanded;
 @end
 
 @interface AIListObject : ESObjectWithStatus{
