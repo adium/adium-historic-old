@@ -4,6 +4,8 @@
 <dict>
 	<key>AdiumSetVersion</key>
 	<integer>1</integer>
+	<key>Service Class</key>
+	<string>MSN</string>
 	<key>BasedOnURL</key>
 	<string>http://messenger.msn.com/Resource/Emoticons.aspx</string>
 	<key>Emoticons</key>

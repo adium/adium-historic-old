@@ -4,6 +4,8 @@
 <dict>
 	<key>AdiumSetVersion</key>
 	<integer>1</integer>
+	<key>Service Class</key>
+	<string>AIM-compatible</string>
 	<key>Emoticons</key>
 	<dict>
 		<key>Angry Face.png</key>
