@@ -29,6 +29,11 @@
 	<key>Yahoo:Port</key>
 	<integer>5050</integer>
 	
+	<key>Proxy Type</key>
+	<integer>1</integer>
+	<key>Proxy Needs Authentication</key>
+	<false/>
+	
 		<key>TextProfile</key>
 		<data>
 		e1xydGYxXG1hY1xhbnNpY3BnMTAwMDBcY29jb2FydGYx

@@ -14,8 +14,18 @@
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {changedConnectionPreference = id; }; 
             CLASS = ESGaimAccountViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_proxyRequireAuthentication" = NSButton; 
+                "button_proxySetPassword" = NSButton; 
+                "menu_proxy" = NSPopUpButton; 
+                "textField_hostName" = NSTextField; 
+                "textField_portNumber" = NSTextField; 
+                "textField_proxyHostName" = NSTextField; 
+                "textField_proxyPortNumber" = NSTextField; 
+            }; 
             SUPERCLASS = AIAccountViewController; 
         }, 
         {
