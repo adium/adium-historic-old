@@ -136,6 +136,11 @@
     - Ability to add a screenname into AB as a new card
     - Add People Picker & ability to add via this panel
 
+// Group Chat
+	- Different message style / not Webkit for group chats? (it bogs down quickly in active rooms)
+	- Allow chats to be added as contact list objects?
+	- Support configuring Jabber rooms (this is aparently a libgaim callback?)
+
 //-------------------------------------------------------------------------------------------------------
 // Incomplete Thoughts
 //-------------------------------------------------------------------------------------------------------
