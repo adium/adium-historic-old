@@ -234,12 +234,12 @@
     subStringRange = NSMakeRange(0,[tempURLString length]);
     [tempURLString addAttribute:NSLinkAttributeName value:urlString range:subStringRange];
     //make it look like a link
-    [tempURLString addAttribute:NSForegroundColorAttributeName
+    /*[tempURLString addAttribute:NSForegroundColorAttributeName
                           value:[NSColor blueColor]
                           range:subStringRange];
     [tempURLString addAttribute:NSUnderlineStyleAttributeName
                           value:[NSNumber numberWithInt:1]
-                          range:subStringRange];
+                          range:subStringRange];*/
 
     if(editLink){ //replace selected text if editing
         [[(NSTextView *)inView textStorage] replaceCharactersInRange:linkRange withAttributedString:tempURLString];

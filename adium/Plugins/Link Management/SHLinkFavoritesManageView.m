@@ -10,6 +10,7 @@
 
 @interface SHLinkFavoritesManageView (PRIVATE)
 - (void)configureControlDimming;
+- (void)_writePrefs;
 @end
 
 @implementation SHLinkFavoritesManageView
@@ -27,6 +28,7 @@
 - (void)dealloc
 {
     [[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
+    [self _writePrefs];
     [super dealloc];
 }
 
@@ -43,7 +45,24 @@
     [table reloadData];
 }
 
+- (void)_writePrefs
+{
+    NSEnumerator    *enumerator = [favorites objectEnumerator];
+    NSString        *key = nil;
+    NSDictionary    *prefDict = [[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:PREF_GROUP_LINK_FAVORITES];
+    while((key = [enumerator nextObject])){
+        [[[AIObject sharedAdiumInstance] preferenceController] setPreference:[prefDict objectForKey:key]
+                                                                      forKey:key
+                                                                       group:PREF_GROUP_LINK_FAVORITES];
+    }
+}
+
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    return favoriteCount;
+}
+
+- (int)favoritesCount
 {
     return favoriteCount;
 }
