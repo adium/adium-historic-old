@@ -18,6 +18,12 @@
 
 static BOOL didInitMSN = NO;
 
+- (void)initAccount
+{
+	[super initAccount];
+	currentFriendlyName = nil;
+}
+
 - (const char*)protocolPlugin
 {
 	[super initSSL];
@@ -119,9 +125,8 @@ static BOOL didInitMSN = NO;
 		if([key isEqualToString:@"FullNameAttr"]){
 			
 			NSString	*friendlyName = [[self autoRefreshingOutgoingContentForStatusKey:key] string];
-			NSString	*oldFriendlyName = [[self displayArrayForKey:@"Display Name" create:NO] objectWithOwner:self];
 			
-			if (!friendlyName || ![friendlyName isEqualToString:oldFriendlyName]){
+			if (!friendlyName || ![friendlyName isEqualToString:currentFriendlyName]){
 				[self _setFriendlyNameTo:friendlyName];
 			}
 		}
@@ -134,6 +139,7 @@ static BOOL didInitMSN = NO;
 		if (GAIM_DEBUG) NSLog(@"Updating FullNameAttr to %@",inAlias);
 
  		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
+		[currentFriendlyName release]; currentFriendlyName = [inAlias retain];
 	}
 }
 
