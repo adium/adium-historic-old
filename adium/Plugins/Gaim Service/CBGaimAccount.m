@@ -969,7 +969,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	NSString	*hostName;
 	int			portNumber;
-	
+
 	//Host (server)
 	hostName = [self host];
 	if (hostName && [hostName length]){
@@ -984,6 +984,9 @@ static id<GaimThread> gaimThread = nil;
 	
 	//E-mail checking
 	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
+	
+	//Status
+	[self updateAllStatusKeys];	
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1128,14 +1131,6 @@ static id<GaimThread> gaimThread = nil;
     //Silence updates
     [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
-
-    //Set our initial status
-	/*
-	[self performSelector:@selector(updateAllStatusKeys)
-			   withObject:nil
-			   afterDelay:1.00001];
-*/
-	[self updateAllStatusKeys];
 	
     //Reset reconnection attempts
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
@@ -1219,6 +1214,13 @@ static id<GaimThread> gaimThread = nil;
                                     withDescription:connectionNotice];
 }
 
+//Account is finishing login
+- (oneway void)accountFinishLogin
+{
+	[self updateStatusForKey:@"AwayMessage"];
+	[self updateStatusForKey:@"IdleSince"];
+}
+
 //Our account has disconnected
 - (oneway void)accountConnectionDisconnected
 {
@@ -1293,13 +1295,7 @@ static id<GaimThread> gaimThread = nil;
 - (void)updateAllStatusKeys
 {
     [self updateStatusForKey:@"TextProfile"];
-    [self updateStatusForKey:@"AwayMessage"];
     [self updateStatusForKey:KEY_USER_ICON];
-	
-	//We use updateAllStatusKeys when we first connect; AIM won't accept an idle time immediately upon connecting, so delay a bit before setting it
-	[self performSelector:@selector(updateStatusForKey:)
-			   withObject:@"IdleSince"
-			   afterDelay:2.0];
 }
 
 //Update our status
@@ -1308,7 +1304,15 @@ static id<GaimThread> gaimThread = nil;
 	[super updateStatusForKey:key];
 
     //Now look at keys which only make sense while online
-	if([[self statusObjectForKey:@"Online"] boolValue]){
+#warning Need to think about this....
+	/*
+	 Currently update status key is called before the account is connected to pass status information to libgaim,
+	 which libgaim will automatically set as it's connecting at the correct time.  This means that we need to have
+	 some of these keys change while not online.  However, it does not make sense to change these keys while
+	 an account isn't even going to connect.
+	*/
+	
+	//	if([[self statusObjectForKey:@"Online"] boolValue]){
 		NSData  *data;
 		
 		if([key isEqualToString:@"IdleSince"]){
@@ -1327,7 +1331,7 @@ static id<GaimThread> gaimThread = nil;
 			}
 			
 		}
-	}
+//	}
 }
 
 //Set our idle (Pass nil for no idle)

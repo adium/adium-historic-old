@@ -481,6 +481,11 @@ static void *gaim_adium_get_handle(void)
 	return &adium_gaim_handle;
 }
 
+static void server_finish_login_cb(GaimAccount *account, void *data)
+{
+	[accountLookup(account) mainPerformSelector:@selector(accountFinishLogin)];
+}
+
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
 	if (buddy){
@@ -564,6 +569,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 
 - (void)configureSignals
 {
+	void *accounts_handle = gaim_accounts_get_handle();
 	void *blist_handle = gaim_blist_get_handle();
 	void *handle       = gaim_adium_get_handle();
 	
@@ -629,6 +635,10 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 	gaim_signal_connect(blist_handle, "buddy-direct-im-disconnected",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_DISCONNECTED));
+
+	//Account finish login
+	gaim_signal_connect(accounts_handle, "account-finish-login",
+						handle, GAIM_CALLBACK(server_finish_login_cb), NULL);	
 }
 
 #pragma mark Conversation
@@ -2127,9 +2137,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
-		
+	GaimAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
+
+	gaim_account_set_user_info(account, [profileHTML UTF8String]);
+
+	if(account->gc != NULL && gaim_account_is_connected(account)){
 		serv_set_info(account->gc, [profileHTML UTF8String]);
 	}
 }
@@ -2144,7 +2156,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)gaimThreadSetBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (account){
+	if(account){
 		gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
 	}
 }
