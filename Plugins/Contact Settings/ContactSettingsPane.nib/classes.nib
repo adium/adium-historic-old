@@ -6,10 +6,22 @@
             CLASS = AIContactSettingsPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "popUp_encryption" = NSPopUpButton; 
                 "textField_alias" = ESDelayedTextField; 
                 "textField_notes" = ESDelayedTextField; 
             }; 
             SUPERCLASS = AIContactInfoPane; 
+        }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
         }, 
         {
             ACTIONS = {changePreference = id; }; 

@@ -8,6 +8,10 @@
 
 #import "AIContactSettingsPane.h"
 
+@interface AIContactSettingsPane (PRIVATE)
+- (NSMenu *)encryptionMenu;
+@end
+
 @implementation AIContactSettingsPane
 
 //Preference pane properties
@@ -24,7 +28,26 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+	[popUp_encryption setMenu:[self encryptionMenu]];
+}
 
+- (NSMenu *)encryptionMenu
+{
+	NSMenu	*encryptionMenu = [[adium contentController] encryptionMenuNotifyingTarget:nil];
+	
+	[encryptionMenu addItem:[NSMenuItem separatorItem]];
+
+	NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Default",nil)
+													  target:nil
+													  action:nil
+											   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Default];
+	[encryptionMenu addItem:menuItem];
+	[menuItem release];
+	
+	return(encryptionMenu);
+	
 }
 
 //Preference view is closing
@@ -38,6 +61,7 @@
 {
 	NSString	*notes;
 	NSString	*alias;
+	NSNumber	*encryption;
 
 	//Be sure we've set the last changes before changing which object we are editing
 	[textField_alias fireImmediately];
@@ -59,6 +83,15 @@
     }else{
         [textField_notes setStringValue:@""];
     }
+
+	//Encryption
+	encryption = [listObject preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+										group:GROUP_ENCRYPTION];
+	if(encryption){
+		[popUp_encryption compatibleSelectItemWithTag:[encryption intValue]];		
+	}else{
+		[popUp_encryption compatibleSelectItemWithTag:EncryptedChat_Default];		
+	}
 }
 
 //Apply an alias

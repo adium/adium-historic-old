@@ -9,6 +9,7 @@
 @interface AIContactSettingsPane : AIContactInfoPane {
 	IBOutlet	ESDelayedTextField		*textField_alias;
 	IBOutlet	ESDelayedTextField		*textField_notes;
+	IBOutlet	NSPopUpButton			*popUp_encryption;
 
 	AIListObject		*listObject;
 }
