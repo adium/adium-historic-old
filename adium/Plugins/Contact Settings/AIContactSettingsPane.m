@@ -39,7 +39,7 @@
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	NSString	*note;
+	NSString	*notes;
 	NSString	*alias;
 
 	//Be sure we've set the last changes before changing which object we are editing
@@ -57,8 +57,8 @@
 	}
 	
 	//Current note
-    if(note = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
-        [textField_notes setStringValue:note];
+    if(notes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
+        [textField_notes setStringValue:notes];
     }else{
         [textField_notes setStringValue:@""];
     }
@@ -71,15 +71,18 @@
         NSString	*alias = [textField_alias stringValue];
         if([alias length] == 0) alias = nil; 
         
-        //Save the alias
-        [listObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
-		
+		NSString	*oldAlias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES];
+		if ((!alias && oldAlias) ||
+			(alias && !([alias isEqualToString:oldAlias]))){
+			//Save the alias
+			[listObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+			
 #warning There must be a cleaner way to do this alias stuff!  This works for now :)
-		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-												  object:listObject
-												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																					 forKey:@"Notify"]];
-		
+			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+													  object:listObject
+													userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																						 forKey:@"Notify"]];
+		}
     }
 }
 
@@ -90,8 +93,12 @@
         NSString 	*notes = [textField_notes stringValue];
         if([notes length] == 0) notes = nil; 
 
-		//Save the note
-        [listObject setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
+		NSString	*oldNotes = [listObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
+		if ((!notes && oldNotes) ||
+			(notes && (![notes isEqualToString:oldNotes]))){
+			//Save the note
+			[listObject setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
+		}
     }
 }
 
