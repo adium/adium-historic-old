@@ -639,6 +639,8 @@
 		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
+			NSToolbarShowColorsItemIdentifier,
+			NSToolbarShowFontsItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
 }
 

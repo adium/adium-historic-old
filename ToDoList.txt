@@ -25,10 +25,6 @@
 	- Dim service icon slightly on selection (Similar to contact list)
 	- Use status icon to show online state instead of postfixing 'online/offline'
 
-//Message window toolbar
-  Additional message window toolbar items
-	- Open font/color panel (standard system buttons)
-
 //Auto-completion
   Tab auto-completion in the message window
 	- Contact names (Mainly for multi-user chat)
