@@ -1858,6 +1858,63 @@
 			shellPath = /bin/sh;
 			shellScript = "mkdir \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\n#Current\nif !([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" ]); then\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\"\n#Root\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Libgaim\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\nfi";
 		};
+		344ECBA90620F323007256C6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = agent.png;
+			path = "Plugins/Version Checker/agent.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344ECBAA0620F323007256C6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionAvailable.nib;
+			path = "Plugins/Version Checker/VersionAvailable.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344ECBAB0620F323007256C6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "VersionChecker Defaults.plist";
+			path = "Plugins/Version Checker/VersionChecker Defaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344ECBAC0620F323007256C6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionUpToDate.nib;
+			path = "Plugins/Version Checker/VersionUpToDate.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344ECBAD0620F323007256C6 = {
+			fileRef = 344ECBA90620F323007256C6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344ECBAE0620F323007256C6 = {
+			fileRef = 344ECBAA0620F323007256C6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344ECBAF0620F323007256C6 = {
+			fileRef = 344ECBAB0620F323007256C6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344ECBB00620F323007256C6 = {
+			fileRef = 344ECBAC0620F323007256C6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344EE9210574504B000F342B = {
 			children = (
 				344EE92D0574510C000F342B,
@@ -3803,10 +3860,10 @@
 				BF99B524061D74DA00BF2252,
 				BF99B525061D74DA00BF2252,
 				BF99B526061D74DA00BF2252,
-				4B55F0A40620F2FB001AB995,
-				4B55F0A60620F2FF001AB995,
-				4B55F0A80620F303001AB995,
-				4B55F0AA0620F307001AB995,
+				344ECBAD0620F323007256C6,
+				344ECBAE0620F323007256C6,
+				344ECBAF0620F323007256C6,
+				344ECBB00620F323007256C6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7178,7 +7235,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-Os";
+				OPTIMIZATION_CFLAGS = "-mcpu=7450 -Os -pipe -fsigned-char -maltivec -mabi=altivec -mpowerpc-gfxopt -mtune=7450";
 				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS";
 				ZERO_LINK = NO;
 			};
@@ -8863,63 +8920,6 @@
 			path = "Plugins/Volume Control/VolumeControlPrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B55F0A30620F2FB001AB995 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = agent.png;
-			path = "Plugins/Version Checker/agent.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B55F0A40620F2FB001AB995 = {
-			fileRef = 4B55F0A30620F2FB001AB995;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B55F0A50620F2FF001AB995 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = VersionAvailable.nib;
-			path = "Plugins/Version Checker/VersionAvailable.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B55F0A60620F2FF001AB995 = {
-			fileRef = 4B55F0A50620F2FF001AB995;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B55F0A70620F303001AB995 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = VersionUpToDate.nib;
-			path = "Plugins/Version Checker/VersionUpToDate.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B55F0A80620F303001AB995 = {
-			fileRef = 4B55F0A70620F303001AB995;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B55F0A90620F307001AB995 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = "VersionChecker Defaults.plist";
-			path = "Plugins/Version Checker/VersionChecker Defaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B55F0AA0620F307001AB995 = {
-			fileRef = 4B55F0A90620F307001AB995;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B5827E80613CE9D0004BD25 = {
 			fileEncoding = 30;
@@ -16529,11 +16529,11 @@
 				83DB8F220611460E00A5C28C,
 				3404893106173DAB004D0B7E,
 				3404893206173DAB004D0B7E,
-				4B55F0A90620F307001AB995,
-				4B55F0A50620F2FF001AB995,
-				4B55F0A70620F303001AB995,
+				344ECBAA0620F323007256C6,
+				344ECBAC0620F323007256C6,
+				344ECBAB0620F323007256C6,
 				34F58F33061A76C500B4B5D6,
-				4B55F0A30620F2FB001AB995,
+				344ECBA90620F323007256C6,
 			);
 			isa = PBXGroup;
 			name = "Version Checker";
