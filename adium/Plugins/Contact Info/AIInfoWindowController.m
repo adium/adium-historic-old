@@ -319,8 +319,8 @@ static AIListObject				*activeListObject = nil;
 		[activeListObject release]; activeListObject = [listObject retain];
 		
 		//Ask contacts to update their info
-		if([object isKindOfClass:[AIListContact class]]){
-			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)object];
+		if([activeListObject isKindOfClass:[AIListContact class]]){
+			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)activeListObject];
 		}
 		
 		[sharedInstance configureWindow];
