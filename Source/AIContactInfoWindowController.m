@@ -429,6 +429,15 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[contactListController setContactListRoot:listObject];
 		[drawer_metaContact open];
 	
+		NSRect	outlineFrame = [contactListView frame];
+		int		totalHeight = [contactListView totalHeight];
+		
+		if(outlineFrame.size.height != totalHeight){
+			outlineFrame.size.height = totalHeight;
+			[contactListView setFrame:outlineFrame];
+			[contactListView setNeedsDisplay:YES];
+		}
+		
 	}else{
 		[drawer_metaContact close];	
 		[contactListController setContactListRoot:nil];
