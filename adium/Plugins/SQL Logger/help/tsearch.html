@@ -8,10 +8,15 @@
 <body><table border="0" cellspacing="0" cellpadding="5">
 <tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">Installing the PostgreSQL tsearch contrib module</h2></td></tr>
 <tr>
+<td width="170" height="20" background="transp-change.png" bgcolor="green"></td>
+<td height="20" background="transp-change.png"></td>
+</tr>
+<tr>
 <td width="170" bgcolor="green" valign="top" align="right">
 <h4>Adium SQL Links<br>
 </h4>
-<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="jsp.html" class="sidebar">Resin Installation</a><br><br><h4>Other links</h4>
+<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
+              Details</a><br><br><h4>Other links</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
                 2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
                 Forums</a><br><a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a>
@@ -103,7 +108,7 @@ select * from messages where message_idx ## 'search&amp;!string';
     &quot;searchphrase&quot; at the beginning, &quot;searchphrase$ looks for it at the end,
     etc).  Check the PostgreSQL documentation for more info.</p>
 <p>If the tsearch module is not installed, the regular expressions will
-    work all the time.  The AND/OR/NOT boolean logic will not.</p>
+      work all the time, but very slowly.  The AND/OR/NOT boolean logic will not.</p>
 <hr>
 <div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
 </td>

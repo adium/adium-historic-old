@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<page>
+  <title>Adium SQL Logger Technical Details</title>
+  <body>
+    <p>This page describes a few more technical details of Adium's SQL Logging
+    Plugin.</p>
+    <div align="center">
+      <a href="#adium.sql">adium.sql</a> | 
+      <a href="#tsearch.sql">tsearch.sql</a> | 
+      <a href="#parser.pl">parser.pl/parser-2.pl</a>
+    </div>
+
+    <a name="adium.sql"><h2>adium.sql</h2></a>
+    <p>The file <code>adium.sql</code> contains instructions for setting up a
+    database schema for use with Adium's SQL Logging. 
+    Running the file creates the adium schema, two tables and one
+    view.</p>
+    <p>The first table that is created is <code>users</code>.  It is very
+    simple, storing only a username, a service, and a code, user_id.  Everyone
+    who sends or receives a message will have an entry in
+    <code>users</code>.</p>
+    <p>The second table, messages, contains the basis for the plugin: the
+    messages.  Named <code>messages</code>, it has a sequenced field for each
+    message (message_id), the message itself (message), the messgae date and
+    time (message_date), and two references to users (sender_id,
+    recipient_id).  If you have tsearch indexing setup, it contains another
+    field specifically for that (message_idx).</p>
+    <p>The created view is used for all of the message viewing.  It contains
+      message_id, message, message_date, and the screenames from users
+      (sender_sn, sender_service, recipient_sn, recipient_service).  It does
+      not contain message_idx, the tsearch field.  Using message_v can allow
+      searches based on screenname instead of a (relatively) meaningless
+      number.</p>
+    <p>Both the Adium plugin and the log parsing scripts work by inserting a
+      record into message_v.  When an insert is performed, a rule fires.  It
+      attempts to insert the screennames into users, and doesn't if that
+      screenname already exists.  Then it retrieves the two user_ids and
+      inserts a record into message.  Updates or deletes on message_v silently
+      fail, and are best performed by operating directly on the underlying
+      tables.</p>
+    
+    <a name="tsearch.sql"><h2>tsearch.sql</h2></a>
+    <p>tsearch indexing requires a special method and index type to do it's
+      magic.  It uses a column message_idx, where it stores a list
+      of all the words used in the IM in their "base form".  Storing in a base
+      form allows it to do stemming.  (Searching for 'kicking' will return
+      'kicking', 'kick', 'kicks', etc).  It uses a GiST index to track these
+      terms down very quickly, which I REALLY don't understand.  But it does
+      work very well.</p>
+    <p>tsearch.sql does only four things, but requires that the tsearch module
+      be installed to work.</p>
+   <ol>
+     <li>Adds the column message_idx to messages.</li>
+     <li>Sets message_idx to the transformed version for all messages
+       currently in the table.</li>
+     <li>Creates a GiST index on message_idx.</li>
+     <li>Creates a trigger on messages which fires when inserting or updating
+       a record.  This trigger converts the text in message to text in
+       message_idx.</li>
+    </ol>
+    <p>This script can take a while to run.  The two steps that take time are
+      the update to everything in the table, and creating the index.  Creating
+      the index can take 10-15 minutes or more, depending on how much data
+      there is in your table.</p>
+    
+    <a name="parser.pl"><h2>parser.pl/parser-2.pl</h2></a>
+
+    <p><code>Parser.pl</code> and <code>parser-2.pl</code> read through all 
+      of your Adium logs and
+      inserts the messages into the database.  
+      There is not a lot of difference between
+      the two, except that parser works on Adium logs before 2.0, and parser-2
+      goes over Adium 2.0 logs.</p>
+    <p>The perl scripts require a few modules for talking to the database.  It
+      requires <code>DBI</code> and <code>DBD::Pg</code>.  DBI is a standard
+      database-independant perl module.  You can download it with either CPAN
+      or fink. (<a href="http://fink.sourceforge.net"
+        class="offsite">http://fink.sourceforge.net</a>)</p>
+    <p>To install them via CPAN:</p>
+    <div class="tutorialcode"><pre>sudo perl -MCPAN -e 'install DBI'
+sudo perl -MCPAN -e 'install DBD::Pg'</pre></div>
+  <p>If this is your first time running CPAN, it will ask a few questions.
+    The defaults are fine.</p>
+  <p>If you see errors relating to <code>ranlib</code> or
+    <code>libpq.a</code>, don't worry.  Just run the following command:</p>
+  <div class="tutorialcode"><pre>sudo ranlib /usr/local/pgsql/lib/libpq.a</pre>
+  </div>
+  <p>After running that, attempt to install DBD::Pg again.</p>
+  <p>If you want to install via fink, the packages are called "dbi-pm" and
+    "dbd-pg-pg" [unstable]</p>.
+  <p><code>parser.pl</code> will look in <code>~/Library/Application
+      Support/Adium/Users</code> for all of the Adium 1.6 logs.  When it's
+    there, it will iterate over every folder [users who logged in] and
+    everyone they talked to.</p>
+  <p><code>parser-2.pl</code> looks in <code>~/Library/Application
+      Support/Adium 2.0/Users/Default/Logs/</code>.  If you have multiple
+    users on your machine, you will need to modify this path to be what you
+    log in with.  As it's iterating over conversations, it gleans the service
+    used from the name of the folder (AIM.fetchgreebledonx).</p>
+  <p>Both scripts insert messages into message_v.  The parser scripts will
+    capture status chaning incidents (idle, away, etc), but the SQL Logger
+    plugin will not.</p>
+  <p>Both scripts will rename the log files they insert, so if there is a
+    problem the script can be run multiple times.  Adium has no problem
+    reading the renamed log files.</p>
+  <p><code>restore.pl</code> simply undoes the 
+    renaming, so they go back to the standard Adium filenames.  Requires no
+    additional modules.</p>
+  <h4>Troubleshooting</h4>
+  I have run into the following problems:
+    <ul>
+      <li>About half a dozen of my logs were encoded incorrectly.  I have no
+        idea what caused this, or if it's a common problem.  My solution was
+        to move the logs out and try again.</li>
+      <li>If the database is Unicode-encoded, it will be very picky about
+        inserting characters it doesn't know into it.  Since Adium doesn't log
+        as unicode, this could cause some problems.</li>
+    </ul>
+ </body>
+</page>
