@@ -116,7 +116,9 @@
 
     //Check if 'delete' was pressed
     if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
-        [[self dataSource] outlineViewDeleteSelectedRows:self ]; //Delete the selection
+        if([[self dataSource] respondsToSelector:@selector(outlineViewDeleteSelectedRows:)]){
+            [[self dataSource] outlineViewDeleteSelectedRows:self ]; //Delete the selection
+        }
     }else{
         [super keyDown:theEvent]; //Pass the key event on
     }

@@ -14,26 +14,25 @@
 - (void)drawRect:(NSRect)inRect
 {
     NSFont			*font = [NSFont boldSystemFontOfSize:11];
-    NSAttributedString		*text;
+    NSRect			bounds = [self bounds];
+    NSDictionary		*attributes;
     NSColor			*textColor;
-    
+
     textColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.4];
-    
-    text = [[NSAttributedString alloc] initWithString:[self stringValue] 
-        attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:
             textColor, NSForegroundColorAttributeName,
-            font, NSFontAttributeName, nil]];
+            font, NSFontAttributeName, nil];
             
-    [text drawInRect:NSOffsetRect(inRect, 0, -1)];
+    [[self stringValue] drawInRect:NSOffsetRect(bounds, +2, +1) withAttributes:attributes];
+
     
     textColor = [NSColor colorWithCalibratedWhite:0.16 alpha:1.0];
-    
-    text = [[NSAttributedString alloc] initWithString:[self stringValue] 
-    attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         textColor, NSForegroundColorAttributeName,
-        font, NSFontAttributeName, nil]];
-        
-    [text drawInRect:inRect];
+        font, NSFontAttributeName, nil];
+
+    [[self stringValue] drawInRect:NSOffsetRect(bounds, +2, 0) withAttributes:attributes];
 
 }
+
 @end

@@ -26,7 +26,7 @@
 {
     [super initWithFrame:frameRect];
 
-    delegate = [inDelegate retain];
+    delegate = inDelegate;
     owner = [inOwner retain];
 
     [self configureView];
@@ -43,9 +43,8 @@
 - (void)dealloc
 {
     [[owner notificationCenter] removeObserver:self];
-    [delegate release];
     [owner release];
-
+    
     [super dealloc];
 }
 
@@ -74,7 +73,7 @@
         [view release];
     }
     [view_contents release];
-
+    
     //
     [[popUp_accounts menu] setAutoenablesItems:NO];
 }
@@ -85,6 +84,7 @@
     AIListObject	*contact = [delegate contact];
     NSEnumerator	*enumerator;
     AIAccount		*anAccount;
+    int			selectedIndex;
 
     //remove any existing menu items
     [popUp_accounts removeAllItems];
@@ -110,8 +110,9 @@
     }
 
     //Select our current account
-    [popUp_accounts selectItemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:[delegate account]]];
-        
+    selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
+    [popUp_accounts selectItemAtIndex:selectedIndex];
+    [self updateMenu];
 }
 
 //The account list/status changed
@@ -125,6 +126,29 @@
 {
     //Inform our delegate of the new selection
     [delegate setAccount:[[sender selectedItem] representedObject]];
+    
+    //
+    [self updateMenu];
+}
+
+- (void)updateMenu
+{
+    NSEnumerator	*enumerator;
+    NSMenuItem		*menuItem;
+    AIAccount		*account = [delegate account];
+
+    //Update the 'Checked' menu item
+    enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
+    while(menuItem = [enumerator nextObject]){
+        if([menuItem representedObject] == account){
+            [menuItem setState:NSOnState];
+        }else{
+            [menuItem setState:NSOffState];
+        }
+    }
+
+    //Size the menu to fit
+    [popUp_accounts sizeToFit];
 }
 
 @end

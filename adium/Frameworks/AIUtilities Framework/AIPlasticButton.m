@@ -137,7 +137,9 @@
     [plasticCaps release];
     [plasticMiddle release];
     [plasticPressedCaps release];
-    [plasticPressedMiddle release];    
+    [plasticPressedMiddle release];
+    [plasticDefaultCaps release];
+    [plasticDefaultMiddle release];    
 
     [super dealloc];
 }

@@ -179,8 +179,7 @@
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
 {
-    visible = NO;
-    
+    //
     if(visible && !view_accountSelection){ //Show the account selection view
         view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self owner:owner];
         [view_contents addSubview:view_accountSelection];
@@ -269,7 +268,7 @@
 }
 
 - (void)dealloc
-{
+{    
     //Close chat
     if(chat){
         [[owner contentController] closeChat:chat];
@@ -280,9 +279,17 @@
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
+    //Account selection view
+    if(view_accountSelection){
+        [view_accountSelection removeFromSuperview];
+        [view_accountSelection release]; view_accountSelection = nil;
+    }
+
     //nib
     [view_contents removeAllSubviews];
     [view_contents release]; view_contents = nil;
+
+
 
     [view_accountSelection release];
     [messageViewController release];

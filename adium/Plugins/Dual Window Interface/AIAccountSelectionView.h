@@ -35,6 +35,7 @@
 - (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate owner:(id)inOwner;
 - (void)configureView;
 - (void)configureAccountMenu;
+- (void)updateMenu;
 - (void)accountListChanged:(NSNotification *)notification;
 - (IBAction)selectNewAccount:(id)sender;
 
