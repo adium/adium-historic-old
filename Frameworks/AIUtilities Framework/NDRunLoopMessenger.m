@@ -453,23 +453,54 @@ struct message
  */
 - (void)handlePortMessage:(NSPortMessage *)aPortMessage
 {
-	struct message 	* theMessage;
-	NSData				* theData;
-	void					handlePerformSelectorMessage( struct message * aMessage );
-	void					handleInvocationMessage( struct message * aMessage );
+	//Invoke the portMessage's invocation if we are not already in the middle of an invocation
+	if(!insideMessageInvocation){
+		struct message 	* theMessage;
+		NSData				* theData;
+		void					handlePerformSelectorMessage( struct message * aMessage );
+		void					handleInvocationMessage( struct message * aMessage );
+		
+		theData = [[aPortMessage components] lastObject];
+		
+		theMessage = (struct message *)[theData bytes];
+		
+		insideMessageInvocation = YES;
+		[theMessage->invocation invoke];
+		insideMessageInvocation = NO;
 
-	theData = [[aPortMessage components] lastObject];
+		if( theMessage->resultLock )
+		{
+			[theMessage->resultLock lock];
+			[theMessage->resultLock unlockWithCondition:YES];
+		}
+		
+		[theMessage->invocation release];	// to balance messageInvocation:withResult:
+	}else{
+		/* 
+		 It is possible for an invocation to trigger a call which leads to HIToolbox's GetNextEventMatchingMask().
+		 If this occurs, we can end of trying to reinvoke the same message.  We want to ignore this and requeue the
+		 port message.
+		 */
 
-	theMessage = (struct message *)[theData bytes];
-	
-	[theMessage->invocation invoke];
-	if( theMessage->resultLock )
-	{
-		[theMessage->resultLock lock];
-		[theMessage->resultLock unlockWithCondition:YES];
+		if (!queuedPortMessageArray) queuedPortMessageArray = [[NSMutableArray alloc] init];
+
+		if ([queuedPortMessageArray count]){
+			[queuedPortMessageArray insertObject:aPortMessage
+										 atIndex:0];
+		}else{
+			[queuedPortMessageArray addObject:aPortMessage];
+		}
+		
+		
+		//Start the timer if necessary
+		if (!queuedPortMessageTimer){
+			queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:messageRetry
+																	   target:self 
+																	 selector:@selector(sendQueuedDataTimer:) 
+																	 userInfo:nil 
+																	  repeats:YES] retain];
+		}
 	}
-
-	[theMessage->invocation release];	// to balance messageInvocation:withResult:
 }
 
 /*
