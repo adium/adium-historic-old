@@ -217,13 +217,12 @@
 
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict
 {
-	if([groupCell respondsToSelector:@selector(setBackgroundColor:gradientColor:)]){
-		[groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
-						gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
-	}
-	
-	if([groupCell respondsToSelector:@selector(setShadowColor:)]){
-		[groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
+	if ([groupCell isKindOfClass:[AIListGroupGradientCell class]]){
+
+		[(AIListGroupGradientCell *)groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
+												   gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
+
+		[(AIListGroupGradientCell *)groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	}
 	
 	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE
@@ -260,7 +259,7 @@
 {
     if(item == nil){
 		if (hideRoot){
-			return([contactList visibleCount]);
+			return([(AIListGroup *)contactList visibleCount]);
 		}else{
 			return(1);
 		}
