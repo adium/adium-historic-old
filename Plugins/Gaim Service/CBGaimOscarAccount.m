@@ -13,7 +13,6 @@
 #define DELAYED_UPDATE_INTERVAL		1.0
 
 static NSString *ICQServiceID = nil;
-static NSString *MobileServiceID = nil;
 static NSImage  *ICQImage = nil;
 static NSImage  *ICQMenuImage = nil;
 static NSImage  *ICQOnlineMenuImage = nil;
@@ -74,28 +73,6 @@ static BOOL didInitOscar = NO;
 	
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
-}
-
-- (NSImage *)image
-{
-	return (image ? image : [super image]);
-}
-
-- (NSImage *)menuImage
-{
-	return (menuImage ? menuImage : [super menuImage]);
-}
-
-- (NSImage *)onlineMenuImage{
-	return (onlineMenuImage ? onlineMenuImage : [super onlineMenuImage]);
-}
-
-- (NSImage *)connectingMenuImage{
-	return (connectingMenuImage ? connectingMenuImage : [super connectingMenuImage]);
-}
-
-- (NSImage *)offlineMenuImage{
-	return (offlineMenuImage ? offlineMenuImage : [super offlineMenuImage]);
 }
 
 - (void)dealloc
@@ -236,35 +213,39 @@ static BOOL didInitOscar = NO;
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
-	AIListContact   *contact;
-	
-	contact = [super _contactWithUID:sourceUID];
-	
-	if (![contact statusObjectForKey:@"DisplayServiceID"]){
-		BOOL			isICQ, isMobile;
-		char			firstCharacter;
-		firstCharacter = [sourceUID characterAtIndex:0];
-		if ( (isICQ = (firstCharacter >= '0' && firstCharacter <= '9')) || (isMobile = (firstCharacter == '+')) ) {
-			if (isICQ){
-				if (!ICQServiceID) ICQServiceID = @"ICQ";
-				[contact setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:NO];
-			}else{
-				if (!MobileServiceID) MobileServiceID = @"Mobile";
-				[contact setStatusObject:MobileServiceID forKey:@"DisplayServiceID" notify:NO];
-			}
-			
-			//Apply any changes
-			[contact notifyOfChangedStatusSilently:silentAndDelayed];
-			
-		}else {
-			[contact setStatusObject:[contact serviceID] forKey:@"DisplayServiceID" notify:NO];
+	AIListContact	*contact = [[adium contactController] existingContactWithService:service
+																			 account:self
+																				 UID:sourceUID];
+	if(!contact){
+		NSString	*contactServiceID = nil;
+		AIService	*contactService;
+		char		firstCharacter = [sourceUID characterAtIndex:0];
+		
+		//Determine service based on UID
+		if([sourceUID hasSuffix:@"@mac.com"]){
+			contactServiceID = @"libgaim-oscar-Mac";
+		}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+			contactServiceID = @"libgaim-oscar-ICQ";
+//		}else if(isMobile = (firstCharacter == '+')){
+//			contactServiceID = @"libgaim-oscar-AIM";
+		}else{
+			contactServiceID = @"libgaim-oscar-AIM";
 		}
+		
+		
+		contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
+
+		NSLog(@"%@ -> %@",contactServiceID,contactService);
+
+		contact = [[adium contactController] contactWithService:contactService
+														account:self
+															UID:sourceUID];
 	}
 	
-	return contact;
+	return(contact);
 }
-
-
+	
+	
 #pragma mark Account Connection
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
@@ -813,7 +794,7 @@ aim_srv_setavailmsg(od->sess, text);
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if (account &&
 			[listObject isKindOfClass:[AIListContact class]] && 
-			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
+			[(AIListContact *)listObject account] == self){
 			
 			if ([[userInfo objectForKey:@"Key"] isEqualToString:@"Notes"]){
 				
