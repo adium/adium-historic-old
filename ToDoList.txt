@@ -1,5 +1,62 @@
 //-------------------------------------------------------------------------------------------------------
-// Adium 0.8
+// Adium 0.8 beta bugs
+//-------------------------------------------------------------------------------------------------------
+- Contact list isn't defaulting right at all
+- First launch, need setup assistant or need to open account prefs
+- Preference window needs to default to account prefs
+- Account string should read "click the + to add a new account" when there are no accounts
+- Account add button needs a triangle to indicate that it's a popup
+- Align controls in Privacy tab of account prefs
+- Default new accounts (or atleast the first new account) to online
+- List toolbar needs a new default set
+- List toolbar needs icon for toggle groups, add group, toggle offline contacts
+- Message window toolbar needs new default set
+- Move window shadow preference from layout to advanced
+- Move opacity preference from layout to main pane or advanced
+- Move maximum width slider from layout to main pane
+- Version 3 message styles need a default variant, or need to apply their default variant
+- Webkit background image type selector needs to be re-implemented
+- Existing message windows should not update for preference changes for performance reasons
+- Status window when away preference is not implemented
+- Status set state after inactivity is not implemented
+- Status delete and edit buttons don't dim correctly on panel load
+- Crash on launch in 10.2 because of AIColorAdditions use of strtof
+- Default contact list transitions to off for performance
+- Default contact list flashing to off
+- Finish implementing and commit state icons on the contact list code
+- Remove fonts/colors preference from advanced, force it to YES
+- Clean up layout in advanced messages pane
+- Default mininum font size to 8 or 9pt
+- MSN display names as extended status isn't working
+- Implement 'edit menu' sheets for deleting list layouts and themes
+- Improve behavior when customizing existing layouts and themes
+- Improve behavior when canceling changes to layouts and themes
+- Implement emoticon menu in appearance
+- Implement emoticons customize sheet in appearance
+- Prevent layout changes from altering prefs that are no longer in layout
+- Add a warning sheet about window moving/performance for non-standard styles
+- Not fetching buddy icons as well as we could be
+- Moving MSN buddies from one group to another doesn't usually work
+- List editing "Too many buddies" error is frequent and random
+- Contact list, file transfers, and MANY other windows not remembering their positions (did the switch from windowShouldClose to windowWillClose in AIWindowController break this?)
+- Adding an invisible state makes a third section in the state menu (including another custom... item)
+- Disable the my webcam window so people don't expect video chat to work
+- Log viewer drawer defaults to about 2 pixels wide
+- Rounded edges of the info window tab view are visible
+- Info window events tab buttons need to be turned back into +/-
+- Contact menu is inconsistent with menu item naming, item grouping
+- View menu is inconsistent with menu item grouping
+- Scrolling credits need more whitespace at the bottom so they don't snap
+- Wrapped messages in minimal are indenting into the margin
+- Show header preference needs to disable for styles without a header
+- Custom background preferences needs to disable if styles disallow it
+- Restore defaults is broken, just remove it?
+
+
+
+
+//-------------------------------------------------------------------------------------------------------
+// Old junk
 //-------------------------------------------------------------------------------------------------------
 
 (incomplete list, feel free to add and assign issues)
@@ -12,15 +69,12 @@
 
 [Preferences]
 - Restore defaults broken?
-- Message formatting [Adam]
 - MSN preferences to Accounts Options
 
 [Accounts]
 - Jabber account registration
-- Changing personal settings (profile, display name, whatever) disconnects the account.
 - If you connect, change a server setting, disconnect, then reconnect, we still use the old server setting.
 	Specifically seen this with Jabber, switching from one jabber server to another.
-- Active checkbox doesn't update properly if you cancel the password dialog
 
 [Growl]
 - Growl sticky support [Colin]
