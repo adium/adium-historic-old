@@ -447,10 +447,10 @@
         [entryString adjustColorsToShowOnBackground:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
         
         //headIndent doesn't apply to the first line of a paragraph... so when new lines are in the entry, we need to tab over to the proper location
-        [entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength];
-        NSRange fullLength = NSMakeRange(0, [entryString length]);
-        [entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength];
-        NSRange fullLength = NSMakeRange(0, [entryString length]);
+        if ([entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength])
+            NSRange fullLength = NSMakeRange(0, [entryString length]);
+        if ([entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength])
+            NSRange fullLength = NSMakeRange(0, [entryString length]);
                 
         //Run the entry through the filters and add it to tipString
         [tipString appendAttributedString:
