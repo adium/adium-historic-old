@@ -27237,7 +27237,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
 			name = "Single Window Interface.nib";
-			path = "build/Adium.app/Contents/PlugIns/Single Window Interface.AdiumPlugin/Contents/Resources/Single Window Interface.nib";
+			path = "Plugins/Single Window Interface/Single Window Interface.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
