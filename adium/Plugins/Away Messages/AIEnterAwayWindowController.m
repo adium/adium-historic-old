@@ -70,8 +70,8 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [[owner preferenceController] setPreference:newAway forKey:KEY_QUICK_AWAY_MESSAGE group:PREF_GROUP_AWAY_MESSAGES];
 
     //Set the away
-    [[owner accountController] setProperty:newAway forKey:@"AwayMessage" account:nil];
-
+    [[owner accountController] setProperty:newAway  forKey:@"AwayMessage"   account:nil];
+    [[owner accountController] setProperty:nil      forKey:@"Autoresponse"  account:nil];
     //Close our window
     [self closeWindow:nil];
 }
