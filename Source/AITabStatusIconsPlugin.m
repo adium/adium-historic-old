@@ -71,22 +71,23 @@
     NSSet		*modifiedAttributes = nil;
 	
 	if(inModifiedKeys == nil ||
-	   [inModifiedKeys containsObject:@"NotAStranger"] ||
+	   [inModifiedKeys containsObject:@"Online"] ||
 	   [inModifiedKeys containsObject:@"StatusName"] ||
 	   [inModifiedKeys containsObject:@"StatusType"] ||
 	   [inModifiedKeys containsObject:@"IsIdle"] ||
-	   [inModifiedKeys containsObject:@"Online"]){
+	   [inModifiedKeys containsObject:@"NotAStranger"] ||
+	   [inModifiedKeys containsObject:@"IsMobile"]){
 		
 		//Tab
 		NSImage	*icon = [AIStatusIcons statusIconForListObject:inObject
-														type:AIStatusIconTab
-												   direction:AIIconNormal];
+														  type:AIStatusIconTab
+													 direction:AIIconNormal];
 		[[inObject displayArrayForKey:@"Tab Status Icon"] setObject:icon withOwner:self];
-
+		
 		//List
 		icon = [AIStatusIcons statusIconForListObject:inObject
-											   type:AIStatusIconList
-										  direction:AIIconNormal];
+												 type:AIStatusIconList
+											direction:AIIconNormal];
 		[[inObject displayArrayForKey:@"List Status Icon"] setObject:icon withOwner:self];
 		
 		modifiedAttributes = [NSSet setWithObjects:@"Tab Status Icon", @"List Status Icon", nil];
