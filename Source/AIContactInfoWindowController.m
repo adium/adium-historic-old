@@ -172,7 +172,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				label = AILocalizedString(@"Info","short form of tab view item title for Contact Info window's first tab");
 				break;
 			case AIInfo_Accounts:
-				label = AILocalizedString(@"Accounts","tab view item title for Accounts a contact is on in the Contact Info window");
+				label = ACCOUNTS_TITLE;
 				break;
 			case AIInfo_Alerts:
 				label = EVENTS_TITLE;
