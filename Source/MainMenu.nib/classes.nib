@@ -71,6 +71,7 @@
         }, 
         {
             ACTIONS = {
+                adiumPrint = id; 
                 closeChatMenu = id; 
                 closeContactList = id; 
                 closeMenu = id; 
@@ -100,6 +101,7 @@
                 "menuItem_italic" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteFormatted" = NSMenuItem; 
+                "menuItem_print" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
             }; 
             SUPERCLASS = NSObject; 
@@ -199,7 +201,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }
+        {ACTIONS = {adiumPrint = id; }; CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

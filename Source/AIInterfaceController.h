@@ -36,6 +36,8 @@ typedef enum {
 	DCWebkitMessageView			//Preferred message view
 } DCMessageViewType;
 
+@class AIMenuController;
+
 //Sends Interface_ViewDesiredSizeDidChange notifications
 @protocol AIAutoSizingView 
 - (NSSize)desiredSize;
@@ -60,8 +62,6 @@ typedef enum {
 @protocol AIMessageViewPlugin <NSObject>	
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
 @end
-
-
 
 @protocol AIContactListTooltipEntry <NSObject>
 - (NSString *)labelForObject:(AIListObject *)inObject;
@@ -101,7 +101,9 @@ typedef enum {
 - (void)closeContactList;
 @end
 
-@class AIMenuController;
+@interface NSObject (AdiumPrinting)
+- (void)adiumPrint:(id)sender;
+@end
 
 @interface AIInterfaceController : NSObject {
 	IBOutlet	AIMenuController	*menuController;
@@ -119,6 +121,8 @@ typedef enum {
 	IBOutlet    NSMenuItem      *menuItem_showToolbar;
 	IBOutlet    NSMenuItem      *menuItem_customizeToolbar;
 
+	IBOutlet	NSMenuItem		*menuItem_print;
+	
     NSMutableArray				*contactListViewArray;
     NSMutableArray				*messageViewArray;
     NSMutableArray				*interfaceArray;
@@ -149,17 +153,11 @@ typedef enum {
 	
 	BOOL	tabbedChatting;
 	
-	
-	
-	
 	id <AIInterfaceController> interfacePlugin;
 	id <AIContactListController> contactListPlugin;
-	
-	
+		
 	BOOL	groupChatsByContactGroup;
 	BOOL	arrangeChats;
-	
-	
 }
 
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
@@ -225,6 +223,9 @@ typedef enum {
 //Custom pasting
 - (IBAction)paste:(id)sender;
 - (IBAction)pasteFormatted:(id)sender;
+
+//Custom printing
+- (IBAction)adiumPrint:(id)sender;
 
 //Custom Dimming menu items
 - (IBAction)toggleFontTrait:(id)sender;

@@ -82,8 +82,30 @@
 									   name:Content_DidReceiveContent object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:)
 									   name:Content_FirstContentRecieved object:nil];
-
 }
+
+#if 0
+//Can be called by a timer to periodically log the responder chain
+//[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(reportResponderChain:) userInfo:nil repeats:YES];
+- (void)reportResponderChain:(NSTimer *)inTimer
+{
+	NSMutableString	*responderChain = [NSMutableString string];
+	
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+	[responderChain appendFormat:@"%@ (%i): ",keyWindow,[keyWindow respondsToSelector:@selector(print:)]];
+	
+	NSResponder	*responder = [keyWindow firstResponder];
+	
+	//First, walk down the responder chain looking for a responder which can handle the preferred selector
+	while(responder){
+		[responderChain appendFormat:@"%@ (%i)",responder,[responder respondsToSelector:@selector(print:)]];
+		responder = [responder nextResponder];
+		if(responder) [responderChain appendString:@" -> "];
+	}
+
+	NSLog(responderChain);
+}
+#endif
 
 - (void)finishIniting
 {
@@ -1160,6 +1182,19 @@
 	}
 }
 
+//Custom Printing ------------------------------------------------------------------------------------------------------
+#pragma mark Custom Printing
+- (IBAction)adiumPrint:(id)sender
+{
+	//Pass the print command to the window, which is responsible for routing it to the correct place or
+	//creating a view and printing.  Adium will not print from a window that does not respond to adiumPrint:
+	NSWindow	*keyWindowController = [[[NSApplication sharedApplication] keyWindow] windowController];
+	if([keyWindowController respondsToSelector:@selector(adiumPrint:)]){
+		[keyWindowController performSelector:@selector(adiumPrint:)
+								  withObject:sender];
+	}
+}
+
 //Custom Dimming menu items --------------------------------------------------------------------------------------------
 #pragma mark Custom Dimming menu items
 //The standard ones do not dim correctly when unavailable
@@ -1189,8 +1224,8 @@
 //Menu item validation
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	NSWindow	*window = [[NSApplication sharedApplication] keyWindow];
-	NSResponder *responder = [window firstResponder]; 
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+	NSResponder *responder = [keyWindow firstResponder]; 
 
     if(menuItem == menuItem_bold || menuItem == menuItem_italic){
 		NSFont			*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
@@ -1205,15 +1240,18 @@
 		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType,nil]] != nil);
 	
 	}else if(menuItem == menuItem_showToolbar){
-		[menuItem_showToolbar setTitle:([[window toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
-		return([window toolbar] != nil);
+		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
+		return([keyWindow toolbar] != nil);
 	
 	}else if(menuItem == menuItem_customizeToolbar){
-		return([window toolbar] != nil && [[window toolbar] isVisible]);
+		return([keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible]);
 
 	}else if(menuItem == menuItem_closeChat){
 		return(activeChat != nil);
 		
+	}else if(menuItem == menuItem_print){
+		return([[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)]);
+
 	}else{
 		return(YES);
 	}
