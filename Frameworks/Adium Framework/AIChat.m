@@ -62,15 +62,8 @@
 	NSImage			*image = nil;
 	
 	if(listObject){
-		//Use the contact's image
 		image = [listObject userIcon];
-		if(!image){
-			//If that is not available, use the contact's service image (cached, since it's a lot of work to look up)
-			if(!_serviceImage){
-				_serviceImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
-			}
-			image = _serviceImage;
-		}
+		if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
 	}
 
 	return(image);
@@ -247,7 +240,7 @@
 	if (!uniqueChatID) {
 		AIListObject	*listObject;
 		if (listObject = [self listObject]){
-			uniqueChatID = [listObject uniqueObjectID];
+			uniqueChatID = [listObject internalObjectID];
 		}else{
 			uniqueChatID = [AIChat uniqueChatIDForChatWithName:name
 													 onAccount:account];
@@ -268,7 +261,7 @@
 
 + (NSString *)uniqueChatIDForChatWithName:(NSString *)inName onAccount:(AIAccount *)inAccount
 {
-	return [NSString stringWithFormat:@"%@.%@", inName, [inAccount uniqueObjectID]];
+	return [NSString stringWithFormat:@"%@.%@", inName, [inAccount internalObjectID]];
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
@@ -311,7 +304,9 @@
     [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
 }
 
-#pragma mark Applescript Commands
+
+//Applescript ----------------------------------------------------------------------------------------------------------
+#pragma mark Applescript
 - (id)sendScriptCommand:(NSScriptCommand *)command {
 	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
 	NSString		*message = [evaluatedArguments objectForKey:@"message"];
