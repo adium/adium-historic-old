@@ -227,7 +227,7 @@
                                     [replacement addAttributes:[inMessage attributesAtIndex:currentLocation effectiveRange:nil] range:NSMakeRange(0,1)];
                                     
                                     //insert the emoticon
-                                    if(!newMessage) newMessage = [inMessage mutableCopy];
+                                    if(!newMessage) newMessage = [[inMessage mutableCopy] autorelease];
                                     [newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength) withAttributedString:replacement];
                                     
                                     //Update where we are in the original and replacement messages
