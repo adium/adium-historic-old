@@ -1,0 +1,5 @@
+				Adium X Version History
+				-----------------------
+
+Version X.XX (X/XX/XXXX)
+- Initial Release

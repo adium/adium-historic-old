@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Auto Encode</key>
+	<string>FALSE</string>
+	<key>Auto Open</key>
+	<string>TRUE</string>
+	<key>Background Image Path</key>
+	<string>dmgBackground.png</string>
+	<key>Build Format</key>
+	<string>DMG (OS X only)</string>
+	<key>Custom Icon Path</key>
+	<string></string>
+	<key>Disk Image Name</key>
+	<string>~/AdiumNightly/build/AdiumX_0.50.dmg</string>
+	<key>Encode Format</key>
+	<string>None</string>
+	<key>Encryption Type</key>
+	<string>None</string>
+	<key>Finalize Format</key>
+	<string>Read-only with compression</string>
+	<key>Icon Size</key>
+	<string>96</string>
+	<key>Image Size Extra</key>
+	<string>0</string>
+	<key>Image Size Type</key>
+	<string>Automatic</string>
+	<key>Internet Enable</key>
+	<string>FALSE</string>
+	<key>Item List</key>
+	<array>
+		<dict>
+			<key>Origin</key>
+			<string>{179, 88}</string>
+			<key>Path</key>
+			<string>/Users/adamiser/Code/adium/build/Adium.app</string>
+			<key>Type</key>
+			<string>File Item</string>
+		</dict>
+		<dict>
+			<key>Origin</key>
+			<string>{314, 260}</string>
+			<key>Path</key>
+			<string>/Users/adamiser/Code/adium/License.txt</string>
+			<key>Type</key>
+			<string>File Item</string>
+		</dict>
+		<dict>
+			<key>Origin</key>
+			<string>{50, 260}</string>
+			<key>Path</key>
+			<string>/Users/adamiser/Code/adium/Changes.txt</string>
+			<key>Type</key>
+			<string>File Item</string>
+		</dict>
+		<dict>
+			<key>Origin</key>
+			<string>{182, 260}</string>
+			<key>Path</key>
+			<string>/Users/adamiser/Code/adium/ReadMe.rtf</string>
+			<key>Type</key>
+			<string>File Item</string>
+		</dict>
+	</array>
+	<key>License List</key>
+	<array/>
+	<key>Lock Frame</key>
+	<string>TRUE</string>
+	<key>Project File Path</key>
+	<string>/Users/adamiser/Code/adium/Utilities/DiskImage/</string>
+	<key>Show Toolbar</key>
+	<string>TRUE</string>
+	<key>Volume Name</key>
+	<string>Adium X 0.50</string>
+	<key>Window Frame</key>
+	<string>{{146, 81}, {531, 496}}</string>
+</dict>
+</plist>
