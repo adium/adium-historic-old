@@ -187,6 +187,9 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     [textView_errorInfo setVerticallyResizable:YES];
     [textView_errorInfo setDrawsBackground:NO];
     [scrollView_errorInfo setDrawsBackground:NO];
+	
+	//Center
+	[[self window] center];
 }
 
 // called as the window closes
