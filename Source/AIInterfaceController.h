@@ -30,6 +30,11 @@
 #define KEY_SORT_CHATS					@"Sort Chats"
 #define KEY_GROUP_CHATS_BY_GROUP		@"Group Chats By Group"
 
+//Identifiers for the various message views
+typedef enum {
+	DCStandardMessageView = 1,	//10.2 only, unless webkit is not available
+	DCWebkitMessageView			//Preferred message view
+} DCMessageViewType;
 
 //Sends Interface_ViewDesiredSizeDidChange notifications
 @protocol AIAutoSizingView 
@@ -202,6 +207,7 @@
 //Message View
 - (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin;
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+- (DCMessageViewType)preferredMessageView;
 
 //Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;

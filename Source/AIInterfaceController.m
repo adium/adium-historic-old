@@ -21,7 +21,6 @@
 #define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
 
-#define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
 #define DISPLAY_IMAGE_ON_RIGHT			NO
@@ -32,6 +31,14 @@
 
 #define CONTACT_LIST_WINDOW_MENU_TITLE  AILocalizedString(@"Contact List","Title for the contact list menu item")
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
+
+
+#define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns/"	//Path to the internal plugins
+#define DIRECTORY_EXTERNAL_PLUGINS		@"/PlugIns"				//Path to the external plugins
+#define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
+
+#define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
+#define SMV_PLUGIN						@"Standard Message View.AdiumPlugin"
 
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
@@ -702,6 +709,43 @@
     return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
 }
 
+//Returns a value indicating which message view should be used on this system
+//Ignoring the result of this can cause all sorts of nastiness
+- (DCMessageViewType)preferredMessageView
+{
+
+	DCMessageViewType viewToUse = DCStandardMessageView;
+
+	if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter] && [NSApp isWebKitAvailable] ) {
+		viewToUse = DCWebkitMessageView;
+	}
+	
+	if( viewToUse == DCWebkitMessageView ) {
+		if( ![[owner pluginController] pluginEnabled:WEBKIT_PLUGIN] ) {
+			viewToUse = DCStandardMessageView;
+		}
+	}
+	
+	if( viewToUse == DCStandardMessageView ) {
+		if( ![[owner pluginController] pluginEnabled:SMV_PLUGIN] ) {
+			viewToUse = 0;
+			
+			// Offer to quit before things really go bad
+			if( NSRunInformationalAlertPanel(@"No Message View Plugin Installed",
+											@"Adium could not find a message view plugin to use. Please reenable the WebKit Message View or Standard Message View in the Finder.",
+											@"Quit", 
+											@"Continue",
+											 nil) == NSAlertDefaultReturn) {
+				[NSApp terminate:nil];
+			
+			}
+				
+		}
+	}
+	
+	return viewToUse;
+
+}
 
 //Error Display --------------------------------------------------------------------------------------------------------
 #pragma mark Error Display

@@ -86,6 +86,7 @@
 - (ESFileTransferController *)fileTransferController;
 - (ESContactAlertsController *)contactAlertsController;
 - (ESDebugController *)debugController;
+- (AIPluginController *)pluginController;
 //- (BZActivityWindowController *)activityWindowController;
 
 - (NSNotificationCenter *)notificationCenter;

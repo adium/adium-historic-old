@@ -21,6 +21,7 @@
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
+#define SMV_PLUGIN						@"Standard Message View.AdiumPlugin"
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
 
 @interface AIPluginController (PRIVATE)
@@ -60,6 +61,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 //init
 - (void)initController
 {
+	
     pluginArray = [[NSMutableArray alloc] init];
 
 #ifdef ADIUM_COMPONENTS
@@ -153,6 +155,9 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 	[self loadPluginWithClass:[ESFileTransferMessagesPlugin class]];
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
+
+	// Check for the preferred message view; bail if there is none
+	[[owner interfaceController] preferredMessageView];
 #endif
 	
 	[[owner notificationCenter] addObserver:self 
@@ -327,7 +332,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 						[[NSNotificationCenter defaultCenter] removeObserver:plugin];
 					}
 					NSString	*errorPartOne = AILocalizedString(@"The","definite article");
-					NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory","part of the plugin error message");
+					NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium's plugin directory","part of the plugin error message");
 					NSString	*errorPartThree = AILocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
 					[[owner interfaceController] handleErrorMessage:(AILocalizedString(@"Plugin load error",nil))
 													withDescription:[NSString stringWithFormat:@"%@ \"%@\" %@ (\"%@\")%@.", errorPartOne,
@@ -352,6 +357,20 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
         [plugin uninstallPlugin];
     }
 	
+}
+
+// Returns YES if the named plugin exists. Does not imply that the plugin actually loaded or is functioning.
+- (BOOL)pluginEnabled:(NSString *)pluginName
+{
+	BOOL inBundle = NO;
+	BOOL inExternal = NO;
+	
+	inBundle = [[NSFileManager defaultManager] fileExistsAtPath:[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
+	if(!inBundle)
+		inExternal = [[NSFileManager defaultManager] fileExistsAtPath:[[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
+	
+	AILog(@"#### %@ enabled: in %d, out %d",pluginName,inBundle,inExternal);
+	return(inBundle || inExternal);	
 }
 
 @end
