@@ -110,11 +110,11 @@
 		[textField_proxyHostName setStringValue:(proxyHost ? proxyHost : @"")];
 		
 		NSString	*proxyPort = [account preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
-		[textField_proxyPortNumber setStringValue:(proxyPort ? proxyHost : @"")];
+		[textField_proxyPortNumber setStringValue:(proxyPort ? proxyPort : @"")];
 		
 		//Username
 		NSString	*proxyUser = [account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
-		[textField_proxyUserName setStringValue:(proxyUser ? proxyHost : @"")];
+		[textField_proxyUserName setStringValue:(proxyUser ? proxyUser : @"")];
 
 		[self updatePasswordField];
 		[self configureControlDimming];
