@@ -36,10 +36,10 @@ static OSErr AppleScriptActiveProc( long aRefCon )
 
 static OSErr AppleEventResumeHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon )
 {
-	NDComponentInstance			* self = (id)aRefCon;
-	OSErr								theError = errAEEventNotHandled;
-	id									theResumeHandler = [self appleEventResumeHandler];
-	NSAppleEventDescriptor		* theResult = nil;	
+	NDComponentInstance							* self = (id)aRefCon;
+	OSErr										theError = errAEEventNotHandled;
+	id <NDScriptDataAppleEventResumeHandler>	theResumeHandler = [self appleEventResumeHandler];
+	NSAppleEventDescriptor						* theResult = nil;
 
 	NSCParameterAssert( self != nil );
 

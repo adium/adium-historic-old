@@ -44,3 +44,14 @@
 - (BOOL)appleScriptActive;
 @end
 
+/*!
+	@protocol NDScriptDataAppleEventResumeHandler
+ */
+@protocol NDScriptDataAppleEventResumeHandler
+
+/*!
+	@method handleResumeAppleEvent:
+ */
+- (NSAppleEventDescriptor *)handleResumeAppleEvent:(NSAppleEventDescriptor *)aDescriptor;
+
+@end
