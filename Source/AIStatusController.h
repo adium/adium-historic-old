@@ -115,6 +115,7 @@
 }
 
 - (void)initController;
+- (void)beginClosing;
 - (void)closeController;
 - (void)finishIniting;
 - (NSArray *)stateArray;

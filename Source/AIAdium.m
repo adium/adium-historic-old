@@ -257,6 +257,9 @@ static NSString	*prefsCategory;
 //Give all the controllers a chance to close down
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	//Let the status controller we'll be closing so it can keep track of connected accounts for use with the global statuses
+	[statusController beginClosing];
+
 	//Preference controller needs to close the prefs window before the plugins that control it are unloaded
 	[preferenceController beginClosing];
 
