@@ -197,6 +197,7 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 		
 		account = buddy->account;
 		normalized = gaim_normalize(account, buddy->name);
+//		GaimDebug(@"contactLookupfromBuddy: Normalized %s to %s",buddy->name,normalized);
 		name  = [NSString stringWithUTF8String:normalized];
 
 		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:name];
@@ -246,7 +247,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		char			*name;
 		
 		account = conv->account;
-		GaimDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
+//		GaimDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
 		name = g_strdup(gaim_normalize(account, conv->name));
 		
 		//First, find the GaimBuddy with whom we are conversing
@@ -875,8 +876,10 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				AIChatErrorType	errorType = -1;
 				
 				if([messageString rangeOfString:@"Unable to send message"].location != NSNotFound){
-					if([messageString rangeOfString:@"Not logged in"].location != NSNotFound){
+					if(([messageString rangeOfString:@"Not logged in"].location != NSNotFound) ||
+					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)){
 						errorType = AIChatUserNotAvailable;
+
 					}else if(([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
 							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)){
 						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
