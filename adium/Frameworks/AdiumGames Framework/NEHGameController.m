@@ -92,6 +92,9 @@
 
 - (void)gameDidComplete:(GameEndState)end displaySheet:(BOOL)display
 {
+	[self retain];			//Retain ourself...
+	[plugin endGameWith:contact_OtherPlayer fromAccount:account_Player]; //...and have the plugin release us
+	state = State_GameOver;
 	if(display)
 		NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,[self window],nil,NULL,NULL,NULL,end==End_GameTied?TIE:(end == End_UserWon?YOU_WIN:YOU_LOSE));
 }
@@ -156,10 +159,6 @@
 {
 }
 
-- (void)gameDidEnd
-{
-}
-
 - (void)didSendInvitation:(int)playAs
 {
 }
@@ -191,8 +190,13 @@
 	if(state == State_Playing)
 	{
 		[self sendMessage:@"" ofType:MSG_TYPE_END_GAME];
+		[self end:nil returnCode:0 contextInfo:NULL];
 	}
-	[self end:nil returnCode:0 contextInfo:NULL];
+	else if(state == State_GameOver)
+	{
+		[self close];
+		[self release];
+	}
 }
 
 - (IBAction)acceptInvite:(id)sender
@@ -251,7 +255,6 @@
 - (void)end:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	[self close];
-	[self gameDidEnd];
 	[plugin endGameWith:contact_OtherPlayer fromAccount:account_Player];
 }
 
