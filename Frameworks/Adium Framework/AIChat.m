@@ -449,4 +449,10 @@ static int nextChatNumber = 0;
 - (float)largestOrder { return(1E10); }
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
+#pragma mark Debugging
+- (NSString *)description
+{
+	return([NSString stringWithFormat:@"%@:%@",[super description],[self uniqueChatID]]);
+}
+
 @end
