@@ -101,7 +101,7 @@
 			if(!object) object = [[chat listObject] UID];
 			account	= [chat account];
 			source	= [content source];
-			message = (NSString *)[[[content message] safeString] string];
+			message = [[[content message] safeString] string];
 			
 			
 			if(account && source) { //valid message
@@ -151,7 +151,7 @@
 			if(!object) object = [[chat listObject] UID];
 			account	= [chat account];
 			source	= [content source];
-			message = (NSString *)[content message];
+			message = [[[content message] safeString] string];
 			
 			if(account && source){
 				theMessage = [[NSMutableString alloc] init];
