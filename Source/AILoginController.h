@@ -20,7 +20,7 @@
 @class AILoginWindowController;
 
 @interface AILoginController : NSObject{
-    IBOutlet	AIAdium			*owner;
+    IBOutlet	AIAdium			*adium;
     
     NSString					*currentUser;			//The current logged in username
     NSString					*userDirectory;			//The current user's Adium home directory
