@@ -449,6 +449,7 @@
 				4BE9FFE7055981AB00359B15,
 				F59DB3D6033EA9CD01A8010A,
 				F59DB3D7033EA9CD01A8010A,
+				344C0D4306B6D5E300DA7200,
 				F5741745033E731F01A8010A,
 				F5BF8A6002C7D2F401A8010A,
 				4B4F5B2C042D642500A8010A,
@@ -2161,6 +2162,117 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		344C0D4306B6D5E300DA7200 = {
+			children = (
+				344C0D4E06B6D63800DA7200,
+				344C0D4F06B6D63800DA7200,
+				344C0D4806B6D61B00DA7200,
+				344C0D4C06B6D62600DA7200,
+			);
+			isa = PBXGroup;
+			name = Applescriptability;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D4806B6D61B00DA7200 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = AdiumSuite.scriptSuite;
+			path = Source/AdiumSuite.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D4906B6D61B00DA7200 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = English;
+			path = Source/English.lproj/AdiumSuite.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D4A06B6D61B00DA7200 = {
+			fileRef = 344C0D4806B6D61B00DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344C0D4C06B6D62600DA7200 = {
+			children = (
+				344C0D4906B6D61B00DA7200,
+			);
+			isa = PBXVariantGroup;
+			name = AdiumSuite.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D4D06B6D62600DA7200 = {
+			fileRef = 344C0D4C06B6D62600DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344C0D4E06B6D63800DA7200 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESApplescriptabilityController.m;
+			path = Source/ESApplescriptabilityController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D4F06B6D63800DA7200 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESApplescriptabilityController.h;
+			path = Source/ESApplescriptabilityController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D5006B6D63800DA7200 = {
+			fileRef = 344C0D4E06B6D63800DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344C0D5106B6D63800DA7200 = {
+			fileRef = 344C0D4F06B6D63800DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344C0D5206B6D76000DA7200 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ApplescriptDebugging.m;
+			path = "Frameworks/AIUtilities Framework/ApplescriptDebugging.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D5306B6D76000DA7200 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ApplescriptDebugging.h;
+			path = "Frameworks/AIUtilities Framework/ApplescriptDebugging.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0D5406B6D76000DA7200 = {
+			fileRef = 344C0D5206B6D76000DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344C0D5506B6D76000DA7200 = {
+			fileRef = 344C0D5306B6D76000DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		344ECA4506209C2D007256C6 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -5017,6 +5129,7 @@
 				4BF002CE06B55FCF00C32219,
 				4BA0E3DC06B6BBD3001750FC,
 				4BA0E3E006B6BBDF001750FC,
+				344C0D5106B6D63800DA7200,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5345,6 +5458,8 @@
 				4B97DB6706AC123A0003EE49,
 				9E28FDE706ADB30D0041553E,
 				9E28FDE806ADB30D0041553E,
+				344C0D4A06B6D61B00DA7200,
+				344C0D4D06B6D62600DA7200,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5667,6 +5782,7 @@
 				4BF002CF06B55FCF00C32219,
 				4BA0E3DD06B6BBD3001750FC,
 				4BA0E3E106B6BBDF001750FC,
+				344C0D5006B6D63800DA7200,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6312,6 +6428,7 @@
 				4BF000B406B5488900C32219,
 				4BF000B806B5492A00C32219,
 				4BA0E3E806B6BD86001750FC,
+				344C0D5506B6D76000DA7200,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6776,6 +6893,7 @@
 				4BF000B506B5488900C32219,
 				4BF000B906B5492A00C32219,
 				4BA0E3E906B6BD86001750FC,
+				344C0D5406B6D76000DA7200,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17760,6 +17878,8 @@
 				4B33F8DF0511F45000A8010A,
 				4B37AEEE058A8D4A00E266A7,
 				4B37AEEF058A8D4A00E266A7,
+				344C0D5206B6D76000DA7200,
+				344C0D5306B6D76000DA7200,
 			);
 			isa = PBXGroup;
 			name = Other;
