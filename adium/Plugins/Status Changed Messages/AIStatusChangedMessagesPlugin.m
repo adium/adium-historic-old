@@ -39,7 +39,7 @@
 {
     
     if([inModifiedKeys containsObject:@"StatusMessage"]){
-        NSString	*statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
+        NSString	*statusMessage = [[inObject statusObjectForKey:@"StatusMessage"] string];
 
 		if(statusMessage && [statusMessage length] != 0){
 			[self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forObject:inObject];
