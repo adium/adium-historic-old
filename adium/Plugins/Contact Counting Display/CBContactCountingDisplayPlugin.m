@@ -21,7 +21,6 @@
 	
     //register our prefs
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
-    prefs = [[CBContactCountingDisplayPreferences contactCountingDisplayPreferences] retain];
     
     //init our menu items
     visibleCountingMenuItem = [[NSMenuItem alloc] initWithTitle:VISIBLE_COUNTING_MENU_ITEM_TITLE target:self action:@selector(toggleMenuItem:) keyEquivalent:@""];
@@ -36,6 +35,7 @@
     //install our observers
     [[adium contactController] registerListObjectObserver:self];
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -54,8 +54,8 @@
 			[visibleCountingMenuItem setState:visibleCount];
 		}
 		
-        //Refresh all
-        [[adium contactController] updateAllListObjectsForObserver:self];
+		//Refresh all
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 
@@ -96,7 +96,6 @@
 
 - (void)uninstallPlugin
 {
-    [prefs release];
         
     //we are no longer an observer
     [[adium notificationCenter] removeObserver:self];

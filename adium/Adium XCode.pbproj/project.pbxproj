@@ -25468,36 +25468,6 @@
 //9E2
 //9E3
 //9E4
-		9E1BE1C005B245B4009B1A21 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBContactCountingDisplayPreferences.h;
-			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E1BE1C105B245B4009B1A21 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBContactCountingDisplayPreferences.m;
-			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E1BE1C205B245B4009B1A21 = {
-			fileRef = 9E1BE1C005B245B4009B1A21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E1BE1C305B245B4009B1A21 = {
-			fileRef = 9E1BE1C105B245B4009B1A21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E1BE1C605B248F0009B1A21 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -26546,7 +26516,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EBAC45305B21CD300A98ADC,
-				9E1BE1C205B245B4009B1A21,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26555,7 +26524,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E1BE1C705B248F0009B1A21,
-				BF64E94C05B3484800DC5BB5,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26564,7 +26532,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EBAC45405B21CD300A98ADC,
-				9E1BE1C305B245B4009B1A21,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26662,10 +26629,7 @@
 			children = (
 				9EBAC45105B21CD200A98ADC,
 				9EBAC45205B21CD300A98ADC,
-				9E1BE1C005B245B4009B1A21,
-				9E1BE1C105B245B4009B1A21,
 				9E1BE1C605B248F0009B1A21,
-				BF64E94B05B3484800DC5BB5,
 			);
 			isa = PBXGroup;
 			name = "Contact Counting Display";
@@ -28007,20 +27971,6 @@
 		};
 		BF5D5E5D05A38AAC001426E0 = {
 			fileRef = F5793984033E756E01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF64E94B05B3484800DC5BB5 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactCountingDisplay.nib;
-			path = "Plugins/Contact Counting Display/ContactCountingDisplay.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF64E94C05B3484800DC5BB5 = {
-			fileRef = BF64E94B05B3484800DC5BB5;
 			isa = PBXBuildFile;
 			settings = {
 			};
