@@ -42,11 +42,17 @@ typedef enum {
 	Screen_Name = 4
 } NameFormat;
 
+typedef enum {
+	Fill = 0,
+	Tile,
+	NoStretch,
+	Center
+} BackgroundTypes;
+
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
 	ESWKMVAdvancedPreferences		*advancedPreferences;
-	
-	
+
 	NSMutableDictionary				*styleDictionary;
 }
 

@@ -12,6 +12,10 @@
     IBOutlet	NSButton			*button_useAnotherAccount;
 	IBOutlet	NSTextView			*textView_message;
 
+	IBOutlet	NSTextField			*label_To;
+	IBOutlet	NSTextField			*label_From;
+	IBOutlet	NSTextField			*label_Message;
+	
 	AIListContact					*toContact;
 }
 

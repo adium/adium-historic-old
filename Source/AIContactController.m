@@ -1321,7 +1321,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
         [[adium notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
 										   name:Interface_ContactListDidResignMain 
 										 object:nil];
-		
+			
 		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
 		//(it will expand into showing both the normal and the alternate items when the menu changes)
 		[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
