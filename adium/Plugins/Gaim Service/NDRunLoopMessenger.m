@@ -11,7 +11,7 @@
 #import "NDRunLoopMessenger.h"
 
 #define PORT_MESSAGE_RETRY_TIMEOUT  0.5
-#define PORT_MESSAGE_RETRY			0.5
+#define PORT_MESSAGE_RETRY			0.01
 
 static NSString		* kThreadDictionaryKey = @"NDRunLoopMessengerInstance";
 static NSString		* kSendMessageException = @"NDRunLoopMessengerSendException",
@@ -439,24 +439,32 @@ struct message
 	if( port )
 	{
 		thePortMessage = [[NSPortMessage alloc] initWithSendPort:port receivePort:nil components:[NSArray arrayWithObject:aData]];
-
-		if( ![thePortMessage sendBeforeDate:[NSDate dateWithTimeIntervalSinceNow:PORT_MESSAGE_RETRY_TIMEOUT]] ){
-			//If the message can't be sent before the timeout, add it to a queue array and ensure a timer is firing to send it later
+		
+		//Ensure that messages are delivered in the order sent, so if we have queued messages, queue this new mesage, too
+		if (queuedPortMessageTimer){
 			if (!queuedPortMessageArray){
 				queuedPortMessageArray = [[NSMutableArray alloc] init];
 			}
 			
 			[queuedPortMessageArray addObject:thePortMessage];
-			
-			if (!queuedPortMessageTimer){
-				queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:PORT_MESSAGE_RETRY
-																		   target:self 
-																		 selector:@selector(sendQueuedDataTimer:) 
-																		 userInfo:nil 
-																		  repeats:YES] retain];
+		}else{
+			if( ![thePortMessage sendBeforeDate:[NSDate dateWithTimeIntervalSinceNow:PORT_MESSAGE_RETRY_TIMEOUT]] ){
+				//If the message can't be sent before the timeout, add it to a queue array and ensure a timer is firing to send it later
+				if (!queuedPortMessageArray){
+					queuedPortMessageArray = [[NSMutableArray alloc] init];
+				}
+				
+				[queuedPortMessageArray addObject:thePortMessage];
+				
+				if (!queuedPortMessageTimer){
+					queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:PORT_MESSAGE_RETRY
+																			   target:self 
+																			 selector:@selector(sendQueuedDataTimer:) 
+																			 userInfo:nil 
+																			  repeats:YES] retain];
+				}
 			}
 		}
-
 		[thePortMessage release];
 	}
 	else

@@ -29,7 +29,7 @@
 - (NSString *)displayServiceIDForUID:(NSString *)aUID;
 
 //- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
-- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact silently:(BOOL)silent;
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway;
 
@@ -57,7 +57,7 @@ static id<GaimThread> gaimThread = nil;
 	//Create a gaim account if one does not already exist
 	if (!account) {
 		[self createNewGaimAccount];
-		if (GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		if (GAIM_DEBUG) NSLog(@"%x: created GaimAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
 	}
 	
     return account;
@@ -191,8 +191,7 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
-	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
-		[theContact setStatusObject:nil forKey:@"Online" notify:NO];
+	if(contactOnlineStatus && ([contactOnlineStatus boolValue] != NO)){
 		[self _setInstantMessagesWithContact:theContact enabled:NO];
 		
 		if(!silentAndDelayed){
@@ -201,8 +200,8 @@ static id<GaimThread> gaimThread = nil;
 			[theContact setStatusObject:nil forKey:@"Signed Off" afterDelay:15];
 		}
 
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		//Will also apply any changes applied above, so no need to call notifyOfChangedStatusSilently 
+		[self removeAllStatusFlagsFromContact:theContact silently:silentAndDelayed];
 	}
 }
 
@@ -310,7 +309,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	if(theContact){
 		[theContact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:theContact];
+		[self removeAllStatusFlagsFromContact:theContact silently:YES];
 	}
 }
 
@@ -1128,8 +1127,13 @@ static id<GaimThread> gaimThread = nil;
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
     //Set our initial status
+	/*
+	[self performSelector:@selector(updateAllStatusKeys)
+			   withObject:nil
+			   afterDelay:1.00001];
+*/
 	[self updateAllStatusKeys];
-
+	
     //Reset reconnection attempts
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 
@@ -1199,7 +1203,7 @@ static id<GaimThread> gaimThread = nil;
 	while (contact = [enumerator nextObject]){
 		
 		[contact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:contact];
+		[self removeAllStatusFlagsFromContact:contact silently:YES];
 	}
 	
 	[[adium contactController] endListObjectNotificationDelay];
@@ -1345,7 +1349,7 @@ static id<GaimThread> gaimThread = nil;
 
 		//Set the away serverside
 		[gaimThread setAway:awayHTML onAccount:self];
-		
+
 		//We are now away
 		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
 		[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
@@ -1501,6 +1505,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)dealloc
 {	
+	NSLog(@"DEALLOC CBGAIMACCOUNT!");
     [chatDict release];
     [filesToSendArray release];
 	
@@ -1574,7 +1579,7 @@ static id<GaimThread> gaimThread = nil;
 /***************************/
 #pragma mark Private
 // Removes all the possible status flags from the passed contact
-- (void)removeAllStatusFlagsFromContact:(AIListContact *)theContact
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)theContact silently:(BOOL)silent
 {
     NSArray			*keyArray = [self contactStatusFlags];
 	NSEnumerator	*enumerator = [keyArray objectEnumerator];
@@ -1585,7 +1590,7 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:YES];
+	[theContact notifyOfChangedStatusSilently:silent];
 }
 
 - (NSArray *)contactStatusFlags
