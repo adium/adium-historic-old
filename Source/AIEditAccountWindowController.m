@@ -1,15 +1,15 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
@@ -53,8 +53,8 @@
 + (void)editAccount:(AIAccount *)inAccount onWindow:(id)parentWindow deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
 	AIEditAccountWindowController	*controller;
-	
-	controller = [[self alloc] initWithWindowNibName:@"EditAccountSheet" 
+
+	controller = [[self alloc] initWithWindowNibName:@"EditAccountSheet"
 											 account:inAccount
 									deleteIfCanceled:inDeleteIfCanceled];
 
@@ -74,7 +74,7 @@
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
-	if((self = [super initWithWindowNibName:windowNibName]) {
+	if((self = [super initWithWindowNibName:windowNibName])) {
 		account = [inAccount retain];
 		deleteIfCanceled = inDeleteIfCanceled;
 		userIconData = nil;
@@ -92,7 +92,7 @@
 
 	[super dealloc];
 }
-	
+
 /*!
  * @brief Setup the window before it is displayed
  */
@@ -102,22 +102,22 @@
 
 	//Center our window if we're not a sheet (or opening a sheet failed)
 	[[self window] center];
-	
+
 	//Account Overview
 	[image_serviceIcon setImage:[AIServiceIcons serviceIconForService:[account service]
 																 type:AIServiceIconLarge
-															direction:AIIconNormal]];	
+															direction:AIIconNormal]];
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	[textField_accountDescription setStringValue:[account UID]];
 	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
-	
+
 	//User icon
 	if(iconData = [account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 		NSImage *image = [[NSImage alloc] initWithData:iconData];
 		[imageView_userIcon setImage:image];
 		[image release];
-	}        
-	
+	}
+
 
 	//Insert the custom controls for this account
 	[self _removeCustomViewAndTabs];
@@ -143,7 +143,7 @@
 
 /*!
  * @brief Cancel
- * 
+ *
  * Close without saving changes. If deleteIfCanceled is YES, delete the account at this time.
  * deleteIfCanceled should only be YES if we were called to edit a newly created account. Canceling the process should
  * delete the account which we were passed.
@@ -159,7 +159,7 @@
 
 /*!
  * @brief Okay.
- * 
+ *
  * Save changes and close.
  */
 - (IBAction)okay:(id)sender
@@ -179,9 +179,9 @@
 {
 	//User icon
 	[account setPreference:(userIconData ? userIconData : [[imageView_userIcon image] PNGRepresentation])
-					forKey:KEY_USER_ICON 
+					forKey:KEY_USER_ICON
 					 group:GROUP_ACCOUNT_STATUS];
-					 
+
 	//Auto connect
 	[account setPreference:[NSNumber numberWithBool:[checkBox_autoConnect state]]
 					forKey:@"AutoConnect"
@@ -196,14 +196,14 @@
 	NSRect	windowFrame;
 	int		heightChange = 0;
 	int		heightDifference;
-	
+
 	windowFrame = [[self window] frame];
-	
+
 	//Configure our account and proxy view controllers
 	accountViewController = [[[inAccount service] accountViewController] retain];
 	[accountViewController configureForAccount:inAccount];
 
-	accountProxyController = ([[inAccount service] supportsProxySettings] ? 
+	accountProxyController = ([[inAccount service] supportsProxySettings] ?
 							  [[AIAccountProxySettings alloc] init] :
 							  nil);
 	[accountProxyController configureForAccount:inAccount];
@@ -231,7 +231,7 @@
 									 toView:view_accountPrivacy
 					  tabViewItemIdentifier:@"privacy"];
 	if(heightDifference > heightChange) heightChange = heightDifference;
-	
+
 	//Add proxy view
 	heightDifference = [self _addCustomView:[accountProxyController view]
 									 toView:view_accountProxy
@@ -270,7 +270,7 @@
 	if(customView){
 		customViewFrameSize = [customView frame].size;
 		ourViewFrame = [setupView frame];
-		
+
 		heightDifference = (customViewFrameSize.height - ourViewFrame.size.height);
 		if(heightDifference > 0){
 			//Modify our frame to make room
@@ -278,7 +278,7 @@
 			ourViewFrame.origin.y -= heightDifference;
 			[setupView setFrame:ourViewFrame];
 		}
-		
+
 		[customView setFrameSize:ourViewFrame.size];
 		[setupView addSubview:customView];
 	}else{
@@ -287,7 +287,7 @@
 
 		heightDifference = 0;
 	}
-	
+
 	return(heightDifference > 0 ? heightDifference : 0);
 }
 

@@ -1,15 +1,15 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
@@ -40,22 +40,22 @@
 							selector:(SEL)inSelector
 {
 	ESFileTransferRequestPromptController	*requestPromptController;
-	
+
 	requestPromptController = [[self alloc] initWithWindowNibName:TRANSFER_REQUEST_PROMPT_NIB
 												  forFileTransfer:inFileTransfer
 												  notifyingTarget:inTarget
 														 selector:inSelector];
-	
-	[requestPromptController showWindow:nil];	
+
+	[requestPromptController showWindow:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
 			forFileTransfer:(ESFileTransfer *)inFileTransfer
 			notifyingTarget:(id)inTarget
 				   selector:(SEL)inSelector
-{	
-	
-	if((self = [super initWithWindowNibName:windowNibName]) {
+{
+
+	if((self = [super initWithWindowNibName:windowNibName])) {
 		fileTransfer = [inFileTransfer retain];
 		target       = [inTarget       retain];
 		selector     =  inSelector;
@@ -76,7 +76,7 @@
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-	
+
     //release the window controller (ourself)
     [self autorelease];
 }
@@ -84,18 +84,18 @@
 - (void)windowDidLoad
 {
 	NSString	*remoteFilename = [fileTransfer remoteFilename];
-	
+
 	//Setup the textviews
     [textView_requestTitle setHorizontallyResizable:NO];
     [textView_requestTitle setVerticallyResizable:YES];
     [textView_requestTitle setDrawsBackground:NO];
     [scrollView_requestTitle setDrawsBackground:NO];
-	
+
     [textView_requestDetails setHorizontallyResizable:NO];
     [textView_requestDetails setVerticallyResizable:YES];
     [textView_requestDetails setDrawsBackground:NO];
     [scrollView_requestDetails setDrawsBackground:NO];
-	
+
 	//Setup the buttons
 	[button_save setTitle:AILocalizedString(@"Save",nil)];
 	[button_saveAs setTitle:AILocalizedString(@"Save As...",nil)];
@@ -106,19 +106,19 @@
 	if(iconImage = [fileTransfer iconImage]){
 		[imageView_icon setImage:iconImage];
 	}
-	
+
 	NSRect	frame = [[self window] frame];
     int		heightChange;
-	
+
     //Display the current request title
     [textView_requestTitle setString:[NSString stringWithFormat:AILocalizedString(@"File transfer request from %@",nil),[[fileTransfer contact] displayName]]];
-	
+
 	//Resize the window frame to fit the request title
 	[textView_requestTitle sizeToFit];
 	heightChange = [textView_requestTitle frame].size.height - [scrollView_requestTitle documentVisibleRect].size.height;
 	frame.size.height += heightChange;
 	frame.origin.y -= heightChange;
-	
+
 	//Display the name of the file, with the file's size if available
 	NSString	*filenameDisplay;
 	unsigned long long fileSize = [fileTransfer size];
@@ -135,19 +135,19 @@
 	heightChange = [textView_requestDetails frame].size.height - [scrollView_requestDetails documentVisibleRect].size.height;
 	frame.size.height += heightChange;
     frame.origin.y -= heightChange;
-	
+
 	//Perform the window resizing as needed
 	if ([NSApp isOnPantherOrBetter]){
 		[[self window] setFrame:frame display:YES animate:YES];
 	}else{
 		[[self window] setFrame:frame display:YES]; //animate:YES can crash in 10.2
 	}
-	
+
 	//Set the title
 	[[self window] setTitle:AILocalizedString(@"File Transfer Request",nil)];
 
     [[self window] makeKeyAndOrderFront:nil];
-	
+
 	[super windowDidLoad];
 }
 
@@ -169,7 +169,7 @@
 										  modalDelegate:self
 										 didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
 											contextInfo:nil];
-		
+
 	}else if (sender == button_cancel){
 		/* File name remains nil and the transfer will therefore be canceled */
 		finished = YES;
@@ -179,7 +179,7 @@
 		[target performSelector:selector
 					 withObject:fileTransfer
 					 withObject:localFilename];
-		
+
 		//close the prompt
 		[self closeWindow:nil];
 	}
