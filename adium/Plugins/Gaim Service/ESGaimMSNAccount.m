@@ -78,13 +78,17 @@ static BOOL didInitMSN = NO;
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
+	BOOL shouldAttemptReconnect = YES;
+	
 	if (disconnectionError){
 		if (([disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
 			[[adium accountController] forgetPasswordForAccount:self];
+		}else if (([disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
+			shouldAttemptReconnect = NO;
 		}
 	}
 	
-	return YES;
+	return shouldAttemptReconnect;
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
@@ -123,8 +127,9 @@ static BOOL didInitMSN = NO;
 -(void)_setFriendlyNameTo:(NSString *)inAlias
 {
 #warning we should ignore this set if it hasnt changed...
- 	if (gaim_account_is_connected(account)) 
+ 	if (gaim_account_is_connected(account)){
  		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
+	}
 }
 
 //Update all our status keys
