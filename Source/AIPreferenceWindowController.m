@@ -149,6 +149,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
 	[self _configureAdvancedPreferencesTable];
 	[self _configreTabViewItemLabels];
+	[[self window] betterCenter];
 
 	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
 	viewArray = [[NSArray alloc] initWithObjects:
