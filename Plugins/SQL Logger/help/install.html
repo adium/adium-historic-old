@@ -1,7 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>SQL Logger Installation Instructions (OS X)</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -10,12 +10,12 @@
 <div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
-<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
+<a href="index.html" class="sidebar">Home</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
               Details</a><br><a href="performance.html" class="sidebar">Maintenance/Performance</a><br><a href="changes.txt" class="offsides">Changelog</a><br><a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz" class="offsides"><b>JSP/HTML package</b></a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
                 Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides">Adium Plugin</a><br><h4>Fire</h4>
 <a href="http://fire.sourceforge.net" class="offsides">Fire</a><br><h4>PostgreSQL</h4>
-<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
+<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.4/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a>
 </div>
 <div id="content">
@@ -23,7 +23,8 @@
     PostgreSQL from source and the SQL Logger components on Panther.  It covers almost
     everything.</p>
 <h3>Installing PostgreSQL</h3>
-<p>The first step is to install Fink.  You can get it from <a class="offsite" href="http://fink.sourceforge.net">http://fink.sourceforge.net</a></p>
+<p>The first step is to install Fink.  You can get it from <a class="offsite" href="http://fink.sourceforge.net">http://fink.sourceforge.net</a>
+</p>
 <p>After fink is set up properly, install a couple programs to make
     PostgreSQL work better.  You can also use DarwinPorts (<a class="offsite" href="http://darwinports.opendarwin.org/ports/">http://darwinports.opendarwin.org/ports/</a> for this purpose, if
   you have the desire.</p>
@@ -53,11 +54,11 @@ sudo make install</pre>
 <h3>Configuring PostgreSQL</h3>
 <p>That's all it takes to compile and install PostgreSQL.  To set it up, you
   need to create a new user for Postgres to run as.  I used NetInfo Manager to
-  do this.  After authenticating, select the "www" user and duplicate it.  A
+  do this.  After authenticating, select the &quot;www&quot; user and duplicate it.  A
   few things need to be changed after duplicating the user.</p>
 <ul>
     <li>Change the short
- username to "postgres", and the long name to "PostgreSQL Server".</li>
+ username to &quot;postgres&quot;, and the long name to &quot;PostgreSQL Server&quot;.</li>
     <li>The uid
   and gid values need to be changed.  It doesn't matter what they're changed
   to, as long as it is unique.  If the uid is less than 500, the user will not
@@ -129,7 +130,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
    -
     &lt;database&gt;
       &lt;jndi-name&gt;jdbc/mysql&lt;/jndi-name&gt;
-      &lt;driver type="org.gjt.mm.mysql.Driver"&gt;
+      &lt;driver type=&quot;org.gjt.mm.mysql.Driver&quot;&gt;
         &lt;url&gt;jdbc:mysql://localhost:3306/test&lt;/url&gt;
         &lt;user&gt;&lt;/user&gt;
         &lt;password&gt;&lt;/password&gt;
@@ -149,7 +150,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
   <b> --&gt;</b>
     &lt;database&gt;
     &lt;jndi-name&gt;<b>jdbc/postgresql</b>&lt;/jndi-name&gt;
-      &lt;driver type="<b>org.postgresql.Driver</b>"&gt;
+      &lt;driver type=&quot;<b>org.postgresql.Driver</b>&quot;&gt;
         &lt;url&gt;<b>jdbc:postgresql:<i>USERNAME</i></b>&lt;/url&gt;
         &lt;user&gt;<b><i>USERNAME</i></b>&lt;/user&gt;
         &lt;password&gt;&lt;/password&gt;
@@ -158,7 +159,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
       &lt;max-idle-time&gt;30s&lt;/max-idle-time&gt;
     &lt;/database&gt;</pre>
 </div>
-<br><div class="important">Make sure you move the "--&gt;" to above the
+<br><div class="important">Make sure you move the &quot;--&gt;&quot; to above the
   &lt;database&gt;.  Otherwise you will comment out the entire file.</div>
 <p>Next, find the part referring to the document directory.  The document
   directory tells where to look for files.  It needs to be changed to wherever

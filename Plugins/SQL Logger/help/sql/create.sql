@@ -330,7 +330,7 @@ from im.meta_container natural join
      im.information_keys where delete = false);
 
 -- Insert the default queries into the saved queries
-INSERT INTO saved_queries (title, notes, query_text)
+INSERT INTO im.saved_queries (title, notes, query_text)
 VALUES ('Word Frequency', 'Shows the frequency of a selected word.', 'select s.username as sender,
           r.username as recipient,
           count(*)
@@ -345,7 +345,7 @@ group by s.username, r.username
 having count(*) > 1
 order by count(*) desc');
 
-INSERT INTO saved_queries (title, notes, query_text) VALUES ('Proximity Search', 'Search for two words within x minutes of each other.', 'select message_id,
+INSERT INTO im.saved_queries (title, notes, query_text) VALUES ('Proximity Search', 'Search for two words within x minutes of each other.', 'select message_id,
           s.username as sender,
           r.username as recipient,
           message_date,
@@ -364,14 +364,14 @@ where s.user_id = sender_id
            where sender_id in (a.sender_id, a.recipient_id)
              and   recipient_id in (a.sender_id, a.recipient_id)
              and   b.idxfti @@ q2
-             and   b.message_date > 
+             and   b.message_date >
                          a.message_date - ''5 minutes''::interval
              and   b.message_date <
                          a.message_date + ''5 minutes''::interval)');
 
-INSERT INTO saved_queries (title, notes, query_text) VALUES ('Contact Info', 'Retrieve the contact info for a person.', 'select username,
+INSERT INTO im.saved_queries (title, notes, query_text) VALUES ('Contact Info', 'Retrieve the contact info for a person.', 'select username,
           key_name,
           value
-from   users natural join contact_information 
+from   users natural join contact_information
           natural join information_keys
 where username = ''fetchgreebledonx''');
