@@ -251,7 +251,11 @@
 	
     //Sort this group
     if(sortController){
-        [sortController sortListObjects:containedObjects];
+		//We assume that, in general, the array is already close to being properly sorted
+		NSMutableArray	*sortedListObjects;
+		
+		sortedListObjects = [[sortController sortListObjects:containedObjects] mutableCopy];
+		[containedObjects release]; containedObjects = sortedListObjects;
     }
 }
 
