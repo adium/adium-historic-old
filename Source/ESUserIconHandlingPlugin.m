@@ -23,6 +23,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/ESImageButton.h>
 #import <Adium/AIAccount.h>
@@ -30,6 +31,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
+
+#define	TOOLBAR_ITEM_TAG	-999
 
 @interface ESUserIconHandlingPlugin (PRIVATE)
 - (BOOL)cacheAndSetUserIconFromPreferenceForListObject:(AIListObject *)inObject;
@@ -62,11 +65,6 @@
 									   name:ListObject_AttributesChanged
 									 object:nil];
 
-	//Toolbar item registration
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarWillAddItem:)
-												 name:NSToolbarWillAddItemNotification
-											   object:nil];
 	[self registerToolbarItem];
 }
 
@@ -353,7 +351,35 @@
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
 	if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
+		
 		[item setEnabled:YES];
+		
+		/* Add menu to toolbar item (for text mode)
+		 *
+		 * We depend on menuNeedsUpdate: for efficient safe updating, so only proceed if setDelegate is available.
+		 * This means that 10.2 will have this item greyed out in text-only mode. */
+		if([NSMenu instancesRespondToSelector:@selector(setDelegate:)]){
+			NSMenuItem	*menuFormRepresentation, *blankMenuItem;
+			NSMenu		*menu;
+			
+			menuFormRepresentation = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
+			
+			menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+			[menu setDelegate:self];
+			[menu setAutoenablesItems:NO];
+			
+			blankMenuItem = [[NSMenuItem alloc] initWithTitle:@"" 
+													   target:self
+													   action:@selector(dummyTarget:)
+												keyEquivalent:@""];
+			[blankMenuItem setRepresentedObject:item];
+			[blankMenuItem setEnabled:YES];
+			[menu addItem:blankMenuItem];
+			
+			[menuFormRepresentation setSubmenu:menu];
+			[menuFormRepresentation setTitle:[item label]];
+			[item setMenuFormRepresentation:menuFormRepresentation];
+		}
 		
 		//If this is the first item added, start observing for chats becoming visible so we can update the icon
 		if([toolbarItems count] == 0){
@@ -433,8 +459,7 @@
 												   direction:AIIconNormal];
 			}
 			
-			[(ESImageButton *)[item view] setImage:image];
-			
+			[(ESImageButton *)[item view] setImage:image];			
 			break;
 		}
 	}	
@@ -443,6 +468,27 @@
 /*!
  * @brief Empty action for menu item validation purposes
  */
-- (IBAction)dummyAction:(id)sender {};
+- (IBAction)dummyAction:(id)sender{};
+
+/*
+ * @brief Menu needs update
+ *
+ * Should only be called for a menu off one of our toolbar items in text-only mode, and only when that menu is about
+ * to be displayed. The menu should have two items. The first is added by the system; the second has no title and is
+ * our menu item for showing the image.
+ */
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	//The first item is a root item inserted by the system. The second item is the single item 
+	NSMenuItem		*menuItem = [menu itemAtIndex:1];
+	NSToolbarItem	*toolbarItem = [menuItem representedObject];
+
+	[menuItem setImage:[[[(ESImageButton *)[toolbarItem view] image] copy] autorelease]];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	return YES;
+}
 
 @end
