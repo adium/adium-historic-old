@@ -1,4 +1,5 @@
-deploy: index.html resin.html technical.html tsearch.html performance.html
+deploy: index.html resin.html technical.html tsearch.html performance.html \
+	quick_install.html
 
 %.html: %.xml
 	xsltproc -o $@ adium.xsl $<

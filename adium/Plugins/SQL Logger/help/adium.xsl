@@ -40,6 +40,8 @@
               Details</a>
               <br /><a href="performance.html"
               class="sidebar">Performance/Maintenance</a>
+              <br /><a href="quick_install.html" class="sidebar">Quick Install
+              Notes</a>
 
               <br /><h4>Adium</h4>
               <a href="http://www.adiumx.com/" class="offsides">Adium</a>

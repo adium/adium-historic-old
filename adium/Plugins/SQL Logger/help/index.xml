@@ -16,6 +16,10 @@
       <li>Other goodness.</li>
     </ul>
 
+    <div class="important">If you are compiling from source with Panther,
+        PostgreSQL 7.3 will not work.  The newest 7.4 beta will,
+        however.</div>
+    
     <p>To install this, a few things are required.
     Setup, however, is not that bad.
     At the base level, all that is required is PostgreSQL (duh).
@@ -181,7 +185,8 @@ bare-bones: the sending and receiving screenames, the message, and a date.</p>
   The first one is called "DBI" (DataBase Interface) and the second "DBD-PG"
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
   The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
-  information on installation and use can be found in <a href="technical.html">Technical Details</a>.
+  information on installation and use can be found in <a
+    href="technical.html#parser.pl">Technical Details</a>.
   Run it by typing <code>./parser.pl</code>.
   It should automatically find all of your logs, but you may need to edit the
   paths.
