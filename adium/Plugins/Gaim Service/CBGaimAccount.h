@@ -68,6 +68,8 @@
 - (void)accountConnectionReportDisconnect:(const char*)text;
 - (void)accountConnectionDisconnected;
 - (void)accountConnectionConnected;
+- (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
+- (NSString *)connectionStringForStep:(int)step;
 - (void)resetLibGaimAccount;
 
 //Account status

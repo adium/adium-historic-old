@@ -63,6 +63,7 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
     if(GAIM_DEBUG) NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
+	[accountLookup(gc->account) accountConnectionProgressStep:step of:step_count withText:text];
     
 }
 

@@ -96,25 +96,40 @@ struct buddyinfo {
     return "prpl-oscar";
 }
 
+/*
 - (NSArray *)supportedPropertyKeys
 {
-/*
- return ([[super supportedPropertyKeys] arrayByAddingObjectsFromArray:
-        [NSArray arrayWithObjects:
-            @"TextProfile",
-            nil]] );
-*/
     return [super supportedPropertyKeys];
 }
+*/
 
+#pragma mark Account Connection
 
-/*
- - (void)accountBlistNewNode:(GaimBlistNode *)node 
- {
-     [super accountBlistNewNode:node];
- }
- */
- 
+- (NSString *)connectionStringForStep:(int)step
+{
+	switch (step)
+	{
+		case 0:
+			return AILocalizedString(@"Connecting",nil);
+			break;
+		case 1:
+			return AILocalizedString(@"Screen name sent",nil);
+			break;
+		case 2:
+			return AILocalizedString(@"Password sent",nil);
+			break;			
+		case 3:
+			return AILocalizedString(@"Received authorization",nil);
+			break;
+		case 4:
+			return AILocalizedString(@"Connection established",nil);
+			break;
+		case 5:
+			return AILocalizedString(@"Finalizing connection",nil);
+			break;
+	}
+	return nil;
+}
 
 - (void)accountConnectionDisconnected
 {
@@ -332,6 +347,7 @@ struct buddyinfo {
     }
 }*/
 
+#pragma mark File transfer
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
 	//See if the super account can handle it
@@ -390,6 +406,7 @@ struct buddyinfo {
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
+#pragma mark Privacy
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
 {
     return [super addListObject:inObject toPrivacyList:type];
@@ -417,6 +434,7 @@ struct buddyinfo {
 
 
 @end
+#pragma mark Notes
 /*if (isdigit(b->name[0])) {
 char *status;
 status = gaim_icq_status((b->uc & 0xffff0000) >> 16);
