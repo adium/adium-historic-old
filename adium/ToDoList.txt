@@ -4,6 +4,7 @@ Legend
 # Debatable (ASK and debate before doing!)
 
 If you are working on something big and it may take a while, please tag it with your [name].
+If you want to leave a comment, please put your <name> on them too.
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -31,14 +32,20 @@ Accounts:
 	+ Add 'Priority' field to jabber advanced preferences
 
 Message Window:
-	+ Need a way to allow tabs to be rearranged (within the same tab bar) even when dragging between windows isn't permitted (i.e. when group-based sorting is enabled), and vice-versa.
-		Currently, tabs can be dragged to new windows but not rearranged when name-based sorting is on, but dragging is right out when group-based sorting is on.
+	+ Need a way to allow tabs to be rearranged (within the same tab bar) even when 
+	  dragging between windows isn't permitted (i.e. when group-based sorting is enabled), and vice-versa.
+		<comment> Currently, tabs can be dragged to new windows but 
+			  not rearranged when name-based sorting is on, but dragging 
+			  is right out when group-based sorting is on.
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
-        I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
+        	<Colin> I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, 
+			dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
 	= Insert emoticon menu item, contextual menu item [Brian]
             // this can now be deemed done... although it should now be Insert Emoticon button/menu ala iChat/MSN/AIM in message view
 	+ Tab-complete usernames in messages and chat
+		<tick> Do we really need to tab complete in a message? I can see in a chat, but not in a 1-to-1 message...
 	+ Make 'save as' menu item work
+		<tick> This could just copy the log file to somewhere the user specify if logging is on.
 	+ Accept dragged items and do wonderful things on them, like if it is text append it in the input field or if it is a file send it to the contact.
         * Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
 	+ Put a delay on typing events... time out when typing stops.
@@ -84,10 +91,28 @@ Toolbar Items:
         + Show Color Panel
         + Send File
         + User Icon
-        + Emoticon
-        + Add Link
         + Bookmarks
         + Scripts
+        = Emoticon
+        + Add Link
+
+		<tick> Moved from areas that require more thought as toolbar buttons seem to cover this:
+
+			Link Management:
+				Just throwing out a thought for discussion... how about a button like 
+				those for emoticons or push/pop with add/edit and a list of favorites 
+				to make them accessible within the message view without using contextual 
+				menus? In that same vein... what about autocompleting recognized URLs 
+				(such as www.ad completes to www.adiumx.com if its a favorite)? 
+
+				//Steve: yeah, both of those seem to be good ideas, and the link 
+				editor window is certainly abstract enough to be called through 
+				most any mechanism, and I had always intended a button to be 
+				included for it eventually.  Auto-completing URLs is an interesting 
+				idea... and would work very well if done right.  I'd comment more, 
+				but I'm feeling a little under the weather right now. :\
+
+
 
 Contact list display:
 	Add user icon and extended status display support to the contact list, and simplify its
@@ -114,17 +139,17 @@ Event Notifications (the feature formerly known as Event Bezel):
 	+ Implement Growl App Bridge.framework
 	+ Build in a way to install plugin if user requests to use notifications
 
-/*    + Give the contact alert a nice icon.
-    + Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option hold down should close all queued events altogether.
-    + Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
-    + Add small pretty protocol icons (we need nice icons for this)
-    # Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
+/*	+ Give the contact alert a nice icon.
+	+ Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option 	hold down should close all queued events altogether.
+	+ Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
+	+ Add small pretty protocol icons (we need nice icons for this)
+	# Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
 	# Give the notification window a titlebar, and allow it to be repositioned while visible.
-      not sure about adding a titlebar to it [Jorge]
+	not sure about adding a titlebar to it [Jorge]
 */
 
-[Colin]
-Contact Blocking:
+
+Contact Blocking: [Colin]
     	Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
     	all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
 
@@ -134,7 +159,11 @@ Contact Blocking:
 	+ Add "Block contacts not on my list" to AIM account preferences
 
 Documentation
-	Documentation is considered one of the most important parts of a project. It is also the most tedious part. We need good documentation in order to assist users and developers. These should include screen shots if possible (visual aid). Documentation should not be moved to the done portion of this list until every other part is done, as things may change.
+	Documentation is considered one of the most important parts of a project. 
+	It is also the most tedious part. We need good documentation in order to 
+	assist users and developers. These should include screen shots if 
+	possible (visual aid). Documentation should not be moved to the done 
+	portion of this list until every other part is done, as things may change.
 
 	+ User documentation
 		
@@ -145,8 +174,8 @@ Documentation
 		+ Address book integration
 
 Activity Window
-Will sort of resemble Safari's. Entries in the window only reflect progress of items; actions are performed from the toolbar.
-= Done! [boredzo]
+	Will sort of resemble Safari's. Entries in the window only reflect progress of items; actions are performed from the toolbar.
+	= Done! [boredzo]
 		
 //-------------------------------------------------------------------------------------------------------
 // Areas that require more thought before implementing
@@ -158,8 +187,8 @@ New State System:
     (idle & away) with something that better suits a user connected to multiple protocols, and allow
     Adium's behavior to be better customized to a user's diverse 'states' of IM throughout the day.
 
-[Dave]
-Multi-user chat:
+
+Multi-user chat:  [Dave]
     Powerful multi-user chat that can handle both large, moderated rooms (irc) and multi-way IMs (MSN).
 		- Tick: would we want a drawer or a list, or a collapsable list or what? Everyone seems opposed to a drawer, so a list would do better.
 		- Dave: I'm going to start making this work, but I NEED LOTS OF HELP!!
@@ -186,23 +215,62 @@ File Transfer:
 Deferring of initial message:
    Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
 
-Contact List import/export: [Steve]
-	+ Export to plist
-   Import/export code is not fun.
-   Steve: In addition to our own plist format, we should probably support importing from the official clients formats.  Perhaps exporting - but why would anyone want to go back?  ;)   I might need some help with this one re: adding contacts back to the list.  We'll see.
 
-Too many tabs issue:
-	It seems that if you have too many tabs, then the tabs come to a point of not being usable. Tabs rock, but with 15 open windows intrinsic issues with this approach start to appear. We could:
+Importing/Exporting:
 
-	1) Offer a side list/drawer as an option.
-	2) Have the arrows thing like in gaim and other clients.
-	3) Multiple rows of tabs
+	<tick> If possible, we could turn the Adium 1.6 importer into a massive importer/exporter, and include it in adium/have it online for download.
 
-	This will require a great deal of thought probably, and may not be resolvable for all parties.
+	+Contact List import/export: [Steve]
+		+ Export to plist
+			<Steve> Import/export code is not fun.
+   			<Steve> In addition to our own plist format, we should probably support importing from the official clients
+				formats.  Perhaps exporting - but why would anyone want to go back?  ;)   I might need some help 
+				with this one re: adding contacts back to the list.  We'll see.
+	+iChat import/export
+		+Log files
+		+Custom Away Messages
+		+Custom Available Messages
+			<tick> Check out ~/Library/Preferences/com.apple.iChat.plist for away/available
+			<tick> As iChat stores aliases in address book, we already have that :D
+	+Gaim
+		+Logs
+		+Aliases
+		+Emoticons
+		+Contact importation. This has issues with server side protocols
+
+	+Fire
+		+Aliases
+		+Logs
+		+Emoticons (we are possibly moving to a standardized format, so this may not be needed)
+		+Contact importation. This has issues with server side protocols
+
+	+Proteus
+		+Aliases
+		+Logs
+		+Emoticons (we are possibly moving to a standardized format, so this may not be needed)
+		+Contact importation. This has issues with server side protocols
+
+	+Trillian (dons flame proof vest :D)
+		+Aliases
+		+Logs
+		+Emoticons (we are possibly moving to a standardized format, so this may not be needed)
+		+Contact importation. This has issues with server side protocols
+
+
+Tabs Issues:
+
+	# Too many tabs issue:
+		It seems that if you have too many tabs, then the tabs come to a point 
+		of not being usable. Tabs rock, but with 15 open windows intrinsic 
+		issues with this approach start to appear. We could:
+
+			1) Offer a side list/drawer as an option.
+			2) Have the arrows thing like in gaim and other clients.
+			3) Multiple rows of tabs
+
+			This will require a great deal of thought probably, and may not be resolvable for all parties.
         
-Link Management:
-    Just throwing out a thought for discussion... how about a button like those for emoticons or push/pop with add/edit and a list of favorites to make them accessible within the message view without using contextual menus? In that same vein... what about autocompleting recognized URLs (such as www.ad completes to www.adiumx.com if its a favorite)? 
-	//Steve: yeah, both of those seem to be good ideas, and the link editor window is certainly abstract enough to be called through most any mechanism, and I had always intended a button to be included for it eventually.  Auto-completing URLs is an interesting idea... and would work very well if done right.  I'd comment more, but I'm feeling a little under the weather right now. :\
+
     
 //-------------------------------------------------------------------------------------------------------
 // Unfixable(?) Issues
