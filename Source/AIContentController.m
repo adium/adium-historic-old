@@ -972,6 +972,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		}
 	}	
 	
+	AILog(@"existingChatWithName returning %@",chat);
 	return chat;
 }
 
