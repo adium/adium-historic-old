@@ -864,14 +864,16 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 
 				if (errorType == -1){
 					errorType = AIChatUnknownError;
-					NSLog(@"*** Conversation error:\n%@\nPlease report this. ***",messageString);
 				}
 				
 				if (errorType != -2) {
-				[accountLookup(conv->account) mainPerformSelector:@selector(errorForChat:type:)
-													   withObject:chat
-													   withObject:[NSNumber numberWithInt:errorType]];
+					[accountLookup(conv->account) mainPerformSelector:@selector(errorForChat:type:)
+														   withObject:chat
+														   withObject:[NSNumber numberWithInt:errorType]];
 				}
+				
+				GaimDebug (@"*** Conversation error (%@): %@",
+						   ([chat listObject] ? [[chat listObject] UID] : [chat name]),messageString);
 			}
 		}
 	}
