@@ -180,9 +180,10 @@
             //Get the object from our tracking dictionary
             AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
             AIMutableOwnerArray     *statusArray = [listObject statusArrayForKey:@"UserIcon"];
-            
+            NSLog(@"%@: %@",[listObject displayName],statusArray);
             //apply the image
             if([statusArray count] == 0) {
+                NSLog(@"so setting image...");
                 [statusArray setObject:image withOwner:self];
                 [[adium contactController] listObjectStatusChanged:listObject
                                                 modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
@@ -198,10 +199,18 @@
 
 - (void)updateSelf
 {
-    //Begin loading image data for the "me" address book entry, if one exists
-    ABPerson *me;
-    if (me = [[ABAddressBook sharedAddressBook] me]) {
-        meTag = [me beginLoadingImageDataForClient:self];
+    @try {
+        //Begin loading image data for the "me" address book entry, if one exists
+        ABPerson *me;
+        if (me = [[ABAddressBook sharedAddressBook] me]) {
+            meTag = [me beginLoadingImageDataForClient:self];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"ABIntegration: Caught %@: %@", [exception name], [exception reason]);
+    }   
+    @finally {
+
     }
 }
 
