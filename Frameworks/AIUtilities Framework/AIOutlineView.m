@@ -37,8 +37,7 @@
 
 - (void)_initOutlineView
 {
-	//
-	inTile = NO;
+
 }
 
 //Allow our delegate to specify context menus
@@ -49,18 +48,6 @@
     }else{
         return(nil);
     }
-}
-
-//Default to a more intelligent vertical line scroll
-- (void)tile
-{
-	if (!inTile){
-		//This call may lead to a recursive tile->setFrameSize->tile crash
-		inTile = YES;
-		[super tile];
-		[[self enclosingScrollView] setVerticalLineScroll:([self rowHeight] + [self intercellSpacing].height)];
-		inTile = NO;
-	}
 }
 
 //Navigate outline view with the keyboard, send select actions to delegate

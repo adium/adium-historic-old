@@ -15,8 +15,6 @@
 @interface AIOutlineView : NSOutlineView {
     BOOL		needsReload;
 	BOOL		ignoreExpandCollapse;
-	
-	BOOL		inTile;
 }
 
 @end
