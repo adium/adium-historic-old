@@ -132,10 +132,12 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 -(IBAction)deleteEventAction:(id)sender
 {
-    [instance deleteEventAction:nil];
-    [self tableViewSelectionDidChange:nil];
+    if (row != -1)
+    {
+        [instance deleteEventAction:nil];
+        [self tableViewSelectionDidChange:nil];
+    }
 }
-
 
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -217,12 +219,16 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     {
         NSDictionary * selectedActionDict = [instance dictAtIndex:row];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
+        [instance setOldIdentifier:action];
+        
         [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
 
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
+
     }
+
     else //no selection
     {
         [instance configureWithSubview:nil];

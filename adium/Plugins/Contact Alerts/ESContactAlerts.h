@@ -45,6 +45,8 @@
 
     NSMenu				*actionListMenu_cached;
     NSMenu				*eventMenu_cached;
+
+    NSString				*oldIdentifier;
     
     AIAdium				*owner;
 }
@@ -63,6 +65,7 @@
 - (NSMutableArray *)eventActionArray;
 - (void)currentRowIs:(int)currentRow;
 - (void)setOffset:(int)inOffset;
+- (void)setOldIdentifier:(NSString *)inIdentifier;
 - (void)changeOffsetBy:(int)changeOffset;
 - (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict;
 - (void)executeAppropriateAction:(NSString *)action inMenu:(NSMenu *)actionMenu;
