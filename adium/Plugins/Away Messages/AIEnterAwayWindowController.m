@@ -221,7 +221,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 	[textView_awayMessage setString:@""];
 	loaded_message = NO;
     } else {
-        [textView_awayMessage setAttributedString:[[sender representedObject] objectForKey:@"Message"]];
+	NSAttributedString * theString = [[sender representedObject] objectForKey:@"Message"];
+        [textView_awayMessage setAttributedString:theString];
+	[textView_awayMessage setSelectedRange:(NSMakeRange(0, [[theString string] length]))];
         loaded_message = YES;
     }
 
