@@ -21,7 +21,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@class NDAppleScriptObject
 	@abstract Class to represent an AppleScript.
-	@discussion As well as representing an AppleScript, <tt>NDAppleScriptObject</tt> also can maintain seperate context for each AppleScript, useful if you want to run each script within a seperate thread. <tt>NDAppleScriptObject</tt> is interface compatabile with <tt>NSAppleScript</tt>
+	@discussion As well as representing an AppleScript, <tt>NDAppleScriptObject</tt> also can maintain seperate context for each AppleScript, useful if you want to run each script within a seperate thread. <tt>NDAppleScriptObject</tt> is interface compatible with <tt>NSAppleScript</tt>
   */
 @interface NDAppleScriptObject : NSObject
 {
