@@ -15,12 +15,15 @@
 - (void) _loadPreviewFromStylePath:(NSString *)inStylePath;
 - (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory;
 - (void)processNewContent;
+
 - (NSMenu *)_stylesMenu;
 - (void)_buildFontMenus;
 - (NSMenu *)_fontMenu;
 - (NSMenu *)_fontSizeMenu;
 - (void)_buildTimeStampMenu;
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
+- (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName;
+
 - (void)_createPreviewConversationFromChatDict:(NSDictionary *)chatDict;
 @end
 
@@ -117,11 +120,12 @@
 	//leave the variant preference alone - this will let the previously selected variant be selected automatically
 	NSString	*variant = [newStyleDict objectForKey:@"variant"];
 	if (variant){
-		[[adium preferenceController] setPreference:[variant length] ? variant : nil
-											 forKey:[plugin keyForDesiredVariantOfStyle:newStyleName]
+		NSString	*variantKey = [plugin keyForDesiredVariantOfStyle:newStyleName];
+		[[adium preferenceController] setPreference:variant
+											 forKey:variantKey
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
-	
+
 	[self updatePreview];
 }
 
@@ -229,7 +233,7 @@
 			NSString		*variant;
 			NSMenu			*subMenu = nil;
 			NSMenuItem		*subMenuItem;
-			
+						
 			variantsEnumerator = [variantsArray objectEnumerator];
 			while (variant = [variantsEnumerator nextObject]){
 				
@@ -270,11 +274,32 @@
 	return menu;
 }
 
-- (void)_updatePopupMenuSelections
+- (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName
 {
+	NSMenu		*submenu;
+	
 	[popUp_font selectItemWithTitle:[preview fontFamily]];
 	[popUp_fontSize selectItemAtIndex:[[popUp_fontSize menu] indexOfItemWithTag:[[preview preferences] defaultFontSize]]];
 	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
+	
+	NSEnumerator	*enumerator = [[[popUp_styles menu] itemArray] objectEnumerator];
+	NSMenuItem		*item;
+	while(item = [enumerator nextObject]){
+		if (submenu = [item submenu]){
+			[submenu setAllMenuItemsToState:NSOffState];
+		}
+	}
+	
+	submenu = [[popUp_styles selectedItem] submenu];
+	if (submenu){
+		NSString	*variant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
+																   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		if ([variant length]){
+			[[submenu itemWithTitle:variant] setState:NSOnState];
+		}else{
+			[[submenu itemAtIndex:0] setState:NSOnState];
+		}
+	}
 }
 
 #pragma mark Preview WebView
@@ -305,7 +330,7 @@
 		
 		//Load preferences for the style and update the popup menus
 		[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
-		[self _updatePopupMenuSelections];
+		[self _updatePopupMenuSelectionsForStyle:styleName];
 
 		//Retain the stylePath
 		stylePath = [[style resourcePath] retain];
@@ -347,15 +372,23 @@
 		chat = [AIChat chatForAccount:nil initialStatusDictionary:nil];
 		
 		if ([type isEqualToString:@"IM"]){
-			NSString *user;
-			if (user = [chatDict objectForKey:@"User"]){
-				[chat addParticipatingListObject:[previewListObjectsDict objectForKey:user]];
+			NSString *UID;
+			if (UID = [chatDict objectForKey:@"Destination UID"]){
+				[chat addParticipatingListObject:[previewListObjectsDict objectForKey:UID]];
+			}
+			if (UID = [chatDict objectForKey:@"Source UID"]){
+				[chat setAccount:(AIAccount *)[previewListObjectsDict objectForKey:UID]];
 			}
 		}else{
 			NSString *name;
 			if (name = [chatDict objectForKey:@"Name"]){
 				[chat setName:name];
 			}
+		}
+
+		NSString	*dateOpened;
+		if (dateOpened = [chatDict objectForKey:@"Date Opened"]){
+			[chat setDateOpened:[NSDate dateWithNaturalLanguageString:dateOpened]];
 		}
 	}
 

@@ -268,10 +268,10 @@
 //
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
 {
+	NSDate  *date;
 	NSRange	range;
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
-		
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if(range.location != NSNotFound){
@@ -310,44 +310,23 @@
 			}
 		} while(range.location != NSNotFound);
 		
-		//We don't support the message being in a content display more than once.  That would be ridiculous.
-        range = [inString rangeOfString:@"%message%"];
-        if(range.location != NSNotFound){
-            [inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
-																				  headers:NO 
-																				 fontTags:YES
-																			closeFontTags:YES
-																				styleTags:YES   
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES 
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO]];
-        }
-		
-		do{
-			range = [inString rangeOfString:@"%time%"];
+		//We don't support the message being in a content display more than once, so no do/while.  That would be ridiculous.
+		{
+			range = [inString rangeOfString:@"%message%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
+				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
+																					  headers:NO 
+																					 fontTags:YES
+																				closeFontTags:YES
+																					styleTags:YES
+																   closeStyleTagsOnFontChange:YES
+																			   encodeNonASCII:YES 
+																				   imagesPath:@"/tmp"
+																			attachmentsAsText:NO]];
 			}
-		} while(range.location != NSNotFound);
+		}
 		
-		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
-		do{
-			range = [inString rangeOfString:@"%time{"];
-			if(range.location != NSNotFound) {
-				NSRange endRange;
-				endRange = [inString rangeOfString:@"}%"];
-				if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-					
-					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-					
-					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-											withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																			   allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
-					
-				}
-			}
-		} while(range.location != NSNotFound);
+		date = [(AIContentStatus *)content date];
 		
 	}else if ([content isKindOfClass:[AIContentStatus class]]) {
 		
@@ -357,19 +336,23 @@
 				[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
 			}
 		} while(range.location != NSNotFound);
-		
-		do{
-			range = [inString rangeOfString:@"%time%"];
-			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range
-										withString:[timeStampFormatter stringForObjectValue:[(AIContentStatus *)content date]]];
-			}
-		} while(range.location != NSNotFound);
-		
+				
 		do{
 			range = [inString rangeOfString:@"%status%"];
 			if(range.location != NSNotFound) {
 				[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
+			}
+		} while(range.location != NSNotFound);
+		
+		date = [(AIContentStatus *)content date];
+	}
+	
+	//Replacements applicable to any AIContentObject with a date
+	if (date){
+		do{
+			range = [inString rangeOfString:@"%time%"];
+			if(range.location != NSNotFound){
+				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
 			}
 		} while(range.location != NSNotFound);
 		
@@ -385,12 +368,11 @@
 					
 					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
 											withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																			   allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
+																			   allowNaturalLanguage:NO] stringForObjectValue:date]];
 					
 				}
 			}
 		} while(range.location != NSNotFound);
-		
 	}
 	
 	return(inString);
@@ -401,7 +383,7 @@
 	NSRange	range;
 	
 	do{
-		range = [inString rangeOfString:@"%chat_name%"];
+		range = [inString rangeOfString:@"chatName"];
 		if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range
 									withString:[chat name]];
@@ -410,21 +392,53 @@
 	} while(range.location != NSNotFound);
 	
 	do{
-		range = [inString rangeOfString:@"%chat_icon%"];
+		range = [inString rangeOfString:@"incomingIconPath"];
 		if(range.location != NSNotFound){
 			AIListObject	*listObject = [chat listObject];
 			NSString		*iconPath = nil;
 			
-			if (listObject){
-				iconPath = [listObject statusObjectForKey:@"UserIconPath"];
-			}
-			
-			if (!iconPath){
-				iconPath = @"chat_icon.png";
-			}
+			if (listObject) iconPath = [listObject statusObjectForKey:@"UserIconPath"];
 			
 			[inString replaceCharactersInRange:range
-									withString:iconPath];
+									withString:(iconPath ? iconPath : @"incoming_icon.png")];
+		}
+	} while(range.location != NSNotFound);
+	
+	do{
+		range = [inString rangeOfString:@"%outgoingIconPath%"];
+		if(range.location != NSNotFound){
+			AIListObject	*account = [chat account];
+			NSString		*iconPath = nil;
+			
+			if (account) iconPath = [account statusObjectForKey:@"UserIconPath"];
+			
+			[inString replaceCharactersInRange:range
+									withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+		}
+	} while(range.location != NSNotFound);
+	
+	do{
+		range = [inString rangeOfString:@"%timeOpened%"];
+		if(range.location != NSNotFound){
+			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
+		}
+	} while(range.location != NSNotFound);
+	
+	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
+	do{
+		range = [inString rangeOfString:@"%timeOpened{"];
+		if(range.location != NSNotFound) {
+			NSRange endRange;
+			endRange = [inString rangeOfString:@"}%"];
+			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+				
+				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+				
+				[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
+										withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																		   allowNaturalLanguage:NO] stringForObjectValue:[chat dateOpened]]];
+				
+			}
 		}
 	} while(range.location != NSNotFound);
 	

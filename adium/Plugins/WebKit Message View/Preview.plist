@@ -26,8 +26,12 @@
 	<dict>
 		<key>Type</key>
 		<string>IM</string>
-		<key>User</key>
+		<key>Destination UID</key>
 		<string>fetchgreebledonx</string>
+		<key>Source UID</key>
+		<string>TekJew</string>
+		<key>Date Opened</key>
+		<string>2004-04-19 12:45:47 -0500</string>
 	</dict>
 	
 	<key>Preview Messages</key>
