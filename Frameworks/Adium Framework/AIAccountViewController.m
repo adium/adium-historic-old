@@ -27,12 +27,18 @@
 //Init
 - (id)init
 {
+	BOOL result;
+	
     [super init];
     account = nil;
     
-	//Load our default views
-	[NSBundle loadNibNamed:@"AccountViews" owner:self];
-
+	//Load our default views (We must use the instanced nib load because this will be subclassed and we want to load
+	//the nib from our framework, not the bundle of the subclass)
+	result = [[NSBundle bundleForClass:[AIAccountViewController class]] loadNibFile:@"AccountViews"
+																  externalNameTable:[NSDictionary dictionaryWithObject:self forKey:@"NSOwner"]
+																		   withZone:nil];
+	
+	
 	//Load custom views and tabs for our subclass (If it specified a nib name)
 	if([self nibName]){
 		[NSBundle loadNibNamed:[self nibName] owner:self];
@@ -117,24 +123,28 @@
 //Configure the account view
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-    NSString		*savedPassword = nil;
 	
-	if(account != inAccount){
+	if(account != inAccount){		
 		account = inAccount;
+		
+		//UID Label
+		NSString *userNameLabel = [[account service] userNameLabel];
+		[textField_accountUIDLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
 		
 		//UID
 		NSString	*formattedUID = [account preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
 		[textField_accountUID setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [account UID])];
 
+		//Restrict UID field to valid characters and length
+		[textField_accountUID setFormatter:
+			[AIStringFormatter stringFormatterAllowingCharacters:[[account service] allowedCharactersForAccountName]
+														  length:[[account service] allowedLengthForAccountName]
+												   caseSensitive:[[account service] caseSensitive]
+													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+		
 		//Password
-		if([account UID] && [[account UID] length]){
-			savedPassword = [[adium accountController] passwordForAccount:account];
-		}
-		if(savedPassword && [savedPassword length] != 0){
-			[textField_password setStringValue:savedPassword];
-		}else{
-			[textField_password setStringValue:@""];
-		}
+		[self updatePasswordField];
+		
 		
 		//Host
 //		hostName = [theAccount host];
@@ -179,6 +189,7 @@
 		
 		if(![[account UID] isEqualToString:newUID]){
 			[[adium accountController] changeUIDOfAccount:account to:newUID];			
+			[self updatePasswordField];
 		}
 		
 	}else if(sender == textField_password){
@@ -194,6 +205,21 @@
             [[adium accountController] forgetPasswordForAccount:account];
         }
     }
+}
+
+//Update password field
+- (void)updatePasswordField
+{
+    NSString		*savedPassword = nil;
+
+	if([account UID] && [[account UID] length]){
+		savedPassword = [[adium accountController] passwordForAccount:account];
+	}
+	if(savedPassword && [savedPassword length] != 0){
+		[textField_password setStringValue:savedPassword];
+	}else{
+		[textField_password setStringValue:@""];
+	}
 }
 
 //Save changes made in delayed controls
