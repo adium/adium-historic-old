@@ -361,23 +361,33 @@
 				//Check for each service the address book supports
 				while(serviceID = [servicesEnumerator nextObject]){
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
-#warning AIM, ICQ, and dot mac are interchangable in this context. What to do?
-					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithService:[[adium accountController] firstServiceWithServiceID:serviceID]] objectEnumerator];
-					AIAccount		*account;
+					ABMultiValue	*names = [me valueForProperty:addressBookKey];
 					
-					//Look at each account on this service, searching for one a matching UID
-					while (account = [accountsArray nextObject]){
-						//An ABPerson may have multiple names on a given service; iterate through them
-						ABMultiValue	*names = [me valueForProperty:addressBookKey];
+					if ([serviceID isEqualToString:@"AIM"] || [serviceID isEqualToString:@"ICQ"]){
+						serviceID = @"AIM-compatible";
+					}
+
+					NSEnumerator	*serviceEnumerator = [[[adium accountController] servicesWithServiceClass:serviceID] objectEnumerator];
+					AIService		*service;
+					while (service = [serviceEnumerator nextObject]){
 						
-						int				nameCount = [names count];
-						int				i;
-						for (i=0 ; i<nameCount ; i++){
-							if ([[account UID] isEqualToString:[[names valueAtIndex:i] compactedString]]){
-								[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
-																			  withOwner:self
-																		  priorityLevel:Low_Priority];
-								
+						NSEnumerator	*accountsArray = [[[adium accountController] accountsWithService:service] objectEnumerator];
+						AIAccount		*account;
+						
+						//Look at each account on this service, searching for one a matching UID
+						while (account = [accountsArray nextObject]){
+							//An ABPerson may have multiple names on a given service; iterate through them
+							NSString		*accountUID = [[account UID] compactedString];
+							int				nameCount = [names count];
+							int				i;
+							
+							for (i=0 ; i<nameCount ; i++){
+								if ([accountUID isEqualToString:[[names valueAtIndex:i] compactedString]]){
+									[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
+																				  withOwner:self
+																			  priorityLevel:Low_Priority];
+									
+								}
 							}
 						}
 					}
@@ -419,15 +429,32 @@
 			ABMultiValue	*names = [person valueForProperty:addressBookKey];
 			int				nameCount = [names count];
 			int				i;
-
+			BOOL			isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
+									   [serviceID isEqualToString:@"ICQ"]);
+				
 			for (i=0 ; i<nameCount ; i++){
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
 				[dict setObject:[person uniqueId] forKey:UID];
 				
 				[UIDsArray addObject:UID];
+				
+				//If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
+				if (isOSCAR){
+					const char	firstCharacter = [UID characterAtIndex:0];
+					
+					//Determine service based on UID
+					if([UID hasSuffix:@"@mac.com"]){
+						serviceID = @"Mac";
+					}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+						serviceID = @"ICQ";
+					}else{
+						serviceID = @"AIM";
+					}
+				}
+				
 				[servicesArray addObject:serviceID];
 			}
-		}	
+		}
 		
 		if ([UIDsArray count] > 1){
 			//Got a record with multiple names
