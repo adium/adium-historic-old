@@ -18,15 +18,18 @@
 @class AIInterfaceController;
 
 @interface ErrorMessageWindowController : AIWindowController {
-    IBOutlet	NSTextField	*textField_errorTitle;
-    IBOutlet	NSTextView	*textView_errorInfo;
+	IBOutlet	NSTextView		*textView_errorTitle;
+    IBOutlet	NSScrollView	*scrollView_errorTitle;
+    
+    IBOutlet	NSTextView		*textView_errorInfo;
     IBOutlet	NSScrollView	*scrollView_errorInfo;
-    IBOutlet	NSTabView	*tabView_multipleErrors;
-    IBOutlet	NSButton	*button_okay;
+    
+	IBOutlet	NSTabView		*tabView_multipleErrors;
+    IBOutlet	NSButton		*button_okay;
 
-    NSMutableArray	*errorTitleArray;
-    NSMutableArray	*errorDescArray;
-    NSMutableArray	*errorWindowTitleArray;
+    NSMutableArray				*errorTitleArray;
+    NSMutableArray				*errorDescArray;
+    NSMutableArray				*errorWindowTitleArray;
 }
 
 + (id)errorMessageWindowController;
