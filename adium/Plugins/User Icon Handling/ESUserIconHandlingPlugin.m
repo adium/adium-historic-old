@@ -41,7 +41,7 @@
 		NSString			*cachedImagePath = [self _cachedImagePathForObject:inObject];
 		if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
 			NSImage				*cachedImage = [[[NSImage alloc] initByReferencingFile:cachedImagePath] autorelease];
-			
+
 			if (cachedImage) {
 				[[inObject displayArrayForKey:@"UserIcon"] setObject:cachedImage
 														   withOwner:self
@@ -91,6 +91,32 @@
 	}
 }
 
+/*
+- (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
+{
+	BOOL		success = NO;
+	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
+	
+	
+	NSBitmapImageRep* imageRep = [[inImage representations] objectAtIndex:0];
+	NSLog(@"ImageRep %@",imageRep);
+		unsigned char *imageBytes = [imageRep bitmapData];
+		NSData  *imageData = [NSData dataWithBytes:imageBytes 
+											length:[imageRep bytesPerRow] * [imageRep pixelsHigh]];
+		success = ([imageData writeToFile:cachedImagePath
+							   atomically:YES]);
+		if (success){
+			NSLog(@"Success!");
+			[inObject setStatusObject:cachedImagePath 
+							   forKey:@"UserIconPath"
+						   notify:YES];
+		}
+
+	return success;
+}
+*/
+
+
 - (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
 {
 	BOOL		success;
@@ -111,7 +137,7 @@
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
 {
 	//Appending .tiff is probably unnecessary; may want to change this later
-	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.tiff",[inObject uniqueObjectID]]]);
+	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[inObject uniqueObjectID]]]);
 }
 
 @end
