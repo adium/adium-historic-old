@@ -173,7 +173,6 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				   (secondary ? secondary : ""));
 		
 		GList					*gl, *fl, *field_list;
-		GaimRequestField		*field;
 		GaimRequestFieldGroup	*group;
 
 		//Look through each group, processing each field
@@ -185,24 +184,24 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 			field_list = gaim_request_field_group_get_fields(group);
 			
 			for (fl = field_list; fl != NULL; fl = fl->next) {
-				GaimRequestFieldType type;
-				
 				/*
-				 typedef enum
-				 {
-					 GAIM_REQUEST_FIELD_NONE,
-					 GAIM_REQUEST_FIELD_STRING,
-					 GAIM_REQUEST_FIELD_INTEGER,
-					 GAIM_REQUEST_FIELD_BOOLEAN,
-					 GAIM_REQUEST_FIELD_CHOICE,
-					 GAIM_REQUEST_FIELD_LIST,
-					 GAIM_REQUEST_FIELD_LABEL,
-					 GAIM_REQUEST_FIELD_ACCOUNT
-					 
-				 } GaimRequestFieldType;
-				 */
+				typedef enum
+				{
+					GAIM_REQUEST_FIELD_NONE,
+					GAIM_REQUEST_FIELD_STRING,
+					GAIM_REQUEST_FIELD_INTEGER,
+					GAIM_REQUEST_FIELD_BOOLEAN,
+					GAIM_REQUEST_FIELD_CHOICE,
+					GAIM_REQUEST_FIELD_LIST,
+					GAIM_REQUEST_FIELD_LABEL,
+					GAIM_REQUEST_FIELD_ACCOUNT
+				} GaimRequestFieldType;
+				*/
 
 				/*
+				GaimRequestField		*field;
+				GaimRequestFieldType	type;
+				
 				field = (GaimRequestField *)fl->data;
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_STRING) {

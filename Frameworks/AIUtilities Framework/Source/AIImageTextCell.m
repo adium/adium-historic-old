@@ -210,7 +210,6 @@
 		NSSize	size = [image size];
 		NSSize  destSize = size;
 		NSPoint	destPoint = cellFrame.origin;
-		float	imageLeftPadding, imageWidthWithPadding = 0;
 		
 		//Adjust the rects
 		destPoint.y += 1;

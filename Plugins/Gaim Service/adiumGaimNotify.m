@@ -16,6 +16,7 @@
 
 #import "ESGaimNotifyEmailController.h"
 #import "adiumGaimNotify.h"
+#import "SLGaimCocoaAdapter.h"
 #import <AIUtilities/CBObjectAdditions.h>
 
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb,void *userData)

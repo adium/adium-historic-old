@@ -24,6 +24,7 @@
 #import <AIUtilities/BZGenericViewCell.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIListObject.h>
+#import "AIPreferenceController.h"
 
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
@@ -145,7 +146,7 @@
 	emoticonPackPreviewControllers = [[NSMutableArray alloc] init];
 	while(pack = [enumerator nextObject]){
 		[emoticonPackPreviewControllers addObject:[AIEmoticonPackPreviewController previewControllerForPack:pack
-																								 withPlugin:[adium emoticonController]
+																								 withPlugin:(AIEmoticonsPlugin *)[adium emoticonController]
 																								preferences:self]];
 	}
 	
@@ -387,7 +388,7 @@
 					  AILocalizedString(@"Delete",nil),
 					  AILocalizedString(@"Cancel",nil),
 					  @"",
-					  [[self view] window],
+					  [self window],
 					  self, 
                       @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
                       AILocalizedString(@"Are you sure you want to delete the %@ Emoticon Pack? It will be moved to the Trash.",nil), name);

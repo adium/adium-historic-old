@@ -79,6 +79,7 @@
 
 - (void)displayFileSendError;
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
+- (void *)handleNotifyFormattedWithTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary text:(const char *)text;
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict;
 - (oneway void)performAccountMenuActionFromDict:(NSDictionary *)dict;
@@ -92,14 +93,14 @@
 @end
 
 //Lookup functions
-void* adium_gaim_get_handle(void);
-GaimConversation* existingConvLookupFromChat(AIChat *chat);
-GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount);
-AIChat* imChatLookupFromConv(GaimConversation *conv);
-AIChat* existingChatLookupFromConv(GaimConversation *conv);
-AIChat* chatLookupFromConv(GaimConversation *conv);
-AIListContact* contactLookupFromIMConv(GaimConversation *conv);
-AIListContact* contactLookupFromBuddy(GaimBuddy *buddy);
-GaimAccount* accountLookupFromAdiumAccount(CBGaimAccount *adiumAccount);
-CBGaimAccount* accountLookup(GaimAccount *acct);
-NSMutableDictionary* get_chatDict(void);
+void *adium_gaim_get_handle(void);
+GaimConversation *existingConvLookupFromChat(AIChat *chat);
+GaimConversation *convLookupFromChat(AIChat *chat, id adiumAccount);
+AIChat *imChatLookupFromConv(GaimConversation *conv);
+AIChat *existingChatLookupFromConv(GaimConversation *conv);
+AIChat *chatLookupFromConv(GaimConversation *conv);
+AIListContact *contactLookupFromIMConv(GaimConversation *conv);
+AIListContact *contactLookupFromBuddy(GaimBuddy *buddy);
+GaimAccount *accountLookupFromAdiumAccount(CBGaimAccount *adiumAccount);
+CBGaimAccount *accountLookup(GaimAccount *acct);
+NSMutableDictionary *get_chatDict(void);
