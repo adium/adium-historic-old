@@ -34,6 +34,7 @@
 
     id					delegate;
     BOOL				allowsInactiveTabClosing;	//Allow closing of inactive tabs
+	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window
 	BOOL				trackingCursor;				//Tracking rects are installed
 
 	//Tab Dragging
@@ -60,6 +61,10 @@
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue;
 - (BOOL)allowsInactiveTabClosing;
 
+//Permit rearranging within the window
+- (void)setAllowsTabRearranging:(BOOL)inValue;
+- (BOOL)allowsTabRearranging;
+
 //
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)resizeTabs;
@@ -70,6 +75,7 @@
 - (void)closeTab:(AICustomTabCell *)tabCell;
 - (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
 - (NSArray *)tabCells;
+- (NSTabView *)tabView;
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
 - (void)resetCursorTracking;
 
