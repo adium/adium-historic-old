@@ -482,7 +482,7 @@
 		
         NSString			*body = [self encodedAttributedString:[cm message] forListObject:listObject];
         GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-        char				*destination = [[listObject UID] UTF8String];
+        const char			*destination = [[listObject UID] UTF8String];
 		
         //create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
         //whereas it previously belonged to another account
