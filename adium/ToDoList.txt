@@ -15,6 +15,7 @@ Bugs
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
+* Contact list flippy triangles have stripes behind them in 10.2
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
