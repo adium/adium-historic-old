@@ -353,7 +353,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[self updateCellRelatedThemePreferencesFromDict:themeDict];
 	[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
 
-	[self setHideRoot:NO];
+	[self setHideRoot:YES];
 }
 
 - (void)configureDrawer
