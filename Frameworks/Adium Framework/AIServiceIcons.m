@@ -49,7 +49,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 + (NSImage *)serviceIconForServiceID:(NSString *)serviceID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
 	NSImage				*serviceIcon;
-	
+		
 	//Retrieve the service icon from our cache
 	serviceIcon = [serviceIcons[iconType][iconDirection] objectForKey:serviceID];
 	
@@ -75,7 +75,6 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	if(!serviceIconBasePath || ![serviceIconBasePath isEqualToString:inPath]){
 		NSDictionary	*serviceIconPack = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
-		NSLog(@"setActiveServiceIconsFromPath:%@",inPath);
 		
 		if(serviceIconPack && [[serviceIconPack objectForKey:@"AdiumSetVersion"] intValue] == 1){
 			serviceIconBasePath = [inPath retain];
