@@ -57,8 +57,8 @@
     if([[tableColumn identifier] isEqual:@"service"]){
 		NSArray	*serviceArray = (showingContacts ? [controller_LogViewer toServiceArray] : [controller_LogViewer fromServiceArray]);
 		NSImage	*image = [AIServiceIcons serviceIconForServiceID:[serviceArray objectAtIndex:row]
-															type:AIServiceIconSmall
-													   direction:AIIconNormal];
+                                                                    type:AIServiceIconSmall
+                                                               direction:AIIconNormal];
 		return(image ? image : blankImage);
 			
     }else if([[tableColumn identifier] isEqual:@"name"]){
@@ -88,6 +88,62 @@
 		[controller_LogViewer filterForContactName:nil];
 		[controller_LogViewer filterForAccountName:nil];
 	}
+}
+
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+    if(showingContacts){ // deleting a contact
+        [self moveContactToTrash];
+    }else{ // deleting an account
+        [self moveAccountToTrash];
+    }
+}
+
+-(void)moveContactToTrash
+{
+    NSString	*name = [[[[controller_LogViewer toArray] objectAtIndex:[table_filterList selectedRow]] copy] autorelease];
+    NSBeginAlertSheet(@"Delete Contact and Their Logs",@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
+                      @selector(trashContactConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+                      @"Are you sure you want to delete %@ and any logs of past conversations with %@? These will be moved to the Trash, which may take a moment, depending on how many there are.",name,name);
+    
+}
+
+- (void)trashContactConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton) {
+        int dLoop = 0;
+        // loop through all accounts & find this contact, remove as needed
+        // -> if you can think of a more efficient solution please do, this is all that came to mind
+        while(dLoop < [[controller_LogViewer fromArray] count])
+        {
+            NSString *deleteString = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@/%@/", [[controller_LogViewer fromServiceArray] objectAtIndex:dLoop], [[controller_LogViewer fromArray] objectAtIndex:dLoop], [[controller_LogViewer toArray] objectAtIndex:[table_filterList selectedRow]]]];
+            if([[NSFileManager defaultManager] fileExistsAtPath:deleteString])
+            {
+                [[NSFileManager defaultManager] trashFileAtPath:deleteString];
+            } 
+            dLoop++;
+        }
+        [controller_LogViewer rebuildIndices];
+        [table_filterList reloadData];
+        [self tableViewSelectionDidChange:nil];
+    }
+}
+
+-(void)moveAccountToTrash
+{
+    NSString	*name = [[[[controller_LogViewer fromArray] objectAtIndex:[table_filterList selectedRow]] copy] autorelease];
+    NSBeginAlertSheet(@"Delete Account's Logs",@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
+                      @selector(trashAccountConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+                      @"Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash, which may several minutes, depending on how many logs there are.", name);
+}
+
+- (void)trashAccountConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton) {
+        [[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[controller_LogViewer fromServiceArray] objectAtIndex:[table_filterList selectedRow]], [[controller_LogViewer fromArray] objectAtIndex:[table_filterList selectedRow]]]]];
+        [controller_LogViewer rebuildIndices];
+        [table_filterList reloadData];
+    }
 }
 
 //Switch the displayed filter

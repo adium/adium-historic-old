@@ -20,24 +20,24 @@
 #import "AILogToGroup.h"
 #import "ESRankingCell.h"
 
-#define LOG_VIEWER_NIB						@"LogViewer"
-#define LOG_VIEWER_JAG_NIB					@"LogViewerJag"
-#define KEY_LOG_VIEWER_WINDOW_FRAME			@"Log Viewer Frame"
-#define	PREF_GROUP_CONTACT_LIST				@"Contact List"
-#define KEY_LOG_VIEWER_GROUP_STATE			@"Log Viewer Group State"	//Expand/Collapse state of groups
-#define TOOLBAR_LOG_VIEWER					@"Log Viewer Toolbar"
+#define LOG_VIEWER_NIB                          @"LogViewer"
+#define LOG_VIEWER_JAG_NIB			@"LogViewerJag"
+#define KEY_LOG_VIEWER_WINDOW_FRAME             @"Log Viewer Frame"
+#define	PREF_GROUP_CONTACT_LIST			@"Contact List"
+#define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
+#define TOOLBAR_LOG_VIEWER			@"Log Viewer Toolbar"
 
 #define MAX_LOGS_TO_SORT_WHILE_SEARCHING	3000	//Max number of logs we will live sort while searching
-#define LOG_SEARCH_STATUS_INTERVAL			20		//1/60ths of a second to wait before refreshing search status
+#define LOG_SEARCH_STATUS_INTERVAL		20	//1/60ths of a second to wait before refreshing search status
 
 #define LOG_CONTENT_SEARCH_MAX_RESULTS		10000	//Max results allowed from a search
-#define LOG_RESULT_CLUMP_SIZE				10		//Number of logs to fetch at a time
+#define LOG_RESULT_CLUMP_SIZE			10	//Number of logs to fetch at a time
 
-#define SEARCH_MENU			AILocalizedString(@"Search Menu",nil)
-#define FROM				AILocalizedString(@"From",nil)
-#define TO					AILocalizedString(@"To",nil)
-#define DATE				AILocalizedString(@"Date",nil)
-#define CONTENT				AILocalizedString(@"Content",nil)
+#define SEARCH_MENU                             AILocalizedString(@"Search Menu",nil)
+#define FROM                                    AILocalizedString(@"From",nil)
+#define TO                                      AILocalizedString(@"To",nil)
+#define DATE                                    AILocalizedString(@"Date",nil)
+#define CONTENT                                 AILocalizedString(@"Content",nil)
 
 #define HIDE_EMOTICONS				AILocalizedString(@"Hide Emoticons",nil)
 #define SHOW_EMOTICONS				AILocalizedString(@"Show Emoticons",nil)
@@ -45,7 +45,7 @@
 #define IMAGE_EMOTICONS_OFF			@"emoticonsOff"
 #define IMAGE_EMOTICONS_ON			@"emoticonsOn"
 
-#define	REFRESH_RESULTS_INTERVAL	0.5 //Interval between results refreshes while searching
+#define	REFRESH_RESULTS_INTERVAL                0.5 //Interval between results refreshes while searching
 
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
@@ -76,12 +76,12 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 @implementation AILogViewerWindowController
 
 //Open the log viewer window
-static AILogViewerWindowController *sharedLogViewerInstance = nil;
-static NSTimer						*refreshResultsTimer = nil;
-static NSMutableDictionary			*logFromGroupDict = nil;
-static NSMutableDictionary			*logToGroupDict = nil;
-static NSString						*filterForAccountName = nil;	//Account name to restrictively match content searches
-static NSString						*filterForContactName = nil;	//Contact name to restrictively match content searches
+static AILogViewerWindowController          *sharedLogViewerInstance = nil;
+static NSTimer                              *refreshResultsTimer = nil;
+static NSMutableDictionary                  *logFromGroupDict = nil;
+static NSMutableDictionary                  *logToGroupDict = nil;
+static NSString                             *filterForAccountName = nil;	//Account name to restrictively match content searches
+static NSString                             *filterForContactName = nil;	//Contact name to restrictively match content searches
 
 + (id)openForPlugin:(id)inPlugin
 {
@@ -188,9 +188,9 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 {
     NSEnumerator			*enumerator;
     NSString				*folderName;
-	NSMutableDictionary		*toDict = [NSMutableDictionary dictionary];
-	NSString				*basePath = [AILoggerPlugin logBasePath];
-	NSString				*fromUID, *serviceClass;
+    NSMutableDictionary                 *toDict = [NSMutableDictionary dictionary];
+    NSString				*basePath = [AILoggerPlugin logBasePath];
+    NSString				*fromUID, *serviceClass;
 
     //Process each account folder (/Logs/SERVICE.ACCOUNT_NAME/) - sorting by compare: will result in an ordered list
 	//first by service, then by account name.
@@ -302,7 +302,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     [self startSearchingClearingCurrentResults:YES];
 	
 	if ([[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_DRAWER_STATE
-												  group:PREF_GROUP_LOGGING] boolValue]){
+                                                      group:PREF_GROUP_LOGGING] boolValue]){
 		[drawer_contacts open];
 	}else{
 		[drawer_contacts close];
@@ -318,17 +318,19 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     [resultsLock lock];
     if(row >= 0 && row < [selectedLogArray count]){
         theLog = [selectedLogArray objectAtIndex:row];
+        sameSelection = row--;
     }
 	[resultsLock unlock];
 	
 	if (theLog){
 		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		NSLock			*logAccessLock = [plugin logAccessLock];
+		NSLock              *logAccessLock = [plugin logAccessLock];
 		
 		//Remember that this locks and unlocks the logAccessLock
-		SKIndexRef		logSearchIndex = [plugin logContentIndex];
-		SKDocumentRef	document;
+		SKIndexRef          logSearchIndex = [plugin logContentIndex];
+		SKDocumentRef       document;
 		
+                useSame = YES;
 		[theLog retain];
 
 		[resultsLock lock];
@@ -359,6 +361,21 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
 		[theLog release];
 	}
+}
+
+-(void)rebuildIndices
+{
+    //Rebuild the 'global' log indexes
+    [logFromGroupDict release]; logFromGroupDict = [[NSMutableDictionary alloc] init];
+    [toArray removeAllObjects]; //note: even if there are no logs, the name will remain [bug or feature?]
+    [toServiceArray removeAllObjects];
+    [fromArray removeAllObjects];
+    [fromServiceArray removeAllObjects];
+    
+    [self initLogFiltering];
+    
+    [tableView_results reloadData];
+    [self selectDisplayedLog];    
 }
 
 //Close the window
@@ -668,9 +685,18 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 		[tableView_results selectRow:index byExtendingSelection:NO];
 		[tableView_results scrollRowToVisible:index];
 		
-    }else{
-		[self selectFirstLog];
+    }
+    else{
+        if(useSame == YES && sameSelection > 0)
+        {
+            [tableView_results selectRow:sameSelection byExtendingSelection:NO];
+        }
+        else
+        {   
+            [self selectFirstLog];
+        }
     }    
+    useSame = NO;
 }
 
 - (void)selectFirstLog

@@ -17,9 +17,10 @@
 #import "AILogViewerWindowController.h"
 
 @interface BGContactsTable : AIObject {
-    IBOutlet    AILogViewerWindowController    *controller_LogViewer;
-    IBOutlet    NSTableView                    *table_filterList;
-    IBOutlet    NSPopUpButton                  *popup_filterType;
+    IBOutlet    AILogViewerWindowController       *controller_LogViewer;
+    IBOutlet    AIAlternatingRowTableView         *table_filterList;
+    IBOutlet    NSPopUpButton                     *popup_filterType;
+    IBOutlet    NSWindow                          *window_LogViewer;
 	
 	BOOL		showingContacts;
 	NSImage		*blankImage;
