@@ -1684,7 +1684,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
     if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;
 	
-	if ([NSApplication isOnTigerOrBetter]) callBackTypes |= kCFSocketConnectCallBack;
+	/*if ([NSApplication isOnTigerOrBetter]) */callBackTypes |= kCFSocketConnectCallBack;
 	
 //	if ((condition & GAIM_INPUT_CONNECT) != 0) callBackTypes |= kCFSocketConnectCallBack;
 	
