@@ -44,8 +44,9 @@
         //Insert an updated value
         if(hidden){
             [hiddenArray addObject:[NSNumber numberWithInt:hidden] withOwner:self];
-            modifiedAttributes = [NSArray arrayWithObject:@"Hidden"];
         }
+
+        modifiedAttributes = [NSArray arrayWithObject:@"Hidden"];
     }
 
     return(modifiedAttributes);
