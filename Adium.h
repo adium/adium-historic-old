@@ -52,7 +52,6 @@
 #import "AIContentStatus.h"
 #import "AIContentTyping.h"
 #import "AIEmoticon.h"
-#import "AIException.h"
 #import "ESFileTransfer.h"
 #import "AIIconState.h"
 #import "AIListContact.h"

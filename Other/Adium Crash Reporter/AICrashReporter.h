@@ -7,6 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define RELATIVE_PATH_TO_CRASH_REPORTER	 @"/Contents/Resources/Adium Crash Reporter.app"
+#define EXCEPTIONS_PATH					[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
+#define CRASHES_PATH					[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
 @interface AICrashReporter : NSObject {
     IBOutlet	NSWindow                    *window_MainWindow;

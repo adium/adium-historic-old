@@ -124,7 +124,6 @@
 
 //Crash Reporter
 #define PATH_TO_IMPORTER              [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium 1.6 Pref Importer.app"] stringByExpandingTildeInPath]
-#define PATH_TO_CRASH_REPORTER        [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium Crash Reporter.app"] stringByExpandingTildeInPath]
 #define EXCEPTIONS_PATH               [@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH                  [@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 

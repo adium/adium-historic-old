@@ -9,8 +9,6 @@
 #import "AICrashReporter.h"
 
 #define CRASH_REPORT_URL				@"http://www.visualdistortion.org/crash/post.jsp"
-#define EXCEPTIONS_PATH					[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
-#define CRASHES_PATH					[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
 #define KEY_CRASH_EMAIL_ADDRESS			@"AdiumCrashReporterEmailAddress"
 #define KEY_CRASH_AIM_ACCOUNT			@"AdiumCrashReporterAIMAccount"
