@@ -72,4 +72,5 @@
 - (BOOL)controlKey{
     return ( ([self modifierFlags] & NSControlKeyMask) != 0);
 }
+
 @end

@@ -53,3 +53,4 @@
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem;
 
 @end
+
