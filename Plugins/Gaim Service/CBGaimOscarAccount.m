@@ -214,21 +214,21 @@ static BOOL didInitOscar = NO;
 	AIService	*contactService;
 	NSString	*contactServiceID = nil;
 	
-	const char	firstCharacter = [contactUID characterAtIndex:0];
-	
+	const char	firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : nil);
+
 	//Determine service based on UID
 	if([contactUID hasSuffix:@"@mac.com"]){
 		contactServiceID = @"libgaim-oscar-Mac";
-	}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+	}else if(firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')){
 		contactServiceID = @"libgaim-oscar-ICQ";
 	//		}else if(isMobile = (firstCharacter == '+')){
 	//			contactServiceID = @"libgaim-oscar-AIM";
 	}else{
 		contactServiceID = @"libgaim-oscar-AIM";
 	}
-	
+
 	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
-	
+
 	return(contactService);
 }
 	
