@@ -481,6 +481,8 @@ void sendData( NSData * aData, NSPort * aPort )
 {
 	[targetObject release];
 	[owner release];
+	
+	[super dealloc];
 }
 
 /*
