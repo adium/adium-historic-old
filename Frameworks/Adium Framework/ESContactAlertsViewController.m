@@ -68,6 +68,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 		[button_edit setFrame:newFrame];
 	}
+	
+	[button_add setToolTip:AILocalizedString(@"Add an action for the selected event",nil)];
+	[button_delete setToolTip:AILocalizedString(@"Remove the selected action(s)",nil)];
+	[button_edit setToolTip:AILocalizedString(@"Configure the selected action",nil)];
 
 	//Update enable state of our buttons
 	[self outlineViewSelectionDidChange:nil];
