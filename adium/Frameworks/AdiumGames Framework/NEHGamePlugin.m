@@ -197,11 +197,6 @@ static NSMenu			*menu_Games;
 			account = [inObj destination];
 			
 			contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
-			if(!contacts){
-				contacts = [NSMutableDictionary dictionary];
-				[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
-			}
-			
 			control = [contacts objectForKey:[contact uniqueObjectID]];
 			
 			if([type isEqualToString:MSG_TYPE_INVITE]) {
@@ -241,6 +236,15 @@ static NSMenu			*menu_Games;
 
 - (void)handleInvitation:(NSString *)msg account:(AIAccount *)account contact:(AIListContact *)contact
 {
+	NEHGameController   *control;
+	NSMutableDictionary *contacts;
+	
+	contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
+	if(!contacts){
+		contacts = [NSMutableDictionary dictionary];
+		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
+	}
+				
 	control = [self newController];
 	[control handleInvitation:msg account:account contact:contact];
 	[contacts setObject:control forKey:[contact uniqueObjectID]];
