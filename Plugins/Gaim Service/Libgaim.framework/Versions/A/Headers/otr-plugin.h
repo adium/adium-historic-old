@@ -58,7 +58,4 @@ void otrg_plugin_send_default_query_conv(GaimConversation *conv);
  * appropriate. */
 void otrg_plugin_disconnect(ConnContext *context);
 
-/* Return the user state used by the gaim-otr plugin */
-OtrlUserState* otr_plugin_get_userstate(void);
-
 #endif

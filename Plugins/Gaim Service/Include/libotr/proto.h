@@ -22,6 +22,7 @@
 
 #include "context.h"
 #include "version.h"
+#include "tlv.h"
 
 /* If we ever see this sequence in a plaintext message, we'll assume the
  * other side speaks OTR, and try to establish a connection. */
@@ -118,14 +119,15 @@ gcry_error_t otrl_proto_accept_key_exchange(OtrlUserState us,
 	    const char *accountname, const char *protocol),
 	void *create_privkey_data);
 
-/* Create an OTR Data message.  Pass the plaintext as msg, and a
- * newly-allocated string will be returned in *encmessagep. */
+/* Create an OTR Data message.  Pass the plaintext as msg, and an
+ * optional chain of TLVs.  A newly-allocated string will be returned in
+ * *encmessagep. */
 gcry_error_t otrl_proto_create_data(char **encmessagep, ConnContext *context,
-	const char *msg);
+	const char *msg, OtrlTLV *tlvs);
 
 /* Accept an OTR Data Message in datamsg.  Decrypt it and put the
- * plaintext into *plaintextp. */
-gcry_error_t otrl_proto_accept_data(char **plaintextp, ConnContext *context, 
-	const char *datamsg);
+ * plaintext into *plaintextp, and any TLVs into tlvsp. */
+gcry_error_t otrl_proto_accept_data(char **plaintextp, OtrlTLV **tlvsp,
+	ConnContext *context, const char *datamsg);
 
 #endif
