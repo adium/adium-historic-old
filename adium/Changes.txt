@@ -1,5 +1,13 @@
 				Adium X Version History
 				-----------------------
+Version 0.55
+- Fixed a crash when connecting to a Yahoo account with privacy settings enabled
+- Fixed formatting when sending messages to oneself via MSN
+- Fixed a crash when editing links that are in the view at load time
+- Fixed emoticon pack loading to ignore empty packs
+- Fixed a bug preventing Jabber names with "-" in them from connecting
+- Disabled dragging web links into the message view
+
 Version 0.54 (5/7/2004)
 - Added support for displaying strikethrough, subscript, and superscript text
 - Added support for basic formatting in MSN messages
