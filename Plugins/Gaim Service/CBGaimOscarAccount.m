@@ -13,6 +13,7 @@
 #define KEY_OSCAR_PORT  @"Oscar:Port"
 
 #define DELAYED_UPDATE_INTERVAL		1.0
+#define MAX_AVAILABLE_MESSAGE_LENGTH 44
 
 @interface CBGaimOscarAccount (PRIVATE)
 - (NSString *)serversideCommentForContact:(AIListContact *)theContact;
@@ -368,7 +369,7 @@ static BOOL didInitOscar = NO;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
 {
 	if(!strcmp(gaimStatusType, "Available")){
-		return([inAttributedString string]);
+		return([[inAttributedString string] stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
 	}else{
 		return([super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType]);
 	}
