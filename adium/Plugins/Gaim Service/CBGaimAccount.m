@@ -497,12 +497,12 @@
 			NSData				*imageTIFFData = [image TIFFRepresentation];
 			NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
             
-            [[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES];
+			//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
+            if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
+				[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+			}
 			
 			[image release];
-			
-			//Write an <IMG SRC="filepath"> tag
-			[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
 		}
 	}
 	
