@@ -94,7 +94,7 @@ struct oscar_data {
     //General updates
     [super accountUpdateBuddy:buddy];
     
-        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
 }
 
 - (void)_delayedBlistUpdate:(NSTimer *)inTimer

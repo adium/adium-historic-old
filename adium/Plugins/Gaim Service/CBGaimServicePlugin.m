@@ -553,6 +553,19 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_set_blist(gaim_blist_new());
     //gaim_blist_load();
 
+    //Setup libgaim core preferences
+    
+    //Disable gaim away handling - we do it ourselves
+    gaim_prefs_set_bool("/core/conversations/away_back_on_send", FALSE);
+    gaim_prefs_set_bool("/core/away/auto_response/enabled", FALSE);
+    
+    //Disable gaim conversation logging
+    gaim_prefs_set_bool("/gaim/gtk/logging/log_chats", FALSE);
+    gaim_prefs_set_bool("/gaim/gtk/logging/log_ims", FALSE);
+    
+    //Typing preference!
+    gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
+        
     //Install the libgaim event loop timer
     [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL target:self selector:@selector(gaimEventLoopTimer:) userInfo:nil repeats:YES];
 
@@ -561,7 +574,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
                                                       description:@"AIM/OSCAR c/o Libgaim"
                                                             image:nil
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
     //Register this service
     [[owner accountController] registerService:self];
