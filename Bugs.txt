@@ -2,12 +2,6 @@
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
 
-Insert Link sheet
-  - Multiple sheets can be invoked at the same time (needs to be modal sheet)
-
-Dock
-  - Dock icon does not appear to be saved for some users while Adium is closed
-
 //------------------------------------------------------------------------------------
 // Adium X Known Issues
 //------------------------------------------------------------------------------------
@@ -16,6 +10,10 @@ Dock
 [MEDIUM]
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
+
+Contacts
+	- MSN Authorization requests seem to fail to show up at least sometimes.
+
 [LOW]
 
 Contacts
