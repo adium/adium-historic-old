@@ -342,7 +342,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
 	[invocation retainArguments];
 
-#if 1
+#if THREADED_FILTERING
 	//Now request the asynchronous filtering
 	[[self filterRunLoopMessenger] target:self 
 						  performSelector:@selector(thread_filterAttributedString:contentFilter:threadedContentFilter:filterContext:invocation:) 
