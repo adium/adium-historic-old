@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.8 2004/03/17 04:33:24 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.9 2004/04/02 22:56:50 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -20,13 +20,13 @@
 												  target:self action:@selector(menuSendFile:)
 										   keyEquivalent:@"F"];
 	[sendFileMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-//	[[owner menuController] addMenuItem:sendFileMenuItem toLocation:LOC_Contact_Action];
+	[[owner menuController] addMenuItem:sendFileMenuItem toLocation:LOC_Contact_Action];
 	
     //Add our get info contextual menu item
     sendFileContextMenuItem = [[NSMenuItem alloc] initWithTitle:SEND_FILE
 														 target:self action:@selector(menuSendFile:)
 												  keyEquivalent:@""];
-//  [[owner menuController] addContextualMenuItem:sendFileContextMenuItem toLocation:Context_Contact_Action];
+	[[owner menuController] addContextualMenuItem:sendFileContextMenuItem toLocation:Context_Contact_Action];
 	
 }
 
@@ -69,8 +69,8 @@
 	if (account) {
 
 		//Set up a fileTransfer object
-		ESFileTransfer *fileTransfer = [[ESFileTransfer fileTransferWithContact:listContact
-																	 forAccount:account] retain];
+		ESFileTransfer *fileTransfer = [ESFileTransfer fileTransferWithContact:listContact
+																	forAccount:account];
 		[fileTransfer setLocalFilename:inFile];
 		[fileTransfer setType:Outgoing_FileTransfer];
 		
@@ -89,12 +89,17 @@
     NSLog(@"canceled a file transfer...");
 }
 
-//Menu or context menu item for sending a file was selected
+//Menu or context menu item for sending a file was selected - possible only when a listContact is selected
 - (IBAction)menuSendFile:(id)sender
 {
 	//Get the "selected" list object (that is, the first responder which returns a listObject)
-	AIListObject	*object = [[owner contactController] selectedListObject];	
-	[self requestForSendingFileToListContact:(AIListContact *)object];
+	AIListObject	*selectedObject = [[owner contactController] selectedListObject];	
+	
+	AIListContact   *listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																			  forListContact:(AIListContact *)selectedObject];
+
+	
+	[self requestForSendingFileToListContact:listContact];
 }
 
 /*
@@ -113,23 +118,28 @@
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    BOOL valid = YES;
+	AIListContact   *listContact = nil;
 	
     if(menuItem == sendFileMenuItem){
         AIListObject	*selectedObject = [[owner contactController] selectedListObject];
+
+		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																	 forListContact:(AIListContact *)selectedObject];
+		}
 		
-        if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-            [menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,[selectedObject displayName]]];
-        }else{
-            [menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,CONTACT]];
-            valid = NO;
-        }
-    }else if(menuItem == sendFileContextMenuItem){
-        AIListContact	*selectedContact = [[owner menuController] contactualMenuContact];
-        if ( !(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]) )
-            valid = NO;
+		[menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,(listContact ? [selectedObject displayName] : CONTACT]];
+
+	}else if(menuItem == sendFileContextMenuItem){
+		AIListObject	*selectedObject = [[owner menuController] contactualMenuContact];
+
+		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																	 forListContact:(AIListContact *)selectedObject];
+		}
     }
-    return(valid);
+	
+    return(listContact != nil);
 }
 
 @end
