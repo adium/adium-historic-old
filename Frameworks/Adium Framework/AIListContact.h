@@ -30,5 +30,6 @@
 - (AIAccount *)account;
 - (NSString *)internalUniqueObjectID;
 + (NSString *)internalUniqueObjectIDForService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
+- (void)restoreGrouping;
 
 @end

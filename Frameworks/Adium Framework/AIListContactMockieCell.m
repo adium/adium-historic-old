@@ -52,10 +52,17 @@
 
 		[lastBackgroundBezierPath release];
 
-		//Draw the bottom corners rounded if this is the last cell in a group
 		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
+			//Draw the bottom corners rounded if this is the last cell in a group
 			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] retain];
 			[lastBackgroundBezierPath fill];
+			
+		}else if(row == 0){
+			//Draw the top corner rounded if this cell is the first cell in the outline view (only possible if its containing
+			//group is not being displayed)
+			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS] retain];
+			[lastBackgroundBezierPath fill];
+			
 		}else{
 			lastBackgroundBezierPath = nil;
 
@@ -73,10 +80,17 @@
 		
 		[lastBackgroundBezierPath release];
 
-		//Draw the bottom corners rounded if this is the last cell in a group
 		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
+			//Draw the bottom corners rounded if this is the last cell in a group
 			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:cellFrame radius:MOCKIE_RADIUS] retain];
 			[gradient drawInBezierPath:lastBackgroundBezierPath];
+			
+		}else if(row == 0){
+			//Draw the top corner rounded if this cell is the first cell in the outline view (only possible if its containing
+			//group is not being displayed)
+			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedTopCorners:cellFrame radius:MOCKIE_RADIUS] retain];
+			[gradient drawInBezierPath:lastBackgroundBezierPath];
+			
 		}else{
 			lastBackgroundBezierPath = nil;
 			[gradient drawInRect:cellFrame];

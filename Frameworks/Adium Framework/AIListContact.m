@@ -94,6 +94,13 @@
 	return(remoteGroupName);
 }
 
+//An AIListContact normally groups based on its remoteGroupName (if it is not within a metaContact). 
+//Restore this grouping.
+- (void)restoreGrouping
+{
+	[[adium contactController] listObjectRemoteGroupingChanged:self];
+}
+
 //A listContact is a stranger if it has a nil remoteGroupName
 - (BOOL)isStranger
 {
