@@ -260,7 +260,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     if(inGroup){
         //Group
         ([inGroup isExpanded] ? [inView expandItem:inGroup] : [inView collapseItem:inGroup]);
-
+        
         //Subgroups
         while((object = [enumerator nextObject])){
             if([object isKindOfClass:[AIEditorListGroup class]]){

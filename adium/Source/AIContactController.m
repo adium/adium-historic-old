@@ -341,7 +341,7 @@
             [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
 
             [self sortListGroup:[listContact containingGroup] mode:AISortGroupAndSuperGroups];
-            [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+            [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[listContact containingGroup]];
         }
 
         //Post a 'status' changed message, signaling that the object's status has changed.
@@ -367,7 +367,7 @@
         [[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
 
         [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
-        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inObject containingGroup]];
     }
 
     //Post an attributes changed message (if necessary)
