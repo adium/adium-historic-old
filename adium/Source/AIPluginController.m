@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.73 2004/06/15 14:09:40 adamiser Exp $
+//$Id: AIPluginController.m,v 1.74 2004/06/17 17:28:43 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -49,6 +49,10 @@ ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessage
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin;
+
+#ifdef ALL_IN_ONE
+@class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
+#endif
 
 @implementation AIPluginController
 //init
@@ -133,11 +137,19 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
         [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
         [self loadPluginWithClass:[AIContactAccountsPlugin class]];
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
-//	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
+		
+	#ifdef ALL_IN_ONE
+		[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
+		[self loadPluginWithClass:[CBGaimServicePlugin class]];
+		[self loadPluginWithClass:[NEHTicTacToePlugin class]];
+	#endif
+		
 #endif
 	
+#ifndef ALL_IN_ONE
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:NO];
 	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:YES];
+#endif
 }
 
 //close
