@@ -7,6 +7,8 @@
 
 #import "ESAddressBookIntegrationPlugin.h"
 
+#define AB_DISPLAYFORMAT_DEFAULT_PREFS		@"AB Display Format Defaults"
+
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
 - (void)updateSelf;

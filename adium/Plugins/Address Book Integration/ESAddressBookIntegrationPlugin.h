@@ -15,8 +15,6 @@
 #define KEY_AB_USE_NICKNAME					@"AB Use NickName"
 #define KEY_AB_PREFER_ADDRESS_BOOK_IMAGES	@"AB Prefer AB Images"
 
-#define AB_DISPLAYFORMAT_DEFAULT_PREFS		@"AB Display Format Defaults"
-
 typedef enum {
     None = 0,
     FirstLast,
