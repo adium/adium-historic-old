@@ -470,6 +470,12 @@ static  AICustomTabCell	*dragTabCell;
             operation = NSDragOperationPrivate;
 	}
     }
+    
+    //pass along to the windowController, as well
+    if ( [[[self window] windowController] respondsToSelector:@selector(draggingEntered:)]){
+        [[[self window] windowController] draggingEntered:sender];
+    }
+    
     return(operation);
 }
 
@@ -547,6 +553,11 @@ static  AICustomTabCell	*dragTabCell;
         //Let all the views settle back into place
         if(!viewsRearranging){
             [self smoothlyArrangeCells];
+        }
+        
+        //pass along to the windowController, as well
+        if ( [[[self window] windowController] respondsToSelector:@selector(draggingExited:)]){
+            [[[self window] windowController] draggingExited:sender];
         }
     }
 }
@@ -673,9 +684,10 @@ static  AICustomTabCell	*dragTabCell;
 //importing of data should occur here - add tab to this window and to the tab bar
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-    NSPasteboard *pboard = [sender draggingPasteboard];
-    NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,TAB_CELL_IDENTIFIER,nil]];
-               NSPoint		dragLocation = [self convertPoint:[sender draggingLocation] fromView:nil]; 
+    NSPasteboard    *pboard = [sender draggingPasteboard];
+    NSString        *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,TAB_CELL_IDENTIFIER,nil]];
+    NSPoint         dragLocation = [self convertPoint:[sender draggingLocation] fromView:nil]; 
+    
     if (type) {
         if ([type isEqualToString:NSRTFPboardType]) { //got RTF data
 
@@ -792,7 +804,35 @@ static  AICustomTabCell	*dragTabCell;
     } else { 
         [tabView selectTabViewItem:[dragTabCell tabViewItem]];
     }
+    
 }
+
+-(void)acceptDropInMessageView
+{
+    [[owner interfaceController] transferMessageTabContainer:[dragTabCell tabViewItem] toWindow:[[self window] windowController] atIndex:-1 withTabBarAtPoint:NSMakePoint(0,0)];   
+    
+    //Stop hovering
+    hoverIndex = -1;
+    
+    //so smoothlyArrangeCells won't hide our cute lil' cell
+    draggedIndex = -1; 
+    
+    //Inform our delegate
+    if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
+        [delegate customTabViewDidChangeNumberOfTabViewItems:self];
+    }
+    
+    //Arrange the views
+    if(!viewsRearranging){
+        [self smoothlyArrangeCells];
+    }
+    
+    [tabView selectTabViewItem:[dragTabCell tabViewItem]];
+    
+    //Make sure we're no longer focusing for the drag, as it's now over
+    [self setFocusedForDrag:NO];
+}
+
 // Context menu ------------------------------------------------------------------------
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
@@ -826,7 +866,6 @@ static  AICustomTabCell	*dragTabCell;
 - (void)smoothlyArrangeCells
 {
     BOOL finished = [self arrangeCellsAbsolute:NO];
-   // BOOL finished = [self arrangeCellsAbsolute:YES];
 
     //If all the items aren't in place, we set ourself to adjust them again
     if(!finished){

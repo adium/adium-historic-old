@@ -64,6 +64,7 @@
 
 - (void)removeTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)setOwner:(AIAdium *)inOwner;
+- (void)acceptDropInMessageView;
 
 @end
 
