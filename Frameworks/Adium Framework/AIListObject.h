@@ -32,11 +32,17 @@ typedef enum {
 - (NSArray *)containedObjects;
 - (unsigned)containedObjectsCount;
 - (BOOL)containsObject:(AIListObject *)inObject;
+
 - (id)objectAtIndex:(unsigned)index;
 - (int)indexOfObject:(AIListObject *)inObject;
-- (NSEnumerator *)objectEnumerator;
-- (void)removeAllObjects;
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
+- (NSEnumerator *)objectEnumerator;
+
+- (BOOL)addObject:(AIListObject *)inObject;
+
+- (void)removeObject:(AIListObject *)inObject;
+- (void)removeAllObjects;
+
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
 - (float)smallestOrder;
