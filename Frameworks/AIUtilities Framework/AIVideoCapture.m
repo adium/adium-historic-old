@@ -21,6 +21,8 @@ static NSMutableDictionary	*videoCaptureInstances = nil;
 pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset, long chRefCon, TimeValue time,
 									  short writeType,  long refCon);
 
+static long instanceCounter = 0L;
+
 @interface AIVideoCapture (PRIVATE)
 - (void)_initVideoCapture;
 - (void)_deallocVideoCapture;
@@ -126,8 +128,12 @@ pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset
 		//We achieve this by keeping track of all the open AIVideoCapture instances, where each instance has a unique
 		//identifier.  The callback can lookup the instance it wants by this unique ID.
 		if(!videoCaptureInstances) videoCaptureInstances = [[NSMutableDictionary alloc] init];
-		while(!uniqueID || [videoCaptureInstances objectForKey:[NSNumber numberWithLong:uniqueID]]){
-			uniqueID = random();
+		if(!uniqueID) {
+			uniqueID = ++instanceCounter;
+			if(uniqueID <= 0) {
+				//we overflowed the long
+				uniqueID = instanceCounter = 1;
+			}
 		}
 		[videoCaptureInstances setObject:self forKey:[NSNumber numberWithLong:uniqueID]];
 		
