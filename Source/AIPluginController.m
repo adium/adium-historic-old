@@ -256,11 +256,14 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 
 					}else{
 						//Add this plugin to our confirmed list
-						NSMutableArray	*newConfirmed = [[confirmed mutableCopy] autorelease];
-						if(!newConfirmed) newConfirmed = [NSMutableArray array];
+						NSMutableArray	*newConfirmed;
+						
+						if(!(newConfirmed = [confirmed mutableCopy])) newConfirmed = [[NSMutableArray alloc] init];
+						
 						[newConfirmed addObject:pluginName];
-						[[NSUserDefaults standardUserDefaults] setObject:newConfirmed forKey:CONFIRMED_PLUGINS];	
-
+						[[NSUserDefaults standardUserDefaults] setObject:newConfirmed forKey:CONFIRMED_PLUGINS];
+						
+						[newConfirmed release];
 					}
 				}
 			}

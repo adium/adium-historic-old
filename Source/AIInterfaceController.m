@@ -292,14 +292,14 @@
 - (void)consolidateChats
 {
 	//We work with copies of these arrays, since moving chats may change their contents
-	NSArray			*openContainers = [[[interfacePlugin openContainers] copy] autorelease];
+	NSArray			*openContainers = [[interfacePlugin openContainers] copy];
 	NSEnumerator	*containerEnumerator = [openContainers objectEnumerator];
 	NSString		*firstContainerID = [containerEnumerator nextObject];
 	NSString		*containerID;
 	
 	//For all containers but the first, move the chats they contain to the first container
 	while(containerID = [containerEnumerator nextObject]){
-		NSArray			*openChats = [[[interfacePlugin openChatsInContainerWithID:containerID] copy] autorelease];
+		NSArray			*openChats = [[interfacePlugin openChatsInContainerWithID:containerID] copy];
 		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
 		AIChat			*chat;
 
@@ -310,9 +310,13 @@
 								index:(arrangeChats ? [self indexForInsertingChat:chat
 															  intoContainerWithID:firstContainerID] : -1)];
 		}
+		
+		[openChats release];
 	}
 	
 	[self chatOrderDidChange];
+	
+	[openContainers release];
 }
 
 //Active chat
@@ -798,8 +802,8 @@
             
         }else{ //This is a new tooltip
             NSArray                     *tabArray;
-            NSMutableParagraphStyle     *paragraphStyleTitle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-            NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+            NSMutableParagraphStyle     *paragraphStyleTitle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+            NSMutableParagraphStyle     *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
             
             //Hold onto the new object
             [tooltipListObject release]; tooltipListObject = [object retain];
@@ -867,6 +871,9 @@
                                             onWindow:inWindow
                                              atPoint:point 
                                          orientation:TooltipBelow];
+			
+			[paragraphStyleTitle release];
+			[paragraphStyle release];
         }
         
     }else{
