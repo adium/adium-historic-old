@@ -11,42 +11,18 @@
 @interface AICLPreferences : AIPlugin {
     IBOutlet	NSView			*view_prefView;
 
+    IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;
     IBOutlet	NSButton		*checkBox_alternatingGrid;
+    IBOutlet	NSColorWell		*colorWell_background;
+    IBOutlet	NSColorWell		*colorWell_grid;
+    IBOutlet	NSSlider		*slider_opacity;
+    IBOutlet	NSTextField		*textField_opacityPercent;
 
     NSDictionary		*preferenceDict;
-    
-/*
-    id	fontPopUp;
-    id	facePopUp;
-    id	sizePopUp;
-
-    id	enableGridSwitch;
-    id	alternatingGridSwitch;
-
-    
-    id	opacitySlider;
-    id	opacityPercentLabel;
-
-    id	backgroundColorWell;
-    id	gridColorWell;
-    id	gridColorLabel;
-
-    AIPreferenceController*     preferenceController;
-    AIPlugin	*parentPlugin;*/
 }
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
-- (IBAction)setContactListFont:(id)sender;
-- (IBAction)toggleAlternatingGrid:(id)sender;
+- (IBAction)changePreference:(id)sender;
 
-    /*
-
-- (void) initialize: (id) foo;
-
-- (void) fontPopUps: (id) sender;
-- (void) gridOptions: (id) sender;
-- (void) colorAndOpacity: (id) sender;
-
-- (void) setCLController: (id) foo;*/
 @end

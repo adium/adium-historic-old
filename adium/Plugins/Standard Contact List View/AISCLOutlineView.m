@@ -50,10 +50,9 @@
 //    [self setRowHeight:[font defaultLineHeightForFont]];
     [self setIndentationPerLevel:10];
 
-    [self setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
+//    [self setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
 //    [self setDrawsAlternatingRows:YES];
-    [self setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(237.0/255.0) blue:(240.0/255.0) alpha:1.0]];
-    [self setDrawsAlternatingColumns:NO];
+//    [self setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(237.0/255.0) blue:(240.0/255.0) alpha:1.0]];
 
     return(self);
 }

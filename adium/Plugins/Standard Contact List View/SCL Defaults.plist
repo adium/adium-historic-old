@@ -6,5 +6,11 @@
 	<string>Lucida Grande,11</string>
 	<key>Alternating Grid</key>
 	<true/>
+	<key>Background Color</key>
+	<string>237,237,240</string>
+	<key>Grid Color</key>
+	<string>255,255,255</string>
+	<key>Opacity</key>
+	<real>1.0</real>
 </dict>
 </plist>
