@@ -26,7 +26,11 @@
 
 @implementation AIAccountProxySettings
 
-//Init our account proxy settings
+/*
+ * @brief Init our account proxy settings
+ *
+ * Loads AccountProxy.nib and sets up menus
+ */
 - (id)init
 {
 	[super init];
@@ -40,31 +44,50 @@
 	return(self);
 }
 
+/*
+ * @brief Our view
+ */
 - (NSView *)view
 {
 	return(view_accountProxy);
 }
 
-//Dealloc
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
+	[view_accountProxy release];
+
 	[super dealloc];
 }
 
 
-//
+/*
+ * @brief Toggle proxy
+ *
+ * Called when proxy usage is turned on or off
+ */
 - (IBAction)toggleProxy:(id)sender
 {
 	[self configureControlDimming];
 }
 
+/*
+ * @brief Change proxy type
+ *
+ * Called when the proxy type is changed
+ */
 - (void)changeProxyType:(id)sender
 {
 	[self configureControlDimming];
 }
 
-
-//Configure the proxy view for the passed account
+/*
+ * @brief Configure the proxy view for the passed account
+ *
+ * @param inAccount The account for which to configure
+ */
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	if(account != inAccount){
@@ -93,7 +116,9 @@
 	}
 }
 
-//Save current control values
+/*
+ * @brief Save current control values
+ */
 - (void)saveConfiguration
 {
 	NSString	*proxyHostName = [textField_proxyHostName stringValue];
@@ -125,8 +150,9 @@
 					forKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 }
 
-
-//Update password field
+/*
+ * @brief Update password field
+ */
 - (void)updatePasswordField
 {
 	NSString	*proxyHostName = [textField_proxyHostName stringValue];
@@ -139,9 +165,12 @@
 	}
 }	
 
-//User changed proxy preference
-//We set to nil instead of the @"" a stringValue would return because we want to return to the global (default) value
-//if the user clears the field
+/*
+ * @brief User changed proxy preference
+ *
+ * We set to nil instead of the @"" a stringValue would return because we want to return to the global (default) value
+ * if the user clears the field.
+ */
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
 	NSTextField *sender = [aNotification object];
@@ -170,8 +199,9 @@
 	}
 }
 
-
-//Configure dimming of proxy controls
+/*
+ * @brief Configure dimming of proxy controls
+ */
 - (void)configureControlDimming
 {
 	AdiumProxyType	proxyType = [[popUpButton_proxy selectedItem] tag];
@@ -190,7 +220,11 @@
 
 //Proxy type menu ------------------------------------------------------------------------------------------------------
 #pragma mark Proxy type menu
-//Build and return the proxy type menu
+/*
+ * @brief Build the proxy type menu
+ *
+ * @result An NSMenu of supported proxy settings
+ */
 - (NSMenu *)_proxyMenu
 {
     NSMenu			*proxyMenu = [[NSMenu alloc] init];
@@ -205,7 +239,11 @@
 	return [proxyMenu autorelease];
 }
 
-//
+/*
+ * @brief Create a proxy menu menuItem
+ *
+ * Convenience method for _proxyMenu
+ */
 - (NSMenuItem *)_proxyMenuItemWithTitle:(NSString *)title tag:(int)tag
 {
 	NSMenuItem		*menuItem;
