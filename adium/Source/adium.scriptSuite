@@ -1,0 +1,16 @@
+{
+	"Name" = "Adium";
+	
+	"Commands" = {
+		"OpenURL" = {
+			AppleEventClassCode = "WWW!"; 
+			AppleEventCode = "OURL"; 
+			CommandClass = "CBHandleURLScriptCommand"; 
+		};
+		"GetURL" = {
+			AppleEventClassCode = "GURL";
+			AppleEventCode = "GURL";
+			CommandClass = "CBHandleURLScriptCommand";
+		};
+	};
+}

@@ -1,0 +1,2 @@
+@interface CBHandleURLScriptCommand : NSScriptCommand
+@end
