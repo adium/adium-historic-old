@@ -212,6 +212,12 @@ static NSImage *pushIndicatorImage = nil;
 - (void)cancelOperation:(id)sender
 {
 	if(clearOnEscape){
+		NSUndoManager	*undoManager = [self undoManager];
+		[undoManager registerUndoWithTarget:self
+								   selector:@selector(setAttributedString:)
+									 object:[[[self textStorage] copy] autorelease]];
+		[undoManager setActionName:AILocalizedString(@"Clear",nil)];
+
 		[self setString:@""];
 	}
 }
