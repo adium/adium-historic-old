@@ -52,8 +52,7 @@
 	if(sourceAccount){
 		[popUp_messageFrom selectItemWithRepresentedObject:sourceAccount];
 	}
-	
-	NSAttributedString  *messageText = [[[NSAttributedString alloc] initWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]] autorelease];
+	NSAttributedString  *messageText = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]];
 	if(messageText){
 		[[textView_message textStorage] setAttributedString:messageText];
 	}else{

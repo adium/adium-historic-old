@@ -43,7 +43,7 @@
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	NSString		*messageText = [details objectForKey:KEY_MESSAGE_SEND_MESSAGE];
+	NSString		*messageText = [[NSAttributedString stringWithData:[details objectForKey:KEY_MESSAGE_SEND_MESSAGE]] string];
 	NSString		*destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
 	AIListContact	*contact = nil;
 
@@ -109,7 +109,7 @@
 			chat = [[adium contentController] openChatWithContact:contact];
 			[[adium interfaceController] setActiveChat:chat];
 			
-			message = [[[NSAttributedString alloc] initWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]] autorelease];
+			message = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]];
 				
 			//Prepare the content object we're sending
 			AIContentMessage	*content = [AIContentMessage messageInChat:chat
