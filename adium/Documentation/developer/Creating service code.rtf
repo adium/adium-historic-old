@@ -1,8 +1,7 @@
 {\rtf1\mac\ansicpg10000\cocoartf102
 {\fonttbl\f0\fswiss\fcharset77 Helvetica-Bold;\f1\fswiss\fcharset77 Helvetica;\f2\fnil\fcharset77 Monaco;
 \f3\froman\fcharset77 Times-Bold;}
-{\colortbl;\red255\green255\blue255;\red128\green0\blue0;\red0\green0\blue0;\red118\green15\blue80;
-}
+{\colortbl;\red255\green255\blue255;\red128\green0\blue0;\red118\green15\blue80;}
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 
 \f0\b\fs28 \cf2 Adium Documentation : Creating service code\
@@ -38,14 +37,14 @@ The service controller protocol consists of the following methods:\
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
 \cf0 Returns a string identifier for the service.  This string must be unique to the service code.  \
 \
-Since the identifier string is never seen by the user, it may be as cryptic as you want.  It is recommended that you use the service\'d5s name, with the specific protocol(if applicable) in parenthesis.  Such as \'d2AIM (TOC2)\'d3, where the service is AIM, and the specific protocol being used is TOC, version 2.\
+Since the identifier string is never seen by the user, it may be as cryptic as you want.  It is recommended that you use the service\'d5s name, with the specific protocol (if applicable) in parenthesis.  Such as \'d2AIM (TOC2)\'d3, where the service is AIM, and the specific protocol being used is TOC, version 2.\
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 \cf0 \
 - (NSString *)description;\
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
 \cf0 Returns a string description for the service.  This string is used exclusively to inform the user about the service code, and doesn\'d5t need to be unique.\
 \
-It is recommended that the service\'d5s full name is used, with the specific protocol (if applicable) in parenthesis.  Such as \'d2AOL Instant Messenger (TOC2)\'d3.\
+It is recommended that the service\'d5s full name is used, with the specific protocol (if applicable) in parentheses.  Such as \'d2AOL Instant Messenger (TOC2)\'d3.\
 \
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 \cf0 - (AIServiceType *)handleServiceType;
@@ -77,7 +76,7 @@ It is recommended that the service\'d5s full name is used, with the specific pro
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 \cf0 \
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
-\cf2 caseSensitive\cf3  & \cf2 allowedCharacters:\
+\cf2 caseSensitive & allowedCharacters:\
 \pard\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
 \cf0 Case sensitive should be true if case matters for contact names on this service.  Allowed characters is a characterset containing all the characters allowed in handle names.  Use this to prevent the user from entering invalid contact names.\
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
@@ -206,7 +205,7 @@ It is recommended that this method returns a combination of the service identifi
 \cf0 In response to his method, the passed handle should be renamed to inName.  inName serves as the handles new UID.\
 \pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
 
-\f2 \cf4 \
+\f2 \cf3 \
 \
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 
