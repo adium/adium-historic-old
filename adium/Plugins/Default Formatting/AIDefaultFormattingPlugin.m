@@ -71,13 +71,13 @@
 		attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
 		
 		//Setup the attributes; don't include colors which match the systemwide defaults
-		if (![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]){
+		if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]){
 			[attributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
 		}
 		if(subBackgroundColor){
 			[attributes setObject:subBackgroundColor forKey:NSBackgroundColorAttributeName];
 		}
-		if (![textColor equalToRGBColor:[NSColor textColor]]){
+		if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]){
 			[attributes setObject:textColor forKey:NSForegroundColorAttributeName];	
 		}
 
