@@ -112,12 +112,33 @@ typedef enum {
 	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
 	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
 	[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
-	
+	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
+
 	//Localized strings
 	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
 	[label_statusIcons setLocalizedString:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
 	[label_dockIcons setLocalizedString:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
 
+	//Horizontal Sizing Label
+	int windowMode = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	BOOL horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+	
+	if(windowMode == WINDOW_STYLE_STANDARD){
+		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
+		[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
+		[slider_horizontalWidth setEnabled:horizontalAutosize];
+		
+	}else{
+		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
+		//horizontal sizing slider when autosizing is off
+		if(horizontalAutosize){
+			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
+		}else{
+			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Width:",nil)];			
+		}
+		[slider_horizontalWidth setEnabled:YES];
+	}
+	
 	[self _updateSliderValues];
 }
 
@@ -172,6 +193,17 @@ typedef enum {
                                               group:PREF_GROUP_APPEARANCE];
 		[self _updateSliderValues];
 		
+	}else if(sender == slider_horizontalWidth){
+		int newValue = [sender intValue];
+		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
+																 group:PREF_GROUP_APPEARANCE] intValue];
+		if(newValue != oldValue){ 
+			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
+												 forKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
+												  group:PREF_GROUP_APPEARANCE];
+			[self _updateSliderValues];
+		}
+		
 	}else if(sender == popUp_emoticons){
 		if([sender tag] != AIEmoticonMenuMultiple){
 			//Disable all active emoticons
@@ -196,6 +228,7 @@ typedef enum {
 - (void)_updateSliderValues
 {
 	[textField_windowOpacity setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowOpacity floatValue]]];
+	[textField_horizontalWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_horizontalWidth intValue]]];
 }
 
 

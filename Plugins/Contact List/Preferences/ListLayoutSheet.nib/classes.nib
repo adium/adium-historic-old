@@ -7,14 +7,11 @@
             OUTLETS = {
                 "checkBox_drawContactBubblesWithGraadient" = NSButton; 
                 "checkBox_extendedStatusVisible" = NSButton; 
-                "checkBox_horizontalAutosizing" = NSButton; 
                 "checkBox_outlineBubbles" = NSButton; 
                 "checkBox_serviceIconsVisible" = NSButton; 
                 "checkBox_showGroupBubbles" = NSButton; 
                 "checkBox_statusIconsVisible" = NSButton; 
                 "checkBox_userIconVisible" = NSButton; 
-                "checkBox_verticalAutosizing" = NSButton; 
-                "checkBox_windowHasShadow" = NSButton; 
                 "fontField_contact" = JVFontPreviewField; 
                 "fontField_group" = JVFontPreviewField; 
                 "fontField_status" = JVFontPreviewField; 
@@ -25,27 +22,21 @@
                 "popUp_serviceIconPosition" = NSPopUpButton; 
                 "popUp_statusIconPosition" = NSPopUpButton; 
                 "popUp_userIconPosition" = NSPopUpButton; 
-                "popUp_windowStyle" = NSPopUpButton; 
                 "slider_contactLeftIndent" = NSSlider; 
                 "slider_contactRightIndent" = NSSlider; 
                 "slider_contactSpacing" = NSSlider; 
                 "slider_groupTopSpacing" = NSSlider; 
-                "slider_horizontalWidth" = NSSlider; 
                 "slider_outlineWidth" = NSSlider; 
                 "slider_userIconSize" = NSSlider; 
-                "slider_windowTransparency" = NSSlider; 
                 "tabViewItem_advancedContactBubbles" = NSTabViewItem; 
                 "tabView_preferences" = NSTabView; 
                 "textField_contactLeftIndent" = NSTextField; 
                 "textField_contactRightIndent" = NSTextField; 
                 "textField_contactSpacing" = NSTextField; 
                 "textField_groupTopSpacing" = NSTextField; 
-                "textField_horizontalWidthIndicator" = NSTextField; 
-                "textField_horizontalWidthText" = NSTextField; 
                 "textField_layoutName" = NSTextField; 
                 "textField_outlineWidthIndicator" = NSTextField; 
                 "textField_userIconSize" = NSTextField; 
-                "textField_windowTransparency" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

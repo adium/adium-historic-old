@@ -31,6 +31,10 @@
 	IBOutlet	NSSlider		*slider_windowOpacity;
 	IBOutlet	NSTextField		*textField_windowOpacity;
 	
+	IBOutlet	NSTextField		*textField_horizontalWidthText;
+	IBOutlet	NSSlider		*slider_horizontalWidth;
+	IBOutlet	NSTextField		*textField_horizontalWidthIndicator;
+		
 	IBOutlet	NSTextField		*label_serviceIcons;
 	IBOutlet	NSTextField		*label_statusIcons;
 	IBOutlet	NSTextField		*label_dockIcons;

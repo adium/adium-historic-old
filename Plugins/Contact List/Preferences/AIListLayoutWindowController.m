@@ -186,7 +186,6 @@
 	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	[slider_contactLeftIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 	[slider_contactRightIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
-	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
 	[self updateSliderValues];
 	
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
@@ -320,16 +319,6 @@
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self updateSliderValues];
 		
-	}else if(sender == slider_horizontalWidth){
-		int newValue = [sender intValue];
-		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
-																 group:PREF_GROUP_LIST_LAYOUT] intValue];
-		if (newValue != oldValue){ 
-			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
-												 forKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
-												  group:PREF_GROUP_LIST_LAYOUT];
-			[self updateSliderValues];
-		}
 	}else if (sender == slider_outlineWidth){
 		int newValue = [sender intValue];
 		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH
@@ -378,7 +367,6 @@
 	[textField_groupTopSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupTopSpacing intValue]]];
 	[textField_contactLeftIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactLeftIndent intValue]]];
 	[textField_contactRightIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactRightIndent intValue]]];
-	[textField_horizontalWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_horizontalWidth intValue]]];
 	[textField_outlineWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_outlineWidth intValue]]];
 }
 
@@ -451,23 +439,6 @@
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
-	
-	//Contact style
-	if(windowStyle == WINDOW_STYLE_STANDARD){
-		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
-		[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
-		[slider_horizontalWidth setEnabled:horizontalAutosize];
-		
-	}else{
-		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
-		//horizontal sizing slider when autosizing is off
-		if (horizontalAutosize){
-			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
-		}else{
-			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Width:",nil)];			
-		}
-		[slider_horizontalWidth setEnabled:YES];
-	}
 	
 	//Contact Bubbles Advanced
 	
