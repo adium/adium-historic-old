@@ -32,8 +32,6 @@
         <true/>
         <key>Row Spacing</key>
         <real>2.0</real>
-        <key>Tooltips In Background</key>
-        <true/>
         <key>Label Around Contact</key>
         <false/>
         <key>Outline Labels</key>
