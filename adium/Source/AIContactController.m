@@ -156,8 +156,6 @@
         //Empty the group and hold onto it as well
         [inGroup removeAllObjects];
         [abandonedGroups setObject:inGroup forKey:[inGroup UID]];
-
-        NSLog(@"Break Down %@",[inGroup UID]);
     }
 }
 
@@ -175,12 +173,13 @@
 
 - (void)_handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount
 {
+    NSArray	*statusKeyArray = [[inHandle statusDictionary] allKeys];
+
     //Remove ALL status flags from the handle, and then call an update status.
     [[inHandle statusDictionary] removeAllObjects];
-    [self handleStatusChanged:inHandle modifiedStatusKeys:nil];
+    [self handleStatusChanged:inHandle modifiedStatusKeys:statusKeyArray];
 
     //After all the observers have responded to the status change, we can remove the handle
-    NSLog(@"Remove %@ from %@",inHandle,[inHandle containingContact]);
     [[inHandle containingContact] removeHandle:inHandle];
 
     //We really don't have to update the list... just leave the contact there.. no harm in it
@@ -299,7 +298,7 @@
 - (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys
 {
     AIListContact	*listContact;
-
+    
     listContact = [inHandle containingContact];
     if(listContact){
         NSDictionary		*handleStatusDict = [inHandle statusDictionary];
