@@ -25,7 +25,8 @@
 #define KEY_USE_LAST_WINDOW					@"Use Last Window"
 #define KEY_AUTOHIDE_TABBAR					@"Autohide Tab Bar"
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
-
+#define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
+#define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 
@@ -56,7 +57,11 @@
     NSMenuItem				*menuItem_openInNewWindow;
     NSMenuItem				*menuItem_openInPrimaryWindow;
     NSMenuItem				*menuItem_consolidate;
+	NSMenuItem				*menuItem_splitByGroup;
 	NSMenuItem				*menuItem_toggleTabBar;
+	
+	NSMenuItem				*menuItem_arrangeTabs;
+	NSMenuItem				*menuItem_arrangeTabs_alternate;
     
     //Containers
     AIContactListWindowController 	*contactListWindowController;
@@ -78,6 +83,9 @@
     
     BOOL				forceIntoNewWindow; //Override preference for next opened chat
     BOOL				forceIntoTab; //Override preference for next opened chat
+	
+	BOOL				keepTabsArranged;
+	BOOL				arrangeByGroup;
 }
 
 - (IBAction)showContactList:(id)sender;

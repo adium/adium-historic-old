@@ -30,6 +30,8 @@
 		[defaultPrefs objectForKey:KEY_USE_LAST_WINDOW],KEY_USE_LAST_WINDOW,
 		[defaultPrefs objectForKey:KEY_AUTOHIDE_TABBAR],KEY_AUTOHIDE_TABBAR,
 		[defaultPrefs objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE],KEY_ENABLE_INACTIVE_TAB_CLOSE,
+		[defaultPrefs objectForKey:KEY_KEEP_TABS_ARRANGED],KEY_KEEP_TABS_ARRANGED,
+		[defaultPrefs objectForKey:KEY_ARRANGE_TABS_BY_GROUP],KEY_ARRANGE_TABS_BY_GROUP,
 		nil];
 	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	return(defaultsDict);
@@ -44,12 +46,20 @@
 				      forKey:KEY_AUTOHIDE_TABBAR
 				       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
-    }else if(sender == checkBox_allowInactiveClosing){
+    } else if(sender == checkBox_allowInactiveClosing){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                       forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
                                        group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	
-    }
+    } else if(sender == checkBox_arrangeTabs){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_KEEP_TABS_ARRANGED
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	} else if(sender == checkBox_arrangeByGroup) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_ARRANGE_TABS_BY_GROUP
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	}
 
     [self configureControlDimming];
 }
@@ -61,7 +71,9 @@
 
     [autohide_tabBar setState:![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
     [checkBox_allowInactiveClosing setState:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-    
+    [checkBox_arrangeTabs setState:[[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue]];
+	[checkBox_arrangeByGroup setState:[[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue]];
+
     [self configureControlDimming];
 }
 

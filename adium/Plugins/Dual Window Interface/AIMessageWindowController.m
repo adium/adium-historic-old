@@ -149,7 +149,7 @@
     [tabView_messages selectLastTabViewItem:nil];
 }
 
-//Add a tab view item container (without changing the current selection)
+//Add a tab view item container at the end of the tabs (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {    
     [self addTabViewItemContainer:inTabViewItem atIndex:-1];
@@ -158,16 +158,56 @@
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index
 {    
+	
+	AIListObject *newListObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
+	int objectIndex = 0;
+	
     [self window]; //Ensure our window has loaded
-    if (index == -1) {
-        [tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
-    } else {
-        [tabView_messages insertTabViewItem:inTabViewItem atIndex:index]; //Add the tab at the specified index
-    }
-    
+    	
+	// Add the list object to our sorting array, and sort the result if need be
+	if(keepTabsArranged) {
+		objectIndex = [[[adium contactController] activeSortController] indexForInserting:newListObject intoObjects:listObjectArray];
+		[listObjectArray insertObject:newListObject atIndex:objectIndex];		
+		[tabView_messages insertTabViewItem:inTabViewItem atIndex:objectIndex]; //Add the tab at the specified index
+	} else {
+		if (index == -1) {
+			[listObjectArray addObject:newListObject];			//Add the list object at the end
+		    [tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
+		} else {
+			[listObjectArray insertObject:newListObject atIndex:index];			//Add the list object
+		    [tabView_messages insertTabViewItem:inTabViewItem atIndex:index];   //Add the tab at the specified index
+		}
+	}
+
     [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
     
     [self showWindow:nil]; //Show the window
+}
+
+- (void)arrangeTabs
+{
+	
+	NSEnumerator	*enumerator;
+	AICustomTabCell *tabCell;
+	AIListObject	*listObject;
+	int				newIndex = 0;
+	
+	// Sort the list objects, so we know what order the tabs should have
+	[[[adium contactController] activeSortController] sortListObjects:listObjectArray];
+
+	enumerator = [[tabView_customTabs tabCells] objectEnumerator];
+
+	// Run through all tab cells and move them to the right place
+	while( tabCell = [enumerator nextObject] ) {
+		listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
+		
+		if(listObject) {
+			newIndex = [listObjectArray indexOfObjectIdenticalTo:listObject];
+			if( newIndex != NSNotFound )
+				[tabView_customTabs moveTab:tabCell toIndex:newIndex selectTab:NO];
+		}
+	}
+	
 }
 
 //Remove a tab view item container
@@ -178,10 +218,13 @@
 		[tabView_messages selectNextTabViewItem:nil];
     }
 
+	// Get rid of the list object from our sorting array
+	[listObjectArray removeObjectIdenticalTo:[[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject]];
+
     //Remove the tab and let the interface know a container closed
     [tabView_messages removeTabViewItem:inTabViewItem];
     [interface containerDidClose:inTabViewItem];
-
+	
     //If that was our last container, save the position for its contact
     if([tabView_messages numberOfTabViewItems] == 0 && !windowIsClosing){
         [self closeWindow:nil];
@@ -199,9 +242,9 @@
     tabIsShowing = YES;
     supressHiding = NO;
     force_tabBar_visible = -1;
-	
+	listObjectArray = [[NSMutableArray alloc] init];
     [[adium notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
-    
+ 	
     //Load our window
     [super initWithWindowNibName:windowNibName];
     [self window];	
@@ -286,6 +329,9 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
+		keepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
+		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
+
 		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 		
 		if (force_tabBar_visible == -1) {
