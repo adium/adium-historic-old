@@ -20,6 +20,9 @@
 {
     [super init];
     
+	linkURL = nil;
+	pString = nil;
+	
     [self setURLFromString:inString];
     linkRange = inRange;
     [self setParentString:pInString];
@@ -43,12 +46,12 @@
 
 -(NSString *)parentString
 {
-    return [[pString copy] autorelease];
+    return pString;
 }
 
 -(NSURL *)URL
 {
-    return [[linkURL copy] autorelease];
+    return linkURL;
 }
 
 -(URI_VERIFICATION_STATUS)validationStatus
@@ -70,15 +73,15 @@
 -(void)setURL:(NSURL *)inURL
 {
     if(linkURL != inURL){
-        [linkURL autorelease];
+        [linkURL release];
         linkURL = [inURL retain];
     }
 }
 
 -(void)setURLFromString:(NSString *)inString
 {
-    [linkURL autorelease];
-    linkURL = [[[NSURL alloc] initWithString:inString] retain];
+    [linkURL release];
+    linkURL = [[NSURL alloc] initWithString:inString];
 }
 
 -(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
@@ -89,7 +92,7 @@
 -(void)setParentString:(NSString *)pInString
 {
     if(pString != pInString){
-        [pString autorelease];
+        [pString release];
         pString = [pInString retain];
     }
 }
