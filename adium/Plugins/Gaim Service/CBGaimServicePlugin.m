@@ -558,7 +558,7 @@ static void adiumGaimNewXfer(GaimXfer *xfer)
 
 static void adiumGaimDestroy(GaimXfer *xfer)
 {
-	NSLog(@"adiumGaimDestroy");
+	[accountLookup(xfer->account) accountXferDestroy:xfer];
 }
 
 static void adiumGaimRequestFile(GaimXfer *xfer)

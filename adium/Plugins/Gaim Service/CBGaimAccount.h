@@ -45,6 +45,7 @@
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
 - (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent;
 - (void)accountXferCanceledRemotely:(GaimXfer *)xfer;
+- (void)accountXferDestroy:(GaimXfer *)xfer;
 
 //AIAccount sublcassed methods
 - (void)initAccount;
