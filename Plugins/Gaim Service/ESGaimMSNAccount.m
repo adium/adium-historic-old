@@ -36,7 +36,7 @@
 @implementation ESGaimMSNAccount
 
 /*!
-* @brief The UID will be change. The account has a chance to perform modifications
+ * @brief The UID will be changed. The account has a chance to perform modifications
  *
  * For example, MSN adds @hotmail.com to the proposedUID and returns the new value
  *
