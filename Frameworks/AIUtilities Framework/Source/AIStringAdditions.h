@@ -24,6 +24,8 @@
 + (id)ellipsis;
 - (NSString *)stringByAppendingEllipsis;
 
+- (NSString *)stringByTranslatingByOffset:(int)offset;
+
 - (NSString *)compactedString;
 
 - (int)intValueFromHex;
