@@ -54,6 +54,7 @@
 - (NSString *)_localizedTitle:(NSString *)englishTitle;
 
 - (void)saveCurrentEventPreset;
+- (void)configureEventSummaryOutlineView;
 
 - (void)setAndConfigureEventPresetsMenu;
 - (void)updateSoundSetSelection;
@@ -106,33 +107,7 @@
 
 	[label_soundSet setLocalizedString:AILocalizedString(@"Sound set:",nil)];
 
-	AIGradientImageCell				*imageCell;
-	AIVerticallyCenteredTextCell	*textCell;
-
-	imageCell = [[AIGradientImageCell alloc] init];
-	[imageCell setDrawsGradientHighlight:YES];
-	[imageCell setAlignment:NSCenterTextAlignment];
-	[imageCell setMaxSize:NSMakeSize(32, 32)];
-	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
-	[imageCell release];
-	
-	textCell = [[AIVerticallyCenteredTextCell alloc] init];
-	[textCell setFont:[NSFont boldSystemFontOfSize:12]];
-	[textCell setDrawsGradientHighlight:YES];
-	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:textCell];
-	[textCell release];
-	
-	textCell = [[AIVerticallyCenteredTextCell alloc] init];
-	[textCell setFont:[NSFont systemFontOfSize:10]];
-	[textCell setDrawsGradientHighlight:YES];
-	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:textCell];
-	[textCell release];
-	
-	
-	[outlineView_summary setDrawsAlternatingRows:YES];
-	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,4.0)];
-	[outlineView_summary setTarget:self];
-	[outlineView_summary setDoubleAction:@selector(configureSelectedEvent:)];
+	[self configureEventSummaryOutlineView];
 
 	//Observe contact alerts preferences to update our summary
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
@@ -484,6 +459,39 @@
 
 	//Ensure the Summary menu item is selected, as we can get here by means other than the user selecting it
 	[popUp_show selectItemAtIndex:0];
+}
+
+/*
+ * @brief Configure the event summary outline view
+ */
+- (void)configureEventSummaryOutlineView
+{
+	AIGradientImageCell				*imageCell;
+	AIVerticallyCenteredTextCell	*textCell;
+	
+	imageCell = [[AIGradientImageCell alloc] init];
+	[imageCell setDrawsGradientHighlight:YES];
+	[imageCell setAlignment:NSCenterTextAlignment];
+	[imageCell setMaxSize:NSMakeSize(32, 32)];
+	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
+	[imageCell release];
+	
+	textCell = [[AIVerticallyCenteredTextCell alloc] init];
+	[textCell setFont:[NSFont boldSystemFontOfSize:12]];
+	[textCell setDrawsGradientHighlight:YES];
+	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:textCell];
+	[textCell release];
+	
+	textCell = [[AIVerticallyCenteredTextCell alloc] init];
+	[textCell setFont:[NSFont systemFontOfSize:10]];
+	[textCell setDrawsGradientHighlight:YES];
+	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:textCell];
+	[textCell release];
+
+	[outlineView_summary setDrawsAlternatingRows:YES];
+	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,4.0)];
+	[outlineView_summary setTarget:self];
+	[outlineView_summary setDoubleAction:@selector(configureSelectedEvent:)];
 }
 
 /*
