@@ -38,7 +38,7 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(AIContactListEditorPlugin *)inPlugin;
 //- (int)_collectionsRequestingOwnership;
 //- (void)_sizeContentColumnsToFit:(NSNotification *)notification;
-//- (void)installToolbar;
+- (void)installToolbar;
 //- (IBAction)toggleDrawer:(id)sender;
 //- (void)configureForCollection:(AIEditorCollection *)collection;
 //- (IBAction)delete:(id)sender;
@@ -150,7 +150,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    [self _configureSourceView];
 //    
 //    //Install our window toolbar and generate our collections
-////    [self installToolbar];
+    [self installToolbar];
 //    [self collectionArrayChanged:nil];
 }
 //
@@ -1007,10 +1007,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
                                     withIdentifier:@"Import"
                                              label:@"Import"
                                       paletteLabel:@"Import"
-                                           toolTip:@"Load buddies from a .blt file"
+                                           toolTip:@"Import Contacts"
                                             target:self
                                    settingSelector:@selector(setImage:)
-                                       itemContent:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]
+                                       itemContent:[AIImageUtilities imageNamed:@"importContacts" forClass:[self class]]
                                             action:@selector(import:)
                                               menu:NULL];
 
