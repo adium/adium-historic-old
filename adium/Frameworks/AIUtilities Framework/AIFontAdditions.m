@@ -69,7 +69,7 @@
     fontName = [self substringToIndex:divider];
     fontSize = [[self substringFromIndex:divider+1] intValue];
 
-    return([NSFont fontWithName:fontName size:fontSize]);
+    return([NSFont cachedFontWithName:fontName size:fontSize]);
 }
 
 @end
