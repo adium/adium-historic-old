@@ -31,8 +31,4 @@
     NSString *savedAwayMessage;
 }
 
-- (void)setAccountIdleTo:(NSDate *)idle;
-- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
-- (void)updateAllStatusKeys;
-
 @end
