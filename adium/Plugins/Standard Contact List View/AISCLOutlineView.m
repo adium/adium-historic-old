@@ -82,6 +82,7 @@
     
     //Cleanup
     [font release];
+    [groupFont release];
     [color release];
     [invertedColor release];
     [groupColor release];
