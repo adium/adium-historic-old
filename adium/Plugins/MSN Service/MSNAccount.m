@@ -710,7 +710,7 @@
                             forKey:@"Display Name"];
                             
                         [[owner contactController] handleStatusChanged:theHandle
-                                                    modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]
+                                                    modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
                                                                delayed:NO
                                                                 silent:NO];
             
@@ -817,7 +817,7 @@
                                 forKey:@"Display Name"];
 
                             [[owner contactController] handleStatusChanged:theHandle
-                                                        modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]
+                                                        modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
                                                                    delayed:NO
                                                                     silent:NO];
                             
@@ -857,7 +857,7 @@
                                 forKey:@"Display Name"];
 
                             [[owner contactController] handleStatusChanged:theHandle
-                                                        modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]
+                                                        modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
                                                                    delayed:NO
                                                                     silent:NO];
                         }
