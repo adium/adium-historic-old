@@ -34,7 +34,7 @@
 	//Account list
     IBOutlet		AIAutoScrollView			*scrollView_accountList;
     IBOutlet		NSTableView					*tableView_accountList;
-	IBOutlet		NSButton					*button_newAccount;
+	IBOutlet		NSPopUpButton				*button_newAccount;
     IBOutlet		NSButton					*button_deleteAccount;
 
 	//Current configuration
