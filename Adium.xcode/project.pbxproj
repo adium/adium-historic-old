@@ -2171,25 +2171,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34416059059FC2310019246B = {
-			children = (
-				34416165059FC5430019246B,
-				34416166059FC5430019246B,
-				34416092059FC2C00019246B,
-				34416093059FC2C00019246B,
-				6EA3687D06B73D75009CA81A,
-				6EA3687E06B73D75009CA81A,
-				6EA3687C06B73D75009CA81A,
-				344160A7059FC2DB0019246B,
-				344160A8059FC2DB0019246B,
-				4B76477807A07C170021CCD7,
-			);
-			isa = PBXGroup;
-			name = Napster;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34416060059FC2450019246B = {
 			children = (
 				34416159059FC5330019246B,
@@ -2265,66 +2246,6 @@
 		};
 		34416088059FC2A40019246B = {
 			fileRef = 34416086059FC2A30019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34416092059FC2C00019246B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESGaimNapsterAccount.h;
-			path = "Plugins/Gaim Service/ESGaimNapsterAccount.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34416093059FC2C00019246B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESGaimNapsterAccount.m;
-			path = "Plugins/Gaim Service/ESGaimNapsterAccount.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34416094059FC2C00019246B = {
-			fileRef = 34416092059FC2C00019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34416095059FC2C00019246B = {
-			fileRef = 34416093059FC2C00019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344160A7059FC2DB0019246B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESGaimNapsterAccountViewController.h;
-			path = "Plugins/Gaim Service/ESGaimNapsterAccountViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344160A8059FC2DB0019246B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESGaimNapsterAccountViewController.m;
-			path = "Plugins/Gaim Service/ESGaimNapsterAccountViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344160A9059FC2DB0019246B = {
-			fileRef = 344160A7059FC2DB0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344160AA059FC2DB0019246B = {
-			fileRef = 344160A8059FC2DB0019246B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2415,36 +2336,6 @@
 		};
 		3441615C059FC5340019246B = {
 			fileRef = 3441615A059FC5340019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34416165059FC5430019246B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESNapsterService.h;
-			path = "Plugins/Gaim Service/ESNapsterService.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34416166059FC5430019246B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESNapsterService.m;
-			path = "Plugins/Gaim Service/ESNapsterService.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34416167059FC5440019246B = {
-			fileRef = 34416165059FC5430019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34416168059FC5440019246B = {
-			fileRef = 34416166059FC5430019246B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -14961,28 +14852,12 @@
 		};
 		4B76476C07A07BEC0021CCD7 = {
 			children = (
-				34416059059FC2310019246B,
 				34F1429D05E95AFF00B32FD7,
 			);
 			isa = PBXGroup;
 			name = "Services (Disabled)";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B76477807A07C170021CCD7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = GaimDefaultsNapster.plist;
-			path = "Plugins/Gaim Service/GaimDefaultsNapster.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B76477907A07C170021CCD7 = {
-			fileRef = 4B76477807A07C170021CCD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B76478507A07C440021CCD7 = {
 			fileEncoding = 30;
@@ -15093,12 +14968,9 @@
 				34415BD5059FA9CE0019246B,
 				34416072059FC27E0019246B,
 				34416087059FC2A40019246B,
-				34416094059FC2C00019246B,
-				344160A9059FC2DB0019246B,
 				344160B6059FC2F60019246B,
 				344160C5059FC3090019246B,
 				3441615B059FC5340019246B,
-				34416167059FC5440019246B,
 				34416173059FC55A0019246B,
 				344161C5059FC72E0019246B,
 				340915F205C0A5DF00CDE3DD,
@@ -15124,7 +14996,6 @@
 				6E4D962506B73BE0005235E9,
 				6E4D962B06B73C18005235E9,
 				6E4D963106B73C4D005235E9,
-				6EA3688006B73D75009CA81A,
 				6EA3688606B73E7D009CA81A,
 				6EA3688C06B73F28009CA81A,
 				6EA3689206B73F67009CA81A,
@@ -15179,7 +15050,6 @@
 				6E4D962406B73BE0005235E9,
 				6E4D962A06B73C18005235E9,
 				6E4D963006B73C4D005235E9,
-				6EA3687F06B73D75009CA81A,
 				6EA3688506B73E7D009CA81A,
 				6EA3688B06B73F28009CA81A,
 				6EA3689106B73F67009CA81A,
@@ -15197,7 +15067,6 @@
 				4B76474007A07B630021CCD7,
 				4B76474D07A07B900021CCD7,
 				4B76476107A07BC90021CCD7,
-				4B76477907A07C170021CCD7,
 				4B76478607A07C440021CCD7,
 				4B76479607A07C720021CCD7,
 				4BDD822207A0BAE00057DB2C,
@@ -15222,12 +15091,9 @@
 				34415BD3059FA9CE0019246B,
 				34416073059FC27E0019246B,
 				34416088059FC2A40019246B,
-				34416095059FC2C00019246B,
-				344160AA059FC2DB0019246B,
 				344160B7059FC2F60019246B,
 				344160C6059FC3090019246B,
 				3441615C059FC5340019246B,
-				34416168059FC5440019246B,
 				34416174059FC55A0019246B,
 				34F142A405E95B0F00B32FD7,
 				34F142A505E95B0F00B32FD7,
@@ -15251,7 +15117,6 @@
 				6E4D962606B73BE0005235E9,
 				6E4D962C06B73C18005235E9,
 				6E4D963206B73C4D005235E9,
-				6EA3688106B73D75009CA81A,
 				6EA3688706B73E7D009CA81A,
 				6EA3688D06B73F28009CA81A,
 				6EA3689306B73F67009CA81A,
@@ -19770,50 +19635,6 @@
 			path = "Plugins/Idle Message/IdleMessagePreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6EA3687C06B73D75009CA81A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DCGaimNapsterJoinChatView.nib;
-			path = "Plugins/Gaim Service/DCGaimNapsterJoinChatView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EA3687D06B73D75009CA81A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = DCGaimNapsterJoinChatViewController.h;
-			path = "Plugins/Gaim Service/DCGaimNapsterJoinChatViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EA3687E06B73D75009CA81A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = DCGaimNapsterJoinChatViewController.m;
-			path = "Plugins/Gaim Service/DCGaimNapsterJoinChatViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EA3687F06B73D75009CA81A = {
-			fileRef = 6EA3687C06B73D75009CA81A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EA3688006B73D75009CA81A = {
-			fileRef = 6EA3687D06B73D75009CA81A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EA3688106B73D75009CA81A = {
-			fileRef = 6EA3687E06B73D75009CA81A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6EA3688206B73E7D009CA81A = {
 			isa = PBXFileReference;
