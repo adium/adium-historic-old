@@ -13,13 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAccountSetupView;
+@class AIAccountSetupView, AIAccountSetupOverviewView, AIAccountSetupEditAccountView,
+	   AIAccountSetupNewAccountView, AIAccountSetupConnectionView;
 
 @interface AIAccountSetupWindowController : AIWindowController {
-	IBOutlet	AIAccountSetupView	*view_overview;
-	IBOutlet	AIAccountSetupView	*view_newAccount;
-	IBOutlet	AIAccountSetupView	*view_editAccount;
-	IBOutlet	AIAccountSetupView	*view_connection;
+	IBOutlet	AIAccountSetupOverviewView		*view_overview;
+	IBOutlet	AIAccountSetupEditAccountView	*view_newAccount;
+	IBOutlet	AIAccountSetupNewAccountView	*view_editAccount;
+	IBOutlet	AIAccountSetupConnectionView	*view_connection;
 	
 	AIAccountSetupView				*activeView;
 	AIAccount						*newAccount;
@@ -32,6 +33,7 @@
 
 - (void)showAccountsOverview;
 - (void)newAccountPane;
+- (void)newAccountConnectionPane;
 - (void)newAccountOnService:(AIService *)service;
 - (void)editExistingAccount:(AIAccount *)account;
 
