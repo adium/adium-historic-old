@@ -52,8 +52,9 @@
     }
 	
 	// HERE
-	
-	[tempThemesList insertObject:defaultThemePath atIndex:0];
+	if(defaultThemePath){
+		[tempThemesList insertObject:defaultThemePath atIndex:0];
+	}
 	
     themeCount = [tempThemesList count];
     [themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
