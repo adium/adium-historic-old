@@ -57,7 +57,6 @@
 
 //Services
 - (NSArray *)availableServices;
-- (NSArray *)activeServices;
 - (AIService *)serviceWithUniqueID:(NSString *)identifier;
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
 - (NSArray *)servicesWithServiceClass:(NSString *)serviceClass;
@@ -69,6 +68,7 @@
 
 //Accounts
 - (NSArray *)accountArray;
+- (NSArray *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible;
 - (AIAccount *)accountWithAccountNumber:(int)accountNumber;
 - (NSArray *)accountsWithService:(AIService *)service;
 - (NSArray *)accountsWithServiceClass:(NSString *)serviceClass;
