@@ -55,13 +55,15 @@
     //Search for an exception log
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
-    }else{		
-        //Kill the apple crash reporter
-        [NSTimer scheduledTimerWithTimeInterval:CRASH_REPORT_SLAY_INTERVAL
-                                         target:self
-                                       selector:@selector(appleCrashReportSlayer:)
-                                       userInfo:nil
-                                        repeats:YES];
+    }else{  
+        //Kill the apple crash reporter (not a worry in jag)
+        if([NSApp isOnPantherOrBetter]){
+			[NSTimer scheduledTimerWithTimeInterval:CRASH_REPORT_SLAY_INTERVAL
+											 target:self
+										   selector:@selector(appleCrashReportSlayer:)
+										   userInfo:nil
+											repeats:YES];
+		}
         
         //Wait for a valid crash log to appear
         [NSTimer scheduledTimerWithTimeInterval:CRASH_LOG_WAIT_INTERVAL
