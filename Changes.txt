@@ -1,6 +1,21 @@
 				Adium X Version History
 				-----------------------
 
+Version 0.71
+- Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings 
+- Fixed issues with automatic reconnection of accounts after sleeping
+- Fixed issues with tooltip display after opening a message window
+- Fixed issues with parsing of log dates in certain situations
+- Fixed issues with background coloration of events displayed in the Dock
+- Fixed issues with running Adium from folders with certain unusual characters
+- Fixed issues with spoken text in combination with the "mute while away" option
+- Fixed issues with the Tic-Tac-Toe game
+- Fixed a crash from malformed Address Book entries
+- Fixed a crash when opening a message window with no accounts online
+- Improved Rendezvous performance
+- Updated glib to avoid a potential buffer overflow
+- Updated to libgaim 1.0.2, which fixes 3 potential security problems (More information is available here: http://gaim.sf.net/security/)  
+
 Version 0.70 (10/18/2004)
 Services
 - Added Rendezvous support (iChat compatible) 
