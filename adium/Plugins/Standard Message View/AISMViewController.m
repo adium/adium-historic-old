@@ -873,14 +873,16 @@
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
+	NSAttributedString * messageString;
 	//Strip all coloring and formatting of received messages if desired
 	if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
-		return([self _stringWithContextStyle:[content message]]);
+		messageString = [self _stringWithContextStyle:[content message]];
 	}else if([content isOutgoing] || !ignoreTextStyles) {
-        return([content message]);
+        messageString = [content message];
     }else{
-        return([self _stringByRemovingAllStyles:[content message]]);
+        messageString = [self _stringByRemovingAllStyles:[content message]];
     }    
+	return [messageString stringByAddingFormattingForLinks];
 }
 
 //Build and return an attributed string for the content using the current prefix preference

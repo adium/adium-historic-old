@@ -467,16 +467,16 @@ int HTMLEquivalentForFontSize(int fontSize)
                         inDiv = NO;
                     //LINK
                     }else if([chunkString caseInsensitiveCompare:@"A"] == 0){
-                        [textAttributes setUnderline:YES];
-                        [textAttributes setTextColor:[NSColor blueColor]];
+                        //[textAttributes setUnderline:YES];
+                        //[textAttributes setTextColor:[NSColor blueColor]];
                         if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
                             [self processLinkTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the linktag's contents
                         }
 
                     }else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
                         [textAttributes setLinkURL:nil];
-                        [textAttributes setUnderline:NO];
-                        [textAttributes setTextColor:[NSColor blackColor]];
+                        //[textAttributes setUnderline:NO];
+                        //[textAttributes setTextColor:[NSColor blackColor]];
 
                     //Body
                     }else if([chunkString caseInsensitiveCompare:Body] == 0){

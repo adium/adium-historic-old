@@ -292,6 +292,21 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 	return changed;
 }
 
+- (void)addFormattingForLinks
+{
+	NSRange searchRange;
+	
+	searchRange = NSMakeRange(0,0);
+	while(searchRange.location < [self length])	{
+		NSDictionary	*attributes = [self attributesAtIndex:searchRange.location effectiveRange:&searchRange];
+		if([attributes objectForKey:NSLinkAttributeName] != nil) {
+			[self addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:searchRange];
+			[self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithBool:YES] range:searchRange];
+		}
+		searchRange.location += searchRange.length;
+	}
+}
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
@@ -331,6 +346,13 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 - (NSAttributedString *)safeString
 {
     return(_safeString(self));
+}
+
+- (NSAttributedString *)stringByAddingFormattingForLinks
+{
+	NSMutableAttributedString * str = [self mutableCopy];
+	[str addFormattingForLinks];
+	return [str autorelease];
 }
 
 @end

@@ -161,13 +161,13 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 				    
 				}
     
-				//Color it blue and underline for good measure
+/*				//Color it blue and underline for good measure
 				[replacementMessage addAttribute:NSForegroundColorAttributeName 
                                                            value:[NSColor blueColor]
                                                            range:urlRange];
 				[replacementMessage addAttribute:NSUnderlineStyleAttributeName 
                                                            value:[NSNumber numberWithInt:1] 
-                                                           range:urlRange];
+                                                           range:urlRange];*/
                             }
 			    
                         }
