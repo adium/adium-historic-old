@@ -1601,11 +1601,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
 	AIService		*theService = [[owner accountController] firstServiceWithServiceID:inService];
-	AIListObject	*tempListObject = [[AIListObject alloc] initWithUID:inUID 
+	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID 
 																service:theService];
 	AIAccount		*account = [[owner accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
-																					  toContact:(AIListContact *)tempListObject];
-	[tempListObject release];
+																					  toContact:tempListContact];
+	[tempListContact release];
 	
 	return([self contactWithService:theService account:account UID:inUID]);
 }
