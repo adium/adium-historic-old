@@ -177,10 +177,10 @@
 //User wants to send the report
 - (IBAction)send:(id)sender
 {
-    if([[textField_emailAddress stringValue] isEqualToString:@""]){
+    if([[textField_emailAddress stringValue] isEqualToString:@""] && [[textField_accountIM stringValue] isEqualToString:@""]){
         NSBeginCriticalAlertSheet(AILocalizedString(@"Email Address Required",nil),
 				  AILocalizedString(@"Okay",nil), nil, nil, window_MainWindow, nil, nil, nil, NULL,
-				  AILocalizedString(@"Please provide your email address so we may request additional information or provide a fix.",nil));
+				  AILocalizedString(@"Please provide either your email address or AIM name incase we need to contact you for additional information (or to suggest a solution).",nil));
     }else{
         NSString	*shortDescription = [textField_description stringValue];
         
