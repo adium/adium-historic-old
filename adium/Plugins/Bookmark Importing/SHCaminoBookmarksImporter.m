@@ -103,8 +103,8 @@ static NSMenu   *caminoTopMenu;
                                                                             target:owner
                                                                             action:nil
                                                                      keyEquivalent:@""] autorelease];
-                [caminoBookmarksSupermenu addItem:[caminoSubmenuItem retain]];
-                [caminoBookmarksSupermenu setSubmenu:[caminoBookmarksMenu retain] forItem:caminoSubmenuItem];
+                [caminoBookmarksSupermenu addItem:caminoSubmenuItem];
+                [caminoBookmarksSupermenu setSubmenu:caminoBookmarksMenu forItem:caminoSubmenuItem];
                 [self drillPropertyList:outObject];
             }
         }
@@ -119,7 +119,7 @@ static NSMenu   *caminoTopMenu;
 
 -(void)menuItemFromDict:(NSDictionary *)inDict
 {
-    SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[[inDict objectForKey:CAMINO_DICT_URL_KEY] retain]
+    SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:CAMINO_DICT_URL_KEY]
                                                           withValidationStatus:SH_URL_VALID
                                                                   parentString:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
                                                                       andRange:NSMakeRange(0,[(NSString *)[inDict objectForKey:CAMINO_DICT_TITLE_KEY] length])] autorelease];
@@ -128,7 +128,7 @@ static NSMenu   *caminoTopMenu;
                                   target:owner
                                   action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""
-                       representedObject:[markedLink retain]];
+                       representedObject:markedLink];
 }
 
 @end

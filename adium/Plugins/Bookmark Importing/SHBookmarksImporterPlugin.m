@@ -31,19 +31,6 @@ static NSMenu       *bookmarkSets;
     // install new importer classes here - very similar to AIPluginController
     [self installImporterClass:[SHSafariBookmarksImporter class]];
     [self installImporterClass:[SHCaminoBookmarksImporter class]];
-                                                         
-    // install our menuItems
-//    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-//                                                       target:self
-//                                                       action:@selector(dummyTarget:)
-//                                                keyEquivalent:@""] autorelease];
-//    [bookmarkRootMenuItem setRepresentedObject:self];
-//                                               
-//    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-//                                                                 target:self
-//                                                                 action:@selector(dummyTarget:)
-//                                                          keyEquivalent:@""] autorelease];
-//    [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     // initial menu configuration
     [self configureMenus];
@@ -93,19 +80,19 @@ static NSMenu       *bookmarkSets;
     [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     // create a new menu
-   /* NSMenu  * */ bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+    bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
     // iterate through each importer, and build a menu if it's bookmark file exists
     while(importer = [enumerator nextObject]){
         if([importer bookmarksExist]){
-            /*NSMenuItem  * */firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
+            firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
                                                               target:self
                                                               action:nil
                                                        keyEquivalent:@""] autorelease];
             [firstMenuItem setRepresentedObject:importer];
             [bookmarkSets addItem:firstMenuItem];
 
-           /* NSMenu  * */firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
+            firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
             [firstMenuItem setSubmenu:firstSubmenu];
         }
     }
@@ -147,6 +134,11 @@ static NSMenu       *bookmarkSets;
             }
         }
         
+//        if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+//            if([[menuItem representedObject] bookmarksUpdated]){
+//                [menuItem setSubmenu:[self buildBookmarkMenuFor:menuItem]];
+//            }
+//        }
         if(responder && [responder isKindOfClass:[NSTextView class]]){
             return [(NSTextView *)responder isEditable];
 	}else{

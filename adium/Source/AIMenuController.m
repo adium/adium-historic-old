@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.33 2004/05/27 00:48:54 earthmkii Exp $
+// $Id: AIMenuController.m,v 1.34 2004/05/28 16:37:24 earthmkii Exp $
 
 #import "AIMenuController.h"
 
@@ -262,7 +262,6 @@
     
     //Remove all items from the existing menu
     [textViewContextualMenu removeAllItems];
-    NSLog(@"All menu items from textViewContextualMenu removed.  New description:\n\n%@\n---description end.",[[textViewContextualMenu itemArray] description]);
 //    textViewContextualMenu = [[NSMenu alloc] init];
 //    NSLog(@"new menu inited");
     
@@ -276,11 +275,9 @@
         NSArray         *menuItems = [contextualMenuItemDict objectForKey:location];
         NSEnumerator    *itemEnumerator;
         
-        NSLog(@"Menu Items for location: %@",[location stringValue]);
         
         if(itemsAbove && [menuItems count]) {
             [textViewContextualMenu addItem:[NSMenuItem separatorItem]];
-            NSLog(@"inserted seperator item");
             itemsAbove = NO;
         }
         
@@ -288,13 +285,11 @@
         itemEnumerator = [menuItems objectEnumerator];
         while((menuItem = [itemEnumerator nextObject])) {
             if([menuItems containsObject:menuItem]){
-                NSLog(@"inserting %@",[menuItem title]);
                 [textViewContextualMenu addItem:menuItem];
             }
             itemsAbove = YES;
         }
     }
-    NSLog(@"returning textViewContextualMenu. description:\n\n%@\n---description end.",[[textViewContextualMenu itemArray] description]);
     return textViewContextualMenu;
 }
 
