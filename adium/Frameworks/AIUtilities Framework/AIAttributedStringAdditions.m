@@ -52,13 +52,12 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 {
     NSRange theRange;
     int numberOfReplacements = 0;
-    
     while ( (theRange = [[self string] rangeOfString:target options:opts range:searchRange]).location != NSNotFound ) {
         [self replaceCharactersInRange:theRange withString:replacement];
         numberOfReplacements++;
         searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
         
-        searchRange.location = theRange.location + theRange.length;
+        searchRange.location = theRange.location + [replacement length];
         if (searchRange.length - searchRange.location < 1)
             break;
     }
@@ -78,7 +77,7 @@ NSAttributedString *_safeString(NSAttributedString *inString);
         numberOfReplacements++;
         searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
         
-        searchRange.location = theRange.location + theRange.length;
+        searchRange.location = theRange.location + [replacement length];
         if (searchRange.length - searchRange.location < 1)
             break;
     }
