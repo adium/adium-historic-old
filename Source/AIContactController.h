@@ -118,10 +118,10 @@ typedef enum {
 
 //Contact list access
 - (AIListGroup *)contactList;
-- (AIListContact *)contactWithService:(NSString *)serviceID accountID:(NSString *)accountID UID:(NSString *)UID;
+- (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
 - (AIListContact *)contactOnAccount:(AIAccount *)account fromListContact:(AIListContact *)inContact;
 - (AIListObject *)existingListObjectWithUniqueID:(NSString *)uniqueID;
-- (AIListContact *)existingContactWithService:(NSString *)serviceID accountID:(NSString *)accountUID UID:(NSString *)UID;
+- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount;
 - (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
@@ -162,7 +162,7 @@ typedef enum {
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
 - (void)removeListObjects:(NSArray *)objectArray;
 - (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListGroup *)group index:(int)index;
-- (void)requestAddContactWithUID:(NSString *)contactUID serviceID:(NSString *)inServiceID;
+- (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService;
 - (void)moveContact:(AIListContact *)listContact toGroup:(AIListGroup *)group;
 
 //Contact info
