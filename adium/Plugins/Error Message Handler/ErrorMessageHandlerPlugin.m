@@ -19,8 +19,6 @@
 
 @implementation ErrorMessageHandlerPlugin
 
-
-
 - (void)installPlugin
 {
     //Install our observers
@@ -62,6 +60,7 @@
 //*****
 //ESContactAlertProvider
 //*****
+#pragma mark ESContactAlertProvider
 
 - (NSString *)identifier
 {
@@ -77,7 +76,9 @@
 - (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
 {
     NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], actionName];
-    [[adium interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
+    [[adium interfaceController] handleMessage:title 
+							   withDescription:(details ? details : @"")
+							   withWindowTitle:@"Contact Alert"];
     return YES;
 }
 
@@ -86,6 +87,5 @@
 {
     return YES;
 }
-
 
 @end
