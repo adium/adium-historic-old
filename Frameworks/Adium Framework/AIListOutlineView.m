@@ -16,25 +16,47 @@
 #import "AIListOutlineView.h"
 #import "AIListCell.h"
 
-#define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
 #define EMPTY_HEIGHT					48
 #define EMPTY_WIDTH						140
 
+@interface AIListOutlineView (PRIVATE)
+- (void)_initListOutlineView;
+@end
+
 @implementation AIListOutlineView
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    [super initWithCoder:aDecoder];
+    [self _initListOutlineView];
+    return(self);
+}
 
 - (id)initWithFrame:(NSRect)frame
 {
 	[super initWithFrame:frame];
-	
-	updateShadowsWhileDrawing = NO;
-
-	[self sizeLastColumnToFit];
+	[self _initListOutlineView];
 	
 	return(self);
 }
 
-- (void)dealloc
+- (void)_initListOutlineView
 {
+	updateShadowsWhileDrawing = NO;
+	
+	backgroundImage = nil;
+	backgroundFade = 1.0;
+	backgroundColor = nil;
+	backgroundStyle = AINormalBackground;
+	
+	[self sizeLastColumnToFit];
+}
+
+- (void)dealloc
+{	
+	[backgroundImage release];
+	[backgroundColor release];
+	
 	[super dealloc];
 }
 
@@ -127,18 +149,122 @@
 		
 		//Image
 		if(backgroundImage){
-			NSRect 	visRect = [[self enclosingScrollView] documentVisibleRect];
+			NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
 			NSSize	imageSize = [backgroundImage size];
 			
-			[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
-							   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
-							  operation:NSCompositeSourceOver
-							   fraction:backgroundFade];
-		}	
+			switch(backgroundStyle) {
+				
+				case AINormalBackground:{
+					//Background image normal
+					[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
+									   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+									  operation:NSCompositeSourceOver
+									   fraction:backgroundFade];
+					break;
+				}
+				case AIFillProportionatelyBackground:{
+					//Background image proportional stretch
+					
+					//Make the width change by the same proportion as the height will change
+					//visRect.size.width = imageSize.width * (visRect.size.height / imageSize.height);
+					
+					//Make the height change by the same proportion as the width will change
+					visRect.size.height = imageSize.height * (visRect.size.width / imageSize.width);
+					
+					//Background image stretch
+					[backgroundImage drawInRect:visRect
+									   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+									  operation:NSCompositeSourceOver
+									   fraction:backgroundFade];
+					break;
+				}
+				case AIFillStretchBackground:{
+					//Background image stretch
+					[backgroundImage drawInRect:visRect
+									   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+									  operation:NSCompositeSourceOver
+									   fraction:backgroundFade];
+					break;
+				}
+				case AITileBackground:{
+					//Tiling
+					NSPoint	currentOrigin;
+					currentOrigin = visRect.origin;
+					
+					//We'll repeat this vertical process as long as necessary
+					while (currentOrigin.y < visRect.size.height){				
+						//Reset the x axis to draw a series of images horizontally at this height
+						currentOrigin.x = visRect.origin.x;
+						
+						//Draw as long as our origin is within the visible rect
+						while(currentOrigin.x < visRect.size.width){
+							//Draw at the current x and y at least once with the original size
+							[backgroundImage drawInRect:NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height)
+											   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+											  operation:NSCompositeSourceOver
+											   fraction:backgroundFade];
+							
+							//Shift right for the next iteration
+							currentOrigin.x += imageSize.width;
+						}
+						
+						//Shift down for the next series of horizontal draws
+						currentOrigin.y += imageSize.height;
+					}
+					break;
+				}
+			}
+		}
+		
 	}else{
+		//If we aren't drawing a background, fill the rect with clearColor
 		[[NSColor clearColor] set];
 		NSRectFill(clipRect);
 	}
+}
+
+//Background -----------------------------------------------------------------
+//
+- (void)setBackgroundImage:(NSImage *)inImage
+{
+	if(backgroundImage != inImage){
+		[backgroundImage release];
+		backgroundImage = [inImage retain];		
+		[backgroundImage setFlipped:YES];
+	}
+	
+	[(NSClipView *)[self superview] setCopiesOnScroll:(!backgroundImage)];
+	[self setNeedsDisplay:YES];
+}
+
+- (void)setBackgroundFade:(float)fade
+{
+	backgroundFade = fade;
+}
+
+- (void)setBackgroundColor:(NSColor *)inColor
+{
+	if(backgroundColor != inColor){
+		[backgroundColor release];
+		backgroundColor = [inColor retain];
+	}
+}
+- (NSColor *)backgroundColor
+{
+	return(backgroundColor);
+}
+
+- (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle
+{
+	backgroundStyle = inBackgroundStyle;
+}
+
+
+- (void)viewWillMoveToSuperview:(NSView *)newSuperview
+{
+	[super viewWillMoveToSuperview:newSuperview];
+	
+	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
 }
 
 /* ######################## Crappy code alert ########################
