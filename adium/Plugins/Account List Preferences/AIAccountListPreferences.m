@@ -30,6 +30,7 @@
 - (void)enableDisableControls;
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
+- (void)_configureResponderChain:(NSTimer *)inTimer;
 @end
 
 @implementation AIAccountListPreferences
@@ -67,6 +68,11 @@
 //Preference view is closing
 - (void)viewWillClose
 {
+	//Halt any incomplete timers
+	[responderChainTimer invalidate];
+	[responderChainTimer release];
+	responderChainTimer = nil;
+	
 	//Get any final changes to the UID field
 	[textField_accountName fireImmediately];
 	
@@ -135,6 +141,9 @@
 	float accountViewHeight = [accountView frame].size.height;
     [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
 
+	//Setup the responder chain
+	[self _configureResponderChain:nil];
+	
 	//Swap in the account auxiliary tabs
     enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
@@ -149,24 +158,40 @@
     for(i = 1;i < [tabView_auxiliary numberOfTabViewItems];i++){
         [tabView_auxiliary selectPreviousTabViewItem:nil];
     }
-	
-    //Hook up the responder chain --
-	//We must enable these controls.  If they are disabled some of our nextKeyView calls below will be ignored
-	//[popupMenu_serviceList setEnabled:YES];
-	//[textField_accountName setEnabled:YES];
-	//nope, that's not it
-	
-	//Name field goes to first control in account view
-	[textField_accountName setNextKeyView:[accountView nextValidKeyView]];
-
-	//Last control in account view goes to account list
-	NSView	*nextView = [accountView nextKeyView];
-	while([nextView nextKeyView]) nextView = [nextView nextKeyView];
-	[nextView setNextKeyView:tableView_accountList];
-
-	//Account list goes to service menu
-	[tableView_accountList setNextKeyView:popupMenu_serviceList];
 }
+
+//Hook up the responder chain
+//Must wait until our view is visible to do this, otherwise our requests to setup the chain will be ignored.
+//So, this method waits until our view becomes visible, and then sets up the chain :)
+- (void)_configureResponderChain:(NSTimer *)inTimer
+{
+	[responderChainTimer invalidate];
+	[responderChainTimer release];
+	responderChainTimer = nil;
+	
+	NSLog(@"%@  canDraw:%i  window:%@", view, [view canDraw], [view window]);
+	if([view canDraw]){
+		NSView	*accountView = [accountViewController view];
+		
+		//Name field goes to first control in account view
+		[textField_accountName setNextKeyView:[accountView nextValidKeyView]];
+		
+		//Last control in account view goes to account list
+		NSView	*nextView = [accountView nextKeyView];
+		while([nextView nextKeyView]) nextView = [nextView nextKeyView];
+		[nextView setNextKeyView:tableView_accountList];
+		
+		//Account list goes to service menu
+		[tableView_accountList setNextKeyView:popupMenu_serviceList];
+	}else{
+		responderChainTimer = [[NSTimer scheduledTimerWithTimeInterval:0.001
+															   target:self
+															 selector:@selector(_configureResponderChain:)
+															 userInfo:nil
+															  repeats:NO] retain]; 
+	}
+}
+
 
 //Remove any existing custom views
 - (void)_removeCustomViewAndTabs
