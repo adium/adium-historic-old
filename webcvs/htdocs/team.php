@@ -129,7 +129,7 @@
                         <span class="teamData">Website:</span><a href="http://www.fourx.org/">http://www.fourx.org/</a><br />
                         <span class="teamData">Email:</span><a href="mailto:timber@lava.net">timber@lava.net</a><br />
                         <span class="teamData">AIM:</span>mactigerz<br />
-                        <span class="teamData">MSN:</span>ramoth4x@hotmail.com
+                        <span class="teamData">Yahoo:</span>ramoth4_com
                     </div>
                     <div class="teamMember">
                         <h2>Jorge Salvador Caffarena <span class="teamDescription">(Developer, Site Coding)</span></h2>
