@@ -474,19 +474,6 @@ static id<GaimThread> gaimThread = nil;
 
 // GaimConversations ---------------------------------------------------------------------------------------------------
 #pragma mark GaimConversations
-- (oneway void)destroyMultiChat:(AIChat *)chat
-{
-	[chat release];
-}
-- (oneway void)destroyIMChat:(AIChat *)chat
-{
-	AIListObject *listObject = [chat listObject];
-	if(listObject){
-		[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
-	}
-	[chat release];
-}
-
 - (oneway void)addChat:(AIChat *)chat
 {
 	//Open the chat
@@ -724,6 +711,7 @@ static id<GaimThread> gaimThread = nil;
 	AIListObject	*listObject = [chat listObject];
 	if (listObject){
 		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
+		[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
 		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
 	}else{
 		NSString	*name = [chat name];
