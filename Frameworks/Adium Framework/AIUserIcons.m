@@ -14,6 +14,13 @@ static NSSize				iconCacheSize;
 
 @implementation AIUserIcons
 
+//+ (void)initialize
+//{
+//	[super initialize];
+//	
+//	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+//}
+	
 //Retrieve a user icon sized for the contact list
 + (NSImage *)listUserIconForContact:(AIListContact *)inContact
 {
@@ -21,15 +28,15 @@ static NSSize				iconCacheSize;
 	
 	//Retrieve the icon from our cache
 	if(!iconCache) iconCache = [[NSMutableDictionary alloc] init];
-	userIcon = [iconCache objectForKey:[inContact uniqueObjectID]];
+	userIcon = [iconCache objectForKey:[inContact internalObjectID]];
 
 	//Render the icon if it's not cached
 	if(!userIcon){
 		userIcon = [[inContact userIcon] imageByScalingToSize:iconCacheSize fraction:1.0 flipImage:YES];
-		if(userIcon) [iconCache setObject:userIcon forKey:[inContact uniqueObjectID]];
+		if(userIcon) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
-	return(userIcon);
+	return(userIcon/* ? userIcon : defaultUserIcon*/);
 }
 
 //Set the current contact list user icon size
