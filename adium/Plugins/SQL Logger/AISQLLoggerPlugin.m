@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.43 $
- * $Date: 2004/05/24 06:03:43 $
+ * $Revision: 1.44 $
+ * $Date: 2004/06/01 18:32:58 $
  * $Author: evands $
  *
  */
@@ -185,10 +185,12 @@
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
     escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO 
-																		   fontTags:NO includingColorTags:NO closeFontTags:NO 
+																		   fontTags:NO
+																 includingColorTags:NO  closeFontTags:NO 
 																		  styleTags:YES closeStyleTagsOnFontChange:NO 
-																	 encodeNonASCII:YES imagesPath:nil attachmentsAsText:YES
-																		 simpleTagsOnly:NO]];
+																	 encodeNonASCII:YES imagesPath:nil
+																  attachmentsAsText:YES attachmentImagesOnlyForSending:NO
+																	 simpleTagsOnly:NO]];
 	
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
