@@ -768,21 +768,25 @@
         newMessageWindow = [self _createMessageWindow];
         if ( !(screenPoint.x == 0 && screenPoint.y == 0) ) {
             NSString	*savedFrame;
-            
-            //Restore the window position for the object about to have its chat added as the first in this window
+            NSRect 	newFrame;
+
+            //We want to use the saved frame's width and height (if one has been saved)
             savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
                                                                   group:PREF_GROUP_WINDOW_POSITIONS 
                                                                  object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
             if(savedFrame){
-                [[newMessageWindow window] setFrameFromString:savedFrame];
-                NSRect theFrame = [[newMessageWindow window] frame];
-                theFrame.origin = screenPoint;
-                [[newMessageWindow window] setFrame:theFrame display:NO];
-                [[owner preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
-                                                     forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                                      group:PREF_GROUP_WINDOW_POSITIONS
-                                                     object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];                
-            }   
+                newFrame.size.width = NSRectFromString(savedFrame).size.width;
+                newFrame.size.height = NSRectFromString(savedFrame).size.height;                
+            }else{ //Default to the width of the source message window
+                newFrame.size.width = [[[tabViewItem tabView] window] frame].size.width;
+                newFrame.size.height = [[[tabViewItem tabView] window] frame].size.height;                
+            }
+            newFrame.origin = screenPoint;
+            [[newMessageWindow window] setFrame:newFrame display:NO];
+            [[owner preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
+                                                 forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                                  group:PREF_GROUP_WINDOW_POSITIONS
+                                                 object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
         }
     }   
     
