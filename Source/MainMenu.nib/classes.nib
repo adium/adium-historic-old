@@ -35,6 +35,7 @@
                 pluginLoader = AICorePluginLoader; 
                 preferenceController = AIPreferenceController; 
                 soundController = AISoundController; 
+                statusController = AIStatusController; 
                 toolbarController = AIToolbarController; 
             }; 
             SUPERCLASS = NSObject; 
@@ -117,38 +118,39 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 adium = AIAdium; 
-                "menuItem_Format_Italics" = NSMenuItem; 
-                "menu_Adium_About" = NSMenuItem; 
-                "menu_Adium_Preferences" = NSMenuItem; 
-                "menu_Contact_Action" = NSMenuItem; 
-                "menu_Contact_Additions" = NSMenuItem; 
-                "menu_Contact_Editing" = NSMenuItem; 
-                "menu_Contact_Manage" = NSMenuItem; 
-                "menu_Contact_NegativeAction" = NSMenuItem; 
+                "menuItem_Format_Italics" = id; 
+                "menu_Adium_About" = id; 
+                "menu_Adium_Preferences" = id; 
+                "menu_Contact_Action" = id; 
+                "menu_Contact_Additions" = id; 
+                "menu_Contact_Editing" = id; 
+                "menu_Contact_Manage" = id; 
+                "menu_Contact_NegativeAction" = id; 
                 "menu_Dock_Status" = id; 
-                "menu_Edit_Additions" = NSMenuItem; 
-                "menu_Edit_Bottom" = NSMenuItem; 
-                "menu_File_Accounts" = NSMenuItem; 
-                "menu_File_Additions" = NSMenuItem; 
-                "menu_File_Close" = NSMenuItem; 
+                "menu_Edit_Additions" = id; 
+                "menu_Edit_Bottom" = id; 
+                "menu_File_Additions" = id; 
+                "menu_File_Close" = id; 
                 "menu_File_New" = id; 
-                "menu_File_Save" = NSMenuItem; 
-                "menu_File_Status" = NSMenuItem; 
-                "menu_Format_Additions" = NSMenuItem; 
-                "menu_Format_Palettes" = NSMenuItem; 
-                "menu_Format_Styles" = NSMenuItem; 
-                "menu_Help_Additions" = NSMenuItem; 
-                "menu_Help_Local" = NSMenuItem; 
-                "menu_Help_Web" = NSMenuItem; 
-                "menu_View_General" = NSMenuItem; 
-                "menu_View_Unnamed_A" = NSMenuItem; 
-                "menu_View_Unnamed_B" = NSMenuItem; 
-                "menu_View_Unnamed_C" = NSMenuItem; 
-                "menu_Window_Auxiliary" = NSMenuItem; 
-                "menu_Window_Commands" = NSMenuItem; 
-                "menu_Window_Fixed" = NSMenuItem; 
-                "menu_Window_Top" = NSMenuItem; 
-                nilMenuItem = NSMenuItem; 
+                "menu_File_Save" = id; 
+                "menu_Format_Additions" = id; 
+                "menu_Format_Palettes" = id; 
+                "menu_Format_Styles" = id; 
+                "menu_Help_Additions" = id; 
+                "menu_Help_Local" = id; 
+                "menu_Help_Web" = id; 
+                "menu_Status_Accounts" = id; 
+                "menu_Status_Additions" = id; 
+                "menu_Status_State" = id; 
+                "menu_View_General" = id; 
+                "menu_View_Unnamed_A" = id; 
+                "menu_View_Unnamed_B" = id; 
+                "menu_View_Unnamed_C" = id; 
+                "menu_Window_Auxiliary" = id; 
+                "menu_Window_Commands" = id; 
+                "menu_Window_Fixed" = id; 
+                "menu_Window_Top" = id; 
+                nilMenuItem = id; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
@@ -161,6 +163,12 @@
         }, 
         {
             CLASS = AISoundController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {adium = AIAdium; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIStatusController; 
             LANGUAGE = ObjC; 
             OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
