@@ -4,8 +4,6 @@
 <dict>
 	<key>Show Event Bezel</key>
 	<false/>
-        <key>Event Bezel Position</key>
-        <integer>0</integer>
         <key>Display if Online</key>
         <true/>
         <key>Display if Offline</key>
@@ -20,22 +18,8 @@
         <false/>
         <key>Display if First Message</key>
         <true/>
-        <key>Show Image Badges</key>
-        <false/>
-        <key>Show Color Labels</key>
-        <true/>
         <key>Duration</key>
         <integer>3</integer>
-        <key>Show Name Labels</key>
-        <false/>
-        <key>Size</key>
-        <integer>0</integer>
-        <key>Background</key>
-        <integer>0</integer>
-        <key>Fade In</key>
-        <false/>
-        <key>Fade Out</key>
-        <true/>
         <key>Show Hidden</key>
         <true/>
         <key>Show While Away</key>

@@ -42,22 +42,10 @@
 
 - (IBAction)changePreference:(id)sender
 {
-    if (sender == popUp_position) {
-        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
-                                         forKey: KEY_EVENT_BEZEL_POSITION
-                                          group: PREF_GROUP_EVENT_BEZEL];
-    } else if (sender == slider_duration) {
+    if (sender == slider_duration) {
         [[adium preferenceController] setPreference: [NSNumber numberWithInt: [slider_duration intValue]]
                                              forKey: KEY_EVENT_BEZEL_DURATION
                                               group:PREF_GROUP_EVENT_BEZEL];
-    } else if (sender == popUp_size) {
-        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [popUp_size indexOfSelectedItem]]
-                                             forKey: KEY_EVENT_BEZEL_SIZE
-                                              group: PREF_GROUP_EVENT_BEZEL];
-    } else if (sender == popUp_background) {
-        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [popUp_background indexOfSelectedItem]]
-                                             forKey: KEY_EVENT_BEZEL_BACKGROUND
-                                              group: PREF_GROUP_EVENT_BEZEL];
     } else { //handle the check boxes
         NSString *key = nil;
         
@@ -77,16 +65,6 @@
             key = KEY_EVENT_BEZEL_IDLE;
         } else if (sender == checkBox_firstMessage) {
             key = KEY_EVENT_BEZEL_FIRST_MESSAGE;
-        } else if (sender == checkBox_imageBadges) {
-            key = KEY_EVENT_BEZEL_IMAGE_BADGES;
-        } else if (sender == checkBox_colorLabels) {
-            key = KEY_EVENT_BEZEL_COLOR_LABELS;
-        } else if (sender == checkBox_nameLabels) {
-            key = KEY_EVENT_BEZEL_NAME_LABELS;
-        } else if (sender == checkBox_fadeIn) {
-            key = KEY_EVENT_BEZEL_FADE_IN;
-        } else if (sender == checkBox_fadeOut) {
-            key = KEY_EVENT_BEZEL_FADE_OUT;
         } else if (sender == checkBox_showHidden) {
             key = KEY_EVENT_BEZEL_SHOW_HIDDEN;
         } else if (sender == checkBox_showAway) {
@@ -123,9 +101,7 @@
 		
 		// Set the values of the checkboxes
 		[checkBox_showBezel setState:[[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];
-		
-		[popUp_position selectItemAtIndex: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
-		
+				
 		[slider_duration setIntValue: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_DURATION] intValue]];
 		
 		[checkBox_online setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue]];
@@ -136,16 +112,7 @@
 		[checkBox_idle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue]];
 		[checkBox_firstMessage setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue]];
 		[checkBox_includeText setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue]];
-		[checkBox_imageBadges setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
-		[checkBox_colorLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
-		[checkBox_nameLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NAME_LABELS] boolValue]];
-		
-		[popUp_size selectItemAtIndex: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_SIZE] intValue]];
-		
-		[popUp_background selectItemAtIndex: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_BACKGROUND] intValue]];
-		
-		[checkBox_fadeIn setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_IN] boolValue]];
-		[checkBox_fadeOut setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_OUT] boolValue]];
+				
 		[checkBox_showHidden setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]];
 		[checkBox_showAway setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
 		
