@@ -47,7 +47,7 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIImageTextCell *newCell = [super copyWithZone:zone];
 
 	newCell->font = nil;
 	[newCell setFont:font];
