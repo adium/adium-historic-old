@@ -36,6 +36,18 @@ static NSMenu       *bookmarkSets;
     [self installImporterClass:[SHFireFoxBookmarksImporter class]];
     [self installImporterClass:[SHMSIEBookmarksImporter class]];
     [self installImporterClass:[SHOmniWebBookmarksImporter class]];
+
+    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+                                                       target:self
+                                                       action:@selector(dummyTarget:)
+                                                keyEquivalent:@""] autorelease];
+    [bookmarkRootMenuItem setRepresentedObject:self];
+                                               
+    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+                                                                 target:self
+                                                                 action:@selector(dummyTarget:)
+                                                          keyEquivalent:@""] autorelease];
+    [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     bookmarksLock = [[NSLock alloc] init];
     // initial menu configuration
@@ -78,18 +90,6 @@ static NSMenu       *bookmarkSets;
     
     NSEnumerator *enumerator = [importerArray objectEnumerator];
     id <SHBookmarkImporter> importer;
-    
-    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-                                                       target:self
-                                                       action:@selector(dummyTarget:)
-                                                keyEquivalent:@""] autorelease];
-    [bookmarkRootMenuItem setRepresentedObject:self];
-                                               
-    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-                                                                 target:self
-                                                                 action:@selector(dummyTarget:)
-                                                          keyEquivalent:@""] autorelease];
-    [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     // create a new menu
     bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
