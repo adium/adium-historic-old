@@ -187,7 +187,12 @@ Protocol Specific Functions: <<<INCOMPLETE>>>
 --- AIM
 # Buddy Search
 --- ICQ
+# Create a 'libgaim icq' in the drop down menu for protocols.
++ Offline messaging
++ Offline message recieving
 --- Y!
++ Offline messaging
++ Offline message recieving
 --- MSN
 --- TREPIA
 * Stop showing multiple disconnect notifications/resolve problem with connections disconnecting in libgaim. This also happens in gaim.
