@@ -220,7 +220,7 @@
 	if([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
 	[interface containerDidClose:self];
 
-    return(YES);
+    return;
 }
 
 //
