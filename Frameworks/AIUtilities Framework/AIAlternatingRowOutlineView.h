@@ -22,7 +22,7 @@
 	BOOL		hidesSelectionWhenNotMain;
 	
 	int			lastSelectedRow;
-    id			lastSelectedRowIndexes; //NSIndexSet* - OS X 10.3
+//    id			lastSelectedRowIndexes; //NSIndexSet* - OS X 10.3
 	BOOL		isOnPantherOrBetter;
 }
 

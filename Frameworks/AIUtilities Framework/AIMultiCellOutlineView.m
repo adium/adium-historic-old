@@ -371,12 +371,12 @@
 {
 	//Draw the gradient
 	AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-	[gradient drawInRect:selectRect];
+	[gradient drawInRect:rect];
 	
 	//Draw a line at the light side, to make it look a lot cleaner
-	selectRect.size.height = 1;
+	rect.size.height = 1;
 	[[NSColor alternateSelectedControlColor] set];
-	NSRectFillUsingOperation(selectRect, NSCompositeSourceOver);
+	NSRectFillUsingOperation(rect, NSCompositeSourceOver);
 	
 }
 
