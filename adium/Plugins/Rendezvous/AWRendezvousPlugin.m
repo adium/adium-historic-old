@@ -36,9 +36,9 @@
 														menuImage:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[[NSCharacterSet illegalCharacterSet] invertedSet]
-						ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-						    allowedLength:999] retain];
-
+												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
+													allowedLength:999] retain];
+	
     //Register this service
     [[adium accountController] registerService:self];
 }
