@@ -74,7 +74,18 @@
 - (IBAction)pressedButton:(id)sender
 {
 	if ((sender == button_showEmail) && urlString){
-		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:urlString]];
+		
+		NSURL   *emailURL;
+		
+		//The urlString could either be a web address or a path to a local HTML file we are supposed to load.
+		//The local HTML file will be in the user's temp directory, which Gaim obtains with g_get_tmp_dir()... so we will, too.
+		if ([urlString rangeOfString:[NSString stringWithUTF8String:g_get_tmp_dir()]].location != NSNotFound){
+			emailURL = [NSURL fileURLWithPath:[urlString stringByExpandingTildeInPath]];
+		}else{
+			emailURL = [NSURL URLWithString:urlString];
+		}
+		
+		[[NSWorkspace sharedWorkspace] openURL:emailURL];
 	}
 	
 	[[self window] close];

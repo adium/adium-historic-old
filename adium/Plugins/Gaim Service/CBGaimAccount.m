@@ -882,8 +882,11 @@ static id<GaimThread> gaimThread = nil;
 //Update an ESFileTransfer object progress
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent
 {
-	NSLog(@"File Transfer: %f%% complete",[percent floatValue]);
-    [fileTransfer setPercentDone:[percent floatValue] bytesSent:[bytesSent unsignedValue]];
+	float percentDone = [percent floatValue];
+    [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedValue]];
+	if (percentDone == 1.0){
+		[[adium fileTransferController] transferComplete:fileTransfer];
+	}
 }
 
 //The remote side canceled the transfer, the fool.  Tell the fileTransferController
