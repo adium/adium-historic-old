@@ -252,6 +252,8 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				4B191D8C0611C11000E8A4E7,
+				4B191D8E0611C11400E8A4E7,
 				4BE9FFE7055981AB00359B15,
 				F59DB3D6033EA9CD01A8010A,
 				F59DB3D7033EA9CD01A8010A,
@@ -3796,8 +3798,6 @@
 				34E8FA34054D9CE8008BB262,
 				4BE9FFE8055981AB00359B15,
 				4B584E1B055DD7FD00E89D48,
-				4BBEC8B90563E7CD0013C8F7,
-				4BBEC8BA0563E7CD0013C8F7,
 				4BCB9B5F0567FF5D001D3559,
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
@@ -3952,6 +3952,10 @@
 				4BD6771E06002FD50049CAF7,
 				4B74D3340602641C00C21B7C,
 				34327CA6060D4093003D7AD9,
+				4B191D8A0611C10800E8A4E7,
+				4B191D8B0611C10800E8A4E7,
+				4B191D8D0611C11000E8A4E7,
+				4B191D8F0611C11400E8A4E7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7825,6 +7829,61 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B191D880611C10800E8A4E7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = License.txt;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B191D890611C10800E8A4E7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
+			path = ReadMe.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B191D8A0611C10800E8A4E7 = {
+			fileRef = 4B191D880611C10800E8A4E7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B191D8B0611C10800E8A4E7 = {
+			fileRef = 4B191D890611C10800E8A4E7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B191D8C0611C11000E8A4E7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = Changes.txt;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B191D8D0611C11000E8A4E7 = {
+			fileRef = 4B191D8C0611C11000E8A4E7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B191D8E0611C11400E8A4E7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = ToDoList.txt;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B191D8F0611C11400E8A4E7 = {
+			fileRef = 4B191D8E0611C11400E8A4E7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B215D970598907100305B3C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -11216,33 +11275,6 @@
 			path = "Plugins/Contact List Editor/AddContact.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BBEC8B70563E7CC0013C8F7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text;
-			path = " LICENSE.txt";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BBEC8B80563E7CC0013C8F7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.rtf;
-			path = " README.rtf";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BBEC8B90563E7CD0013C8F7 = {
-			fileRef = 4BBEC8B70563E7CC0013C8F7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BBEC8BA0563E7CD0013C8F7 = {
-			fileRef = 4BBEC8B80563E7CC0013C8F7;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BC02D310452C69100A8010A = {
 			fileEncoding = 4;
@@ -17916,24 +17948,6 @@
 			settings = {
 			};
 		};
-		9E9F1A82060E8422002D6A40 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.scriptSuite;
-			name = adium.scriptSuite;
-			path = Source/adium.scriptSuite;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E9F1A83060E8422002D6A40 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.scriptTerminology;
-			name = adium.scriptTerminology;
-			path = Source/adium.scriptTerminology;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9EA125E8055B630900ECF349 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -19125,11 +19139,9 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
-				9E9F1A82060E8422002D6A40,
-				9E9F1A83060E8422002D6A40,
+				4B191D880611C10800E8A4E7,
+				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,
-				4BBEC8B70563E7CC0013C8F7,
-				4BBEC8B80563E7CC0013C8F7,
 				4B24A2330482B34B00A8010A,
 				34498CA505EEF31200D5816E,
 				34498CA605EEF31300D5816E,
