@@ -479,7 +479,40 @@
 	}
 }
 	
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
+{
+	NSEnumerator	*enumerator = [objects objectEnumerator];
+	AIListObject	*object;
 	
+	while(object = [enumerator nextObject]){
+		//Get the group (Create if necessary)
+		GaimGroup *group = gaim_find_group([[inGroup UID] UTF8String]);
+		if(group == NULL){
+			group = gaim_group_new([[inGroup UID] UTF8String]);
+			gaim_blist_add_group(group, NULL);
+		}
+		
+     	//verify the buddy does not already exist, and create it
+		GaimBuddy *buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+		if(buddy == NULL){
+			buddy = gaim_buddy_new(account, [[object UID] UTF8String], NULL);
+		}
+		
+		//Add the buddy locally to libgaim, and then to the serverside list
+		gaim_blist_add_buddy(buddy, NULL, group, NULL);
+		serv_add_buddy(gc, [[object UID] UTF8String], group);
+		
+		//Set our remote grouping
+		[object setRemoteGroupName:[inGroup UID] forAccount:self];
+	}
+}
+
+// Return YES if the contact list is editable
+- (BOOL)contactListEditable
+{
+    return([[self statusObjectForKey:@"Online"] boolValue]);
+}
+
 	
 	//{
 	//    AIHandle	*handle;
@@ -511,7 +544,8 @@
 //        return(nil);
 //    }
 //}
-//// Returns YES if the list is editable
+
+	//// Returns YES if the list is editable
 //- (BOOL)contactListEditable
 //{
 //    return YES;

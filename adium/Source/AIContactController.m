@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.89 2004/01/17 21:34:02 adamiser Exp $
+// $Id: AIContactController.m,v 1.90 2004/01/18 15:17:42 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -620,6 +620,34 @@
 		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
 																		 object:listObject
 																	   userInfo:[NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"]];
+	}
+}
+
+- (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group onAccounts:(NSArray *)accountArray
+{
+	NSEnumerator	*objectEnumerator;
+	AIListContact	*listObject;
+	NSEnumerator	*accountEnumerator;
+	AIAccount		*account;
+	
+	//Add the applicable contacts to each account
+	accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+	while(account = [accountEnumerator nextObject]){
+		NSMutableArray	*objectsOnAccount = [NSMutableArray array];
+		NSString		*accountServiceID = [[[account service] handleServiceType] identifier];
+		
+		objectEnumerator = [contactArray objectEnumerator];
+		while(listObject = [objectEnumerator nextObject]){
+			
+			//If this account is the correct service type, add the contact
+			if([[listObject serviceID] compare:accountServiceID] == 0 && [account contactListEditable]){
+				[objectsOnAccount addObject:listObject];
+			}
+		}
+		
+		if([objectsOnAccount count]){
+			[account addContacts:objectsOnAccount toGroup:group];
+		}
 	}
 }
 

@@ -97,6 +97,7 @@ typedef enum {
 - (void)sortListObject:(AIListObject *)inObject;
 
 //Editing
+- (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group onAccounts:(NSArray *)accountArray;
 - (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group;
 
 //Contact info

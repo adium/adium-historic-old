@@ -229,10 +229,10 @@
 //}
 
 // Return YES if the contact list is editable
-//- (BOOL)contactListEditable
-//{
-//    return([[self statusObjectForKey:@"Online"] boolValue]);
-//}
+- (BOOL)contactListEditable
+{
+    return([[self statusObjectForKey:@"Online"] boolValue]);
+}
 
 // Return a dictionary of our handles
 //- (NSDictionary *)availableHandles
@@ -738,7 +738,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.114 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.115 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

@@ -22,6 +22,7 @@
 #import "AIEditorImportCollection.h"
 #import "AIListEditorCell.h"
 #import "AIBrowser.h"
+#import "AINewContactWindowController.h"
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
@@ -922,7 +923,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Create a new handle
 - (IBAction)handle:(id)sender
 {
-//    AIEditorListHandle	*newHandle;
+	[AINewContactWindowController promptForNewContactOnWindow:[self window]];
+	
+
+	
+	//    AIEditorListHandle	*newHandle;
 //    AIEditorListGroup	*selectedGroup;
 //    int			selectedIndex;
 //
