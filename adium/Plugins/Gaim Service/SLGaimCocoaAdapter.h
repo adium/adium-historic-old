@@ -4,7 +4,6 @@
 //  Adapts gaim to the Cocoa event loop.
 //
 //  Created by Scott Lamb on Sun Nov 2 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 /*!
