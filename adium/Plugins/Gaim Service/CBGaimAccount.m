@@ -1169,7 +1169,8 @@ static id<GaimThread> gaimThread = nil;
 //Our account was disconnected, report the error
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
-	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
+	//We receive retained data
+	[lastDisconnectionError release]; lastDisconnectionError = text;
 
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
@@ -1194,7 +1195,10 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)accountConnectionNotice:(NSString *)connectionNotice
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
-                                    withDescription:connectionNotice];	
+                                    withDescription:connectionNotice];
+	
+	//We should receive retained data
+	[connectionNotice release];
 }
 
 //Our account has disconnected
