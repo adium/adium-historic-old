@@ -13,8 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AICLPreferences : AIObject {
-    AIPreferencePane			*generalPane;
+@interface AICLPreferences : AIPreferencePane {
     IBOutlet	NSView			*view_prefViewGeneral;
     IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;
@@ -23,14 +22,6 @@
     IBOutlet	NSColorWell		*colorWell_contact;
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;
-    
-    AIPreferencePane			*groupsPane;
-    IBOutlet	NSView			*view_prefViewGroups;
-    IBOutlet	NSButton		*checkBox_customGroupColor;
-    IBOutlet	NSColorWell		*colorWell_group;
 }
-
-+ (AICLPreferences *)contactListPreferences;
-- (IBAction)changePreference:(id)sender;
 
 @end

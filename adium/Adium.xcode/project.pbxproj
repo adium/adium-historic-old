@@ -2839,6 +2839,8 @@
 			children = (
 				F544A5DE03B3628B01A8010A,
 				F544A5DF03B3628B01A8010A,
+				4BBF449E0661354F001D31E1,
+				4BBF449F0661354F001D31E1,
 				F544A5E003B3628B01A8010A,
 				3484645005910E5F00241F68,
 				3484644F05910E5F00241F68,
@@ -4450,6 +4452,7 @@
 				4BBF41E30661194A001D31E1,
 				4BBF41E50661194A001D31E1,
 				4BBF41EB06611994001D31E1,
+				4BBF44A00661354F001D31E1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5062,6 +5065,7 @@
 				4BBF41E40661194A001D31E1,
 				4BBF41E60661194A001D31E1,
 				4BBF41EC06611994001D31E1,
+				4BBF44A10661354F001D31E1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13447,6 +13451,36 @@
 		};
 		4BBF41F506611A23001D31E1 = {
 			fileRef = 4BBF41EE066119A8001D31E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBF449E0661354F001D31E1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AICLGroupPreferences.h;
+			path = "Plugins/Standard Contact List View/Preferences/AICLGroupPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BBF449F0661354F001D31E1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AICLGroupPreferences.m;
+			path = "Plugins/Standard Contact List View/Preferences/AICLGroupPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BBF44A00661354F001D31E1 = {
+			fileRef = 4BBF449E0661354F001D31E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBF44A10661354F001D31E1 = {
+			fileRef = 4BBF449F0661354F001D31E1;
 			isa = PBXBuildFile;
 			settings = {
 			};
