@@ -29,6 +29,8 @@
 	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_AWAY_NO withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_IDLE_YES withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_IDLE_NO withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_SEEN_ONLINE_YES withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_SEEN_ONLINE_NO withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
 	
 	//Observe status changes
     [[adium contactController] registerListObjectObserver:self];
@@ -50,6 +52,10 @@
 		description = AILocalizedString(@"Becomes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 		description = AILocalizedString(@"Returns from idle",nil);
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		description = AILocalizedString(@"Is seen",nil);
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]){
+		description = AILocalizedString(@"Is no longer seen",nil);
 	}else{
 		description = @"";
 	}
@@ -73,8 +79,12 @@
 		description = AILocalizedString(@"Contact becomes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 		description = AILocalizedString(@"Contact returns from idle",nil);
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		description = AILocalizedString(@"Contact is seen",nil);
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]){
+		description = AILocalizedString(@"Contact is no longer seen",nil);
 	}else{
-		description = @"";	
+		description = @"";
 	}
 	
 	return(description);
@@ -98,6 +108,10 @@
 		description = @"Contact Went Idle";
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 		description = @"Contact Returned from Idle";
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		description = @"Contact is seen";
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]){
+		description = @"Contact is no longer seen";
 	}else{
 		description = @"";	
 	}
@@ -122,6 +136,10 @@
 		format = AILocalizedString(@"When %@ goes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 		format = AILocalizedString(@"When %@ returns from idle",nil);
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		format = AILocalizedString(@"When you see %@",nil);
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		format = AILocalizedString(@"When you no longer see %@",nil);
 	}else{
 		format = @"";
 	}
@@ -159,6 +177,10 @@
 			format = AILocalizedString(@"%@ went idle",nil);
 		}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 			format = AILocalizedString(@"%@ became active",nil);
+		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+			format = AILocalizedString(@"%@ is seen",nil);
+		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+			format = AILocalizedString(@"%@ is no longer seen",nil);
 		}
 		
 		description = [NSString stringWithFormat:format,[listObject displayName]];
@@ -175,6 +197,10 @@
 			description = AILocalizedString(@"went idle",nil);
 		}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 			description = AILocalizedString(@"became active",nil);
+		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+			description = AILocalizedString(@"is seen",nil);
+		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+			description = AILocalizedString(@"is no longer seen",nil);
 		}
 	}
 	
@@ -196,8 +222,16 @@
 						  forKey:@"Online"
 						newValue:newValue
 					  listObject:inObject
-				  performCompare:YES] && !silent){
-				NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
+				  performCompare:YES]){
+				if(!silent){
+					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
+					[[adium contactAlertsController] generateEvent:event
+													 forListObject:inObject
+														  userInfo:nil
+									  previouslyPerformedActionIDs:nil];
+				}
+									
+				NSString	*event = ([newValue boolValue] ? CONTACT_SEEN_ONLINE_YES : CONTACT_SEEN_ONLINE_NO);
 				[[adium contactAlertsController] generateEvent:event
 												 forListObject:inObject
 													  userInfo:nil
