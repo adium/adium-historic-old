@@ -177,7 +177,7 @@
 		if(menuIndex >= 0 && menuIndex < [menu numberOfItems]){
 			AIListGroup	*group = [[menu itemAtIndex:menuIndex] representedObject];
 			
-			if(group){
+			if(group && (group != [listObject containingGroup])){
 				if(existing){ //Move contact
 					[[adium contactController] addContacts:[NSArray arrayWithObject:existing] toGroup:group];
 
@@ -189,7 +189,7 @@
 
 				}
 				
-			}else{
+			}else if (!group){
 				//User selected not listed, so we'll remove that contact
 				if(existing){
 					[[adium contactController] removeListObjects:[NSArray arrayWithObject:existing]];
