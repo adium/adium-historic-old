@@ -5,7 +5,6 @@
 //  Created by Brian Ganninger on Sat Jan 03 2004.
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
-
 #import <Foundation/Foundation.h>
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
@@ -13,23 +12,20 @@
 
 @interface BGThemesPreferences : AIPreferencePane {
     // create tab
+    IBOutlet NSWindow *createWindow;
     IBOutlet NSTextField *nameField;
     IBOutlet NSTextField *authorField;
     IBOutlet NSTextField *versionField;
-    IBOutlet NSButton *createButton;
-    IBOutlet NSTextField *createStatus;
+    IBOutlet AIPlasticButton *createButton;
+    IBOutlet AIPlasticButton *removeButton;
     // manage tab
     IBOutlet BGThemeManageView *themesList;
-    IBOutlet NSImageView *applyPreview;
-    IBOutlet NSTextField *manageStatus;
     // other
-    IBOutlet NSButton *themesFolderButton;
     id themePlugin;
     NSMenu *themeMenu;
 }
+-(IBAction)createAction:(id)sender;
 -(IBAction)createTheme:(id)sender;
--(IBAction)openThemesFolder:(id)sender;
 -(void)setPlugin:(id)newPlugin;
--(void)applyDone;
 -(void)createDone;
 @end
