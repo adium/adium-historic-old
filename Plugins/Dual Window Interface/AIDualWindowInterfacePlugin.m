@@ -254,7 +254,7 @@
 
 //Custom Tab Management ------------------------------------------------------------------------------------------------
 #pragma mark Custom Tab Management
-//Transfer a tab from one window to another (or to it's own window)
+//Transfer a tab from one window to another (or to its own window)
 - (void)transferMessageTab:(AIMessageTabViewItem *)tabViewItem
 			   toContainer:(id)newMessageWindow
 				   atIndex:(int)index
