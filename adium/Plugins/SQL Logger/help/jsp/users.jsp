@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/24 16:39:37 $ -->
+<!--$Rev: 697 $ $Date: 2004/06/25 01:19:47 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -98,7 +98,7 @@ try {
                 <div class="boxWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 100 as height from adium.information_keys where delete = false");
+    pstmt = conn.prepareStatement("select count(*) * 31 + 100 as height from im.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
 
@@ -108,7 +108,7 @@ try {
 
     pstmt = conn.prepareStatement("select user_id, scramble(username) " +
         " as username, scramble(display_name) as display_name " +
-        " from adium.users natural join user_display_name udn " +
+        " from im.users natural join user_display_name udn " +
         " where not exists (select 'x' from user_display_name " +
         " where user_id = udn.user_id  and effdate > udn.effdate) " +
         " order by not exists (select 'x' from meta_contact " +
@@ -130,7 +130,7 @@ try {
             rset.getString("username") + ")</h2>");
         out.println("<div class=\"meta\">");
 
-        infoStmt = conn.prepareStatement("select key_name, value from adium.user_contact_info where user_id = ? order by key_name");
+        infoStmt = conn.prepareStatement("select key_name, value from im.user_contact_info where user_id = ? order by key_name");
 
         infoStmt.setInt(1, rset.getInt("user_id"));
 

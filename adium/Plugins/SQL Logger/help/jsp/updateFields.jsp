@@ -26,7 +26,7 @@ try {
 
         if(requestText != null && requestText.equals("on")) {
 
-            updateStmt = conn.prepareStatement("update adium.information_keys set delete = true where key_id = ? ");
+            updateStmt = conn.prepareStatement("update im.information_keys set delete = true where key_id = ? ");
 
             updateStmt.setInt(1, rset.getInt("key_id"));
 
@@ -34,7 +34,7 @@ try {
         }
     }
 
-    pstmt = conn.prepareStatement("insert into adium.information_keys (key_name) values (?)");
+    pstmt = conn.prepareStatement("insert into im.information_keys (key_name) values (?)");
 
     for(int i = 1; i <= 3; i++) {
         String req = request.getParameter("new" + i);

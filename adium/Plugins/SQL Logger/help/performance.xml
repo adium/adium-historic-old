@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="adium.xsl" type="text/xsl"?>
+<?xml-stylesheet href="transform.xsl" type="text/xsl"?>
 <page>
   <title>Performance / Maintenance</title>
   <body>
@@ -38,7 +38,7 @@ vacuumdb -z</pre></div></li>
     <p>If you want to see if PostgreSQL is using an index for something, you
       can construct a similar query in psql:</p>
     <div class="tutorialcode">
-      <pre>select * from adium.message_v where message_date > 'now'::date;</pre>
+      <pre>select * from im.message_v where message_date > 'now'::date;</pre>
     </div>
     <p>That query should return very quickly.
       If you want to see exactly how fast it runs:

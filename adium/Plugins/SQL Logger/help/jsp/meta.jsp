@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/24 16:39:37 $ -->
+<!--$Rev: 697 $ $Date: 2004/06/25 01:19:47 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -67,7 +67,7 @@ try {
                 <div class="boxExtraWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 125 as height from adium.information_keys where delete = false");
+    pstmt = conn.prepareStatement("select count(*) * 31 + 125 as height from im.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
 
@@ -75,7 +75,7 @@ try {
 
     int height = rset.getInt("height");
 
-    pstmt = conn.prepareStatement("select (max(length(username || display_name)) + 5) * 5 as width from adium.users natural join adium.user_display_name where not exists (select 'x' from adium.user_display_name where user_id = users.user_id and effdate < user_display_name.effdate)");
+    pstmt = conn.prepareStatement("select (max(length(username || display_name)) + 5) * 5 as width from im.users natural join im.user_display_name where not exists (select 'x' from im.user_display_name where user_id = users.user_id and effdate < user_display_name.effdate)");
 
     rset = pstmt.executeQuery();
 
@@ -84,7 +84,7 @@ try {
     int longDispWidth = rset.getInt(1);
 
     pstmt = conn.prepareStatement("select meta_id, name " +
-        " from adium.meta_container order by name");
+        " from im.meta_container order by name");
 
     rset = pstmt.executeQuery();
 
@@ -100,7 +100,7 @@ try {
         out.println("<div class=\"meta\">");
         out.print("<div class=\"personal_info\">");
 
-        infoStmt = conn.prepareStatement("select key_name, value from adium.meta_contact_info where meta_id = ? order by key_name");
+        infoStmt = conn.prepareStatement("select key_name, value from im.meta_contact_info where meta_id = ? order by key_name");
 
         infoStmt.setInt(1, rset.getInt("meta_id"));
 
@@ -117,7 +117,7 @@ try {
         out.println("</table>");
         out.println("</div>");
 
-        metaStmt = conn.prepareStatement("select user_id, service, scramble(username) as username, display_name, preferred from adium.users natural join adium.meta_contact natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where effdate > udn.effdate and user_id = users.user_id) order by display_name, username");
+        metaStmt = conn.prepareStatement("select user_id, service, scramble(username) as username, display_name, preferred from im.users natural join im.meta_contact natural join im.user_display_name udn where meta_id = ? and not exists (select 'x' from im.user_display_name where effdate > udn.effdate and user_id = users.user_id) order by display_name, username");
 
         metaStmt.setInt(1, rset.getInt("meta_id"));
 

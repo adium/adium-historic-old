@@ -20,7 +20,7 @@ ResultSet rset = null;
 String name = new String();
 
 try {
-    pstmt = conn.prepareStatement("select name, key_id, key_name, coalesce(value, '') as value from adium.meta_container natural join adium.information_keys natural left join adium.contact_information where meta_id = ? and delete = false order by key_name");
+    pstmt = conn.prepareStatement("select name, key_id, key_name, coalesce(value, '') as value from im.meta_container natural join im.information_keys natural left join im.contact_information where meta_id = ? and delete = false order by key_name");
 
     pstmt.setInt(1, meta_id);
 

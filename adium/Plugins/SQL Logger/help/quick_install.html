@@ -13,9 +13,8 @@
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
               Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><a href="quick_install.html" class="sidebar">Quick Install
               Notes</a><br><h4>Adium</h4>
-<a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
-                2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
-                Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
+<a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
+                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><h4>PostgreSQL</h4>
 <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
 </div>
@@ -93,7 +92,7 @@ CLASSPATH=/usr/local/pgsql/share/java/postgresql.jar:$CLASSPATH
 export PATH CLASSPATH</pre></div>
 <p>Now you're ready to use the Adium stuff.</p>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
-psql &lt; adium.sql
+psql &lt; create.sql
 createlang plpgsql
 psql &lt; functions.sql</pre></div>
 <p>At this point, it is helpful to edit the search path of the database.</p>
@@ -237,7 +236,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
 <p>All that is left is installing the Adium plugin itself.  You can either
   download the Adium source and compile it yourself, or download the plugin
   from here.  I would recommend compiling from source.  It's not difficult.
-  Download the newest Adium source from <a href="http://adium.sourceforge.net" class="offsite">http://adium.sourceforge.net</a>.  Open it up in Project
+  Download the newest Adium source from <a href="http://im.sourceforge.net" class="offsite">http://im.sourceforge.net</a>.  Open it up in Project
   Builder or XCode, switch the active target to &quot;SQL Logger&quot;, and hit compile.
   Then go into the build directory, select &quot;SQL Logger.AdiumPlugin&quot; and drag
   it to the <code>~/Library/Application Support/Adium 2.0/Plugins</code>.

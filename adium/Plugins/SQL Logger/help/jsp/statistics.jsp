@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 785 $ $Date: 2004/05/27 16:09:03 $ -->
+<!--$Rev: 809 $ $Date: 2004/06/25 01:19:47 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -47,10 +47,10 @@ try {
     if(sender != 0) {
         pstmt = conn.prepareStatement("select scramble(username) as username, "+
         "scramble(display_name) as display_name from " +
-        " adium.users natural join adium.user_display_name udn " +
+        " im.users natural join im.user_display_name udn " +
         " where user_id = ?"+
         " and not exists " +
-        " (select 'x' from adium.user_display_name " +
+        " (select 'x' from im.user_display_name " +
         " where effdate > udn.effdate and user_id = users.user_id)");
         pstmt.setInt(1, sender);
         rset = pstmt.executeQuery();
@@ -64,7 +64,7 @@ try {
     }
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select name, service, username,display_name from adium.meta_container natural join adium.meta_contact natural join adium.users natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where user_id = udn.user_id and effdate > udn.effdate)");
+        pstmt = conn.prepareStatement("select name, service, username,display_name from im.meta_container natural join im.meta_contact natural join im.users natural join im.user_display_name udn where meta_id = ? and not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate)");
 
         pstmt.setInt(1, meta_id);
 
@@ -166,7 +166,7 @@ try {
                 <div class="boxThinContent">
 
 <%
-    pstmt = conn.prepareStatement("select meta_id, name from adium.meta_container order by name");
+    pstmt = conn.prepareStatement("select meta_id, name from im.meta_container order by name");
 
     rset = pstmt.executeQuery();
 
@@ -184,13 +184,13 @@ try {
     rset = stmt.executeQuery("select user_id, " +
         " scramble(display_name) as display_name, " +
         " scramble(username) " +
-        " as username from adium.users " +
-        " natural join adium.user_display_name udn" +
+        " as username from im.users " +
+        " natural join im.user_display_name udn" +
         " where case when true = " + loginUsers +
         " then login = true " +
         " else 1 = 1 " +
         " end " +
-        " and not exists (select 'x' from adium.user_display_name where " +
+        " and not exists (select 'x' from im.user_display_name where " +
         " user_id = users.user_id and effdate > udn.effdate) " +
         " order by scramble(display_name), username");
 
@@ -233,7 +233,7 @@ try {
         " min(length(message)) as min_sent_length, " +
         " max(length(message)) as max_sent_length, " +
         " trunc(avg(length(message)),2) as avg_sent_length " +
-        " from adium.messages " +
+        " from im.messages " +
         " where sender_id = ? " +
         " group by sender_id " +
         " union all " +
@@ -242,7 +242,7 @@ try {
         " min(length(message)) as min_sent_length, " +
         " max(length(message)) as max_sent_length, " +
         " trunc(avg(length(message)),2) as avg_sent_length " +
-        " from adium.messages " +
+        " from im.messages " +
         " where recipient_id =  ? " +
         " group by recipient_id ");
 
@@ -256,7 +256,7 @@ try {
             " min(length(message)) as min_sent_length, " +
             " max(length(message)) as max_sent_length, " +
             " trunc(avg(length(message)),2) as avg_sent_length " +
-            " from adium.messages, adium.meta_contact " +
+            " from im.messages, im.meta_contact " +
             " where sender_id = user_id " +
             " and meta_id = ? " +
             " union all " +
@@ -265,7 +265,7 @@ try {
             " min(length(message)) as min_sent_length, " +
             " max(length(message)) as max_sent_length, " +
             " trunc(avg(length(message)),2) as avg_sent_length " +
-            " from adium.messages, adium.meta_contact " +
+            " from im.messages, im.meta_contact " +
             " where recipient_id =  user_id " +
             " and meta_id = ? ");
 
@@ -325,7 +325,7 @@ try {
 
     pstmt = conn.prepareStatement("select date_part('year', message_date) " +
     " as year, " +
-    "count(*) as count from adium.messages where sender_id = ? or recipient_id = ? " +
+    "count(*) as count from im.messages where sender_id = ? or recipient_id = ? " +
     " group by date_part('year', message_date) " +
     " order by date_part('year', message_date)");
 
@@ -335,7 +335,7 @@ try {
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select date_part('year', message_date) " +
         " as year, " +
-        " count(*) as count from adium.messages, adium.meta_contact " +
+        " count(*) as count from im.messages, im.meta_contact " +
         " where (sender_id = user_id or recipient_id = user_id) " +
         " and meta_id = ? " +
         " group by date_part('year', message_date) " +
@@ -394,7 +394,7 @@ try {
 
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-        " as month, count(*) as count from adium.messages, adium.meta_contact " +
+        " as month, count(*) as count from im.messages, im.meta_contact " +
         " where (sender_id = user_id or " +
         " recipient_id = user_id) and meta_id = ? " +
         " group by date_part('month', message_date)");
@@ -473,14 +473,14 @@ try {
                 <div class="boxWideContent">
 <%
     pstmt = conn.prepareStatement("select message, count(*) " +
-        " from adium.messages where sender_id = ? group by message " +
+        " from im.messages where sender_id = ? group by message " +
         " order by count(*) desc limit 20 ");
 
     pstmt.setInt(1, sender);
 
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select message, count(*) " +
-            " from adium.messages, adium.meta_contact " +
+            " from im.messages, im.meta_contact " +
             " where sender_id = user_id and meta_id = ? " +
             " group by message " +
             " order by count(*) desc limit 20 ");
@@ -536,7 +536,7 @@ try {
          pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn "+
             ", scramble(recipient_sn) as recipient_sn, " +
             " message, count(*) " +
-            " from simple_message_v smv, adium.meta_contact "+
+            " from simple_message_v smv, im.meta_contact "+
             " where not exists "+
                 " (select 'x' from messages "+
                 " where sender_id in (smv.sender_id, smv.recipient_id) "+

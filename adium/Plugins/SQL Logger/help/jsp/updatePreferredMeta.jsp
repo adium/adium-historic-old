@@ -10,14 +10,14 @@ Connection conn = source.getConnection();
 PreparedStatement pstmt = null;
 
 try {
-    pstmt = conn.prepareStatement("update adium.meta_contact set preferred = true where user_id = ? and meta_id = ?");
+    pstmt = conn.prepareStatement("update im.meta_contact set preferred = true where user_id = ? and meta_id = ?");
 
     pstmt.setInt(1, Integer.parseInt(request.getParameter("user_id")));
     pstmt.setInt(2, Integer.parseInt(request.getParameter("meta_id")));
 
     pstmt.executeUpdate();
 
-    pstmt = conn.prepareStatement("update adium.meta_contact set preferred = false where user_id = ? and meta_id <> ?");
+    pstmt = conn.prepareStatement("update im.meta_contact set preferred = false where user_id = ? and meta_id <> ?");
 
 
     pstmt.setInt(1, Integer.parseInt(request.getParameter("user_id")));

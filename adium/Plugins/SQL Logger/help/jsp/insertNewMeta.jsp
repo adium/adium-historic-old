@@ -22,7 +22,7 @@ try {
 
         conn.setAutoCommit(false);
 
-        pstmt = conn.prepareStatement("insert into adium.meta_container (name) values (?)");
+        pstmt = conn.prepareStatement("insert into im.meta_container (name) values (?)");
 
         pstmt.setString(1, name);
 
@@ -43,7 +43,7 @@ try {
             String requestText = request.getParameter(rset.getString("key_id"));
 
             if(requestText != null && !requestText.equals("")) {
-                updateStmt = conn.prepareStatement("insert into adium.contact_information (meta_id, key_id, value) values (?, ?, ?)");
+                updateStmt = conn.prepareStatement("insert into im.contact_information (meta_id, key_id, value) values (?, ?, ?)");
 
                 updateStmt.setInt(1, meta_id);
                 updateStmt.setInt(2, rset.getInt("key_id"));

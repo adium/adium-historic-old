@@ -9,7 +9,7 @@ begin
 
     select value
     into   do_scramble
-    from   adium.preferences
+    from   im.preferences
     where  rule = ''scramble'';
 
     entry_length = length(entry_text);

@@ -6,7 +6,7 @@ deploy: $(HTML_FILES)
 clean: 
 	rm -f $(HTML_FILES)
 
-$(HTML_FILES): adium.xsl
+$(HTML_FILES): transform.xsl
 
 %.html: %.xml
-	xsltproc -o $@ adium.xsl $<
+	xsltproc -o $@ transform.xsl $<

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 487 $ $Date: 2004/05/22 20:08:07 $ -->
+<!--$Rev: 487 $ $Date: 2004/06/25 01:19:47 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -56,7 +56,7 @@ try {
         pstmt = conn.prepareStatement("select " +
             " case when sender_id = ? then recipient_id else sender_id " +
             " end as sender_id " +
-            " from adium.messages where sender_id = ? or recipient_id = ? " +
+            " from im.messages where sender_id = ? or recipient_id = ? " +
             " order by message_date ");
 
         pstmt.setInt(1, sender);
@@ -99,7 +99,7 @@ try {
     <%
     if(!loginUsers) {
         rset = stmt.executeQuery("select user_id, scramble(username) "+
-            " as username from adium.users" +
+            " as username from im.users" +
             " order by username");
     } else {
         rset = stmt.executeQuery("select sender_id as user_id, "+

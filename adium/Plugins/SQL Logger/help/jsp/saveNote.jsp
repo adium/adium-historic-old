@@ -10,7 +10,7 @@ Connection conn = source.getConnection();
 PreparedStatement pstmt = null;
 
 try {
-    pstmt = conn.prepareStatement("insert into adium.message_notes (message_id, title, notes) values (?, ?, ?)");
+    pstmt = conn.prepareStatement("insert into im.message_notes (message_id, title, notes) values (?, ?, ?)");
 
     pstmt.setInt(1, Integer.parseInt(request.getParameter("message_id")));
     pstmt.setString(2, request.getParameter("title"));

@@ -4,7 +4,7 @@
 <%@ page import='java.util.Properties' %>
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/crash/post-comments.jsp $-->
-<!--$Rev: 504 $ $Date: 2004/05/22 20:08:07 $-->
+<!--$Rev: 504 $ $Date: 2004/06/25 01:19:47 $-->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -24,7 +24,7 @@ ResultSet rset = null;
 int rowsAffected = 0;
 
 try {
-    pstmt = conn.prepareStatement("select user_id from adium.users where login=true and user_id not in (" + queryString + ")");
+    pstmt = conn.prepareStatement("select user_id from im.users where login=true and user_id not in (" + queryString + ")");
 
     rset = pstmt.executeQuery();
 
@@ -37,7 +37,7 @@ try {
         rowsAffected++;
     }
 
-    pstmt = conn.prepareStatement("select user_id from adium.users where (login=false or login is null) and user_id in (" + queryString + ")");
+    pstmt = conn.prepareStatement("select user_id from im.users where (login=false or login is null) and user_id in (" + queryString + ")");
 
     rset = pstmt.executeQuery();
 

@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="adium.xsl" type="text/xsl"?>
+<?xml-stylesheet href="transform.xsl" type="text/xsl"?>
 <page>
   <title>Adium SQL Logger Technical Details</title>
   <body>
     <p>This page describes a few more technical details of the Adium SQL Logging
     Plugin.</p>
     <div align="center">
-      <a href="#adium.sql">adium.sql</a> | 
+      <a href="#im.sql">im.sql</a> | 
       <a href="#tsearch.sql">tsearch.sql</a> | 
       <a href="#parser.pl">parser.pl/parser-2.pl</a>
     </div>
 
-    <a name="adium.sql"><h2>adium.sql</h2></a>
-    <p>The file <code>adium.sql</code> contains instructions for setting up a
+    <a name="im.sql"><h2>im.sql</h2></a>
+    <p>The file <code>im.sql</code> contains instructions for setting up a
     database schema for use with Adium's SQL Logging. 
     Running the file creates the adium schema, two tables and one
     view.</p>
