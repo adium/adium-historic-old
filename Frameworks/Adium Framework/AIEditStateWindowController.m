@@ -30,6 +30,7 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
+- (void)hideSaveCheckbox;
 @end
 
 /*!
@@ -49,15 +50,20 @@
  * @param inStatusState Initial AIStatus
  * @param inStatusType AIStatusType to use initially if inStatusState is nil
  * @param inAccount The account which to configure the custom state window; nil to configure globally
+ * @param allowSave YES if the save checkbox should be shown; NO if it should not
  * @param parentWindow Parent window for a sheet, nil for a stand alone editor
  * @param inTarget Target object to notify when editing is complete
  */
-+ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
++ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)allowSave onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditStateWindowController	*controller;
 	
 	controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forType:inStatusType andAccount:inAccount customState:inStatusState notifyingTarget:inTarget];
 	
+	if(!allowSave){
+		[controller hideSaveCheckbox];
+	}
+
 	if(parentWindow){
 		[NSApp beginSheet:[controller window]
 		   modalForWindow:parentWindow
@@ -69,7 +75,7 @@
 		[[controller window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
 	}
-	
+
 	return controller;
 }
 
@@ -443,6 +449,14 @@
 	}
 
 	return(workingStatusState);
+}
+
+- (void)hideSaveCheckbox
+{
+	//Ensure the window is loaded
+	[self window];
+
+	[checkBox_save setHidden:YES];
 }
 
 @end
