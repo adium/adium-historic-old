@@ -6465,12 +6465,12 @@
 				349E2E8D07A8AF0C00EAB76A,
 				34C14CD207A8B1AB003CC138,
 				4B292D3207A9C8E100C5F882,
-				4B292D5307A9C92F00C5F882,
-				4B292D5707A9C92F00C5F882,
-				4B292D5907A9C92F00C5F882,
-				4BC32F7A07AABC5400DDED66,
-				4B587C7207ABFDAD001832A9,
 				4B3B125907AC411D00187CCF,
+				4BE6175507AC67EE0049C87D,
+				4BE6175707AC67EE0049C87D,
+				4BE6175907AC67EE0049C87D,
+				4BE6175B07AC67EE0049C87D,
+				4BE6175D07AC67EE0049C87D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6800,7 +6800,7 @@
 				34DFF54707A62EB300B92233,
 				34DFF54807A62EB300B92233,
 				34C14D5107A8BA00003CC138,
-				4B292D5C07A9C92F00C5F882,
+				4BE6174907AC67D50049C87D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7047,12 +7047,12 @@
 				349E2E8E07A8AF0C00EAB76A,
 				34C14CD307A8B1AB003CC138,
 				4B292D3307A9C8E100C5F882,
-				4B292D5407A9C92F00C5F882,
-				4B292D5807A9C92F00C5F882,
-				4B292D5A07A9C92F00C5F882,
-				4BC32F7B07AABC5400DDED66,
-				4B587C7307ABFDAD001832A9,
 				4B3B125A07AC411D00187CCF,
+				4BE6175607AC67EE0049C87D,
+				4BE6175807AC67EE0049C87D,
+				4BE6175A07AC67EE0049C87D,
+				4BE6175C07AC67EE0049C87D,
+				4BE6175E07AC67EE0049C87D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12218,116 +12218,14 @@
 		};
 		4B292D4707A9C92D00C5F882 = {
 			children = (
-				4B292D4807A9C92D00C5F882,
-				4B292D4907A9C92E00C5F882,
+				4BE6174D07AC67ED0049C87D,
+				4BE6174E07AC67ED0049C87D,
 			);
 			isa = PBXGroup;
 			name = "Auto-Reply";
 			path = Plugins/AutoReply;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B292D4807A9C92D00C5F882 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AIAutoReplyPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B292D4907A9C92E00C5F882 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = AIAutoReplyPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B292D4D07A9C92E00C5F882 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIPresetStatusWindowController.h;
-			path = Plugins/Status/AIPresetStatusWindowController.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B292D4E07A9C92E00C5F882 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIPresetStatusWindowController.m;
-			path = Plugins/Status/AIPresetStatusWindowController.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B292D4F07A9C92E00C5F882 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIStateMenuPlugin.h;
-			path = Plugins/Status/AIStateMenuPlugin.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B292D5007A9C92E00C5F882 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIStateMenuPlugin.m;
-			path = Plugins/Status/AIStateMenuPlugin.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B292D5207A9C92E00C5F882 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = PresetStatusWindow.nib;
-			path = Plugins/Status/PresetStatusWindow.nib;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B292D5307A9C92F00C5F882 = {
-			fileRef = 4B292D4807A9C92D00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B292D5407A9C92F00C5F882 = {
-			fileRef = 4B292D4907A9C92E00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B292D5707A9C92F00C5F882 = {
-			fileRef = 4B292D4D07A9C92E00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B292D5807A9C92F00C5F882 = {
-			fileRef = 4B292D4E07A9C92E00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B292D5907A9C92F00C5F882 = {
-			fileRef = 4B292D4F07A9C92E00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B292D5A07A9C92F00C5F882 = {
-			fileRef = 4B292D5007A9C92E00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B292D5C07A9C92F00C5F882 = {
-			fileRef = 4B292D5207A9C92E00C5F882;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B2D5FB80781C1F500315A60 = {
 			fileEncoding = 4;
@@ -13216,8 +13114,8 @@
 		};
 		4B587C6C07ABFD2E001832A9 = {
 			children = (
-				4B292D4F07A9C92E00C5F882,
-				4B292D5007A9C92E00C5F882,
+				4BE6175307AC67EE0049C87D,
+				4BE6175407AC67EE0049C87D,
 			);
 			isa = PBXGroup;
 			name = "Preset State Menu";
@@ -13227,47 +13125,17 @@
 		};
 		4B587C6F07ABFD31001832A9 = {
 			children = (
-				4B587C7007ABFDAC001832A9,
-				4B587C7107ABFDAD001832A9,
-				4B292D4D07A9C92E00C5F882,
-				4B292D4E07A9C92E00C5F882,
-				4B292D5207A9C92E00C5F882,
+				4BE6175107AC67EE0049C87D,
+				4BE6175207AC67EE0049C87D,
+				4BE6174F07AC67EE0049C87D,
+				4BE6175007AC67EE0049C87D,
+				4BE6174807AC67D50049C87D,
 			);
 			isa = PBXGroup;
 			name = "Preset State Editor";
 			path = Plugins/AutoReply;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B587C7007ABFDAC001832A9 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIStateEditorPlugin.h;
-			path = Plugins/Status/AIStateEditorPlugin.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B587C7107ABFDAD001832A9 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIStateEditorPlugin.m;
-			path = Plugins/Status/AIStateEditorPlugin.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B587C7207ABFDAD001832A9 = {
-			fileRef = 4B587C7007ABFDAC001832A9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B587C7307ABFDAD001832A9 = {
-			fileRef = 4B587C7107ABFDAD001832A9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B587CA507ABFEFD001832A9 = {
 			children = (
@@ -16003,44 +15871,14 @@
 		};
 		4BC32F7107AABC3500DDED66 = {
 			children = (
-				4BC32F7807AABC5400DDED66,
-				4BC32F7907AABC5400DDED66,
+				4BE6174B07AC67ED0049C87D,
+				4BE6174C07AC67ED0049C87D,
 			);
 			isa = PBXGroup;
 			name = "Auto-Idle";
 			path = Plugins/AutoReply;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BC32F7807AABC5400DDED66 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAutoIdlePlugin.h;
-			path = "Plugins/Auto Idle/AIAutoIdlePlugin.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BC32F7907AABC5400DDED66 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAutoIdlePlugin.m;
-			path = "Plugins/Auto Idle/AIAutoIdlePlugin.m";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BC32F7A07AABC5400DDED66 = {
-			fileRef = 4BC32F7807AABC5400DDED66;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC32F7B07AABC5400DDED66 = {
-			fileRef = 4BC32F7907AABC5400DDED66;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BC5A5C90764F70E0080ECF7 = {
 			children = (
@@ -17778,6 +17616,170 @@
 			path = "Plugins/Contact Sort Selection/SortingDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BE6174807AC67D50049C87D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = PresetStatusWindow.nib;
+			path = Resources/PresetStatusWindow.nib;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6174907AC67D50049C87D = {
+			fileRef = 4BE6174807AC67D50049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6174B07AC67ED0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAutoIdlePlugin.h;
+			path = Source/AIAutoIdlePlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6174C07AC67ED0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAutoIdlePlugin.m;
+			path = Source/AIAutoIdlePlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6174D07AC67ED0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAutoReplyPlugin.h;
+			path = Source/AIAutoReplyPlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6174E07AC67ED0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAutoReplyPlugin.m;
+			path = Source/AIAutoReplyPlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6174F07AC67EE0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIPresetStatusWindowController.h;
+			path = Source/AIPresetStatusWindowController.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6175007AC67EE0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIPresetStatusWindowController.m;
+			path = Source/AIPresetStatusWindowController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6175107AC67EE0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStateEditorPlugin.h;
+			path = Source/AIStateEditorPlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6175207AC67EE0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIStateEditorPlugin.m;
+			path = Source/AIStateEditorPlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6175307AC67EE0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStateMenuPlugin.h;
+			path = Source/AIStateMenuPlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6175407AC67EE0049C87D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIStateMenuPlugin.m;
+			path = Source/AIStateMenuPlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BE6175507AC67EE0049C87D = {
+			fileRef = 4BE6174B07AC67ED0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175607AC67EE0049C87D = {
+			fileRef = 4BE6174C07AC67ED0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175707AC67EE0049C87D = {
+			fileRef = 4BE6174D07AC67ED0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175807AC67EE0049C87D = {
+			fileRef = 4BE6174E07AC67ED0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175907AC67EE0049C87D = {
+			fileRef = 4BE6174F07AC67EE0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175A07AC67EE0049C87D = {
+			fileRef = 4BE6175007AC67EE0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175B07AC67EE0049C87D = {
+			fileRef = 4BE6175107AC67EE0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175C07AC67EE0049C87D = {
+			fileRef = 4BE6175207AC67EE0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175D07AC67EE0049C87D = {
+			fileRef = 4BE6175307AC67EE0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE6175E07AC67EE0049C87D = {
+			fileRef = 4BE6175407AC67EE0049C87D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BE666CC0577AFA0007E115C = {
 			children = (
