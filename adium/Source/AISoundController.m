@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.37 2004/04/16 23:02:05 evands Exp $
+// $Id: AISoundController.m,v 1.38 2004/04/20 06:26:33 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -97,18 +97,16 @@
 {
     NSString		*path;
     NSMutableArray	*soundSetArray;
+	NSEnumerator	*enumerator;
 
     //Setup
     soundSetArray = [[NSMutableArray alloc] init];
     
-    //Scan internal sounds
-    path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS] stringByExpandingTildeInPath];
-    [self _scanSoundSetsFromPath:path intoArray:soundSetArray];
-
-    //Scan user sounds
-    path = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS];
-    [self _scanSoundSetsFromPath:path intoArray:soundSetArray];
-
+    //Scan sounds
+	enumerator = [[owner resourcePathsForName:@"Sounds"] objectEnumerator];
+	while (path = [enumerator nextObject]){
+		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
+	}
     
     return([soundSetArray autorelease]);
 }
