@@ -159,6 +159,9 @@
 		}	
 
 	}else{
+		description = messageText;
+
+		/*
 		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
 			description = [NSString stringWithFormat:
 				AILocalizedString(@"said %@ to %@", "implied subject is you; you said Message to Contact"),
@@ -171,6 +174,7 @@
 				AILocalizedString(@"said %@", "implied subject is a contact; the contact said Message"),
 				messageText];
 		}
+		 */
 	}
 	
 	return(description);
