@@ -1,19 +1,17 @@
-/*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
-
-// $Id$ 
+/* 
+Adium, Copyright 2001-2004, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -23,10 +21,6 @@
 #define PREF_GROUP_SPELLING 			@"Spelling"
 #define OBJECT_PREFS_PATH               @"ByObject"				//Path to object specific preference folder
 #define ACCOUNT_PREFS_PATH              @"Accounts"				//Path to account specific preference folder
-#define Preference_GroupChanged			@"Preference_GroupChanged"
-#define Preference_WindowWillOpen       @"Preference_WindowWillOpen"
-#define Preference_WindowDidClose       @"Preference_WindowDidClose"
-#define Themes_Changed                  @"Themes_Changed"
 
 //Preference Categories
 typedef enum {
@@ -44,57 +38,60 @@ typedef enum {
     AIPref_Advanced_Status,
     AIPref_Advanced_Service,
     AIPref_Advanced_Other,
-	
 } PREFERENCE_CATEGORY;
 
 @class AIPreferencePane, AIAdium;
 
 @interface AIPreferenceController : NSObject {
-    IBOutlet	AIAdium		*owner;
-	
+    IBOutlet	AIAdium		*adium;
 	NSString				*userDirectory;
 	
-    NSMutableArray			*paneArray;					//An array of preference panes
-    NSMutableDictionary		*groupDict;					//A dictionary of pref dictionaries
-	NSMutableDictionary		*defaultPrefs;  			//A dictionary of default preferences
+    NSMutableArray			*paneArray;						//Loaded preference panes
+	NSMutableDictionary		*observers;						//Preference change observers
 
-    NSMutableDictionary		*themablePreferences;
-	NSMutableDictionary		*objectPrefCache;			//Object specific preferences
-    
-    int						preferenceChangeDelays;
-    NSMutableSet			*delayedNotificationGroups;  //Group names for delayed notifications
+    NSMutableDictionary		*prefCache;						//Preference cache
+    NSMutableDictionary		*objectPrefCache;				//Object specific preferences cache
+
+    int						preferenceChangeDelays;			//Number of active delays (0 = not delayed)
+    NSMutableSet			*delayedNotificationGroups;  	//Groups with delayed changes
 }
 
-//Preference window
+//Preference Window
 - (IBAction)showPreferenceWindow:(id)sender;
 - (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category;
 - (void)openPreferencesToAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)category;
-
-
-//Preference views
 - (void)addPreferencePane:(AIPreferencePane *)inPane;
-- (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane;
-
-//Defaults and access to preferences
-- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
-- (NSDictionary *)preferencesForGroup:(NSString *)groupName;
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
-
-//Themable preferences
-- (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName;
-- (NSDictionary *)themablePreferences;
-
-- (NSMutableDictionary *)cachedObjectPrefsForKey:(NSString *)objectKey path:(NSString *)path;
-- (void)setCachedObjectPrefs:(NSMutableDictionary *)prefs forKey:(NSString *)objectKey path:(NSString *)path;
-
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
-- (void)delayPreferenceChangedNotifications:(BOOL)inDelay;
-
-//Private
-- (void)initController;
-- (void)willFinishIniting;
-- (void)beginClosing;
-- (void)closeController;
 - (NSArray *)paneArray;
 
+//Observing
+- (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group;
+- (void)unregisterPreferenceObserver:(id)observer;
+- (void)unregisterPreferenceObserver:(id)observer forGroup:(NSString *)group;
+- (void)informObserversOfChangedKey:(NSString *)key inGroup:(NSString *)group object:(AIListObject *)object;
+- (void)delayPreferenceChangedNotifications:(BOOL)inDelay;
+
+//Setting Preferences
+- (void)setPreference:(id)value forKey:(NSString *)key group:(NSString *)group;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)group object:(AIListObject *)object;
+
+//Retrieving Preferences
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group;
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object;
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group objectIgnoringInheritance:(AIListObject *)object;
+- (NSDictionary *)preferencesForGroup:(NSString *)group;
+
+//Defaults
+- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group;
+- (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane;
+
+//Preference Cache
+- (NSMutableDictionary *)cachedPreferencesForGroup:(NSString *)group object:(AIListObject *)object;
+- (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object;
+
 @end
+
+@interface NSObject (AIPreferenceObserver)
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict;
+@end
+
