@@ -1,10 +1,18 @@
-//
-//  ESFileTransferController.h
-//  Adium
-//
-//  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
-//
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #define	FileTransfer_NewFileTransfer	@"NewFileTransfer"
 
@@ -14,6 +22,22 @@
 #define KEY_FT_AUTO_OPEN_SAFE			@"FT AutoOpenSafe"
 #define	KEY_FT_AUTO_CLEAR_COMPLETED		@"FT AutoClearCompleted"
 #define	KEY_FT_SHOW_PROGRESS_WINDOW		@"FT ShowProgressWindow"
+
+typedef enum {
+	Unknown_FileTransfer = 0,
+    Incoming_FileTransfer,
+    Outgoing_FileTransfer,
+} FileTransferType;
+
+typedef enum {
+	Unknown_Status_FileTransfer = 0,
+	Not_Started_FileTransfer,		//File transfer is pending confirmation from a user, either local or remote
+	Accepted_FileTransfer,			//Could also be called Began_FileTransfer or Started_FileTransfer
+	In_Progress_FileTransfer,		//Currently transferring, not yet complete
+	Complete_FileTransfer,			//File is complete; transferring is finished.
+	Canceled_Local_FileTransfer,	//The local user canceled the transfer
+	Canceled_Remote_FileTransfer	//The remote user canceled the transfer
+} FileTransferStatus;
 
 typedef enum {
 	AutoAccept_None = 0,

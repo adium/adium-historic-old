@@ -1,20 +1,22 @@
 /* 
-Adium, Copyright 2001-2005, Adam Iser
- 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- General Public License as published by the Free Software Foundation; either version 2 of the License,
- or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- Public License for more details.
- 
- You should have received a copy of the GNU General Public License along with this program; if not,
- write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <AddressBook/AddressBook.h>
 #import "ESAddressBookIntegrationAdvancedPreferences.h"
+#import <AddressBook/AddressBook.h>
+#import <Adium/AIPlugin.h>
 
 #define PREF_GROUP_ADDRESSBOOK					@"Address Book"
 #define KEY_AB_ENABLE_IMPORT					@"AB Enable Import"
@@ -27,6 +29,8 @@ Adium, Copyright 2001-2005, Adam Iser
 #define	KEY_AB_CREATE_METACONTACTS				@"AB Create MetaContacts"
 
 #define AB_DISPLAYFORMAT_DEFAULT_PREFS			@"AB Display Format Defaults"
+
+@protocol AIListObjectObserver, ABImageClient;
 
 typedef enum {
     FirstLast,

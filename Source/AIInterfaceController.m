@@ -1,22 +1,40 @@
-/*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2005, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 // $Id$
 
+#import "AIContactController.h"
+#import "AIContentController.h"
 #import "AIInterfaceController.h"
+#import "AIMenuController.h"
+#import "AIPreferenceController.h"
 #import "AIStandardListWindowController.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AITooltipUtilities.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
+#import <Adium/AIServiceIcons.h>
+#import <Adium/AISortController.h>
 
 #define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
