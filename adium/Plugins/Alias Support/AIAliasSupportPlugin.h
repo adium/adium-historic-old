@@ -15,8 +15,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AIAliasSupportPreferences.h"
-
 @protocol AIListEditorColumnController;
 
 #define DISPLAY_NAME			1
@@ -33,9 +31,7 @@
     AIPreferenceViewController		*contactView;
     AIListObject					*activeListObject;
     int displayFormat;
-    
-    AIAliasSupportPreferences		*prefs;
-	
+    	
 	NSMenu							*menu_contactSubmenu;
 	NSMenuItem						*menuItem_contactName;
 }
