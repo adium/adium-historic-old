@@ -112,6 +112,7 @@ DeclareString(AppendNextMessage);
 	
 	//This is really weird.  defaultFontSize returns the proper value, but we have to do setDefaultFontSize with it for it to be applied.
 	[[webView preferences] setDefaultFontSize:[[webView preferences] defaultFontSize]];
+	#warning ## setDefaultFontSize breaks the WebView in 10.2 ##
 }
 
 #pragma mark Available Webkit Styles
