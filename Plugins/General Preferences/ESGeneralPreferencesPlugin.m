@@ -104,8 +104,10 @@
 - (void)_configureSendingKeysForObject:(id)inObject
 {
     if([inObject isKindOfClass:[AISendingTextView class]]){
-        [(AISendingTextView *)inObject setSendOnReturn:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:SEND_ON_RETURN] boolValue]];
-		[(AISendingTextView *)inObject setSendOnEnter:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:SEND_ON_ENTER] boolValue]];
+		NSDictionary	*prefDict = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+			
+        [(AISendingTextView *)inObject setSendOnReturn:[[prefDict objectForKey:SEND_ON_RETURN] boolValue]];
+		[(AISendingTextView *)inObject setSendOnEnter:[[prefDict objectForKey:SEND_ON_ENTER] boolValue]];
     }
 }
 
