@@ -279,9 +279,11 @@ static NSImage *pushIndicatorImage = nil;
 
 - (void)pasteAsRichText:(id)sender
 {
+	NSDictionary		*attributes = nil;
+	
+	/*
 	NSAttributedString  *attribString;
 	NSRange				range = NSMakeRange(0,0);
-	NSDictionary		*attributes = nil;
 	id					link;
 
 	attribString = [NSAttributedString stringWithData:[[NSPasteboard generalPasteboard] dataForType:NSRTFPboardType]];
@@ -293,10 +295,10 @@ static NSImage *pushIndicatorImage = nil;
 	}
 	
 	//If pasting a link, save the current typing attributes
-	if (link) {
-		NSLog(@"found it");
-		attributes = [[[self typingAttributes] copy] autorelease];
-	}
+	if (link)
+	 */
+	//Save the current typing attributes
+	attributes = [[[self typingAttributes] copy] autorelease];
 	
 	[super pasteAsRichText:sender];
 		
