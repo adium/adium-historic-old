@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.45 $
- * $Date: 2004/06/07 16:09:46 $
- * $Author: evands $
+ * $Revision: 1.46 $
+ * $Date: 2004/06/25 01:19:46 $
+ * $Author: jmelloy $
  *
  */
 
@@ -206,7 +206,7 @@
     PQescapeString(escapeSendDisplay, [sendDisp UTF8String], [sendDisp length]);
     PQescapeString(escapeRecDisplay, [destDisp UTF8String], [destDisp length]);
     
-    sqlStatement = [NSString stringWithFormat:@"insert into adium.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service, sender_display, recipient_display) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\', \'%s\', \'%s\')", 
+    sqlStatement = [NSString stringWithFormat:@"insert into im.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service, sender_display, recipient_display) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\', \'%s\', \'%s\')", 
     escapeSender, escapeRecip, escapeMessage, s_service, r_service, escapeSendDisplay, escapeRecDisplay];
     
     res = PQexec(conn, [sqlStatement UTF8String]);

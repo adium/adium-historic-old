@@ -2,10 +2,10 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser.pl $
-# $Rev: 754 $ $Date: 2004/05/14 00:40:37 $
+# $Rev: 809 $ $Date: 2004/06/25 01:19:46 $
 #
 # Script will parse Adium logs <= 1.6.x and put them in postgresql table.
-# Table is created with "adium.sql"
+# Table is created with "im.sql"
 #
 # If --verbose is passed, will print out name of every log file.
 # If --no-vacuum, will not vacuum table at end (not recommended).
@@ -44,7 +44,7 @@ chdir "$path" or die qq{Path does not exist.};
 my $dbh = DBI->connect("DBI:Pg:dbname=$username", '', '', {RaiseError=>1})
     or die qq{Cannot connect to server: $DBI::errstr\n};
 
-my $sth = $dbh->prepare("insert into adium.message_v 
+my $sth = $dbh->prepare("insert into im.message_v 
     (sender_sn, recipient_sn, message, message_date) 
     values (?,?,?,?)");
 
@@ -127,13 +127,13 @@ foreach my $user (glob '*') {
     chdir $path;
 }
 $dbh->begin_work;
-$sth = $dbh->prepare("insert into adium.user_display_name (user_id, display_name, effdate) select user_id, username, '-infinity' from users where not exists (select 'x' from user_display_name where user_display_name.user_id = users.user_id and user_display_name.effdate = '-infinity')");
+$sth = $dbh->prepare("insert into im.user_display_name (user_id, display_name, effdate) select user_id, username, '-infinity' from users where not exists (select 'x' from user_display_name where user_display_name.user_id = users.user_id and user_display_name.effdate = '-infinity')");
 $sth->execute();
 $dbh->commit;
 if ($vacuum) {
     $| = 1;
     !$quiet && print "Vacuuming . .";
-    $dbh->do('vacuum analyze adium.messages');
+    $dbh->do('vacuum analyze im.messages');
     !$quiet && print " . done.\n";
 }
 $dbh->disconnect;

@@ -1,7 +1,7 @@
 -- Jeffrey Melloy <jmelloy@visualdistortion.org>
 
 -- $URL: http://svn.visualdistortion.org/repos/projects/adium/sql/tsearch2.sql $
--- $Rev: 480 $ $Date: 2003/11/22 18:35:11 $
+-- $Rev: 809 $ $Date: 2004/06/25 01:19:47 $
 
 -- This script adds full-text index searching (fast).
 -- It needs to be run after the "tsearch2" module is installed.
@@ -15,8 +15,8 @@
 -- For large tables, this script may take a few minutes, especially the 
 -- "create index" stage.
 
-alter table adium.messages add idxfti tsvector;
-update adium.messages set idxfti=to_tsvector('default', message);
-create index fti_idx on adium.messages using gist(idxfti);
-create trigger tsvectorupdate before update or insert on adium.messages
+alter table im.messages add idxfti tsvector;
+update im.messages set idxfti=to_tsvector('default', message);
+create index fti_idx on im.messages using gist(idxfti);
+create trigger tsvectorupdate before update or insert on im.messages
 for each row execute procedure tsearch2(idxfti, message);

@@ -11,7 +11,7 @@ PreparedStatement pstmt = null;
 int meta_id = 0;
 
 try {
-    pstmt = conn.prepareStatement("insert into adium.saved_chats (title, notes, sent_sn, received_sn, single_sn, date_start, date_finish, meta_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
+    pstmt = conn.prepareStatement("insert into im.saved_chats (title, notes, sent_sn, received_sn, single_sn, date_start, date_finish, meta_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
 
     pstmt.setString(1, request.getParameter("title"));
     pstmt.setString(2, request.getParameter("notes"));

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="adium.xsl" type="text/xsl"?>
+<?xml-stylesheet href="transform.xsl" type="text/xsl"?>
 <page>
   <title>SQL Logger Quick Install Instructions</title>
   <body>
@@ -79,7 +79,7 @@ export PATH CLASSPATH</pre></div>
 
 <p>Now you're ready to use the Adium stuff.</p>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
-psql &lt; adium.sql
+psql &lt; create.sql
 createlang plpgsql
 psql &lt; functions.sql</pre></div>
 
@@ -169,7 +169,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
  <a name="resin3" />
 
  <h4>If you installed Resin 3.0: </h4> <a href="#complete">Skip to the end</a>
- 
+
  <p>The configuration file needs to be edited.  Resin needs to be told how to
    connect to PostgreSQL and where you have put the JSP files.</p>
  <div class="tutorialcode"><pre>pico conf/resin.conf</pre></div>
@@ -220,7 +220,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
   &lt;document-directory&gt;<b>doc</b>&lt;/document-directory&gt;</pre>
 </div>
  <a name="#complete" />
-   <p>That's all it takes to set Resin up.</p> 
+   <p>That's all it takes to set Resin up.</p>
   <div class="tutorialcode">
     <pre>bin/httpd.sh</pre>
   </div>
@@ -233,12 +233,12 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
 <p>All that is left is installing the Adium plugin itself.  You can either
   download the Adium source and compile it yourself, or download the plugin
   from here.  I would recommend compiling from source.  It's not difficult.
-  Download the newest Adium source from <a href="http://adium.sourceforge.net"
-    class="offsite">http://adium.sourceforge.net</a>.  Open it up in Project
+  Download the newest Adium source from <a href="http://im.sourceforge.net"
+    class="offsite">http://im.sourceforge.net</a>.  Open it up in Project
   Builder or XCode, switch the active target to "SQL Logger", and hit compile.
   Then go into the build directory, select "SQL Logger.AdiumPlugin" and drag
   it to the <code>~/Library/Application Support/Adium 2.0/Plugins</code>.
   That's it.</p>
 </body>
-</page> 
+</page>
 

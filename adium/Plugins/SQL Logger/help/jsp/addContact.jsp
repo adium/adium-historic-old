@@ -32,7 +32,7 @@ if(username != null && username.equals("")) {
 }
 
 try {
-    pstmt = conn.prepareStatement("select name from adium.meta_container where meta_id = ?");
+    pstmt = conn.prepareStatement("select name from im.meta_container where meta_id = ?");
 
     pstmt.setInt(1, meta_id);
 
@@ -50,7 +50,7 @@ try {
 <form action="insertMeta.jsp" method="get">
 
 <%
-    pstmt = conn.prepareStatement("select distinct service from adium.users order by service");
+    pstmt = conn.prepareStatement("select distinct service from im.users order by service");
 
     rset = pstmt.executeQuery();
 %>
@@ -77,24 +77,24 @@ try {
     out.println(service);
 
     if(username == null && service == null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from adium.users natural join adium.user_display_name udn where not exists (select 'x' from adium.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from adium.meta_contact where meta_id = ? and user_id = users.user_id) order by display_name, username");
+        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) order by display_name, username");
 
         pstmt.setInt(1, meta_id);
 
     } else if (username != null && service != null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from adium.users natural join adium.user_display_name udn where not exists (select 'x' from adium.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from adium.meta_contact where meta_id = ? and user_id = users.user_id) and service = ? and username ilike ? order by display_name, username");
+        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) and service = ? and username ilike ? order by display_name, username");
 
         pstmt.setInt(1, meta_id);
         pstmt.setString(2, service);
         pstmt.setString(3, username);
 
     } else if (username != null && service == null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from adium.users natural join adium.user_display_name udn where not exists (select 'x' from adium.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from adium.meta_contact where meta_id = ? and user_id = users.user_id) and username ilike ? order by display_name, username");
+        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) and username ilike ? order by display_name, username");
 
         pstmt.setInt(1, meta_id);
         pstmt.setString(2, username);
     } else if (service != null && username == null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from adium.users natural join adium.user_display_name udn where not exists (select 'x' from adium.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from adium.meta_contact where meta_id = ? and user_id = users.user_id) and service = ? order by display_name, username");
+        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) and service = ? order by display_name, username");
 
         pstmt.setInt(1, meta_id);
         pstmt.setString(2, service);

@@ -10,7 +10,7 @@ Connection conn = source.getConnection();
 PreparedStatement pstmt = null;
 
 try {
-    pstmt = conn.prepareStatement("delete from adium.meta_contact where user_id = ? and meta_id = ?");
+    pstmt = conn.prepareStatement("delete from im.meta_contact where user_id = ? and meta_id = ?");
 
     pstmt.setInt(1, Integer.parseInt(request.getParameter("user_id")));
     pstmt.setInt(2, Integer.parseInt(request.getParameter("meta_id")));

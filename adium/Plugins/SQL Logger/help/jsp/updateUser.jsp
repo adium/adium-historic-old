@@ -36,7 +36,7 @@ try {
             int returnVal;
 
             if(requestText != null && !requestText.equals("")) {
-                updateStmt = conn.prepareStatement("update adium.contact_information set value = ? where key_id = ? and user_id = ?");
+                updateStmt = conn.prepareStatement("update im.contact_information set value = ? where key_id = ? and user_id = ?");
 
                 updateStmt.setString(1, requestText);
                 updateStmt.setInt(2, rset.getInt("key_id"));
@@ -45,7 +45,7 @@ try {
                 returnVal = updateStmt.executeUpdate();
 
                 if(returnVal == 0) {
-                    updateStmt = conn.prepareStatement("insert into adium.contact_information (user_id, key_id, value) values (?, ?, ?)");
+                    updateStmt = conn.prepareStatement("insert into im.contact_information (user_id, key_id, value) values (?, ?, ?)");
 
                     updateStmt.setInt(1, user_id);
                     updateStmt.setInt(2, rset.getInt("key_id"));
@@ -55,7 +55,7 @@ try {
                 }
             } else if (requestText == null || requestText.equals("")) {
 
-                updateStmt = conn.prepareStatement("delete from adium.contact_information where user_id = ? and key_id = ?");
+                updateStmt = conn.prepareStatement("delete from im.contact_information where user_id = ? and key_id = ?");
 
                 updateStmt.setInt(1, user_id);
                 updateStmt.setInt(2, rset.getInt("key_id"));

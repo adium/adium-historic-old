@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 777 $ $Date: 2004/05/22 20:08:07 $ -->
+<!--$Rev: 809 $ $Date: 2004/06/25 01:19:47 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -58,10 +58,10 @@ try {
     " ?::timestamp + \'1 month\'::interval as end_month, " +
     " to_char(?::timestamp, \'Mon, YYYY\') as month " +
     " from " +
-    " adium.users natural join adium.user_display_name udn " +
+    " im.users natural join im.user_display_name udn " +
     " where user_id = ?"+
     " and not exists " +
-    " (select 'x' from adium.user_display_name " +
+    " (select 'x' from im.user_display_name " +
     " where effdate > udn.effdate and user_id = users.user_id)");
 
     pstmt.setString(1, date);
@@ -77,7 +77,7 @@ try {
         " ?::timestamp + \'1 month\'::interval as end_month, " +
         " to_char(?::timestamp, \'Mon, YYYY\') as month " +
         " from " +
-        " adium.meta_container " +
+        " im.meta_container " +
         " where meta_id = ? ");
 
         pstmt.setString(1, date);
@@ -187,7 +187,7 @@ try {
                 <div class="boxThinContent">
 
 <%
-    pstmt = conn.prepareStatement("select name, meta_id from adium.meta_container order by name");
+    pstmt = conn.prepareStatement("select name, meta_id from im.meta_container order by name");
 
     rset = pstmt.executeQuery();
 
@@ -207,12 +207,12 @@ try {
     rset = stmt.executeQuery("select user_id, " +
         " scramble(display_name) as display_name, " +
         " scramble(username) " +
-        " as username from adium.users " +
-        " natural join adium.user_display_name udn" +
+        " as username from im.users " +
+        " natural join im.user_display_name udn" +
         " where case when true = " + loginUsers +
         " then login = true" +
         " else 1 = 1 end " +
-        " and not exists (select 'x' from adium.user_display_name where " +
+        " and not exists (select 'x' from im.user_display_name where " +
         " user_id = users.user_id and effdate > udn.effdate) " +
         " order by scramble(display_name), username");
 
@@ -255,7 +255,7 @@ try {
     " coalesce(max(length(message)),0) as max_length, " +
     " coalesce(trunc(avg(length(message)),2),0) as avg_length, " +
     " \'S\' as identifier " +
-    " from adium.messages " +
+    " from im.messages " +
     " where sender_id = ? and message_date >= ?::timestamp " +
     " and message_date < ?::timestamp group by sender_id " +
     " union all " +
@@ -265,7 +265,7 @@ try {
     " coalesce(max(length(message)),0) as max_length, " +
     " coalesce(trunc(avg(length(message)), 2),0) as avg_length, " +
     " \'R\' as identifier " +
-    " from adium.messages " +
+    " from im.messages " +
     " where recipient_id = ? " +
     " and message_date >= ?::timestamp " +
     " and message_date < ?::timestamp " +
@@ -285,7 +285,7 @@ try {
         " coalesce(max(length(message)),0) as max_length, " +
         " coalesce(trunc(avg(length(message)),2),0) as avg_length, " +
         " \'S\' as identifier " +
-        " from adium.messages, adium.meta_contact " +
+        " from im.messages, im.meta_contact " +
         " where sender_id = user_id and " +
         " meta_id = ? " +
         " and message_date >= ?::timestamp " +
@@ -297,7 +297,7 @@ try {
         " coalesce(max(length(message)),0) as max_length, " +
         " coalesce(trunc(avg(length(message)), 2),0) as avg_length, " +
         " \'R\' as identifier " +
-        " from adium.messages, adium.meta_contact " +
+        " from im.messages, im.meta_contact " +
         " where recipient_id = user_id " +
         " and meta_id = ? " +
         " and message_date >= ?::timestamp " +
@@ -546,8 +546,8 @@ try {
                 <table>
                     <tr>
                         <td>#</td>
-                        <td>Sender</td>
-                        <td>Recipient</td>
+                        <td>Sender<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;Recipient</td>
                         <td>Message</td>
                         <td>Count</td>
                     </tr>
@@ -556,8 +556,9 @@ try {
             out.println("<tr>");
             out.println("<td>" +
                 rset.getRow() + "</td>");
-            out.println("<td>" + rset.getString("sender_sn") + "</td>");
-            out.println("<td>" + rset.getString("recipient_sn") + "</td>");
+            out.println("<td>" + rset.getString("sender_sn") + "<br />");
+            out.println("&nbsp;&nbsp;&nbsp;&nbsp;" +
+                rset.getString("recipient_sn") + "</td>");
             out.println("<td>" + rset.getString("message") + "</td>");
             out.println("<td>" + rset.getString("count") + "</td>");
             out.println("</tr>");

@@ -13,9 +13,8 @@
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
               Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><a href="quick_install.html" class="sidebar">Quick Install
               Notes</a><br><h4>Adium</h4>
-<a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
-                2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
-                Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
+<a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
+                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><h4>PostgreSQL</h4>
 <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
 </div>
@@ -33,7 +32,7 @@
       <li>Other goodness.</li>
     </ul>
 <div class="important">If you are compiling from source with Panther,
-      PostgreSQL 7.3 will not work.  PostgreSQL 7.4 
+      PostgreSQL 7.3 will not work.  PostgreSQL 7.4
       will work, however.</div>
 <div class="important">Make sure you check out the Quick Install
       instructions <a href="quick_install.html">here.</a>
@@ -49,7 +48,7 @@
 <p>There is also a set of installation instructions for installing
     PostgreSQL from source at <a href="http://developer.apple.com/internet/macosx/postgres.html" class="offsite">http://developer.apple.com/internet/macosx/postgres.html</a>.
     That tutorial is very good.  It covers installing PostgreSQL from source, shows
-  how to use PostgreSQL with Perl (not necessary for this), 
+  how to use PostgreSQL with Perl (not necessary for this),
   Java (necessary for the JSP viewers to work), and PHP (not necessary
   for this).  It also covers how to administer the database using phpPgAdmin, an
   administration program with a web interface.</p>
@@ -59,7 +58,7 @@
 <div class="tutorialcode">
       <pre>createuser <i>username</i></pre>
 </div>
-<p>Then create a database with your username, as yourself 
+<p>Then create a database with your username, as yourself
       (<code>su&#160;-&#160;<i>username</i></code>):</p>
 <div class="tutorialcode">
       <pre>createdb <i>username</i></pre>
@@ -72,14 +71,14 @@
     simply typing <code>psql</code>.
     To log information, Adium will expect to have a certain setup in the
     database.  Get the following package (this is also included in the
-    Adium source): <a href="adium-sql.tar.gz">adium.tar.gz</a>.  After using Stuffit Expander or
+    Adium source): <a href="im-sql.tar.gz">im-sql.tar.gz</a>.  After using Stuffit Expander or
     the command line to unpack it, there should these files inside:
     <div class="filelist">
       <h4>Setup files:</h4>
       <dl>
-        <dt>sql/adium.sql</dt>
+        <dt>sql/create.sql</dt>
         <dd>main database setup script
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/adium.sql.txt" class="offsite">Changes</a>]</dd>
+        [<a href="http://www.visualdistortion.org/adium/changes/sql/create.sql.txt" class="offsite">Changes</a>]</dd>
       <dt>sql/tsearch.sql</dt>
       <dd>setup for fast searching
         [<a href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt" class="offsite">Changes</a>]</dd>
@@ -137,17 +136,17 @@
           <dt>technical</dt>
           <dd>technical details/detailed parser instructions
             [<a href="http://www.visualdistortion.org/adium/changes/technical.xml.txt" class="offsite">XML Changes</a>]</dd>
-          <dt>adium.xslt</dt>
+          <dt>transform.xslt</dt>
           <dd>XSLT stylesheet to transform XML to HTML
-            [<a href="http://www.visualdistortion.org/adium/changes/adium.xsl.txt" class="offsite">Changes</a>]</dd>
+            [<a href="http://www.visualdistortion.org/adium/changes/transform.xsl.txt" class="offsite">Changes</a>]</dd>
         </dl>
       </div>
     </p>
 <p>The JSP files will allow you to view logs through a web interface.  These
     can be used locally and from the world-wide web.</p>
 <p>The SQL files are a language that tells the database what type of
-    information to store and tables to create.  They are split into two files: 
-    the file called &quot;adium.sql&quot; will create the default table
+    information to store and tables to create.  They are split into two files:
+    the file called &quot;create.sql&quot; will create the default table
     layout.  tsearch.sql will enable it to use a module called &quot;tsearch&quot;,
     which allows for very, very fast searching.  It requires slightly more
     setup, which is why it has been split into a different file.</p>
@@ -155,7 +154,7 @@
     and switch to the directory that contains the files you just downloaded.
     (If you don't know how to do that, I would suggest <a href="http://www.macdevcenter.com/pub/a/mac/2002/12/06/terminal_osx.html" class="offsite">this
       series of articles</a>).  Type:</p>
-<div class="tutorialcode"><pre>psql &lt; adium.sql
+<div class="tutorialcode"><pre>psql &lt; create.sql
 createlang plpgsql
 psql &lt; functions.sql</pre></div>
 <p>You
@@ -181,7 +180,7 @@ jmelloy=#</pre></div>
     quit psql (<code>\q</code>) and start again, or type <code>set search_path=adium,public;</code>.  After doing either of those, type &quot;\d&quot; and you should see something like this:</p>
 <div class="tutorialcode"><pre>jmelloy=# \d
                    List of relations
- Schema |           Name           |   Type   |  Owner  
+ Schema |           Name           |   Type   |  Owner
 --------+--------------------------+----------+---------
  adium  | message_simple_v         | view     | jmelloy
  adium  | message_v                | view     | jmelloy
@@ -201,7 +200,7 @@ jmelloy=#</pre></div>
 bare-bones: the sending and receiving screennames, the message, and a date.</p>
 <p>At this point, you're ready to use the plugin.
   You can run <code>parser.pl</code> to insert all of your old logs into the
-  database.  
+  database.
   To run the script, a few modules are needed for your Perl installation.
   The first one is called &quot;DBI&quot; (DataBase Interface) and the second &quot;DBD-PG&quot;
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
@@ -234,12 +233,12 @@ bare-bones: the sending and receiving screennames, the message, and a date.</p>
 <p>To check that either parser.pl worked correctly, and/or it's correctly
   logging, type <code>psql</code>.  To view messages:</p>
 <div class="tutorialcode">
-    <pre>select * from adium.message_v order by message_date desc limit 5;</pre>
+    <pre>select * from im.message_v order by message_date desc limit 5;</pre>
   </div>
 <p>You should see the last five messages you sent/received.  To search for
   messages, you can do </p>
 <div class="tutorialcode">
-    <pre>select * from adium.message_v where message ~ '<i>search string</i>';</pre>
+    <pre>select * from im.message_v where message ~ '<i>search string</i>';</pre>
   </div>
 <p>This interface is kind of a pain, and searching can
   be made faster.</p>

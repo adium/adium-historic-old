@@ -17,10 +17,10 @@
   \----------------------------------------------------------------------------------------------------------*/
 
 /**
- * 
- * $Revision: 1.11 $
- * $Date: 2004/05/24 06:03:43 $
- * $Author: evands $
+ *
+ * $Revision: 1.12 $
+ * $Date: 2004/06/25 01:19:45 $
+ * $Author: jmelloy $
  *
  **/
 
@@ -39,7 +39,7 @@
 @interface AISQLLoggerPlugin : AIPlugin <AIPluginInfo> {
     JMSQLLoggerAdvancedPreferences  *advancedPreferences;
     PGconn                          *conn;
-	
+
 	NSString	*username;
 	NSString	*url;
 	NSString	*port;

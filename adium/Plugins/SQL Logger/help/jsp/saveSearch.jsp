@@ -10,7 +10,7 @@ Connection conn = source.getConnection();
 PreparedStatement pstmt = null;
 
 try {
-    pstmt = conn.prepareStatement("insert into adium.saved_searches (title, notes, sender, recipient, searchstring, orderby) values (?, ?, ?, ?, ?, ?)");
+    pstmt = conn.prepareStatement("insert into im.saved_searches (title, notes, sender, recipient, searchstring, orderby) values (?, ?, ?, ?, ?, ?)");
 
     pstmt.setString(1, request.getParameter("title"));
     pstmt.setString(2, request.getParameter("notes"));

@@ -80,7 +80,7 @@ searchKey = searchString;
 
 try {
     if(search_id != 0) {
-        pstmt = conn.prepareStatement("select title, notes, sender, recipient, searchstring, date_start, date_finish, orderby from adium.saved_searches where search_id = ?");
+        pstmt = conn.prepareStatement("select title, notes, sender, recipient, searchstring, date_start, date_finish, orderby from im.saved_searches where search_id = ?");
 
         pstmt.setInt(1, search_id);
 
@@ -169,7 +169,7 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    pstmt = conn.prepareStatement("select search_id, title from adium.saved_searches");
+    pstmt = conn.prepareStatement("select search_id, title from im.saved_searches");
 
     rset = pstmt.executeQuery();
 
@@ -405,7 +405,7 @@ try {
                 queryString = "select scramble(s.username) as sender_sn, "+
                     " scramble(r.username) as recipient_sn," +
                     " message, message_date, message_id " +
-                    " from adium.messages, adium.users s, adium.users r " +
+                    " from im.messages, im.users s, im.users r " +
                     " where " +
                     " messages.sender_id = s.user_id " +
                     " and messages.recipient_id = r.user_id " +
@@ -415,7 +415,7 @@ try {
                     " scramble(r.username) as recipient_sn, " +
                     " headline(message, q) as message, message_date, " +
                     " message_id " +
-                    " from adium.messages, adium.users s, adium.users r, "+
+                    " from im.messages, im.users s, im.users r, "+
                     " to_tsquery(?) as q " +
                     " where messages.sender_id = s.user_id " +
                     " and messages.recipient_id = r.user_id " +

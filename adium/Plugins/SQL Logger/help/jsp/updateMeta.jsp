@@ -27,28 +27,28 @@ try {
 
     if(deleteMe != null && deleteMe.equals("on")) {
 
-        pstmt = conn.prepareStatement("delete from adium.meta_contact where meta_id = ?");
+        pstmt = conn.prepareStatement("delete from im.meta_contact where meta_id = ?");
 
         pstmt.setInt(1, meta_id);
 
         pstmt.executeUpdate();
 
 
-        pstmt = conn.prepareStatement("delete from adium.contact_information where meta_id = ?");
+        pstmt = conn.prepareStatement("delete from im.contact_information where meta_id = ?");
 
         pstmt.setInt(1, meta_id);
 
         pstmt.executeUpdate();
 
 
-        pstmt = conn.prepareStatement("delete from adium.meta_container where meta_id = ?");
+        pstmt = conn.prepareStatement("delete from im.meta_container where meta_id = ?");
         pstmt.setInt(1, meta_id);
 
         pstmt.executeUpdate();
 
     } else if(name != null && !name.equals("") && meta_id != 0) {
 
-        pstmt = conn.prepareStatement("update adium.meta_container set name = ? where meta_id = ?");
+        pstmt = conn.prepareStatement("update im.meta_container set name = ? where meta_id = ?");
 
         pstmt.setString(1, name);
         pstmt.setInt(2, meta_id);
@@ -64,7 +64,7 @@ try {
             int returnVal;
 
             if(requestText != null && !requestText.equals("")) {
-                updateStmt = conn.prepareStatement("update adium.contact_information set value = ? where key_id = ? and meta_id = ?");
+                updateStmt = conn.prepareStatement("update im.contact_information set value = ? where key_id = ? and meta_id = ?");
 
                 updateStmt.setString(1, requestText);
                 updateStmt.setInt(2, rset.getInt("key_id"));
@@ -73,7 +73,7 @@ try {
                 returnVal = updateStmt.executeUpdate();
 
                 if(returnVal == 0) {
-                    updateStmt = conn.prepareStatement("insert into adium.contact_information (meta_id, key_id, value) values (?, ?, ?)");
+                    updateStmt = conn.prepareStatement("insert into im.contact_information (meta_id, key_id, value) values (?, ?, ?)");
 
                     updateStmt.setInt(1, meta_id);
                     updateStmt.setInt(2, rset.getInt("key_id"));
@@ -83,7 +83,7 @@ try {
                 }
             } else if (requestText == null || requestText.equals("")) {
 
-                updateStmt = conn.prepareStatement("delete from adium.contact_information where meta_id = ? and key_id = ?");
+                updateStmt = conn.prepareStatement("delete from im.contact_information where meta_id = ? and key_id = ?");
 
                 updateStmt.setInt(1, meta_id);
                 updateStmt.setInt(2, rset.getInt("key_id"));

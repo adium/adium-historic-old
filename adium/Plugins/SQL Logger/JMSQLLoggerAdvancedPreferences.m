@@ -52,9 +52,9 @@
     if(notification == nil || [PREF_GROUP_SQL_LOGGING isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
 		id				tmp;
-		
+
 		[checkbox_enableSQLLogging setState:[[preferenceDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue]];
-		
+
 		//This ugliness is because setStringValue doesn't like being passed nil
 		[text_Username setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_USERNAME]) ? tmp : @""];
 		[text_Port setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_PORT]) ? tmp: @""];

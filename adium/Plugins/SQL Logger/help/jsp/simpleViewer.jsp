@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/simpleViewer.jsp $-->
-<!--$Rev: 795 $ $Date: 2004/06/01 00:51:09 $ -->
+<!--$Rev: 809 $ $Date: 2004/06/25 01:19:47 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -96,7 +96,7 @@ String queryText = new String();
 try {
 
     if(chat_id != 0) {
-        pstmt = conn.prepareStatement("select title, notes, sent_sn, received_sn, single_sn, date_start, date_finish, meta_id from adium.saved_chats where chat_id = ?");
+        pstmt = conn.prepareStatement("select title, notes, sent_sn, received_sn, single_sn, date_start, date_finish, meta_id from im.saved_chats where chat_id = ?");
 
         pstmt.setInt(1, chat_id);
 
@@ -164,22 +164,22 @@ a:hover {
     if(showDisplay) {
        queryText += ", scramble(sender_display) as sender_display, "+
            " scramble(recipient_display) as recipient_display " +
-           " from adium.message_v as view ";
+           " from im.message_v as view ";
     } else if (showMeta) {
         queryText += ", coalesce(send.name, scramble(sender_sn)) as sender_meta, " +
             " coalesce(rec.name, scramble(recipient_sn)) as recipient_meta " +
-            " from adium.simple_message_v as view left join " +
-            " adium.meta_contact as r " +
+            " from im.simple_message_v as view left join " +
+            " im.meta_contact as r " +
             " on (recipient_id = r.user_id and r.preferred = true) " +
-            " left join adium.meta_container rec on (r.meta_id = rec.meta_id)" +
-            " left join adium.meta_contact as s " +
+            " left join im.meta_container rec on (r.meta_id = rec.meta_id)" +
+            " left join im.meta_contact as s " +
             " on (sender_id = s.user_id and s.preferred = true) " +
-            " left join adium.meta_container send on (s.meta_id = send.meta_id)";
+            " left join im.meta_container send on (s.meta_id = send.meta_id)";
     } else {
-        queryText += " from adium.simple_message_v as view ";
+        queryText += " from im.simple_message_v as view ";
     }
 
-    queryText += " natural left join adium.message_notes ";
+    queryText += " natural left join im.message_notes ";
 
     if (dateStart == null) {
         queryText += "where message_date > 'now'::date ";
@@ -369,7 +369,7 @@ a:hover {
 
         if(rset.getBoolean("notes")) {
             pstmt = conn.prepareStatement("select title, notes " +
-            " from adium.message_notes where message_id = ? " +
+            " from im.message_notes where message_id = ? " +
             " order by date_added ");
 
             pstmt.setInt(1, rset.getInt("message_id"));
