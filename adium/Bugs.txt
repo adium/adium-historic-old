@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
-- Multiple identical emoticons in a row don't display
-- Advanced user name format WebKit option does not apply properly
+- Emoticon menu inserts the wrong emoticons if some are disabled
+- 'Combine Consecutive Messages', when disabled, causes messages to nest within eathocher
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
