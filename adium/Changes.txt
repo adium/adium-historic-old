@@ -45,8 +45,10 @@ Version 0.53 (4/27/2004)
 - Fixed an issue with the contact list position when a multiscreen configuration changed
 - Fixed several memory leaks
 - Fixed a bug with Japanese and Chinese text in the webkit message view
+- Fixed an SQL Logger crash when opening the preferences
+- Fixed an SQL Logger issue with the same screenname on multiple services.
 - Scripts, themes, and sounds can be put in all three Library/Application Support folders (Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0).
-- Scripts, themes, sounds in the Adium application bundle no longer override those in the Application Support folders.
+- Scripts, themes, sounds in the Adium application bundle no longer override those in the Application Support folders
 - Performance and launch time improvements
 
 Version 0.52 (4/16/2004)
