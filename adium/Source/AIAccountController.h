@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.21 $
- * $Date: 2004/06/04 06:58:20 $
- * $Author: evands $
+ * $Revision: 1.22 $
+ * $Date: 2004/06/06 16:26:44 $
+ * $Author: adamiser $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -41,8 +41,7 @@
     NSMutableDictionary		*accountStatusDict;			//Account status
 	
     NSMutableArray			*sleepingOnlineAccounts;	//Accounts that were connected before we slept
-	
-	BOOL					enableAccountSaving;
+	NSMutableArray			*unloadableAccounts;
 }
 
 //Services
