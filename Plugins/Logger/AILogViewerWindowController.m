@@ -38,6 +38,8 @@
 #define TO								AILocalizedString(@"To",nil)
 #define DATE							AILocalizedString(@"Date",nil)
 #define CONTENT							AILocalizedString(@"Content",nil)
+#define DELETE							AILocalizedString(@"Delete",nil)
+#define SEARCH							AILocalizedString(@"Search",nil)
 
 #define HIDE_EMOTICONS					AILocalizedString(@"Hide Emoticons",nil)
 #define SHOW_EMOTICONS					AILocalizedString(@"Show Emoticons",nil)
@@ -87,7 +89,10 @@ static NSString                             *filterForContactName = nil;	//Conta
 
 + (id)openForPlugin:(id)inPlugin
 {
-    if(!sharedLogViewerInstance) sharedLogViewerInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) plugin:inPlugin];
+    if(!sharedLogViewerInstance){
+		sharedLogViewerInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) plugin:inPlugin];
+	}
+
     [sharedLogViewerInstance showWindow:nil];
     
 	return(sharedLogViewerInstance);
@@ -294,9 +299,9 @@ static NSString                             *filterForContactName = nil;	//Conta
 	[self installToolbar];
 
 	//Localize tableView_results column headers
-	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:AILocalizedString(@"To",nil)];
-	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:AILocalizedString(@"From",nil)];
-	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:AILocalizedString(@"Date",nil)];
+	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
+	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:FROM];
+	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:DATE];
 
     //Prepare the search controls
     [self buildSearchMenu];
@@ -304,14 +309,23 @@ static NSString                             *filterForContactName = nil;	//Conta
 		[textView_content setUsesFindPanel:YES];
     }
 
-    //Sort by date
-    selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
+    //Sort by preference, defaulting to sorting by date
+	NSString	*selectedTableColumnPref;
+	if(selectedTableColumnPref = [[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_SELECTED_COLUMN
+																		  group:PREF_GROUP_LOGGING]){
+		selectedColumn = [[tableView_results tableColumnWithIdentifier:selectedTableColumnPref] retain];
+	}
+	if(!selectedColumn){
+		selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
+	}
 
     //Prepare indexing and filter searching
     [self initLogFiltering];
     [plugin prepareLogContentSearching];
 
     //Begin our initial search
+	[self setSearchMode:LOG_SEARCH_TO];
+
     [searchField_logs setStringValue:(activeSearchString ? activeSearchString : @"")];
     [self startSearchingClearingCurrentResults:YES];
 	
@@ -418,16 +432,21 @@ static NSString                             *filterForContactName = nil;	//Conta
 										 forKey:KEY_LOG_VIEWER_DRAWER_STATE
 										  group:PREF_GROUP_LOGGING];
 	
-	// set preference for drawer size
+	//Set preference for drawer size
 	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[drawer_contacts contentSize].width]
 										 forKey:KEY_LOG_VIEWER_DRAWER_SIZE
 										  group:PREF_GROUP_LOGGING];       
 	
-	// set preference for emoticon filtering
+	//Set preference for emoticon filtering
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showEmoticons]
 										 forKey:KEY_LOG_VIEWER_EMOTICONS
 										  group:PREF_GROUP_LOGGING];
 	
+	//Set preference for selected column
+	[[adium preferenceController] setPreference:[selectedColumn identifier]
+										 forKey:KEY_LOG_VIEWER_SELECTED_COLUMN
+										  group:PREF_GROUP_LOGGING];
+
     //Disable the search field.  If we don't disable the search field, it will often try to call its target action
     //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
     //before we close the window down seems to prevent the crash.
@@ -950,20 +969,29 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Set the active search mode (Does not invoke a search)
 - (void)setSearchMode:(LogSearchMode)inMode
 {
+	//Get the NSTextFieldCell and use it only if it responds to setPlaceholderString: (10.3 and above)
+	NSTextFieldCell	*cell = [searchField_logs cell];
+	if(![cell respondsToSelector:@selector(setPlaceholderString:)]) cell = nil;
+	
     searchMode = inMode;
 	
 	//Clear any filter from the table if it's the current mode, as well
 	switch(searchMode){
 		case LOG_SEARCH_FROM:
 			[filterForAccountName release]; filterForAccountName = nil;
+			[cell setPlaceholderString:AILocalizedString(@"Search From","Placeholder for searching logs from an account")];
 			break;
 		case LOG_SEARCH_TO:
 			[filterForContactName release]; filterForContactName = nil;
+			[cell setPlaceholderString:AILocalizedString(@"Search To","Placeholder for searching logs with/to a contact")];
 			break;
 			
-		//Take no action for date and content searching
 		case LOG_SEARCH_DATE:
+			[cell setPlaceholderString:AILocalizedString(@"Search by Date","Placeholder for searching logs by date")];
+			break;
+
 		case LOG_SEARCH_CONTENT:
+			[cell setPlaceholderString:AILocalizedString(@"Search Content","Placeholder for searching logs by content")];
 			break;
 	}
 
@@ -1511,8 +1539,8 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 	//Delete Logs
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
                                         withIdentifier:@"delete"
-                                                 label:AILocalizedString(@"Delete",nil)
-                                          paletteLabel:AILocalizedString(@"Delete",nil)
+                                                 label:DELETE
+                                          paletteLabel:DELETE
                                                toolTip:AILocalizedString(@"Delete selected log",nil)
                                                 target:self
                                        settingSelector:@selector(setImage:)
@@ -1522,8 +1550,8 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 	//Search
 	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"search"
-                                                              label:AILocalizedString(@"Search",nil)
-                                                       paletteLabel:AILocalizedString(@"Search",nil)
+                                                              label:SEARCH
+                                                       paletteLabel:SEARCH
                                                             toolTip:AILocalizedString(@"Search or filter logs",nil)
                                                              target:self
                                                     settingSelector:@selector(setView:)
