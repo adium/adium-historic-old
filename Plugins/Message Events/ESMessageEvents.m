@@ -12,9 +12,9 @@
 - (void)installPlugin
 {
 	//Register the events we generate
-	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_SENT withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_SENT withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	
 	//Install our observers
     [[adium notificationCenter] addObserver:self 
@@ -56,11 +56,11 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
-		description = AILocalizedString(@"Message Sent",nil);
+		description = AILocalizedString(@"You sent a message",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
-		description = AILocalizedString(@"Message Received",nil);
+		description = AILocalizedString(@"You receive any message",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
-		description = AILocalizedString(@"Message Received (New)",nil);
+		description = AILocalizedString(@"You receive an initial message",nil);
 	}else{
 		description = @"";
 	}
@@ -89,21 +89,41 @@
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
 {
-	NSString	*description;
+	NSString	*description = nil;
 	
-	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
-		description = AILocalizedString(@"When %@ is sent a message by you",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
-		description = AILocalizedString(@"When %@ sends a message to you",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
-		description = AILocalizedString(@"When %@ sends an initial message to you",nil);
+	if(listObject){
+		NSString	*name;
+		NSString	*format;
+		
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			format = AILocalizedString(@"When you send %@ a message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+			format = AILocalizedString(@"When %@ sends a message to you",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			format = AILocalizedString(@"When %@ sends an initial message to you",nil);
+		}else{
+			format = nil;
+		}
+		
+		if(format){
+			name = ([listObject isKindOfClass:[AIListGroup class]] ?
+					[NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
+					[listObject displayName]);
+			
+			description = [NSString stringWithFormat:format, name];
+		}
+			
 	}else{
-		description = AILocalizedString(@"Unknown",nil);
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			description = AILocalizedString(@"When you send a message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+			description = AILocalizedString(@"When you receive any message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			description = AILocalizedString(@"When you receive an initial message",nil);
+		}
 	}
-	
-	return([NSString stringWithFormat:description,([listObject isKindOfClass:[AIListGroup class]] ?
-												   [NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
-												   [listObject displayName])]);
+
+	return(description);
 }
 
 - (void)handleMessageEvent:(NSNotification *)notification

@@ -22,12 +22,12 @@
 	statusMessageCache = [[NSMutableDictionary alloc] init];
 	
 	//Register the events we generate
-	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_ONLINE_YES withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_ONLINE_NO withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_AWAY_YES withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_AWAY_NO withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_IDLE_YES withHandler:self];
-	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_IDLE_NO withHandler:self];
+	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_ONLINE_YES withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_ONLINE_NO withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_AWAY_YES withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_AWAY_NO withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_IDLE_YES withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_IDLE_NO withHandler:self inGroup:AIContactsEventHandlerGroup globalOnly:NO];
 	
 	//Observe status changes
     [[adium contactController] registerListObjectObserver:self];
@@ -38,15 +38,15 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
-		description = AILocalizedString(@"Connects",nil);
+		description = AILocalizedString(@"Signs on",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
-		description = AILocalizedString(@"Disconnects",nil);
+		description = AILocalizedString(@"Signs off",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
 		description = AILocalizedString(@"Goes away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
 		description = AILocalizedString(@"Returns from away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
-		description = AILocalizedString(@"Goes idle",nil);
+		description = AILocalizedString(@"Becomes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 		description = AILocalizedString(@"Returns from idle",nil);
 	}else{
@@ -61,17 +61,17 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
-		description = AILocalizedString(@"Contact Signed On",nil);
+		description = AILocalizedString(@"Contact signs on",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
-		description = AILocalizedString(@"Contact Signed Off",nil);
+		description = AILocalizedString(@"Contact signs off",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
-		description = AILocalizedString(@"Contact Went Away",nil);
+		description = AILocalizedString(@"Contact goes away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
-		description = AILocalizedString(@"Contact Returned from Away",nil);
+		description = AILocalizedString(@"Contact returns from away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
-		description = AILocalizedString(@"Contact Went Idle",nil);
+		description = AILocalizedString(@"Contact becomes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
-		description = AILocalizedString(@"Contact Returned from Idle",nil);
+		description = AILocalizedString(@"Contact returns from idle",nil);
 	}else{
 		description = @"";	
 	}
@@ -107,6 +107,7 @@
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
 {
 	NSString	*description;
+	NSString	*name;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
 		description = AILocalizedString(@"When %@ connects",nil);
@@ -124,9 +125,15 @@
 		description = AILocalizedString(@"Unknown",nil);
 	}
 	
-	return([NSString stringWithFormat:description,([listObject isKindOfClass:[AIListGroup class]] ?
-												   [NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
-												   [listObject displayName])]);
+	if(listObject){
+		name = ([listObject isKindOfClass:[AIListGroup class]] ?
+				[NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
+				[listObject displayName]);
+	}else{
+		name = AILocalizedString(@"a contact",nil);
+	}
+
+	return([NSString stringWithFormat:description,name]);
 }
 
 //
