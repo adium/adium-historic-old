@@ -28,10 +28,7 @@
 
 #define badgewidth 				30
 
-#define CONTACT_TEXT_ALIGN		NSLeftTextAlignment//NSCenterTextAlignment
-//NSLeftTextAlignment		= 0, /* Visually left aligned */
-//NSRightTextAlignment	= 1, /* Visually right aligned */
-//NSCenterTextAlignment	= 2,
+#define CONTACT_TEXT_ALIGN		NSLeftTextAlignment
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -42,16 +39,61 @@
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Label color
+- (NSColor *)labelColor
+{
+	NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
+	return(labelColor ? labelColor : [NSColor whiteColor]);
+}
+
+
+
+
+
+
+
+
 - (NSFont *)font
 {
 	return(CONTACT_FONT);
 }
 
-
-- (NSTextAlignment)textAlignment
-{
-	return(CONTACT_TEXT_ALIGN);
-}
 
 - (NSSize)cellSize
 {
@@ -153,6 +195,9 @@ int		textHeight = [attrString heightWithWidth:1e7];
 	
 	[self drawDisplayNameWithFrame:rect];
 }
+
+
+
 
 
 

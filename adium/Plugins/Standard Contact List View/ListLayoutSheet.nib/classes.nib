@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {cancel = id; okay = id; preferenceChanged = id; }; 
+            CLASS = AIListLayoutWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_contactTextAlignment" = NSPopUpButton; 
+                "popUp_groupTextAlignment" = NSPopUpButton; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

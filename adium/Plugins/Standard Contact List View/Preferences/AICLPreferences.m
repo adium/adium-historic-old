@@ -16,6 +16,7 @@
 #import "AICLPreferences.h"
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
+#import "AIListLayoutWindowController.h"
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
@@ -127,5 +128,11 @@
         [inTextField setStringValue:@""];
     }
 }
+
+- (IBAction)spawnLayout:(id)sender
+{
+	[[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]] retain];
+}
+
 
 @end

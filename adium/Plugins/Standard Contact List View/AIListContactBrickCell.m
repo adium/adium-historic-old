@@ -11,35 +11,20 @@
 
 @implementation AIListContactBrickCell
 
-//Draw content of our cell
-- (void)drawContentWithFrame:(NSRect)rect
-{	
-//make more global? .. margins for left & right in addition to top/bottom?
-	//Indent
-	rect.origin.x += 2;
-	rect.size.width -= 4;
-	
-	[super drawContentWithFrame:rect];
+//
+#warning hmm
+- (int)topPadding{
+	return([super topPadding] + 2);
+}
+- (int)bottomPadding{
+	return([super bottomPadding] + 2);
 }
 
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	int 			row = [controlView rowForItem:listObject];
-	NSColor			*labelColor = nil;
-	
-	//Color
-	labelColor = [[[listObject displayArrayForKey:@"Label Color"] objectValue] colorWithAlphaComponent:1.0];
-	if(!labelColor) labelColor = [NSColor whiteColor];
-	
-	[labelColor set];
-	
-	//Draw
-	if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
-		[[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] fill];
-	}else{
-		[NSBezierPath fillRect:rect];
-	}
+	[[self labelColor] set];
+	[NSBezierPath fillRect:rect];
 }
 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAutoScrollView, AIListOutlineView;
+@class AIAutoScrollView, AIListOutlineView, AIListCell;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
@@ -37,7 +37,8 @@
     BOOL								autoResizeHorizontally;
 
 
-
+	AIListCell	*contentCell;
+	AIListCell	*groupCell;
 
 
 

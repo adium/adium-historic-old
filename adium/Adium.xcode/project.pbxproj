@@ -726,36 +726,6 @@
 			settings = {
 			};
 		};
-		3411F8DF06BB42830005AF5C = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 3411FA1806BB42920005AF5C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3411F8E006BB42830005AF5C = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 3411FA1906BB42920005AF5C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3411FA1806BB42920005AF5C = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		3411FA1906BB42920005AF5C = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		341591E005463DA700291275 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3533,9 +3503,6 @@
 		};
 		3484644C05910DFF00241F68 = {
 			children = (
-				F544A5DE03B3628B01A8010A,
-				F544A5DF03B3628B01A8010A,
-				F544A5E003B3628B01A8010A,
 				4BBF449E0661354F001D31E1,
 				4BBF449F0661354F001D31E1,
 				4B6C4647066FEB180082199C,
@@ -3547,7 +3514,7 @@
 				3453667A059BA7E200A83D9E,
 			);
 			isa = PBXGroup;
-			name = Preferences;
+			name = OldPreferences;
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -5252,6 +5219,8 @@
 				4B12D41A06B9C93600186CDD,
 				4BF28D5606BA954C00B3FE6F,
 				4BF28D6006BA9AA600B3FE6F,
+				4B25362706BECC3E003498D4,
+				4B25362D06BECC8F003498D4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5576,6 +5545,8 @@
 				344C0D4A06B6D61B00DA7200,
 				344C0D4D06B6D62600DA7200,
 				344C0EE006B6DE3A00DA7200,
+				4B25362F06BECC8F003498D4,
+				4B25363006BECC8F003498D4,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5901,6 +5872,8 @@
 				4B12D41B06B9C93600186CDD,
 				4BF28D5706BA954C00B3FE6F,
 				4BF28D6106BA9AA600B3FE6F,
+				4B25362806BECC3E003498D4,
+				4B25362E06BECC8F003498D4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9786,8 +9759,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				4B57CCA106848F05003FF229,
-				3411F8DF06BB42830005AF5C,
-				3411F8E006BB42830005AF5C,
+				4B25352606BECC14003498D4,
+				4B25352706BECC14003498D4,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -11227,6 +11200,139 @@
 			lastKnownFileType = folder;
 			name = "Dock Icons";
 			path = "Source/Dock Icons";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25352606BECC14003498D4 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 4B25352806BECC15003498D4;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B25352706BECC14003498D4 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4B25352906BECC15003498D4;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B25352806BECC15003498D4 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		4B25352906BECC15003498D4 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		4B25362506BECC3E003498D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListContactMockieCell.h;
+			path = "Plugins/Standard Contact List View/AIListContactMockieCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25362606BECC3E003498D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListContactMockieCell.m;
+			path = "Plugins/Standard Contact List View/AIListContactMockieCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25362706BECC3E003498D4 = {
+			fileRef = 4B25362506BECC3E003498D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25362806BECC3E003498D4 = {
+			fileRef = 4B25362606BECC3E003498D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25362906BECC8F003498D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListLayoutWindowController.h;
+			path = "Plugins/Standard Contact List View/AIListLayoutWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25362A06BECC8F003498D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListLayoutWindowController.m;
+			path = "Plugins/Standard Contact List View/AIListLayoutWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25362B06BECC8F003498D4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ListLayoutSheet.nib;
+			path = "Plugins/Standard Contact List View/ListLayoutSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25362C06BECC8F003498D4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ListThemeSheet.nib;
+			path = "Plugins/Standard Contact List View/ListThemeSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B25362D06BECC8F003498D4 = {
+			fileRef = 4B25362906BECC8F003498D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25362E06BECC8F003498D4 = {
+			fileRef = 4B25362A06BECC8F003498D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25362F06BECC8F003498D4 = {
+			fileRef = 4B25362B06BECC8F003498D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25363006BECC8F003498D4 = {
+			fileRef = 4B25362C06BECC8F003498D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25363306BECC97003498D4 = {
+			children = (
+				F544A5DE03B3628B01A8010A,
+				F544A5DF03B3628B01A8010A,
+				F544A5E003B3628B01A8010A,
+				4B25362906BECC8F003498D4,
+				4B25362A06BECC8F003498D4,
+				4B25362B06BECC8F003498D4,
+				4B25362C06BECC8F003498D4,
+			);
+			isa = PBXGroup;
+			name = Prefs;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15984,6 +16090,8 @@
 				4BF28D5F06BA9AA600B3FE6F,
 				4B12D41806B9C93600186CDD,
 				4B12D41906B9C93600186CDD,
+				4B25362506BECC3E003498D4,
+				4B25362606BECC3E003498D4,
 				4B1EE91F06B7E22900A919E9,
 				4B1EE92006B7E22900A919E9,
 				4B1EE92106B7E22900A919E9,
@@ -15998,6 +16106,10 @@
 		};
 		4BD388C606B589C7000A346A = {
 			children = (
+				4B970BE00535B6AC002F28F9,
+				4B970BE10535B6AC002F28F9,
+				4B970BE40535B6BE002F28F9,
+				3484644C05910DFF00241F68,
 				4BAC8E9C0448412300A8010A,
 				4BAC8E9D0448412300A8010A,
 				F579399D033E75CB01A8010A,
@@ -16018,6 +16130,7 @@
 				34503BFE058F8CFD00FB7AD1,
 				4BD6F0B706B988AC002AB122,
 				4BD6F0B806B988AC002AB122,
+				4B25363306BECC97003498D4,
 			);
 			isa = PBXGroup;
 			name = "Borderless Contact List";
@@ -19002,10 +19115,6 @@
 				F51DEFA40326330101A8010A,
 				4BD388D306B58B8B000A346A,
 				4BD388C606B589C7000A346A,
-				3484644C05910DFF00241F68,
-				4B970BE00535B6AC002F28F9,
-				4B970BE10535B6AC002F28F9,
-				4B970BE40535B6BE002F28F9,
 			);
 			isa = PBXGroup;
 			name = "Contact List";
