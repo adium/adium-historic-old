@@ -556,6 +556,8 @@
         holdUpdates--;
     }
 
+//    NSLog(@"setHoldContactListUpdates (%@) to %i",(inHoldUpdates ? @"YES":@"NO"),holdUpdates);
+
     if(holdUpdates < 0) holdUpdates = 0;  //This should never be needed, but just incase
     if(holdUpdates == 0){
         //Resort and redisplay the entire list at once (since sorting has been skipped while delayed)
