@@ -36,12 +36,16 @@
 
 - (void)showWindowWithDict:(NSDictionary *)infoDict
 {
+	NSAttributedString	*attribMsg;
 	NSRect  newFrame, oldFrame, zeroFrame = NSMakeRect(0,0,0,0);
 	
 	NSArray		*buttonNamesArray = [infoDict objectForKey:@"Button Names"];
 	NSString	*titleString = [infoDict objectForKey:@"TitleString"];
 	NSString	*msg = [infoDict objectForKey:@"Message"];
-		
+	
+	//msg may be in HTML; decode it just in case
+	attribMsg = (msg ? [AIHTMLDecoder decodeHTML:msg] : nil);
+	
 	actionCount = [[infoDict objectForKey:@"Count"] intValue];
 	callBacks = [[infoDict objectForKey:@"callBacks"] retain];
 	userData = [[infoDict objectForKey:@"userData"] retain];
@@ -61,7 +65,7 @@
 		NSRect  frame = [[self window] frame];
 		int		heightChange;
 
-		[textView_msg setString:(msg ? msg : @"")];
+		[[textView_msg textStorage] setAttributedString:attribMsg];
 		[textView_msg sizeToFit];
 		heightChange = [textView_msg frame].size.height - [scrollView_msg documentVisibleRect].size.height;
 		
