@@ -66,7 +66,7 @@
 //Dealloc
 - (void)dealloc
 {
-	[statusType release];
+	[statusType release]; statusType = nil;
 	
     [super dealloc];
 }

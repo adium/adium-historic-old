@@ -35,7 +35,7 @@
 	message = [inMessage retain];
 	date = [(inDate ? inDate : [NSDate date]) retain];
 	
-    chat = inChat; //Not retained.  Chats hold onto content.  Content need not hold onto chats.
+    chat = [inChat retain];
     outgoing = ([source isKindOfClass:[AIAccount class]]);
     
     return(self);
@@ -43,10 +43,11 @@
 
 - (void)dealloc
 {
-    [source release];
-    [destination release];
-	[date release];
-	[message release];
+    [source release]; source = nil;
+    [destination release]; destination = nil;
+	[date release]; date = nil;
+	[message release]; message = nil;
+	[chat release]; chat = nil;
 	
     [super dealloc];
 }
