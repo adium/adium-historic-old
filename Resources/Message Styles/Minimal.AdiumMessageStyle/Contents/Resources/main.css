@@ -1,11 +1,118 @@
-@import url(base.css);
+body
+{
+	color: #333333;
+	background-color: #ffffff;
+	background-image: url("images/back_l.png");
+	margin: 0;
+	background-repeat: repeat-y;
+	line-height: 1.3em;
+}
 
-		.incoming { color: #009BD4; }
-		.outgoing { color: #EF3800; }
-		.status { color: #95CC00; }
-		.greyed { color: #9F9F9F; }
+p
+{
+	margin: 0;
+	padding: 0;
+}
 
-		.incoming_link a { color: #009BD4; text-decoration:none; }
-		.outgoing_link a { color: #EF3800; text-decoration:none; }
-		.status_link a { color: #95CC00; text-decoration:none; }
-		.greyed_link a { color: #9F9F9F; text-decoration:none; }
+a { text-decoration: none; }
+
+.convo_container
+{
+	width: 100%;
+	padding-bottom: 6px;
+}
+
+.container
+{
+	padding-top: 4px;
+	border-top: 1px dotted #E9E9E9;
+}
+
+.container_next { margin-top: 2px; }
+
+.container, .container_next
+{
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-bottom: 0px;
+	margin-left: 8px;
+	margin-bottom: 5px;
+}
+
+.fromstatus
+{
+	float: left;
+	padding-right: 7px;
+	position: relative;
+	top: 2px;
+}
+
+.next_label
+{
+	font-size: 16px;
+	font-family: Helvetica;
+	font-weight: normal;
+	position: relative;
+	top: 0px;
+	left: -1px;
+	text-align: right;
+	width: 10px;
+	float: left;
+	margin-right: 2px;
+}
+
+.sender { text-align: left; }
+
+.sender, .fromstatus
+{
+	font-size: 11px;
+	font-family: Helvetica;
+	font-weight: bold;
+}
+
+.sender, .next_label { overflow: hidden; }
+
+.time_initial
+{
+	color: #9F9F9F;
+	float: right;
+	text-align: right;
+	padding-left: 6px;
+	font-size: 9px;
+	font-family: Helvetica;
+}
+
+.message {
+	overflow: auto;
+}
+.context_message { color: #B6B6B6; }
+
+.message, .context_message
+{
+	width: auto;
+	text-align: left;
+}
+
+.indent { text-indent: 12px; }
+.clear { clear: both; }
+
+.buddyicon img
+{
+	float: left;
+	margin-top: 2px;
+	margin-right: 6px;
+	width: 24px;
+	height: 24px;
+	border-color: #CCCCCC;
+	border-width: 1px;
+}
+
+.buddyicon img[src="Incoming/buddy_icon.png"], .buddyicon img[src="Outgoing/buddy_icon.png"] { display: none; }
+
+img
+{
+	vertical-align: middle;
+	top: -3px;
+}
+
+#Chat { overflow: hidden; }
