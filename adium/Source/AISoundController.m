@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.47 2004/06/28 04:04:07 evands Exp $
+// $Id: AISoundController.m,v 1.48 2004/06/28 04:37:24 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -40,7 +40,8 @@
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)speakNext;
--(void)initDefaultVoiceIfNecessary;
+- (void)initDefaultVoiceIfNecessary;
+- (void)_stopSpeakingNow;
 @end
 
 @implementation AISoundController
@@ -82,6 +83,7 @@
 //close
 - (void)closeController
 {
+	[self _stopSpeakingNow];
     [self _removeSystemAlertIDs];
     [voiceArray release];
 }
@@ -490,6 +492,12 @@
 {
     speaking = NO;
     [self speakNext];
+}
+
+- (void)_stopSpeakingNow
+{
+	[speaker_defaultVoice stopSpeaking];
+	[speaker_variableVoice stopSpeaking];
 }
 
 - (void)initDefaultVoiceIfNecessary
