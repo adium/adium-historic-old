@@ -25,6 +25,7 @@
     IBOutlet NSButton       *checkBox_fadeIn;
     IBOutlet NSButton       *checkBox_fadeOut;
     IBOutlet NSButton       *checkBox_showHidden;
+    IBOutlet NSButton       *checkBox_showAway;
 }
 
 - (IBAction)toggleShowBezel:(id)sender;
@@ -45,5 +46,6 @@
 - (IBAction)toggleFadeIn:(id)sender;
 - (IBAction)toggleFadeOut:(id)sender;
 - (IBAction)toggleShowHidden:(id)sender;
+- (IBAction)toggleShowAway:(id)sender;
 
 @end

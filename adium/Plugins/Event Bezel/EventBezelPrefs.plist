@@ -38,5 +38,7 @@
         <true/>
         <key>Show Hidden</key>
         <true/>
+        <key>Show While Away</key>
+        <true/>
 </dict>
 </plist>

@@ -16,6 +16,7 @@
 #import "AIAwayStatusWindowController.h"
 #import "AIAwayStatusWindowPlugin.h"
 #import "AIEventSoundsPlugin.h"
+#import "JSCEventBezelPlugin.h"
 
 #define AWAY_STATUS_WINDOW_NIB			@"AwayStatusWindow"
 #define	KEY_AWAY_STATUS_WINDOW_FRAME		@"Away Status Frame"
@@ -69,9 +70,17 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 //Called when "Mute" button is clicked
 - (IBAction)toggleMute:(id)sender
 {
-    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[button_mute state]]
+    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[sender state]]
                                          forKey:KEY_EVENT_MUTE_WHILE_AWAY
                                           group:PREF_GROUP_SOUNDS];
+}
+
+//Called when "Show event bezel" button is clicked
+- (IBAction)toggleShowBezel:(id)sender
+{
+    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_SHOW_AWAY
+                                          group:PREF_GROUP_EVENT_BEZEL];
 }
 
 // 
@@ -233,6 +242,9 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
             //get the new one
             timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:NO
                 showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
+
+        [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
+        [button_showBezel setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
 
 }
 // XXX replace this to use ESDateFormatter
