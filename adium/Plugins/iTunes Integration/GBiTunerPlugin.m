@@ -28,9 +28,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 {
 	NSMenuItem	*scriptMenuItem;
 	
-	//Init
-	scriptDict = [[NSMutableDictionary alloc] init];
-	scriptArray = [[NSMutableArray alloc] init];
+	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
 
 	//We have an array of scripts, which is used to build the menu.
