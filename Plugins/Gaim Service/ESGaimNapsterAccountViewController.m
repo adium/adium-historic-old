@@ -10,8 +10,4 @@
 
 @implementation ESGaimNapsterAccountViewController
 
-- (NSString *)nibName{
-    return(@"ESGaimNapsterAccountView");
-}
-
 @end
