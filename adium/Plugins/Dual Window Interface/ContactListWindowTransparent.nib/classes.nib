@@ -1,20 +1,6 @@
 {
     IBClasses = (
-        {
-            CLASS = AIAlternatingRowOutlineView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSOutlineView; 
-        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
-        {CLASS = AIBrushedPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
-        {CLASS = AIBubbleView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
-        {CLASS = AIContactListCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
-        {
-            CLASS = AIContactListOutlineView; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {scrollView = NSScrollView; }; 
-            SUPERCLASS = AIAlternatingRowOutlineView; 
-        }, 
         {
             ACTIONS = {close = id; makeActive = id; }; 
             CLASS = AIContactListWindowController; 
@@ -27,38 +13,7 @@
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = AICustomScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
-        {
-            CLASS = AICustomTabsView; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {tabView = NSTabView; }; 
-            SUPERCLASS = NSView; 
-        }, 
-        {CLASS = AICustomWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {
-            CLASS = AIMessageSendingTextView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AISendingTextView; 
-        }, 
-        {
-            CLASS = AIMiniToolbar; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {representedObject = id; }; 
-            SUPERCLASS = NSView; 
-        }, 
-        {CLASS = AIMiniToolbarButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
-        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
-        {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
-        {
-            ACTIONS = {selectNewStatus = id; }; 
-            CLASS = AIStatusSelectionView; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_status" = NSPopUpButton; "view_contents" = NSView; }; 
-            SUPERCLASS = NSView; 
-        }, 
-        {CLASS = CBEmbossedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = ESBorderlessWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {CLASS = ESInvisibleWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
