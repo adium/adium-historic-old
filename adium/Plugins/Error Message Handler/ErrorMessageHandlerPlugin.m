@@ -25,7 +25,10 @@
 - (void)installPlugin
 {
     //Install our observers
-    [[adium notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(handleError:)
+									   name:Interface_ShouldDisplayErrorMessage 
+									 object:nil];
     
     //Install our contact alert
 	[[adium contactAlertsController] registerActionID:ERROR_MESSAGE_CONTACT_ALERT_IDENTIFIER withHandler:self];
@@ -52,7 +55,9 @@
     windowTitle = [userInfo objectForKey:@"Window Title"];
 
     //Display an alert
-    [[ErrorMessageWindowController errorMessageWindowController] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
+    [[ErrorMessageWindowController errorMessageWindowController] displayError:errorTitle 
+															  withDescription:errorDesc
+																	withTitle:windowTitle];
 	
 	//Generate the event (for no list object, so only global triggers apply)
 	[[adium contactAlertsController] generateEvent:INTERFACE_ERROR_MESSAGE
