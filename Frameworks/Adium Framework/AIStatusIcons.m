@@ -173,58 +173,57 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 
 + (NSImage *)previewMenuImageForStatusIconsAtPath:(NSString *)inPath
 {
-	NSImage	*image = [[NSImage alloc] initWithSize:NSMakeSize((PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN) * 4,
+	NSImage			*image;
+	NSDictionary	*iconDict;
+	
+	image = [[NSImage alloc] initWithSize:NSMakeSize((PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN) * 4,
 															  PREVIEW_MENU_IMAGE_SIZE)];
 
-	NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+	iconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 	
-	if(statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
-		
-		NSDictionary	*previewStatusIconNames = [statusIconDict objectForKey:@"List"];
+	if(iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		NSDictionary	*previewIconNames = [iconDict objectForKey:@"List"];
 		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:@"available",@"away",@"idle",@"offline",nil] objectEnumerator];
-		NSString		*statusID;
+		NSString		*iconID;
 		int				xOrigin = 0;
-		
+
 		[image lockFocus];
-		while(statusID = [enumerator nextObject]){
-			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewStatusIconNames objectForKey:statusID]];
-			NSImage		*statusIcon;
+		while(iconID = [enumerator nextObject]){
+			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
+			NSImage		*anIcon;
 			
-			statusIcon = [[NSImage alloc] initWithContentsOfFile:anIconPath];
-		
-			if(statusIcon){
-				NSSize	statusIconSize = [statusIcon size];
+			if(anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease]){
+				NSSize	anIconSize = [anIcon size];
 				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
 				
-				if(statusIconSize.width < targetRect.size.width){
-					float difference = (targetRect.size.width - statusIconSize.width)/2;
+				if(anIconSize.width < targetRect.size.width){
+					float difference = (targetRect.size.width - anIconSize.width)/2;
 					
 					targetRect.size.width -= difference;
 					targetRect.origin.x += difference;
 				}
 				
-				if(statusIconSize.height < targetRect.size.height){
-					float difference = (targetRect.size.height - statusIconSize.height)/2;
+				if(anIconSize.height < targetRect.size.height){
+					float difference = (targetRect.size.height - anIconSize.height)/2;
 					
 					targetRect.size.height -= difference;
 					targetRect.origin.y += difference;
 				}
-					
-				[statusIcon drawInRect:targetRect
-							  fromRect:NSMakeRect(0,0,statusIconSize.width,statusIconSize.height)
-							 operation:NSCompositeCopy
-							  fraction:1.0];
+				
+				[anIcon drawInRect:targetRect
+						  fromRect:NSMakeRect(0,0,anIconSize.width,anIconSize.height)
+						 operation:NSCompositeCopy
+						  fraction:1.0];
+				
+				//Shift right in preparation for next image
 				xOrigin += PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN;
 			}
-		
-			[statusIcon release];
 		}
 		[image unlockFocus];
-		
-	}
-	
-	
+	}		
+
 	return([image autorelease]);
 }
+
 @end
 
