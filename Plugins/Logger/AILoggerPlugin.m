@@ -140,7 +140,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Returns the RELATIVE path to the folder where the log should be written
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account
 {
-    return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [account formattedUID], object]);
+    return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [account UID], object]);
 }
 
 //Returns the file name for the log
@@ -261,7 +261,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	if(date && message && source) {
 		if(logHTML) {
 			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
-				([content isOutgoing] ? @"send" : @"receive"), date, [source formattedUID],
+				([content isOutgoing] ? @"send" : @"receive"), date, [source displayName],
 				[AIHTMLDecoder encodeHTML:message
                                                   headers:NO
                                                  fontTags:NO
