@@ -80,7 +80,9 @@
     [super init];
 
     //Register our preference pane
-    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Idle withDelegate:self label:IDLE_TIME_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Idle
+																				  withDelegate:self 
+																						 label:IDLE_TIME_PREF_TITLE]];
 
     return(self);
 }
@@ -102,6 +104,7 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+	[[adium notificationCenter] removeObserver:self];
     [view_prefView release]; view_prefView = nil;
 }
 
