@@ -104,13 +104,13 @@
 		//Setup
 		numberOfRows = [self numberOfRows];
 		numberOfColumns = [self numberOfColumns];
-		rowHeight = [self rowHeight] + [self intercellSpacing].height;
+		rowHeight = [self rowHeight];// + [self intercellSpacing].height;
 		if(numberOfRows == 0){
 			rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
 			coloredRow = YES;        
 		}else{
-			rowRect = NSMakeRect(0, NSMaxY([self rectOfRow:numberOfRows-1]) + rowHeight, rect.size.width, rowHeight);
-			coloredRow = (numberOfRows % 2);        
+			rowRect = NSMakeRect(0, NSMaxY([self rectOfRow:numberOfRows-1])/* - [self intercellSpacing].height*/, rect.size.width, rowHeight);
+			coloredRow = !(numberOfRows % 2);        
 		}
 		
 		//Draw the grid
