@@ -27,12 +27,6 @@
 - (void)viewDidLoad
 {
 	toContact = nil;
-	
-	[label_To setStringValue:AILocalizedString(@"To:",nil)];
-	[label_From setStringValue:AILocalizedString(@"From:",nil)];	
-	[label_Message setStringValue:AILocalizedString(@"Message:",nil)];
-
-	[button_useAnotherAccount setTitle:AILocalizedString(@"Use another account if necessary",nil)];
 }
 
 //

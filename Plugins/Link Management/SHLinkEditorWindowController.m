@@ -67,12 +67,6 @@
 #pragma mark Window Methods
 - (void)windowDidLoad
 {
-	[button_insert setTitle:AILocalizedString(@"Insert",nil)];
-    [button_cancel setTitle:AILocalizedString(@"Cancel",nil)];
-	[button_removeLink setTitle:AILocalizedString(@"Remove Link",nil)];	
-	[label_linkText setStringValue:AILocalizedString(@"Link Text:","Label for the text entry area for the name when creating a link")];
-	[label_URL setStringValue:AILocalizedString(@"URL",nil)];
-	
 	if(textView){
 		NSRange 	selectedRange = [textView selectedRange];
 		NSRange		rangeOfLinkAttribute;
@@ -154,19 +148,19 @@
 	if(textView){
 		NSMutableString *urlString = [NSMutableString stringWithString:[[textView_URL textStorage] string]];
         NSString		*linkString  = [textField_linkText stringValue];
-
+		
 		//Pre-fix the url if necessary
         switch([textView_URL validationStatus]){
             case SH_URL_DEGENERATE:
                 [urlString insertString:@"http://" atIndex:0];
-				break;
+			break;
             case SH_MAILTO_DEGENERATE:
                 [urlString insertString:@"mailto:" atIndex:0];
-				break;
+			break;
             default:
-				break;
+			break;
         }
-
+		
         //Insert it into the text view
         [self insertLinkTo:[urlString string] withText:linkString inView:textView];
 	}

@@ -31,7 +31,6 @@
 - (void)_buildFontMenus;
 - (NSMenu *)_fontMenu;
 - (NSMenu *)_fontSizeMenu;
-- (NSMenu *)backgroundImageTypeMenu;
 - (void)_buildTimeStampMenu;
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
 - (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName;
@@ -71,7 +70,6 @@
 	[fontPreviewField_currentFont setShowFontFace:NO];
 	[fontPreviewField_currentFont setShowPointSize:YES];
 	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
-	[popUp_backgroundImageType setMenu:[self backgroundImageTypeMenu]];
 	
 	[popUp_customBackground setMenu:[self _customBackgroundMenu]];
 	[popUp_styles setMenu:[self _stylesMenu]];
@@ -203,12 +201,6 @@
 		[[adium preferenceController] setPreference:nil
                                              forKey:key
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}else if (sender == popUp_backgroundImageType){
-		NSString	*key = [NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]]];
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
-										 forKey:key
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-		[self updatePreview];
 	}
 }
 
@@ -352,7 +344,6 @@
 	
 	NSString	*customBackground;
 	int			tag;
-	NSString	*imageTypeKey = [NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]]];
 	customBackground = (disableCustomBackground 
 						? nil
 						: [[adium preferenceController] preferenceForKey:[plugin backgroundKeyForStyle:[style name]]
@@ -365,8 +356,6 @@
 	}
 	[popUp_customBackground selectItemAtIndex:[popUp_customBackground indexOfItemWithTag:tag]];
 	[popUp_customBackground setEnabled:!disableCustomBackground];
-	[popUp_backgroundImageType selectItemAtIndex:[[popUp_backgroundImageType menu] indexOfItemWithTag:[[[adium preferenceController] preferenceForKey:imageTypeKey
-																																				group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue]]];
 	
 	//Setup the Background Color colorwell (enabled/disable as needed, default to the color specified by the styl/variant or to white
 	NSColor *backgroundColor;
@@ -381,7 +370,6 @@
 	[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
 	[colorWell_customBackgroundColor setEnabled:!disableCustomBackground];
 	[button_restoreDefaultBackgroundColor setEnabled:!disableCustomBackground];
-	[popUp_backgroundImageType setEnabled:!disableCustomBackground];
 	
 	//Font menus
 	NSFont		*font = [NSFont cachedFontWithName:[preview fontFamily]
@@ -538,42 +526,6 @@
 	}
 	
 	return menu;
-}
-
-- (NSMenu *)backgroundImageTypeMenu
-{
-	NSMenu			*backgroundImageTypeMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-	NSMenuItem		*menuItem;
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Fill",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:Fill];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Tile",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:Tile];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Do Not Stretch",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:NoStretch];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Center",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:Center];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	return backgroundImageTypeMenu;
 }
 
 

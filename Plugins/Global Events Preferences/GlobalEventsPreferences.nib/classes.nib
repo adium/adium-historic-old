@@ -7,17 +7,6 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            CLASS = AILocalizationTextField; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "view_anchorToLeftSide" = NSView; 
-                "view_anchorToRightSide" = NSView; 
-                "window_anchorOnLeftSide" = NSWindow; 
-                "window_anchorOnRightSide" = NSWindow; 
-            }; 
-            SUPERCLASS = NSTextField; 
-        }, 
-        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
@@ -47,10 +36,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 contactAlertsViewController = ESContactAlertsViewController; 
-                "label_bounceTheDockIcon" = NSTextField; 
-                "label_displayGrowlNotifications" = NSTextField; 
-                "label_soundSet" = NSTextField; 
-                "label_speech" = NSTextField; 
                 "popUp_dockBehaviorSet" = NSPopUpButton; 
                 "popUp_growlPreset" = NSPopUpButton; 
                 "popUp_soundSet" = NSPopUpButton; 

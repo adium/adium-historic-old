@@ -16,18 +16,14 @@
 
 @interface SHLinkEditorWindowController : AIWindowController {
     
-    IBOutlet    NSButton                    *button_insert;
-    IBOutlet    NSButton                    *button_cancel;
-	IBOutlet	NSButton					*button_removeLink;
-	
+    IBOutlet    NSButton                    *button_OK;
+    IBOutlet    NSButton                    *button_Cancel;
+    
     IBOutlet    NSTextField                 *textField_linkText;
     IBOutlet	AIAutoScrollView            *scrollView_URL;
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
-	IBOutlet	NSTextField					*label_linkText;
-	IBOutlet	NSTextField					*label_URL;
-	
     NSTextView                              *textView;
     id                                       target;
 }

@@ -19,8 +19,6 @@
 	NSValue						*callBacks;
 	unsigned int				actionCount;
 	NSValue						*userData;
-	
-	NSDictionary				*theInfoDict;
 }
 
 + (void)showActionWindowWithDict:(NSDictionary *)infoDict;
