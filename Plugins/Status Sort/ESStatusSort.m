@@ -524,41 +524,47 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			}
 		}
 		
-		//If we made it here, resolve the ordering either alphabetically or by manual ordering
-		if (resolveAlphabetically){
-			NSComparisonResult returnValue;
+		if (!resolveAlphabetically){
+			//If we don't want to resolve alphabetically, we do want to resolve by manual ordering if possible
+			float orderIndexA = [objectA orderIndex];
+			float orderIndexB = [objectB orderIndex];
 			
-			if (resolveAlphabeticallyByLastName){
-				NSString	*space = @" ";
-				NSString	*displayNameA = [objectA displayName];
-				NSString	*displayNameB = [objectB displayName];
-				NSArray		*componentsA = [displayNameA componentsSeparatedByString:space];
-				NSArray		*componentsB = [displayNameB componentsSeparatedByString:space];
-				
-				returnValue = [[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]];
-				//If the last names are the same, compare the whole object, which will amount to sorting these objects by first name
-				if (returnValue == NSOrderedSame){
-					returnValue = [displayNameA caseInsensitiveCompare:displayNameB];
-					if (returnValue == NSOrderedSame){
-						returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
-					}
-				}
-			}else{
-				returnValue = [[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]];
+			if(orderIndexA > orderIndexB){
+				return(NSOrderedDescending);
+			}else if (orderIndexA < orderIndexB){
+				return(NSOrderedAscending);
+			}
+		}
+		
+		//If we made it here, resolve the ordering alphabetically, which is guaranteed to be consistent.
+		//Note that this sort should -never- return NSOrderedSame, so as a last resort we use the internalObjectID.
+		NSComparisonResult returnValue;
+		
+		if (resolveAlphabeticallyByLastName){
+			//Split the displayname into parts by spacing and use the last part, the "last name," for comparison
+			NSString	*space = @" ";
+			NSString	*displayNameA = [objectA displayName];
+			NSString	*displayNameB = [objectB displayName];
+			NSArray		*componentsA = [displayNameA componentsSeparatedByString:space];
+			NSArray		*componentsB = [displayNameB componentsSeparatedByString:space];
+			
+			returnValue = [[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]];
+			//If the last names are the same, compare the whole object, which will amount to sorting these objects
+			//by first name
+			if (returnValue == NSOrderedSame){
+				returnValue = [displayNameA caseInsensitiveCompare:displayNameB];
 				if (returnValue == NSOrderedSame){
 					returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 				}
 			}
-			
-			return (returnValue);
 		}else{
-			//Keep groups in manual order
-			if([objectA orderIndex] > [objectB orderIndex]){
-				return(NSOrderedDescending);
-			}else{
-				return(NSOrderedAscending);
+			returnValue = [[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]];
+			if (returnValue == NSOrderedSame){
+				returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 			}
 		}
+		
+		return (returnValue);
 	}
 }
 
