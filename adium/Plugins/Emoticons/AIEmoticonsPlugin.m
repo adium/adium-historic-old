@@ -161,7 +161,6 @@
             }
             
         }
-        
     }
 }
 
@@ -270,7 +269,11 @@
 - (void)resetActiveEmoticons
 {
     [_activeEmoticonPacks release]; _activeEmoticonPacks = nil;
+    
+    //Let the contentController know about the lack of active emoticons
+    [[adium contentController] setEmoticonsArray:nil];
     [_activeEmoticons release]; _activeEmoticons = nil;
+    
     [_emoticonHintCharacterSet release]; _emoticonHintCharacterSet = nil;
     [_emoticonStartCharacterSet release]; _emoticonStartCharacterSet = nil;
     [_emoticonIndexDict release]; _emoticonIndexDict = nil;
@@ -298,6 +301,9 @@
         while(emoticonPack = [enumerator nextObject]){
             [_activeEmoticons addObjectsFromArray:[emoticonPack emoticons]];
         }
+        
+        //Let the contentController know about the active emoticons
+        [[adium contentController] setEmoticonsArray:_activeEmoticons];
     }
 
     //
