@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.114 2004/03/12 02:30:26 adamiser Exp $
+// $Id: AIContactController.m,v 1.115 2004/03/13 05:49:24 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -42,7 +42,9 @@
 - (void)saveContactList;
 - (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
+
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
+- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol;
 
 - (NSArray *)_arrayRepresentationOfListObjects:(NSArray *)listObjects;
 - (NSDictionary *)_compressedOrderingOfObject:(AIListObject *)inObject;
@@ -395,7 +397,7 @@
 		}
 	}
     
-    //Post an attributes changed message (if necessary)
+    //Post an status changed message (if necessary)
     if([modifiedAttributeKeys count]){
 		[self listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributeKeys];
     }
@@ -492,10 +494,14 @@
 {
 	return([self _performSelectorOnFirstAvailableResponder:@selector(listObject)]);
 }
+- (AIListObject *)selectedListObjectInContactList
+{
+	return([self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)]);
+}
+
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector
 {
     NSResponder	*responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
-	
     //Check the first responder
     if([responder respondsToSelector:selector]){
         return([responder performSelector:selector]);
@@ -510,9 +516,31 @@
         
     } while(responder != nil);
 	
-    //Noone found, return nil
+    //None found, return nil
     return(nil);
 }
+- (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol
+{
+	NSResponder *responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
+	//Check the first responder
+	if([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]){
+		return([responder performSelector:selector]);
+	}
+	
+    //Search the responder chain
+    do{
+        responder = [responder nextResponder];
+        if([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]){
+            return([responder performSelector:selector]);
+        }
+        
+    } while(responder != nil);
+	
+    //None found, return nil
+    return(nil);
+}
+
+
 
 
 //Contact Sorting --------------------------------------------------------------------------------
