@@ -57,7 +57,11 @@
 			
 			//Observe new message windows only if we aren't already observing them
 			isObserving = YES;
-			[[adium notificationCenter] addObserver:self selector:@selector(addContextDisplayToWindow:) name:Chat_DidOpen object:nil];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(addContextDisplayToWindow:)
+											   name:Chat_DidOpen 
+											 object:nil];
+			
 		} else if ( isObserving && (!shouldDisplay || linesToDisplay <= 0) ) {
 			
 			//Remove observer
