@@ -35,6 +35,7 @@
 - (NSString *)_processGaimImagesInString:(NSString *)inString;
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
+- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 @end
 
 @implementation CBGaimAccount
@@ -77,10 +78,10 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-	/*
-	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
+	
+	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
-    int                     online;*/
+    /*int                     online;*/
 	
     AIListContact           *theContact;
 	
@@ -109,7 +110,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-//	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
+	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
@@ -255,6 +256,24 @@
     }
 }
 
+- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy
+{
+	
+	//Set their online/available state
+	if (GAIM_BUDDY_IS_ONLINE(buddy)) {
+		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
+	} else {
+		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNOFF];
+	}
+	
+	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON_TIME];
+	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_AWAY];	
+	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_IDLE];	
+	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_EVIL];
+	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_ICON];
+	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_MISCELLANEOUS];	
+}
+
 
 /***********************/
 /* accountConv methods */
@@ -289,6 +308,7 @@
                 gaim_conv_im_update_typing(im);
 			break;
             default:
+				NSLog(@"got a conv update %i",type);
 //            {
 //                NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
 //                if (typing && [typing boolValue])
@@ -329,13 +349,22 @@
                     gaim_blist_add_group(group, NULL);              //add it gaimside
                 }
                 gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
+				
+#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
+				serv_add_buddy(gc, buddy->name, group);				//add it to the serverside list
+				
+				//Add it to Adium's list
+				//[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
             }
             listContact = [self contactAssociatedWithBuddy:buddy];
         }
-        // Need to start a new chat
+        // Need to start a new chat, associating with the gaim conv
         chat = [[adium contentController] chatWithContact:listContact
 											initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
 																					  forKey:@"GaimConv"]];
+		// Associate the gaim conv with the AIChat
+		conv->ui_data = chat;
+		
     } else  {
         NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
     }
@@ -596,7 +625,9 @@
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if(gc && ([[inContact statusObjectForKey:@"Online"] boolValue])){
+    if(gc && 
+	   gaim_account_is_connected(account)/* && 
+	   ([[inContact statusObjectForKey:@"Online"] boolValue])*/){
 		serv_get_info(gc, [[inContact UID] UTF8String]);
     }
 }
@@ -1087,7 +1118,7 @@
 
 - (void)displayError:(NSString *)errorDesc
 {
-    [[adium interfaceController] handleErrorMessage:@"Gaim error"
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[self serviceID]]
                                     withDescription:errorDesc];
 }
 
@@ -1186,6 +1217,9 @@
 {
     NSEnumerator    *enumerator;
     
+	//Reset the gaim account (We don't want it tracking anything between sessions)
+    [self resetLibGaimAccount];
+	
     //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
@@ -1200,9 +1234,6 @@
     
     //Remove our chat dictionary
     [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-    
-    //Reset the gaim account (We don't want it tracking anything between sessions)
-    [self resetLibGaimAccount];
     
     //If we were disconnected unexpectedly, attempt a reconnect
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
