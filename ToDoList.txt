@@ -12,7 +12,7 @@
 3 - Get updated plastics view for bundling
 3 - Implement jabber account registration from the account prefs
 3 - Message views are ignoring variant specific info.plist keys
-3 - Several window frames are not saving (esp preferences)
+3 - Several window frames are not saving (esp preferences) - check for center and super calls
 2 - Account online checkboxes have incorrect state after canceling a password prompt
 2 - Allow meta-contact creation without holding option, add a confirmation sheet
 2 - Change sound sets so that events use key sounds rather then specifing directly
@@ -26,6 +26,7 @@
 2 - Line breaks do not work properly with ICQ
 2 - Minor control alignment in account preference sheet
 2 - Minor control alignment in advanced preferences
+2 - Investigate how sleeping and the gaim thread are interacting for disconnecting before sleeping
 1 - Account connectivity & status panel on launch
 1 - Add priority support for jabber connections
 1 - Add resize widget to borderless, remove width slider by overloading window resizing
@@ -44,7 +45,7 @@
 1 - Revisit gaim-vv
 1 - Save as support for exporting a log
 1 - Save as support for saving an individual conversation
-1 - Setup assistant and prefernce importer
+1 - Setup assistant and preference importer
 1 - Tab auto-completion of contact names in the message window
 1 - Tab bar needs a chevron when the tabs overflow the bar
 1 - Printing from the log viewer
