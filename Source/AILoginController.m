@@ -78,7 +78,7 @@
 		
 		argumentIndex = [arguments indexOfObject:@"--user"];
 		if((argumentIndex != NSNotFound) && ([arguments count] > argumentIndex + 1)){
-			userName = [arguments objectAtIndex:argumentIndex+1];
+			userName = [[[arguments objectAtIndex:argumentIndex+1] copy] autorelease];
 		}
 	}
 
@@ -101,6 +101,7 @@
 		}
     }
 
+	
 	if(userName){
 		[self loginAsUser:userName];
 	}
@@ -152,10 +153,11 @@
 - (NSArray *)userArray
 {
     NSString		*userPath;
-    NSArray		*directoryContents;
+    NSArray			*directoryContents;
     NSMutableArray	*userArray;
-    int			loop;
-    BOOL		isDirectory;
+    int				loop;
+	unsigned		count;
+    BOOL			isDirectory;
 
     //Get the users path
     userPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS];
@@ -164,7 +166,8 @@
     userArray = [[NSMutableArray alloc] init];
 
     directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath:userPath];
-    for(loop = 0;loop < [directoryContents count];loop++){
+	count = [directoryContents count];
+    for(loop = 0;loop < count;loop++){
         NSString	*path = [directoryContents objectAtIndex:loop];
 
         //Fetch the names of all directories
