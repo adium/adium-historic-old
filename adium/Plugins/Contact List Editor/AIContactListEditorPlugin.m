@@ -30,30 +30,30 @@
 
 - (void)installPlugin
 {
-    NSMenuItem		*menuItem;
-
-    //
-//    listEditorColumnControllerArray = [[NSMutableArray alloc] init];
-//    collectionsArray = nil;
-    
-    //Install the 'edit contact list' menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_CONTACT_LIST target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
-
-    //Edit contact list toolbar item
-    NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
-									   label:EDIT_CONTACT_LIST_TOOLBAR
-								    paletteLabel:EDIT_CONTACT_LIST_TOOLBAR
-									 toolTip:EDIT_CONTACT_LIST_TOOLBAR
-									  target:self
-								 settingSelector:@selector(setImage:)
-								     itemContent:[AIImageUtilities imageNamed:@"AIMsettings" forClass:[self class]]
-									  action:@selector(showContactListEditor:)
-									    menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
-
-    //Observe account list changes
-//    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+//    NSMenuItem		*menuItem;
+//
+//    //
+////    listEditorColumnControllerArray = [[NSMutableArray alloc] init];
+////    collectionsArray = nil;
+//    
+//    //Install the 'edit contact list' menu item
+//    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_CONTACT_LIST target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
+//    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
+//
+//    //Edit contact list toolbar item
+//    NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
+//									   label:EDIT_CONTACT_LIST_TOOLBAR
+//								    paletteLabel:EDIT_CONTACT_LIST_TOOLBAR
+//									 toolTip:EDIT_CONTACT_LIST_TOOLBAR
+//									  target:self
+//								 settingSelector:@selector(setImage:)
+//								     itemContent:[AIImageUtilities imageNamed:@"AIMsettings" forClass:[self class]]
+//									  action:@selector(showContactListEditor:)
+//									    menu:nil];
+//    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
+//
+//    //Observe account list changes
+////    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
 }
 
 - (void)uninstallPlugin
