@@ -437,9 +437,9 @@
 			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 											   [serviceID isEqualToString:@"ICQ"]);
 			
-			if (!(dict = [mutableAddressBookDict objectForKey:serviceID])){
+			if (!(dict = [addressBookDict objectForKey:serviceID])){
 				dict = [[[NSMutableDictionary alloc] init] autorelease];
-				[mutableAddressBookDict setObject:dict forKey:serviceID];
+				[addressBookDict setObject:dict forKey:serviceID];
 			}
 			
 			addressBookKey = [serviceDict objectForKey:serviceID];
