@@ -16,7 +16,8 @@ Dock
 [MEDIUM]
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
-
+Log Viewer
+    - All logs appear twice in the Log Viewer. 
 [LOW]
 
 Contacts
