@@ -25,6 +25,8 @@ typedef int(*sortfunc)(id, id, BOOL);
 	sortfunc				sortFunction;
 	
 	IBOutlet	NSView		*configureView;
+	
+	BOOL					becameActiveFirstTime;
 }
 
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
@@ -45,4 +47,7 @@ typedef int(*sortfunc)(id, id, BOOL);
 - (NSString *)configureNibName;
 - (void)viewDidLoad;
 - (IBAction)changePreference:(id)sender;
+- (void)didBecomeActive;
+- (void)didBecomeActiveFirstTime;
+
 @end
