@@ -16,11 +16,10 @@
 
 #import <Adium/AIPlugin.h>
 
-@class AIMessageWindowController, AIMessageViewController, AIMessageTabViewItem, AITabSwitchingPreferences,
-AIContactListWindowController,
-AIDualWindowPreferences, ESDualWindowMessageAdvancedPreferences;
+@class AIContactListWindowController, AIDualWindowPreferences, AIMessageTabViewItem,
+	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences;
 
-@protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
+@protocol AIInterfaceController;
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
