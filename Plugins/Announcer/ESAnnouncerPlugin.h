@@ -35,6 +35,4 @@
 
 - (IBAction)changedSetting:(id)sender;
 
-+ (BOOL)customEventSpeechHandlingForEventID:(NSString *)eventID;
-
 @end

@@ -167,7 +167,7 @@
 	}else{ /*Speak Event*/	
 		
 		//Handle messages in a custom manner
-		if([[self class] customEventSpeechHandlingForEventID:eventID]){
+		if([[adium contactAlertsController] isMessageEvent:eventID]){
 			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
 			NSString			*message = [[[content message] safeString] string];
 			AIListObject		*source = [content source];
@@ -272,13 +272,6 @@
 	}else{ /*Speak Event*/
 		return(NO);
 	}
-}
-
-+ (BOOL)customEventSpeechHandlingForEventID:(NSString *)eventID
-{
-	return([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
-		   [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
-		   [eventID isEqualToString:CONTENT_MESSAGE_SENT]);
 }
 
 @end
