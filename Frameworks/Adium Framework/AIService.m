@@ -158,29 +158,30 @@
 //Filters a UID.  All invalid characters and ignored characters are removed.
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
 {
-	NSString	*workingString = ([self caseSensitive] ? inUID : [inUID lowercaseString]);
+	NSString		*workingString = ([self caseSensitive] ? inUID : [inUID lowercaseString]);
 	NSCharacterSet	*allowedCharacters = [self allowedCharactersForUIDs];
 	NSCharacterSet	*ignoredCharacters = [self ignoredCharacters];
-	
+
 	//Prepare a little buffer for our filtered UID
-	int		destLength = 0;
-	unichar *dest = malloc([workingString length] * sizeof(unichar));
-	
+	unsigned	destLength = 0;
+	unsigned	workingStringLength = [workingString length];
+	unichar		*dest = malloc(workingStringLength * sizeof(unichar));
+
 	//Filter the UID
-	int pos;
-	for(pos = 0; pos < [workingString length]; pos++){
+	unsigned	pos;
+	for(pos = 0; pos < workingStringLength; pos++){
 		unichar c = [workingString characterAtIndex:pos];
 		
         if([allowedCharacters characterIsMember:c] && (!removeIgnored || ![ignoredCharacters characterIsMember:c])){
-            dest[destLength] = (removeIgnored ? [workingString characterAtIndex:pos] : [inUID characterAtIndex:pos]);
+            dest[destLength] = (removeIgnored ? c : [inUID characterAtIndex:pos]);
 			destLength++;
 		}
 	}
-	
+
 	//Turn it back into a string and return
     NSString *filteredString = [NSString stringWithCharacters:dest length:destLength];
 	free(dest);
-	
+
 	return(filteredString);
 }
 
