@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.58 2004/04/02 23:07:35 evands Exp $
+// $Id: AIContentController.m,v 1.59 2004/04/03 00:35:18 evands Exp $
 
 #import "AIContentController.h"
 
@@ -691,12 +691,12 @@
 																								   UID:[inObject UID]];
 			//Does the account know this object?
 			if(contactForAccount){
-				knowsObject = [account availableForSendingContentType:inType
+				knowsObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType
 														 toListObject:contactForAccount];
 			}
 			
 			//Could the account send this
-			couldSendContent = [account availableForSendingContentType:inType
+			couldSendContent = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType
 														  toListObject:nil];
 			
 			if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && couldSendContent)){

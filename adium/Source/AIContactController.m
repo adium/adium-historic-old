@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.120 2004/04/02 23:00:51 evands Exp $
+// $Id: AIContactController.m,v 1.121 2004/04/03 00:35:17 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -838,12 +838,12 @@
 		
 		NSEnumerator	*enumerator = [(AIMetaContact *)inContact objectEnumerator];
 		
-		while ((containedObject = [enuemrator nextObject]) && !returnContact){
+		while ((containedObject = [enumerator nextObject]) && !returnContact){
 			
 			//Recurse into metacontacts if necessary
 			if ([containedObject isKindOfClass:[AIMetaContact class]]){
 				returnContact = [self preferredContactForContentType:inType
-													  forListContact:containedObject];
+													  forListContact:(AIMetaContact *)containedObject];
 			}else{
 				account = [[owner accountController] preferredAccountForSendingContentType:inType
 																			  toListObject:containedObject];
@@ -858,9 +858,9 @@
 		account = [[owner accountController] preferredAccountForSendingContentType:inType
 																	  toListObject:inContact];
 		if (account) {
-			returnContact = [self contactWithService:[inObject serviceID]
+			returnContact = [self contactWithService:[inContact serviceID]
 										   accountID:[account uniqueObjectID] 
-												 UID:[inObject UID]];
+												 UID:[inContact UID]];
 		}
  	}
 	
