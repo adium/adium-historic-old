@@ -31,9 +31,6 @@
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
 
-//Private idle function
-extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
-
 @interface AIStatusController (PRIVATE)
 - (void)_saveStateArrayAndNotifyOfChanges;
 - (void)_applyStateToAllAccounts:(AIStatus *)state;
@@ -173,13 +170,25 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	return([menu autorelease]);
 }
 
-
-//Sort by title.  We may need to do more complex sorting to put certain defaults at the top?
+/*
+ * @brief Sort status menu items
+ *
+ * Sort alphabetically by title.
+ */
 int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
 	return [[menuItemA title] caseInsensitiveCompare:[menuItemB title]];
 }
 
+/*
+ * @brief Return an array of menu items for an AIStatusType and service
+ *
+ * @pram type The AIStatusType for which to return statuses
+ * @param inServiceCodeUniqueID The service for which to return active statuses.  If nil, return all statuses for online services.
+ * @param target The target for the menu items
+ *
+ * @result An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects.
+ */
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target
 {
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
@@ -235,6 +244,15 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return([menuItems autorelease]);
 }
 
+/*
+ * @brief Add menu items for a particular type of status
+ *
+ * @param type The AIStatusType, used for determining the icon of the menu items
+ * @param target The target of the created menu items
+ * @param statusDicts An NSSet of NSDictionary objects, which should each represent a status of the passed type
+ * @param menuItems The NSMutableArray to which to add the menuItems
+ * @param alreadyAddedTitles NSMutableSet of NSString titles which have already been added and should not be duplicated. Will be updated as items are added.
+ */
 - (void)_addMenuItemsForStatusOfType:(AIStatusType)type
 						  withTarget:(id)target
 							 fromSet:(NSSet *)statusDicts
@@ -243,7 +261,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
 	NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
 	NSDictionary	*statusDict;
-	
+	NSImage			*image = [[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
+															   type:AIStatusIconList
+														  direction:AIIconNormal] copy] autorelease];
+
 	//Enumerate the status dicts
 	while(statusDict = [statusDictEnumerator nextObject]){
 		NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
@@ -259,9 +280,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 																						  action:@selector(selectStatus:)
 																				   keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:statusDict];
-			[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
-																 type:AIStatusIconList
-															direction:AIIconNormal] copy] autorelease]];
+			[menuItem setImage:image];
 			[menuItem setEnabled:YES];
 			[menuItems addObject:menuItem];
 			[alreadyAddedTitles addObject:title];
@@ -296,6 +315,11 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return nil;
 }
 
+/*
+ * @brief The status name to use by default for a passed type
+ *
+ * This is the name which will be used for new AIStatus objects of this type.
+ */
 - (NSString *)defaultStatusNameForType:(AIStatusType)statusType
 {
 	//Set the default status name
@@ -597,6 +621,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 #define MACHINE_IDLE_THRESHOLD			30 	//30 seconds of inactivity is considered idle
 #define MACHINE_ACTIVE_POLL_INTERVAL	30	//Poll every 60 seconds when the user is active
 #define MACHINE_IDLE_POLL_INTERVAL		1	//Poll every second when the user is idle
+
+//Private idle function
+extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
+
 /*!
  * @brief Returns the current machine idle time
  *
@@ -736,6 +764,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[menuItemArray removeAllObjects];
 }
 
+/*
+ * @brief A plugin created its own menu items it wants us to track and update
+ */
 - (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems
 {
 	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
@@ -1106,6 +1137,11 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	return(title);
 }
 
+/*
+ * @brief Create and add the built-in status types
+ *
+ * The built-in status types are basic, generic "Available" and "Away" states.
+ */
 - (void)buildBuiltInStatusTypes
 {
 	NSDictionary	*statusDict;
