@@ -110,12 +110,16 @@
     }
 
     //Volume
+   // NSLog (@"Could save slider volume of %f", value);
     if(value != [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]){
+        //NSLog (@"Old sound volume: %@", [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL]);
         [[owner preferenceController] setPreference:[NSNumber numberWithFloat:value]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
                                               group:PREF_GROUP_GENERAL];
         playSample = YES;
+        //NSLog (@"New sound volume: %f", value);
     }
+    //NSLog (@"Opportunity for this over: 'Could save slider volume of %f'", value);
 
     //Muted
     if(mute != [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue]){

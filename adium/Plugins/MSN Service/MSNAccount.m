@@ -1148,22 +1148,30 @@
     switch([[[timer userInfo] objectForKey:@"Phase"] intValue])
     {
         case 0:
-            if (thisTrid == 0)
+            if ([socket isValid])
             {
-                thisTrid = [self getTrid:YES];
-                [[timer userInfo] setObject:[NSNumber numberWithInt:thisTrid] forKey:@"Trid"];
-            }
-            
-            temp = [NSString stringWithFormat:@"XFR %u SB\r\n", thisTrid];
-            
-            if ([socket sendData:[temp dataUsingEncoding:NSUTF8StringEncoding]])
+                if (thisTrid == 0)
                 {
-                    NSLog(@">>> %@", temp);
-                    [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
+                    thisTrid = [self getTrid:YES];
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:thisTrid] forKey:@"Trid"];
                 }
-            NSLog([[timer userInfo] objectForKey:@"Handle"]);
+                
+                temp = [NSString stringWithFormat:@"XFR %u SB\r\n", thisTrid];
+                
+                if ([socket sendData:[temp dataUsingEncoding:NSUTF8StringEncoding]])
+                    {
+                        NSLog(@">>> %@", temp);
+                        [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
+                    }
+                NSLog([[timer userInfo] objectForKey:@"Handle"]);
+            }
+            else
+            {
+                NSLog (@"MSN: 0Tried to start SB Socket with dead NS Socket.  Cancelling");
+                [timer invalidate];
+            }
             break;
-            
+
         case 1:
             if([socket getDataToNewline:&inData remove:NO])
             {
@@ -1199,6 +1207,11 @@
                     //move on
                     [[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Phase"];
                 }
+            }
+            else if (![socket isValid])
+            {
+                NSLog (@"MSN: 1Tried to start SB Socket with dead NS Socket.  Cancelling");
+                [timer invalidate];
             }
             break;
 
