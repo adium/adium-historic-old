@@ -52,6 +52,9 @@
     invertedGroupColor = nil;
     outlineGroupColor = nil;
     selectedItem = nil;
+    outlineLabels = NO;
+    labelOpacity = 1.0;
+    
     int i;
     for (i=0 ; i < 3; i++) {
         desiredWidth[i] = 0;
@@ -422,6 +425,21 @@
     return(showLabels);
 }
 
+- (void)setLabelOpacity:(float)inValue{
+    labelOpacity = inValue;
+}
+- (float)labelOpacity{
+    return labelOpacity;
+}
+
+- (void)setOutlineLabels:(BOOL)inValue{
+    outlineLabels = inValue;
+}
+- (BOOL)outlineLabels{
+    return outlineLabels;   
+}
+
+
 - (void)setIsBorderless:(BOOL)inIsBorderless{
     isBorderless = inIsBorderless;
 }
@@ -480,17 +498,33 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    //If it's borderless, handle passing the cmdKey along to the window or making the window key, as the OS won't do this for us
-    if (isBorderless) {
-        if ([theEvent cmdKey]) {
-            if ([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
-                [[self delegate] performSelector:@selector(_endTrackingMouse)];
+    //If it's borderless, handle passing the cmdKey along to the window or making the window key, as the OS won't do this for us; otherwise, act as normal
+    if (isBorderless && ([theEvent type] == NSLeftMouseDown)) {
+        //Grab the next event
+        NSEvent *newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO];
+        //
+        if ([newEvent type]==NSLeftMouseUp){
+            //The borderless window does not automatically becaome key and main, so force it to be
+            if (![[self window] isMainWindow]) {
+                [[self window] makeKeyWindow];
+                [[self window] makeMainWindow];
+            }
             
-            [[self window] mouseDown:theEvent];
-        } else {
-            [[self window] makeKeyWindow];
             [super mouseDown:theEvent];
-        }
+            [super mouseUp:newEvent];
+        } else {
+            if ([theEvent cmdKey]) {
+                if ([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
+                    [[self delegate] performSelector:@selector(_endTrackingMouse)];
+                [[self window] mouseDown:theEvent];
+                if ([newEvent type]==NSLeftMouseDraggedMask) {
+                    [[self window] mouseDragged:newEvent];
+                }
+            } else {
+                //Now pass the event to NSOutlineView
+                [super mouseDown:theEvent];
+            }
+        } 
     } else {
         [super mouseDown:theEvent];   
     }

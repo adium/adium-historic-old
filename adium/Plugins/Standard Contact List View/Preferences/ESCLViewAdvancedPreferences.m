@@ -54,6 +54,14 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_LABEL_AROUND_CONTACT
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];       
+    }else if(sender == checkbox_outlineLabels){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SCL_OUTLINE_LABELS
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];       
+    }else if(sender == slider_labelOpacity){
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+                                             forKey:KEY_SCL_LABEL_OPACITY
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];   
     }
            
     [self configureControlDimming];
@@ -66,11 +74,15 @@
 
     [slider_opacity setFloatValue:[[preferenceDict objectForKey:KEY_SCL_OPACITY] floatValue]];
     [checkbox_borderless setState:[[preferenceDict objectForKey:KEY_SCL_BORDERLESS] boolValue]];
+    
     [slider_rowSpacing setFloatValue:[[preferenceDict objectForKey:KEY_SCL_SPACING] floatValue]];
     [checkbox_outlineGroups setState:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue]];
     [colorWell_outlineGroupsColor setColor:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor]];
     [checkbox_tooltipsInBackground setState:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue]];
+    
     [checkbox_labelAroundContact setState:[[preferenceDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue]];
+    [checkbox_outlineLabels setState:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue]];
+    [slider_labelOpacity setFloatValue:[[preferenceDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue]];
     
     [self configureControlDimming];
 }
@@ -80,8 +92,19 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
-    [checkbox_labelAroundContact setEnabled:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
-    [colorWell_outlineGroupsColor setEnabled:[checkbox_outlineGroups state]];
+    //Labels
+    BOOL labelsAreEnabled = [[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
+    [checkbox_labelAroundContact    setEnabled:labelsAreEnabled];
+    [checkbox_outlineLabels         setEnabled:labelsAreEnabled];
+    [slider_labelOpacity            setEnabled:labelsAreEnabled];
+    
+    //Outlining of groups uses NSStrokeColorAttributeName, which was introduced in Panther
+    if (![NSApp isOnPantherOrBetter]) {
+        [checkbox_outlineGroups setEnabled:NO];
+        [colorWell_outlineGroupsColor setEnabled:NO];
+    } else {
+        [colorWell_outlineGroupsColor setEnabled:[checkbox_outlineGroups state]];
+    }
 }
 
 @end
