@@ -55,7 +55,6 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 {
 	NSMenu			*scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
 	NSString		*internalPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS];
-	NSMutableArray  *scripts;
 	
 	//Load the scripts, sort them, and stick them in our menu
 	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:[internalPath stringByExpandingTildeInPath]
@@ -144,7 +143,6 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	enumerator = [scripts objectEnumerator];
 	while(appendDict = [enumerator nextObject]){
 		NSString	*type = [appendDict objectForKey:@"Type"];
-		NSMenuItem	*item = nil;
 		
 		//Get the item
 		if([type compare:@"Script"] == 0){
