@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define TAB_COLORING_DEFAULT_PREFS	@"TabColoringDefaults"
+#define TAB_COLORING_DEFAULT_PREFS              @"TabColoringDefaults"
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
 #define KEY_TAB_AWAY_ENABLED		@"Tab Away Enabled"
@@ -35,6 +35,15 @@
 #define KEY_TAB_UNVIEWED_COLOR		@"Tab Unviewed Content Color"
 #define KEY_TAB_ONLINE_COLOR		@"Tab Online Color"
 #define KEY_TAB_IDLE_AWAY_COLOR		@"Tab Idle And Away Color"
+
+#define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
+#define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
+#define KEY_LABEL_TYPING_COLOR		@"Typing Label Color"
+#define KEY_LABEL_SIGNED_OFF_COLOR	@"Signed Off Label Color"
+#define KEY_LABEL_SIGNED_ON_COLOR	@"Signed On Label Color"
+#define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
+#define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
+#define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
 
 @class AIContactStatusTabColoringPreferences;
 
