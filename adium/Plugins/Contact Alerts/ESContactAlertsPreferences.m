@@ -315,7 +315,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     }else if([identifier compare:TABLE_COLUMN_CONTACT] == 0){
         NSString *contact;
-        contact = [[instance activeObject] displayName]; //just the display name for now
+        contact = [[instance activeObject] longDisplayName]; //Milk switched to longDisplayName to differentiate people with two aliases.  (aliii?)
 
         [instance configForObject:activeContactObject];
         return (contact);
