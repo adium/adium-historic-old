@@ -18,7 +18,7 @@
 #import "AIListGroupBubbleCell.h"
 #import "AIListGroupBubbleToFitCell.h"
 
-#define FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10];
+#define FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 
 @implementation AIAbstractListWindowController
 
