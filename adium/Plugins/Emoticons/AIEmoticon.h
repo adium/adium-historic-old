@@ -18,7 +18,6 @@
 
 @interface AIEmoticon : NSObject {
     NSString			*path;
-//    NSMutableArray		*representedText;
     NSString			*representedText;
     NSAttributedString		*attributedEmoticon;
 }
@@ -27,10 +26,9 @@
 - (id)initWithPath:(NSString *)inPath andText:(NSString *)inText;
 
 - (NSString *)path;
-//- (NSEnumerator *)representedTextEnumerator;
-- (NSAttributedString *)attributedEmoticon;
 - (NSString *)representedText;
 - (NSString *)string;
+- (NSAttributedString *)attributedEmoticon;
 
 - (void)setRepresentedText:(NSString *)inString;
 - (void)setPath:(NSString *)inPath;

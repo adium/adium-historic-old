@@ -33,6 +33,7 @@
 
     path = nil;
     representedText = nil;
+    attributedEmoticon = nil;
 
     return(self);
 }
@@ -58,16 +59,6 @@
 {
     return path;
 }
-/*
-- (NSEnumerator *)representedTextEnumerator
-{
-    return [representedText objectEnumerator];
-}*/
-- (NSAttributedString *)attributedEmoticon
-{
-    return attributedEmoticon;
-}
-
 - (NSString *)representedText
 {
     return representedText;
@@ -75,12 +66,11 @@
 - (NSString *)string
 {
     return representedText;
-    /*
-    if([representedText count] != 0){
-	return [representedText objectAtIndex:0];
-    }else{
-	return nil;
-    }*/
+}
+
+- (NSAttributedString *)attributedEmoticon
+{
+    return attributedEmoticon;
 }
 
 - (void)setRepresentedText:(NSString *)inString
@@ -89,17 +79,6 @@
         [representedText release];
         representedText = [inString retain];
     }
-    /*
-    NSArray		*textStrings = [returnDelimitedString componentsSeparatedByString:@"\r"];
-    NSEnumerator	*enumerator = [textStrings objectEnumerator];
-    NSString		*currentString = nil;
-    
-    [representedText release]; representedText = [[NSMutableArray alloc] init];
-    
-    while(currentString = [enumerator nextObject]){
-	[representedText addObject:[currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-    }
-    */
 }
 
 - (void)setPath:(NSString *)inPath
