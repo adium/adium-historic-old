@@ -6305,7 +6305,6 @@
 				4BD6745906001D5F0049CAF7,
 				4BD6745D06001D730049CAF7,
 				4BD6746206001D750049CAF7,
-				4BD6746706001D7E0049CAF7,
 				4BD6746906001D7F0049CAF7,
 				4BD6746B06001D800049CAF7,
 				4BD6746D06001D800049CAF7,
@@ -6429,6 +6428,7 @@
 				4B292D5907A9C92F00C5F882,
 				4BC32F7A07AABC5400DDED66,
 				4B587C7207ABFDAD001832A9,
+				4B3B125907AC411D00187CCF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6888,7 +6888,6 @@
 				4BD6745A06001D5F0049CAF7,
 				4BD6745E06001D740049CAF7,
 				4BD6746306001D760049CAF7,
-				4BD6746806001D7E0049CAF7,
 				4BD6746A06001D800049CAF7,
 				4BD6746C06001D800049CAF7,
 				4BD6746E06001D810049CAF7,
@@ -7012,6 +7011,7 @@
 				4B292D5A07A9C92F00C5F882,
 				4BC32F7B07AABC5400DDED66,
 				4B587C7307ABFDAD001832A9,
+				4B3B125A07AC411D00187CCF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12673,6 +12673,36 @@
 			settings = {
 			};
 		};
+		4B3B125707AC411D00187CCF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIChatLog.h;
+			path = Plugins/Logger/AIChatLog.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B3B125807AC411D00187CCF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIChatLog.m;
+			path = Plugins/Logger/AIChatLog.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B3B125907AC411D00187CCF = {
+			fileRef = 4B3B125707AC411D00187CCF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3B125A07AC411D00187CCF = {
+			fileRef = 4B3B125807AC411D00187CCF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3DB8FD04547A8D00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -17168,18 +17198,6 @@
 			settings = {
 			};
 		};
-		4BD6746706001D7E0049CAF7 = {
-			fileRef = 6C644D3405776BC500D79723;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6746806001D7E0049CAF7 = {
-			fileRef = 6C644D3505776BC600D79723;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6746906001D7F0049CAF7 = {
 			fileRef = 6C644D3605776BC600D79723;
 			isa = PBXBuildFile;
@@ -17728,8 +17746,8 @@
 				C45F7F6406C75E210056B1F2,
 				4B1AB2A606E101FF00FB5EAD,
 				4B1AB2A706E101FF00FB5EAD,
-				6C644D3405776BC500D79723,
-				6C644D3505776BC600D79723,
+				4B3B125707AC411D00187CCF,
+				4B3B125807AC411D00187CCF,
 				6C644D3605776BC600D79723,
 				6C644D3705776BC600D79723,
 				6C644D3C05776BEF00D79723,
@@ -18792,24 +18810,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = JSCEventBezelWindow.m;
 			path = "Plugins/Event Bezel/JSCEventBezelWindow.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C644D3405776BC500D79723 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AILog.h;
-			path = Plugins/Logger/AILog.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C644D3505776BC600D79723 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AILog.m;
-			path = Plugins/Logger/AILog.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
