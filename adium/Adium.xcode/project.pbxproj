@@ -6270,6 +6270,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
+				CACEFF8E06D4032500BD9C13,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium 1.6 Pref Importer";
@@ -6331,6 +6332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3448769806D1EF5900DA778C,
+				CACEFF8C06D4031A00BD9C13,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21186,6 +21188,34 @@
 //C42
 //C43
 //C44
+//CA0
+//CA1
+//CA2
+//CA3
+//CA4
+		CACEFF8C06D4031A00BD9C13 = {
+			fileRef = 3448717206D1E57700DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CACEFF8D06D4032500BD9C13 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		CACEFF8E06D4032500BD9C13 = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = CACEFF8D06D4032500BD9C13;
+		};
+//CA0
+//CA1
+//CA2
+//CA3
+//CA4
 //D30
 //D31
 //D32
