@@ -26,6 +26,9 @@
 
 @implementation SHSafariBookmarksImporter
 
+static NSMenu   *bookmarksMenu;
+static NSMenu   *bookmarksSupermenu;
+
 -(NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;
@@ -83,12 +86,12 @@
             }else if([[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
                 // if outObject is a list, then get the array it contains, then push the menu down.
                 bookmarksSupermenu = bookmarksMenu;
-                bookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
+                bookmarksMenu = [[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]];
                 
-                NSMenuItem *safariSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
+                NSMenuItem *safariSubMenuItem = [[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
-                                                                     keyEquivalent:@""] autorelease];
+                                                                     keyEquivalent:@""];
                 [bookmarksSupermenu addItem:[safariSubMenuItem retain]];
                 [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:safariSubMenuItem];
                 [self drillPropertyList:outObject];
@@ -103,6 +106,11 @@
     }
 }
 
+//-(void)clearAllItems
+//{
+//    bookmarksMenu
+//}
+
 -(void)menuItemFromDict:(NSDictionary *)inDict
 {
     // for convienence, refer to the URIDictionary by it's own variable
@@ -114,7 +122,7 @@
                                                                       andRange:NSMakeRange(0,[(NSString *)[URIDict objectForKey:SAFARI_DICT_URI_TITLE] length])] autorelease];
     
     [bookmarksMenu addItemWithTitle:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
-                                  target:[owner retain]
+                                  target:owner
                                   action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""
                        representedObject:[markedLink retain]];

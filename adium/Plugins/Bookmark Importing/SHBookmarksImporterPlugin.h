@@ -16,8 +16,8 @@
 
 @interface SHBookmarksImporterPlugin : AIPlugin {
     NSMutableArray  *importerArray;
-    NSMenuItem      *bookmarkRootMenuItem;
-    NSMenuItem      *bookmarkRootContextualMenuItem;
+//    NSMenuItem      *bookmarkRootMenuItem;
+//    NSMenuItem      *bookmarkRootContextualMenuItem;
 }
 
 @end

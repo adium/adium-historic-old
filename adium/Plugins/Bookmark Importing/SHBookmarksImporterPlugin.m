@@ -18,6 +18,11 @@
 
 @implementation SHBookmarksImporterPlugin
 
+static NSMenuItem   *bookmarkRootMenuItem;
+static NSMenuItem   *bookmarkRootContextualMenuItem;
+static NSMenuItem   *firstMenuItem;
+static NSMenu       *firstSubmenu;
+static NSMenu       *bookmarkSets;
 - (void)installPlugin
 {
     importerArray = [[[NSMutableArray alloc] init] autorelease];
@@ -63,19 +68,22 @@
     NSEnumerator *enumerator = [importerArray objectEnumerator];
     id <SHBookmarkImporter> importer;
     
-    NSMenu  *bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+    if([bookmarkRootMenuItem submenu]) [[bookmarkRootMenuItem submenu] removeAllItems];
+    if([bookmarkRootContextualMenuItem submenu]) [[bookmarkRootContextualMenuItem submenu] removeAllItems];
+    
+    bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
     while(importer = [enumerator nextObject]){
         if([importer bookmarksExist]){
-            NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
+            firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
                                                               target:self
                                                               action:nil
                                                        keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:importer];
-            [bookmarkSets addItem:menuItem];
+            [firstMenuItem setRepresentedObject:importer];
+            [bookmarkSets addItem:firstMenuItem];
 
-            NSMenu *subMenu = [self buildBookmarkMenuFor:menuItem];
-            [menuItem setSubmenu:subMenu];
+            firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
+            [firstMenuItem setSubmenu:firstSubmenu];
         }
     }
     if([bookmarkSets numberOfItems]){
@@ -94,10 +102,38 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
-            if([[menuItem representedObject] bookmarksUpdated]){
-                [self buildBookmarkMenuFor:menuItem];
+//	if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+//            if([[menuItem representedObject] bookmarksUpdated]){
+//                [self buildBookmarkMenuFor:menuItem];
+//            }
+//        }
+
+        if([[[bookmarkRootMenuItem submenu] itemArray] count]){
+            NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
+            NSMenuItem *object;
+            NSMenu  *newMenu = nil;
+            while(object = [enumerator nextObject]){
+                if([[object representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+                    if([[object representedObject] bookmarksUpdated]){
+                        NSLog(@"building new menu");
+                        [[object submenu] removeAllItems];
+                        newMenu = [self buildBookmarkMenuFor:object];
+                        [object setSubmenu:newMenu];
+                        [[[(NSMenuItem *)bookmarkRootContextualMenuItem submenu] itemAtIndex:[[(NSMenuItem *)bookmarkRootMenuItem submenu] indexOfItem:object]]
+                                                                                setSubmenu:[[newMenu copy] autorelease]];
+                        NSLog(@"built new menu");
+                    }
+                }
             }
+//            if(newMenu){
+//                [[bookmarkRootMenuItem submenu] removeAllItems];
+//                [[bookmarkRootContextualMenuItem submenu] removeAllItems]; 
+//                
+//                [bookmarkRootMenuItem setSubmenu:newMenu];
+//                [bookmarkRootContextualMenuItem setSubmenu:[[newMenu copy] autorelease]];
+//            }
+        }else{
+            return NO;
         }
         
         if(responder && [responder isKindOfClass:[NSTextView class]]){
