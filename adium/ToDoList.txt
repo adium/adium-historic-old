@@ -60,7 +60,11 @@ Other:
 	+ Add export option to log viewer
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 		- This should be supported by libgaim already; look into tapping into it
-	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
+	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host
+                [Steve] mostly done - xmpp:user@host works.
+                        xmpp:user@host/resource would, but it looks like we can't open a chat to an arbitrary resource on jabber quite yet.
+                        I'd be willing to tinker away with this, but I'm horribly unfamiliar with the protocol code & libgaim.  If someone wants to go through it with me at some point, that'd be awesome.
+                [/Steve]
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
 
 Contact alerts:
