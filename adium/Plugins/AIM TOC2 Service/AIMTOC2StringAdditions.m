@@ -61,24 +61,6 @@
     return([self substringFromIndex:[scanner scanLocation]]);
 }
 
-/* compactedString
-*   returns the string in all lowercase without spaces
-*/
-- (NSString *)compactedString
-{
-    NSMutableString 	*outName;
-    short		pos;
-
-    outName = [[NSMutableString alloc] initWithString:[self lowercaseString]];
-    for(pos = 0;pos < [outName length];pos++){
-        if([outName characterAtIndex:pos] == ' '){
-            [outName deleteCharactersInRange:NSMakeRange(pos,1)];
-            pos--;
-        }
-    }
-
-    return([outName autorelease]);
-}
 
 - (NSMutableString *)validAIMStringCopy
 {

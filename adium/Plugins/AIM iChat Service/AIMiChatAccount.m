@@ -17,10 +17,15 @@
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
+#import "InstantMessageFramework.h"
 
 //
 extern void* objc_getClass(const char *name);
 //
+
+@interface AIMiChatAccount (PRIVATE)
+- (void)processProperties:(NSArray *)inProperties;
+@end
 
 @implementation AIMiChatAccount
 
@@ -30,15 +35,11 @@ extern void* objc_getClass(const char *name);
 {
     NSArray	*services;
 
+    //init
+    buddyPropertiesQue = [[NSMutableArray alloc] init];
+
     //Connect to the iChatAgent
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
-
-//    [connection setReplyTimeout:-1];
-//    [connection setRequestTimeout:0];
-//    [connection setIndependentConversationQueueing:YES];
-
-buddyPropertiesQue = [[NSMutableArray alloc] init];
-
     FZDaemon = [[connection rootProxy] retain];
 
     //Get the AIM Service
@@ -46,7 +47,7 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
     AIMService = [[[FZDaemon allServices] objectAtIndex:0] retain];
 
     //Register as a listener
-    [FZDaemon addListener:self  capabilities:15]; //15 is what iChat uses... dunno the meaning    
+    [FZDaemon addListener:self capabilities:15]; //15 is what iChat uses... dunno the meaning    
     [AIMService addListener:self signature:@"com.adiumX.adium" capabilities:15]; //15 is what iChat uses... dunno the meaning
 }
 
@@ -59,7 +60,7 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
 // Return a unique ID for this account type and username
 - (NSString *)accountID
 {
-    return([NSString stringWithFormat:@"AIM.%@",[[self accountDescription] compactedString]]);
+    return([NSString stringWithFormat:@"iChat.%@",[[self accountDescription] compactedString]]);
 }
 
 // Return a readable description of this account's username
@@ -100,26 +101,39 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
     return(YES);
 }
 
-// AIAccount_Messaging
+- (BOOL)renameHandle:(AIContactHandle *)handle inGroup:(AIContactGroup *)group to:(NSString *)inName
+{
+    return(YES);
+}
+
+- (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
+{
+    return(YES);
+}
+
+- (BOOL)contactListEditable
+{
+    return(NO);
+}
+
+// AIAccount_Messaging --------------------------------------------------------------------------------
 - (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle
 {
-    if([object isKindOfClass:[AIContentMessage class]]){
+    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         NSString	*message;
         id		chat;
         id		messageObject;
 
         message = [[(AIContentMessage *)object message] string];
-        //Convert to HTML
 
         //Create a chat & send the message
-        #warning I guess I could cache these chats
+        //(I guess I could cache these chats)
 	chat = [AIMService createChatForIMsWith:[inHandle UID] isDirect:NO];
-        messageObject = [[objc_getClass("FZMessage") alloc] initWithSender:[self accountDescription] time:[NSDate date] format:2 body:message attributes:0 incomingFile:0 outgoingFile:0 inlineFiles:0 flags:5];
+        messageObject = [[FZMessage alloc] initWithSender:[self accountDescription] time:[NSDate date] format:2 body:message attributes:0 incomingFile:0 outgoingFile:0 inlineFiles:0 flags:5];
         [AIMService sendMessage:messageObject toChat:chat];
 
     }else{
-        NSLog(@"Uknown message object subclass");
-        #warning call default handler
+        NSLog(@"Unknown message object subclass");
     }
     
     return(YES);
@@ -172,13 +186,16 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
         case 4: //Online
             [self setStatus:STATUS_ONLINE];
             NSLog(@"Connected: %@",inMessage);
+
+            //
+            screenName = [[AIMService loginID] copy];
+
+            //Squelch soudns and updates while we sign on
+            [[owner contactController] delayContactListUpdatesFor:10];
             
-            #warning give iChatAgent 2 seconds to flood us with update events
+            //Give iChatAgent 2 seconds to flood us with update events
             queEvents = YES;
             [NSTimer scheduledTimerWithTimeInterval:(2.0) target:self selector:@selector(finishSignOn:) userInfo:nil repeats:NO];
-            
-//            [self service:nil buddyPropertiesChanged:[AIMService buddyProperties]];
-
         break;
 
         default:
@@ -193,16 +210,17 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
     NSAttributedString	*messageText;
     AIContentMessage	*messageObject;
     
-    
     NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
 
-    //Get the handle and message
-    handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[inMessage sender] forAccount:self];
-    messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
-
-    //Add the message
-    messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
-    [[owner contentController] addIncomingContentObject:messageObject toHandle:handle];
+    if([[inMessage sender] compare:screenName] != 0){ //Ingore echoed messages (anything from ourself)
+        //Get the handle and message
+        handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[inMessage sender] forAccount:self];
+        messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
+    
+        //Add the message
+        messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
+        [[owner contentController] addIncomingContentObject:messageObject toHandle:handle];
+    }
 }
 
 - (oneway void)service:(id)inService buddyPropertiesChanged:(NSArray *)inProperties
@@ -237,8 +255,9 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
         
         //Get the handle
         compactedName = [dict objectForKey:@"FZPersonID"];
-        #warning check the 'ISBuddy' key, and if it's NO, use the 'handleWithService' method.
-        handle = [[owner contactController] createHandleWithService:[service handleServiceType] UID:compactedName inGroup:[[owner contactController] contactList] forAccount:self];
+
+        //(check the 'ISBuddy' key, and if it's NO, use the 'handleWithService' method.)
+        handle = [[owner contactController] createHandleWithService:[service handleServiceType] UID:compactedName inGroup:nil forAccount:self];
 
         if(handle){
             NSNumber		*storedValue;
@@ -312,11 +331,6 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
                 
             }
             
-            //Update the handle's.....
-//            NSLog(@"%@ (%i) caps",compactedName, [[dict objectForKey:@"FZPersonCapabilities"] intValue]);
-            
-            //Update the handle's.....
-            
             //Let the contact list know a handle's status changed
             if([alteredStatusKeys count]){
                 [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys];
@@ -326,37 +340,37 @@ buddyPropertiesQue = [[NSMutableArray alloc] init];
 }
 
 - (oneway void)service:(id)service requestOutgoingFileXfer:(id)file{
-    NSLog(@"Woot: requestOutgoingFileXfer (%@)",file);
+//    NSLog(@"Woot: requestOutgoingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)service requestIncomingFileXfer:(id)file{
-    NSLog(@"Woot: requestIncomingFileXfer (%@)",file);
+//    NSLog(@"Woot: requestIncomingFileXfer (%@)",file);
 }
-- (oneway void)service:(id)service chat:(id)chat member:(id)member statusChanged:(int)status{
-    NSLog(@"Woot: chat:member:statusChanged (%@, %@, %i)",chat,member,status);
+- (oneway void)service:(id)service chat:(id)chat member:(id)member statusChanged:(int)inStatus{
+//    NSLog(@"Woot: chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
 }
 - (oneway void)service:(id)service chat:(id)chat showError:(id)error{
-    NSLog(@"Woot: showError (%@, %i)",chat,error);
+//    NSLog(@"Woot: showError (%@, %i)",chat,error);
 }
-- (oneway void)service:(id)service chat:(id)chat statusChanged:(int)status{
-    NSLog(@"Woot: chat:statusChanged (%@, %i)",chat,status);
+- (oneway void)service:(id)service chat:(id)chat statusChanged:(int)inStatus{
+//    NSLog(@"Woot: chat:statusChanged (%@, %i)",chat,inStatus);
 }
 - (oneway void)service:(id)service directIMRequestFrom:(id)from invitation:(id)invitation{
-    NSLog(@"Woot: directIMRequestFrom (%@, %@)",from,invitation);
+//    NSLog(@"Woot: directIMRequestFrom (%@, %@)",from,invitation);
 }
 - (oneway void)service:(id)service invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
-    NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
+//    NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
 }
 - (oneway void)service:(id)service youAreDesignatedNotifier:(char)notifier{
-    NSLog(@"Woot: youAreDesignatedNotifier (%i)",(int)notifier);
+//    NSLog(@"Woot: youAreDesignatedNotifier (%i)",(int)notifier);
 }
 - (oneway void)service:(id)service buddyPictureChanged:(id)buddy imageData:(id)image{
-    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);
+//    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);
 }
 - (oneway void)openNotesChanged:(id)unknown{
-    NSLog(@"Woot: openNotesChanged (%@)",unknown);
+//    NSLog(@"Woot: openNotesChanged (%@)",unknown);
 }
 - (oneway void)myStatusChanged:(id)unknown{
-    NSLog(@"Woot: myStatusChanged (%@)",unknown);
+//    NSLog(@"Woot: myStatusChanged (%@)",unknown);
 }
 
 

@@ -721,6 +721,87 @@
 			settings = {
 			};
 		};
+		4BC3133A03BE28D700A8010A = {
+			fileRef = F56621A803AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC3133B03BE28D800A8010A = {
+			fileRef = F56621A603AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC3133C03BE28D800A8010A = {
+			fileRef = F54441AC0378A36A01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC3133F03BE2CE200A8010A = {
+			fileRef = F56621A503AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC3134003BE2CE200A8010A = {
+			fileRef = F56621A703AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEF84CB03BE33E100A8010A = {
+			isa = PBXBundleReference;
+			name = "AIM (iChat).AdiumPlugin";
+			path = "build/AIM (iChat).AdiumPlugin";
+			refType = 4;
+		};
+		4BEF84CC03BE33E100A8010A = {
+			fileRef = 4BEF84CB03BE33E100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEF84CD03BE41C700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStringAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIStringAdditions.h";
+			refType = 4;
+		};
+		4BEF84CE03BE41C700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStringAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIStringAdditions.m";
+			refType = 4;
+		};
+		4BEF84CF03BE41C700A8010A = {
+			fileRef = 4BEF84CD03BE41C700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEF84D003BE41C700A8010A = {
+			fileRef = 4BEF84CE03BE41C700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEF84D203BE41E900A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = InstantMessageFramework.h;
+			path = "Plugins/AIM iChat Service/InstantMessageFramework.h";
+			refType = 4;
+		};
+		4BEF84D303BE41E900A8010A = {
+			fileRef = 4BEF84D203BE41E900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //4B0
 //4B1
 //4B2
@@ -1969,6 +2050,7 @@
 				F55B417303AB8C5601A8010A,
 				F55596B603B784C801A8010A,
 				4BBC8E4D03BA0DB900A8010A,
+				4BEF84CF03BE41C700A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2035,6 +2117,7 @@
 				F55B417503AB8C6201A8010A,
 				F55596B703B784C801A8010A,
 				4BBC8E4E03BA0DB900A8010A,
+				4BEF84D003BE41C700A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2631,6 +2714,7 @@
 				F5DDB1CD03B6BDDA01A8010A,
 				F551A50603AC4C5001A8010A,
 				F551A50703AC4C5001A8010A,
+				4BEF84CC03BE33E100A8010A,
 				F551A50803AC4C5001A8010A,
 				F551A50903AC4C5001A8010A,
 				F551A50A03AC4C5001A8010A,
@@ -2872,6 +2956,7 @@
 				F551A4FA03AC4C4E01A8010A,
 				F551A4FB03AC4C4E01A8010A,
 				F551A4FC03AC4C4F01A8010A,
+				4BEF84CB03BE33E100A8010A,
 				F551A4FD03AC4C4F01A8010A,
 				F551A4FE03AC4C4F01A8010A,
 				F551A4FF03AC4C4F01A8010A,
@@ -3858,15 +3943,15 @@
 		F56621A703AD02AC01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = AIMiChatService.h;
-			path = "Plugins/AIM iChat Service/AIMiChatService.h";
+			name = AIMiChatServicePlugin.h;
+			path = "Plugins/AIM iChat Service/AIMiChatServicePlugin.h";
 			refType = 4;
 		};
 		F56621A803AD02AC01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = AIMiChatService.m;
-			path = "Plugins/AIM iChat Service/AIMiChatService.m";
+			name = AIMiChatServicePlugin.m;
+			path = "Plugins/AIM iChat Service/AIMiChatServicePlugin.m";
 			refType = 4;
 		};
 		F567DD510306A43A01A8010A = {
@@ -5813,6 +5898,7 @@
 		F5793978033E74F001A8010A = {
 			children = (
 				F5793952033E74E401A8010A,
+				4BEF84CD03BE41C700A8010A,
 				F55596B403B784C801A8010A,
 				F55B415903AB8B2601A8010A,
 				F55B417203AB8C5601A8010A,
@@ -6230,6 +6316,7 @@
 		F59C470D033E544E01A8010A = {
 			children = (
 				F5793939033E74E401A8010A,
+				4BEF84CE03BE41C700A8010A,
 				F579393B033E74E401A8010A,
 				4BBC8E4C03BA0DB900A8010A,
 				F579394D033E74E401A8010A,
@@ -6685,6 +6772,9 @@
 		F5A01D860379813301A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4BC3133F03BE2CE200A8010A,
+				4BC3134003BE2CE200A8010A,
+				4BEF84D303BE41E900A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6699,6 +6789,8 @@
 		F5A01D880379813301A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4BC3133A03BE28D700A8010A,
+				4BC3133B03BE28D800A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6710,6 +6802,7 @@
 				F5B97145037985BA01A8010A,
 				F5B97146037985CE01A8010A,
 				F5B97147037985CE01A8010A,
+				4BC3133C03BE28D800A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6737,7 +6830,7 @@
 				PRODUCT_NAME = "AIM (iChat)";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumService;
+				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
 			);
@@ -6772,14 +6865,14 @@
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
-	<string>AIMiChatService</string>
+	<string>AIMiChatServicePlugin</string>
 </dict>
 </plist>
 ";
 		};
 		F5A01D8C0379813301A8010A = {
 			isa = PBXBundleReference;
-			path = "AIM (iChat).AdiumService";
+			path = "AIM (iChat).AdiumPlugin";
 			refType = 3;
 		};
 		F5A01D8D0379813F01A8010A = {
@@ -6991,6 +7084,7 @@
 		};
 		F5AD9BAD0381EA4501A8010A = {
 			children = (
+				4BEF84D203BE41E900A8010A,
 				F56621A503AD02AC01A8010A,
 				F56621A703AD02AC01A8010A,
 			);

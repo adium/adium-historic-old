@@ -46,4 +46,4 @@
 #import "AIAnimatedView.h"
 #import "AITabViewAdditions.h"
 #import "AIFontAdditions.h"
-
+#import "AIStringAdditions.h"

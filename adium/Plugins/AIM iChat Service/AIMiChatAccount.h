@@ -15,35 +15,15 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
-
-@protocol FZServiceListener <NSObject>
-- (oneway void)service:(id)service requestOutgoingFileXfer:(id)file;
-- (oneway void)service:(id)service requestIncomingFileXfer:(id)file;
-- (oneway void)service:(id)service chat:(id)chat member:(id)member statusChanged:(int)status;
-- (oneway void)service:(id)service chat:(id)chat showError:(id)error;
-- (oneway void)service:(id)service chat:(id)chat messageReceived:(id)message;
-- (oneway void)service:(id)service chat:(id)chat statusChanged:(int)status;
-- (oneway void)service:(id)service directIMRequestFrom:(id)from invitation:(id)invitation;
-- (oneway void)service:(id)service invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation;
-- (oneway void)service:(id)service youAreDesignatedNotifier:(char)notifier;
-- (oneway void)service:(id)service buddyPictureChanged:(id)buddy imageData:(id)image;
-- (oneway void)service:(id)inService buddyPropertiesChanged:(NSArray *)inProperties;
-- (oneway void)service:(id)inService loginStatusChanged:(int)inStatus message:(id)inMessage reason:(int)inReason;
-@end
-
-@protocol FZDaemonListener <NSObject>
-- (oneway void)openNotesChanged:(id)unknown;
-- (oneway void)myStatusChanged:(id)unknown;
-@end
-
+#import "InstantMessageFramework.h"
 
 @interface AIMiChatAccount : AIAccount <AIAccount_Required, AIAccount_Content, AIAccount_GroupedHandles, AIAccount_Status, FZServiceListener, FZDaemonListener> {
 
     NSConnection	*connection;
-    id			FZDaemon;
-    id			AIMService;
+    id <FZDaemon>	FZDaemon;
+    id <FZService>	AIMService;
 
-
+    NSString		*screenName;
 
 
     BOOL		queEvents;

@@ -14,16 +14,28 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Adium/Adium.h>
-#import "AIMiChatService.h"
+#import <AIUtilities/AIUtilities.h>
+#import "AIMiChatServicePlugin.h"
 #import "AIMiChatAccount.h"
 
-@implementation AIMiChatService
+@implementation AIMiChatServicePlugin
 
-//Init anything global relating to the service
-- (void)initService
+//init
+- (void)installPlugin
 {
+    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
+                                                      description:@"AIM, AOL, and .Mac"
+                                                            image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
+                                                    caseSensitive:NO
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
+    //Launch the agent
+    [[NSTask launchedTaskWithLaunchPath:@"/System/Library/PrivateFrameworks/InstantMessage.framework/iChatAgent.app/Contents/MacOS/iChatAgent" arguments:[NSArray array]] retain];
+    
+    //Register this service
+    [[owner accountController] registerService:self];
 }
+
 
 //Return a new account with the specified properties
 - (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
@@ -44,11 +56,12 @@
 // Return an ID, description, and image for handles owned by accounts of this type
 - (AIServiceType *)handleServiceType
 {
-    return([AIServiceType serviceTypeWithIdentifier:@"AIM"
-                          description:@"AIM, AOL, and .Mac"
-                          image:nil
-                          caseSensitive:NO
-                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]]);
+    return(handleServiceType);
 }
+
+//Is there any way to squelch the 'does not fully implement protocol' warnings besided this:?
+- (id)retain{ return([super retain]); }
+- (oneway void)release{ [super release]; }
+- (id)autorelease { return([super autorelease]); }
 
 @end
