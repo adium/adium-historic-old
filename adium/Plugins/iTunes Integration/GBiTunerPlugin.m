@@ -86,7 +86,7 @@
 		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
             if([originalAttributedString rangeOfString:pattern].location != NSNotFound){
-				mesg = [[inAttributedString mutableCopy] autorelease];                
+				if(!mesg) mesg = [[inAttributedString mutableCopy] autorelease];   
                 [mesg replaceOccurrencesOfString:pattern 
                                       withString:[self hashLookup:pattern] 
                                          options:NSLiteralSearch 
