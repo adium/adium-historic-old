@@ -25,31 +25,37 @@
           <div id="sidebar-a">
             <h4>SQL Logger<br /></h4>
               <a href="index.html" class="sidebar">Installation Instructions</a>
-              <br /><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a>
-              <br /><a href="tsearch.html" class="sidebar">TSearch Installation</a>
-              <br /><a href="resin.html" class="sidebar">Resin Installation</a>
+              <br /><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a>
+              <br /><a href="install.html"
+                class="sidebar">Installation</a>
               <br /><a href="technical.html" class="sidebar">Technical
               Details</a>
               <br /><a href="performance.html"
-              class="sidebar">Performance/Maintenance</a>
-              <br /><a href="quick_install.html" class="sidebar">Quick Install
-              Notes</a>
+              class="sidebar">Maintenance/Performance</a>
+            <br /><a href="changes.txt" class="offsides">Changelog</a>
+            <br /><a
+              href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz"
+              class="offsides">JSP/HTML package</a>
 
               <br /><h4>Adium</h4>
               <a href="http://www.adiumx.com/" class="offsides">Adium</a>
-              <br /><a href="http://forums.adiumx.com" 
+              <br /><a href="http://forums.adiumx.com"
                 class="offsides">Adium
                 Forums</a>
                 <br /><a href="http://planet.adiumx.com"
                 class="offsides">Planet Adium</a>
                 <br /><a href="http://cia.navi.cx/stats/project/adium/"
                 class="offsides">CVS Changes</a>
-                <br />
-                <h4>PostgreSQL</h4>
+              <br /><a
+                href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz"
+                class="offsides">Adium Plugin</a>
+              <br /><h4>Fire</h4>
+              <a href="http://fire.sourceforge.net" class="offsides">Fire</a>
+              <br /><h4>PostgreSQL</h4>
               <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a>
               <br /><a
                 href="http://www.postgresql.org/docs/7.3/interactive/index.html"
-                class="offsides">PSQL Documentation</a>
+                class="offsides">PgSQL Documentation</a>
               <br /><a
               href="http://www.xceltech.net/products/freeware_products.html"
               class="offsides">PostMan Query</a>
@@ -57,16 +63,6 @@
               <h4>Visual Distortion</h4>
               <a href="http://www.visualdistortion.org/"
               class="offsides">Visual Distortion Home</a>
-              <br />
-              <a href="http://www.visualdistortion.org/guestbook.jsp"
-              class="offsides">Guestbook</a>
-              <br /><a
-              href="http://www.visualdistortion.org/pictures/"
-              class="offsides">Pictures</a>
-              <br /><a href="http://www.visualdistortion.org/films/"
-              class="offsides">Films</a>
-              <br /><a href="http://www.visualdistortion.org/music/"
-              class="offsides">Music</a>
           </div>
           <div id="content">
             <xsl:apply-templates select="body"/>

@@ -1,4 +1,4 @@
-<!-- $Id: stylesheet.css,v 1.5 2003/11/25 22:09:43 jmelloy Exp $ -->
+<!-- $Id: stylesheet.css,v 1.6 2004/07/05 04:45:18 jmelloy Exp $ -->
 
 .dummy {
     color: #fff;
@@ -57,7 +57,9 @@
 a.sidebar {
     text-decoration: none;
     color: #fff;
+    margin-left: 5px;
 }
+
 .titlebar {
     color: #fff;
 }
@@ -68,14 +70,20 @@ a.offsite {
 
 a.offsides {
     font-style:italic;
-    text-decoration:none;
+    text-decoration: none;
     color: #fff;
+    margin-left: 5px;
+}
+
+h4 {
+    color: fff;
+    margin-bottom: 5px;
 }
 
 #container {
     border: 1px solid gray;
     margin: 10px;
-    margin-left: auto; 
+    margin-left: auto;
     margin-right: auto;
     padding: 10px;
 }
@@ -111,4 +119,5 @@ a.offsides {
     background-color: rgb(213, 219, 225);
     text-align: right;
 }
+
 
