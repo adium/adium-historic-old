@@ -17074,6 +17074,21 @@
 			settings = {
 			};
 		};
+		34F142AA05E962A400B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NSImagePicker.h;
+			path = "Frameworks/AIUtilities Framework/NSImagePicker.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F142AC05E962A500B32FD7 = {
+			fileRef = 34F142AA05E962A400B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34F2BC67059CC2840005B238 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -20449,6 +20464,7 @@
 				34F142A205E95B0F00B32FD7,
 				34F142A305E95B0F00B32FD7,
 				34F142A905E95B4D00B32FD7,
+				34F142AC05E962A500B32FD7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -29474,6 +29490,7 @@
 				F570A5AE03704C1101A8010A,
 				F5793946033E74E401A8010A,
 				F5793947033E74E401A8010A,
+				34F142AA05E962A400B32FD7,
 			);
 			isa = PBXGroup;
 			name = "Images / Drawing";
