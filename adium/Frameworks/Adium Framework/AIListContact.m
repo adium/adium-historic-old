@@ -22,7 +22,7 @@
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
 {
     [super initWithUID:inUID];
-
+    
     serviceID = [inServiceID retain];
     handleArray = [[NSMutableArray alloc] init];
     statusDictionary = [[NSMutableDictionary alloc] init];
@@ -39,6 +39,11 @@
 - (NSString *)UIDAndServiceID //ServiceID.UID
 {
     return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
+}
+
+- (NSString *)description
+{
+    return([NSString stringWithFormat:@"%@.%@ (%@)",serviceID,UID,[super description]]);
 }
 
 

@@ -38,7 +38,7 @@
 }
 
 
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     if([inModifiedKeys containsObject:@"UnviewedContent"]){
         if([[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){

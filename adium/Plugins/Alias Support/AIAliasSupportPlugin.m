@@ -85,7 +85,7 @@
 }
 
 //Called as contacts are created, load their alias
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     if(inModifiedKeys == nil){ //Only set an alias on contact creation
         NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inContact];

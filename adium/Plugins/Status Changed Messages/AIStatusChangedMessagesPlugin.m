@@ -19,7 +19,7 @@
 #import <AIUtilities/AIUtilities.h>
 
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
-- (void)statusMessage:(NSString *)message forHandle:(AIHandle *)handle;
+- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact;
 @end
 
 @implementation AIStatusChangedMessagesPlugin
@@ -38,14 +38,21 @@
 }
 
 //Catch away message changes and display them
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
+    
     if([inModifiedKeys containsObject:@"StatusMessage"]){
-        NSString	*statusMessage = [[[inHandle statusDictionary] objectForKey:@"StatusMessage"] string];
+        AIMutableOwnerArray	*statusMessageArray = [inContact statusArrayForKey:@"StatusMessage"];
 
-        if(statusMessage && [statusMessage length] != 0){
-            [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forHandle:inHandle];
+        if([statusMessageArray count] != 0){
+            NSString		*statusMessage = [statusMessageArray objectAtIndex:0];
+
+            if([statusMessage length] != 0){
+                [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",[statusMessageArray objectAtIndex:0]] forContact:inContact];
+            }
+            
         }
+        
     }
 
     return(nil);
@@ -53,34 +60,33 @@
 
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ went away" forHandle:[notification object]];
+    [self statusMessage:@"%@ went away" forContact:[notification object]];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
-    [self statusMessage:@"%@ came back" forHandle:[notification object]];
+    [self statusMessage:@"%@ came back" forContact:[notification object]];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ connected" forHandle:[notification object]];
+    [self statusMessage:@"%@ connected" forContact:[notification object]];
 }
 - (void)Contact_StatusOnlineNO:(NSNotification *)notification{
-    [self statusMessage:@"%@ disconnected" forHandle:[notification object]];
+    [self statusMessage:@"%@ disconnected" forContact:[notification object]];
 }
 - (void)Contact_StatusIdleYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ went idle" forHandle:[notification object]];
+    [self statusMessage:@"%@ went idle" forContact:[notification object]];
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
-    [self statusMessage:@"%@ became active" forHandle:[notification object]];
+    [self statusMessage:@"%@ became active" forContact:[notification object]];
 }
 
 
 //Post a status message
-- (void)statusMessage:(NSString *)message forHandle:(AIHandle *)handle
+- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact
 {
-    AIListContact		*contact = [handle containingContact];
     AIContentStatus		*content;
 
     //Create our content object
-    content = [AIContentStatus statusWithSource:[handle account]
-                                    destination:handle
+    content = [AIContentStatus statusWithSource:contact
+                                    destination:contact
                                            date:[NSDate date]
                                         message:[NSString stringWithFormat:message,[contact displayName]]];
 

@@ -285,12 +285,19 @@ static char *hash_password(const char * const password);
 {
     BOOL	sent = NO;
     NSString	*message;
+    AIHandle	*handle;
 
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]];
 
         if([message length] <= AIM_PACKET_MAX_LENGTH){
-            [self AIM_SendMessage:message toHandle:[[object destination] UID]];
+            //Get the handle for receiving this content
+            handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:self];
+            if(!handle){
+                handle = [self addHandleWithUID:[[[object destination] UID] compactedString] serverGroup:nil temporary:YES];
+            }
+
+            [self AIM_SendMessage:message toHandle:[handle UID]];
             sent = YES;
 
         }else{
@@ -836,7 +843,7 @@ static char *hash_password(const char * const password);
 
     //Create a content object for the message
     messageText = [AIHTMLDecoder decodeHTML:rawMessage];
-    messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
+    messageObject = [AIContentMessage messageWithSource:[handle containingContact] destination:self date:nil message:messageText];
 
     //Add the content object
     [[owner contentController] addIncomingContentObject:messageObject];

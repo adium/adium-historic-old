@@ -38,7 +38,7 @@
 
 }
 
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     if([inModifiedKeys containsObject:@"UnviewedContent"] || [inModifiedKeys containsObject:@"Signed On"] || [inModifiedKeys containsObject:@"Signed Off"]){
         if([[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] || [[inContact statusArrayForKey:@"Signed On"] greatestIntegerValue] || [[inContact statusArrayForKey:@"Signed Off"] greatestIntegerValue]){

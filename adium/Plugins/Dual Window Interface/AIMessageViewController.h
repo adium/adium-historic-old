@@ -32,7 +32,7 @@
     AIAdium			*owner;
     id <AIContainerInterface> 	interface;
     AIListContact		*contact;
-    AIHandle			*handle;
+//    AIHandle			*handle;
     AIAccount			*account;
     float			currentTextEntryHeight;
 }

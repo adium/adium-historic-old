@@ -20,8 +20,8 @@
 
 @interface AIContactIdlePlugin : AIPlugin <AIContactObserver, AIContactListTooltipEntry> {
 
-    NSMutableArray	*idleHandleArray;
-    NSTimer		*idleHandleTimer;
+    NSMutableArray	*idleContactArray;
+    NSTimer		*idleContactTimer;
 }
 
 @end

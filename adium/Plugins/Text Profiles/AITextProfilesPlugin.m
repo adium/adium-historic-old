@@ -72,7 +72,7 @@
 }
 
 //Called as profiles are set on a handle, update our display
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     //If we're currently displaying this handle, and it's profile changed...
     if(inContact == activeContactObject && [inModifiedKeys containsObject:@"TextProfile"]){

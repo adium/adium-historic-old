@@ -110,8 +110,7 @@
 //Add a message object to a handle
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject
 {
-    AIHandle		*handle = [inObject source];
-    AIListContact 	*contact = [handle containingContact];
+    AIListContact 	*contact = [inObject source];
 
     if(contact){
         NSEnumerator		*enumerator;
@@ -130,8 +129,8 @@
         [contact addContentObject:inObject];
 
         //Set 'UnrespondedContent' to YES  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"UnrespondedContent"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+        [[contact statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:YES] withOwner:contact];
+        [[owner contactController] contactStatusChanged:contact modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
 
         //content object addeed
         [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
@@ -144,8 +143,7 @@
 //Send a message object to a handle
 - (BOOL)sendContentObject:(id <AIContentObject>)inObject
 {
-    AIHandle		*handle = [inObject destination];
-    AIListContact 	*contact = [handle containingContact];
+    AIListContact 	*contact = [inObject destination];
     BOOL		sent = NO;
 
     if(contact){
@@ -167,8 +165,8 @@
             [contact addContentObject:inObject];
 
             //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-            [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"UnrespondedContent"];
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+            [[contact statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:contact];
+            [[owner contactController] contactStatusChanged:contact modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
 
             //Content object added
             [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];

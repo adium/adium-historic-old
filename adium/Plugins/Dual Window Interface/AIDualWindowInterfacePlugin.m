@@ -38,8 +38,7 @@
 - (void)buildWindowMenu;
 - (AIMessageTabViewItem *)messageTabWithContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create;
 - (void)updateActiveWindowMenuItem;
-- (void)increaseUnviewedContentOfHandle:(AIHandle *)inHandle;
-- (void)clearUnviewedContentOfHandle:(AIHandle *)inHandle;
+- (void)increaseUnviewedContentOfContact:(AIListContact *)inContact;
 - (void)clearUnviewedContentOfContact:(AIListContact *)inContact;
 @end
 
@@ -294,7 +293,7 @@
 
     //Increase the handle's unviewed count (If it's not the active container)
     if(container != activeContainer){
-        [self increaseUnviewedContentOfHandle:[object source]];        
+        [self increaseUnviewedContentOfContact:[object source]];        
     }
 }
 
@@ -502,39 +501,30 @@
 
 
 //
-- (void)increaseUnviewedContentOfHandle:(AIHandle *)inHandle
+- (void)increaseUnviewedContentOfContact:(AIListContact *)inContact
 {
-    NSMutableDictionary	*statusDict = [inHandle statusDictionary];
+    AIMutableOwnerArray	*ownerArray = [inContact statusArrayForKey:@"UnviewedContent"];
     int			currentUnviewed;
 
     //'UnviewedContent'++
-    currentUnviewed = [[statusDict objectForKey:@"UnviewedContent"] intValue];
-    [statusDict setObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:@"UnviewedContent"];
+    currentUnviewed = [[ownerArray objectWithOwner:inContact] intValue];
+    [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inContact];
 
     //
-    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
-}
-
-//
-- (void)clearUnviewedContentOfHandle:(AIHandle *)inHandle
-{
-    if([[[inHandle statusDictionary] objectForKey:@"UnviewedContent"] intValue]){
-        //Set 'UnviewedContent' to 0
-        [[inHandle statusDictionary] setObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent"];
-
-        //
-        [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
-    }
+    [[owner contactController] contactStatusChanged:inContact modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
 }
 
 //
 - (void)clearUnviewedContentOfContact:(AIListContact *)inContact
 {
-    NSEnumerator	*enumerator = [inContact handleEnumerator];
-    AIHandle		*handle;
+    AIMutableOwnerArray	*ownerArray = [inContact statusArrayForKey:@"UnviewedContent"];
 
-    while((handle = [enumerator nextObject])){
-        [self clearUnviewedContentOfHandle:handle];
+    if([[ownerArray objectWithOwner:inContact] intValue]){
+        //Set 'UnviewedContent' to 0
+        [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:inContact];
+
+        //
+        [[owner contactController] contactStatusChanged:inContact modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
     }
 }
 
