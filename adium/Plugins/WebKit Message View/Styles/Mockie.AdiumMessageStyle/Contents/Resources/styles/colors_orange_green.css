@@ -1,5 +1,5 @@
 body {
-	background-color: rgba(102,204,50,0.4);
+	background-color: #f2fbee;
 }
 
 #curtain {
@@ -24,7 +24,7 @@ body {
 }
 
 .incoming .message {
-	background: rgba(255,124,0,0.2);
+	background: rgba(244,225,190,0.9);
 }
 
 .incoming .time_consecutive + p {
@@ -55,7 +55,7 @@ body {
 
 .outgoing .message
 {
-	background: rgba(102,204,50,0.2);
+	background: rgba(213,241,200,0.9);
 }
 
 .outgoing .time_consecutive + p {
@@ -66,4 +66,8 @@ body {
 {
 	background: #66CC32;
 	color: white;
+}
+
+.status_container {
+	background-color: rgba(242,251,238,0.8);
 }

@@ -28,5 +28,37 @@
     <false/>
     <key>ShowsUserIcons:Red - Icon Hidden</key>
     <false/>
+    <key>DefaultBackgroundColor</key>
+    <string>eef3eb</string>
+    <key>DefaultBackgroundColor:Brown - Icon Alternate</key>
+    <string>eef3eb</string>
+    <key>DefaultBackgroundColor:Brown - Icon Hidden</key>
+    <string>eef3eb</string>
+    <key>DefaultBackgroundColor:Brown - Icon Right</key>
+    <string>eef3eb</string>
+    <key>DefaultBackgroundColor:Indigo - Icon Alternate</key>
+    <string>f8f0f0</string>
+    <key>DefaultBackgroundColor:Indigo - Icon Hidden</key>
+    <string>f8f0f0</string>
+    <key>DefaultBackgroundColor:Indigo - Icon Left</key>
+    <string>f8f0f0</string>
+    <key>DefaultBackgroundColor:Indigo - Icon Right</key>
+    <string>f8f0f0</string>
+    <key>DefaultBackgroundColor:Orange - Icon Alternate</key>
+    <string>f2fbee</string>
+    <key>DefaultBackgroundColor:Orange - Icon Hidden</key>
+    <string>f2fbee</string>
+    <key>DefaultBackgroundColor:Orange - Icon Left</key>
+    <string>f2fbee</string>
+    <key>DefaultBackgroundColor:Orange - Icon Right</key>
+    <string>f2fbee</string>
+    <key>DefaultBackgroundColor:Red - Icon Alternate</key>
+    <string>fff4f4</string>
+    <key>DefaultBackgroundColor:Red - Icon Hidden</key>
+    <string>fff4f4</string>
+    <key>DefaultBackgroundColor:Red - Icon Left</key>
+    <string>fff4f4</string>
+    <key>DefaultBackgroundColor:Red - Icon Right</key>
+    <string>fff4f4</string>
 </dict>
 </plist>
