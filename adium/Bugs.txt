@@ -90,32 +90,16 @@
 //-------------------------------------------------------------------------------------------------------
 - User icons are still getting flipped (Icons from AIM, apparently)
 - We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
-- Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
-- Update checker reporting a new version when non exists? (possibly a caching error?)
 - If one tries to change one's idle time to a lower amount, (for example, from 2:32 to :36), an update will not occur, and your idle time will stay at 2:32.
-- Tooltips are flashing when the contact list auto-resizes?
-- Deleting an idle contact may cause a crash when the idle updates next? http://www.visualdistortion.org/crash/view.jsp?crash=10088
-- Empty groups come back on next launch after being deleted?
 - Unicode (German) messages not working over ICQ ?
-- away messages aren't going away
-- Yahoo giving some users a Gaim error: unknown error 29 on connect
-	Evan: This is an unauthorized user error, so far as I can tell. I got it after trying a wrong password a ton of times in a row.  The linked image is one of those "type this distorted text to verify you're a person" things.
-- We're receiving (but not processing/interpreting) HTML over ICQ
-	Evan: Official ICQ clients send RTF, not HTML.  SIM is an unofficial one that does.  Gaim intentionally escapes HTML coming from ICQ for this reason... Odd.
-- away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
-- We are having some text encoding issues with ICQ (multiple mentions)
-- Do we support ISA proxies? (ISA and NTLM authorization).  Does gaim have support for these?
-	- Evan: No, gaim proxy support is ancient.
+- away messages aren't going away (if we disconnect, then they come back, then we re-connect?)
 - Yahoo ignore list is being ignored?
 - Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
 - Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
 - We aren't fetching the display names of ICQ users, some icq users, when over AIM? (They still show up in the info, apparently)
-- text to speech not working ?
 - Dragging buddies on MSN account not working
 - Contact screennames aren't appearing for all contacts when using ICQ
 - AIM Passwords with question marks in them prevent libgaim from connecting?
-- Jabber UIDs do not include the server.
-	- Evan: The formattedUID does.  The UID should not.
 - Out of curiosity - is there a reason we use .adiumEmoticonset instead of .adiumEmoticonSet (call me a capitalization nut :)? 
 
