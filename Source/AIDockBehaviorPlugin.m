@@ -20,8 +20,8 @@
 #import "ESDockAlertDetailPane.h"
 #import <AIUtilities/ESImageAdditions.h>
 
-#define DOCK_BEHAVIOR_ALERT_SHORT	@"Bounce the dock icon"
-#define DOCK_BEHAVIOR_ALERT_LONG	@"Bounce the dock icon %@"
+#define DOCK_BEHAVIOR_ALERT_SHORT	AILocalizedString(@"Bounce the dock icon",nil)
+#define DOCK_BEHAVIOR_ALERT_LONG	AILocalizedString(@"Bounce the dock icon %@",nil)
 
 @interface AIDockBehaviorPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
