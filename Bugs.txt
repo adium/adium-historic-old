@@ -10,6 +10,8 @@
 - Autolinking overwrites custom titled links with domain names in them.
 - [ICQ] Encoding problems
 - 10.2 users are losing color in their profiles & away messages (colors not saving)
+- Double clicking two names in succession causes the first name to highlight the second time.
+- 10.2 users are losing color in their profiles & away messages (colors not saving)
 - First Message Received triggered multiple times
 - [GaduGadu] Contacts not saving to the server-list
 
@@ -23,21 +25,15 @@
 - Extended status doesn't update on the list when it changes
 - Extended status sometimes draws outside the cell (and is therefore cropped) instead of increasing cell height
 - Extended status should be able to be forced below the name
-- Horizontal sizing doesn't work properly
+- Horizontal sizing doesn't work properly - if window is on right edge, resize leftward.  Add slider for max width and
+	allow sizing based on status.
 - Selected cells need to draw with inverted text
-- *Window loss - completely offscreen due to vertical autoresizing... manually trash window positions.plist & mess around to return (single monitor, etc.) -  [Evan]
 - Manual ordering is most likely screwed up, because I've turned off loading of old contacts on launch :)
 - Metacontacts display no service icon
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
 - Team decision on contact list bottom bar (Remove and restore the regular sized scroller?)
-- Message history seems to be dead
-
-[Unconfirmed (mostly from irc)]
-<+graphite> is it me...or does resizing vertically borked...i.e. it resizes from the top in rather than the bottom
-<+graphite> revision 6480
-
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -52,9 +48,12 @@
 
 - Tooltips are not appearing for links in profile text.
 
+<<<<<<< .mine
+=======
 - Double clicking two names in succession causes the first name to highlight
   the second time.
 
+>>>>>>> .r6509
 - Why oh why doesn't our image picker window remember its position whatsoever?
 
 - [MSN] Outoing chat appears twice with a display name set
