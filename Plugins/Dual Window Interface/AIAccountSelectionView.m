@@ -109,7 +109,7 @@
         [view release];
     }
 	
-	//Release the view_contents, which we own via -[NSBundle loadNibNamed:withOnwer:]
+	//Release the view_contents, which we own via -[NSBundle loadNibNamed:withOwner:]
     [view_contents release];
 }
 
