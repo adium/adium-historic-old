@@ -7859,6 +7859,7 @@
 				6C60B1AB05605FAD00CAD137,
 				34BD9CF3053146CC000AB133,
 				344EE91E0574500F000F342B,
+				4B7845EC059B50820048A8BA,
 				34BD9D0A053146CC000AB133,
 				34BD9CF4053146CC000AB133,
 				34BD9CF5053146CC000AB133,
@@ -17387,20 +17388,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B1E70AC059B15FE006E2567 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libgaim.0.0.0.dylib;
-			path = "Plugins/Gaim Service/LIBS/libgaim.0.0.0.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1E70AD059B15FF006E2567 = {
-			fileRef = 4B1E70AC059B15FE006E2567;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B215D970598907100305B3C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -19394,6 +19381,32 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B7845EB059B50820048A8BA = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 4B7F278205440C0800CDFC90;
+			remoteInfo = Gaim;
+		};
+		4B7845EC059B50820048A8BA = {
+			isa = PBXTargetDependency;
+			target = 4B7F278205440C0800CDFC90;
+			targetProxy = 4B7845EB059B50820048A8BA;
+		};
+		4B7845EF059B50AF0048A8BA = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			name = "libgaim-0.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libgaim-0.0.0.dylib";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B7845F0059B50AF0048A8BA = {
+			fileRef = 4B7845EF059B50AF0048A8BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B791A230534C4130000969C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -19686,7 +19699,7 @@
 				34535742059AEE1000A83D9E,
 				34535743059AEE1000A83D9E,
 				34535744059AEE1000A83D9E,
-				4B1E70AD059B15FF006E2567,
+				4B7845F0059B50AF0048A8BA,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19848,7 +19861,7 @@
 		4B7F279005440CA100CDFC90 = {
 			children = (
 				9E2BD856054BE18200558E56,
-				4B1E70AC059B15FE006E2567,
+				4B7845EF059B50AF0048A8BA,
 				4B7F279205440CB800CDFC90,
 				4B7F279305440CB900CDFC90,
 				4B7F279405440CB900CDFC90,
