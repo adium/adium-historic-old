@@ -285,6 +285,10 @@ void Adium_HandleSignal(int i){
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
+    } else if ([extension caseInsensitiveCompare:@"AdiumTheme"] == NSOrderedSame){
+        destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
+        requiresRestart = NO;
+        fileDescription = AILocalizedString(@"Adium theme",nil);
     }
     
     if (destination){
