@@ -1566,19 +1566,14 @@ static id<GaimThread> gaimThread = nil;
 //Set our user image (Pass nil for no image)
 - (void)setAccountUserImage:(NSImage *)image
 {
-#warning account->gc is now nil before a connection...
-	if (account && account->gc) {
+	if (account) {
 		//Clear the existing icon first
 		[gaimThread setBuddyIcon:nil onAccount:self];
 		
 		//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
 		//image to one, and then pass libgaim the path.
 		if(image){
-			NSLog(@"updating %@",self);
-			NSLog(@"%x",account);
-			NSLog(@"%x",account->gc);
-			NSLog(@"%x",account->gc->prpl);
-			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
 			GaimDebug (@"Original image of size %f %f",[image size].width,[image size].height);
 			if (prpl_info && (prpl_info->icon_spec.format)){
 				char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
