@@ -138,8 +138,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 	if(!groups){
 		
 		//Always sort offline contacts to the bottom
-		BOOL onlineA = ([objectA integerStatusObjectForKey:@"Online"]);
-		BOOL onlineB = ([objectB integerStatusObjectForKey:@"Online"]);
+		BOOL onlineA = ([[objectA numberStatusObjectForKey:@"Online"] boolValue]);
+		BOOL onlineB = ([[objectB numberStatusObjectForKey:@"Online"] boolValue]);
 		if (!onlineB && onlineA){
 			return NSOrderedAscending;
 		}else if (!onlineA && onlineB){
