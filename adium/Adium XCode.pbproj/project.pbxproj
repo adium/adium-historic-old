@@ -9477,6 +9477,7 @@
 				4B37AEF0058A8D4A00E266A7,
 				341F08E8058A97AB00A5A7AB,
 				4B215D990598907100305B3C,
+				34F2BC69059CC2850005B238,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10222,6 +10223,7 @@
 				4B37AEF1058A8D4A00E266A7,
 				341F08E7058A97AB00A5A7AB,
 				4B215D9A0598907100305B3C,
+				34F2BC6A059CC2850005B238,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16702,6 +16704,36 @@
 		};
 		34E8FA34054D9CE8008BB262 = {
 			fileRef = 34E8FA33054D9CE7008BB262;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2BC67059CC2840005B238 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESTextViewWithPlaceholder.h;
+			path = "Frameworks/AIUtilities Framework/ESTextViewWithPlaceholder.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2BC68059CC2840005B238 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESTextViewWithPlaceholder.m;
+			path = "Frameworks/AIUtilities Framework/ESTextViewWithPlaceholder.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2BC69059CC2850005B238 = {
+			fileRef = 34F2BC67059CC2840005B238;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2BC6A059CC2850005B238 = {
+			fileRef = 34F2BC68059CC2840005B238;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -26983,9 +27015,9 @@
 				4BCDEB2E03D4CACA00A8010A,
 				F5793936033E74E401A8010A,
 				F5793937033E74E401A8010A,
-				4BC0304B0453388C00A8010A,
 				4B3E502203EC538D00A8010A,
 				4B3E502303EC538D00A8010A,
+				4BC0304B0453388C00A8010A,
 				4BC0304C0453388C00A8010A,
 				4B910DBF053588A900846781,
 				4B910DC0053588A900846781,
@@ -26993,6 +27025,8 @@
 				F570A59103704AB901A8010A,
 				F57938F8033E745F01A8010A,
 				F57938B8033E739101A8010A,
+				34F2BC67059CC2840005B238,
+				34F2BC68059CC2840005B238,
 				9E49CC5C04BF6F8700415B22,
 				9E49CC5D04BF6F8700415B22,
 				F5793944033E74E401A8010A,
