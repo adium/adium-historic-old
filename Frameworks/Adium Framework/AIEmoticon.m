@@ -15,7 +15,7 @@
  */
 
 #import "AIEmoticon.h"
-#import <AIUtilities/AITextAttachmentExtension.h>
+#import "AITextAttachmentExtension.h"
 
 @interface AIEmoticon (PRIVATE)
 - (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;

@@ -15,15 +15,17 @@
  */
 
 #import "AIChat.h"
-#import "AIContentController.h"
-#import "AIInterfaceController.h"
 #import "AIMenuController.h"
 #import "AIMessageEntryTextView.h"
 #import "AIObject.h"
+#import "ESFileWrapperExtension.h"
+#import "AITextAttachmentExtension.h"
+
+#import "AIContentController.h"
+#import "AIInterfaceController.h"
+
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AITextAttachmentExtension.h>
 #import <AIUtilities/AITextAttributes.h>
-#import <AIUtilities/ESFileWrapperExtension.h>
 #import <AIUtilities/ESImageAdditions.h>
 
 #define MAX_HISTORY					25		//Number of messages to remember in history

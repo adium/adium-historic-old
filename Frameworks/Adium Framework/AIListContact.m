@@ -22,7 +22,7 @@
 #import "AIMetaContact.h"
 #import "AIService.h"
 #import "ESFileTransfer.h"
-#import <AIUtilities/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
 
 @implementation AIListContact
 
