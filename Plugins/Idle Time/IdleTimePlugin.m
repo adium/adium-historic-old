@@ -33,13 +33,14 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (double)currentIdleTime;
 
 - (void)_openIdleState:(AIIdleState)inState;
-- (void)_closeIdleState:(AIIdleState)inState;
 - (void)_setAllAccountsIdleTo:(double)inSeconds;
 - (void)setAutoAway:(BOOL)autoAway;
 
 - (void)installIdleMenu;
 - (void)updateIdleMenu;
 - (void)selectIdleMenu:(id)sender;
+
+- (void)automaticIdleTimeCheckTimer:(NSTimer *)inTimer;
 @end
 
 @implementation AIIdleTimePlugin
@@ -50,6 +51,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	didAutoAway = NO;
     idleTimer = nil;
 	autoAwayTimer = nil;
+	manualIdleTimeReferenceTick = 0;
 	
     //Start up with an invalid state so we will set in [self preferencesChanged:nil];
     idleState = -999999;
@@ -89,7 +91,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 - (void)uninstallPlugin
 {
-    //unregister, remove, ...
+	//Remove our timer
+	[idleTimer invalidate]; [idleTimer release]; idleTimer = nil;
 }
 
 - (void)requestSetManualIdleTime:(NSNotification *)notification
@@ -109,12 +112,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	}	
 }
 
-
 // Private ---------------------------------------------------------------------------------
 //dealloc
 - (void)dealloc
 {
-    [self _closeIdleState:idleState]; //Close down current state
     [IdleTimeWindowController closeSharedInstance]; //Close/release idle time window
     
     [menuItem_setIdle release]; menuItem_setIdle = nil;
@@ -173,8 +174,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         Remove idle time
     
     Idle (Manually Set on delay): ['set idle' is selected]
-        Install timer for threshold
-        On fire, set idle time to threshold
+        Set idle time to threshold after a delay of the threshold
     
     Idle (Manually Set): ['set custom idle' is selected]
         Set idle time, no timer
@@ -186,114 +186,141 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		(inState == AIManualIdle) || 
 		(inState == AIDelayedManualIdle)){
 		
-		[self _closeIdleState:idleState]; //Close down current state		
 		[self _openIdleState:inState]; //Start up new state
-
+		
 		if ([NSApp isOnPantherOrBetter]) [self updateIdleMenu];
 	}
 }
 
+//Configure for the passed idle state, installing or removing timers as needed and setting accounts' idle times
 - (void)_openIdleState:(AIIdleState)inState
 {
 	idleState = inState;
-
+	
     switch(inState){
         case AINotIdle:
+		{
             //Set idle to 0 seconds (Not idle)
             [self _setAllAccountsIdleTo:0];
+
+			//Clear any reference tick for manual idle setting
+			manualIdleTimeReferenceTick = 0;
 
             if(idleEnabled || autoAwayEnabled){
                 //Install a timer to check the user's activity every 30 seconds.
                 [idleTimer invalidate]; [idleTimer release];
                 idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_ACTIVE_INTERVAL)
                                                               target:self
-                                                            selector:@selector(notIdleTimer:)
+                                                            selector:@selector(automaticIdleTimeCheckTimer:)
                                                             userInfo:nil
                                                              repeats:YES] retain];
+				
+				//Perform a check immediately in case the switch to notIdle should be accompanied by an autoaway change
+				[self automaticIdleTimeCheckTimer:nil];
             }
 
-        break;
+			break;
+		}
         case AIAutoIdle:
+		{
             //Set idle to the user's current system idle
             [self _setAllAccountsIdleTo:[self currentIdleTime]];
-
-            //Install a timer to check the user's activity every 1 seconds.
+			
+            //Install a timer to check the user's activity every 1 second (since they are idle,
+			//we want to respond to them coming back as quickly as possible).
             [idleTimer invalidate]; [idleTimer release];
             idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_INACTIVE_INTERVAL)
                                                           target:self
-                                                        selector:@selector(autoIdleTimer:)
+                                                        selector:@selector(automaticIdleTimeCheckTimer:)
                                                         userInfo:nil
                                                          repeats:YES] retain];
 			
-			//Clear the autoAwayTimer if it exists (as we don't need two timers checking autoIdleTimer:)
-			[autoAwayTimer invalidate]; [autoAwayTimer release]; autoAwayTimer = nil;
+			//Clear any reference tick for manual idle setting
+			manualIdleTimeReferenceTick = 0;
 			
-        break;
+			break;
+		}
         case AIManualIdle:
+		{
             //Set idle to a custom manualIdleTime
             [self _setAllAccountsIdleTo:manualIdleTime];
-            
-        break;
+			
+			//For the purposes of bookkeeping, we went idle at the current TickCount() minus the amount of time we have
+			//supposedly been idle, times 60, since there are 60 ticks in a second.
+			manualIdleTimeReferenceTick = TickCount() - (manualIdleTime * 60.0);
+
+			//Perform a check immediately in case the switch to manualIdle should be accompanied by an autoaway change
+			[self automaticIdleTimeCheckTimer:nil];
+			
+			break;
+		}
         case AIDelayedManualIdle:
+		{
             //Set idle to 0 (Not Idle)
             [self _setAllAccountsIdleTo:0];
-
-            //Install a timer for the user's threshold.  After the threshold is up, we set the user as idle.  This makes it easier to fake idle status, since the user doesn't instantly have a 5/10 minute idle time.
-			[idleTimer invalidate]; [idleTimer release];
-            idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(idleThreshold)
-                                                          target:self
-                                                        selector:@selector(delayedManualIdleTimer:)
-                                                        userInfo:nil
-                                                         repeats:YES] retain];
-        break;
+			
+			//We'll be setting a manual idle time of idleThreshold...
+			manualIdleTime = idleThreshold;
+			
+            /*
+			 ...idleThreshold seconds from now.
+			 
+			 This makes it easier to fake idle status, since the user doesn't instantly have a 5/10 minute idle time.
+			 */
+			[self performSelector:@selector(delayedManualIdleTimer:)
+					   withObject:nil
+					   afterDelay:idleThreshold];
+			
+			//Note the tick at which we requested a manual idle time
+			manualIdleTimeReferenceTick = TickCount();
+			
+			//If autoAway is not enabled, we can stop with the idle checking.  If it is, we need to keep checking to
+			//perform the autoAway action at the proper time.
+			if(!autoAwayEnabled){
+				[idleTimer invalidate]; [idleTimer release]; idleTimer = nil;				
+			}
+				
+			break;
+		}
 	}    
 }
 
-- (void)_closeIdleState:(AIIdleState)inState
-{
-    switch(inState){
-        case AINotIdle:
-        case AIAutoIdle:
-        case AIDelayedManualIdle:
-            //Remove our timer
-            [idleTimer invalidate]; [idleTimer release]; idleTimer = nil;
-        break;
-        case AIManualIdle:
-            //Nothing needs to be done
-        break;
-    }
-}
-
-//Make sure the user hasn't gone idle; called every IDLE_ACTIVE_INTERVAL seconds to check,
-//potentially making the user idle or away or both.
-- (void)notIdleTimer:(NSTimer *)inTimer
+/*
+ Called every 30 seconds during active operation, or every 1 second when automatically idle.
+ Check the current idle time (usually the time since the system was used, 
+	although this may be a 'fake' time via setting a manual idle.) and set idle and autoAway as desired.
+ */
+- (void)automaticIdleTimeCheckTimer:(NSTimer *)inTimer
 {
 	double	currentIdleTime = [self currentIdleTime];
-	BOOL	userNowIdle = ((currentIdleTime > idleThreshold) && idleEnabled);
 
-	if(userNowIdle){
-		//The user has gone idle
-        [self setIdleState:AIAutoIdle];
-    }
-	
+	//Idle checking
+	if(idleEnabled){
+		if(currentIdleTime > idleThreshold){
+			if(idleState == AINotIdle){
+				//The user has gone idle from a not-idle state
+				[self setIdleState:AIAutoIdle];				
+			}
+		}else{
+			if(idleState == AIAutoIdle){
+				//The user was automatically idle before, but is now not beyond the idleThreshold
+				[self setIdleState:AINotIdle];
+			}
+		}
+	}
+
+	//Auto away checking
     if(autoAwayEnabled){
 		if(currentIdleTime > autoAwayThreshold){
 			if (!didAutoAway){
 				//The user has exceeded the autoAwayThreshold (time to set auto away)
 				[self setAutoAway:YES];
-				
-				//Install a timer to check the user's activity every 1 seconds if autoIdle hasn't already
-				if (!userNowIdle){
-					[idleTimer invalidate]; [idleTimer release];
-					idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_INACTIVE_INTERVAL)
-																  target:self
-																selector:@selector(autoIdleTimer:)
-																userInfo:nil
-																 repeats:YES] retain];
-				}
 			}
-		}else if (didAutoAway){
-			[self setAutoAway:NO];
+		}else{
+			if (didAutoAway){
+				//The user was automatically away before, but is now not beyond the autoAwayThreshold
+				[self setAutoAway:NO];
+			}
 		}
 	}
 }
@@ -338,7 +365,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 			didAutoAway = YES;
 		}
 	}else{
-		//If we did an autoaway before, clear it now.
+		//If we did an autoAway before, clear it now.
 		if (didAutoAway){
 			[[adium preferenceController] setPreference:nil
 												 forKey:@"AwayMessage"
@@ -347,44 +374,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 												 forKey:@"Autoresponse" 
 												  group:GROUP_ACCOUNT_STATUS];
 			didAutoAway = NO;
-			
-			//Remove the timer to check the user's activity every 1 seconds if it exists
-			[autoAwayTimer invalidate]; [autoAwayTimer release]; autoAwayTimer = nil;
-		}
-	}
-}
-
-//Make sure the user is still idle
-- (void)autoIdleTimer:(NSTimer *)inTimer
-{
-	double currentIdleTime = [self currentIdleTime];
-
-	/* The user is no longer idle according to her idle threshold. */
-    if(idleEnabled && (currentIdleTime < idleThreshold)){
-		[self setIdleState:AINotIdle];
-    }
-
-	//Check just in case the user wants to go away automatically after an amount of time greater than the idle timer
-	//which would mean that they were now idle but the notIdleTimer was no longer firing
-	if(autoAwayEnabled){
-		if(currentIdleTime > autoAwayThreshold){
-			//The user has exceeded the autoAwayThreshold (time to set auto away)
-			[self setAutoAway:YES];
-			
-			//If we aren't automatically checking if the user comes back from idling as a result of an autoidle
-			//Install a timer to do so.  We must be careful to remove this timer later.
-			if (idleState != AIAutoIdle){
-				//Install a timer to check the user's activity every 1 seconds.
-				[autoAwayTimer invalidate]; [autoAwayTimer release];
-				autoAwayTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_INACTIVE_INTERVAL)
-																  target:self
-																selector:@selector(autoIdleTimer:)
-																userInfo:nil
-																 repeats:YES] retain];
-			}	
-
-		}else if(didAutoAway && (currentIdleTime < autoAwayThreshold)){
-			[self setAutoAway:NO];
 		}
 	}
 }
@@ -392,7 +381,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Switch the user over to regular manual idle mode
 - (void)delayedManualIdleTimer:(NSTimer *)inTimer
 {
-    manualIdleTime = idleThreshold;
     [self setIdleState:AIManualIdle];
 }
 
@@ -419,12 +407,21 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Returns the current # of seconds the user has been idle
 - (double)currentIdleTime
 {
-    double idleTime = CGSSecondsSinceLastInputEvent(-1);
+    double idleTime;
+	
+	if(manualIdleTimeReferenceTick){
+		//If we have a manual idleTime reference tick, our idleTime should be reported as the current tick
+		//minus the reference tick, divided by 60 (since there are 60 ticks in a second).
+		idleTime = (TickCount() - manualIdleTimeReferenceTick) / 60.0;
 
-    //On MDD Powermacs, the above function will return a large value when the machine is active (-1?).
-    //Here we check for that value and correctly return a 0 idle time.
-    if(idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0
+	}else{
+		idleTime = CGSSecondsSinceLastInputEvent(-1);
 
+		//On MDD Powermacs, the above function will return a large value when the machine is active (-1?).
+		//Here we check for that value and correctly return a 0 idle time.
+		if(idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0
+	}
+	
     return(idleTime);
 }
 
