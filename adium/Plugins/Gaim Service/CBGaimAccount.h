@@ -31,8 +31,6 @@
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
 - (oneway void)removeContact:(AIListContact *)theContact;
 
-- (oneway void)destroyMultiChat:(AIChat *)chat;
-- (oneway void)destroyIMChat:(AIChat *)chat;
 - (oneway void)addChat:(AIChat *)chat;
 - (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing;
 - (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type;
@@ -150,8 +148,6 @@
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
 - (oneway void)removeContact:(AIListContact *)theContact;
 
-- (oneway void)destroyMultiChat:(AIChat *)chat;
-- (oneway void)destroyIMChat:(AIChat *)chat;
 - (oneway void)addChat:(AIChat *)chat;
 - (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing;
 - (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type;

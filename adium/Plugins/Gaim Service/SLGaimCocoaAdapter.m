@@ -382,13 +382,9 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 //		NSLog(@"Blist update %s",((GaimBuddy*) node)->name);
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*) node;
-		
 
-			
-//		[accountLookup(buddy->account) updateContact:contactLookupFromBuddy(buddy)];
 		AIListContact *theContact = contactLookupFromBuddy(buddy);
 		
-//		NSLog(@"update in %@!",self);
 		//Group changes - gaim buddies start off in no group, so this is an important update for us
 		if(![theContact remoteGroupName]){
 			GaimGroup *g = gaim_find_buddys_group(buddy);
@@ -398,9 +394,11 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 			}
 		}
 		
-		NSString *alias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
-		[accountLookup(buddy->account) updateContact:theContact toAlias:alias];
-		
+		const char *alias = gaim_get_buddy_alias(buddy);
+		if (alias){
+			NSString *aliasString = [NSString stringWithUTF8String:alias];
+			[accountLookup(buddy->account) updateContact:theContact toAlias:aliasString];
+		}
     }
 }
 
@@ -595,13 +593,8 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 // Conversation ------------------------------------------------------------------------------------------------------
 static void adiumGaimConvDestroy(GaimConversation *conv)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		[accountLookup(conv->account) destroyMultiChat:chatLookupFromConv(conv)];
-	}else 	if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
-		[accountLookup(conv->account) destroyIMChat:imChatLookupFromConv(conv)];	
-	}
-	
-	conv->ui_data = nil;
+	//Gaim is telling us a conv was destroyed.  This should only happen when we tell it to, and that via closeChat: below
+	//so we should not need to do anything here.
 }
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
@@ -1000,9 +993,8 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 {
 	if (GAIM_DEBUG) NSLog(@"adiumGaimRequestAction");
     int		    alertReturn, i;
-    //XXX evands: we can't use AILocalizedString here because there is no self (nor is there a spoon).
-    /*AILocalizedString(@"Request","Title: General request from gaim")*/
-    NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"Request");
+	
+    NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
     NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
 		(primary ? primary : ""),
 		((primary && secondary) ? "\n\n" : ""),
