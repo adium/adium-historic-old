@@ -43,6 +43,9 @@
     //Install our 'enter away message' submenu
     [self installAwayMenu];
     [self updateAwayMenu];
+
+    //Install our tooltip entry
+    [[owner interfaceController] registerContactListTooltipEntry:self];
     
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
@@ -67,6 +70,19 @@
 {
     [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil]; //Remove the away status flag
 }
+
+
+//Tooltip entry --
+- (NSString *)label
+{
+    return(@"Away");
+}
+
+- (NSString *)entryForObject:(AIListObject *)inObject
+{
+    return(@"Maybe ;)");
+}
+
 
 
 //Private ------------------------------------------------------------------------------

@@ -202,6 +202,11 @@ typedef enum {
 - (void)flash:(int)value;
 @end
 
+@protocol AIContactListTooltipEntry <NSObject>
+- (NSString *)label;
+- (NSString *)entryForObject:(AIListObject *)inObject;
+@end
+
 
 // Public core controller methods ------------------------------------------------------------
 @interface AILoginController : NSObject{
@@ -351,10 +356,13 @@ typedef enum {
     NSMutableArray		*contactListViewArray;
     NSMutableArray		*messageViewArray;
     NSMutableArray		*interfaceArray;
+    NSMutableArray		*contactListTooltipEntryArray;
 
     NSMutableArray		*flashObserverArray;
     NSTimer			*flashTimer;
     int				flashState;
+    AIListObject		*tooltipListObject;
+    NSString			*tooltipString;
     
     NSString		*errorTitle;
     NSString		*errorDesc;
@@ -371,6 +379,7 @@ typedef enum {
 - (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
 - (int)flashState;
 - (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
+- (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry;
 
 @end
 

@@ -72,6 +72,7 @@
     enumerator = [controllerArray objectEnumerator];
     while((controller = [enumerator nextObject])){
         if([controller contactListView] == inView){
+            [controller closeView];
             [controllerArray removeObject:controller];
             return; //We've found and removed our view, return.
         }

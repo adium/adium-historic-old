@@ -21,6 +21,7 @@
 #define MINI_TOOLBAR_MENU_NIB		@"MiniToolbarMenu"	//Filename of the minitoolbar nib
 #define MINI_TOOLBAR_ITEM_SPACING	0 //3			//Space between toolbar items
 #define MINI_TOOLBAR_EDGE_SPACING	0 //2
+#define MINI_TOOLBAR_FPS		30.0			//Animation speed
 
 @interface AIMiniToolbar (PRIVATE)
 - (NSArray *)rebuildItems;
@@ -335,7 +336,7 @@
 {
     if(!itemsRearranging){
         itemsRearranging = YES;
-        [NSTimer scheduledTimerWithTimeInterval:(1.0/24.0) target:self selector:@selector(arrangeItemsTimer:) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:(1.0/MINI_TOOLBAR_FPS) target:self selector:@selector(arrangeItemsTimer:) userInfo:nil repeats:NO];
     }
 }
 
@@ -347,7 +348,7 @@
     //If all the items aren't in place, we set ourself to adjust them again
     if(!finished){
         itemsRearranging = YES;
-        [NSTimer scheduledTimerWithTimeInterval:(1.0/24.0) target:self selector:@selector(arrangeItemsTimer:) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:(1.0/MINI_TOOLBAR_FPS) target:self selector:@selector(arrangeItemsTimer:) userInfo:nil repeats:NO];
     }else{
         itemsRearranging = NO;
     }
@@ -420,7 +421,7 @@
         if(!absolute){
             if(origin.x > itemFrame.origin.x){
                 int distance = (origin.x - itemFrame.origin.x) * 0.5;
-                if(distance > 6) distance = 6;
+                if(distance > 7) distance = 7;
                 if(distance < 1) distance = 1;
             
                 origin.x = itemFrame.origin.x + distance;
@@ -428,7 +429,7 @@
                 if(finished) finished = NO;
             }else if(origin.x < itemFrame.origin.x){
                 int distance = (itemFrame.origin.x - origin.x) * 0.5;
-                if(distance > 6) distance = 6;
+                if(distance > 7) distance = 7;
                 if(distance < 1) distance = 1;
     
                 origin.x = itemFrame.origin.x - distance;
