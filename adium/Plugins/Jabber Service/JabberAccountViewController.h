@@ -1,5 +1,5 @@
 #import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 
 @class JabberAccount;
@@ -13,9 +13,10 @@
     IBOutlet    NSTextField     *textField_username;
     IBOutlet    NSTextField     *textField_host;
 }
+
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
 - (NSView *)view;
-- (void)saveChanges;
 - (void)configureViewAfterLoad;
+- (IBAction)preferenceChanged:(id)sender;
 
 @end
