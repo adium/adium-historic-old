@@ -14,14 +14,12 @@
 - (void)installPlugin
 {
     [[owner contentController] registerDisplayingContentFilter:self];
-    NSLog(@"Installing LaTeX Plugin");
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject
 {
     if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
     {
-        NSLog(@"Checking message");
         AIContentMessage *contMsg = (AIContentMessage *)inObject;
         NSMutableAttributedString *newMessage = [[[contMsg message] mutableCopy] autorelease];
         NSScanner *stringScanner;
