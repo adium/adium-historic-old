@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.100 2004/08/04 20:42:19 evands Exp $
+// $Id: AIContentController.m,v 1.101 2004/08/05 03:37:28 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -394,6 +394,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 		}
 		mostRecentChat = chat;
 	}
+
 }
 
 //Send a content object
