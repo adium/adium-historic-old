@@ -369,8 +369,13 @@ static int  sizeOfSortOrder;
 			int targetIndex = [sortOrderPref indexOfObject:[self numberForString:[self tableView:tableView
 																		 objectValueForTableColumn:nil
 																							   row:row]]];
-			//Insert it there
-			[sortOrderPref insertObject:sortNumber atIndex:targetIndex];
+			if (targetIndex != NSNotFound){
+				//Insert it there
+				[sortOrderPref insertObject:sortNumber atIndex:targetIndex];
+			}else{
+				//Dropped at the bottom
+				[sortOrderPref addObject:sortNumber];
+			}
 		}
 		
 		[[adium preferenceController] setPreference:sortOrderPref
