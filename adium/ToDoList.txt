@@ -13,10 +13,9 @@ Bugs
 -------------------------------------------------------------------------------------------------------
 * Don't spawn new windows when we're hidden, doing so will unhide us
     What should we do with the new content then? Throw it in the trash? Feed it to Laura's geckos?
-* Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
-* Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field.
 * Pushing escape clears the text field, instead of allowing you to convert from kanji to romain. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
+	Evan:I say we just take this nonstandard 'feature' out.
 
 
 
@@ -40,7 +39,7 @@ Contact List:
 Accounts:
 	+ Allow user to cancel connecting of accounts
 	+ Auto-complete aliases in log viewer
-    + Add account specific proxy fields (Type, host, port) for all libgaim connections
+	+ Add account specific proxy fields (Type, host, port) for all libgaim connections [Evan]
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -61,7 +60,9 @@ Contact List Display:
 Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
-        Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P -Colin
+	        Colin: Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P
+		Evan: Auburn University? I'm with you though if we change it... but I really think it's okay as-is.
+
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 
 -------------------------------------------------------------------------------------------------------
@@ -205,6 +206,8 @@ Bug Fixes:
 = Contact list display format preference not applying correctly on launch
 = Window content is drawing 2 pixels to the left when dragging tabs
 = Prevent cmd-delete from working in the message window
+= Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
+= Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
 
 Features & Changes:
 = Add Offline status coloring
