@@ -26,6 +26,7 @@
 - (AIEditorListGroup *)list;		//Return an editor list group containing all objects
 
 - (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID;	//Do you have this handle?
+- (AIEditorListGroup *)groupWithUID:(NSString *)UID;
 - (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID;
 
 - (void)addObject:(AIEditorListObject *)inObject;					//Add the object

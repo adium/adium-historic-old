@@ -84,6 +84,11 @@
     return(NO); //Not needed
 }
 
+- (AIEditorListGroup *)groupWithUID:(NSString *)UID
+{
+    return(nil); //Not needed
+}
+
 - (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
     return(NO); //Not needed

@@ -190,29 +190,35 @@
 {
     AIEditorListGroup	*group;
 
-#warning avoid duplicates
-    if(temporary){
-        group = [[AIEditorListGroup alloc] initWithUID:name temporary:YES];
-        [[collection list] addObject:group]; //We don't add the group to the collection, since it's only temporary
+    //Make sure a group with this UID doesn't already exist on the collection
+    if(group = [collection groupWithUID:name]){
+        //Return the existing group
 
     }else{
-        group = [[AIEditorListGroup alloc] initWithUID:name temporary:NO]; 	//Create the group
-        [[collection list] addObject:group];					//Add it to the list
-        [collection addObject:group];						//Let the collection add it
-
-        //Post an object added notification
-        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+        if(temporary){
+            group = [[AIEditorListGroup alloc] initWithUID:name temporary:YES];
+            [[collection list] addObject:group]; //We don't add the group to the collection, since it's only temporary
+    
+        }else{
+            group = [[AIEditorListGroup alloc] initWithUID:name temporary:NO]; 	//Create the group
+            [[collection list] addObject:group];					//Add it to the list
+            [collection addObject:group];						//Let the collection add it
+    
+            //Post an object added notification
+            [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+        }
     }
-
+        
     return(group);
 }
 
 //Rename an object (correctly sets temporary objects as permanent)
-- (void)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)inName
+- (BOOL)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)inName
 {
     NSString		*serviceID = [collection serviceID];
     AIServiceType	*serviceType = [[owner accountController] serviceTypeWithID:serviceID];
     NSString		*name = (serviceType ? [serviceType filterUID:inName] : inName); //Filter the new name
+    BOOL		success = YES;
     
     if([[object UID] compare:name] != 0){ //Ignore the rename if the name hasn't changed
         if([object isKindOfClass:[AIEditorListHandle class]]){ //Rename of a handle
@@ -247,19 +253,28 @@
                 [self createGroupNamed:inName onCollection:collection temporary:NO];
 
             }else{ //Regular group
-                //Rename the group
-                [collection renameObject:object to:name];
-                [object setUID:name];
+                AIEditorListGroup	*group;
+                
+                //Make sure a group with the new UID doesn't already exist on the collection
+                if(group = [collection groupWithUID:inName]){
+                    //Warn user and reject
+                    NSRunAlertPanel(@"Invalid Name", [NSString stringWithFormat:@"A group named \"%@\" already exists.",name] , nil, nil, nil);
+                    success = NO;
 
-                //Post a renamed notification
-                [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+                }else{
+                    //Rename the group
+                    [collection renameObject:object to:inName];
+                    [object setUID:inName];
 
+                    //Post a renamed notification
+                    [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+                }
             }
-
         }
     }
-    
+
     [[object containingGroup] sort]; //resort the containing editor group
+    return(success);
 }
 
 //Move an object

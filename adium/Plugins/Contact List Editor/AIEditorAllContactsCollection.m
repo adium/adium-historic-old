@@ -21,6 +21,7 @@
 - (AIEditorListGroup *)generateEditorListGroup;
 - (void)_processCollectionGroup:(AIEditorListGroup *)collectionGroup intoEditorGroup:(AIEditorListGroup *)editorGroup;
 - (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
+- (AIEditorListGroup *)_groupNamed:(NSString *)name;
 @end
 
 
@@ -82,6 +83,12 @@
 {
     return([self _handleNamed:UID inGroup:list]);
 }
+
+- (AIEditorListGroup *)groupWithUID:(NSString *)UID
+{
+    return([self _groupNamed:UID]);
+}
+
 
 - (NSString *)subLabel{
     return(@"All Avaliable Contacts");
@@ -337,6 +344,23 @@
             if((object = [self _handleNamed:name inGroup:(AIEditorListGroup *)object])){
                 return((AIEditorListHandle *)object);
             }
+        }
+    }
+
+    return(nil);
+}
+
+//Scan for a group on our list
+- (AIEditorListGroup *)_groupNamed:(NSString *)name
+{
+    NSEnumerator	*enumerator;
+    AIEditorListGroup	*group;
+
+    //Look for this group
+    enumerator = [list objectEnumerator];
+    while(group = [enumerator nextObject]){
+        if([name caseInsensitiveCompare:[group UID]] == 0){
+            return(group);
         }
     }
 
