@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.59 2004/04/17 12:45:27 adamiser Exp $
+$Id: ToDoList.txt,v 1.60 2004/04/18 23:58:09 evands Exp $
 
 Legend
 + Change or Addition
@@ -20,15 +20,10 @@ Bugs
 * Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
-* Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
-	- (Tick: Yes, jabber works)
 * User icons are still getting flipped (Icons from AIM, apparently)
-* Changing an alias in the inspector does not correctly update the contact list
-    - (eevyl: I think this is fixed now at least my test worked, not sure though)
-* Some URLs in profiles aren't allowing clicks properly (Ones that include %n ?)
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
-* Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
+
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
 * Adding a contact that's already online causes them to appear signed off on the list.
 * Adding buddies, sometimes they'll show up on the list twice until a restart
@@ -36,8 +31,6 @@ Bugs
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
 * Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
-* Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well) [Evan] 
-* We have issues with not notifying the user when a message fails to send
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * Message history 'date' timestamps are not using localized time strings
@@ -78,10 +71,9 @@ Contact List:
 	* Alias doesn't stick on quit. This is needed for those services that don't support certain characters.
 	
 Accounts:
-	+ Allow user to cancel connecting of accounts
 	+ Auto-complete aliases in log viewer
 	+ Add account specific proxy fields (Type, host, port) for all libgaim connections [Evan]
-	+ Standardize on the service description for Oscar accounts - do something like "AIM, ICQ, and .Mac" in the services dropdown, in the new message prompt, etc.
+
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -133,15 +125,12 @@ Contact alerts:
 	= Sheet has event, action, and contact (submenued by group) popups.
 	= Add source list on left of all objects with alerts
 	= Clicking in source list changes displayed
-	+ Menu has "all contacts in ___" items, and "all contacts" item
+	+ Menu has "all contacts in ___" items, and "all contacts" item (?)
 	= Dynamically load view into sheet depending on selected alert
-	+ Redesign views, simplify, use big controls
+	= Redesign views, simplify, use big controls
 	= Add "Add alert" context menu - that opens the sheet as a panel and allows easy adding
-	+ Add "Contact Alerts" menu item to window menu for opening alert window
+	= Add "Contact Alerts" menu item to window menu for opening alert window
 	= Auto-fill sheet for new alert based on selection in window on clicking add
-
-
-		- Chris (tick): Is it better to have a separate window for alerts, or is it better to make it into the get info/inspector/whatever thingamabob.
 
 Contact list display:
 	Add user icon and extended status display support to the contact list, and simplify its
@@ -289,6 +278,12 @@ ced preference panes.
 = We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 	- (Tick: I thought jabber sent xml...???)
 = Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
+= Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
+= Changing an alias in the inspector does not correctly update the contact list
+= Some URLs in profiles aren't allowing clicks properly (Ones that include %n ?)
+= Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
+= Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well)
+= We have issues with not notifying the user when a message fails to send
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
@@ -322,3 +317,5 @@ Features & Changes:
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
 = Tabbing through account pref fields (yahoo) is no longer working [regression]
 = Changes to the password field (Account prefs) aren't applied when connect is clicked.
+= Allow user to cancel connecting of accounts
+= Standardize on the service description for Oscar accounts - do something like "AIM, ICQ, and .Mac" in the services dropdown, in the new message prompt, etc.
