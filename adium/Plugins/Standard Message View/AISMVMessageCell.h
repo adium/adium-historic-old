@@ -30,10 +30,9 @@
     NSRange		glyphRange;
 }
 
-+ (AISMVMessageCell *)messageCellWithString:(NSAttributedString *)inString;
++ (AISMVMessageCell *)messageCellWithString:(NSAttributedString *)inString backgroundColor:(NSColor *)inBackgroundColor;
 - (NSSize)sizeCellForWidth:(float)inWidth;
 - (NSSize)cellSize;
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
-- (void)setBackgroundColor:(NSColor *)inColor;
 
 @end

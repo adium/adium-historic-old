@@ -3560,6 +3560,30 @@
 			isa = PBXTargetDependency;
 			target = F50F252D03B0425301A80202;
 		};
+		F55F696303B62F8F01A8010A = {
+			isa = PBXFileReference;
+			name = AISMVTimeCell.h;
+			path = "Plugins/Standard Message View/AISMVTimeCell.h";
+			refType = 4;
+		};
+		F55F696403B62F8F01A8010A = {
+			isa = PBXFileReference;
+			name = AISMVTimeCell.m;
+			path = "Plugins/Standard Message View/AISMVTimeCell.m";
+			refType = 4;
+		};
+		F55F696503B62F8F01A8010A = {
+			fileRef = F55F696303B62F8F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55F696603B62F8F01A8010A = {
+			fileRef = F55F696403B62F8F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F56621A503AD02AC01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -5800,6 +5824,7 @@
 				F570A60B03704EBA01A8010A,
 				F5793993033E75B001A8010A,
 				F5793995033E75B001A8010A,
+				F55F696303B62F8F01A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -6265,6 +6290,7 @@
 				F5793994033E75B001A8010A,
 				F570A60C03704EBA01A8010A,
 				F55B415103AB89E301A8010A,
+				F55F696403B62F8F01A8010A,
 			);
 			isa = PBXGroup;
 			name = "Standard Message View";
@@ -6278,6 +6304,7 @@
 				F5793999033E75B001A8010A,
 				F570A60D03704EBA01A8010A,
 				F55B415203AB89E301A8010A,
+				F55F696503B62F8F01A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6296,6 +6323,7 @@
 				F579399A033E75B001A8010A,
 				F570A60E03704EBA01A8010A,
 				F55B415303AB89E301A8010A,
+				F55F696603B62F8F01A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

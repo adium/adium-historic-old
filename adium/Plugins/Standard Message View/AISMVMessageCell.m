@@ -20,7 +20,7 @@
 #import "AIContentMessage.h"
 
 @interface AISMVMessageCell (PRIVATE)
-- (AISMVMessageCell *)initMessageCellWithString:(NSAttributedString *)inString;
+- (AISMVMessageCell *)initMessageCellWithString:(NSAttributedString *)inString backgroundColor:(NSColor *)inBackgroundColor;
 @end
 
 //AIAttributedStringTextCell
@@ -31,9 +31,9 @@
 @implementation AISMVMessageCell
 
 //Create a new cell
-+ (AISMVMessageCell *)messageCellWithString:(NSAttributedString *)inString
++ (AISMVMessageCell *)messageCellWithString:(NSAttributedString *)inString backgroundColor:(NSColor *)inBackgroundColor
 {
-    return([[[self alloc] initMessageCellWithString:inString] autorelease]);
+    return([[[self alloc] initMessageCellWithString:inString backgroundColor:inBackgroundColor] autorelease]);
 }
 
 //Resizes this cell for the desired width.  Returns the resulting size
@@ -52,12 +52,6 @@
 //Returns the last calculated cellSize (so, the last value returned by cellSizeForBounds)
 - (NSSize)cellSize{
     return(cellSize);
-}
-
-//Set the background color of this cell
-- (void)setBackgroundColor:(NSColor *)inColor
-{
-    backgroundColor = [inColor retain];
 }
 
 //Draws this cell in the requested view and rect
@@ -79,13 +73,13 @@
 }
 
 //Private --------------------------------------------------------------------------------
-- (AISMVMessageCell *)initMessageCellWithString:(NSAttributedString *)inString
+- (AISMVMessageCell *)initMessageCellWithString:(NSAttributedString *)inString backgroundColor:(NSColor *)inBackgroundColor
 {
     [super init];
 
     //Init
     string = [inString retain];
-    backgroundColor = nil;
+    backgroundColor = [inBackgroundColor retain];
     
     //Setup the layout manager and text container
     textStorage = [[NSTextStorage alloc] initWithAttributedString:inString];
@@ -113,116 +107,3 @@
 
 @end
 
-
-
-
-
-/*
-
-//Return the layout manager for our message text
-- (NSLayoutManager *)messageLayoutManagerWithWidth:(int)inWidth
-{
-    if(!messageLayoutManager || messageLayoutWidth != inWidth){
-        NSTextStorage 		*textStorage;
-        NSTextContainer 	*textContainer;
-    
-//        NSLog(@"layout width %i",(int)inWidth);
-    
-        //Setup the layout manager and text container
-        textStorage = [[NSTextStorage alloc] initWithAttributedString:[self messageString]];
-        textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(inWidth, 1e7)];
-        messageLayoutManager = [[NSLayoutManager alloc] init];
-        
-        //Configure
-        [textContainer setLineFragmentPadding:0.0];
-        [messageLayoutManager addTextContainer:textContainer];
-        [textStorage addLayoutManager:messageLayoutManager];
-        
-        messageGlyphRange = [messageLayoutManager glyphRangeForTextContainer:textContainer];
-        messageLayoutWidth = inWidth;
-    }
-    
-    return(messageLayoutManager);
-}
-
-//Return the string of our sender
-- (NSAttributedString *)senderString
-{
-    if(!senderString){
-        AIContactHandle		*source;
-        NSString			*senderNameString;
-        NSColor			*senderColor;
-        BOOL			incoming;
-        NSMutableParagraphStyle	*style;
-    
-        //Get the sender information
-        source = [object source];
-        
-        if([source isKindOfClass:[AIAccount class]]){
-            senderNameString = [(AIAccount *)source accountDescription];
-        }else{    
-            senderNameString = [source displayName];
-        }
-        incoming = ![source isKindOfClass:[AIAccount class]];
-    
-        //Prepare some attributes
-        style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        [style setAlignment:NSRightTextAlignment];
-        
-        if(incoming){
-            senderColor = [[[owner preferenceController] preferenceForKey:@"message_incoming_darkPrefixColor" group:PREF_GROUP_GENERAL object:source] representedColor];
-        }else{
-            senderColor = [[[owner preferenceController] preferenceForKey:@"message_outgoing_darkPrefixColor" group:PREF_GROUP_GENERAL object:source] representedColor];
-        }
-    
-        //Create
-        senderString = [[NSAttributedString alloc] initWithString:senderNameString attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:12], NSFontAttributeName, style, NSParagraphStyleAttributeName, senderColor, NSForegroundColorAttributeName, nil]];
-    }
-    
-    return(senderString);
-}
-*/
-
-/*    NSRect			segmentRect;
-    AIContactHandle		*sender;
-    BOOL			incoming;
-
-    NSColor	*messageRowIn = [[preferenceController preferenceForKey:@"message_incoming_backgroundColor" group:PREF_GROUP_GENERAL object:sender] representedColor];
-    NSColor	*messageRowOut = [[preferenceController preferenceForKey:@"message_outgoing_backgroundColor" group:PREF_GROUP_GENERAL object:sender] representedColor];
-
-
-    sender = [object source];
-    incoming = ![[object source] isKindOfClass:[AIAccount class]];
-
-
-    //Draw the sender Gradient
-    segmentRect = cellFrame;
-    segmentRect.size.width = senderWidth;
-    if(incoming){
-        [AIGradient drawGradientInRect:segmentRect from:messageRowIn to:[messageRowIn darkenBy:0.10]];
-    }else{
-        [AIGradient drawGradientInRect:segmentRect from:messageRowOut to:[messageRowOut darkenBy:0.10]];
-    }
-
-    //Draw sender string
-    if(drawSource){
-        segmentRect.size.width -= SENDER_PADDING;
-        [[self senderString] drawInRect:segmentRect];
-        segmentRect.size.width += SENDER_PADDING;
-    }
-
-    //Draw the message background
-    segmentRect.origin.x += segmentRect.size.width;
-    segmentRect.size.width = cellFrame.size.width - segmentRect.origin.x;
-
-    if(incoming){
-        [messageRowIn set];
-    }else{
-        [messageRowOut set];
-    }
-    [NSBezierPath fillRect:segmentRect];
-    
-    //Draw the message string
-    segmentRect.origin.x += MESSAGE_PADDING;
-
-    [[self messageLayoutManagerWithWidth:(lastCellSize.width - senderWidth - MESSAGE_PADDING * 2)] drawGlyphsForGlyphRange:messageGlyphRange atPoint:segmentRect.origin];*/

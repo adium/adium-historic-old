@@ -17,16 +17,16 @@
 
 
 @interface AISMVSenderCell : NSCell {
-    NSAttributedString	*string;
-    
+    NSAttributedString	*attributedSenderString;
+
     NSSize		cellSize;
     NSColor		*backgroundColor;
+    NSColor		*darkBackgroundColor;
+    
 }
 
-+ (AISMVSenderCell *)senderCellWithString:(NSAttributedString *)inString;
-//- (NSSize)sizeCellForWidth:(float)inWidth;
++ (AISMVSenderCell *)senderCellWithString:(NSString *)inString textColor:(NSColor *)inTextColor backgroundColor:(NSColor *)inBackColor font:(NSFont *)inFont;
 - (NSSize)cellSize;
 - (void)drawWithFrame:(NSRect)cellFrame showName:(BOOL)showName inView:(NSView *)controlView;
-- (void)setBackgroundColor:(NSColor *)inColor;
 
 @end

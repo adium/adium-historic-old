@@ -23,6 +23,8 @@
     
     NSMutableArray	*messageCellArray;
     NSMutableArray	*contentArray;
+    NSMutableArray	*timeCellArray;
+    float		maxTimeWidth;
     
     NSMutableArray	*senderArray;
     NSMutableArray	*senderCellArray;

@@ -19,6 +19,7 @@
 #import "AISMTextView.h"
 #import "AISMVMessageCell.h"
 #import "AISMVSenderCell.h"
+#import "AISMVTimeCell.h"
 
 #define AUTOSCROLL_CATCH_SIZE 	20	//The distance (in pixels) that the scrollview must be within (from the bottom) for auto-scroll to kick in.
 
@@ -46,88 +47,91 @@
 //Draw a rect of this view
 - (void)drawRect:(NSRect)rect
 {
-    NSEnumerator		*cellEnumerator, *contentEnumerator;
-    AISMVMessageCell		*textCell;
-    AIContentMessage		*contentObject;
-    NSRect			cellFrame = NSMakeRect(0, 0, [self frame].size.width, 0);
-    NSRect			documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    id				previousSource = nil;
-    id				source;
-    
-    //If there isn't enough content to fill our entire view, we draw a section of blankness, and move down, so the content is bottom-aligned
-    if(contentsHeight < documentVisibleRect.size.height){
-        int	gapSize = documentVisibleRect.size.height - contentsHeight;
+    NSEnumerator		*cellEnumerator, *contentEnumerator, *timeCellEnumerator;
+    NSRect			cellFrame, documentVisibleRect;
 
-        //Move down so we're bottom aligned
-        cellFrame.origin.y += gapSize;        
+    NSString			*previousTimeString;
+    id				previousSource;
+
+    AISMVMessageCell		*textCell;
+    AISMVTimeCell		*timeCell;
+
+
+    
+    //If there isn't enough content to fill our entire view, we move down so the content is bottom-aligned
+    cellFrame = NSMakeRect(0, 0, [self frame].size.width, 0);
+    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    if(contentsHeight < documentVisibleRect.size.height){
+        cellFrame.origin.y += (documentVisibleRect.size.height - contentsHeight);
     }
 
-    //Set up the bezier paths
+    //Prepare for drawing
     [NSBezierPath setDefaultLineWidth:1.0];
     [NSBezierPath setDefaultLineCapStyle:NSButtLineCapStyle];
 
-    //Loop through, and draw, each cell
     cellEnumerator = [messageCellArray objectEnumerator];
+    timeCellEnumerator = [timeCellArray objectEnumerator];
     contentEnumerator = [contentArray objectEnumerator];
+
+    //Loop through, and draw, each cell
+    previousSource = nil;
+    previousTimeString = nil;
     while((textCell = [cellEnumerator nextObject])){
+        AIContentMessage	*contentObject;
+        NSString		*timeString;
+        id			source;
+        
+        //Fetch all the information needed to display
+        timeCell = [timeCellEnumerator nextObject];
         contentObject = [contentEnumerator nextObject];
-
-        source = [contentObject source];
-
         cellFrame.size.height = [textCell cellSize].height;
-        if(NSIntersectsRect(documentVisibleRect,cellFrame)){
-            NSRect	subFrame;
+        source = [contentObject source];
+        timeString = [timeCell timeString];
+        
+        if(NSIntersectsRect(documentVisibleRect,cellFrame)){ //Only draw visible cells
+            NSSize		cellSize;
+            AISMVSenderCell	*senderCell;
             
             //Draw the text cell
-            subFrame = cellFrame;
-            subFrame.size.width -= maxSenderWidth;
-            subFrame.origin.x += maxSenderWidth;
-            [textCell drawWithFrame:subFrame inView:self];
-        
-            //Draw the divider line and sender string
-            // (we offset 0.5 pixels to achieve a simple 1 pixel aliased line)
-            
-            if(source != previousSource){ 
-                int		senderCellIndex;
+            cellSize = [textCell cellSize];
+            [textCell drawWithFrame:NSMakeRect(cellFrame.origin.x + maxSenderWidth,
+                                               cellFrame.origin.y,
+                                               cellSize.width,
+                                               cellFrame.size.height)
+                             inView:self];
 
-                //Draw the sender cell
-                senderCellIndex = [senderArray indexOfObject:source];
-                if(senderCellIndex != NSNotFound){
-                    AISMVSenderCell	*senderCell = [senderCellArray objectAtIndex:senderCellIndex];
+            //Draw the sender cell
+            senderCell = [senderCellArray objectAtIndex:[senderArray indexOfObject:source]];
+            [senderCell drawWithFrame:NSMakeRect(cellFrame.origin.x,
+                                                 cellFrame.origin.y,
+                                                 maxSenderWidth,
+                                                 cellFrame.size.height)
+                                showName:(source != previousSource)
+                                inView:self];
 
-                    subFrame = cellFrame;
-                    subFrame.size.width = maxSenderWidth;
-                    subFrame.origin.x = 0;
-                    [senderCell drawWithFrame:subFrame showName:YES inView:self];
-                }
+            //Draw the time cell
+            [timeCell drawWithFrame:NSMakeRect(cellFrame.origin.x + cellFrame.size.width - maxTimeWidth,
+                                               cellFrame.origin.y,
+                                               maxTimeWidth,
+                                               cellFrame.size.height)
+                           showTime:([timeString compare:previousTimeString] != 0)
+                             inView:self];
 
-                //Left portion of the line
-                [lineColorDivider set];
+            //Draw the divider line (offset 0.5 pixels for an aliased line)
+            if(source != previousSource){
                 [lineColorDarkDivider set];
-                [NSBezierPath strokeLineFromPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + 0.5) toPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y + 0.5)]; 
-                
-                //Right portion of the line
+                [NSBezierPath strokeLineFromPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + 0.5)
+                                          toPoint:NSMakePoint(cellFrame.origin.x + maxSenderWidth, cellFrame.origin.y + 0.5)];
+
                 [lineColorDivider set];
-                [NSBezierPath strokeLineFromPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + 0.5) toPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y + 0.5)]; 
-
-            }else{
-                int		senderCellIndex;
-
-                //Draw an empty sender cell
-                senderCellIndex = [senderArray indexOfObject:source];
-                if(senderCellIndex != NSNotFound){
-                    AISMVSenderCell	*senderCell = [senderCellArray objectAtIndex:senderCellIndex];
-
-                    subFrame = cellFrame;
-                    subFrame.size.width = maxSenderWidth;
-                    subFrame.origin.x = 0;
-                    [senderCell drawWithFrame:subFrame showName:NO inView:self];
-                }
+                [NSBezierPath strokeLineFromPoint:NSMakePoint(cellFrame.origin.x + maxSenderWidth, cellFrame.origin.y + 0.5)
+                                          toPoint:NSMakePoint(cellFrame.origin.x + maxSenderWidth + cellFrame.size.width, cellFrame.origin.y + 0.5)];
             }
         }
 
         //Next..
         cellFrame.origin.y += cellFrame.size.height;
+	previousTimeString = timeString;
         previousSource = source;
     }
 }
@@ -158,6 +162,7 @@
     contentArray = [[NSMutableArray alloc] init];
     senderArray = [[NSMutableArray alloc] init];
     senderCellArray = [[NSMutableArray alloc] init];
+    timeCellArray = [[NSMutableArray alloc] init];
     contentsHeight = 0;
     maxSenderWidth = 0;
 
@@ -198,6 +203,7 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
     [contentArray release];
     [senderArray release];
     [senderCellArray release];
+    [timeCellArray release];
 
     [super dealloc];
 }
@@ -207,23 +213,6 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
     return(YES);
 }
 
-
-//Called after we're inserted in a window
-/*- (void)viewDidMoveToSuperview
-{
-    //Recalculate the cell dimensions and redisplay
-    [self resizeToFillContainerView];
-    [self resizeCells];
-    [self setNeedsDisplay:YES];
-}*/
-
-//Called before we're inserted in a window
-/*- (void)viewWillMoveToSuperview:(NSView *)newSuperview
-{
-    //force a cell resize
-    
-}*/
-
 //Called when the frame changes.  Adjust to fill the new frame
 - (void)frameChanged:(NSNotification *)notification
 {    
@@ -232,15 +221,6 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
     [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
 }
-
-//Called after the view is resized.  Re-calculate the cell dimensions
-/*- (void)viewDidEndLiveResize
-{
-    //Recalculate the cell dimensions and redisplay
-    [self resizeToFillContainerView];
-    [self resizeCells];
-    [self setNeedsDisplay:YES];
-}*/
 
 //Flush and completely rebuild the message cell array
 - (void)buildMessageCellArray
@@ -258,82 +238,70 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
     while((object = [enumerator nextObject])){
         [self addCellsForContactObject:object];
     }
-
 }
 
 //Add a cell
 - (void)addCellsForContactObject:(NSObject<AIContentObject> *)object
 {
+    AISMVSenderCell	*senderCell;
     AISMVMessageCell	*messageCell;
-    float		width;// = [self frame].size.width - maxSenderWidth;
+    AISMVTimeCell	*timeCell;
     
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){ //Message content
-        NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
         AIContentMessage	*contentMessage = (AIContentMessage *)object;
         id			messageSource = [contentMessage source];
-        float			height;
+        BOOL			outgoing = ([messageSource isKindOfClass:[AIAccount class]]);
+
+        //Add it to our content array
+        [contentArray addObject:object];
 
         //Create a sender cell (if one doesn't already exist)
         if([senderArray indexOfObject:messageSource] == NSNotFound){
-            AISMVSenderCell	*senderCell;
-            NSDictionary	*attributes;
-            NSAttributedString	*attributedName;
-            NSString		*senderName;
-            NSColor		*backgroundColor;
-            NSColor		*textColor;
-
-            if([messageSource isKindOfClass:[AIAccount class]]){
-                senderName = [NSString stringWithFormat:@"%@:",[(AIAccount *)messageSource accountDescription]];
-                backgroundColor = backColorOut;
-                textColor = outgoingSourceColor;
-
+            if(outgoing){
+                senderCell = [AISMVSenderCell senderCellWithString:[NSString stringWithFormat:@"%@:",[(AIAccount *)messageSource accountDescription]]
+                                                         textColor:outgoingSourceColor
+                                                   backgroundColor:backColorOut
+                                                              font:[NSFont systemFontOfSize:11]];
             }else{
-                senderName = [NSString stringWithFormat:@"%@:",[(AIContactHandle *)messageSource displayName]];
-                backgroundColor = backColorIn;
-                textColor = incomingSourceColor;
-
+                senderCell = [AISMVSenderCell senderCellWithString:[NSString stringWithFormat:@"%@:",[(AIContactHandle *)messageSource displayName]]
+                                                         textColor:incomingSourceColor
+                                                   backgroundColor:backColorIn
+                                                              font:[NSFont systemFontOfSize:11]];
             }
             
-            //Create the cell
-            [paragraphStyle setAlignment:NSRightTextAlignment];
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,[NSFont systemFontOfSize:11],NSFontAttributeName,paragraphStyle,NSParagraphStyleAttributeName,nil];
-            attributedName = [[[NSAttributedString alloc] initWithString:senderName attributes:attributes] autorelease];
-            senderCell = [AISMVSenderCell senderCellWithString:attributedName];
-            [senderCell setBackgroundColor:backgroundColor];
-
             //Cache it
             [senderArray addObject:messageSource];
             [senderCellArray addObject:senderCell];
-            
-            if([senderCell cellSize].width > maxSenderWidth){
+
+            if([senderCell cellSize].width > maxSenderWidth){ //Resize the sender cells if this one is wider
                 maxSenderWidth = [senderCell cellSize].width;
-                [self resizeCells]; //resize our cells so they adjust to the new sender width
+                [self resizeCells];
             }
         }
+
         
-//if([
-//left line = 194
-//Dark name zone = 208
-//light name zone = 234
-//vertical divider = 207
-
-        //track it in our content array
-        [contentArray addObject:object];
-
-        //Create a message cell
-        messageCell = [AISMVMessageCell messageCellWithString:[contentMessage message]];
-        width = [self frame].size.width - maxSenderWidth;
-        height = [messageCell sizeCellForWidth:width].height;
-        if([messageSource isKindOfClass:[AIAccount class]]){
-            [messageCell setBackgroundColor:backColorOut];
-        }else{
-            [messageCell setBackgroundColor:backColorIn];
+        //Create a time cell
+        //User's localized date format: [[NSUserDefaults standardUserDefaults] objectForKey:NSTimeFormatString] w/ seconds
+        timeCell = [AISMVTimeCell timeCellWithDate:[contentMessage date]
+                                            format:@"%1I:%M"
+                                         textColor:[NSColor grayColor]
+                                   backgroundColor:(outgoing ? backColorOut : backColorIn)
+                                              font:[NSFont fontWithName:@"Helvetica" size:10]];
+        [timeCellArray addObject:timeCell];
+        if([timeCell cellSize].width > maxTimeWidth){ //Resize the time cells if this one is wider
+            maxTimeWidth = [timeCell cellSize].width;
+            [self resizeCells];
         }
 
-
+        
+        //Create a message cell
+        messageCell = [AISMVMessageCell messageCellWithString:[contentMessage message]
+                                              backgroundColor:(outgoing ? backColorOut : backColorIn)];
         [messageCellArray addObject:messageCell];
-        contentsHeight += height;
 
+        
+        //Increase our height to fit this new cell
+        contentsHeight += [messageCell sizeCellForWidth:([self frame].size.width - maxSenderWidth - maxTimeWidth) ].height;
 
     }else{ //Unknown content
         [[owner contentController] invokeDefaultHandlerForObject:object];
@@ -350,7 +318,7 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 
     //Determine our width
     enclosingScrollView = [self enclosingScrollView];
-    width = [enclosingScrollView documentVisibleRect].size.width - maxSenderWidth;
+    width = [enclosingScrollView documentVisibleRect].size.width - maxSenderWidth - maxTimeWidth;
 
     //Resize our cells
     contentsHeight = 0;
@@ -390,11 +358,4 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 
 
 @end
-
-
-
-
-
-
-
 

@@ -21,61 +21,65 @@
 #define STRING_ROUNDOFF_PADDING 1
 
 @interface AISMVSenderCell (PRIVATE)
-- (AISMVSenderCell *)initSenderCellWithString:(NSAttributedString *)inString;
+- (AISMVSenderCell *)initSenderCellWithString:(NSString *)inString textColor:(NSColor *)inTextColor backgroundColor:(NSColor *)inBackColor font:(NSFont *)inFont;
 @end
 
 @implementation AISMVSenderCell
 
 //Create a new cell
-+ (AISMVSenderCell *)senderCellWithString:(NSAttributedString *)inString
++ (AISMVSenderCell *)senderCellWithString:(NSString *)inString textColor:(NSColor *)inTextColor backgroundColor:(NSColor *)inBackColor font:(NSFont *)inFont
 {
-    return([[[self alloc] initSenderCellWithString:inString] autorelease]);
+    return([[[self alloc] initSenderCellWithString:inString textColor:inTextColor backgroundColor:inBackColor font:inFont] autorelease]);
 }
 
 //Returns the last calculated cellSize (so, the last value returned by cellSizeForBounds)
-- (NSSize)cellSize{
-    return(cellSize);
-}
-
-//Set the background color of this cell
-- (void)setBackgroundColor:(NSColor *)inColor
+- (NSSize)cellSize
 {
-    backgroundColor = [inColor retain];
+    return(cellSize);
 }
 
 //Draws this cell in the requested view and rect
 - (void)drawWithFrame:(NSRect)cellFrame showName:(BOOL)showName inView:(NSView *)controlView
 {
     //Draw our background
-    if(backgroundColor){
-        [AIGradient drawGradientInRect:cellFrame from:backgroundColor to:[backgroundColor darkenBy:0.09]];
-    }else{
-        [AIGradient drawGradientInRect:cellFrame from:[NSColor whiteColor] to:[NSColor redColor]];
-    }
-    
+    [AIGradient drawGradientInRect:cellFrame from:backgroundColor to:darkBackgroundColor];
+
     //Draw the name string
     if(showName){
         cellFrame.size.width -= SENDER_PADDING_L + SENDER_PADDING_R;
         cellFrame.origin.x += SENDER_PADDING_L;
 
-        [string drawInRect:cellFrame];
+        [attributedSenderString drawInRect:cellFrame];
     }
 }
 
 //Private --------------------------------------------------------------------------------
-- (AISMVSenderCell *)initSenderCellWithString:(NSAttributedString *)inString
+- (AISMVSenderCell *)initSenderCellWithString:(NSString *)inString textColor:(NSColor *)inTextColor backgroundColor:(NSColor *)inBackColor font:(NSFont *)inFont
 {
-    NSSize	stringSize;
-
-    [super init];
-
-    //Init
-    string = [inString retain];
-    backgroundColor = nil;
+    NSMutableParagraphStyle	*paragraphStyle;
+    NSDictionary		*attributes;
+    NSSize			stringSize;
     
-    //Precalc our cell size
-    stringSize = [string size];
-    cellSize = NSMakeSize(stringSize.width + SENDER_PADDING_L + SENDER_PADDING_R + STRING_ROUNDOFF_PADDING, stringSize.height);
+    //Init
+    [super init];
+    backgroundColor = [inBackColor retain];
+    darkBackgroundColor = [[backgroundColor darkenBy:0.09] retain];
+
+    //Apply attributes to the name
+    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    [paragraphStyle setAlignment:NSRightTextAlignment];
+
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+        inTextColor, NSForegroundColorAttributeName,
+        inFont, NSFontAttributeName,
+        paragraphStyle, NSParagraphStyleAttributeName,
+        nil];
+
+    attributedSenderString = [[NSAttributedString alloc] initWithString:inString attributes:attributes];
+
+    //Pre-calculate the cell size
+    stringSize = [attributedSenderString size];
+    cellSize = NSMakeSize((int)stringSize.width + SENDER_PADDING_L + SENDER_PADDING_R + STRING_ROUNDOFF_PADDING, stringSize.height);
 
     return(self);
 }
@@ -83,7 +87,8 @@
 - (void)dealloc
 {
     [backgroundColor release];
-    [string release];
+    [attributedSenderString release];
+    [darkBackgroundColor release];
 
     [super dealloc];
 }
