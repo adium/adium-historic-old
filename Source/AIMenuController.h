@@ -70,8 +70,8 @@ typedef enum {
     IBOutlet    NSMenuItem  *menuItem_Format_Italics;
     
     NSMenu                              *contextualMenu;
-    NSMutableDictionary			*contextualMenuItemDict;
-    AIListContact                       *contactualMenuContact;
+    NSMutableDictionary					*contextualMenuItemDict;
+    AIListObject						*contactualMenuObject;
     
     //disabled until post .53
     NSMenu                              *textViewContextualMenu;
@@ -89,7 +89,7 @@ typedef enum {
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
-- (AIListContact *)contactualMenuContact;
+- (AIListObject *)contactualMenuObject;
 
 - (NSTextView *)contextualMenuTextView;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;

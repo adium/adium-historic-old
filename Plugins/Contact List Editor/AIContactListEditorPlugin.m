@@ -135,7 +135,7 @@
 	if(menuItem == menuItem_delete){
 		return([[adium contactController] selectedListObjectInContactList] != nil);
 	}else if(menuItem == menuItem_tabAddContact){
-		return([[adium menuController] contactualMenuContact] != nil);
+		return([[adium menuController] contactualMenuObject] != nil);
 	}
 	
 	return(YES);
@@ -163,8 +163,11 @@
 //Prompt for a new contact with the current tab's name
 - (IBAction)addContactFromTab:(id)sender
 {
-	[self promptForNewContactOnWindow:nil
-				  strangerListContact:[[adium menuController] contactualMenuContact]];
+	AIListObject *object = [[adium menuController] contactualMenuObject];
+	if([object isKindOfClass:[AIListContact class]]){
+		[self promptForNewContactOnWindow:nil
+					  strangerListContact:(AIListContact *)object];
+	}
 }
 
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact
@@ -199,7 +202,7 @@
 
 - (IBAction)deleteSelectionFromTab:(id)sender
 {
-	AIListObject   *object = [[adium menuController] contactualMenuContact];
+	AIListObject   *object = [[adium menuController] contactualMenuObject];
 	if (object){
 		NSArray		*array = [NSArray arrayWithObject:object];
 		[NSApp activateIgnoringOtherApps:YES];
@@ -231,7 +234,7 @@
 //Called by a context menu
 - (IBAction)renameGroup:(id)sender
 {
-//	AIListObject	*object = [[adium menuController] contactualMenuContact];
+//	AIListObject	*object = [[adium menuController] contactualMenuObject];
 	
 }
 

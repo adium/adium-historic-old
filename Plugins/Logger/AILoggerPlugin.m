@@ -200,9 +200,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
         }
 		
     }else if(menuItem == viewContactLogsContextMenuItem){
-        AIListContact	*selectedContact = [[adium menuController] contactualMenuContact];
+        AIListObject	*selectedObject = [[adium menuController] contactualMenuObject];
 		
-        if(!(selectedContact && [selectedContact isKindOfClass:[AIListContact class]])){
+        if(!(selectedObject && [selectedObject isKindOfClass:[AIListContact class]])){
 			valid = NO;
 		}
     }
@@ -220,9 +220,12 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContextContact:(id)sender
 {
-	[NSApp activateIgnoringOtherApps:YES];
-        [[[AILogViewerWindowController openForContact:[[adium menuController] contactualMenuContact] plugin:self] window]
-                                 makeKeyAndOrderFront:nil];
+	AIListObject* object = [[adium menuController] contactualMenuObject];
+	if([object isKindOfClass:[AIListContact class]]){
+		[NSApp activateIgnoringOtherApps:YES];
+			[[[AILogViewerWindowController openForContact:(AIListContact *)object plugin:self] window]
+									 makeKeyAndOrderFront:nil];
+	}
 }
 
 
