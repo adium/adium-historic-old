@@ -1,6 +1,6 @@
 
 //Extensive debug logging
-#define GAIM_DEBUG  TRUE
+#define GAIM_DEBUG  FALSE
 
 //Gaim includes
 #include <libgaim/libgaim.h>
