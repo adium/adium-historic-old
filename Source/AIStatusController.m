@@ -1212,6 +1212,11 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		   [inModifiedKeys containsObject:@"StatusState"]){
 
 			[self rebuildAllStateMenus];
+			
+			//We can get here without the preferencesChanged: notification if the account is automatically connected.
+			if([inModifiedKeys containsObject:@"Online"]){
+				if([inObject online]) [accountsToConnect addObject:object];
+			}
 		}
 	}
     
