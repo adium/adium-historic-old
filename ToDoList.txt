@@ -14,7 +14,6 @@
 - Message views are ignoring variant specific info.plist keys
 - %_statusmessage script is broken
 - Line breaks don't work properly with ICQ
-- Get Info on a group after getting info on a contact shows the group's service as the last viewed contact's service, or nothing at all
 - Double-clicking a contact with more than one message window open opens a new tab in the first opened window (instead of the frontmost)
 - Dragging a group chat's tab, then clicking a user in the userlist crashes
 - Chats are sticking in the evil duck menu
