@@ -24,11 +24,8 @@
 
 	IBOutlet	AIModularPaneCategoryView	*view_General;
 	IBOutlet	AIModularPaneCategoryView	*view_Appearance;
-    IBOutlet	AIModularPaneCategoryView	*view_ContactList;
     IBOutlet	AIModularPaneCategoryView	*view_Messages;
 	IBOutlet	AIModularPaneCategoryView	*view_Events;
-    IBOutlet	AIModularPaneCategoryView	*view_Dock;
-    IBOutlet 	AIModularPaneCategoryView	*view_Emoticons;
     IBOutlet 	AIModularPaneCategoryView	*view_FileTransfer;
 
     IBOutlet	NSTableView					*tableView_advanced;
