@@ -25636,6 +25636,51 @@
 //9E2
 //9E3
 //9E4
+		9E1BE1C005B245B4009B1A21 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBContactCountingDisplayPreferences.h;
+			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E1BE1C105B245B4009B1A21 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBContactCountingDisplayPreferences.m;
+			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E1BE1C205B245B4009B1A21 = {
+			fileRef = 9E1BE1C005B245B4009B1A21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E1BE1C305B245B4009B1A21 = {
+			fileRef = 9E1BE1C105B245B4009B1A21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E1BE1C605B248F0009B1A21 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = ContactCountingDisplayDefaults.plist;
+			path = "Plugins/Contact Counting Display/ContactCountingDisplayDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E1BE1C705B248F0009B1A21 = {
+			fileRef = 9E1BE1C605B248F0009B1A21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E2BD856054BE18200558E56 = {
 			children = (
 				9E2BD857054BE18200558E56,
@@ -26669,6 +26714,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EBAC45305B21CD300A98ADC,
+				9E1BE1C205B245B4009B1A21,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26676,6 +26722,7 @@
 		9E57135F05B2146200283CAD = {
 			buildActionMask = 2147483647;
 			files = (
+				9E1BE1C705B248F0009B1A21,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26684,6 +26731,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EBAC45405B21CD300A98ADC,
+				9E1BE1C305B245B4009B1A21,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26787,6 +26835,9 @@
 			children = (
 				9EBAC45105B21CD200A98ADC,
 				9EBAC45205B21CD300A98ADC,
+				9E1BE1C005B245B4009B1A21,
+				9E1BE1C105B245B4009B1A21,
+				9E1BE1C605B248F0009B1A21,
 			);
 			isa = PBXGroup;
 			name = "Contact Counting Display";

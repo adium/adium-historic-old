@@ -9,6 +9,11 @@
 #import "CBContactCountingDisplayPreferences.h"
 #import "CBContactCountingDisplayPlugin.h"
 
+/* useful code snippet
+    groupsPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Groups withDelegate:self label:CL_PREF_GROUPS_TITLE];
+    [[adium preferenceController] addPreferencePane:groupsPane];
+*/
+
 @implementation CBContactCountingDisplayPreferences
 
 @end
