@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 787 $ $Date: 2004/05/27 16:09:03 $ -->
+<!--$Rev: 787 $ $Date: 2004/05/30 23:57:52 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -349,6 +349,20 @@ try {
     out.println("<div class=\"boxThinBottom\"></div>\n");
 
 %>
+
+<%
+    out.println("<h1>Special Searches</h1>");
+    out.println("<div class=\"boxThinTop\"></div>\n");
+    out.println("<div class=\"boxThinContent\">");
+%>
+
+                <a href="#"
+                onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent Links</a>
+    <%
+    out.println("</div>\n");
+    out.println("<div class=\"boxThinBottom\"></div>\n");
+
+%>
             </div>
             <div id="content">
             <h1>View Messages by Date</h1>
@@ -434,11 +448,6 @@ try {
                 <span style="float: right">
                     <input type="reset" /><input type="submit" />
                 </span>
-
-                <a href="#"
-                onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent URls</a>
-
-
                 </form>
             </div>
             <div class="boxWideBottom"></div>
