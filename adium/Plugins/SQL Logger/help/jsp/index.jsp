@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 778 $ $Date: 2004/05/23 17:45:50 $ -->
+<!--$Rev: 787 $ $Date: 2004/05/27 16:09:03 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -429,11 +429,16 @@ try {
                 <label for="disp">Show Alias/Display Name</label>
                <br />
                 <input type="radio" name="screen_or_display" value="meta" id="meta" <% if (showMeta) out.print("checked=\"true\""); %> />
-                    <label for="meta">Show Meta Contact</label>
+                    <label for="meta">Show Meta Contact</label><br /><br />
 
-                <div align="right">
+                <span style="float: right">
                     <input type="reset" /><input type="submit" />
-                </div>
+                </span>
+
+                <a href="#"
+                onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent URls</a>
+
+
                 </form>
             </div>
             <div class="boxWideBottom"></div>

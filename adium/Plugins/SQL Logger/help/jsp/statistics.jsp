@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 777 $ $Date: 2004/05/22 20:08:07 $ -->
+<!--$Rev: 785 $ $Date: 2004/05/27 16:09:03 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -440,7 +440,7 @@ try {
 
     out.print("<tr>");
     for(int i = 1; i < 13; i++) {
-        out.print("<td>" + i + "</td>");
+        out.print("<td align=\"center\">" + i + "</td>");
     }
     out.print("</tr></table>");
 %>
