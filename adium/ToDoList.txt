@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.117 2004/05/11 18:44:32 adamiser Exp $
+$Id: ToDoList.txt,v 1.118 2004/05/11 19:28:51 adamiser Exp $
 
 
 Legend
@@ -28,7 +28,7 @@ Bugs
 * Links with %n's in them beep when clicked (Set a %n link in your profile using AOLIM)
 * Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
 * Smooth operator and Elisha webkit styles incorrectly display multi-line status messages.
-* Emoticon packs flip upside down when you select them AAAHHHHAHHAHAHHHHHHHH!
+* Emoticon packs flip upside down when you select them.  (The emoticon menu is causing them to flip, so only enabled packs will be flipped.  No amount of flipping and unflipping within the emoticon pack cell seems to make things correct)
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
