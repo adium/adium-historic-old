@@ -15,11 +15,13 @@
 
 #import "AIAlphabeticalSort.h"
 
+#define KEY_SORT_BY_LAST_NAME				@"ABC:Sort by Last Name"
 #define KEY_SORT_GROUPS						@"ABC:Sort Groups"
 #define ALPHABETICAL_SORT_DEFAULT_PREFS		@"AlphabeticalSortDefaults"
 
 int alphabeticalSort(id objectA, id objectB, BOOL groups);
 static 	BOOL	sortGroups;
+static  BOOL	sortByLastName;
 
 @implementation AIAlphabeticalSort
 
@@ -34,10 +36,11 @@ static 	BOOL	sortGroups;
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTACT_SORTING];
 	
-	//Load our single preference
-	sortGroups = [[[adium preferenceController] preferenceForKey:KEY_SORT_GROUPS
-														   group:PREF_GROUP_CONTACT_SORTING] boolValue];
-
+	//Load our preferences
+	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
+	sortGroups = [[prefDict objectForKey:KEY_SORT_GROUPS] boolValue];
+	sortByLastName = [[prefDict objectForKey:KEY_SORT_BY_LAST_NAME] boolValue];
+	
 	return self;
 }
 
@@ -66,15 +69,21 @@ static 	BOOL	sortGroups;
 	return @"AlphabeticalSortConfiguration";
 }
 - (void)viewDidLoad{
-	[checkBox_sortGroups setState:(sortGroups ? NSOnState : NSOffState)];
+	[checkBox_sortByLastName setState:sortByLastName];
+	[checkBox_sortGroups setState:sortGroups];
 }
 - (IBAction)changePreference:(id)sender
 {
-	if (sender == checkBox_sortGroups) {
+	if (sender == checkBox_sortGroups){
 		sortGroups = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:sortGroups]
                                              forKey:KEY_SORT_GROUPS
                                               group:PREF_GROUP_CONTACT_SORTING];		
+	}else if (sender == checkBox_sortByLastName){
+		sortByLastName = [sender state];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:sortByLastName]
+                                             forKey:KEY_SORT_BY_LAST_NAME
+                                              group:PREF_GROUP_CONTACT_SORTING];			
 	}
 	
 	[[adium contactController] sortContactList];
@@ -88,11 +97,22 @@ static 	BOOL	sortGroups;
 int alphabeticalSort(id objectA, id objectB, BOOL groups)
 {
 	//If we were not passed groups or if we should be sorting groups, sort alphabetically
-	if (!groups || sortGroups){
-		return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+	if (!groups){
+		if (sortByLastName){
+			NSString	*space = @" ";
+			NSArray		*componentsA = [[objectA displayName] componentsSeparatedByString:space];
+			NSArray		*componentsB = [[objectB displayName] componentsSeparatedByString:space];
+			
+			return ([[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]]);
+			
+		}else{
+			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+		}
 	}else{
-		//Keep groups in manual order
-		if([objectA orderIndex] > [objectB orderIndex]){
+		//If sorting groups, do a caseInsesitiveCompare; otherwise, keep groups in manual order
+		if (sortGroups){
+			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+		}else if([objectA orderIndex] > [objectB orderIndex]){
 			return(NSOrderedDescending);
 		}else{
 			return(NSOrderedAscending);
