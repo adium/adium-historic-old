@@ -505,6 +505,50 @@
 			settings = {
 			};
 		};
+		07C52D4007BD2F53006BE37C = {
+			children = (
+				07C52D4507BD2F97006BE37C,
+				07C52D4607BD2F97006BE37C,
+			);
+			isa = PBXGroup;
+			name = "Notification of host reachability";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07C52D4507BD2F97006BE37C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIHostReachabilityMonitor.h;
+			path = "Frameworks/AIUtilities Framework/AIHostReachabilityMonitor.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07C52D4607BD2F97006BE37C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIHostReachabilityMonitor.m;
+			path = "Frameworks/AIUtilities Framework/AIHostReachabilityMonitor.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07C52D4707BD2F97006BE37C = {
+			fileRef = 07C52D4507BD2F97006BE37C;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		07C52D4807BD2F97006BE37C = {
+			fileRef = 07C52D4607BD2F97006BE37C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //070
 //071
 //072
@@ -5215,6 +5259,7 @@
 				4BD1F2AB06D2683300B3975E,
 				4BD1EF7706D2636E00B3975E,
 				4BD1F30206D26AB600B3975E,
+				07C52D4007BD2F53006BE37C,
 				348E5E1D06D2F457004C051C,
 				4BD1EF7406D2636A00B3975E,
 				0750FF1A073A04E9000D8A1F,
@@ -5870,6 +5915,7 @@
 				070959860798F1ED00B140BD,
 				4B84A63307B70A5000C2941D,
 				4B5CBF7707BC1887007E4075,
+				07C52D4707BD2F97006BE37C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6033,6 +6079,7 @@
 				4BC5A5C40764F6ED0080ECF7,
 				3433564D0793699400C84B15,
 				4B84A63407B70A5000C2941D,
+				07C52D4807BD2F97006BE37C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
