@@ -19,7 +19,10 @@
 	NSString		*room = [textField_roomName stringValue];
 	NSDictionary	*chatCreationInfo;
 	
-	NSLog(@"#### Yahoo! joinChatWithAccount: %@ joining",inAccount);
+	//NSLog(@"#### Yahoo! joinChatWithAccount: %@ joining",inAccount);
+		
+	NSArray *contacts = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
+	[self registerToInviteUsers:contacts message:[textField_inviteMessage stringValue]];
 	
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",nil];
 	
@@ -27,7 +30,8 @@
 				   onAccount:inAccount
 			chatCreationInfo:chatCreationInfo
 			invitingContacts:nil
-	  withInivitationMessage:nil];
+	  withInvitationMessage:nil];
+	
 }
 
 - (NSString *)nibName

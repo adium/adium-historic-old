@@ -44,6 +44,7 @@
 	//Obtain room and exchange from the view
 	//room = [NSString stringWithFormat:@"Chat %@",[NSString randomStringOfLength:5]];
 	room = [textField_roomName stringValue];
+
 	if (room && [room length]){
 		exchange = 4;
 		
@@ -73,10 +74,11 @@
 					   onAccount:inAccount
 				chatCreationInfo:chatCreationInfo
 				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
-		  withInivitationMessage:[textField_inviteMessage stringValue]];
+		  withInvitationMessage:[textField_inviteMessage stringValue]];
 	}else{
 		NSLog(@"Error: No room specified.");
 	}
+
 }
 
 - (NSString *)nibName

@@ -5,6 +5,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "textField_handle" = NSTextField; 
+                "textField_inviteMessage" = NSTextField; 
+                "textField_inviteUsers" = NSTextField; 
                 "textField_password" = NSTextField; 
                 "textField_roomName" = NSTextField; 
                 "textField_server" = NSTextField; 

@@ -3,6 +3,10 @@
         {
             CLASS = DCGaimYahooJoinChatViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "textField_inviteMessage" = NSTextField; 
+                "textField_inviteUsers" = NSTextField; 
+            }; 
             SUPERCLASS = DCJoinChatViewController; 
         }, 
         {

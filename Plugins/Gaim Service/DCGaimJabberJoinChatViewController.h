@@ -11,6 +11,9 @@
 	IBOutlet		NSTextField		*textField_server;
 	IBOutlet		NSTextField		*textField_handle;
 	IBOutlet		NSTextField		*textField_password;
+	
+	IBOutlet		NSTextField		*textField_inviteMessage;
+	IBOutlet		NSTextField		*textField_inviteUsers;
 }
 
 @end
