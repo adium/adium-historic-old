@@ -365,7 +365,6 @@
     BOOL			isGroup = [handle isKindOfClass:[AIEditorListGroup class]];
 
     if(!controlledChanges){
-        NSLog(@"collectionAddedObject:%@",[handle UID]);
         if([collection includeInOwnershipColumn] && collection != self){
             
             //If object isn't already on our list
@@ -382,9 +381,7 @@
     AIEditorCollection	*collection = [notification object];
     AIEditorListHandle	*handle = [[notification userInfo] objectForKey:@"Object"];
 
-    if(!controlledChanges){
-        NSLog(@"collectionRemovedObject:%@",[handle UID]);
-    
+    if(!controlledChanges){    
         if([collection includeInOwnershipColumn] && collection != self){
             NSString	*handleUID = [handle UID];
             NSEnumerator	*enumerator;
@@ -410,9 +407,7 @@
 
 - (void)collectionRenamedObject:(NSNotification *)notification
 {
-    if(!controlledChanges){
-        NSLog(@"collectionRenamedObject");
-    
+    if(!controlledChanges){    
         //Rebuild our list (for now)
         [self generateEditorListGroup];
     }
