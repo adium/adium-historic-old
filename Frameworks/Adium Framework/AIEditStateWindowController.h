@@ -17,7 +17,7 @@
 #import "AIWindowController.h"
 #import "AIStatus.h"
 
-@class ESTextViewWithPlaceholder, AIStatus, AIService, AIAutoScrollView, AISendingTextView;
+@class AIAccount, ESTextViewWithPlaceholder, AIService, AIAutoScrollView, AISendingTextView;
 
 @interface AIEditStateWindowController : AIWindowController {
 	IBOutlet	NSTextField		*label_state;

@@ -1056,12 +1056,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	NSEnumerator		*enumerator;
     AIAccount			*account;
-    
-	NSString			*ONLINE = @"Online";
-	
+
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([[account preferenceForKey:ONLINE group:GROUP_ACCOUNT_STATUS] boolValue]){
+        if([account online]){
 			return YES;
         }
     }	
@@ -1223,6 +1221,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	[accountMenuPluginsArray addObject:accountMenuPlugin];
 	
 	[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
+	
+	//Immediately add the status submenu items by asking the statusController to rebuilt our state menus.
+	[[adium statusController] rebuildAllStateMenusForPlugin:self];
 }
 - (void)unregisterAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
@@ -1303,7 +1304,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	if(menuItem){
 		NSString	*accountTitle = [account formattedUID];
-		NSString	*titleFormat;
+		NSString	*titleFormat = nil;
 
 		//Default to <New Account> if a name is not available
 		if(!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
@@ -1312,17 +1313,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		NSImage	*statusIcon = [AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal];
 		NSImage	*serviceIcon = [AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal];
 
-		//Determine how much to dim the icons (depending on connectivity)
-		if([[account statusObjectForKey:@"Online"] boolValue]){
-			titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
-
-		}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
+		//Show connecting and disconnecting in the title as appropriate
+		if([[account statusObjectForKey:@"Connecting"] boolValue]){
 			titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
 
 		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
-		}else{
-			titleFormat = ACCOUNT_CONNECT_MENU_TITLE;
 		}
 
 		//Composite the status icon and service icon together
@@ -1342,10 +1338,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 		//Update the menu item
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setTitle:/*[NSString stringWithFormat:titleFormat,accountTitle]*/accountTitle];
+		[menuItem setTitle:(titleFormat ? [NSString stringWithFormat:titleFormat,accountTitle] : accountTitle)];
 		[menuItem setImage:composite];		
-		[menuItem setEnabled:(![[account statusObjectForKey:@"Connecting"] boolValue] &&
-							  ![[account statusObjectForKey:@"Disconnecting"] boolValue])];
+		[menuItem setEnabled:/*(![[account statusObjectForKey:@"Connecting"] boolValue] &&
+							  ![[account statusObjectForKey:@"Disconnecting"] boolValue])*/YES];
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 
 		//Cleanup
