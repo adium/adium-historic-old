@@ -6939,6 +6939,7 @@
 				340833EC075C3A7900703011,
 				34D1897F076114C00075A380,
 				34D189B2076131850075A380,
+				34E829840766B0FE00EFB3BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7113,6 +7114,7 @@
 				34E6D3910727354600A2643A,
 				340833ED075C3A7900703011,
 				34D18980076114C00075A380,
+				34E829850766B0FE00EFB3BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8481,6 +8483,36 @@
 		};
 		34E6D3910727354600A2643A = {
 			fileRef = 34E6D38F0727354600A2643A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E829820766B0FE00EFB3BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountPlusFieldPromptController.h;
+			path = "Frameworks/Adium Framework/AIAccountPlusFieldPromptController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E829830766B0FE00EFB3BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountPlusFieldPromptController.m;
+			path = "Frameworks/Adium Framework/AIAccountPlusFieldPromptController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E829840766B0FE00EFB3BC = {
+			fileRef = 34E829820766B0FE00EFB3BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E829850766B0FE00EFB3BC = {
+			fileRef = 34E829830766B0FE00EFB3BC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -11869,6 +11901,8 @@
 		};
 		4B4F5B2E042D647600A8010A = {
 			children = (
+				34E829820766B0FE00EFB3BC,
+				34E829830766B0FE00EFB3BC,
 				7E1E8176063A3EEC00EB00F7,
 				7E1E8177063A3EEC00EB00F7,
 				4B5827E80613CE9D0004BD25,
