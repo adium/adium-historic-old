@@ -14,6 +14,7 @@
 #import "AIMiniToolbarCenter.h"
 
 #define MINI_TOOLBAR_CUSTOMIZE_NIB	@"MiniToolbarCustomize"		//Filename of the minitoolbar nib
+#define TOOLBAR_CONFIG_FRAME		@"MiniToolbarConfig"		//Frame save name
 
 @interface AIMiniToolbarCustomizeController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forToolbar:(AIMiniToolbar *)inToolbar;
@@ -48,6 +49,9 @@
 {
     NSEnumerator	*enumerator;
     AIMiniToolbarItem	*toolbarItem;
+
+    //Restore the saved frame
+    [[self window] setFrameUsingName:TOOLBAR_CONFIG_FRAME];
     
     //Setup the tableview
     [[tableView_items tableColumnWithIdentifier:@"icon"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
@@ -135,6 +139,9 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Save the frame
+    [[self window] saveFrameUsingName:TOOLBAR_CONFIG_FRAME];
+
     [[AIMiniToolbarCenter defaultCenter] endCustomization:toolbar];
 
     return(YES);
