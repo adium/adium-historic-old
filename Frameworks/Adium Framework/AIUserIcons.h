@@ -12,7 +12,7 @@
 
 }
 
-+ (NSImage *)listUserIconForContact:(AIListContact *)inContact;
++ (NSImage *)listUserIconForContact:(AIListContact *)inContact size:(NSSize)size;
 + (NSImage *)menuUserIconForObject:(AIListObject *)inObject;
 
 + (void)setListUserIconSize:(NSSize)inSize;

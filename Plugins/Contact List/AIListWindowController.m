@@ -181,6 +181,11 @@
 		
 		int				forcedWindowWidth, maxWindowWidth;
 		
+		//User icon cache size
+		int iconSize = [[layoutDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue];
+		[AIUserIcons setListUserIconSize:NSMakeSize(iconSize,iconSize)];
+
+		
 		if (autoResizeHorizontally){
 			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
 			maxWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
@@ -231,6 +236,8 @@
 		[contactListController setMaxWindowWidth:maxWindowWidth];
 		
 		[contactListController contactListDesiredSizeChanged:nil];
+
+
 		
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];

@@ -25,17 +25,18 @@ static NSSize				menuIconCacheSize;
 }
 
 //Retrieve a user icon sized for the contact list
-+ (NSImage *)listUserIconForContact:(AIListContact *)inContact
++ (NSImage *)listUserIconForContact:(AIListContact *)inContact size:(NSSize)size
 {
-	NSImage *userIcon;
+	BOOL	cache = NSEqualSizes(iconCacheSize, size);
+	NSImage *userIcon = nil;
 	
 	//Retrieve the icon from our cache
-	userIcon = [iconCache objectForKey:[inContact internalObjectID]];
+	if(cache) userIcon = [iconCache objectForKey:[inContact internalObjectID]];
 
 	//Render the icon if it's not cached
 	if(!userIcon){
 		userIcon = [[inContact userIcon] imageByScalingToSize:iconCacheSize fraction:1.0 flipImage:YES];
-		if(userIcon) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
+		if(userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
 	return(userIcon/* ? userIcon : defaultUserIcon*/);
