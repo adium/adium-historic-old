@@ -11,10 +11,10 @@
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 
-#define NO_GROUP					@"__NoGroup__"
-#define USER_ICON_CACHE_PATH		@"~/Library/Caches/Adium"
-#define USER_ICON_CACHE_NAME		@"UserIcon_%@"
-#define MESSAGE_IMAGE_CACHE_NAME	@"Image_%@_%i"
+#define NO_GROUP						@"__NoGroup__"
+#define ACCOUNT_IMAGE_CACHE_PATH	@"~/Library/Caches/Adium"
+#define USER_ICON_CACHE_NAME			@"UserIcon_%@"
+#define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
 #define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS		4
@@ -518,7 +518,7 @@
     gc = NULL;
     
     //ensure our user icon cache path exists
-    [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
+    [AIFileUtilities createDirectory:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
 	
 	insideDealloc = NO;
 }
@@ -1000,6 +1000,8 @@
 	
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
 {
+	NSAssert(buddy != nil,@"contactAssociatedWithBuddy: passed a nil buddy");
+	
 	AIListContact	*contact;
 	NSString		*contactUID = [NSString stringWithUTF8String:(buddy->name)];
 	
@@ -1201,13 +1203,13 @@
 - (NSString *)_userIconCachePath
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self uniqueObjectID]];
-    return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
+    return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 
 - (NSString *)_messageImageCachePathForID:(int)imageID
 {
     NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self uniqueObjectID], imageID];
-    return([[[USER_ICON_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
+    return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
