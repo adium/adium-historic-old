@@ -14,7 +14,8 @@ Bugs
 * Don't spawn new windows when we're hidden, doing so will unhide us
     What should we do with the new content then? Throw it in the trash? Feed it to Laura's geckos?
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
-
+* Adium will unhide if hidden (via cmd-H) while a tooltip is visible
+* Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
 
 
 
@@ -169,8 +170,8 @@ Meta Contacts:
     Provide a way for users to create and manage their own meta contacts.    
 
 Protocol Specific Functions:
-    Provide a menu for service code to insert protocol specific options.  Things such as buddy search and
-    password changing.
+    Provide a menu for service code to insert protocol specific options.  Things such as buddy search,
+    password changing, getting info on non-listed users, etc.
 
 File Transfer:
     Non-intrusive prompts, download management, drag & drop transfer, previewing, direct connect,
