@@ -10,16 +10,17 @@
 
 
 @interface AICrashReporter : NSObject {
-    IBOutlet	NSWindow		*window_MainWindow;
-	IBOutlet	NSTextField		*textField_emailAddress;
-	IBOutlet	NSTextField		*textField_accountIM;
-	IBOutlet	NSTextField		*textField_description;
-	IBOutlet	NSTextView		*textView_details;
+    IBOutlet	NSWindow			*window_MainWindow;
+	IBOutlet	NSTextField			*textField_emailAddress;
+	IBOutlet	NSTextField			*textField_accountIM;
+	IBOutlet	NSTextField			*textField_description;
+	IBOutlet	NSTextView			*textView_details;
+	IBOutlet	NSProgressIndicator	*progress_sending;
 	
-	IBOutlet	NSPanel			*panel_privacySheet;
-	IBOutlet	NSTextView		*textView_crashLog;
+	IBOutlet	NSPanel				*panel_privacySheet;
+	IBOutlet	NSTextView			*textView_crashLog;
 	
-	NSString					*crashLog;		//Current crash log
+	NSString						*crashLog;		//Current crash log
 }
 
 - (void)sendReport:(NSDictionary *)crashReport;
