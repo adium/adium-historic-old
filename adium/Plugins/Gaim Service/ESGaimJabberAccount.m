@@ -40,12 +40,12 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	[super dealloc];
 }
 
-- (void)createNewGaimAccount
+- (void)configureGaimAccount
 {
-	NSString	*connectServer, *resource, *userNameWithHost = nil, *completeUserName = nil;
-	BOOL		forceOldSSL, useTLS, allowPlaintext, serverAppendedToUID;
+	[super configureGaimAccount];
 	
-	[super createNewGaimAccount];
+	NSString	*connectServer;
+	BOOL		forceOldSSL, useTLS, allowPlaintext;
 	
 	//'Connect via' server (nil by default)
 	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
@@ -64,7 +64,15 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	//Allow plaintext authorization over an unencrypted connection? Gaim will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
+}
 
+- (void)createNewGaimAccount
+{
+	[super createNewGaimAccount];
+	
+	NSString	 *resource, *userNameWithHost = nil, *completeUserName = nil;
+	BOOL		serverAppendedToUID;
+	
 	//Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
 	//createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
 	//than once.
@@ -77,7 +85,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}else{
 		userNameWithHost = [NSString stringWithFormat:@"%@@%@",UID,[self host]];
 	}
-
+	
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
 	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 	

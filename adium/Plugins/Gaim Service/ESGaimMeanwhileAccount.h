@@ -9,6 +9,16 @@
 #define KEY_MEANWHILE_HOST				@"Meanwhile:Host"
 #define KEY_MEANWHILE_PORT				@"Meanwhile:Port"
 
+#define	KEY_MEANWHILE_CONTACTLIST		@"Meanwhile:ContactList"
+
+#define MW_PRPL_OPT_BLIST_ACTION		"/plugins/prpl/meanwhile/blist_action"
+
+enum Meanwhile_CL_Choice {
+	Meanwhile_CL_None = 1,
+	Meanwhile_CL_Load = 2,
+	Meanwhile_CL_Load_And_Save = 3
+};
+
 //From mwgaim.c
 struct mw_plugin_data {
 	struct mwSession *session;

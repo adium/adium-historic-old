@@ -32,6 +32,15 @@ static BOOL didInitMeanwhile = NO;
 	return KEY_MEANWHILE_PORT;
 }
 
+- (void)configureGaimAccount
+{
+	[super configureGaimAccount];
+	
+	int contactListChoice = [[self preferenceForKey:KEY_MEANWHILE_CONTACTLIST group:GROUP_ACCOUNT_STATUS] intValue];
+
+	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, contactListChoice);
+}
+
 //Away and away return
 - (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
 {
