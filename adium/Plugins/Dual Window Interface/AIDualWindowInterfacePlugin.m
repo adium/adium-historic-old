@@ -320,7 +320,7 @@
     if(inContainer == contactListWindowController){
         [contactListWindowController release]; contactListWindowController = nil;
     }
-
+    
     [self buildWindowMenu]; //Rebuild our window menu
 }
 

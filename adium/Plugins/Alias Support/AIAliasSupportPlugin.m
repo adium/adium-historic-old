@@ -49,9 +49,9 @@
     displayFormat = [[[owner preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue];
     
     //Install the contact info view
-/*    [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
+    [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Alias" categoryName:@"None" view:view_contactAliasInfoView delegate:self] retain];
-    [[owner contactController] addContactInfoView:contactView];*/
+    [[owner contactController] addContactInfoView:contactView];
 
     //Wait for the contact list editor to init so we can add our column
     [[owner notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
