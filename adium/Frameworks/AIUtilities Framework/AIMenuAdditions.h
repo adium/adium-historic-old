@@ -22,6 +22,13 @@
 
 @end
 
+@interface NSMenu (AIMenuAdditions)
+
+//Swap two menu items
++ (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem;
+
+@end
+
 @interface NSMenuItem (ItemCreationAdditions)
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode;
