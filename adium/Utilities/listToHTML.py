@@ -133,7 +133,8 @@ def listToHTML(infile, outfile):
 		"<html><head>\n"
 		'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n'
 		"<title>The List&trade;</title>\n"
-		'<style type="text/css">\n')
+		'<style type="text/css">\n'
+		'body { color: black; background-color: white }\n')
 
 	for buf in infile:
 #		buf = buf.strip()
@@ -145,7 +146,7 @@ def listToHTML(infile, outfile):
 				outfile.write(
 					"</style>\n"
 					"</head>\n"
-					'<body text="black" bgcolor="white">\n')
+					"<body>\n")
 				inBody = True
 			if inTask:
 				outfile.write("\t</li>\n")
