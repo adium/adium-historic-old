@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 755 $ $Date: 2004/05/14 04:23:55 $ -->
+<!--$Rev: 756 $ $Date: 2004/05/14 16:53:43 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -261,20 +261,28 @@ try {
         pstmt.setString(2, dateStart);
     }
 
-    rset = pstmt.executeQuery();
 
     out.println("<h1>Users</h1>");
     out.println("<div class=\"boxThinTop\"></div>");
     out.println("<div class=\"boxThinContent\">");
-    while(rset.next()) {
-        out.print("<p><a href=\"index.jsp?start=" + dateStart + 
-        "&finish=" + dateFinish + "&contains=" + 
-        rset.getString("username") + "\">"+
-        rset.getString("username") + "</a></p>\n");
+
+    try {
+
+        rset = pstmt.executeQuery();
+
+        while(rset.next()) {
+            out.print("<p><a href=\"index.jsp?start=" + dateStart + 
+            "&finish=" + dateFinish + "&contains=" + 
+            rset.getString("username") + "\">"+
+            rset.getString("username") + "</a></p>\n");
+        }
+
+        out.print("<a href=\"index.jsp?start=" + dateStart +
+            "&finish=" + dateFinish + "\"><i>All</i></a>");
+    } catch (SQLException e) {
+        out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
     }
-    
-    out.print("<a href=\"index.jsp?start=" + dateStart +
-        "&finish=" + dateFinish + "\"><i>All</i></a>");
+
     out.println("</div>");
     out.println("<div class=\"boxThinBottom\"></div>");
     
@@ -550,7 +558,7 @@ try {
     }
 
 }catch(SQLException e) {
-    out.print("<spant style=\"color: red\">" + e.getMessage() + "</span>");
+    out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
 } finally {
     pstmt.close();
     conn.close();
