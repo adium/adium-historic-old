@@ -63,6 +63,11 @@
 	return [[[self alloc] initWithData:data encoding:encoding] autorelease];
 }
 
++ (id)ellipsis
+{
+	return [NSString stringWithUTF8String:"\xE2\x80\xA6"];
+}
+
 /*	compactedString
  *	returns the string in all lowercase without spaces
  */
@@ -148,7 +153,7 @@
 	
 	if (length < [self length]) {
 		//Truncate and append the ellipsis
-		returnString = [[self substringToIndex:length-1] stringByAppendingString:[NSString stringWithUTF8String:"\xE2\x80\xA6"]];
+		returnString = [[self substringToIndex:length-1] stringByAppendingString:[NSString ellipsis]];
 	} else {
 		//We don't need to truncate, so don't append an ellipsis
 		returnString = [[self copy] autorelease];

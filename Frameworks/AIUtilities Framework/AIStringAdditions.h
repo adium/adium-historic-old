@@ -21,6 +21,8 @@
 
 + (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
 
++ (id)ellipsis;
+
 - (NSString *)compactedString;
 
 - (int)intValueFromHex;
