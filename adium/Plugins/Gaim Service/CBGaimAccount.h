@@ -83,6 +83,7 @@
 - (void)connect;
 - (void)configureAccountProxy;
 - (void)disconnect;
+- (void)accountConnectionNotice:(const char*)text;
 - (void)accountConnectionReportDisconnect:(const char*)text;
 - (void)accountConnectionDisconnected;
 - (void)accountConnectionConnected;

@@ -83,6 +83,7 @@ static void adiumGaimConnDisconnected(GaimConnection *gc)
 static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
     if(GAIM_DEBUG) NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
+	[accountLookup(gc->account) accountConnectionNotice:text];
 }
 
 static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
@@ -729,7 +730,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
     YahooService	= nil  /* [[[ESYahooService alloc] initWithService:self] retain] */;
     JabberService   = nil /* [[[ESJabberService alloc] initWithService:self] retain] */;
-    
 }
 
 - (void)uninstallPlugin

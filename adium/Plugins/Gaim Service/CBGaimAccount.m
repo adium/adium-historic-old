@@ -1205,6 +1205,11 @@
 {
     [self displayError:[NSString stringWithUTF8String:text]];
 }
+- (void)accountConnectionNotice:(const char*)text
+{
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
+                                    withDescription:[NSString stringWithUTF8String:text]];	
+}
 
 //Our account has disconnected (called automatically by gaimServicePlugin)
 - (void)accountConnectionDisconnected
