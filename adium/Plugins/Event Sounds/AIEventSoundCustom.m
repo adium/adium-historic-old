@@ -186,35 +186,6 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
     [[adium preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
 }
 
-/*
-//Builds and returns an event menu
-- (NSMenu *)eventMenu
-{
-    NSEnumerator	*enumerator;
-    NSDictionary	*eventDict;
-    NSMenu		*eventMenu = [[NSMenu alloc] init];
-
-    //Add the static/display menu item
-    [eventMenu addItemWithTitle:ADD_EVENT_MENU_ITEM target:nil action:nil keyEquivalent:@""];
-
-    //Add a menu item for each event
-    enumerator = [[adium eventNotifications] objectEnumerator];
-    while((eventDict = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]
-                                               target:self
-                                               action:@selector(newEventSound:)
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:[eventDict objectForKey:KEY_EVENT_NOTIFICATION]];
-
-        [eventMenu addItem:menuItem];
-    }
-
-    return(eventMenu);
-}
-*/
-
 //Builds and returns a sound list menu
 - (NSMenu *)soundListMenu
 {
