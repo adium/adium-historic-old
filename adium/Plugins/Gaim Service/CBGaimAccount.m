@@ -565,11 +565,13 @@ static id<GaimThread> gaimThread = nil;
 	[[adium contentController] receiveContentObject:messageObject];
 }
 
+/* XXX - No longer used, apparently
 - (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
 {
 	return ([self _contactAssociatedWithBuddy:buddy 
 									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
 }
+*/
 
 #pragma mark GaimConversation User Lists
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
