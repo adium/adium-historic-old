@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.6 $
- * $Date: 2003/11/05 21:39:38 $
- * $Author: adamiser $
+ * $Revision: 1.7 $
+ * $Date: 2003/11/12 17:53:41 $
+ * $Author: jmelloy $
  */
 
 #import "JMSQLLogViewerWindowController.h"
@@ -104,13 +104,6 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     }else{
         [[self window] center];
     }
-    /*
-    //Colors and alternating rows
-    [outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
-    [outlineView_contacts setDrawsAlternatingRows:YES];
-    [outlineView_contacts setAlternatingRowColor:[NSColor colorWithCalibratedRed:(231.0/255.0) green:(243.0/255.0) blue:(255.0/255.0) alpha:1.0]];
-    [outlineView_contacts setNeedsDisplay:YES];
-    */
 
     //Scan the user's logs    
     [self scanAvailableLogs];
@@ -136,7 +129,10 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
     [sharedInstance autorelease]; sharedInstance = nil;
-
+    [selectedLogArray release]; selectedLogArray = nil;
+    [availableLogArray release]; availableLogArray = nil;
+    [selectedColumn release]; selectedColumn = nil;
+    
     return(YES);
 }
 
@@ -206,6 +202,9 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     if (!accountRes || PQresultStatus(accountRes) != PGRES_TUPLES_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(accountRes)), PQresultErrorMessage(accountRes), sqlStatement);
         [[owner interfaceController] handleErrorMessage:@"Account Selection failed." withDescription:@"Account Selection Failed"];
+        if(accountRes) {
+            PQclear(accountRes);
+        }
     } else {
         for(i = 0; i < PQntuples(accountRes); i++){
             NSString	*accountUID, *serviceID;
@@ -236,6 +235,8 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
                 [contactDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:accountUID, @"UID", serviceID, @"ServiceID", serverGroup, @"Group", userID, @"userID", nil] forKey:contactKey];
             }
         }
+        
+        PQclear(accountRes);
     }
                      
     //Build a sorted available log array from our dictionaries
@@ -277,6 +278,9 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     if (!dateRes || PQresultStatus(dateRes) != PGRES_TUPLES_OK) {
         [[owner interfaceController] handleErrorMessage:@"Date Selection Failed" withDescription:@"Date Selection Failed"];
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(dateRes)), PQresultErrorMessage(dateRes), dateSQL);
+        if(dateRes) {
+            PQclear(dateRes);
+        }
     } else {
         for(i = 0; i < PQntuples(dateRes); i++) {
             NSDate 	*logDate = [NSCalendarDate dateWithYear:atoi(PQgetvalue(dateRes, i, 3)) month:atoi(PQgetvalue(dateRes, i, 4)) day:atoi(PQgetvalue(dateRes, i, 5)) hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
@@ -291,7 +295,9 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
             [selectedLogArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 logDate, @"Date", to, @"To", from, @"From",
                 message_date, @"MessageDate", fromUserID, @"fromUserID", toUserID, @"toUserID", nil]];
+            
         }
+        PQclear(dateRes);
     }
 
     //Sort the logs correctly
@@ -372,6 +378,9 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     if(!logRes || PQresultStatus(logRes) != PGRES_TUPLES_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(logRes)), PQresultErrorMessage(logRes), logSQL);
         [[owner interfaceController] handleErrorMessage:@"Log Selection failed." withDescription:@"Log Selection Failed"];
+        if(logRes) {
+            PQclear(logRes);
+        }
     } else {
         for(i = 0; i < PQntuples(logRes); i++) {
             for(j = 0; j < PQnfields(logRes); j++) {
@@ -380,8 +389,11 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
                 log = [NSString stringWithCString:PQgetvalue(logRes, i, j)];
 
                 [rawLogText appendString:log];
+                
             }
         }
+        
+        PQclear(logRes);
     }
     logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:rawLogText]] autorelease];
     
