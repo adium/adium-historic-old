@@ -45,6 +45,7 @@
 								   groupName:nil];
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[webView setFrameLoadDelegate:self];
+	[webView setPolicyDelegate:self];
 	
 	//We'd load this information from a file or plist or something
 	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
@@ -200,7 +201,7 @@
 	
 	range = [inString rangeOfString:@"%message"];
 	if(range.location != NSNotFound){
-		[inString replaceCharactersInRange:range withString:
+        [inString replaceCharactersInRange:range withString:
 		  [AIHTMLDecoder encodeHTML:[content message] 
 		      headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
 	}
@@ -239,7 +240,12 @@
     frame:(WebFrame *)frame
     decisionListener:(id<WebPolicyDecisionListener>)listener
 {
-    [[NSWorkspace sharedWorkspace] openURL: [request URL]];
+    int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
+    if (actionKey == WebNavigationTypeOther) {
+        [listener use];
+    } else {
+        [[NSWorkspace sharedWorkspace] openURL: [request URL]];
+    }
 }
 
 @end
