@@ -25,9 +25,10 @@
                 "button_default" = NSButton; 
                 "button_other" = NSButton; 
                 "scrollView_message" = NSScrollView; 
+                "scrollView_messageHeader" = NSScrollView; 
                 target = id; 
-                "textField_messageHeader" = NSTextField; 
                 "textView_message" = NSTextView; 
+                "textView_messageHeader" = NSTextView; 
                 userInfo = id; 
             }; 
             SUPERCLASS = AIWindowController; 

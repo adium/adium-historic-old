@@ -198,32 +198,49 @@
 	}
 
 	//Message header
-	[textField_messageHeader setStringValue:(messageHeader ? messageHeader : @"")];
+	int		headerHeightChange, heightChange = 0;
+	NSRect  frame = [window frame];
 	
+	[textView_messageHeader setVerticallyResizable:YES];
+	[textView_messageHeader setDrawsBackground:NO];
+	[scrollView_messageHeader setDrawsBackground:NO];
+	
+	[textView_messageHeader setString:title];
+	
+	//Resize the window frame to fit the error title
+	[textView_messageHeader sizeToFit];
+	headerHeightChange = [textView_messageHeader frame].size.height - [scrollView_messageHeader documentVisibleRect].size.height;
+	heightChange += headerHeightChange;
+	
+	frame.size.height += heightChange;
+	frame.origin.y -= heightChange;
+
 	//Set the message, then change the window size accordingly
 	{
 		[textView_message setVerticallyResizable:YES];
 		[textView_message setDrawsBackground:NO];
 		[scrollView_message setDrawsBackground:NO];
 		
-		NSRect  frame = [window frame];
-		int		heightChange;
-		
 		[[textView_message textStorage] setAttributedString:message];
 		[textView_message sizeToFit];
-		heightChange = [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
+		heightChange += [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
 		
 		frame.size.height += heightChange;
 		frame.origin.y -= heightChange;
 
+		//Adjust the message's scrollView's frame to account for the movement of the header
+		NSRect	infoFrame = [scrollView_message frame];
+		infoFrame.origin.y -= headerHeightChange;
+		[scrollView_message setFrame:infoFrame];
+		
 		if(!messageHeader){
-			if([textField_messageHeader respondsToSelector:@selector(setHidden:)]){
-				[textField_messageHeader setHidden:YES];
+			if([scrollView_messageHeader respondsToSelector:@selector(setHidden:)]){
+				[scrollView_messageHeader setHidden:YES];
 			}else{
-				[textField_messageHeader setFrame:NSZeroRect];	
+				[scrollView_messageHeader setFrame:NSZeroRect];	
 			}
 			
-			NSRect messageHeaderFrame = [textField_messageHeader frame];
+			NSRect messageHeaderFrame = [scrollView_messageHeader frame];
 			NSRect scrollFrame = [scrollView_message frame];
 			
 			//verticalChange is how far we can move our message area up since we don't have a messageHeader
