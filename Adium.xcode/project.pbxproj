@@ -5,6 +5,42 @@
 	};
 	objectVersion = 39;
 	objects = {
+		0783620D077B0C000032D975 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESDualWindowMessageWindowPreferences.h;
+			path = "Plugins/Dual Window Interface/ESDualWindowMessageWindowPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0783620E077B0C000032D975 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESDualWindowMessageWindowPreferences.m;
+			path = "Plugins/Dual Window Interface/ESDualWindowMessageWindowPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07836210077B0C000032D975 = {
+			fileRef = 0783620E077B0C000032D975;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07836212077B0CA90032D975 = {
+			fileRef = 4B970BF80535B864002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07836214077B0CAF0032D975 = {
+			fileRef = 0783620D077B0C000032D975;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07CE05590661D7E600C50929 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -6146,7 +6182,6 @@
 				4BD6753706001E100049CAF7,
 				4BD6753C06001E120049CAF7,
 				4BD6753D06001E140049CAF7,
-				4BD6754F06001E1C0049CAF7,
 				4BD6755506001E270049CAF7,
 				4BD6756006001E2E0049CAF7,
 				4BD6757B06001E3F0049CAF7,
@@ -6248,6 +6283,8 @@
 				34C68B250778FA1300EB423C,
 				34C68B2B0778FA5C00EB423C,
 				34C68B5A0778FC6400EB423C,
+				07836212077B0CA90032D975,
+				07836214077B0CAF0032D975,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6819,6 +6856,7 @@
 				34C68B260778FA1300EB423C,
 				34C68B2C0778FA5C00EB423C,
 				34C68B5B0778FC6400EB423C,
+				07836210077B0C000032D975,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13946,6 +13984,8 @@
 		};
 		4BA12FFC04C0A12900A8010A = {
 			children = (
+				0783620D077B0C000032D975,
+				0783620E077B0C000032D975,
 				4B970BF80535B864002F28F9,
 				4B970BF90535B864002F28F9,
 				4B970BFC0535B879002F28F9,
@@ -16636,12 +16676,6 @@
 		};
 		4BD6753F06001E150049CAF7 = {
 			fileRef = 4BCFEF4C03F59F2800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6754F06001E1C0049CAF7 = {
-			fileRef = 4B970BF80535B864002F28F9;
 			isa = PBXBuildFile;
 			settings = {
 			};
