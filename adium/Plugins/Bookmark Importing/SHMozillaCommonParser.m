@@ -8,6 +8,10 @@
 
 #import "SHMozillaCommonParser.h"
 
+@interface SHMozillaCommonParser(PRIVATE)
++(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
++(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
+@end
 
 @implementation SHMozillaCommonParser
 
@@ -39,6 +43,8 @@ DeclareString(bApostropheHTML)
 DeclareString(bMdash)
 DeclareString(bMdashHTML)
 
+DeclareString(untitledString)
+
 + (void)load
 {
     InitString(gtSign,@">")
@@ -68,15 +74,17 @@ DeclareString(bMdashHTML)
     InitString(bApostropheHTML,@"APOS")
     InitString(bMdash,@"-");
     InitString(bMdashHTML,@"MDASH");
+    
+    InitString(untitledString,@"untitled")
 }
 
-+ (void)parseBookmarksfromString:(NSString *)inString forOwner:(id)owner andMenu:(NSMenu *)bookmarksMenu
++ (NSArray *)parseBookmarksfromString:(NSString *)inString
 {
-    NSMenu      *bookmarksSupermenu = bookmarksMenu;
-    NSMenu      *topMenu = bookmarksMenu;
+    NSMutableArray      *bookmarksArray = [NSMutableArray array];
+    //NSMutableArray      *baseArray = bookmarksArray;
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *titleString, *urlString;
-    NSString    *untitledString = @"untitled";
+    //NSString    *untitledString = @"untitled";
     
     unsigned int stringLength = [inString length];
     
@@ -99,15 +107,9 @@ DeclareString(bMdashHTML)
                 titleString = nil;
             }
             
-            bookmarksSupermenu = bookmarksMenu;
-            bookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : untitledString] autorelease];
-        
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : untitledString
-                                                                         target:owner
-                                                                         action:nil
-                                                                  keyEquivalent:@""] autorelease];
-            [bookmarksSupermenu addItem:mozillaSubmenuItem];
-            [bookmarksSupermenu setSubmenu:bookmarksMenu forItem:mozillaSubmenuItem];
+            [bookmarksArray addObject:[self menuDictWithTitle:titleString
+                                                    menuItems:[self parseBookmarksfromString:[inString substringFromIndex:[linkScanner scanLocation]]]]];
+
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
@@ -124,30 +126,36 @@ DeclareString(bMdashHTML)
                     titleString = nil;
                 }
             
-                SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
-                                                                      withValidationStatus:SH_URL_VALID
-                                                                              parentString:titleString? titleString : urlString
-                                                                                  andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
-                                                                          
-                [bookmarksMenu addItemWithTitle:titleString? titleString : urlString
-                                         target:owner
-                                         action:@selector(injectBookmarkFrom:)
-                                  keyEquivalent:@""
-                              representedObject:markedLink];
+                [bookmarksArray addObject:[self hyperlinkForTitle:titleString URL:urlString]];
             }
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-            if([bookmarksMenu isNotEqualTo:topMenu]){
-                bookmarksMenu = bookmarksSupermenu;
-                bookmarksSupermenu = [bookmarksSupermenu supermenu];
-            }
+            
+            return bookmarksArray;
         }else{
             [linkScanner scanUpToString:ltSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
     }
+    return bookmarksArray;
 }
-        
+
++(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
+{
+    NSString    *title = inString? inString : untitledString;
+    return [[[SHMarkedHyperlink alloc] initWithString:inURLString
+                                 withValidationStatus:SH_URL_VALID
+                                         parentString:title
+                                             andRange:NSMakeRange(0,[title length])] autorelease];
+}
+
++(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
+{
+    NSString    *titleString = inTitle? inTitle : untitledString;
+    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
+}
+
+#pragma mark HTML replacement        
 + (NSString *)simplyReplaceHTMLCodes:(NSString *)inString
 {
     NSString        *tokenString,*blahString,*tagOpen;
