@@ -26,7 +26,8 @@
 #define CUSTOM_TABS_GAP			1					//Gap between tabs
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 
-#warning For Adam: I do not know this code well enough to properly document it. It is all you. ;)
+//XXX - This code needs to be updated to use a delegate and for other interface improvements.  If I try to document this
+//      I will inevitably end up rewriting it, which is not what we need right now :)
 
 //Images shared by all instances of AICustomTabsView
 static  NSImage			*tabBackground = nil;
