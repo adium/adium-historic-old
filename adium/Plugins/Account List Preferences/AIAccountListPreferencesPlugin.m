@@ -147,7 +147,7 @@
     
     //Toggle the connection
     if([[targetAccount supportedStatusKeys] containsObject:@"Online"]){
-        if([[owner accountController] statusObjectForKey:@"Online" account:targetAccount]){
+        if([[[owner accountController] statusObjectForKey:@"Online" account:targetAccount] boolValue]){
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
         }else{
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
