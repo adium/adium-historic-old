@@ -29,7 +29,6 @@
 - If mouse is over the list when it closes we crash in tooltip code
 - Selected cells need to draw with inverted text
 - Create default layouts & styles for the contact list preferences
-- Thread filter can cause beachballing at startup.
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium

@@ -6195,128 +6195,23 @@
 		34BD9E9705314758000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9E9805314758000AB133,
-				34BD9E9905314758000AB133,
-				34BD9E9A05314758000AB133,
-				34BD9E9B05314758000AB133,
-				34BD9E9C05314758000AB133,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9E9805314758000AB133 = {
-			fileRef = F59DB3B8033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E9905314758000AB133 = {
-			fileRef = F59DB3BA033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E9A05314758000AB133 = {
-			fileRef = F59DB3BC033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E9B05314758000AB133 = {
-			fileRef = F59DB3BE033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E9C05314758000AB133 = {
-			fileRef = F570A5C903704D1A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9E9E05314758000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9E9F05314758000AB133,
-				34BD9EA205314758000AB133,
-				34BD9EA305314758000AB133,
-				34BD9EA405314758000AB133,
-				34BD9EA505314758000AB133,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9E9F05314758000AB133 = {
-			fileRef = F59DB3B4033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA205314758000AB133 = {
-			fileRef = F5C8B7720358631001A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA305314758000AB133 = {
-			fileRef = 4B0D1C9903B8A89400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA405314758000AB133 = {
-			fileRef = 4BF2B70B048A82E900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA505314758000AB133 = {
-			fileRef = 4B001BFF04F105B800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9EA605314758000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9EA705314758000AB133,
-				34BD9EA805314758000AB133,
-				34BD9EA905314758000AB133,
-				34BD9EAA05314758000AB133,
-				34BD9EAB05314758000AB133,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EA705314758000AB133 = {
-			fileRef = F59DB3B9033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA805314758000AB133 = {
-			fileRef = F59DB3BB033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA905314758000AB133 = {
-			fileRef = F59DB3BD033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EAA05314758000AB133 = {
-			fileRef = F59DB3BF033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EAB05314758000AB133 = {
-			fileRef = F570A5CA03704D1A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9EAD05314758000AB133 = {
 			buildActionMask = 2147483647;
@@ -6387,72 +6282,23 @@
 		34BD9EB80531475B000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9EB90531475B000AB133,
-				34BD9EBA0531475B000AB133,
-				34BD9EBB0531475B000AB133,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9EB90531475B000AB133 = {
-			fileRef = 6576A00E05026B16000EB664;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EBA0531475B000AB133 = {
-			fileRef = 6576A02C05026BF9000EB664;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EBB0531475B000AB133 = {
-			fileRef = 65D51E0B0502993C0077AADF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9EBC0531475B000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9EBD0531475B000AB133,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9EBD0531475B000AB133 = {
-			fileRef = 65D51E09050296AB0077AADF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9EBE0531475B000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9EBF0531475B000AB133,
-				34BD9EC00531475B000AB133,
-				34BD9EC10531475B000AB133,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EBF0531475B000AB133 = {
-			fileRef = 6576A00F05026B16000EB664;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EC00531475B000AB133 = {
-			fileRef = 6576A02D05026BF9000EB664;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EC10531475B000AB133 = {
-			fileRef = 65D51E0C0502993C0077AADF;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9EC20531475B000AB133 = {
 			buildActionMask = 2147483647;
@@ -9002,32 +8848,6 @@
 //4B2
 //4B3
 //4B4
-		4B001BFB04F105AC00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMTOC2ChatInviteWindowController.h;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2ChatInviteWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B001BFC04F105AC00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMTOC2ChatInviteWindowController.m;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2ChatInviteWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B001BFF04F105B800A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ChatInviteWindow.nib;
-			path = "Plugins/AIM TOC2 Service/ChatInviteWindow.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B0118080679168700FCB992 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -9262,15 +9082,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B0D1C9903B8A89400A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = AIMErrors.plist;
-			path = "Plugins/AIM TOC2 Service/AIMErrors.plist";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B0DB3AB06122B53004F47D9 = {
 			children = (
@@ -10279,12 +10090,9 @@
 		};
 		4B3717000510D19400A8010A = {
 			children = (
-				6576A001050269A6000EB664,
-				F53EA2B502C8020E01A8010A,
 				6C1CC23105415D5700B64925,
 				6C1CC23205415D5700B64925,
 				BF0F5BD805A2B1590034AD18,
-				F5F846FE04C702DB01A80106,
 				4B5D67D3050CF56700A8010A,
 				4BF42E7806AC36640091DE5D,
 				4B31E8E104C4712F00A8010A,
@@ -16299,14 +16107,6 @@
 			settings = {
 			};
 		};
-		4BF2B70B048A82E900A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = TrafficWatch.nib;
-			path = "Plugins/AIM TOC2 Service/TrafficWatch.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BF2E194067CAE9200743318 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -17590,103 +17390,6 @@
 //522
 //523
 //524
-//650
-//651
-//652
-//653
-//654
-		6576A001050269A6000EB664 = {
-			children = (
-				6576A00E05026B16000EB664,
-				6576A00F05026B16000EB664,
-				6576A02C05026BF9000EB664,
-				6576A02D05026BF9000EB664,
-				65D51E0B0502993C0077AADF,
-				65D51E0C0502993C0077AADF,
-				65D51E08050295900077AADF,
-			);
-			isa = PBXGroup;
-			name = Jabber;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6576A00E05026B16000EB664 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = JabberServicePlugin.h;
-			path = "Plugins/Jabber Service/JabberServicePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6576A00F05026B16000EB664 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = JabberServicePlugin.m;
-			path = "Plugins/Jabber Service/JabberServicePlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6576A02C05026BF9000EB664 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = JabberAccount.h;
-			path = "Plugins/Jabber Service/JabberAccount.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6576A02D05026BF9000EB664 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = JabberAccount.m;
-			path = "Plugins/Jabber Service/JabberAccount.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		65D51E08050295900077AADF = {
-			children = (
-				65D51E09050296AB0077AADF,
-			);
-			isa = PBXGroup;
-			name = Interfaces;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		65D51E09050296AB0077AADF = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = JabberAccountView.nib;
-			path = "Plugins/Jabber Service/JabberAccountView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		65D51E0B0502993C0077AADF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = JabberAccountViewController.h;
-			path = "Plugins/Jabber Service/JabberAccountViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		65D51E0C0502993C0077AADF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = JabberAccountViewController.m;
-			path = "Plugins/Jabber Service/JabberAccountViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-//650
-//651
-//652
-//653
-//654
 //6C0
 //6C1
 //6C2
@@ -22244,29 +21947,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F53EA2B502C8020E01A8010A = {
-			children = (
-				F570A5C903704D1A01A8010A,
-				F570A5CA03704D1A01A8010A,
-				F59DB3B8033EA90801A8010A,
-				F59DB3B9033EA90801A8010A,
-				F59DB3BA033EA90801A8010A,
-				F59DB3BB033EA90801A8010A,
-				F59DB3BC033EA90801A8010A,
-				F59DB3BD033EA90801A8010A,
-				F59DB3BE033EA90801A8010A,
-				F59DB3BF033EA90801A8010A,
-				4B001BFB04F105AC00A8010A,
-				4B001BFC04F105AC00A8010A,
-				F5C8B7740358632101A8010A,
-				F59DB3D4033EA90B01A8010A,
-			);
-			isa = PBXGroup;
-			name = "AIM (TOC2)";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F544A5DE03B3628B01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -22525,24 +22205,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIMenuController.m;
 			path = Source/AIMenuController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A5C903704D1A01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMTOC2ServicePlugin.h;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2ServicePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A5CA03704D1A01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMTOC2ServicePlugin.m;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2ServicePlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23017,96 +22679,6 @@
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
-		F59DB3B4033EA90801A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AIMTOCAccountView.nib;
-			path = "Plugins/AIM TOC2 Service/AIMTOCAccountView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3B8033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMTOC2Account.h;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2Account.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3B9033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMTOC2Account.m;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2Account.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3BA033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMTOC2AccountViewController.h;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2AccountViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3BB033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMTOC2AccountViewController.m;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2AccountViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3BC033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMTOC2Packet.h;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2Packet.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3BD033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMTOC2Packet.m;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2Packet.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3BE033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMTOC2StringAdditions.h;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3BF033EA90801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMTOC2StringAdditions.m;
-			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3D4033EA90B01A8010A = {
-			children = (
-				4B0D1C9903B8A89400A8010A,
-				F5C8B7720358631001A8010A,
-			);
-			isa = PBXGroup;
-			name = Resources;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F59DB3D6033EA9CD01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -23304,27 +22876,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5C8B7720358631001A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = TOC2Defaults.plist;
-			path = "Plugins/AIM TOC2 Service/TOC2Defaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5C8B7740358632101A8010A = {
-			children = (
-				F59DB3B4033EA90801A8010A,
-				4BF2B70B048A82E900A8010A,
-				4B001BFF04F105B800A8010A,
-			);
-			isa = PBXGroup;
-			name = Interfaces;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5CDCE460350758501A8010A = {
 			children = (
 				F570A59803704B6101A8010A,
@@ -23423,33 +22974,6 @@
 			lastKnownFileType = text.xml;
 			name = EmoticonDefaults.plist;
 			path = Plugins/Emoticons/EmoticonDefaults.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5F846FE04C702DB01A80106 = {
-			children = (
-				F5F8470004C7035601A80106,
-				F5F846FF04C7035601A80106,
-			);
-			isa = PBXGroup;
-			name = "User Switching Menuitem";
-			path = "Plugins/User Switching Menuitem";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5F846FF04C7035601A80106 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = AIUserSwitchingMenuitemPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5F8470004C7035601A80106 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AIUserSwitchingMenuitemPlugin.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
