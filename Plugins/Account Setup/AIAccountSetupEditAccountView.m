@@ -11,6 +11,11 @@
 
 @implementation AIAccountSetupEditAccountView
 
+- (void)awakeFromNib
+{
+	
+}
+
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	[account release];

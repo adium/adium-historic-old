@@ -60,31 +60,13 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 	[[self window] center];
 }
 
-
-//Account overview
-- (void)showAccountsOverview
+//Close down the preference view
+- (BOOL)windowShouldClose:(id)sender
 {
-	[self setActiveSetupView:view_overview];
+	[sharedAccountSetupWindowInstance autorelease]; sharedAccountSetupWindowInstance = nil;
+	
+	return(YES);
 }
-
-//New account
-- (void)newAccountOnService:(AIService *)service
-{
-	[view_newAccount configureForService:service];
-	[self setActiveSetupView:view_newAccount];
-}
-
-//Edit account
-- (void)editExistingAccount:(AIAccount *)account
-{
-	[view_editAccount configureForAccount:account];
-	[self setActiveSetupView:view_editAccount];
-}
-
-
-
-
-
 
 //Close
 - (IBAction)closeWindow:(id)sender
@@ -94,16 +76,55 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
     }
 }
 
-//closing
-- (BOOL)windowShouldClose:(id)sender
+
+//Actions --------------------------------------------------------------------------------------------------------------
+#pragma Actions
+//Edit account
+- (void)editExistingAccount:(AIAccount *)account
 {
-	[sharedAccountSetupWindowInstance autorelease]; sharedAccountSetupWindowInstance = nil;
-	
-	return(YES);
+	[view_editAccount configureForAccount:account];
+	[self setActiveSetupView:view_editAccount];
 }
 
 
-//Views ------------------------------------------------------------------------
+//Start the process of creating a new account on the passed service.  Switches to the new account walkthrough panes.
+- (void)newAccountOnService:(AIService *)service
+{
+	newAccount = [[[adium accountController] newAccountAtIndex:-1 forService:service] retain];
+	[self newAccountPane];
+}
+
+
+//Switching panes ------------------------------------------------------------------------------------------------------
+#pragma mark Switching panes
+//Switch to the accounts overview pane
+//Going back to this point cancles any account creation that was taking place
+- (void)showAccountsOverview
+{
+	if(newAccount){
+		[[adium accountController] deleteAccount:newAccount save:YES];
+		[newAccount release];
+		newAccount = nil;
+	}
+	[self setActiveSetupView:view_overview];
+}
+
+//Switch to the new account pane
+- (void)newAccountPane
+{
+	[view_newAccount configureForAccount:newAccount];
+	[self setActiveSetupView:view_newAccount];
+}
+
+//Switch to the new account connection setup pane
+- (void)newAccountConnectionPane
+{
+	[view_connection configureForAccount:newAccount];
+	[self setActiveSetupView:view_connection];
+}
+
+
+//Swapping Views -------------------------------------------------------------------------------------------------------
 #pragma mark
 //Set the active setup window view, transitions to the new view
 - (void)setActiveSetupView:(AIAccountSetupView *)inView

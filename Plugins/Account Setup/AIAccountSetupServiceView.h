@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface AIAccountSetupServiceView : NSView {
 	AIService			*service;
 	NSImage				*serviceIcon;
@@ -27,12 +26,22 @@
 	id					delegate;
 	
 	
-	NSArray				*trackingRects;
+	NSMutableArray		*trackingRects;
 }
 
 - (id)initWithService:(AIService *)inService delegate:(id)inDelegate;
-- (void)setServiceIconSize:(NSSize)inSize;
+
+//Configure
 - (void)setAccounts:(NSArray *)array;
-- (NSDictionary *)accountNameAttributes;
+- (void)setServiceIconSize:(NSSize)inSize;
+- (NSSize)serviceIconSize;
+- (void)setDelegate:(id)inDelegate;
+- (id)delegate;
 
 @end
+
+@interface NSObject (AIAccountSetupViewDelegate)
+- (void)newAccountOnService:(AIService *)service;
+- (void)editExistingAccount:(AIAccount *)account;
+@end
+

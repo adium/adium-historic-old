@@ -11,10 +11,17 @@
 
 @implementation AIAccountSetupNewAccountView
 
-- (void)configureForService:(AIService *)inService
+- (void)awakeFromNib
 {
-	[service release];
-	service = [inService retain];
+	
+}
+
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+	AIService	*service = [inAccount service];
+
+	[account release];
+	account = [inAccount retain];
 
 	//Service icon
 	[image_serviceIcon setImage:[AIServiceIcons serviceIconForService:service
@@ -38,16 +45,17 @@
 											   caseSensitive:[service caseSensitive]
 												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
 
-	//account view controller
-	accountViewController = [[inService accountView] retain];
+	//Account details view
+	accountViewController = [[service accountView] retain];
 
-	//Swap in the account details view
 	NSView	*accountView = [accountViewController view];
 	float 	accountViewHeight = [accountView frame].size.height;
 	
     [view_accountDetails removeAllSubviews];
 	[view_accountDetails addSubview:accountView];
 	[accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
+
+	[accountViewController configureForAccount:account];
 }
 
 - (NSSize)desiredSize
@@ -58,6 +66,11 @@
 - (IBAction)cancel:(id)sender
 {
 	[controller showAccountsOverview];
+}
+
+- (IBAction)okay:(id)sender
+{
+	[controller newAccountConnectionPane];
 }
 
 @end
