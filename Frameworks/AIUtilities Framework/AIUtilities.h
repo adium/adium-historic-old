@@ -55,6 +55,7 @@
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIGradientCell.h>
 #import <AIUtilities/AIHTMLDecoder.h>
+#import <AIUtilities/AIImageGridView.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIKeychain.h>
 #import <AIUtilities/AILinkTextView.h>

@@ -4465,6 +4465,46 @@
 			settings = {
 			};
 		};
+		4B6DDA4A075A883B002E0BF4 = {
+			children = (
+				4B6DDA4D075A8879002E0BF4,
+				4B6DDA4E075A8879002E0BF4,
+			);
+			isa = PBXGroup;
+			name = "View that displays images in a grid iPhoto style";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B6DDA4D075A8879002E0BF4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIImageGridView.h;
+			path = "Frameworks/AIUtilities Framework/AIImageGridView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B6DDA4E075A8879002E0BF4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIImageGridView.m;
+			path = "Frameworks/AIUtilities Framework/AIImageGridView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B6DDA4F075A8879002E0BF4 = {
+			fileRef = 4B6DDA4D075A8879002E0BF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B6DDA50075A8879002E0BF4 = {
+			fileRef = 4B6DDA4E075A8879002E0BF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BD1EED206D25EC900B3975E = {
 			children = (
 				34486B5406D1DF0300DA778C,
@@ -4790,6 +4830,7 @@
 				4BD1EF3006D2631300B3975E,
 				4BD1EF3606D2632300B3975E,
 				4BD1F33006D26D0C00B3975E,
+				4B6DDA4A075A883B002E0BF4,
 				4BD1F34A06D26F0A00B3975E,
 			);
 			isa = PBXGroup;
@@ -5483,6 +5524,7 @@
 				34A2EBEB073B3BCD0042C391,
 				34A2EBEF073B3BCD0042C391,
 				34E4692A075681AE004C3A42,
+				4B6DDA4F075A8879002E0BF4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5638,6 +5680,7 @@
 				34A2EBEA073B3BCD0042C391,
 				34A2EBEE073B3BCD0042C391,
 				34E4692B075681AE004C3A42,
+				4B6DDA50075A8879002E0BF4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
