@@ -24,6 +24,9 @@
     //Retain our information
     UID = [inUID retain];
     serviceID = [inServiceID retain];
+
+    UIDAndServiceID = [[NSString stringWithFormat:@"%@.%@",serviceID,UID] retain];
+    
     serverGroup = [inGroup retain];
     account = [inAccount retain];
     temporary = inTemporary;
@@ -41,6 +44,7 @@
     [serviceID release];
     [serverGroup release];
     [account release];
+    [UIDAndServiceID release];
 
     [super dealloc];
 }
@@ -55,6 +59,10 @@
 - (NSString *)serviceID
 {
     return(serviceID);
+}
+- (NSString *)UIDAndServiceID //ServiceID.UID
+{
+    return(UIDAndServiceID);
 }
 - (NSString *)serverGroup
 {

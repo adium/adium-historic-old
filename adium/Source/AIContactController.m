@@ -143,8 +143,14 @@
     enumerator = [inGroup objectEnumerator];
     while((object = [enumerator nextObject])){
         if([object isKindOfClass:[AIListContact class]]){
+            //Remove handles from the contact
+            [(AIListContact *)object removeAllHandles];
+            
             //Add the contact to our abandoned dict
-            [abandonedContacts setObject:object forKey:[object UID]];
+            if(![abandonedContacts objectForKey:[object UID]]){
+                //Multiple contacts with the same UID could exist.  The behavior here in that case is not the best.  For now we're just dropping and recreating the duplicate contact.  In the future, duplicates will most likely be disallowed.
+                [abandonedContacts setObject:object forKey:[object UID]];
+            }
 
         }else if([object isKindOfClass:[AIListGroup class]]){
             //Breakdown the subgroup
@@ -224,7 +230,7 @@
     
     //We first check if a contact for this handle alredy exists on our new contact list.
     //If it does, we'll simply add this handle to the existing contact.
-    contact = [self contactInGroup:contactList withService:serviceType UID:handleUID serverGroup:serverGroup];
+    contact = [self contactInGroup:contactList withService:serviceType UID:handleUID serverGroup:nil/*serverGroup*/];
     if(!contact){
         //If the contact does not exist
         //Check for it in the abandoned contact dict

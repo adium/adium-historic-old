@@ -30,6 +30,7 @@
 - (NSEnumerator *)handleEnumerator;
 - (void)addHandle:(AIHandle *)inHandle;
 - (void)removeHandle:(AIHandle *)inHandle;
+- (void)removeAllHandles;
 
 //Content
 - (NSArray *)contentObjectArray;
