@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 435 $ $Date: 2003/09/22 16:42:13 $ -->
+<!--$Rev: 437 $ $Date: 2003/09/25 15:02:59 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -249,11 +249,11 @@ try {
     while (rset.next()) {
         if(!rset.getDate("message_date").equals(currentDate)) {
             currentDate = rset.getDate("message_date");
-            out.print("<tr>");
+            out.print("<tr><td></td>");
             out.print("<td align=\"center\" bgcolor=\"teal\"" +
             " background=\"images/transp-change.png\">");
             out.print("<font color=\"white\">" + currentDate.toString());
-            out.print("</font></td><td></td><td></td>");
+            out.print("</font></td>");
             out.print("</tr>");
         }
 

@@ -42,6 +42,10 @@
       (<code>su&#160;-&#160;<i>username</i></code>):</p>
     <div class="tutorialcode">
       <pre>createdb <i>username</i></pre></div>
+    <p>If you get errors relating to <code>createuser: command not
+        found</code>, then the problem may be that you do not have your path
+      set up.  Try <code>/usr/local/bin/createuser</code> (or
+      <code>/sw/bin/createuser</code>) instead</p>
     <p>After a database is created, you should be able to connect to it by
     simply typing <code>psql</code>.
     To log information, Adium will expect to have a certain setup in the
