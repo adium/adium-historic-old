@@ -138,6 +138,14 @@
     [column setResizable:NO];
 }
 
+//Prevent the display of a focus ring around the contact list
+- (NSFocusRingType)focusRingType
+{
+    return(NSFocusRingTypeNone);
+}
+
+
+
 
 // Selection Hiding --------------------------------------------------------------------
 //Restore the selection
