@@ -10,7 +10,11 @@
 #import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
 
-
+//Recognized URL types
+static int 	linkSubStringCount = 8;
+static NSString *linkSubString[] = {@"http://", @"ftp://", @"www.", @".com", @".edu", @".gov", @".net", @".org"};
+static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.com", @"*.edu", @"*.gov", @"*.net", @"*.org"};
+ 
 @implementation AIAutoLinkingPlugin
 
 - (void)installPlugin
@@ -21,9 +25,6 @@
 
 - (void)filterContentObject:(id <AIContentObject>)inObject
 {
-    static NSString *linkSubString[] = {@"http://", @"ftp://", @"www.", @".com", @".edu", @".gov", @".net", @".org"};
-    static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.com", @"*.edu", @"*.gov", @"*.net", @"*.org"};
-    static int linkSubStringCount = 8;
 
     if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         int				loop;
@@ -118,13 +119,30 @@
 
                         //If the URL was valid, turn it into a link
                         if(URLIsValid){
+                            NSRange	urlRange;
+                            
                             //Make sure we've got a replacement message string made
                             if(!replacementMessage){
                                 replacementMessage = [[[contentMessage message] mutableCopy] autorelease];
                             }
 
-                            //Apply blue for now
-                            [replacementMessage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:NSMakeRange([messageScanner scanLocation] - [urlString length], [urlString length])];
+                            //Set this segment as a link, appending http:// if necessary
+                            urlRange = NSMakeRange([messageScanner scanLocation] - [urlString length], [urlString length]);
+
+                            if([urlString rangeOfString:@"://"].location != NSNotFound){
+                                [replacementMessage addAttribute:NSLinkAttributeName
+                                                           value:urlString
+                                                           range:urlRange];
+                            }else{
+                                [replacementMessage addAttribute:NSLinkAttributeName
+                                                           value:[NSString stringWithFormat:@"http://%@",urlString]
+                                                           range:urlRange];
+                            }
+
+                            //Color it blue and underline for good measure
+                            [replacementMessage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:urlRange];
+                            [replacementMessage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:1] range:urlRange];
+                            
                         }
                     }
                 }
