@@ -11,7 +11,6 @@
 #define NO_GROUP						@"__NoGroup__"
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define USER_ICON_CACHE_NAME			@"UserIcon_%@"
-#define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
 #define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS		4
@@ -357,7 +356,7 @@ static id<GaimThread> gaimThread = nil;
     //Request profile
     if (gaim_account_is_connected(account) && 
 	   ([[inContact statusObjectForKey:@"Online"] boolValue])){
-		serv_get_info(account->gc, [[inContact UID] UTF8String]);
+		[gaimThread getInfoFor:[inContact UID] onAccount:self];
     }
 }
 
@@ -574,10 +573,6 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
 {		
-	if ([message rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-		message = [self _processGaimImagesInString:message];
-	}
-	
 	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
 														   withSource:sourceContact
 														  destination:self
@@ -587,14 +582,6 @@ static id<GaimThread> gaimThread = nil;
 	
 	[[adium contentController] receiveContentObject:messageObject];
 }
-
-/* XXX - No longer used, apparently
-- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
-{
-	return ([self _contactAssociatedWithBuddy:buddy 
-									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
-}
-*/
 
 #pragma mark GaimConversation User Lists
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
@@ -1358,6 +1345,7 @@ static id<GaimThread> gaimThread = nil;
 			profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
 		}
 		
+		NSLog(@"Setting to %s",profileHTML);
 		if (gaim_account_is_connected(account)){
 			serv_set_info(account->gc, profileHTML);
 		}
@@ -1585,76 +1573,10 @@ static id<GaimThread> gaimThread = nil;
                                     withDescription:errorDesc];
 }
 
-- (NSString *)_processGaimImagesInString:(NSString *)inString
-{
-	NSScanner			*scanner;
-    NSString			*chunkString = nil;
-    NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID=\"";
-    int imageID;
-	
-    //set up
-	newString = [[NSMutableString alloc] init];
-	
-    scanner = [NSScanner scannerWithString:inString];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-	
-	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)	 
-    
-	//Parse the incoming HTML
-    while(![scanner isAtEnd]){
-		
-		//Find the beginning of a gaim IMG ID tag
-		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
-			[newString appendString:chunkString];
-		}
-		
-		if ([scanner scanString:targetString intoString:&chunkString]) {
-			
-			//Get the image ID from the tag
-			[scanner scanInt:&imageID];
-			
-			//Scan up to ">
-			[scanner scanString:@"\">" intoString:nil];
-			
-			//Get the image, then write it out as a png
-			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
-			if (gaimImage){
-				NSString			*imagePath = [self _messageImageCachePathForID:imageID];
-				
-				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
-				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage) 
-																						  length:gaim_imgstore_get_size(gaimImage)]];
-				NSData				*imageTIFFData = [image TIFFRepresentation];
-				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-				
-				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
-				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
-					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
-				}
-				
-				[image release];
-			}else{
-				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
-				[newString appendString:chunkString];
-			}
-		}
-	}
-	
-	return ([newString autorelease]);
-}
-
 - (NSString *)_userIconCachePath
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self uniqueObjectID]];
     return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
-}
-
-- (NSString *)_messageImageCachePathForID:(int)imageID
-{
-    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self uniqueObjectID], imageID];
-    return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
 - (AIListContact *)_contactWithUID:(NSString *)inUID

@@ -18,6 +18,7 @@
 - (AIChat *)chatWithContact:(AIListContact *)contact;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
+- (NSString *)uniqueObjectID;
 @end
 
 @interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy,AdiumGaimDO>
