@@ -52,7 +52,7 @@
     return(AIPref_Events);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Events","Events preferences label"));
+    return(EVENTS_TITLE);
 }
 - (NSString *)nibName{
     return(@"GlobalEventsPreferences");
