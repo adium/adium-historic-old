@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.5 2004/06/16 08:20:31 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.6 2004/06/16 11:23:17 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -720,6 +720,13 @@ NSData *decode_dns(char* buffer, int len )
 	} else {
 	    AWEzvLog(@"Conect to update not in dictionary and has bad identifier");
 	}
+    }
+    
+    // Versions too high?
+    if (av && ([[rendezvousData getField:@"txtvers"] intValue] > 1 ||
+	       [[rendezvousData getField:@"version"] intValue] > 1)) {
+	AWEzvLog(@"Ignoring %@: version too high", [contact uniqueID]);
+	return;
     }
     
     if ([rendezvousData getField:@"slumming"] != nil)
