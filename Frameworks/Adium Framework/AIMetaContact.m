@@ -42,6 +42,7 @@
 	
 	containsOnlyOneUniqueContact = YES;
 	containsOnlyOneService = YES;
+	expanded = YES;
 	
 	return(self);
 }
@@ -811,6 +812,19 @@
 	}
 	
 	return(object);
+}
+
+//Expanded State -------------------------------------------------------------------------------------------------------
+#pragma mark Expanded State
+//Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)
+- (void)setExpanded:(BOOL)inExpanded
+{
+    expanded = inExpanded;
+}
+//Returns the current expanded/collapsed state of this group
+- (BOOL)isExpanded
+{
+    return(expanded);
 }
 
 @end

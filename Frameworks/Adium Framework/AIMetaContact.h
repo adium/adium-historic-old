@@ -20,6 +20,8 @@
 	BOOL					containsOnlyOneService;
 
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
+	
+    BOOL					expanded;			//Exanded/Collapsed state of this object
 }
 
 //The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance
@@ -40,4 +42,6 @@
 
 - (NSDictionary *)dictionaryOfServicesAndListContacts;
 
+- (void)setExpanded:(BOOL)inExpanded;
+- (BOOL)isExpanded;
 @end
