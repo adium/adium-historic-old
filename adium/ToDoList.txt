@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.21 2004/04/07 13:23:12 adamiser Exp $
+$Id: ToDoList.txt,v 1.22 2004/04/07 14:20:30 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -18,6 +18,7 @@ Bugs
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * If preferences are selected to advanced on close, the window will be vertically small on re-open.
+* Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
