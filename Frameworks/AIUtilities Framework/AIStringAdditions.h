@@ -43,4 +43,16 @@
 - (NSString *)stringByEscapingForShell;
 //- (BOOL)isURLEncoded;
 
+/*examples:
+ *	receiver                            result
+ *	========                            ======
+ *	/                                   /
+ *	/Users/boredzo                      /
+ *	/Volumes/Repository                 /Volumes/Repository
+ *	/Volumes/Repository/Downloads       /Volumes/Repository
+ *and if /Volumes/Toolbox is your startup disk (as it is mine):
+ *	/Volumes/Toolbox/Applications       /
+ */
+- (NSString *)volumePath;
+
 @end

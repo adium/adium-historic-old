@@ -57,8 +57,8 @@
 }
 
 
-/* compactedString
-*   returns the string in all lowercase without spaces
+/*	compactedString
+ *	returns the string in all lowercase without spaces
  */
 - (NSString *)compactedString
 {
@@ -442,7 +442,8 @@
 	return result;
 }
 
-- (NSString *)stringByUnescapingFromHTML {
+- (NSString *)stringByUnescapingFromHTML
+{
 	if([self length] == 0) return self; //avoids various RangeExceptions.
 	
 	static NSString *ampersand = @"&", *semicolon = @";";
@@ -536,7 +537,8 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	0,0,0, //0x18..0x20
 };
 
-- (NSString *)stringByEscapingForShell {
+- (NSString *)stringByEscapingForShell
+{
 	if(!(characterNature[' '] & whitespaceNature)) {
 		//if space doesn't have the whitespace nature, clearly we need to build the nature array.
 
@@ -637,6 +639,19 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	free(buf);
 
 	return result;
+}
+
+- (NSString *)volumePath
+{
+	NSEnumerator *pathEnum = [[[NSWorkspace sharedWorkspace] mountedLocalVolumePaths] objectEnumerator];
+	NSString *volumePath;
+	while((volumePath = [pathEnum nextObject])) {
+		if([self hasPrefix:[volumePath stringByAppendingString:@"/"]])
+			break;
+	}
+	if(!volumePath)
+		volumePath = @"/";
+	return volumePath;
 }
 
 @end
