@@ -29,9 +29,6 @@
 	personArrayForImageData = nil;
 	imageLookupTimer = nil;
 
-    //Register ourself as a handle observer
-    [[adium contactController] registerListObjectObserver:self];
-	
     //Configure our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS 
 																		forClass:[self class]]  
@@ -44,7 +41,6 @@
 								kABMSNInstantProperty,@"MSN",
 								kABYahooInstantProperty,@"Yahoo!",
 								kABICQInstantProperty,@"ICQ",nil] retain];
-	[self rebuildAddressBookDict];
 	
     //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
@@ -68,6 +64,12 @@
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];	
+	
+	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
 }
 
 - (void)uninstallPlugin
@@ -80,13 +82,30 @@
 	//    [sharedAddressBook release];
 }
 
+//Adium is ready to receive our glory.
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
+	//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
+	[self rebuildAddressBookDict];
+	
+    //Register ourself as a listObject observer
+    [[adium contactController] registerListObjectObserver:self];
+	
+	//Gotta update 'em all
+	[[adium contactController] updateAllListObjectsForObserver:self];
+}
+
 //Called as contacts are created, load their address book information
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
+	//Just stop here if we don't have an address book dict to work with
+	if (!addressBookDict){
+		return nil;
+	}
+	
 	NSArray		*modifiedAttributes = nil;
 	
-    if(inModifiedKeys == nil){ //Only set on contact creation
-                               //look up the property for this serviceID
+    if(inModifiedKeys == nil){ //Only perform this when updating for all list objects
         
         ABPerson *person = [self searchForObject:inObject];
 		
@@ -136,7 +155,7 @@
 			}
 		}
 		
-    } else if (automaticSync && [inModifiedKeys containsObject: KEY_USER_ICON]) {
+    } else if (automaticSync && [inModifiedKeys containsObject:KEY_USER_ICON]) {
         
 		//Only update when the serverside icon changes if there is no Adium preference overriding it
 		if (![inObject preferenceForKey:KEY_USER_ICON group:PREF_GROUP_USERICONS ignoreInheritedValues:YES]){
@@ -371,8 +390,11 @@
 	
 	while (person = [peopleEnumerator nextObject]){
 		
-		NSEnumerator	*servicesEnumerator = [allServiceKeys objectEnumerator];
-		NSString		*serviceID;
+		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
+		NSString			*serviceID;
+		
+		NSMutableArray		*UIDsArray = [NSMutableArray array];
+		NSMutableArray		*servicesArray = [NSMutableArray array];
 		
 		while (serviceID = [servicesEnumerator nextObject]){
 			NSMutableDictionary  *dict = [mutableAddressBookDict objectForKey:serviceID];
@@ -387,14 +409,20 @@
 			ABMultiValue	*names = [person valueForProperty:addressBookKey];
 			int				nameCount = [names count];
 			int				i;
+
 			for (i=0 ; i<nameCount ; i++){
-				[dict setObject:[person uniqueId] forKey:[[names valueAtIndex:i] compactedString]];
+				NSString	*UID = [[names valueAtIndex:i] compactedString];
+				[dict setObject:[person uniqueId] forKey:UID];
+				
+				[UIDsArray addObject:UID];
+				[servicesArray addObject:serviceID];
 			}
+		}	
+		
+		if ([UIDsArray count] > 1){
+			//Got a record with multiple names
+			[[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 			
-			//Evan: Metacontact something here?
-			if (nameCount > 1){
-					//got a record with multiple names
-			}
 		}
 	}
 	
