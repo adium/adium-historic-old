@@ -172,6 +172,9 @@ typedef enum {
 	BOOL								alreadyDidDealloc;	
 	
 	id									delegate;
+	
+	BOOL								showTooltips;
+	BOOL								showTooltipsInBackground;
 }
 
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
@@ -196,9 +199,12 @@ typedef enum {
 
 - (void)configureViewsAndTooltips;
 
-//Tooltip
+//Tooltips
 - (void)showTooltipAtPoint:(NSPoint)screenPoint;
 - (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint;
 - (void)hideTooltip;
+
+- (void)setShowTooltips:(BOOL)inShowTooltips;
+- (void)setShowTooltipsInBackground:(BOOL)inShowTooltipsInBackground;
 
 @end

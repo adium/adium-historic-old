@@ -41,7 +41,6 @@
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 
 @interface AIAbstractListController (PRIVATE)
-- (BOOL)shouldShowTooltips;
 - (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment;
 @end
 
@@ -54,10 +53,12 @@
 	contactListView = [inContactListView retain];
 	scrollView_contactList = [inScrollView_contactList retain];
 	delegate = inDelegate;
-	
+
 	hideRoot = YES;
 	dragItems = nil;
-	
+	showTooltips = YES;
+	showTooltipsInBackground = NO;
+
 	[self configureViewsAndTooltips];
 	
 	//Watch for drags ending so we can clear any cached drag data
@@ -100,12 +101,8 @@
 - (void)configureViewsAndTooltips
 {
 	//Configure the contact list view
-	if ([self shouldShowTooltips]){
-		tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
-	}else{
-		tooltipTracker = nil;
-	}
-	
+	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
+
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListContactCell alloc] init] autorelease]];
 	
 	//Targeting
@@ -124,7 +121,10 @@
 
 - (void)setContactListRoot:(ESObjectWithStatus <AIContainingObject> *)newContactListRoot
 {
-	[contactList release]; contactList = [newContactListRoot retain];
+	if(contactList != newContactListRoot){
+		[contactList release]; contactList = [newContactListRoot retain];
+	}
+
 	[contactListView reloadData];
 }
 
@@ -623,15 +623,20 @@
 
 - (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint
 {
-	NSRect		contactListFrame = [contactListView frame];
-	NSPoint		viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
-	
-	//Be sure that screen points outside our view return nil, since no contact is being hovered.
-	if(viewPoint.x > NSMinX(contactListFrame) && viewPoint.x < NSMaxX(contactListFrame)){
-		return([contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]]);
-	}else{
-		return(nil);
+	AIListObject	*listObject = nil;
+
+	if(showTooltips && (showTooltipsInBackground || [NSApp isActive])){
+		NSRect		contactListFrame = [contactListView frame];
+		NSPoint		viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint]
+													 fromView:nil];
+		
+		//Be sure that screen points outside our view return nil, since no contact is being hovered.
+		if(viewPoint.x > NSMinX(contactListFrame) && viewPoint.x < NSMaxX(contactListFrame)){
+			listObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
+		}
 	}
+	
+	return(listObject);
 }
 
 //Hide tooltip
@@ -651,7 +656,23 @@
 - (BOOL)shouldUseContactTextColors{
 	return YES;
 }
-- (BOOL)shouldShowTooltips{
-	return YES;
+
+/*
+ * @brief Show tooltips?
+ */
+- (void)setShowTooltips:(BOOL)inShowTooltips
+{
+	showTooltips = inShowTooltips;	
 }
+
+/*
+ * @brief Show tooltips when Adium is in the background?
+ *
+ * Only relevant if showTooltips is set to YES.
+ */
+- (void)setShowTooltipsInBackground:(BOOL)inShowTooltipsInBackground
+{
+	showTooltipsInBackground = inShowTooltipsInBackground;
+}
+
 @end
