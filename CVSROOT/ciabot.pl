@@ -2,7 +2,6 @@
 #
 # ciabot -- Mail a CVS log message to a given address, for the purposes of CIA
 #
-#
 # Loosely based on cvslog by Russ Allbery <rra@stanford.edu>
 # Copyright 1998  Board of Trustees, Leland Stanford Jr. University
 #
@@ -29,7 +28,7 @@
 # If it does not work, try to disable $xml_rpc in the configuration section
 # below.
 #
-# $Id: ciabot.pl,v 1.19 2004/01/23 03:32:03 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.20 2004/01/23 03:36:09 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
