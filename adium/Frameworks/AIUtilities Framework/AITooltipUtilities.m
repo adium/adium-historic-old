@@ -18,7 +18,7 @@
 #define TOOLTIP_MAX_WIDTH           300
 #define TOOLTIP_INSET               4.0
 #define TOOLTIP_TITLE_BODY_MARGIN   10.0
-#define IMAGE_DIMENSION             48.0
+#define IMAGE_DIMENSION             50.0
 
 @interface AITooltipUtilities (PRIVATE)
 + (void)_createTooltip;
