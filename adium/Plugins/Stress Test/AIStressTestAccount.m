@@ -1,4 +1,4 @@
-/*
+
  //
 //  AIStressTestAccount.m
 //  Adium
@@ -99,17 +99,17 @@
             int i;
             
             for(i=0;i < count;i++){
-                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
-                AIHandle	*handle = [handleDict objectForKey:UID];
+                NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
+                AIHandle	*handle = [handleDict objectForKey:buddyUID];
 
                 if(!handle){
                     handle = [AIHandle handleWithServiceID:@"TEMP"
-                                                       UID:UID
+                                                       UID:buddyUID
                                                serverGroup:[NSString stringWithFormat:@"Group%i",i/20]
                                                  temporary:NO
                                                 forAccount:self];
                     [[adium contactController] handle:handle addedToAccount:self];
-                    [handleDict setObject:handle forKey:UID];
+                    [handleDict setObject:handle forKey:buddyUID];
                 }
             }
 
@@ -124,9 +124,9 @@
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
             for(i=0;i < count;i++){
                 AIHandle	*handle;
-                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
+                NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-                if(handle = [handleDict objectForKey:UID]){
+                if(handle = [handleDict objectForKey:buddyUID]){
                     [handleArray addObject:handle];
                 }
             }
@@ -143,9 +143,9 @@
 
             for(i=0;i < count;i++){
                 AIHandle	*handle;
-                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
+                NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-                if(handle = [handleDict objectForKey:UID]){
+                if(handle = [handleDict objectForKey:buddyUID]){
                     [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];
                     [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
                 }
@@ -199,9 +199,9 @@
     int			spread = [[userInfo objectForKey:@"spread"] intValue];
 
     AIHandle	*handle;
-    NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i%spread];
+    NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(handle = [handleDict objectForKey:UID]){
+    if(handle = [handleDict objectForKey:buddyUID]){
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
                                                 withSource:[commandHandle containingContact]
@@ -229,9 +229,9 @@
     BOOL		msgIn = [[userInfo objectForKey:@"in"] boolValue];
     
     AIHandle	*handle;
-    NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i%spread];
+    NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(handle = [handleDict objectForKey:UID]){
+    if(handle = [handleDict objectForKey:buddyUID]){
         AIContentMessage *messageObject;
         if(msgIn){
             messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
@@ -306,10 +306,6 @@
     [[adium contentController] addIncomingContentObject:messageObject];
 }
 
-
-
-
-
 // AIAccount_Status --------------------------------------------------------------------------------
 // Returns an array of the status keys we support
 - (NSArray *)supportedPropertyKeys
@@ -322,16 +318,4 @@
 {
 }
 
-
-
-
-
-
-
-
-
-
-
-
 @end
-*/
