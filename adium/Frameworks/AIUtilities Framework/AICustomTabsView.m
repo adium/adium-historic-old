@@ -54,6 +54,8 @@
 #define CUSTOM_TABS_OVERLAP	2                       //Overlapped pixels between tabs
 #define CUSTOM_TABS_INDENT	3                       //Indent on left and right of tabbar
 
+#define NSAppKitVersionNumber10_2_3 663.6               //to fix some problems with gcc 3.1
+
 //objects shared by all instances of AICustomTabsView
 static  AICustomTabCell         *dragTabCell = nil;     //Custom tab cell being dragged
 static  AICustomTabsView        *sourceTabBar = nil;    //source tabBar of the drag
