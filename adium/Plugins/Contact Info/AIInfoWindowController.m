@@ -8,9 +8,9 @@
 #import "AIInfoWindowController.h"
 
 #define KEY_TEXT_PROFILE_WINDOW_FRAME	@"Text Profile Window"
-#define INFO_WINDOW_NIB					@"ContactInfo"
-#define InfoIndentA						80
-#define InfoIndentB						85
+#define INFO_WINDOW_NIB                 @"ContactInfo"
+#define InfoIndentA                     80
+#define InfoIndentB                     85
 #define REFRESH_RATE                    300
 
 @interface AIInfoWindowController (PRIVATE)
@@ -21,21 +21,20 @@
 
 //Open a new info window
 static AIInfoWindowController   *sharedInfoWindowInstance = nil;
-static AIListObject				*activeListObject = nil;
+static AIListObject             *activeListObject = nil;
 
 #pragma mark configureWindow
 //Configure our window for the specified object
 - (void)configureWindow
 {
     NSMutableAttributedString	*infoString;
-    NSDictionary				*labelAttributes, *valueAttributes, *bigValueAttributes;
-    NSMutableParagraphStyle		*paragraphStyle;
-    NSTextAttachmentCell 		*imageAttatchment;
-    NSTextAttachment 			*attatchment;
-    NSImage 					*buddyImage;
+    NSDictionary                *labelAttributes, *valueAttributes, *bigValueAttributes;
+    NSMutableParagraphStyle     *paragraphStyle;
+    NSTextAttachmentCell        *imageAttatchment;
+    NSTextAttachment            *attatchment;
+    NSImage                     *buddyImage;
     BOOL                        online = [[activeListObject numberStatusObjectForKey:@"Online"] boolValue];
     
-	//
     [timer invalidate]; [timer release];
     timer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RATE
 											  target:self
@@ -224,12 +223,22 @@ static AIListObject				*activeListObject = nil;
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
     }
     
+    //Contact Notes
+    // needs to check for 'em first ;)
+        NSString *currentNotes;
+        currentNotes = [activeListObject preferenceForKey:@"Notes" group:@"Notes" ignoreInheritedValues:YES];
+        if(currentNotes != nil &&  [currentNotes isEqualTo:@""] == NO)
+        {
+            [infoString appendString:@"\r\r\tNotes:\t" withAttributes:labelAttributes];
+            [infoString appendString:currentNotes withAttributes:valueAttributes];
+        }
+    
     //Text Profile
-	NSAttributedString 	*textProfile = [activeListObject statusObjectForKey:@"TextProfile"];
+    NSAttributedString 	*textProfile = [activeListObject statusObjectForKey:@"TextProfile"];
     if(textProfile && [textProfile length]){
 		[infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
 		NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile 
-																								 listObjectContext:activeListObject] mutableCopy];
+                                                                                                         listObjectContext:activeListObject] mutableCopy];
 		NSMutableParagraphStyle     *indentStyle;
 		
 		NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
