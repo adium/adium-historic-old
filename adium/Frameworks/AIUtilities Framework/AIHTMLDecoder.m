@@ -113,6 +113,7 @@ int HTMLEquivalentForFontSize(int fontSize);
             if(closeFontTags && openFontTag){
                 [string appendString:@"</FONT>"];
             }
+            openFontTag = YES;
             [string appendString:@"<FONT"];
 
             //Family
@@ -241,7 +242,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSString			*chunkString, *tagOpen;
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
-    BOOL			send, receive, inDiv;
+    BOOL			send = NO, receive = NO, inDiv = NO;
     
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -338,7 +339,10 @@ int HTMLEquivalentForFontSize(int fontSize)
                         }
                         
                     }else if([chunkString caseInsensitiveCompare:@"/FONT"] == 0){
-                        //ignore
+                        [textAttributes setTextColor:[NSColor blackColor]];
+                        [textAttributes setFontFamily:@"Helvetica"];
+                        [textAttributes setFontSize:12];
+
                     //span
                     }else if([chunkString caseInsensitiveCompare:@"SPAN"] == 0){
                         if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
@@ -356,6 +360,8 @@ int HTMLEquivalentForFontSize(int fontSize)
                         }
                     } else if ([chunkString caseInsensitiveCompare:@"/SPAN"] == 0 ) {
                         [textAttributes setTextColor:[NSColor blackColor]];
+                        [textAttributes setFontFamily:@"Helvetica"];
+                        [textAttributes setFontSize:12];
                     //Line Break
                     }else if([chunkString caseInsensitiveCompare:@"BR"] == 0 || [chunkString caseInsensitiveCompare:@"/BR"] == 0){
                         [attrString appendString:@"\r" withAttributes:nil];

@@ -159,6 +159,7 @@
         }
         
         if (PQresultStatus(res) == PGRES_NONFATAL_ERROR) {
+            //Disconnect and reconnect.
             PQfinish(conn);
             conn = PQconnectdb("");
             if (PQstatus(conn) == CONNECTION_BAD)

@@ -38,14 +38,30 @@
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 
     [checkBox_enableLogging setState:[[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
+    [checkBox_enableFont setState:[[preferenceDict objectForKey:KEY_LOGGER_FONT] boolValue]];
+    [checkBox_enableStyle setState:[[preferenceDict objectForKey:KEY_LOGGER_STYLE] boolValue]];
+    [checkBox_enableStatus setState:[[preferenceDict objectForKey:KEY_LOGGER_STATUS] boolValue]];
+
 }
 
 //
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == checkBox_enableLogging){
+    if(sender == checkBox_enableLogging) {
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LOGGER_ENABLE
+                                              group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableStatus) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_STATUS
+                                              group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableFont) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_FONT
+                                              group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableStyle) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_STYLE
                                               group:PREF_GROUP_LOGGING];
     }
 }

@@ -3,7 +3,12 @@
         {
             CLASS = AILoggerPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_enableLogging" = NSButton; }; 
+            OUTLETS = {
+                "checkBox_enableFont" = NSButton; 
+                "checkBox_enableLogging" = NSButton; 
+                "checkBox_enableStatus" = NSButton; 
+                "checkBox_enableStyle" = NSButton; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {

@@ -19,12 +19,15 @@
 #define PATH_LOGS		@"/Logs"
 #define PREF_GROUP_LOGGING	@"Logging"
 #define KEY_LOGGER_ENABLE	@"Enable Logging"
+#define	KEY_LOGGER_STYLE	@"Enable Style Logging"
+#define	KEY_LOGGER_FONT		@"Enable Font Logging"
+#define KEY_LOGGER_STATUS	@"Enable Status Logging"
 
 @class AILoggerPreferences;
 
 @interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
     AILoggerPreferences		*preferences;
-    BOOL			observingContent;
+    BOOL			observingContent, logStyle, logFont, logStatus;
     
     NSString			*logBasePath; 			//The base directory of all logs
 
