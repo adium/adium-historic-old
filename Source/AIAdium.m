@@ -26,7 +26,6 @@
 #import "ESFileTransferController.h"
 #import "ESContactAlertsController.h"
 #import "LNAboutBoxController.h"
-#import "AILicenseWindowController.h"
 #import "AICorePluginLoader.h"
 #import "AICoreComponentLoader.h"
 #import "AICrashController.h"
@@ -153,16 +152,6 @@
     completedApplicationLoad = NO;
 	advancedPrefsName = nil;
 	prefsCategory = -1;
-				
-	//Display the license agreement
-//	NSNumber	*viewedLicense = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_VIEWED_LICENSE];
-//	if(!viewedLicense || [viewedLicense intValue] < 1){
-//		if([AILicenseWindowController displayLicenseAgreement]){
-//			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:1] forKey:KEY_USER_VIEWED_LICENSE];
-//		}else{
-//			[NSApp terminate:nil];
-//		}
-//	}
 
 #ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
 	[self upgradePreferenceFolderFromAdium2ToAdium];
