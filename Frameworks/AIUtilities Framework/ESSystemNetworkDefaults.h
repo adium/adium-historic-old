@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Fri Jun 25 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 
 //Proxy types
 typedef enum

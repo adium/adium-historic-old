@@ -3,7 +3,7 @@
 //  AIUtilities.framework
 //
 //  Created by Evan Schoenberg on 12/2/04.
-//  Copyright 2004 The Adium Team. All rights reserved.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

@@ -3,7 +3,7 @@
 //  AIUtilities.framework
 //
 //  Created by Mac-arena the Bored Zo on 2004-12-29.
-//  Copyright 2004 Mac-arena the Bored Zo. All rights reserved.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

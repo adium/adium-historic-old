@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Colin Barrett on Mon Sep 22 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 @interface NSObject (HashingAdditions)

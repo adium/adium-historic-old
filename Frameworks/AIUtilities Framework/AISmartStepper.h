@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on Sat Jul 26 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 /*!

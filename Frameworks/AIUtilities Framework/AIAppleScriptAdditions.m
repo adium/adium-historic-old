@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on Mon Feb 16 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "AIAppleScriptAdditions.h"
