@@ -32,6 +32,11 @@
 		   message:(NSAttributedString *)inMessage;
 - (NSString *)type;
 
+//Comparing
+- (BOOL)isSimilarToContent:(AIContentObject *)inContent;
+- (BOOL)isFromSameDayAsContent:(AIContentObject *)inContent;
+
+//Content
 - (id)source;
 - (id)destination;
 - (NSDate *)date;
@@ -42,9 +47,7 @@
 - (void)setMessage:(NSAttributedString *)inMessage;
 - (NSAttributedString *)message;
 
-- (BOOL)isSimilarToContent:(AIContentObject *)inContent;
-- (BOOL)isFromSameDayAsContent:(AIContentObject *)inContent;
-
+//Behavior
 - (BOOL)filterContent;
 - (BOOL)trackContent;
 - (BOOL)displayContent;
