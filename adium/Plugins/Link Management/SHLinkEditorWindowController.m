@@ -19,12 +19,14 @@
 
 @implementation SHLinkEditorWindowController
 
+#pragma mark various init methods
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder
 {
     if(nil != (editableView = responder)) {
         SHLinkEditorWindowController  *newLinkEditor;
         newLinkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
         editLink = NO; //this is for a new link to be inserted
+        favoriteWindow = NO;
         [newLinkEditor showWindow:nil];
     }
 }
@@ -32,11 +34,21 @@
 - (void)initEditLinkWindowControllerWithResponder:(NSResponder *)responder
 {
     if(nil != (editableView = responder)) {
-        SHLinkEditorWindowController    *newLinkEditor;
-        newLinkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
+        SHLinkEditorWindowController    *linkEditor;
+        linkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
         editLink = YES; //this is to edit an existing link
-        [newLinkEditor showWindow:nil];
+        favoriteWindow = NO;
+        [linkEditor showWindow:nil];
     }
+}
+
+- (void)initAddLinkFavoritesWindowController
+{
+    SHLinkEditorWindowController    *favsEditor;
+    favsEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
+    editLink = NO;
+    favoriteWindow = YES;
+    [favsEditor showWindow:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -146,25 +158,29 @@
     NSString        *linkString = nil;
     NSRange          linkRange = NSMakeRange(0,0);
     
-    //get our infos out from the text's
-    urlString   = [[NSMutableString alloc] initWithString:[[textView_URL textStorage] string]];
-    linkString  = [textField_linkText stringValue];
-    linkRange   = selectionRange;
+    if(!favoriteWindow){
+        //get our infos out from the text's
+        urlString   = [[NSMutableString alloc] initWithString:[[textView_URL textStorage] string]];
+        linkString  = [textField_linkText stringValue];
+        linkRange   = selectionRange;
     
-    switch([textView_URL validationStatus]){
-        case SH_URL_DEGENERATE:
-            [urlString insertString:@"http://" atIndex:0];
-            break;
-        case SH_MAILTO_DEGENERATE:
-            [urlString insertString:@"mailto:" atIndex:0];
-            break;
+        switch([textView_URL validationStatus]){
+            case SH_URL_DEGENERATE:
+                [urlString insertString:@"http://" atIndex:0];
+                break;
+            case SH_MAILTO_DEGENERATE:
+                [urlString insertString:@"mailto:" atIndex:0];
+                break;
+        }
+    
+        //call the insertion method
+        [self insertLinkTo:[urlString string]
+                  withText:linkString
+                    inView:editableView
+                 withRange:linkRange];
+    }else{
+        [self addURLToFavorites:nil];
     }
-    
-    //call the insertion method
-    [self insertLinkTo:[urlString string]
-              withText:linkString
-                inView:editableView
-             withRange:linkRange];
              
     [self closeWindow:nil];
 }

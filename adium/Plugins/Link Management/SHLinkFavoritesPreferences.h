@@ -10,6 +10,7 @@
 @interface SHLinkFavoritesPreferences : AIPreferencePane {
 
     IBOutlet AIPlasticButton            *removeButton;
+    IBOutlet AIPlasticButton            *addButton;
     
     IBOutlet SHLinkFavoritesManageView  *favoritesList;
 

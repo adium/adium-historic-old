@@ -72,10 +72,15 @@
     }
 }
 
--(IBAction)removeLink:(id)sender
+- (IBAction)removeLink:(id)sender
 {
     [[[AIObject sharedAdiumInstance] preferenceController] setPreference:nil forKey:[self selectedLink] group:PREF_GROUP_LINK_FAVORITES];
     [self buildLinksList];
+}
+
+- (IBAction)addLink:(id)sender
+{
+    [[SHLinkEditorWindowController alloc] initAddLinkFavoritesWindowController];
 }
 
 - (void)configureControlDimming

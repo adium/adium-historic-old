@@ -22,20 +22,24 @@
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
     BOOL                                     editLink;
+    BOOL                                     favoriteWindow;
     
     NSRange                                  selectionRange;
     NSResponder                             *editableView;
     
-    NSDictionary                     *favoritesDict;
+    NSDictionary                            *favoritesDict;
 }
 
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder;
 - (void)initEditLinkWindowControllerWithResponder:(NSResponder *)responder;
+- (void)initAddLinkFavoritesWindowController;
+
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 
 - (IBAction)acceptURL:(id)sender;
 - (IBAction)selectFavoriteURL:(id)sender;
 - (IBAction)addURLToFavorites:(id)sender;
+
 - (void)favoritesChanged:(NSNotification *)notification;
 @end

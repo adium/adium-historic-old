@@ -28,12 +28,15 @@
 
 - (NSDictionary *)restorablePreferences
 {
-    return(nil);
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_LINK_FAVORITES];
+	return(defaultsDict);
 }
 
 - (void)viewDidLoad
 {
     [removeButton setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
+    [addButton setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
 }
 
 - (void)viewWillClose
