@@ -36,6 +36,8 @@
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;
 
+	BOOL				namesAreCaseSensitive;
+	
 	BOOL				inDealloc;
 }
 
