@@ -7308,6 +7308,7 @@
 				3428328D07D2644F004F01C9,
 				342838EE07D2D004004F01C9,
 				3428392507D2D013004F01C9,
+				4BB5B78207D2DC4900CFE06F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17069,6 +17070,20 @@
 			settings = {
 			};
 		};
+		4BB5B78107D2DC4900CFE06F = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "pref-status.png";
+			path = "Resources/pref-status.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BB5B78207D2DC4900CFE06F = {
+			fileRef = 4BB5B78107D2DC4900CFE06F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BB5CBB006EDF04D009B4517 = {
 			children = (
 				349C6E8B07C972B2005EB896,
@@ -20899,6 +20914,7 @@
 				34D8336C07CBD807006466F2,
 				34D8336D07CBD807006466F2,
 				34D8336E07CBD807006466F2,
+				4BB5B78107D2DC4900CFE06F,
 			);
 			isa = PBXGroup;
 			name = Icons;
