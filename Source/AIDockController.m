@@ -55,19 +55,33 @@
     needsDisplay = NO;
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_GENERAL];
     
     //Observe pref changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[owner notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 
     //We always want to stop bouncing when Adium is made active
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillChangeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(appWillChangeActive:) 
+												 name:NSApplicationWillBecomeActiveNotification 
+											   object:nil];
 
     //We also stop bouncing when Adium is no longer active
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillChangeActive:) name:NSApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(appWillChangeActive:) 
+												 name:NSApplicationWillResignActiveNotification 
+											   object:nil];
 
-    
+    [[owner notificationCenter] addObserver:self 
+								   selector:@selector(adiumVersionUpgraded:) 
+									   name:Adium_VersionUpgraded
+									 object:nil];
 }
 
 - (void)closeController
@@ -108,39 +122,39 @@
     
 #ifdef MAC_OS_X_VERSION_10_0
             //Write the icon to the Adium application bundle so finder will see it
-			NSString	    *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-			NSString		*lastLaunchedVersion = [[owner preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
-																							group:PREF_GROUP_GENERAL];
-			
+
 			//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
 			//change we always want to update it
-			if(notification != nil || !lastLaunchedVersion || !version || ![lastLaunchedVersion isEqualToString:version]){
-                NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
-                IconFamily		*iconFamily;
-                NSImage			*image;
-
-				image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
-                if(image){
-                    iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
-                    [iconFamily writeToFile:icnsPath];
-					
-					//Finder won't update Adium's icon to match the new one until it is restarted if we don't
-					//tell NSWorkspace to note the change.
-					[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[[NSBundle mainBundle] bundlePath]];
-                }
-
-				//Remember the version of Adium this image was set for, so we don't need to do it again
-				if(version){
-					[[owner preferenceController] setPreference:version
-														 forKey:KEY_LAST_VERSION_LAUNCHED
-														  group:PREF_GROUP_GENERAL];
-				}
+			if(notification != nil){
+				[self updateAppBundleIcon];
 			}
 #endif
             //Recomposite the icon
             [self _setNeedsDisplay];
         }
     }
+}
+
+- (void)adiumVersionUpgraded:(NSNotification *)notification
+{
+	[self updateAppBundleIcon];
+}
+
+- (void)updateAppBundleIcon
+{
+	NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
+	IconFamily		*iconFamily;
+	NSImage			*image;
+	
+	image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
+	if(image){
+		iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
+		[iconFamily writeToFile:icnsPath];
+		
+		//Finder won't update Adium's icon to match the new one until it is restarted if we don't
+		//tell NSWorkspace to note the change.
+		[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[[NSBundle mainBundle] bundlePath]];
+	}
 }
 
 //Icons ------------------------------------------------------------------------------------

@@ -132,11 +132,11 @@ DeclareString(UID);
 
 	//
 	[self prepareContactInfo];
-	
-	// AIContactStatusEvents Stuff
-    onlineDict = [[NSMutableDictionary alloc] init];
-    awayDict = [[NSMutableDictionary alloc] init];
-    idleDict = [[NSMutableDictionary alloc] init];
+
+	[[owner notificationCenter] addObserver:self 
+								   selector:@selector(adiumVersionWillBeUpgraded:) 
+									   name:Adium_VersionWillBeUpgraded
+									 object:nil];
 }
 
 //finish initing
@@ -160,6 +160,16 @@ DeclareString(UID);
 //    [contactInfoCategory release];
 
     [super dealloc];
+}
+
+- (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
+{
+	//After 0.63 - metaContacts dictionary changed; old dictionary is very large and quite useless.
+	if ([[[notification userInfo] objectForKey:@"lastLaunchedVersion"] floatValue] <= 0.63){
+		[self setPreference:nil
+					 forKey:KEY_FLAT_METACONTACTS
+					  group:PREF_GROUP_CONTACT_LIST];
+	}		
 }
 
 //Local Contact List Storage -------------------------------------------------------------------------------------------
@@ -701,7 +711,7 @@ DeclareString(UID);
 	//AIMetaContact will handle reassigning the list object's grouping to being itself
 	if (success = [metaContact addObject:listObject]){
 		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalObjectID]];
-
+		
 		//Remove the object from its previous containing group
 		if (localGroup){
 			[localGroup removeObject:listObject];
@@ -797,7 +807,7 @@ DeclareString(UID);
 	
 	int				count = [UIDsArray count];
 	int				i;
-	
+
 	//Build an array of all contacts matching this description (multiple accounts on the same service listing
 	//the same UID mean that we can have multiple AIListContact objects with a UID/service combination)
 	for (i = 0; i < count; i++){
