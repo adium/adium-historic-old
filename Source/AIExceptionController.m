@@ -68,6 +68,7 @@ static BOOL catchExceptions = NO;
 		   [theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound || //NSKeyedUnarchiver can get confused and throw this; it's out of our control
 		   [theReason rangeOfString:@"-whiteComponent not defined"].location != NSNotFound || //Random NSColor exception for certain coded color values
 		   [theReason isEqualToString:@"Failed to get fache -4"] || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
+		   [theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
 		   !theName || //Harmless
 		   [theName isEqualToString:@"GIFReadingException"] || //GIF reader sucks
 		   [theName isEqualToString:@"NSPortTimeoutException"] || //Harmless - it timed out for a reason
