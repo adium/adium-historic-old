@@ -8,7 +8,9 @@
 
 @interface CSDisconnectAllPlugin : AIPlugin {
     NSMenuItem *connectItem;
+	NSMenuItem *connectDockItem;
     NSMenuItem *disconnectItem;
+    NSMenuItem *disconnectDockItem;
     NSMenuItem *cancelConnectItem;
 }
 

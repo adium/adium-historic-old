@@ -26,10 +26,16 @@ static NSMenu			* menu_Games;
 	if(menu_Games == nil)
 	{
 		menu_Games = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-		menuItem_newGame = [[[NSMenuItem alloc] initWithTitle:MENU_NEWGAME action:NULL keyEquivalent:@""] autorelease];
-		menuItem_invite = [[[NSMenuItem alloc] initWithTitle:MENU_INVITE action:NULL keyEquivalent:@""] autorelease];
+		
+		menuItem_newGame = [[[NSMenuItem alloc] initWithTitle:MENU_NEWGAME
+													   action:NULL 
+												keyEquivalent:@""] autorelease];
+		menuItem_invite = [[[NSMenuItem alloc] initWithTitle:MENU_INVITE
+													  action:NULL 
+											   keyEquivalent:@""] autorelease];
 		[menuItem_newGame setSubmenu:menu_Games];
 		[menuItem_invite setSubmenu:menu_Games];
+		
 		[[adium menuController] addContextualMenuItem:menuItem_invite toLocation:Context_Contact_Manage];
 		[[adium menuController] addMenuItem:menuItem_newGame toLocation:LOC_File_New];
 	}

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
 | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
 | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -20,6 +20,7 @@
 
 #define	CONTACT_NOTES_NIB			@"ContactNotes"		 //Filename of the notes info view
 #define	PREF_GROUP_NOTES			@"Notes"                //Preference group to store notes in
+
 #define PREF_GROUP_ADDRESSBOOK                  @"Address Book"
 #define KEY_AB_NOTE_SYNC                        @"AB Note Sync"
 
@@ -98,10 +99,10 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    NSAttributedString * entry = nil;
-    if([inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
-        NSString *currentNotes;
-        currentNotes = [(AIListContact *)inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
+    NSAttributedString  *entry = nil;
+	NSString			*currentNotes;
+    
+	if(currentNotes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
         entry = [[NSAttributedString alloc] initWithString:currentNotes];
     }
     
@@ -161,22 +162,6 @@
 - (NSArray *)_addNotes:(NSString *)inNotes toObject:(AIListObject *)inObject notify:(BOOL)notify;
 {    
     return(nil);
-}
-
-//need to watch it as it changes as we can't catch the window closing
-- (void)controlTextDidChange:(NSNotification *)theNotification
-{
-    if(delayedChangesTimer){
-        if([delayedChangesTimer isValid]){
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
-    
-    delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
-                                                            target:self
-                                                          selector:@selector(_delayedSetNotes:) 
-                                                          userInfo:nil repeats:NO] retain];
 }
 
 - (void)_delayedSetNotes:(NSTimer *)inTimer

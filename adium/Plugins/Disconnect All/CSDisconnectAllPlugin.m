@@ -21,11 +21,23 @@
 												 action:@selector(disconnectAll:)
 										  keyEquivalent:@"K"] autorelease];
     
+    disconnectDockItem = [[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
+												 target:self
+												 action:@selector(disconnectAll:)
+										  keyEquivalent:@""];
+	
+	
     connectItem = [[[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
                                               target:self
                                               action:@selector(connectAll:)
                                        keyEquivalent:@"k"] autorelease];
     [connectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+
+    
+    connectDockItem = [[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
+                                              target:self
+                                              action:@selector(connectAll:)
+                                       keyEquivalent:@""];
     
     
     cancelConnectItem = [[[NSMenuItem alloc] initWithTitle:CANCEL_MENU_TITLE
@@ -37,6 +49,9 @@
     [[adium menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
     [[adium menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
     [[adium menuController] addMenuItem:cancelConnectItem toLocation:LOC_File_Accounts];
+
+	[[adium menuController] addMenuItem:connectDockItem toLocation:LOC_Dock_Status];
+	[[adium menuController] addMenuItem:disconnectDockItem toLocation:LOC_Dock_Status];
 }
 
 -(void)uninstallPlugin
@@ -44,6 +59,8 @@
     [[adium menuController] removeMenuItem:disconnectItem];
     [[adium menuController] removeMenuItem:connectItem];
     [[adium menuController] removeMenuItem:cancelConnectItem];
+	[[adium menuController] removeMenuItem:connectDockItem];
+	[[adium menuController] removeMenuItem:disconnectDockItem];
 }
 
 -(void)disconnectAll:(id)sender
@@ -78,7 +95,7 @@
     NSEnumerator *accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     AIAccount	 *account;
 	
-    if(menuItem == disconnectItem) {
+    if(menuItem == disconnectItem || menuItem == disconnectDockItem) {
         while(account = [accountEnumerator nextObject]) {
 			
 			//Enable it as soon as we find an account which is online
@@ -86,7 +103,7 @@
 				return YES;
             }
         }
-    }else if(menuItem == connectItem) {
+    }else if(menuItem == connectItem || menuItem == connectDockItem) {
         while(account = [accountEnumerator nextObject]) {
 			
 			//Enable it as soon as we find an account which is offline

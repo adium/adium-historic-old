@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
- * $Revision: 1.5 $
- * $Date: 2003/12/22 06:28:01 $
- * $Author: jmelloy $
+ * $Revision: 1.6 $
+ * $Date: 2004/05/24 06:03:44 $
+ * $Author: evands $
  */
 
 #import "libpq-fe.h"

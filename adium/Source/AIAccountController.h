@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.19 $
- * $Date: 2004/05/06 08:20:11 $
+ * $Revision: 1.20 $
+ * $Date: 2004/05/24 06:04:01 $
  * $Author: evands $
  **/
 

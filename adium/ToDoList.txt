@@ -29,7 +29,6 @@ Contact List:
 	- Remove contact list font preference.  Hook this up to cmd-T
 	- Remove the advanced option for vertical resizing, since this is already covered in the main preferences.
 	* Renaming doesn't work at the moment.
-	* Alias doesn't stick on quit. This is needed for those services that don't support certain characters.
 	
 Accounts:
 	+ Auto-complete aliases in log viewer
@@ -48,7 +47,6 @@ Message Window:
 	
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
-	= With offline contacts visible, hide the group counting 'visible' value.
 
 Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
@@ -64,33 +62,13 @@ Other:
 	+ Display new mail notices for the accounts that support it.  This is bloat - but some people expect it.
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
 
+Contact alerts:
+	+ Add icons (16x16) to event types, and display them in the event list (still needed on some.  make the ESContactAlert subclasses respond to -icon)
+	+ Menu has "all contacts in ___" items, and "all contacts" item (?)
+
 //-------------------------------------------------------------------------------------------------------
 // Big Stuff
 //-------------------------------------------------------------------------------------------------------
-
-Contact alerts:
-	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
-	(Model: http://homepage.mac.com/adamiser/sortathis6.png)
-
-	Steps:
-        = Remove alerts preference pane
-	= Remove contact menu from alert window
-	= Remove event popup from alert window
-	= Disallow editing of events
-	= Remove event view insertion (on selection)
-	= Rework context menus.. change to "Edit Alerts"
-	+ Add icons (16x16) to event types, and display them in the event list (still needed on some.  make the ESContactAlert subclasses respond to -icon)
-	= Add toolbar to window, add, edit, delete
-	= Add sheet for 'add', 'edit'.  Must be independent from alert window.
-	= Sheet has event, action, and contact (submenued by group) popups.
-	= Add source list on left of all objects with alerts
-	= Clicking in source list changes displayed
-	+ Menu has "all contacts in ___" items, and "all contacts" item (?)
-	= Dynamically load view into sheet depending on selected alert
-	= Redesign views, simplify, use big controls
-	= Add "Add alert" context menu - that opens the sheet as a panel and allows easy adding
-	= Add "Contact Alerts" menu item to window menu for opening alert window
-	= Auto-fill sheet for new alert based on selection in window on clicking add
 
 Contact list display:
 	Add user icon and extended status display support to the contact list, and simplify its
@@ -120,11 +98,6 @@ Event Notifications (the feature formerly known as Event Bezel):
     # Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
 	# Give the notification window a titlebar, and allow it to be repositioned while visible.
       not sure about adding a titlebar to it [Jorge]
-    = Hook the thing into the new alert system.    = Add one more advanced preference to make it unclickable, changing the visual appearance of the window so it is less obstrusive.
-    = Detect when the bezel is displaying with no position info (from autoSaveFrameName) and put it in a default position like the old bezel "default" one.
-	= Color the entire bezel to match the event being displayed
-	= Make the bezel smaller, clearer, easier to read, prettier
-	= Give the event info few preferences if any.
 
 [Colin]
 Contact Blocking:
@@ -232,7 +205,7 @@ http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0
 
 * Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
 
-* WebKit caching is meaning that buddy icons don't update until Adium restarts.
+* WebKit caching is meaning that buddy icons don't update until Adium restarts. 
 
 * If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
 
