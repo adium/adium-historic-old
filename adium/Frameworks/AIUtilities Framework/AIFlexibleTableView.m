@@ -208,48 +208,62 @@
 - (void)copy:(id)sender
 {
     NSMutableAttributedString	*copyString = [[NSMutableAttributedString alloc] init];
-    AIFlexibleTableCell		*startCell, *endCell;
-    int				row, column, index;
-    if(selection_startRow > selection_endRow) //If the start cell is below the end cell, swap
-    {
-        row = selection_endRow;
-        selection_endRow = selection_startRow;
-        selection_startRow = row;
+    int				row, column, index, lowColumn, highColumn;
 
-        column = selection_endColumn;
-        selection_endColumn = selection_startColumn;
-        selection_startColumn = column;
-
-        index = selection_endIndex;
-        selection_endIndex = selection_startIndex;
-        selection_startIndex = index;
-    }
-
-    startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];       
-    //Select text in the first cell
     if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
+        AIFlexibleTableCell *startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
         [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:selection_endIndex]];
-    }else //The selection spans at least two cells, either in columns or rows
+    }
+    else //The selection spans at least two cells
     {
-        //Allow for partial selection of the first cell
-        [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:10000]];
+        if(selection_startRow > selection_endRow) //If the start cell is below the end cell, swap
+        {
+            row = selection_endRow;
+            selection_endRow = selection_startRow;
+            selection_startRow = row;
 
-    //Select all text in every cell between start and end - traverse each row, column by column
-    for(row = selection_startRow ; row <= selection_endRow; row++) {
-        for(column = selection_startColumn; column <= selection_endColumn; column++) {
-            if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
+            column = selection_endColumn;
+            selection_endColumn = selection_startColumn;
+            selection_startColumn = column;
+
+            index = selection_endIndex;
+            selection_endIndex = selection_startIndex;
+            selection_startIndex = index;
+        }
+
+        if(selection_startColumn < selection_endColumn) //left-to-right selection
+        {
+            lowColumn = selection_startColumn;
+            highColumn = selection_endColumn;
+        }
+        else //right-to-left selection
+        {
+            lowColumn = selection_endColumn;
+            highColumn = selection_startColumn;
+        }
+
+        //Select all text in every cell between start and end - traverse each row, column by column, left-to-right
+        for(row = selection_startRow ; row <= selection_endRow; row++) {
+            for(column = lowColumn; column <= highColumn; column++) {
                 AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row];
-                [copyString appendAttributedString:[cell stringFromIndex:0 to:10000]]; //10000 characters is somewhat hack-ish, but it works for now
-            }
-        } //end column for-loop
-        if (row != selection_endRow) //Don't endline the last row (b/c remainder is still waiting to be read, below)
-            [copyString appendString:@"\r" withAttributes:nil]; //end line after each row
-    } //end row for-loop
 
-    //Select text in the last cell (to allow for a partial selection of the cell)
-    endCell =[[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];
-    [copyString appendAttributedString:[endCell stringFromIndex:0 to:selection_endIndex]];
-    
+                if(row == selection_startRow && column == selection_startColumn) { //starting cell
+                    if (lowColumn == selection_startColumn)  //copy index to end of cell
+                         [copyString appendAttributedString:[cell stringFromIndex:selection_startIndex to:10000]];
+                    else //copy left to index of cell
+                         [copyString appendAttributedString:[cell stringFromIndex:0 to:selection_startIndex]];
+                } else if(row == selection_endRow && column == selection_endColumn) { //ending cell
+                    if (lowColumn == selection_endColumn) //copy index to end of cell
+                        [copyString appendAttributedString:[cell stringFromIndex:selection_endIndex to:10000]];
+                    else //copy left to index of cell
+                        [copyString appendAttributedString:[cell stringFromIndex:0 to:selection_endIndex]];
+                } else { //intermediary cells - copy entire contents
+                    [copyString appendAttributedString:[cell stringFromIndex:0 to:10000]];
+                }
+            } //end column for-loop
+                [copyString appendString:@"\r" withAttributes:nil]; //end line after each row
+        } //end row for-loop
+
     }
     [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
     [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
