@@ -75,8 +75,8 @@
 				
 				[entryString appendString:[contact formattedUID]];
 				
-				serviceIcon = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal];
-				//[[[listContact account] menuImage] imageByScalingToSize:NSMakeSize(9,9)];
+				serviceIcon = [[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal]
+									imageByScalingToSize:NSMakeSize(9,9)];
 				if (serviceIcon){
 					NSTextAttachment		*attachment;
 					NSTextAttachmentCell	*cell;
