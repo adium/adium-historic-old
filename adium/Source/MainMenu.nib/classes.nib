@@ -160,7 +160,12 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = ESFileTransferController; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {runToolbarConfigurationPalette = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = testgradview; LANGUAGE = ObjC; SUPERCLASS = NSView; }
     ); 
