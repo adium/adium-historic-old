@@ -39,4 +39,12 @@
 {
 	return(NO);
 }
+
+//ICQ doesn't support automatic typing notification clearing after a send, but AIM and .Mac do, so we return YES
+//for smooth operation, particularly with iChat where this is very noticeable.
+- (BOOL)suppressTypingNotificationChangesAfterSend
+{
+	return(YES);
+}
+
 @end
