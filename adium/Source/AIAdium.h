@@ -443,8 +443,8 @@ typedef enum {
     AIListObject		*tooltipListObject;
     NSString			*tooltipString;
     
-    NSString		*errorTitle;
-    NSString		*errorDesc;
+    NSString			*errorTitle;
+    NSString			*errorDesc;
 
 }
 

@@ -85,6 +85,7 @@
     AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
 
     if(!array){
+	NSLog(@"array for key:%@ not found and created", inKey);
         array = [[AIMutableOwnerArray alloc] init];
         [displayDictionary setObject:array forKey:inKey];
         [array release];
@@ -118,6 +119,7 @@
     AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
 
     if(!array){
+	NSLog(@"array for key:%@ not found and created", inKey);
         array = [[AIMutableOwnerArray alloc] init];
         [statusDictionary setObject:array forKey:inKey];
         [array release];

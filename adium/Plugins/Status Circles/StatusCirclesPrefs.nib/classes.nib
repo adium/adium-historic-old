@@ -5,7 +5,6 @@
             CLASS = AIStatusCirclesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_displayBackgroundStatusBar" = NSButton; 
                 "checkBox_displayIdle" = NSButton; 
                 "checkBox_displayStatusCircle" = NSButton; 
                 "checkBox_displayStatusCircleOnLeft" = NSButton; 

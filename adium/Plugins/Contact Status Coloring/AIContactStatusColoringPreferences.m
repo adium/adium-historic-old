@@ -72,11 +72,6 @@
                                              forKey:KEY_ONLINE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_openTab){
-        [[owner preferenceController] setPreference:[[colorWell_openTab color] stringRepresentation]
-                                             forKey:KEY_OPEN_TAB_COLOR
-                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
-
     }else if(sender == colorWell_idleAndAway){
         [[owner preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
                                              forKey:KEY_IDLE_AWAY_COLOR
@@ -117,11 +112,6 @@
     }else if(sender == colorWell_onlineLabel){
         [[owner preferenceController] setPreference:[[colorWell_onlineLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_ONLINE_COLOR
-                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
-
-    }else if(sender == colorWell_openTabLabel){
-        [[owner preferenceController] setPreference:[[colorWell_openTabLabel color] stringRepresentation]
-                                             forKey:KEY_LABEL_OPEN_TAB_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idleAndAwayLabel){
@@ -170,12 +160,6 @@
     }else if(sender == checkBox_online){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_ONLINE_ENABLED
-                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
-
-    }else if(sender == checkBox_openTab){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_OPEN_TAB_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
@@ -236,7 +220,6 @@
     [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-    [colorWell_openTab setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor]];
     [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
 
     [colorWell_awayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
@@ -246,7 +229,6 @@
     [colorWell_typingLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContentLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
     [colorWell_onlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
-    [colorWell_openTabLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_OPEN_TAB_COLOR] representedColor]];
     [colorWell_idleAndAwayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
 
     [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
@@ -256,7 +238,6 @@
     [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
     [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
     [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
-    [checkBox_openTab setState:[[preferenceDict objectForKey:KEY_OPEN_TAB_ENABLED] boolValue]];
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
 
     [self configureControlDimming];
@@ -285,9 +266,6 @@
 
     [colorWell_online setEnabled:[checkBox_online state]];
     [colorWell_onlineLabel setEnabled:[checkBox_online state]];
-
-    [colorWell_openTab setEnabled:[checkBox_openTab state]];
-    [colorWell_openTabLabel setEnabled:[checkBox_openTab state]];
 
     [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
     [colorWell_idleAndAwayLabel setEnabled:[checkBox_idleAndAway state]];
