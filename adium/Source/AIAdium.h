@@ -36,6 +36,8 @@
     
     NSNotificationCenter                    *notificationCenter;
     NSMutableDictionary                     *eventNotifications;
+    
+    BOOL                                    completedApplicationLoad;
 }
 
 + (NSString *)applicationSupportDirectory;
