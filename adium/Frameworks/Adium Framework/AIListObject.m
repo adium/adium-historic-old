@@ -181,6 +181,8 @@ DeclareString(FormattedUID);
 //Quickly set a status key for this object
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
+	[statusUpdateLock lock];
+	
 	if(key){
 		if(value){
 			[statusDictionary setObject:value forKey:key];
@@ -203,11 +205,15 @@ DeclareString(FormattedUID);
 			[changedStatusKeys addObject:key];
 		}
 	}
+	
+	[statusUpdateLock unlock];
 }
 
 //Perform a status change after a short delay
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
+	[delayedStatusTimerLock lock];
+	
 	if(!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
 	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
 														  target:self
@@ -218,6 +224,8 @@ DeclareString(FormattedUID);
 															nil]
 														 repeats:NO];
 	[delayedStatusTimers addObject:timer];
+	
+	[delayedStatusTimerLock unlock];
 }
 - (void)_applyDelayedStatus:(NSTimer *)inTimer
 {
