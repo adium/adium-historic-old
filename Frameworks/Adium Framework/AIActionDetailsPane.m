@@ -25,7 +25,7 @@
 
 //For subclasses -------------------------------------------------------------------------------
 //
-- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)listObject 
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	
 }

@@ -14,7 +14,7 @@
 
 + (AIActionDetailsPane *)actionDetailsPane;
 + (AIActionDetailsPane *)actionDetailsPaneForPlugin:(id)inPlugin;
-- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)listObject;
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject;
 - (NSDictionary *)actionDetails;
 
 @end
