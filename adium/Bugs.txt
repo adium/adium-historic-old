@@ -18,9 +18,6 @@
 	We don't want to spawn new windows while Adium is hudden.  Windows should be qued and shown when
 	Adium is unhid.
 
-- Auto-resizing is not docking
-	Auto-resizing is no longer docking to the bottom of the screen.
-
 - Manual ordering not saving
 	All manual ordering is lost on relaunch
 
