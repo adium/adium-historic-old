@@ -9,7 +9,6 @@
 @class AIBrowserColumn;
 
 @interface AIBrowser : NSView {
-	AIBrowserColumn	*rootColumn;
 	NSMutableArray	*columnArray;
 	id				dataSource;
 }
@@ -18,6 +17,7 @@
 - (id)dataSource;
 - (void)reloadData;
 - (void)sizeToFit;
+- (id)selectedItem;
 
 @end
 

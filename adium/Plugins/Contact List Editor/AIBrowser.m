@@ -9,13 +9,14 @@
 #import "AIBrowser.h"
 #import "AIBrowserColumn.h"
 
-#define COLUMN_WIDTH 	140
+#define COLUMN_WIDTH 	180
 
 @interface AIBrowser (PRIVATE)
 - (void)_init;
 - (AIBrowserColumn *)newColumnForObject:(id)object;
 - (void)addColumn:(AIBrowserColumn *)column;
 - (void)removeLastColumn;
+- (id)selectedItemInColumn:(AIBrowserColumn *)column;
 @end
 
 @implementation AIBrowser
@@ -39,14 +40,12 @@
 }
 
 - (void)_init
-{	
+{		
 	dataSource = nil;
 	columnArray = [[NSMutableArray alloc] init];
 	
 	//Start off w/ one column
-	rootColumn = [[self newColumnForObject:nil] retain];
-	[[rootColumn scrollView] setFrameOrigin:NSMakePoint(0, 0)];
-	[self addSubview:[rootColumn scrollView]];
+	[self addColumn:[self newColumnForObject:nil]];
 	
 	
 //	
@@ -66,6 +65,8 @@
 	NSTableView		*table;
 	NSTableColumn	*column;
 	NSScrollView	*scroll;
+	
+	NSLog(@"new for %@",[object displayName]);
 	
 	//Enclosing scroll
 	scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, COLUMN_WIDTH, [self frame].size.height)];
@@ -106,13 +107,15 @@
 
 - (void)addColumn:(AIBrowserColumn *)column
 {
-	NSPoint		position = NSMakePoint((([columnArray count] + 1) * (COLUMN_WIDTH + 4)), 0);
+	NSPoint		position = NSMakePoint(([columnArray count] * (COLUMN_WIDTH + 4)), 0);
 	
 	[[column scrollView] setFrameOrigin:position];
 	[self addSubview:[column scrollView]];
 	[columnArray addObject:column];
 	
 	[self sizeToFit];
+	[[column tableView] reloadData];
+	
 }
 				   
 - (void)removeLastColumn
@@ -127,7 +130,7 @@
 
 - (void)sizeToFit
 {
-	[self setFrameSize:NSMakeSize((([columnArray count] + 1) * (COLUMN_WIDTH + 4)) - 4, [self frame].size.height)];
+	[self setFrameSize:NSMakeSize(([columnArray count] * (COLUMN_WIDTH + 4)) - 4, [self frame].size.height)];
 	[self setNeedsDisplay:YES];
 }
 
@@ -144,10 +147,38 @@
 
 - (void)reloadData
 {
-	[[rootColumn tableView] reloadData];
+	NSEnumerator	*enumerator;
+	AIBrowserColumn	*column;
 	
+	enumerator = [columnArray reverseObjectEnumerator];
+	while(column = [enumerator nextObject]){
+		[[column tableView] reloadData];
+	}
 }
 
+//returns the rightmost selected item
+- (id)selectedItem
+{
+	NSEnumerator	*enumerator;
+	AIBrowserColumn	*column;
+	
+	//Walk right to left, looking for a selection
+	NSLog(@"%@",[[self window] firstResponder]);
+	enumerator = [columnArray reverseObjectEnumerator];
+	while(column = [enumerator nextObject]){
+		if([[self window] firstResponder] == [column tableView]){
+			return([self selectedItemInColumn:column]);
+		}
+	}
+	
+	return(nil);
+}
+
+//- (void)tableViewLostFocus:(NSNotification *)notification
+//{
+//	NSLog(@"Lost focus: %@",[notification object]);
+//	
+//}
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
@@ -162,12 +193,7 @@
 	}else{
 		columnIndex++;
 	}
-
-	if([table numberOfSelectedRows] != 0){
-		selectedItem = [dataSource browserView:self
-										 child:[table selectedRow]
-										ofItem:[[self columnForTableView:table] representedObject]];
-	}
+	selectedItem = [self selectedItemInColumn:[self columnForTableView:table]];
 
 	//Close down all table views after this one
 	while(columnIndex < [columnArray count]){
@@ -180,6 +206,19 @@
 	}
 }
 
+- (id)selectedItemInColumn:(AIBrowserColumn *)column
+{
+	id	selectedItem = nil;
+	
+	if([[column tableView] numberOfSelectedRows] != 0){
+		selectedItem = [dataSource browserView:self
+										 child:[[column tableView] selectedRow]
+										ofItem:[column representedObject]];
+	}
+	
+	return(selectedItem);
+}
+
 - (void)drawRect:(NSRect)rect
 {
 	[[NSColor orangeColor] set];
@@ -190,7 +229,7 @@
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	AIBrowserColumn	*column = [self columnForTableView:tableView];
-	id				item = (column == rootColumn ? nil : [column representedObject]);
+	id				item = (([columnArray count] && column == [columnArray objectAtIndex:0]) ? nil : [column representedObject]);
 
 	return([dataSource browserView:self numberOfChildrenOfItem:item]);
 }

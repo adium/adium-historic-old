@@ -810,6 +810,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Delete the selection
 - (IBAction)delete:(id)sender
 {
+	AIListObject	*object = [browser_contactList selectedItem];
+	
+	NSLog(@"Selected: %@",[object displayName]);
+	if(object){
+//		[[adium contactController] removeListObject:object fromGroup:];
+	}
+	
+	
 //    NSDictionary	*contextInfo;
 //    NSMutableArray	*handles;
 //    NSMutableArray 	*groups;
