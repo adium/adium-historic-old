@@ -67,6 +67,7 @@ static NSImage *pushIndicatorImage = nil;
 	
     [chat release];
 	[associatedView release];
+	[defaultTypingAttributes release];
     [returnArray release]; returnArray = nil;
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
