@@ -1,6 +1,6 @@
 //
 //  ESFileTransferController.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
 //
