@@ -28,7 +28,7 @@ a { text-decoration: none; }
 	border-top: 1px dotted #E9E9E9;
 }
 
-.container_next { margin-top: 2px; }
+.container_next { padding-top: 2px; }
 
 .container, .container_next
 {
@@ -36,7 +36,7 @@ a { text-decoration: none; }
 	padding-right: 8px;
 	padding-bottom: 0px;
 	margin-left: 0px;
-	margin-bottom: 5px;
+	padding-bottom: 5px;
 }
 
 .fromstatus
