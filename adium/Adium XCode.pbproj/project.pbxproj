@@ -14253,6 +14253,7 @@
 			files = (
 				34BDA031053147BF000AB133,
 				4BA81D5B05B0ABEC001E2143,
+				4B7BB56505B19DD500598C55,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14401,6 +14402,7 @@
 			files = (
 				34BDA047053147BF000AB133,
 				4BA81D5C05B0ABED001E2143,
+				4B7BB56605B19DD500598C55,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20736,6 +20738,36 @@
 		};
 		4B7BB54205B1906700598C55 = {
 			fileRef = 4B7BB54105B1906700598C55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BB56305B19DD500598C55 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListEditorCell.h;
+			path = "Plugins/Contact List Editor/AIListEditorCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7BB56405B19DD500598C55 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListEditorCell.m;
+			path = "Plugins/Contact List Editor/AIListEditorCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7BB56505B19DD500598C55 = {
+			fileRef = 4B7BB56305B19DD500598C55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BB56605B19DD500598C55 = {
+			fileRef = 4B7BB56405B19DD500598C55;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -28482,6 +28514,8 @@
 				F570A59D03704B9501A8010A,
 				F55B411203AB88D601A8010A,
 				F55B411303AB88D601A8010A,
+				4B7BB56305B19DD500598C55,
+				4B7BB56405B19DD500598C55,
 				F55B411003AB88D601A8010A,
 				F55B411103AB88D601A8010A,
 				4BFB1570043497E700A8010A,

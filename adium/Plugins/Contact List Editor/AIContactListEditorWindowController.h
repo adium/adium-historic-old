@@ -22,6 +22,8 @@
 @interface AIContactListEditorWindowController : AIWindowController {
 
 	IBOutlet	NSBrowser		*browser_contactList;
+
+	NSMutableArray	*columns;
 	
 //    IBOutlet	AIAlternatingRowOutlineView	*outlineView_contactList;	//The contact list outline view
 //    IBOutlet	NSScrollView			*scrollView_contactList;	//The contact list's scroll view
