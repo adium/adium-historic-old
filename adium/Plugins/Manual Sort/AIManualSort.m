@@ -49,19 +49,34 @@ int manualSort(id objectA, id objectB, void *context)
     BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
     BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
 
-    if(invisibleA && !invisibleB){
+    if(invisibleA && !invisibleB){ //Invisible to the bottom
         return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){
+    }else if(!invisibleA && invisibleB){ //Invisible to the bottom
         return(NSOrderedAscending);
     }else{
-//        AIListGroup	*group = [objectA containingGroup];
+        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 
-        //Keep everything in manual order
-//        if([(AIListContact *)objectA index] > [(AIListContact *)objectB index]){
+        if(groupA && !groupB){ //Groups to the bottom
+            return(NSOrderedAscending);
+        }else if(!groupA && groupB){ //Groups to the bottom
             return(NSOrderedDescending);
-//        }else{
-//            return(NSOrderedAscending);
-//        }
+        }else if(!groupA && !groupB){ //Contacts in manual order
+            if([(AIListContact *)objectA index] > [(AIListContact *)objectB index]){
+                return(NSOrderedDescending);
+            }else{
+                return(NSOrderedAscending);
+            }
+
+        }else{ //Groups in manual order
+            AIListGroup	*group = [objectA containingGroup];
+
+            if([group indexOfObject:objectA] > [group indexOfObject:objectB]){
+                return(NSOrderedDescending);
+            }else{
+                return(NSOrderedAscending);
+            }
+        }
     }
 }
 

@@ -21,7 +21,8 @@
 
 @interface AIStatusCircle (PRIVATE)
 - (id)init;
-- (NSAttributedString *)attributedStringForHeight:(float)height;
+- (NSAttributedString *)attributedString:(NSString *)inString forHeight:(float)height;
+- (void)_flushDrawingCache;
 @end
 
 @implementation AIStatusCircle
@@ -39,6 +40,11 @@
     flashColor = nil;
     string = nil;
     state = AICircleNormal;
+
+    attributedString = nil;
+    attributedStringSize = NSMakeSize(0,0);
+    maxWidth = 0;
+    cachedHeight = 0;
     
     return(self);
 }
@@ -63,6 +69,7 @@
     if(string != inString){
         [string release];
         string = [inString retain];
+        [self _flushDrawingCache];
     }
 }
 
@@ -88,13 +95,22 @@
 //Returns our desired width
 - (float)widthForHeight:(int)inHeight
 {
-    if(string){
-        NSSize	stringSize = [[self attributedStringForHeight:(inHeight + CIRCLE_SIZE_OFFSET)] size];
+    if(cachedHeight != inHeight){
+        [self _flushDrawingCache];
+    }
+    
+    if(!maxWidth){
+        maxWidth = [[self attributedString:@"8:88" forHeight:(inHeight + CIRCLE_SIZE_OFFSET)] size].width;
+    }
+    
+/*    if(string){
+        NSSize	stringSize = 
         
         return(stringSize.width + (inHeight + CIRCLE_SIZE_OFFSET) / 2.0);
     }else{
         return(inHeight + CIRCLE_SIZE_OFFSET);
-    }
+    }*/
+    return(maxWidth);
 }
 
 //Draw
@@ -102,8 +118,6 @@
 {
     NSBezierPath 		*pillPath;
     float 			innerLeft, innerRight, innerTop, innerBottom, centerY, insideWidth, circleRadius, lineWidth;
-    NSAttributedString		*attributedString;
-    NSSize			stringSize;
 
 /*
   innerLeft     innerRight
@@ -118,16 +132,23 @@
         insideWidth
 */
 
+    if(cachedHeight != inRect.size.height){
+        [self _flushDrawingCache];
+    }
+
     //Calculate
     circleRadius = (inRect.size.height + CIRCLE_SIZE_OFFSET) / 2.0;    
 
     //Circle width
     if(string){
-        attributedString = [self attributedStringForHeight:(inRect.size.height + CIRCLE_SIZE_OFFSET)];
-        stringSize = [attributedString size];
+        //Get our attributed string and its dimensions
+        if(!attributedString){
+            attributedString = [[self attributedString:string forHeight:(inRect.size.height + CIRCLE_SIZE_OFFSET)] retain];
+            attributedStringSize = [attributedString size];
+        }
         
         //The string is inset 1/4 into each endcap
-        insideWidth = (stringSize.width - circleRadius) + 0.5;
+        insideWidth = (attributedStringSize.width - circleRadius) + 1.0;
 
         //Prevent the pill from shrinking any smaller than a perfect circle
         if(insideWidth < 0){
@@ -138,8 +159,8 @@
     }
 
     lineWidth = (circleRadius * (2.0/15.0));
-    innerLeft = inRect.origin.x + circleRadius;
-    innerRight = inRect.origin.x + insideWidth + circleRadius;
+    innerLeft = inRect.origin.x + inRect.size.width - circleRadius - insideWidth;
+    innerRight = inRect.origin.x + inRect.size.width - circleRadius;
     innerTop = inRect.origin.y + CIRCLE_Y_OFFSET + circleRadius * 2;
     innerBottom = inRect.origin.y + CIRCLE_Y_OFFSET;
     centerY = inRect.origin.y + CIRCLE_Y_OFFSET + circleRadius;
@@ -168,10 +189,10 @@
 
     if(string){
         //Draw the string content
-        [attributedString drawInRect:NSMakeRect(inRect.origin.x + 1, //The string is already centered horizontally
-                                                inRect.origin.y - 1 + CIRCLE_Y_OFFSET + (inRect.size.height - stringSize.height) / 2.0, //Center vertically
-                                                inRect.size.width,
-                                                stringSize.height)];
+        [attributedString drawInRect:NSMakeRect(innerLeft - circleRadius + 1, //The string is already centered horizontally
+                                                inRect.origin.y - 1 + CIRCLE_Y_OFFSET + (inRect.size.height - attributedStringSize.height) / 2.0, //Center vertically
+                                                innerRight - innerLeft + circleRadius * 2,
+                                                attributedStringSize.height)];
         
     }else{
         //draw the dot (for unreplied messages)
@@ -215,13 +236,19 @@
 
 }
 
+- (void)_flushDrawingCache
+{
+    [attributedString release]; attributedString = nil;
+    attributedStringSize = NSMakeSize(0,0);
+    maxWidth = 0;
+}
+
 //
-- (NSAttributedString *)attributedStringForHeight:(float)height
+- (NSAttributedString *)attributedString:(NSString *)inString forHeight:(float)height
 {
     NSMutableParagraphStyle	*paragraphStyle;
     NSDictionary		*attributes;
     int				fontSize;
-    NSAttributedString		*attributedString;
     
     //Create a paragraph style with the correct alignment
     paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
@@ -243,8 +270,7 @@
         [NSFont cachedFontWithName:@"Lucida Grande" size:fontSize], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName, nil];
 
-    attributedString = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
-    return(attributedString);
+    return([[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease]);
 }
 
 @end

@@ -99,7 +99,7 @@
         [statusCircle setColor:circleColor];
 
         //Embedded idle time
-        if(idle != 0){
+        if(idle != 0){            
             [statusCircle setStringContent:[self idleStringForSeconds:idle]];
         }else{
             [statusCircle setStringContent:nil];
@@ -177,6 +177,12 @@
 {
     NSString	*idleString;
 
+    //Cap idle at 999 Hours (999*60*60 seconds)
+    if(seconds > 599400){
+        seconds = 599400;
+    }
+
+    //Create the idle string
     if(seconds >= 600){
         idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
     }else if(seconds >= 60){

@@ -307,6 +307,9 @@ typedef enum {
     NSMutableDictionary		*abandonedGroups;
 
     NSMenuItem			*menuItem_getInfo;
+
+    NSMutableDictionary		*listOrderDict;
+    int				largestOrder;
 }
 
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;

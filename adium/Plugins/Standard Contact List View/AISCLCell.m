@@ -19,8 +19,8 @@
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 
-#define LEFT_MARGIN		0 //9
-#define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
+//#define LEFT_MARGIN		0 //9
+//#define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
 #define LEFT_VIEW_PADDING	3
 
 @implementation AISCLCell
@@ -41,22 +41,23 @@
         AIMutableOwnerArray	*leftViewArray;
         int			loop;
 
+//        [[NSColor lightGrayColor] set];
+//        [NSBezierPath fillRect:cellFrame];
+        
         //Indent into the left margin
-        cellFrame.origin.x -= LEFT_MARGIN;
-        cellFrame.size.width += LEFT_MARGIN;
-
-        // Icons can be 14 pixels wide, as they grow larger, they stop pushing the text right and instead push left.  Once the left margin is full (14?), they continue to push right again.
+//        cellFrame.origin.x -= LEFT_MARGIN;
+//        cellFrame.size.width += LEFT_MARGIN;
 
         //Left aligned icon
         leftViewArray = [listObject displayArrayForKey:@"Left View"];
         for(loop = 0;loop < [leftViewArray count];loop++){
             id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
             NSRect			drawRect = cellFrame;
-            float			width = [handler widthForHeight:drawRect.size.height];
-            float			push;
-            float			leftViewIndent = (drawRect.size.height * LEFT_VIEW_INDENT_SIZE);
+//            float			width = [handler widthForHeight:drawRect.size.height];
+//            float			push;
+//            float			leftViewIndent = (drawRect.size.height * LEFT_VIEW_INDENT_SIZE);
         
-            if(width <= leftViewIndent){ //Right Aligned
+/*            if(width <= leftViewIndent){ //Right Aligned
                 drawRect.origin.x = (drawRect.origin.x + leftViewIndent) - width;
                 drawRect.size.width = width;
                 push = leftViewIndent;
@@ -70,14 +71,16 @@
                 drawRect.origin.x -= leftViewIndent;
                 drawRect.size.width = width;
                 push = width - leftViewIndent;
-            }
+            }*/
+
+            drawRect.size.width = [handler widthForHeight:drawRect.size.height];
         
             //Draw the icon
             [handler drawInRect:drawRect];
             
             //Subtract the drawn area from the rect
-            cellFrame.origin.x += (push + LEFT_VIEW_PADDING);
-            cellFrame.size.width -= (push + LEFT_VIEW_PADDING);
+            cellFrame.origin.x += (drawRect.size.width + LEFT_VIEW_PADDING);
+            cellFrame.size.width -= (drawRect.size.width + LEFT_VIEW_PADDING);
         }
 
         //Color

@@ -20,6 +20,7 @@
     handleArray = [[NSMutableArray alloc] init];
     statusDictionary = [[NSMutableDictionary alloc] init];
     contentObjectArray = [[NSMutableArray alloc] init];
+    index = -1;
     
     return(self);
 }
@@ -27,6 +28,11 @@
 - (NSString *)serviceID
 {
     return(serviceID);
+}
+
+- (NSString *)UIDAndServiceID //ServiceID.UID
+{
+    return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
 }
 
 
@@ -77,13 +83,13 @@
 
 
 //Manual Ordering
-/*- (void)setIndex:(int)inIndex
+- (void)setIndex:(int)inIndex
 {
     index = inIndex;
 }
 - (int)index{
     return(index);
-}*/
+}
 
 
 //Content

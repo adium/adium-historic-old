@@ -29,6 +29,12 @@ typedef enum {
     NSColor		*flashColor;
     AICircleState	state;
     NSString		*string;
+
+    //Drawing Cache
+    NSAttributedString	*attributedString;
+    NSSize		attributedStringSize;
+    float		cachedHeight;
+    float		maxWidth;
 }
 
 + (id)statusCircle;
