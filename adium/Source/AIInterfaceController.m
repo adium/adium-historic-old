@@ -30,8 +30,6 @@
 {     
     contactListViewArray = [[NSMutableArray alloc] init];
     messageViewArray = [[NSMutableArray alloc] init];
-    errorTitleArray = [[NSMutableArray alloc] init];
-    errorDescArray =  [[NSMutableArray alloc] init];
 }
 
 //dealloc
@@ -39,8 +37,6 @@
 {
     [contactListViewArray release]; contactListViewArray = nil;
     [messageViewArray release]; messageViewArray = nil;
-    [errorTitleArray release]; errorTitleArray = nil;
-    [errorDescArray release]; errorDescArray = nil;
     
     [interfaceNotificationCenter release]; interfaceNotificationCenter = nil;
     
@@ -108,28 +104,24 @@
     return([[messageViewArray objectAtIndex:0] messageViewForHandle:inHandle]);
 }
 
-- (void)handleErrorMessage:(NSString *)errorTitle withDescription:(NSString *)errorDesc
+- (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc
 {
-    if([errorTitleArray count] >= 20){//Only allow error arrays to hold 20 error messages.. we don't want them to grow huge, and everything should be handled for logging already anyway
-        [errorTitleArray removeObjectAtIndex:[errorTitleArray count]-1];
-        [errorDescArray removeObjectAtIndex:[errorDescArray count]-1];
-    }
-    [errorTitleArray insertObject:errorTitle atIndex:0];
-    [errorDescArray insertObject:errorDesc atIndex:0];
+    errorTitle = inTitle;
+    errorDesc = inDesc;
     
-    //Post a notification that the error array changed
-    [[self interfaceNotificationCenter] postNotificationName:Interface_ErrorArrayChanged object:nil userInfo:nil];
+    //Post a notification that an error was recieved
+    [[self interfaceNotificationCenter] postNotificationName:Interface_ErrorMessageRecieved object:nil userInfo:nil];
 }
 
 
-- (NSMutableArray *)errorTitleArray
+- (NSString *)errorTitle
 {
-    return(errorTitleArray);
+    return(errorTitle);
 };
 
-- (NSMutableArray *)errorDescArray
+- (NSString *)errorDesc
 {
-    return(errorDescArray);
+    return(errorDesc);
 };
 
 @end

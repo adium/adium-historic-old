@@ -81,7 +81,7 @@ typedef enum {
 #define Interface_SendEnteredMessage			@"Interface_SendEnteredMessage"
 #define Interface_WillSendEnteredMessage 		@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage		@"Interface_DidSendEnteredMessage"
-#define Interface_ErrorArrayChanged		@"Interface_ErrorArrayChanged"
+#define Interface_ErrorMessageRecieved		@"Interface_ErrorMessageRecieved"
 #define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
 #define Content_WillSendContent				@"Content_WillSendContent"
 #define Content_DidSendContent					@"Content_DidSendContent"
@@ -260,8 +260,8 @@ typedef enum {
     NSMutableArray		*contactListViewArray;
     NSMutableArray		*messageViewArray;
     
-    NSMutableArray	*errorTitleArray;
-    NSMutableArray	*errorDescArray;
+    NSString		*errorTitle;
+    NSString		*errorDesc;
 }
 
 - (NSNotificationCenter *)interfaceNotificationCenter;
@@ -271,9 +271,9 @@ typedef enum {
 - (NSView *)messageViewForHandle:(AIContactHandle *)inHandle;
 - (IBAction)initiateMessage:(id)sender;
 
-- (void)handleErrorMessage:(NSString *)errorTitle withDescription:(NSString *)errorDesc;
-- (NSMutableArray *)errorTitleArray;
-- (NSMutableArray *)errorDescArray;
+- (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
+- (NSString *)errorTitle;
+- (NSString *)errorDesc;
 
 @end
 

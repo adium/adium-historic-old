@@ -100,6 +100,7 @@
 				F501BB1403882A2901A8010A,
 				F5AAD090039BA10901A8010A,
 				F50F253A03B0425301A80202,
+				40AC0EE703B5BEAF00A80202,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -120,6 +121,7 @@
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -141,6 +143,7 @@
 				F501BB1303882A2901A8010A,
 				F5AAD08F039BA10901A8010A,
 				F50F252D03B0425301A80202,
+				40AC0EE603B5BEAF00A80202,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -167,6 +170,7 @@
 				F501BB0D03882A0201A8010A,
 				F5AAD085039BA0D301A8010A,
 				F50F253F03B042BC01A80202,
+				40AC0EEA03B5BEDB00A80202,
 				F5B53FBE0333AB9201A8010A,
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
@@ -238,6 +242,7 @@
 				F510B77503339F4901A8010A,
 				F573C6230333B88401A8010A,
 				F50CD62C03603C7D01A8010A,
+				40AC0EE803B5BEAF00A80202,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -281,7 +286,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		29B97327FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -378,11 +382,238 @@
 //402
 //403
 //404
-		401BA29F03B5B9C300A80202 = {
+		40AC0EE103B5BEAF00A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				40AC0EED03B5BF1000A80202,
+				40AC0F1103B5C29E00A80202,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40AC0EE203B5BEAF00A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				40AC0F1403B5C34800A80202,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40AC0EE303B5BEAF00A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				40AC0EEE03B5BF1000A80202,
+				40AC0F1203B5C29E00A80202,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40AC0EE403B5BEAF00A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				40AC0EF903B5BFDA00A80202,
+				40AC0EF303B5BFD400A80202,
+				40AC0EF603B5BFD600A80202,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40AC0EE503B5BEAF00A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40AC0EE603B5BEAF00A80202 = {
+			buildPhases = (
+				40AC0EE103B5BEAF00A80202,
+				40AC0EE203B5BEAF00A80202,
+				40AC0EE303B5BEAF00A80202,
+				40AC0EE403B5BEAF00A80202,
+				40AC0EE503B5BEAF00A80202,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/smitty078/adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Error Message Handler";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				40AC0EEF03B5BFB600A80202,
+				40AC0EF003B5BFB900A80202,
+			);
+			isa = PBXBundleTarget;
+			name = "Error Message Handler";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Error Message Handler";
+			productReference = 40AC0EE703B5BEAF00A80202;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Error Message Handler</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>ErrorMessageHandlerPlugin</string>
+</dict>
+</plist>
+";
+		};
+		40AC0EE703B5BEAF00A80202 = {
+			isa = PBXBundleReference;
+			path = "Error Message Handler.AdiumPlugin";
+			refType = 3;
+		};
+		40AC0EE803B5BEAF00A80202 = {
+			isa = PBXTargetDependency;
+			target = 40AC0EE603B5BEAF00A80202;
+		};
+		40AC0EEA03B5BEDB00A80202 = {
+			children = (
+				40AC0F0E03B5C26000A80202,
+				40AC0EEC03B5BF1000A80202,
+				40AC0F1003B5C29E00A80202,
+				40AC0F1303B5C34800A80202,
+			);
+			isa = PBXGroup;
+			name = "Error Message Handler";
+			refType = 4;
+		};
+		40AC0EEB03B5BF1000A80202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ErrorMessageHandlerPlugin.h;
+			path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.h";
+			refType = 4;
+		};
+		40AC0EEC03B5BF1000A80202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ErrorMessageHandlerPlugin.m;
+			path = "Plugins/Error Message Handler/ErrorMessageHandlerPlugin.m";
+			refType = 4;
+		};
+		40AC0EED03B5BF1000A80202 = {
+			fileRef = 40AC0EEB03B5BF1000A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0EEE03B5BF1000A80202 = {
+			fileRef = 40AC0EEC03B5BF1000A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0EEF03B5BFB600A80202 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		40AC0EF003B5BFB900A80202 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		40AC0EF303B5BFD400A80202 = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0EF603B5BFD600A80202 = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0EF903B5BFDA00A80202 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0F0C03B5C1F000A80202 = {
 			isa = PBXBundleReference;
 			name = "Error Message Handler.AdiumPlugin";
 			path = "build/Error Message Handler.AdiumPlugin";
 			refType = 4;
+		};
+		40AC0F0D03B5C1F000A80202 = {
+			fileRef = 40AC0F0C03B5C1F000A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0F0E03B5C26000A80202 = {
+			children = (
+				40AC0EEB03B5BF1000A80202,
+				40AC0F0F03B5C29E00A80202,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		40AC0F0F03B5C29E00A80202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ErrorMessageWindowController.h;
+			path = "Plugins/Error Message Handler/ErrorMessageWindowController.h";
+			refType = 4;
+		};
+		40AC0F1003B5C29E00A80202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ErrorMessageWindowController.m;
+			path = "Plugins/Error Message Handler/ErrorMessageWindowController.m";
+			refType = 4;
+		};
+		40AC0F1103B5C29E00A80202 = {
+			fileRef = 40AC0F0F03B5C29E00A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0F1203B5C29E00A80202 = {
+			fileRef = 40AC0F1003B5C29E00A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		40AC0F1303B5C34800A80202 = {
+			isa = PBXFileReference;
+			name = ErrorWindow.nib;
+			path = "Plugins/Error Message Handler/ErrorWindow.nib";
+			refType = 4;
+		};
+		40AC0F1403B5C34800A80202 = {
+			fileRef = 40AC0F1303B5C34800A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //400
 //401
@@ -561,7 +792,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F501BB1403882A2901A8010A = {
 			isa = PBXBundleReference;
@@ -854,7 +1084,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F50CD62903603C7201A8010A = {
 			isa = PBXBundleReference;
@@ -948,7 +1177,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F50F252E03B0425301A80202 = {
 			isa = PBXTargetDependency;
@@ -1244,7 +1472,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F510B77403339F1C01A8010A = {
 			isa = PBXBundleReference;
@@ -1426,7 +1653,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F51DEFAF032633E301A8010A = {
 			isa = PBXBundleReference;
@@ -1630,7 +1856,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5370C9902D76F3B01A8010A = {
 			isa = PBXBundleReference;
@@ -1831,7 +2056,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9A0702CCED6401A8010A = {
 			isa = PBXFrameworkReference;
@@ -1957,7 +2181,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9A0F02CCED8B01A8010A = {
 			isa = PBXFrameworkReference;
@@ -2164,7 +2387,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53B9ACC02CD12CB01A8010A = {
 			isa = PBXBundleReference;
@@ -2332,7 +2554,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F53EA2CE02C803C101A8010A = {
 			isa = PBXBundleReference;
@@ -2363,6 +2584,7 @@
 				F551A51003AC4C5001A8010A,
 				F551A51103AC4C5001A8010A,
 				F50F255303B0431C01A80202,
+				40AC0F0D03B5C1F000A80202,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2595,7 +2817,7 @@
 		};
 		F551A4F903AC4C2301A8010A = {
 			children = (
-				401BA29F03B5B9C300A80202,
+				40AC0F0C03B5C1F000A80202,
 				F50F254A03B0431C01A80202,
 				F551A4FA03AC4C4E01A8010A,
 				F551A4FB03AC4C4E01A8010A,
@@ -3745,7 +3967,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F569E39202CA88C701A8010A = {
 			isa = PBXBundleReference;
@@ -6403,7 +6624,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F59F9A8A032BE6B101A8010A = {
 			isa = PBXBundleReference;
@@ -6516,7 +6736,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5A01D8C0379813301A8010A = {
 			isa = PBXBundleReference;
@@ -6698,7 +6917,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5AAD090039BA10901A8010A = {
 			isa = PBXBundleReference;
@@ -6889,7 +7107,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5B53FC70333AFB501A8010A = {
 			isa = PBXBundleReference;
@@ -7063,7 +7280,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		F5BD46CF02D0789901A8010A = {
 			isa = PBXBundleReference;
