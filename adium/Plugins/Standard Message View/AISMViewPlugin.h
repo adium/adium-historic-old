@@ -20,6 +20,7 @@
 
 #define KEY_SMV_SHOW_USER_ICONS                 @"Show icons"
 #define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
+#define	KEY_SMV_COMBINE_MESSAGES		@"Combine Messages"
 
 
 

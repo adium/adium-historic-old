@@ -47,7 +47,7 @@
     NSMutableString             *timeStampFormat;
     NSDateFormatter *timeStampFormatter;
     
-    
+    BOOL        combineMessages;
     
     
     NSString			*prefixIncoming;

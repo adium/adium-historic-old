@@ -8,6 +8,8 @@
 	<true/>
         <key>Show AM-PM</key>
         <false/>
+	<key>Combine Messages</key>
+	<true/>
 	<key>Hide Duplicate Times</key>
 	<true/>
 	<key>Show icons</key>

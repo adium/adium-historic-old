@@ -9,6 +9,7 @@
 #import "AIFlexibleTableTextCell.h"
 
 @interface AIFlexibleTableFramedTextCell : AIFlexibleTableTextCell {
+    BOOL        drawTopDivider;
     BOOL	drawTop;
     BOOL	drawBottom;
     BOOL        drawSides;
@@ -22,11 +23,13 @@
     
     NSColor 	*borderColor;
     NSColor	*bubbleColor;
+    NSColor	*dividerColor;
 }
 + (AIFlexibleTableFramedTextCell *)cellWithAttributedString:(NSAttributedString *)inString;
 
 - (id)initWithAttributedString:(NSAttributedString *)inString;
 
+- (void)setDrawTopDivider:(BOOL)inDrawTopDivider;
 - (void)setDrawTop:(BOOL)inDrawTop;
 - (void)setDrawBottom:(BOOL)inDrawBottom;
 - (void)setDrawSides:(BOOL)inDrawSides;
@@ -38,6 +41,6 @@
 - (void)setSuppressTopBorder:(BOOL)inSuppressTopBorder;
 - (void)setSuppressBottomBorder:(BOOL)inSuppressBottomBorder;
 
-- (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor;
+- (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor;
 
 @end

@@ -17,7 +17,11 @@
         {
             CLASS = AISMPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_showUserIcons" = NSButton; "popUp_timeStamps" = NSPopUpButton; }; 
+            OUTLETS = {
+                "checkBox_combineMessages" = NSButton; 
+                "checkBox_showUserIcons" = NSButton; 
+                "popUp_timeStamps" = NSPopUpButton; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = AISMViewController; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
