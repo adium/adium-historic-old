@@ -8,6 +8,8 @@
 #import "GBiTunerPlugin.h"
 
 #define PATH_INTERNAL_SCRIPTS	@"/Contents/Resources/Scripts/"
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
+#define PATH_EXTERNAL_SCRIPTS   [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Scripts"]
 #define SCRIPT_PATH_EXTENSION	@"scpt"
 
 @interface GBiTunerPlugin (PRIVATE)
@@ -45,6 +47,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
 	//Wait until the first time the menu is accessed to generate the submenu of scripts, in validateMenuItem:
 	hasGeneratedScriptMenu = NO;
+	[AIFileUtilities createDirectory:PATH_EXTERNAL_SCRIPTS];
 }
 
 //Load the scripts and build (returning) a script menu of them
@@ -56,6 +59,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	
 	//Load the scripts, sort them, and stick them in our menu
 	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:[internalPath stringByExpandingTildeInPath]
+													   intoUsageDict:scriptDict]];
+	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:PATH_EXTERNAL_SCRIPTS
 													   intoUsageDict:scriptDict]];
 	[self _sortScriptsByTitle:scriptArray];
 	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
