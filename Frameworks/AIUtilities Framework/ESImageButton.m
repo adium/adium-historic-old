@@ -57,9 +57,9 @@
 		}
 
 		imageFloater = [[ESFloater floaterWithImage:bigImage styleMask:NSBorderlessWindowMask] retain];
-		[imageFloater setMaxOpacity:0.90];
+		[imageFloater setMaxOpacity:1.00];
 		[imageFloater moveFloaterToPoint:point];
-		[imageFloater setVisible:YES animate:YES];
+		[imageFloater setVisible:YES animate:NO];
 		imageFloaterShouldBeOpen = TRUE;
 	}
 }
