@@ -7,23 +7,11 @@
 //
 
 #import "GaimCommon.h"
-#import "SLGaimCocoaAdapter.h"
 
-@protocol AdiumGaimDO
+@protocol AIAccount_Privacy;
+@class SLGaimCocoaAdapter, ESFileTransfer, AIService;
 
-- (GaimAccount*)gaimAccount;
-
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize remoteFilename:(NSString *)remoteFilename;
-
-- (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
-- (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
-- (AIChat *)mainThreadChatWithName:(NSString *)name;
-- (oneway void)requestAddContactWithUID:(NSString *)contactUID;
-
-- (NSString *)internalObjectID;
-@end
-
-@interface CBGaimAccount : AIAccount <AIAccount_Privacy, AdiumGaimDO>
+@interface CBGaimAccount : AIAccount <AIAccount_Privacy>
 {     
     NSMutableDictionary *chatDict;
 
@@ -135,6 +123,9 @@
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
+										 size:(unsigned long long)inSize
+							   remoteFilename:(NSString *)remoteFilename;
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject;
 
