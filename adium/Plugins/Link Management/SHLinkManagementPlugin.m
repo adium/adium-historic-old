@@ -13,6 +13,10 @@
 #define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
 #define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
 
+@interface SHLinkManagementPlugin (PRIVATE)
+- (BOOL)textViewSelectionIsLink:(NSTextView *)textView;
+@end
+
 @implementation SHLinkManagementPlugin
 
 - (void)installPlugin
@@ -49,17 +53,8 @@
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
-		NSString	*title = ADD_LINK_TITLE;
-		
 		//Update the menu item's title to reflect the current action
-		if([[(NSTextView *)responder textStorage] length] && [(NSTextView *)responder selectedRange].location != NSNotFound){
-			NSRange selectionRange = [(NSTextView *)responder selectedRange];
-			id		selectedLink = [[(NSTextView *)responder textStorage] attribute:NSLinkAttributeName
-																			atIndex:selectionRange.location
-																	 effectiveRange:&selectionRange];
-			if(selectedLink) title = EDIT_LINK_TITLE;
-		}
-		[menuItem setTitle:title];
+		[menuItem setTitle:([self textViewSelectionIsLink:(NSTextView *)responder] ? EDIT_LINK_TITLE : ADD_LINK_TITLE)];
 
 		return(YES);
 	}else{
@@ -71,14 +66,31 @@
 //Add or edit a link
 - (IBAction)editFormattedLink:(id)sender
 {
-    NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+    NSResponder *responder = [keyWindow firstResponder];
+	
     if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
-        if([(NSTextView *)responder selectedRange].length != 0) {
-            [[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder];
-        }else{ //if nothing selected, add link
-            [[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder];
-        }
+		[SHLinkEditorWindowController showLinkEditorForResponder:responder
+														onWindow:keyWindow
+													existingLink:YES];
     }
+}
+
+//Returns YES if a link is under the selection of the passed text view
+- (BOOL)textViewSelectionIsLink:(NSTextView *)textView
+{
+	id		selectedLink = nil;
+	
+	if([[textView textStorage] length] &&
+	   [textView selectedRange].location != NSNotFound &&
+	   [textView selectedRange].location != [[textView textStorage] length]){
+		NSRange selectionRange = [textView selectedRange];
+		selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
+												 atIndex:selectionRange.location
+										  effectiveRange:&selectionRange];
+	}
+	
+	return(selectedLink != nil);
 }
 
 @end

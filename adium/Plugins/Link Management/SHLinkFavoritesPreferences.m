@@ -47,7 +47,7 @@
 #pragma mark Favorites Editing
 - (IBAction)addLink:(id)sender
 {
-    [[SHLinkEditorWindowController alloc] initAddLinkFavoritesWindowControllerWithView:view];
+	[SHLinkEditorWindowController showLinkEditorForResponder:view onWindow:[view window] existingLink:NO];
 }
 
 - (IBAction)removeLink:(id)sender

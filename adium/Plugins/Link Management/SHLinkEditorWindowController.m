@@ -13,7 +13,7 @@
 #define CHOOSE_URL                  AILocalizedString(@"Select...",nil)
 
 @interface SHLinkEditorWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName;
+- (id)initWithWindowNibName:(NSString *)windowNibName forResponder:(NSResponder *)responder existingLink:(BOOL)existingLink;
 - (void)_buildPopUpMenu;
 - (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSResponder *)inView withRange:(NSRange)linkRange;
 @end
@@ -21,99 +21,82 @@
 @implementation SHLinkEditorWindowController
 
 #pragma mark init methods
-- (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder
+
++ (void)showLinkEditorForResponder:(NSResponder *)responder onWindow:(NSWindow *)parentWindow existingLink:(BOOL)existingLink
 {
-    if(nil != (editableView = responder)) {
-        SHLinkEditorWindowController    *newLinkEditor;
-        newLinkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
-        editLink = NO; //this is for a new link to be inserted
-        favoriteWindow = NO;
-        [NSApp beginSheet:[newLinkEditor window]
-            modalForWindow:[(NSTextView *)editableView window]
-            modalDelegate:nil
-            didEndSelector:nil
-            contextInfo:nil];
-        [self windowWillBeginSheet:nil];
-    }
+#warning rename to show favorite selector or whatnot
+	SHLinkEditorWindowController	*editorWindow = [[self alloc] initWithWindowNibName:(existingLink ? LINK_EDITOR_NIB_NAME : FAVS_EDITOR_NIB_NAME)
+																		   forResponder:responder
+																		   existingLink:existingLink];
+	
+	if(parentWindow){
+		[NSApp beginSheet:[editorWindow window]
+		   modalForWindow:parentWindow
+			modalDelegate:editorWindow
+		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+			  contextInfo:nil];
+	}else{
+		[editorWindow showWindow:nil];
+	}
 }
 
-- (void)initEditLinkWindowControllerWithResponder:(NSResponder *)responder
-{
-    if(nil != (editableView = responder)) {
-        SHLinkEditorWindowController    *linkEditor;
-        linkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
-        editLink = YES; //this is to edit an existing link
-        favoriteWindow = NO;
-        [NSApp beginSheet:[linkEditor window]
-            modalForWindow:[(NSTextView *)editableView window]
-            modalDelegate:self
-            didEndSelector:nil
-            contextInfo:nil];
-        [self windowWillBeginSheet:nil];
-    }
-}
-
-- (void)initAddLinkFavoritesWindowControllerWithView:(NSView *)view
-{
-    SHLinkEditorWindowController    *favsEditor;
-    favsEditor = [self initWithWindowNibName:FAVS_EDITOR_NIB_NAME];
-    editLink = NO;
-    favoriteWindow = YES;
-    [NSApp beginSheet:[favsEditor window]
-            modalForWindow:[view window]
-            modalDelegate:nil
-            didEndSelector:nil
-            contextInfo:nil];
-    [self windowWillBeginSheet:nil];
-}
-
-- (id)initWithWindowNibName:(NSString *)windowNibName
+- (id)initWithWindowNibName:(NSString *)windowNibName forResponder:(NSResponder *)responder existingLink:(BOOL)existingLink
 {
     [super initWithWindowNibName:windowNibName];
-    return(self);
+
+	editableView = [responder retain];
+	editLink = existingLink;
+
+	return(self);
 }
 
 - (void)dealloc
 {
+	[editableView release];
     [super dealloc];
 }
 
 
+//Window Methods -------------------------------------------------------------------------------------------------------
 #pragma mark Window Methods
-//- (void)windowDidLoad
-- (void)windowWillBeginSheet:(NSNotification *)aNotification
+- (void)windowDidLoad
 {
     NSRange      localSelectionRange = NSMakeRange(0,0);
                  selectionRange = NSMakeRange(0,0);
     NSString    *linkText = nil;
-    id    linkURL = nil;
-    
-        //fetch the range of the selection
-        localSelectionRange = [(NSTextView *)editableView selectedRange];
-        
-        selectionRange = localSelectionRange;
-        
-        //pop stuff into their proper fields for editing
-        if(editLink) {
-            linkText = [[(NSTextView *)editableView attributedSubstringFromRange:localSelectionRange] string];
-            
-            linkURL = [[(NSTextView *)editableView textStorage] attribute:NSLinkAttributeName
-                                                  atIndex:localSelectionRange.location
-                                           effectiveRange:&localSelectionRange];
-            
-            if(linkURL) {
-                if([linkURL isKindOfClass:[NSString class]]){
-                    [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
+    id   	 	linkURL = nil;
+		
+	//fetch the range of the selection
+	if([editableView isKindOfClass:[NSTextView class]]){
+		localSelectionRange = [(NSTextView *)editableView selectedRange];
+		
+		selectionRange = localSelectionRange;
+		
+		//pop stuff into their proper fields for editing
+		if(editLink) {
+			linkText = [[(NSTextView *)editableView attributedSubstringFromRange:localSelectionRange] string];
+			
+			if(selectionRange.location >= 0 && NSMaxRange(selectionRange) < [[(NSTextView *)editableView textStorage] length]){
+				linkURL = [[(NSTextView *)editableView textStorage] attribute:NSLinkAttributeName
+																	  atIndex:localSelectionRange.location
+															   effectiveRange:&localSelectionRange];
+			}
+			
+			if(linkURL) {
+				if([linkURL isKindOfClass:[NSString class]]){
+					[[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
                                                      initWithString:[(NSString *)linkURL string]]];
-                }else if([linkURL isKindOfClass:[NSURL class]]){
-                    [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
+				}else if([linkURL isKindOfClass:[NSURL class]]){
+					[[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
                                                      initWithString:[(NSURL *)linkURL absoluteString]]];                
 				}
-            }
-            if(linkText) {
-                [textField_linkText setStringValue:linkText];
-            }
-        }
+			}
+			if(linkText) {
+				[textField_linkText setStringValue:linkText];
+			}
+		}
+		
+	}
     
     //Retrive our favorites
 	favoritesDict = [[[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
@@ -154,35 +137,45 @@
     [popUp_Favorites setTitle:CHOOSE_URL];
 }
 
+//Window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
-    selectionRange = NSMakeRange(0,0);
+	[self autorelease];
     return(YES);
 }
 
-- (IBAction)closeWindow:(id)sender;
+//Close this window
+- (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]) {
-        [NSApp endSheet:[self window]];
-        [[self window] orderOut:self];
+		if([[self window] isSheet]) [NSApp endSheet:[self window]];
         [[self window] close];
-        [[self window] release];
     }
 }
 
-- (IBAction)cancel:(id)sender;
+//Called as the sheet closes, dismisses the sheet
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [sheet orderOut:nil];
+}
+
+//Cancel
+- (IBAction)cancel:(id)sender
 {
     [self closeWindow:sender];
 }
 
+
+//AttributedString Wrangleing Methods ----------------------------------------------------------------------------------
 #pragma mark AttributedString Wrangleing Methods
-- (IBAction)acceptURL:(id)sender;
+- (IBAction)acceptURL:(id)sender
 {
     NSMutableString *urlString = nil;
     NSString        *linkString = nil;
     NSRange          linkRange = NSMakeRange(0,0);
     
-    if(!favoriteWindow){
+#warning Use a delegate or target call to clean this up
+	if([editableView isKindOfClass:[NSTextView class]]){
         //get our infos out from the text's
         urlString   = [[NSMutableString alloc] initWithString:[[textView_URL textStorage] string]];
         linkString  = [textField_linkText stringValue];
@@ -256,6 +249,8 @@
     }
 }
 
+
+//Favorite URL Management ----------------------------------------------------------------------------------------------
 #pragma mark Favorite URL Management
 //User selected a link, display it in the text fields (Called by menu item)
 - (IBAction)selectFavoriteURL:(NSPopUpButton *)sender
@@ -291,6 +286,8 @@
     [self _buildPopUpMenu];
 }
 
+
+//URL Validation and other Delegate Oddities ---------------------------------------------------------------------------
 #pragma mark URL Validation and other Delegate Oddities
 - (void)textDidChange:(NSNotification *)aNotification
 {
