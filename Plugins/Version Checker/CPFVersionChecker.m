@@ -109,9 +109,12 @@
 - (void)_requestVersionThread
 {
 	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
+	NSString			*dateOfLatestBuild;
+	
+	dateOfLatestBuild = [self dateOfLatestBuild];
 
 	[self performSelectorOnMainThread:@selector(_versionReceived:)
-						   withObject:[self dateOfLatestBuild]
+						   withObject:dateOfLatestBuild
 						waitUntilDone:YES];
 	[pool release];
 }
