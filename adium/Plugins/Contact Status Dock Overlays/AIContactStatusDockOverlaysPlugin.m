@@ -138,10 +138,10 @@
 //
 - (NSImage *)overlayImageFlash:(BOOL)flash
 {
-    NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     NSEnumerator		*enumerator;
     AIListContact		*contact;
     NSFont			*font;
+    NSParagraphStyle		*paragraphStyle;
     float			dockIconScale;
     int				iconHeight;
     float			top, bottom;
@@ -160,8 +160,7 @@
 
     //Set up the string details
     font = [NSFont boldSystemFontOfSize:(SMALLESTFONTSIZE + (FONTSIZERANGE * dockIconScale))];
-    [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
-    [paragraphStyle setAlignment:NSCenterTextAlignment];
+    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment lineBreakMode:NSLineBreakByClipping];
 
     //Clear our image
     [image lockFocus];

@@ -149,14 +149,14 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    NSFont			*font;
-    NSAttributedString		*displayName;
-    NSMutableString 		*displayString;
-    NSString			*rightText, *leftText;
-    NSColor			*textColor, *backgroundColor = nil;
-    AIMutableOwnerArray		*leftViewArray, *rightViewArray, *leftTextArray, *rightTextArray;
-    NSMutableParagraphStyle	*paragraphStyle;
-    int				loop;
+    NSFont		    *font;
+    NSAttributedString      *displayName;
+    NSMutableString	    *displayString;
+    NSString		    *rightText, *leftText;
+    NSColor		    *textColor, *backgroundColor = nil;
+    AIMutableOwnerArray     *leftViewArray, *rightViewArray, *leftTextArray, *rightTextArray;
+    NSParagraphStyle	    *paragraphStyle;
+    int			    loop;
 
     if(isGroup){ //move text away from flippy triangle
         cellFrame.origin.x += GROUP_PADDING;
@@ -279,12 +279,9 @@
     }
 
     //Create a paragraph Style (To turn off clipping by word)
-    paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
+    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByClipping];
 
     //Get the name string
-    
-    //string
     leftTextArray = [listObject displayArrayForKey:@"Left Text"];
     rightTextArray = [listObject displayArrayForKey:@"Right Text"];
     displayString = [NSMutableString stringWithString:@""];

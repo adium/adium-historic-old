@@ -414,14 +414,9 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
 //Returns the correct attributed string for our view
 - (NSAttributedString *)_attributedString:(NSString *)inString forHeight:(float)height
 {
-    NSMutableParagraphStyle	*paragraphStyle;
     NSDictionary		*attributes;
     int				fontSize;
     
-    //Create a paragraph style with the correct alignment
-    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setAlignment:NSCenterTextAlignment];
-
     if(height <= 9){
         fontSize = 7;
     }else if(height <= 11){
@@ -442,7 +437,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         stringColor, NSForegroundColorAttributeName,
         [NSFont cachedFontWithName:@"Lucida Grande" size:fontSize], NSFontAttributeName,
-        paragraphStyle, NSParagraphStyleAttributeName, nil];
+        [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName, nil];
 
     return([[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease]);
 }
