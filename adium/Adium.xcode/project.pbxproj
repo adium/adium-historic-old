@@ -3651,7 +3651,6 @@
 				4BD675A506001E750049CAF7,
 				4B74D3290602629300C21B7C,
 				4B74D32F0602633700C21B7C,
-				9E9F1A80060E8339002D6A40,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3952,8 +3951,6 @@
 				4BD6771E06002FD50049CAF7,
 				4B74D3340602641C00C21B7C,
 				34327CA6060D4093003D7AD9,
-				9E9F1A84060E8422002D6A40,
-				9E9F1A85060E8422002D6A40,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4265,7 +4262,6 @@
 				4BD675A606001E750049CAF7,
 				4B74D32A0602629300C21B7C,
 				4B74D3300602633700C21B7C,
-				9E9F1A81060E8339002D6A40,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8694,8 +8690,6 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
-				9E9F1A7E060E8339002D6A40,
-				9E9F1A7F060E8339002D6A40,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -17830,36 +17824,6 @@
 			settings = {
 			};
 		};
-		9E9F1A7E060E8339002D6A40 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBHandleURLScriptCommand.h;
-			path = Source/CBHandleURLScriptCommand.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E9F1A7F060E8339002D6A40 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBHandleURLScriptCommand.m;
-			path = Source/CBHandleURLScriptCommand.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E9F1A80060E8339002D6A40 = {
-			fileRef = 9E9F1A7E060E8339002D6A40;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E9F1A81060E8339002D6A40 = {
-			fileRef = 9E9F1A7F060E8339002D6A40;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E9F1A82060E8422002D6A40 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -17877,18 +17841,6 @@
 			path = Source/adium.scriptTerminology;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		9E9F1A84060E8422002D6A40 = {
-			fileRef = 9E9F1A82060E8422002D6A40;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E9F1A85060E8422002D6A40 = {
-			fileRef = 9E9F1A83060E8422002D6A40;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9EA125E8055B630900ECF349 = {
 			fileEncoding = 4;
