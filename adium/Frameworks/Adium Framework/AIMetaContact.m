@@ -75,7 +75,6 @@
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {	
-	
     return([objectArray objectAtIndex:index]);
 }
 

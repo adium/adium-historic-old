@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.59 2004/05/24 06:02:32 evands Exp $
+// $Id: AIAccount.m,v 1.60 2004/06/06 09:26:02 evands Exp $
 
 #import "AIAccount.h"
 
@@ -36,11 +36,10 @@
 //Init the connection
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID
 {
-	uniqueObjectID = [[NSString stringWithFormat:@"%i",inObjectID] retain];
-	
-    [super initWithUID:inUID serviceID:[[inService handleServiceType] identifier]];
+	objectID = inObjectID;
     service = [inService retain];
-
+    [super initWithUID:inUID serviceID:[[inService handleServiceType] identifier]];
+	
     //Handle the preference changed monitoring (for account status) for our subclass
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(_accountPreferencesChanged:)
@@ -95,8 +94,7 @@
 	
     [[adium notificationCenter] removeObserver:self];
     [service release];
-	[uniqueObjectID release];
-    
+	
     [super dealloc];
 }
 
@@ -109,6 +107,9 @@
 //Our unique object ID is the number associated with this account
 - (NSString *)uniqueObjectID
 {
+	if (!uniqueObjectID){
+		uniqueObjectID = [[NSString stringWithFormat:@"%i",objectID] retain];
+	}
 	return(uniqueObjectID);
 }
 

@@ -89,11 +89,11 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-	NSString					*uniqueObjectID;				//Unique number ID of this account
     id <AIServiceController>	service;						//The service controller that spawned us
     NSString                    *password;						//Password of this account
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
     BOOL						disconnectedByFastUserSwitch;
+	int							objectID;
 	
 	//Auto-reconnect
 	NSTimer						*reconnectTimer;
