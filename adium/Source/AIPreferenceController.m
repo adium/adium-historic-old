@@ -150,7 +150,7 @@
     
     //Load the preferences
     prefDict = [self loadPreferenceGroup:groupName];
-    objectPrefDict = [[prefDict objectForKey:prefDictKey] mutableCopy];
+    objectPrefDict = [[[prefDict objectForKey:prefDictKey] mutableCopy] autorelease];
     if(!objectPrefDict) objectPrefDict = [[[NSMutableDictionary alloc] init] autorelease];
     
     //Set and save the new value
