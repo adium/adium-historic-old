@@ -8,7 +8,10 @@
 
 #define TAB_CELL_IDENTIFIER                     @"Tab Cell Identifier"
 
-@class AICustomTabDragWindow;
+#define AICustomTabDragWillBegin	@"AICustomTabDragWillBegin"
+#define AICustomTabDragDidComplete	@"AICustomTabDragDidComplete"
+
+@class AICustomTabDragWindow, AICustomTabsView;
 
 @interface AICustomTabDragging : NSObject {
 	AICustomTabCell         *dragTabCell;			//Custom tab cell being dragged

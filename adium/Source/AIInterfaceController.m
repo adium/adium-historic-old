@@ -13,9 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.74 2004/07/10 06:20:42 evands Exp $
+// $Id: AIInterfaceController.m,v 1.75 2004/07/12 22:24:37 adamiser Exp $
 
 #import "AIInterfaceController.h"
+#import "AIContactListWindowController.h"
+
+#define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
+#define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
@@ -26,11 +30,21 @@
 #define KEY_FORMATTING_FONT				@"Default Font"
 
 
+#define CONTACT_LIST_WINDOW_MENU_TITLE  AILocalizedString(@"Contact List","Title for the contact list menu item")
+#define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
+
+#import "AINewMessagePrompt.h"
+
 @interface AIInterfaceController (PRIVATE)
-- (void)flashTimer:(NSTimer *)inTimer;
+- (void)_resetOpenChatsCache;
+- (void)_resortChat:(AIChat *)chat;
+- (void)_resortAllChats;
+- (int)_indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName;
+- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName ignoringChat:(AIChat *)ignoreChat;
+- (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
-- (void)pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
+- (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 @end
 
 @implementation AIInterfaceController
@@ -40,10 +54,16 @@
 {     
     contactListViewArray = [[NSMutableArray alloc] init];
     messageViewArray = [[NSMutableArray alloc] init];
-    interfaceArray = [[NSMutableArray alloc] init];
+//    interfaceArray = [[NSMutableArray alloc] init];
     contactListTooltipEntryArray = [[NSMutableArray alloc] init];
     contactListTooltipSecondaryEntryArray = [[NSMutableArray alloc] init];
-    
+	closeMenuConfiguredForChat = NO;
+	_cachedOpenChats = nil;
+
+#warning load from pref
+groupChatsByContactGroup = YES;
+arrangeChats = YES;
+
     tooltipListObject = nil;
     tooltipTitle = nil;
     tooltipBody = nil;
@@ -51,21 +71,49 @@
     flashObserverArray = nil;
     flashTimer = nil;
     flashState = 0;
+	
+	windowMenuArray = nil;
+	
+    //Observe content so we can open chats as necessary
+    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
+									   name:Content_DidReceiveContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:)
+									   name:Content_FirstContentRecieved object:nil];
+
 }
 
 - (void)finishIniting
 {
     //Load the interface
-    [[interfaceArray objectAtIndex:0] openInterface];
-    
+    [interface openInterface];
+
     //Configure our dynamic paste menu item
     [menuItem_paste setDynamic:YES];
     [menuItem_pasteFormatted setDynamic:YES];
+
+	//Open the contact list window
+    [self showContactList:nil];
+
+	//Contact list menu tem
+    NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE
+												   target:self
+												   action:@selector(toggleContactList:)
+											keyEquivalent:@"/"] autorelease];
+	[[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+	[[owner menuController] addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
+
+#warning dont observe if not enabled
+	[[owner notificationCenter] addObserver:self 
+								   selector:@selector(contactOrderChanged:)
+									   name:Contact_OrderChanged 
+									 object:nil];
+	
 }
 
 - (void)closeController
 {
-    [[interfaceArray objectAtIndex:0] closeInterface]; //Close the interface
+    if(contactListWindowController) [contactListWindowController close:nil];
+    [interface closeInterface]; //Close the interface
 }
 
 // Dealloc
@@ -83,21 +131,33 @@
     [super dealloc];
 }
 
+//If no windows are visible, show the contact list
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-    return([(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] handleReopenWithVisibleWindows:visibleWindows]);    
+#warning re-implement
+//    if(contactListWindowController == nil && [messageWindowControllerArray count] == 0){
+//		[self showContactList:nil];
+//		return(NO);
+//    }else{
+//		return([interface handleReopenWithVisibleWindows:visibleWindows]);    
+//	}
 }
 
 // Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController
 {
-    [interfaceArray addObject:inController];
+	if(!interface){
+		interface = [inController retain];
+	}
+//    [interfaceArray addObject:inController];
 }
 
-//Contact List -----------------------------------
+
+//Contact List ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact list
-// Registers a view to handle the contact list.  The user may chose from the available views
-// The view only needs to be added to the interface, it is entirely self sufficient
+#warning contact list hard coded for now.  Merge contact list window with contact list view, move into plugin.
+//Registers a view to handle the contact list.  The user may chose from the available views
+//The view only needs to be added to the interface, it is entirely self sufficient
 - (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin
 {
     [contactListViewArray addObject:inPlugin];
@@ -107,10 +167,438 @@
     return([[contactListViewArray objectAtIndex:0] contactListViewController]);
 }
 
-//Messaging & Chats -----------------------------------
-#pragma mark Messaging & Chats
-// Registers a view to handle the contact list.  The user may chose from the available views
-// The view only needs to be added to the interface, it is entirely self sufficient
+//Toggle the contact list
+- (IBAction)toggleContactList:(id)sender
+{
+    if(contactListWindowController && [[contactListWindowController window] isMainWindow]){ //The window is loaded and main
+		[self closeContactList:nil];
+    }else{
+		[self showContactList:nil];
+    } 
+}
+
+//Show the contact list window
+- (IBAction)showContactList:(id)sender
+{
+    if(!contactListWindowController){ //Load the window
+        contactListWindowController = [[AIContactListWindowController contactListWindowController] retain];
+    }
+    [contactListWindowController makeActive:nil];
+}
+
+//Show the contact list window and bring Adium to the front
+- (IBAction)showContactListAndBringToFront:(id)sender
+{
+    [self showContactList:nil];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+}
+
+//Close the contact list window
+- (IBAction)closeContactList:(id)sender
+{
+    if(contactListWindowController){
+        [[contactListWindowController window] performClose:nil];
+    }
+}
+
+- (void)contactListDidClose
+{
+	[contactListWindowController release]; contactListWindowController = nil;
+}
+	
+
+//Messaging ------------------------------------------------------------------------------------------------------------
+//Methods for instructing the interface to provide a representation of chats, and to determine which chat has user focus
+#pragma mark Messaging
+//Open a window for the chat
+- (void)openChat:(AIChat *)inChat
+{
+	NSArray		*containers = [interface openContainersAndChats];
+	NSString	*containerName;
+	int			index = -1;
+	
+	//Determine the correct container for this chat
+	if(groupChatsByContactGroup){
+		AIListGroup	*group = [[inChat listObject] containingGroup];
+		containerName = (group ? [group displayName] : @"Chat"); 
+	}else{
+		//Open new chats into the first container (if not available, create a new one)
+		if([containers count] > 0){
+			containerName = [[containers objectAtIndex:0] objectForKey:@"Title"];
+		}else{
+			containerName = @"Adium_First_Container";
+		}
+	}
+
+	//Determine the correct placement for this chat withing the container
+	if(arrangeChats){
+		index = [self _indexForInsertingChat:inChat intoContainerNamed:containerName];
+	}
+	
+	[interface openChat:inChat inContainerNamed:containerName atIndex:index];
+}
+
+//Set the active chat window
+- (void)setActiveChat:(AIChat *)inChat
+{
+	[interface setActiveChat:inChat];
+}
+
+//Close the window for a chat
+- (void)closeChat:(AIChat *)inChat
+{
+    [interface closeChat:inChat];
+}
+
+//Returns an array of open chats (cached, so call as frequently as desired)
+- (NSArray *)openChats
+{
+	if(!_cachedOpenChats){
+		_cachedOpenChats = [[interface openChats] retain];
+	}
+	
+	return(_cachedOpenChats);
+}
+
+//
+- (NSArray *)openChatsInContainerNamed:(NSString *)containerName
+{
+	return([interface openChatsInContainerNamed:containerName]);
+}
+
+//Resets the cache of open chats
+- (void)_resetOpenChatsCache
+{
+	[_cachedOpenChats release]; _cachedOpenChats = nil;
+}
+
+
+//Interface plugin callbacks -------------------------------------------------------------------------------------------
+//These methods are called by the interface to let us know what's going on.  We're informed of chats opening, closing,
+//changing order, etc.
+#pragma mark Interface plugin callbacks
+//A chat window did open: rebuild our window menu to show the new chat
+- (void)chatDidOpen:(AIChat *)inChat
+{
+	[self _resetOpenChatsCache];
+	[self buildWindowMenu];
+}
+
+//A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
+- (void)chatDidBecomeActive:(AIChat *)inChat
+{
+	[activeChat release]; activeChat = [inChat retain];
+	[self clearUnviewedContentOfChat:inChat];
+	[self updateCloseMenuKeys];
+	[self updateActiveWindowMenuItem];
+}
+
+//A chat window did close: rebuild our window menu to remove the chat
+- (void)chatDidClose:(AIChat *)inChat
+{
+	[self _resetOpenChatsCache];
+	[self clearUnviewedContentOfChat:inChat];
+	[self buildWindowMenu];
+}
+
+//The order of chats has changed: rebuild our window menu to reflect the new order
+- (void)chatOrderDidChange
+{
+	[self _resetOpenChatsCache];
+	[self buildWindowMenu];
+}
+
+//Clear the unviewed content count of the chat.  This is done when chats are made active or closed.
+- (void)clearUnviewedContentOfChat:(AIChat *)inChat
+{
+	NSEnumerator	*enumerator;
+    AIListObject	*listObject;
+	
+    enumerator = [[inChat participatingListObjects] objectEnumerator];
+    while(listObject = [enumerator nextObject]){
+		if([listObject integerStatusObjectForKey:@"UnviewedContent"]){
+			[[owner contentController] clearUnviewedContentOfListObject:listObject];
+		}
+    }
+}
+
+//Content was received, increase the unviewed content count of the chat (if it's not currently active)
+- (void)didReceiveContent:(NSNotification *)notification
+{
+	NSDictionary		*userInfo = [notification userInfo];
+	AIContentObject		*object = [userInfo objectForKey:@"Object"];
+	
+	if([object chat] != activeChat){
+		[[owner contentController] increaseUnviewedContentOfListObject:[object source]];
+	}
+}
+#warning possible to simplify interface protocol any?
+
+
+//Dynamically ordering / grouping tabs ---------------------------------------------------------------------------------
+- (void)contactOrderChanged:(NSNotification *)notification
+{
+	AIListObject				*changedObject = [notification object];
+	
+	NSLog(@"contactOrderChanged: %@",[notification object]);
+
+	if(changedObject){
+		NSEnumerator	*enumerator = [[self openChats] objectEnumerator];
+		AIChat			*chat;
+
+		//Check if we have a chat window open with this contact.  If we do, re-sort that chat
+		//Unfortunately we need to enumerate all our chats to determine this :(  Stupid group chats screwing everything up
+		while(chat = [enumerator nextObject]){
+			if([chat listObject] == changedObject) break;
+		}
+		if(chat) [self _resortChat:chat];
+
+	}else{
+		//Entire list was resorted, resort all our chats
+		[self _resortAllChats];
+	}
+	
+}
+
+//
+- (void)_resortChat:(AIChat *)chat
+{
+	NSString	*containerName = [interface containerNameForChat:chat];
+	
+	[interface moveChat:chat toContainerNamed:containerName
+				  index:[self _indexForInsertingChat:chat intoContainerNamed:containerName]];
+	
+}
+
+//
+- (void)_resortAllChats
+{
+	AISortController	*sortController = [[owner contactController] activeSortController];
+	NSEnumerator		*containerEnumerator = [[interface openContainerNames] objectEnumerator];
+	NSString			*containerName;
+	
+	while(containerName = [containerEnumerator nextObject]){
+		NSArray			*chatsInContainer = [self openChatsInContainerNamed:containerName];
+		NSMutableArray  *listObjects;
+		NSMutableArray  *sortedListObjects;
+		NSEnumerator	*objectEnumerator;
+		AIListObject	*object;
+		int				index = 0;
+		
+		//Sort the chats in this container
+		listObjects = [self _listObjectsForChatsInContainerNamed:containerName ignoringChat:nil];
+		sortedListObjects = [listObjects mutableCopy];
+		[sortController sortListObjects:sortedListObjects];
+		
+		//Sync the container with the sorted chats
+		objectEnumerator = [listObjects objectEnumerator];
+		while(object = [objectEnumerator nextObject]){
+			[interface moveChat:[chatsInContainer objectAtIndex:[listObjects indexOfObject:object]]
+			   toContainerNamed:containerName
+						  index:index++];
+		}
+	}
+}
+
+
+- (int)_indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName
+{
+	AISortController	*sortController = [[owner contactController] activeSortController];
+
+	return([sortController indexForInserting:[chat listObject]
+								 intoObjects:[self _listObjectsForChatsInContainerNamed:containerName ignoringChat:chat]]);
+}
+
+//Build array of list objects to sort
+//We can't keep track of this easily since participating list objects may change due to multi-user chat
+//Multi-user chats make this so difficult :(
+#warning would love to do away with this
+- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName ignoringChat:(AIChat *)ignoreChat
+{
+	NSMutableArray	*listObjects = [NSMutableArray array];
+	NSEnumerator	*enumerator;
+	AIChat			*chat;
+	AIListObject	*listObject;
+
+	enumerator = [[self openChatsInContainerNamed:containerName] objectEnumerator];
+	while(chat = [enumerator nextObject]){
+		if(chat != ignoreChat){
+			listObject = [chat listObject];
+			if(listObject) [listObjects addObject:listObject];
+		}
+	}
+
+	return(listObjects);
+}
+
+
+
+
+
+//Chat close menus -----------------------------------------------------------------------------------------------------
+#pragma mark Chat close menus
+//Close the active window
+- (IBAction)closeMenu:(id)sender
+{
+    [[[NSApplication sharedApplication] keyWindow] performClose:nil];
+}
+
+//Close the active chat
+- (IBAction)closeChatMenu:(id)sender
+{
+	if(activeChat) [self closeChat:activeChat];
+}
+
+//Updates the key equivalents on 'close' and 'close chat' (dynamically changed to make cmd-w less destructive)
+- (void)updateCloseMenuKeys
+{
+	if(activeChat && !closeMenuConfiguredForChat){
+        [menuItem_close setKeyEquivalent:@"W"];
+        [menuItem_closeChat setKeyEquivalent:@"w"];
+	}else if(!activeChat && closeMenuConfiguredForChat){
+        [menuItem_close setKeyEquivalent:@"w"];
+		[menuItem_closeChat removeKeyEquivalent];		
+	}
+}
+
+
+//Window Menu ----------------------------------------------------------------------------------------------------------
+#pragma mark Window Menu
+//Make a chat window active (Invoked by a selection in the window menu)
+- (IBAction)showChatWindow:(id)sender
+{
+	[self setActiveChat:[sender representedObject]];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+}
+
+//Updates the 'check' icon so it's next to the active window
+- (void)updateActiveWindowMenuItem
+{
+    NSEnumerator	*enumerator = [windowMenuArray objectEnumerator];
+    NSMenuItem		*item;
+
+    while((item = [enumerator nextObject])){
+		if([item representedObject]) [item setState:([item representedObject] == activeChat ? NSOnState : NSOffState)];
+    }
+}
+
+//Builds the window menu
+//This function gets called whenever chats are opened, closed, or re-ordered - so improvements and optimizations here
+//would probably be helpful
+- (void)buildWindowMenu
+{	
+    NSMenuItem				*item;
+    NSEnumerator			*enumerator;
+//    NSEnumerator			*tabViewEnumerator;
+//    NSEnumerator			*windowEnumerator;
+    int						windowKey = 1;
+	
+    //Remove any existing menus
+    enumerator = [windowMenuArray objectEnumerator];
+    while((item = [enumerator nextObject])){
+        [[owner menuController] removeMenuItem:item];
+    }
+    [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
+	
+    //Messages window and any open messasges
+	NSEnumerator	*containerEnumerator = [[interface openContainersAndChats] objectEnumerator];
+	NSDictionary	*containerDict;
+	
+	while(containerDict = [containerEnumerator nextObject]){
+		NSString		*containerName = [containerDict objectForKey:@"Title"];
+		NSArray			*contentArray = [containerDict objectForKey:@"Content"];
+		NSEnumerator	*contentEnumerator = [contentArray objectEnumerator];
+		AIChat			*chat;
+		
+		//Add a menu item for the container
+		if([contentArray count] > 1){
+			item = [[[NSMenuItem alloc] initWithTitle:containerName
+											   target:nil
+											   action:nil
+										keyEquivalent:@""] autorelease];
+			[self _addItemToMainMenuAndDock:item];
+		}
+		
+		//Add items for the chats it contains
+		while(chat = [contentEnumerator nextObject]){
+			NSString		*windowKeyString;
+			NSString		*chatMenuTitle = [NSString stringWithFormat:@"   %@",[chat name]];
+			
+			//Prepare a key equivalent for the controller
+			if(windowKey < 10){
+				windowKeyString = [NSString stringWithFormat:@"%i",(windowKey)];
+			}else if (windowKey == 10){
+				windowKeyString = [NSString stringWithString:@"0"];
+			}else{
+				windowKeyString = [NSString stringWithString:@""];
+			}
+			
+			item = [[[NSMenuItem alloc] initWithTitle:([contentArray count] > 1 ? chatMenuTitle : [chat name])
+											   target:self
+											   action:@selector(showChatWindow:)
+										keyEquivalent:windowKeyString] autorelease];
+			[item setRepresentedObject:chat];
+			[self _addItemToMainMenuAndDock:item];
+			
+			windowKey++;
+		}
+	}
+
+	[self updateActiveWindowMenuItem];
+}
+
+//Adds a menu item to the internal array, dock menu, and main menu
+- (void)_addItemToMainMenuAndDock:(NSMenuItem *)item
+{
+	//Add to main menu first
+	[[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+	[windowMenuArray addObject:item];
+	
+	//Make a copy, and add to the dock
+	item = [[item copy] autorelease];
+	[item setKeyEquivalent:@""];
+	[[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+	[windowMenuArray addObject:item];
+}
+
+
+//Chat Cycling ---------------------------------------------------------------------------------------------------------
+#pragma mark Chat Cycling
+//Select the next message
+- (IBAction)nextMessage:(id)sender
+{
+	NSArray	*openChats = [self openChats];
+
+	if([openChats count]){
+		if(activeChat){
+			int chatIndex = [openChats indexOfObject:activeChat]+1;
+			[self setActiveChat:[openChats objectAtIndex:(chatIndex < [openChats count] ? chatIndex : 0)]];
+		}else{
+			[self setActiveChat:[openChats objectAtIndex:0]];
+		}
+	}
+}
+
+//Select the previous message
+- (IBAction)previousMessage:(id)sender
+{
+	NSArray	*openChats = [self openChats];
+	
+	if([openChats count]){
+		if(activeChat){
+			int chatIndex = [openChats indexOfObject:activeChat]-1;
+			[self setActiveChat:[openChats objectAtIndex:(chatIndex >= 0 ? chatIndex : [openChats count]-1)]];
+		}else{
+			[self setActiveChat:[openChats lastObject]];
+		}
+	}
+}
+
+
+//Message View ---------------------------------------------------------------------------------------------------------
+//Message view is abstracted from the containing interface, since they're not directly related to eachother
+#pragma mark Message View
+//Registers a view to handle the contact list
 - (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin
 {
     [messageViewArray addObject:inPlugin];
@@ -120,29 +608,9 @@
     return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
 }
 
-//Interface chat opening and closing
-- (IBAction)initiateMessage:(id)sender
-{
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] initiateNewMessage];
-}
 
-- (void)setActiveChat:(AIChat *)inChat
-{
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
-}
-
-- (void)openChat:(AIChat *)inChat
-{
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] openChat:inChat];
-}
-
-- (void)closeChat:(AIChat *)inChat
-{
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] closeChat:inChat];
-}
-
-//Errors
-#pragma mark Errors
+//Error Display --------------------------------------------------------------------------------------------------------
+#pragma mark Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc
 {
     [self handleMessage:inTitle withDescription:inDesc withWindowTitle:ERROR_MESSAGE_WINDOW_TITLE];
@@ -157,11 +625,13 @@
     [[owner notificationCenter] postNotificationName:Interface_ShouldDisplayErrorMessage object:nil userInfo:errorDict];
 }
 
-//Flashing
-#pragma mark Flashing
+
+//Synchronized Flashing ------------------------------------------------------------------------------------------------
+#pragma mark Synchronized Flashing
+//Register to observe the synchronized flashing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver
 {
-    //Create a flash observer array and install the flash timer
+    //Setup the timer if we don't have one yet
     if(flashObserverArray == nil){
         flashObserverArray = [[NSMutableArray alloc] init];
         flashTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) 
@@ -175,6 +645,7 @@
     [flashObserverArray addObject:inObserver];
 }
 
+//Unregister from observing flashing
 - (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver
 {
     //Remove the observer from our array
@@ -188,6 +659,7 @@
     }
 }
 
+//Timer, invoke a flash
 - (void)flashTimer:(NSTimer *)inTimer
 {
     NSEnumerator	*enumerator;
@@ -201,15 +673,16 @@
     }
 }
 
+//Current state of flashing.  This is an integer the increases by 1 with every flash.  Mod to whatever range is desired
 - (int)flashState
 {
     return(flashState);
 }
 
-//Tooltips -----------------------------------
-#pragma mark Tooltips
 
-// Registers code to display tooltip info about a contact
+//Tooltips -------------------------------------------------------------------------------------------------------------
+#pragma mark Tooltips
+//Registers code to display tooltip info about a contact
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary
 {
     if (isSecondary)
@@ -523,16 +996,16 @@
 //Paste, stripping formatting
 - (IBAction)paste:(id)sender
 {
-	[self pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
+	[self _pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
 }
 
 //Paste with formatting
 - (IBAction)pasteFormatted:(id)sender
 {
-	[self pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
+	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
 }
 
-- (void)pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender
+- (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSResponder	*responder = [keyWindow firstResponder];
@@ -589,6 +1062,7 @@
 	[window runToolbarCustomizationPalette:sender];
 }
 
+//Menu item validation
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSWindow	*window = [[NSApplication sharedApplication] keyWindow];
@@ -614,10 +1088,30 @@
 	}else if(menuItem == menuItem_customizeToolbar){
 		return([window toolbar] != nil && [[window toolbar] isVisible]);
 
+	}else if(menuItem == menuItem_closeChat){
+		return(activeChat != nil);
+#warning && [activeChat contaningWindow] numberOfTabs > 1
+		
 	}else{
 		return(YES);
 	}
 }
+
+
+
+
+
+
+
+//Initiate a chat
+#warning make separate plugin
+- (IBAction)initiateMessage:(id)sender
+{
+	[AINewMessagePrompt newMessagePrompt];
+}
+
+
+
 
 @end
 

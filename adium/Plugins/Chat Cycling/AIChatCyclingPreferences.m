@@ -5,27 +5,26 @@
 //  Created by Adam Iser on Thu Jun 10 2004.
 //
 
-#import "AITabSwitchingPreferences.h"
-#import "AIDualWindowInterfacePlugin.h"
+#import "AIChatCyclingPreferences.h"
+#import "AIChatCyclingPlugin.h"
 
-
-@implementation AITabSwitchingPreferences
+@implementation AIChatCyclingPreferences
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Keys);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Tab Keys","Label of preference pane for modifying the keys used to switch message tabs"));
+    return(@"Chat Cycle Keys");
 }
 - (NSString *)nibName{
-    return(@"TabSwitchPrefs");
+    return(@"ChatCyclingPrefs");
 }
 
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHAT_CYCLING];
 
 	[popUp_tabKeys compatibleSelectItemWithTag:[[preferenceDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]];
 }
@@ -35,7 +34,7 @@
 {
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
 										 forKey:KEY_TAB_SWITCH_KEYS
-										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+										  group:PREF_GROUP_CHAT_CYCLING];
 }
 
 @end

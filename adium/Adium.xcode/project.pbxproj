@@ -4970,13 +4970,14 @@
 				4B2DC05A066F689A00AD5AAD,
 				4B2DC06D066F705800AD5AAD,
 				7E6FDD660672B89A00B5C3D4,
-				4B01180E0679172E00FCB992,
 				4B052CA0067E39B100A43B4A,
 				4B052CA6067E39BE00A43B4A,
 				9EE161B006819C6F00AB822A,
 				4BF3031B068746A8000DCA65,
 				34E38240068F7F2300303451,
 				34E3860C068FAA7900303451,
+				4B2E560A06A33D85008866CF,
+				4B2E560C06A33D85008866CF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5285,7 +5286,6 @@
 				4B0CB2160670E07E005821CC,
 				4B0CB2170670E07E005821CC,
 				4B0118090679168700FCB992,
-				4B0118110679175400FCB992,
 				4BF2E201067CAE9200743318,
 				4BF2E6BB067CB70E00743318,
 				4BB1E43F067F2CA100D1DB86,
@@ -5300,6 +5300,7 @@
 				4BF302F206873CCE000DCA65,
 				4BC7BA3E069C8BD4001F2DD8,
 				7EBC6E5F069DE5BC00020736,
+				4B2E560E06A33D85008866CF,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5609,13 +5610,14 @@
 				4B2DC05B066F689A00AD5AAD,
 				4B2DC06E066F705800AD5AAD,
 				7E6FDD670672B89A00B5C3D4,
-				4B01180F0679172E00FCB992,
 				4B052CA1067E39B100A43B4A,
 				4B052CA7067E39BE00A43B4A,
 				9EE161B106819C6F00AB822A,
 				4BF3031C068746A8000DCA65,
 				34E38241068F7F2300303451,
 				34E3860D068FAA7900303451,
+				4B2E560B06A33D85008866CF,
+				4B2E560D06A33D85008866CF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10147,50 +10149,6 @@
 			settings = {
 			};
 		};
-		4B01180C0679172E00FCB992 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITabSwitchingPreferences.h;
-			path = "Plugins/Dual Window Interface/AITabSwitchingPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B01180D0679172E00FCB992 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITabSwitchingPreferences.m;
-			path = "Plugins/Dual Window Interface/AITabSwitchingPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B01180E0679172E00FCB992 = {
-			fileRef = 4B01180C0679172E00FCB992;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B01180F0679172E00FCB992 = {
-			fileRef = 4B01180D0679172E00FCB992;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B0118100679175400FCB992 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = TabSwitchPrefs.nib;
-			path = "Plugins/Dual Window Interface/TabSwitchPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0118110679175400FCB992 = {
-			fileRef = 4B0118100679175400FCB992;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B030E52056C2D7E00C765F9 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -11146,6 +11104,89 @@
 			settings = {
 			};
 		};
+		4B2E560406A33D85008866CF = {
+			children = (
+				4B2E560506A33D85008866CF,
+				4B2E560606A33D85008866CF,
+				4B2E560706A33D85008866CF,
+				4B2E560806A33D85008866CF,
+				4B2E560906A33D85008866CF,
+			);
+			isa = PBXGroup;
+			name = "Chat Cycling";
+			path = "Plugins/Chat Cycling";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2E560506A33D85008866CF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AIChatCyclingPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2E560606A33D85008866CF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AIChatCyclingPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2E560706A33D85008866CF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AIChatCyclingPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2E560806A33D85008866CF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AIChatCyclingPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2E560906A33D85008866CF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = ChatCyclingPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2E560A06A33D85008866CF = {
+			fileRef = 4B2E560506A33D85008866CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2E560B06A33D85008866CF = {
+			fileRef = 4B2E560606A33D85008866CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2E560C06A33D85008866CF = {
+			fileRef = 4B2E560706A33D85008866CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2E560D06A33D85008866CF = {
+			fileRef = 4B2E560806A33D85008866CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2E560E06A33D85008866CF = {
+			fileRef = 4B2E560906A33D85008866CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B30490B047FBD6A00A8010A = {
 			children = (
 				4B30491A047FBDCE00A8010A,
@@ -11610,6 +11651,7 @@
 		};
 		4B4F5B23042D636700A8010A = {
 			children = (
+				4B2E560406A33D85008866CF,
 				4BF303160687466D000DCA65,
 				9EB7C05703D52AFA00415B22,
 				4B30490B047FBD6A00A8010A,
@@ -13818,9 +13860,6 @@
 				4B970BF80535B864002F28F9,
 				4B970BF90535B864002F28F9,
 				4B970BFC0535B879002F28F9,
-				4B01180C0679172E00FCB992,
-				4B01180D0679172E00FCB992,
-				4B0118100679175400FCB992,
 				4BA1300304C0A4E300A8010A,
 				C497516305BBAFE4009958A6,
 				34D43504051ADC10003B2F21,

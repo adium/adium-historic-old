@@ -35,12 +35,13 @@
 	//ahead of time to ensure it applies evenly to both preferences.
 	BOOL	senderState = [sender state]; 
 	
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:senderState]
-                                             forKey:KEY_DUAL_RESIZE_VERTICAL
-                                              group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:senderState]
-                                             forKey:KEY_DUAL_RESIZE_HORIZONTAL
-                                              group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+#warning CLPrefs
+//        [[adium preferenceController] setPreference:[NSNumber numberWithBool:senderState]
+//                                             forKey:KEY_DUAL_RESIZE_VERTICAL
+//                                              group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+//        [[adium preferenceController] setPreference:[NSNumber numberWithBool:senderState]
+//                                             forKey:KEY_DUAL_RESIZE_HORIZONTAL
+//                                              group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }
 }
 
@@ -62,23 +63,24 @@
 //Keep the preferences current
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
-        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-
-        //If the Behavior set changed
-        if(notification == nil || ([key isEqualToString:KEY_DUAL_RESIZE_VERTICAL]) || ([key isEqualToString:KEY_DUAL_RESIZE_HORIZONTAL]) ){
-            NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-            
-            BOOL vertical = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
-            BOOL horizontal = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
-            if (vertical && horizontal) {
-                [checkBox_autoResize setState:NSOnState];
-            } else if (vertical || horizontal) {
-                [checkBox_autoResize setState:NSMixedState];
-            } else 
-                [checkBox_autoResize setState:NSOffState];
-        }
-    }
+#warning CLPrefs
+//    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
+//        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+//
+//        //If the Behavior set changed
+//        if(notification == nil || ([key isEqualToString:KEY_DUAL_RESIZE_VERTICAL]) || ([key isEqualToString:KEY_DUAL_RESIZE_HORIZONTAL]) ){
+//            NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+//            
+//            BOOL vertical = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
+//            BOOL horizontal = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
+//            if (vertical && horizontal) {
+//                [checkBox_autoResize setState:NSOnState];
+//            } else if (vertical || horizontal) {
+//                [checkBox_autoResize setState:NSMixedState];
+//            } else 
+//                [checkBox_autoResize setState:NSOffState];
+//        }
+//    }
 }
 
 @end

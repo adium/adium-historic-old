@@ -16,6 +16,12 @@
 @class AIMiniToolbar, AIAutoScrollView;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
+#define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
+#define KEY_SCL_BORDERLESS					@"Borderless"
+#define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
+#define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
+
+
 @protocol AIContactListCleanup <NSObject>
 - (void)unloadContactListWindow;
 @end
@@ -23,7 +29,6 @@
 @interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
     IBOutlet	AIAutoScrollView		*scrollView_contactList;
 
-    NSObject <AIContainerInterface>		*interface;
     id <AIContactListViewController>	contactListViewController;
     NSView								*contactListView;
 
@@ -35,7 +40,7 @@
     BOOL								autoResizeHorizontally;
 }
 
-+ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface;
++ (AIContactListWindowController *)contactListWindowController;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 

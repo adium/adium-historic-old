@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.154 2004/06/30 22:01:08 evands Exp $
+// $Id: AIContactController.m,v 1.155 2004/07/12 22:24:34 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -762,6 +762,7 @@
 //Sort the entire contact list
 - (void)sortContactList
 {
+	NSLog(@"Sort contact list");
     [contactList sortGroupAndSubGroups:YES sortController:activeSortController];
 	[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
 }
@@ -774,9 +775,11 @@
 	}else{
 		AIListGroup		*group = [inObject containingGroup];
 
+		NSLog(@"Sort object %@",[inObject displayName]);
+
 		//Sort the groups containing this object
 		[group sortListObject:inObject sortController:activeSortController];
-		[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:group];
+		[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:inObject];
 	}
 }
 

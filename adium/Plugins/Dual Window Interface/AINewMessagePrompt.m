@@ -24,7 +24,7 @@
 - (BOOL)shouldCascadeWindows;
 - (void)_configureTextFieldForAccount:(AIAccount *)account;
 @end
-
+#warning make a separate plugin
 @implementation AINewMessagePrompt
 
 static AINewMessagePrompt *sharedNewMessageInstance = nil;
@@ -70,14 +70,11 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 												  accountID:[account uniqueObjectID] 
 														UID:UID];
     if(contact){
-        AIChat	*chat;
-        
         //Close the prompt
         [AINewMessagePrompt closeSharedInstance];
 
         //Initiate the message
-        chat = [[adium contentController] openChatWithContact:contact];
-        [[adium interfaceController] setActiveChat:chat];
+        [[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
     }
 }
 

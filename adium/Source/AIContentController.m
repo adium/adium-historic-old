@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.91 2004/07/05 17:24:59 adamiser Exp $
+// $Id: AIContentController.m,v 1.92 2004/07/12 22:24:36 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -360,10 +360,10 @@
 		AIChat		*chat = [inObject chat];
 
 		//Tell the interface to open the chat
-		if(![chat hasContent]){
-//			NSLog(@"displayContentObject %@ : %@",inObject,chat);
-			[[owner interfaceController] openChat:chat]; 
-		}
+		//For incoming messages, we don't open the chat until we're sure that new content is being received.
+		//This is only necessary for the first incoming message.  The quickest way to check this is checking whether
+		//the chat already has content or not.  If there is content, this is not the first message.
+		if(![chat hasContent]) [[owner interfaceController] openChat:chat]; 
 		
 		//Add this content to the chat
 		[chat addContentObject:inObject];
@@ -383,6 +383,26 @@
         return(NO);
     }
 }
+
+
+
+//Unviewed Content -------------------------------------------------------------------------------------------------
+#pragma mark Unviewed Content
+//Increase unviewed content
+- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject
+{
+	int currentUnviewed = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+	[inObject setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:@"UnviewedContent" notify:YES];
+}
+
+//Clear unviewed content
+- (void)clearUnviewedContentOfListObject:(AIListObject *)inObject
+{
+	[inObject setStatusObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent" notify:YES];
+}
+
+
+
 
 
 

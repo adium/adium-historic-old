@@ -79,6 +79,26 @@
     return self;
 }
 
+//Remove the key equivalent from a menu item
+//
+//Because of a bug with NSMenuItem (Yay), we can't just do this:
+// [menuItem_closeTab setKeyEquivalent:@""];
+//
+//Instead, we'll need to remove the menu item, remove its key
+//equivalant, and then re-add it to the menu.  *sigh*
+//
+- (void)removeKeyEquivalent
+{
+	NSMenu	*menu = [self menu];
+	int		index = [menu indexOfItem:self];
+
+	[self retain];
+	[menu removeItemAtIndex:index];
+	[self setKeyEquivalent:@""];
+	[menu insertItem:self atIndex:index];
+	[self release];
+}
+
 @end
 
 //Note: AdditionsFromCarbonMenuManager require the menu item already be added to a menu. 

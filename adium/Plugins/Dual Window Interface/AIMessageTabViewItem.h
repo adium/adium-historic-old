@@ -13,10 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMessageViewController;
+@class AIMessageViewController, AIMessageWindowController;
 @protocol AIInterfaceContainer;
 
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
+	AIMessageWindowController	*container;
     AIMessageViewController 	*messageView;
     AIAdium						*adium;
 	NSImage						*tabViewItemImage;
@@ -27,8 +28,11 @@
 - (void)close:(id)sender;
 - (NSString *)label;
 - (NSImage *)icon;
+- (AIChat *)chat;
 - (NSImage *)image;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
+- (void)setContainer:(AIMessageWindowController *)inContainer;
+- (AIMessageWindowController *)container;
 
 @end

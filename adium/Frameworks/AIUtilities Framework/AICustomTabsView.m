@@ -73,6 +73,7 @@ static  NSImage			*tabDivider = nil;
 	allowsTabDragging = YES;
     tabCellArray = nil;
     selectedCustomTabCell = nil;
+	ignoreTabNumberChange = NO;
 
     //register as a drag observer
     [self registerForDraggedTypes:[self acceptableDragTypes]];
@@ -172,16 +173,13 @@ static  NSImage			*tabDivider = nil;
 //Redisplay a tab
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
-	NSEnumerator	*enumerator = [tabCellArray objectEnumerator];
-	AICustomTabCell	*tabCell;
-    while((tabCell = [enumerator nextObject]) && [tabCell tabViewItem] != inTabViewItem);
-	[self setNeedsDisplayInRect:[tabCell frame]];
+	[self setNeedsDisplayInRect:[[self tabCellForTabViewItem:inTabViewItem] frame]];
 }
 
-//Recalculate tab sizes
-- (void)resizeTabs
+//
+- (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
-	[self arrangeTabs];
+	[self smoothlyArrangeTabs];
 }
 
 //Tell our delegate to close a tab
@@ -219,24 +217,39 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Reposition a tab
-- (void)moveTab:(AICustomTabCell *)tabCell toIndex:(int)index selectTab:(BOOL)shouldSelect
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect
 {
-	NSTabViewItem	*tabViewItem = [tabCell tabViewItem];
-
+	NSLog(@"tab is at index %i",[tabView indexOfTabViewItem:tabViewItem]);
+	
 	//Ignore the move request if the tab is already at the proper index
-	if ([tabView indexOfTabViewItem:tabViewItem] != index){
+	if([tabView indexOfTabViewItem:tabViewItem] != index){
+		AICustomTabCell		*tabCell = [self tabCellForTabViewItem:tabViewItem];
+		
 		//Ignore the 'shouldSelect' choice if this cell is already selected
 		if(tabViewItem == [tabView selectedTabViewItem]) shouldSelect = YES;
 		
+		//Move the tab cell
+		if(tabCell) [tabCellArray moveObject:tabCell toIndex:index];
+		
 		//Move the tab
+		if([tabView indexOfTabViewItem:tabViewItem] < index) index++;
+		ignoreTabNumberChange = YES;
 		[tabViewItem retain];
 		[tabView removeTabViewItem:tabViewItem];
 		[tabView insertTabViewItem:tabViewItem atIndex:index];
 		[tabViewItem release];
+		ignoreTabNumberChange = NO;
 		
 		//Inform our delegate of the re-order
 		if([delegate respondsToSelector:@selector(customTabViewDidChangeOrderOfTabViewItems:)]){
 			[delegate customTabViewDidChangeOrderOfTabViewItems:self];
+		}
+		
+		//Smoothly animate into place
+		if(tabCell){
+			[self smoothlyArrangeTabs];
+		}else{
+			[self rebuildTabCells];
 		}
 	}
 	
@@ -310,13 +323,15 @@ static  NSImage			*tabDivider = nil;
 //Rebuild our tab list to match the tabView
 - (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)inTabView
 {
-    //Reset our tab list
-    [self rebuildTabCells];        
-	
-    //Inform our delegate of the tab count change
-    if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
-        [delegate customTabViewDidChangeNumberOfTabViewItems:self];
-    }
+	if(!ignoreTabNumberChange){
+		//Reset our tab list
+		[self rebuildTabCells];        
+		
+		//Inform our delegate of the tab count change
+		if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
+			[delegate customTabViewDidChangeNumberOfTabViewItems:self];
+		}
+	}
 }
 
 //Intercept frame changes and correctly resize our tabs
@@ -364,6 +379,16 @@ static  NSImage			*tabDivider = nil;
 	
 	[self arrangeTabs];
 	[self startCursorTracking];
+}
+
+- (AICustomTabCell *)tabCellForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	NSEnumerator	*enumerator = [tabCellArray objectEnumerator];
+	AICustomTabCell	*tabCell;
+	
+	while((tabCell = [enumerator nextObject]) && [tabCell tabViewItem] != tabViewItem);
+	
+	return(tabCell);
 }
 
 
@@ -701,6 +726,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	int				dropIndex;
 	AICustomTabCell	*tabCell;
 	
+	//Perform the drag
     if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){
 		[self _dropPointForTabOfWidth:[[AICustomTabDragging sharedInstance] sizeOfDraggedCell].width
 				 hoveredAtScreenPoint:location
@@ -719,7 +745,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
             }
         }
     }
-    
+	
     return(success);
 }
 

@@ -34,6 +34,7 @@
 #import "BZContextImageBridge.h"
 #import "AICursorAdditions.h"
 #import "AICustomTabCell.h"
+#import "AICustomTabDragging.h"
 #import "AICustomTabsView.h"
 #import "ESDateFormatterAdditions.h"
 #import "ESDelayedTextField.h"
