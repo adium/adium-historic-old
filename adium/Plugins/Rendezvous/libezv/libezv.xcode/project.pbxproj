@@ -387,6 +387,42 @@
 			settings = {
 			};
 		};
+		495335150683F7CE00FB077F = {
+			fileRef = 49D2A86C05C62BC1000207CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		495335160683F7D300FB077F = {
+			fileRef = 49D2A86C05C62BC1000207CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		495335170683F7DA00FB077F = {
+			containerPortal = 0867D690FE84028FC02AAC07;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 49D2A86B05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		495335180683F7DA00FB077F = {
+			isa = PBXTargetDependency;
+			target = 49D2A86B05C62BC1000207CB;
+			targetProxy = 495335170683F7DA00FB077F;
+		};
+		495335190683F7E400FB077F = {
+			containerPortal = 0867D690FE84028FC02AAC07;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 49D2A86B05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		4953351A0683F7E400FB077F = {
+			isa = PBXTargetDependency;
+			target = 49D2A86B05C62BC1000207CB;
+			targetProxy = 495335190683F7E400FB077F;
+		};
 		496F530005CE007600B6A0F5 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -439,12 +475,6 @@
 		};
 		496F531505CE00ED00B6A0F5 = {
 			fileRef = 496F531305CE00ED00B6A0F5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		496F53AB05CE0B1C00B6A0F5 = {
-			fileRef = 49D2A86C05C62BC1000207CB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -568,6 +598,7 @@
 				WARNING_CFLAGS = "-Wmost";
 			};
 			dependencies = (
+				495335180683F7DA00FB077F,
 			);
 			isa = PBXNativeTarget;
 			name = "libezv (Static)";
@@ -718,18 +749,12 @@
 		496F57D105CE4E7800B6A0F5 = {
 			buildActionMask = 2147483647;
 			files = (
+				495335160683F7D300FB077F,
 				496F57D305CE4E9B00B6A0F5,
-				496F57D205CE4E9600B6A0F5,
 				499C9CD9067F4E4000D88CC0,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		496F57D205CE4E9600B6A0F5 = {
-			fileRef = 49D2A86C05C62BC1000207CB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		496F57D305CE4E9B00B6A0F5 = {
 			fileRef = 49D2B14805C63189000207CB;
@@ -1288,8 +1313,8 @@
 		D2AAC0C505546C1D00DB518D = {
 			buildActionMask = 2147483647;
 			files = (
+				495335150683F7CE00FB077F,
 				49D2B14A05C63189000207CB,
-				496F53AB05CE0B1C00B6A0F5,
 				499C9CD8067F4E4000D88CC0,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -1323,6 +1348,7 @@
 				WARNING_CFLAGS = "-Wmost";
 			};
 			dependencies = (
+				4953351A0683F7E400FB077F,
 			);
 			isa = PBXNativeTarget;
 			name = libezv;
