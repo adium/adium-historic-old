@@ -4099,6 +4099,49 @@
 			settings = {
 			};
 		};
+		34E6CE5B072632EA00A2643A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESExpandedRecursiveLock.h;
+			path = "Frameworks/AIUtilities Framework/ESExpandedRecursiveLock.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E6CE5C072632EA00A2643A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESExpandedRecursiveLock.m;
+			path = "Frameworks/AIUtilities Framework/ESExpandedRecursiveLock.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E6CE5D072632EA00A2643A = {
+			fileRef = 34E6CE5B072632EA00A2643A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34E6CE5E072632EA00A2643A = {
+			fileRef = 34E6CE5C072632EA00A2643A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E6CE61072632F800A2643A = {
+			children = (
+				34E6CE5B072632EA00A2643A,
+				34E6CE5C072632EA00A2643A,
+			);
+			isa = PBXGroup;
+			name = "Recursive Lock with improvements";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 //340
 //341
 //342
@@ -4490,6 +4533,7 @@
 				4BD1F30206D26AB600B3975E,
 				348E5E1D06D2F457004C051C,
 				4BD1EF7406D2636A00B3975E,
+				34E6CE61072632F800A2643A,
 				4BD1F2B406D268C300B3975E,
 				4BD1F2D506D2693200B3975E,
 				4BD1EEE706D25FFF00B3975E,
@@ -5127,6 +5171,7 @@
 				348E5E1906D2F447004C051C,
 				34A274220721EC6A004F3455,
 				34A274350721F231004F3455,
+				34E6CE5D072632EA00A2643A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5274,6 +5319,7 @@
 				348E5E1A06D2F447004C051C,
 				34A274230721EC6A004F3455,
 				34A274360721F231004F3455,
+				34E6CE5E072632EA00A2643A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
