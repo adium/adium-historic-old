@@ -1498,15 +1498,15 @@
                                             message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]];
                         [[owner contentController] addIncomingContentObject:messageObject];
                     }
-                    else if([contentType isEqual:@"text/x-msmsgscontrol\r\n"])
+                    else if([messageLoad objectForKey:@"TypingUser"] != nil)
                     {
                         NSLog(@"typing");
                         //w00t. typing. ph33r.
-                        AIHandle *handle = [handleDict objectForKey:handle];
+                        AIHandle *Handle = [handleDict objectForKey:handle];
                         
-                        [[handle statusDictionary] 
+                        [[Handle statusDictionary] 
                             setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
-                        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:
+                        [[owner contactController] handleStatusChanged:Handle modifiedStatusKeys:
                             [NSArray arrayWithObject:@"Typing"]];
                     }
                 }
