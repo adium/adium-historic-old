@@ -1444,7 +1444,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 /*! 
 * @brief Generate a menu of encryption preference choices
 */
-- (NSMenu *)encryptionMenuNotifyingTarget:(id)target
+- (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault
 {
 	NSMenu		*encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
 	NSMenuItem	*menuItem;
@@ -1486,6 +1486,19 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[menuItem setTag:EncryptedChat_RejectUnencryptedMessages];
 	[encryptionMenu addItem:menuItem];
 	[menuItem release];
+	
+	if(withDefault){
+		[encryptionMenu addItem:[NSMenuItem separatorItem]];
+		
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Default",nil)
+														  target:nil
+														  action:nil
+												   keyEquivalent:@""];
+		
+		[menuItem setTag:EncryptedChat_Default];
+		[encryptionMenu addItem:menuItem];
+		[menuItem release];
+	}
 	
 	return([encryptionMenu autorelease]);
 }
