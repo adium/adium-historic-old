@@ -6,7 +6,7 @@ Version 0.70
 
 New features:
 *** - Complete contact list rewrite, w00t.
-- Support for grouping multiple contacts into a single entry ("MetaContacts") via the Address Book
+- Support for grouping multiple contacts into a single entry ("MetaContacts") via option-dragging in the Contact List and via the Address Book
 - Applescript dictionary
 - Adium now detects changes in network connectivity and automatically disconnects/reconnects as appropriate. When Adium launches, autoconnecting accounts
 	wait for network availability before attempting to connect.
