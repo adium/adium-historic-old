@@ -7,10 +7,9 @@
 
 #import "ESGaimYahooAccountViewController.h"
 
-
 @implementation ESGaimYahooAccountViewController
 - (NSString *)nibName{
-    return(@"ESGaimYahooAuxiliaryAccountView");
+    return(@"ESGaimYahooAccountView");
 }
 
 @end

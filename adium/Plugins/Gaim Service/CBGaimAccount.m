@@ -1574,7 +1574,7 @@
 	if (inPassword){
 		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
 		
-		NSLog(@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+		if (GAIM_DEBUG) NSLog(@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
 		[self continueConnectWithConfiguredProxy];
 	}else{
