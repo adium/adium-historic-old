@@ -9,10 +9,9 @@
 #import "JSCEventBezelPlugin.h"
 #import "JSCEventBezelPreferences.h"
 #import "AIContactStatusColoringPlugin.h"
-//#import "ESEventBezelContactAlert.h"
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
-#define EVENT_BEZEL_ALERT   @"Show Event Notification Window"
+#define EVENT_BEZEL_ALERT   AILocalizedString(@"Show Event Notification Window",nil)
 
 @interface JSCEventBezelPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -23,9 +22,6 @@
 
 - (void)installPlugin
 {
-    //Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"ShowEventBezel" withHandler:self];
-
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_EVENT_BEZEL];
     
@@ -73,7 +69,7 @@
     
     
     //Install our contact alert
-//	[[adium contactAlertsController] registerActionID:@"EventBezel" withHandler:self];
+	[[adium contactAlertsController] registerActionID:@"EventBezel" withHandler:self];
 	
     //watch preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -83,8 +79,7 @@
 
 - (void)uninstallPlugin
 {
-    //Uninstall our contact alert
-//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
+
 }
 
 - (void)dealloc
@@ -106,26 +101,26 @@
         ignoreClicks = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue];
 		
         [eventArray removeAllObjects];
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
             [eventArray addObject:Content_FirstContentRecieved];                
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue])
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue])
             [eventArray addObject:CONTACT_STATUS_ONLINE_YES];
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue])
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue])
             [eventArray addObject:CONTACT_STATUS_ONLINE_NO];
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue])
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue])
             [eventArray addObject:CONTACT_STATUS_AWAY_YES];
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue])
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue])
             [eventArray addObject:CONTACT_STATUS_AWAY_NO];
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue])
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue])
             [eventArray addObject:CONTACT_STATUS_IDLE_YES];
-        if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue])
-            [eventArray addObject:CONTACT_STATUS_IDLE_NO];   
+        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue])
+            [eventArray addObject:CONTACT_STATUS_IDLE_NO];
     }
 }
 
 - (void)eventNotification:(NSNotification *)notification
 {
-    if (showEventBezel && [eventArray containsObject:[notification name]]) {
+    if(showEventBezel && [eventArray containsObject:[notification name]]){
         [self processBezelForNotification:notification];
     }
 }
@@ -141,9 +136,9 @@
     NSDictionary                *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
     NSDictionary                *colorPreferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     
-    if ([notificationName isEqualToString:Content_FirstContentRecieved]) {
+    if([notificationName isEqualToString:Content_FirstContentRecieved]) {
 		NSArray *participatingListObjects = [[notification object] participatingListObjects];
-		if ([participatingListObjects count]){
+		if([participatingListObjects count]){
 			contact = [participatingListObjects objectAtIndex:0];
 			isFirstMessage = YES;
 		}else{
@@ -153,7 +148,7 @@
         contact = [notification object];
     }
     
-	if (contact){
+	if(contact){
 		//Check to be sure bezel for contact and for its group is enabled
 		NSNumber *contactDisabledNumber = [contact preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
 		//NSNumber *groupDisabledNumber = [[contact containingGroup] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
@@ -165,15 +160,15 @@
 		BOOL showIfAway = ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]
 			|| ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
 		
-		if (contactEnabled && /*groupEnabled &&*/ showIfHidden && showIfAway){
-			if ([NSApp isHidden]) {
+		if(contactEnabled && /*groupEnabled &&*/ showIfHidden && showIfAway){
+			if([NSApp isHidden]) {
 				[NSApp unhideWithoutActivation];
 			}
 			
-			if (isFirstMessage) {
+			if(isFirstMessage){
 				AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
 				statusMessage = [[[contentMessage message] safeString] string];
-			} else {
+			}else{
 				// If it is a status change, show status message
 				// Not working
 				/*ownerArray = [contact statusArrayForKey: @"StatusMessage"];
@@ -185,40 +180,40 @@
 				}*/
 			}
 			
-			if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
+			if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]){
 				tempEvent = AILocalizedString(@"is now online",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-			} else if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
+			}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]){
 				tempEvent = AILocalizedString(@"has gone offline",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-			} else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
+			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]){
 				tempEvent = AILocalizedString(@"has gone away",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
-			} else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
+			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]){
 				tempEvent = AILocalizedString(@"is available",nil);
 				#warning Jorge: Here would be nice to have a check on the contact status and color accordingly
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-			} else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
+			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]){
 				tempEvent = AILocalizedString(@"is idle",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
-			} else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
+			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]){
 				tempEvent = AILocalizedString(@"is no longer idle",nil);
 				#warning Jorge: Here would be nice to have a check on the contact status and color accordingly
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
-			} else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
+            }else if([notificationName isEqualToString: Content_FirstContentRecieved]){
 				tempEvent = AILocalizedString(@"new message",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
 			}
 			
 			tempBuddyIcon = [[[contact displayArrayForKey:@"UserIcon"] objectValue] retain];
-			if (!tempBuddyIcon) {
+			if(!tempBuddyIcon){
 				tempBuddyIcon = [[NSImage imageNamed: @"DefaultIcon"] retain];
 			}
 			[ebc showBezelWithContact: [contact longDisplayName]
@@ -238,7 +233,7 @@
     activeListObject = [inObject retain];
     
     contactDisableBezel = [activeListObject preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
-    if (contactDisableBezel)
+    if(contactDisableBezel)
         [checkBox_disableBezel setState:[contactDisableBezel boolValue]];
     else
         [checkBox_disableBezel setState:NO];
@@ -246,12 +241,12 @@
 
 - (IBAction)changedSetting:(id)sender
 {
-    if (sender == checkBox_disableBezel) {
+    if(sender == checkBox_disableBezel){
         [activeListObject setPreference:[NSNumber numberWithBool:[checkBox_disableBezel state]] forKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
     }
 }
 
-#pragma mark Event Notification Alert
+#pragma mark AIActionHandler
 
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
@@ -268,44 +263,14 @@
 	return([NSImage imageNamed:@"BezelAlert" forClass:[self class]]);
 }
 
-- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
-{
-	return nil;
-}
-
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
 {
-	// Display the Event Notification
+    [self eventNotification:[NSNotification notificationWithName:eventID object:listObject]];
 }
 
-//        NSString * ContactStatusString = nil;
-//        if ([event isEqualToString:@"Signed On"]) {
-//            ContactStatusString = CONTACT_STATUS_ONLINE_YES;
-//        } else  if ([event isEqualToString:@"Signed Off"]) {
-//            ContactStatusString = CONTACT_STATUS_ONLINE_NO;
-//        } else {
-//            if (event_status) { //positive
-//                if ([event isEqualToString:@"Away"]) {
-//                    ContactStatusString = CONTACT_STATUS_AWAY_YES;
-//                } else if ([event isEqualToString:@"Idle"]) {
-//                    ContactStatusString = CONTACT_STATUS_IDLE_YES;
-//                }
-//            } else {
-//                if ([event isEqualToString:@"Away"]) {
-//                    ContactStatusString = CONTACT_STATUS_AWAY_NO;
-//                } else if ([event isEqualToString:@"Idle"]) {
-//                    ContactStatusString = CONTACT_STATUS_IDLE_NO;
-//                }
-//            }
-//        }
-//        
-//        if (ContactStatusString) {
-//            if (!showEventBezel || (![eventArray containsObject:ContactStatusString])) {
-//                [self processBezelForNotification:[NSNotification notificationWithName:ContactStatusString object:inObject]];
-//                return YES;
-//            }
-//        }
-//        return NO;
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+    return nil;
+}
 
-	
 @end
