@@ -33,27 +33,33 @@
 
 /*
  * @class AIEventSoundsPlugin
+ *
+ * @brief Component for the Play Sound action
  */
 @implementation AIEventSoundsPlugin
 
+/*!
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our contact alert
 	[[adium contactAlertsController] registerActionID:SOUND_ALERT_IDENTIFIER withHandler:self];
 }
 
-- (void)uninstallPlugin
-{
-
-}
-
-//Play Sound Alert -----------------------------------------------------------------------------------------------------
-#pragma mark Play Sound Alert
+/*!
+ * @brief Short description
+ * @result A short localized description of the action
+ */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
 	return(EVENT_SOUNDS_ALERT_SHORT);
 }
 
+/*!
+ * @brief Long description
+ * @result A longer localized description of the action which should take into account the details dictionary as appropraite.
+ */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	NSString	*fileName = [[[details objectForKey:KEY_ALERT_SOUND_PATH] lastPathComponent] stringByDeletingPathExtension];
@@ -65,28 +71,58 @@
 	}
 }
 
+/*!
+ * @brief Image
+ */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
 	return([NSImage imageNamed:@"SoundAlert" forClass:[self class]]);
 }
 
+/*!
+ * @brief Details pane
+ * @result An <tt>AIModularPane</tt> to use for configuring this action, or nil if no configuration is possible.
+ */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
 	return([ESEventSoundAlertDetailPane actionDetailsPane]);
 }
 
+/*!
+ * @brief Perform an action
+ *
+ * Play a sound
+ *
+ * @param actionID The ID of the action to perform
+ * @param listObject The listObject associated with the event triggering the action. It may be nil
+ * @param details If set by the details pane when the action was created, the details dictionary for this particular action
+ * @param eventID The eventID which triggered this action
+ * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
+ */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString	*soundPath = [[details objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
 	[[adium soundController] playSoundAtPath:soundPath];
 }
 
+/*!
+ * @brief Allow multiple actions?
+ *
+ * If this method returns YES, every one of this action associated with the triggering event will be executed.
+ * If this method returns NO, only the first will be.
+ *
+ * Don't allow multiple sounds to be played for a single event.
+ */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
 	return(NO);
 }
 
-//Play the sound when the alert is selected
+/*
+ * @brief Alert was selected in the preferences
+ *
+ *  Play the sound for this alert when the alert is selected
+ */
 - (void)didSelectAlert:(NSDictionary *)alert
 {
 	NSString	*soundPath = [[[alert objectForKey:KEY_ACTION_DETAILS] objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
