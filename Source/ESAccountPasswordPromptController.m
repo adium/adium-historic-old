@@ -46,7 +46,7 @@
 - (void)windowDidLoad
 {
     [textField_account setStringValue:[account formattedUID]];
-	[textField_service setStringValue:[account displayServiceID]];
+	[textField_service setStringValue:[[account service] shortDescription]];
 	
     [checkBox_savePassword setState:[[account preferenceForKey:[self savedPasswordKey] 
 														 group:GROUP_ACCOUNT_STATUS] boolValue]];
