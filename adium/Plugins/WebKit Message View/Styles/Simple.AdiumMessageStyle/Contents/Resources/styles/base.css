@@ -7,7 +7,7 @@ body {
 
 .prefix
 {
-	font-weight: bold;
+	font: bold 11px "Lucida Grande";
 }
 
 /*<group=Incoming>*/
@@ -24,6 +24,9 @@ body {
 
 .incoming .nextmessagebody {
 	background: #E5F2FF;
+}
+
+.incoming .nextmessagetext {
 	border-top: 1px solid #B6CFEB;
 }
 
@@ -44,10 +47,21 @@ body {
 
 .outgoing .nextmessagebody {
 	background: #E6FFEA;
+}
+
+.outgoing .nextmessagetext {
 	border-top: 1px solid #B8E6BF;
 }
 
 /*</group>*/
+
+.incoming.context .prefix {
+	color: #516cbb;
+}
+
+.outgoing.context .prefix {
+	color: #28cb28;
+}
 
 .context .messagebody, .context .nextmessagebody {
 	color: gray;
