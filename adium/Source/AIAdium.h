@@ -455,6 +455,8 @@ typedef enum {
     BOOL		useCustomVolume;
     BOOL		muteSounds;
     int			customVolume;
+
+    int			activeSoundThreads;
 }
 
 - (void)playSoundNamed:(NSString *)inName;

@@ -31,6 +31,11 @@
     miniCheck_Mixed = [[AIImageUtilities imageNamed:@"miniCheck_Mixed" forClass:[self class]] retain];
     miniCheck_Mixed_Press = [[AIImageUtilities imageNamed:@"miniCheck_Mixed_Press" forClass:[self class]] retain];
 
+    //Config ourselves a bit
+    [self setBordered:NO];
+    [self setBezeled:NO];
+    [self setEnabled:YES];
+    
     return(self);
 }
 
@@ -74,10 +79,16 @@
     return(state);
 }
 
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+/*{
+    [self drawInteriorWithFrame:cellFrame inView:controlView];
+}
+
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView*/
 {
     NSImage	*image = nil;
     BOOL	enabled, highlighted;
+    NSSize	imageSize;
 
     //Erease the rect
     [[NSColor clearColor] set];
@@ -109,7 +120,16 @@
         }
     }
 
-    [image compositeToPoint:NSMakePoint(cellFrame.origin.x + 1,cellFrame.origin.y + cellFrame.size.height - 2) operation:NSCompositeSourceOver];
+    //Draw the image centered
+    imageSize = [image size];
+    cellFrame.origin.x += (cellFrame.size.width - imageSize.width) / 2.0;
+    cellFrame.origin.y -= (cellFrame.size.height - imageSize.height) / 2.0;
+    
+    [image compositeToPoint:NSMakePoint(cellFrame.origin.x ,cellFrame.origin.y + cellFrame.size.height) operation:NSCompositeSourceOver];
 }
 
 @end
+
+
+
+

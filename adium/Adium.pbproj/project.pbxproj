@@ -391,7 +391,6 @@
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
 				4B1CA9D80458D76E00A8010A,
-				9E2E3070046CA9BF00415B22,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2097,6 +2096,30 @@
 			settings = {
 			};
 		};
+		4B36704F04702E0300FDA82E = {
+			isa = PBXFileReference;
+			name = AccountLarge.tiff;
+			path = "Plugins/Contact List Editor/AccountLarge.tiff";
+			refType = 4;
+		};
+		4B36705004702E0300FDA82E = {
+			isa = PBXFileReference;
+			name = AllContacts.tiff;
+			path = "Plugins/Contact List Editor/AllContacts.tiff";
+			refType = 4;
+		};
+		4B36705104702E0300FDA82E = {
+			fileRef = 4B36704F04702E0300FDA82E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B36705204702E0300FDA82E = {
+			fileRef = 4B36705004702E0300FDA82E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3CFE04044DFF1B00A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
@@ -3680,6 +3703,18 @@
 			path = "Mutable owner arrays.rtf";
 			refType = 4;
 		};
+		4B79E4F2046D67FC0018AE8B = {
+			isa = PBXFileReference;
+			name = Folder.tiff;
+			path = "Plugins/Contact List Editor/Folder.tiff";
+			refType = 4;
+		};
+		4B79E4F3046D67FC0018AE8B = {
+			fileRef = 4B79E4F2046D67FC0018AE8B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B7BD56204123BEB00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4139,6 +4174,56 @@
 			settings = {
 			};
 		};
+		4B8434BE046E80830003BC68 = {
+			fileRef = F55B411003AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8434BF046E80840003BC68 = {
+			fileRef = F55B411103AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8434C0046E80860003BC68 = {
+			fileRef = F55B411203AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8434C1046E80870003BC68 = {
+			fileRef = F570A59C03704B9501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8434C2046E94920003BC68 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorBlockedCollection.h;
+			path = "Plugins/Contact List Editor/AIEditorBlockedCollection.h";
+			refType = 4;
+		};
+		4B8434C3046E94920003BC68 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorBlockedCollection.m;
+			path = "Plugins/Contact List Editor/AIEditorBlockedCollection.m";
+			refType = 4;
+		};
+		4B8434C4046E94920003BC68 = {
+			fileRef = 4B8434C2046E94920003BC68;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8434C5046E94920003BC68 = {
+			fileRef = 4B8434C3046E94920003BC68;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B864DB303EDC32600A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
 			isa = PBXBuildFile;
@@ -4398,6 +4483,32 @@
 		};
 		4B9E73E603F708A800A8010A = {
 			fileRef = 4B9E73E403F708A800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA80057046C63DF00C50DA9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorAllContactsCollection.h;
+			path = "Plugins/Contact List Editor/AIEditorAllContactsCollection.h";
+			refType = 4;
+		};
+		4BA80058046C63DF00C50DA9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorAllContactsCollection.m;
+			path = "Plugins/Contact List Editor/AIEditorAllContactsCollection.m";
+			refType = 4;
+		};
+		4BA80059046C63DF00C50DA9 = {
+			fileRef = 4BA80057046C63DF00C50DA9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA8005A046C63DF00C50DA9 = {
+			fileRef = 4BA80058046C63DF00C50DA9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5081,6 +5192,32 @@
 		};
 		4BCFEF4D03F59F2800A8010A = {
 			fileRef = 4BCFEF4C03F59F2800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BD0DF2D046BF84700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactListCollectionCell.h;
+			path = "Plugins/Contact List Editor/AIContactListCollectionCell.h";
+			refType = 4;
+		};
+		4BD0DF2E046BF84700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactListCollectionCell.m;
+			path = "Plugins/Contact List Editor/AIContactListCollectionCell.m";
+			refType = 4;
+		};
+		4BD0DF2F046BF84700A8010A = {
+			fileRef = 4BD0DF2D046BF84700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BD0DF30046BF84700A8010A = {
+			fileRef = 4BD0DF2E046BF84700A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6604,6 +6741,10 @@
 				4BF5BA26042F3CFD00A8010A,
 				4BFB1571043498E200A8010A,
 				4BFB1572043498E200A8010A,
+				4BA80057046C63DF00C50DA9,
+				4BA80058046C63DF00C50DA9,
+				4B8434C2046E94920003BC68,
+				4B8434C3046E94920003BC68,
 				9EA81D61044A611A00415B22,
 				9EA81D62044A611A00415B22,
 			);
@@ -7040,12 +7181,6 @@
 			isa = PBXBundleReference;
 			path = MSN.AdiumPlugin;
 			refType = 3;
-		};
-		9E2E3070046CA9BF00415B22 = {
-			fileRef = 9E2E306E046CA9BF00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9E2E3071046CAA4500415B22 = {
 			isa = PBXTargetDependency;
@@ -7721,6 +7856,8 @@
 				F570A59D03704B9501A8010A,
 				F55B411203AB88D601A8010A,
 				F55B411303AB88D601A8010A,
+				4BD0DF2D046BF84700A8010A,
+				4BD0DF2E046BF84700A8010A,
 				F55B411003AB88D601A8010A,
 				F55B411103AB88D601A8010A,
 				4BFB1570043497E700A8010A,
@@ -7742,6 +7879,12 @@
 				4BF5BA34042F3CFD00A8010A,
 				4BFB1573043498E200A8010A,
 				9EA81D63044A611A00415B22,
+				4BD0DF2F046BF84700A8010A,
+				4BA80059046C63DF00C50DA9,
+				4B8434BE046E80830003BC68,
+				4B8434C0046E80860003BC68,
+				4B8434C1046E80870003BC68,
+				4B8434C4046E94920003BC68,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7752,7 +7895,6 @@
 				F55B412303AB88D601A8010A,
 				F55B412403AB88D601A8010A,
 				F55B412903AB88D601A8010A,
-				F55B412E03AB88D601A8010A,
 				F55B412F03AB88D601A8010A,
 				F55B413003AB88D601A8010A,
 				F55B413103AB88D601A8010A,
@@ -7764,6 +7906,9 @@
 				F55B413703AB88D601A8010A,
 				4BE103F804237C7800A8010A,
 				4BF5BA37042F3D1600A8010A,
+				4B79E4F3046D67FC0018AE8B,
+				4B36705104702E0300FDA82E,
+				4B36705204702E0300FDA82E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7778,6 +7923,10 @@
 				4BF5BA35042F3CFD00A8010A,
 				4BFB1574043498E200A8010A,
 				9EA81D64044A611A00415B22,
+				4BD0DF30046BF84700A8010A,
+				4BA8005A046C63DF00C50DA9,
+				4B8434BF046E80840003BC68,
+				4B8434C5046E94920003BC68,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8425,11 +8574,13 @@
 		};
 		F5361E3103058E2A01A8010A = {
 			children = (
+				4B36704F04702E0300FDA82E,
+				4B36705004702E0300FDA82E,
+				4B79E4F2046D67FC0018AE8B,
 				4BF5BA36042F3D1600A8010A,
 				F55B411403AB88D601A8010A,
 				F55B410E03AB88D601A8010A,
 				F55B410F03AB88D601A8010A,
-				F55B411903AB88D601A8010A,
 				F55B411A03AB88D601A8010A,
 				F55B412203AB88D601A8010A,
 				F55B411B03AB88D601A8010A,
@@ -9768,12 +9919,6 @@
 			path = "Plugins/Contact List Editor/ContactListEditorWindow.nib";
 			refType = 4;
 		};
-		F55B411903AB88D601A8010A = {
-			isa = PBXFileReference;
-			name = Folder.tiff;
-			path = "Plugins/Contact List Editor/Folder.tiff";
-			refType = 4;
-		};
 		F55B411A03AB88D601A8010A = {
 			isa = PBXFileReference;
 			name = inspect.tiff;
@@ -9842,12 +9987,6 @@
 		};
 		F55B412903AB88D601A8010A = {
 			fileRef = F55B411403AB88D601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F55B412E03AB88D601A8010A = {
-			fileRef = F55B411903AB88D601A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};

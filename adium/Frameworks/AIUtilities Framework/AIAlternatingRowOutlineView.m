@@ -136,11 +136,11 @@
     return(secondaryAlternatingColumnColor);
 }
 
+
 // Scrolling ----------------------------------------------------------------------
 - (void)tile
 {
     [super tile];
-
     [[self enclosingScrollView] setVerticalLineScroll: ([self rowHeight] + [self intercellSpacing].height) ];
 }
 
@@ -288,7 +288,5 @@
 
     }
 }
-
-
 
 @end

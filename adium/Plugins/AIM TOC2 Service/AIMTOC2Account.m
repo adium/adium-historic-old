@@ -258,7 +258,11 @@ static char *hash_password(const char * const password);
 // Return a dictionary of our handles
 - (NSDictionary *)availableHandles
 {
-    return(handleDict);
+    if([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]){
+        return(handleDict);
+    }else{
+        return(nil);
+    }
 }
 
  

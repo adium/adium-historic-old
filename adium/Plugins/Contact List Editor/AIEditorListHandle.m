@@ -17,6 +17,7 @@
     [super initWithUID:inUID temporary:inTemporary];
 
     serviceID = [inServiceID retain];
+    ownerAccountArray = [[NSMutableArray alloc] init];
     
     return(self);
 }
@@ -25,5 +26,11 @@
 {
     return(serviceID);
 }
+
+- (NSMutableArray *)ownerAccountArray
+{
+    return(ownerAccountArray);
+}
+
 
 @end
