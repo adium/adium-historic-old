@@ -22,10 +22,6 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListObject.h>
 
-@interface AIContactSettingsPane (PRIVATE)
-- (NSMenu *)encryptionMenu;
-@end
-
 @implementation AIContactSettingsPane
 
 //Preference pane properties
@@ -42,25 +38,8 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-	[popUp_encryption setMenu:[self encryptionMenu]];
-}
-
-- (NSMenu *)encryptionMenu
-{
-	NSMenu	*encryptionMenu = [[adium contentController] encryptionMenuNotifyingTarget:nil];
-	
-	[encryptionMenu addItem:[NSMenuItem separatorItem]];
-
-	NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Default",nil)
-													  target:nil
-													  action:nil
-											   keyEquivalent:@""];
-	
-	[menuItem setTag:EncryptedChat_Default];
-	[encryptionMenu addItem:menuItem];
-	[menuItem release];
-	
-	return(encryptionMenu);
+	[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil withDefault:YES]];
+	[[popUp_encryption menu] setAutoenablesItems:NO];
 }
 
 //Preference view is closing
@@ -123,6 +102,13 @@
         NSString 	*notes = [textField_notes stringValue];
 		[listObject setNotes:notes];
     }
+}
+
+- (IBAction)selectedEncryptionPreference:(id)sender
+{
+	[listObject setPreference:[NSNumber numberWithInt:[sender tag]]
+					   forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+						group:GROUP_ENCRYPTION];
 }
 
 @end
