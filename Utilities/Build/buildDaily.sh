@@ -59,7 +59,7 @@ svn="svn"
 copy_to_sourceforge="no"
 
 # Where all the daily build files are kept
-# adium/ is created by CVS checkout beneath this dir
+# adium/ is created by svn checkout beneath this dir
 adium_build_dir="$HOME/AdiumDaily"
 
 # Where Adium gets built - all the source
@@ -72,11 +72,11 @@ lastbuild_log="$adium_build_dir/log/lastbuild.log"
 build_output_dir="$adium_build_dir/build"
 
 # Normal logging records the status of each step as it completes
-# Verbose mode records all CVS activity
+# Verbose mode records all svn activity
 #log="normal"
 log="verbose"
 
-# Do we want to create a file with change-log information from CVS? (Handled automatically if packaging or uploading)
+# Do we want to create a file with change-log information from svn? (Handled automatically if packaging or uploading)
 changelog="no"
 
 # Replace Running Adium with new version
