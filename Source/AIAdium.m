@@ -56,7 +56,7 @@
 - (void)configureCrashReporter;
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
-- (void)checkForVersionUpdate;
+- (NSDictionary *)versionUpgradeDict;
 @end
 
 @implementation AIAdium
@@ -213,7 +213,7 @@
 //    [activityWindowController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
-	NSNumber	*newVersionNumber = [self newVersionNumber];
+	NSNumber	*versionUpgradeDict = [self versionUpgradeDict];
 	
 	if (versionUpgradeDict){
 		[[self notificationCenter] postNotificationName:Adium_VersionWillBeUpgraded

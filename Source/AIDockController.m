@@ -35,6 +35,7 @@
 - (NSString *)_pathOfIconPackWithName:(NSString *)name;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (AIIconState *)iconStateFromStateDict:(NSDictionary *)stateDict folderPath:(NSString *)folderPath;
+- (void)updateAppBundleIcon;
 @end
 
 @implementation AIDockController
