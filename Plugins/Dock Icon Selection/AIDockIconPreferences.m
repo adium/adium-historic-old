@@ -89,7 +89,7 @@
         
         //Find all the .AdiumIcon's
         while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0){
+            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
                 NSString		*fullPath;
                 AIIconState		*previewState;
                 
