@@ -17,7 +17,7 @@
 
 @class AIGroup;
 
-@interface JabberAccount : AIAccount <AIAccount_Content, AIAccount_Handles, JabberRosterDelegate>
+@interface JabberAccount : AIAccount <AIAccount_Handles, JabberRosterDelegate>
 {
     JabberID *myID;
     NSString *myPassword;
@@ -33,7 +33,7 @@
 // Send a message object to its destination
 - (BOOL)sendContentObject:(AIContentObject *)object;
 // Returns YES if the contact is available for receiving content of the specified type
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject;
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account
