@@ -1,14 +1,13 @@
 /* CPFVersionChecker */
 
 
-@interface CPFVersionChecker : AIPlugin
-{
-    IBOutlet id textWithInformation;
-    NSMenuItem *versionCheckerMenuItem;
-    NSMenuItem *Version_Checker;
-    
-	double currentBuildUnixDate;
-	double latestBuildUnixDate;
+@interface CPFVersionChecker : AIPlugin {
+    NSMenuItem 	*versionCheckerMenuItem;
 }
+
+- (void)checkForNewVersion:(id)sender;
+- (NSDate *)dateOfThisBuild;
+- (NSDate *)dateOfLatestBuild;
+- (NSString *)intervalBetweenDate:(NSDate *)firstDate andDate:(NSDate *)secondDate;
 
 @end
