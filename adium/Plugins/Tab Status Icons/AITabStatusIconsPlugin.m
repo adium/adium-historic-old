@@ -59,7 +59,7 @@
 		return(tabTyping);
 	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
 		return(tabStranger);
-	}else if([listObject statusObjectForKey:@"Away"]){
+	}else if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
 		return(tabAway);
 	}else if([listObject statusObjectForKey:@"IdleSince"]){
 		return(tabIdle);
