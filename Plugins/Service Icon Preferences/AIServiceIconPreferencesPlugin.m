@@ -22,21 +22,21 @@
 //    preferences = [[IdleMessagePreferences preferencePane] retain];
 	
 	//Observe preference changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
+//    [[adium notificationCenter] addObserver:self
+//								   selector:@selector(preferencesChanged:)
+//									   name:Preference_GroupChanged
+//									 object:nil];
 	
-	[self preferencesChanged:nil];
-}
-
-//Hard coded icon pack for now
-- (void)preferencesChanged:(NSNotification *)notification
-{
-	if(notification == nil){
+//	[self preferencesChanged:nil];
+//}
+//
+////Hard coded icon pack for now
+//- (void)preferencesChanged:(NSNotification *)notification
+//{
+//	if(notification == nil){
 		NSString *path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Status Icons"] stringByExpandingTildeInPath];
 		[AIStatusIcons setActiveStatusIconsFromPath:[path stringByAppendingPathComponent:@"Gems.AdiumStatusIcons"]];
-	}
+//	}
 }
 
 @end
