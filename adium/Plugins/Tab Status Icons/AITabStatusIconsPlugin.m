@@ -8,7 +8,8 @@
 #import "AITabStatusIconsPlugin.h"
 
 @interface AITabStatusIconsPlugin (PRIVATE)
-- (NSImage *)_iconForListObject:(AIListObject *)listObject isTemporary:(BOOL *)isTemporary;
+- (NSImage *)_stateIconForListObject:(AIListObject *)listObject;
+- (NSImage *)_statusIconForListObject:(AIListObject *)listObject;
 @end
 
 @implementation AITabStatusIconsPlugin
@@ -75,8 +76,6 @@
 //Returns the status icon for the passed contact (away, idle, online, stranger, ...)
 - (NSImage *)_statusIconForListObject:(AIListObject *)listObject
 {
-	AITypingState typingState = [listObject integerStatusObjectForKey:@"Typing"];
-	
 	if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
 		return(tabAway);
 		
