@@ -34,29 +34,29 @@
 @implementation AIAwayStatusWindowController
 
 //Return a new away status window controller
-AIAwayStatusWindowController	*mySharedInstance = nil;
+AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 + (AIAwayStatusWindowController *)awayStatusWindowController
 {
-    if(!mySharedInstance){
-        mySharedInstance = [[self alloc] initWithWindowNibName:AWAY_STATUS_WINDOW_NIB];
+    if(!sharedAwayStatusInstance){
+        sharedAwayStatusInstance = [[self alloc] initWithWindowNibName:AWAY_STATUS_WINDOW_NIB];
     }
     
-    return(mySharedInstance);
+    return(sharedAwayStatusInstance);
 }
 
 // Called by menu items to force updates, including closing the window
 + (void)updateAwayStatusWindow
 {
-    if(mySharedInstance) {
-        [mySharedInstance updateWindow];
+    if(sharedAwayStatusInstance) {
+        [sharedAwayStatusInstance updateWindow];
     }
 }
 
 // Sets the window visibility -- used with the pref to hide/show the window
 + (void)setWindowVisible:(bool)visible
 {
-    if(mySharedInstance) {
-        [mySharedInstance setVisible:visible];
+    if(sharedAwayStatusInstance) {
+        [sharedAwayStatusInstance setVisible:visible];
     }
 }
 
@@ -64,7 +64,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 - (IBAction)comeBack:(id)sender
 {
     [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-    [mySharedInstance updateWindow];
+    [sharedAwayStatusInstance updateWindow];
 }
 
 //Called when "Mute" button is clicked
@@ -218,7 +218,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
                                           group:PREF_GROUP_WINDOW_POSITIONS];
     
     //Release the shared instance
-    [mySharedInstance autorelease]; mySharedInstance = nil;
+    [sharedAwayStatusInstance autorelease]; sharedAwayStatusInstance = nil;
 
     return(YES);
 }

@@ -19,20 +19,20 @@
 @implementation IdleTimeWindowController
 
 //Create and return a contact list editor window controller
-static IdleTimeWindowController *sharedInstance = nil;
+static IdleTimeWindowController *sharedIdleTimeInstance = nil;
 + (id)idleTimeWindowControllerForPlugin:(AIIdleTimePlugin *)inPlugin
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:@"SetIdleTime" forPlugin:inPlugin];
+    if(!sharedIdleTimeInstance){
+        sharedIdleTimeInstance = [[self alloc] initWithWindowNibName:@"SetIdleTime" forPlugin:inPlugin];
     }
 
-    return(sharedInstance);
+    return(sharedIdleTimeInstance);
 }
 
 + (void)closeSharedInstance
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedIdleTimeInstance){
+        [sharedIdleTimeInstance closeWindow:nil];
     }
 }
 
@@ -64,7 +64,7 @@ static IdleTimeWindowController *sharedInstance = nil;
 {
     //Close this shared instance
     [self autorelease];
-    sharedInstance = nil;
+    sharedIdleTimeInstance = nil;
     
     return(YES);
 }

@@ -34,21 +34,21 @@
 @implementation AIDockCustomBehavior
 
 //
-AIDockCustomBehavior	*sharedInstance = nil;
+AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 + (id)showDockBehaviorCustomPanelWithPlugin:(id)inPlugin
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:NIB_DOCK_BEHAVIOR_CUSTOM plugin:inPlugin];
+    if(!sharedDockCustomInstance){
+        sharedDockCustomInstance = [[self alloc] initWithWindowNibName:NIB_DOCK_BEHAVIOR_CUSTOM plugin:inPlugin];
     }
-    return(sharedInstance);
+    return(sharedDockCustomInstance);
 }
 
 //
 + (void)closeDockBehaviorCustomPanel;
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
-        [sharedInstance release]; sharedInstance = nil;
+    if(sharedDockCustomInstance){
+        [sharedDockCustomInstance closeWindow:nil];
+        [sharedDockCustomInstance release]; sharedDockCustomInstance = nil;
     }
 }
 
@@ -111,7 +111,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
 
     //Clean up shared instance
     [self autorelease];
-    sharedInstance = nil;
+    sharedDockCustomInstance = nil;
 
     return(YES);
 }

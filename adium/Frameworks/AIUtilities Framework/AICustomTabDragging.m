@@ -20,11 +20,11 @@
 
 @implementation AICustomTabDragging
 
-static AICustomTabDragging *sharedInstance = nil;
+static AICustomTabDragging *sharedTabDragInstance = nil;
 + (AICustomTabDragging *)sharedInstance
 {
-	if(!sharedInstance) sharedInstance = [[self alloc] init];
-	return(sharedInstance);
+	if(!sharedTabDragInstance) sharedTabDragInstance = [[self alloc] init];
+	return(sharedTabDragInstance);
 }
 
 //Init

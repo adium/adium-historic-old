@@ -32,27 +32,27 @@
 /* sharedInstance
 *   returns the shared instance of AIErrorController
 */
-static ErrorMessageWindowController *sharedInstance = nil;
+static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 + (id)errorMessageWindowController
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB];
+    if(!sharedErrorMessageInstance){
+        sharedErrorMessageInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB];
     }
 
-    return(sharedInstance);
+    return(sharedErrorMessageInstance);
 }
 
 + (void)closeSharedInstance
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedErrorMessageInstance){
+        [sharedErrorMessageInstance closeWindow:nil];
     }
 }
 
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 {
     //force the window to load
-    [sharedInstance window];
+    [sharedErrorMessageInstance window];
 
     //add the error
     if([errorTitleArray count] < MAX_ERRORS){ //Stop logging errors after too many
@@ -172,7 +172,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {    
     //release the window controller (ourself)
-    sharedInstance = nil;
+    sharedErrorMessageInstance = nil;
     [self autorelease];
 
     return(YES);

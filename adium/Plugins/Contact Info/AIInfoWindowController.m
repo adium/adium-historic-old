@@ -20,7 +20,7 @@
 @implementation AIInfoWindowController
 
 //Open a new info window
-static AIInfoWindowController   *sharedInstance = nil;
+static AIInfoWindowController   *sharedInfoWindowInstance = nil;
 static AIListObject				*activeListObject = nil;
 
 #pragma mark configureWindow
@@ -309,8 +309,8 @@ static AIListObject				*activeListObject = nil;
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
 {
 	
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB];
+    if(!sharedInfoWindowInstance){
+        sharedInfoWindowInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB];
     }
 	
 	if (listObject) {
@@ -322,22 +322,22 @@ static AIListObject				*activeListObject = nil;
 			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)activeListObject];
 		}
 		
-		[sharedInstance configureWindow];
+		[sharedInfoWindowInstance configureWindow];
 	} else {
-		[sharedInstance contactSelectionChanged:nil];
+		[sharedInfoWindowInstance contactSelectionChanged:nil];
 	}
 	
 	//Show the window and configure it for the contact
-	[sharedInstance showWindow:nil];
+	[sharedInfoWindowInstance showWindow:nil];
 	
-    return(sharedInstance);
+    return(sharedInfoWindowInstance);
 }
 
 //Close the profile window
 + (void)closeTextProfileWindow
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedInfoWindowInstance){
+        [sharedInfoWindowInstance closeWindow:nil];
     }
 }
 
@@ -408,7 +408,7 @@ static AIListObject				*activeListObject = nil;
     [activeListObject release]; activeListObject = nil;
 
     //Close down the shared instance
-	[sharedInstance autorelease]; sharedInstance = nil;
+	[sharedInfoWindowInstance autorelease]; sharedInfoWindowInstance = nil;
     
     return(YES);
 }

@@ -18,14 +18,14 @@
 
 @implementation CBStatusMenuItemController
 
-CBStatusMenuItemController *sharedInstance = nil;
+CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 
 + (CBStatusMenuItemController *)statusMenuItemController
 {
-    if (!sharedInstance) {
-//		sharedInstance = [[self alloc] init];
+    if (!sharedStatusMenuInstance) {
+//		sharedStatusMenuInstance = [[self alloc] init];
     }
-    return (sharedInstance);
+    return (sharedStatusMenuInstance);
 }
 
 //- (id)init
