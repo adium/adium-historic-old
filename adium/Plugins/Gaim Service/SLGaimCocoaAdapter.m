@@ -4,7 +4,7 @@
 //  Adapts gaim to the Cocoa event loop.
 //  Requires Mac OS X 10.2.
 //
-//  Created by Scott Lamb on Sun Nov 2 2003.
+//  Event loop code by Scott Lamb on Sun Nov 2 2003.
 //
 
 #import  <Foundation/Foundation.h>
@@ -24,6 +24,8 @@
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimRequestActionWindowController.h"
 #import "ESGaimNotifyEmailWindowController.h"
+
+#include "jabber.h"
 
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
@@ -156,7 +158,7 @@ static AIChat* chatLookupFromConv(GaimConversation *conv)
 	if (!chat){
 		NSString *name = [NSString stringWithUTF8String:conv->name];
 		
-		chat = [accountLookup(conv->account) chatWithName:name];
+		chat = [accountLookup(conv->account) mainThreadChatWithName:name];
 
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
@@ -1869,6 +1871,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	gaim_xfer_request_denied(xfer);
 }
 
+#pragma mark Protocol specific accessors
+- (oneway void)jabberRosterRequestForAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadJabberRosterRequestForAccoun:)
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadJabberRosterRequestForAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		JabberStream *js = account->gc->proto_data;
+		jabber_roster_request(js);
+	}
+}
 
 #pragma mark Gaim Images
 - (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
