@@ -181,6 +181,7 @@
 			[pickerController initAtPoint:[NSEvent mouseLocation] inWindow: nil];
 			[pickerController setHasChanged: NO];
 		}
+		[pickerController selectionChanged];
 		[[pickerController window] makeKeyAndOrderFront: nil];
 	}
 }
