@@ -60,8 +60,11 @@
 - (int)allowedLength{
 	return(129);
 }
+
+//Generally, Jabber is NOT case sensitive, but handles in group chats are case sensitive, so return YES
+//and do custom handling as needed in the account code
 - (BOOL)caseSensitive{
-	return(NO);
+	return(YES);
 }
 - (AIServiceImportance)serviceImportance{
 	return(AIServicePrimary);

@@ -155,4 +155,6 @@
 
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact;
 
+- (NSString *)_UIDForAddingObject:(AIListContact *)object;
+
 @end

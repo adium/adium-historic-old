@@ -104,7 +104,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-	if(![contactName isEqualToString:[theContact formattedUID]]){
+	if(![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]){
 		[theContact setStatusObject:contactName
 							 forKey:@"FormattedUID"
 							 notify:NotifyLater];
@@ -156,7 +156,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			displayNameChanges = YES;
 		}
 	}else{
-		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
+		if(![gaimAlias isEqualToString:[theContact formattedUID]] && ![gaimAlias isEqualToString:[theContact UID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
@@ -478,11 +478,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
 	
 	while(object = [enumerator nextObject]){
-		[gaimThread addUID:[object UID] onAccount:self toGroup:groupName];
+		[gaimThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
 		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
 	}
+}
+
+- (NSString *)_UIDForAddingObject:(AIListContact *)object
+{
+	return([object UID]);
 }
 
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
@@ -959,14 +964,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	if (chat){
 		AIListContact *contact = [self _contactWithUID:contactName];
-		
+
 		if (!namesAreCaseSensitive){
 			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
 		}
-		
+
 		[chat addParticipatingListObject:contact];
-		
-		GaimDebug (@"added user %@ in conversation %@",contactName,[chat name]);
+
+		GaimDebug (@"added user %@ in chat %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
@@ -977,10 +982,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	if (chat){
 		AIListContact	*contact = [self _contactWithUID:contactName];
-		
+
 		[chat removeParticipatingListObject:contact];
-		
-		GaimDebug (@"removed user %@ in conversation %@",contactName,[chat name]);
+
+		GaimDebug (@"removed user %@ in chat %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
