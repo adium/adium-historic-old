@@ -91,7 +91,8 @@
             CLASS = AIInterfaceController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                interface = id; 
+                contactListPlugin = id; 
+                interfacePlugin = id; 
                 menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 

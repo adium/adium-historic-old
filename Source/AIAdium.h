@@ -134,6 +134,12 @@
 #define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key,table,[NSBundle bundleForClass: [self class]],comment)
 
 //Debugging
+#if BETA_RELEASE			/* Automatically turn on DEBUG_BUILD for all BETA_RELEASE builds */
+	#ifndef DEBUG_BUILD
+		#define DEBUG_BUILD
+	#endif
+#endif
+
 #ifdef DEBUG_BUILD
 #define	AILog(fmt, ...) [[[AIObject sharedAdiumInstance] debugController] adiumDebug:fmt, ## __VA_ARGS__]
 #else
