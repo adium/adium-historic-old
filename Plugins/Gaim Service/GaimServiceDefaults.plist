@@ -2,26 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Oscar:Host</key>
-	<string>login.oscar.aol.com</string>
-	<key>Oscar:Port</key>
-	<integer>5190</integer>
+	<key>GaduGadu:Host</key>
+	<string>appmsg.gadu-gadu.pl</string>
+	<key>GaduGadu:Port</key>
+	<integer>80</integer>
 	
 	<key>ICQ:Encoding</key>
 	<string>ISO-8859-1</string>
-	
-	<key>MSN:Host</key>
-	<string>messenger.hotmail.com</string>
-	<key>MSN:Port</key>
-	<integer>1863</integer>
-	<key>MSN:HTTP Connect Method</key>
-	<false/>
-	<key>MSN:Display Names As Status</key>
-	<false/>
-	<key>MSN:Conversation Closed</key>
-	<true/>	
-	<key>MSN:Conversation Timed Out</key>
-	<false/>
 	
 	<key>Jabber:Host</key>
 	<string>jabber.org</string>
@@ -36,10 +23,39 @@
 	<key>Jabber:Allow Plaintext Authentication</key>
 	<false/>
 	
+	<key>Meanwhile:ContactList</key>
+	<integer>2</integer>
+	
+	<key>MSN:Host</key>
+	<string>messenger.hotmail.com</string>
+	<key>MSN:Port</key>
+	<integer>1863</integer>
+	<key>MSN:HTTP Connect Method</key>
+	<false/>
+	<key>MSN:Display Names As Status</key>
+	<false/>
+	<key>MSN:Conversation Closed</key>
+	<true/>	
+	<key>MSN:Conversation Timed Out</key>
+	<false/>
+
 	<key>Napster:Host</key>
 	<string>64.124.41.187</string>
 	<key>Napster:Port</key>
 	<integer>8888</integer>
+	
+	<key>Novell:Port</key>
+	<integer>8300</integer>
+
+	<key>Oscar:Host</key>
+	<string>login.oscar.aol.com</string>
+	<key>Oscar:Port</key>
+	<integer>5190</integer>
+	
+	<key>Trepia:Host</key>
+	<string>trepia.com</string>
+	<key>Trepia:Port</key>
+	<integer>8201</integer>
 	
 	<key>Yahoo:Host</key>
 	<string>scs.msg.yahoo.com</string>
@@ -47,17 +63,6 @@
 	<string>cs.yahoo.co.jp</string>
 	<key>Yahoo:Port</key>
 	<integer>5050</integer>
-	
-	<key>Novell:Port</key>
-	<integer>8300</integer>
-	
-	<key>Trepia:Host</key>
-	<string>trepia.com</string>
-	<key>Trepia:Port</key>
-	<integer>8201</integer>
-	
-	<key>Meanwhile:ContactList</key>
-	<integer>2</integer>
 	
 	<key>Zephyr:Export .anyone</key>
 	<false/>
