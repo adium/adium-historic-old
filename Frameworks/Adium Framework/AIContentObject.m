@@ -27,7 +27,8 @@
 	trackContent = YES;
 	displayContent = YES;
 	sendContent = YES;
-	
+	logContent = YES;
+
     //Store source, dest, chat, ...
     source = [inSource retain];
     destination = [inDest retain];
@@ -174,4 +175,12 @@
 - (BOOL)sendContent{
 	return(sendContent);
 }
+
+- (void)setPostProcessContent:(BOOL)inPostProcessContent{
+	postProcessContent = inPostProcessContent;
+}
+- (BOOL)postProcessContent{
+	return(postProcessContent);
+}
+
 @end
