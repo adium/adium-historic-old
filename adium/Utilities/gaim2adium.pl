@@ -10,10 +10,11 @@ my $outDir = undef ;
 my $adiumUser = undef;
 my $force = 0;
 
-my %Protocols = (		#Map gaim protocol IDs to Adium ones. This is incomplete
+my %Protocols = (		#Map gaim protocol IDs to Adium ones
 				"aim"	=>	"AIM",
 				"yahoo"	=>	"Yahoo!"
-				#Add the rest here, someone who uses other protocols!
+				"msn"	=>	"MSN"
+				#Add the rest here, or tell me what they are, someone who uses other protocols
 				);
 
 sub usage
@@ -30,6 +31,7 @@ sub usage
 sub process_log
 {
 	-f or return;
+	#gaim logs are LOG_BASE/Protocol/Account/Contact/YYYY-MM-DD-<JUNK>.(html|txt)
 	if($File::Find::name =~ m!^$inDir/(.*?)/(.*?)/(.*?)/(\d{4})-(\d{2})-(\d{2})\.\d+\.(html|txt)!)
 	{
 		my ($proto,$acct,$contact,$year,$month,$day,$ext) = ($1,$2,$3,$4,$5,$6,$7);
