@@ -53,18 +53,17 @@
     if(menuItem == viewContactLogsMenuItem){
         AIListContact	*selectedContact = [[owner contactController] selectedContact];
 
-        if(selectedContact){
+        if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
             [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedContact displayName]]];
         }else{
             [viewContactLogsMenuItem setTitle:@"View Contact's Logs"];
             valid = NO;
         }
-        
     }else if(menuItem == viewContactLogsContextMenuItem){
-        valid = ([[owner menuController] contactualMenuContact] != nil);
-
+        AIListContact	*selectedContact = [[owner menuController] contactualMenuContact];
+        if ( !(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]) )
+              valid = NO;
     }
-
     return(valid);
 }
 
