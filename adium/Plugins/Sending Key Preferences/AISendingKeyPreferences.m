@@ -23,7 +23,7 @@
     return(AIPref_Messages_Sending);
 }
 - (NSString *)label{
-    return(@"F");
+    return(@"S");
 }
 - (NSString *)nibName{
     return(@"SendingKeyPrefs");
@@ -35,12 +35,18 @@
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
     [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:SEND_ON_RETURN] intValue]];
+	[checkBox_sendOnEnter setState:[[preferenceDict objectForKey:SEND_ON_ENTER] intValue]];
 }
 
 //User changed a preference
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_sendOnReturn){
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
+                                             forKey:SEND_ON_RETURN
+                                              group:PREF_GROUP_GENERAL];
+        
+    } else if(sender == checkBox_sendOnEnter){
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
                                              forKey:SEND_ON_ENTER
                                               group:PREF_GROUP_GENERAL];

@@ -16,7 +16,7 @@
         {
             CLASS = AISendingKeyPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_sendOnReturn" = NSButton; }; 
+            OUTLETS = {"checkBox_sendOnEnter" = NSButton; "checkBox_sendOnReturn" = NSButton; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
