@@ -12,12 +12,7 @@
 
 - (BOOL)containsObjectIdenticalTo:(id)obj
 {
-	NSEnumerator *selfEnum = [self objectEnumerator];
-	id thisObj;
-
-	while( (thisObj = [selfEnum nextObject]) && (thisObj != obj) );
-
-	return thisObj != nil;
+	return ([self indexOfObjectIdenticalTo:obj] != NSNotFound);
 }
 
 @end
