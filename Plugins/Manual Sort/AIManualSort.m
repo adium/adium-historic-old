@@ -49,11 +49,17 @@ int manualSort(id objectA, id objectB, BOOL groups);
 int manualSort(id objectA, id objectB, BOOL groups)
 {
 	//Contacts and Groups in manual order
-	if([objectA orderIndex] > [objectB orderIndex]){
+	float orderIndexA = [objectA orderIndex];
+	float orderIndexB = [objectB orderIndex];
+	
+	if(orderIndexA > orderIndexB){
 		return(NSOrderedDescending);
-	}else{
+	}else if (orderIndexA < orderIndexB){
 		return(NSOrderedAscending);
+	}else{
+		return([[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]]);
 	}
+	
 }
 
 @end
