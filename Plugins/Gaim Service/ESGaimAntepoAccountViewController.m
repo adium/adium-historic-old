@@ -21,17 +21,18 @@
 }
 
 //Update display for account status change - don't allow the superclass to change the allowPlainText checkbox
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	NSSet	*returnSet = [super updateListObject:inObject keys:inModifiedKeys silent:silent];
-
-	if(inObject == nil || inObject == account){
-		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
-			[checkBox_allowPlaintext setEnabled:NO];
-		}
-	}
-	
-	return(returnSet);
-}
+//XXX - We're not doing any dynamic disabling/enabling at the moment in account views -ai
+//- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+//{
+//	NSSet	*returnSet = [super updateListObject:inObject keys:inModifiedKeys silent:silent];
+//
+//	if(inObject == nil || inObject == account){
+//		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+//			[checkBox_allowPlaintext setEnabled:NO];
+//		}
+//	}
+//	
+//	return(returnSet);
+//}
 
 @end

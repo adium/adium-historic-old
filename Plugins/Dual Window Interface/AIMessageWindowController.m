@@ -221,7 +221,7 @@
 		[self _updateWindowTitleAndIcon];
     }
 
-#warning Temporary setup for multiple windows
+	//XXX - Temporary setup for multiple windows
     if([group isEqualToString:PREF_GROUP_INTERFACE]){
 		if(![[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue]) alwaysShowTabs = NO;
 	}

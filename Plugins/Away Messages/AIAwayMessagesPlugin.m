@@ -207,7 +207,7 @@
 	}
     
     //Setup the dock menu away selector
-#warning Dock supports alternates in 10.4
+	//XXX - Dock supports alternates in 10.4
     menuItem_dockAway = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AWAY_MESSAGE_MENU_TITLE
 																			 target:self
 																			 action:@selector(enterAwayMessage:)

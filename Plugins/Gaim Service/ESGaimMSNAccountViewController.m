@@ -36,17 +36,18 @@
 }
 
 //Update display for account status change
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	
-	if(inObject == nil || inObject == account){
-		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
-			BOOL shouldEnable = ![[account statusObjectForKey:@"Online"] boolValue];
-			[checkBox_HTTPConnectMethod setEnabled:shouldEnable];
-		}
-	}
-	
-	return([super updateListObject:inObject keys:inModifiedKeys silent:silent]);
-}
+//XXX - We're not doing any dynamic disabling/enabling at the moment in account views -ai
+//- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+//{
+//	
+//	if(inObject == nil || inObject == account){
+//		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+//			BOOL shouldEnable = ![[account statusObjectForKey:@"Online"] boolValue];
+//			[checkBox_HTTPConnectMethod setEnabled:shouldEnable];
+//		}
+//	}
+//	
+//	return([super updateListObject:inObject keys:inModifiedKeys silent:silent]);
+//}
 
 @end

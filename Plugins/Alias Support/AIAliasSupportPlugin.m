@@ -180,7 +180,7 @@
 					break;
 				
 			case SCREEN_NAME:
-#warning How should this be handled for metaContacts?  What if there are no aliases set?
+				//??? - How should this be handled for metaContacts?  What if there are no aliases set?
 				formattedUID = [inObject formattedUID];
 				longDisplayName = (formattedUID ? formattedUID : displayName);
 				break;

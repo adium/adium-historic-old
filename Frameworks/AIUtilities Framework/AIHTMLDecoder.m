@@ -1030,7 +1030,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	return attachString;
 }
 
-#warning Currently always appends as png.  This is probably not always best as Windows DirectIM will not handle it.
+//XXX - Currently always appends as png.  This is probably not always best as Windows DirectIM will not handle it.
 - (BOOL)appendImage:(NSImage *)attachmentImage
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)fileSafeChunk 

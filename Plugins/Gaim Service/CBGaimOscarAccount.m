@@ -166,7 +166,7 @@ static BOOL didInitOscar = NO;
 				return (returnString);
 				
 			} else {
-#warning DirectIM is not ready for prime time.  Temporary.
+				//XXX - DirectIM is not ready for prime time.  Temporary.
 				return [encoderAttachmentsAsText encodeHTML:inAttributedString
 												 imagesPath:nil];
 

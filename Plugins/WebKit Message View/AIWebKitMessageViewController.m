@@ -251,7 +251,7 @@ DeclareString(AppendNextMessage);
 	op = [NSPrintOperation printOperationWithView:imageView];
 	[op setCanSpawnSeparateThread:YES];
 	
-#warning documentView creates a visual glitch which disappears when the scrollbar or window is changed. odd.
+//XXX - documentView creates a visual glitch which disappears when the scrollbar or window is changed. odd.
 	[op runOperationModalForWindow:[webView window]
 						  delegate:self
 					didRunSelector:@selector(printOperationDidRun:success:contextInfo:)

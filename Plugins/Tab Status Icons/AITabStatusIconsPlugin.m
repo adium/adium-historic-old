@@ -15,8 +15,6 @@
 
 @implementation AITabStatusIconsPlugin
 
-#warning temporary status icon stuff in here
-
 //
 - (void)installPlugin
 {

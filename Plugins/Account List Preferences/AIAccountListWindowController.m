@@ -232,7 +232,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	responderChainTimer = nil;
 	
 //	if([view canDraw]){
-		NSView	*accountView = [accountViewController view];
+		NSView	*accountView = [accountViewController setupView];
 		
 		//Name field goes to first control in account view
 		[textField_accountName setNextKeyView:[accountView nextValidKeyView]];

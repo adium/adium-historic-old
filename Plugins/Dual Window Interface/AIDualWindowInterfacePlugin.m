@@ -38,7 +38,7 @@
 	applicationIsHidden = NO;
 
 	//Preferences
-#warning move to separate plugin
+	//XXX - move to separate plugin
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
 										  forGroup:PREF_GROUP_INTERFACE];
 

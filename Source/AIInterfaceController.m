@@ -277,7 +277,7 @@
 		}
 	}
 	
-#warning Temporary setup for multiple windows
+	//XXX - Temporary setup for multiple windows
 	if(!tabbedChatting){
 		if([inChat listObject]){
 			containerID = [[inChat listObject] internalObjectID];

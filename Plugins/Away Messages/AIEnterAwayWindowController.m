@@ -395,7 +395,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     NSDictionary *dict;
     while (dict = [enumerator nextObject])
     {
-   		#warning much of this code is duplicated in AIAwayMessagesPlugin.m, could they be combined somehow?
+   		//XXX - much of this code is duplicated in AIAwayMessagesPlugin.m, could they be combined somehow?
         NSString * title = [dict objectForKey:@"Title"];
         if (title) {
 			NSRange  fullRange = NSMakeRange(0, 0);

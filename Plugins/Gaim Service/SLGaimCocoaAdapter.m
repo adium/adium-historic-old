@@ -355,7 +355,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
 					
 					GaimDebug (@"Creating a chat.");
-#warning Not all prpls support the below method for chat creation.  Need prpl-specific possibilites.
+//XXX - Not all prpls support the below method for chat creation.  Need prpl-specific possibilites.
 					GHashTable				*components;
 					
 					//Prpl Info
