@@ -22,6 +22,11 @@
 #define LOG_IMPORT_NIB		@"LogImport"
 #define ADIUM_1X_LOGS_PATH	@"~/Library/Application Support/Adium/Users"
 
+
+@interface AILogImporter (PRIVATE)
+- (NSArray *)availableUsers;
+@end
+
 @implementation AILogImporter
 
 + (id)logImporterWithOwner:(id)inOwner
@@ -150,7 +155,7 @@
     NSString		*oldUserFolder;
     NSMutableArray	*userArray;
     NSEnumerator	*enumerator;
-    NSString		*directoryContents;
+    NSArray		*directoryContents;
     NSString		*folderName;
     
     //Get the user list

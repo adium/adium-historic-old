@@ -25,6 +25,7 @@
     IBOutlet	NSTabView	*tabView;
 
     NSMutableArray	*tabArray;
+    AICustomTab		*selectedCustomTab;
 
     //Images
     NSImage		*tabBackground;
@@ -40,7 +41,6 @@
 
     int			tabXOrigin;
 
-    AICustomTab	*selectedCustomTab;
 }
 
 - (void)beginDragOfTab:(AICustomTab *)inTab fromOffset:(NSSize)inOffset;
