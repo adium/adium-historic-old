@@ -52,6 +52,9 @@
             SUPERCLASS = AIAlternatingRowOutlineView; 
         }, 
         {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIToolbarTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }, 
         {
             CLASS = AIWindowController; 
