@@ -61,6 +61,7 @@ typedef enum {
 typedef enum {
 	AIChatUnknownError = 0,
 	AIChatUserNotAvailable,
+	AIChatUserIsBlocked,
 	AIChatMessageSendingTooLarge,
 	AIChatMessageSendingTimeOutOccurred,
 	AIChatMessageReceivingMissedTooLarge,
