@@ -32,7 +32,9 @@ Version 0.61 (6/25/2004)
 - Fixed issue with the 'delete' contextual menu item on tabs
 - Fixed issue with send file context menu on inactive tabs
 - Fixed issue with the away status window not closing with cmd-w
+- Fixed date format to be properly localized in the About window and in tooltips
 - Fixed a crash when closing message windows in certain situations
+- Fixed a crash when pasting large amounts of text into the message window
 - Fixed a crash on quit
 - Performance improvements
 - Launch time improvements
