@@ -46,10 +46,9 @@ typedef enum {
     BOOL				sortDirection;			//Direction to sort
     LogSearchMode		searchMode;				//Currently selected search mode
     NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
-    NSToolbar			*toolbar;				//Shiny new toolbar of fun
     BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
-    BOOL				filterEmoticons;		//Flag for whether or not to filter into graphics
+    BOOL				showEmoticons;			//Flag for whether or not to process emoticons
 	
     //Search information
     int					activeSearchID;			//ID of the active search thread, all other threads should quit
