@@ -19,13 +19,13 @@
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
-   /* gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
+   gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
 
     //Log error
     if(!category) category = "general"; //Category can be nil
     NSLog(@"(Debug: %s) %s", category, arg_s);
     
-    g_free(arg_s); */
+    g_free(arg_s);
 }
 
 static GaimDebugUiOps adiumGaimDebugOps = {
