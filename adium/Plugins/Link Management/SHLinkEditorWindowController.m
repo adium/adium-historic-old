@@ -20,23 +20,22 @@
 
 @implementation SHLinkEditorWindowController
 
+static NSWindow *theSheet = nil;
 #pragma mark init methods
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder
 {
     if(nil != (editableView = responder)) {
-        SHLinkEditorWindowController  *newLinkEditor;
+        SHLinkEditorWindowController    *newLinkEditor;
         newLinkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
+        theSheet = [newLinkEditor window];
         editLink = NO; //this is for a new link to be inserted
         favoriteWindow = NO;
-        //[newLinkEditor showWindow:nil];
-        [NSApp beginSheet:[newLinkEditor window]
+        [NSApp beginSheet:theSheet
             modalForWindow:[(NSTextView *)editableView window]
             modalDelegate:nil
             didEndSelector:nil
             contextInfo:nil];
-        [NSApp runModalForWindow:[newLinkEditor window]];
-        [NSApp endSheet:[newLinkEditor window]];
-        [[newLinkEditor window] orderOut:self];
+        [self windowWillBeginSheet:nil];
     }
 }
 
@@ -45,17 +44,15 @@
     if(nil != (editableView = responder)) {
         SHLinkEditorWindowController    *linkEditor;
         linkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
+        theSheet = [linkEditor window];
         editLink = YES; //this is to edit an existing link
         favoriteWindow = NO;
-        //[linkEditor showWindow:nil];
-        [NSApp beginSheet:[linkEditor window]
+        [NSApp beginSheet:theSheet
             modalForWindow:[(NSTextView *)editableView window]
-            modalDelegate:nil
+            modalDelegate:self
             didEndSelector:nil
             contextInfo:nil];
-        [NSApp runModalForWindow:[linkEditor window]];
-        [NSApp endSheet:[linkEditor window]];
-        [[linkEditor window] orderOut:self];
+        [self windowWillBeginSheet:nil];
     }
 }
 
@@ -63,17 +60,15 @@
 {
     SHLinkEditorWindowController    *favsEditor;
     favsEditor = [self initWithWindowNibName:FAVS_EDITOR_NIB_NAME];
+    theSheet = [favsEditor window];
     editLink = NO;
     favoriteWindow = YES;
-    //[favsEditor showWindow:nil];
-    [NSApp beginSheet:[favsEditor window]
+    [NSApp beginSheet:theSheet
             modalForWindow:[view window]
             modalDelegate:nil
             didEndSelector:nil
             contextInfo:nil];
-    [NSApp runModalForWindow:[favsEditor window]];
-    [NSApp endSheet:[favsEditor window]];
-    [[favsEditor window] orderOut:self];
+    [self windowWillBeginSheet:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -89,7 +84,8 @@
 
 
 #pragma mark Window Methods
-- (void)windowDidLoad
+//- (void)windowDidLoad
+- (void)windowWillBeginSheet:(NSNotification *)aNotification
 {
     NSRange      localSelectionRange = NSMakeRange(0,0);
                  selectionRange = NSMakeRange(0,0);
@@ -137,7 +133,6 @@
     if(![NSApp isOnPantherOrBetter]){
         [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];
     }
-    [[self window] center];
 }
 
 - (void)_buildPopUpMenu
@@ -171,8 +166,11 @@
 - (IBAction)closeWindow:(id)sender;
 {
     if([self windowShouldClose:nil]) {
-        //[[self window] close];
-        [NSApp stopModal];
+        [NSApp endSheet:[self window]];
+        [[self window] orderOut:self];
+        [[self window] close];
+        [[self window] release];
+        theSheet = nil;
     }
 }
 
