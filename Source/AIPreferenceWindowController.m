@@ -73,22 +73,21 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	
 	//Select the category
 	switch(inCategory){
-		case AIPref_Accounts: tabIdentifier = 1; break;
-		case AIPref_ContactList: tabIdentifier = 2; break;
-		case AIPref_Messages: tabIdentifier = 3; break;
+		case AIPref_ContactList: tabIdentifier = 1; break;
+		case AIPref_Messages: tabIdentifier = 2; break;
+		case AIPref_General: tabIdentifier = 3;
 		case AIPref_Status_Away:
 		case AIPref_Status_Idle: tabIdentifier = 4; break;
-		case AIPref_Dock: tabIdentifier = 5; break;
-		case AIPref_Sound: tabIdentifier = 6; break;
+		case AIPref_Events: tabIdentifier = 5; break;
+		case AIPref_Dock: tabIdentifier = 6; break;
 		case AIPref_Emoticons: tabIdentifier = 7; break;
-		case AIPref_Keys: tabIdentifier = 8; break;
+		case AIPref_FileTransfer: tabIdentifier = 8; break;
 		case AIPref_Advanced_ContactList:
 		case AIPref_Advanced_Messages:
 		case AIPref_Advanced_Status:
 		case AIPref_Advanced_Service:
 		case AIPref_Advanced_Other: tabIdentifier = 9; break;
-		case AIPref_FileTransfer: tabIdentifier = 88; break;
-		case AIPref_Events: tabIdentifier = 99; break;
+			
 		default: tabIdentifier = 1; break;
 	}
 	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
@@ -261,29 +260,29 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
-//                [view_Accounts setPanes:[self _panesInCategory:AIPref_Accounts]];
-            break;
-            case 2:
                 [view_ContactList setPanes:[self _panesInCategory:AIPref_ContactList]];
             break;
-            case 3:
+            case 2:
                 [view_Messages setPanes:[self _panesInCategory:AIPref_Messages]];
             break;
-            case 4:
+			case 3:
+				[view_General setPanes:[self _panesInCategory:AIPref_General]];
+				break;
+			case 4:
 				[view_Status_Away setPanes:[self _panesInCategory:AIPref_Status_Away]];
                 [view_Status_Idle setPanes:[self _panesInCategory:AIPref_Status_Idle]];
             break;
             case 5:
-				[view_Dock setPanes:[self _panesInCategory:AIPref_Dock]];
+				[view_Events setPanes:[self _panesInCategory:AIPref_Events]];
             break;
             case 6:
-				[view_Sound setPanes:[self _panesInCategory:AIPref_Sound]];
+				[view_Dock setPanes:[self _panesInCategory:AIPref_Dock]];
             break;
             case 7:
 				[view_Emoticons setPanes:[self _panesInCategory:AIPref_Emoticons]];
 			break;
 			case 8:
-				[view_Keys setPanes:[self _panesInCategory:AIPref_Keys]];
+				[view_FileTransfer setPanes:[self _panesInCategory:AIPref_FileTransfer]];
 				break;
             case 9:
                 [outlineView_advanced reloadData];
@@ -296,12 +295,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 				if([self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:row]]){
 					[outlineView_advanced selectRow:row byExtendingSelection:NO];
 				}
-				break;
-			case 88:
-				[view_FileTransfer setPanes:[self _panesInCategory:AIPref_FileTransfer]];
-				break;
-			case 99:
-				[view_Events setPanes:[self _panesInCategory:AIPref_Events]];
 				break;
         }
 
@@ -323,17 +316,15 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	switch([[tabViewItem identifier] intValue]){
-//		case 1: return([view_Accounts desiredHeight]); break;
-		case 2: return([view_ContactList desiredHeight]); break;
-		case 3: return([view_Messages desiredHeight]); break;
+		case 1: return([view_ContactList desiredHeight]); break;
+		case 2: return([view_Messages desiredHeight]); break;
+		case 3: return([view_General desiredHeight]); break;
 		case 4: return([AIModularPaneCategoryView heightForTabView:tabView_status]); break;
-		case 5: return([view_Dock desiredHeight]); break;
-		case 6: return([view_Sound desiredHeight]); break;
+		case 5: return([view_Events desiredHeight]); break;
+		case 6: return([view_Dock desiredHeight]); break;
 		case 7: return([view_Emoticons desiredHeight]); break;
-		case 8: return([view_Keys desiredHeight]); break;
+		case 8: return([view_FileTransfer desiredHeight]); break;
 		case 9: return(ADVANCED_PANE_HEIGHT); break;
-		case 88: return([view_FileTransfer desiredHeight]); break;
-		case 99: return([view_Events desiredHeight]); break;
 		default: return(0); break;
 	}
 }
