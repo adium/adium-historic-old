@@ -16,7 +16,7 @@
     return(AIPref_Advanced_ContactList);
 }
 - (NSString *)label{
-    return(@"Auto-resizing");
+    return(AILocalizedString(@"Auto-resizing","Automatic size changes of the contact list"));
 }
 - (NSString *)nibName{
     return(@"DualWindowAdvanced");
