@@ -52,6 +52,7 @@
 
 //Display
 - (NSString *)serverDisplayName;
+- (NSString *)formattedUID;
 - (NSString *)displayName;
 - (NSString *)longDisplayName;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
