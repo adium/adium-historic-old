@@ -103,12 +103,12 @@
 //Password Storage
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
 - (NSString *)passwordForAccount:(AIAccount *)inAccount;
-- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 
 - (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName;
 - (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
-- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
 //Private
 - (void)initController;
