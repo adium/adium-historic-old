@@ -120,6 +120,12 @@
     return(nil);
 }
 
+//
+- (NSEnumerator *)objectEnumerator
+{
+	return([contentArray objectEnumerator]);
+}
+
 
 //Return the number of objects
 - (unsigned)count
