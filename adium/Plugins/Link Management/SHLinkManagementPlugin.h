@@ -9,7 +9,6 @@
 
 
 @interface SHLinkManagementPlugin : AIPlugin {
-    SHLinkEditorWindowController        *editorWindow;
     SHLinkFavoritesPreferences          *preferences;
 }
 
