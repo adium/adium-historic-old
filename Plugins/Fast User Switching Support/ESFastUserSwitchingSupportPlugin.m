@@ -10,6 +10,10 @@
 
 #define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
 
+@interface ESFastUserSwitchingSupportPlugin (PRIVATE)
+-(void)switchHandler:(NSNotification*) notification;
+@end
+
 @implementation ESFastUserSwitchingSupportPlugin
 - (void)installPlugin
 {
@@ -17,7 +21,6 @@
     {
         setAwayThroughFastUserSwitch = NO;
         setMuteThroughFastUserSwitch = NO;
-		
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
                                                             selector:@selector(switchHandler:) 
                                                                 name:NSWorkspaceSessionDidBecomeActiveNotification 
@@ -32,13 +35,16 @@
 
 -(void)uninstallPlugin
 {
+	//Clear the fast switch away if we had it up before
+	[self switchHandler:nil];
+
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 }
 
 -(void)switchHandler:(NSNotification*) notification
 {
     if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
-		//Deactivation
+		//Deactivation - go away
  
         //Go away if we aren't already away
         if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
@@ -62,7 +68,7 @@
 			setMuteThroughFastUserSwitch = YES;
 		}
     } else {  
-		//Activation
+		//Activation - return from away
         
 		//Remove the away status flag if we set it originally
         if (setAwayThroughFastUserSwitch) {
