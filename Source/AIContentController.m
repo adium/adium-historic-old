@@ -306,7 +306,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
 								  contentFilter:(NSArray *)inContentFilterArray
 								  filterContext:(id)filterContext
-									  usingLock:(NSRecursiveLock *)inLock;
+									  usingLock:(NSRecursiveLock *)inLock
 {
 	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
 	id<AIContentFilter>	filter;
