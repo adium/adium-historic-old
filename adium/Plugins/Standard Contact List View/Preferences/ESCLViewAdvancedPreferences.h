@@ -13,7 +13,7 @@
     
     //Window
     IBOutlet    NSSlider        *slider_opacity;
-    IBOutlet	NSButton	*checkbox_borderless;
+    IBOutlet	NSButton		*checkbox_borderless;
     IBOutlet    NSButton        *checkbox_shadows;
 }
 
