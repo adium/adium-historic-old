@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.31 2004/02/03 15:47:40 dchoby98 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.32 2004/02/06 08:25:24 dchoby98 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -436,7 +436,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 			NSEnumerator	*keyEnum = [defaultsDict keyEnumerator];
 			
 			while( key = (NSString *)[keyEnum nextObject] ) {
-				NSLog(@"----Key: %@, Value: %@, Group: %@",key,[defaultsDict objectForKey:key],group);
+				//NSLog(@"----Key: %@, Value: %@, Group: %@",key,[defaultsDict objectForKey:key],group);
 				[[adium preferenceController] setPreference:[defaultsDict objectForKey:key]
 													 forKey:key
 													  group:group];
