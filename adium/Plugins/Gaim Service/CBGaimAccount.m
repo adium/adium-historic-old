@@ -15,6 +15,7 @@
 - (void)displayError:(NSString *)errorDesc;
 - (void)setAwayMessage:(id)msg;
 - (void)signonTimerExpired:(NSTimer*)timer;
+- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 @end
 
 @implementation CBGaimAccount
@@ -295,6 +296,115 @@
     [[owner contentController] addIncomingContentObject:messageObject];
 }
 
+/*****************************************************/
+/* File transfer / AIAccount_Files inherited methods */
+/*****************************************************/
+
+//The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
+- (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
+{
+    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
+    
+    [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
+        
+    [[owner fileTransferController] receiveRequestForFileTransfer:fileTransfer];
+}
+
+//The account requested that we send a file, but we do not know what file yet - query the fileTransferController for a target file
+/*- (void)accountXferSendFileWithXfer:(GaimXfer *)xfer
+{
+    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
+    //prompt the fileTransferController for the target filename
+    [[owner fileTransferController] sendRequestForFileTransfer:fileTransfer];
+}
+*/
+
+- (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer
+{
+    //set up our fileTransfer object
+    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
+
+    NSString *filename = [filesToSendArray objectAtIndex:0];
+    [fileTransfer setLocalFilename:filename];
+    [filesToSendArray removeObjectAtIndex:0];
+
+    //again, be sure to malloc the cFilename so gaim can take care of freeing it later
+    char * cFilename = g_malloc(strlen([filename UTF8String]) * 4 + 1);
+    [filename getCString:cFilename];
+    //set the xfer local filename; accepting the file transfer will take care of setting size and such
+    gaim_xfer_set_local_filename(xfer,cFilename);
+
+    //begin transferring the file
+    [self acceptFileTransferRequest:fileTransfer];    
+}
+
+
+
+//Create an ESFileTransfer object from an xfer, associating the xfer with the object and the object with the xfer
+- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
+{
+    AIHandle * handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
+    //handle new handles here
+    //****
+    
+    ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithHandle:handle forAccount:self]; 
+
+    [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+    xfer->ui_data = fileTransfer;
+    
+    return fileTransfer;
+}
+
+//Update an ESFileTransfer object progress
+- (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent
+{
+    [(ESFileTransfer *)(xfer->ui_data) setPercentDone:percent bytesSent:(xfer->bytes_sent)];
+}
+
+//The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
+- (void)accountXferCanceledRemotely:(GaimXfer *)xfer
+{
+    [[owner fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
+    gaim_xfer_destroy(xfer);
+}
+
+//Accept a send or receive ESFileTransfer object, beginning the transfer.  Subsequently inform the fileTransferController that the fun has begun.
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+{
+    GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
+    NSString * filename = [fileTransfer localFilename];
+    
+    //gaim will do a g_free of xferFileName while executing gaim_xfer_request_accepted
+    //so we need to malloc to prevent errors
+    char * xferFileName = g_malloc(strlen([filename UTF8String]) * 4 + 1);
+    [filename getCString:xferFileName];
+    
+    //set the size - must be done after request is accepted?
+    [fileTransfer setSize:(xfer->size)];
+    
+    GaimXferType xferType = gaim_xfer_get_type(xfer);
+    if ( xferType == GAIM_XFER_SEND ) {
+        [fileTransfer setType:Outgoing_FileTransfer];   
+    } else if ( xferType == GAIM_XFER_RECEIVE ) {
+        [fileTransfer setType:Incoming_FileTransfer];
+    }
+        
+    //accept the request
+    gaim_xfer_request_accepted(xfer, xferFileName);
+    
+    //tell the fileTransferController to display appropriately
+    [[owner fileTransferController] beganFileTransfer:fileTransfer];
+}
+
+//User refused a receive request.  Tell gaim, then release the ESFileTransfer object
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
+{
+    gaim_xfer_request_denied((GaimXfer *)[[fileTransfer accountData] pointerValue]);
+    [fileTransfer release];
+}
+
+
+
 /********************************/
 /* AIAccount subclassed methods */
 /********************************/
@@ -304,6 +414,8 @@
     NSLog(@"CBGaimAccount initAccount");
     handleDict = [[NSMutableDictionary alloc] init];
 //    chatDict = [[NSMutableDictionary alloc] init];
+    filesToSendArray = [[NSMutableArray alloc] init];
+    
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     gc = NULL;
@@ -316,6 +428,7 @@
     NSLog(@"CBGaimAccount dealloc");
 //    [chatDict release];
     [handleDict release];
+    [filesToSendArray release];
     if (signonTimer != nil) {
         [signonTimer invalidate];
         [signonTimer release];
@@ -399,6 +512,7 @@
                                     styleTags:YES
                    closeStyleTagsOnFontChange:NO] UTF8String];
     }
+    NSLog(@"setting away message...");
     serv_set_away(gc, NULL, newValue);
 }
 

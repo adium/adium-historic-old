@@ -40,6 +40,8 @@
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
     ESContactAlertsPreferences		*prefs;
+    
+    BOOL                                processedForUser;
 }
 
 @end

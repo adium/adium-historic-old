@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, SUSpeaker;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, ESFileTransfer, SUSpeaker;
 
 @interface AIAdium : NSObject {
 
@@ -119,6 +119,13 @@ typedef enum {
     
 
 } PREFERENCE_CATEGORY;
+
+//File transfers
+typedef enum {
+    Incoming_FileTransfer = 0,
+    Outgoing_FileTransfer,
+    Unknown_FileTransfer
+} FileTransferType;
 
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
@@ -666,8 +673,9 @@ typedef enum {
 
 }
 
-- (NSString *)saveLocationForFileName:(NSString *)inFile;
-
+- (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)beganFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)transferCanceled:(ESFileTransfer *)fileTransfer;
 @end
 
 

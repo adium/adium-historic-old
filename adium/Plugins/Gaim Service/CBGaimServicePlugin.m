@@ -438,17 +438,14 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 
 static void adiumGaimRequestFile(GaimXfer *xfer)
 {
-    NSLog(@"adiumGaimRequestFile %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+    GaimXferType xferType = gaim_xfer_get_type(xfer);
 
-    CBGaimAccount * receivingAccount = accountLookup(xfer->account);
-    NSString * filename = [[[receivingAccount owner] fileTransferController] saveLocationForFileName:[[NSString stringWithUTF8String:(xfer->filename)] lastPathComponent]];
-
-    //gaim will do a g_free of xferFileName while executing gaim_xfer_request_accepted
-    //so we need to malloc to prevent errors
-    char * xferFileName = g_malloc(strlen([filename UTF8String]) * 4 + 1);
-    [filename getCString:xferFileName];
-    
-    gaim_xfer_request_accepted(xfer, xferFileName);
+    if ( xferType == GAIM_XFER_RECEIVE ) {
+        NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+        [accountLookup(xfer->account) accountXferRequestFileReceiveWithXfer:xfer];
+    } else if ( xferType == GAIM_XFER_SEND ) {
+        [accountLookup(xfer->account) accountXferBeginFileSendWithXfer:xfer];   
+    }
 }
 
 static void adiumGaimAskCancel(GaimXfer *xfer)
@@ -463,7 +460,8 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
-    NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+ //   NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+    [accountLookup(xfer->account) accountXferUpdateProgress:xfer percent:percent];
 }
 
 static void adiumGaimCancelLocal(GaimXfer *xfer)
@@ -474,6 +472,7 @@ static void adiumGaimCancelLocal(GaimXfer *xfer)
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
         NSLog(@"adiumGaimCancelRemote");
+    [accountLookup(xfer->account) accountXferCanceledRemotely:xfer];
 }
 
 static GaimXferUiOps adiumGaimFileTrasnferOps = {

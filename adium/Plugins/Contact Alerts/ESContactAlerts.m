@@ -170,15 +170,22 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                                         keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:@"Sound"];
         [actionListMenu addItem:menuItem];
-
+        
         menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
                                                target:self
                                                action:@selector(actionSendMessage:)
                                         keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:@"Message"];
         [actionListMenu addItem:menuItem];
-
-        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Show an alert"
+        
+        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Display the Event Bezel"
+                                               target:self
+                                               action:@selector(actionDisplayBezel:)
+                                        keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:@"Bezel"];
+        [actionListMenu addItem:menuItem];
+        
+        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Show a text alert"
                                                target:self
                                                action:@selector(actionDisplayAlert:)
                                         keyEquivalent:@""] autorelease];
@@ -321,6 +328,12 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [self configureWithSubview:view_details_message];
 
     [[view_details_message window] makeFirstResponder:textField_message_actionDetails];
+}
+
+//No further configuration is required
+-(IBAction)actionDisplayBezel:(id)sender
+{
+    [self configureWithSubview:nil];
 }
 
 // Saving --------------------------------------------------------------------------------------------------------------------------------

@@ -21,15 +21,29 @@
     
 }
 
-- (NSString *)saveLocationForFileName:(NSString *)inFile
+- (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
     NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setTitle:@"Receive File"];
+
+    NSString * defaultName = [fileTransfer remoteFilename];
     
-    [savePanel runModalForDirectory:nil file:inFile];
-    
-    return([savePanel filename]);
+    if ([savePanel runModalForDirectory:nil file:defaultName] == NSFileHandlingPanelOKButton) {
+        [fileTransfer setLocalFilename:[savePanel filename]];
+        [(AIAccount<AIAccount_Files> *)[fileTransfer account] acceptFileTransferRequest:fileTransfer];
+    } else {
+        [(AIAccount<AIAccount_Files> *)[fileTransfer account] rejectFileReceiveRequest:fileTransfer];        
+    }
 }
 
+- (void)beganFileTransfer:(ESFileTransfer *)fileTransfer
+{
+    NSLog(@"began a file transfer...");
+}
+
+- (void)transferCanceled:(ESFileTransfer *)fileTransfer
+{
+    NSLog(@"canceled a file transfer...");   
+}
 
 @end

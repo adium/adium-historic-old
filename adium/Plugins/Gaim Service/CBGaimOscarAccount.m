@@ -196,8 +196,37 @@ struct oscar_data {
         }
     }
 }
-@end
 
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+{
+    [super acceptFileTransferRequest:fileTransfer];    
+}
+
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
+{
+    [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+
+/*
+//Creates the oscar xfer object, the ESFileTransfer object, and informs
+- (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact
+{
+    NSString * destination = [[inContact UID] compactedString];
+    
+    //gaim will do a g_free of xferFileName while executing gaim_xfer_request_accepted
+    //so we need to malloc to prevent errors
+    char * destsn = g_malloc(strlen([destination UTF8String]) * 4 + 1);
+    [destination getCString:destsn];
+     
+    [filesToSendArray addObject:filename];
+    
+    oscar_ask_sendfile(gc,destsn);
+}
+*/
+
+
+@end
 /*if (isdigit(b->name[0])) {
 char *status;
 status = gaim_icq_status((b->uc & 0xffff0000) >> 16);
