@@ -2,17 +2,16 @@
     IBClasses = (
         {
             ACTIONS = {preferenceChanged = id; }; 
-            CLASS = AIMTOC2Service; 
+            CLASS = AIMTOC2ServicePlugin; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_ping" = NSButton; 
                 "textField_host" = NSTextField; 
                 "textField_port" = NSTextField; 
                 "view_preferences" = NSView; 
             }; 
-            SUPERCLASS = AIService; 
+            SUPERCLASS = AIPlugin; 
         }, 
-        {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

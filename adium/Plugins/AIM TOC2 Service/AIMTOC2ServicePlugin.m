@@ -44,7 +44,6 @@
     
     [textField_host setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_HOST]];
     [textField_port setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_PORT]];
-    [checkBox_ping setIntValue:[preferencesDict boolForKey:AIM_TOC2_KEY_PING]];
 
     //Register this service
     [[owner accountController] registerService:self];
@@ -88,9 +87,6 @@
 
     }else if(sender == textField_port){
         [preferenceController setPreference:[textField_port stringValue] forKey:AIM_TOC2_KEY_PORT group:AIM_TOC2_PREFS];
-
-    }else if(sender == checkBox_ping){
-        [preferenceController setPreference:[NSNumber numberWithInt:[checkBox_ping intValue]] forKey:AIM_TOC2_KEY_PING group:AIM_TOC2_PREFS];
 
     }
 }

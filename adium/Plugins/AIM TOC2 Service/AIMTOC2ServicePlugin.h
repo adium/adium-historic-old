@@ -27,7 +27,6 @@
 //Preference Keys
 #define AIM_TOC2_KEY_HOST		@"host"
 #define AIM_TOC2_KEY_PORT		@"port"
-#define AIM_TOC2_KEY_PING		@"ping"
 
 @class AIServiceType;
 
@@ -37,7 +36,6 @@
     //Preferences
     IBOutlet	NSTextField	*textField_host;
     IBOutlet	NSTextField	*textField_port;
-    IBOutlet	NSButton	*checkBox_ping;
 
     AIServiceType		*handleServiceType;
 }
