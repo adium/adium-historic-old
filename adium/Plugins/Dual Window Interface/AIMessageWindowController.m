@@ -384,12 +384,25 @@
     AIListObject	*selectedObject = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
     
     if(selectedObject){
-        return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
-            [NSNumber numberWithInt:Context_Contact_Manage],
-            [NSNumber numberWithInt:Context_Contact_Action],
-            [NSNumber numberWithInt:Context_Contact_NegativeAction],
-			[NSNumber numberWithInt:Context_Contact_TabAction],
-            [NSNumber numberWithInt:Context_Contact_Additions], nil]
+		NSArray *locations;
+		if ([selectedObject integerStatusObjectForKey:@"Stranger"]){
+			locations = [NSArray arrayWithObjects:
+				[NSNumber numberWithInt:Context_Contact_Manage],
+				[NSNumber numberWithInt:Context_Contact_Action],
+				[NSNumber numberWithInt:Context_Contact_NegativeAction],
+				[NSNumber numberWithInt:Context_Contact_TabAction],
+				[NSNumber numberWithInt:Context_Contact_Stranger_TabAction],
+				[NSNumber numberWithInt:Context_Contact_Additions], nil];
+		}else{
+			locations = [NSArray arrayWithObjects:
+				[NSNumber numberWithInt:Context_Contact_Manage],
+				[NSNumber numberWithInt:Context_Contact_Action],
+				[NSNumber numberWithInt:Context_Contact_NegativeAction],
+				[NSNumber numberWithInt:Context_Contact_TabAction],
+				[NSNumber numberWithInt:Context_Contact_Additions], nil];
+		}
+		
+		return([[adium menuController] contextualMenuWithLocations:locations
 													 forListObject:selectedObject]);
         
     }
