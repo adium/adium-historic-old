@@ -25,7 +25,7 @@
 - (void)updateAccountList;
 - (void)configureNameAndService;
 - (void)setContactName:(NSString *)contact;
-- (void)setServiceID:(NSString *)inServiceID;
+- (void)setService:(AIService *)inService;
 - (void)selectGroup:(id)sender;
 - (void)selectFirstValidServiceType;
 - (void)selectServiceType:(id)sender;
@@ -34,13 +34,13 @@
 @implementation AINewContactWindowController
 
 //Prompt for a new user.  Pass nil for a panel prompt. Include a particular name if you wish.
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact serviceID:(NSString *)inServiceID
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService
 {
 	AINewContactWindowController	*newContactWindow;
 	
 	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB];
 	[newContactWindow setContactName:contact];
-	[newContactWindow setServiceID:inServiceID];
+	[newContactWindow setService:inService];
 	
 	if(parentWindow){
 		[parentWindow makeKeyAndOrderFront:nil];
@@ -63,7 +63,7 @@
     [super initWithWindowNibName:windowNibName];
 	accounts = nil;
 	contactName = nil;
-	serviceID = nil;
+	service = nil;
 	
     return(self);
 }
@@ -73,7 +73,7 @@
 {
 	[accounts release];
 	[contactName release];
-	[serviceID release];
+	[service release];
 	
     [super dealloc];
 }
@@ -138,18 +138,15 @@
 //Add the contact
 - (IBAction)addContact:(id)sender
 {
-	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
-	NSString		*currentServiceID = [serviceType identifier];
 	NSString		*UID = [textField_contactName stringValue];
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		if([account conformsToProtocol:@protocol(AIAccount_List)] &&
-		   [(AIAccount<AIAccount_List> *)account contactListEditable] &&
+		if([account contactListEditable] &&
 		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
-			AIListContact	*contact = [[adium contactController] contactWithService:currentServiceID
-																		   accountID:[account uniqueObjectID]
+			AIListContact	*contact = [[adium contactController] contactWithService:service
+																			 account:account
 																				 UID:UID];
 			AIListGroup		*group = ([popUp_targetGroup numberOfItems] ?
 									  [[popUp_targetGroup selectedItem] representedObject] : 
@@ -185,8 +182,7 @@
 //Build the menu of contact service types
 - (void)buildContactTypeMenu
 {
-	NSEnumerator		*enumerator;
-	AIServiceType		*serviceType;
+	NSEnumerator	*enumerator;
 
 	//Empty the menu
 	[popUp_contactType removeAllItems];
@@ -194,14 +190,14 @@
 	NSMenu				*menu = [popUp_contactType menu];
 	
 	//Add an item for each service
-	enumerator = [[[adium accountController] activeServiceTypes] objectEnumerator];
-	while(serviceType = [enumerator nextObject]){
-		NSMenuItem  *menuItem = [[[NSMenuItem alloc] initWithTitle:[serviceType description]
+	enumerator = [[[adium accountController] activeServices] objectEnumerator];
+	while(service = [enumerator nextObject]){
+		NSMenuItem  *menuItem = [[[NSMenuItem alloc] initWithTitle:[service shortDescription]
 															target:self
 															action:@selector(selectServiceType:)
 													 keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:serviceType];
-		[menuItem setImage:[serviceType menuImage]];
+		[menuItem setRepresentedObject:service];
+//		[menuItem setImage:[service menuImage]];
 		[menu addItem:menuItem];
 	}
 	[[popUp_contactType menu] update];
@@ -228,6 +224,8 @@
 //Service type selected from the menu
 - (void)selectServiceType:(id)sender
 {	
+	service = [[popUp_contactType selectedItem] representedObject];
+
 	[self updateAccountList];
 	[self validateEnteredName];
 }
@@ -271,12 +269,12 @@
 		[textField_contactName setStringValue:contactName];
 	}
 	
-	if(serviceID){
+	if(service){
 		NSMenuItem		*item;
 		NSEnumerator	*enumerator = [[popUp_contactType itemArray] objectEnumerator];
 		
 		while (item = [enumerator nextObject]){
-			if ([[[item representedObject] identifier] isEqualToString:serviceID]){
+			if([item representedObject] == service){
 				[popUp_contactType selectItem:item];
 				break;
 			}
@@ -293,10 +291,10 @@
 	contactName = [contact retain];
 }
 
-- (void)setServiceID:(NSString *)inServiceID
+- (void)setService:(AIService *)inService
 {
-	[serviceID release];
-	serviceID = [inServiceID retain];
+	[service release];
+	service = [inService retain];
 }
 
 //Entered name is changing
@@ -310,16 +308,15 @@
 //Validate the entered name, enabling the add button if it is valid
 - (void)validateEnteredName
 {
-	NSString		*name = [textField_contactName stringValue];
-	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
-	BOOL			enabled = YES;
+	NSString	*name = [textField_contactName stringValue];
+	BOOL		enabled = YES;
 	
-	if([name length] != 0 && [name length] < [serviceType allowedLength]){
-		BOOL		caseSensitive = [serviceType caseSensitive];
+	if([name length] != 0 && [name length] < [service allowedLength]){
+		BOOL		caseSensitive = [service caseSensitive];
 		NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? name : [name lowercaseString])];
 		NSString	*validSegment = nil;
 		
-		[scanner scanCharactersFromSet:[serviceType allowedCharacters] intoString:&validSegment];
+		[scanner scanCharactersFromSet:[service allowedCharacters] intoString:&validSegment];
 		if(!validSegment || [validSegment length] != [name length]){
 			enabled = NO;
 		}
@@ -336,8 +333,7 @@
 		BOOL anAccountIsChecked = NO;
 		
 		while(account = [enumerator nextObject]){
-			if([account conformsToProtocol:@protocol(AIAccount_List)] &&
-			   [(AIAccount<AIAccount_List> *)account contactListEditable] &&
+			if([account contactListEditable] &&
 			   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
 				anAccountIsChecked = YES;
 				break;
@@ -356,15 +352,13 @@
 #pragma mark Add to Accounts
 //Update the accounts list
 - (void)updateAccountList
-{
-	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
-	
+{	
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 	NSNumber		*addTo;
 	
 	[accounts release];
-	accounts = [[[adium accountController] accountsWithServiceID:[serviceType identifier]] retain];
+	accounts = [[[adium accountController] accountsWithService:service] retain];
 	
 	//Select accounts by default
 	enumerator = [accounts objectEnumerator];
@@ -395,7 +389,7 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIAccount class]] && [inModifiedKeys containsObject:@"Online"]){
-		if ([self validateMenuItem:[popUp_contactType selectedItem]]){
+		if([self validateMenuItem:[popUp_contactType selectedItem]]){
 			//If the current selection in the contact type menu is still valid (an account is still online), reload the accounts data
 			[tableView_accounts reloadData];
 		}else{
@@ -462,14 +456,12 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if([[menuItem representedObject] isKindOfClass:[AIServiceType class]]) {
-		AIServiceType   *serviceType = [menuItem representedObject];
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
 		
-		enumerator = [[[adium accountController] accountsWithServiceID:[serviceType identifier]] objectEnumerator];
-		while(account = [enumerator nextObject]) {
-			if([account conformsToProtocol:@protocol(AIAccount_List)] &&
-			   [(AIAccount<AIAccount_List> *)account contactListEditable]) {
+		enumerator = [[[adium accountController] accountsWithService:[menuItem representedObject]] objectEnumerator];
+		while(account = [enumerator nextObject]){
+			if([account contactListEditable]){
 				return YES;
 			}
 		}
