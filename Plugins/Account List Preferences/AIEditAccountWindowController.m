@@ -96,6 +96,7 @@
 //Window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
+	[self autorelease];
     return(YES);
 }
 
@@ -108,10 +109,10 @@
 //Close this window
 - (IBAction)closeWindow:(id)sender
 {
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		if([self windowShouldClose:nil]){
+	if([self windowShouldClose:nil]){
+		if([[self window] isSheet]){
+			[NSApp endSheet:[self window]];
+		}else{
 			[[self window] close];
 		}
 	}
