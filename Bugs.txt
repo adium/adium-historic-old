@@ -34,7 +34,6 @@ Meta Contacts
 [MEDIUM]
 
 [LOW]
-  - Autoaway after Idle is broken
   - Adding contact that already exists
     Adding an existing contact causes issues.  It may result in duplicate contacts on
     the user's list, and will make the contact appear offline.  Sometimes they will
