@@ -79,6 +79,7 @@ static void adiumGaimCoreDebugInit(void)
 #endif
 }
 
+/* The core is ready... finish configuring libgaim and its plugins */
 static void adiumGaimCoreUiInit(void)
 {
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
@@ -91,8 +92,26 @@ static void adiumGaimCoreUiInit(void)
     gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());
 	gaim_roomlist_set_ui_ops (adium_gaim_roomlist_get_ui_ops());	
 #if	ENABLE_WEBCAM
-	gaim_webcam_set_ui_ops(adium_gaim_webcam_get_ui_ops());
+	initGaimWebcamSupport();
 #endif
+	
+	initGaimOTRSupprt();
+	
+	/* Why use Gaim's accounts and blist list when we have the information locally?
+		*		- Faster account connection: Gaim doesn't have to recreate the local list
+		*		- Privacy/blocking support depends on the accounts and blist files existing
+		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
+		*			re-requesting icons we already have locally on some protocols such as AIM.
+		*/
+	//Load the accounts list
+	gaim_accounts_load();
+	
+	//Setup the buddy list; then load the blist.
+	gaim_set_blist(gaim_blist_new());
+	gaim_blist_load();
+	
+	//Configure signals for receiving gaim events
+	configureAdiumGaimSignals();
 }
 
 static void adiumGaimCoreQuit(void)

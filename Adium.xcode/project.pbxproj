@@ -6153,6 +6153,36 @@
 			settings = {
 			};
 		};
+		34BBE55407A342AF00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimOTR.h;
+			path = "Plugins/Gaim Service/adiumGaimOTR.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE55507A342AF00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimOTR.m;
+			path = "Plugins/Gaim Service/adiumGaimOTR.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE55607A342AF00663CC9 = {
+			fileRef = 34BBE55407A342AF00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE55707A342AF00663CC9 = {
+			fileRef = 34BBE55507A342AF00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34BD98B20531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8108,6 +8138,8 @@
 		};
 		34C2CFE6063340780018E5D2 = {
 			children = (
+				34BBE55407A342AF00663CC9,
+				34BBE55507A342AF00663CC9,
 				34BBE10907A2EE3700663CC9,
 				34BBE10A07A2EE3700663CC9,
 				34BBE0E907A2ECCF00663CC9,
@@ -13361,6 +13393,7 @@
 				34BBE18C07A2F2A600663CC9,
 				34BBE1B407A2F36400663CC9,
 				34BBE1BA07A2F4C500663CC9,
+				34BBE55607A342AF00663CC9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13485,6 +13518,7 @@
 				34BBE18D07A2F2A600663CC9,
 				34BBE1B507A2F36400663CC9,
 				34BBE1BB07A2F4C500663CC9,
+				34BBE55707A342AF00663CC9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -162,33 +162,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	set_gaim_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 	
-	//Register ourself as libgaim's UI handler
+	//Register ourself as libgaim's UI handler; this will call back on a function in which we finish configuring libgaim
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
 	if(!gaim_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
-	
-	/* Why use Gaim's accounts and blist list when we have the information locally?
-		*		- Faster account connection: Gaim doesn't have to recreate the local list
-		*		- Privacy/blocking support depends on the accounts and blist files existing
-		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
-		*			re-requesting icons we already have locally on some protocols such as AIM.
-		*/
-	//Load the accounts list
-	gaim_accounts_load();
-	
-	//Setup the buddy list; then load the blist.
-	gaim_set_blist(gaim_blist_new());
-	gaim_blist_load();
-	
-	//Load gaim plugins
-#if ENABLE_WEBCAM
-	gaim_init_j2k_plugin();
-#endif
-	
-	//Configure signals for receiving gaim events
-	configureAdiumGaimSignals();
 }
 
 #pragma mark Lookup functions

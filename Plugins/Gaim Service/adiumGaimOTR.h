@@ -1,5 +1,5 @@
 //
-//  adiumGaimWebcam.h
+//  adiumGaimOTR.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 1/22/05.
@@ -7,7 +7,3 @@
 //
 
 #import "SLGaimCocoaAdapter.h"
-
-struct gaim_webcam_ui_ops *adium_gaim_webcam_get_ui_ops(void);
-void initGaimWebcamSupport(void);
-

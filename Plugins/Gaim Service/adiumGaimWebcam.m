@@ -181,3 +181,11 @@ struct gaim_webcam_ui_ops *adium_gaim_webcam_get_ui_ops(void)
 	return &adiumGaimWebcamOps;
 }
 
+void initGaimWebcamSupport(void)
+{
+	//Init the plugin
+	gaim_init_j2k_plugin();
+	
+	//Set the UI Ops
+	gaim_webcam_set_ui_ops(adium_gaim_webcam_get_ui_ops());
+}
