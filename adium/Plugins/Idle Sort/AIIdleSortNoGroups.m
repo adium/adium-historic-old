@@ -88,7 +88,7 @@ int idleSortNoGroups(id objectA, id objectB, void *context)
 		}else if(!awayA && awayB){
 		    return(NSOrderedAscending);
 		}else{
-		    return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+		    return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 		}
 	    }else{
 		if ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] < [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
@@ -96,7 +96,7 @@ int idleSortNoGroups(id objectA, id objectB, void *context)
 		}else if ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] > [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
 		    return(NSOrderedDescending);
 		}else{
-		    return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+		    return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 		}
             }
         }else{

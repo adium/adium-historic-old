@@ -81,7 +81,7 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context)
             }else if(!idleAwayA && idleAwayB){
                 return(NSOrderedAscending);
             }else{
-                return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+                return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
             }
         }else{
             //Keep groups in manual order

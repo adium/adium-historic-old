@@ -30,11 +30,12 @@
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
 
 //Identifying information
-- (NSString *)UID;
 - (NSString *)serviceID;
 - (NSString *)UIDAndServiceID;
 
 //Display
+- (NSString *)UID;
+- (NSString *)serverDisplayName;
 - (NSString *)displayName;
 - (NSString *)longDisplayName;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
