@@ -3,7 +3,7 @@
         {
             CLASS = AIAccountController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -43,13 +43,17 @@
             ACTIONS = {showContactInfo = id; }; 
             CLASS = AIContactController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"menuItem_getInfo" = NSMenuItem; owner = AIAdium; }; 
+            OUTLETS = {
+                adium = AIAdium; 
+                "menuItem_getInfo" = NSMenuItem; 
+                "menuItem_getInfoAlternate" = NSMenuItem; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = AIContentController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = AICoreComponentLoader; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
@@ -62,7 +66,7 @@
         {
             CLASS = AIDockController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -85,6 +89,7 @@
             CLASS = AIInterfaceController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                adium = AIAdium; 
                 contactListPlugin = id; 
                 interfacePlugin = id; 
                 menuController = AIMenuController; 
@@ -96,20 +101,20 @@
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteFormatted" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
-                owner = AIAdium; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = AILoginController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; target = id; }; 
+            OUTLETS = {adium = AIAdium; target = id; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = AIMenuController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                adium = AIAdium; 
                 "menuItem_Format_Italics" = NSMenuItem; 
                 "menu_Adium_About" = NSMenuItem; 
                 "menu_Adium_Preferences" = NSMenuItem; 
@@ -142,7 +147,6 @@
                 "menu_Window_Fixed" = NSMenuItem; 
                 "menu_Window_Top" = NSMenuItem; 
                 nilMenuItem = NSMenuItem; 
-                owner = AIAdium; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
@@ -150,19 +154,19 @@
             ACTIONS = {showPreferenceWindow = id; }; 
             CLASS = AIPreferenceController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = AISoundController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = AIToolbarController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -174,7 +178,7 @@
         {
             CLASS = ESContactAlertsController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -186,7 +190,7 @@
         {
             CLASS = ESFileTransferController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
