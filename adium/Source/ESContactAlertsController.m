@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.33 2004/07/30 20:34:59 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.34 2004/08/02 07:10:15 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -320,13 +320,14 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 //Add an alert (passed as a dictionary) to a list object
 - (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject
 {
-	NSLog(@"Add %@ to %@",newAlert, listObject);
 	NSString			*newAlertEventID = [newAlert objectForKey:KeyEventID];
 	NSMutableDictionary	*contactAlerts;
 	NSMutableArray		*eventArray;
 	
 	id  preferenceSource = listObject;
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
+	
+	[[owner preferenceController] delayPreferenceChangedNotifications:YES];
 	
 	//Get the alerts for this list object
 	contactAlerts = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
@@ -339,7 +340,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	if(!eventArray) eventArray = [[NSMutableArray alloc] init];
 	
 	//Avoid putting the exact same alert into the array twice
-	if ([eventArray indexOfObject:newAlert] != NSNotFound){
+	if ([eventArray indexOfObject:newAlert] == NSNotFound){
 		//Add the new alert
 		[eventArray addObject:newAlert];
 		
@@ -360,6 +361,8 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 											 forKey:KEY_DEFAULT_ACTION_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];	
 	}
+	
+	[[owner preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 - (void)addGlobalAlert:(NSDictionary *)newAlert
