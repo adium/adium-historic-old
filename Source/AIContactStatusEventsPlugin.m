@@ -173,7 +173,7 @@
 		format = AILocalizedString(@"When %@ returns from idle",nil);
 	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
 		format = AILocalizedString(@"When you see %@",nil);
-	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+	}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]){
 		format = AILocalizedString(@"When you no longer see %@",nil);
 	}else{
 		format = @"";
