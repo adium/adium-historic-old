@@ -450,9 +450,55 @@ DeclareString(AppendNextMessage);
 //
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content allowingColors:(BOOL)allowColors
 {
-	NSDate  *date;
+	NSDate  *date = nil;
 	NSRange	range;
 	
+	//date
+	if([content isKindOfClass:[AIContentMessage class]]){
+		date = [(AIContentMessage *)content date];
+	}else if ([content isKindOfClass:[AIContentStatus class]]){
+		date = [(AIContentStatus *)content date];
+	}
+		
+		
+		
+
+	//Replacements applicable to any AIContentObject
+	//	if (date){
+	do{
+		range = [inString rangeOfString:@"%time%"];
+		if(range.location != NSNotFound){
+			if(date)
+				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
+			else
+				[inString deleteCharactersInRange:range];
+		}
+	} while(range.location != NSNotFound);
+	
+	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
+	do{
+		range = [inString rangeOfString:@"%time{"];
+		if(range.location != NSNotFound) {
+			NSRange endRange;
+			endRange = [inString rangeOfString:@"}%"];
+			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+				if(date) {
+					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+					
+					NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																			 allowNaturalLanguage:NO] autorelease];
+					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
+											withString:[dateFormatter stringForObjectValue:date]];						
+				} else {
+					[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
+				}
+				
+			}
+		}
+	} while(range.location != NSNotFound);
+	//	}
+
+	//message stuff
 	if ([content isKindOfClass:[AIContentMessage class]]) {
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
@@ -526,9 +572,11 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:[[content source] displayServiceID]];
 			}
 		} while(range.location != NSNotFound);
-		
-		//We don't support the message being in a content display more than once, so no do/while.  That would be ridiculous.
-		{
+	}
+	
+	
+		//message (must do last)
+		if ([content isKindOfClass:[AIContentMessage class]]) {
 			range = [inString rangeOfString:@"%message%"];
 			if(range.location != NSNotFound){
 				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
@@ -544,64 +592,23 @@ DeclareString(AppendNextMessage);
 															   attachmentImagesOnlyForSending:NO
 																			   simpleTagsOnly:NO]];
 			}
-		}
-		
-		date = [(AIContentStatus *)content date];
-		
-	}else if ([content isKindOfClass:[AIContentStatus class]]) {
-		
-		do{
-			range = [inString rangeOfString:@"%message%"];
-			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content message] string]];
-			}
-		} while(range.location != NSNotFound);
-				
-		do{
-			range = [inString rangeOfString:@"%status%"];
-			if(range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
-			}
-		} while(range.location != NSNotFound);
-		
-		date = [(AIContentStatus *)content date];
-	}
-	
-	//Replacements applicable to any AIContentObject
-//	if (date){
-		do{
-			range = [inString rangeOfString:@"%time%"];
-			if(range.location != NSNotFound){
-				if(date)
-					[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
-				else
-					[inString deleteCharactersInRange:range];
-			}
-		} while(range.location != NSNotFound);
-		
-		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
-		do{
-			range = [inString rangeOfString:@"%time{"];
-			if(range.location != NSNotFound) {
-				NSRange endRange;
-				endRange = [inString rangeOfString:@"}%"];
-				if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-					if(date) {
-						NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-						
-						NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																				 allowNaturalLanguage:NO] autorelease];
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-												withString:[dateFormatter stringForObjectValue:date]];						
-					} else {
-						[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
-					}
-					
+		}else if ([content isKindOfClass:[AIContentStatus class]]) {
+			do{
+				range = [inString rangeOfString:@"%message%"];
+				if(range.location != NSNotFound){
+					[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content message] string]];
 				}
-			}
-		} while(range.location != NSNotFound);
-//	}
-	
+			} while(range.location != NSNotFound);
+			
+			do{
+				range = [inString rangeOfString:@"%status%"];
+				if(range.location != NSNotFound) {
+					[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
+				}
+			} while(range.location != NSNotFound);
+		}			
+		
+		
 	return(inString);
 }
 
