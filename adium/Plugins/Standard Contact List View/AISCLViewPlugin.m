@@ -165,30 +165,31 @@
 //A contact list preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
-    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
-    AISCLOutlineView	*SCLView;
-
-    while((SCLView = [enumerator nextObject])){
-        NSFont	*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
-        float	alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
-        NSColor	*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
-        NSColor	*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
-        BOOL	alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
-        
-        //Display
-        [SCLView setFont:font];
-        [SCLView setRowHeight:[font defaultLineHeightForFont]];
-        [SCLView setBackgroundColor:backgroundColor];
-        
-        //Grid
-        [SCLView setDrawsAlternatingRows:alternatingGrid];
-        [SCLView setAlternatingRowColor:gridColor];
-
-        //Needed for proper transparency... but not the cleanest way.
-        [[SCLView window] setOpaque:(alpha == 100.0)];
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:GROUP_CONTACT_LIST] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
+        NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+        AISCLOutlineView	*SCLView;
+    
+        while((SCLView = [enumerator nextObject])){
+            NSFont	*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
+            float	alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
+            NSColor	*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
+            NSColor	*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
+            BOOL	alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
+            
+            //Display
+            [SCLView setFont:font];
+            [SCLView setRowHeight:[font defaultLineHeightForFont]];
+            [SCLView setBackgroundColor:backgroundColor];
+            
+            //Grid
+            [SCLView setDrawsAlternatingRows:alternatingGrid];
+            [SCLView setAlternatingRowColor:gridColor];
+    
+            //Needed for proper transparency... but not the cleanest way.
+            [[SCLView window] setOpaque:(alpha == 100.0)];
+        }
     }
-
 }
 
 //Expand & collapse a group

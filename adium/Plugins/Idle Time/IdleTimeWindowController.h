@@ -18,10 +18,13 @@
     IBOutlet	NSButton	*button_Apply;
     AIAdium	*owner;
 }
-+ (id)IdleTimeWindowControllerWithOwner:(id)inOwner;
++ (id)idleTimeWindowControllerWithOwner:(id)inOwner;
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)buildAccountsPopup;
 - (IBAction)apply:(id)sender;
 - (IBAction)configureControls:(id)sender;
++ (void)closeSharedInstance;
+- (IBAction)closeWindow:(id)sender;
+- (BOOL)windowShouldClose:(id)sender;
 
 @end

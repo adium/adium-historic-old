@@ -9,15 +9,38 @@
 #import "IdleTimePlugin.h"
 #import <AIUtilities/AIUtilities.h>
 #import "IdleTimeWindowController.h"
+#import "IdleTimePreferences.h"
+
+#define    IDLE_ACTIVE_INTERVAL		30.0	//Checking delay when the user is active
+#define    IDLE_INACTIVE_INTERVAL	1.0	//Checking delay when the user is idle
 
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
+
+@interface AIIdleTimePlugin (PRIVATE)
+- (void)dealloc;
+- (void)preferencesChanged:(NSNotification *)notification;
+- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects;
+- (void)setIsIdle:(BOOL)inIsIdle;
+- (void)idleTimer:(NSTimer *)inTimer;
+- (void)removeIdleTimer;
+- (void)setAllAccountsIdleTo:(double)inSeconds;
+- (double)currentIdleTime;
+@end
 
 @implementation AIIdleTimePlugin
 
 - (void)installPlugin
 {
-    //Install the timer for auto idles
-    [self installIdleTimer];
+    isIdle = NO;
+    idleTimer = nil;
+    
+    //Register our defaults and install the preference view
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:GROUP_IDLE_TIME]; //Register our default preferences
+    preferences = [[IdleTimePreferences idleTimePreferencesWithOwner:owner] retain]; 
+
+    //Observe preference changed notifications, and setup our initial values
+    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 
     //Install the menu item to manually set idle time
     NSMenuItem		*menuItem;
@@ -44,101 +67,114 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     //unregister, remove, ...
 }
 
-- (void)goIdle
-{
-    double seconds = CGSSecondsSinceLastInputEvent(-1);
-
-    //see if they're idle
-    if(seconds > 300){//idle after 5 minutes, evenutally there will be a preference for this
-
-        int		loop;
-        NSArray		*accountArray;
-        AIAccount	*theAccount;
-
-        accountArray = [[owner accountController] accountArray];
-
-        for(loop = 0;loop < [accountArray count];loop++){
-            theAccount = [accountArray objectAtIndex:loop];
-            if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)] &&
-                (![(AIAccount <AIAccount_IdleTime> *)theAccount idleWasSetManually])) {
-                [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:seconds manually:FALSE];
-            }
-        }
-
-        //uninstall ourself
-        [self removeTimer:idleTimer];
-
-        //install unidle timer
-        [self installUnidleTimer];
-    }
-}
-
-- (void)unIdle
-{
-    double seconds = CGSSecondsSinceLastInputEvent(-1);
-
-    //see if they're unidle
-    if(seconds < 300){
-
-        int		loop;
-        NSArray		*accountArray;
-        AIAccount	*theAccount;
-
-        accountArray = [[owner accountController] accountArray];
-
-        for(loop = 0;loop < [accountArray count];loop++){
-            theAccount = [accountArray objectAtIndex:loop];
-            if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)] &&
-                (![(AIAccount <AIAccount_IdleTime> *)theAccount idleWasSetManually])) {
-                [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:0 manually:FALSE];
-            }
-        }
-
-        //uninstall ourself
-        [self removeTimer:unidleTimer];
-
-        //install idle timer
-        [self installIdleTimer];
-    }
-}
-
-- (void)installIdleTimer
-{
-    //---install idle timer---
-    idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(30.0) target:self selector:@selector(goIdle) userInfo:nil repeats:YES] retain];
-}
-
-- (void)installUnidleTimer
-{
-    //---install unidle timer---
-    unidleTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0) target:self selector:@selector(unIdle) userInfo:nil repeats:YES] retain];
-}
-
-- (void)removeTimer:(NSTimer *)timer
-{
-    NSParameterAssert(timer != nil);
-    [timer invalidate];
-    [timer release];
-    timer = nil;
-}
-
+//Show the 'set idle time' window
 - (IBAction)showIdleTimeWindow:(id)sender
 {
-    [[IdleTimeWindowController IdleTimeWindowControllerWithOwner:owner] showWindow:nil];
+    [[IdleTimeWindowController idleTimeWindowControllerWithOwner:owner] showWindow:nil];
 }
 
+
+// Private ---------------------------------------------------------------------------------
+//dealloc
 - (void)dealloc
 {
-    [IdleTimeWindowController release]; 	//Release the controller we created above.
-    [AIMiniToolbarItem release];
+    [self removeIdleTimer];
+    [IdleTimeWindowController closeSharedInstance];
+    //Close/release idle time window
+
     [super dealloc];
 }
 
+//An idle preference has changed
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:GROUP_IDLE_TIME] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_IDLE_TIME];
+    
+        //Store the new values locally
+        idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];
+        idleThreshold = [[prefDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue] * 60; //convert to seconds
+
+        //Reset our idle timers
+        [self setIsIdle:NO];
+    }
+}
+
+//Configure our 'set idle' toolbar item
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
     return(YES);
 }
 
+//Set our idle state
+- (void)setIsIdle:(BOOL)inIsIdle
+{    
+    if(!idleEnabled){
+        //If idle is disabled, we set our idle to NO and do not install timers
+        isIdle = NO;
+        
+    }else{
+        isIdle = inIsIdle;
+    
+        if(isIdle){ //Idle
+            [self setAllAccountsIdleTo:[self currentIdleTime]];
+            [self removeIdleTimer];
+            idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_INACTIVE_INTERVAL) target:self selector:@selector(idleTimer:) userInfo:nil repeats:YES] retain]; //Install the new idle timer
+    
+        }else if(!isIdle){ //Unidle
+            [self setAllAccountsIdleTo:0];
+            [self removeIdleTimer];
+            idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_ACTIVE_INTERVAL) target:self selector:@selector(idleTimer:) userInfo:nil repeats:YES] retain]; //Install the new idle timer
+    
+        }
+    }
+}
 
+//Called periodically to monitor the user's activity
+- (void)idleTimer:(NSTimer *)inTimer
+{
+    if(isIdle){ //If they're idle, make sure they are still idle
+        if([self currentIdleTime] < idleThreshold){ //The user is no longer idle
+            [self setIsIdle:NO];
+        }
+
+    }else{ //If they're active, make sure they haven't gone idle
+        if([self currentIdleTime] > idleThreshold){ //The user has gone idle
+            [self setIsIdle:YES];
+        }
+    }
+}
+
+//Remove any active idle timer
+- (void)removeIdleTimer
+{
+    if(idleTimer){
+        [idleTimer invalidate];
+        [idleTimer release];
+        idleTimer = nil;
+    }
+}
+
+//Set the idle time of all accounts
+- (void)setAllAccountsIdleTo:(double)inSeconds
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if ([account conformsToProtocol:@protocol(AIAccount_IdleTime)] &&
+            (![(AIAccount <AIAccount_IdleTime> *)account idleWasSetManually])) {
+            
+            [(AIAccount<AIAccount_IdleTime> *)account setIdleTime:inSeconds manually:FALSE];
+        }
+    }
+}
+
+//Returns the current # of seconds the user has been idle
+- (double)currentIdleTime
+{
+    return(CGSSecondsSinceLastInputEvent(-1));
+}
 
 @end

@@ -8,7 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AICLPreferences : AIPlugin {
+@class AIAdium;
+
+@interface AICLPreferences : NSObject {
+    AIAdium		*owner;
+    
     IBOutlet	NSView			*view_prefView;
 
     IBOutlet	NSButton		*button_setFont;

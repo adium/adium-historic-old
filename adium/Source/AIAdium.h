@@ -66,6 +66,7 @@ typedef enum {
 //Preference Categories
 #define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
 #define PREFERENCE_CATEGORY_INTERFACE		@"Interface"
+#define PREFERENCE_CATEGORY_STATUS		@"Status"
 
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"

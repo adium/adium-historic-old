@@ -4,13 +4,20 @@
 
 //Create and return a contact list editor window controller
 static IdleTimeWindowController *sharedInstance = nil;
-+ (id)IdleTimeWindowControllerWithOwner:(id)inOwner
++ (id)idleTimeWindowControllerWithOwner:(id)inOwner
 {
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:@"SetIdleTime" owner:inOwner];
     }
 
     return(sharedInstance);
+}
+
++ (void)closeSharedInstance
+{
+    if(sharedInstance){
+        [sharedInstance closeWindow:nil];
+    }
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
@@ -41,6 +48,23 @@ static IdleTimeWindowController *sharedInstance = nil;
                                     object:nil];
     [self buildAccountsPopup];
     [self configureControls:nil];
+}
+
+//Close the window
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
+}
+
+- (BOOL)windowShouldClose:(id)sender
+{
+    //Close this shared instance
+    [self autorelease];
+    sharedInstance = nil;
+    
+    return(YES);
 }
 
 - (void)dealloc
