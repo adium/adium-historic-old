@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.100 2004/02/16 22:55:39 eevyl Exp $
+// $Id: AIContactController.m,v 1.101 2004/02/17 07:08:19 eevyl Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -87,6 +87,11 @@
     awayDict = [[NSMutableDictionary alloc] init];
     idleDict = [[NSMutableDictionary alloc] init];
     [owner registerEventNotification:CONTACT_STATUS_AWAY_YES displayName:@"Contact Away"];
+	[owner registerEventNotification:CONTACT_STATUS_AWAY_NO displayName:@"Contact UnAway"];
+	[owner registerEventNotification:CONTACT_STATUS_ONLINE_YES displayName:@"Contact Signed On"];
+	[owner registerEventNotification:CONTACT_STATUS_ONLINE_NO displayName:@"Contact Signed Off"];
+	[owner registerEventNotification:CONTACT_STATUS_IDLE_YES displayName:@"Contact Idle"];
+	[owner registerEventNotification:CONTACT_STATUS_IDLE_NO displayName:@"Contact UnIdle"];
 
 	//
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
