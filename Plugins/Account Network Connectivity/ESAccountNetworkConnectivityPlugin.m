@@ -33,7 +33,7 @@ static NSMutableSet							*accountsToConnect = nil;
 									   name:Adium_CompletedApplicationLoad
 									 object:nil];
 
-	//Monitor system sleep so we can cleanly disconnect / reconnect our accounts
+	//Monitor network connectivity so we can cleanly disconnect / reconnect our accounts
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(networkConnectivityChanged:)
                                                  name:AINetwork_ConnectivityChanged
@@ -117,7 +117,7 @@ static NSMutableSet							*accountsToConnect = nil;
 }
 
 #pragma mark Update List Object
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 { 
 	if ([inObject isKindOfClass:[AIAccount class]]){
 		if ([inModifiedKeys containsObject:@"Online"] &&
