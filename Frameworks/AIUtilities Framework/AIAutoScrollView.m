@@ -121,7 +121,8 @@
         NSRect	newDocumentFrame = [[self documentView] frame];
         
         //We autoscroll if the height of the document frame changed AND (Using the old frame to calculate) we're scrolled close to the bottom.
-        if((newDocumentFrame.size.height != oldDocumentFrame.size.height) && ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > (oldDocumentFrame.size.height - AUTOSCROLL_CATCH_SIZE))){
+        if((newDocumentFrame.size.height != oldDocumentFrame.size.height) && 
+		   ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > (oldDocumentFrame.size.height - AUTOSCROLL_CATCH_SIZE))){
 			inAutoScrollToBottom = YES;
             [self scrollToBottom];
 			inAutoScrollToBottom = NO;

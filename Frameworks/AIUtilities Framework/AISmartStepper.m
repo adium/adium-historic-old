@@ -7,7 +7,6 @@
 
 #import "AISmartStepper.h"
 
-
 @implementation AISmartStepper
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -25,6 +24,5 @@
         [[self window] makeFirstResponder:textField];
     }
 }
-
 
 @end
