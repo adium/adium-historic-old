@@ -13,10 +13,34 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIGradient : NSObject {
+typedef enum {
+	AIHorizontal = 0,
+	AIVertical
+} AIDirection;
 
+@interface AIGradient : NSObject {
+	AIDirection		direction;
+	NSColor			*color1;
+	NSColor			*color2;
 }
 
-+ (void)drawGradientInRect:(NSRect)rect from:(NSColor *)sourceColor to:(NSColor *)destColor;
++ (AIGradient*)gradientWithFirstColor:(NSColor*)inColor1
+						  secondColor:(NSColor*)inColor2
+							direction:(AIDirection)inDirection;
+- (id)initWithFirstColor:(NSColor*)inColor1
+			 secondColor:(NSColor*)inColor2
+			   direction:(AIDirection)inDirection;
+
+- (void)setFirstColor:(NSColor*)inColor;
+- (NSColor*)firstColor;
+
+- (void)setSecondColor:(NSColor*)inColor;
+- (NSColor*)secondColor;
+
+- (void)setDirection:(AIDirection)inDirection;
+- (AIDirection)direction;
+
+- (void)drawInRect:(NSRect)rect;
+- (void)drawInBezierPath:(NSBezierPath *)inPath;
 
 @end

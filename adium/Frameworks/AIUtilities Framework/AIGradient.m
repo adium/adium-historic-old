@@ -15,92 +15,142 @@
 
 #import "AIGradient.h"
 
+@interface AIGradient (PRIVATE)
+
+- (id)initWithFirstColor:(NSColor*)inColor1
+			 secondColor:(NSColor*)inColor2
+			   direction:(AIDirection)inDirection;
+- (void)_drawInRect:(NSRect)inRect useTransparency:(BOOL)useTransparency;
+
+@end
 
 @implementation AIGradient
 
-//left to right gradient
-+ (void)drawGradientInRect:(NSRect)rect from:(NSColor *)destColor to:(NSColor *)sourceColor
-{ //(since we draw the gradient backwards, right to left, we swap the source and dest colors for the correct effect)
-    int x,y;
-    unsigned char *bitmap;
-    NSBitmapImageRep	*myBitmapRep;
-
-    int srcR, srcG, srcB, dstR, dstG, dstB;
-    float redSkip, greenSkip, blueSkip;
-    float red, green, blue;
-    
-    int	width;
-    int	height;
-
-    //Get color components
-    sourceColor = [sourceColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-    destColor = [destColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-    srcR = [sourceColor redComponent]*255;
-    srcG = [sourceColor greenComponent]*255;
-    srcB = [sourceColor blueComponent]*255;
-    dstR = [destColor redComponent]*255;
-    dstG = [destColor greenComponent]*255;
-    dstB = [destColor blueComponent]*255;
-    
-
-    myBitmapRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil
-             pixelsWide:rect.size.width
-             pixelsHigh:rect.size.height
-             bitsPerSample:8
-             samplesPerPixel:3
-             hasAlpha:NO
-             isPlanar:NO
-             colorSpaceName:NSCalibratedRGBColorSpace
-             bytesPerRow:0
-             bitsPerPixel:24];
-
-    bitmap = [myBitmapRep bitmapData];
-
-    width = (int)rect.size.width;
-    height = (int)rect.size.height;
-
-    //Draw the first row
-    redSkip = (float)(dstR - srcR) / (float)width;
-    greenSkip = (float)(dstG - srcG) / (float)width;
-    blueSkip = (float)(dstB - srcB) / (float)width;
-    red = srcR;
-    green = srcG;
-    blue = srcB;
-    
-    x = (width * 3) - 1;
-    while(x >= 0){
-        bitmap[x--] = (int)blue;
-        bitmap[x--] = (int)green;
-        bitmap[x--] = (int)red;
-        
-        red += redSkip;
-        green += greenSkip;
-        blue += blueSkip;
-    }
-    
-    //Copy the first row to all additional rows
-    for(y = 1;y < height;y++){
-        int offset = y * width * 3;
-        
-        x = (width * 3) - 1;
-        while(x >= 0){
-            bitmap[offset + x] = bitmap[x];
-            x--;
-        }
-    }
-
-    [myBitmapRep drawAtPoint:rect.origin];
-    [myBitmapRep release];
+#pragma mark Class Initialization
++ (AIGradient*)gradientWithFirstColor:(NSColor*)inColor1
+						  secondColor:(NSColor*)inColor2
+							direction:(AIDirection)inDirection
+{
+	return ([[[self alloc] initWithFirstColor:inColor1 secondColor:inColor2 direction:inDirection] autorelease]);
 }
 
-
-/*
 - (void)dealloc {
-     [myBitmapRep release];
+	[color1 release];
+	[color2 release];
+	[super dealloc];
 }
 
-- (void)drawRect:(NSRect)rect {
-     [myBitmapRep drawAtPoint:NSZeroPoint];
-*/
+#pragma mark Private
+
+- (id)initWithFirstColor:(NSColor*)inColor1
+			 secondColor:(NSColor*)inColor2
+			   direction:(AIDirection)inDirection
+{
+	if (self = [self init]) {
+		[self setFirstColor:inColor1];
+		[self setSecondColor:inColor2];
+		[self setDirection:inDirection];
+	}
+	return self;
+}
+
+- (void)_drawInRect:(NSRect)inRect useTransparency:(BOOL)useTransparency
+{
+	NSColor *currentColor;
+	NSColor *newColor1;
+	NSColor *newColor2;
+	float fraction;
+	int x;
+	if (useTransparency) {
+		newColor1 = color1;
+		newColor2 = color2;
+	} else {
+		newColor1 = [color1 colorWithAlphaComponent:1.0];
+		newColor2 = [color2 colorWithAlphaComponent:1.0];
+	}
+	
+	if (direction == AIVertical) {
+		for (x=0;x<inRect.size.height;x++)
+		{
+			NSRect newRect = NSMakeRect(inRect.origin.x,inRect.origin.y + x,inRect.size.width,1);
+			fraction = (float)(x / inRect.size.height);
+			
+			currentColor = [newColor1 blendedColorWithFraction:fraction ofColor:newColor2];
+			[currentColor set];
+			NSRectFillUsingOperation(newRect, NSCompositeSourceAtop);
+		}
+	} else {
+		for (x=0;x<inRect.size.width;x++)
+		{
+			NSRect newRect = NSMakeRect(inRect.origin.x + x,inRect.origin.y,1,inRect.size.height);
+			fraction = (float)(x / inRect.size.width);
+			
+			currentColor = [newColor1 blendedColorWithFraction:fraction ofColor:newColor2];
+			[currentColor set];
+			NSRectFillUsingOperation(newRect, NSCompositeSourceAtop);
+		}
+	}
+}
+
+#pragma mark Accessor Methods
+
+- (void)setFirstColor:(NSColor*)inColor
+{
+	if (color1) {
+		[color1 release];
+		color1 = nil;
+	}
+	color1 = [inColor retain];
+}
+- (NSColor*)firstColor
+{
+	return color1;
+}
+
+- (void)setSecondColor:(NSColor*)inColor
+{
+	if (color2) {
+		[color2 release];
+		color2 = nil;
+	}
+	color2 = [inColor retain];
+}
+- (NSColor*)secondColor
+{
+	return color1;
+}
+
+- (void)setDirection:(AIDirection)inDirection
+{
+	direction = inDirection;
+}
+- (AIDirection)direction
+{
+	return direction;
+}
+
+#pragma mark Drawing
+
+- (void)drawInRect:(NSRect)rect
+{
+	[self _drawInRect:rect useTransparency:YES];
+}
+
+- (void)drawInBezierPath:(NSBezierPath *)inPath
+{
+	NSImage *image = [[[NSImage alloc] initWithSize:[inPath bounds].size] autorelease];
+	NSAffineTransform *trans = [NSAffineTransform transform];
+	NSPoint keepPoint = [inPath bounds].origin;
+	NSBezierPath *tempPath = [inPath copy];
+	[trans translateXBy:(-1.0f * [tempPath bounds].origin.x) yBy:(-1.0f * [tempPath bounds].origin.y)];
+	[tempPath transformUsingAffineTransform:trans];
+	[image lockFocus];
+	[tempPath fill];
+	[self _drawInRect:[tempPath bounds] useTransparency:NO];
+	[image unlockFocus];
+	
+	[image setFlipped:NO];
+	[image drawAtPoint:keepPoint fromRect:NSMakeRect(0, 0, [image size].width, [image size].height) operation:NSCompositeSourceOver fraction:1.0];	
+}
 
 @end
