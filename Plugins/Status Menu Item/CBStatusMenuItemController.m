@@ -25,7 +25,17 @@
 @implementation CBStatusMenuItemController
 
 static	CBStatusMenuItemController	*sharedStatusMenuInstance = nil;
+
 static	NSImage						*unviewedContentImage = nil;
+
+static	NSImage						*adiumOfflineImage = nil;
+static	NSImage						*adiumOfflineHighlightImage = nil;
+
+static	NSImage						*adiumImage = nil;
+static	NSImage						*adiumHighlightImage = nil;
+
+static	NSImage						*adiumRedImage = nil;
+static	NSImage						*adiumRedHighlightImage = nil;
 
 //Returns the shared instance, possibly initializing and creating a new one.
 + (CBStatusMenuItemController *)statusMenuItemController
@@ -43,10 +53,30 @@ static	NSImage						*unviewedContentImage = nil;
         //Create and set up the status item
         statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
         [statusItem setHighlightMode:YES];
-		if (!unviewedContentImage){
+		
+		//Initialize our cached images
+		if(!unviewedContentImage){
 			unviewedContentImage = [[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]] retain];
 		}
-		
+		if(!adiumOfflineImage){
+			adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
+		}
+		if(!adiumOfflineHighlightImage){
+			adiumOfflineHighlightImage = [[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]] retain];
+		}
+		if(!adiumImage){
+			adiumImage = [[NSImage imageNamed:@"adium.png" forClass:[self class]] retain];
+		}
+		if(!adiumHighlightImage){
+			adiumHighlightImage = [[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]] retain];
+		}
+		if(!adiumRedImage){
+			adiumRedImage = [[NSImage imageNamed:@"adiumRed.png" forClass:[self class]] retain];
+		}
+		if(!adiumRedHighlightImage){
+			adiumRedHighlightImage = [[NSImage imageNamed:@"adiumRedHighlight.png" forClass:[self class]] retain];
+		}
+			
 		//Initialize our state
 		iconState = -1;
 		[self setIconState:OFFLINE];
@@ -109,14 +139,14 @@ static	NSImage						*unviewedContentImage = nil;
 		iconState = state;
 		//And set the appropriate icon
 		if(iconState == OFFLINE){
-			[statusItem setImage:[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]]];
-			[statusItem setAlternateImage:[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]]];
+			[statusItem setImage:adiumOfflineImage];
+			[statusItem setAlternateImage:adiumOfflineHighlightImage];
 		}else if(iconState == ONLINE){
-			[statusItem setImage:[NSImage imageNamed:@"adium.png" forClass:[self class]]];
-			[statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
+			[statusItem setImage:adiumImage];
+			[statusItem setAlternateImage:adiumHighlightImage];
 		}else{
-			[statusItem setImage:[NSImage imageNamed:@"adiumRed.png" forClass:[self class]]];
-			[statusItem setAlternateImage:[NSImage imageNamed:@"adiumRedHighlight.png" forClass:[self class]]];
+			[statusItem setImage:adiumRedImage];
+			[statusItem setAlternateImage:adiumRedHighlightImage];
 		}
 	}
 }
@@ -283,19 +313,9 @@ static	NSImage						*unviewedContentImage = nil;
 #pragma mark Offline Icon Control
 
 - (void)accountStateChanged:(NSNotification *)notification
-{
-	static int onlineCount = 0;
-	
-	//Increase our counter when accounts come online
-	if([[notification name] isEqualToString:ACCOUNT_CONNECTED]){
-		onlineCount++;
-	//Decrease our counter when accounts go offline
-	}else{
-		onlineCount--;
-	}
-	
+{	
 	//Set our Icon State accordingly
-	[self setIconState:(onlineCount > 0 ? ONLINE : OFFLINE)];
+	[self setIconState:([[adium accountController] oneOrMoreConnectedAccounts] == YES ? ONLINE : OFFLINE)];
 }
 
 @end
