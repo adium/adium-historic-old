@@ -10,6 +10,4 @@
 	IBOutlet	NSButton		*checkBox_combineConsecutive;
 }
 
-- (IBAction)changeFormat:(id)sender;
-
 @end

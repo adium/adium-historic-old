@@ -2495,7 +2495,6 @@
 				346C9D3006004650000F5A8A,
 				34C2D70506338E2E0018E5D2,
 				3498914C064C48020095598E,
-				34B019A6064E8E8A0011D119,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2524,7 +2523,6 @@
 				346C9D1606004646000F5A8A,
 				34C2D70606338E2E0018E5D2,
 				3498914D064C48020095598E,
-				34B019A7064E8E8A0011D119,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3808,18 +3806,6 @@
 			path = "Plugins/WebKit Message View/JVFontPreviewField.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34B019A6064E8E8A0011D119 = {
-			fileRef = 34B019A4064E8E8A0011D119;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34B019A7064E8E8A0011D119 = {
-			fileRef = 34B019A5064E8E8A0011D119;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34B5875A058D801D00E7EF0D = {
 			fileEncoding = 30;
@@ -5940,6 +5926,7 @@
 				07CE0D410661E11600C50929,
 				07CE0D470661E12A00C50929,
 				07CE0D490661E12A00C50929,
+				4BDC4F27066229D700C28445,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6390,6 +6377,7 @@
 				07CE0D0B0661E0D200C50929,
 				07CE0D460661E12A00C50929,
 				07CE0D480661E12A00C50929,
+				4BDC4F26066229D700C28445,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8845,8 +8833,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				6CED9083065B686A00A9C196,
-				6CA9B65806621C27004859D6,
-				6CA9B65906621C27004859D6,
+				4BDC4CC4066227DB00C28445,
+				4BDC4CC5066227DB00C28445,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -11162,6 +11150,8 @@
 				F57938B8033E739101A8010A,
 				4BFFA4430644C74E00FC068D,
 				4BFFA4440644C74E00FC068D,
+				34B019A4064E8E8A0011D119,
+				34B019A5064E8E8A0011D119,
 				34BD83DB054E530700EB2652,
 				34BD83DA054E530700EB2652,
 				4B9AB61704D2C84700A8010A,
@@ -16438,6 +16428,48 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BDC4CC4066227DB00C28445 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4BDC4F21066227E100C28445;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BDC4CC5066227DB00C28445 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4BDC4F22066227E100C28445;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BDC4F21066227E100C28445 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4BDC4F22066227E100C28445 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		4BDC4F26066229D700C28445 = {
+			fileRef = 34B019A5064E8E8A0011D119;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDC4F27066229D700C28445 = {
+			fileRef = 34B019A4064E8E8A0011D119;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BDD982D047FC48B00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -18111,36 +18143,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6CA9B65806621C27004859D6 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 6CA9B8E706621C4D004859D6;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6CA9B65906621C27004859D6 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 6CA9B8E806621C4D004859D6;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6CA9B8E706621C4D004859D6 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		6CA9B8E806621C4D004859D6 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		6CC851C10574B314008A5F66 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -19087,8 +19089,6 @@
 				34C2D70406338E2E0018E5D2,
 				3498914A064C48020095598E,
 				3498914B064C48020095598E,
-				34B019A4064E8E8A0011D119,
-				34B019A5064E8E8A0011D119,
 				34C2D8C00633BBA80018E5D2,
 				34989146064C47F20095598E,
 				347065E406015DC5004F0D20,

@@ -52,16 +52,12 @@
 	webView = [[ESWebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
 									 frameName:nil
 									 groupName:nil];
-	
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[webView setFrameLoadDelegate:self];
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-	#warning Jorge: delete this to revert to webkit default dragged types, or use our own with registerForDraggedTypes
 	[webView unregisterDraggedTypes]; 
-
-//	[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 	
 	//Observe preference changes and set our initial preferences
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -94,6 +90,8 @@
 	return([[webView mainFrame] frameView]);
 }
 
+
+//WebView preferences --------------------------------------------------------------------------------------------------
 #pragma mark WebView preferences
 //The controller observes for preferences which are applied to the WebView
 - (void)preferencesChanged:(NSNotification *)notification
@@ -153,44 +151,46 @@
 	
 }
 
+
+//Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
+//Content was added
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-	AIContentObject		*content = [[notification userInfo] objectForKey:@"Object"];
-
-	//Add
-	[newContent addObject:content];
+	[newContent addObject:[[notification userInfo] objectForKey:@"Object"]];
 	[self processNewContent];	
 }
 
+//Process any content waiting to be displayed
 - (void)processNewContent
 {
 	while(webViewIsReady && [newContent count]){
 		AIContentObject *content = [newContent objectAtIndex:0];
 		
+		//Display the content
 		[plugin processContent:content
 		   withPreviousContent:previousContent 
 					forWebView:webView
 				 fromStylePath:stylePath
 				allowingColors:allowColors];
 
-		//
+		//Remember the last content inserted (Used mainly for combining consecutive messages)
 		[previousContent release];
 		previousContent = [content retain];
 
-		//de-queue
+		//Remove the content we just displayed from the que
 		if ([newContent count]){
 			[newContent removeObjectAtIndex:0];
 		}
 	}
 	
-	//cleanup previous 
+	//We no longer need the update timer
 	if(newContentTimer){
 		[newContentTimer invalidate]; [newContentTimer release];
 		newContentTimer = nil;
 	}
 	
-	//if not added, Try to add this content again in a little bit
+	//If we still have content to process, we'll try again after a brief delay
 	if([newContent count]){
 		newContentTimer = [[NSTimer scheduledTimerWithTimeInterval:NEW_CONTENT_RETRY_DELAY
 															target:self
@@ -200,25 +200,25 @@
 	}
 }
 
+
+//WebView Delegates ----------------------------------------------------------------------------------------------------
 #pragma mark WebFrameLoadDelegate
-//----WebFrameLoadDelegate
+//Called once the webview has loaded and is ready to accept content
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
+	//Flag the view as ready so we know it's now safe to add content
 	webViewIsReady = YES;
 }
 
-#pragma mark WebPolicyDelegate
-//----WebPolicyDelegate
+//Prevent the webview from following external links.  We direct these to the users web browser.
 - (void)webView:(WebView *)sender
     decidePolicyForNavigationAction:(NSDictionary *)actionInformation
     request:(NSURLRequest *)request
     frame:(WebFrame *)frame
     decisionListener:(id<WebPolicyDecisionListener>)listener
 {
-//	NSLog(@"decidePolicyForNavigationAction:%@ %@ %@ %@",actionInformation,request,frame,listener);
-	
     int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
-    if (actionKey == WebNavigationTypeOther) {
+    if (actionKey == WebNavigationTypeOther){
 		[listener use];
     } else {
 		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
@@ -227,5 +227,4 @@
     }
 }
 
-#pragma mark Web
 @end

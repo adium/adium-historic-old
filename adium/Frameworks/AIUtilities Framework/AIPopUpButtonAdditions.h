@@ -16,6 +16,7 @@
 @interface NSPopUpButton (AIPopUpButtonAdditions)
 
 - (void)selectItemWithRepresentedObject:(id)object;
+- (void)selectItemWithTag:(int)tag;
 - (void)autosizeAndCenterHorizontally;
 
 @end

@@ -61,6 +61,7 @@
 #import "AIKeychain.h"
 #import "AILinkTextView.h"
 #import "AILinkTrackingController.h"
+#import "JVFontPreviewField.h"
 #import "AIMenuAdditions.h"
 #import "AIMutableOwnerArray.h"
 #import "NEHMutableStringAdditions.h"

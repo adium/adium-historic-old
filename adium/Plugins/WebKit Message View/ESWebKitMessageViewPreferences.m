@@ -124,6 +124,7 @@
         [[adium preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
                                              forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
 	}else if (sender == popUp_minimumFontSize){
 		[[preview preferences] setMinimumFontSize:[[popUp_minimumFontSize selectedItem] tag]];
 		[self updatePreview];	
@@ -134,6 +135,7 @@
 		[[adium preferenceController] setPreference:[[colorWell_customBackgroundColor color] stringRepresentation]
                                              forKey:key
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
 	}else if (sender == button_restoreDefaultBackgroundColor){
 		NSString	*key = [plugin backgroundColorKeyForStyle:[[popUp_styles selectedItem] title]];
 		
@@ -144,7 +146,11 @@
 }
 
 
-- (void) fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font {
+- (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
+{
+//	[[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING];
+
+	
 	[preview setFontFamily:[font fontName]];
 	[[preview preferences] setDefaultFontSize:[font pointSize]];
 
