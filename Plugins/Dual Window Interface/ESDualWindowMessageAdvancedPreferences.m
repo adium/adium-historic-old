@@ -70,10 +70,6 @@
 											 forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
-	}else if (sender == checkBox_combineConsecutive){
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_WEBKIT_COMBINE_CONSECUTIVE
-											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
 	}else if(sender == checkBox_customNameFormatting){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_WEBKIT_USE_NAME_FORMAT
@@ -111,7 +107,6 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
-	[checkBox_combineConsecutive setState:[[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue]];
 	[checkBox_backgroundColorFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_ALLOW_BACKGROUND_COLORING] boolValue]];
 
 	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];

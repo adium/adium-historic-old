@@ -90,8 +90,9 @@ DeclareString(AppendNextMessage);
 	
 	//Style flags
 	allowsCustomBackground = ![[styleBundle objectForInfoDictionaryKey:@"DisableCustomBackground"] boolValue];
-	//allowsTextColors = ![[styleBundle objectForInfoDictionaryKey:@"AllowTextColors"] boolValue];	
-	
+	combineConsecutive = ![[styleBundle objectForInfoDictionaryKey:@"DisableCombineConsecutive"] boolValue];
+	//allowsTextColors = ![[styleBundle objectForInfoDictionaryKey:@"AllowTextColors"] boolValue];		
+		
 	return(self);
 }
 
@@ -205,14 +206,6 @@ DeclareString(AppendNextMessage);
 - (void)setAllowTextBackgrounds:(BOOL)inValue
 {
 	allowTextBackgrounds = inValue;
-}
-
-/*!
- * @brief Toggle combining of consecutive messages
- */
-- (void)setCombineConsecutive:(BOOL)inValue
-{
-	combineConsecutive = inValue;
 }
 
 /*!

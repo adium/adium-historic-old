@@ -48,7 +48,7 @@
 - Custom background preferences needs to disable if styles disallow it
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists
-
+- Tab typing icons are broken
 
 
 //-------------------------------------------------------------------------------------------------------
