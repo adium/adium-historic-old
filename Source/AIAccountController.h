@@ -53,7 +53,6 @@ typedef enum
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController;
 
 @protocol AccountMenuPlugin <NSObject>
-- (NSString *)identifier;
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 @end

@@ -164,13 +164,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 //AccountMenuPlugin --------------------------------------------------------
 #pragma mark AccountMenuPlugin
-
-- (NSString *)identifier
-{
-    //For once, I'm unimaginative. Go figure.
-    return @"CBStatusMenuItemController";
-}
-
 - (void)addAccountMenuItems:(NSArray *)menuItemArray
 {
     //Stick 'em in!
@@ -192,7 +185,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 //StateMenuPlugin --------------------------------------------------------
 #pragma mark StateMenuPlugin
-
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
     //Stick 'em in!

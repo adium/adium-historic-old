@@ -15,7 +15,7 @@ Adium, Copyright 2001-2005, Adam Iser
 
 #import <Cocoa/Cocoa.h>
 
-@interface AIStateMenuPlugin : AIPlugin {	
+@interface AIStateMenuPlugin : AIPlugin <StateMenuPlugin> {	
 	NSMutableArray	*stateMenuItemArray;
 	NSMenuItem		*customStateMenuItem;
 	NSMenuItem		*selectedStateMenuItem;
