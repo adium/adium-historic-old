@@ -71,14 +71,15 @@
 //Returns an attributed string containing the LaTeX image
 - (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent
 {
-    NSImage *img = [[NSImage alloc] initWithPasteboard:pb];
-    NSTextAttachmentCell *cell = [[NSTextAttachmentCell alloc] initImageCell:img];
-    AITextAttachmentExtension *attachment = [[AITextAttachmentExtension alloc] init];
-    NSAttributedString *attachString;
+    NSImage						*img = [[NSImage alloc] initWithPasteboard:pb];
+    NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
+    AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+    NSAttributedString			*attachString;
     
     [attachment setAttachmentCell:cell];
     [attachment setString:textEquivalent];
     [attachment setShouldSaveImageForLogging:YES];
+	[attachment setHasAlternate:YES];
     attachString = [NSAttributedString attributedStringWithAttachment:attachment];
     
     [img release];
