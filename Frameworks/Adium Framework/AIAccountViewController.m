@@ -135,7 +135,6 @@
 	}
 }
 
-#warning XXX - PortKey, HostKey, find it, replace it -ai
 //Save all control values
 - (void)saveConfiguration
 {
