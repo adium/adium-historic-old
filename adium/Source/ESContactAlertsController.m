@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.30 2004/07/05 20:13:13 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.31 2004/07/09 22:54:00 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -118,7 +118,7 @@ DeclareString(KeyOneTimeAlert);
 }
 
 //Generate an event
-- (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject
+- (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo;
 {
 	NSDictionary	*dict = [self appendEventsForObject:listObject toDictionary:nil];
 	NSArray			*alerts = [dict objectForKey:eventID];
@@ -136,7 +136,8 @@ DeclareString(KeyOneTimeAlert);
 			[actionHandler performActionID:actionID
 							 forListObject:listObject
 							   withDetails:actionDetails 
-						 triggeringEventID:eventID];
+						 triggeringEventID:eventID
+								  userInfo:userInfo];
 			
 			//If this alert was a single-fire alert, we can delete it now
 			if([[alert objectForKey:KeyOneTimeAlert] intValue]){
@@ -144,6 +145,10 @@ DeclareString(KeyOneTimeAlert);
 			}
 		}
 	}
+	
+	[[owner notificationCenter] postNotificationName:eventID
+											  object:listObject 
+											userInfo:userInfo];
 }
 
 //
