@@ -140,26 +140,32 @@ static	AITooltipOrientation	tooltipOrientation;
 //Create the tooltip
 + (void)_createTooltip
 {
+	NSTextStorage   *textStorage;
+	NSLayoutManager *layoutManager;
+	NSTextContainer *container;
+	
     //Create the window
     tooltipWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,0,0) 
 											   styleMask:NSBorderlessWindowMask
 												 backing:NSBackingStoreBuffered
 												   defer:NO];
-    [tooltipWindow setLevel:NSStatusWindowLevel]; //Just using the floating panel level is insufficient because the contact list can float, too
     [tooltipWindow setHidesOnDeactivate:NO];
     [tooltipWindow setIgnoresMouseEvents:YES];
-    [tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
+	[tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
     [tooltipWindow setAlphaValue:0.9];
     [tooltipWindow setHasShadow:YES];
+	
+	//Just using the floating panel level is insufficient because the contact list can float, too
+    [tooltipWindow setLevel:NSStatusWindowLevel];
     
     //Add the title text view
-    NSTextStorage * textStorage = [[NSTextStorage alloc] init];
+    textStorage = [[NSTextStorage alloc] init];
     
-    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    layoutManager = [[NSLayoutManager alloc] init];
     [textStorage addLayoutManager:layoutManager];
     [layoutManager release];
     
-    NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
+    container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
     [container setLineFragmentPadding:1.0]; //so widths will caclulate properly
     [layoutManager addTextContainer:container];
     [container release];
@@ -208,9 +214,9 @@ static	AITooltipOrientation	tooltipOrientation;
 
 + (void)_sizeTooltip
 {
-    NSRect	tooltipTitleRect;
-    NSRect	tooltipBodyRect;
-    NSRect      tooltipWindowRect;
+    NSRect  tooltipTitleRect;
+    NSRect  tooltipBodyRect;
+    NSRect  tooltipWindowRect;
     
     BOOL hasTitle = tooltipTitle && [tooltipTitle length];
     BOOL hasBody = tooltipBody && [tooltipBody length];
