@@ -216,9 +216,10 @@ File Transfer:
 Deferring of initial message:
    Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
 
-Importing/Exporting:
+Importing/Exporting: [Brandon]
 
 	<tick> If possible, we could turn the Adium 1.6 importer into a massive importer/exporter, and include it in adium/have it online for download.
+        <Brandon>Yeah, the Migration Assistant(har har)
 
 	+Contact List import/export: [Steve]
 		+ Export to plist
@@ -228,8 +229,8 @@ Importing/Exporting:
 				with this one re: adding contacts back to the list.  We'll see.
 	+iChat import/export
 		+Log files
-		+Custom Away Messages
-		+Custom Available Messages
+		+Custom Away Messages[Done]
+		+Custom Available Messages[Done]
 			<tick> Check out ~/Library/Preferences/com.apple.iChat.plist for away/available
 			<tick> As iChat stores aliases in address book, we already have that :D
 	+Gaim
