@@ -433,6 +433,39 @@
 /* AIAccount_Handles */
 /*********************/
 #pragma mark Handles
+
+- (void)removeListObject:(AIListObject *)object
+{
+	NSString	*group = [object remoteGroupNameForAccount:self];
+	GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+	
+	serv_remove_buddy(gc, [[object UID] UTF8String], [group UTF8String]);	//remove it from the list serverside
+	gaim_blist_remove_buddy(buddy);											//remove it gaimside
+}
+	
+	
+	
+	//{
+	//    AIHandle	*handle;
+	//    if(handle = [handleDict objectForKey:inUID]){
+	//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
+	//        
+	//        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
+	//        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
+	//        
+	//        return YES;
+	//    } else 
+	//        return NO;
+	//}
+		
+	//    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
+	//    
+	//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
+	//    gaim_blist_remove_group(group);                         //remove it gaimside
+	//															
+	//        NSLog(@"remove group %@",inGroup);
+	//    return YES;
+
 // Returns a dictionary of AIHandles available on this account
 //- (NSDictionary *)availableHandles //return nil if no contacts/list available
 //{

@@ -498,6 +498,10 @@ typedef enum {
 - (void)sortContactList;
 - (void)sortListObject:(AIListObject *)inObject;
 
+//Editing
+- (void)removeListObject:(AIListObject *)object fromGroup:(AIListGroup *)group;
+
+
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
 - (void)showInfoForContact:(AIListContact *)inContact;

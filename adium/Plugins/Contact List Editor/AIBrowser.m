@@ -174,6 +174,24 @@
 	return(nil);
 }
 
+//Returns the column containing the current selection
+- (id)selectedColumn
+{
+	NSEnumerator	*enumerator;
+	AIBrowserColumn	*column;
+	
+	//Walk right to left, looking for a selection
+	NSLog(@"%@",[[self window] firstResponder]);
+	enumerator = [columnArray reverseObjectEnumerator];
+	while(column = [enumerator nextObject]){
+		if([[self window] firstResponder] == [column tableView]){
+			return(column);
+		}
+	}
+	
+	return(nil);
+}
+
 //- (void)tableViewLostFocus:(NSNotification *)notification
 //{
 //	NSLog(@"Lost focus: %@",[notification object]);
