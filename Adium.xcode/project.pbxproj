@@ -1500,7 +1500,6 @@
 				34E385FF068FAA5100303451,
 				343EAB8306EF857F001CDAFF,
 				346E640C05153395003B2F21,
-				F5148D9404C8B3BF018B6CC7,
 				4BAA1B3F0632EDDE00D8B92C,
 				9EB7C05703D52AFA00415B22,
 				F5AAD085039BA0D301A8010A,
@@ -6229,7 +6228,6 @@
 				4BD6737506001BF00049CAF7,
 				4BD6737E06001BF60049CAF7,
 				4BD6739906001C3F0049CAF7,
-				4BD6739C06001C440049CAF7,
 				4BD673A206001C4D0049CAF7,
 				4BD673A406001C4E0049CAF7,
 				4BD673A706001C4F0049CAF7,
@@ -6796,7 +6794,6 @@
 				4BD6737606001BF10049CAF7,
 				4BD6737D06001BF50049CAF7,
 				4BD6739B06001C410049CAF7,
-				4BD6739D06001C450049CAF7,
 				4BD673A306001C4E0049CAF7,
 				4BD673A506001C4E0049CAF7,
 				4BD673A806001C500049CAF7,
@@ -16290,18 +16287,6 @@
 			settings = {
 			};
 		};
-		4BD6739C06001C440049CAF7 = {
-			fileRef = F527079504E203BB0114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739D06001C450049CAF7 = {
-			fileRef = F527079604E203BB0114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD673A206001C4D0049CAF7 = {
 			fileRef = 4BD7D0D704620DF900A8010A;
 			isa = PBXBuildFile;
@@ -22313,20 +22298,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5148D9404C8B3BF018B6CC7 = {
-			children = (
-				F527079504E203BB0114B3C0,
-				F527079604E203BB0114B3C0,
-				F52707A104E203EA0114B3C0,
-				F52707A004E203EA0114B3C0,
-				F5148D9604C8B4AA018B6CC7,
-			);
-			isa = PBXGroup;
-			name = "Contact Alerts (Get Info window)";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5148D9604C8B4AA018B6CC7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -22345,24 +22316,6 @@
 			isa = PBXGroup;
 			name = "Login Window";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F527079504E203BB0114B3C0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactAlertsPlugin.h;
-			path = "Plugins/Contact Alerts/ESContactAlertsPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F527079604E203BB0114B3C0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactAlertsPlugin.m;
-			path = "Plugins/Contact Alerts/ESContactAlertsPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23243,6 +23196,8 @@
 			children = (
 				4B052CA4067E39BE00A43B4A,
 				4B052CA5067E39BE00A43B4A,
+				F52707A104E203EA0114B3C0,
+				F52707A004E203EA0114B3C0,
 				F570A59803704B6101A8010A,
 				F570A59903704B6101A8010A,
 				4BBF41DD0661194A001D31E1,
@@ -23252,6 +23207,7 @@
 				340F47EB06DA41DB0072E2FA,
 				340F47EA06DA41DB0072E2FA,
 				4BB1E43E067F2CA100D1DB86,
+				F5148D9604C8B4AA018B6CC7,
 				F5CDCE4B0350760A01A8010A,
 				4BBF41E10661194A001D31E1,
 				4B2DC068066F6B1200AD5AAD,
