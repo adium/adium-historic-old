@@ -103,7 +103,7 @@
 //Called when Adium receives content
 - (void)didReceiveContent:(NSNotification *)notification
 {
-    AIContentObject 	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject 	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
     
     //If the user received a message which another user sent (not an autoreply), send our away message to source
     if(([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]) &&
@@ -145,7 +145,7 @@
 //Called when Adium sends content
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
     
     if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat	*chat = [contentObject chat];
@@ -266,20 +266,16 @@
 			[self _updateAwaySubmenus];
 			
 			//Remove existing content sent/received observer, and install new (if away)
-			[[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-			[[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-			[[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+			[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_RECEIVED object:nil];
+			[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_SENT object:nil];
 			[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
 			if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil){
 				[[adium notificationCenter] addObserver:self
 							       selector:@selector(didReceiveContent:) 
-								   name:Content_DidReceiveContent object:nil];
-				[[adium notificationCenter] addObserver:self
-							       selector:@selector(didReceiveContent:)
-								   name:Content_FirstContentRecieved object:nil];
+								   name:CONTENT_MESSAGE_RECEIVED object:nil];
 				[[adium notificationCenter] addObserver:self
 							       selector:@selector(didSendContent:)
-								   name:Content_DidSendContent object:nil];
+								   name:CONTENT_MESSAGE_SENT object:nil];
 				[[adium notificationCenter] addObserver:self
 							       selector:@selector(chatWillClose:)
 								   name:Chat_WillClose object:nil];
