@@ -31,6 +31,7 @@
 - (void)sizeWindowForContent;
 
 - (void)showAccountsOverview;
+- (void)newAccountPane;
 - (void)newAccountOnService:(AIService *)service;
 - (void)editExistingAccount:(AIAccount *)account;
 

@@ -78,7 +78,7 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 
 
 //Actions --------------------------------------------------------------------------------------------------------------
-#pragma Actions
+#pragma mark Actions
 //Edit account
 - (void)editExistingAccount:(AIAccount *)account
 {
