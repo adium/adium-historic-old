@@ -186,8 +186,6 @@ if [ -z "$install_dir" ] ; then
 		fi
 	fi	
 fi		
-# Liboscar has to be updated each build with ranlib
-liboscar="$adium_co_dir/Plugins/Gaim?Service/LIBS/liboscar.a"
 
 # Get the date for version tracking
 today=$(date +"%Y-%m-%d")
@@ -241,9 +239,6 @@ fi
 
 # Time to start
 cd $adium_co_dir				# Really just ./adium
-
-# ranlib the static library
-ranlib $liboscar
 
 # Delete the (empty) Adium.pbproj
 # We only want one .pbproj file so we don't have to tell
@@ -333,7 +328,7 @@ if [ "$copy_to_sourceforge" == "yes" ] ; then
        /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg \
        /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
 
- 	$adium_co_dir/Utilities/listToHTML.py $adium_co_dir/theList.txt theList.html
+ 	$adium_co_dir/Utilities/listToHTML.py $adium_co_dir/ToDoList.txt theList.html
 	scp theList.html $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/theList.html
 
 	scp $adium_co_dir/build/version.plist  $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/version.plist
