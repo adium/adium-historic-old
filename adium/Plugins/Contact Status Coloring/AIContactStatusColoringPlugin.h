@@ -24,6 +24,7 @@
 #define KEY_IDLE_COLOR			@"Idle Color"
 #define KEY_ONLINE_COLOR		@"Online Color"
 #define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
+#define KEY_TYPING_COLOR		@"Typing Color"
 #define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
@@ -36,6 +37,7 @@
 #define KEY_OPEN_TAB_INVERTED_COLOR		@"Open Tab Inverted Color"
 #define KEY_SIGNED_OFF_INVERTED_COLOR		@"Signed Off Inverted Color"
 #define KEY_SIGNED_ON_INVERTED_COLOR		@"Signed On Inverted Color"
+#define KEY_TYPING_INVERTED_COLOR		@"Typing Inverted Color"
 #define KEY_UNVIEWED_INVERTED_COLOR		@"Unviewed Content Inverted Color"
 #define KEY_WARNING_INVERTED_COLOR		@"Warning Inverted Color"
 
@@ -47,23 +49,25 @@
 
     NSMutableArray	*flashingContactArray;
 
-    NSColor		*signedOffColor;
-    NSColor		*signedOnColor;
-    NSColor		*onlineColor;
     NSColor		*awayColor;
     NSColor		*idleColor;
     NSColor		*idleAwayColor;
+    NSColor		*onlineColor;
     NSColor		*openTabColor;
+    NSColor		*signedOffColor;
+    NSColor		*signedOnColor;
+    NSColor		*typingColor;
     NSColor		*unviewedContentColor;
     NSColor		*warningColor;
 
-    NSColor		*signedOffInvertedColor;
-    NSColor		*signedOnInvertedColor;
-    NSColor		*onlineInvertedColor;
     NSColor		*awayInvertedColor;
     NSColor		*idleInvertedColor;
     NSColor		*idleAwayInvertedColor;
+    NSColor		*onlineInvertedColor;
     NSColor		*openTabInvertedColor;
+    NSColor		*signedOffInvertedColor;
+    NSColor		*signedOnInvertedColor;
+    NSColor		*typingInvertedColor;
     NSColor		*unviewedContentInvertedColor;
     NSColor		*warningInvertedColor;
 }

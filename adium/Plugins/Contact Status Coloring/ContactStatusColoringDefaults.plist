@@ -30,6 +30,10 @@
     <string>0,0,102</string>
     <key>Signed On Inverted Color</key>
     <string>216,216,255</string>
+    <key>Typing Color</key>
+    <string>0,255,0</string>
+    <key>Typing Inverted Color</key>
+    <string>255,255,255</string>
     <key>Unviewed Content Color</key>
     <string>0,102,0</string>
     <key>Unviewed Content Inverted Color</key>

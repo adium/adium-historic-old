@@ -37,24 +37,14 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == colorWell_signedOff){
-        [[owner preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
-                                             forKey:KEY_SIGNED_OFF_COLOR
-                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
-
-    }else if(sender == colorWell_signedOn){
-        [[owner preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
-                                             forKey:KEY_SIGNED_ON_COLOR
-                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
-
-    }else if(sender == colorWell_online){
-        [[owner preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
-                                             forKey:KEY_ONLINE_COLOR
-                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
-
-    }else if(sender == colorWell_away){
+    if(sender == colorWell_away){
         [[owner preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
                                              forKey:KEY_AWAY_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_awayInverted){
+        [[owner preferenceController] setPreference:[[colorWell_awayInverted color] stringRepresentation]
+                                             forKey:KEY_AWAY_INVERTED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idle){
@@ -62,9 +52,29 @@
                                              forKey:KEY_IDLE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
+    }else if(sender == colorWell_idleInverted){
+        [[owner preferenceController] setPreference:[[colorWell_idleInverted color] stringRepresentation]
+                                             forKey:KEY_IDLE_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
     }else if(sender == colorWell_idleAway){
         [[owner preferenceController] setPreference:[[colorWell_idleAway color] stringRepresentation]
                                              forKey:KEY_IDLE_AWAY_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_idleAwayInverted){
+        [[owner preferenceController] setPreference:[[colorWell_idleAwayInverted color] stringRepresentation]
+                                             forKey:KEY_IDLE_AWAY_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_online){
+        [[owner preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
+                                             forKey:KEY_ONLINE_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_onlineInverted){
+        [[owner preferenceController] setPreference:[[colorWell_onlineInverted color] stringRepresentation]
+                                             forKey:KEY_ONLINE_INVERTED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_openTab){
@@ -72,14 +82,59 @@
                                              forKey:KEY_OPEN_TAB_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
+    }else if(sender == colorWell_openTabInverted){
+        [[owner preferenceController] setPreference:[[colorWell_openTabInverted color] stringRepresentation]
+                                             forKey:KEY_OPEN_TAB_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_signedOff){
+        [[owner preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
+                                             forKey:KEY_SIGNED_OFF_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_signedOffInverted){
+        [[owner preferenceController] setPreference:[[colorWell_signedOnInverted color] stringRepresentation]
+                                             forKey:KEY_SIGNED_ON_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_signedOn){
+        [[owner preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
+                                             forKey:KEY_SIGNED_ON_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_signedOnInverted){
+        [[owner preferenceController] setPreference:[[colorWell_signedOnInverted color] stringRepresentation]
+                                             forKey:KEY_SIGNED_ON_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_typing){
+        [[owner preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
+                                             forKey:KEY_TYPING_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_typingInverted){
+        [[owner preferenceController] setPreference:[[colorWell_typingInverted color] stringRepresentation]
+                                             forKey:KEY_TYPING_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
     }else if(sender == colorWell_unviewedContent){
         [[owner preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
                                              forKey:KEY_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
+    }else if(sender == colorWell_unviewedContentInverted){
+        [[owner preferenceController] setPreference:[[colorWell_unviewedContentInverted color] stringRepresentation]
+                                             forKey:KEY_UNVIEWED_INVERTED_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
     }else if(sender == colorWell_warning){
         [[owner preferenceController] setPreference:[[colorWell_warning color] stringRepresentation]
                                              forKey:KEY_WARNING_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_warningInverted){
+        [[owner preferenceController] setPreference:[[colorWell_warningInverted color] stringRepresentation]
+                                             forKey:KEY_WARNING_INVERTED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
     }
 
@@ -112,23 +167,25 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
     [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
     [colorWell_idleAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
     [colorWell_openTab setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor]];
+    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_warning setColor:[[preferenceDict objectForKey:KEY_WARNING_COLOR] representedColor]];
 
-    [colorWell_signedOffInverted setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_INVERTED_COLOR] representedColor]];
-    [colorWell_signedOnInverted setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_INVERTED_COLOR] representedColor]];
-    [colorWell_onlineInverted setColor:[[preferenceDict objectForKey:KEY_ONLINE_INVERTED_COLOR] representedColor]];
     [colorWell_awayInverted setColor:[[preferenceDict objectForKey:KEY_AWAY_INVERTED_COLOR] representedColor]];
     [colorWell_idleInverted setColor:[[preferenceDict objectForKey:KEY_IDLE_INVERTED_COLOR] representedColor]];
     [colorWell_idleAwayInverted setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_INVERTED_COLOR] representedColor]];
+    [colorWell_onlineInverted setColor:[[preferenceDict objectForKey:KEY_ONLINE_INVERTED_COLOR] representedColor]];
     [colorWell_openTabInverted setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_INVERTED_COLOR] representedColor]];
+    [colorWell_signedOffInverted setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_INVERTED_COLOR] representedColor]];
+    [colorWell_signedOnInverted setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_INVERTED_COLOR] representedColor]];
+    [colorWell_typingInverted setColor:[[preferenceDict objectForKey:KEY_TYPING_INVERTED_COLOR] representedColor]];
     [colorWell_unviewedContentInverted setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_INVERTED_COLOR] representedColor]];
     [colorWell_warningInverted setColor:[[preferenceDict objectForKey:KEY_WARNING_INVERTED_COLOR] representedColor]];
 
@@ -138,17 +195,6 @@
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
 {
-/*
-    //Font
-    [button_setFont setEnabled:[checkBox_forceFont state]];
-    [textField_desiredFont setEnabled:[checkBox_forceFont state]];
-
-    //Text
-    [colorWell_textColor setEnabled:[checkBox_forceTextColor state]];
-
-    //Background
-    [colorWell_backgroundColor setEnabled:[checkBox_forceBackgroundColor state]];
-*/
 }
 
 @end

@@ -72,6 +72,11 @@
                                              forKey:KEY_OPEN_TAB_COLOR
                                               group:PREF_GROUP_STATUS_CIRCLES];
 
+    }else if(sender == colorWell_typing){
+        [[owner preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
+                                             forKey:KEY_TYPING_COLOR
+                                              group:PREF_GROUP_STATUS_CIRCLES];
+
     }else if(sender == colorWell_unviewedContent){
         [[owner preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
                                              forKey:KEY_UNVIEWED_COLOR
@@ -119,14 +124,15 @@
 {
 
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
-    
-    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+
     [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
     [colorWell_idleAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
     [colorWell_openTab setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor]];
+    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_warning setColor:[[preferenceDict objectForKey:KEY_WARNING_COLOR] representedColor]];
 
@@ -136,17 +142,6 @@
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
 {
-/*
-    //Font
-    [button_setFont setEnabled:[checkBox_forceFont state]];
-    [textField_desiredFont setEnabled:[checkBox_forceFont state]];
-
-    //Text
-    [colorWell_textColor setEnabled:[checkBox_forceTextColor state]];
-
-    //Background
-    [colorWell_backgroundColor setEnabled:[checkBox_forceBackgroundColor state]];
-*/
 }
 
 @end
