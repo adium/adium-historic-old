@@ -9,6 +9,7 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
 #import "SLGaimCocoaAdapter.h"
+#import "ESGaimRequestWindowController.h"
 
 #import "GaimServices.h"
 
@@ -466,6 +467,7 @@ static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char *
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb, void *userData)
 {
+	NSLog(@"adiumGaimNotifyFormatted");
     return(nil);
 }
 
@@ -493,7 +495,33 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 // Request ------------------------------------------------------------------------------------------------------
 static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb, void *userData)
 {
-    NSLog(@"adiumGaimRequestInput");
+	/*
+	 Multiline should be a paragraph-sized box; otherwise, a single line will suffice.
+	 Masked means we want to use an NSSecureTextField sort of thing.
+	 We may receive any combination of primary and secondary text (either, both, or neither).
+	 */
+	
+	NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"Input Requested");
+	NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
+		(primary ? primary : ""),
+		((primary && secondary) ? "\n\n" : ""),
+		(secondary ? secondary : "")];
+	NSString	*okButtonText = [NSString stringWithUTF8String:okText];
+	NSString	*cancelButtonText = [NSString stringWithUTF8String:cancelText];
+	NSString	*defaultValueString = (defaultValue ? [NSString stringWithUTF8String:defaultValue] : nil);
+
+	//Default value may be nil; it should be last in the dictionaryWithObjectsAndKeys: call so if it is, we just stop there
+	NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:titleString,@"Title",
+											msg,@"Message",
+											okButtonText,@"OK Text",
+											cancelButtonText,@"Cancel Text",
+											[NSValue valueWithPointer:okCb],@"OK Callback",
+											[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
+											[NSValue valueWithPointer:userData],@"userData",
+											defaultValueString,@"Default Value",nil];
+
+	[ESGaimRequestWindowController showInputWindowWithDict:infoDict multiline:multiline masked:masked];
+
     return(nil);
 }
 
@@ -506,6 +534,7 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action, void *userData, size_t actionCount, va_list actions)
 {
+	if (GAIM_DEBUG) NSLog(@"adiumGaimRequestAction");
     int		    alertReturn, i;
     //XXX evands: we can't use AILocalizedString here because there is no self (nor is there a spoon).
     /*AILocalizedString(@"Request","Title: General request from gaim")*/
@@ -562,10 +591,9 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     //Convert the return value to an array index
     alertReturn = (alertReturn + (actionCount - 2));
 	
-    if (callBacks[alertReturn] != NULL) 
+    if (callBacks[alertReturn] != NULL){
 		((GaimRequestActionCb)callBacks[alertReturn])(userData, alertReturn);
-    
-    //    gaim_request_close(GAIM_REQUEST_INPUT, nil);
+	}
     
     return(nil);
 }
@@ -578,7 +606,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 
 static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 {
-    NSLog(@"adiumGaimRequestClose");
+
 }
 
 static GaimRequestUiOps adiumGaimRequestOps = {

@@ -94,7 +94,7 @@ static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer da
                                                      repeats:YES];
     info->tag = sourceId;
     info->sourceFunction = function;
-    info->timer = timer;
+    info->timer = [timer retain];
     info->socket = NULL;
     info->rls = NULL;
     info->user_data = data;
@@ -182,20 +182,23 @@ static guint adium_timeout_remove(guint tag) {
 
 static void adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
-        [[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
-
-    if (sourceInfo == NULL)
-        return;
-
-    if (sourceInfo->timer != NULL) { // timer
-        [sourceInfo->timer invalidate];
-    } else { // file handle
-        CFRunLoopSourceInvalidate(sourceInfo->rls);
-        CFSocketInvalidate(sourceInfo->socket);
-    }
-
-    [sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
-    free(sourceInfo);
+									[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
+	
+    if (sourceInfo){
+		if (sourceInfo->timer != NULL) { 
+			//Got a timer; invalidate and release
+			[sourceInfo->timer invalidate];
+			[sourceInfo->timer release];
+			
+		}else{
+			//Got a file handle; invalidate the source and the socket
+			CFRunLoopSourceInvalidate(sourceInfo->rls);
+			CFSocketInvalidate(sourceInfo->socket);
+		}
+		
+		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
+		free(sourceInfo);
+	}
 }
 
 @end

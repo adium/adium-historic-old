@@ -71,10 +71,6 @@ typedef enum
 } GaimProtocol;
 
 
-#include "blist.h"
-#include "proxy.h"
-#include "plugin.h"
-
 /** Default protocol plugin description */
 #define GAIM_PRPL_DESC(x) \
 		"Allows gaim to use the " (x) " protocol.\n\n"      \
@@ -97,6 +93,10 @@ typedef enum
 	GAIM_CONV_IM_AUTO_RESP = 0x0001,    /**< Auto response.    */
 	GAIM_CONV_IM_IMAGES    = 0x0002     /**< Contains images.  */
 } GaimConvImFlags;
+
+#include "blist.h"
+#include "proxy.h"
+#include "plugin.h"
 
 /**
  * Protocol options
@@ -254,7 +254,6 @@ struct _GaimPluginProtocolInfo
 	int  (*send_typing)(GaimConnection *, const char *name, int typing);
 	void (*get_info)(GaimConnection *, const char *who);
 	void (*set_away)(GaimConnection *, const char *state, const char *message);
-	void (*get_away)(GaimConnection *, const char *who);
 	void (*set_dir)(GaimConnection *, const char *first,
 					const char *middle, const char *last,
 					const char *maiden, const char *city,
@@ -281,6 +280,7 @@ struct _GaimPluginProtocolInfo
 	void (*set_permit_deny)(GaimConnection *);
 	void (*warn)(GaimConnection *, const char *who, int anonymous);
 	void (*join_chat)(GaimConnection *, GHashTable *components);
+	void (*reject_chat)(GaimConnection *, GHashTable *components);
 	void (*chat_invite)(GaimConnection *, int id,
 						const char *who, const char *message);
 	void (*chat_leave)(GaimConnection *, int id);
@@ -327,8 +327,10 @@ struct _GaimPluginProtocolInfo
 	/* room listing prpl callbacks */
 	struct _GaimRoomlist *(*roomlist_get_list)(GaimConnection *gc);
 	void (*roomlist_cancel)(struct _GaimRoomlist *list);
-	void (*roomlist_expand_catagory)(struct _GaimRoomlist *list, struct _GaimRoomlistRoom *catagory);
+	void (*roomlist_expand_category)(struct _GaimRoomlist *list, struct _GaimRoomlistRoom *category);
 
+	/* Chat specific menu in the buddy list */
+	GList *(*chat_menu)(GaimConnection *, GHashTable *);
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \

@@ -74,6 +74,7 @@
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
+	//Remove "signed on from another location" check for libgaim 0.77
 	if (([disconnectionError rangeOfString:@"signed on from another location"].location != NSNotFound)) {
 		return NO;
 	}else if (([disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
