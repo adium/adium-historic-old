@@ -8,19 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define CL_PREFERENCE_GROUP		@"Contact List Preferences"
-#define CL_DEFAULT_FONT			@"Default Font"
-#define CL_ENABLE_GRID			@"Enable Grid"
-#define CL_ALTERNATING_GRID		@"Alternating Grid"
-#define CL_BACKGROUND_COLOR		@"Background Color"
-#define CL_GRID_COLOR			@"Grid Color"
-#define CL_OPACITY			@"Opacity"
-
 @interface AICLPreferences : AIPlugin {
     IBOutlet	NSView			*view_prefView;
 
     IBOutlet	NSTextField		*textField_fontName;
-
+    IBOutlet	NSButton		*checkBox_alternatingGrid;
 
     NSDictionary		*preferenceDict;
     
@@ -46,6 +38,7 @@
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
 - (IBAction)setContactListFont:(id)sender;
+- (IBAction)toggleAlternatingGrid:(id)sender;
 
     /*
 

@@ -24,12 +24,6 @@
 - (void)buildFontMenuFor:(NSPopUpButton *)inFontPopUp;
 - (void)configureView;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
-
-/*
-- (void) _prefsChangedNotify;
-- (void) _buildFontMenuFor: (NSPopUpButton*)inFontPopUp;
-- (void) _buildFontFaceMenuFor:(NSPopUpButton *)inFacePopUp using:(NSPopUpButton *)inFamilyPopUp;
-- (void) _loadPrefs;*/
 @end
 
 @implementation AICLPreferences
@@ -53,36 +47,27 @@
     [fontManager orderFrontFontPanel:self];
 }
 
+- (IBAction)toggleAlternatingGrid:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_SCL_ALTERNATING_GRID group:GROUP_CONTACT_LIST];
+}
+
+
+
+
+
+//Private ---------------------------------------------------------------------------
 //Called in response to a font panel change
 - (void)changeFont:(id)sender
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
-    
+
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
     [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:GROUP_CONTACT_LIST];
 }
-
-
-
-//Private ---------------------------------------------------------------------------
-/*NSResponder *responder = nil;
-- (NSResponder *)nextResponder
-{
-    return(responder);
-}
-
-- (void)setNextResponder:(NSResponder *)aResponder
-{
-    responder = [aResponder retain];    
-}
-
-- (BOOL)tryToPerform:(SEL)anAction with:(id)anObject
-{
-    NSLog(@"tryToPerform");
-    return([responder tryToPerform:anAction with:anObject]);
-}*/
 
 //init
 - (id)initWithOwner:(id)inOwner
@@ -119,10 +104,13 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSFont	*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
-//    NSString	*fontName;
+    //Font
+    [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
 
-    [self showFont:contactListFont inField:textField_fontName];
+    //Grid
+    [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
+    
+    
     
 //    [self buildFontMenuFor:popUp_font];
 //    [popUp_font selectItemWithTitle:[preferenceDict objectForKey:KEY_SCL_FONT_NAME]];

@@ -4,5 +4,7 @@
 <dict>
 	<key>Font</key>
 	<string>Lucida Grande,11</string>
+	<key>Alternating Grid</key>
+	<true/>
 </dict>
 </plist>

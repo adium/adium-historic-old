@@ -19,7 +19,17 @@
 #define	GROUP_CONTACT_LIST		@"Contact List Display"
 
 #define SCL_DEFAULT_PREFS		@"SCL Defaults"
+
 #define KEY_SCL_FONT			@"Font"
+#define	KEY_SCL_ALTERNATING_GRID	@"Alternating Grid"
+
+/*
+#define CL_PREFERENCE_GROUP		@"Contact List Preferences"
+#define CL_DEFAULT_FONT			@"Default Font"
+#define CL_BACKGROUND_COLOR		@"Background Color"
+#define CL_GRID_COLOR			@"Grid Color"
+#define CL_OPACITY			@"Opacity"
+*/
 
 
 @class AIContactGroup, AICLPreferences;
