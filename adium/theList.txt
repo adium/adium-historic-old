@@ -12,7 +12,7 @@ If you are working on something big and it may take a while, please tag it with 
 Bugs
 -------------------------------------------------------------------------------------------------------
 * Don't spawn new windows when we're hidden, doing so will unhide us
-* Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
+* Standard Message View: Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 * Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
 * Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
 
@@ -40,7 +40,6 @@ Emoticons:
 	+ Clean up emoticon preference layout.  Move checkbox next to pack name, [align icons - Evan:done], adjust padding, etc.
 	
 WebKit Message View:
-	+ Add keypress forwarding
 	+ Add preference to switch active style, preview styles
 	+ Add support for displaying emoticon images
     
@@ -237,7 +236,7 @@ Features & Changes:
 = Tab scrubbing.  If control is held when mousing over a tab, select that tab
 = Make option-clicking a tab close button close all other tabs
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
+= Webkit: Add keypress forwarding
 = Auto-complete aliases in New Message prompt
 = Create new account, tab from username->pass->account list.  Next tab should go back to username
 = Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
-= Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
