@@ -234,12 +234,11 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Delete a layout or theme set
 + (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
 {
-	BOOL			success;
+	BOOL		success;
 	
-	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
-	
-	success = [[NSFileManager defaultManager] removeFileAtPath:[destFolder stringByAppendingPathComponent:fileName]
+	success = [[NSFileManager defaultManager] removeFileAtPath:[[AIObject sharedAdiumInstance] pathOfPackWithName:setName
+																										extension:extension
+																							   resourceFolderName:folder]
 													   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
@@ -251,13 +250,14 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //
 + (BOOL)renameSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toName:(NSString *)newName
 {
-	BOOL			success;
+	BOOL		success;
 	
 	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
 	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
 	
-	success = [[NSFileManager defaultManager] movePath:[destFolder stringByAppendingPathComponent:fileName]
+	success = [[NSFileManager defaultManager] movePath:[[AIObject sharedAdiumInstance] pathOfPackWithName:setName
+																								extension:extension
+																					   resourceFolderName:folder]
 												toPath:[destFolder stringByAppendingPathComponent:newFileName]
 											   handler:nil];
 
@@ -270,14 +270,15 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //
 + (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName
 {
-	BOOL			success;
+	BOOL		success;
 	
 	//Duplicate the set
 	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
 	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
 	
-	success = [[NSFileManager defaultManager] copyPath:[destFolder stringByAppendingPathComponent:fileName]
+	success = [[NSFileManager defaultManager] copyPath:[[AIObject sharedAdiumInstance] pathOfPackWithName:setName
+																								extension:extension
+																					   resourceFolderName:folder]
 												toPath:[destFolder stringByAppendingPathComponent:newFileName]
 											   handler:nil];
 	
@@ -286,10 +287,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 
 	return(success);
 }
-
-
-
-
 
 + (NSArray *)availableLayoutSets
 {
