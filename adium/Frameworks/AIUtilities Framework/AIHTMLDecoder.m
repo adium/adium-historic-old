@@ -44,6 +44,7 @@ int HTMLEquivalentForFontSize(int fontSize);
     NSString		*inMessageString;
     int			messageLength;
     NSRange		searchRange;
+	short		loop;
     
     //Get the incoming message as a regular string, and it's length
     inMessageString = [inMessage string];
@@ -143,9 +144,31 @@ int HTMLEquivalentForFontSize(int fontSize);
     
             }
         }
-  */      
-        [string appendString:[inMessageString substringWithRange:searchRange]];
-
+  */    
+		
+        //[string appendString:[inMessageString substringWithRange:searchRange]];
+		//ikrieg commented to replace with the following
+		loop = searchRange.location;
+		while (loop < (searchRange.location + searchRange.length))
+		{
+			long currentChar = [inMessageString characterAtIndex:loop];
+			
+			if(currentChar == 60){ //replace less-than's (<) with their HTML code (&lt;)
+				//[string replaceCharactersInRange:NSMakeRange(loop, 1) withString:@"&lt;"];
+				[string appendString:@"&lt;"];
+			}else if(currentChar == 62){ //replace greater-than's (>) with their HTML code (&gt;)
+				//[string replaceCharactersInRange:NSMakeRange(loop, 1) withString:@"&gt;"];
+				[string appendString:@"&gt;"];
+			}else if(currentChar == '&'){ //replace with (&amp;) (breaks links, but we'll deal with that later)
+				//[string replaceCharactersInRange:NSMakeRange(loop, 1) withString:@"&amp;"];
+				[string appendString:@"&amp;"];
+			}else{
+				[string appendCharacter:currentChar];
+			}
+			loop++;
+		}
+		
+		//ikrieg end
         searchRange.location += searchRange.length;
     }
 
