@@ -175,7 +175,7 @@
 {
 	register unsigned int H = 0;
 	register unsigned rem = length;
-	register const char *bytes = buffer;
+	register const char *bytes = backing;
 	while(rem > 3) {
 		MULLE_ELF_STEP(bytes[length - rem]);
 		MULLE_ELF_STEP(bytes[length - rem + 1]);
