@@ -35,7 +35,7 @@ Minor Changes
 
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
-	+ Add Offline status coloring
+	= Add Offline status coloring
 	- Remove sorting preferences.  Consolidate these and place them in the view menu
 	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip
