@@ -37,7 +37,8 @@
     BOOL			pushIndicatorVisible;
     NSButton		*indicator;
 	NSMenu			*pushMenu;
-        
+	NSDictionary	*defaultTypingAttributes;
+	
     NSSize			lastPostedSize;
 	NSSize			_desiredSizeCached;
     
@@ -52,6 +53,10 @@
 - (void)setPushPop:(BOOL)inBool;
 
 - (void)setTarget:(id)inTarget action:(SEL)inSelector;
+
+- (void)setDefaultTypingAttributes:(NSDictionary *)dict;
+- (NSDictionary *)defaultTypingAttributes;
+- (void)resetToDefaultTypingAttributes;
 
 - (void)insertText:(id)aString;
 
