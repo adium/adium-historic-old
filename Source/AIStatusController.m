@@ -53,7 +53,6 @@
 							 toArray:(NSMutableArray *)menuItems
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
 - (void)buildBuiltInStatusTypes;
-- (AIStatus *)defaultInitialStatusState;
 - (void)setInitialStatusState;
 @end
 									
