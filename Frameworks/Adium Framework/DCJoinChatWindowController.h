@@ -24,5 +24,6 @@
 - (IBAction)closeWindow:(id)sender;
 
 - (void)setJoinChatEnabled:(BOOL)enabled;
+- (AIListContact *)contactFromText:(NSString *)text;
 
 @end
