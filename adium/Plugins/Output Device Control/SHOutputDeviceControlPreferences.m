@@ -25,7 +25,7 @@
 
 - (void)viewDidLoad
 {
-    NSDictionary        *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    NSDictionary        *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     
     
     if([[preferenceDict objectForKey:KEY_USE_SYSTEM_SOUND_OUTPUT] boolValue] == YES)
@@ -37,7 +37,7 @@
     if(![NSApp isOnPantherOrBetter]){
         [[adium preferenceController] setPreference:NO
                                              forKey:KEY_USE_SYSTEM_SOUND_OUTPUT
-                                              group:PREF_GROUP_GENERAL];
+                                              group:PREF_GROUP_SOUNDS];
                                               
         [checkBox_useAlertOutput setEnabled:NO];
     }
@@ -48,7 +48,7 @@
     if(sender == checkBox_useAlertOutput){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_useAlertOutput state]]
                                              forKey:KEY_USE_SYSTEM_SOUND_OUTPUT
-                                              group:PREF_GROUP_GENERAL];
+                                              group:PREF_GROUP_SOUNDS];
     }
 }
 

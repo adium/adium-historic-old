@@ -13,8 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_SOUNDS			@"Sounds"
-
 #define SOUND_EVENT_START			@"\nSoundset:\n"	//String marking start of event list
 #define SOUND_EVENT_QUOTE			@"\""			//Character before and after event name
 #define SOUND_NEWLINE				@"\n"			//Newline character
@@ -25,7 +23,7 @@
 #define KEY_EVENT_SOUND_SET			@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
 #define	KEY_EVENT_SOUND_EVENT_ID	@"Notification"
-#define KEY_EVENT_MUTE_WHILE_AWAY   @"Mute While Away"
+
 
 #define SOUND_ALERT_IDENTIFIER		@"PlaySound"
 
