@@ -284,6 +284,7 @@
 //Close the window for a chat
 - (void)closeChat:(AIChat *)inChat
 {
+	[inChat setIsOpen:NO];
     [interfacePlugin closeChat:inChat];
 }
 
