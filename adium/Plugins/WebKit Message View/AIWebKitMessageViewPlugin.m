@@ -21,24 +21,26 @@ DeclareString(AppendNextMessage);
 
 - (void)installPlugin
 {
-	InitString(AppendMessage,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
-	InitString(AppendNextMessage,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
-	
-	//Register our default preferences and install our preference view
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS
-																		forClass:[self class]]
-										  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-    preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
-	
-	styleDictionary = [[NSMutableDictionary alloc] init];
-	[self _loadAvailableWebkitStyles];
-	
-	//Observe preference changes and set our initial preferences
-	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-	[self preferencesChanged:nil];
-	
-    //Register ourself as a message view plugin
-    [[adium interfaceController] registerMessageViewPlugin:self];
+	if([NSApp isOnPantherOrBetter]){
+		InitString(AppendMessage,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
+		InitString(AppendNextMessage,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
+		
+		//Register our default preferences and install our preference view
+		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS
+																			forClass:[self class]]
+											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
+		
+		styleDictionary = [[NSMutableDictionary alloc] init];
+		[self _loadAvailableWebkitStyles];
+		
+		//Observe preference changes and set our initial preferences
+		[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+		[self preferencesChanged:nil];
+		
+		//Register ourself as a message view plugin
+		[[adium interfaceController] registerMessageViewPlugin:self];
+	}
 }
 
 //Return a message view controller
