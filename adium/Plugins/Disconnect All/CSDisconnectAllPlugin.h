@@ -9,6 +9,7 @@
 @interface CSDisconnectAllPlugin : AIPlugin {
     NSMenuItem *connectItem;
     NSMenuItem *disconnectItem;
+    NSMenuItem *cancelConnectItem;
 }
 
 @end
