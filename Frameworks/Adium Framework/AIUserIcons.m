@@ -9,14 +9,18 @@
 #import "AIListObject.h"
 
 static NSMutableDictionary	*iconCache = nil;
+static NSMutableDictionary	*menuIconCache = nil;
 static NSSize				iconCacheSize;
+static NSSize				menuIconCacheSize;
 
 @implementation AIUserIcons
 
 + (void)initialize
 {
 	iconCache = [[NSMutableDictionary alloc] init];
-	
+	menuIconCache = [[NSMutableDictionary alloc] init];
+	menuIconCacheSize = NSMakeSize(16,16);
+
 //	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 }
 
@@ -37,6 +41,32 @@ static NSSize				iconCacheSize;
 	return(userIcon/* ? userIcon : defaultUserIcon*/);
 }
 
+//Retrieve a user icon sized for a menu, returning the appropriate service icon if no user icon is found
++ (NSImage *)menuUserIconForObject:(AIListObject *)inObject
+{
+	NSImage *userIcon = nil;
+	
+	if ([inObject isKindOfClass:[AIListContact class]]){
+		//Retrieve the icon from our cache
+		userIcon = [menuIconCache objectForKey:[(AIListContact *)inObject internalObjectID]];
+		
+		//Render the icon if it's not cached
+		if(!userIcon){
+			userIcon = [[(AIListContact *)inObject userIcon] imageByScalingToSize:menuIconCacheSize
+																		 fraction:1.0
+																		flipImage:NO];
+			if(userIcon) [menuIconCache setObject:userIcon
+										   forKey:[(AIListContact *)inObject internalObjectID]];
+		}
+	}
+	
+	return(userIcon ?
+		   userIcon :
+		   [AIServiceIcons serviceIconForObject:inObject
+										   type:AIServiceIconSmall
+									  direction:AIIconNormal]);
+}
+
 //Set the current contact list user icon size
 + (void)setListUserIconSize:(NSSize)inSize
 {
@@ -51,11 +81,15 @@ static NSSize				iconCacheSize;
 {
 	[iconCache release]; iconCache = nil; 	
 	iconCache = [[NSMutableDictionary alloc] init];
+	
+	[menuIconCache release]; menuIconCache = nil; 	
+	menuIconCache = [[NSMutableDictionary alloc] init];
 }
 
 + (void)flushCacheForContact:(AIListContact *)inContact
 {
 	[iconCache removeObjectForKey:[inContact internalObjectID]];
+	[menuIconCache removeObjectForKey:[inContact internalObjectID]];
 }
 
 @end

@@ -33,9 +33,6 @@
     participatingListObjects = [[NSMutableArray alloc] init];
     dateOpened = [[NSDate date] retain];
 	uniqueChatID = nil;
-	_serviceImage = nil;
-	_cachedImage = nil;
-	_cachedMiniImage = nil;
 	isOpen = NO;
 	
     return(self);
@@ -48,9 +45,6 @@
     [participatingListObjects release];
   	[dateOpened release]; 
 	[uniqueChatID release]; uniqueChatID = nil;
-  	[_serviceImage release]; 
-  	[_cachedImage release]; 
-  	[_cachedMiniImage release]; 
 	
     [super dealloc];
 }
@@ -72,22 +66,14 @@
 //lil image
 - (NSImage *)chatMenuImage
 {
-	AIListObject 	*listObject = [self listObject];
+	AIListObject 	*listObject;
+	NSImage			*chatMenuImage = nil;
 	
-	if(listObject){
-		//If the image has changed, re-render our mini image
-		if(_cachedImage != [self chatImage]){
-			//Hold onto the new image, we'll need it later to know when the image has changed :)
-			[_cachedImage release];
-			_cachedImage = [[self chatImage] retain];
-
-			//Flush the old mini image, and render a new one
-			[_cachedMiniImage release];
-			_cachedMiniImage = [[_cachedImage imageByScalingToSize:NSMakeSize(16,16)] retain];
-		}
+	if(listObject = [self listObject]){
+		chatMenuImage = [AIUserIcons menuUserIconForObject:listObject];
 	}
 
-	return(_cachedMiniImage);
+	return(chatMenuImage);
 }
 
     

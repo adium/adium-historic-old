@@ -32,6 +32,8 @@ typedef enum {
 - (NSString *)shortDescription;
 - (NSString *)longDescription;
 - (NSCharacterSet *)allowedCharacters;
+- (NSCharacterSet *)allowedCharactersForUIDs;
+- (NSCharacterSet *)allowedCharactersForAccountName;
 - (NSCharacterSet *)ignoredCharacters;
 - (int)allowedLength;
 - (BOOL)caseSensitive;
