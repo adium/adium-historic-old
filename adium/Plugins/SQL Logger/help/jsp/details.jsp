@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 402 $ $Date: 2003/08/29 06:54:47 $ -->
+<!--$Rev: 418 $ $Date: 2003/09/09 01:18:57 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -42,34 +42,38 @@ try {
     
     pstmt = conn.prepareStatement("select " +
     " to_char(?::timestamp, \'Mon, YYYY\') as month, " +
-    " count(*) as total_sent," +
-    " min(length(message)) as min_length, " +
-    " max(length(message)) as max_length, " +
-    " trunc(avg(length(message)),2) as avg_length, " +
-    " null as last_day " +
+    " coalesce(count(*),0) as total_sent," +
+    " coalesce(min(length(message)),0) as min_length, " +
+    " coalesce(max(length(message)),0) as max_length, " +
+    " coalesce(trunc(avg(length(message)),2),0) as avg_length, " +
+    " date_part(\'day\', ?::timestamp + \'1 month\'::interval - " +
+    " \'1 day\'::interval) as last_day, " +
+    " \'S\' as identifier " +
     " from adium.messages " +
     " where sender_id = ? and date_trunc(\'month\', " +
     " message_date) = ?::timestamp group by sender_id " + 
     " union all " +
     " select " + 
     " null as month, " +
-    " count(*) as total_sent, " + 
-    " min(length(message)) as min_length, " +
-    " max(length(message)) as max_length, " +
-    " trunc(avg(length(message)), 2) as avg_length, " +
+    " coalesce(count(*),0) as total_sent, " + 
+    " coalesce(min(length(message)),0) as min_length, " +
+    " coalesce(max(length(message)),0) as max_length, " +
+    " coalesce(trunc(avg(length(message)), 2),0) as avg_length, " +
     " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+ 
-    " \'1 day\'::interval) as last_day"+
+    " \'1 day\'::interval) as last_day, "+
+    " \'R\' as identifier " +
     " from adium.messages " +
     " where recipient_id = ? " +
     " and date_trunc(\'month\', message_date) = ? " +
     " group by recipient_id ");
     
     pstmt.setString(1, date);
-    pstmt.setInt(2, sender_id);
-    pstmt.setString(3, date);
+    pstmt.setString(2, date);
+    pstmt.setInt(3, sender_id);
     pstmt.setString(4, date);
-    pstmt.setInt(5, sender_id);
-    pstmt.setString(6, date);
+    pstmt.setString(5, date);
+    pstmt.setInt(6, sender_id);
+    pstmt.setString(7, date);
     rset = pstmt.executeQuery();
     
     out.print("<div align=\"center\"><h3>");
@@ -79,23 +83,36 @@ try {
         int total = 0;
         out.print(rset.getString("month"));
         out.print("</h3></div>");
+        if(rset.getString("identifier").equals("S")) { %>
+            Total Sent: <%= rset.getString("total_sent") %><br />
+            <% total += rset.getInt("total_sent"); %>
+            Minimum Sent Length: <%= rset.getString("min_length") %><br />
+            Maximum Sent Length: <%= rset.getString("max_length") %><br />
+            Average Sent Length: <%= rset.getString("avg_length") %><br />
+    <%  } else { %>
+            Total Sent: 0<br />
+            Minimum Sent Length: 0<br />
+            Maximum Sent Length: 0<br />
+            Average Sent Length: 0<br />
+    <%  } %>
+        <br />
+    <%  rset.next(); 
+        if(rset.getString("identifier").equals("R")) { 
     %>
-        Total Sent: <%= rset.getString("total_sent") %><br />
-        <% total += rset.getInt("total_sent"); %>
-        Minimum Sent Length: <%= rset.getString("min_length") %><br />
-        Maximum Sent Length: <%= rset.getString("max_length") %><br />
-        Average Sent Length: <%= rset.getString("avg_length") %><br />
+            Total Received: <%= rset.getString("total_sent") %><br />
+            <% total += rset.getInt("total_sent"); %>
+            Minimum Received Length: <%= rset.getString("min_length") %><br />
+            Maximum Received Length: <%= rset.getString("max_length") %><br />
+            Average Received Length: <%= rset.getString("avg_length") %><br />
+            <br />
+    <%  } else { %>
+        Total Received: 0 <br />
+        Minimum Received Length: 0<br />
+        Maximum Received Length: 0<br />
+        Average Received Length: 0<br />
         <br />
-        <% rset.next(); %>
-        Total Received: <%= rset.getString("total_sent") %><br />
-        <% total += rset.getInt("total_sent"); %>
-        Minimum Received Length: <%= rset.getString("min_length") %><br
-        />
-        Maximum Received Length: <%= rset.getString("max_length") %><br
-        />
-        Average Received Length: <%= rset.getString("avg_length") %><br
-        />
-        <br />
+        <% } %>
+        
         Total Sent/Received: <%= total %><br />
         <br />
     <%
