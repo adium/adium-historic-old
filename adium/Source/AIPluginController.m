@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.63 2004/05/24 06:04:04 evands Exp $
+//$Id: AIPluginController.m,v 1.64 2004/05/24 21:46:39 earthmkii Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -48,7 +48,7 @@ ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendM
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin, AIContactProfilePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
-SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin;
+SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin;
 
 @implementation AIPluginController
 //init
@@ -129,7 +129,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
 //	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]]; //Crash on launch = 1
         [self loadPluginWithClass:[SHLinkManagementPlugin class]];
-
+        [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
