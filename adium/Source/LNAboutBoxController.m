@@ -93,7 +93,8 @@ LNAboutBoxController *sharedInstance = nil;
     [linkTextView_siteLink resetCursorRects];
 
     [textField_buildDate setStringValue:[NSString stringWithFormat:@"Build Date: %s", __DATE__]];
-    
+    [textField_buildTime setStringValue:[NSString stringWithFormat:@"Build Time: %s", __TIME__]];
+
     [[self window] center];
 }
 
