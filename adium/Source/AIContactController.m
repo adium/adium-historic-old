@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.132 2004/05/19 01:29:09 evands Exp $
+// $Id: AIContactController.m,v 1.133 2004/05/19 01:30:00 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -1062,7 +1062,7 @@
 		contactUID,@"UID",
 		inServiceID,@"serviceID",nil];
 	
-	[[adium notificationCenter] postNotificationName:Contact_AddNewContact
+	[[owner notificationCenter] postNotificationName:Contact_AddNewContact
 											  object:nil
 											userInfo:userInfo];
 }
