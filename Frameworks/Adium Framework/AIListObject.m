@@ -538,6 +538,19 @@ DeclareString(FormattedUID);
 	[self setStatusObject:nil forKey:@"StatusState" notify:notify];
 }
 
+/*!
+ * @brief Determine the status message to be displayed in the contact list
+ */
+- (NSAttributedString *)contactListStatusMessage
+{
+	NSString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
+	if(!contactListStatusMessage){
+		contactListStatusMessage = [[self statusState] statusMessage];
+	}
+	
+	return contactListStatusMessage;
+}
+
 - (BOOL)online
 {
 	return ([self integerStatusObjectForKey:@"Online"] ? YES : NO);
