@@ -32,7 +32,7 @@
 [Other]
 - Metacontact drawer in get info crashes upon dragging
 - Team decision on contact list bottom bar (Remove and restore the regular sized scroller?)
-
+- Message history seems to be dead
 
 [Unconfirmed (mostly from irc)]
 <+graphite> is it me...or does resizing vertically borked...i.e. it resizes from the top in rather than the bottom
