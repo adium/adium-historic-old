@@ -19,19 +19,34 @@
 @implementation AIAccountListPreferencesPlugin
 
 #define ACCOUNT_MENU_TITLE		@"Accounts..."
+#define ACCOUNT_EDIT_MENU_TITLE	@"Edit Accounts..."
 
 //Register our preference pane
 - (void)installPlugin
 {
 	NSMenuItem	*menuItem;
 	
-    //Add/Edit Link... menu item (edit menu)
+	//Install our menu items.
+	//We actually have two menu items for accessing the account preferences.  A lot of users will instinctively check
+	//the "Adium" menu for accounts.  Others will be looking in "Adium" for preferences (assuming our accounts are
+	//in preferences), and find the accounts menu item in the process.  Adding an "Edit accounts" in the status menu
+	//keeps consistency with the "Edit status" menu item, in addition to providing a nearby way to edit the account
+	//list visible in that menu.
+
+    //Adium menu item
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_MENU_TITLE
 																	 target:self
 																	 action:@selector(showAccountWindow:)
 															  keyEquivalent:@"a"] autorelease];
 	[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
+
+	//Status menu item
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_EDIT_MENU_TITLE
+																	target:self
+																	action:@selector(showAccountWindow:)
+															 keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Additions];
 }
 
 - (IBAction)showAccountWindow:(id)sender
