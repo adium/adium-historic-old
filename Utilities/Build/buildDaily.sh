@@ -197,7 +197,7 @@ cd $adium_co_dir				# Really just ./adium
 if [ -e $adium_co_dir/Plugins ]; then
 
 if [ "$clean_build" == "yes" ] ; then
-	rm -r $adium_co_dir/build
+	rm -rf $adium_co_dir/build
 fi
 
 # Produce Changelog
