@@ -6,6 +6,6 @@
 
 @interface NSURL (ESURLAdditions)
 
-- (int)length;
+- (unsigned int)length;
 
 @end

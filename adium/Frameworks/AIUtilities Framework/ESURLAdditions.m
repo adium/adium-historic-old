@@ -7,10 +7,9 @@
 
 #import "ESURLAdditions.h"
 
-
 @implementation NSURL (ESURLAdditions)
 
-- (int)length
+- (unsigned int)length
 {
 	return [[self absoluteString] length];
 }
