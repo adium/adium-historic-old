@@ -74,7 +74,7 @@
 {
     if(!([theEvent modifierFlags] & NSCommandKeyMask)){
         if([theEvent keyCode] == 36){ //Enter or return
-            [(AISCLViewPlugin *)[self delegate] performDefaultActionOnSelectedContact:nil];
+            [(AISCLViewPlugin *)[self delegate] performDefaultActionOnSelectedContact:self];
 
         }else if([theEvent keyCode] == 123){ //left
             AIContactObject 	*object = [self itemAtRow:[self selectedRow]];
