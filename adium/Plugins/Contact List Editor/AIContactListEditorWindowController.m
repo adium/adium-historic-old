@@ -86,13 +86,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 {
     //init
     owner = [inOwner retain];
-    editor = nil;
-    editedObject = nil;
     [super initWithWindowNibName:windowNibName owner:self];
     
     //Install observers
     [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-//    [[owner notificationCenter] addObserver:self selector:@selector(contactChanged:) name:Contact_ObjectChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
 
@@ -189,19 +186,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Notified when the contact list changes
 - (void)contactListChanged:(NSNotification *)notification
 {
-    //Fetch the new contact list
-    //    [contactList release]; contactList = [[[owner contactController] contactList] retain];
-
     //Redisplay
     [self generateCollectionsArray];
 }
-
-//Notified when a contact changes
-/*- (void)contactChanged:(NSNotification *)notification
-{
-    //refresh the outline view
-    [self refreshContentOutlineView];
-}*/
 
 
 // Collections table view
@@ -326,24 +313,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 
 
-//-Collections-
-//All Contacts
-//
-//Accounts
-// MrMoo111
-// RockZieg
-//
-//Other
-// Address Book
-// Rondezvous
-//
-//Imports
-// Proteus
-// Adium 1.6.x
-// Fire
-// AOLIM
-
-
 // Outline View ---------------------------------------------------------------------------------
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
@@ -424,26 +393,26 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
-/*    [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
+    [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
 
     //Build a list of all the highlighted objects
     if(dragItems) [dragItems release];
     dragItems = [items copy];
 
     //put it on the pasteboard
-    [pboard setString:@"Private" forType:@"AIContactObjects"];*/
+    [pboard setString:@"Private" forType:@"AIContactObjects"];
 
     return(YES);
 }
 
 - (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-/*    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
+    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
 
     if([avaliableType compare:@"AIContactObjects"] == 0){
         if((item == nil ||					//(handles can be dragged to the root level
             index != -1 ||					// to anywhere in a group
-            [item isKindOfClass:[AIContactGroup class]])	// or onto a group)
+            [item isKindOfClass:[AIEditorListGroup class]])	// or onto a group)
            && ([dragItems indexOfObject:item] == NSNotFound)){	//(But they cannot be dragged into themselves)
 
             return(NSDragOperationPrivate);
@@ -452,38 +421,43 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             return(NSDragOperationNone);
 
         }
-    }else{*/
+
+    }else{
         return(NSDragOperationMove);
 
-//    }
+    }
 }
 
 - (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-/*    NSString 	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
+    NSString 	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
 
     if([availableType compare:@"AIContactObjects"] == 0){
-        NSEnumerator	*enumerator;
-        AIContactObject	*object;
+        NSEnumerator		*enumerator;
+        AIEditorListObject	*object;
 
         //Move the groups first
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
-            if([object isKindOfClass:[AIContactGroup class]]){
-                [[owner contactController] moveObject:object toGroup:item index:index];
+            if([object isKindOfClass:[AIEditorListGroup class]]){
+//                [[
+//                [[owner contactController] moveObject:object toGroup:item index:index];
             }
         }
 
         //Then move the handles
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
-            if([object isKindOfClass:[AIContactHandle class]]){
-                [[owner contactController] moveObject:object toGroup:item index:index];
+            if([object isKindOfClass:[AIEditorListHandle class]]){
+                NSString	*handleUID = [[object UID] retain];
+
+                [(AIAccount<AIAccount_Handles> *)[selectedCollection account] removeHandleWithUID:handleUID];
+                [(AIAccount<AIAccount_Handles> *)[selectedCollection account] addHandleWithUID:handleUID serverGroup:[item UID] temporary:NO];
             }
         }
     }
 
-    [dragItems release]; dragItems = nil;*/
+    [dragItems release]; dragItems = nil;
     return(YES);
 }
 
@@ -678,7 +652,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         AIEditorListGroup	*editorGroup;
         AIEditorListHandle	*editorHandle;
 
-//        if(![handle temporary]){
+        if(![handle temporary]){
             //Make sure a group exists for this handle
             editorGroup = [groupDict objectForKey:serverGroup];
             if(!editorGroup){
@@ -690,7 +664,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             //Create the handle and add it to the group
             editorHandle = [[[AIEditorListHandle alloc] initWithServiceID:[handle serviceID] UID:[handle UID] temporary:NO] autorelease];
             [editorGroup addObject:editorHandle];
-//        }
+        }
     }
 
     return(listGroup);

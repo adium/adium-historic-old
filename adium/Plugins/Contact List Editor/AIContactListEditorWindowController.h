@@ -15,16 +15,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-//#define SUB_COLUMN_WIDTH	12 //18
-//#define LABEL_ROTATION		55 //45
-//#define LABEL_SIZE		10
-//#define LABEL_HEIGHT		16
-//#define LABEL_LENGTH		180
-//#define LABEL_X_OFFSET		1 //4
-//#define LABEL_Y_OFFSET		-4// -6
-//#define LABEL_NAME_X_OFFSET	2
-
-
 #define MAIN_COLUMN_WIDTH	160		//Width of the main column
 #define ALIAS_COLUMN_WIDTH	160		//Width of the alias column
 #define SUB_COLUMN_WIDTH	12		//Width of the account columns
@@ -37,23 +27,14 @@
     IBOutlet	NSScrollView			*scrollView_contactList;	//The contact list's scroll view
     IBOutlet	NSTableView			*tableView_sourceList;		//
     IBOutlet	AISCLEditHeaderView		*customView_tableHeader;	//The custom table header view
-    
-    NSImage			*folderImage;			//The image of a small folder
 
     AIAdium			*owner;				//AIAdium
-//    AIContactGroup		*contactList;			//A local reference to the contact list
 
+    NSImage			*folderImage;			//The image of a small folder
     NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
-
-    NSTextField			*editor;			//The custom outline view editor field
-    BOOL			editorOpen;			//YES if the editor is currently open
-    AIContactObject		*editedObject;			//The contact being edited
-    NSTableColumn		*editedColumn;			//The column being edited
-
     NSMutableArray		*dragItems;
-
-    NSMutableArray		*collectionsArray;
     
+    NSMutableArray		*collectionsArray;
     AIEditorCollection		*selectedCollection;
 }
 
