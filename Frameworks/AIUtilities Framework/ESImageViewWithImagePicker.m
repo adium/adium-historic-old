@@ -60,12 +60,12 @@
 		[pickerController release]; pickerController = nil;
 	}
 	
+	delegate = nil;
 	[title release];
 }
 
 // Getters and Setters ----------------------------------------------------------------
 #pragma mark Getters and Setters
-
 - (void)setDelegate:(id)inDelegate
 {
 	delegate = inDelegate;
