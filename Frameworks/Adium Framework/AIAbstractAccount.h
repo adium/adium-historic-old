@@ -30,11 +30,14 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval;
 - (void)updateContactStatus:(AIListContact *)inContact;
 - (void)updateCommonStatusForKey:(NSString *)key;
+- (void)setStatusState:(AIStatus *)statusState;;
+- (AIStatus *)statusState;
 
 //Auto-Refreshing Status String
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector;
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext;
+- (NSAttributedString *)autoRefreshingOriginalAttributedStringForStatusKey:(NSString *)key;
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
 - (void)startAutoRefreshingStatusKey:(NSString *)key;
 - (void)stopAutoRefreshingStatusKey:(NSString *)key;

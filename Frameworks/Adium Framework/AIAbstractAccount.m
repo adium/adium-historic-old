@@ -270,7 +270,20 @@ Adium, Copyright 2001-2005, Adam Iser
             }
         }
 		
-    }else if([key isEqualToString:@"FullNameAttr"]) {
+    }else if([key isEqualToString:@"StatusState"]){
+		if(areOnline){
+			//XXX Check against 'offline' state, disconnect if it has been specified?
+			
+			//Set the status state after filtering its statusMessage as appropriate
+			[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
+												   selector:@selector(gotFilteredStatusMessage:forStatusState:)
+													context:[self statusObjectForKey:@"StatusState"]];
+		}else{
+			//XXX behavior for setting a status when account is currently offline:
+			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
+		}
+
+	}else if([key isEqualToString:@"FullNameAttr"]) {
 		//Update the display name for this account
 		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
 		if([displayName length] == 0) displayName = nil;
@@ -288,6 +301,44 @@ Adium, Copyright 2001-2005, Adam Iser
 					   notify:YES];
 		
 	} 
+}
+
+/*!
+ * @brief Set the account to a specified statusState
+ *
+ * This is the entry point for setting an AIAccount to a specified state.
+ */
+- (void)setStatusState:(AIStatus *)statusState
+{
+	//Store teh status state as a status object so it can be easily used elsewhere
+	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];
+	
+	//Update us to the new state
+	[self updateStatusForKey:@"StatusState"];
+
+	/*
+	//Note the date/time this status state was set
+	[self setStatusObject:[NSDate date] 
+				   forKey:@"StatusStateDate"
+				   notify:NotifyNever];
+	 */
+}
+
+/*!
+* @brief The current status state of this account
+ */
+- (AIStatus *)statusState
+{
+	return [self statusObjectForKey:@"StatusState"];
+}
+
+/*!
+ * @brief Callback from the threaded filter performed in [self updateStatusForKey:@"StatusState"]
+ */
+- (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState
+{
+	[self setStatusState:statusState
+	  usingStatusMessage:statusMessage];
 }
 
 /*!
@@ -325,7 +376,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key
 {
-	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
+	NSAttributedString	*originalValue = [self autoRefreshingOriginalAttributedStringForStatusKey:key];
 	NSAttributedString  *filteredValue;
 	
 	filteredValue = [[adium contentController] filterAttributedString:originalValue
@@ -358,7 +409,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext
 {
-	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
+	NSAttributedString	*originalValue = [self autoRefreshingOriginalAttributedStringForStatusKey:key];
 	NSMutableDictionary	*contextDict;
 	
 	contextDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromSelector(selector), @"selectorString",
@@ -380,6 +431,26 @@ Adium, Copyright 2001-2005, Adam Iser
 									  notifyingTarget:self
 											 selector:@selector(gotFilteredOutgoingContent:context:)
 											  context:contextDict];
+}
+
+/*
+ * @brief Provide the NSAttributedString which will be filtered for a given status key
+ *
+ * In general, returns the preference for the key as an attributed string.
+ * For statuses, returns the status message of the current statusState.
+ */
+- (NSAttributedString *)autoRefreshingOriginalAttributedStringForStatusKey:(NSString *)key
+{
+	NSAttributedString	*originalValue;
+	
+	if([key isEqualToString:@"StatusState"]){
+		originalValue = [[self statusState] statusMessage];
+
+	}else{
+		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];		
+	}
+
+	return originalValue;
 }
 
 /*!
