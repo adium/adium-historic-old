@@ -21,10 +21,12 @@ static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, s
 {
     GaimDebug (@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
 	
+	/*
 	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionProgressStep:percentDone:)
 										 withObject:[NSNumber numberWithInt:step]
 										 withObject:connectionProgressPrecent];
+	 */
 }
 
 static void adiumGaimConnConnected(GaimConnection *gc)
