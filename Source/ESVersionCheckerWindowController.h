@@ -22,7 +22,6 @@ Adium, Copyright 2001-2005, Adam Iser
 + (void)showUpdateWindowFromBuild:(NSDate *)currentBuildDate toBuild:(NSDate *)latestBuildDate;
 + (void)showCannotConnectWindow;
 
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)update:(id)sender;
 - (IBAction)changePreference:(id)sender;
 
