@@ -20,6 +20,7 @@
 #define ADD_CONTACT   				AILocalizedString(@"Add Contact…",nil)
 #define ADD_GROUP   				AILocalizedString(@"Add Group…",nil)
 #define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
+#define RENAME_GROUP				AILocalizedString(@"Rename Group…",nil)
 
 @implementation AIContactListEditorPlugin
 
@@ -39,6 +40,12 @@
 	//Delete selection menu item
     menuItem_delete = [[NSMenuItem alloc] initWithTitle:DELETE_CONTACT target:self action:@selector(deleteSelection:) keyEquivalent:@"\b"];
     [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Editing];
+	
+	//Rename group context menu item
+	menuItem = [[[NSMenuItem alloc] initWithTitle:RENAME_GROUP target:self action:@selector(renameGroup:) keyEquivalent:@""] autorelease];
+    //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
+
+	
 }
 
 //Uninstall
@@ -87,6 +94,13 @@
 			[[adium contactController] removeListObjects:[NSArray arrayWithObject:object]];
 		}
 	}
+}
+
+//Called by a context menu
+- (IBAction)renameGroup:(id)sender
+{
+	AIListObject	*object = [[adium menuController] contactualMenuContact];
+	
 }
 
 @end
