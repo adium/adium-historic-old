@@ -141,8 +141,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	
 	//Request the roster now; while gaim official manages to request before doing blist updates, libgaim does not
 	//If we don't request, all buddies will seem to be unauthorized so won't report their online status
-	JabberStream *js = account->gc->proto_data;
-	jabber_roster_request(js);
+	[[super gaimThread] jabberRosterRequestForAccount:self];
 }
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
