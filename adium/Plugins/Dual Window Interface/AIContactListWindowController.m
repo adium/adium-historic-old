@@ -306,12 +306,12 @@
     if(savedFrame){
         NSRect savedFrameRect = NSRectFromString(savedFrame);
 
-        if (borderless) {
-            //NSLog(@"%f %f %f %f",savedFrameRect.origin.x,savedFrameRect.origin.y,savedFrameRect.size.width,savedFrameRect.size.height);
-            [[self window] setFrameOrigin:savedFrameRect.origin];
-        } else {
+//        if (borderless) {
+        NSLog(@"Restoring window to:(%f,%f) %f by %f ; screen is ",savedFrameRect.origin.x,savedFrameRect.origin.y,savedFrameRect.size.width,savedFrameRect.size.height);
+//            [[self window] setFrameOrigin:savedFrameRect.origin];
+//        } else {
             [[self window] setFrame:savedFrameRect display:YES];            
-        }
+//        }
 
     }
 
@@ -331,6 +331,7 @@
     contactListViewController = [[[adium interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
     [scrollView_contactList setAndSizeDocumentView:contactListView];
+    [scrollView_contactList setUpdateShadowsWhileScrolling:YES];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
     [[self window] makeFirstResponder:contactListView];
