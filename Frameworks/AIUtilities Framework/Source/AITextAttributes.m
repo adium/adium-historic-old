@@ -51,9 +51,8 @@
 		fontFamilyName = [inFamilyName retain];
 		fontTraitsMask = inTraits;
 		fontSize = inSize;
-
-		[self updateFont];
 	}
+
 	return self;
 }
 
@@ -73,8 +72,6 @@
 			fontTraitsMask = 0;
 			fontSize = 12;
 		}
-	
-		[self updateFont];
 	}
 
 	return self;
@@ -120,8 +117,8 @@
         [fontFamilyName release];
         fontFamilyName = [inName retain];
 
-		[self updateFont];
-   }
+		[dictionary removeObjectForKey:NSFontAttributeName];
+	}
 }
 
 //Set the font size
@@ -130,20 +127,28 @@
 	if(fontSize != inSize){
 		fontSize = inSize;
 		
-		[self updateFont];
+		[dictionary removeObjectForKey:NSFontAttributeName];
 	}
 }
 
 //Set the text foreground color
 - (void)setTextColor:(NSColor *)inColor
 {
-    [dictionary setObject:inColor forKey:NSForegroundColorAttributeName];
+	if(inColor){
+		[dictionary setObject:inColor forKey:NSForegroundColorAttributeName];
+	}else{
+		[dictionary removeObjectForKey:NSForegroundColorAttributeName];
+	}
 }
 
 //Sub-backround color (drawn just behind the text)
 - (void)setTextBackgroundColor:(NSColor *)inColor
 {
-    [dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
+	if(inColor){
+		[dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
+	}else{
+		[dictionary removeObjectForKey:NSBackgroundColorAttributeName];
+	}
 }
 
 //Set the background color
@@ -156,8 +161,7 @@
 - (void)enableTrait:(NSFontTraitMask)inTrait
 {
     fontTraitsMask |= inTrait;
-
-    [self updateFont];
+	[dictionary removeObjectForKey:NSFontAttributeName];
 }
 
 //Disable a masked trait (bold, italic)
@@ -167,7 +171,7 @@
         fontTraitsMask ^= inTrait;
     }
     
-    [self updateFont];
+	[dictionary removeObjectForKey:NSFontAttributeName];
 }
 
 //Enable/Disable underlining
@@ -197,7 +201,6 @@
 		[dictionary setObject:[NSNumber numberWithFloat:(fontSize / -2.0f)] forKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize - 2)];
 		
-		[self updateFont];
 	}else{
 		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize + 2)];
@@ -209,9 +212,8 @@
 	if(inSuperscript){
 		[dictionary setObject:[NSNumber numberWithFloat:(fontSize / 2.0f)] forKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize - 2)];
-		
-		[self updateFont];
-	}else {
+
+	}else{
 		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize + 2)];
 	}
@@ -226,10 +228,36 @@
     }
 }
 
+- (void)setLanguageValue:(id)languageValue
+{
+	if(languageValue){
+		[dictionary setObject:languageValue forKey:@"LanguageValue"];
+	}else{
+		[dictionary removeObjectForKey:@"LanguageValue"];		
+	}
+}
+
+- (id)languageValue
+{
+	return([dictionary objectForKey:@"LanguageValue"]);
+}
+
 //Returns a dictinary of attributes
 - (NSDictionary *)dictionary
 {
+	//If the dictionary doesn't specify a font, it means our font has changed since the last call here. Update now.
+	if(![dictionary objectForKey:NSFontAttributeName]) [self updateFont];
+
     return(dictionary);
+}
+
+- (void)resetFontAttributes
+{
+	[fontFamilyName release]; fontFamilyName = nil;
+	fontSize = 0;
+	[dictionary removeObjectForKey:NSForegroundColorAttributeName];
+	[dictionary removeObjectForKey:NSBackgroundColorAttributeName];
+	[dictionary removeObjectForKey:@"LanguageValue"];
 }
 
 //Updates the cached font
@@ -242,12 +270,18 @@
 
     //Create the font
     if(fontFamilyName){
-		font = [[NSFontManager sharedFontManager] fontWithFamilyInsensitively:fontFamilyName traits:fontTraitsMask weight:5 size:fontSize];
+		font = [[NSFontManager sharedFontManager] fontWithFamilyInsensitively:fontFamilyName 
+																	   traits:fontTraitsMask
+																	   weight:5
+																		 size:fontSize];
     }
     
     //If no name was specified or the font is not available, use the default font
     if(!font){
-        font = [[NSFontManager sharedFontManager] fontWithFamily:FONT_DEFAULT_NAME traits:fontTraitsMask weight:5 size:fontSize];
+        font = [[NSFontManager sharedFontManager] fontWithFamily:FONT_DEFAULT_NAME
+														  traits:fontTraitsMask
+														  weight:5
+															size:fontSize];
     }
 
     if(font){ //Just to be safe, incase the default font was unavailable for some reason
