@@ -265,7 +265,7 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
 {
-    [self eventNotification:[NSNotification notificationWithName:eventID object:listObject]];
+    [self processBezelForNotification:[NSNotification notificationWithName:eventID object:listObject]];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
