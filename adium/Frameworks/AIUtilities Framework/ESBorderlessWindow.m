@@ -71,12 +71,13 @@ float movementY = currentLocation.y - previousLocation.y;
         newOrigin.y += movementY;
         previousLocation = currentLocation;
 		
-		//        NSLog(@"%f + %f > %f + %f",newOrigin.y,windowFrame.size.height,screenFrame.origin.y,screenFrame.size.height);
+		NSLog(@"%@: %f + %f > %f + %f",currentScreen,newOrigin.y,windowFrame.size.height,[currentScreen visibleFrame].origin.y,[currentScreen visibleFrame].size.height);
 		
 		//Keep the window from going under the menu bar (on the main screen)
+		NSRect  screenFrame = [currentScreen visibleFrame];
 		if (currentScreen == [[NSScreen screens] objectAtIndex:0]) {
-			NSRect  screenFrame = [currentScreen visibleFrame];
-			if( (newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ){
+
+			if((newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ){
 				
 				newOrigin.y = screenFrame.origin.y + (screenFrame.size.height-windowFrame.size.height);
 			}
@@ -84,8 +85,8 @@ float movementY = currentLocation.y - previousLocation.y;
 		
 		// Keep the topmost part of the window on the screen (if it goes onto another screen in the process,
 		// that screen should become [self screen] so this check shouldn't fire).
-		if ( (newOrigin.y+windowFrame.size.height) < 10 ) {
-            newOrigin.y = 10 - windowFrame.size.height;
+		if ((newOrigin.y+windowFrame.size.height) < 10 + screenFrame.origin.y ) {
+            newOrigin.y = 10 + screenFrame.origin.y - windowFrame.size.height;
         }
   
 //		NSLog(@"%f + %f = %f ; screenFrame width is %f",newOrigin.x,windowFrame.size.width,(newOrigin.x + windowFrame.size.width),screenFrame.size.width);
