@@ -7,7 +7,7 @@
 	<key>Use Last Window</key>
 	<true/>
 	<key>Autohide Tab Bar</key>
-	<true/>
+	<false/>
 	<key>Enable Inactive Tab Close</key>
 	<false/>
 </dict>
