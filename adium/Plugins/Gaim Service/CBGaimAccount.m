@@ -44,6 +44,9 @@
 
 - (void)displayError:(NSString *)errorDesc;
 - (NSNumber *)shouldCheckMail;
+
+- (void)updateStatusForKey:(NSString *)key immediately:(BOOL)immediately;
+
 @end
 
 @implementation CBGaimAccount
@@ -451,10 +454,9 @@ static id<GaimThread> gaimThread = nil;
 #pragma mark Chats
 
 //Add a new chat - this will ultimately call -(BOOL)openChat:(AIChat *)chat below.
+//We use the interfaceController's openChat as we don't have a listContact to pass the contentController.
 - (oneway void)addChat:(AIChat *)chat
 {
-#warning is there a reason this is not using the openChat method in contentController ?
-#warning yes.
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 }
@@ -1078,7 +1080,9 @@ static id<GaimThread> gaimThread = nil;
 	
 	//Update a few status keys before we begin connecting.  Libgaim will send these automatically
     [self updateStatusForKey:KEY_USER_ICON];
-    [self updateStatusForKey:@"TextProfile"];
+	
+	//We must do the TextProfile immediately so it doesn't try to happen while we are in the middle of connecting
+    [self updateStatusForKey:@"TextProfile" immediately:YES];
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1396,25 +1400,42 @@ static id<GaimThread> gaimThread = nil;
 	
     //Now look at keys which only make sense if we have an account
 	if(account){
-		NSData  *data;
-		
 		GaimDebug (@"Updating status for key: %@",key);
+
 		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleSinceTo:idleSince];
 			
 		}else if([key isEqualToString:@"AwayMessage"]){
-			[self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
+			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];
 			
 		}else if([key isEqualToString:@"TextProfile"]){
-			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
+			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
 		}else if([key isEqualToString:KEY_USER_ICON]){
+			NSData  *data;
+
 			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 				[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
 			}
 			
 		}
+	}
+}
+
+- (void)updateStatusForKey:(NSString *)key immediately:(BOOL)immediately
+{
+	BOOL handled = NO;
+	
+	if (immediately){
+		if([key isEqualToString:@"TextProfile"]){
+			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
+			handled = YES;
+		}
+	}
+	
+	if (!handled){
+		[self updateStatusForKey:key];
 	}
 }
 

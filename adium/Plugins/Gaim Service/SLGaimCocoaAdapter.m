@@ -15,7 +15,6 @@
 #import "SLGaimCocoaAdapter.h"
 #import <CoreFoundation/CFSocket.h>
 #import <CoreFoundation/CFRunLoop.h>
-#import "NDRunLoopMessenger.h"
 
 #import "GaimCommon.h"
 #import "CBGaimServicePlugin.h"
@@ -103,7 +102,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	
 	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 
-	CFRunLoopRun();;
+	CFRunLoopRun();
 
 	NSAssert(FALSE,@"Should we ever make it here?");
 	runLoopMessenger = nil;
