@@ -117,13 +117,18 @@
 - (int)greatestIntegerValue
 {
     int	loop;
+    int	count = [ownerArray count];
     int	greatest = 0;
 
-    for(loop = 0;loop < [ownerArray count];loop++){
-        int	current = [[contentArray objectAtIndex:loop] intValue];
-    
-        if(current > greatest){
-            greatest = current;
+    if(count != 0){
+        greatest = [[contentArray objectAtIndex:0] intValue];
+
+        for(loop = 1;loop < count;loop++){
+            int	current = [[contentArray objectAtIndex:loop] intValue];
+
+            if(current > greatest){
+                greatest = current;
+            }
         }
     }
     
@@ -134,13 +139,18 @@
 - (double)greatestDoubleValue
 {
     int		loop;
+    int		count = [ownerArray count];
     double	greatest = 0;
 
-    for(loop = 0;loop < [ownerArray count];loop++){
-        double	current = [[contentArray objectAtIndex:loop] doubleValue];
+    if(count != 0){
+        greatest = [[contentArray objectAtIndex:0] doubleValue];
 
-        if(current > greatest){
+        for(loop = 1;loop < [ownerArray count];loop++){
+            double	current = [[contentArray objectAtIndex:loop] doubleValue];
+
+            if(current > greatest){
             greatest = current;
+            }
         }
     }
 

@@ -65,6 +65,7 @@ static char *hash_password(const char * const password);
 - (void)autoReconnectTimer:(NSTimer *)inTimer;
 - (void)firstSignOnUpdateReceived;
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
+- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
 @end
 
 @implementation AIMTOC2Account
@@ -816,19 +817,7 @@ static char *hash_password(const char * const password);
             [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
             [alteredStatusKeys addObject:@"Idle"];
 
-            if(idleTime == 0){
-                [idleHandleArray removeObject:handle];
-                if([idleHandleArray count] == 0){
-                    [idleHandleTimer invalidate]; [idleHandleTimer release];
-                    [idleHandleArray release];
-                }
-            }else{
-                if(!idleHandleArray){
-                    idleHandleArray = [[NSMutableArray alloc] init];
-                    idleHandleTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleHandlesTimer:) userInfo:nil repeats:YES] retain];
-                }
-                [idleHandleArray addObject:handle];
-            }
+            [self handle:handle isIdle:(idleTime != 0)];
         }
 
         //Sign on date
@@ -1245,6 +1234,25 @@ static char *hash_password(const char * const password) {
     }
 
     return(string);
+}
+
+//Adds or removes a handle from our idle tracking array
+//Handles in the array have their idle times increased every minute
+- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle
+{
+    if(inIdle){
+        if(!idleHandleArray){
+            idleHandleArray = [[NSMutableArray alloc] init];
+            idleHandleTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleHandlesTimer:) userInfo:nil repeats:YES] retain];
+        }
+        [idleHandleArray addObject:inHandle];
+    }else{
+        [idleHandleArray removeObject:inHandle];
+        if([idleHandleArray count] == 0){
+            [idleHandleTimer invalidate]; [idleHandleTimer release];
+            [idleHandleArray release];
+        }
+    }
 }
 
 - (void)updateIdleHandlesTimer:(NSTimer *)inTimer

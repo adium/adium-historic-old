@@ -95,9 +95,9 @@
         color = [NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(1.0/255.0) alpha:1.0];
     }else if(signedOn){
         color = [NSColor colorWithCalibratedRed:(0.0/255.0) green:(0.0/255.0) blue:(102.0/255.0) alpha:1.0];
-    }else if(idle && away){
+    }else if(idle != 0 && away){
         color = [NSColor colorWithCalibratedRed:(89.0/255.0) green:(89.0/255.0) blue:(59.0/255.0) alpha:1.0];
-    }else if(idle){
+    }else if(idle != 0){
         color = [NSColor colorWithCalibratedRed:(67.0/255.0) green:(67.0/255.0) blue:(67.0/255.0) alpha:1.0];
     }else if(away){
         color = [NSColor colorWithCalibratedRed:(66.0/255.0) green:(66.0/255.0) blue:(0.0/255.0) alpha:1.0];

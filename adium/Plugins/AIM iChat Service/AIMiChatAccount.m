@@ -24,8 +24,9 @@ extern void* objc_getClass(const char *name);
 //
 
 @interface AIMiChatAccount (PRIVATE)
-- (void)processProperties:(NSArray *)inProperties;
 - (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle;
+- (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle;
+- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
 @end
 
 @implementation AIMiChatAccount
@@ -37,12 +38,15 @@ extern void* objc_getClass(const char *name);
     NSArray	*services;
 
     //init
-    buddyPropertiesQue = [[NSMutableArray alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
+    idleHandleArray = nil;
+    idleHandleTimer = nil;
     
     //Connect to the iChatAgent
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
     FZDaemon = [[connection rootProxy] retain];
+
+    [connection setIndependentConversationQueueing:YES];
     
     //Get the AIM Service
     services   = [FZDaemon allServices];
@@ -55,6 +59,8 @@ extern void* objc_getClass(const char *name);
     [AIMService addListener:self signature:@"com.adiumX.adium" capabilities:15]; //15 is what iChat uses... dunno the meaning
 
     //Clear the online state flag - this account should always load as offline (online state is not restored)
+    //Option 2:Clearing the online state, and using the classic 'auto-Connect' option system
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
@@ -237,28 +243,42 @@ extern void* objc_getClass(const char *name);
         case 2: //Disconnecting
             //Squelch sounds and updates while we sign off
 //            [[owner contactController] delayContactListUpdatesFor:5];
-
+            NSLog(@"Disconnecting");
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
         break;
             
         case 3: //Connecting
             //Squelch sounds and updates while we sign on
 //            [[owner contactController] delayContactListUpdatesFor:10];
+            NSLog(@"Connecting");
 
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
         break;
 
         case 4: //Online
+            NSLog(@"Online");
+            [[owner contactController] setHoldContactListUpdates:YES];
+
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
-            //
+
+            numberOfSignOnUpdates = 0;
+            processingSignOnUpdates = YES;
+
+    //        [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(temp:) userInfo:nil repeats:NO];
+            
+            //Hold onto the account name
             if(screenName) [screenName release];
                 screenName = [[AIMService loginID] copy];
 
-            //Give iChatAgent 2 seconds to flood us with update events
-            queEvents = YES;
-            [NSTimer scheduledTimerWithTimeInterval:(2.0) target:self selector:@selector(finishSignOn:) userInfo:nil repeats:NO];
+            //Check every 0.2 seconds for additional updates
+            [NSTimer scheduledTimerWithTimeInterval:(0.2)
+                                             target:self
+                                           selector:@selector(waitForLastSignOnUpdate:)
+                                           userInfo:nil
+                                            repeats:YES];
+
         break;
 
         default:
@@ -266,6 +286,29 @@ extern void* objc_getClass(const char *name);
         break;
     }
 }
+
+- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
+{
+    if(numberOfSignOnUpdates == 0){
+        NSLog(@"Done.");
+        //No updates received, sign on is complete
+        [inTimer invalidate]; //Stop this timer
+        [[owner contactController] handlesChangedForAccount:self]; //
+        [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
+
+    }else{
+        NSLog(@"Connecting... (%i)",(int)numberOfSignOnUpdates);
+        numberOfSignOnUpdates = 0;
+    }
+}
+
+/*- (void)temp:(NSTimer *)timer
+{
+    NSLog(@"tmp unhold");
+    
+    processingSignOnUpdates = NO;
+
+}*/
 
 - (oneway void)service:(id)inService chat:(id)chat messageReceived:(id)inMessage
 {
@@ -295,132 +338,164 @@ extern void* objc_getClass(const char *name);
 
 - (oneway void)service:(id)inService buddyPropertiesChanged:(NSArray *)inProperties
 {
-    /* If we take too long in here, iChatAgent will attempt to call it again, and things will pause for 5 seconds or so.  This mainly causes problems during sign on (where tons of events are happening at once), so during sign on we que all the messages until the flood is complete, and then process them */    
-
-    if(!queEvents){
-        //Handle the properties immedientally
-        [self processProperties:inProperties];
-    }else{
-        //Add the properties to our que
-        [buddyPropertiesQue addObjectsFromArray:inProperties];
-    }
-}
-
-- (void)finishSignOn:(NSTimer *)inTimer
-{
-    queEvents = NO;
-    [self processProperties:buddyPropertiesQue];
-    [buddyPropertiesQue release]; buddyPropertiesQue = [[NSMutableArray alloc] init];
-}
-
-- (void)processProperties:(NSArray *)inProperties
-{
-    NSEnumerator	*enumerator;
-    NSDictionary	*dict;
-
-    enumerator = [inProperties objectEnumerator];
-    while((dict = [enumerator nextObject])){
+    NSEnumerator	*buddyEnumerator;
+    NSDictionary	*buddyPropertiesDict;
+    
+//    NSLog(@"Update %i %@",(int)[inProperties count],inProperties);
+    
+    buddyEnumerator = [inProperties objectEnumerator];
+    while((buddyPropertiesDict = [buddyEnumerator nextObject])){
+        NSString	*compactedName = [buddyPropertiesDict objectForKey:@"FZPersonID"];
         AIHandle	*handle;
-        NSString	*compactedName;
+        NSArray		*modifiedStatusKeys;
+
+        if(processingSignOnUpdates) numberOfSignOnUpdates++; //Keep track of updates during signon
         
         //Get the handle
-        compactedName = [dict objectForKey:@"FZPersonID"];
         handle = [handleDict objectForKey:compactedName];
-
-        //If the handle doesn't exist, we need to create it
-        if(!handle){ //create it
+        if(!handle){ //If the handle doesn't exist
+            //Create and add the handle
             handle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
-                                               UID:compactedName
-                                       serverGroup:@"iChat"
-                                         temporary:[[dict objectForKey:@"FZPersonIsBuddy"] boolValue]
+                                                UID:compactedName
+                                        serverGroup:@"iChat"
+                                            temporary:[[buddyPropertiesDict objectForKey:@"FZPersonIsBuddy"] boolValue]
                                         forAccount:self];
-            
             [handleDict setObject:handle forKey:compactedName];
-            
-            [[owner contactController] handle:handle addedToAccount:self];
+
+            //Let the contact controller know about the new handle
+            // (This is not necessary when signing on, since we let the controller know about all the new handles at once after signon is complete)
+            if(!processingSignOnUpdates){
+                [[owner contactController] handle:handle addedToAccount:self];
+            }
+
+        }
+
+        //Apply the properties, and inform the contact controller of any changes
+        modifiedStatusKeys = [self applyProperties:buddyPropertiesDict toHandle:handle];
+        if([modifiedStatusKeys count]){
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:modifiedStatusKeys];
         }
         
-        if(handle){
-            NSNumber		*storedValue;
-            NSMutableArray	*alteredStatusKeys;
-        
-            alteredStatusKeys = [[NSMutableArray alloc] init];
-    
-            //-- Update the handle's status --
-            if((storedValue = [dict objectForKey:@"FZPersonStatus"])){
-                int		buddyStatus = [storedValue intValue];
-                NSString	*awayMessage = [dict objectForKey:@"FZPersonStatusMessage"];
-                NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
-                BOOL		online;
-                BOOL		away;
-                double		idleTime;
+    }
+}
 
-                switch(buddyStatus){
-                    case 1: //Offline, signed OFF
-                        online = NO;
-                        away = NO;
-                        idleTime = 0;
-                    break;
-                    case 2: //Idle (or Idle & Away)
-                        online = YES;
-                        idleTime = 12; //TEMP FOR NOW
+- (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle
+{
+    NSNumber		*storedValue;
+    NSDate		*storedDate;
+    NSMutableArray	*alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
 
-                        if(awayMessage){
-                            away = YES;
-                            NSLog(@"(IDLE & AWAY) %@ Away Message: \"%@\"",compactedName,awayMessage);
-                        }else{
-                            away = NO;
-                        }
-                        
-                    break;
-                    case 3: //Away
-                        online = YES;
-                        away = YES;
-                        idleTime = 0;
+    //Status (Online, Away, and Idle)
+    if((storedValue = [inProperties objectForKey:@"FZPersonStatusMessage"])){
+        NSLog(@"%@ Away Message: \"%@\"",[inHandle UID],storedValue);
+    }
 
-                        NSLog(@"(AWAY) %@ Away Message: \"%@\"",compactedName,awayMessage);
+    if((storedValue = [inProperties objectForKey:@"FZPersonStatus"])){
+        NSMutableDictionary	*handleStatusDict = [inHandle statusDictionary];
+        BOOL			online;
+        BOOL			away;
+        double			idleTime;
 
-                    break;
-                    case 4: //Online, signed ON (no ailments)
-                        online = YES;
-                        away = NO;
-                        idleTime = 0;
-                    break;
-                    default:
-                        NSLog(@"%@: unknown status %i",compactedName, buddyStatus);
-                    break;
-                }
-                
-                //Online/Offline
-                storedValue = [handleStatusDict objectForKey:@"Online"];
-                if(storedValue == nil || online != [storedValue intValue]){
-                    [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
-                    [alteredStatusKeys addObject:@"Online"];
-                }
-    
-                //Idle time (seconds)
-                storedValue = [handleStatusDict objectForKey:@"Idle"];
-                if(storedValue == nil || idleTime != [storedValue doubleValue]){
-                    [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
-                    [alteredStatusKeys addObject:@"Idle"];
-                }
-    
-                //Away
-                storedValue = [handleStatusDict objectForKey:@"Away"];
-                if(storedValue == nil || away != [storedValue intValue]){
-                    [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
-                    [alteredStatusKeys addObject:@"Away"];
-                }
-                
-            }
-            
-            //Let the contact list know a handle's status changed
-            if([alteredStatusKeys count]){
-                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys];
-            }
+        switch([storedValue intValue]){
+            case 1: //Offline, signed OFF
+                online = NO;
+                away = NO;
+                idleTime = 0;
+            break;
+            case 2: //Idle (or Idle & Away)
+                online = YES;
+
+                storedDate = [inProperties objectForKey:@"FZPersonAwaySince"];
+                idleTime = -([storedDate timeIntervalSinceNow] / 60.0);
+
+                away = NO; //iChat doesn't differentiate between idle and idle+away :(
+            break;
+            case 3: //Away
+                online = YES;
+                away = YES;
+                idleTime = 0;
+            break;
+            case 4: //Online, signed ON (no ailments)
+                online = YES;
+                away = NO;
+                idleTime = 0;
+            break;
+            default:
+                NSLog(@"%@: unknown status %i",[inHandle UID], [storedValue intValue]);
+            break;
+        }
+
+        //Online/Offline
+        storedValue = [handleStatusDict objectForKey:@"Online"];
+        if(storedValue == nil || online != [storedValue intValue]){
+            [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
+            [alteredStatusKeys addObject:@"Online"];
+        }
+
+        //Idle time (seconds)
+        storedValue = [handleStatusDict objectForKey:@"Idle"];
+        if(storedValue == nil || idleTime != [storedValue doubleValue]){
+            [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
+            [alteredStatusKeys addObject:@"Idle"];
+            [self handle:inHandle isIdle:(idleTime != 0)]; //Set up the idle tracking for this handle
+        }
+
+        //Away
+        storedValue = [handleStatusDict objectForKey:@"Away"];
+        if(storedValue == nil || away != [storedValue intValue]){
+            [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
+            [alteredStatusKeys addObject:@"Away"];
+        }
+    }
+
+    return(alteredStatusKeys);
+}
+
+
+//Adds or removes a handle from our idle tracking array
+//Handles in the array have their idle times increased every minute
+- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle
+{
+    if(inIdle){
+        if(!idleHandleArray){
+            idleHandleArray = [[NSMutableArray alloc] init];
+            idleHandleTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleHandlesTimer:) userInfo:nil repeats:YES] retain];
+        }
+        [idleHandleArray addObject:inHandle];
+    }else{
+        [idleHandleArray removeObject:inHandle];
+        if([idleHandleArray count] == 0){
+            [idleHandleTimer invalidate]; [idleHandleTimer release];
+            [idleHandleArray release];
         }
     }
 }
+
+- (void)updateIdleHandlesTimer:(NSTimer *)inTimer
+{
+    NSEnumerator	*enumerator;
+    AIHandle		*handle;
+
+    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates to prevent multiple updates and re-sorts
+
+    enumerator = [idleHandleArray objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
+        double			idleValue = [[handleStatusDict objectForKey:@"Idle"] doubleValue];
+
+        //Increase the stored idle time
+        [handleStatusDict setObject:[NSNumber numberWithDouble:++idleValue] forKey:@"Idle"];
+
+        //Post a status changed message
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
+    }
+
+    [[owner contactController] setHoldContactListUpdates:NO]; //Resume updates
+}
+
+
+
+
 
 - (oneway void)service:(id)inService requestOutgoingFileXfer:(id)file{
 //    NSLog(@"Woot: requestOutgoingFileXfer (%@)",file);

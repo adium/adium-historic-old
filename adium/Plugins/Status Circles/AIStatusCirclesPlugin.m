@@ -86,9 +86,9 @@
             circleColor = [NSColor colorWithCalibratedRed:(178.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
         }else if(signedOn){
             circleColor = [NSColor colorWithCalibratedRed:(102.0/255.0) green:(102.0/255.0) blue:(229.0/255.0) alpha:1.0];
-        }else if(idle && away){
+        }else if(idle != 0 && away){
             circleColor = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(153.0/255.0) alpha:1.0];
-        }else if(idle){
+        }else if(idle != 0){
             circleColor = [NSColor colorWithCalibratedRed:(204.0/255.0) green:(204.0/255.0) blue:(204.0/255.0) alpha:1.0];
         }else if(away){
             circleColor = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(102.0/255.0) alpha:1.0];
@@ -98,7 +98,7 @@
         [statusCircle setColor:circleColor];
 
         //Embedded idle time
-        if(idle){
+        if(idle > 0){
             [statusCircle setStringContent:[self idleStringForSeconds:idle]];
         }else{
             [statusCircle setStringContent:nil];

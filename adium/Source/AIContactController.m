@@ -47,7 +47,7 @@
     activeSortController = nil;
     holdUpdates = NO;
     contactList = nil;
-    groupDict = nil;//[[NSMutableDictionary alloc] init];
+    groupDict = [[NSMutableDictionary alloc] init];
     abandonedContacts = [[NSMutableDictionary alloc] init];
     abandonedGroups = [[NSMutableDictionary alloc] init];
     
@@ -193,6 +193,8 @@
 
     [groupDict release];
     groupDict = [[NSMutableDictionary alloc] init];
+
+    NSLog(@"HandlesChanged");
         
     //Go through each account, grabbing its handles
     accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
@@ -249,7 +251,7 @@
 
             //If it wasn't in the abandoned dict, we create
             if(!group){
-                group = [[AIListGroup alloc] initWithUID:serverGroup];	//Create the group
+                group = [[[AIListGroup alloc] initWithUID:serverGroup] autorelease];	//Create the group
                 [group setExpanded:YES/*[[dict objectForKey:serverGroup boolValue]]*/]; //Correctly expand/collapse the group
             }
 
