@@ -28,8 +28,8 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	commandContact = [[[adium contactController] contactWithService:STRESS_TEST_SERVICE_IDENTIFIER 
-														  accountID:[self uniqueObjectID]
+	commandContact = [[[adium contactController] contactWithService:service 
+															account:self
 																UID:@"Command"] retain];
     [commandContact setRemoteGroupName:@"Command"];
     [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
@@ -56,7 +56,7 @@
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return([self uniqueObjectID]);
+    return([self internalObjectID]);
 }
 
 //The user's account name
@@ -97,8 +97,8 @@
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				AIListContact	*contact;
 				
-				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-															  accountID:[self uniqueObjectID]
+				contact = [[adium contactController] contactWithService:service
+																account:self
 																	UID:buddyUID];
 				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)]];
             }
@@ -117,8 +117,8 @@
 				AIListContact	*contact;
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				
-				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-															  accountID:[self uniqueObjectID]
+				contact = [[adium contactController] contactWithService:service
+																account:self
 																	UID:buddyUID];
 				[handleArray addObject:contact];
             }
@@ -139,8 +139,6 @@
 			BOOL	shouldNotify = !silent;
             int 	i;
 			
-			NSString	*identifier = [[service handleServiceType] identifier];
-			NSString	*myUniqueObjectID = [self uniqueObjectID];
 			NSString	*ONLINE = @"Online";
 			
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
@@ -150,8 +148,8 @@
             for(i=0;i < count;i++){
 				AIListContact	*contact;
 				
-				contact = [[adium contactController] existingContactWithService:identifier
-																	  accountID:myUniqueObjectID
+				contact = [[adium contactController] existingContactWithService:service
+																		account:self
 																			UID:[NSString stringWithFormat:@"Buddy%i",i]];
 				[contact setStatusObject:nil forKey:ONLINE notify:shouldNotify];
             }
@@ -243,8 +241,8 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 	
-    if((contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													  accountID:[self uniqueObjectID]
+    if((contact = [[adium contactController] contactWithService:service
+														account:self
 															UID:buddyUID])){
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
@@ -276,8 +274,8 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 	
-    if((contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													  accountID:[self uniqueObjectID]
+    if((contact = [[adium contactController] contactWithService:service
+														account:self
 															UID:buddyUID])){
         AIContentMessage *messageObject;
         if(msgIn){
@@ -322,8 +320,8 @@
 	if( i == 0 ) {
 		for(j = 0; j < count; j++) {
 			NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",j];
-			[listObjectArray addObject:[[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																		   accountID:[self uniqueObjectID]
+			[listObjectArray addObject:[[adium contactController] contactWithService:service
+																			 account:self
 																				 UID:buddyUID]];
 		}
 		
@@ -352,7 +350,7 @@
 
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
 	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
 		return(YES);
