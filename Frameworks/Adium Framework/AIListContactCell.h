@@ -13,7 +13,7 @@
 	BOOL		extendedStatusVisible;
 	BOOL		statusIconsVisible;
 	BOOL		serviceIconsVisible;
-	int			userIconSize;
+	NSSize		userIconSize;
 	int			statusFontHeight;
 	int			labelFontHeight;
 	
@@ -67,7 +67,7 @@
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder;
 - (NSColor *)labelColor;
 - (NSColor *)textColor;
-- (NSImage *)userIconImageOfSize:(NSSize)inSize;
+- (NSImage *)userIconImage;
 - (NSImage *)statusImage;
 - (NSImage *)serviceImage;
 - (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
