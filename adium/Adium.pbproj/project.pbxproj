@@ -12871,7 +12871,7 @@
 				F5148D8C04C8B38E018B6CC7,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/evands/adium/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
