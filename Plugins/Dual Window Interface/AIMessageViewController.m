@@ -334,7 +334,9 @@
 {
 	AIListObject		*listObject;
 	
-	listObject = [chat listObject];
+	//Put the alert on the metaContact containing this listObject if applicable
+	listObject = [[adium contactController] parentContactForListObject:[chat listObject]];
+	
 	if (listObject){
 		NSMutableDictionary *detailsDict, *alertDict;
 		NSAttributedString	*message;
