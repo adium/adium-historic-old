@@ -6,7 +6,6 @@
 
 #import "SHLinkManagementPlugin.h"
 #import "SHLinkEditorWindowController.h"
-#import "SHLinkFavoritesPreferences.h"
 #import "SHAutoValidatingTextView.h"
 
 #define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
