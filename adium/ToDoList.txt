@@ -1,3 +1,5 @@
+$Id: ToDoList.txt,v 1.19 2004/04/06 06:40:47 ramoth4 Exp $
+
 Legend
 + Change or Addition
 - Removal
@@ -187,9 +189,11 @@ Event integration:
 Unfixable(?) Issues
 -------------------------------------------------------------------------------------------------------
 * Stop contact list from auto-resizing under the dock
-	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
+	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how
+ wide the dock is; only how tall it is.
 
-* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) - (Evan: I spent an hour going through private frameworks trying to figure this out.  If you have any ideas, please let me know.)
+* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) - (Evan: I spent an hour going through private frameworks trying to figure this out.  If you have any ideas
+, please let me know.)
 
 -------------------------------------------------------------------------------------------------------
 Waiting On
@@ -210,7 +214,8 @@ Bug Fixes:
 = Window content is drawing 2 pixels to the left when dragging tabs
 = Prevent cmd-delete from working in the message window
 = Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
-= Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
+= Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advan
+ced preference panes.
 = Pushing escape clears the text field, instead of allowing you to convert from kanji to roman. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
 	Evan: I say we just take this nonstandard 'feature' out.
 	Colin: It's not nonstandard and it's a good feature.
