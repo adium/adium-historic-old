@@ -266,6 +266,18 @@
 /* accountConv methods */
 /***********************/
 
+- (void)accountConvDestroy:(GaimConversation*)conv
+{
+    AIChat *chat = (AIChat*) conv->ui_data;
+    if (chat) {
+        AIListContact *listContact = (AIListContact*) [chat listObject];
+        AIHandle *handle = [listContact handleForAccount:self];
+        if (handle) {
+            [self setTypingFlagOfHandle:handle to:NO];
+        }
+    }
+}
+
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type
 {
     AIChat *chat = (AIChat*) conv->ui_data;
@@ -673,8 +685,8 @@
             
         proxy_info->type = proxytype;
         
-        proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host"),
-        proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port"),
+        proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host");
+        proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
         
         proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
         proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
