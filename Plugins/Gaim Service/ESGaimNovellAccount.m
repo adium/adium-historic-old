@@ -13,6 +13,7 @@ static BOOL didInitNovell;
 
 - (const char*)protocolPlugin
 {
+	[super initSSL];
 	if (!didInitNovell) didInitNovell = gaim_init_novell_plugin();
     return "prpl-novell";
 }
