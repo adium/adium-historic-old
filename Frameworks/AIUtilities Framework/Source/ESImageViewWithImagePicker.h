@@ -81,6 +81,8 @@
 	
 	BOOL					shouldDrawFocusRing;
 	NSResponder				*lastResp;
+	
+	NSPoint					mouseDownPos;
 }
 
 /*!
