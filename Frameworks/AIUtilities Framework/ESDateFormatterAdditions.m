@@ -9,8 +9,18 @@
 #import "CBApplicationAdditions.h"
 #import "AIStringUtilities.h"
 
-typedef enum
-{
+#define ONE_WEEK AILocalizedString(@"1 week", nil)
+#define MULTIPLE_WEEKS AILocalizedString(@"%i weeks", nil)
+#define ONE_DAY AILocalizedString(@"1 day", nil)
+#define MULTIPLE_DAYS AILocalizedString(@"%i days", nil)
+#define ONE_HOUR AILocalizedString(@"1 hour", nil)
+#define MULTIPLE_HOURS AILocalizedString(@"%i hours", nil)
+#define ONE_MINUTE AILocalizedString(@"1 minute", nil)
+#define MULTIPLE_MINUTES AILocalizedString(@"%i minutes", nil)
+#define ONE_SECOND AILocalizedString(@"1 second", nil)
+#define MULTIPLE_SECONDS AILocalizedString(@"%i seconds", nil)
+
+typedef enum {
     NONE,
     SECONDS,
     AMPM,
@@ -111,42 +121,83 @@ typedef enum
     
     double seconds = [[NSDate date] timeIntervalSinceDate:inDate];
     int days = 0, hours = 0, minutes = 0; 
+	
+	//Days
     days = (int)(seconds / 86400);
     seconds -= days * 86400;
-    if (seconds) {
+	
+	//Hours
+    if(seconds){
         hours = (int)(seconds / 3600);
         seconds -= hours * 3600;
     }
-    if (seconds) {
+	
+	//Minutes
+    if(seconds){
         minutes = (int)(seconds / 60);
         seconds -= minutes * 60;
     }
-    if (abbreviate) {
-        if (days)
-            [theString appendString:[NSString stringWithFormat:@"%id ",days,days==1 ? @"":@"s"]];
-        if (hours)
-            [theString appendString:[NSString stringWithFormat:@"%ih ",hours,hours==1 ? @"":@"s"]];
-        if (minutes)
-            [theString appendString:[NSString stringWithFormat:@"%im ",minutes,minutes==1 ? @"":@"s"]];
-        if (showSeconds && seconds)
-            [theString appendString:[NSString stringWithFormat:@"%is ",(int)seconds,seconds==1 ? @"":@"s"]];
+	
+    if(abbreviate){
+        if(days)
+            [theString appendString:[NSString stringWithFormat:@"%id ",days]];
+        if(hours)
+            [theString appendString:[NSString stringWithFormat:@"%ih ",hours]];
+        if(minutes)
+            [theString appendString:[NSString stringWithFormat:@"%im ",minutes]];
+        if(showSeconds && seconds)
+            [theString appendString:[NSString stringWithFormat:@"%is ",(int)seconds]];
         
         //Return the string without the final space
-        if ([theString length])
-            return ([theString substringToIndex:([theString length]-1)]);
-    } else {
-        if (days)
-            [theString appendString:[NSString stringWithFormat:@"%i day%@, ",days,days==1 ? @"":@"s"]];
-        if (hours)
-            [theString appendString:[NSString stringWithFormat:@"%i hour%@, ",hours,hours==1 ? @"":@"s"]];
-        if (minutes)
-            [theString appendString:[NSString stringWithFormat:@"%i minute%@, ",minutes,minutes==1 ? @"":@"s"]];
-        if (showSeconds && seconds)
-            [theString appendString:[NSString stringWithFormat:@"%i second%@, ",(int)seconds,seconds==1 ? @"":@"s"]];
-        
+        if ([theString length]){
+            theString = [theString substringToIndex:([theString length]-1)];
+		}
+
+    }else{
+        if (days >= 1){
+			if(days == 1){
+				[theString appendString:ONE_DAY];
+			}else{
+				[theString appendString:[NSString stringWithFormat:MUTLIPLE_DAYS, days]];
+			}
+			
+			[theString appendString:@", "];
+		}
+
+		if (hours >= 1){
+			if(hours == 1){
+				[theString appendString:ONE_HOUR];
+			}else{
+				[theString appendString:[NSString stringWithFormat:MULTIPLE_HOURS, hours]];
+			}
+			
+			[theString appendString:@", "];
+		}
+
+		if (minutes >= 1){
+			if(minutes == 1){
+				[theString appendString:ONE_MINUTE];
+			}else{
+				[theString appendString:[NSString stringWithFormat:MULTIPLE_MINUTES, minutes]];
+			}
+			
+			[theString appendString:@", "];
+		}
+
+		if (showSeconds && (seconds >= 1)){
+			if(seconds == 1){
+				[theString appendString:ONE_SECOND];
+			}else{
+				[theString appendString:MULTIPLE_SECONDS, seconds];
+			}
+
+			[theString appendString:@", "];
+		}
+
         //Return the string without the final comma and space
-        if ([theString length])
-            return ([theString substringToIndex:([theString length]-2)]);
+        if ([theString length]){
+            theString = [theString substringToIndex:([theString length]-2)];
+		}
     }
     
     return theString;
@@ -156,19 +207,36 @@ typedef enum
 //Returns a string representation of the interval between two dates
 + (NSString *)stringForApproximateTimeIntervalBetweenDate:(NSDate *)firstDate andDate:(NSDate *)secondDate
 {
-	int 	hours = [firstDate timeIntervalSinceDate:secondDate] / 60.0 / 60.0;
-	int 	days = hours / 24.0;
-	int		weeks = days / 7.0;
+	NSString	*timeString = nil;
+	int			hours = [firstDate timeIntervalSinceDate:secondDate] / 60.0 / 60.0;
+	int			days = hours / 24.0;
+	int			weeks = days / 7.0;
 	
-	if(days >= 1){
-		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i day " : @"%i days ", nil), days]);
-	}else if(weeks >= 1){
-		return([NSString stringWithFormat:AILocalizedString(weeks == 1 ? @"%i week " : @"%i weeks ", nil), weeks]);
-	}else if(hours >= 1){
-		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i hour " : @"%i hours ", nil), hours]);
-	}else{
-		return(@"");
+	if(weeks >= 1){
+		if(weeks == 1){
+			timeString = ONE_WEEK;
+		}else{
+			timeString = [NSString stringWithFormat:MULTIPLE_WEEKS, weeks];
+		}
 	}
+	
+	if(!timeString && (days >= 1)){
+		if(days == 1){
+			timeString = ONE_DAY;
+		}else{
+			timeString = [NSString stringWithFormat:MUTLIPLE_DAYS, days];
+		}
+	}
+	
+	if(!timeString && (hours >= 1)){
+		if(hours == 1){
+			timeString = ONE_HOUR;
+		}else{
+			timeString = [NSString stringWithFormat:MULTIPLE_HOURS, hours];
+		}
+	}
+
+	return(timeString ? timeString : @"");
 }
 
 
