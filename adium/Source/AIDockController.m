@@ -55,8 +55,17 @@
 
 - (void)closeController
 {
-    //Set the icon to closed
-//    [self setAppIcon:[iconFamily closedImage]];
+    NSArray		*stateArrayCopy;
+    NSEnumerator	*enumerator;
+    AIIconState		*iconState;
+
+    //Reset our icon by removing all icon states (except for the base state)
+    stateArrayCopy = [[activeIconStateArray copy] autorelease]; //Work with a copy, since this array will change as we remove states
+    enumerator = [stateArrayCopy objectEnumerator];
+    [enumerator nextObject]; //Skip the first icon
+    while(iconState = [enumerator nextObject]){
+        [self removeIconState:iconState];
+    }
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
