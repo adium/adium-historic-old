@@ -185,10 +185,12 @@
 	} else if (!firstName) {                    //If no first name is available, use the last name
 		displayName = lastName;
 	} else {                                    //Look to the preference setting
-		if (displayFormat == FirstLast) {
+		if (displayFormat == FirstLast){
 			displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
-		} else if (displayFormat == LastFirst) {
+		}else if (displayFormat == LastFirst){
 			displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
+		}else if (displayFormat == LastFirstNoComma){
+			displayName = [NSString stringWithFormat:@"%@ %@",lastName,firstName]; 
 		}
 	}
 	

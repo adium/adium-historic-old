@@ -8,9 +8,10 @@
 #import "ESAddressBookIntegrationAdvancedPreferences.h"
 #import "ESAddressBookIntegrationPlugin.h"
 
-#define ADDRESS_BOOK_FIRST_LAST_OPTION  @"First Last"
-#define ADDRESS_BOOK_FIRST_OPTION       @"First"
-#define ADDRESS_BOOK_LAST_FIRST_OPTION  @"Last, First"
+#define ADDRESS_BOOK_FIRST_LAST_OPTION			AILocalizedString(@"First Last","Name display style, e.g. Evan Schoenberg");
+#define ADDRESS_BOOK_FIRST_OPTION				AILocalizedString(@"First","Name display style, e.g. Evan");
+#define ADDRESS_BOOK_LAST_FIRST_OPTION			AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg, Evan");
+#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION	AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg Evan");
 
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -105,6 +106,13 @@
     [menuItem setTag:LastFirst];
     [choicesMenu addItem:menuItem];
 
+	menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION
+                                           target:self
+                                           action:@selector(changeFormat:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setTag:LastFirstNoComma];
+    [choicesMenu addItem:menuItem];
+	
     [format_menu setMenu:choicesMenu];
 
     NSRect oldFrame = [format_menu frame];

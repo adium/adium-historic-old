@@ -24,6 +24,7 @@ typedef enum {
     FirstLast,
     First,
     LastFirst,
+	LastFirstNoComma
 } NameStyle;
 
 @interface ESAddressBookIntegrationPlugin : AIPlugin <AIListObjectObserver, ABImageClient> {
