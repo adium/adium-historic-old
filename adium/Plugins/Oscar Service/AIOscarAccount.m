@@ -552,7 +552,13 @@
 // Add a handle
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 {
-    return(nil);
+    AIHandle		*handle;
+    
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+
+    return(handle);
+
+    //return(nil);
 }
 
 // Remove a handle
@@ -583,6 +589,7 @@
 - (BOOL)contactListEditable
 {
     return(NO);
+    //return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 // Return a dictionary of our handles
