@@ -1,21 +1,21 @@
 //
-//  ESAnnouncerContactAlert.m
+//  ESAnnouncerSpeakTextAlertDetailPane.m
 //  Adium
 //
 //  Created by Evan Schoenberg on Thu Nov 27 2003.
 //
 
-#import "ESAnnouncerAlertDetailPane.h"
+#import "ESAnnouncerSpeakTextAlertDetailPane.h"
 #import "ESAnnouncerPlugin.h"
 
-@implementation ESAnnouncerAlertDetailPane
+@implementation ESAnnouncerSpeakTextAlertDetailPane
 
 //Pane Details
 - (NSString *)label{
 	return(@"");
 }
 - (NSString *)nibName{
-    return(@"AnnouncerContactAlert");    
+    return(@"AnnouncerSpeakTextContactAlert");    
 }
 
 //Configure for the action
