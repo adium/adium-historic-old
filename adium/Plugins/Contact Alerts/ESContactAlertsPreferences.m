@@ -79,26 +79,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     //Build the contact list
     [popUp_contactList setMenu:[self switchContactMenu]];
 
-#warning is the next bit needed?
     ESContactAlerts * thisInstance = [[ESContactAlerts alloc] init];
-    //Build the event menu
 
+    //Build the event menu (for no contact)
     [popUp_addEvent setMenu:[thisInstance eventMenu]];
-    //Build the action menu
 
+    //Build the action menu (for no contact)
     actionMenu = [thisInstance actionListMenu];
-
-
-    //Configure the 'Action' table column
-    NSPopUpButtonCell			*dataCell;
-    dataCell = [[AITableViewPopUpButtonCell alloc] init];
-    [dataCell setMenu:actionMenu];
-    [dataCell setControlSize:NSSmallControlSize];
-    [dataCell setFont:[NSFont menuFontOfSize:11]];
-    [dataCell setBordered:NO];
-    [[tableView_actions tableColumnWithIdentifier:TABLE_COLUMN_ACTION] setDataCell:dataCell];
-
-
 
     [self rebuildPrefAlertsArray]; //needs to happen before any table commands
 
@@ -113,10 +100,10 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
 
-    if ([prefAlertsArray count]) //no specific contact, but some alerts do exist
+    if ([prefAlertsArray count]) //some alerts do exist
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-        [self tableViewSelectionDidChange:nil];
+     //   [self tableViewSelectionDidChange:nil];
     }
 
     //Update the outline view
@@ -140,13 +127,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         else
         {
             [tableView_actions selectRow:firstIndex byExtendingSelection:NO];
-            [self tableViewSelectionDidChange:nil];
+        //    [self tableViewSelectionDidChange:nil];
         }
     }
     else //got nil
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-        [self tableViewSelectionDidChange:nil];
+    //    [self tableViewSelectionDidChange:nil];
     }
 }
 
@@ -167,13 +154,15 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     {
         ESContactAlerts * thisInstance = [[ESContactAlerts alloc] initForObject:contact withDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner];
         [thisInstance setOffset:offset];
-        //    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[plugin,[contact UID]];
+
         for (arrayCounter=0 ; arrayCounter<[thisInstance count] ; arrayCounter++)
         {
             [prefAlertsArray addObject:thisInstance];
         }
         offset += [thisInstance count];
     }
+
+    [actionColumn setPrefAlertsArray:prefAlertsArray];
 }
 
 -(IBAction)oneTimeEvent:(id)sender
@@ -185,9 +174,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 {
 
     int index = [prefAlertsArray indexOfObject:instance];
+    
     [prefAlertsArray removeObjectAtIndex:index]; //take one instance for this contact out of our array
+    [actionColumn setPrefAlertsArray:prefAlertsArray];
+    
     index += [instance count] - 1;
-    NSLog(@"indexofobject %i ; instance count %i ; index %i ; currentRow %i",[prefAlertsArray indexOfObject:instance],[instance count],index,[instance currentRow]);
     NSRange theRange;
 
     theRange.length = [prefAlertsArray count] - index;
@@ -216,11 +207,16 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 -(IBAction)addedEvent:(id)sender
 {
     [self rebuildPrefAlertsArray];
-    [tableView_actions reloadData];
 
-    int firstIndex = [prefAlertsArray indexOfObject:instance];
-    [tableView_actions selectRow:(firstIndex + [instance count] - 1) byExtendingSelection:NO];
-    [self tableViewSelectionDidChange:nil];
+    ESContactAlerts * thisInstance = sender;
+    int index = [prefAlertsArray indexOfObject:thisInstance] + [thisInstance count] - 1;
+
+    [tableView_actions scrollRowToVisible:index];
+    [tableView_actions selectRow:index byExtendingSelection:NO];
+
+    [tableView_actions reloadData];
+    
+//    [self tableViewSelectionDidChange:nil];
 
     //Update the outline view
 
@@ -238,16 +234,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     if([identifier compare:TABLE_COLUMN_EVENT] == 0){
         NSDictionary	*actionDict;
-        NSString	*event;
         NSString	*displayName;
         ESContactAlerts * thisInstance = [prefAlertsArray objectAtIndex:row];
-        //Get the event string
-        actionDict = [thisInstance dictAtIndex:row];
-        event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
 
+        actionDict = [thisInstance dictAtIndex:row];
         //Get that event's display name
         displayName = [actionDict objectForKey:KEY_EVENT_DISPLAYNAME];
-        return(displayName ? displayName : event);
+        return(displayName);
 
     }else if([identifier compare:TABLE_COLUMN_ACTION] == 0){
         NSDictionary	*actionDict;
@@ -275,7 +268,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 {
     NSString	*identifier = [tableColumn identifier];
     if([identifier compare:TABLE_COLUMN_ACTION] == 0){
-
         ESContactAlerts * thisInstance = [prefAlertsArray objectAtIndex:row];
         [cell selectItemWithRepresentedObject:[[thisInstance dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
     }
@@ -293,7 +285,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         ESContactAlerts * thisInstance = [prefAlertsArray objectAtIndex:row];
 
-        selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
+        selectedMenuItem = [[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
         selectedActionDict = [[thisInstance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 
@@ -305,7 +297,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [instance deleteEventAction:nil]; //Delete it
+    [self deleteEventAction:nil]; //Delete it, using the preferences view custom deleteEventAction (which calls in the instance)
 }
 
 //selection changed; update the view
@@ -313,39 +305,26 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 //- (void)tableViewSelectionIsChanging:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
-    NSLog(@"row = %d",row);
-
+    NSLog(@"changed to row: %i",row);
     if (row != -1) //a row is selected
     {
         instance = [prefAlertsArray objectAtIndex:row];
 
         [instance currentRowIs:row]; //tell the instance which row is selected
 
-        //(re)Build the event menu
+        //rebuild the event menu to apply to this instance
         [popUp_addEvent setMenu:[instance eventMenu]];
-
-        //(re)Build the action menu
-        actionMenu = [instance actionListMenu];
-
-        //(re)Configure the 'Action' table column
-        NSPopUpButtonCell			*dataCell;
-        dataCell = [[AITableViewPopUpButtonCell alloc] init];
-        [dataCell setMenu:actionMenu];
-        [dataCell setControlSize:NSSmallControlSize];
-        [dataCell setFont:[NSFont menuFontOfSize:11]];
-        [dataCell setBordered:NO];
-        [[tableView_actions tableColumnWithIdentifier:TABLE_COLUMN_ACTION] setDataCell:dataCell];
 
         NSDictionary * selectedActionDict = [instance dictAtIndex:row];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
-        [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
+        [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
 
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
 
         //Update the outline view
-        [tableView_actions reloadData];
+  //      [tableView_actions reloadData];
     }
     else //no selection
     {
@@ -356,6 +335,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     }
 
 }
+
+
 
 
 - (BOOL)shouldSelectRow:(int)inRow

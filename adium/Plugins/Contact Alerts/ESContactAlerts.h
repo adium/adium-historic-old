@@ -40,6 +40,9 @@
     NSMutableArray			*eventActionArray;
     NSMutableArray			*eventSoundArray;
 
+    NSMenu				*actionListMenu_cached;
+    NSMenu				*eventMenu_cached;
+    
     AIAdium				*owner;
 }
 

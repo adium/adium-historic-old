@@ -8,12 +8,15 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 #import "ESContactAlerts.h"
+//#import "ESContactAlertsPrefsTableView.h"
+#import "ESContactAlertsActionColumn.h"
 
 @class AIAdium, AIAlternatingRowTableView, AIListContact, ESContactAlertsPlugin;
 
 @interface ESContactAlertsPreferences : NSObject {
     IBOutlet	NSPopUpButton			*popUp_addEvent;
     IBOutlet	AIAlternatingRowTableView	*tableView_actions;
+    IBOutlet	ESContactAlertsActionColumn	*actionColumn;
     IBOutlet	NSButton			*button_delete;
     IBOutlet	NSButton			*button_oneTime;
     IBOutlet	NSPopUpButton			*popUp_contactList;
