@@ -703,13 +703,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
     [self saveEventActionArray];
 
-    [tableView_actions selectRow:([eventActionArray count]-1) byExtendingSelection:NO]; //select the new event
+ //   [tableView_actions selectRow:([eventActionArray count]-1) byExtendingSelection:NO]; //select the new event
 
     if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
         [[tableView_actions dataSource] performSelector:@selector(addedEvent:) withObject:self];
 
     //Update the outline view
-    [tableView_actions reloadData];
+//    [tableView_actions reloadData];
 
 }
 
@@ -831,6 +831,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 //Delete the selected action
 -(IBAction)deleteEventAction:(id)sender
 {
+//    [self configureWithSubview:nil];
     //Remove the event
     [eventActionArray removeObjectAtIndex:row];
 
@@ -838,7 +839,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [self saveEventActionArray];
 
     //Update the outline view
-    [tableView_actions reloadData];
+//    [tableView_actions reloadData];
 }
 
 //editing is over - save in KEY_EVENT_DETAILS

@@ -173,6 +173,9 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 -(IBAction)addedEvent:(id)sender
 {
+    [tableView_actions reloadData];
+    [tableView_actions selectRow:([instance count]-1) byExtendingSelection:NO]; //select the new event
+
     [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
                                               object:activeContactObject
                                             userInfo:nil];
