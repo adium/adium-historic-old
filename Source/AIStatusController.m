@@ -365,10 +365,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			NSImage		*image;
 			NSMenuItem	*menuItem;
 			
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																			 target:target
-																			 action:@selector(selectStatus:)
-																	  keyEquivalent:@""] autorelease];
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																			target:target
+																			action:@selector(selectStatus:)
+																	 keyEquivalent:@""];
 			
 			image = [[[AIStatusIcons statusIconForStatusName:[statusDict objectForKey:KEY_STATUS_NAME]
 												  statusType:type
@@ -379,6 +379,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			[menuItem setImage:image];
 			[menuItem setEnabled:YES];
 			[menuItems addObject:menuItem];
+			[menuItem release];
 
 			[alreadyAddedTitles addObject:title];
 		}
@@ -1604,24 +1605,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		[menuItem setImage:[[[statusState icon] copy] autorelease]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
+		[menuItem setTag:[statusState statusType]];
 		[statusStatesMenu addItem:menuItem];
 		[menuItem release];
 	}
-
-	//Now add a separator and the Offline state option
-	[statusStatesMenu addItem:[NSMenuItem separatorItem]];
-	
-	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_OFFLINE
-										  target:nil
-										  action:nil
-								   keyEquivalent:@""];
-	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
-													 statusType:AIOfflineStatusType
-													   iconType:AIStatusIconList
-													  direction:AIIconNormal] copy] autorelease]];
-	[menuItem setTag:AIOfflineStatusType];
-	[statusStatesMenu addItem:menuItem];
-	[menuItem release];
 
 	[statusStatesMenu setMenuChangedMessagesEnabled:YES];
 
