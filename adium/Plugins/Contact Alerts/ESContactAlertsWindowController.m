@@ -29,7 +29,7 @@
 - (id)initWithOwner:(id)inOwner forPlugin:(id)inPlugin;
 @end
 
-int alphabeticalSort(id objectA, id objectB, void *context);
+int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 @implementation ESContactAlertsWindowController
 //Open a new info window
@@ -58,7 +58,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
-        [plugin removeAllSubviews:view_main];
+        [instance removeAllSubviews:view_main];
         //Save the window position
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
@@ -75,7 +75,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
     //Remember who we're displaying actions for
     [activeContactObject release]; activeContactObject = [inContact retain];
-    
+
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[activeContactObject displayName]]];
 
@@ -85,15 +85,15 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [popUp_contactList setMenu:[self switchContactMenu]];
     [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
 
-    [plugin release];
-    plugin = [[ESContactAlerts alloc] initForObject:activeContactObject withDetailsView:view_main withTable:tableView_actions owner:owner];
-    [plugin retain];
+    [instance release];
+    instance = [[ESContactAlerts alloc] initForObject:activeContactObject withDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
+    [instance retain];
 
     //Build the event menu
-    [popUp_addEvent setMenu:[plugin eventMenu]];
+    [popUp_addEvent setMenu:[instance eventMenu]];
 
     //Build the action menu
-    actionMenu = [plugin actionListMenu];
+    actionMenu = [instance actionListMenu];
 
     //Configure the 'Action' table column
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
@@ -110,11 +110,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
     [tableView_actions retain];
-    
+
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
-    
-    if ([plugin hasAlerts])
+
+    if ([instance hasAlerts])
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
         [self tableViewSelectionDidChange:nil];
@@ -126,19 +126,19 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 -(IBAction)oneTimeEvent:(id)sender
 {
-    [plugin oneTimeEvent:button_oneTime];
+    [instance oneTimeEvent:button_oneTime];
 }
 
 -(IBAction)deleteEventAction:(id)sender
 {
-    [plugin deleteEventAction:nil];
+    [instance deleteEventAction:nil];
     [self tableViewSelectionDidChange:nil];
 }
 
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return([plugin count]);
+    return([instance count]);
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -151,7 +151,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         NSString	*displayName;
 
         //Get the event string
-        actionDict = [plugin dictAtIndex:row];
+        actionDict = [instance dictAtIndex:row];
         event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
 
         //Get that event's display name
@@ -163,7 +163,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         NSString	*action;
 
         //Get the action string
-        actionDict = [plugin dictAtIndex:row];
+        actionDict = [instance dictAtIndex:row];
         action = [actionDict objectForKey:KEY_EVENT_ACTION];
 
         return(action);
@@ -177,7 +177,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
     if([identifier compare:TABLE_COLUMN_ACTION] == 0){
-        [cell selectItemWithRepresentedObject:[[plugin dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
+        [cell selectItemWithRepresentedObject:[[instance dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
     }
 }
 
@@ -192,29 +192,28 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         NSString		*newAction;
 
         selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
-        selectedActionDict = [[plugin dictAtIndex:row] mutableCopy];
+        selectedActionDict = [[instance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 
         [selectedActionDict setObject:newAction forKey:KEY_EVENT_ACTION];
-        [plugin replaceDictAtIndex:row withDict:selectedActionDict];
-
+        [instance replaceDictAtIndex:row withDict:selectedActionDict];
     }
 }
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [plugin deleteEventAction:nil]; //Delete it
+    [instance deleteEventAction:nil]; //Delete it
 }
 
 //selection changed; update the view
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
-    [plugin currentRowIs:row]; //tell the plugin which row is selected
-    
+    [instance currentRowIs:row]; //tell the instance which row is selected
+
     if (row != -1) //a row is selected
     {
-        NSDictionary * selectedActionDict = [plugin dictAtIndex:row];
+        NSDictionary * selectedActionDict = [instance dictAtIndex:row];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
         [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
@@ -224,7 +223,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     }
     else //no selection
     {
-        [plugin configureWithSubview:nil];
+        [instance configureWithSubview:nil];
         [button_delete setEnabled:NO];
         [button_oneTime setEnabled:NO];
     }
@@ -278,13 +277,13 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
 //from offline ones by a seperator reading "Offline"
-//uses alphabeticalSort and calls switchToContact: when a selection is made
-- (NSMenu *)sendToContactMenu
+//uses alphabeticalGroupOfflineSort and calls switchToContact: when a selection is made
+- (NSMenu *)switchContactMenu
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
     NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
-    [contactArray sortUsingFunction:alphabeticalSort context:nil]; //online buddies will end up at the top, alphabetically
+    [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically
 
     NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
     AIListObject	*contact;
