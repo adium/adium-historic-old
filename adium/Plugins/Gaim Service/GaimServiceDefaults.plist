@@ -47,6 +47,9 @@
 	<key>Proxy Needs Authentication</key>
 	<false/>
 	
+	<key>Check Mail</key>
+	<false/>
+	
 		<key>TextProfile</key>
 		<data>
 		e1xydGYxXG1hY1xhbnNpY3BnMTAwMDBcY29jb2FydGYx
