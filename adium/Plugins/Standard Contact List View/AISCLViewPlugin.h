@@ -44,16 +44,18 @@
 #define KEY_SCL_LABEL_GROUPS_COLOR      @"Label Groups Color"
 #define KEY_SCL_USE_GRADIENT		@"Use Gradient"
 
-@class AIListGroup, AICLPreferences, ESCLViewAdvancedPreferences, ESCLViewLabelsAdvancedPrefs, AICLGroupPreferences;
+@class AIContactListWindowController, AIListGroup, AICLPreferences, ESCLViewAdvancedPreferences, ESCLViewLabelsAdvancedPrefs, AICLGroupPreferences;
 @protocol AIContactListViewController;
 
-@interface AISCLViewPlugin : AIPlugin <AIContactListViewPlugin> {
-    NSMutableArray                  *controllerArray;
+@interface AISCLViewPlugin : AIPlugin <AIContactListController> {	
+	AIContactListWindowController 	*contactListWindowController;
     
     AICLPreferences                 *preferences;
 	AICLGroupPreferences			*preferencesGroup;
     ESCLViewAdvancedPreferences     *preferencesAdvanced;
     ESCLViewLabelsAdvancedPrefs     *preferencesLabelsAdvanced;
 }
+
+- (void)contactListDidClose;
 
 @end

@@ -75,19 +75,20 @@
 - (void)closeChat:(AIChat *)chat;
 - (void)setActiveChat:(AIChat *)inChat;
 - (void)moveChat:(AIChat *)chat toContainerNamed:(NSString *)containerName index:(int)index;
-
 - (NSArray *)openContainersAndChats;
 - (NSArray *)openContainerNames;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
-
 - (NSString *)containerNameForChat:(AIChat *)chat;
-
-
-
 @end
 
-@class AIContactListWindowController, AIMenuController;
+@protocol AIContactListController <NSObject>
+- (void)showContactListAndBringToFront:(BOOL)bringToFront;
+- (BOOL)contactListIsVisibleAndMain;
+- (void)closeContactList;
+@end
+
+@class AIMenuController;
 
 @interface AIInterfaceController : NSObject {
 	IBOutlet	AIMenuController	*menuController;
@@ -123,7 +124,6 @@
     NSString					*errorTitle;
     NSString					*errorDesc;
 	
-    AIContactListWindowController 	*contactListWindowController;
 	
 	BOOL			closeMenuConfiguredForChat;
 	
@@ -135,7 +135,10 @@
 	
 	
 	
-	id <AIInterfaceController> interface;
+	
+	
+	id <AIInterfaceController> interfacePlugin;
+	id <AIContactListController> contactListPlugin;
 	
 	
 	BOOL	groupChatsByContactGroup;
@@ -145,16 +148,14 @@
 }
 
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
+- (void)registerContactListController:(id <AIContactListController>)inController;
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
 
 //Contact List
-- (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin;
-- (id <AIContactListViewController>)contactListViewController;
 - (IBAction)toggleContactList:(id)sender;
 - (IBAction)showContactList:(id)sender;
 - (IBAction)showContactListAndBringToFront:(id)sender;
 - (IBAction)closeContactList:(id)sender;
-- (void)contactListDidClose;
 
 //Messaging
 - (void)openChat:(AIChat *)inChat;
@@ -164,7 +165,6 @@
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
 - (BOOL)allowChatOrdering;
-- (BOOL)allowChatGrouping;
 - (int)indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName;
 
 //Interface plugin callbacks

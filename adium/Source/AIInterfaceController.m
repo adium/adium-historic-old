@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.83 2004/07/19 16:47:12 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.84 2004/07/19 19:14:42 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -82,7 +82,7 @@ arrangeChats = YES;
 - (void)finishIniting
 {
     //Load the interface
-    [interface openInterface];
+    [interfacePlugin openInterface];
 
     //Configure our dynamic paste menu item
     [menuItem_paste setDynamic:YES];
@@ -110,8 +110,8 @@ arrangeChats = YES;
 
 - (void)closeController
 {
-    if(contactListWindowController) [contactListWindowController close:nil];
-    [interface closeInterface]; //Close the interface
+    [contactListPlugin closeContactList];
+    [interfacePlugin closeInterface];
 }
 
 // Dealloc
@@ -129,47 +129,38 @@ arrangeChats = YES;
     [super dealloc];
 }
 
+//Registers code to handle the interface
+- (void)registerInterfaceController:(id <AIInterfaceController>)inController
+{
+	if(!interfacePlugin) interfacePlugin = [inController retain];
+}
+
+//Register code to handle the contact list
+- (void)registerContactListController:(id <AIContactListController>)inController
+{
+	if(!contactListPlugin) contactListPlugin = [inController retain];
+}
+
 //If no windows are visible, show the contact list
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
 #warning re-implement
-//    if(contactListWindowController == nil && [messageWindowControllerArray count] == 0){
-//		[self showContactList:nil];
-//		return(NO);
-//    }else{
-//		return([interface handleReopenWithVisibleWindows:visibleWindows]);    
-//	}
+	//    if(contactListWindowController == nil && [messageWindowControllerArray count] == 0){
+	//		[self showContactList:nil];
+	//		return(NO);
+	//    }else{
+	//		return([interface handleReopenWithVisibleWindows:visibleWindows]);    
+	//	}
 	return YES;
-}
-
-// Registers code to handle the interface
-- (void)registerInterfaceController:(id <AIInterfaceController>)inController
-{
-	if(!interface){
-		interface = [inController retain];
-	}
-//    [interfaceArray addObject:inController];
 }
 
 
 //Contact List ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact list
-#warning contact list hard coded for now.  Merge contact list window with contact list view, move into plugin.
-//Registers a view to handle the contact list.  The user may chose from the available views
-//The view only needs to be added to the interface, it is entirely self sufficient
-- (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin
-{
-    [contactListViewArray addObject:inPlugin];
-}
-- (id <AIContactListViewController>)contactListViewController
-{
-    return([[contactListViewArray objectAtIndex:0] contactListViewController]);
-}
-
 //Toggle the contact list
 - (IBAction)toggleContactList:(id)sender
 {
-    if(contactListWindowController && [[contactListWindowController window] isMainWindow]){ //The window is loaded and main
+    if([contactListPlugin contactListIsVisibleAndMain]){
 		[self closeContactList:nil];
     }else{
 		[self showContactList:nil];
@@ -179,32 +170,21 @@ arrangeChats = YES;
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
-    if(!contactListWindowController){ //Load the window
-        contactListWindowController = [[AIContactListWindowController contactListWindowController] retain];
-    }
-    [contactListWindowController makeActive:nil];
+	[contactListPlugin showContactListAndBringToFront:NO];
 }
 
 //Show the contact list window and bring Adium to the front
 - (IBAction)showContactListAndBringToFront:(id)sender
 {
-    [self showContactList:nil];
-    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+	[contactListPlugin showContactListAndBringToFront:YES];
 }
 
 //Close the contact list window
 - (IBAction)closeContactList:(id)sender
 {
-    if(contactListWindowController){
-        [[contactListWindowController window] performClose:nil];
-    }
+	[contactListPlugin closeContactList];
 }
 
-- (void)contactListDidClose
-{
-	[contactListWindowController release]; contactListWindowController = nil;
-}
-	
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 //Methods for instructing the interface to provide a representation of chats, and to determine which chat has user focus
@@ -212,7 +192,7 @@ arrangeChats = YES;
 //Open a window for the chat
 - (void)openChat:(AIChat *)inChat
 {
-	NSArray		*containers = [interface openContainersAndChats];
+	NSArray		*containers = [interfacePlugin openContainersAndChats];
 	NSString	*containerName;
 	int			index = -1;
 	
@@ -234,19 +214,19 @@ arrangeChats = YES;
 		index = [self indexForInsertingChat:inChat intoContainerNamed:containerName];
 	}
 	
-	[interface openChat:inChat inContainerNamed:containerName atIndex:index];
+	[interfacePlugin openChat:inChat inContainerNamed:containerName atIndex:index];
 }
 
 //Set the active chat window
 - (void)setActiveChat:(AIChat *)inChat
 {
-	[interface setActiveChat:inChat];
+	[interfacePlugin setActiveChat:inChat];
 }
 
 //Close the window for a chat
 - (void)closeChat:(AIChat *)inChat
 {
-    [interface closeChat:inChat];
+    [interfacePlugin closeChat:inChat];
 }
 
 //Active chat
@@ -259,7 +239,7 @@ arrangeChats = YES;
 - (NSArray *)openChats
 {
 	if(!_cachedOpenChats){
-		_cachedOpenChats = [[interface openChats] retain];
+		_cachedOpenChats = [[interfacePlugin openChats] retain];
 	}
 	
 	return(_cachedOpenChats);
@@ -268,7 +248,7 @@ arrangeChats = YES;
 //
 - (NSArray *)openChatsInContainerNamed:(NSString *)containerName
 {
-	return([interface openChatsInContainerNamed:containerName]);
+	return([interfacePlugin openChatsInContainerNamed:containerName]);
 }
 
 //Resets the cache of open chats
@@ -377,10 +357,10 @@ arrangeChats = YES;
 //
 - (void)_resortChat:(AIChat *)chat
 {
-	NSString	*containerName = [interface containerNameForChat:chat];
+	NSString	*containerName = [interfacePlugin containerNameForChat:chat];
 		
-	[interface moveChat:chat toContainerNamed:containerName
-				  index:[self indexForInsertingChat:chat intoContainerNamed:containerName]];
+	[interfacePlugin moveChat:chat toContainerNamed:containerName
+						index:[self indexForInsertingChat:chat intoContainerNamed:containerName]];
 	
 }
 
@@ -388,7 +368,7 @@ arrangeChats = YES;
 - (void)_resortAllChats
 {
 	AISortController	*sortController = [[owner contactController] activeSortController];
-	NSEnumerator		*containerEnumerator = [[interface openContainerNames] objectEnumerator];
+	NSEnumerator		*containerEnumerator = [[interfacePlugin openContainerNames] objectEnumerator];
 	NSString			*containerName;
 	
 	while(containerName = [containerEnumerator nextObject]){
@@ -407,9 +387,9 @@ arrangeChats = YES;
 		//Sync the container with the sorted chats
 		objectEnumerator = [listObjects objectEnumerator];
 		while(object = [objectEnumerator nextObject]){
-			[interface moveChat:[chatsInContainer objectAtIndex:[listObjects indexOfObject:object]]
-			   toContainerNamed:containerName
-						  index:index++];
+			[interfacePlugin moveChat:[chatsInContainer objectAtIndex:[listObjects indexOfObject:object]]
+					 toContainerNamed:containerName
+								index:index++];
 		}
 	}
 }
@@ -519,7 +499,7 @@ arrangeChats = YES;
     [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
 	
     //Messages window and any open messasges
-	NSEnumerator	*containerEnumerator = [[interface openContainersAndChats] objectEnumerator];
+	NSEnumerator	*containerEnumerator = [[interfacePlugin openContainersAndChats] objectEnumerator];
 	NSDictionary	*containerDict;
 	
 	while(containerDict = [containerEnumerator nextObject]){

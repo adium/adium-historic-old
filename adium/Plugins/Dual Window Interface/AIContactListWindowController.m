@@ -16,6 +16,7 @@
 #import "AIContactListWindowController.h"
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIStatusSelectionView.h"
+#import "AISCLViewController.h"
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -33,7 +34,7 @@
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
 @interface AIContactListWindowController (PRIVATE)
-- (id)init;
+- (id)initWithPlugin:(AISCLViewPlugin *)inPlugin;
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
 - (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification;
@@ -48,14 +49,15 @@
 @implementation AIContactListWindowController
 
 //Return a new contact list window controller
-+ (AIContactListWindowController *)contactListWindowController
++ (AIContactListWindowController *)contactListWindowControllerWithPlugin:(AISCLViewPlugin *)inPlugin
 {
-    return([[[self alloc] init] autorelease]);
+    return([[[self alloc] initWithPlugin:inPlugin] autorelease]);
 }
 
 //Init
-- (id)init
+- (id)initWithPlugin:(AISCLViewPlugin *)inPlugin
 {
+	plugin = inPlugin;
 	toolbarItems = nil;
 	borderless = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_SCL_BORDERLESS
 																					group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
@@ -117,7 +119,7 @@
     minWindowSize = [[self window] minSize];
 	
     //Swap in the contact list view
-    contactListViewController = [[[adium interfaceController] contactListViewController] retain];
+    contactListViewController = [[AISCLViewController contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
@@ -150,7 +152,7 @@
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 	
     //Tell the interface to unload our window
-    [[adium interfaceController] contactListDidClose];
+    [plugin contactListDidClose];
     
     return(YES);
 }
@@ -175,7 +177,7 @@
 		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];
     }
 	
-    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE])){
+    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
         autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];

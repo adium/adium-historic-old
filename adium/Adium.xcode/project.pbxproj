@@ -3129,7 +3129,6 @@
 				4B31E8E104C4712F00A8010A,
 				F53B9AC502CD12AB01A8010A,
 				4B4F5B24042D636A00A8010A,
-				F51DEFA40326330101A8010A,
 				D3376B2C052BBC2900A8010B,
 				3479A83B05DC9F2400998B3D,
 			);
@@ -4939,7 +4938,6 @@
 				4BD6753C06001E120049CAF7,
 				4BD6753D06001E140049CAF7,
 				4BD6754006001E150049CAF7,
-				4BD6754606001E180049CAF7,
 				4BD6754906001E190049CAF7,
 				4BD6754C06001E1A0049CAF7,
 				4BD6754F06001E1C0049CAF7,
@@ -5232,7 +5230,6 @@
 				4BD6753B06001E120049CAF7,
 				4BD6753F06001E150049CAF7,
 				4BD6754206001E160049CAF7,
-				4BD6754806001E180049CAF7,
 				4BD6754B06001E190049CAF7,
 				4BD6754E06001E1C0049CAF7,
 				4BD6755106001E1D0049CAF7,
@@ -5589,7 +5586,6 @@
 				4BD6753A06001E110049CAF7,
 				4BD6753E06001E140049CAF7,
 				4BD6754106001E160049CAF7,
-				4BD6754706001E180049CAF7,
 				4BD6754A06001E190049CAF7,
 				4BD6754D06001E1A0049CAF7,
 				4BD6755006001E1D0049CAF7,
@@ -13848,8 +13844,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = AIDualWindowAdvancedPrefs.h;
-			path = "Plugins/Dual Window Interface/AIDualWindowAdvancedPrefs.h";
+			name = AIContactListAdvancedPrefs.h;
+			path = "Plugins/Dual Window Interface/AIContactListAdvancedPrefs.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13857,16 +13853,16 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = AIDualWindowAdvancedPrefs.m;
-			path = "Plugins/Dual Window Interface/AIDualWindowAdvancedPrefs.m";
+			name = AIContactListAdvancedPrefs.m;
+			path = "Plugins/Dual Window Interface/AIContactListAdvancedPrefs.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		4B970BE40535B6BE002F28F9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = DualWindowAdvanced.nib;
-			path = "Plugins/Dual Window Interface/DualWindowAdvanced.nib";
+			name = ContactListAdvanced.nib;
+			path = "Plugins/Dual Window Interface/ContactListAdvanced.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13959,32 +13955,6 @@
 			);
 			isa = PBXGroup;
 			name = Preferences;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA12FFD04C0A17300A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DualWindowPrefs.nib;
-			path = "Plugins/Dual Window Interface/DualWindowPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA12FFF04C0A2D900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIDualWindowPreferences.h;
-			path = "Plugins/Dual Window Interface/AIDualWindowPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA1300004C0A2D900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIDualWindowPreferences.m;
-			path = "Plugins/Dual Window Interface/AIDualWindowPreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15415,6 +15385,9 @@
 				4B25494603F6A32700A8010A,
 				4B25494703F6A32700A8010A,
 				4BCFEF4C03F59F2800A8010A,
+				BF000236063A4D2E0019910B,
+				BF000237063A4D2E0019910B,
+				BF00023A063A4FFE0019910B,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -17089,24 +17062,6 @@
 			settings = {
 			};
 		};
-		4BD6754606001E180049CAF7 = {
-			fileRef = 4BA12FFF04C0A2D900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6754706001E180049CAF7 = {
-			fileRef = 4BA1300004C0A2D900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6754806001E180049CAF7 = {
-			fileRef = 4BA12FFD04C0A17300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6754906001E190049CAF7 = {
 			fileRef = 4B970BE00535B6AC002F28F9;
 			isa = PBXBuildFile;
@@ -18258,13 +18213,13 @@
 		};
 		4BF42E6506AC35500091DE5D = {
 			children = (
+				F57939A1033E75CB01A8010A,
+				F57939A2033E75CB01A8010A,
 				F579397D033E756E01A8010A,
 				F579397E033E756E01A8010A,
 				F5793983033E756E01A8010A,
+				F51DEFA40326330101A8010A,
 				34503BFE058F8CFD00FB7AD1,
-				4BA12FFF04C0A2D900A8010A,
-				4BA1300004C0A2D900A8010A,
-				4BA12FFD04C0A17300A8010A,
 				4B970BE00535B6AC002F28F9,
 				4B970BE10535B6AC002F28F9,
 				4B970BE40535B6BE002F28F9,
@@ -23347,8 +23302,6 @@
 		};
 		F51DEFA40326330101A8010A = {
 			children = (
-				F57939A1033E75CB01A8010A,
-				F57939A2033E75CB01A8010A,
 				4BAC8E9C0448412300A8010A,
 				4BAC8E9D0448412300A8010A,
 				F579399F033E75CB01A8010A,
@@ -23714,9 +23667,6 @@
 			children = (
 				4BACB70103C8CB5E00A8010A,
 				4BACB70203C8CB5E00A8010A,
-				BF000236063A4D2E0019910B,
-				BF000237063A4D2E0019910B,
-				BF00023A063A4FFE0019910B,
 				F570A5CD03704D3D01A8010A,
 				F570A5CE03704D3D01A8010A,
 				F5793984033E756E01A8010A,
@@ -23943,8 +23893,8 @@
 				F579397F033E756E01A8010A,
 				F5793980033E756E01A8010A,
 				F549EF1C036B1A0A01A8010A,
-				4BCFEC5803F5718700A8010A,
 				4BA12FFC04C0A12900A8010A,
+				4BCFEC5803F5718700A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dual Window Interface";
