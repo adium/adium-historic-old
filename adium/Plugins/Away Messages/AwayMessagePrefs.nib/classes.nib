@@ -20,6 +20,7 @@
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
+        {CLASS = AIContextMenuTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = AIFlexibleTableView; 
             LANGUAGE = ObjC; 
