@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView;
+@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView, AIContactInfoWindowController;
 @protocol AIAccountSelectionViewDelegate, AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {
@@ -22,6 +22,7 @@
     IBOutlet	AIMessageEntryTextView	*textView_outgoing;
 				NSView					*controllerView_messages;
     IBOutlet	NSView					*scrollView_messages;
+	IBOutlet	NSSplitView				*splitView_messages;
     IBOutlet	AIMiniToolbar			*toolbar_bottom;
 
     IBOutlet	NSTableView				*tableView_userList;

@@ -1,5 +1,5 @@
 
- //
+//
 //  AIStressTestAccount.m
 //  Adium
 //
@@ -16,7 +16,8 @@
 - (void)initAccount
 {
     chatDict = [[NSMutableDictionary alloc] init];
-
+	listObjectArray = [[NSMutableArray alloc] init];
+	
 	commandContact = [[[adium contactController] contactWithService:STRESS_TEST_SERVICE_IDENTIFIER 
 														  accountID:[self uniqueObjectID]
 																UID:@"Command"] retain];
@@ -25,9 +26,9 @@
     
     //
     //commandChat = [[[adium contentController] chatWithContact:commandContact initialStatus:nil] retain];
-
+	
     //
-	NSLog(@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash");
+	NSLog(@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash");
     //[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
 }
 
@@ -85,7 +86,7 @@
 																	UID:buddyUID];
 				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)]];
             }
-
+			
             [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
             
         }else if([type compare:@"online"] == 0){
@@ -93,69 +94,81 @@
             int 		count = [[commands objectAtIndex:1] intValue];
             BOOL 		silent = NO;
             int 		i;
-
+			
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
             for(i=0;i < count;i++){
 				AIListContact	*contact;
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
-
+				
 				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
 															  accountID:[self uniqueObjectID]
 																	UID:buddyUID];
 				[handleArray addObject:contact];
             }
-
+			
             [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_online:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",[NSNumber numberWithBool:silent],@"silent",nil] repeats:YES];
             [self echo:[NSString stringWithFormat:@"%i handles signing on %@",count,(silent?@"(Silently)":@"")]];
-
+			
         }else if([type compare:@"offline"] == 0){
             int 	count = [[commands objectAtIndex:1] intValue];
             BOOL 	silent = NO;
             int 	i;
-
+			
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
-
+			
             for(i=0;i < count;i++){
 				AIListContact	*contact;
                 NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
-
+				
 				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
 															  accountID:[self uniqueObjectID]
 																	UID:buddyUID];
 				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
             }
-
+			
             [self echo:[NSString stringWithFormat:@"%i handles signed off %@",count,(silent?@"(Silently)":@"")]];
-
+			
         }else if([type compare:@"msgin"] == 0){
             int 		count = [[commands objectAtIndex:1] intValue];
-            int 		spread = [[commands objectAtIndex:2] intValue];
+			int 		spread = [[commands objectAtIndex:2] intValue];
             NSString	*messageIn = [commands objectAtIndex:3];
-
+			
             [NSTimer scheduledTimerWithTimeInterval:0.00001
 											 target:self
 										   selector:@selector(timer_msgin:)
 										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
-																									[NSNumber numberWithInt:count],@"count",
-																									[NSNumber numberWithInt:spread],@"spread",
-																									messageIn,@"message",nil] 
+											   [NSNumber numberWithInt:count],@"count",
+											   [NSNumber numberWithInt:spread],@"spread",
+											   messageIn,@"message",nil] 
 											repeats:YES];
-
+			
         }else if([type compare:@"msginout"] == 0){
             int 		count = [[commands objectAtIndex:1] intValue];
             int 		spread = [[commands objectAtIndex:2] intValue];
             NSString	*messageOut = [commands objectAtIndex:3];
-
+			
             [NSTimer scheduledTimerWithTimeInterval:0.00001 
 											 target:self 
 										   selector:@selector(timer_msginout:)
 										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
-																									[NSNumber numberWithInt:count],@"count",
-																									[NSNumber numberWithInt:spread],@"spread",
-																									messageOut,@"message",
-																									[NSNumber numberWithBool:NO],@"in",nil] 
+											   [NSNumber numberWithInt:count],@"count",
+											   [NSNumber numberWithInt:spread],@"spread",
+											   messageOut,@"message",
+											   [NSNumber numberWithBool:NO],@"in",nil] 
 											repeats:YES];
             
+		}else if ([type compare:@"groupchat"] == 0) {
+            int 		count = [[commands objectAtIndex:1] intValue];
+			NSString	*messageIn = [commands objectAtIndex:2];
+			
+			[NSTimer scheduledTimerWithTimeInterval:0.00001
+											 target:self
+										   selector:@selector(timer_groupchat:)
+										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
+											   [NSNumber numberWithInt:count],@"count",
+											   messageIn,@"message",nil] 
+											repeats:YES];	
+			
         }else if ([type compare:@"crash"] == 0){
             NSMutableArray *help = [[NSMutableArray alloc] init];
             [help addObject:nil];   
@@ -163,7 +176,7 @@
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
         }
     }
-
+	
     return(YES);
 }
 
@@ -172,10 +185,10 @@
     NSMutableDictionary	*userInfo = [inTimer userInfo];
     NSMutableArray		*array = [userInfo objectForKey:@"handles"];
     AIListContact		*contact = [array lastObject];
-//    BOOL				silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
+	//    BOOL				silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
     
 	[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
- 
+	
     [array removeLastObject];
     if([array count] == 0) [inTimer invalidate];
 }
@@ -251,14 +264,72 @@
                                                   autoreply:NO];
             [[adium contentController] receiveContentObject:messageObject];
         }
-
+		
         [userInfo setObject:[NSNumber numberWithBool:!msgIn] forKey:@"in"];
     }
-
+	
     i++;
     [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
     if(i == count) [inTimer invalidate];
 }
+
+- (void)timer_groupchat:(NSTimer *)inTimer
+{
+    NSMutableDictionary *userInfo = [inTimer userInfo];
+	NSString		*message = [userInfo objectForKey:@"message"];
+    int				i = [[userInfo objectForKey:@"i"] intValue];
+    int				count = [[userInfo objectForKey:@"count"] intValue];
+	int				j;
+    AIListContact	*contact;
+	AIContentMessage *messageObject;
+	
+	if( i == 0 ) {
+		
+		//listObjectArray = [NSMutableArray arrayWithCapacity:4];
+
+		for(j = 0; j < count; j++) {
+			NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",j];
+			[listObjectArray addObject:[[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																		   accountID:[self uniqueObjectID]
+																				 UID:buddyUID]];
+			//NSLog(@"######## added %@ to listObjectArray",buddyUID);
+		}
+		
+		
+		commandChat = [[adium contentController] chatWithContact:[listObjectArray objectAtIndex:0] initialStatus:nil];
+		
+		messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:[listObjectArray objectAtIndex:0] 
+																					 initialStatus:nil]
+											 withSource:[listObjectArray objectAtIndex:0]
+											destination:self
+												   date:nil
+												message:[[[NSAttributedString alloc] initWithString:message
+																						 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+											  autoreply:NO];
+		[[adium contentController] receiveContentObject:messageObject];
+		
+		//NSLog(@"#### commandChat: %@ listObjectArray: %@",commandChat,listObjectArray);
+		
+	} else if( i < count ) {
+		[commandChat addParticipatingListObject:[listObjectArray objectAtIndex:i]];
+		//NSLog(@"#### should add (%d) in listObjectArray: %@ to %@",i,listObjectArray,commandChat);
+		messageObject = [AIContentMessage messageInChat:commandChat
+											 withSource:[listObjectArray objectAtIndex:i]
+											destination:self
+												   date:nil
+												message:[[[NSAttributedString alloc] initWithString:message
+																						 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+											  autoreply:NO];
+		[[adium contentController] receiveContentObject:messageObject];
+		
+		
+	}	
+	
+	i++;
+    [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
+    if(i == count) [inTimer invalidate];
+}
+
 
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
