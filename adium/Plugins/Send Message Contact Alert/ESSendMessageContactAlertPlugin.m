@@ -28,6 +28,11 @@
 //    [self preferencesChanged:nil];
 }
 
+- (void)uninstallPlugin
+{
+    [attributes release];
+}
+
 
 //Send Message Alert -----------------------------------------------------------------------------------------------------
 #pragma mark Send Message Alert
@@ -51,11 +56,151 @@
 	return([ESSendMessageAlertDetailPane actionDetailsPane]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)inDetails
 {
+	BOOL			success = NO;
+	AIAccount 		*account;
+	NSString		*destUniqueID;
+	AIListContact	*contact = nil;
+	NSString 		*messageText;
+	BOOL			useAnotherAccount;
+		
+	//Intended source and dest
+	account = [[adium accountController] accountWithObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]];
+	destUniqueID = [inDetails objectForKey:KEY_MESSAGE_SEND_TO];
+	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+
+	//Message to send and other options
+	messageText = [inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE];
+	useAnotherAccount = [[inDetails objectForKey:KEY_MESSAGE_OTHER_ACCOUNT] boolValue];
+
+	//If we have a contact (and not a meta contact), we need to make sure it's the contact for account, or 
+	//availableForSendingContentType: will return NO incorrectly.
+	//######### The core should really handle this for us. #########
+	if([contact isKindOfClass:[AIListContact class]]){
+		contact = [[adium contactController] existingContactWithService:[contact serviceID]
+															  accountID:[account uniqueObjectID]
+																	UID:[contact UID]];
+	}
 	
+	//If the desired account is not available for sending, ask Adium for the best available account
+	if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact onAccount:account]){
+		if(useAnotherAccount){
+			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact];
+		}else{
+			account = nil;
+		}
+	}
+	
+	if(account){
+		//Find the contact listed on this account (If it's not listed, this will add it as a stranger)
+		//######### The core should really handle this for us. #########
+		contact = [[adium contactController] contactWithService:[contact serviceID]
+													  accountID:[account uniqueObjectID] 
+															UID:[contact UID]];
+		if(contact){
+			//Create and open a chat with this contact
+			AIChat	*chat = [[adium contentController] openChatWithContact:contact];
+			[[adium interfaceController] setActiveChat:chat];
+			
+			//Prepare the content object we're sending
+			AIContentMessage	*content = [AIContentMessage messageInChat:chat
+																withSource:account
+															   destination:contact
+																	  date:nil
+																   message:[[[NSAttributedString alloc] initWithString:messageText attributes:nil] autorelease]
+																 autoreply:NO];
+			
+			//Send the content
+			success = [[adium contentController] sendContentObject:content];
+		}
+			
+	}
+	
+	//Display an error message if the message was not delivered
+	if(!success){
+        [[adium interfaceController] handleMessage:@"Contact Alert Error"
+								   withDescription:[NSString stringWithFormat:@"Unable to send message to %@.", [contact displayName]]
+								   withWindowTitle:@""];
+	}
 }
 
+/*
+    AIAccount           *account;
+
+    AIContentMessage    *responseContent;
+    NSAttributedString  *message;
+    
+    AIListContact       *contact;
+    NSString            *uid;
+    NSString            *service;
+    
+    NSString            *errorReason = nil;
+    int                 displayError;
+    BOOL                success = NO;
+
+    //Source account
+    account = [[adium accountController] accountWithObjectID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
+    
+    message = [[NSAttributedString alloc] initWithString:details attributes:attributes];
+
+    //intended recipient
+    uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
+    service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
+    contact = [[adium contactController] contactWithService:service accountID:[account uniqueObjectID] UID:uid];
+    
+    //error message
+    displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];
+
+    if ([[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact onAccount:account]) { //desired account is available to send to contact
+        success = YES;
+    } else {
+        if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
+            account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																		  toListObject:contact];
+            
+            if (!account) {//no appropriate accounts found
+                errorReason = @"failed because no appropriate accounts are online.";
+                success = NO;
+            } else
+                success = YES;
+        }
+        else {
+            errorReason = [NSString stringWithFormat:@"with %@ failed because the account %@ is currently offline.",[account displayName],[account displayName]];
+            success = NO;
+        }
+    }
+    if (success) { //we're good so far...
+            if ([contact integerStatusObjectForKey:@"Online"]) {
+                AIChat	*chat = [[adium contentController] openChatWithContact:contact];
+                
+                [[adium interfaceController] setActiveChat:chat];
+                responseContent = [AIContentMessage messageInChat:chat
+                                                       withSource:account
+                                                      destination:contact
+                                                             date:nil
+                                                          message:message
+                                                        autoreply:NO];
+                success = [[adium contentController] sendContentObject:responseContent];
+                
+                if (!success)
+                    errorReason = @"failed while sending the message.";
+            }
+            else { //target contact is not online
+                errorReason = [NSString stringWithFormat:@"failed because %@ is currently unavailable.",[contact displayName]];
+                success = NO;
+            }
+    }
+    
+    if (!success && displayError) { //Would have had it if it weren't for those pesky account and contact kids...
+        NSString *alertMessage = [NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason];
+        NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], actionName];
+        [[adium interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
+    }
+    
+    [message release];
+    return success;
+ */
 
 
 
@@ -65,20 +210,6 @@
 
 
 
-
-- (void)uninstallPlugin
-{
-//    //Uninstall our contact alert
-//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
-//    
-    [attributes release];
-}
-
-- (void)dealloc
-{
-    [attributes release];
-    [super dealloc];
-}
 
 //- (void)preferencesChanged:(NSNotification *)notification
 //{
