@@ -6,8 +6,10 @@
 //
 
 @interface NEHGrowlPlugin : AIPlugin {
-	NSDictionary * events;
+	NSDictionary	*events;
+	BOOL			 showWhileAway;
 }
 
 - (void)handleEvent:(NSNotification*)notification;
+- (void)preferencesChanged:(NSNotification*)notification;
 @end

@@ -9,21 +9,23 @@
 #import "NEHGrowlPlugin.h"
 #import "GrowlDefines.h"
 
+#define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
+#define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
 
 @implementation NEHGrowlPlugin
 
 - (void)installPlugin
 {
-	//Set up the events and titles
-	events = [[NSDictionary dictionaryWithObjectsAndKeys:
-				AILocalizedString(@"Contact came online",nil), CONTACT_STATUS_ONLINE_YES,
-				AILocalizedString(@"Contact went offline",nil), CONTACT_STATUS_ONLINE_NO,
-				AILocalizedString(@"Contact has gone away",nil), CONTACT_STATUS_AWAY_YES,
-				AILocalizedString(@"Contact is available",nil), CONTACT_STATUS_AWAY_NO,
-				AILocalizedString(@"Contact is idle",nil), CONTACT_STATUS_IDLE_YES,
-				AILocalizedString(@"Contact is no longer idle",nil), CONTACT_STATUS_IDLE_NO,
-				AILocalizedString(@"New Message received",nil), Content_FirstContentRecieved,
-				nil] retain];
+	//Set up the events
+	events = [[NSDictionary alloc] initWithObjectsAndKeys:
+				@"Adium-ContactOnline", CONTACT_STATUS_ONLINE_YES,
+				@"Adium-ContactOffline", CONTACT_STATUS_ONLINE_NO,
+				@"Adium-ContactAway", CONTACT_STATUS_AWAY_YES,
+				@"Adium-ContactUnaway", CONTACT_STATUS_AWAY_NO,
+				@"Adium-ContactIdle", CONTACT_STATUS_IDLE_YES,
+				@"Adium-ContactUnidle", CONTACT_STATUS_IDLE_NO,
+				@"Adium-NewMessage", Content_FirstContentRecieved,
+				nil];
 	
 	//Register us with Growl
 	
@@ -43,10 +45,17 @@
 	while(note = [notes nextObject]) {
 		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object: nil];
 	}
+	
+	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	
+	[self preferencesChanged:nil];
 }
 
 - (void)handleEvent:(NSNotification*)notification
 {
+	if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && ! showWhileAway)
+		return;
+	
 	NSString * title;
 	NSString * description;
 	NSString * message;
@@ -74,30 +83,23 @@
 	if(contact) {
 		contactName = [contact longDisplayName];
 		
-		title = [events objectForKey:notificationName];
+		title = contactName;
 		
 		if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-			description = [NSString stringWithFormat: AILocalizedString(@"%@ came online",nil),
-										contactName];
+			description = AILocalizedString(@"came online",nil);
 		}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-			description = [NSString stringWithFormat: AILocalizedString(@"%@ went offline",nil),
-										contactName];
+			description = AILocalizedString(@"went offline",nil);
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-			description = [NSString stringWithFormat: AILocalizedString(@"%@ went away",nil),
-										contactName];
+			description = AILocalizedString(@"went away",nil);
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-			description = [NSString stringWithFormat: AILocalizedString(@"%@ is available",nil),
-										contactName];
+			description = AILocalizedString(@"is available",nil);
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-			description = [NSString stringWithFormat: AILocalizedString(@"%@ is idle",nil),
-										contactName];
+			description = AILocalizedString(@"is idle",nil);
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-			description = [NSString stringWithFormat: AILocalizedString(@"%@ is no longer idle",nil),
-										contactName];
+			description = AILocalizedString(@"is no longer idle",nil);
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]) {
 			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
-			description = [NSString stringWithFormat: AILocalizedString(@"From %@\n%@",nil),
-										contactName, message];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@",nil), message];
 		}
 		
 		if(buddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue]){
@@ -117,6 +119,13 @@
 													userInfo: growlEvent
 										  deliverImmediately: NO];
 		
+	}
+}
+
+- (void)preferencesChanged:(NSNotification*)notification
+{
+	if (notification == nil ||  [(NSString*)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EVENT_BEZEL]) {
+		showWhileAway = [[[adium preferenceController] preferenceForKey:KEY_EVENT_BEZEL_SHOW_AWAY group:PREF_GROUP_EVENT_BEZEL] boolValue];
 	}
 }
 
