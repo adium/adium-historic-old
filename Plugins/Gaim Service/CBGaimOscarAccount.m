@@ -648,15 +648,17 @@ static BOOL didInitOscar = NO;
 
 - (void)gotGroupForContact:(AIListContact *)theContact
 {
-	if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray array] retain];
-	[arrayOfContactsForDelayedUpdates addObject:theContact];
-	
-	if (!delayedSignonUpdateTimer){
-		delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
-															   target:self
-															 selector:@selector(_performDelayedUpdates:) 
-															 userInfo:nil 
-															  repeats:YES] retain];
+	if(theContact){
+		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray array] retain];
+		[arrayOfContactsForDelayedUpdates addObject:theContact];
+		
+		if (!delayedSignonUpdateTimer){
+			delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
+																		 target:self
+																	   selector:@selector(_performDelayedUpdates:) 
+																	   userInfo:nil 
+																		repeats:YES] retain];
+		}
 	}
 }
 
