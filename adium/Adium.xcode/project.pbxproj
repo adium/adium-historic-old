@@ -3695,7 +3695,6 @@
 				4BD6739206001C2F0049CAF7,
 				4BD6739306001C300049CAF7,
 				4BD6739A06001C400049CAF7,
-				4BD673A006001C460049CAF7,
 				4BD673A606001C4E0049CAF7,
 				4BD673AB06001C510049CAF7,
 				4BD673AC06001C510049CAF7,
@@ -3815,9 +3814,6 @@
 				4B5829E60613D0BD0004BD25,
 				34F58F35061A76C500B4B5D6,
 				BF99B520061D74C300BF2252,
-				BF99B524061D74DA00BF2252,
-				BF99B525061D74DA00BF2252,
-				BF99B526061D74DA00BF2252,
 				344ECBAD0620F323007256C6,
 				344ECBAE0620F323007256C6,
 				344ECBAF0620F323007256C6,
@@ -8797,6 +8793,7 @@
 				4BAE85A40498194200A8010A,
 				C4382545062E795000F5A31D,
 				4B18A51F0459F89300A8010A,
+				4BAA1B3F0632EDDE00D8B92C,
 				4B5D67D3050CF56700A8010A,
 				34086A1005E5E17B00ABB759,
 			);
@@ -9324,6 +9321,28 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEmoticonPackCell.m;
 			path = Plugins/Emoticons/AIEmoticonPackCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B584F060638C01B0019FAD2 = {
+			children = (
+				BF99B527061D74EE00BF2252,
+				BF99B528061D74EE00BF2252,
+				BF99B51F061D74C300BF2252,
+			);
+			isa = PBXGroup;
+			name = "New Alert Panel";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B584F090638C0230019FAD2 = {
+			children = (
+				F52707A104E203EA0114B3C0,
+				F52707A004E203EA0114B3C0,
+				F5148D9604C8B4AA018B6CC7,
+			);
+			isa = PBXGroup;
+			name = "Alerts Window";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -11164,6 +11183,7 @@
 			);
 			isa = PBXGroup;
 			name = "Contact Status Events";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12596,12 +12616,6 @@
 		};
 		4BD6739D06001C450049CAF7 = {
 			fileRef = F527079604E203BB0114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673A006001C460049CAF7 = {
-			fileRef = F59C2E6104DDC8C201496213;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -18197,48 +18211,6 @@
 			settings = {
 			};
 		};
-		BF99B521061D74DA00BF2252 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = deleteAlert.tif;
-			path = "Plugins/Contact Alerts/deleteAlert.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF99B522061D74DA00BF2252 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = editAlert.tif;
-			path = "Plugins/Contact Alerts/editAlert.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF99B523061D74DA00BF2252 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = newAlert.tif;
-			path = "Plugins/Contact Alerts/newAlert.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF99B524061D74DA00BF2252 = {
-			fileRef = BF99B521061D74DA00BF2252;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF99B525061D74DA00BF2252 = {
-			fileRef = BF99B522061D74DA00BF2252;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF99B526061D74DA00BF2252 = {
-			fileRef = BF99B523061D74DA00BF2252;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		BF99B527061D74EE00BF2252 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -18845,18 +18817,10 @@
 		};
 		F5148D9404C8B3BF018B6CC7 = {
 			children = (
-				4BAA1B3F0632EDDE00D8B92C,
-				F59C2EEA04DDF4DB01496213,
-				F59C2EE904DDF4D301496213,
-				BF99B527061D74EE00BF2252,
-				BF99B528061D74EE00BF2252,
 				F527079504E203BB0114B3C0,
 				F527079604E203BB0114B3C0,
-				BF99B521061D74DA00BF2252,
-				BF99B522061D74DA00BF2252,
-				BF99B523061D74DA00BF2252,
-				F59C2E6104DDC8C201496213,
-				BF99B51F061D74C300BF2252,
+				4B584F090638C0230019FAD2,
+				4B584F060638C01B0019FAD2,
 			);
 			isa = PBXGroup;
 			name = "Contact Alerts";
@@ -18939,24 +18903,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = ESContactAlertsPlugin.m;
 			path = "Plugins/Contact Alerts/ESContactAlertsPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F527079C04E203D40114B3C0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactAlertsPreferences.h;
-			path = "Plugins/Contact Alerts/ESContactAlertsPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F527079D04E203D40114B3C0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactAlertsPreferences.m;
-			path = "Plugins/Contact Alerts/ESContactAlertsPreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20784,39 +20730,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F59C2E6104DDC8C201496213 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactAlertsActions.nib;
-			path = "Plugins/Contact Alerts/ContactAlertsActions.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59C2EE904DDF4D301496213 = {
-			children = (
-				F52707A104E203EA0114B3C0,
-				F52707A004E203EA0114B3C0,
-				F5148D9604C8B4AA018B6CC7,
-			);
-			isa = PBXGroup;
-			name = Window;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59C2EEA04DDF4DB01496213 = {
-			children = (
-				F527079C04E203D40114B3C0,
-				F527079D04E203D40114B3C0,
-				F5E726C004E5E2980100011E,
-				F5E726C104E5E2980100011E,
-				F5B6215E04E2CC3F018B68D6,
-			);
-			isa = PBXGroup;
-			name = "Preference Pane";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F59C470D033E544E01A8010A = {
 			children = (
 				9E9739D905784EFA00CF3AEE,
@@ -21136,14 +21049,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5B6215E04E2CC3F018B68D6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactAlertsPrefs.nib;
-			path = "Plugins/Contact Alerts/ContactAlertsPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5B89EFC033CA8CC01A8010A = {
 			children = (
 				F57938F1033E745F01A8010A,
@@ -21326,24 +21231,6 @@
 			lastKnownFileType = image.tiff;
 			name = Bold_On.tiff;
 			path = "Plugins/Text Toolbar Items/Bold_On.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5E726C004E5E2980100011E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactAlertsActionColumn.h;
-			path = "Plugins/Contact Alerts/ESContactAlertsActionColumn.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5E726C104E5E2980100011E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactAlertsActionColumn.m;
-			path = "Plugins/Contact Alerts/ESContactAlertsActionColumn.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};

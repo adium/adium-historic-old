@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.50 2004/04/23 02:20:49 adamiser Exp $
+//$Id: AIPluginController.m,v 1.51 2004/04/23 03:40:56 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -131,7 +131,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
 	
-	//Crash on launch = 1
+	//Crash on launch = 2
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:NO];
 	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:YES];
 }
