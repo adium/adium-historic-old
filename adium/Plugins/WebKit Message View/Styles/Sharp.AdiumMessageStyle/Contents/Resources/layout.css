@@ -42,6 +42,7 @@ body {
 
 .message {
 	padding-left: 6px;
+	padding-right: 6px;
 }
 
 .nofocus {
