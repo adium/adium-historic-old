@@ -19299,6 +19299,8 @@
 		4B539C4205EFD35400E5921A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B539C4D05EFD6CD00E5921A,
+				4B539C5305EFD6FB00E5921A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19313,6 +19315,8 @@
 		4B539C4405EFD35400E5921A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B539C4E05EFD6CD00E5921A,
+				4B539C5405EFD6FB00E5921A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19382,6 +19386,66 @@
 			path = "Webkit Message View.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B539C4B05EFD6CD00E5921A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIWebKitMessageViewPlugin.h;
+			path = "Plugins/WebKit Message View/AIWebKitMessageViewPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B539C4C05EFD6CD00E5921A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIWebKitMessageViewPlugin.m;
+			path = "Plugins/WebKit Message View/AIWebKitMessageViewPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B539C4D05EFD6CD00E5921A = {
+			fileRef = 4B539C4B05EFD6CD00E5921A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C4E05EFD6CD00E5921A = {
+			fileRef = 4B539C4C05EFD6CD00E5921A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5105EFD6FA00E5921A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIWebKitMessageViewController.h;
+			path = "Plugins/WebKit Message View/AIWebKitMessageViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B539C5205EFD6FB00E5921A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIWebKitMessageViewController.m;
+			path = "Plugins/WebKit Message View/AIWebKitMessageViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B539C5305EFD6FB00E5921A = {
+			fileRef = 4B539C5105EFD6FA00E5921A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5405EFD6FB00E5921A = {
+			fileRef = 4B539C5205EFD6FB00E5921A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B54D1020502865F00A8010A = {
 			fileEncoding = 4;
@@ -25383,6 +25447,10 @@
 		};
 		9CBADC5005712615005187DA = {
 			children = (
+				4B539C4B05EFD6CD00E5921A,
+				4B539C4C05EFD6CD00E5921A,
+				4B539C5105EFD6FA00E5921A,
+				4B539C5205EFD6FB00E5921A,
 			);
 			isa = PBXGroup;
 			name = "WebKit Message View";
