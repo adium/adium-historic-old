@@ -96,7 +96,6 @@ typedef enum {
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
-- (NSArray *)allPreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 - (NSString *)pathToPreferences;
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)

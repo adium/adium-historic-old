@@ -16,10 +16,6 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
-@interface AIListObject (PRIVATE)
-- (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
-@end
-
 @implementation AIListObject
 
 DeclareString(ObjectStatusCache);
@@ -261,99 +257,23 @@ DeclareString(FormattedUID);
 //Object specific preferences ------------------------------------------------------------------------------------------
 #pragma mark Object specific preferences
 //Set a preference value
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
+- (void)setPreference:(id)value forKey:(NSString *)key group:(NSString *)group
 {   
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self internalObjectID]
-																					 path:[self pathToPreferences]];
-
-    //Set the new value
-    if(value != nil){
-		if(!prefDict) prefDict = [[NSMutableDictionary alloc] init];
-		[prefDict setObject:value forKey:inKey];
-    }else{
-        [prefDict removeObjectForKey:inKey];
-    }
-    
-    //Save
-	[[adium preferenceController] setCachedObjectPrefs:prefDict
-												forKey:[self internalObjectID]
-												  path:[self pathToPreferences]];
-    
-    //Broadcast a preference changed notification
-    [[adium notificationCenter] postNotificationName:Preference_GroupChanged
-											  object:self
-											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,Group,inKey,Key,nil]];
-}
-
-//Retrieve a preference value (with the option of ignoring inherited values)
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore
-{
-	if(!ignore) return([self preferenceForKey:inKey group:groupName]);
-	
-	//Return our value for the preference only
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self internalObjectID]
-																					 path:[self pathToPreferences]];
-	return([prefDict objectForKey:inKey]);
+	[[adium preferenceController] setPreference:value forKey:key group:group object:self];
 }
 
 //Retrieve a preference value
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group
 {
-    id					value = nil;
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self internalObjectID]
-																					 path:[self pathToPreferences]];
-
-    //Get our value for the preference
-    value = [prefDict objectForKey:inKey];
-    
-    //If we don't have a value
-    if(!value){
-		if(containingObject){
-			//return the value of the group that contains us
-			value = [containingObject preferenceForKey:inKey group:groupName];
-		}else{
-			//If we are the root group, return Adium's global preference for this key
-			value = [[adium preferenceController] preferenceForKey:inKey group:groupName];
-		}
-    }
-    
-    return(value);
+	return([[adium preferenceController] preferenceForKey:key group:group object:self]);
 }
-
-//
-- (NSArray *)allPreferencesForKey:(NSString *)inKey group:(NSString *)groupName
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group ignoreInheritedValues:(BOOL)ignore
 {
-    NSMutableArray *returnArray = [self _recursivePreferencesForKey:inKey group:groupName];
-    id      rootValue = [[adium preferenceController] preferenceForKey:inKey group:groupName];
-    if (rootValue){
-        if (returnArray){
-            return [returnArray addObject:rootValue];
-        }else{
-            return [NSArray arrayWithObject:rootValue];
-        }
-    }
-    
-    return returnArray;
-}
-
-- (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName
-{
-    id					value = nil;
-    NSMutableArray  	*returnArray = [NSMutableArray arrayWithCapacity:1];
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self internalObjectID]
-																					 path:[self pathToPreferences]];
-    
-    //Get our value for the preference
-	if(value = [prefDict objectForKey:inKey]){
-		[returnArray addObject:value];
+	if(ignore){
+		return([[adium preferenceController] preferenceForKey:key group:group objectIgnoringInheritance:self]);
+	}else{
+		return([[adium preferenceController] preferenceForKey:key group:group object:self]);
 	}
-    
-    //so long as we aren't the root group, add our containingObjects' preferences
-	if(containingObject){
-		[returnArray addObjectsFromArray:[containingObject _recursivePreferencesForKey:inKey group:groupName]];
-	}
-    
-    return returnArray;
 }
 
 //Path for storing our reference file
