@@ -18,6 +18,9 @@
 
 @interface AILoggerPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_enableLogging;
+    IBOutlet	NSButton	*checkBox_enableStyle;
+    IBOutlet	NSButton	*checkBox_enableFont;
+    IBOutlet	NSButton	*checkBox_enableStatus;
 }
 
 @end

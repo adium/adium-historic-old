@@ -22,7 +22,7 @@
 #define LOGGING_DEFAULT_PREFS	@"LoggingDefaults"
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date logHTML:(BOOL)logHTML;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -61,10 +61,26 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LOGGING] == 0){
-        BOOL	newValue = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_ENABLE] boolValue];
+        BOOL	newLogValue = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_ENABLE] boolValue];
 
-        if(newValue != observingContent){
-            observingContent = newValue;
+        BOOL	newLogStyle = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_STYLE] boolValue];
+
+        BOOL	newLogFont = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_FONT] boolValue];
+
+        BOOL	newLogStatus = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_STATUS] boolValue];
+
+        if(newLogStyle != logStyle) {
+            logStyle = newLogStyle;
+        }
+        if(newLogFont != logFont) {
+            logFont = newLogFont;
+        }
+        if(newLogStatus != logStatus) {
+            logStatus = newLogStatus;
+        }
+        
+        if(newLogValue != observingContent){
+            observingContent = newLogValue;
 
             if(!observingContent){ //Stop Logging
                 //Stop Observing
@@ -113,6 +129,13 @@
     NSDate		*date = nil;
     NSString		*dateString = nil;
     NSString		*logMessage = nil;
+    BOOL		logHTML = NO;
+    BOOL		closeStyle = NO;
+    
+    if(logFont || logStyle) logHTML = YES;
+    else logHTML = NO;
+    if(logFont && logStyle) closeStyle = YES;
+    else closeStyle=NO;
 
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
@@ -124,16 +147,26 @@
         account	= [chat account];
 	source	= [content source];
 	message = [[content message] safeString];
-	
+
         if(account &&/* object && */source){
-            if ([[account UID] isEqualTo:[source UID]]) {
-                logMessage = [NSString stringWithFormat:@"<div class=\"send\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@:</span><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+            if (logHTML) {
+
+                NSString  *sendOrReceive;
+
+                if ([[account UID] isEqualTo:[source UID]]) {
+                    sendOrReceive = [NSString stringWithString:@"send"];
+                } else {
+                    sendOrReceive = [NSString stringWithString:@"receive"];
+                }
+
+                logMessage = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@:</span><pre class=\"message\">%@</pre></div>\n", sendOrReceive, dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle]];
+
             } else {
-                logMessage = [NSString stringWithFormat:@"<div class=\"receive\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@:</span><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+                logMessage = [NSString stringWithFormat:@"(%@) %@:%@\n", dateString, [source UID], [message string]];
             }
 	}
 
-    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0 && logStatus){
         date = [content date];
         dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
         chat	= [notification object];
@@ -144,13 +177,17 @@
         message = [content message];
 
         if(account && source){
-	    logMessage = [NSString stringWithFormat:@"<span class=\"status\">%@ (%@)</span>\n", message, dateString];
+            if(logHTML) {
+                logMessage = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, dateString];
+            } else {
+                logMessage = [NSString stringWithFormat:@"<%@ (%@)>\n", message, dateString];
+            }
 	}
     }
 
     //Log the message
     if(logMessage != nil){
-        [self _addMessage:logMessage betweenAccount:account andObject:object onDate:date];
+        [self _addMessage:logMessage betweenAccount:account andObject:object onDate:date logHTML:logHTML];
     }
 }
 
@@ -175,7 +212,7 @@
 }
 
 //Add a message to the specified log file
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date logHTML:(BOOL)logHTML
 {
     NSString	*logPath;
     NSString	*logFileName;
@@ -183,7 +220,11 @@
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
     logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:object];
-    logFileName = [NSString stringWithFormat:@"%@_(%@).adiumLog.html", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    if(logHTML) {
+        logFileName = [NSString stringWithFormat:@"%@_(%@).adiumLog.html", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    } else {
+        logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    }
 
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];
@@ -199,7 +240,7 @@
 }
 
 - (NSString *)pluginDescription {
-    return @"This plugin implements chat logging like that of Adium 1.x.";
+    return @"This plugin implements chat logging with a variable amount of HTML.";
 }
 
 - (NSString *)pluginVersion {
