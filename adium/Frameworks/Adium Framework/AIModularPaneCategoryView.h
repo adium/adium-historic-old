@@ -13,48 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPreferenceCategoryView.m,v 1.2 2004/05/24 06:04:19 evands Exp $
-
-#import "AIPreferenceCategoryView.h"
-
-@implementation AIPreferenceCategoryView
-
-//Return yes so this view's origin is the top left corner, and it behaves more naturally in scroll views
-- (BOOL)isFlipped
-{
-    return(YES);
+@interface AIModularPaneCategoryView : NSView {
+    int		desiredHeight;
 }
 
-//Draw
-/*- (void)drawRect:(NSRect)rect
-{
-    static NSColor *color;
-    
-    //Fill the rect with aqua stripes
-    [[NSColor windowBackgroundColor] set];
-    [NSBezierPath fillRect:rect];
-
-    //Soften the stripes by painting 50% white over them
-    if(!color){
-        color = [[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:0.5] retain];
-    }
-    [color set];
-    [NSBezierPath fillRect:rect];
-}*/
-
-- (void)setDesiredHeight:(int)inHeight
-{
-    desiredHeight = inHeight;
-}
-
-- (int)desiredHeight
-{
-    return(desiredHeight);
-}
-
-- (void)dealloc
-{
-    [super dealloc];
-}
+- (void)setDesiredHeight:(int)inHeight;
+- (int)desiredHeight;
+- (void)setPanes:(NSArray *)paneArray;
++ (int)heightForTabView:(NSTabView *)tabView;
 
 @end

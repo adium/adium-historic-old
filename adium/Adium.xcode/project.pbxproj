@@ -4676,7 +4676,6 @@
 				4B091035065CE9D600FF0528,
 				4BBF41E30661194A001D31E1,
 				4BBF41E50661194A001D31E1,
-				4BBF41EB06611994001D31E1,
 				4BBF44A00661354F001D31E1,
 				07CE05910661D7FE00C50929,
 				7E64084706629E10006A5552,
@@ -5295,7 +5294,6 @@
 				4B091036065CE9D600FF0528,
 				4BBF41E40661194A001D31E1,
 				4BBF41E60661194A001D31E1,
-				4BBF41EC06611994001D31E1,
 				4BBF44A10661354F001D31E1,
 				07CE05900661D7FE00C50929,
 				7E64084806629E10006A5552,
@@ -5576,6 +5574,7 @@
 				4BAA1B390632ED8B00D8B92C,
 				4BAA1B3B0632ED8B00D8B92C,
 				7E1E8178063A3EEC00EB00F7,
+				4BAD188E066A83550002008E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5701,6 +5700,7 @@
 				4BAA1B3C0632ED8B00D8B92C,
 				7E1E8179063A3EEC00EB00F7,
 				4BBF41F506611A23001D31E1,
+				4BAD188F066A83550002008E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8896,7 +8896,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				52C6214706697AA90006C387,
+				4BAD1634066A7F870002008E,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -13382,6 +13382,51 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BAD1634066A7F870002008E = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4BAD1888066A7FA60002008E;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BAD1888066A7FA60002008E = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		4BAD188C066A83550002008E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIModularPaneCategoryView.h;
+			path = "Frameworks/Adium Framework/AIModularPaneCategoryView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAD188D066A83550002008E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIModularPaneCategoryView.m;
+			path = "Frameworks/Adium Framework/AIModularPaneCategoryView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAD188E066A83550002008E = {
+			fileRef = 4BAD188C066A83550002008E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAD188F066A83550002008E = {
+			fileRef = 4BAD188D066A83550002008E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BB17E6F03E4633D00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -13645,36 +13690,6 @@
 		};
 		4BBF41E80661194A001D31E1 = {
 			fileRef = 4BBF41E20661194A001D31E1;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BBF41E906611994001D31E1 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIPreferenceCategoryView.h;
-			path = Source/AIPreferenceCategoryView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBF41EA06611994001D31E1 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIPreferenceCategoryView.m;
-			path = Source/AIPreferenceCategoryView.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBF41EB06611994001D31E1 = {
-			fileRef = 4BBF41E906611994001D31E1;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BBF41EC06611994001D31E1 = {
-			fileRef = 4BBF41EA06611994001D31E1;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17736,21 +17751,6 @@
 			settings = {
 			};
 		};
-		52C6214706697AA90006C387 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 52C6219906697AAE0006C387;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		52C6219906697AAE0006C387 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		52C623D506697AC00006C387 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -17801,7 +17801,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Plists/Growl-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -23433,6 +23432,8 @@
 				4BAA1B360632ED8B00D8B92C,
 				F5793923033E74C301A8010A,
 				F5793913033E748F01A8010A,
+				4BAD188C066A83550002008E,
+				4BAD188D066A83550002008E,
 			);
 			isa = PBXGroup;
 			name = Panes;
@@ -23578,8 +23579,6 @@
 			children = (
 				F57938F0033E745F01A8010A,
 				F57938BB033E739101A8010A,
-				4BBF41E906611994001D31E1,
-				4BBF41EA06611994001D31E1,
 				F57938BC033E739101A8010A,
 				F5A137FC03421FEB01A8010A,
 				34B9BCD4064061F10097AF93,

@@ -12,8 +12,8 @@
 @implementation AIContactProfilePane
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
-    return(AIPref_Accounts);
+- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+    return(AIInfo_Profile);
 }
 - (NSString *)label{
     return(@"Profile");

@@ -13,12 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIContactHandle;
+@class AIModularPaneCategoryView;
 
-#define KEY_CONTACT_INSPECTOR_WINDOW_FRAME  @"Contact Inspector Window Frame"
+@interface AIContactInfoWindowController : AIWindowController {	
+	IBOutlet		NSTabView						*tabView_category;
+	
+	IBOutlet		AIModularPaneCategoryView		*view_Profile;
+	IBOutlet		AIModularPaneCategoryView		*view_Accounts;
+	IBOutlet		AIModularPaneCategoryView		*view_Alerts;
+	IBOutlet		AIModularPaneCategoryView		*view_Settings;
 
-@interface AIContactInfoWindowController : AIWindowController {
-	AIListObject			*displayedObject;
+	AIListObject	*displayedObject;
+	NSMutableArray	*loadedPanes;
 }
 
 + (void)showInfoWindowForListObject:(AIListObject *)listObject;

@@ -8,6 +8,7 @@
 - [MSN] Crash moving contacts between groups
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
 - Mockie message style rendering incorrectly in very wide windows
+- HTML <BR/> tags appearing in certain received messages
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
@@ -20,7 +21,7 @@
 	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
 	and shown when Adium is unhid.
 
-- Contact list view goes behind toolbar (Did we fix this?, can't reproduce)
+- Contact list view goes behind toolbar
 	It's possible for the contact list view to become stuck under the toolbar,
 	covering the first few contacts on the list.  Toggling the toolbar will sometimes
 	correct the view.
@@ -123,4 +124,16 @@
 - Out of curiosity - is there a reason we use .adiumEmoticonset instead of
 	.adiumEmoticonSet (call me a capitalization nut :)?
 	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
+	[Adam] Need to be careful.. some users are running on case-sensitive file systems
 - Crash reporter doesn't appear for some users (snu on IRC in particular)
+- Message view time stamps not 100% localized? "den 29 May 2004" - [swedish] [29] [english] [2004]
+ 
+
+
+
+
+
+
+
+
+

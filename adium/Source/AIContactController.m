@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.136 2004/05/24 06:04:02 evands Exp $
+// $Id: AIContactController.m,v 1.137 2004/05/30 21:17:55 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -556,6 +556,12 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     return(YES);
+}
+
+//
+- (NSArray *)contactInfoPanes
+{
+	return(contactInfoPanes);
 }
 
 
