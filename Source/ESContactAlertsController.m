@@ -68,10 +68,10 @@ DeclareString(KeyOneTimeAlert);
 	}
 }
 
-//Return all events for groups/contacts
-- (NSDictionary *)eventHandlers
+//Return all event IDs for groups/contacts
+- (NSDictionary *)allEventIDs
 {
-	return(eventHandlers);
+	return([[eventHandlers allKeys] arrayByAddingObjectsFromArray:[globalOnlyEventHandlers allKeys]]);
 }
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject

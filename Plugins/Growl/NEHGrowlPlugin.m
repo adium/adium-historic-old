@@ -61,8 +61,8 @@
 - (NSDictionary *)growlRegistrationDict
 {
 	//Register us with Growl
-	NSArray *allNotes = [[[adium contactAlertsController] eventHandlers] allKeys];
-			
+	NSArray *allNotes = [[adium contactAlertsController] allEventIDs];
+
 	NSDictionary * growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"Adium", GROWL_APP_NAME,
 		allNotes, GROWL_NOTIFICATIONS_ALL,
@@ -113,7 +113,11 @@
 	NSDictionary	*growlEvent;
 	
 	if(listObject){
-		title = [listObject longDisplayName];
+		if([listObject isKindOfClass:AIListContact]){
+			title = [listObject longDisplayName];
+		}else{
+			title = [listObject formattedUID];
+		}
 		
 		iconData = [listObject userIconData];
 		
