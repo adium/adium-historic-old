@@ -55,12 +55,12 @@
 //Init
 - (id)initWithInterface:(id <AIContainerInterface>)inInterface
 {
-    [super initWithWindowNibName:(borderless ? CONTACT_LIST_WINDOW_TRANSPARENT_NIB : CONTACT_LIST_WINDOW_NIB)];
-	
     interface = [inInterface retain];
 	toolbarItems = nil;
     borderless = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_SCL_BORDERLESS
 																					group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+
+    [super initWithWindowNibName:(borderless ? CONTACT_LIST_WINDOW_TRANSPARENT_NIB : CONTACT_LIST_WINDOW_NIB)];
 	
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
