@@ -1,10 +1,17 @@
 {
     IBClasses = (
         {
+            ACTIONS = {deleteAwayMessage = id; newAwayMessage = id; }; 
             CLASS = AIAwayMessagePreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"view_prefView" = NSView; }; 
+            OUTLETS = {"tableView_aways" = AIFlexibleTableView; "view_prefView" = NSView; }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIFlexibleTableView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSControl; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

@@ -23,20 +23,30 @@
 @end
 
 @interface AIFlexibleTableView : NSControl {
-    NSMutableArray		*columnArray;	//Our columns
+    //Display
+    int					oldWidth;		//Used to avoid unnecessary cell resizes calculations
+    float				contentsHeight;		//Total height of our content
+    NSMutableArray			*rowHeightArray; 	//Height of every row
 
-    float			contentsHeight;	//Total height of our content
-    NSMutableArray		*rowHeightArray; //Height of every row
+    //Configuration
+    id <AIFlexibleTableViewDelegate>	delegate;		//Our delegate
+    NSMutableArray			*columnArray;		//Our columns
+    BOOL				contentBottomAligned;	//YES for bottom-aligned content
+    BOOL				scrollsOnNewContent;	//YES to enable autoscroll
+    int					selectedRow;		//The currently selected row
     
-    id <AIFlexibleTableViewDelegate>	delegate;
+    //Editing
+    NSTextView		*editor;
+    NSScrollView	*editorScroll;
 
-    int				oldWidth;
 }
 
 - (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate;
 - (void)addColumn:(AIFlexibleTableColumn *)inColumn;
 - (void)loadNewRow;
 - (void)reloadData;
+- (void)setContentBottomAligned:(BOOL)inValue;
+- (void)setScrollsOnNewContent:(BOOL)inValue;
 
 @end
 

@@ -67,6 +67,8 @@
     
     cellSize = [inString size];
     string = [inString retain];
+    frame = NSMakeRect(0,0,0,0);
+    selected = NO;
 
     return(self);
 }
@@ -128,6 +130,20 @@
     bottomPadding = inBottom;
 }
 
+- (void)setSelected:(BOOL)inSelected
+{
+    selected = inSelected;
+}
+
+
+// Access ------------------------------------------------------------------------------
+- (NSSize)paddingInset{
+    return(NSMakeSize(leftPadding, topPadding));
+}
+
+- (NSAttributedString *)string{
+    return(string);
+}
 
 // Sizing ------------------------------------------------------------------------------
 //Returns the size required to display this cell without wrapping
@@ -164,14 +180,21 @@
 //Draws this cell in the requested view and rect
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+    frame = cellFrame;
+    
     //Draw the background
-    if(!gradientColor){ //Plain background
-        [backgroundColor set];
+    if(!selected){
+        if(!gradientColor){ //Plain background
+            [backgroundColor set];
+            [NSBezierPath fillRect:cellFrame];
+
+        }else{ //Gradient background
+            [AIGradient drawGradientInRect:cellFrame from:backgroundColor to:gradientColor];
+
+        }
+    }else{
+        [[NSColor alternateSelectedControlColor] set];
         [NSBezierPath fillRect:cellFrame];
-
-    }else{ //Gradient background
-        [AIGradient drawGradientInRect:cellFrame from:backgroundColor to:gradientColor];
-
     }
 
     //Draw our divider line (offset 0.5 for an aliased line)
@@ -189,12 +212,46 @@
         cellFrame.origin.y += topPadding;
         cellFrame.size.height -= topPadding + bottomPadding;
 
-        if(layoutManager){ //Draw our string with wrapping (slower)
-            [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+        if(!selected){
+            if(layoutManager){ //Draw our string with wrapping (slower)
+                [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+            }else{
+                [string drawInRect:cellFrame]; //Draw our string without wrapping (faster)
+            }
         }else{
-            [string drawInRect:cellFrame]; //Draw our string without wrapping (faster)
+            NSMutableAttributedString *mutableString = [string mutableCopy];
+
+            [mutableString addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:NSMakeRange(0,[mutableString length])];
+
+            if(layoutManager){ //Draw our string with wrapping (slower)
+                NSTextStorage	*whiteTextStorage = [[NSTextStorage alloc] initWithAttributedString:mutableString];
+                NSTextContainer	*whiteTextContainer = [[NSTextContainer alloc] initWithContainerSize:cellFrame.size];
+                NSLayoutManager	*whiteLayoutManager = [[NSLayoutManager alloc] init];
+
+                [whiteTextContainer setLineFragmentPadding:0.0];
+                [whiteLayoutManager addTextContainer:whiteTextContainer];
+                [whiteTextStorage addLayoutManager:whiteLayoutManager];
+
+                [layoutManager drawGlyphsForGlyphRange:[whiteLayoutManager glyphRangeForTextContainer:whiteTextContainer]
+                                               atPoint:cellFrame.origin];
+
+                [whiteTextStorage release];
+                [whiteTextContainer release];
+                [whiteLayoutManager release];
+                
+            }else{
+                [mutableString drawInRect:cellFrame]; //Draw our string in white
+                
+            }
+            [mutableString release];
         }
     }
+}
+
+//Returns the last frame where this cell was drawn
+- (NSRect)frame
+{
+    return(frame);
 }
 
 

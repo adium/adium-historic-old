@@ -24,8 +24,10 @@
     //Size / Drawing
     BOOL		drawContents;
     NSSize		cellSize;
+    NSRect		frame;
     NSColor		*dividerColor;
     NSAttributedString	*string;
+    BOOL		selected;
 
     //Text rendering cache
     NSTextStorage 	*textStorage;
@@ -43,6 +45,11 @@
 - (void)setDrawContents:(BOOL)inValue;
 - (void)setPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom;
 - (void)setDividerColor:(NSColor *)inColor;
+- (void)setSelected:(BOOL)inSelected;
+
+//Access
+- (NSAttributedString *)string;
+- (NSSize)paddingInset;
 
 //Sizing
 - (NSSize)cellSize;
@@ -50,5 +57,6 @@
 
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+- (NSRect)frame;
 
 @end

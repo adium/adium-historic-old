@@ -29,24 +29,51 @@
 - (BOOL)addCellsForRow:(int)inRow;
 - (void)resizeCells;
 - (void)resizeToFillContainerView;
+- (void)_init;
+- (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
+- (void)endEditing;
+- (void)selectRow:(int)inRow;
+- (void)setSelected:(BOOL)selected row:(int)inRow;
 @end
 
 @implementation AIFlexibleTableView
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    [super initWithCoder:aDecoder];
+    [self _init];
+    return(self);
+}
+
+- (id)initWithFrame:(NSRect)frameRect
+{
+    [super initWithFrame:frameRect];
+    [self _init];
+    return(self);
+}
+
 - (id)init
 {
-    //init
     [super init];
+    [self _init];
+    return(self);
+}
+
+- (void)_init
+{
     columnArray = [[NSMutableArray alloc] init];
     delegate = nil;
     contentsHeight = 0;
     oldWidth = 0;
+    editor = nil;
+    editorScroll = nil;
+
+    contentBottomAligned = YES;
+    scrollsOnNewContent = YES;
 
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:self];
-
-    return(self);
 }
 
 - (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate
@@ -72,7 +99,7 @@
 
     //If there isn't enough content to fill our entire view, we move down so the content is bottom-aligned
     documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    if(contentsHeight < documentVisibleRect.size.height){
+    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
         startOriginY = (documentVisibleRect.size.height - contentsHeight);
     }
 
@@ -106,6 +133,170 @@
         cellFrame.origin.x += cellFrame.size.width;
     }
 }
+
+
+//Clicking --------------------------------------------------------------------------------
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    NSRect			documentVisibleRect;
+    NSPoint			clickLocation;
+
+    NSEnumerator		*enumerator;
+
+    AIFlexibleTableColumn	*column;
+    int				width = 0;
+
+    NSNumber			*rowHeight;
+    int				height = 0;
+    int				targetedRow = 0;
+        
+    //The cell check is broken by the bottom aligning offset, so we need to adjust our calculations
+    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
+        height = (documentVisibleRect.size.height - contentsHeight);
+    }
+
+    //Get the click location relative to our view
+    clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    //Determine the row that was clicked
+    enumerator = [rowHeightArray objectEnumerator];
+    while((rowHeight = [enumerator nextObject])){
+        height += [rowHeight intValue];
+        if(height > clickLocation.y) break;
+        targetedRow++;
+    }
+
+    //Determine the column that was clicked
+    enumerator = [columnArray objectEnumerator];
+    while((column = [enumerator nextObject])){
+        width += [column width];
+        if(width > clickLocation.x) break;
+    }
+
+    //Select the row
+    [self selectRow:targetedRow];
+
+    //Open the selected cell for editing
+    if([theEvent clickCount] >= 2){
+        [self editRow:targetedRow column:column];
+        
+    }
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+//    NSLog(@"mouse Up (%i) (%i,%i)", (int)[theEvent clickCount], (int)[theEvent locationInWindow].x, (int)[theEvent locationInWindow].y, (int)[theEvent eventNumber]);
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+//    if(rearrangeSupported){
+//    }else{
+    [self mouseDown:theEvent]; //Handle this as a mouse down
+//    }
+}
+
+
+//Open a specified row/column for editing
+- (void)selectRow:(int)inRow
+{
+    //Close any existing editor
+    [self endEditing];
+
+    //Deselect the existing selection
+    if(selectedRow != -1){
+        [self setSelected:NO row:selectedRow];
+    }
+
+    //Select the new row
+    [self setSelected:YES row:inRow];
+    selectedRow = inRow;
+}
+
+//Toggle the selection of a row
+- (void)setSelected:(BOOL)selected row:(int)inRow
+{
+    NSEnumerator		*enumerator;
+    AIFlexibleTableColumn	*column;
+
+    enumerator = [columnArray objectEnumerator];
+    while((column = [enumerator nextObject])){
+        AIFlexibleTableCell	*cell = [[column cellArray] objectAtIndex:inRow];
+
+        [cell setSelected:selected];
+        [self setNeedsDisplayInRect:[cell frame]];
+    }
+}
+
+    //Open a specified row/column for editing
+- (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn
+{
+    AIFlexibleTableCell	*cell;
+
+    //Get the cell targeted for editing
+    cell = [[inColumn cellArray] objectAtIndex:inRow];
+
+    //Close any existing editor
+    [self endEditing];
+
+    //Create the editor
+    editor = [[NSTextView alloc] init];
+    [editor setDelegate:self];
+    [editor setEditable:YES];
+    [editor setSelectable:YES];
+    [editor setTextContainerInset:[cell paddingInset]];
+//    [editor setBackgroundColor:[NSColor orangeColor]];
+    [editor setFrame:NSMakeRect(0, 0, [cell frame].size.width, [cell frame].size.height)];
+    [[editor textStorage] setAttributedString:[cell string]];
+    [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
+
+    
+    editorScroll = [[NSScrollView alloc] init];
+    [editorScroll setDocumentView:editor];
+    [editorScroll setBorderType:NSBezelBorder];
+    [editorScroll setBackgroundColor:[NSColor orangeColor]];
+    [editorScroll setDrawsBackground:YES];
+    [editorScroll setHasVerticalScroller:NO];
+    [editorScroll setHasHorizontalScroller:NO];
+    [editorScroll setFrame:[cell frame]];
+
+    //Make it visible and key
+    [self addSubview:editorScroll];
+    [[self window] makeFirstResponder:editor];
+}
+
+//Cancel any existing editing
+- (void)endEditing
+{
+    if(editor){
+        //Save
+
+        //Close
+        [editorScroll removeFromSuperview];
+        [editorScroll release]; editorScroll = nil;
+        [editor release]; editor = nil;
+    }
+}
+
+- (BOOL)resignFirstResponder
+{
+    [self endEditing];
+    
+    return(YES);
+}
+
+
+//Config --------------------------------------------------------------------------------
+- (void)setContentBottomAligned:(BOOL)inValue{
+    contentBottomAligned = inValue;
+}
+
+- (void)setScrollsOnNewContent:(BOOL)inValue{
+    scrollsOnNewContent = inValue;
+}
+
+
 
 //Reloading --------------------------------------------------------------------------------
 //Call after adding a new row
@@ -271,13 +462,15 @@
 {
     NSScrollView		*enclosingScrollView;
     NSRect			documentVisibleRect;
-    BOOL			autoScroll;
+    BOOL			autoScroll = NO;
     NSSize			size;
 
     //Before resizing the view, we decide if the user is close to the bottom of our view.  If they are, we want to keep them at the bottom no matter what happens during the resize.
-    enclosingScrollView = [self enclosingScrollView];
-    documentVisibleRect = [enclosingScrollView documentVisibleRect];
-    autoScroll = ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > ([self frame].size.height - AUTOSCROLL_CATCH_SIZE));
+    if(scrollsOnNewContent){
+        enclosingScrollView = [self enclosingScrollView];
+        documentVisibleRect = [enclosingScrollView documentVisibleRect];
+        autoScroll = ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > ([self frame].size.height - AUTOSCROLL_CATCH_SIZE));        
+    }
 
     //Resize our view
     size.width = documentVisibleRect.size.width;
