@@ -50,6 +50,7 @@
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem;
 - (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject;
+- (AICustomTabsView *)customTabsView;
 - (BOOL)selectNextTabViewItemContainer;
 - (BOOL)selectPreviousTabViewItemContainer;
 - (void)selectFirstTabViewItemContainer;

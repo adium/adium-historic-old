@@ -197,12 +197,25 @@
 		useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
 		
 		//Cache the tab sorting prefs
-		keepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
+		BOOL newKeepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
 		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
 
-		if( keepTabsArranged )
-			[self arrangeTabs:menuItem_arrangeTabs_alternate];
-		
+		//If anything changed, check if we should autoarrange tabs
+		if( newKeepTabsArranged != keepTabsArranged ) {
+			
+			keepTabsArranged = newKeepTabsArranged;
+			
+			AIMessageWindowController   *controller;
+			NSEnumerator				*enumerator = [messageWindowControllerArray objectEnumerator];
+			while( controller = [enumerator nextObject] ) {
+				[[controller customTabsView] setAllowsTabRearranging:(!keepTabsArranged)];
+			}
+			
+			//Force the arrangement if we should
+			if( keepTabsArranged )
+				[self arrangeTabs:menuItem_arrangeTabs_alternate];
+		}
+				
     } else if( contactListWindowController &&
 			   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) ){
 		
@@ -668,11 +681,11 @@
 											   keyEquivalent:@"O"];
     [[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
     
-	//menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
-	//												   target:self
-	//												   action:@selector(splitAllChatsByGroup:)
-	//											keyEquivalent:@""];
-	//[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
+	menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
+													   target:self
+													   action:@selector(splitAllChatsByGroup:)
+												keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
 		
     menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:TOGGLE_TAB_BAR
 													   target:nil 
@@ -878,12 +891,12 @@
     }else if (menuItem == menuItem_consolidate){
 		if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
 		
+	}else if (menuItem == menuItem_splitByGroup){
+		NSLog(@"#### Split by Group menu item validation: message window count: %d",![messageWindowControllerArray count]);
+        if(![messageWindowControllerArray count]) enabled = NO;
+		
     }else if (menuItem == menuItem_arrangeTabs || menuItem == menuItem_arrangeTabs_alternate){
         if(![messageWindowControllerArray count] || keepTabsArranged) enabled = NO;
-
-	}else if (menuItem == menuItem_splitByGroup){
-        //if(![messageWindowControllerArray count]) enabled = NO;
-		enabled = NO;
 	}
 	
     return(enabled);
@@ -1010,7 +1023,25 @@
 
 - (IBAction)splitTabsByGroup:(id)sender
 {
-	// this is gonna be a pain
+	
+	AIMessageWindowController   *controller;
+	NSEnumerator				*controllerEnumerator = [messageWindowControllerArray objectEnumerator];
+	NSEnumerator				*tabCellEnumerator;
+	AICustomTabCell				*tabCell;
+	AIListObject				*listObject;
+	AIListGroup					*listGroup;
+	
+	// Run through all message windows
+	while( controller = [controllerEnumerator nextObject] ) {
+		
+		// Run through each tab cell and get its listObject
+		tabCellEnumerator = [[[controller customTabsView] tabCells] objectEnumerator];
+		while( tabCell = [tabCellEnumerator nextObject] ) {
+			listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
+			listGroup = [listObject containingGroup];
+			NSLog(@"%@ is in group %@",[listObject uniqueObjectID],[listGroup uniqueObjectID]);
+		}
+	}
 
 }
 
