@@ -148,19 +148,19 @@
     //Empty the menu
     [popUp_prefixFormat removeAllItems];
     
-    [self _buildPrefixFormatMenu_AddFormat:@"%a %r" withTitle:@"Alias"];
-    [self _buildPrefixFormatMenu_AddFormat:@"?a%a (?a%n?a)?a %r" withTitle:@"Alias (User Name)"];
-    [self _buildPrefixFormatMenu_AddFormat:@"%n %r" withTitle:@"User Name"];
-    [self _buildPrefixFormatMenu_AddFormat:@"%n?a (%a)?a %r" withTitle:@"User Name (Alias)"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%a%r" withTitle:@"Alias"];
+    [self _buildPrefixFormatMenu_AddFormat:@"?a%a (?a%n?a)?a%r" withTitle:@"Alias (User Name)"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n%r" withTitle:@"User Name"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n?a (%a)?a%r" withTitle:@"User Name (Alias)"];
     
     [[popUp_prefixFormat menu] addItem:[NSMenuItem separatorItem]];
     
-    [self _buildPrefixFormatMenu_AddFormat:@"%a %r: %m" withTitle:@"Alias: Message"];
-    [self _buildPrefixFormatMenu_AddFormat:@"%n %r: %m" withTitle:@"User Name: Message"];
-    [self _buildPrefixFormatMenu_AddFormat:@"(%t) %a %r: %m" withTitle:@"(Time) Alias: Message"];
-    [self _buildPrefixFormatMenu_AddFormat:@"(%t) %n %r: %m" withTitle:@"(Time) User Name: Message"];
-    [self _buildPrefixFormatMenu_AddFormat:@"%a (%t) %r: %m" withTitle:@"Alias (Time): Message"];
-    [self _buildPrefixFormatMenu_AddFormat:@"%n (%t) %r: %m" withTitle:@"User Name (Time): Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%a%r: %m" withTitle:@"Alias: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n%r: %m" withTitle:@"User Name: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"(%t) %a%r: %m" withTitle:@"(Time) Alias: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"(%t) %n%r: %m" withTitle:@"(Time) User Name: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%a (%t)%r: %m" withTitle:@"Alias (Time): Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n (%t)%r: %m" withTitle:@"User Name (Time): Message"];
 }
 
 //Add a prefix format to the menu
