@@ -258,14 +258,28 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     //Append the new content (We use fopen/fputs/fclose for max speed)
     logFullPath = [logPath stringByAppendingPathComponent:[logFileName safeFilenameString]];
     file = fopen([logFullPath fileSystemRepresentation], "a");
-    if (ftell(file) == 0) {
-        const unichar bom = 0xFEFF;
-        NSString *bomString = [[NSString alloc] initWithCharacters:&bom length:1];
-        fputs([bomString UTF8String], file);
-        [bomString release];
-    }
-    fputs([message UTF8String], file);
-    fclose(file);
+	if(!file)
+	{
+		NSLog(@"Unable to write %@: %d",logFullPath,errno);
+		NSRunAlertPanel(@"Unable to write log",
+						[NSString stringWithFormat:@"Adium was unable to write the log file for this conversation. Please check your log directory (%@) and then reenable logging in the Message preferences.",logBasePath],
+						@"OK",nil,nil);
+		//Disable logging
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
+                                             forKey:KEY_LOGGER_ENABLE
+                                              group:PREF_GROUP_LOGGING];
+	}
+	else
+	{
+		if (ftell(file) == 0) {
+			const unichar bom = 0xFEFF;
+			NSString *bomString = [[NSString alloc] initWithCharacters:&bom length:1];
+			fputs([bomString UTF8String], file);
+			[bomString release];
+		}
+		fputs([message UTF8String], file);
+		fclose(file);
+	}
  
     return(logFullPath);
 }
