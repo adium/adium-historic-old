@@ -711,8 +711,12 @@
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
-    if([content isOutgoing]) {
+	//Strip all coloring and formatting of received messages if desired
+    if([content isOutgoing] || !ignoreTextStyles) {
         return([content message]);
+    }else{
+        return([self _stringByRemovingAllColors:[content message]]);
+    }    
         
     //} else if (!ignoreTextColor && !ignoreBackgroundColor){ //just fix the colors
     //    return([self _stringByFixingTextColor:[content message] forColor:nil]);
@@ -725,11 +729,6 @@
     //    NSAttributedString *messageString = [self _stringByRemovingTextColor:[content message]];
     //    return([self _stringByFixingTextColor:messageString forColor:nil]);
 	//
-	} else if( ignoreTextStyles ) {
-		return([self _stringByRemovingAllStyles:[content message]]);
-    } else { //strip it of all coloration
-        return([self _stringByRemovingAllColors:[content message]]);
-    }    
 }
 
 //Build and return an attributed string for the content using the current prefix preference
