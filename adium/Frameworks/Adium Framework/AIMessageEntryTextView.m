@@ -72,7 +72,6 @@ static NSImage *pushIndicatorImage = nil;
     [returnArray release]; returnArray = nil;
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
-    //[[self menu] removeAllItems];
     [super dealloc];
 }
 
@@ -415,6 +414,8 @@ static NSImage *pushIndicatorImage = nil;
 	
 	//clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
 	[[self undoManager] removeAllActions];
+        
+        [self setTypingAttributes:defaultTypingAttributes];
 }
 
 
@@ -439,9 +440,9 @@ static NSImage *pushIndicatorImage = nil;
 //Pop into the message entry field
 - (void)popContent
 {
-	if([pushArray count] && pushPopEnabled){
+    if([pushArray count] && pushPopEnabled){
         [self setAttributedString:[pushArray lastObject]];
-		[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+        [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
         [pushArray removeLastObject];
         if([pushArray count] == 0){
             [self _setPushIndicatorVisible:NO];
