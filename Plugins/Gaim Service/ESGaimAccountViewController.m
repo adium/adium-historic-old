@@ -75,8 +75,11 @@
         // icon junk
         [imageView_userIcon setImageFrameStyle:NSImageFramePhoto];
         if(data = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-            NSImage *image = [[[NSImage alloc] initWithData:data] autorelease];
+            NSImage *image;
+			
+			image = [[NSImage alloc] initWithData:data];
             [imageView_userIcon setImage:image];
+			[image release];
         } 
         else{
             // image = {default image thing};

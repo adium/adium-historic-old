@@ -69,6 +69,8 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 void gaim_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
 int gaim_xfer_choose_file(GaimXfer *xfer);
 
+static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount);
+
 @implementation SLGaimCocoaAdapter
 
 #pragma mark Init
@@ -93,8 +95,20 @@ int gaim_xfer_choose_file(GaimXfer *xfer);
 
 - (void)addAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
 {
-	GaimAccount *account = [adiumAccount gaimAccount];
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	account->ui_data = adiumAccount;
+	
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadAddAdiumAccount:)
+				  withObject:adiumAccount];
+}
+
+//Register the account gaimside in the gaim thread to avoid a conflict on the g_hash_table containing accounts
+- (void)gaimThreadAddAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+
+    gaim_accounts_add(account);	
 }
 
 #pragma mark Init
@@ -1118,8 +1132,8 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const 
 		GaimAccount		*account = gc->account;
 		GaimBuddy		*buddy = gaim_find_buddy(account,who);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
-		
-		
+
+
 		[accountLookup(account) mainPerformSelector:@selector(updateUserInfo:withData:)
 										 withObject:theContact
 										 withObject:textString];
