@@ -184,6 +184,7 @@
 {
     if(autoResizeVertically || autoResizeHorizontally){
         NSRect	desiredFrame = [self _desiredWindowFrame];
+        if ((desiredFrame.size.width != 0) && (desiredFrame.size.height != 0)) {
         NSRect  newFrame = desiredFrame;
         NSRect  oldFrame = [[self window] frame];
 
@@ -235,6 +236,7 @@
             [[self window] setMinSize:targetMin];
             [[self window] setMaxSize:targetMax];
         }
+    }
     }
 }
 
