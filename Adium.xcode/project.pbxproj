@@ -2972,30 +2972,12 @@
 		};
 		344EE9210574504B000F342B = {
 			children = (
-				344EE92D0574510C000F342B,
-				344EE92E0574510C000F342B,
+				34E2A1CB07AF635A006735BC,
+				34E2A1CC07AF635A006735BC,
 			);
 			isa = PBXGroup;
 			name = "Fast User Switching Support";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344EE92D0574510C000F342B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESFastUserSwitchingSupportPlugin.h;
-			path = "Plugins/Fast User Switching Support/ESFastUserSwitchingSupportPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344EE92E0574510C000F342B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESFastUserSwitchingSupportPlugin.m;
-			path = "Plugins/Fast User Switching Support/ESFastUserSwitchingSupportPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -6298,9 +6280,7 @@
 				6CF42679057763E200F27FAA,
 				4BD6737306001BF00049CAF7,
 				4BD6737506001BF00049CAF7,
-				4BD6737B06001BF40049CAF7,
 				4BD6737E06001BF60049CAF7,
-				4BD6738406001BF90049CAF7,
 				4BD6738606001C2B0049CAF7,
 				4BD6738806001C2C0049CAF7,
 				4BD6738C06001C2D0049CAF7,
@@ -6474,6 +6454,8 @@
 				342910CC07AE228600C815F6,
 				34E2A0BB07AF5924006735BC,
 				34E2A0C407AF593B006735BC,
+				34E2A1CE07AF635A006735BC,
+				34E2A1DC07AF6504006735BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6880,9 +6862,7 @@
 				6CF4267A057763E200F27FAA,
 				4BD6737406001BF00049CAF7,
 				4BD6737606001BF10049CAF7,
-				4BD6737C06001BF40049CAF7,
 				4BD6737D06001BF50049CAF7,
-				4BD6738506001BF90049CAF7,
 				4BD6738706001C2B0049CAF7,
 				4BD6738906001C2C0049CAF7,
 				4BD6738D06001C2E0049CAF7,
@@ -7056,6 +7036,8 @@
 				342910CD07AE228600C815F6,
 				34E2A0BC07AF5924006735BC,
 				34E2A0C307AF593B006735BC,
+				34E2A1CD07AF635A006735BC,
+				34E2A1DB07AF6504006735BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9286,6 +9268,8 @@
 				F5B53FBF0333ABA701A8010A,
 				F510B76D03339ED501A8010A,
 				34C188A006CAB36400FF5FF9,
+				4B1332140459B9A000A8010A,
+				344EE9210574504B000F342B,
 			);
 			isa = PBXGroup;
 			name = Accounts;
@@ -9348,6 +9332,66 @@
 		};
 		34E2A0C407AF593B006735BC = {
 			fileRef = 34E2A0C207AF593B006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A1CB07AF635A006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFastUserSwitchingSupportPlugin.m;
+			path = Source/ESFastUserSwitchingSupportPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A1CC07AF635A006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFastUserSwitchingSupportPlugin.h;
+			path = Source/ESFastUserSwitchingSupportPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A1CD07AF635A006735BC = {
+			fileRef = 34E2A1CB07AF635A006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A1CE07AF635A006735BC = {
+			fileRef = 34E2A1CC07AF635A006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A1D907AF6503006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIDockAccountStatusPlugin.m;
+			path = Source/AIDockAccountStatusPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A1DA07AF6504006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIDockAccountStatusPlugin.h;
+			path = Source/AIDockAccountStatusPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A1DB07AF6504006735BC = {
+			fileRef = 34E2A1D907AF6503006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A1DC07AF6504006735BC = {
+			fileRef = 34E2A1DA07AF6504006735BC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -11887,8 +11931,8 @@
 		};
 		4B1332140459B9A000A8010A = {
 			children = (
-				4B13322F0459BAD200A8010A,
-				4B1332300459BAD200A8010A,
+				34E2A1D907AF6503006735BC,
+				34E2A1DA07AF6504006735BC,
 			);
 			isa = PBXGroup;
 			name = "Dock Account Status";
@@ -11914,31 +11958,11 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B13322F0459BAD200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIDockAccountStatusPlugin.h;
-			path = "Plugins/Dock Account Status/AIDockAccountStatusPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1332300459BAD200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIDockAccountStatusPlugin.m;
-			path = "Plugins/Dock Account Status/AIDockAccountStatusPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B1332390459BCFA00A8010A = {
 			children = (
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
 				BF7BF5E7052BA0EF00000202,
-				4B1332140459B9A000A8010A,
-				344EE9210574504B000F342B,
 				6E97F12F04A94C0100472FFF,
 				F50F253F03B042BC01A80202,
 			);
@@ -16326,18 +16350,6 @@
 			settings = {
 			};
 		};
-		4BD6737B06001BF40049CAF7 = {
-			fileRef = 344EE92D0574510C000F342B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6737C06001BF40049CAF7 = {
-			fileRef = 344EE92E0574510C000F342B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6737D06001BF50049CAF7 = {
 			fileRef = 348E54C10539D04C0021E541;
 			isa = PBXBuildFile;
@@ -16346,18 +16358,6 @@
 		};
 		4BD6737E06001BF60049CAF7 = {
 			fileRef = 348E54C00539D04C0021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738406001BF90049CAF7 = {
-			fileRef = 4B13322F0459BAD200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738506001BF90049CAF7 = {
-			fileRef = 4B1332300459BAD200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
