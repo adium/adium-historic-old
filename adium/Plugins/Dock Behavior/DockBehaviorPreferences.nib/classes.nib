@@ -5,15 +5,9 @@
             CLASS = AIDockBehaviorPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_enableBouncing" = NSButton; 
-                "matrix_bounceCount" = NSMatrix; 
-                "matrix_bounceDelay" = NSMatrix; 
-                "radioButton_bounceConstantly" = NSButtonCell; 
-                "radioButton_bounceEveryNSeconds" = NSButtonCell; 
-                "radioButton_bounceForever" = NSButtonCell; 
-                "radioButton_bounceNTimes" = NSButtonCell; 
-                "textField_thisManySeconds" = NSTextField; 
-                "textField_thisManyTimes" = NSTextField; 
+                bounceField = NSTextField; 
+                delayField = NSTextField; 
+                enabledCheckBox = NSButton; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 

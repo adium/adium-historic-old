@@ -14,16 +14,10 @@
     AIAdium			*owner;
 
     IBOutlet	NSView		*view_prefView;
-    IBOutlet	NSButton	*checkBox_enableBouncing;
-    IBOutlet	NSMatrix	*matrix_bounceCount;
-    IBOutlet	NSButtonCell	*radioButton_bounceForever;
-    IBOutlet	NSButtonCell	*radioButton_bounceNTimes;
-    IBOutlet	NSTextField	*textField_thisManyTimes;
-    IBOutlet	NSMatrix	*matrix_bounceDelay;
-    IBOutlet	NSButtonCell	*radioButton_bounceConstantly;
-    IBOutlet	NSButtonCell	*radioButton_bounceEveryNSeconds;
-    IBOutlet	NSTextField	*textField_thisManySeconds;
-
+    IBOutlet 	NSTextField	*bounceField;
+    IBOutlet	NSTextField	*delayField;
+    IBOutlet	NSButton	*enabledCheckBox;
+    
     NSDictionary		*preferenceDict;
 }
 

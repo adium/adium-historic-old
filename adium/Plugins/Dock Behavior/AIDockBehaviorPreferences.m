@@ -18,13 +18,41 @@
 @interface AIDockBehaviorPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
+- (void)configureDimming;
 @end
 
 @implementation AIDockBehaviorPreferences
 
-+ (id)dockBehaviorPreferencesWithOwner:(id)inOwner {
++ (id)dockBehaviorPreferencesWithOwner:(id)inOwner 
+{
     return [[[self alloc] initWithOwner:inOwner] autorelease];
 }
+- (IBAction)changePreference:(id)sender 
+{
+
+    if(sender == enabledCheckBox)
+    {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                        forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT
+                                        group:PREF_GROUP_DOCK_BEHAVIOR];
+    }
+    else if(sender == bounceField)
+    {	
+        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+                                        forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
+                                        group:PREF_GROUP_DOCK_BEHAVIOR];    
+    }
+    else if(sender == delayField)
+    {    
+        [[owner preferenceController] setPreference:[NSNumber numberWithDouble:[sender doubleValue]]
+                                        forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY
+                                        group:PREF_GROUP_DOCK_BEHAVIOR];    
+    }
+    
+    [self configureDimming];
+} 
+
+//-------Private----------------------------------
 
 - (id)initWithOwner:(id)inOwner
 {
@@ -47,91 +75,23 @@
     return self;
 }
 
-- (void)configureView {
-    BOOL enableOverall = [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT] boolValue];
-    [checkBox_enableBouncing setState:enableOverall];
-
-    [radioButton_bounceForever setEnabled:enableOverall];
-    [radioButton_bounceNTimes setEnabled:enableOverall];
-    [textField_thisManyTimes setEnabled:enableOverall];
-    [radioButton_bounceConstantly setEnabled:enableOverall];
-    [radioButton_bounceEveryNSeconds setEnabled:enableOverall];
-    [textField_thisManySeconds setEnabled:enableOverall];
+//configure our view
+- (void)configureView 
+{
+    [enabledCheckBox setState:
+        [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT] boolValue]];
+    [bounceField setIntValue: 
+        [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] intValue]];
+    [delayField setDoubleValue:
+        [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY] doubleValue]];
     
-    if ([[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] intValue] == 0) {
-        [matrix_bounceCount selectCellWithTag:0];
-        [textField_thisManyTimes setEnabled:NO];
-    } else {
-        [matrix_bounceCount selectCellWithTag:1];
-        [textField_thisManyTimes setEnabled:YES];
-    }
-    
-    [textField_thisManyTimes setStringValue:[[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] stringValue]];
-
-    if ([[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY] intValue] == 0) {
-        [matrix_bounceDelay selectCellWithTag:0];
-        [textField_thisManySeconds setEnabled:NO];
-    } else {
-        [matrix_bounceDelay selectCellWithTag:1];
-        [textField_thisManySeconds setEnabled:YES];
-    }
-    
-    [textField_thisManySeconds setStringValue:[[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY] stringValue]];
+    [self configureDimming];
 }
 
-- (IBAction)changePreference:(id)sender {
-    if (sender == checkBox_enableBouncing) {
-        if ([sender state] == NSOnState) {
-            [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
-                                                 forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT
-                                                  group:PREF_GROUP_DOCK_BEHAVIOR];
-            [radioButton_bounceForever setEnabled:YES];
-            [radioButton_bounceNTimes setEnabled:YES];
-            [textField_thisManyTimes setEnabled:YES];
-            [radioButton_bounceConstantly setEnabled:YES];
-            [radioButton_bounceEveryNSeconds setEnabled:YES];
-            [textField_thisManySeconds setEnabled:YES];
-        } else {
-            [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
-                                                 forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT
-                                                  group:PREF_GROUP_DOCK_BEHAVIOR];
-            [radioButton_bounceForever setEnabled:NO];
-            [radioButton_bounceNTimes setEnabled:NO];
-            [textField_thisManyTimes setEnabled:NO];
-            [radioButton_bounceConstantly setEnabled:NO];
-            [radioButton_bounceEveryNSeconds setEnabled:NO];
-            [textField_thisManySeconds setEnabled:NO];
-        }
-    } else if (sender == matrix_bounceCount && [[matrix_bounceCount selectedCells] objectAtIndex:0] == radioButton_bounceForever) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:0]
-                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
-                                              group:PREF_GROUP_DOCK_BEHAVIOR];
-        [textField_thisManyTimes setEnabled:NO];
-    } else if (sender == matrix_bounceCount && [[matrix_bounceCount selectedCells] objectAtIndex:0] == radioButton_bounceNTimes) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[textField_thisManyTimes intValue]]
-                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
-                                              group:PREF_GROUP_DOCK_BEHAVIOR];
-        [textField_thisManyTimes setEnabled:YES];
-    } else if (sender == textField_thisManyTimes) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[textField_thisManyTimes intValue]]
-                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
-                                              group:PREF_GROUP_DOCK_BEHAVIOR];
-
-    } else if (sender == matrix_bounceDelay && [[matrix_bounceDelay selectedCells] objectAtIndex:0] == radioButton_bounceConstantly) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:0]
-                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY
-                                              group:PREF_GROUP_DOCK_BEHAVIOR];
-        [textField_thisManySeconds setEnabled:NO];
-    } else if (sender == matrix_bounceDelay && [[matrix_bounceDelay selectedCells] objectAtIndex:0] ==  radioButton_bounceEveryNSeconds) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[textField_thisManySeconds intValue]]
-                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY
-                                              group:PREF_GROUP_DOCK_BEHAVIOR];
-        [textField_thisManySeconds setEnabled:YES];
-    } else if (sender == textField_thisManySeconds) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[textField_thisManySeconds intValue]]
-                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY
-                                              group:PREF_GROUP_DOCK_BEHAVIOR];
-    }
-}
-
+//enable and disable the boxes
+- (void)configureDimming
+{	
+    [bounceField setEnabled:[enabledCheckBox state]];
+    [delayField setEnabled:[enabledCheckBox state]];
+}   
 @end
