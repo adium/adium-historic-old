@@ -311,71 +311,71 @@
 	[super updateContact:theContact forEvent:event];
 }
 
-- (void)updateStatusMessage:(AIListContact *)theContact
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
-	if (gaim_account_is_connected(account)){
-		const char  *uidUTF8String = [[theContact UID] UTF8String];
-		GaimBuddy   *buddy;
-		JabberBuddy *jb;
+	NSAttributedString  *statusMessage = nil;
+
+	if (gaim_account_is_connected(account)){		
+		char	*normalized = g_strdup(gaim_normalize(b->account, b->name));
+		JabberBuddy	*jb;
 		
-		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
-			(jb = jabber_buddy_find(account->gc->proto_data, uidUTF8String, FALSE))){	
+		if(jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE)){
+			NSString	*statusMessageString;
+			const char	*msg = jabber_buddy_get_status_msg(jb);
 			
-			//Retrieve the current status string
-			NSString		*statusName = nil;
-			NSString		*statusMessage = nil;
-			AIStatusType	statusType = ((buddy->uc & UC_UNAVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);
-			
-			//Get the custom jabber status message if one is set
-			const char		*msg = jabber_buddy_get_status_msg(jb);
 			if(msg){
-				statusMessage = [NSString stringWithUTF8String:msg];
+				//Get the custom jabber status message if one is set
+				statusMessageString = [NSString stringWithUTF8String:msg];
+				
 			}else{
 				//If no custom status message, use the preset possibilities
-				switch(buddy->uc){
+				switch(b->uc){
 					case JABBER_STATE_CHAT:
-						statusName = STATUS_NAME_FREE_FOR_CHAT;
-						statusMessage = STATUS_DESCRIPTION_FREE_FOR_CHAT;
-						break;						
+						statusMessageString = STATUS_DESCRIPTION_FREE_FOR_CHAT;
+						break;
+
 					case JABBER_STATE_XA:
-						statusName = STATUS_NAME_EXTENDED_AWAY;
-						statusMessage = STATUS_DESCRIPTION_EXTENDED_AWAY;
+						statusMessageString = STATUS_DESCRIPTION_EXTENDED_AWAY;
 						break;
 						
 					case JABBER_STATE_DND:
-						statusName = STATUS_NAME_DND;
-						statusMessage = STATUS_DESCRIPTION_DND;
+						statusMessageString = STATUS_DESCRIPTION_DND;
 						break;
 						
 				}
 			}
 			
-			[theContact setStatusWithName:statusName
-							   statusType:statusType
-								   notify:NotifyLater];
-			[theContact setStatusMessage:(statusMessage ?
-										  [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
-										  nil)
-								  notify:NotifyLater];
-			
-			//Apply the change
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			if(statusMessageString && [statusMessageString length]){
+				statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
+																 attributes:nil] autorelease];
+			}
 		}
+		
+		g_free(normalized);
 	}
+	
+	return statusMessage;
 }
 
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
 {
-	[self updateStatusMessage:theContact];
-}
-
-- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
-{
-	[self updateStatusMessage:theContact];
-}
-- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
-{
-	[self updateStatusMessage:theContact];	
+	NSString		*statusName = nil;
+	
+	//If no custom status message, use the preset possibilities
+	switch(b->uc){
+		case JABBER_STATE_CHAT:
+			statusName = STATUS_NAME_FREE_FOR_CHAT;
+			break;						
+		case JABBER_STATE_XA:
+			statusName = STATUS_NAME_EXTENDED_AWAY;
+			break;
+			
+		case JABBER_STATE_DND:
+			statusName = STATUS_NAME_DND;
+			break;
+	}
+	
+	return statusName;
 }
 
 #pragma mark Menu items

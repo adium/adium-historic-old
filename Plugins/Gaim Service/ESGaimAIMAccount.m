@@ -217,29 +217,6 @@
 	return /*YES*/GAIM_DEBUG;
 }
 
--(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
-{
-	//Default to UTF-8
-	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
-
-	//Only attempt to check encoding if we were passed one
-	if (encoding && (encoding[0] != '\0')){
-		NSString			*encodingString = [NSString stringWithUTF8String:encoding];
-
-		if (encodingString){
-			if ([encodingString rangeOfString:@"unicode-2-0"].location != NSNotFound){
-				desiredEncoding = NSUnicodeStringEncoding;
-			}else if ([encodingString rangeOfString:@"iso-8859-1"].location != NSNotFound){
-				desiredEncoding = NSISOLatin1StringEncoding;
-			}
-		}
-		
-	}
-
-	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
-}
-
-
 #pragma mark Delayed updates
 
 - (void)gotGroupForContact:(AIListContact *)theContact
@@ -512,61 +489,6 @@
 	[super updateContact:theContact forEvent:event];
 }
 
-- (void)updateStatusMessage:(AIListContact *)theContact
-{
-	OscarData			*od;
-	aim_userinfo_t		*userinfo;
-	struct buddyinfo	*bi;
-	const char			*uidUTF8String = [[theContact UID] UTF8String];
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, uidUTF8String))){
-		
-		GaimBuddy		*b;
-		AIStatusType	statusType = (((b = gaim_find_buddy(account, uidUTF8String)) && (b->uc & UC_UNAVAILABLE)) ? 
-									  AIAwayStatusType : 
-									  AIAvailableStatusType);
-		NSString		*statusMessage = nil;
-
-		bi = (od->buddyinfo ? g_hash_table_lookup(od->buddyinfo, uidUTF8String) : NULL);
-		
-		if ((bi != NULL) && (bi->availmsg != NULL) && !(userinfo->flags & AIM_FLAG_AWAY)) {
-			
-			//Available status message - bi->availmsg has already been converted to UTF8 if needed for us.
-			statusMessage = [NSString stringWithUTF8String:(bi->availmsg)];
-			
-		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away != NULL)){
-			if ((userinfo->away_len > 0) && 
-				(userinfo->away_encoding != NULL)) {
-				
-				//Away message using specified encoding
-				statusMessage = [self stringWithBytes:userinfo->away
-											   length:userinfo->away_len
-											 encoding:userinfo->away_encoding];
-			}else{
-				//Away message, no encoding provided, assume UTF8
-				statusMessage = [NSString stringWithUTF8String:userinfo->away];
-			}
-		}
-		
-		
-		[theContact setStatusWithName:nil
-						   statusType:statusType
-							   notify:NotifyLater];
-		[theContact setStatusMessage:(statusMessage ? [AIHTMLDecoder decodeHTML:statusMessage] : nil)
-							  notify:NotifyLater];
-
-		//Apply the change
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
-}
-
-
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
-{
-	[self updateStatusMessage:theContact];
-}
 - (void)updateInfo:(AIListContact *)theContact
 {
 	OscarData			*od;

@@ -80,25 +80,13 @@
 }
 
 #pragma mark Contact status
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
-{
-	[theContact setStatusWithName:nil
-					   statusType:(newAway ? AIAwayStatusType : AIAvailableStatusType)
-						   notify:NotifyLater];
-	[theContact setStatusMessage:[self statusMessageForContact:theContact]
-						  notify:NotifyLater];
-	
-	//Apply the change
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];	
-}
 
-- (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
 	NSAttributedString  *statusMessage = nil;
 	
-	GaimBuddy *buddy = gaim_find_buddy([self gaimAccount],[[theContact UID] UTF8String]);
-	if (buddy && buddy->proto_data){
-		NSString	*statusMessageString = [NSString stringWithUTF8String:buddy->proto_data];
+	if(b && b->proto_data){
+		NSString	*statusMessageString = [NSString stringWithUTF8String:b->proto_data];
 		if (statusMessageString && [statusMessageString length]){
 			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 															 attributes:nil] autorelease];
