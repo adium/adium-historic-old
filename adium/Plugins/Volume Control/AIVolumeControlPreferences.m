@@ -19,6 +19,8 @@
 #import "AIVolumeControlPreferences.h"
 #import "AIVolumeControlPlugin.h"
 
+#define DEFAULT_VOLUME 0.5
+
 @implementation AIVolumeControlPreferences
 
 //Preference pane properties
@@ -41,7 +43,7 @@
         [slider_volume setFloatValue:0.0];
 
     }else if([[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue] == NO){
-        [slider_volume setFloatValue:0.5];
+        [slider_volume setFloatValue:DEFAULT_VOLUME];
 
     }else{
         float	volume = [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
@@ -50,19 +52,26 @@
     }
 }
 
+//Reset to the default value
+- (IBAction)resetVolume:(id)sender
+{
+    [slider_volume setFloatValue:DEFAULT_VOLUME];
+    [self selectVolume:nil]; 
+}
+
 //New value selected on the volume slider
 - (IBAction)selectVolume:(id)sender
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-    float		value = [sender floatValue];
+    float		value = [slider_volume floatValue];
     BOOL		mute, custom;
     BOOL		playSample = NO;
     
     //Save the pref
-    if(value == -1.0){ //Muted
+    if(value == 0.0){ //Muted
         mute = YES;
         custom = NO;        
-    }else if(value == 0.5){ //Default Volume
+    }else if(value == DEFAULT_VOLUME){ //Default Volume
         mute = NO;
         custom = NO;        
     }else{ //Custom volume
@@ -83,7 +92,7 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:mute]
                                              forKey:KEY_SOUND_MUTE
                                               group:PREF_GROUP_GENERAL];
-        playSample = YES;
+        playSample = NO;
     }
 
     //Custom

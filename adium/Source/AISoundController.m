@@ -205,7 +205,7 @@
         customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue] * 512.0);
         muteSounds = [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue];
         //NSLog (@"Custom volume changed to %d", customVolume);
-        if(customVolume <= 5) customVolume = 5; //Too quiet to hear is silly
+        //if(customVolume <= 5) customVolume = 5; //Too quiet to hear is silly (silly yes, but this turns off muting -chb)
         //NSLog (@"Custom volume now %d", customVolume);
         
         //Display the custom volume performance warning
