@@ -161,6 +161,7 @@
 - (void)removeStatusState:(AIStatus *)state;
 - (void)replaceExistingStatusState:(AIStatus *)oldState withStatusState:(AIStatus *)newState;
 - (int)moveStatusState:(AIStatus *)state toIndex:(int)destIndex;
+- (void)statusStateDidSetUniqueStatusID;
 
 //Machine Idle
 - (double)currentMachineIdle;
@@ -177,5 +178,6 @@
 - (void)setDelayStateMenuUpdates:(BOOL)shouldDelay;
 
 - (NSMenu *)statusStatesMenu;
+
 
 @end
