@@ -11,33 +11,41 @@
 
 @implementation AIListContactCell
 
+#define USER_ICON_SIZE			16
+#define VERTICAL_ICON_PADDING	1
+#define ICON_LEFT_PADDING 		4
+#define ICON_RIGHT_PADDING 		2
+
 
 
 #define badgewidth 				30
-#define USER_ICON_SIZE			28
+
+- (NSSize)cellSize
+{
+	return(NSMakeSize(0, USER_ICON_SIZE + (VERTICAL_ICON_PADDING * 2.0)));
+}
 
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
-	rect.origin.x += 4;
-	rect.size.width -= 4;
-	
-	//Status badge
-	[self drawUserStatusBadgeInRect:NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
-											   rect.origin.y,
-											   badgewidth,
-											   rect.size.height)];
-	rect.size.width -= badgewidth;
+	//Indent
+	rect.origin.x += ICON_LEFT_PADDING;
+	rect.size.width -= ICON_LEFT_PADDING;
 	
 	//Draw the user image
 	[self drawUserIconInRect:NSMakeRect(rect.origin.x,
 										rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
 										USER_ICON_SIZE,
 										USER_ICON_SIZE)];
-	
-	rect.origin.x += USER_ICON_SIZE + 2;
-	rect.size.width -= USER_ICON_SIZE + 2;
-//	rect.origin.y += 3;
+	rect.origin.x += USER_ICON_SIZE + ICON_RIGHT_PADDING;
+	rect.size.width -= USER_ICON_SIZE + ICON_RIGHT_PADDING;
+
+	//Status badge
+	[self drawUserStatusBadgeInRect:NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
+											   rect.origin.y,
+											   badgewidth,
+											   rect.size.height)];
+	rect.size.width -= badgewidth;
 	
 	[self drawDisplayNameWithFrame:rect inView:controlView];
 }

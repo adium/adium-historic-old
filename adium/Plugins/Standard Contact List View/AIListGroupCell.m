@@ -8,17 +8,24 @@
 
 #import "AIListGroupCell.h"
 
+#define VERTICAL_GROUP_PADDING	2
+#define GROUP_FONT_SIZE			12
 
 @implementation AIListGroupCell
 
 - (NSSize)cellSize
 {
-	return(NSMakeSize(0, 20));
+	return(NSMakeSize(0, (int)[[self fontInView:nil] defaultLineHeightForFont] + (VERTICAL_GROUP_PADDING * 2)));
 }
 
 - (NSColor *)flippyColor
 {
 	return([NSColor blackColor]);
+}
+
+- (NSFont *)fontInView:(NSView *)controlView
+{
+	return([NSFont boldSystemFontOfSize:GROUP_FONT_SIZE]);
 }
 
 //Draw content of our cell
@@ -28,7 +35,7 @@
 	[[self flippyColor] set];
 	
 	NSBezierPath	*arrowPath = [NSBezierPath bezierPath];
-	NSPoint			center = NSMakePoint(rect.origin.x + 10, rect.origin.y + (rect.size.height/2.0));
+	NSPoint			center = NSMakePoint(rect.origin.x + rect.size.height*.4, rect.origin.y + (rect.size.height/2.0));
 	
 	if([controlView isItemExpanded:listObject]){
 		[arrowPath moveToPoint:NSMakePoint(center.x - rect.size.height*.3, center.y - rect.size.height*.15)];
@@ -43,8 +50,8 @@
 	[arrowPath closePath];
 	[arrowPath fill];
 
-	rect.origin.x += rect.size.height*.7;
-	rect.size.width -= rect.size.height*.7;
+	rect.origin.x += rect.size.height*.4 + rect.size.height*.7;
+	rect.size.width -= rect.size.height*.4 + rect.size.height*.7;
 	
 	
 	[self drawDisplayNameWithFrame:rect inView:controlView];
