@@ -13269,18 +13269,11 @@
 		34BD9FC1053147A0000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9FC2053147A0000AB133,
 				34BD9FC3053147A0000AB133,
 				34BD9FC4053147A0000AB133,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9FC2053147A0000AB133 = {
-			fileRef = 6EE26787047EEBAB00637E34;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9FC3053147A0000AB133 = {
 			fileRef = 6ECE6C2004749C9600CAEAD0;

@@ -46,12 +46,12 @@
     {
         [themePlugin createThemeNamed:[nameField objectValue] by:[authorField objectValue] version:[versionField objectValue]];
     }
-    [self configureControlDimming];
 }
 
 -(void)createDone
 {
     [createStatus setObjectValue:@"New theme created."];
+    [[adium notificationCenter] postNotificationName:Themes_Changed object:nil];
 }
 
 -(void)applyStart // in theory this should be kind enough to start the UI when applying
