@@ -81,8 +81,6 @@ atPosition:(int)position
         NSSize mainScreenSize;
         NSRect windowSize;
         NSPoint mainScreenOrigin, newOrigin;
-        //NSAttributedString          *status = nil;
-        //NSMutableAttributedString   *statusString;
         
         [bezelView setBuddyIconImage:buddyIcon];
         
@@ -113,25 +111,15 @@ atPosition:(int)position
         } else if ([event isEqualToString: CONTACT_STATUS_IDLE_NO]) {
             [bezelView setMainBuddyStatus: @"is no longer idle"];
             [bezelView setBuddyIconBadgeType: @""];
+        } else if ([event isEqualToString: Content_FirstContentRecieved]) {
+            [bezelView setMainBuddyStatus: @"says"];
+            [bezelView setBuddyIconBadgeType: @""];
         }
         
         // This is not working yet, the Plugin class needs to pass the message
         if (message) {
             [bezelView setMainAwayMessage: message];
         } else {
-            // Not working, damn
-            /*
-            ownerArray = [contact statusArrayForKey:@"StatusMessage"];
-            if(ownerArray && [ownerArray count]) {
-                status = [ownerArray objectAtIndex:0];
-            }
-            if (status) {
-                statusString = [[[owner contentController] filteredAttributedString:status] mutableCopy];
-                [bezelView setMainAwayMessage: [statusString string]];
-            } else {
-                [bezelView setMainAwayMessage: @""];
-            }*/
-            // Remove this line when the code above works
             [bezelView setMainAwayMessage: @""];
         }
         
