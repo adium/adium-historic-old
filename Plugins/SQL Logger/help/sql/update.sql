@@ -6,6 +6,13 @@
  *
  */
 
+alter table messages add column random_id float8;
+update messages set random_id = random();
+alter table messages alter column random_id set default random();
+vacuum analyze;
+
+\set ON_ERROR_STOP;
+
 alter table im.user_statistics add column period date;
 alter table im.user_statistics drop column last_message;
 alter table im.user_statistics drop constraint user_statistics_pkey;
