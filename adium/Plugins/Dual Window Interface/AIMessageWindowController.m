@@ -160,7 +160,7 @@
     NSString	*savedFrame;
     
     [self window]; //Ensure our window has loaded
-    if ([tabView_messages numberOfTabViewItems] == 0) {
+    if([tabView_messages numberOfTabViewItems] == 0) {
         //Restore the window position for the object about to have its chat added as the first in this window
         savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
                                                               group:PREF_GROUP_WINDOW_POSITIONS 
@@ -275,12 +275,6 @@
     [interface containerDidBecomeActive:nil];
 
     return(YES);
-}
-
-//Prevent the system from moving our window around
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
 }
 
 //
