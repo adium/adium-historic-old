@@ -19,34 +19,43 @@
 @implementation NSEvent (AIEventAdditions)
 
 + (BOOL)cmdKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask) != 0 );
+    return(((GetCurrentKeyModifiers() & (cmdKey)) != 0) ? YES : NO);
+    //return ( ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask) != 0 );
 }
 
 + (BOOL)shiftKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) != 0 );
+    return(((GetCurrentKeyModifiers() & (shiftKey | rightShiftKey)) != 0) ? YES : NO);
+    //return ( ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) != 0 );
 }
 
 + (BOOL)optionKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) != 0 );
+    return(((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0) ? YES : NO);
+    //return ( ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) != 0 );
 }
 
 + (BOOL)controlKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSControlKeyMask) != 0 );
+    return(((GetCurrentKeyModifiers() & (controlKey | rightControlKey)) != 0) ? YES : NO);
+    //return ( ([[NSApp currentEvent] modifierFlags] & NSControlKeyMask) != 0 );
 }
 
 - (BOOL)cmdKey{
-    return ( ([self modifierFlags] & NSCommandKeyMask) != 0 );
+    return(((GetCurrentKeyModifiers() & (cmdKey)) != 0) ? YES : NO);
+    //return ( ([self modifierFlags] & NSCommandKeyMask) != 0 );
 }
 
 - (BOOL)shiftKey{
-    return ( ([self modifierFlags] & NSShiftKeyMask) != 0 );
+    return(((GetCurrentKeyModifiers() & (shiftKey | rightShiftKey)) != 0) ? YES : NO);
+    //return ( ([self modifierFlags] & NSShiftKeyMask) != 0 );
 }
 
 - (BOOL)optionKey{
-    return ( ([self modifierFlags] & NSAlternateKeyMask) != 0);
+    return(((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0) ? YES : NO);
+    //return ( ([self modifierFlags] & NSAlternateKeyMask) != 0);
 }
 
 - (BOOL)controlKey{
-    return ( ([self modifierFlags] & NSControlKeyMask) != 0);
+    return(((GetCurrentKeyModifiers() & (controlKey | rightControlKey)) != 0) ? YES : NO);
+    //return ( ([self modifierFlags] & NSControlKeyMask) != 0);
 }
+
 @end
