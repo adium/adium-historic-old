@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.128 2004/04/23 03:03:26 adamiser Exp $
+// $Id: AIContactController.m,v 1.129 2004/04/27 22:02:35 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -533,6 +533,10 @@
 - (AIListObject *)selectedListObjectInContactList
 {
 	return([self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)]);
+}
+- (NSArray *)arrayOfSelectedListObjectsInContactList
+{
+	return([self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)]);	
 }
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector
