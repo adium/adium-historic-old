@@ -32,7 +32,7 @@
 {
     //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
-    preferences = [[AISendingKeyPreferences sendingKeyPreferencesWithOwner:owner] retain];
+    preferences = [[AISendingKeyPreferences preferencePaneWithOwner:owner] retain];
 
     //Register as a text entry filter
     [[owner contentController] registerTextEntryFilter:self];

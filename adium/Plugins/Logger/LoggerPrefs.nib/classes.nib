@@ -1,13 +1,26 @@
 {
     IBClasses = (
         {
-            ACTIONS = {preferenceChanged = id; }; 
             CLASS = AILoggerPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_enableLogging" = NSButton; "view_prefView" = NSView; }; 
+            OUTLETS = {"checkBox_enableLogging" = NSButton; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

@@ -18,80 +18,36 @@
 #import "Adium.h"
 #import "AISendingKeyPreferences.h"
 
-#define SENDING_KEY_PREF_NIB		@"SendingKeyPrefs"
-#define SENDING_KEY_PREF_TITLE		@"Send Messages When:"
-
-@interface AISendingKeyPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
-- (void)configureView;
-@end
-
 @implementation AISendingKeyPreferences
-//
-+ (AISendingKeyPreferences *)sendingKeyPreferencesWithOwner:(id)inOwner
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Messages_Sending);
+}
+- (NSString *)label{
+    return(@"F");
+}
+- (NSString *)nibName{
+    return(@"SendingKeyPrefs");
+}
+
+//Configure the preference view
+- (void)viewDidLoad
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    
+    [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:@"Send On Return"] intValue]];
 }
 
 //User changed a preference
-- (IBAction)preferenceChanged:(id)sender
+- (IBAction)changePreference:(id)sender
 {
-    if(sender == checkBox_sendOnEnter){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
-                                             forKey:@"Send On Enter"
-                                              group:PREF_GROUP_GENERAL];
-        
-    }else if(sender == checkBox_sendOnReturn){
+    if(sender == checkBox_sendOnReturn){
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
                                              forKey:@"Send On Return"
                                               group:PREF_GROUP_GENERAL];
         
     }
-}
-
-
-//Private ---------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //Init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Sending withDelegate:self label:SENDING_KEY_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:SENDING_KEY_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-
-}
-
-//Configures our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-
-    [checkBox_sendOnEnter setState:[[preferenceDict objectForKey:@"Send On Enter"] intValue]];
-    [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:@"Send On Return"] intValue]];
 }
 
 @end

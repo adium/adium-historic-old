@@ -14,16 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@interface AILoggerPreferences : NSObject {
-    IBOutlet	NSView		*view_prefView;
+@interface AILoggerPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_enableLogging;
-
-    AIAdium			*owner;
-
 }
-
-+ (AILoggerPreferences *)loggerPreferencesWithOwner:(id)inOwner;
-- (IBAction)preferenceChanged:(id)sender;
 
 @end
