@@ -1,8 +1,10 @@
 {
     IBClasses = (
         {
+            ACTIONS = {connect = id; showAccounts = id; }; 
             CLASS = AIConnectPanelWindowController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {"popupMenu_serviceList" = NSPopUpButton; }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {

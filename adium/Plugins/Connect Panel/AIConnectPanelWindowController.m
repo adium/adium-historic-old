@@ -42,6 +42,10 @@ AIConnectPanelWindowController	*sharedConnectPanelInstance = nil;
         [[self window] setFrameFromString:savedFrame];
     }
 	
+	//Service popup
+	[popupMenu_serviceList setMenu:[[adium accountController] menuOfServicesWithTarget:self]];
+
+	
 }
 
 //Close this window
@@ -75,8 +79,17 @@ AIConnectPanelWindowController	*sharedConnectPanelInstance = nil;
     return(NO);
 }
 
+//
+- (IBAction)connect:(id)sender
+{
+	NSLog(@"Connect");
+}
 
-
+//
+- (IBAction)showAccounts:(id)sender
+{
+	[[adium preferenceController] openPreferencesToCategory:AIPref_Accounts];
+}
 
 
 

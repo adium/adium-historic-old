@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.44 2004/03/12 06:26:58 evands Exp $
+// $Id: AIPreferenceController.m,v 1.45 2004/03/13 01:21:11 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -104,12 +104,12 @@
     [[AIPreferenceWindowController preferenceWindowController] showWindow:nil];
 }
 
-//Show a specific pane of the preference window
-- (void)openPreferencesToPane:(AIPreferencePane *)inPane
+//Show a specific category of the preference window
+- (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category
 {
-	/*    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
-    [preferenceWindow showView:inView];
-    [preferenceWindow showWindow:nil];*/
+	AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
+    [preferenceWindow showCategory:category];
+    [preferenceWindow showWindow:nil];
 }
 
 //Return the array of preference panes
