@@ -159,7 +159,10 @@
     AIAccount		*account = [delegate account];
     
     //Select the correct item
-    [popUp_accounts selectItem:[[popUp_accounts menu] itemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:account]]];
+	int index = [popUp_accounts indexOfItemWithRepresentedObject:account];
+    if(index < [popUp_accounts numberOfItems] && index >= 0){
+		[popUp_accounts selectItemAtIndex:index];
+	}
 
     //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
     enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
