@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.152 2004/06/28 03:27:30 evands Exp $
+// $Id: AIContactController.m,v 1.153 2004/06/28 04:34:41 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -330,6 +330,7 @@
 	//Remove this object from any local groups we have it in currently
 	if(localGroup = [inObject containingGroup]){
 		//Remove the object
+		[inObject retain];
 		[localGroup removeObject:inObject];
 
 		//If this object existed in a meta contact we'll either need to update the meta contact, or remove it.
@@ -342,8 +343,11 @@
 				[internalObject retain];
 				
 				[localGroup removeObject:internalObject];
+				
+				[localGroup retain];
 				[mainGroup removeObject:localGroup];
 				[self _listChangedGroup:mainGroup object:localGroup];
+				[localGroup release];
 				
 				[mainGroup addObject:internalObject];
 				[self _listChangedGroup:mainGroup object:internalObject];
@@ -358,6 +362,8 @@
 		}else{
 			[self _listChangedGroup:localGroup object:inObject];
 		}
+		
+		[inObject release];
 	}
 	
 	//Add this object to its new group
@@ -422,7 +428,7 @@
 	}else{
 		[[owner notificationCenter] postNotificationName:Contact_ListChanged 
 												  object:object
-												userInfo:[NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"]];
+												userInfo:(group ? [NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"] : nil)];
 	}
 }
 	
