@@ -150,6 +150,7 @@ struct oscar_data {
                             [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
                             [modifiedKeys addObject:@"Away"];
                         }
+                        g_free(away_utf8);
                     }
                 }else{ //remove any away message
                     if ([statusDict objectForKey:@"StatusMessage"]) {
@@ -170,6 +171,7 @@ struct oscar_data {
                             [statusDict setObject:profileDecoded forKey:@"TextProfile"];
                             [modifiedKeys addObject:@"TextProfile"];
                         }
+                        g_free(info_utf8);
                     }
                 }
                 
