@@ -713,20 +713,21 @@
 {
 	if(!NSEqualPoints(tooltipLocation, screenPoint)){
 		AIListObject	*hoveredObject = nil;
-
-		if(screenPoint.x != 0 && screenPoint.y != 0){
+		NSWindow		*window = [contactListView window];
+		
+		if((screenPoint.x != 0 && screenPoint.y != 0) && [window isVisible]){
 			NSPoint			viewPoint;
 			int				hoveredRow;
 			
 			//Extract data from the event
-			viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
+			viewPoint = [contactListView convertPoint:[window convertScreenToBase:screenPoint] fromView:nil];
 			
 			//Get the hovered contact
 			hoveredRow = [contactListView rowAtPoint:viewPoint];
 			hoveredObject = [contactListView itemAtRow:hoveredRow];
 		}
 		
-		[[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:[contactListView window]];
+		[[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:window];
 		tooltipLocation = screenPoint;
 	}
 }
