@@ -15,10 +15,13 @@
  AIToolbar sends this notification for each item so observers can balance any action taken via
  the NSToolbarWillAddItemNotification notification.
  */
+@interface NSToolbar (AIPrivate)
+- (void)_postWillDeallocToolbarNotifications;
+@end
 
 @implementation AIToolbar
 /* load
-*   install ourself to intercept dealloc calls
+*   install ourself to intercept _postWillDeallocToolbarNotifications calls
 */
 + (void)load
 {
@@ -26,7 +29,7 @@
     [self poseAsClass: [NSToolbar class]];
 }
 
-- (void)dealloc
+- (void)_postWillDeallocToolbarNotifications
 {
 	NSNotificationCenter	*defaultCenter = [NSNotificationCenter defaultCenter];
 	NSEnumerator			*enumerator;
@@ -41,8 +44,8 @@
 																		forKey:@"item"]];
 	}
 
-	//Now perform super's dealloc behavior
-	[super dealloc];
+	//Now perform super's _toolbarWillDeallocNotification
+	[super _postWillDeallocToolbarNotifications];
 }
 
 @end
