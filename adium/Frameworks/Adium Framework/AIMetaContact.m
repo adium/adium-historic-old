@@ -26,11 +26,11 @@
 //init
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
 {
-	[super initWithUID:inUID serviceID:inServiceID];
-	
 	objectArray = [[NSMutableArray alloc] init];
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 
+	[super initWithUID:inUID serviceID:inServiceID];
+	
 	return(self);
 }
 
@@ -103,7 +103,7 @@
 //Update our status cache as object we contain change status
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
 {
-	[self _cacheStatusValue:[inObject statusObjectForKey:key] forObject:inObject key:key];
+	[self _cacheStatusValue:value forObject:inObject key:key];
 	
 	[super listObject:self didSetStatusObject:value forKey:key];
 }
