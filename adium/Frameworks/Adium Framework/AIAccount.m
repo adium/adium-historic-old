@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.73 2004/07/30 19:15:05 dchoby98 Exp $
+// $Id: AIAccount.m,v 1.74 2004/08/02 07:04:31 evands Exp $
 
 #import "AIAccount.h"
 
@@ -215,7 +215,7 @@
 #pragma mark Status
 //Enable and disable the refresh timers as our account goes online and offline; 
 //if we get informed that we are disconnecting, stop them sooner than later.
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
+- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
 	if([key isEqualToString:@"Online"]){
 		if([value boolValue]){
@@ -364,7 +364,7 @@
     return([inAttributedString string]);
 }
 
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
 	return NO;
 }
@@ -378,10 +378,6 @@
 {
 	
 }
-
-- (NSImage *)serviceImage {}
-- (NSImage *)serviceMenuImage {}
-
 
 //Contact Status -------------------------------------------------------------------------------------------------------
 #pragma mark Contact Status
