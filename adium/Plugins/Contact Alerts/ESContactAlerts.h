@@ -20,13 +20,7 @@
     IBOutlet	NSView			*view_details_text;
     IBOutlet 	NSTextField		*textField_description_textField;
     IBOutlet	NSTextField		*textField_actionDetails;
-    //Message View
-    IBOutlet	NSView			*view_details_message;
-    IBOutlet	NSTextField		*textField_message_actionDetails;
-    IBOutlet	NSPopUpButton		*popUp_message_actionDetails_one;
-    IBOutlet	NSPopUpButton		*popUp_message_actionDetails_two;
-    IBOutlet	NSButton		*button_anotherAccount;
-    IBOutlet	NSButton		*button_displayAlert;
+
     //Open Message View
     IBOutlet	NSView			*view_details_open_message;
     IBOutlet	NSPopUpButton		*popUp_actionDetails_open_message;
