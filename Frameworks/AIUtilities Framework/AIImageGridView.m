@@ -188,7 +188,7 @@ Adium, Copyright 2001-2004, Adam Iser
 	padding.width = (newFrame.size.width - (columns * imageSize.width)) / (columns + 1);
 	padding.height = padding.width;
 	
-	//Resize our view so its tall enuogh to display enough rows for all our images and that it always
+	//Resize our view so it's tall enuogh to display enough rows for all our images and that it always
 	//covers the entire visible area in our scroll view.
 	rows = ceil((double)numberOfImages / (double)columns);
 	newFrame.size.height = rows * (imageSize.height + padding.height) + padding.height;
