@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 495 $ $Date: 2003/12/17 07:02:50 $ -->
+<!--$Rev: 506 $ $Date: 2003/12/20 02:54:57 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -206,19 +206,19 @@ try {
     }
 
     if (from_sn != null && to_sn != null) {
-        queryText += " and ((sender_sn = ? " + 
+        queryText += " and (((sender_sn = ? " + 
         " and recipient_sn = ?) or " +
-        "(sender_sn = ? and recipient_sn = ?) or " +
-        "(scramble(sender_sn) = ? and scramble(recipient_sn) = ?) or " +
-        "(scramble(recipient_sn) = ? and scramble(sender_sn) = ?))";
-        commandArray[aryCount++] = new String(to_sn);
-        commandArray[aryCount++] = new String(to_sn);
-        commandArray[aryCount++] = new String(from_sn);
-        commandArray[aryCount++] = new String(from_sn);
+        "(sender_sn = ? and recipient_sn = ?)) or " +
+        "((scramble(sender_sn) = ? and scramble(recipient_sn) = ?) or " +
+        "(scramble(recipient_sn) = ? and scramble(sender_sn) = ?)))";
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(to_sn);
+        commandArray[aryCount++] = new String(to_sn);
+        commandArray[aryCount++] = new String(from_sn);
+        commandArray[aryCount++] = new String(to_sn);
+        commandArray[aryCount++] = new String(from_sn);
     
     } else if (from_sn != null && to_sn == null) {
         queryText += " and (sender_sn = ? or scramble(sender_sn) = ?)";
@@ -278,14 +278,14 @@ try {
         while(rset.next()) {
             if (rset.getRow() % 5 == 0) {
                 out.print("<br />");
-            } else if (rset.getRow() != 1) {
-                out.print(" | ");
             }
-            out.print("<a href=\"index.jsp?&after=" + afterDate + 
+            out.print("<a href=\"index.jsp?after=" + afterDate + 
             "&before=" + beforeDate + "&contains=" + 
             rset.getString("username") + "\">"+
-            rset.getString("username") + "</a>");
+            rset.getString("username") + "</a>&nbsp;|&nbsp;");
         }
+        out.print("<a href=\"index.jsp?after=" + afterDate +
+            "&before=" + beforeDate + "\"><i>All</i></a>");
         out.println("</div><br />");
     }
     pstmt = conn.prepareStatement(queryText);
