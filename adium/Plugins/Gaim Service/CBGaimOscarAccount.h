@@ -7,14 +7,10 @@
  */
 
 #import "CBGaimAccount.h"
-//#import "aim.h"
 
-@interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files,AIAccount_Privacy>
+@interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files>
 {
 
 }
-
-extern gchar *oscar_encoding_to_utf8(const char *encoding, char *text, int textlen);
-extern GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn);
 
 @end
