@@ -51,8 +51,11 @@
     //Configure ourself for the message view
     [messageView setDelegate:self];
     [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
-									   name:Content_ChatStatusChanged
+									   name:Chat_StatusChanged
 									 object:[messageView chat]];
+    [[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
+									   name:Chat_AttributesChanged
+									 object:[messageView chat]];	
     [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
 									   name:Content_ChatParticipatingListObjectsChanged
 									 object:[messageView chat]];
@@ -119,18 +122,31 @@
 
     //If the display name changed, we resize the tabs
     if(notification == nil || [keys containsObject:@"DisplayName"]){
+		[[[self tabView] delegate] resizeTabForTabViewItem:self];
+		
         //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
         [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
     }
 }
 
+- (void)chatAttributesChanged:(NSNotification *)notification
+{
+	NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
+	
+	//Redraw if the icon has changed
+	if(keys == nil || [keys containsObject:@"Tab State Icon"]){
+		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+		[[self container] updateIconForTabViewItem:self];		
+	}
+		
+}
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
 	//Redraw if the icon has changed
-	if(keys == nil || [keys containsObject:@"Tab State Icon"] || [keys containsObject:@"Tab Status Icon"]){
+	if(keys == nil || [keys containsObject:@"Tab Status Icon"]){
 		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
 		[[self container] updateIconForTabViewItem:self];
 	}
@@ -199,15 +215,7 @@
 //
 - (NSString *)label
 {
-    AIChat			*chat = [messageView chat];
-    NSString		*displayName;
-	
-    if(displayName = [[chat statusDictionary] objectForKey:@"DisplayName"]){
-        return(displayName);
-    }else{
-		AIListObject *listObject = [chat listObject];
-        return(listObject ? [listObject displayName] : [chat name]);
-    }
+	return ([[messageView chat] displayName]);
 }
 
 //Return the icon to be used for our tabs.  State gets first priority, then status.
@@ -220,13 +228,13 @@
 //Status icon is the status of this contact (away, idle, online, stranger)
 - (NSImage *)statusIcon
 {
-	return([[[[messageView chat] listObject] displayArrayForKey:@"Tab Status Icon"] objectValue]);
+	return([[[messageView chat] listObject] displayArrayObjectForKey:@"Tab Status Icon"]);
 }
 
 //State icon is the state of the contact (Typing, unviewed content)
 - (NSImage *)stateIcon
 {
-	return([[[[messageView chat] listObject] displayArrayForKey:@"Tab State Icon"] objectValue]);
+	return([[messageView chat] displayArrayObjectForKey:@"Tab State Icon"]);
 }
 
 - (NSImage *)image
