@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 856 $ $Date: 2004/08/07 19:42:01 $ -->
+<!--$Rev: 864 $ $Date: 2004/08/17 00:20:30 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -46,7 +46,7 @@ try {
 
     if(sender != 0) {
         pstmt = conn.prepareStatement("select username as username, "+
-        "display_name as display_name, lower(service) as service  from " +
+        " display_name as display_name, lower(service) as service  from " +
         " im.users natural join im.user_display_name udn " +
         " where user_id = ?"+
         " and not exists " +

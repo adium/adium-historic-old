@@ -172,7 +172,8 @@ try {
             out.println("<td>" + rset.getRow() + "</td>");
 
             for(int i = 1; i <= rsmd.getColumnCount(); i++) {
-                if(i == 1 && rset.getString(1).equals(prevFirst)) {
+                if(i == 1 && rset.getString(1) != null &&
+                    rset.getString(1).equals(prevFirst)) {
                     out.println("<td></td>");
                 } else {
                     if(rsmd.getColumnName(i).equals("message_id")) {
