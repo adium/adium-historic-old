@@ -10,6 +10,7 @@
 #import <Adium/Adium.h>
 
 #define PREF_GROUP_AWAY_MESSAGES 	@"Away Messages"
+#define KEY_SAVED_AWAYS			@"Saved Aways"
 
 @class AIAwayMessagePreferences;
 

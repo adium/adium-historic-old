@@ -722,6 +722,30 @@
 			settings = {
 			};
 		};
+		4B187A0703D5E95500A8010A = {
+			isa = PBXFileReference;
+			name = LittleAdd.tif;
+			path = "Plugins/Away Messages/LittleAdd.tif";
+			refType = 4;
+		};
+		4B187A0803D5E95500A8010A = {
+			isa = PBXFileReference;
+			name = LittleDelete.tif;
+			path = "Plugins/Away Messages/LittleDelete.tif";
+			refType = 4;
+		};
+		4B187A0903D5E95500A8010A = {
+			fileRef = 4B187A0703D5E95500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B187A0A03D5E95500A8010A = {
+			fileRef = 4B187A0803D5E95500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B28907503C1D14200A8010A = {
 			children = (
 				4B28909B03C1D2F900A8010A,
@@ -1568,6 +1592,8 @@
 				4B70F29203D1D13800A8010A,
 				4B70F28D03D1CC6400A8010A,
 				4B70F28F03D1D04900A8010A,
+				4B187A0703D5E95500A8010A,
+				4B187A0803D5E95500A8010A,
 			);
 			isa = PBXGroup;
 			name = "Away Messages";
@@ -1589,6 +1615,8 @@
 			files = (
 				4B70F28E03D1CC6400A8010A,
 				4B70F29003D1D04900A8010A,
+				4B187A0903D5E95500A8010A,
+				4B187A0A03D5E95500A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

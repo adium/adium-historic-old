@@ -30,6 +30,7 @@
 - (void)accountListChanged:(NSNotification *)notification;
 - (void)updateMenuForAccount:(AIAccount *)account;
 - (void)toggleAutoConnect:(id)sender;
+- (IBAction)toggleConnection:(id)sender;
 @end
 
 @implementation AIAccountMenuAccessPlugin
@@ -74,7 +75,7 @@
     NSEnumerator	*enumerator;
     NSMenuItem		*menuItem;
     NSMenuItem		*targetMenuItem = nil;
-    NSMenuItem		*connectTogleItem;
+    NSMenuItem		*connectToggleItem;
     NSMenuItem		*autoConnectItem;
 
     //Find the menu
@@ -89,35 +90,31 @@
     if(targetMenuItem){
         if([[account supportedStatusKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
-            connectTogleItem = [[targetMenuItem submenu] itemAtIndex:0];
+            connectToggleItem = [[targetMenuItem submenu] itemAtIndex:0];
             switch([[[owner accountController] statusObjectForKey:@"Status" account:account] intValue]){
                 case STATUS_OFFLINE:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
-                    [connectTogleItem setTitle:ACCOUNT_CONNECT_MENU_TITLE];
-                    [connectTogleItem setEnabled:YES];
-                    [connectTogleItem setTarget:account];
-                    [connectTogleItem setAction:@selector(connect)];
+                    [connectToggleItem setTitle:ACCOUNT_CONNECT_MENU_TITLE];
+                    [connectToggleItem setEnabled:YES];
                 break;
                 case STATUS_CONNECTING:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
-                    [connectTogleItem setTitle:ACCOUNT_CONNECTING_MENU_TITLE];
-                    [connectTogleItem setEnabled:NO];
+                    [connectToggleItem setTitle:ACCOUNT_CONNECTING_MENU_TITLE];
+                    [connectToggleItem setEnabled:NO];
                 break;
                 case STATUS_ONLINE:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]]];
-                    [connectTogleItem setTitle:ACCOUNT_DISCONNECT_MENU_TITLE];
-                    [connectTogleItem setEnabled:YES];
-                    [connectTogleItem setTarget:account];
-                    [connectTogleItem setAction:@selector(disconnect)];
+                    [connectToggleItem setTitle:ACCOUNT_DISCONNECT_MENU_TITLE];
+                    [connectToggleItem setEnabled:YES];
                 break;
                 case STATUS_DISCONNECTING:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
-                    [connectTogleItem setTitle:ACCOUNT_DISCONNECTING_MENU_TITLE];
-                    [connectTogleItem setEnabled:NO];
+                    [connectToggleItem setTitle:ACCOUNT_DISCONNECTING_MENU_TITLE];
+                    [connectToggleItem setEnabled:NO];
                 break;
                 default:
-                    [connectTogleItem setTitle:@"n/a"];
-                    [connectTogleItem setEnabled:NO];
+                    [connectToggleItem setTitle:@"n/a"];
+                    [connectToggleItem setEnabled:NO];
                 break;
             }
             
@@ -146,6 +143,22 @@
     [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];    
 }
 
+//Togle the connection of the selected account (called by the connect/disconnnect menu item)
+//MUST be called by a menu item with an account as it's represented object!
+- (IBAction)toggleConnection:(id)sender
+{
+    AIAccount			*targetAccount = [sender representedObject];
+
+    //Toggle the connection
+    if([[targetAccount supportedStatusKeys] containsObject:@"Online"]){
+        if([[[owner accountController] statusObjectForKey:@"Online" account:targetAccount] boolValue]){
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
+        }else{
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
+        }
+    }
+}
+
 //Create the list of account sub menus in the file menu
 - (void)buildAccountMenus
 {
@@ -170,11 +183,18 @@
         //Create the submenu
         subMenu = [[[NSMenu alloc] init] autorelease];
         [subMenu setAutoenablesItems:NO];
-        [subMenu addItemWithTitle:ACCOUNT_CONNECT_MENU_TITLE target:nil action:nil keyEquivalent:@""];
+
+        //Connect/Disconnect menu item
+        menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_CONNECT_MENU_TITLE target:self action:@selector(toggleConnection:) keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:account];
+        [subMenu addItem:menuItem];
+
+        //Autoconnect menu item
         [subMenu addItem:[NSMenuItem separatorItem]];
         [subMenu addItemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE target:self action:@selector(toggleAutoConnect:) keyEquivalent:@"" representedObject:account];
+
         
-        //Create the item
+        //Create the submenu's owning item
         menuItem = [[[NSMenuItem alloc] initWithTitle:[account accountDescription] target:nil action:nil keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:account];
         [menuItem setSubmenu:subMenu];

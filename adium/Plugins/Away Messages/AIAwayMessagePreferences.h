@@ -8,16 +8,25 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium;
+@class AIAdium, AIFlexibleTableView, AIFlexibleTableColumn;
 
+@protocol AIFlexibleTableViewDelegate;
 
-@interface AIAwayMessagePreferences : NSObject {
-    AIAdium			*owner;
+@interface AIAwayMessagePreferences : NSObject <AIFlexibleTableViewDelegate> {
+    AIAdium				*owner;
 
     IBOutlet	NSView			*view_prefView;
+    IBOutlet	AIFlexibleTableView	*tableView_aways;
+
+    AIFlexibleTableColumn		*imageColumn;
+    AIFlexibleTableColumn		*messageColumn;
+
+    NSMutableArray			*awayMessageArray;
 
 }
 
 + (AIAwayMessagePreferences *)awayMessagePreferencesWithOwner:(id)inOwner;
+- (IBAction)deleteAwayMessage:(id)sender;
+- (IBAction)newAwayMessage:(id)sender;
 
 @end

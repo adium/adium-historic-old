@@ -7,9 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <AIUtilities/AIUtilities.h>
 
 @class AIContactHandle, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn;
+@protocol AIFlexibleTableViewDelegate;
 
 @interface AISMViewController : NSObject <AIFlexibleTableViewDelegate> {
     AIAdium			*owner;
