@@ -1043,11 +1043,12 @@
 				4BBAEE9E03DD7DAB00A8010A,
 				F5D2FB7D03B6643B01A8010A,
 				4B5B15290493BFB100A8010A,
-				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
 				F16B1A4805163AEB0000000E,
 				34878F6D05182855003B2F21,
 				F1D0C62C051AC1B90000000E,
+				4BA88A390524A98F00A8010A,
+				4BA88A530524AFF600A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1078,6 +1079,8 @@
 				F53B9A0602CCED6401A8010A,
 				F53EA2CD02C803C101A8010A,
 				6576A008050269FA000EB664,
+				4BA88A380524A98F00A8010A,
+				4BA88A520524AFF600A8010A,
 				F5B53FC60333AFB501A8010A,
 				F510B77303339F1C01A8010A,
 				9E4CF9F104AA6D5600415B22,
@@ -1158,7 +1161,6 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
-				6576A01305026B4F000EB664,
 				F53B9A0702CCED6401A8010A,
 				F53B9A0F02CCED8B01A8010A,
 				1058C7A1FEA54F0111CA2CBB,
@@ -1167,6 +1169,7 @@
 				4BDB241F04AF52B000A8010A,
 				F5819CE9032124CE01A8010A,
 				D2547F1D050AD55B00A80164,
+				6576A01305026B4F000EB664,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -1257,6 +1260,8 @@
 				4B5D67D1050CF54700A8010A,
 				F16B1A4905163AEB0000000E,
 				F1D0C62D051AC1B90000000E,
+				4BA88A3A0524A98F00A8010A,
+				4BA88A540524AFF600A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1367,8 +1372,6 @@
 				4B24A26B0482B34B00A8010A,
 				4BC8AFEF04FD4BF000A8010A,
 				4BAC8C8E05012AD900A8010A,
-				34ADE00C05159261003B2F21,
-				34878FA105182CC8003B2F21,
 				4B0AABAF05228F9700A8010A,
 				4B0AABB005228F9700A8010A,
 				4B0AABB105228F9700A8010A,
@@ -1845,12 +1848,6 @@
 			path = "Contact List Window Handling.AdiumPlugin";
 			refType = 3;
 		};
-		34878FA105182CC8003B2F21 = {
-			fileRef = 34878FA005182CC8003B2F21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34878FBA05182CE0003B2F21 = {
 			fileRef = 34878FA005182CC8003B2F21;
 			isa = PBXBuildFile;
@@ -1920,12 +1917,6 @@
 		};
 		34ADE0060515920E003B2F21 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34ADE00C05159261003B2F21 = {
-			fileRef = 346E6407051532D6003B2F21;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3050,6 +3041,7 @@
 		};
 		4B1332380459BCE300A8010A = {
 			children = (
+				4BA88A320524A95F00A8010A,
 				F59F9A7F032BE67901A8010A,
 			);
 			isa = PBXGroup;
@@ -4769,6 +4761,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4BA88A550524AFF600A8010A,
+				4BA88A3B0524A98F00A8010A,
 				4B40E1CB03DB5B9600A8010A,
 				4B1F0F3704AE303600A8010A,
 				4B40E1D303DB5B9600A8010A,
@@ -5133,6 +5127,7 @@
 			children = (
 				F53EA2B502C8020E01A8010A,
 				6576A001050269A6000EB664,
+				4BA88A4C0524AFD700A8010A,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -8461,6 +8456,370 @@
 			settings = {
 			};
 		};
+		4BA88A320524A95F00A8010A = {
+			children = (
+				4BA88A3E0524AA7200A8010A,
+				4BA88A3F0524AA7200A8010A,
+				4BA88A420524AA8D00A8010A,
+				4BA88A430524AA8D00A8010A,
+				4BA88A480524ADC000A8010A,
+				4BA88A460524AAFE00A8010A,
+				4BA88A4A0524AE2900A8010A,
+			);
+			isa = PBXGroup;
+			name = "Message View Selection";
+			refType = 4;
+		};
+		4BA88A330524A98F00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BA88A400524AA7200A8010A,
+				4BA88A440524AA8D00A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A340524A98F00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BA88A470524AAFE00A8010A,
+				4BA88A490524ADC000A8010A,
+				4BA88A4B0524AE2900A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A350524A98F00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BA88A410524AA7200A8010A,
+				4BA88A450524AA8D00A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A360524A98F00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC15BCC0524B2E100A8010A,
+				4BC15BCD0524B2E100A8010A,
+				4BC15BE30524B2F200A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A370524A98F00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A380524A98F00A8010A = {
+			buildPhases = (
+				4BA88A330524A98F00A8010A,
+				4BA88A340524A98F00A8010A,
+				4BA88A350524A98F00A8010A,
+				4BA88A360524A98F00A8010A,
+				4BA88A370524A98F00A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Message View Selection";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BA88A3D0524A99C00A8010A,
+				4BA88A3C0524A99B00A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Message View Selection";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Message View Selection";
+			productReference = 4BA88A390524A98F00A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIMessageViewSelectionPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BA88A390524A98F00A8010A = {
+			isa = PBXBundleReference;
+			path = "Message View Selection.AdiumPlugin";
+			refType = 3;
+		};
+		4BA88A3A0524A98F00A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BA88A380524A98F00A8010A;
+		};
+		4BA88A3B0524A98F00A8010A = {
+			fileRef = 4BA88A390524A98F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A3C0524A99B00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BA88A3D0524A99C00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BA88A3E0524AA7200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIMessageViewSelectionPlugin.h;
+			path = "Plugins/Message View Selection/AIMessageViewSelectionPlugin.h";
+			refType = 4;
+		};
+		4BA88A3F0524AA7200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIMessageViewSelectionPlugin.m;
+			path = "Plugins/Message View Selection/AIMessageViewSelectionPlugin.m";
+			refType = 4;
+		};
+		4BA88A400524AA7200A8010A = {
+			fileRef = 4BA88A3E0524AA7200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A410524AA7200A8010A = {
+			fileRef = 4BA88A3F0524AA7200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A420524AA8D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIMessageViewSelectionPreferences.h;
+			path = "Plugins/Message View Selection/AIMessageViewSelectionPreferences.h";
+			refType = 4;
+		};
+		4BA88A430524AA8D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIMessageViewSelectionPreferences.m;
+			path = "Plugins/Message View Selection/AIMessageViewSelectionPreferences.m";
+			refType = 4;
+		};
+		4BA88A440524AA8D00A8010A = {
+			fileRef = 4BA88A420524AA8D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A450524AA8D00A8010A = {
+			fileRef = 4BA88A430524AA8D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A460524AAFE00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = MessageViewSelectionDefaults.plist;
+			path = "Plugins/Message View Selection/MessageViewSelectionDefaults.plist";
+			refType = 4;
+		};
+		4BA88A470524AAFE00A8010A = {
+			fileRef = 4BA88A460524AAFE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A480524ADC000A8010A = {
+			isa = PBXFileReference;
+			name = MessageViewSelectPrefs.nib;
+			path = "Plugins/Message View Selection/MessageViewSelectPrefs.nib";
+			refType = 4;
+		};
+		4BA88A490524ADC000A8010A = {
+			fileRef = 4BA88A480524ADC000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A4A0524AE2900A8010A = {
+			isa = PBXFileReference;
+			name = preview.tif;
+			path = "Plugins/Message View Selection/preview.tif";
+			refType = 4;
+		};
+		4BA88A4B0524AE2900A8010A = {
+			fileRef = 4BA88A4A0524AE2900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A4C0524AFD700A8010A = {
+			children = (
+				4BC15BEB0524CE5E00A8010A,
+				4BC15BEC0524CE5E00A8010A,
+				4BC15BE90524CE5E00A8010A,
+				4BC15BEA0524CE5E00A8010A,
+			);
+			isa = PBXGroup;
+			name = "Stress Test";
+			path = "";
+			refType = 4;
+		};
+		4BA88A4D0524AFF600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC15BED0524CE5E00A8010A,
+				4BC15BEF0524CE5E00A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A4E0524AFF600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A4F0524AFF600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC15BEE0524CE5E00A8010A,
+				4BC15BF00524CE5E00A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A500524AFF600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC15BE40524B2F700A8010A,
+				4BC15BE50524B2F700A8010A,
+				4BC15BE60524B2F800A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A510524AFF600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BA88A520524AFF600A8010A = {
+			buildPhases = (
+				4BA88A4D0524AFF600A8010A,
+				4BA88A4E0524AFF600A8010A,
+				4BA88A4F0524AFF600A8010A,
+				4BA88A500524AFF600A8010A,
+				4BA88A510524AFF600A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Stress Test";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BA88A560524B01000A8010A,
+				4BA88A570524B01100A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Stress Test";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Stress Test";
+			productReference = 4BA88A530524AFF600A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIStressTestPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BA88A530524AFF600A8010A = {
+			isa = PBXBundleReference;
+			path = "Stress Test.AdiumPlugin";
+			refType = 3;
+		};
+		4BA88A540524AFF600A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BA88A520524AFF600A8010A;
+		};
+		4BA88A550524AFF600A8010A = {
+			fileRef = 4BA88A530524AFF600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA88A560524B01000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BA88A570524B01100A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
 		4BAC8C8C05011FF300A8010A = {
 			isa = PBXFileReference;
 			name = DefaultIcon.tiff;
@@ -9179,6 +9538,94 @@
 		};
 		4BC0304E0453388C00A8010A = {
 			fileRef = 4BC0304C0453388C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BCC0524B2E100A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BCD0524B2E100A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BE30524B2F200A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BE40524B2F700A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BE50524B2F700A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BE60524B2F800A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BE90524CE5E00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStressTestAccount.h;
+			path = "Plugins/Stress Test/AIStressTestAccount.h";
+			refType = 4;
+		};
+		4BC15BEA0524CE5E00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStressTestAccount.m;
+			path = "Plugins/Stress Test/AIStressTestAccount.m";
+			refType = 4;
+		};
+		4BC15BEB0524CE5E00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStressTestPlugin.h;
+			path = "Plugins/Stress Test/AIStressTestPlugin.h";
+			refType = 4;
+		};
+		4BC15BEC0524CE5E00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStressTestPlugin.m;
+			path = "Plugins/Stress Test/AIStressTestPlugin.m";
+			refType = 4;
+		};
+		4BC15BED0524CE5E00A8010A = {
+			fileRef = 4BC15BE90524CE5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BEE0524CE5E00A8010A = {
+			fileRef = 4BC15BEA0524CE5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BEF0524CE5E00A8010A = {
+			fileRef = 4BC15BEB0524CE5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC15BF00524CE5E00A8010A = {
+			fileRef = 4BC15BEC0524CE5E00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20892,11 +21339,6 @@
 			isa = PBXFileReference;
 			path = AIUserSwitchingMenuitemPlugin.h;
 			refType = 4;
-		};
-		F5F8471404C70B8A01A80106 = {
-			isa = PBXBundleReference;
-			path = "User Switching Menuitem.AdiumPlugin";
-			refType = 3;
 		};
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA;

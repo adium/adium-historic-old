@@ -34,7 +34,6 @@
 @interface AIMTOC2ServicePlugin : AIPlugin <AIServiceController> {
     IBOutlet 	NSView		*view_preferences;
     
-
     AIServiceType		*handleServiceType;
 }
 
