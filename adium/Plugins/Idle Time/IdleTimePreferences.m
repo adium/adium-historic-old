@@ -229,7 +229,7 @@
             [savedAwaysMenu addItem:menuItem];
             [checkBox_enableAutoAway setEnabled:NO];
             [textField_autoAwayMinutes setEnabled:NO];
-                                    
+	}            
 
     [savedAwaysMenu setAutoenablesItems:NO];
     return savedAwaysMenu;
