@@ -491,6 +491,9 @@ typedef enum {
 									 namedByKey:@"name"
 									   onWindow:[[self view] window]
 								   withDelegate:self];
+	
+	[popUp_colorTheme selectItemWithRepresentedObject:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME
+																							   group:PREF_GROUP_APPEARANCE]];		
 }
 
 /*
@@ -557,10 +560,9 @@ typedef enum {
 									 namedByKey:@"name"
 									   onWindow:[[self view] window]
 								   withDelegate:self];
-	
-#warning	//Get our menu back to its proper selection
-//	[popUp_listLayout selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
-//																				   group:PREF_GROUP_APPEARANCE]];		
+
+	[popUp_listLayout selectItemWithRepresentedObject:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
+																							   group:PREF_GROUP_APPEARANCE]];		
 }
 
 /*!
