@@ -175,7 +175,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	if(shouldRestorePreviousSelectedPane){
 		NSString *previouslySelectedCategory = [[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
 																						group:PREF_GROUP_WINDOW_POSITIONS];
-		if(!previouslySelectedCategory) previouslySelectedCategory = @"accounts";
+		if(!previouslySelectedCategory || [previouslySelectedCategory isEqualToString:@"loading"])
+			previouslySelectedCategory = @"accounts";
 		[self selectCategoryWithIdentifier:previouslySelectedCategory];
 	}
 	
@@ -335,7 +336,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //Toolbar tab view -----------------------------------------------------------------------------------------------------
 #pragma mark Toolbar tab view
 /*!
- * @brief Tabview will select a new pane, load the views for that pane
+ * @brief Tabview will select a new pane; load the views for that pane.
  */
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
@@ -356,6 +357,21 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		//Update the window title
 		[[self window] setTitle:[NSString stringWithFormat:@"%@ : %@", PREFERENCE_WINDOW_TITLE, [tabViewItem label]]];    	
    }
+}
+
+/*!
+ * @brief Tabview will select a new pane; should it show the loading indicator?
+ *
+ * We only show the loading inidicator if the view is empty.
+ */
+- (BOOL)showLoadingIndicatorForTabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	if(tabView == tabView_category){
+		AIModularPaneCategoryView *view = [viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]];
+		if([view isEmpty]) return YES;
+	}
+
+	return NO;
 }
 
 /*!
