@@ -6,10 +6,13 @@
 
 
 #import "SHMSIEBookmarksImporter.h"
+#import "SHMozillaCommonParser.h"
 
 #define MSIE_BOOKMARKS_PATH  @"~/Library/Preferences/Explorer/Favorites.html"
 
 #define MSIE_ROOT_MENU_TITLE AILocalizedString(@"Internet Explorer",nil)
+
+@class SHMozillaCommonParser;
 
 @interface SHMSIEBookmarksImporter(PRIVATE)
 - (void)parseBookmarksFile:(NSString *)inString;
@@ -114,7 +117,7 @@ DeclareString(ltSign)
 
             if(titleString){
                 // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+                titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
             }
             
             msieBookmarksSupermenu = msieBookmarksMenu;
@@ -136,7 +139,7 @@ DeclareString(ltSign)
 
             if(titleString){
                 // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+                titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
             }
             
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
