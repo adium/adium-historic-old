@@ -162,6 +162,12 @@ static BOOL expandOnClick = YES;
 - (void)reloadData{
 	[super reloadData];
 	[self resetRowHeightCache];
+	//XXX - I'm assuming that our table view's frame is updated from within reloadData.  At that point in time
+	//      however, we haven't yet reset our row height cache.  So the frame of our table view will be incorrect and
+	//      result in an incorrect scrollbar scaling.  This is easy to solve by setting the frame to our correct
+	//      dimensions manually after the reload and height calculations are complete.  This is probably not the
+	//      best solution to this problem, but I am unaware of a better one at this time. -ai
+	[self setFrameSize:NSMakeSize([self frame].size.width, [self totalHeight])];
 }
 
 //On delegate / datasource change
