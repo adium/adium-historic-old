@@ -1,10 +1,17 @@
 {
     IBClasses = (
         {
-            ACTIONS = {selectNewAccount = id; }; 
+            ACTIONS = {selectAccount = id; }; 
             CLASS = AIAccountSelectionView; 
             LANGUAGE = ObjC; 
-            OUTLETS = {delegate = id; "popUp_accounts" = NSButton; "view_contents" = NSView; }; 
+            OUTLETS = {
+                "box_account" = NSBox; 
+                "box_contact" = NSBox; 
+                delegate = id; 
+                "popUp_accounts" = NSPopUpButton; 
+                "popUp_contacts" = NSPopUpButton; 
+                "view_contents" = NSView; 
+            }; 
             SUPERCLASS = NSView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

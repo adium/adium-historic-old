@@ -31,8 +31,9 @@
     adium = [AIObject sharedAdiumInstance];
 
     [self configureView];
+	[self configureContactsMenu];
     [self configureAccountMenu];
-
+	
     //register for notifications
     [[adium notificationCenter] addObserver:self
 				   selector:@selector(accountListChanged:)
@@ -86,89 +87,188 @@
         [view release];
     }
     [view_contents release];
-    
-    //
-    [[popUp_accounts menu] setAutoenablesItems:NO];
 }
 
 + (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
 {
-	return([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
-																					   toListObject:inObject
-																						  preferred:YES] count]
-		   +
-		   [[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
-																					   toListObject:inObject
-																						  preferred:NO] count]> 1);
+	return([self multipleContactsForListObject:inObject] ||
+		   [self multipleAccountsForSendingContentType:inType toListObject:inObject]);
+}
+
++ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
+{
+	return(([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
+																				toListObject:inObject
+																				   preferred:YES] count] > 1)
+	||
+	([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
+																				toListObject:inObject
+																				   preferred:NO] count]> 1));
+}
+
++ (BOOL)multipleContactsForListObject:(AIListObject *)inObject
+{
+	//Find the parent meta contact if possible
+	AIListObject	*containingObject;
+	while ([(containingObject = [inObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+		inObject = containingObject;
+	}
+
+	return ([inObject isKindOfClass:[AIMetaContact class]] && ![(AIMetaContact *)inObject containsOnlyOneUniqueContact]);
 }
 
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
     if(delegate){
+	
 		AIListObject	*listObject = [delegate listObject];
-		int				selectedIndex;
 		
-		//
-		[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
-																				  toListObject:listObject
-																					withTarget:self
-																				includeOffline:NO]];
-		
-		//Select our current account
-		selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
-		if ((selectedIndex != NSNotFound) && (selectedIndex >= 0 && selectedIndex < [popUp_accounts numberOfItems])){
-			[popUp_accounts selectItemAtIndex:selectedIndex];
+//		if ([AIAccountSelectionView multipleAccountsForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject]){
+			
+			//I don't like magic numbers.  And I hate nibs.  How is this fixable?
+			[box_accounts setFrame:NSMakeRect(0,0,212,38)];
+						
+			//
+			[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
+																					  toListObject:listObject
+																						withTarget:self
+																					includeOffline:NO]];
+			//
+			[[popUp_accounts menu] setAutoenablesItems:NO];
+			
+			//Select our current account
+			[self updateAccountMenu];
+/*		}else{
+			[box_accounts setFrame:NSMakeRect(0,0,0,0)];
 		}
-		[self updateMenu];
+			*/
 	}
 }
 
+- (void)configureContactsMenu
+{
+	if(delegate){
+		AIListObject	*listObject = [delegate listObject];
+
+		//Find the parent meta contact if possible
+		AIListObject	*containingObject;
+		while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+			listObject = containingObject;
+		}
+				
+//		if ([AIAccountSelectionView multipleContactsForListObject:listObject]){
+		BOOL isMeta = [listObject isKindOfClass:[AIMetaContact class]];
+			
+			//I don't like magic numbers.  And I hate nibs.  How is this fixable?
+			[box_contacts setFrame:NSMakeRect(212,0,212,38)];
+			
+			//
+			[popUp_contacts setMenu:[[adium contactController] menuOfContainedContacts:listObject
+																			forService:nil
+																			withTarget:self
+																		includeOffline:!isMeta]]; //If not meta, include the contact even if it's offline
+			//
+			[[popUp_contacts menu] setAutoenablesItems:NO];
+			
+			//Select our current contact
+			if (isMeta){
+				[delegate setListObject:[(AIMetaContact *)listObject preferredContactWithServiceID:[[delegate account] serviceID]]];
+			}
+			
+			[self updateContactMenu];
+			
+//		}else{
+//			[box_contacts setFrame:NSMakeRect(0,0,0,0)];
+//		}
+	}
+	
+	[self configureAccountMenu];
+}
+
+- (void)selectContainedContact:(id)sender
+{
+	AIListObject	*listObject = [sender representedObject];
+	NSString		*oldServiceID = [[delegate listObject] serviceID];
+	
+	[delegate setListObject:listObject];
+	
+	//If we changed services, set the account
+	if (![oldServiceID isEqualToString:[listObject serviceID]]){
+		[delegate setAccount:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																				 toListObject:listObject]];
+	}
+	
+	
+	[self updateContactMenu];
+	[self configureAccountMenu];
+}
 
 //An account's status changed
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 {
     if([inObject isKindOfClass:[AIAccount class]]){
-		[self configureAccountMenu]; //rebuild the account menu
+		#warning conflict
+		[self configureContactsMenu];
     }
     
     return(nil);
 }
 
 //The account list/status changed
+#warning conflict
 - (void)accountListChanged:(NSNotification *)notification
 {
-    [self configureAccountMenu]; //rebuild the account menu
+	[self configureContactsMenu];
 }
 
 //User selected a new account from the account menu
 - (IBAction)selectAccount:(id)sender
 {
     [delegate setAccount:[sender representedObject]];
-    [self updateMenu];
+//    [self updateAccountMenu];
 }
 
 - (void)updateMenu
 {
-    NSEnumerator	*enumerator;
-    NSMenuItem		*menuItem;
-    AIAccount		*account = [delegate account];
-    
-    //Select the correct item
-	int index = [popUp_accounts indexOfItemWithRepresentedObject:account];
-    if(index < [popUp_accounts numberOfItems] && index >= 0){
-		[popUp_accounts selectItemAtIndex:index];
-	}
+//	[self updateAccountMenu];
+//	[self updateContactMenu];
+	[self configureContactsMenu];
+}
 
+- (void)updateAccountMenu
+{
+    AIAccount		*account = [delegate account];
+	
+    
+    [self updatePopUp:popUp_accounts toObject:account];
+}
+
+- (void)updateContactMenu
+{
+    AIListObject	*listObject = [delegate listObject];
+    [self updatePopUp:popUp_contacts toObject:listObject];
+}
+
+- (void)updatePopUp:(NSPopUpButton *)popUpButton toObject:(id)object
+{
+	NSEnumerator	*enumerator;
+    NSMenuItem		*menuItem;
+	
+    //Select the correct item
+	int index = [popUpButton indexOfItemWithRepresentedObject:object];
+    if(index < [popUpButton numberOfItems] && index >= 0){
+		[popUpButton selectItemAtIndex:index];
+	}
+	
     //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
-    enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
+    enumerator = [[[popUpButton menu] itemArray] objectEnumerator];
     while(menuItem = [enumerator nextObject]){
-        if([menuItem representedObject] == account){
+        if([menuItem representedObject] == object){
             [menuItem setState:NSOnState];
         }else{
             [menuItem setState:NSOffState];
         }
     }
 }
-
 @end
