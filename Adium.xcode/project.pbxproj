@@ -6068,6 +6068,8 @@
 				349FE306074D01D300E36B3B,
 				349FE308074D01D300E36B3B,
 				34D2E8690758BB0C0054C56D,
+				4BC5A5DB0764F75B0080ECF7,
+				4BC5A5DD0764F75B0080ECF7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6395,6 +6397,7 @@
 				34D183BE075FC6ED0075A380,
 				34D183BF075FC6ED0075A380,
 				34D183C0075FC6ED0075A380,
+				4BC5A5DF0764F75B0080ECF7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6664,6 +6667,8 @@
 				349FE307074D01D300E36B3B,
 				3421D3AB0753EE2F00EBCF4F,
 				34D2E86A0758BB0C0054C56D,
+				4BC5A5DC0764F75B0080ECF7,
+				4BC5A5DE0764F75B0080ECF7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11750,6 +11755,7 @@
 				4B850DBF06AD783F00D41191,
 				4BF303160687466D000DCA65,
 				C42C170005BA687800135D3C,
+				4BC5A5C90764F70E0080ECF7,
 			);
 			isa = PBXGroup;
 			name = Interface;
@@ -14814,6 +14820,93 @@
 			path = "Plugins/Stress Test/AIStressTestPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BC5A5C90764F70E0080ECF7 = {
+			children = (
+				4BC5A5D80764F75B0080ECF7,
+				4BC5A5D90764F75B0080ECF7,
+				4BC5A5D60764F75B0080ECF7,
+				4BC5A5D70764F75B0080ECF7,
+				4BC5A5DA0764F75B0080ECF7,
+			);
+			isa = PBXGroup;
+			name = "Video Chat Interface";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5D60764F75B0080ECF7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILocalVideoWindowController.h;
+			path = "Plugins/Video Chat Interface/AILocalVideoWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5D70764F75B0080ECF7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILocalVideoWindowController.m;
+			path = "Plugins/Video Chat Interface/AILocalVideoWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5D80764F75B0080ECF7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIVideoChatInterfacePlugin.h;
+			path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5D90764F75B0080ECF7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIVideoChatInterfacePlugin.m;
+			path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5DA0764F75B0080ECF7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = LocalVideoWindow.nib;
+			path = "Plugins/Video Chat Interface/LocalVideoWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5DB0764F75B0080ECF7 = {
+			fileRef = 4BC5A5D60764F75B0080ECF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5A5DC0764F75B0080ECF7 = {
+			fileRef = 4BC5A5D70764F75B0080ECF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5A5DD0764F75B0080ECF7 = {
+			fileRef = 4BC5A5D80764F75B0080ECF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5A5DE0764F75B0080ECF7 = {
+			fileRef = 4BC5A5D90764F75B0080ECF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5A5DF0764F75B0080ECF7 = {
+			fileRef = 4BC5A5DA0764F75B0080ECF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BC7BA3D069C8BD4001F2DD8 = {
 			isa = PBXFileReference;

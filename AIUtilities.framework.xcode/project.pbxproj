@@ -4368,6 +4368,9 @@
 			fileRef = 34A2EBE1073B3BCC0042C391;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34A2EBEA073B3BCD0042C391 = {
@@ -4380,6 +4383,9 @@
 			fileRef = 34A2EBE3073B3BCD0042C391;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34A2EBEE073B3BCD0042C391 = {
@@ -4392,6 +4398,9 @@
 			fileRef = 34A2EBE7073B3BCD0042C391;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34D1838D075FC20E0075A380 = {
@@ -4547,6 +4556,50 @@
 		};
 		4B6DDA50075A8879002E0BF4 = {
 			fileRef = 4B6DDA4E075A8879002E0BF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5A5BE0764F6CB0080ECF7 = {
+			children = (
+				4BC5A5C10764F6ED0080ECF7,
+				4BC5A5C20764F6ED0080ECF7,
+			);
+			isa = PBXGroup;
+			name = "Video capture (From FW using QT)";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5C10764F6ED0080ECF7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIVideoCapture.h;
+			path = "Frameworks/AIUtilities Framework/AIVideoCapture.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5C20764F6ED0080ECF7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIVideoCapture.m;
+			path = "Frameworks/AIUtilities Framework/AIVideoCapture.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC5A5C30764F6ED0080ECF7 = {
+			fileRef = 4BC5A5C10764F6ED0080ECF7;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		4BC5A5C40764F6ED0080ECF7 = {
+			fileRef = 4BC5A5C20764F6ED0080ECF7;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4933,6 +4986,7 @@
 				4BD1EF7A06D2637800B3975E,
 				0750FF2F073A0562000D8A1F,
 				4BD1EF8006D2639400B3975E,
+				4BC5A5BE0764F6CB0080ECF7,
 			);
 			isa = PBXGroup;
 			name = "Fun New Classes";
@@ -5573,6 +5627,7 @@
 				34E4692A075681AE004C3A42,
 				4B6DDA4F075A8879002E0BF4,
 				34D18392075FC2390075A380,
+				4BC5A5C30764F6ED0080ECF7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5730,6 +5785,7 @@
 				34E4692B075681AE004C3A42,
 				4B6DDA50075A8879002E0BF4,
 				34D18393075FC2390075A380,
+				4BC5A5C40764F6ED0080ECF7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
