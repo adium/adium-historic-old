@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 553 $ $Date: 2004/01/19 19:59:41 $
+# $Rev: 553 $ $Date: 2004/01/20 04:44:44 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -16,7 +16,7 @@ use strict;
 use CGI qw(-no_debug escapeHTML);
 
 my $vacuum = 1;
-my $verbose = 1;
+my $verbose = 0;
 my $quiet = 0;
 my $debug = 0;
 
