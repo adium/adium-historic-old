@@ -31,26 +31,27 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	 We may receive any combination of primary and secondary text (either, both, or neither).
 	 */
 	
-	NSString	*okButtonText = [NSString stringWithUTF8String:okText];
-	NSString	*cancelButtonText = [NSString stringWithUTF8String:cancelText];
+	NSString			*okButtonText = [NSString stringWithUTF8String:okText];
+	NSString			*cancelButtonText = [NSString stringWithUTF8String:cancelText];
+	NSString			*primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
+	NSMutableDictionary *infoDict;
 	
-	NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
+	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
+	if([primaryString rangeOfString:@"Enter password for "].location != NSNotFound){
+		return;
+	}
+	
+	infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
 		cancelButtonText,@"Cancel Text",
 		[NSValue valueWithPointer:okCb],@"OK Callback",
 		[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
 		[NSValue valueWithPointer:userData],@"userData",nil];
-	if (title){
-		[infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
-	}
-	if (defaultValue){
-		[infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
-	}
-	if (primary){
-		[infoDict setObject:[NSString stringWithUTF8String:primary] forKey:@"Primary Text"];
-	}
-	if (secondary){
-		[infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
-	}
+	
+	
+	if (primaryString) [infoDict setObject:primaryString forKey:@"Primary Text"];
+	if (title) [infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
+	if (defaultValue) [infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
+	if (secondary) [infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
 	
 	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
 	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
@@ -170,6 +171,52 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				   (title ? title : ""),
 				   (primary ? primary : ""),
 				   (secondary ? secondary : ""));
+		
+		GList					*gl, *fl, *field_list;
+		GaimRequestField		*field;
+		GaimRequestFieldGroup	*group;
+
+		//Look through each group, processing each field
+		for (gl = gaim_request_fields_get_groups(fields);
+			 gl != NULL;
+			 gl = gl->next) {
+			
+			group = gl->data;
+			field_list = gaim_request_field_group_get_fields(group);
+			
+			for (fl = field_list; fl != NULL; fl = fl->next) {
+				GaimRequestFieldType type;
+				
+				/*
+				 typedef enum
+				 {
+					 GAIM_REQUEST_FIELD_NONE,
+					 GAIM_REQUEST_FIELD_STRING,
+					 GAIM_REQUEST_FIELD_INTEGER,
+					 GAIM_REQUEST_FIELD_BOOLEAN,
+					 GAIM_REQUEST_FIELD_CHOICE,
+					 GAIM_REQUEST_FIELD_LIST,
+					 GAIM_REQUEST_FIELD_LABEL,
+					 GAIM_REQUEST_FIELD_ACCOUNT
+					 
+				 } GaimRequestFieldType;
+				 */
+
+				/*
+				field = (GaimRequestField *)fl->data;
+				type = gaim_request_field_get_type(field);
+				if (type == GAIM_REQUEST_FIELD_STRING) {
+					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
+						gaim_request_field_string_set_value(field, gaim_account_get_username(account));
+					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
+						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
+					}
+				}
+				 */
+			}
+			
+		}
+//		((GaimRequestFieldsCb)okCb)(userData, fields);
 	}
     
 	return(adium_gaim_get_handle());
