@@ -303,7 +303,7 @@
 }
 
 //Manual Ordering support
-- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
+/*- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
     return(YES);
 }
@@ -316,7 +316,7 @@
 - (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
     return(YES);
-}
+}*/
 
 
 

@@ -26,8 +26,8 @@
 {
     [super initWithFrame:frameRect];
 
-    delegate = inDelegate;
-    owner = inOwner;
+    delegate = [inDelegate retain];
+    owner = [inOwner retain];
 
     [self configureView];
     [self configureAccountMenu];
@@ -43,6 +43,8 @@
 - (void)dealloc
 {
     [[owner notificationCenter] removeObserver:self];
+    [delegate release];
+    [owner release];
 
     [super dealloc];
 }

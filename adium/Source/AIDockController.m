@@ -319,6 +319,10 @@
 }
 - (void)bounceWithTimer:(NSTimer *)timer
 {
+    //Stop any current behavior
+    [self _stopBouncing];
+
+    //Bounce
     [self _singleBounce];
 }
 
@@ -326,7 +330,7 @@
 - (void)_singleBounce
 {
     if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
-        [NSApp requestUserAttention:NSInformationalRequest];
+        currentAttentionRequest = [NSApp requestUserAttention:NSInformationalRequest];
     }
 }
 
