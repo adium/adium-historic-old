@@ -79,6 +79,5 @@
 - (NSView *)accountView{return(nil);};
 - (NSString *)accountID{return(nil);};
 - (NSString *)accountDescription{return(nil);};
-- (BOOL)sendMessageObject:(AIMessageObject *)object toHandle:(AIContactHandle *)inHandle{return(NO);};
 
 @end

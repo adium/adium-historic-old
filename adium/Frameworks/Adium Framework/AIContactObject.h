@@ -35,7 +35,6 @@
 - (void)registerOwner:(AIAccount *)inOwner;
 - (void)unregisterOwner:(AIAccount *)inOwner;
 - (BOOL)belongsToAccount:(AIAccount *)inAccount;
-//- (void)setActiveOwner:(AIAccount *)inOwner;
-//- (AIAccount *)activeOwner;
+
 
 @end

@@ -1664,9 +1664,11 @@
 		F51DEFA40326330101A8010A = {
 			children = (
 				F579399C033E75BC01A8010A,
+				F544A5DF03B3628B01A8010A,
 				F57939A2033E75CB01A8010A,
 				F57939A0033E75CB01A8010A,
 				F579399E033E75CB01A8010A,
+				F544A5E003B3628B01A8010A,
 			);
 			isa = PBXGroup;
 			name = "Standard Contact List View";
@@ -1679,6 +1681,7 @@
 				F57939A3033E75CB01A8010A,
 				F57939A5033E75CB01A8010A,
 				F57939A7033E75CB01A8010A,
+				F544A5E103B3628B01A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1686,6 +1689,7 @@
 		F51DEFAA032633E301A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				F544A5E303B3628B01A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1696,6 +1700,7 @@
 				F57939A4033E75CB01A8010A,
 				F57939A6033E75CB01A8010A,
 				F57939A8033E75CB01A8010A,
+				F544A5E203B3628B01A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2320,7 +2325,6 @@
 			children = (
 				F5793921033E74AE01A8010A,
 				F5793912033E748F01A8010A,
-				F570A61003704EF401A8010A,
 				F579390B033E748F01A8010A,
 				F5793914033E748F01A8010A,
 				F5B89EFC033CA8CC01A8010A,
@@ -2720,6 +2724,42 @@
 			name = InstantMessage.framework;
 			path = /System/Library/PrivateFrameworks/InstantMessage.framework;
 			refType = 0;
+		};
+		F544A5DE03B3628B01A8010A = {
+			isa = PBXFileReference;
+			name = AICLPreferences.h;
+			path = "Plugins/Standard Contact List View/Preferences/AICLPreferences.h";
+			refType = 4;
+		};
+		F544A5DF03B3628B01A8010A = {
+			isa = PBXFileReference;
+			name = AICLPreferences.m;
+			path = "Plugins/Standard Contact List View/Preferences/AICLPreferences.m";
+			refType = 4;
+		};
+		F544A5E003B3628B01A8010A = {
+			isa = PBXFileReference;
+			name = AICLPrefView.nib;
+			path = "Plugins/Standard Contact List View/Preferences/AICLPrefView.nib";
+			refType = 4;
+		};
+		F544A5E103B3628B01A8010A = {
+			fileRef = F544A5DE03B3628B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F544A5E203B3628B01A8010A = {
+			fileRef = F544A5DF03B3628B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F544A5E303B3628B01A8010A = {
+			fileRef = F544A5E003B3628B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F549EF08036B0F2C01A8010A = {
 			children = (
@@ -4754,13 +4794,6 @@
 			path = "Frameworks/Adium Framework/AIService.h";
 			refType = 4;
 		};
-		F570A61003704EF401A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIService.m;
-			path = "Frameworks/Adium Framework/AIService.m";
-			refType = 4;
-		};
 		F570A61303704F4201A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6126,6 +6159,7 @@
 				F579399D033E75CB01A8010A,
 				F579399F033E75CB01A8010A,
 				F57939A1033E75CB01A8010A,
+				F544A5DE03B3628B01A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
