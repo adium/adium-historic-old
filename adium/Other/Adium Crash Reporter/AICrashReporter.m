@@ -16,14 +16,32 @@
 #define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
 #define KEY_CRASH_AIM_ACCOUNT		@"AdiumCrashReporterAIMAccount"
 
+#define CRASH_REPORT_SLAY_ATTEMPTS		100
+#define CRASH_REPORT_SLAY_INTERVAL		0.1
+
+#define CRASH_LOG_WAIT_ATTEMPTS			50
+#define CRASH_LOG_WAIT_INTERVAL			0.2
+
 @implementation AICrashReporter
 
 //
 - (id)init
 {
     [super init];
-    
-    crashLog = nil;
+	
+	//The slower script is more proper... but it's so slow!
+	//The faster script results in the crash window barely appearing at all
+	slayerScript = [[NSAppleScript alloc] initWithSource:
+		/*@"tell application \"System Events\"\r\
+				set theList to name of every application process\r\
+			end tell\r\
+			if theList contains \"UserNotificationCenter\" then\r\
+				tell application \"UserNotificationCenter\" to quit\r\
+				return false\r\
+			end if\r\
+			return true"*/
+		@"tell application \"UserNotificationCenter\" to quit"];
+	crashLog = nil;
     
     return(self);
 }
@@ -38,60 +56,96 @@
 //
 - (void)awakeFromNib
 {
-    NSFileManager 	*fileManager = [NSFileManager defaultManager];
-
 	//Search for an exception log
-    if([fileManager fileExistsAtPath:EXCEPTIONS_PATH]){
+    if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
-    }else{
-		int seconds = 10;
+    }else{		
+		//Kill the apple crash reporter
+		[NSTimer scheduledTimerWithTimeInterval:CRASH_REPORT_SLAY_INTERVAL
+										 target:self
+									   selector:@selector(appleCrashReportSlayer:)
+									   userInfo:nil
+										repeats:YES];
 		
-		while(seconds--){
-			//As soon as we find a log, snatch it and move on
-			if([fileManager fileExistsAtPath:CRASHES_PATH] && [[NSString stringWithContentsOfFile:CRASHES_PATH] length]){
-				[self reportCrashForLogAtPath:CRASHES_PATH];
-				break;
-			}	
-			NSLog(@"No log yet, waiting a second... (%i)",seconds);
-			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
-		}
+		//Wait for a valid crash log to appear
+		[NSTimer scheduledTimerWithTimeInterval:CRASH_LOG_WAIT_INTERVAL
+										 target:self
+									   selector:@selector(delayedCrashLogDiscovery:)
+									   userInfo:nil
+										repeats:YES];
+	}
+}
+
+//Actively tries to kill Apple's "Report this crash" dialog
+- (void)appleCrashReportSlayer:(NSTimer *)inTimer
+{
+	static int 		countdown = CRASH_REPORT_SLAY_ATTEMPTS;
+	
+	NSLog(@"Slay! (%i)",countdown);
+	
+	//Kill the notification app if it's open
+	if(countdown-- == 0 || ![[slayerScript executeAndReturnError:nil] booleanValue]){
+		[inTimer invalidate];
+	}
+}
+
+//Waits for a crash log to be written
+- (void)delayedCrashLogDiscovery:(NSTimer *)inTimer
+{
+	static int 		countdown = CRASH_LOG_WAIT_ATTEMPTS;
+	
+	NSLog(@"No log yet, waiting... (%i)",countdown);
+
+	//Kill the notification app if it's open
+	if(countdown-- == 0 || [self reportCrashForLogAtPath:CRASHES_PATH]){
+		[inTimer invalidate];
 	}
 }
 
 //Display the report crash window for the passed log
-- (IBAction)reportCrashForLogAtPath:(NSString *)inPath
+- (BOOL)reportCrashForLogAtPath:(NSString *)inPath
 {
     NSString	*emailAddress, *aimAccount;
     NSRange		binaryRange;
     
-	NSLog(@"LostAt:%@",inPath);
-	NSLog(@"---");
-    //Fetch and delete the log
-    crashLog = [[NSString stringWithContentsOfFile:inPath] retain];
-    //[[NSFileManager defaultManager] trashFileAtPath:inPath];
-	NSLog(@"CrashLog:%@",crashLog);
-    
-    //Strip off binary descriptions.. we don't need to send all that
-    binaryRange = [crashLog rangeOfString:@"Binary Images Description:"];
-    if(binaryRange.location != NSNotFound){
-        NSString	*shortLog = [crashLog substringToIndex:binaryRange.location];
-        [crashLog release]; crashLog = [shortLog retain];
-    }
-    
-    //Restore the user's email address and account if they've entered it previously
-    if(emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS]){
-        [textField_emailAddress setStringValue:emailAddress];
-    }
-    if(aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT]){
-        [textField_accountIM setStringValue:aimAccount];
-    }
-    
-    //Open our window
-    [window_MainWindow center];
-    [window_MainWindow makeKeyAndOrderFront:nil];
+	if([[NSFileManager defaultManager] fileExistsAtPath:CRASHES_PATH]){
+		NSString	*newLog = [NSString stringWithContentsOfFile:inPath];
+		if(newLog && [newLog length]){
+			//Hang onto and delete the log
+			crashLog = [newLog retain];
+			[[NSFileManager defaultManager] trashFileAtPath:inPath];
+			
+			//Strip off binary descriptions.. we don't need to send all that
+			binaryRange = [crashLog rangeOfString:@"Binary Images Description:"];
+			if(binaryRange.location != NSNotFound){
+				NSString	*shortLog = [crashLog substringToIndex:binaryRange.location];
+				[crashLog release]; crashLog = [shortLog retain];
+			}
+			
+			//Restore the user's email address and account if they've entered it previously
+			if(emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS]){
+				[textField_emailAddress setStringValue:emailAddress];
+			}
+			if(aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT]){
+				[textField_accountIM setStringValue:aimAccount];
+			}
+			
+			//Highlight the existing details text
+			[textView_details setSelectedRange:NSMakeRange(0, [[textView_details textStorage] length])
+									  affinity:NSSelectionAffinityUpstream
+								stillSelecting:NO];
+
+			//Open our window
+			[window_MainWindow makeKeyAndOrderFront:nil];
+			
+			return(YES);
+		}
+	}
+	
+	return(NO);
 }
 
-//
+//Save some of the information for next time on quit
 - (BOOL)windowShouldClose:(id)sender
 {
     //Remember the user's email address, account name
@@ -111,7 +165,6 @@
     
     //Fill in crash log
     [[textView_crashLog textStorage] setAttributedString:attrLogString];
-	NSLog(@"%@",[attrLogString string]);
     
     //Display the sheet
     [NSApp beginSheet:panel_privacySheet

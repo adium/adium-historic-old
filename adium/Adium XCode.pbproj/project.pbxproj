@@ -5914,26 +5914,6 @@
 			settings = {
 			};
 		};
-		3453572F059AEDD400A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = "libgaim-0.0.0.dylib";
-			path = "Plugins/Gaim Service/LIBS/libgaim-0.0.0.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34535730059AEDD500A83D9E = {
-			fileRef = 3453572F059AEDD400A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3453573C059AEDEE00A83D9E = {
-			fileRef = 3453572F059AEDD400A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3453573D059AEE1000A83D9E = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.dylib";
@@ -7879,7 +7859,6 @@
 				6C60B1AB05605FAD00CAD137,
 				34BD9CF3053146CC000AB133,
 				344EE91E0574500F000F342B,
-				6C3E0150054445BA00A4AE2E,
 				34BD9D0A053146CC000AB133,
 				34BD9CF4053146CC000AB133,
 				34BD9CF5053146CC000AB133,
@@ -8763,7 +8742,6 @@
 				4B7F279D05440CB900CDFC90,
 				4B7F279E05440CB900CDFC90,
 				4B7F279F05440CB900CDFC90,
-				3453573C059AEDEE00A83D9E,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17409,6 +17387,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B1E70AC059B15FE006E2567 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			name = libgaim.0.0.0.dylib;
+			path = "Plugins/Gaim Service/LIBS/libgaim.0.0.0.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1E70AD059B15FF006E2567 = {
+			fileRef = 4B1E70AC059B15FE006E2567;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B215D970598907100305B3C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -19690,11 +19682,11 @@
 				343FA4530567DC460049DFFB,
 				34E839060583207E00F2AADB,
 				34E83B0B05832B4300F2AADB,
-				34535730059AEDD500A83D9E,
 				34535741059AEE1000A83D9E,
 				34535742059AEE1000A83D9E,
 				34535743059AEE1000A83D9E,
 				34535744059AEE1000A83D9E,
+				4B1E70AD059B15FF006E2567,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19718,7 +19710,7 @@
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" \"/Users/evands/adium/Plugins/Gaim Service/LIBS\"";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -19856,7 +19848,7 @@
 		4B7F279005440CA100CDFC90 = {
 			children = (
 				9E2BD856054BE18200558E56,
-				3453572F059AEDD400A83D9E,
+				4B1E70AC059B15FE006E2567,
 				4B7F279205440CB800CDFC90,
 				4B7F279305440CB900CDFC90,
 				4B7F279405440CB900CDFC90,
@@ -22788,18 +22780,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		6C3E014F054445BA00A4AE2E = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 4B7F278205440C0800CDFC90;
-			remoteInfo = Gaim;
-		};
-		6C3E0150054445BA00A4AE2E = {
-			isa = PBXTargetDependency;
-			target = 4B7F278205440C0800CDFC90;
-			targetProxy = 6C3E014F054445BA00A4AE2E;
 		};
 		6C3E0151054445C000A4AE2E = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
