@@ -16,6 +16,8 @@ Contacts:
 		* Do we need to show the "Add Contact..." item, greyed out, on basically all contacts?
 			[Dave] Is there an easy way to hide it when not needed? I don't know of one with our system
 		* Do we sure "Delete" should be in the context menu? How often is this used?
+	+ Allow for users to communicate with smart philophers, such as Plato or Aristotle. A 
+		users friends may be boring, so we should enhance the current experience.
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
 	+ Display time stamps in the panel alert
