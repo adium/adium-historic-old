@@ -182,7 +182,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 				if(attachment && [attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
 					NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
 					NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
-					NSString *fileSafeChunk = [chunk safeFilenameString];
+					NSString *fileSafeChunk = [[attachment string] safeFilenameString];
 					NSString *shortFileName;
 					NSString *fileName;
 					
@@ -196,7 +196,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 						[string appendString:@"<img src=\""];
 						[string appendString:fileName];
 						[string appendString:@"\" alt=\""];
-						[string appendString:chunk];
+						[string appendString:[attachment string]];
 						[string appendString:@"\">"];
 						[chunk release]; chunk = nil;
 					}
