@@ -30,6 +30,10 @@
     displayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
     UID = [inUID retain];
+	[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:PREF_GROUP_OBJECT_STATUS_CACHE ignoreInheritedValues:YES]
+				   forKey:@"FormattedUID"
+				   notify:YES];
+	
     serviceID = [inServiceID retain];
 
 	orderIndex = -1;
@@ -370,7 +374,7 @@
 //Server-formatted UID if present, otherwise the UID
 - (NSString *)formattedUID
 {
-    NSString	*outName = [self statusObjectForKey:@"FormattedUID"];	
+	NSString  *outName = [self statusObjectForKey:@"FormattedUID"];
     return(outName ? outName : UID);	
 }
 
@@ -391,7 +395,11 @@
 //Subclasses may choose to override these
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
 {
-
+	if (inObject == self) {
+		if ([key isEqualToString:@"FormattedUID"]){
+			[self setPreference:formattedUID forKey:key group:PREF_GROUP_OBJECT_STATUS_CACHE];
+		}
+	}
 }
 
 @end

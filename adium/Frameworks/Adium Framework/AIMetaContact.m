@@ -104,6 +104,8 @@
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
 {
 	[self _cacheStatusValue:[inObject statusObjectForKey:key] forObject:inObject key:key];
+	
+	[super listObject:self didSetStatusObject:value forKey:key];
 }
 
 //Retrieve a status key for this object
