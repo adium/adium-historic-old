@@ -133,13 +133,11 @@ BOOL pantherOrLater;
         shadowSize.height = 0.0;
         [noShadow setShadowOffset:shadowSize];
         [noShadow setShadowBlurRadius:0.0];
-}
+        [tempShadow set];
+    }
 
     // Paint the buddy icon or placeholder
     if (buddyIconLabelColor) {
-        if(pantherOrLater) {
-            [tempShadow set];
-        }
         [buddyIconLabelColor set];
         [NSBezierPath fillRect:buddyIconLabelRect];
 	
@@ -148,22 +146,15 @@ BOOL pantherOrLater;
         }
         [[NSColor whiteColor] set];
         [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
-        [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
     } else {
-        if(pantherOrLater) {
-            [noShadow set];
-        }
         [[NSColor whiteColor] set];
         [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
         if(pantherOrLater) {
-            [tempShadow set];
-        }
-        [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
-    }
-    if (buddyIconBadge) {
-	if(pantherOrLater) {
             [noShadow set];
         }
+    }
+    [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
+    if (buddyIconBadge) {
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
             
