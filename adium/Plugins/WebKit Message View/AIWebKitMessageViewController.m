@@ -186,7 +186,6 @@
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar
 {
 
-	
 }
 
 //
@@ -197,6 +196,16 @@
 	range = [inString rangeOfString:@"%sender"];
 	if(range.location != NSNotFound){
 		[inString replaceCharactersInRange:range withString:[[content source] displayName]];
+	}
+
+	range = [inString rangeOfString:@"%senderScreenName"];
+	if(range.location != NSNotFound){
+	   [inString replaceCharactersInRange:range withString:[[content source] UID]];
+	}
+	
+	range = [inString rangeOfString:@"%service"];
+	if(range.location != NSNotFound){
+	   [inString replaceCharactersInRange:range withString:[[content source] serviceID]];
 	}
 	
 	range = [inString rangeOfString:@"%message"];
