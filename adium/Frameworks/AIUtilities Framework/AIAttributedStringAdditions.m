@@ -324,14 +324,15 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (float)heightWithWidth:(float)width
 {
-    NSTextStorage 	*textStorage;
+    NSTextStorage		*textStorage;
     NSTextContainer 	*textContainer;
     NSLayoutManager 	*layoutManager;
-
+	float				height;
+	
     //Setup the layout manager and text container
-    textStorage = [[[NSTextStorage alloc] initWithAttributedString:self] autorelease];
-    textContainer = [[[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)] autorelease];
-    layoutManager = [[[NSLayoutManager alloc] init] autorelease];
+    textStorage = [[NSTextStorage alloc] initWithAttributedString:self];
+    textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
+    layoutManager = [[NSLayoutManager alloc] init];
 
     //Configure
     [textContainer setLineFragmentPadding:0.0];
@@ -341,7 +342,13 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     //Force the layout manager to layout its text
     (void)[layoutManager glyphRangeForTextContainer:textContainer];
 
-    return([layoutManager usedRectForTextContainer:textContainer].size.height);
+	height = [layoutManager usedRectForTextContainer:textContainer].size.height;
+	
+	[textStorage release];
+	[textContainer release];
+	[layoutManager release];
+	
+    return(height);
 }
 
 - (NSData *)dataRepresentation
@@ -373,7 +380,7 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (NSAttributedString *)stringByAddingFormattingForLinks
 {
-	NSMutableAttributedString * str = [self mutableCopy];
+NSMutableAttributedString  *str = [self mutableCopy];
 	[str addFormattingForLinks];
 	return [str autorelease];
 }
@@ -397,9 +404,11 @@ NSAttributedString *_safeString(NSAttributedString *inString)
         NSMutableAttributedString *safeString = [[inString mutableCopy] autorelease];
         int currentLocation = 0;
         NSRange attachmentRange;
-
+		
+		NSString	*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
+		
         //find attachment
-        attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] 
+        attachmentRange = [[safeString string] rangeOfString:attachmentCharacterString
 													 options:0 
 													   range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
 
@@ -426,7 +435,9 @@ NSAttributedString *_safeString(NSAttributedString *inString)
             currentLocation = attachmentRange.location + attachmentRange.length;
 
             //find the next attachment
-            attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
+            attachmentRange = [[safeString string] rangeOfString:attachmentCharacterString
+														 options:0
+														   range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
         }
 
         return safeString;
