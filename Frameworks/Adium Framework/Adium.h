@@ -12,12 +12,6 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
-/** 
- * $Revision: 1.48 $
- *  $Date$
- *  $Author#
- *
- **/
 
 //Localization
 #ifndef AILocalizedString
@@ -35,11 +29,6 @@
 #ifndef ReleaseString
 #define ReleaseString(var)			if ( (var) ) { [(var) release]; (var) = nil; } 
 #endif
-
-//First, as other objects are generally subclasses of AIObject
-//#import "AIObject.h"
-
-//#import "ESObjectWithStatus.h"
 
 #import "AIAccount.h"
 #import "AIService.h"
@@ -64,14 +53,12 @@
 #import "AIContactInfoPane.h"
 #import "AIPlugin.h"
 #import "AIPreferencePane.h"
-#import "AIEmoticonPreferences.h"
 #import "AISortController.h"
 #import "AIWindowController.h"
 #import "AIContextMenuTextView.h"
 #import "DCJoinChatViewController.h"
 #import "AIListOutlineView.h"
 #import "AIAbstractListController.h"
-//#import "DCJoinChatWindowController.h"
 #import "AIUserIcons.h"
 #import "AIServiceIcons.h"
 #import "AIStatusIcons.h"
