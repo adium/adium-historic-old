@@ -19,6 +19,7 @@
 	//Register the events we generate
 	[[adium contactAlertsController] registerEventID:ACCOUNT_CONNECTED withHandler:self globalOnly:YES];
 	[[adium contactAlertsController] registerEventID:ACCOUNT_DISCONNECTED withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:ACCOUNT_RECEIVED_EMAIL withHandler:self globalOnly:YES];
 
 	//Observe status changes
     [[adium contactController] registerListObjectObserver:self];
@@ -34,6 +35,8 @@
 		description = AILocalizedString(@"Connected",nil);
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
 		description = AILocalizedString(@"Disconnected",nil);
+	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+		description = AILocaliedString(@"New Mail Received",nil);
 	}else{
 		description = @"";	
 	}
@@ -51,6 +54,8 @@
 		description = @"Connected";
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
 		description = @"Disconnected";
+	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+		description = @"New Mail Received"
 	}else{
 		description = @"";	
 	}

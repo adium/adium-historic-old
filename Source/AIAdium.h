@@ -152,6 +152,7 @@
 #define INTERFACE_ERROR_MESSAGE			@"Interface_ErrorMessageReceived"
 #define ACCOUNT_CONNECTED				@"Account_Connected"
 #define ACCOUNT_DISCONNECTED			@"Account_Disconnected"
+#define	ACCOUNT_RECEIVED_EMAIL			@"Account_NewMailReceived"
 #define FILE_TRANSFER_REQUEST			@"FileTransfer_Request"
 #define FILE_TRANSFER_BEGAN				@"FileTransfer_Began"
 #define FILE_TRANSFER_CANCELED			@"FileTransfer_Canceled"

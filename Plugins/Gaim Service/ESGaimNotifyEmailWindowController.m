@@ -69,6 +69,10 @@
 	if (!urlString){
 		[button_showEmail setFrame:NSMakeRect(0,0,0,0)];
 	}
+
+	[[adium contactAlertsController] generateEvent:ACCOUNT_RECEIVED_EMAIL
+									 forListObject:nil
+										  userInfo:nil];
 }
 
 - (IBAction)pressedButton:(id)sender
