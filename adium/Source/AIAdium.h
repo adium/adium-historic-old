@@ -298,6 +298,7 @@ typedef enum {
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
+- (void)disconnectAllAccounts;
 
 //Account properties
 - (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
