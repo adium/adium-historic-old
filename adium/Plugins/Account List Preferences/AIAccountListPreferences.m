@@ -486,7 +486,7 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     AIAccount   *account = [accountArray objectAtIndex:row];
-    NSImage		*image = [account serviceImage];
+    NSImage		*image = [account image];
 	if (!image) image = [NSImage imageNamed:@"DefaultAccountIcon" forClass:[self class]];
 	NSString	*status = nil;
 	
