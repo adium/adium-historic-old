@@ -214,7 +214,7 @@
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
 
         //If the 'Soundset' changed
-        if(notification == nil || [key compare:KEY_EVENT_SOUND_SET] == 0){
+        if(notification == nil || ([key compare:KEY_EVENT_SOUND_SET] == 0)){
             NSString		*soundSetPath;
             NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
             
@@ -258,8 +258,10 @@
 //Save the event sounds
 - (void)saveEventSoundArray
 {
-     [[owner preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS]; //Remove the soundset preference because we now have a custom one
+    //save the custom soundset
     [[owner preferenceController] setPreference:eventSoundArray forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
+    //Remove the soundset preference because we now have a custom one
+    [[owner preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS]; 
 }
 
 //Builds and returns an event menu
