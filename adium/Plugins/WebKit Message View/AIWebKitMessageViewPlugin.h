@@ -34,10 +34,10 @@
 #import "ESWKMVAdvancedPreferences.h"
 
 typedef enum {
-	Display_Name,
-	Display_Name_Screen_Name,
-	Screen_Name_Display_Name,
-	Screen_Name
+	Display_Name = 1,
+	Display_Name_Screen_Name = 2,
+	Screen_Name_Display_Name = 3,
+	Screen_Name = 4
 } NameFormat;
 
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
