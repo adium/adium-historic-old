@@ -63,9 +63,16 @@
     
     //Set the desired height of this view
     [self setDesiredHeight:yPos + 2 + FRAME_PADDING_OFFSET];
+	containsPanes = YES;
 }
 
-//Pass this a tab view containing module pane category views.  It will return the height of the talles modular pane
+//Returns YES if we contain no panes
+- (BOOL)isEmpty
+{
+	return(!containsPanes);
+}
+
+//Pass this a tab view containing module pane category views.  It will return the height of the tallest modular pane
 //within that tab view
 + (int)heightForTabView:(NSTabView *)tabView
 {
