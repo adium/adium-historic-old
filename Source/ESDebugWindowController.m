@@ -72,7 +72,7 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 
 	mutableDebugString = [[[textView_debug textStorage] mutableString] retain];
 	[scrollView_debug setAutoScrollToBottom:YES];
-	
+
 	enumerator = [[[adium debugController] debugLogArray] objectEnumerator];
 	while(aDebugString = [enumerator nextObject]){
 		[mutableDebugString appendString:aDebugString];
@@ -80,6 +80,8 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 			[mutableDebugString appendString:@"\n"];
 		}
 	}
+
+	[scrollView_debug scrollToBottom];
 }
 
 //Close the window
