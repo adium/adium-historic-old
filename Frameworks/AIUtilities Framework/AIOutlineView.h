@@ -67,6 +67,17 @@
  * @param operation The <tt>NSDragOperation</tt> of the drag
  */
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation;
+
+/*!
+ * @brief Informs the delegate the user typed into the outline view
+ *
+ * As the user types, the delegate can be informed of each successive string the typing generates.  If the user does not type for .2 seconds, the next call will start with just the next typed character, so Finder-style name matching can be performed if desired.
+ *
+ * @param outlineView The outline view
+ * @param inputString The aggregated typed string
+ */
+- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString;
+
 @end
 
 /*!
@@ -82,6 +93,9 @@
 @interface AIOutlineView : NSOutlineView {
     BOOL		needsReload;
 	BOOL		ignoreExpandCollapse;
+
+	UInt32			lastKeypressTick;
+	NSMutableString	*currentInputString;
 }
 
 @end
