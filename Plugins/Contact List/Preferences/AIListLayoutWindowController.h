@@ -3,13 +3,13 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Aug 01 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 @interface AIListLayoutWindowController : AIWindowController {
 	IBOutlet		NSPopUpButton		*popUp_contactTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_groupTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_windowStyle;
+	IBOutlet		NSPopUpButton		*popUp_extendedStatusStyle;
 	IBOutlet		NSPopUpButton		*popUp_extendedStatusPosition;
 	IBOutlet		NSPopUpButton		*popUp_userIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_statusIconPosition;
