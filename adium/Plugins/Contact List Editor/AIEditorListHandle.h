@@ -13,11 +13,9 @@
 
 @interface AIEditorListHandle : AIEditorListObject {
     NSString		*serviceID;
-    BOOL		temporary;
 }
 
 - (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID temporary:(BOOL)inTemporary;
 - (NSString *)serviceID;
-- (BOOL)temporary;
 
 @end

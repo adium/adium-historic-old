@@ -8,22 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIEditorListGroup, AIAccount;
+@class AIEditorListGroup, AIEditorListObject;
 
-@interface AIEditorCollection : NSObject {
-    NSString 		*name;
-    NSImage 		*icon;
-    AIEditorListGroup 	*list;
-    BOOL		enabled;
-    AIAccount		*account;
-    
-}
-
-- (id)initWithName:(NSString *)inName icon:(NSImage *)inIcon list:(AIEditorListGroup *)inList enabled:(BOOL)inEnabled forAccount:(AIAccount *)inAccount;
+@protocol AIEditorCollection <NSObject>
 - (NSString *)name;
 - (NSImage *)icon;
-- (AIEditorListGroup *)list;
 - (BOOL)enabled;
-- (AIAccount *)account;
-
+- (AIEditorListGroup *)list;
+- (void)addObject:(AIEditorListObject *)inObject;
+- (void)deleteObject:(AIEditorListObject *)inObject;
+- (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName;
+- (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup;
 @end

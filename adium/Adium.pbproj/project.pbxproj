@@ -4763,13 +4763,6 @@
 			path = "Plugins/Contact List Editor/AIEditorCollection.h";
 			refType = 4;
 		};
-		4BF5BA27042F3CFD00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIEditorCollection.m;
-			path = "Plugins/Contact List Editor/AIEditorCollection.m";
-			refType = 4;
-		};
 		4BF5BA28042F3CFD00A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4818,12 +4811,6 @@
 			settings = {
 			};
 		};
-		4BF5BA2F042F3CFD00A8010A = {
-			fileRef = 4BF5BA27042F3CFD00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BF5BA30042F3CFD00A8010A = {
 			fileRef = 4BF5BA28042F3CFD00A8010A;
 			isa = PBXBuildFile;
@@ -4868,6 +4855,42 @@
 		};
 		4BF5BA37042F3D1600A8010A = {
 			fileRef = 4BF5BA36042F3D1600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFB1570043497E700A8010A = {
+			children = (
+				4BF5BA26042F3CFD00A8010A,
+				4BFB1571043498E200A8010A,
+				4BFB1572043498E200A8010A,
+			);
+			isa = PBXGroup;
+			name = "Editor Collections";
+			refType = 4;
+		};
+		4BFB1571043498E200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorAccountCollection.h;
+			path = "Plugins/Contact List Editor/AIEditorAccountCollection.h";
+			refType = 4;
+		};
+		4BFB1572043498E200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorAccountCollection.m;
+			path = "Plugins/Contact List Editor/AIEditorAccountCollection.m";
+			refType = 4;
+		};
+		4BFB1573043498E200A8010A = {
+			fileRef = 4BFB1571043498E200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFB1574043498E200A8010A = {
+			fileRef = 4BFB1572043498E200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5534,8 +5557,7 @@
 				F55B411303AB88D601A8010A,
 				F55B411003AB88D601A8010A,
 				F55B411103AB88D601A8010A,
-				4BF5BA26042F3CFD00A8010A,
-				4BF5BA27042F3CFD00A8010A,
+				4BFB1570043497E700A8010A,
 				4B4F5B31042D673500A8010A,
 				F55B411703AB88D601A8010A,
 				F5361E3103058E2A01A8010A,
@@ -5552,6 +5574,7 @@
 				4BF5BA30042F3CFD00A8010A,
 				4BF5BA32042F3CFD00A8010A,
 				4BF5BA34042F3CFD00A8010A,
+				4BFB1573043498E200A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5583,10 +5606,10 @@
 			files = (
 				4BE103F60423747F00A8010A,
 				4BE103F70423748000A8010A,
-				4BF5BA2F042F3CFD00A8010A,
 				4BF5BA31042F3CFD00A8010A,
 				4BF5BA33042F3CFD00A8010A,
 				4BF5BA35042F3CFD00A8010A,
+				4BFB1574043498E200A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
