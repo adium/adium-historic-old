@@ -10,8 +10,6 @@
 
 @class AIAdium, AIAlternatingRowTableView, AIListContact;
 
-//@protocol AIListObjectObserver;
-
 @interface AIContactAlertsWindowController : NSWindowController {
 
     IBOutlet	NSPopUpButton			*popUp_addEvent;
