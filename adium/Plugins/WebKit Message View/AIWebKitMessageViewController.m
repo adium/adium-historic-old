@@ -97,44 +97,45 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] == 0){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-		//Retain the style path for comparison with the new preference
-		NSString		*oldStylePath = [stylePath retain];
+		NSString	*styleName, *newStylePath;
+		NSBundle	*style;
 		
-		//Release the old preference cache
-		[self _flushPreferenceCache];
-
-		//Style and Variant preferences
-		{
-			NSString	*styleName, *desiredVariant, *CSS;
-			NSBundle	*style;
-			
-			styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
-																	group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		style = [plugin messageStyleBundleWithName:styleName];
+		
+		//If the preferred style is unavailable, load Smooth Operator
+		if (!style){
+			styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
+		}
+		
+		newStylePath = [style resourcePath];
+		
+		//If preferences changed but the style did not change, update the webView to the current stylesheet.
+		//If we got here from [self preferencesChanged:nil], prep the webView by loading our template.
+		//Note that we do not support open windows changing styles; new styles only affect new windows.
+		//Variants and font settings and such can change midstream.
+		if (!notification ||  (stylePath && [stylePath isEqualToString:newStylePath])){
+			NSString *desiredVariant, *CSS;
 			
-			//If the preferred style is unavailable, load Smooth Operator
-			if (!style){
-				styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
-				style = [plugin messageStyleBundleWithName:styleName];
-			}
-			
-			stylePath = [[style resourcePath] retain];
-				
 			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
 																	  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
 			CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
 			
-			//If we got here via a notification and the style did not change, update the webView to the current stylesheet.
-			//If we got here from [self preferencesChanged:nil], prep the webView by loading our template.
-			if (notification && [stylePath isEqualToString:oldStylePath]){
+			
+			if (notification){
 				[webView stringByEvaluatingJavaScriptFromString:
 					[NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");", CSS]];
 				
 			}else{
 				NSString	*basePath, *headerHTML, *footerHTML, *templateHTML;
 				
+				[stylePath release];
+				stylePath = [newStylePath retain];
+				
 				[plugin loadPreferencesForWebView:webView withStyleNamed:styleName];
-					
+				
 				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
 				headerHTML = [plugin fillKeywords:[[headerHTML mutableCopy] autorelease] forChat:chat];
@@ -150,15 +151,12 @@
 				[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 			}
 		}
-		
-		//Release the old style path
-		[oldStylePath release];
 	}
 }
 
 - (void)_flushPreferenceCache
 {	
-	[stylePath release];
+	
 }
 
 #pragma mark Content
