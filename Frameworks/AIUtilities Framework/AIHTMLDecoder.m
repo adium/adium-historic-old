@@ -259,7 +259,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 	NSRange			searchRange;
 	NSColor			*pageColor = nil;
-	BOOL			openFontTag = NO;
+	BOOL           openFontTag = NO;
 
 	//Setup the destination HTML string
 	NSMutableString *string = [NSMutableString string];
@@ -276,6 +276,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	BOOL			currentItalic = NO;
 	BOOL			currentBold = NO;
 	BOOL			currentUnderline = NO;
+	BOOL			currentStrikethrough = NO;
 	NSString		*link = nil;
 	NSString		*oldLink = nil;
 	
@@ -297,6 +298,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 		NSFontTraitMask	traits = [fontManager traitsOfFont:font];
 		BOOL			hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+		BOOL			hasStrikethrough = ([NSApp isOnPantherOrBetter] ? 
+											[[attributes objectForKey:NSStrikethroughStyleAttributeName] intValue] :
+											NO);
 		BOOL			isBold = (traits & NSBoldFontMask);
 		BOOL			isItalic = (traits & NSItalicFontMask);
 		
@@ -370,7 +374,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 		}
 
-		//Style (Bold, italic, underline)
+		//Style (Bold, italic, underline, strikethrough)
 		if(thingsToInclude.styleTags){			
 			if(currentItalic && !isItalic){
 				[string appendString:@"</I>"];
@@ -395,6 +399,14 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[string appendString:@"<B>"];
 				currentBold = YES;
 			}
+        
+        if (currentStrikethrough && !hasStrikethrough){
+           [string appendString:@"</S>"];
+           currentStrikethrough = NO;
+        } else if(!currentStrikethrough && hasStrikethrough){
+           [string appendString:@"<S>"];
+           currentStrikethrough = YES;
+        }
 		}
 
 		//Link
@@ -593,6 +605,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		if(currentItalic) [string appendString:@"</I>"];
 		if(currentBold) [string appendString:@"</B>"];
 		if(currentUnderline) [string appendString:@"</U>"];
+      if(currentStrikethrough) [string appendString:@"</S>"];
 	}
 	
 	//If we had a link on the last pass, close the link tag
@@ -619,7 +632,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSString					*chunkString, *tagOpen;
 	NSMutableAttributedString	*attrString;
 	AITextAttributes			*textAttributes;
-	BOOL						send = NO, receive = NO, inDiv = NO;
+	BOOL						send = NO, receive = NO, inDiv = NO, inLogSpan = NO;
 
     //set up
     textAttributes = [[_defaultTextDecodingAttributes copy] autorelease];
@@ -648,62 +661,62 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				BOOL validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
 				if(validTag){ 
 					//HTML
-					if([chunkString caseInsensitiveCompare:HTML] == 0){
+					if([chunkString caseInsensitiveCompare:HTML] == NSOrderedSame){
 						//We ignore stuff inside the HTML tag, but don't want to see the end of it
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
-					}else if([chunkString caseInsensitiveCompare:CloseHTML] == 0){
+					}else if([chunkString caseInsensitiveCompare:CloseHTML] == NSOrderedSame){
 						//We are done
 						break;
 
 					//PRE -- ignore attributes for logViewer
-					}else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 ||
-							 [chunkString caseInsensitiveCompare:@"/PRE"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"PRE"] == NSOrderedSame ||
+							 [chunkString caseInsensitiveCompare:@"/PRE"] == NSOrderedSame){
 
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
 						[textAttributes setTextColor:[NSColor blackColor]];
 					//DIV
-					}else if ([chunkString caseInsensitiveCompare:@"DIV"] == 0){
+					}else if ([chunkString caseInsensitiveCompare:@"DIV"] == NSOrderedSame){
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd
 												intoString:&chunkString];
 						inDiv = YES;
-						if ([chunkString caseInsensitiveCompare:@" class=\"send\""] == 0) {
+						if ([chunkString caseInsensitiveCompare:@" class=\"send\""] == NSOrderedSame) {
 							send = YES;
 							receive = NO;
-						} else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == 0) {
+						} else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == NSOrderedSame) {
 							receive = YES;
 							send = NO;
-						} else if ([chunkString caseInsensitiveCompare:@" class=\"status\""] == 0) {
+						} else if ([chunkString caseInsensitiveCompare:@" class=\"status\""] == NSOrderedSame) {
 							[textAttributes setTextColor:[NSColor grayColor]];
 						}
-					}else if ([chunkString caseInsensitiveCompare:@"/DIV"] == 0) {
+					}else if ([chunkString caseInsensitiveCompare:@"/DIV"] == NSOrderedSame) {
 						inDiv = NO;
 					//LINK
-					}else if([chunkString caseInsensitiveCompare:@"A"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"A"] == NSOrderedSame){
 						//[textAttributes setUnderline:YES];
 						//[textAttributes setTextColor:[NSColor blueColor]];
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 							[self processLinkTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the linktag's contents
 						}
 
-					}else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"/A"] == NSOrderedSame){
 						[textAttributes setLinkURL:nil];
 
 					//Body
-					}else if([chunkString caseInsensitiveCompare:Body] == 0){
+					}else if([chunkString caseInsensitiveCompare:Body] == NSOrderedSame){
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 							[self processBodyTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
 						}
 
-					}else if([chunkString caseInsensitiveCompare:CloseBody] == 0){
+					}else if([chunkString caseInsensitiveCompare:CloseBody] == NSOrderedSame){
 						//ignore
 
 					//Font
-					}else if([chunkString caseInsensitiveCompare:Font] == 0){
+					}else if([chunkString caseInsensitiveCompare:Font] == NSOrderedSame){
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 
 							//Process the font tag if it's in a log
-							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == NSOrderedSame) {
 								if(inDiv && send) {
 									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
 								} else if(inDiv && receive) {
@@ -715,99 +728,106 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							[self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 						}
 
-					}else if([chunkString caseInsensitiveCompare:CloseFont] == 0){
+					}else if([chunkString caseInsensitiveCompare:CloseFont] == NSOrderedSame){
 						[textAttributes setTextColor:[NSColor blackColor]];
 						[textAttributes setFontFamily:@"Helvetica"];
 						[textAttributes setFontSize:12];
 
 					//span
-					}else if([chunkString caseInsensitiveCompare:Span] == 0){
+					}else if([chunkString caseInsensitiveCompare:Span] == NSOrderedSame){
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 
 							//Process the span tag if it's in a log
-							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == NSOrderedSame) {
 								if(inDiv && send) {
 									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+									inLogSpan = YES;
 								} else if(inDiv && receive) {
 									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
+									inLogSpan = YES;
 								}
-							} else {
+							} else if([chunkString caseInsensitiveCompare:@" class=\"timestamp\""] == NSOrderedSame){
 								[textAttributes setTextColor:[NSColor grayColor]];
+								inLogSpan = YES;
 							}
+							
+							//XXX Jabber can send a tag like so: <span style='font-family: Helvetica; font-size: small; '>
 						}
-					} else if ([chunkString caseInsensitiveCompare:CloseSpan] == 0 ) {
-						[textAttributes setTextColor:[NSColor blackColor]];
-						[textAttributes setFontFamily:@"Helvetica"];
-						[textAttributes setFontSize:12];
-
+					} else if ([chunkString caseInsensitiveCompare:CloseSpan] == NSOrderedSame) {
+						if(inLogSpan){
+							[textAttributes setTextColor:[NSColor blackColor]];
+							[textAttributes setFontFamily:@"Helvetica"];
+							[textAttributes setFontSize:12];
+							inLogSpan = NO;
+						}
 					//Line Break
-					}else if([chunkString caseInsensitiveCompare:BR] == 0 || 
-							 [chunkString caseInsensitiveCompare:BRSlash] == 0 ||
-							 [chunkString caseInsensitiveCompare:CloseBR] == 0){
+					}else if([chunkString caseInsensitiveCompare:BR] == NSOrderedSame || 
+							 [chunkString caseInsensitiveCompare:BRSlash] == NSOrderedSame ||
+							 [chunkString caseInsensitiveCompare:CloseBR] == NSOrderedSame){
 						[attrString appendString:Return withAttributes:nil];
 						//Make sure the tag closes, since it may have a <BR /> which stopped the scanner at the space, not the >
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
 					//Bold
-					}else if([chunkString caseInsensitiveCompare:B] == 0){
+					}else if([chunkString caseInsensitiveCompare:B] == NSOrderedSame){
 						[textAttributes enableTrait:NSBoldFontMask];
-					}else if([chunkString caseInsensitiveCompare:CloseB] == 0){
+					}else if([chunkString caseInsensitiveCompare:CloseB] == NSOrderedSame){
 						[textAttributes disableTrait:NSBoldFontMask];
 
 					//Strong (interpreted as bold)
-					}else if([chunkString caseInsensitiveCompare:@"STRONG"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"STRONG"] == NSOrderedSame){
 						[textAttributes enableTrait:NSBoldFontMask];
-					}else if([chunkString caseInsensitiveCompare:@"/STRONG"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"/STRONG"] == NSOrderedSame){
 						[textAttributes disableTrait:NSBoldFontMask];
 
 					//Italic
-					}else if([chunkString caseInsensitiveCompare:I] == 0){
+					}else if([chunkString caseInsensitiveCompare:I] == NSOrderedSame){
 						[textAttributes enableTrait:NSItalicFontMask];
-					}else if([chunkString caseInsensitiveCompare:CloseI] == 0){
+					}else if([chunkString caseInsensitiveCompare:CloseI] == NSOrderedSame){
 						[textAttributes disableTrait:NSItalicFontMask];
 
 					//Emphasised (interpreted as italic)
-					}else if([chunkString caseInsensitiveCompare:@"EM"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"EM"] == NSOrderedSame){
 						[textAttributes enableTrait:NSItalicFontMask];
-					}else if([chunkString caseInsensitiveCompare:@"/EM"] == 0){
+					}else if([chunkString caseInsensitiveCompare:@"/EM"] == NSOrderedSame){
 						[textAttributes disableTrait:NSItalicFontMask];
 
 					//Underline
-					}else if([chunkString caseInsensitiveCompare:U] == 0){
+					}else if([chunkString caseInsensitiveCompare:U] == NSOrderedSame){
 						[textAttributes setUnderline:YES];
-					}else if([chunkString caseInsensitiveCompare:CloseU] == 0){
+					}else if([chunkString caseInsensitiveCompare:CloseU] == NSOrderedSame){
 						[textAttributes setUnderline:NO];
 
 					//Strikethrough: <s> is deprecated, but people use it
-					} else if([chunkString caseInsensitiveCompare:@"S"] == 0) {
+					} else if([chunkString caseInsensitiveCompare:@"S"] == NSOrderedSame) {
 						[textAttributes setStrikethrough:YES];
-					} else if([chunkString caseInsensitiveCompare:@"/S"] == 0) {
+					} else if([chunkString caseInsensitiveCompare:@"/S"] == NSOrderedSame) {
 						[textAttributes setStrikethrough:NO];
 
 					// Subscript
-					} else if([chunkString caseInsensitiveCompare:@"SUB"] == 0)  {
+					} else if([chunkString caseInsensitiveCompare:@"SUB"] == NSOrderedSame)  {
 						[textAttributes setSubscript:YES];
-					} else if([chunkString caseInsensitiveCompare:@"/SUB"] == 0)  {
+					} else if([chunkString caseInsensitiveCompare:@"/SUB"] == NSOrderedSame)  {
 						[textAttributes setSubscript:NO];
 
 					// Superscript
-					} else if([chunkString caseInsensitiveCompare:@"SUP"] == 0)  {
+					} else if([chunkString caseInsensitiveCompare:@"SUP"] == NSOrderedSame)  {
 						[textAttributes setSuperscript:YES];
-					} else if([chunkString caseInsensitiveCompare:@"/SUP"] == 0)  {
+					} else if([chunkString caseInsensitiveCompare:@"/SUP"] == NSOrderedSame)  {
 						[textAttributes setSuperscript:NO];
 
 					//Image
-					} else if([chunkString caseInsensitiveCompare:IMG] == 0){
+					} else if([chunkString caseInsensitiveCompare:IMG] == NSOrderedSame){
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 							[attrString appendAttributedString:attachString];
 						}
-					} else if([chunkString caseInsensitiveCompare:CloseIMG] == 0){
+					} else if([chunkString caseInsensitiveCompare:CloseIMG] == NSOrderedSame){
 						//just ignore </img> if we find it
 
 					// Ignore <p> for those wacky AIM express users
-					} else if ([chunkString caseInsensitiveCompare:P] == 0 ||
-							   [chunkString caseInsensitiveCompare:CloseP] == 0) {
+					} else if ([chunkString caseInsensitiveCompare:P] == NSOrderedSame ||
+							   [chunkString caseInsensitiveCompare:CloseP] == NSOrderedSame) {
 
 					//Invalid
 					} else {
@@ -824,28 +844,28 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					[scanner setScanLocation:scanLocation];
 				}
 
-			}else if([tagOpen compare:Ampersand] == 0){ // escape character, eg &gt;
+			}else if([tagOpen compare:Ampersand] == NSOrderedSame){ // escape character, eg &gt;
 				BOOL validTag = [scanner scanUpToCharactersFromSet:charEnd intoString:&chunkString];
 
 				if(validTag){
 					// We could upgrade this to use an NSDictionary with lots of chars
 					// but for now, if-blocks will do
-					if ([chunkString caseInsensitiveCompare:@"GT"] == 0){
+					if ([chunkString caseInsensitiveCompare:@"GT"] == NSOrderedSame){
 						[attrString appendString:GreaterThan withAttributes:[textAttributes dictionary]];
 
-					}else if ([chunkString caseInsensitiveCompare:@"LT"] == 0){
+					}else if ([chunkString caseInsensitiveCompare:@"LT"] == NSOrderedSame){
 						[attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
 
-					}else if ([chunkString caseInsensitiveCompare:@"AMP"] == 0){
+					}else if ([chunkString caseInsensitiveCompare:@"AMP"] == NSOrderedSame){
 						[attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
 
-					}else if ([chunkString caseInsensitiveCompare:@"QUOT"] == 0){
+					}else if ([chunkString caseInsensitiveCompare:@"QUOT"] == NSOrderedSame){
 						[attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
 
-					}else if ([chunkString caseInsensitiveCompare:@"APOS"] == 0){
+					}else if ([chunkString caseInsensitiveCompare:@"APOS"] == NSOrderedSame){
 						[attrString appendString:@"'" withAttributes:[textAttributes dictionary]];
 
-					}else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
+					}else if ([chunkString caseInsensitiveCompare:@"NBSP"] == NSOrderedSame){
 						[attrString appendString:@" " withAttributes:[textAttributes dictionary]];
 
 					}else if ([chunkString hasPrefix:@"#x"]) {
@@ -915,10 +935,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
-		if([arg caseInsensitiveCompare:Face] == 0){
+		if([arg caseInsensitiveCompare:Face] == NSOrderedSame){
 			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
-		}else if([arg caseInsensitiveCompare:SIZE] == 0){
+		}else if([arg caseInsensitiveCompare:SIZE] == NSOrderedSame){
 			//Always prefer an ABSZ to a size
 			if(![inArgs objectForKey:ABSZ] && ![inArgs objectForKey:@"absz"]){
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
@@ -928,13 +948,13 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[textAttributes setFontSize:size];
 			}
 
-		}else if([arg caseInsensitiveCompare:ABSZ] == 0){
+		}else if([arg caseInsensitiveCompare:ABSZ] == NSOrderedSame){
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
-		}else if([arg caseInsensitiveCompare:Color] == 0){
+		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
 			[textAttributes setTextColor:[[inArgs objectForKey:arg] hexColor]];
 
-		}else if([arg caseInsensitiveCompare:Back] == 0){
+		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
 			[textAttributes setTextBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
 
 		}
@@ -948,7 +968,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
-		if([arg caseInsensitiveCompare:@"BGCOLOR"] == 0){
+		if([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame){
 			[textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
 		}
 	}
@@ -961,7 +981,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
-		if([arg caseInsensitiveCompare:@"HREF"] == 0){
+		if([arg caseInsensitiveCompare:@"HREF"] == NSOrderedSame){
 			[textAttributes setLinkURL:[inArgs objectForKey:arg]];
 		}
 	}
@@ -978,11 +998,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 	enumerator = [inArgs keyEnumerator];
 	while((arg = [enumerator nextObject])){
-		if([arg caseInsensitiveCompare:@"SRC"] == 0){
+		if([arg caseInsensitiveCompare:@"SRC"] == NSOrderedSame){
 			path = [inArgs objectForKey:arg];
 			fileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
 		}
-		if([arg caseInsensitiveCompare:@"ALT"] == 0){
+		if([arg caseInsensitiveCompare:@"ALT"] == NSOrderedSame){
 			[attachment setString:[inArgs objectForKey:arg]];
 			[attachment setHasAlternate:YES];
 		}
