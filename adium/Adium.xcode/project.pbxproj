@@ -195,8 +195,6 @@
 				346C9D6A06004728000F5A8A,
 				6C5C3C2505F6532600490341,
 				6C5C3C2605F6532600490341,
-				4B04B0500600A661007060DF,
-				4B04B0520600A661007060DF,
 				C4382558062E7C5E00F5A31D,
 			);
 			isa = PBXGroup;
@@ -7394,17 +7392,19 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "Webkit Message View.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			name = "Webkit Message View.AdiumPlugin";
+			path = "/Users/eevyl/adium/build/Webkit Message View.AdiumPlugin";
+			refType = 0;
+			sourceTree = "<absolute>";
 		};
 		4B04B0520600A661007060DF = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "Standard Message View.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			name = "Standard Message View.AdiumPlugin";
+			path = "/Users/eevyl/adium/build/Standard Message View.AdiumPlugin";
+			refType = 0;
+			sourceTree = "<absolute>";
 		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
