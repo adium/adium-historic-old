@@ -31,6 +31,8 @@
 	
 	BOOL				inDrag;
 	NSArray				*dragItems;
+	
+	BOOL				alreadyDidDealloc;
 }
 
 + (AISCLViewController *)contactListViewController;

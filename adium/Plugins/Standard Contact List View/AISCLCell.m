@@ -147,7 +147,7 @@
 	}else{
 		displayString = [listObject longDisplayName];
 	}
-		
+
 	//Add the display attributes
 	if(applyAttributes){
 		NSColor				*textColor;
