@@ -163,8 +163,13 @@
 
 - (AIListObject *)listObject
 {
-	return ((AIListObject *)[self firstSelectedItem]);
+	return ([self firstSelectedItem]);
 }
+- (NSArray *)arrayOfListObjects
+{
+	return ([self arrayOfSelectedItems]);
+}
+
 //Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
 - (void)setFrame:(NSRect)frameRect
 {
