@@ -45,6 +45,13 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(self);
 }
 
+- (void)dealloc
+{
+    [cellArray release];
+
+    [super dealloc];
+}
+
 //Returns YES if this row spans into another row's cells
 - (BOOL)spansRows{
     return(spansRows);

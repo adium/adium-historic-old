@@ -524,7 +524,7 @@
 - (void)closeChat:(AIChat *)inChat
 {
     AIMessageTabViewItem	*container;
-    AIMessageWindowController 	*messageWindowController;
+    AIMessageWindowController 	*messageWindowController = nil;
 
     container = [self _messageTabForChat:inChat];
     if (container)

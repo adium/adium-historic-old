@@ -21,23 +21,27 @@
 
 #import "AIMutableOwnerArray.h"
 
+@interface AIMutableOwnerArray (PRIVATE)
+- (void)_createArrays;
+- (void)_destroyArrays;
+@end
+
 @implementation AIMutableOwnerArray
 
 //inits the array
 - (id)init
 {
     [super init];
-    
-    contentArray = [[NSMutableArray alloc] init];
-    ownerArray = [[NSMutableArray alloc] init];
+
+    contentArray = nil;
+    ownerArray = nil;
     
     return(self);
 }
 
 - (void)dealloc
 {
-    [contentArray release];
-    [ownerArray release];
+    [self _destroyArrays];
 
     [super dealloc];
 }
@@ -46,6 +50,8 @@
 - (void)setObject:(id)anObject withOwner:(id)inOwner
 {
     int	ownerIndex;
+
+    if(!contentArray || !ownerArray) [self _createArrays];
     
     //Remove any existing objects
     ownerIndex = [ownerArray indexOfObject:inOwner];
@@ -58,20 +64,20 @@
     if(anObject != nil){
         [contentArray addObject:anObject];
         [ownerArray addObject:inOwner];
+    }else{
+        if([contentArray count] == 0) [self _destroyArrays];
     }
 }
 
 //Returns an object with the specified owner
 - (id)objectWithOwner:(id)inOwner
 {
-    int	index = [ownerArray indexOfObject:inOwner];
-    
-    if(index != NSNotFound){
-        return([contentArray objectAtIndex:index]);
-    }else{
-        return(nil);
+    if(ownerArray && contentArray){
+        int	index = [ownerArray indexOfObject:inOwner];
+        if(index != NSNotFound) return([contentArray objectAtIndex:index]);
     }
-
+    
+    return(nil);
 }
 
 //Return the number of objects
@@ -175,6 +181,18 @@
     }
 
     return(greatest);
+}
+
+- (void)_createArrays
+{
+    if(!contentArray) contentArray = [[NSMutableArray alloc] init];
+    if(!ownerArray) ownerArray = [[NSMutableArray alloc] init];
+}
+
+- (void)_destroyArrays
+{
+    [contentArray release]; contentArray = nil;
+    [ownerArray release]; ownerArray = nil;
 }
 
 @end

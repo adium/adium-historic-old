@@ -233,7 +233,6 @@
 - (AIChat *)openChatWithListObject:(AIListObject *)inListObject
 {
     AIHandle	*handle = [handleDict objectForKey:[inListObject UID]];
-    AIChat	*chat;
 
     if(handle){
         return([self chatForHandle:handle]);
