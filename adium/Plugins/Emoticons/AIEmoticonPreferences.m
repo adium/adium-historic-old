@@ -284,7 +284,7 @@
             [tableView deselectAll:nil];
             enumerator = [movedPacks objectEnumerator];
             while(pack = [enumerator nextObject]){
-                [tableView selectRow:[[plugin availableEmoticonPacks] indexOfObject:pack] byExtendingSelection:YES];
+                [tableView selectRow:[[plugin availableEmoticonPacks] indexOfObject:pack] byExtendingSelection:NO];
             }
             
             return(YES);
