@@ -24,7 +24,7 @@ sTLD		(com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD		(aero|coop|museum)
 
 domains		({ccTLD}|{sTLD}|{uTLD}|arpa)
-urlSpecifier	[^\/]+((.*:)?.*@)?(.*\/)*\.{domains}(:[0-9]+)?(\/.*)?
+urlSpecifier	[^\/]+(.*\/)*\.{domains}(:[0-9]+)?(\/.*)?
 ipURL		[^\/]+([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*@.+\.{domains}(\/.*)?
@@ -32,11 +32,10 @@ aolIMSpec       aim:goim\?screenname=[^\s&]+(&message=.+)?
 yahooIMSpec	ymsgr:sendim\?.+
 
 
-%option noyywrap 8bit caseless prefix="SH"
+%option noyywrap 8bit caseless never-interactive prefix="SH"
 
 %x CANONICAL
 %%
-\w
 
 <CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>{ipURL}          {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_VALID;}
