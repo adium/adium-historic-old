@@ -71,9 +71,6 @@ static int  sizeOfSortOrder;
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray;
 @end
 
-DeclareString(sIdle)
-DeclareString(sOnline)
-
 /*!
  * @class ESStatusSort
  * @brief AISortController to sort by contacts and groups
@@ -81,19 +78,6 @@ DeclareString(sOnline)
  * Extensive configuration is allowed.
  */
 @implementation ESStatusSort
-
-/*!
- * @brief Initialize
- */
-- (id)init
-{
-	InitString(sIdle,@"Idle");
-	InitString(sOnline,@"Online");
-	
-	self = [super init];
-	
-	return self;
-}
 
 /*!
  * @brief Did become active first time
@@ -220,7 +204,7 @@ DeclareString(sOnline)
  * @brief Status keys which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
-	return([NSSet setWithObjects:sOnline,sIdle,@"StatusState",nil]);
+	return([NSSet setWithObjects:@"Online",@"Idle",@"StatusState",nil]);
 }
 
 /*!
@@ -551,8 +535,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		
 	}else{
 		//Always sort offline contacts to the bottom
-		BOOL onlineA = ([[objectA numberStatusObjectForKey:sOnline fromAnyContainedObject:NO] boolValue]);
-		BOOL onlineB = ([[objectB numberStatusObjectForKey:sOnline fromAnyContainedObject:NO] boolValue]);
+		BOOL onlineA = ([[objectA numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO] boolValue]);
+		BOOL onlineB = ([[objectB numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO] boolValue]);
 		if (!onlineB && onlineA){
 			return NSOrderedAscending;
 		}else if (!onlineA && onlineB){
@@ -573,8 +557,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			away[0] = ([[objectA statusState] statusType] == AIAwayStatusType);
 			away[1] = ([[objectB statusState] statusType] == AIAwayStatusType);
 			
-			idle[0] = [objectA integerStatusObjectForKey:sIdle fromAnyContainedObject:NO];
-			idle[1] = [objectB integerStatusObjectForKey:sIdle fromAnyContainedObject:NO];
+			idle[0] = [objectA integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
+			idle[1] = [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
 
 			for (objectCounter = 0; objectCounter < 2; objectCounter++){
 				sortIndex[objectCounter] = 999;
