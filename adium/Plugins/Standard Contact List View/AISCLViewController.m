@@ -590,11 +590,12 @@
 													 name:NSViewFrameDidChangeNotification 
 												   object:[newSuperview superview]];
 	}
+	
+	[self performSelector:@selector(_installCursorRect) withObject:nil afterDelay:0.0001];
 }
 
 - (void)view:(NSView *)inView didMoveToWindow:(NSWindow *)window
 {
-	[self _installCursorRect];
 	[self _configureTransparencyAndShadows];
 	
 	windowHidesOnDeactivate = [window hidesOnDeactivate];
