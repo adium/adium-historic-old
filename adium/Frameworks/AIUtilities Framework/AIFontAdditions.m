@@ -62,6 +62,30 @@
     return([NSString stringWithFormat:@"%@,%i",[self fontName],(int)[self pointSize]]);
 }
 
+- (BOOL)supportsBold
+{
+	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+
+	if(self != [fontManager convertFont:self toHaveTrait:NSBoldFontMask] || 
+	   self != [fontManager convertFont:self toHaveTrait:NSUnboldFontMask]){
+		return YES;
+	}
+	
+	return NO;
+}
+
+- (BOOL)supportsItalics
+{
+	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+	
+	if(self != [fontManager convertFont:self toHaveTrait:NSItalicFontMask] || 
+	   self != [fontManager convertFont:self toHaveTrait:NSUnitalicFontMask]){
+		return YES;
+	}
+	
+	return NO;
+}
+
 @end
 
 @implementation NSString (AIFontAdditions)
