@@ -99,6 +99,8 @@
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict;
+- (NSDictionary *)defaultFormattingAttributes;
 
 //Registering filters
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
