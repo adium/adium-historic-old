@@ -257,7 +257,8 @@ Alert Execution
                                                                                                        andDictionary:[actionDict objectForKey:KEY_EVENT_DETAILS_DICT]
                                                                                                     triggeringObject:inObject
                                                                                                      triggeringEvent:event
-                                                                                                         eventStatus:event_status];
+                                                                                                         eventStatus:event_status
+                                                                                                          actionName:[actionDict objectForKey:KEY_EVENT_DISPLAYNAME]];
                         if (success)
                             keepProcessingForUser = [(NSObject<ESContactAlertProvider> *)contactAlertProvider shouldKeepProcessing];
                         
