@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.37 2004/03/13 17:03:10 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.38 2004/03/16 04:06:10 dchoby98 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -614,11 +614,16 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         [view_Advanced removeAllSubviews];
         
         //Load new panes
-        if([item isKindOfClass:[AIPreferencePane class]]){
             loadedAdvancedPanes = [[NSArray arrayWithObject:item] retain];
             [self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
             [textField_advancedTitle setStringValue:[item label]];
-        }
+			
+			// Disable the "Restore Defaults" button if there's nothing to restore
+			if( [item restorablePreferences] != nil ) {
+				[button_restoreDefaults setEnabled:YES];
+			} else {
+				[button_restoreDefaults setEnabled:NO];
+			}
 		
         return(YES);
     }else{
