@@ -81,7 +81,8 @@ static NSMenu   *omniTopMenu;
 - (void)parseBookmarksFile:(NSString *)inString
 {
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-    NSString    *titleString, *urlString;
+    NSString    *omniTitleString = nil;
+    NSString    *urlString = nil;
     
     [linkScanner setCaseSensitive:NO];
     
@@ -94,12 +95,12 @@ static NSMenu   *omniTopMenu;
             [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
             [linkScanner scanUpToString:@">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</a" intoString:&titleString];
+            [linkScanner scanUpToString:@"</a" intoString:&omniTitleString];
                 
             omniBookmarksSupermenu = omniBookmarksMenu;
-            omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString] autorelease];
+            omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:omniTitleString? omniTitleString : @"untitled"] autorelease];
         
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString
+            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:omniTitleString? omniTitleString : @"untitled"
                                                                          target:owner
                                                                          action:nil
                                                                   keyEquivalent:@""] autorelease];
@@ -110,17 +111,17 @@ static NSMenu   *omniTopMenu;
             [linkScanner scanUpToString:@"href=\"" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
             [linkScanner scanUpToString:@"\"" intoString:&urlString];
-                
+
             [linkScanner scanUpToString:@">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</a" intoString:&titleString];
-                
+            [linkScanner scanUpToString:@"</a" intoString:&omniTitleString];
+
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
                                                                   withValidationStatus:SH_URL_VALID
-                                                                          parentString:titleString
-                                                                              andRange:NSMakeRange(0,[titleString length])] autorelease];
+                                                                          parentString:omniTitleString? omniTitleString : urlString
+                                                                              andRange:NSMakeRange(0,omniTitleString? [omniTitleString length] : [urlString length])] autorelease];
                                                                           
-            [omniBookmarksMenu addItemWithTitle:titleString
+            [omniBookmarksMenu addItemWithTitle:omniTitleString? omniTitleString : urlString
                                             target:owner
                                             action:@selector(injectBookmarkFrom:)
                                      keyEquivalent:@""
