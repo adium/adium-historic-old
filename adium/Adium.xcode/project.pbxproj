@@ -5126,6 +5126,7 @@
 				4B57CDD306849AFE003FF229,
 				4B41F9190686173A00C09B4B,
 				4BF302F206873CCE000DCA65,
+				4BC7BA3E069C8BD4001F2DD8,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14627,6 +14628,20 @@
 			settings = {
 			};
 		};
+		4BC7BA3D069C8BD4001F2DD8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = emoticonToolbar.tif;
+			path = "Plugins/Emoticon Menu/emoticonToolbar.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC7BA3E069C8BD4001F2DD8 = {
+			fileRef = 4BC7BA3D069C8BD4001F2DD8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BC8AAB0059A2D5500F940E1 = {
 			fileRef = 4B7F78B50597F42400162728;
 			isa = PBXBuildFile;
@@ -21998,6 +22013,7 @@
 			children = (
 				C4243C920638E4EA007AD2D9,
 				C4243C930638E4EA007AD2D9,
+				4BC7BA3D069C8BD4001F2DD8,
 			);
 			isa = PBXGroup;
 			name = "Emoticon Menu";

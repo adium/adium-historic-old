@@ -17,6 +17,7 @@
 
 @interface BGEmoticonMenuPlugin(PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)registerToolbarItem;
 @end
 
 @implementation BGEmoticonMenuPlugin
@@ -97,15 +98,15 @@
 	//Register our toolbar item
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"emoticonToolbar" forClass:[self class]]];
-	toolbarItem = [NSToolbarItem toolbarItemWithIdentifier:@"InsertEmoticon"
-													 label:@"Emoticon"
-											  paletteLabel:@"Insert Emoticon"
-												   toolTip:@"Insert Emoticon"
-													target:self
-										   settingSelector:@selector(setView:)
-											   itemContent:button
-													action:@selector(insertEmoticon:)
-													  menu:nil];
+	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
+														  label:@"Emoticon"
+												   paletteLabel:@"Insert Emoticon"
+														toolTip:@"Insert Emoticon"
+														 target:self
+												settingSelector:@selector(setView:)
+													itemContent:button
+														 action:@selector(insertEmoticon:)
+														   menu:nil];
 	[button setToolbarItem:toolbarItem];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
