@@ -11,6 +11,13 @@
 
 #define SINGLE_WINDOW_NIB @"Single Window Interface"
 
+@interface CSSingleWindowInterfacePlugin (PRIVATE)
+
+- (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject;
+- (void)_clearUnviewedContentOfChat:(AIChat *)inChat;
+
+@end
+
 @implementation CSSingleWindowInterfacePlugin
 
 #pragma mark Plugin Setup
@@ -20,6 +27,9 @@
     [[adium interfaceController] registerInterfaceController:self];
 	
 	windowController = [[CSSingleWindowInterfaceWindowController singleWindowInterfaceWindowControllerWithInterface:self] retain];
+	
+	[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
 	
 	menuItem_showMainWindow = [[NSMenuItem alloc] initWithTitle:@"Show Main Window…" target:self action:@selector(openInterface) keyEquivalent:@"N"];
 	[[adium menuController] addMenuItem:menuItem_showMainWindow toLocation:LOC_File_New];
@@ -36,6 +46,22 @@
 	[menuItem_showMainWindow release];
 	[windowController release];
 	[menuItem_close release];
+}
+
+#pragma mark Object Notifications
+
+- (void)didReceiveContent:(NSNotification *)notification
+{
+    NSDictionary		*userInfo = [notification userInfo];
+    AIContentObject		*object;
+	
+    //Get the content object
+    object = [userInfo objectForKey:@"Object"];
+	
+    //Increase the handle's unviewed count (If it's not the active chat)
+    if([object chat] != [windowController activeChat]){
+        [self _increaseUnviewedContentOfListObject:[object source]];
+    }
 }
 
 #pragma mark Interface Protocol
@@ -68,13 +94,47 @@
 
 - (void)setActiveChat:(AIChat *)inChat
 {
-	NSLog(@"Set Active Chat: %@", [inChat participatingListObjects]);
 	[windowController setChat:inChat];
+	[self _clearUnviewedContentOfChat:inChat];
 }
 
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
 	return NO;
+}
+
+#pragma mark Private
+
+- (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject
+{
+	AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
+    int			currentUnviewed;
+	
+    //'UnviewedContent'++
+    currentUnviewed = [[ownerArray objectWithOwner:inObject] intValue];
+    [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inObject];
+	
+    //
+    [[adium contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
+	
+}
+
+- (void)_clearUnviewedContentOfChat:(AIChat *)inChat
+{
+	NSEnumerator	*enumerator;
+    AIListObject	*listObject;
+	
+    //Clear the unviewed content of each list object participating in this chat
+    enumerator = [[inChat participatingListObjects] objectEnumerator];
+    while(listObject = [enumerator nextObject]){
+        AIMutableOwnerArray	*ownerArray = [listObject statusArrayForKey:@"UnviewedContent"];
+		
+        if([[ownerArray objectWithOwner:listObject] intValue]){
+            [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:listObject];
+            [[adium contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
+        }
+    }
+	
 }
 
 @end

@@ -99,6 +99,14 @@
 	[view reloadData];
 }
 
+- (AIChat*)activeChat
+{
+	int selectedRow = [view selectedRow];
+	if (selectedRow >=0 && selectedRow < [messageViewControllerArray count])
+		return ([[messageViewControllerArray objectAtIndex:[view selectedRow]] chat]);
+	return nil;
+}
+
 #pragma mark View
 
 - (AIAlternatingRowTableView*)view
