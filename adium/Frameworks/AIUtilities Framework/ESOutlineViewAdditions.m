@@ -52,7 +52,10 @@
 		NSNumber *row;
 		NSEnumerator *enumerator = [self selectedRowEnumerator]; 
 		while (row = [enumerator nextObject]){
-			[itemArray addObject:[self itemAtRow:[row intValue]]]; 
+			id item = [self itemAtRow:[row intValue]];
+			if (item){
+				[itemArray addObject:item]; 
+			}
 		} 
 #ifdef I_WOULD_LIKE_THIS_STUPID_THING_TO_CRASH_CONSTANTLY
 	}
