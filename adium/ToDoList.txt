@@ -136,12 +136,14 @@ New State System:
     (idle & away) with something that better suits a user connected to multiple protocols, and allow
     Adium's behavior to be better customized to a user's diverse 'states' of IM throughout the day.
 
+[Dave]
 Multi-user chat:
     Powerful multi-user chat that can handle both large, moderated rooms (irc) and multi-way IMs (MSN).
 		- Tick: would we want a drawer or a list, or a collapsable list or what? Everyone seems opposed to a drawer, so a list would do better.
-    
+		- Dave: I'm going to start making this work, but I NEED LOTS OF HELP!!
+		
 Contact status coloring:
-    Status coloring that is easy to configure and consistant throughout Adium.
+    Status coloring that is easy to configure and consistent throughout Adium.
 
 Meta Contacts:
     Provide a way for users to create and manage their own meta contacts.    
