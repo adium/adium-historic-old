@@ -90,7 +90,7 @@
                     [awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
                 }
             }
-            
+
         }else if([inModifiedKeys containsObject:@"Idle"]){ //Idle / UnIdle
             NSNumber	*idle = [[inHandle statusDictionary] objectForKey:@"Idle"];
 
@@ -105,8 +105,9 @@
                     [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
                 }
             }
-        }            
 
+        }
+            
     }
 
     return(nil);
