@@ -187,6 +187,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
                                          forKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
+    [sharedInstance autorelease]; sharedInstance = nil;
+    
     return(YES);
 }
 
