@@ -23,16 +23,20 @@
 + (NSString *)randomStringOfLength:(int)inLength
 {
 	NSMutableString	*string = [[NSMutableString alloc] init];
-	NSString		*randomCharacters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	int				i;
 	
 	//Prepare our random
 	srandom(TickCount());
-
-	//Add the random characters (This is a slow implementation, but it's not really important)
+	
+	//Add the random characters
 	for(i = 0; i < inLength; i++){
-		char	randomChar = [randomCharacters characterAtIndex:(random() % [randomCharacters length])];
-		[string appendString:[NSString stringWithFormat:@"%c",randomChar]];
+	    //get a random number between 0 and 35
+	    int random = (random() % 36);
+	    //0-9 are the digits; add 7 to get to A-Z
+	    if (random > 9) random+=7;
+	    
+	    char randomChar = '0' + random;
+	    [string appendString:[NSString stringWithFormat:@"%c",randomChar]];
 	}
 	
 	return([string autorelease]);
@@ -99,6 +103,15 @@
     
     //Use carbon to truncate the string (this only works when drawing in the system font!)
     TruncateThemeText((CFMutableStringRef)string, kThemeSmallSystemFont, kThemeStateActive, inWidth, truncEnd, NULL);
+    
+    return([string autorelease]);
+}
+
+- (NSString *)safeFilenameString
+{
+    NSMutableString     *string = [self mutableCopy];
+    
+    [string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange(0,[string length])];
     
     return([string autorelease]);
 }
