@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.89 2004/06/28 07:08:38 evands Exp $
+// $Id: AIContentController.m,v 1.90 2004/07/04 21:10:50 evands Exp $
 
 #import "AIContentController.h"
 
@@ -298,24 +298,32 @@
 												direction:AIFilterOutgoing
 												  context:inObject]];
     }
-
+	
     //Send the object
-    if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
-        if([inObject displayContent]){
-            //Add the object
-            [self displayContentObject:inObject];
-        }
-
-        if([inObject trackContent]){
-            //Did send content
-            [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat 
-						    userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-        }
-
-        mostRecentChat = chat;
-        sent = YES;
-    }
-
+	if ([inObject sendContent]){
+		if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
+			if([inObject displayContent]){
+				//Add the object
+				[self displayContentObject:inObject];
+			}
+			
+			if([inObject trackContent]){
+				//Did send content
+				[[owner notificationCenter] postNotificationName:Content_DidSendContent 
+														  object:chat 
+														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+			}
+			
+			mostRecentChat = chat;
+			sent = YES;
+		}
+	}else{
+		//We shouldn't send the content, so something was done with it.. clear the text entry view
+		[[owner notificationCenter] postNotificationName:Interface_ShouldClearTextEntryView
+												  object:chat 
+												userInfo:nil];
+	}
+	
     return(sent);
 }
 
