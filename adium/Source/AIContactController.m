@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.77 2004/01/12 20:51:58 adamiser Exp $
+// $Id: AIContactController.m,v 1.78 2004/01/13 10:05:10 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -208,30 +208,34 @@
 	//Run through the local groups, removing any which should no longer be present
 	enumerator = [[inObject containingGroups] objectEnumerator];
 	while(localGroup = [enumerator nextObject]){
-		NSString	*localGroupUID = [localGroup UID];
-		
-		if([remoteGroups containsObject:localGroupUID]){
-			while([remoteGroups containsObject:localGroupUID]) [remoteGroups removeObject:localGroupUID];
-		}else{ 
-			//The contact should no longer be in this group
-			[localGroup removeObject:inObject];
-			NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
-																			 object:inObject
-																		   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
-		}
+	    NSString	*localGroupUID = [localGroup UID];
+	    
+	    if([remoteGroups containsObject:localGroupUID]){
+		while([remoteGroups containsObject:localGroupUID]) [remoteGroups removeObject:localGroupUID];
+	    }else{ 
+		//The contact should no longer be in this group
+		[localGroup removeObject:inObject];
+		NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
+		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
+										 object:inObject
+									       userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
+	    }
 	}
-
+	
 	//Add the contact to any remaining groups
 	enumerator = [remoteGroups objectEnumerator];
 	while(remoteGroupName = [enumerator nextObject]){
+	    
+#warning lots of crashes from remoteGroupName length being 0... what is up with that? This fix is possibly temporary.
+	    if ([remoteGroupName length]){
 		//The contact needs to be added to this group
 		localGroup = [self groupWithUID:remoteGroupName createInGroup:contactList];
 		[localGroup addObject:inObject];
 		NSLog(@"Grouping:  Added %@ to %@",[inObject displayName],remoteGroupName);
 		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged 
-																		 object:inObject
-																	   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
+										 object:inObject
+									       userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
+	    }
 	}
 }
 
