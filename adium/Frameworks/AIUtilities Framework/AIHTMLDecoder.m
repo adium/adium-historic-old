@@ -174,12 +174,10 @@ int HTMLEquivalentForFontSize(int fontSize);
         if(attachment && [attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
             NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
             NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
-            NSMutableString *fileSafeChunk = [[chunk mutableCopy] autorelease];
+            NSString *fileSafeChunk = [chunk safeFilenameString];
             NSString *shortFileName;
             NSString *fileName;
             
-            //change the '/' characters to ':' so they work in the filesystem
-            [fileSafeChunk replaceOccurrencesOfString:@"/" withString:@":" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
             shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
             fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
             
@@ -591,23 +589,31 @@ int HTMLEquivalentForFontSize(int fontSize)
 
 + (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-    NSEnumerator 	*enumerator;
-    NSString		*arg;
-    NSAttributedString  *attachString;
-    NSFileWrapper       *fileWrapper = nil;
-    AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-    
-    enumerator = [[inArgs allKeys] objectEnumerator];
+    NSEnumerator				*enumerator;
+    NSString					*arg;
+    NSAttributedString			*attachString;
+    NSFileWrapper				*fileWrapper = nil;
+	NSString					*path = nil;
+    AITextAttachmentExtension   *attachment = [[[AITextAttachmentExtension alloc] init] autorelease];
+
+    enumerator = [inArgs keyEnumerator];
     while((arg = [enumerator nextObject])){
         if([arg caseInsensitiveCompare:@"SRC"] == 0){
-            fileWrapper = [[[NSFileWrapper alloc] initWithPath:[inArgs objectForKey:arg]] autorelease];
+			path = [inArgs objectForKey:arg];
+            fileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
         }
         if([arg caseInsensitiveCompare:@"ALT"] == 0){
             [attachment setString:[inArgs objectForKey:arg]];
+			[attachment setHasAlternate:YES];
         }
     }
+	
+	if (![attachment hasAlternate] && path) {
+		[attachment setString:path];
+	}
     
     [attachment setFileWrapper:fileWrapper];
+	[attachment setShouldSaveImageForLogging:YES];
     attachString = [NSAttributedString attributedStringWithAttachment:attachment];
     return attachString;
 }
@@ -615,9 +621,9 @@ int HTMLEquivalentForFontSize(int fontSize)
 + (NSDictionary *)parseArguments:(NSString *)arguments
 {
     NSMutableDictionary	*argDict;
-    NSScanner		*scanner;
-    NSCharacterSet	*equalsSet, *quoteSet, *spaceSet;
-    NSString		*key = nil, *value = nil;
+    NSScanner			*scanner;
+    NSCharacterSet		*equalsSet, *quoteSet, *spaceSet;
+    NSString			*key = nil, *value = nil;
 
     //Setup
     equalsSet = [NSCharacterSet characterSetWithCharactersInString:@"="];
