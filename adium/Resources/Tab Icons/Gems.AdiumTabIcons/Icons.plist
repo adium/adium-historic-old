@@ -16,6 +16,10 @@
 		<string>tab-offline.png</string>
 		<key>stranger</key>
 		<string>tab-stranger.png</string>
+		<key>typing</key>
+		<string>tab-typing.png</string>
+		<key>entered-text</key>
+		<string>tab-entered-text.png</string>
 	</dict>
 </dict>
 </plist>
