@@ -1820,47 +1820,36 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				NSString				*buddyIconFilename = [self _userIconCachePath];
 				NSData					*buddyIconData = nil;
 				NSSize					imageSize = [image size];
-				BOOL					acceptableSize, prplScales;
+				BOOL					bigEnough, smallEnough, prplScales;
 				
 				/* 
 					We need to scale it down if:
 				 1) The prpl needs to scale before it sends (?) AND
 				 2) The image is larger than the maximum size allowed by the protocol
 				 */
-				acceptableSize = (prpl_info->icon_spec.min_width <= imageSize.width &&					
-								  prpl_info->icon_spec.max_width >= imageSize.width &&
-								  prpl_info->icon_spec.min_height <= imageSize.height &&
-								  prpl_info->icon_spec.max_height >= imageSize.height);
+				bigEnough = (prpl_info->icon_spec.min_width <= imageSize.width &&
+							 prpl_info->icon_spec.min_height <= imageSize.height);
+				smallEnough =  (prpl_info->icon_spec.max_width >= imageSize.width &&
+								prpl_info->icon_spec.max_height >= imageSize.height);
+					
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
 
-				if (prplScales && !acceptableSize){
+				if (prplScales && (!bigEnough || !smallEnough)){
 					//Determine the scaled size
-					NSSize  newImageSize = imageSize;
-					NSImage *newImage;
-					
-					if(imageSize.width > prpl_info->icon_spec.max_width)
-						newImageSize.width = prpl_info->icon_spec.max_width;
-					else if(imageSize.width < prpl_info->icon_spec.min_width)
-						newImageSize.width = prpl_info->icon_spec.min_width;
-					if(imageSize.height > prpl_info->icon_spec.max_height)
-						newImageSize.height = prpl_info->icon_spec.max_height;
-					else if(imageSize.height < prpl_info->icon_spec.min_height)
-						newImageSize.height = prpl_info->icon_spec.min_height;
-					
-					//Draw the image, scaled, onto a new image
-					newImage = [[[NSImage alloc] initWithSize:newImageSize] autorelease];
-					
-					[newImage lockFocus];
-					[image drawInRect:NSMakeRect(0,0,newImageSize.width,newImageSize.height)
-							 fromRect:NSMakeRect(0,0,imageSize.width,imageSize.height)
-							operation:NSCompositeCopy
-							 fraction:1.0];
-					[newImage unlockFocus];
-					
-					image = newImage;
-					GaimDebug (@"Scaled image of size %f %f",newImageSize.width,newImageSize.height);
+					if(!smallEnough){
+						//If it's too big, scale to the largest permissable size
+						image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.max_width,
+																	   prpl_info->icon_spec.max_height)];
+						
+					}else /*if(!bigEnough)*/{
+						//If it's not big enough, scale to the smallest permissable size
+						image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.min_width,
+																	   prpl_info->icon_spec.min_height)];
+					}
+
+					GaimDebug (@"Scaled image to size %@",NSStringFromSize([image size]));
 				}
-				
+
 				for (i = 0; prpl_formats[i]; i++) {
 					if (strcmp(prpl_formats[i],"png") == 0){
 						buddyIconData = [image PNGRepresentation];
@@ -1972,6 +1961,28 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	return([NSString stringWithUTF8String:label]);
+}
+
+/* Secure messaging */
+#pragma mark Secure message
+- (void)requestSecureMessaging:(BOOL)inSecureMessaging
+						inChat:(AIChat *)inChat
+{
+	[gaimThread requestSecureMessaging:inSecureMessaging
+								inChat:inChat];
+}
+
+- (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
+{
+	//Allow secure messaging via OTR for one-on-one chats
+	return([inChat name] == nil);
+}
+
+- (NSString *)aboutEncryption
+{
+	return([NSString stringWithFormat:
+		AILocalizedString(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.",nil),
+		[[self service] shortDescription]]);
 }
 
 /********************************/
