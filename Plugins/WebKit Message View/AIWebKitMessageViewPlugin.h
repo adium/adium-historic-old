@@ -16,11 +16,11 @@
 
 #import <Adium/AIPlugin.h>
 #import <WebKit/WebKit.h>
-#import "ESWebKitMessageViewPreferences.h"
 
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
 #define PREF_GROUP_WEBKIT_BACKGROUND_IMAGES		@"WebKit Custom Backgrounds"
 #define WEBKIT_DEFAULT_PREFS					@"WebKit Defaults"
+#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.mockie.style"		//Style used if we cannot find the preferred style
 
 #define KEY_WEBKIT_SHOW_USER_ICONS				@"Show User Icons"
 #define KEY_WEBKIT_SHOW_HEADER					@"Show Header"
@@ -35,6 +35,8 @@
 #define NEW_CONTENT_RETRY_DELAY					0.01
 #define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
 
+@class ESWebKitMessageViewPreferences;
+
 @protocol AIMessageViewPlugin, AIMessageViewController;
 
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
@@ -44,7 +46,7 @@
 
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
 - (NSDictionary *)availableMessageStyles;
-- (NSBundle *)messageStyleBundleWithName:(NSString *)name;
+- (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)identifier;
 - (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style;
 
 @end

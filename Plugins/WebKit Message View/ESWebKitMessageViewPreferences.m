@@ -14,14 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESWebKitMessageViewPreferences.h"
+
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
-#import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewPlugin.h"
 #import "AIWebkitMessageViewStyle.h"
-#import "ESWebKitMessageViewPreferences.h"
+#import "AIWebKitMessageViewController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
@@ -39,6 +40,8 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIService.h>
 #import <Adium/JVFontPreviewField.h>
+
+#import "ESWebView.h"
 
 #define WEBKIT_PREVIEW_CONVERSATION_FILE	@"Preview"
 #define	PREF_GROUP_DISPLAYFORMAT			@"Display Format"  //To watch when the contact name display format changes
@@ -122,7 +125,7 @@
 		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
 		[popUp_styles setMenu:[self _stylesMenu]];
-		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+		[popUp_styles selectItemWithRepresentedObject:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
 	}
 }
 
@@ -135,16 +138,24 @@
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
-		NSString	*style = [prefDict objectForKey:KEY_WEBKIT_STYLE];
-		NSString	*variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
+		NSString	*style;
+		NSString	*variant;
+
+		//Ensure our style/variant menus are showing the correct selection
+		style = [prefDict objectForKey:KEY_WEBKIT_STYLE];
+		if(!style || ![popUp_styles selectItemWithRepresentedObject:style]){
+			style = WEBKIT_DEFAULT_STYLE;
+			[popUp_styles selectItemWithRepresentedObject:style];
+		}
+
+		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
+		if(!variant) variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
 		
 		//When the active style changes, rebuild our variant menu for the new style
 		if(!key || [key isEqualToString:KEY_WEBKIT_STYLE]){
 			[popUp_variants setMenu:[self _variantsMenu]];
 		}
 		
-		//Ensure our style/variant menus are showing the correct selection
-		[popUp_styles selectItemWithRepresentedObject:style];
 		[popUp_variants selectItemWithRepresentedObject:variant];
 		
 		//Configure our style-specific controls to represent the current style
@@ -188,8 +199,8 @@
  */
 - (IBAction)changePreference:(id)sender
 {
-	NSString	*style = [[popUp_styles selectedItem] title];
-	
+	NSString	*style = [[popUp_styles selectedItem] representedObject];
+
     if(sender == checkBox_showUserIcons){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_WEBKIT_SHOW_USER_ICONS
@@ -299,7 +310,7 @@
  */
 - (void)_setBackgroundImage:(NSImage *)image
 {
-	NSString	*style = [[popUp_styles selectedItem] title];
+	NSString	*style = [[popUp_styles selectedItem] representedObject];
 
 	//Save the new image.  We store the images in a separate preference group since they may get big.
 #warning A nice thought, but the preference controller caches the plist in memory regardless... -ai
@@ -308,21 +319,38 @@
 										  group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
 }
 
+int menuTitleSort(id objectA, id objectB, void *context)
+{
+	return([[objectA title] caseInsensitiveCompare:[objectB title]]);
+}
+\
 /*!
  * @brief Builds and returns a menu of available styles
  */
 - (NSMenu *)_stylesMenu
 {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
-	NSEnumerator	*enumerator = [[[[plugin availableMessageStyles] allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
-	NSString		*style;
+	NSMutableArray	*menuItemArray = [NSMutableArray array];
+	NSArray			*availableStyles = [[plugin availableMessageStyles] allValues];
+	NSEnumerator	*enumerator;
+	NSBundle		*style;
+	NSMenuItem		*menuItem;
 	
+	enumerator = [availableStyles objectEnumerator];
 	while(style = [enumerator nextObject]){
-		[menu addItemWithTitle:style
-						target:nil
-						action:nil
-				 keyEquivalent:@""
- 			 representedObject:style];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:[style bundleIdentifier]];
+		[menuItemArray addObject:menuItem];
+	}
+	
+	[menuItemArray sortUsingFunction:menuTitleSort context:nil];
+	
+	enumerator = [menuItemArray objectEnumerator];
+	while(menuItem = [enumerator nextObject]){
+		[menu addItem:menuItem];
 	}
 	
 	return([menu autorelease]);

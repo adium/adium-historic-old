@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Message Style</key>
-	<string>Mockie</string>
+	<string>com.adiumx.mockie.style</string>
 	<key>Show User Icons</key>
 	<true/>
 	<key>DefaultFontFamily</key>

@@ -15,13 +15,13 @@
  */
 
 #import "AIInterfaceController.h"
+#import "AIPreferenceController.h"
 #import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewPlugin.h"
+#import "ESWebKitMessageViewPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESBundleAdditions.h>
-
-#define WEBKIT_DEFAULT_STYLE	@"Mockie"		//Style used if we cannot find the preferred style
 
 @interface AIWebKitMessageViewPlugin (PRIVATE)
 - (void)_scanAvailableWebkitStyles;
@@ -72,6 +72,7 @@
 {
 	if(!styleDictionary){
 		NSString		*AdiumMessageStyle = @"AdiumMessageStyle";
+		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		NSEnumerator	*enumerator, *fileEnumerator;
 		NSString		*filePath, *resourcePath;
 		NSBundle		*style;
@@ -82,14 +83,16 @@
 		//Get all resource paths to search
 		enumerator = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] objectEnumerator];
 		while(resourcePath = [enumerator nextObject]) {
-			fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
+			fileEnumerator = [[defaultManager directoryContentsAtPath:resourcePath] objectEnumerator];
 			
 			//Find all the message styles
 			while((filePath = [fileEnumerator nextObject])){
-				if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
+				if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == NSOrderedSame){
 					if(style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]]){
-						NSString	*styleName = [style name];
-						if(styleName && [styleName length]) [styleDictionary setObject:style forKey:styleName];
+						NSString	*styleIdentifier = [style bundleIdentifier];
+						if(styleIdentifier && [styleIdentifier length]){
+							[styleDictionary setObject:style forKey:styleIdentifier];
+						}
 					}
 				}
 			}
@@ -105,10 +108,10 @@
  * @brief Returns a message style bundle's bundle
  * @param name Name of the message style
  */
-- (NSBundle *)messageStyleBundleWithName:(NSString *)name
+- (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)identifier
 {	
 	NSDictionary	*styles = [self availableMessageStyles];
-	NSBundle		*bundle = [styles objectForKey:name];
+	NSBundle		*bundle = [styles objectForKey:identifier];
 	
 	//If the style isn't available, use our default.  Or, failing that, any available style
 	if(!bundle) bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];

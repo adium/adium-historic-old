@@ -18,7 +18,8 @@
 #import "AIContentController.h"
 #import "AIMenuController.h"
 #import "AIWebKitMessageViewController.h"
-#import "AIWebkitMessageViewStyle.h"
+#import "AIWebKitMessageViewStyle.h"
+#import "AIWebKitMessageViewPlugin.h"
 #import "ESFileTransferController.h"
 #import "ESWebFrameViewAdditions.h"
 #import "ESWebKitMessageViewPreferences.h"
@@ -35,6 +36,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
+
+#import "ESWebView.h"
 
 @class AIContentMessage, AIContentStatus, AIContentObject;
 
@@ -343,13 +346,13 @@
 	
 	//Load the message style
 	activeStyle = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
-	styleBundle = [plugin messageStyleBundleWithName:activeStyle];
+	styleBundle = [plugin messageStyleBundleWithIdentifier:activeStyle];
 	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
 
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
 	if(!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
-
+	
 	//Update message style behavior
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
 	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
