@@ -64,6 +64,7 @@ typedef enum {
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
     IBOutlet 	NSMenuItem  *menuItem_getInfo;
+	IBOutlet	NSMenuItem  *menuItem_getInfoAlternate;
 	
 	NSMutableDictionary		*contactDict;
 	NSMutableDictionary		*groupDict;

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.140 2004/06/05 01:53:12 evands Exp $
+// $Id: AIContactController.m,v 1.141 2004/06/05 18:18:50 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -25,6 +25,7 @@
 
 #define VIEW_CONTACTS_INFO  		AILocalizedString(@"View Contact's Info",nil)
 #define VIEW_INFO	    			AILocalizedString(@"View Info",nil)
+#define ALTERNATE_GET_INFO_MASK		(NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask)
 
 #define UPDATE_CLUMP_INTERVAL		1.0
 
@@ -105,6 +106,32 @@
 
 	//
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
+	
+	if([NSApp isOnPantherOrBetter]) {
+		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
+        menuItem_getInfoAlternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO 
+															   target:self 
+															   action:@selector(showContactInfo:)
+														keyEquivalent:@"i"];
+        [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
+        [menuItem_getInfoAlternate setAlternate:YES];
+        [[owner menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Editing];      
+        
+        //Register for the contact list notifications
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) 
+										   name:Interface_ContactListDidBecomeMain 
+										 object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
+										   name:Interface_ContactListDidResignMain 
+										 object:nil];
+		
+		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
+		//(it will expand into showing both the normal and the alternate items when the menu changes)
+		[[owner notificationCenter] addObserver:self selector:@selector(menuChanged:)
+										   name:Menu_didChange 
+										 object:[menuItem_getInfoAlternate menu]];
+		
+    }
 }
 
 //finish initing
@@ -129,7 +156,6 @@
 
     [super dealloc];
 }
-
 
 //Local Contact List Storage -------------------------------------------------------------------------------------------
 #pragma mark Local Contact List Storage
@@ -589,6 +615,27 @@
 	return(contactInfoPanes);
 }
 
+- (void)contactListDidBecomeMain:(NSNotification *)notification
+{
+    [[owner menuController] removeItalicsKeyEquivalent];
+    [menuItem_getInfoAlternate setKeyEquivalentModifierMask:(NSCommandKeyMask)];
+	[menuItem_getInfoAlternate setAlternate:YES];
+}
+
+- (void)contactListDidResignMain:(NSNotification *)notification
+{
+    //set our alternate modifier mask back to the obscure combination
+    [menuItem_getInfoAlternate setKeyEquivalent:@"i"];
+    [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
+    [menuItem_getInfoAlternate setAlternate:YES];
+    //Now give the italics its combination back
+    [[owner menuController] restoreItalicsKeyEquivalent];
+}
+
+- (void)menuChanged:(NSNotification *)notification
+{
+	[NSMenu updateAlternateMenuItem:menuItem_getInfoAlternate];
+}
 
 //Selected contact ------------------------------------------------
 #pragma mark Selected contact
