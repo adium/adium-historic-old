@@ -117,7 +117,8 @@ static NEHTicTacToeController * sharedInstance = nil;
 - (id)initWithWindowNibName:(NSString*)nib
 {
 	[super initWithWindowNibName:nib];
-	[[adium contentController] registerIncomingContentFilter:self];
+	[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+	[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
 	return self;
 }
 
@@ -167,14 +168,12 @@ static NEHTicTacToeController * sharedInstance = nil;
 		return;
 	}
 	AIListContact   *selectedContact = [[adium contactController] selectedContact];
+	if(selectedContact)
+		[textField_handle setStringValue:[selectedContact UID]];
+	
 	[self showWindow:nil];
 	[NSApp beginSheet:sheet_newGame modalForWindow:boardWindow
 				modalDelegate:self didEndSelector:NULL contextInfo:nil];
-				
-	if(selectedContact)
-		[textField_handle setStringValue:[selectedContact UID]];
-	else
-		[textField_handle setStringValue:@""];
 	
 	NSEnumerator		*enumerator;
     AIListContact		*contact;
@@ -239,8 +238,7 @@ static NEHTicTacToeController * sharedInstance = nil;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-    contact_OtherPlayer = 
-		[[adium contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID serverGroup:nil create:YES];
+    contact_OtherPlayer = [[adium contactController] contactWithService:[serviceType identifier] UID:UID];
     if(contact_OtherPlayer){
         int playAs = [radio_playAs selectedRow];
 		if(playAs == 2) playAs = rand()%2;
@@ -437,8 +435,9 @@ static NEHTicTacToeController * sharedInstance = nil;
 	[[adium contentController] sendContentObject:content];
 }
 
-- (void)filterContentObject:(AIContentObject *)inobj
+- (void)didReceiveContent: (NSNotification*)notification
 {
+	AIContentObject * inobj = [[notification userInfo] objectForKey:@"Object"];
 	if(![[inobj type] isEqual:CONTENT_MESSAGE_TYPE])
 		return;
 	NSString * str = [[((AIContentMessage*)inobj) message] string];
