@@ -148,6 +148,7 @@
 			@"FormattedUID",
 			@"FullNameAttr",
 			@"Display Name",
+			@"StatusState",
 			KEY_USER_ICON,
 			nil];
 	}
