@@ -13,11 +13,10 @@
 -(BOOL)bookmarksExist;
 @end
 
-@class SHSafariBookmarkImporter;
 @interface SHBookmarksImporterPlugin : AIPlugin {
-    NSArray     *importerArray;
-    NSMenuItem  *bookmarkRootMenuItem;
-    NSMenuItem  *bookmarkRootContextualMenuItem;
+    NSMutableArray  *importerArray;
+    NSMenuItem      *bookmarkRootMenuItem;
+    NSMenuItem      *bookmarkRootContextualMenuItem;
 }
 
 @end
