@@ -134,6 +134,7 @@
     NSRect 		frame, sourceRect, destRect;
     int 		capWidth, capHeight;
     int			centeredLabelY;
+    BOOL		highlighted = [[self cell] isHighlighted];
     
     //Get the font and displayed string
     font = [self font];
@@ -144,7 +145,7 @@
     }
     
     //Get the colors
-    if(mouseIn){
+    if(mouseIn || highlighted){
         textColor = [NSColor colorWithCalibratedWhite:1.0 alpha:1.0];
         bezelColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.4];
     }else{
@@ -156,14 +157,20 @@
     textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, nil];
     bezelAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, bezelColor, NSForegroundColorAttributeName, nil];
 
-    //Get the correct images
-    triangle = (mouseIn ? popUpTriangleWhite: popUpTriangle);
-    if(![[self cell] isHighlighted]){
-        caps = popUpRolloverCaps;
-        middle = popUpRolloverMiddle;
+    //Get the correct triangle image
+    if(highlighted || mouseIn){
+        triangle = popUpTriangleWhite;
     }else{
+        triangle = popUpTriangle;
+    }
+    
+    //Get the correct background images
+    if(highlighted){
         caps = popUpPressedCaps;
         middle = popUpPressedMiddle;
+    }else{
+        caps = popUpRolloverCaps;
+        middle = popUpRolloverMiddle;
     }
 
     //Precalc dimensions
@@ -175,7 +182,7 @@
     contentRight = capWidth + labelSize.width - (LABEL_INSET_SMALL * 2) + TRIANGLE_PADDING_X + [triangle size].width;
     
     //Draw the backgound
-    if(mouseIn){
+    if(mouseIn || highlighted){
         //Draw the left cap
         [caps compositeToPoint:NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height)
                       fromRect:NSMakeRect(0, 0, capWidth, capHeight)
@@ -232,10 +239,13 @@
 {
     if(trackingTag == 0){
         NSRect 		trackRect;
+        NSPoint		localPoint;
 
         //Tracking rect
-        mouseIn = NO;
         trackRect = NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height);
+        localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
+        localPoint = [self convertPoint:localPoint fromView:nil];
+        mouseIn = NSPointInRect(localPoint, trackRect);
 
         //Track only if we're within a valid window
         if([self window]){
