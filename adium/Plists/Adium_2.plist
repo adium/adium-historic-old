@@ -95,19 +95,6 @@
 			<true/>
 		</dict>
 	</array>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLIconFile</key>
-            <string>generic</string>
-            <key>CFBundleURLName</key>
-            <string>aim url</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>aim</string>
-            </array>
-        </dict>
-    </array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
@@ -130,8 +117,21 @@
 	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>AdIM</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
+			<string>aim url</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>aim</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>2.0</string>
+	<string>0.5</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSMainNibFile</key>
