@@ -391,56 +391,59 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Perform a thorough variable replacing scan
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
 {
-	NSScanner	*scanner = [NSScanner scannerWithString:inString];
+	NSScanner	*scanner;
 	NSString	*arglessScriptResult = nil;
 	int			offset = 0;
 	
-	//Scan for the keyword
-	while(![scanner isAtEnd]){
-		[scanner scanUpToString:keyword intoString:nil];
-		if([scanner scanString:keyword intoString:nil]){
-			int 		keywordStart, keywordEnd;
-			NSArray 	*argArray = nil;
-			NSString	*argString;
-			
-			//Scan arguments
-			keywordStart = [scanner scanLocation] - [keyword length];
-			if([scanner scanString:@"{" intoString:nil]){				
-				if([scanner scanUpToString:@"}" intoString:&argString]){
-					argArray = [self _argumentsFromString:argString];
-					[scanner scanString:@"}" intoString:nil];
+	if (inString) {
+		scanner = [NSScanner scannerWithString:inString];
+		//Scan for the keyword
+		while(![scanner isAtEnd]){
+			[scanner scanUpToString:keyword intoString:nil];
+			if([scanner scanString:keyword intoString:nil]){
+				int 		keywordStart, keywordEnd;
+				NSArray 	*argArray = nil;
+				NSString	*argString;
+				
+				//Scan arguments
+				keywordStart = [scanner scanLocation] - [keyword length];
+				if([scanner scanString:@"{" intoString:nil]){				
+					if([scanner scanUpToString:@"}" intoString:&argString]){
+						argArray = [self _argumentsFromString:argString];
+						[scanner scanString:@"}" intoString:nil];
+					}
 				}
-			}
-			keywordEnd = [scanner scanLocation];		
+				keywordEnd = [scanner scanLocation];		
 
-			if(keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\'){
-				//Ignore the script (It was escaped) and delete the escape character
-				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
-				offset -= 1;
-				
-			}else{
-				//Run the script.  Cache the result to speed up multiple instances of a single keyword
-				NSString	*scriptResult = nil;
-				if([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
-				if(!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
-				if([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
-				
-				//If the script fails, eat the keyword
-				if(!scriptResult) scriptResult = @"";
-				
-				//Replace the substring with script result
-				if (([scriptResult hasPrefix:@"<HTML>"])){
-					NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
-					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-													withAttributedString:attributedScriptResult];
-
+				if(keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\'){
+					//Ignore the script (It was escaped) and delete the escape character
+					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
+					offset -= 1;
+					
 				}else{
-					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-													withString:scriptResult];
+					//Run the script.  Cache the result to speed up multiple instances of a single keyword
+					NSString	*scriptResult = nil;
+					if([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
+					if(!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
+					if([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
+					
+					//If the script fails, eat the keyword
+					if(!scriptResult) scriptResult = @"";
+					
+					//Replace the substring with script result
+					if (([scriptResult hasPrefix:@"<HTML>"])){
+						NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+														withAttributedString:attributedScriptResult];
+
+					}else{
+						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+														withString:scriptResult];
+					}
+					//Adjust for replaced text
+					offset += [scriptResult length] - (keywordEnd - keywordStart);
+					
 				}
-				//Adjust for replaced text
-				offset += [scriptResult length] - (keywordEnd - keywordStart);
-				
 			}
 		}
 	}
