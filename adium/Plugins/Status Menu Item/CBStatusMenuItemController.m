@@ -25,12 +25,6 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     return (sharedStatusMenuInstance);
 }
 
-//Returns the (naked!) shared instance
-+ (CBStatusMenuItemController *)sharedInstance
-{
-    return sharedStatusMenuInstance;
-}
-
 - (id)init
 {
     if(self = [super init]){
@@ -67,7 +61,7 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     [[adium accountController] unregisterAccountMenuPlugin:self];
     
     //Release our objects
-    [statusItem release];
+    //[statusItem release]; /*This crashes. I guess the system takes care of it.*/
     [theMenu release];
         
     //To the superclass, Robin!
@@ -118,4 +112,15 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     }
 }
 
+//Twiddle visibility --------------------------------------------------------
+#pragma mark Twiddle visibility
+- (void)showStatusItem
+{
+    [statusItem setLength:NSSquareStatusItemLength];
+}
+
+- (void)hideStatusItem
+{
+    [statusItem setLength:0];
+}
 @end
