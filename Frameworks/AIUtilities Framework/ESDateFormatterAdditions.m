@@ -149,8 +149,8 @@ typedef enum {
             [theString appendString:[NSString stringWithFormat:@"%is ",(int)seconds]];
         
         //Return the string without the final space
-        if ([theString length]){
-            theString = [theString substringToIndex:([theString length]-1)];
+        if ([theString length] > 1){
+            [theString deleteCharactersInRange:NSMakeRange(([theString length]-1), 1)];
 		}
 
     }else{
@@ -158,7 +158,7 @@ typedef enum {
 			if(days == 1){
 				[theString appendString:ONE_DAY];
 			}else{
-				[theString appendString:[NSString stringWithFormat:MUTLIPLE_DAYS, days]];
+				[theString appendString:[NSString stringWithFormat:MULTIPLE_DAYS, days]];
 			}
 			
 			[theString appendString:@", "];
@@ -188,15 +188,15 @@ typedef enum {
 			if(seconds == 1){
 				[theString appendString:ONE_SECOND];
 			}else{
-				[theString appendString:MULTIPLE_SECONDS, seconds];
+				[theString appendString:[NSString stringWithFormat:MULTIPLE_SECONDS, seconds]];
 			}
 
 			[theString appendString:@", "];
 		}
 
         //Return the string without the final comma and space
-        if ([theString length]){
-            theString = [theString substringToIndex:([theString length]-2)];
+        if ([theString length] > 2){
+            [theString deleteCharactersInRange:NSMakeRange(([theString length]-2), 2)];
 		}
     }
     
@@ -224,7 +224,7 @@ typedef enum {
 		if(days == 1){
 			timeString = ONE_DAY;
 		}else{
-			timeString = [NSString stringWithFormat:MUTLIPLE_DAYS, days];
+			timeString = [NSString stringWithFormat:MULTIPLE_DAYS, days];
 		}
 	}
 	
