@@ -123,17 +123,10 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
 }
 
 //Returns our desired width
-- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax
+- (float)widthForHeight:(int)inHeight
 {
-    //If our height has changed, flush the string/rect cache
-    //if(cachedHeight != inHeight + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
-
-    //Return the requested width
-    if(computeMax){
-        return([self maxWidthForHeight:inHeight]);
-    }else{
-        return([self _circleWidthForHeight:inHeight]);
-    }    
+    return([self maxWidthForHeight:inHeight]);
+    //return([self _circleWidthForHeight:inHeight]);
 }
 
 //Draw

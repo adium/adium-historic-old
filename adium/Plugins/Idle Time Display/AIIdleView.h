@@ -21,7 +21,6 @@
 
     NSAttributedString	*_attributedString;
     NSSize		_attributedStringSize;
-    float		_maxWidth;
     float		cachedHeight;
 
     NSColor		*textColor;
@@ -31,7 +30,7 @@
 
 - (void)setStringContent:(NSString *)inString;
 - (void)drawInRect:(NSRect)inRect;
-- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
+- (float)widthForHeight:(int)inHeight;
 - (void)setColor:(NSColor *)inColor;
 
     

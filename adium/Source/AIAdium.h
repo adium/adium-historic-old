@@ -173,7 +173,7 @@ typedef enum {
 
 @protocol AIListObjectLeftView //Draws to the left of a handle
     - (void)drawInRect:(NSRect)inRect;
-    - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
+    - (float)widthForHeight:(int)inHeight;
 @end
 
 @protocol AIListObjectRightView //Draws to the right of a handle

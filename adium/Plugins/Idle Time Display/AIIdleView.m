@@ -24,7 +24,6 @@
 - (NSAttributedString *)_attributedString:(NSString *)inString forHeight:(float)height;
 - (NSAttributedString *)attributedStringForHeight:(float)height;
 - (NSSize)attributedStringSizeForHeight:(float)height;
-- (float)maxWidthForHeight:(float)height;
 - (void)_flushDrawingCache;
 @end
 
@@ -44,7 +43,6 @@
 
     _attributedString = nil;
     _attributedStringSize = NSMakeSize(0,0);
-    _maxWidth = 0;
     cachedHeight = 0;
 
     
@@ -78,14 +76,9 @@
 }
 
 //Returns our desired width
-- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax
+- (float)widthForHeight:(int)inHeight
 {
-    //Return the requested width
-    //if(computeMax){
-    //    return([self maxWidthForHeight:inHeight]);
-    //}else{
-        return([self attributedStringSizeForHeight:inHeight].width + 1.0);
-    //}    
+    return([self attributedStringSizeForHeight:inHeight].width + 1.0);
 }
 
 //Draw
@@ -131,7 +124,7 @@
 }
 
 //Return our max width (Cached)
-- (float)maxWidthForHeight:(float)height
+/*- (float)maxWidthForHeight:(float)height
 {
     //If our height has changed, flush the string/rect cache
     if(cachedHeight != height + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
@@ -143,14 +136,13 @@
     }
 
     return(_maxWidth);
-}
+}*/
 
 //Flush the cached strings and sizes
 - (void)_flushDrawingCache
 {
     [_attributedString release]; _attributedString = nil;
     _attributedStringSize = NSMakeSize(0,0);
-    _maxWidth = 0;
 }
 
 
