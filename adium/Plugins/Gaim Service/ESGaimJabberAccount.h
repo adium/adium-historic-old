@@ -6,7 +6,7 @@
 
 #import "CBGaimAccount.h"
 
-@interface ESGaimJabberAccount : CBGaimAccount {
+@interface ESGaimJabberAccount : CBGaimAccount <AIAccount_Files> {
     
 }
 
