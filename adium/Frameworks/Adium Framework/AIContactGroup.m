@@ -119,7 +119,6 @@
     AIMutableOwnerArray		*visibleArray;
     NSEnumerator		*enumerator;
     AIContactObject		*object;
-    int 			loop;
           
     //Sort any groups within this group
     if(subGroups){
@@ -159,6 +158,14 @@
     [self flushSortedArray];
 }
 
+//Add an object to this group
+- (void)insertObject:(AIContactObject *)inObject atIndex:(int)index
+{
+    [inObject setContainingGroup:self];
+    [contactArray insertObject:inObject atIndex:index];
+    [self flushSortedArray];
+}
+
 //Replace an object in this group
 - (void)replaceObject:(AIContactObject *)oldObject with:(AIContactObject *)newObject
 {
@@ -174,6 +181,12 @@
     [inObject setContainingGroup:nil];
     [contactArray removeObject:inObject];
     [self flushSortedArray];
+}
+
+//Returns the index of an object
+- (int)indexOfObject:(AIContactObject *)inObject
+{
+    return([contactArray indexOfObject:inObject]);    
 }
 
 

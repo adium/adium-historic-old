@@ -241,6 +241,33 @@
     [self updateListForObject:inGroup saveChanges:YES];
 }
 
+//Move a group
+- (void)moveGroup:(AIContactGroup *)inGroup toGroup:(AIContactGroup *)destGroup index:(int)inIndex
+{
+    AIContactGroup	*containingGroup = [inGroup containingGroup];
+
+    if(!destGroup) destGroup = [self contactList]; //If no group is specified, we move to the root level
+    if(inIndex <= 0){
+        inIndex = 0;
+    }else if(inIndex > [destGroup count]){
+        inIndex = [destGroup count]-1;
+    }
+
+    if((containingGroup == destGroup) && (inIndex > [containingGroup indexOfObject:inGroup])){
+        //If an object is moving to another location within the same group that is below its current location, we need to offset the destination index for it to fall in the correct place, since the index of every object in the group will shift up one when the targeted object is removed.
+        inIndex -= 1;
+    }
+
+    //move the group
+    [inGroup retain];				//Hold onto the group so it doesn't accidentally get released
+    [containingGroup removeObject:inGroup];
+    [destGroup insertObject:inGroup atIndex:inIndex];
+    [inGroup release];
+
+    //Re-order and update the list
+    [self updateListForObject:inGroup saveChanges:YES];
+}
+
 // Handles --------------------------------------------------------------------------------
 //Delete a handle
 - (void)deleteHandle:(AIContactHandle *)inHandle
@@ -307,26 +334,38 @@
 }
 
 //Move a handle
-- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup
+- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup index:(int)inIndex
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
     AIContactGroup	*containingGroup = [inHandle containingGroup];
 
     if(!inGroup) inGroup = [self contactList]; //If no group is specified, we move to the root level
-    
-    //notify the account(s) that the handle will been moved
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([inHandle belongsToAccount:account] && [account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
-            [(AIAccount<AIAccount_GroupedHandles> *)account moveHandle:inHandle fromGroup:containingGroup toGroup:inGroup];
-        }
+    if(inIndex <= 0){
+        inIndex = 0;
+    }else if(inIndex > [inGroup count]){
+        inIndex = [inGroup count]-1;
     }
 
+    if((containingGroup == inGroup) && (inIndex > [containingGroup indexOfObject:inHandle])){
+        //If an object is moving to another location within the same group that is below its current location, we need to offset the destination index for it to fall in the correct place, since the index of every object in the group will shift up one when the targeted object is removed.
+        inIndex -= 1;
+    }
+
+    //notify the account(s) that the handle will been moved
+    if(containingGroup != inGroup){ //We don't notify the accounts when an object moves to a new location within the same group. Position information is never passed to accounts.
+        enumerator = [[[owner accountController] accountArray] objectEnumerator];
+        while((account = [enumerator nextObject])){
+            if([inHandle belongsToAccount:account] && [account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
+                [(AIAccount<AIAccount_GroupedHandles> *)account moveHandle:inHandle fromGroup:containingGroup toGroup:inGroup];
+            }
+        }
+    }
+        
     //move the handle
     [inHandle retain];				//Hold onto the handle so it doesn't accidentally get released
     [containingGroup removeObject:inHandle];
-    [inGroup addObject:inHandle];
+    [inGroup insertObject:inHandle atIndex:inIndex];
     [inHandle release];
     
     //Re-order and update the list

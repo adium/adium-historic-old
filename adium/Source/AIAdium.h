@@ -224,11 +224,12 @@ typedef enum {
 - (AIContactHandle *)createHandleWithService:(AIServiceType *)inService UID:(NSString *)inUID inGroup:(AIContactGroup *)inGroup forAccount:(AIAccount *)inAccount;
 - (void)deleteHandle:(AIContactHandle *)inHandle;
 - (void)renameHandle:(AIContactHandle *)inHandle to:(NSString *)newName;
-- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup;
+- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup index:(int)inIndex;
 
 - (AIContactGroup *)createGroupNamed:(NSString *)inName inGroup:(AIContactGroup *)inGroup;
 - (void)deleteGroup:(AIContactGroup *)inGroup;
 - (void)renameGroup:(AIContactGroup *)inGroup to:(NSString *)newName;
+- (void)moveGroup:(AIContactGroup *)inGroup toGroup:(AIContactGroup *)destGroup index:(int)inIndex;
 
 - (AIContactGroup *)contactList;
 - (AIContactGroup *)groupWithName:(NSString *)inName;

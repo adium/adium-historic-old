@@ -458,7 +458,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 {
     NSString 	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
 
-    if([availableType compare:@"AIContactObjects"] == 0){ //handles
+    if([availableType compare:@"AIContactObjects"] == 0){
         NSEnumerator	*enumerator;
         AIContactObject	*object;
 
@@ -466,7 +466,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isKindOfClass:[AIContactGroup class]]){
-//                [[owner contactController] moveGroup:handle toGroup:item];
+                [[owner contactController] moveGroup:(AIContactGroup *)object toGroup:item index:index];
             }
         }
         
@@ -474,7 +474,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isKindOfClass:[AIContactHandle class]]){
-                [[owner contactController] moveHandle:(AIContactHandle *)object toGroup:item];
+                [[owner contactController] moveHandle:(AIContactHandle *)object toGroup:item index:index];
             }
         }
     }
@@ -563,6 +563,33 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (IBAction)group:(id)sender
 {
+    id			selectedItem;
+    id			selectedGroup;
+    AIContactGroup	*newGroup;
+    int			newRow;
+
+    //Get the currently selected group
+    selectedItem = [outlineView_contactList itemAtRow:[outlineView_contactList selectedRow]];
+    if(selectedItem == nil){
+        selectedGroup = [[owner contactController] contactList];
+    }else if([selectedItem isKindOfClass:[AIContactHandle class]]){
+        selectedGroup = [selectedItem containingGroup];
+    }else{
+        selectedGroup = selectedItem;
+        [outlineView_contactList expandItem:selectedGroup]; //make sure the group is expanded
+    }
+
+    //Force-end any contact list editing
+    [self removeEditor:nil];
+
+    //Create the new group
+    newGroup = [[owner contactController] createGroupNamed:@"Group" inGroup:selectedGroup];
+    
+    //Select, scroll to, and edit the new group
+    newRow = [outlineView_contactList rowForItem:newGroup];
+    [outlineView_contactList selectRow:newRow byExtendingSelection:NO];
+    [outlineView_contactList scrollRowToVisible:newRow];
+    [self outlineView:outlineView_contactList shouldEditTableColumn:[outlineView_contactList tableColumnWithIdentifier:@"handle"] item:newGroup];
     
 }
 
