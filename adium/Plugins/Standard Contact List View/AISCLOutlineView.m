@@ -82,11 +82,8 @@
 - (void)dealloc
 {
     //Stop observing frame changes!
-    if([self window]){
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
-    }
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	
     //Cleanup
     [font release];
     [groupFont release];
