@@ -6716,6 +6716,7 @@
 				34E2A2FA07B018E5006735BC,
 				34E2A3EA07B08CCB006735BC,
 				34E2A3F107B08CDD006735BC,
+				4BCAB59607B57D31006641B9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13286,6 +13287,7 @@
 				4B2D5FB80781C1F500315A60,
 				4B2D5FB90781C1F500315A60,
 				4B2D602F0781C56200315A60,
+				4BCAB59507B57D31006641B9,
 			);
 			isa = PBXGroup;
 			name = "Typing Notification";
@@ -16031,6 +16033,20 @@
 			path = "Plugins/Spell Checking/SpellingDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BCAB59507B57D31006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = TypingPrefs.png;
+			path = "Plugins/Typing Notification/TypingPrefs.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAB59607B57D31006641B9 = {
+			fileRef = 4BCAB59507B57D31006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BCB9B5E0567FF5D001D3559 = {
 			isa = PBXFileReference;
