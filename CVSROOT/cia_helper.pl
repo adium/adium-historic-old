@@ -8,11 +8,12 @@ while(<STDIN>) {
 }
 
 print "Running CIA\n";
-my $output = `/usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl @ARGV \n$input`;
-print $output;
+open(CIA,  "| /usr/bin/perl ./ciabot.pl @ARGV");
+print CIA $input;
+close CIA;
 
 print "Mailing RSS\n";
 
-$output = `/usr/bin/perl /cvsroot/adium/CVSROOT/cia_mailbucket.pl @ARGV \n$input`;
-
-print $output;
+open(RSS, "| /usr/bin/perl ./cia_mailbucket.pl @ARGV");
+print RSS $input;
+close RSS;
