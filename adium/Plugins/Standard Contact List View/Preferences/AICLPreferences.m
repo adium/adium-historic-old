@@ -76,6 +76,11 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+	[colorWell_contact deactivate];
+	[colorWell_background deactivate];
+	[colorWell_grid deactivate];
+	[colorWell_group deactivate];
+	
     [view_prefViewGeneral release]; view_prefViewGeneral = nil;
     [view_prefViewGroups release]; view_prefViewGroups = nil;
 }
