@@ -196,7 +196,7 @@
 	NSRange	range;
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
-        // this must be before %sender, so it gets the "ScreenName" part.
+		
         range = [inString rangeOfString:@"%senderScreenName%"];
         if(range.location != NSNotFound){
            [inString replaceCharactersInRange:range withString:[[content source] UID]];
@@ -220,7 +220,7 @@
               [AIHTMLDecoder encodeHTML:[[(AIContentMessage *)content message] safeString]
                   headers:NO fontTags:NO closeFontTags:NO styleTags:YES 
                   closeStyleTagsOnFontChange:NO encodeNonASCII:YES 
-                  imagesPath:nil]];
+                  imagesPath:@"/tmp"]];
         }
 		
         range = [inString rangeOfString:@"%time%"];
@@ -235,7 +235,7 @@
 		
 	} else {
 #warning Statuses should be able to know what kind of status it is, for class="away" style tags.
-        range = [inString rangeOfString:@"%messag%e"];
+        range = [inString rangeOfString:@"%message%"];
         if(range.location != NSNotFound){
             [inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
         }

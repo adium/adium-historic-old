@@ -59,6 +59,24 @@
 			head.removeChild( document.getElementById( id ) );
 			head.appendChild( documentFragment );
 		}
+		document.onclick = imageCheck;
+		function imageCheck() {
+			node = event.target;
+			if(node.tagName == 'IMG') {
+				a = document.createElement('a');
+				a.setAttribute('onclick', 'imageSwap(this)');
+				a.setAttribute('src', node.src);
+				text = document.createTextNode(node.alt);
+				a.appendChild(text);
+				node.parentNode.replaceChild(a, node);
+			}
+		}
+		function imageSwap(node) {
+			img = document.createElement('img');
+			img.setAttribute('src', node.src);
+			img.setAttribute('alt', node.firstChild.nodeValue);
+			node.parentNode.replaceChild(img, node);
+		}
 	</script>
 	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
