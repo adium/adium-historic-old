@@ -206,7 +206,7 @@
 													   accountID:[self uniqueObjectID]
 															 UID:[contact uniqueID]];
 	
-    msgObj = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:user initialStatus:nil]
+    msgObj = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:user]
 								  withSource:user
 								 destination:self
 										date:nil
@@ -218,18 +218,16 @@
 
 - (void) user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
 {
-    AIListContact *user;
-    
-    user = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
-													   accountID:[self uniqueObjectID]
-															 UID:[contact uniqueID]];
-			
-    [user setStatusObject:[NSNumber numberWithInt:((typingStatus == AWEzvIsTyping) ? AITyping : AINotTyping)]
-					    forKey:@"Typing"
-					    notify:NO];
-    
-    //Apply any changes
-    [user notifyOfChangedStatusSilently:silentAndDelayed];
+    AIListContact   *listContact;
+    AIChat			*chat;
+    listContact = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
+															  accountID:[self uniqueObjectID]
+																	UID:[contact uniqueID]];
+	chat = [[adium contentController] existingChatWithContact:listContact];
+		
+    [chat setStatusObject:[NSNumber numberWithInt:((typingStatus == AWEzvIsTyping) ? AITyping : AINotTyping)]
+					    forKey:KEY_TYPING
+					    notify:YES];
 }
 
 - (void) user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html {
