@@ -140,6 +140,9 @@ static NSMutableSet							*accountsToConnect = nil;
     NSEnumerator	*enumerator;
     AIAccount		*account;
 	
+	// Don't autoconnect if the Shift key is held down.
+    if (![[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
+    {	
 	//Determine the accounts which want to be autoconnected
 	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while((account = [enumerator nextObject])){
@@ -171,6 +174,7 @@ static NSMutableSet							*accountsToConnect = nil;
 									   userInfo:nil
 										repeats:NO];
 		 */
+	}
 	}
 }
 
