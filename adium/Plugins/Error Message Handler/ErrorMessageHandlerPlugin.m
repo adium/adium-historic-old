@@ -18,7 +18,7 @@
 #import "ESPanelAlertDetailPane.h"
 
 #define ERROR_MESSAGE_ALERT_SHORT	@"Display an alert"
-#define ERROR_MESSAGE_ALERT_LONG	@"Display an alert"
+#define ERROR_MESSAGE_ALERT_LONG	@"Display the alert \"%@\""
 
 @implementation ErrorMessageHandlerPlugin
 
@@ -69,7 +69,7 @@
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
 	
 	if(alertText && [alertText length]){
-		return([NSString stringWithFormat:@"%@: %@", ERROR_MESSAGE_ALERT_LONG, alertText]);
+		return([NSString stringWithFormat:ERROR_MESSAGE_ALERT_LONG, alertText]);
 	}else{
 		return(ERROR_MESSAGE_ALERT_LONG);
 	}

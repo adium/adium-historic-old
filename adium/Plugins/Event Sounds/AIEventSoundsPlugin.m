@@ -19,7 +19,7 @@
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
 #define EVENT_SOUNDS_ALERT_SHORT	@"Play a sound"
-#define EVENT_SOUNDS_ALERT_LONG		@"Play a sound"
+#define EVENT_SOUNDS_ALERT_LONG		@"Play the sound \"%@\""
 
 @interface AIEventSoundsPlugin (PRIVATE)
 - (void)eventNotification:(NSNotification *)notification;
@@ -197,7 +197,7 @@
 	NSString	*fileName = [[details objectForKey:KEY_ALERT_SOUND_PATH] lastPathComponent];
 	
 	if(fileName && [fileName length]){
-		return([NSString stringWithFormat:@"%@: %@",EVENT_SOUNDS_ALERT_LONG, fileName]);
+		return([NSString stringWithFormat:EVENT_SOUNDS_ALERT_LONG, fileName]);
 	}else{
 		return(EVENT_SOUNDS_ALERT_LONG);
 	}

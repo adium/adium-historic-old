@@ -60,6 +60,7 @@ typedef enum {
 
 //Bouncing & behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;
+- (NSString *)descriptionForBehavior:(DOCK_BEHAVIOR)behavior;
 
 //Private
 - (void)initController;
