@@ -460,7 +460,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                             [attrString appendAttributedString:attachString];
                         }
 					// Ignore <p> for those wacky AIM express users
-					} else if ([chunkString caseInsensitiveCompare:@"P"] || [chunkString caseInsensitiveCompare:@"/P"]) {
+					} else if ([chunkString caseInsensitiveCompare:@"P"] == 0 || [chunkString caseInsensitiveCompare:@"/P"] == 0) {
 
                     //Invalid
                     }else{
