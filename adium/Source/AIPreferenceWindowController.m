@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.29 2003/12/15 03:25:00 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.30 2004/02/03 05:23:45 dchoby98 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -39,6 +39,7 @@
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
 - (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view;
 - (void)_sizeWindowForContentHeight:(int)height;
+- (IBAction)restoreDefaults:(id)sender;
 - (NSArray *)advancedCategoryArray;
 - (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category;
 - (NSArray *)_prefsInCategory:(PREFERENCE_CATEGORY)category;
@@ -147,6 +148,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
         [[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
     }
 
+	//Enable the "Restore Defaults" Button
+	[button_restoreDefaults setEnabled:YES];
+	
     //Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
     if(savedFrame){
@@ -154,7 +158,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }else{
         [[self window] center];
     }
-
+	
     //Let everyone know we will open
     [[adium notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
 }
@@ -407,6 +411,44 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }
 }
 
+// Restore everything the AIPreferencePane wants restored
+- (IBAction)restoreDefaults:(id)sender
+{
+	NSDictionary		*allDefaults;
+	NSDictionary		*defaultsDict;
+	NSString			*group;
+	NSString			*key;
+	
+	//Get the previously selected row
+	int previousRow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
+	// Get the restorable prefs dictionary of the pref pane at the active row
+	allDefaults = [[outlineView_advanced itemAtRow:previousRow] restorablePreferences];
+	
+	if( allDefaults ) {
+		
+		NSEnumerator	*enumerator = [allDefaults keyEnumerator];
+		
+		// They keys are preference groups, run through all of them
+		while( group = (NSString *)[enumerator nextObject] ) {
+			
+			// Get the pref dictionary for each pref goup
+			defaultsDict = [allDefaults objectForKey:group];
+			NSEnumerator	*keyEnum = [defaultsDict keyEnumerator];
+			
+			while( key = (NSString *)[keyEnum nextObject] ) {
+				NSLog(@"----Key: %@, Value: %@, Group: %@",key,[defaultsDict objectForKey:key],group);
+				[[adium preferenceController] setPreference:[defaultsDict objectForKey:key]
+													 forKey:key
+													  group:group];
+			}
+		}
+		
+		[self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:previousRow]];
+		//[outlineView_advanced reloadItem:[outlineView_advanced itemAtRow:previousRow]];
+
+	}
+}
+
 //Returns the advanced preference categories
 - (NSArray *)advancedCategoryArray
 {
@@ -554,7 +596,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
             loadedAdvancedPanes = [[NSArray arrayWithObject:item] retain];
             [self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
             [textField_advancedTitle setStringValue:[item label]];
-        }    
+        }
+		
         return(YES);
     }else{
         return(NO);

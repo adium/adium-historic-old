@@ -39,35 +39,6 @@
     return([[[self alloc] initForPlugin:inPlugin] autorelease]);
 }
 
-+ (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane
-{
-	// NSLog(@"----AIPreferencePane: asked to restore defaults for pane %@",[preferencePane label]);
-}
-
-
-- (void)registerRestorablePrefs:(NSDictionary *)defaultDict forGroup:(NSString *)groupName
-{
-    NSMutableDictionary	*prefDict;
-    NSEnumerator		*enumerator;
-    NSString			*key;
-	
-	//restoreDict = ;
-	//Make a dictionary of (key, group) pairs out of the given dictionary
-	
-	/*
-    //Load the group if necessary
-    prefDict = [self loadPreferenceGroup:groupName];
-	
-    //Set defaults for any value that doesn't have a key
-    enumerator = [[defaultDict allKeys] objectEnumerator];
-    while((key = [enumerator nextObject])){
-        if(![prefDict objectForKey:key]){
-            [prefDict setObject:[defaultDict objectForKey:key] forKey:key];
-        }
-    }
-	 */
-}
-
 
 //Init, passing plugin
 - (id)initForPlugin:(id)inPlugin
@@ -188,7 +159,11 @@
 }
 
 
-
+//Return an array of dictionaries, each dictionary of the form (key, default, group)
+- (NSArray *)restorablePreferences
+{
+	return(nil);
+}
 
 
 
