@@ -78,6 +78,7 @@
 	[[adium notificationCenter] removeObserver:self];
     [tabView_customTabs setDelegate:nil];
 	[containedChats release];
+	[toolbarItems release];
 	[name release];
 
     [super dealloc];
