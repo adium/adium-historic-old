@@ -227,58 +227,47 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 }
 
 -(IBAction)deleteEventAction:(id)sender
-{
-    if ([tableView_actions selectedRow] != -1) {
-        AIListObject *activeObject = activeContactObject; //store it now so we'll be okay if deletion releases the instance
-        [activeObject retain];
-       
-        [instance configForObject:activeObject];
-                
-        int index = [prefAlertsArray indexOfObject:activeObject];
-
-        [instance deleteEventAction:nil]; //delete the event from the instance
-        int count = [instance count]; //store new count now
-
-        [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
-                                                  object:activeObject
-                                                userInfo:nil]; //notify that the change occured
-
-        [prefAlertsArray removeObjectAtIndex:index]; //take one instance for this contact out of our array
-
-        index += count;
-        NSRange theRange;
-
-        theRange.length = [prefAlertsArray count] - index;
-        if (theRange.length > 0) { //this isn't the last one
-            theRange.location = index;
-
-            NSMutableSet * prefAlertsSet = [[NSMutableSet alloc] init];
-            [prefAlertsSet addObjectsFromArray:[prefAlertsArray subarrayWithRange:theRange]]; //each instance past the instance we just modified is now in prefAlertsSet
-
-            NSEnumerator * enumerator = [prefAlertsSet objectEnumerator];
-            AIListObject * thisObject;
-            while (thisObject = [enumerator nextObject]) {
-                NSString * UID = [thisObject UID];
-                NSNumber * offset = [offsetDictionary objectForKey:UID];
-                [offsetDictionary setObject:[NSNumber numberWithInt:([offset intValue] - 1)] forKey:UID];
-            }
-        }
-        [self tableViewSelectionDidChange:nil];
-
-        [activeObject release];
+{    
+    AIListObject *tempObject = activeContactObject; //store it now so we'll be okay if deletion releases the instance
+    int row = [tableView_actions selectedRow];
+    
+    [instance deleteEventAction:nil]; //delete the event from the instance
+    [self rebuildPrefAlertsArray];
+    [tableView_actions reloadData]; //necessary?
+    
+    if ( row < ([tableView_actions numberOfRows]-1) ) {
+        [tableView_actions scrollRowToVisible:row];
+        [tableView_actions selectRow:row byExtendingSelection:NO];   
+        [self tableViewSelectionDidChange:nil]; //force it to realize the change
     }
+    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+                                              object:tempObject
+                                            userInfo:nil]; //notify that the change occured    
+    
 }
 
+//doesn't work for grou pyet because of contactInGroup
 -(IBAction)addedEvent:(id)sender
 {
-    AIListObject *tempObject = activeContactObject;
+    AIListObject * tempObject;
+    NSString * UID = [activeContactObject UID];
+    if ([activeContactObject isKindOfClass:[AIListContact class]]) {
+        tempObject = [[owner contactController] contactInGroup:nil withService:[activeContactObject serviceID] UID:UID];
+    } else {
+        tempObject = [[owner contactController] groupInGroup:nil withUID:UID];
+    }
+    
     [self rebuildPrefAlertsArray];
-
+    [tableView_actions reloadData];
+    
     [instance configForObject:tempObject];
     int index = [prefAlertsArray indexOfObjectIdenticalTo:tempObject] + [instance count] - 1;
+    
     [tableView_actions scrollRowToVisible:index];
     [tableView_actions selectRow:index byExtendingSelection:NO];
-
+    
+    [self tableViewSelectionDidChange:nil]; //force it to realize the change
+    
     [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
                                               object:[instance activeObject]
                                             userInfo:nil];
@@ -293,7 +282,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(void)accountListChanged:(NSNotification *)notification
 {
-    //    NSLog(@"account list changed");
+    NSLog(@"account list changed");
     [popUp_contactList setMenu:[self switchContactMenu]];
     if ( activeContactObject && ([popUp_contactList indexOfItemWithRepresentedObject:activeContactObject] == -1) ) {
         if ([popUp_contactList numberOfItems] ) {
@@ -520,8 +509,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (IBAction)switchToContact:(id) sender
 {
-    activeContactObject = [sender representedObject];
     [self configureViewForContact:[sender representedObject]];
+    activeContactObject = [sender representedObject];
 }
 
 - (void)testSelectedEvent
