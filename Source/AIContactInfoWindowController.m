@@ -297,9 +297,18 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		
 		//Account name
 		if (inObject){
-			[textField_accountName setStringValue:(useDisplayName ?
-												   [inObject displayName] :
-												   [inObject formattedUID])];	
+			if (useDisplayName){
+				[textField_accountName setStringValue:[inObject displayName]];
+			}else{
+				NSString	*formattedUID;
+				
+				if (formattedUID = [inObject formattedUID]){
+					[textField_accountName setStringValue:formattedUID];
+				}else{
+					[textField_accountName setStringValue:[inObject displayName]];
+				}
+			}
+			
 		}else{
 			[textField_accountName setStringValue:@""];
 		}
