@@ -6,6 +6,7 @@
 
 #define ITUNER_DEFAULT_PREFS           @"iTunesIntegrationPrefs"
 #define PREF_GROUP_ITUNER              @"iTunes Integration"
+#define SCRIPTS_MENU_NAME              @"Scripts"
 
 @protocol AIContentFilter;
 
