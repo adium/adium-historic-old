@@ -23,6 +23,8 @@
 #import "AIMTOC2AccountViewController.h"
 #import "AIMTOC2ServicePlugin.h"
 
+#define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
+
 static char *hash_password(const char * const password);
 
 @interface AIMTOC2Account (PRIVATE)
@@ -811,66 +813,28 @@ static char *hash_password(const char * const password);
 
 - (void)AIM_HandleError:(NSString *)message
 {
-    int error = [[message TOCStringArgumentAtIndex:1] intValue];
+    NSString		*path;
+    NSDictionary	*errorDict;
+    NSString		*errorMessage;
+    BOOL		disconnect = NO;
+    int			errorNumber = [[message TOCStringArgumentAtIndex:1] intValue];
+    
+    //Get the error message data
+    //Error messages (and if we should disconnect) come from keys within the AIMErrors.plist file
+    path = [[NSBundle bundleForClass:[self class]] pathForResource:AIM_ERRORS_FILE ofType:@"plist"];
+    errorDict = [NSDictionary dictionaryWithContentsOfFile:path];
 
-    switch(error){
-        //Minor errors
-        case 901: NSLog(@"ERROR: User is currently unavailable"); break;
-        case 902: NSLog(@"ERROR: User information is currently unavilable"); break;
-        case 903: NSLog(@"ERROR: (1) You are sending messages too fast; last message was dropped"); break;
-        case 911: NSLog(@"ERROR: Invalid username (or) Unable to change password"); break;
-        case 915: NSLog(@"ERROR: (2) You are sending messages too fast; last message was dropped"); break;
-        case 931: NSLog(@"ERROR: Your buddy list is full, can't fit user"); break;
-        case 950: NSLog(@"ERROR: Chat room is currently unavailable"); break;
-        case 960: NSLog(@"ERROR: (3) You are sending messages too fast; last message was dropped"); break;
-        case 961: NSLog(@"ERROR: Incoming message delivery failure (Message too big)"); break;
-        case 962: NSLog(@"ERROR: Incoming message delivery failure (Message sent too fast)"); break;
-        case 970: NSLog(@"ERROR: User information is currently unavilable (1)"); break;
-        case 971: NSLog(@"ERROR: User information is currently unavilable (Too many matches)"); break;
-        case 972: NSLog(@"ERROR: User information is currently unavilable (Need more qualifiers)"); break;
-        case 973: NSLog(@"ERROR: User information is currently unavilable (Directory service unavailable)"); break;
-        case 974: NSLog(@"ERROR: User information is currently unavilable (Email lookup restricted)"); break;
-        case 975: NSLog(@"ERROR: User information is currently unavilable (Keyword ignored)"); break;
-        case 976: NSLog(@"ERROR: User information is currently unavilable (No keywords)"); break;
-        case 977: NSLog(@"ERROR: User information is currently unavilable (Language not supported)"); break;
-        case 978: NSLog(@"ERROR: User information is currently unavilable (Country not supported)"); break;
-        case 979: NSLog(@"ERROR: User information is currently unavilable (2)"); break;
-        
-        //Disconnecting Errors
-        case 904:
-            NSLog(@"ERROR: You've been bumped off because your screenname has signed on from somewhere else");
-            [self disconnect];
-        break;
-        case 980:
-            NSLog(@"ERROR: Invalid username or password");
-            [self disconnect];
+    //Get the corrent message and disconnect flag
+    errorMessage = [[errorDict objectForKey:@"ErrorString"] objectForKey:[message TOCStringArgumentAtIndex:1]];
+    if(!errorMessage) errorMessage = @"Unknown Error";
+    disconnect = [[[errorDict objectForKey:@"ErrorDisc"] objectForKey:[message TOCStringArgumentAtIndex:1]] boolValue];
 
-            APPKIT_EXTERN int NSRunAlertPanel(NSString *title, NSString *msg, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...);
-            
-            
-            //Prompt error
-            //choices to -reenter pass, cancel, try again
-            
-        break;
-        case 981:
-            NSLog(@"ERROR: Unknown error (Service temporarily unavailable)");
-            [self disconnect];
-        break;
-        case 982:
-            NSLog(@"ERROR: You are blocked (Your warning level is too high to sign on)");
-            [self disconnect];
-        break;
-        case 983:
-            NSLog(@"ERROR: You are blocked (You have been connected and disconnecting too frequently)");
-            [self disconnect];
-        break;
-        case 989:
-            NSLog(@"ERROR: That account is currently suspended (or) The host has refused this connection");
-            [self disconnect];
-        break;
+    //Display the error
+    [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, screenName] withDescription:errorMessage];
 
-        //Unkonwn Error
-        default: NSLog(@"ERROR: Unknown error %i",error); break;
+    //Disconnecting Errors
+    if(disconnect){
+        [self disconnect];
     }
 }
 

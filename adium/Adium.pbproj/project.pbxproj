@@ -658,6 +658,29 @@
 //4A2
 //4A3
 //4A4
+//4B0
+//4B1
+//4B2
+//4B3
+//4B4
+		4B0D1C9903B8A89400A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIMErrors.plist;
+			path = "Plugins/AIM TOC2 Service/AIMErrors.plist";
+			refType = 4;
+		};
+		4B0D1C9A03B8A89400A8010A = {
+			fileRef = 4B0D1C9903B8A89400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//4B0
+//4B1
+//4B2
+//4B3
+//4B4
 //F50
 //F51
 //F52
@@ -2454,6 +2477,7 @@
 				F59DB3D1033EA90801A8010A,
 				F59DB3D3033EA90801A8010A,
 				F5C8B7730358631001A8010A,
+				4B0D1C9A03B8A89400A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6452,6 +6476,7 @@
 		};
 		F59DB3D4033EA90B01A8010A = {
 			children = (
+				4B0D1C9903B8A89400A8010A,
 				F5C8B7720358631001A8010A,
 				F59DB3C1033EA90801A8010A,
 				F59DB3C3033EA90801A8010A,
