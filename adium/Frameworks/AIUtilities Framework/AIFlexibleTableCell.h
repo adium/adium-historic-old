@@ -8,8 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AIFlexibleTableView, AIFlexibleTableColumn;
 
 @interface AIFlexibleTableCell : NSCell {
+    AIFlexibleTableView	*tableView;
 
     //Background
     NSColor 		*backgroundColor;
@@ -26,18 +28,11 @@
     NSSize		cellSize;
     NSRect		frame;
     NSColor		*dividerColor;
-    NSAttributedString	*string;
     BOOL		selected;
 
-    //Text rendering cache
-    NSTextStorage 	*textStorage;
-    NSTextContainer 	*textContainer;
-    NSLayoutManager 	*layoutManager;
-    NSRange		glyphRange;
 }
 
-+ (AIFlexibleTableCell *)cellWithAttributedString:(NSAttributedString *)inString;
-+ (AIFlexibleTableCell *)cellWithString:(NSString *)inString color:(NSColor *)inTextColor font:(NSFont *)inFont alignment:(NSTextAlignment)inAlignment background:(NSColor *)inBackColor gradient:(NSColor *)inGradientColor;
+- (void)setTableView:(AIFlexibleTableView *)inView;
 
 //Configure
 - (void)setBackgroundColor:(NSColor *)inColor;
@@ -48,8 +43,10 @@
 - (void)setSelected:(BOOL)inSelected;
 
 //Access
-- (NSAttributedString *)string;
 - (NSSize)paddingInset;
+- (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView;
+- (void)endEditing;
+- (id <NSCopying>)objectValue;
 
 //Sizing
 - (NSSize)cellSize;

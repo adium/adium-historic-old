@@ -15,6 +15,7 @@
 #define AWAY_MESSAGES_PREF_NIB		@"AwayMessagePrefs"	//Name of preference nib
 #define AWAY_MESSAGES_PREF_TITLE	@"Away Messages"	//Title of the preference view
 #define AWAY_NEW_MESSAGE_STRING		@"(New Away Message)"
+#define AWAY_LIST_IMAGE			@"AwayIcon"		//Away list image filename
 
 @interface AIAwayMessagePreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -66,6 +67,9 @@
     //Load the pref view nib
     [NSBundle loadNibNamed:AWAY_MESSAGES_PREF_NIB owner:self];
 
+    //Load our image
+    awayImage = [[AIImageUtilities imageNamed:AWAY_LIST_IMAGE forClass:[self class]] retain];
+    
     //Install our preference view
     preferenceViewController = [AIPreferenceViewController controllerWithName:AWAY_MESSAGES_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
@@ -146,18 +150,17 @@
     AIFlexibleTableCell	*cell;
 
     if(inCol == imageColumn){
-        cell = [AIFlexibleTableCell cellWithString:@"[:)]"
-                                             color:[NSColor blackColor]
-                                              font:[NSFont systemFontOfSize:11]
-                                         alignment:NSLeftTextAlignment
-                                        background:[NSColor whiteColor]
-                                          gradient:nil];
-        [cell setDividerColor:[NSColor lightGrayColor]];
-        
-    }else if(inCol == messageColumn){
-        cell = [AIFlexibleTableCell cellWithAttributedString:[awayMessageArray objectAtIndex:inRow]];
+        cell = [AIFlexibleTableImageCell cellWithImage:awayImage];
         [cell setBackgroundColor:[NSColor whiteColor]];
         [cell setDividerColor:[NSColor lightGrayColor]];
+        [cell setPaddingLeft:1 top:1 right:1 bottom:1];
+        
+    }else if(inCol == messageColumn){
+        cell = [AIFlexibleTableTextCell cellWithAttributedString:[awayMessageArray objectAtIndex:inRow]];
+        [cell setBackgroundColor:[NSColor whiteColor]];
+        [cell setDividerColor:[NSColor lightGrayColor]];
+        [cell setPaddingLeft:1 top:1 right:1 bottom:1];
+
     }
     
 
@@ -180,7 +183,7 @@
     }
 
     [self saveAwayMessages];
-    [tableView_aways reloadData];
+//    [tableView_aways reloadData];
 }
 
 - (BOOL)shouldSelectRow:(int)inRow

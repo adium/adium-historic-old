@@ -24,6 +24,8 @@
 
     NSMutableArray			*awayMessageArray;
 
+    NSImage				*awayImage;
+
 }
 
 + (AIAwayMessagePreferences *)awayMessagePreferencesWithOwner:(id)inOwner;

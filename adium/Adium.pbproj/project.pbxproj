@@ -86,8 +86,6 @@
 				17587328FF379C6511CA2CBB,
 				F53EA2CE02C803C101A8010A,
 				F569E39202CA88C701A8010A,
-				F53B9A0702CCED6401A8010A,
-				F53B9A0F02CCED8B01A8010A,
 				F53B9ACC02CD12CB01A8010A,
 				F5BD46CF02D0789901A8010A,
 				F5370C9902D76F3B01A8010A,
@@ -135,9 +133,9 @@
 			targets = (
 				29B97326FDCFA39411CA2CEA,
 				F53B9A0E02CCED8B01A8010A,
+				F53B9A0602CCED6401A8010A,
 				F53EA2CD02C803C101A8010A,
 				F5A01D8B0379813301A8010A,
-				F53B9A0602CCED6401A8010A,
 				F569E39102CA88C701A8010A,
 				F5BD46CE02D0789901A8010A,
 				F53B9ACB02CD12CB01A8010A,
@@ -207,8 +205,8 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
-				F53B9A3602CCEF4801A8010A,
-				F53B9A3702CCEF4801A8010A,
+				F53B9A0702CCED6401A8010A,
+				F53B9A0F02CCED8B01A8010A,
 				1058C7A1FEA54F0111CA2CBB,
 				F531836F019E40BB01A80165,
 				01BD68FF015E255C7F000001,
@@ -227,14 +225,13 @@
 				29B9732BFDCFA39411CA2CEA,
 				29B9732DFDCFA39411CA2CEA,
 				043355C9FE30361CC02AAC07,
-				F53EA2DC02C807EE01A8010A,
 				F53B9A2002CCEEA101A8010A,
 			);
 			buildSettings = {
 				DEBUGGING_SYMBOLS = NO;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -245,34 +242,34 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				F5D2FB7E03B6644001A8010A,
-				F55E2CD103B12CF801A80202,
-				F5BE33D4039BE34001A8010A,
-				F5CED5F10388303901A8010A,
-				F55263BC0333CA4401A8010A,
-				F51DEFB00326341601A8010A,
-				F5370C9A02D76F5101A8010A,
-				F5BD470702D0845E01A8010A,
-				F5BD46D902D078CC01A8010A,
-				F53B9A1002CCED9601A8010A,
-				F53B9A0802CCED7701A8010A,
-				F569E39302CA88C901A8010A,
-				F568638302C8083901A8010A,
-				F5A01D8D0379813F01A8010A,
-				F510B77503339F4901A8010A,
-				F573C6230333B88401A8010A,
-				F50CD62C03603C7D01A8010A,
-				40AC0EE803B5BEAF00A80202,
-				4B28907D03C1D17500A8010A,
-				4BED5A5B03C34F4800A8010A,
-				9C8C7F9E03CBA08400267226,
-				4B71CD5603CBCA7E00A8010A,
-				4B81631A03D1C27500A8010A,
-				9EDAC4EE03D5160100415B22,
+				4BF1F04F03D84D1E00A8010A,
+				4BF1F05203D84D1E00A8010A,
+				4BF1F0CA03D873A800A8010A,
+				4BF1F0CB03D873A800A8010A,
+				4BF1F0CC03D873A800A8010A,
+				4BF1F0CD03D873A800A8010A,
+				4BF1F0CE03D873A800A8010A,
+				4BF1F0CF03D873A800A8010A,
+				4BF1F0D003D873A800A8010A,
+				4BF1F0D103D873A800A8010A,
+				4BF1F0D203D873A800A8010A,
+				4BF1F0D303D873A800A8010A,
+				4BF1F0D403D873A800A8010A,
+				4BF1F0D503D873A800A8010A,
+				4BF1F0D603D873A800A8010A,
+				4BF1F0D703D873A800A8010A,
+				4BF1F0D803D873A800A8010A,
+				4BF1F0D903D873A800A8010A,
+				4BF1F0DA03D873A800A8010A,
+				4BF1F0DB03D873A800A8010A,
+				4BF1F0DC03D873A800A8010A,
+				4BF1F0DD03D873A800A8010A,
+				4BF1F0DE03D873A800A8010A,
+				4BF1F0DF03D873A800A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
-			productInstallPath = "$(HOME)/Applications";
+			productInstallPath = /;
 			productName = CocAIMe2;
 			productReference = 17587328FF379C6511CA2CBB;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -281,6 +278,27 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumPlugin</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumPlugin.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Plugin</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
@@ -354,6 +372,7 @@
 				F55B416103AB8BE301A8010A,
 				F55B416903AB8C0501A8010A,
 				F55B416B03AB8C0B01A8010A,
+				4BF1F0E903D888EB00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,8 +408,6 @@
 			files = (
 				1058C7A3FEA54F0111CA2CBB,
 				01BD6900015E255C7F000001,
-				F53B9A3A02CCEF4801A8010A,
-				F53B9A3B02CCEF4801A8010A,
 				F59DB3DE033EB08D01A8010A,
 				4B28908D03C1D19A00A8010A,
 				4B28909103C1D1A900A8010A,
@@ -438,8 +455,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				40AC0EF903B5BFDA00A80202,
-				40AC0EF303B5BFD400A80202,
-				40AC0EF603B5BFD600A80202,
+				4BF1F0BA03D86DB600A8010A,
+				4BF1F0BB03D86DB600A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -461,6 +478,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -475,7 +493,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Error Message Handler";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Error Message Handler";
 			productReference = 40AC0EE703B5BEAF00A80202;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -514,10 +532,6 @@
 			isa = PBXBundleReference;
 			path = "Error Message Handler.AdiumPlugin";
 			refType = 3;
-		};
-		40AC0EE803B5BEAF00A80202 = {
-			isa = PBXTargetDependency;
-			target = 40AC0EE603B5BEAF00A80202;
 		};
 		40AC0EEA03B5BEDB00A80202 = {
 			children = (
@@ -563,18 +577,6 @@
 		40AC0EF003B5BFB900A80202 = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
-		};
-		40AC0EF303B5BFD400A80202 = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		40AC0EF603B5BFD600A80202 = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		40AC0EF903B5BFDA00A80202 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -645,6 +647,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = "$(BUILT_PRODUCTS_DIR)/Adium";
+				INSTALL_MODE_FLAG = "go-w,o+rX";
 				OPTIMIZATION_CFLAGS = "-O0";
 			};
 			isa = PBXBuildStyle;
@@ -656,6 +662,9 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = NO;
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = "$(BUILT_PRODUCTS_DIR)/Adium (Deployment)";
 				OPTIMIZATION_CFLAGS = "-Os";
 			};
 			isa = PBXBuildStyle;
@@ -671,12 +680,6 @@
 //4B2
 //4B3
 //4B4
-		4B02853003C1DE0500A8010A = {
-			fileRef = 4B28907C03C1D17500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B0D1C9903B8A89400A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -786,9 +789,9 @@
 		4B28907903C1D17500A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				4B28909203C1D20E00A8010A,
-				4B28909303C1D20E00A8010A,
 				4B28909403C1D20F00A8010A,
+				4BF1F0BE03D86DBB00A8010A,
+				4BF1F0BF03D86DBB00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -810,6 +813,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -819,12 +823,12 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
-				4B28909603C1D21B00A8010A,
 				4B28909503C1D21800A8010A,
+				4B28909603C1D21B00A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Alias Support";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Alias Support";
 			productReference = 4B28907C03C1D17500A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -864,126 +868,14 @@
 			path = "Alias Support.AdiumPlugin";
 			refType = 3;
 		};
-		4B28907D03C1D17500A8010A = {
-			isa = PBXTargetDependency;
-			target = 4B28907B03C1D17500A8010A;
-		};
-		4B28907F03C1D19300A8010A = {
-			fileRef = F5D2FB7D03B6643B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908003C1D19300A8010A = {
-			fileRef = 40AC0EE703B5BEAF00A80202;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908103C1D19400A8010A = {
-			fileRef = F50F253A03B0425301A80202;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908203C1D19500A8010A = {
-			fileRef = F5AAD090039BA10901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908303C1D19500A8010A = {
-			fileRef = F501BB1403882A2901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908403C1D19600A8010A = {
-			fileRef = F5A01D8C0379813301A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908503C1D19600A8010A = {
-			fileRef = F50CD62903603C7201A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908603C1D19700A8010A = {
-			fileRef = F5B53FC70333AFB501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908703C1D19700A8010A = {
-			fileRef = F510B77403339F1C01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908803C1D19800A8010A = {
-			fileRef = F59F9A8A032BE6B101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908903C1D19800A8010A = {
-			fileRef = F51DEFAF032633E301A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908A03C1D19900A8010A = {
-			fileRef = F5370C9902D76F3B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908B03C1D19900A8010A = {
-			fileRef = F5BD46CF02D0789901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28908C03C1D19A00A8010A = {
-			fileRef = F53B9ACC02CD12CB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B28908D03C1D19A00A8010A = {
 			fileRef = F53B9A0F02CCED8B01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		4B28908F03C1D19E00A8010A = {
-			fileRef = F569E39202CA88C701A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28909003C1D19E00A8010A = {
-			fileRef = F53EA2CE02C803C101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B28909103C1D1A900A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28909203C1D20E00A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B28909303C1D20E00A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1091,18 +983,6 @@
 		};
 		4B53714E03CEF61200A8010A = {
 			fileRef = 4B53714D03CEF61200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B70F28603D1C55B00A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B70F28703D1C55B00A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1232,10 +1112,10 @@
 		4B71CD5203CBCA7E00A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				4B71CD5E03CBCAEF00A8010A,
-				4B71CD5F03CBCAEF00A8010A,
 				4B71CD6103CBCAF100A8010A,
 				4B71CD6203CBCAF100A8010A,
+				4BF1F0C403D86DC100A8010A,
+				4BF1F0C503D86DC200A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1257,6 +1137,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1271,7 +1152,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Text Profiles";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Text Profiles";
 			productReference = 4B71CD5503CBCA7E00A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -1311,10 +1192,6 @@
 			path = "Text Profiles.AdiumPlugin";
 			refType = 3;
 		};
-		4B71CD5603CBCA7E00A8010A = {
-			isa = PBXTargetDependency;
-			target = 4B71CD5403CBCA7E00A8010A;
-		};
 		4B71CD5803CBCAB400A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
@@ -1349,18 +1226,6 @@
 			settings = {
 			};
 		};
-		4B71CD5E03CBCAEF00A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B71CD5F03CBCAEF00A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B71CD6103CBCAF100A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -1381,18 +1246,6 @@
 			isa = PBXGroup;
 			name = Headers;
 			refType = 4;
-		};
-		4B77649203C35D4100A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B77649303C35D4100A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B77649403C35D4200A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -1428,6 +1281,8 @@
 				4BCDEB3903D4DC6F00A8010A,
 				4BCDEB3703D4DC6F00A8010A,
 				4BCDEB3503D4DC6F00A8010A,
+				4BF1F04B03D7B9F000A8010A,
+				4BF1F04703D7B99700A8010A,
 				F5793936033E74E401A8010A,
 				F570A59003704AB901A8010A,
 				F57938F8033E745F01A8010A,
@@ -1592,6 +1447,7 @@
 				4B70F29203D1D13800A8010A,
 				4B70F28D03D1CC6400A8010A,
 				4B70F28F03D1D04900A8010A,
+				4BF1F04503D7B92D00A8010A,
 				4B187A0703D5E95500A8010A,
 				4B187A0803D5E95500A8010A,
 			);
@@ -1617,6 +1473,7 @@
 				4B70F29003D1D04900A8010A,
 				4B187A0903D5E95500A8010A,
 				4B187A0A03D5E95500A8010A,
+				4BF1F04603D7B92D00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1634,10 +1491,10 @@
 		4B81631603D1C27500A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				4B70F28603D1C55B00A8010A,
-				4B70F28703D1C55B00A8010A,
 				4B70F28803D1C55C00A8010A,
 				4B187A0203D59B4C00A8010A,
+				4BF1F0C603D86DC400A8010A,
+				4BF1F0C703D86DC400A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1652,6 +1509,7 @@
 		4B81631803D1C27500A8010A = {
 			buildPhases = (
 				4B81631303D1C27500A8010A,
+				4BF1F0EA03D88B7500A8010A,
 				4B81631403D1C27500A8010A,
 				4B81631503D1C27500A8010A,
 				4B81631603D1C27500A8010A,
@@ -1659,6 +1517,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1673,7 +1532,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Away Messages";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Away Messages";
 			productReference = 4B81631903D1C27500A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -1712,16 +1571,6 @@
 			isa = PBXBundleReference;
 			path = "Away Messages.AdiumPlugin";
 			refType = 3;
-		};
-		4B81631A03D1C27500A8010A = {
-			isa = PBXTargetDependency;
-			target = 4B81631803D1C27500A8010A;
-		};
-		4B81631B03D1C27500A8010A = {
-			fileRef = 4B81631903D1C27500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B81631C03D1C27E00A8010A = {
 			isa = PBXTargetDependency;
@@ -1909,18 +1758,6 @@
 			settings = {
 			};
 		};
-		4BBF317D03CBCD2600A8010A = {
-			fileRef = 4B71CD5503CBCA7E00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BBF317F03CBCD2F00A8010A = {
-			fileRef = 9C8C7F9D03CBA08400267226;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
 			isa = PBXBuildFile;
@@ -1944,6 +1781,8 @@
 				4BCDEB3A03D4DC6F00A8010A,
 				4BCDEB3803D4DC6F00A8010A,
 				4BCDEB3603D4DC6F00A8010A,
+				4BF1F04C03D7B9F000A8010A,
+				4BF1F04803D7B99700A8010A,
 			);
 			isa = PBXGroup;
 			name = "Flexible Table View";
@@ -2114,9 +1953,9 @@
 		4BED5A5703C34F4800A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				4B77649203C35D4100A8010A,
-				4B77649303C35D4100A8010A,
 				4B77649403C35D4200A8010A,
+				4BF1F0C003D86DBD00A8010A,
+				4BF1F0C103D86DBD00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2138,6 +1977,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2152,7 +1992,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Alphabetical Sort";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Alphabetical Sort";
 			productReference = 4BED5A5A03C34F4800A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -2191,16 +2031,6 @@
 			isa = PBXBundleReference;
 			path = "Alphabetical Sort.AdiumPlugin";
 			refType = 3;
-		};
-		4BED5A5B03C34F4800A8010A = {
-			isa = PBXTargetDependency;
-			target = 4BED5A5903C34F4800A8010A;
-		};
-		4BED5A5C03C34F4800A8010A = {
-			fileRef = 4BED5A5A03C34F4800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BED5A5D03C34F7700A8010A = {
 			isa = PBXTargetDependency;
@@ -2277,6 +2107,501 @@
 			path = "Plugins/AIM iChat Service/InstantMessageFramework.h";
 			refType = 4;
 		};
+		4BF1F04503D7B92D00A8010A = {
+			isa = PBXFileReference;
+			name = AwayIcon.tif;
+			path = "Plugins/Away Messages/AwayIcon.tif";
+			refType = 4;
+		};
+		4BF1F04603D7B92D00A8010A = {
+			fileRef = 4BF1F04503D7B92D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F04703D7B99700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIFlexibleTableImageCell.h;
+			path = "Frameworks/AIUtilities Framework/AIFlexibleTableImageCell.h";
+			refType = 4;
+		};
+		4BF1F04803D7B99700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIFlexibleTableImageCell.m;
+			path = "Frameworks/AIUtilities Framework/AIFlexibleTableImageCell.m";
+			refType = 4;
+		};
+		4BF1F04903D7B99700A8010A = {
+			fileRef = 4BF1F04703D7B99700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F04A03D7B99700A8010A = {
+			fileRef = 4BF1F04803D7B99700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F04B03D7B9F000A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIFlexibleTableTextCell.h;
+			path = "Frameworks/AIUtilities Framework/AIFlexibleTableTextCell.h";
+			refType = 4;
+		};
+		4BF1F04C03D7B9F000A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIFlexibleTableTextCell.m;
+			path = "Frameworks/AIUtilities Framework/AIFlexibleTableTextCell.m";
+			refType = 4;
+		};
+		4BF1F04D03D7B9F000A8010A = {
+			fileRef = 4BF1F04B03D7B9F000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F04E03D7B9F000A8010A = {
+			fileRef = 4BF1F04C03D7B9F000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F04F03D84D1E00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BF1F05203D84D1E00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F06A03D8699C00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F06D03D869A000A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F09C03D86C4700A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F09D03D86CD500A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F09E03D86CE200A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F09F03D86D0400A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A003D86D1200A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A103D86D3300A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A203D86D3C00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A303D86D5500A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A403D86D5F00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A603D86D7700A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A703D86D8000A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A803D86D9800A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0A903D86DA100A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0AA03D86DA300A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0AB03D86DA300A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0AC03D86DA500A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0AD03D86DA600A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0AE03D86DA800A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0AF03D86DA800A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B003D86DAA00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B103D86DAB00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B203D86DAC00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B303D86DAD00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B403D86DAF00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B503D86DAF00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B603D86DB100A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B703D86DB200A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B803D86DB400A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0B903D86DB400A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0BA03D86DB600A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0BB03D86DB600A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0BC03D86DB800A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0BD03D86DB900A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0BE03D86DBB00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0BF03D86DBB00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C003D86DBD00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C103D86DBD00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C203D86DBF00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C303D86DBF00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C403D86DC100A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C503D86DC200A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C603D86DC400A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C703D86DC400A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C803D86DC600A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0C903D86DC600A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0CA03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F53EA2CD02C803C101A8010A;
+		};
+		4BF1F0CB03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F5A01D8B0379813301A8010A;
+		};
+		4BF1F0CC03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F569E39102CA88C701A8010A;
+		};
+		4BF1F0CD03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F5BD46CE02D0789901A8010A;
+		};
+		4BF1F0CE03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9ACB02CD12CB01A8010A;
+		};
+		4BF1F0CF03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F5370C9802D76F3B01A8010A;
+		};
+		4BF1F0D003D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F51DEFAE032633E301A8010A;
+		};
+		4BF1F0D103D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F59F9A89032BE6B101A8010A;
+		};
+		4BF1F0D203D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F510B77303339F1C01A8010A;
+		};
+		4BF1F0D303D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F5B53FC60333AFB501A8010A;
+		};
+		4BF1F0D403D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F50CD62803603C7201A8010A;
+		};
+		4BF1F0D503D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F501BB1303882A2901A8010A;
+		};
+		4BF1F0D603D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F5AAD08F039BA10901A8010A;
+		};
+		4BF1F0D703D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F50F252D03B0425301A80202;
+		};
+		4BF1F0D803D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 40AC0EE603B5BEAF00A80202;
+		};
+		4BF1F0D903D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = F5D2FB7C03B6643B01A8010A;
+		};
+		4BF1F0DA03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B28907B03C1D17500A8010A;
+		};
+		4BF1F0DB03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BED5A5903C34F4800A8010A;
+		};
+		4BF1F0DC03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 9C8C7F9C03CBA08400267226;
+		};
+		4BF1F0DD03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B71CD5403CBCA7E00A8010A;
+		};
+		4BF1F0DE03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B81631803D1C27500A8010A;
+		};
+		4BF1F0DF03D873A800A8010A = {
+			isa = PBXTargetDependency;
+			target = 9EDAC4EC03D5160100415B22;
+		};
+		4BF1F0E003D873B900A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BF1F0E103D873B900A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F0E203D873BA00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BF1F0E303D873BA00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F0E403D873D800A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F0E503D873D900A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F0E603D873DE00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F0E703D873E000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BF1F0E803D888EB00A8010A = {
+			isa = PBXFileReference;
+			name = AdiumPlugin.icns;
+			path = Source/AdiumPlugin.icns;
+			refType = 4;
+		};
+		4BF1F0E903D888EB00A8010A = {
+			fileRef = 4BF1F0E803D888EB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF1F0EA03D88B7500A8010A = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 //4B0
 //4B1
 //4B2
@@ -2327,8 +2652,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C8C7FA803CBA23E00267226,
-				9C8C7FA903CBA23F00267226,
-				9C8C7FAA03CBA24000267226,
+				4BF1F0C203D86DBF00A8010A,
+				4BF1F0C303D86DBF00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2350,6 +2675,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2364,7 +2690,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = Logger;
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = Logger;
 			productReference = 9C8C7F9D03CBA08400267226;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -2403,10 +2729,6 @@
 			isa = PBXBundleReference;
 			path = Logger.AdiumPlugin;
 			refType = 3;
-		};
-		9C8C7F9E03CBA08400267226 = {
-			isa = PBXTargetDependency;
-			target = 9C8C7F9C03CBA08400267226;
 		};
 		9C8C7FA003CBA14A00267226 = {
 			isa = PBXTargetDependency;
@@ -2453,18 +2775,6 @@
 		};
 		9C8C7FA803CBA23E00267226 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9C8C7FA903CBA23F00267226 = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9C8C7FAA03CBA24000267226 = {
-			fileRef = F53B9A3602CCEF4801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2573,18 +2883,6 @@
 			settings = {
 			};
 		};
-		9EB7C05D03D52C0400415B22 = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EB7C05E03D52C0400415B22 = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9EDAC4E703D5160100415B22 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -2612,8 +2910,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EB7C05C03D52C0300415B22,
-				9EB7C05D03D52C0400415B22,
-				9EB7C05E03D52C0400415B22,
+				4BF1F0C803D86DC600A8010A,
+				4BF1F0C903D86DC600A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2635,6 +2933,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2649,7 +2948,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Dock Behavior";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Dock Behavior Preferences";
 			productReference = 9EDAC4ED03D5160100415B22;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -2688,16 +2987,6 @@
 			isa = PBXBundleReference;
 			path = "Dock Behavior.AdiumPlugin";
 			refType = 3;
-		};
-		9EDAC4EE03D5160100415B22 = {
-			isa = PBXTargetDependency;
-			target = 9EDAC4EC03D5160100415B22;
-		};
-		9EDAC4EF03D5160100415B22 = {
-			fileRef = 9EDAC4ED03D5160100415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9EDAC4F003D516F500415B22 = {
 			isa = PBXTargetDependency;
@@ -2762,9 +3051,9 @@
 		F501BB1103882A2901A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F5CED5F2038830C901A8010A,
-				F5CED5F3038830C901A8010A,
 				F5CED5F4038830CA01A8010A,
+				4BF1F0B403D86DAF00A8010A,
+				4BF1F0B503D86DAF00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2786,6 +3075,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2795,12 +3085,12 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
-				F501BB1603882A3301A8010A,
 				F501BB1503882A3001A8010A,
+				F501BB1603882A3301A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Standard Toolbar Items";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Standard Toolbar Items";
 			productReference = F501BB1403882A2901A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -2919,22 +3209,10 @@
 			path = "Sounds/(Adium)Stranger.aif";
 			refType = 4;
 		};
-		F50A326903B579B701A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50A326A03B579B701A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F50A326B03B579BD01A8010A = {
 			buildActionMask = 2147483647;
 			dstPath = Sounds;
-			dstSubfolderSpec = 1;
+			dstSubfolderSpec = 7;
 			files = (
 				F50A326C03B579C801A8010A,
 				F50A326D03B579C801A8010A,
@@ -3054,9 +3332,9 @@
 		F50CD62603603C7201A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F50CD64303603E0D01A8010A,
-				F50CD64403603E0D01A8010A,
 				F50CD64503603E0F01A8010A,
+				4BF1F0B203D86DAC00A8010A,
+				4BF1F0B303D86DAD00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3078,6 +3356,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3092,7 +3371,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Contact List Editor";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Contact List Editor";
 			productReference = F50CD62903603C7201A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -3140,22 +3419,6 @@
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
 		};
-		F50CD62C03603C7D01A8010A = {
-			isa = PBXTargetDependency;
-			target = F50CD62803603C7201A8010A;
-		};
-		F50CD64303603E0D01A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50CD64403603E0D01A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F50CD64503603E0F01A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -3172,6 +3435,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3186,6 +3450,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Idle Time";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Event Sounds";
 			productReference = F50F253A03B0425301A80202;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -3262,24 +3527,12 @@
 		F50F253503B0425301A80202 = {
 			buildActionMask = 2147483647;
 			files = (
-				F50F253603B0425301A80202,
-				F50F253703B0425301A80202,
 				F50F253803B0425301A80202,
+				4BF1F0B803D86DB400A8010A,
+				4BF1F0B903D86DB400A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F50F253603B0425301A80202 = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50F253703B0425301A80202 = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F50F253803B0425301A80202 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -3432,9 +3685,9 @@
 		F510B77103339F1C01A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F510B77B0333A51501A8010A,
 				F510B77C0333A51801A8010A,
-				F5A70E95039506C201A8010A,
+				4BF1F0AE03D86DA800A8010A,
+				4BF1F0AF03D86DA800A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3456,6 +3709,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3466,10 +3720,11 @@
 			};
 			dependencies = (
 				F573C6240333B88901A8010A,
+				4BF1F0E603D873DE00A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Account Menu Access";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Account Menu Access";
 			productReference = F510B77403339F1C01A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -3509,10 +3764,6 @@
 			path = "Account Menu Access.AdiumPlugin";
 			refType = 3;
 		};
-		F510B77503339F4901A8010A = {
-			isa = PBXTargetDependency;
-			target = F510B77303339F1C01A8010A;
-		};
 		F510B77A0333A0A201A8010A = {
 			children = (
 				F570A584037049D501A8010A,
@@ -3520,12 +3771,6 @@
 			isa = PBXGroup;
 			name = Headers;
 			refType = 4;
-		};
-		F510B77B0333A51501A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F510B77C0333A51801A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -3614,9 +3859,9 @@
 		F51DEFAC032633E301A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F51DEFB8032634BB01A8010A,
-				F51DEFB9032634BB01A8010A,
 				F51DEFBA032634D401A8010A,
+				4BF1F0AA03D86DA300A8010A,
+				4BF1F0AB03D86DA300A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3638,6 +3883,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3652,7 +3898,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Standard Contact List View";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Standard Contact List View";
 			productReference = F51DEFAF032633E301A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -3692,10 +3938,6 @@
 			path = "Standard Contact List View.AdiumPlugin";
 			refType = 3;
 		};
-		F51DEFB00326341601A8010A = {
-			isa = PBXTargetDependency;
-			target = F51DEFAE032633E301A8010A;
-		};
 		F51DEFB10326345C01A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
@@ -3703,18 +3945,6 @@
 		F51DEFB20326345E01A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
-		};
-		F51DEFB8032634BB01A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F51DEFB9032634BB01A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F51DEFBA032634D401A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -3746,12 +3976,6 @@
 			name = Carbon.framework;
 			path = /System/Library/Frameworks/Carbon.framework;
 			refType = 0;
-		};
-		F5357E4102F8422601A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5357E4202F8422E01A8010A = {
 			isa = PBXTargetDependency;
@@ -3817,9 +4041,9 @@
 		F5370C9602D76F3B01A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F5CBFC4702D7725501A8010A,
-				F5CBFC4802D7725601A8010A,
 				F5CBFC4902D7725601A8010A,
+				4BF1F0A803D86D9800A8010A,
+				4BF1F0A903D86DA100A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3841,6 +4065,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3850,12 +4075,12 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
-				F5D5F61902DC53FA01A8010A,
 				F5D5F61802DC53F501A8010A,
+				F5D5F61902DC53FA01A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Status Circles";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Status Circles.AdiumPlugin";
 			productReference = F5370C9902D76F3B01A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -3895,14 +4120,11 @@
 			path = "Status Circles.AdiumPlugin";
 			refType = 3;
 		};
-		F5370C9A02D76F5101A8010A = {
-			isa = PBXTargetDependency;
-			target = F5370C9802D76F3B01A8010A;
-		};
 		F5385CF601BEB9F901A80165 = {
 			children = (
 				F5E6713603B4D12601A8010A,
 				F552078B033F727F01A8010A,
+				4BF1F0E803D888EB00A8010A,
 				F59DB6AD033EB74801A8010A,
 				F574173F033E72AC01A8010A,
 				F5741740033E72AC01A8010A,
@@ -3957,6 +4179,8 @@
 				4BCDEB3D03D4DC6F00A8010A,
 				4BCDEB3F03D4DC6F00A8010A,
 				4B187A0503D59CCC00A8010A,
+				4BF1F04903D7B99700A8010A,
+				4BF1F04D03D7B9F000A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4029,6 +4253,8 @@
 				4BCDEB3E03D4DC6F00A8010A,
 				4BCDEB4003D4DC6F00A8010A,
 				4B187A0603D59CCC00A8010A,
+				4BF1F04A03D7B99700A8010A,
+				4BF1F04E03D7B9F000A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4061,6 +4287,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-seg1addr 0x10100000";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -4068,6 +4295,7 @@
 				PRINCIPAL_CLASS = "";
 				PRODUCT_NAME = AIUtilities;
 				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -4075,6 +4303,7 @@
 			);
 			isa = PBXFrameworkTarget;
 			name = AIUtilities.Framework;
+			productInstallPath = "@executable_path/../Frameworks";
 			productName = AIUtilities;
 			productReference = F53B9A0702CCED6401A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -4111,10 +4340,6 @@
 			isa = PBXFrameworkReference;
 			path = AIUtilities.framework;
 			refType = 3;
-		};
-		F53B9A0802CCED7701A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
 		};
 		F53B9A0902CCED8B01A8010A = {
 			buildActionMask = 2147483647;
@@ -4166,7 +4391,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F53B9A2902CCEEF301A8010A,
-				F567DD520306A44401A8010A,
+				4BF1F09C03D86C4700A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4191,12 +4416,14 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "";
 				FRAMEWORK_VERSION = A;
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = "-seg1addr 0x10000000";
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRINCIPAL_CLASS = "";
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -4205,6 +4432,7 @@
 			);
 			isa = PBXFrameworkTarget;
 			name = Adium.Framework;
+			productInstallPath = "@executable_path/../Frameworks";
 			productName = Adium.Framework;
 			productReference = F53B9A0F02CCED8B01A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -4242,10 +4470,6 @@
 			path = Adium.framework;
 			refType = 3;
 		};
-		F53B9A1002CCED9601A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
 		F53B9A1302CCEDCA01A8010A = {
 			children = (
 				F5793921033E74AE01A8010A,
@@ -4269,15 +4493,15 @@
 			};
 		};
 		F53B9A2002CCEEA101A8010A = {
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F50A326903B579B701A8010A,
-				F50A326A03B579B701A8010A,
+				4BF1F06A03D8699C00A8010A,
+				4BF1F06D03D869A000A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 		F53B9A2902CCEEF301A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -4291,51 +4515,9 @@
 			settings = {
 			};
 		};
-		F53B9A3602CCEF4801A8010A = {
-			isa = PBXFrameworkReference;
-			name = Adium.framework;
-			path = build/Adium.framework;
-			refType = 4;
-		};
-		F53B9A3702CCEF4801A8010A = {
-			isa = PBXFrameworkReference;
-			name = AIUtilities.framework;
-			path = build/AIUtilities.framework;
-			refType = 4;
-		};
-		F53B9A3A02CCEF4801A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F53B9A3B02CCEF4801A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F53B9A3F02CCEF6601A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
-		};
-		F53B9A4002CCEF6E01A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F53B9A8A02CCF0A701A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F53B9A8B02CCF0A901A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F53B9AC502CD12AB01A8010A = {
 			children = (
@@ -4373,8 +4555,9 @@
 		F53B9AC902CD12CB01A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F53B9AD302CD14F201A8010A,
 				F53B9AD402CD14F301A8010A,
+				4BF1F0A603D86D7700A8010A,
+				4BF1F0A703D86D8000A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4396,6 +4579,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -4406,10 +4590,11 @@
 			};
 			dependencies = (
 				F53B9ACE02CD12DB01A8010A,
+				4BF1F0E503D873D900A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Offline Contact Hiding";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Offline Contact Hiding";
 			productReference = F53B9ACC02CD12CB01A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -4452,12 +4637,6 @@
 		F53B9ACE02CD12DB01A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
-		};
-		F53B9AD302CD14F201A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F53B9AD402CD14F301A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -4542,8 +4721,8 @@
 			files = (
 				F53EA2D402C8041701A8010A,
 				F53D72EF02C8FBE101A8010A,
-				F53B9A8A02CCF0A701A8010A,
-				F53B9A8B02CCF0A901A8010A,
+				4BF1F09D03D86CD500A8010A,
+				4BF1F09E03D86CE200A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4565,6 +4744,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -4574,10 +4754,12 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BF1F0E003D873B900A8010A,
+				4BF1F0E103D873B900A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "AIM (TOC2)";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = AIMTOC2.AdiumService;
 			productReference = F53EA2CE02C803C101A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -4589,21 +4771,21 @@
 	<key>CFBundleExecutable</key>
 	<string>AIM (TOC2)</string>
 	<key>CFBundleGetInfoString</key>
-	<string></string>
+	<string>AIM (TOC2)</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string></string>
+	<string>com.adiumx.AIMTOC2</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string></string>
+	<string>AIM (TOC2)</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string></string>
+	<string>AIM (TOC2)</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>AdIM</string>
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
@@ -4622,37 +4804,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		F53EA2DC02C807EE01A8010A = {
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				9EDAC4EF03D5160100415B22,
-				4B81631B03D1C27500A8010A,
-				4BBF317D03CBCD2600A8010A,
-				4BBF317F03CBCD2F00A8010A,
-				4BED5A5C03C34F4800A8010A,
-				4B02853003C1DE0500A8010A,
-				4B28907F03C1D19300A8010A,
-				4B28908003C1D19300A8010A,
-				4B28908103C1D19400A8010A,
-				4B28908203C1D19500A8010A,
-				4B28908303C1D19500A8010A,
-				4B28908403C1D19600A8010A,
-				4B28908503C1D19600A8010A,
-				4B28908603C1D19700A8010A,
-				4B28908703C1D19700A8010A,
-				4B28908803C1D19800A8010A,
-				4B28908903C1D19800A8010A,
-				4B28908A03C1D19900A8010A,
-				4B28908B03C1D19900A8010A,
-				4B28908C03C1D19A00A8010A,
-				4B28908F03C1D19E00A8010A,
-				4B28909003C1D19E00A8010A,
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F54441AC0378A36A01A8010A = {
 			isa = PBXFrameworkReference;
@@ -4886,10 +5037,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		F55263BC0333CA4401A8010A = {
-			isa = PBXTargetDependency;
-			target = F59F9A89032BE6B101A8010A;
 		};
 		F55596B403B784C801A8010A = {
 			fileEncoding = 30;
@@ -5630,10 +5777,6 @@
 			name = Images;
 			refType = 4;
 		};
-		F55E2CD103B12CF801A80202 = {
-			isa = PBXTargetDependency;
-			target = F50F252D03B0425301A80202;
-		};
 		F56621A503AD02AC01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -5665,16 +5808,6 @@
 		F567DD510306A43A01A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
-		};
-		F567DD520306A44401A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F568638302C8083901A8010A = {
-			isa = PBXTargetDependency;
-			target = F53EA2CD02C803C101A8010A;
 		};
 		F569E38102CA876501A8010A = {
 			children = (
@@ -5726,8 +5859,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F569E39502CA88DF01A8010A,
-				F53B9A4002CCEF6E01A8010A,
-				F5357E4102F8422601A8010A,
+				4BF1F0A103D86D3300A8010A,
+				4BF1F0A203D86D3C00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5749,6 +5882,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5763,7 +5897,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Dual Window Interface";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Dual Window.AdiumInterface";
 			productReference = F569E39202CA88C701A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -5779,17 +5913,17 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string></string>
+	<string>com.adiumX.dualWindowInterface</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string></string>
+	<string>Dual Window</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string></string>
+	<string>Dual Window Interface</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>AdIM</string>
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
@@ -5802,10 +5936,6 @@
 			isa = PBXBundleReference;
 			path = "Dual Window.AdiumPlugin";
 			refType = 3;
-		};
-		F569E39302CA88C901A8010A = {
-			isa = PBXTargetDependency;
-			target = F569E39102CA88C701A8010A;
 		};
 		F569E39502CA88DF01A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -6512,10 +6642,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		F573C6230333B88401A8010A = {
-			isa = PBXTargetDependency;
-			target = F5B53FC60333AFB501A8010A;
 		};
 		F573C6240333B88901A8010A = {
 			isa = PBXTargetDependency;
@@ -8231,8 +8357,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5DD993F032BE94801A8010A,
-				F5DD9940032BE94901A8010A,
-				F5DD9941032BE94901A8010A,
+				4BF1F0AC03D86DA500A8010A,
+				4BF1F0AD03D86DA600A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8254,6 +8380,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8268,7 +8395,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Standard Message View";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Standard Message View";
 			productReference = F59F9A8A032BE6B101A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -8351,9 +8478,9 @@
 			files = (
 				F5B97144037985B901A8010A,
 				F5B97145037985BA01A8010A,
-				F5B97146037985CE01A8010A,
-				F5B97147037985CE01A8010A,
 				4B79C39103C08BDE00A8010A,
+				4BF1F09F03D86D0400A8010A,
+				4BF1F0A003D86D1200A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8375,6 +8502,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8384,9 +8512,12 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BF1F0E203D873BA00A8010A,
+				4BF1F0E303D873BA00A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "AIM (iChat)";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "AIM (iChat).AdiumService";
 			productReference = F5A01D8C0379813301A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -8402,7 +8533,7 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string></string>
+	<string>com.adiumx.AIMiChat</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -8412,7 +8543,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string></string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>AdIM</string>
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
@@ -8425,10 +8556,6 @@
 			isa = PBXBundleReference;
 			path = "AIM (iChat).AdiumPlugin";
 			refType = 3;
-		};
-		F5A01D8D0379813F01A8010A = {
-			isa = PBXTargetDependency;
-			target = F5A01D8B0379813301A8010A;
 		};
 		F5A025050363395F01A8010A = {
 			fileRef = F57938AD033E737001A8010A;
@@ -8482,18 +8609,6 @@
 			settings = {
 			};
 		};
-		F5A70E95039506C201A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A70E9903950D7B01A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5AAD085039BA0D301A8010A = {
 			children = (
 				F5AAD097039BA24601A8010A,
@@ -8530,9 +8645,9 @@
 		F5AAD08D039BA10901A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F5AAD094039BA22201A8010A,
-				F5AAD095039BA22301A8010A,
 				F5AAD096039BA22301A8010A,
+				4BF1F0B603D86DB100A8010A,
+				4BF1F0B703D86DB200A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8554,6 +8669,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8568,6 +8684,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Event Sounds";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Event Sounds";
 			productReference = F5AAD090039BA10901A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -8606,18 +8723,6 @@
 			isa = PBXBundleReference;
 			path = "Event Sounds.AdiumPlugin";
 			refType = 3;
-		};
-		F5AAD094039BA22201A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5AAD095039BA22301A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5AAD096039BA22301A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -8719,8 +8824,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5B53FCD0333B04001A8010A,
-				F5B53FCE0333B04101A8010A,
-				F5A70E9903950D7B01A8010A,
+				4BF1F0B003D86DAA00A8010A,
+				4BF1F0B103D86DAB00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8742,6 +8847,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8752,10 +8858,11 @@
 			};
 			dependencies = (
 				F573C6250333B88A01A8010A,
+				4BF1F0E703D873E000A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Account List Preferences";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Account List Preferences";
 			productReference = F5B53FC70333AFB501A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -8810,12 +8917,6 @@
 			settings = {
 			};
 		};
-		F5B53FCE0333B04101A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5B89EFC033CA8CC01A8010A = {
 			children = (
 				F57938BA033E739101A8010A,
@@ -8835,18 +8936,6 @@
 		};
 		F5B97145037985BA01A8010A = {
 			fileRef = F531836F019E40BB01A80165;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5B97146037985CE01A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5B97147037985CE01A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8894,7 +8983,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5BD46D602D078BD01A8010A,
-				F5BD46D702D078BD01A8010A,
+				4BF1F0A303D86D5500A8010A,
+				4BF1F0A403D86D5F00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8916,6 +9006,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8926,10 +9017,11 @@
 			};
 			dependencies = (
 				F5BD470602D07E9501A8010A,
+				4BF1F0E403D873D800A8010A,
 			);
 			isa = PBXBundleTarget;
 			name = "Contact Status Coloring";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Contact Status Coloring.AdiumPlugin";
 			productReference = F5BD46CF02D0789901A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -8975,27 +9067,9 @@
 			settings = {
 			};
 		};
-		F5BD46D702D078BD01A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5BD46D902D078CC01A8010A = {
-			isa = PBXTargetDependency;
-			target = F5BD46CE02D0789901A8010A;
-		};
 		F5BD470602D07E9501A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
-		};
-		F5BD470702D0845E01A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9ACB02CD12CB01A8010A;
-		};
-		F5BE33D4039BE34001A8010A = {
-			isa = PBXTargetDependency;
-			target = F5AAD08F039BA10901A8010A;
 		};
 		F5BE33D5039BE34601A8010A = {
 			isa = PBXTargetDependency;
@@ -9052,18 +9126,6 @@
 			name = Interfaces;
 			path = "";
 			refType = 4;
-		};
-		F5CBFC4702D7725501A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5CBFC4802D7725601A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5CBFC4902D7725601A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -9129,22 +9191,6 @@
 			settings = {
 			};
 		};
-		F5CED5F10388303901A8010A = {
-			isa = PBXTargetDependency;
-			target = F501BB1303882A2901A8010A;
-		};
-		F5CED5F2038830C901A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5CED5F3038830C901A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5CED5F4038830CA01A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -9181,8 +9227,8 @@
 			files = (
 				F5D2FB8603B664E901A8010A,
 				F5D2FB8703B664E901A8010A,
-				F5D2FB8803B664EA01A8010A,
-				F5D2FB8A03B6650D01A8010A,
+				4BF1F0BC03D86DB800A8010A,
+				4BF1F0BD03D86DB900A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9204,6 +9250,7 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -9218,7 +9265,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Text Toolbar Items";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Text Toolbar Items";
 			productReference = F5D2FB7D03B6643B01A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -9257,10 +9304,6 @@
 			isa = PBXBundleReference;
 			path = "Text Toolbar Items.AdiumPlugin";
 			refType = 3;
-		};
-		F5D2FB7E03B6644001A8010A = {
-			isa = PBXTargetDependency;
-			target = F5D2FB7C03B6643B01A8010A;
 		};
 		F5D2FB7F03B6644301A8010A = {
 			isa = PBXTargetDependency;
@@ -9323,21 +9366,9 @@
 			settings = {
 			};
 		};
-		F5D2FB8803B664EA01A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5D2FB8903B6650701A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
-		};
-		F5D2FB8A03B6650D01A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5D5F61802DC53F501A8010A = {
 			isa = PBXTargetDependency;
@@ -9359,18 +9390,6 @@
 		};
 		F5DD993F032BE94801A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DD9940032BE94901A8010A = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DD9941032BE94901A8010A = {
-			fileRef = F53B9A3602CCEF4801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
