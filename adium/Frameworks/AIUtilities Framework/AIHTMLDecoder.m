@@ -294,7 +294,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
     BOOL			send = NO, receive = NO, inDiv = NO;
-    
+
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
     attrString = [[NSMutableAttributedString alloc] init];

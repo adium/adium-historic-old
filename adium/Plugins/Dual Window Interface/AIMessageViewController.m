@@ -86,11 +86,21 @@
 	
 	//Create the message view
 	messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
-	[scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
+
+	[[scrollView_messages superview] replaceSubview:scrollView_messages with:[messageViewController messageView]];
+	scrollView_messages = [messageViewController messageView];
 	[scrollView_messages setNextResponder:textView_outgoing];
-	[scrollView_messages setAutoScrollToBottom:YES];
-	[scrollView_messages setAutoHideScrollBar:NO];
-	[scrollView_messages setHasVerticalScroller:YES];
+	
+//	[[scrollView_messages superview] addSubview:[messageViewController messageView]];
+//	[[messageViewController messageView] setFrame:[scrollView_messages frame]];
+//	[scrollView_messages removeFromSuperview];
+//	scrollView_messages = [[messageViewController messageView] retain];
+	
+//	[scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
+//	[scrollView_messages setNextResponder:textView_outgoing];
+//	[scrollView_messages setAutoScrollToBottom:YES];
+//	[scrollView_messages setAutoHideScrollBar:NO];
+//	[scrollView_messages setHasVerticalScroller:YES];
 	
 	//User List
 	[scrollView_userList setAutoScrollToBottom:NO];

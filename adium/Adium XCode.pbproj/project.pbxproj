@@ -19244,6 +19244,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B539F3805EFE51500E5921A,
+				4BDEC3AF05F1A47E00416138,
+				4BDEC3B005F1A47E00416138,
+				4BDEC3B105F1A47E00416138,
+				4BDEC3B205F1A47E00416138,
+				4BDEC3B305F1A47E00416138,
+				4BDEC3B405F1A47E00416138,
+				4BDEC3B505F1A47E00416138,
+				4BDEC3B605F1A47E00416138,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22611,6 +22619,122 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BDEC39B05F1A47D00416138 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = background.png;
+			path = "Plugins/WebKit Message View/background.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC39C05F1A47D00416138 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.html;
+			name = Footer.html;
+			path = "Plugins/WebKit Message View/Footer.html";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC39D05F1A47D00416138 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.html;
+			name = Header.html;
+			path = "Plugins/WebKit Message View/Header.html";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC39E05F1A47D00416138 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Incoming;
+			path = "Plugins/WebKit Message View/Incoming";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC3A505F1A47D00416138 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Outgoing;
+			path = "Plugins/WebKit Message View/Outgoing";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC3AC05F1A47D00416138 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = test.css;
+			path = "Plugins/WebKit Message View/test.css";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC3AD05F1A47D00416138 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = testlayout.css;
+			path = "Plugins/WebKit Message View/testlayout.css";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC3AE05F1A47E00416138 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = whitesquare.png;
+			path = "Plugins/WebKit Message View/whitesquare.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDEC3AF05F1A47E00416138 = {
+			fileRef = 4BDEC39B05F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B005F1A47E00416138 = {
+			fileRef = 4BDEC39C05F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B105F1A47E00416138 = {
+			fileRef = 4BDEC39D05F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B205F1A47E00416138 = {
+			fileRef = 4BDEC39E05F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B305F1A47E00416138 = {
+			fileRef = 4BDEC3A505F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B405F1A47E00416138 = {
+			fileRef = 4BDEC3AC05F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B505F1A47E00416138 = {
+			fileRef = 4BDEC3AD05F1A47D00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDEC3B605F1A47E00416138 = {
+			fileRef = 4BDEC3AE05F1A47E00416138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BDF17240450CBDE00A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -25475,6 +25599,14 @@
 				4B539C5105EFD6FA00E5921A,
 				4B539C5205EFD6FB00E5921A,
 				4B539F3705EFE51500E5921A,
+				4BDEC39C05F1A47D00416138,
+				4BDEC39D05F1A47D00416138,
+				4BDEC39E05F1A47D00416138,
+				4BDEC3A505F1A47D00416138,
+				4BDEC3AC05F1A47D00416138,
+				4BDEC3AD05F1A47D00416138,
+				4BDEC39B05F1A47D00416138,
+				4BDEC3AE05F1A47E00416138,
 			);
 			isa = PBXGroup;
 			name = "WebKit Message View";

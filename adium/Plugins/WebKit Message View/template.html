@@ -5,15 +5,24 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="Colloquy 2.0" />
 	<meta name="formatter" content="libxslt 1.0.30" />
-	<title>%@</title>
+	<base href="%@">
 	<script type="text/ecmascript" defer="defer">
 		var scrollToBottomIsNeeded = false;
 
-		function documentAppend( html ) {
+		function documentAppend(html) {
+			chat = document.getElementById("Chat");
 			range = document.createRange();
-			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
-			documentFragment = range.createContextualFragment( html );
-			document.body.appendChild( documentFragment );
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
+		}
+		
+		function documentAppendMessage(html) {
+			chat =  document.getElementById("Chat").lastChild;
+			range = document.createRange();
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
 		}
 
 		function scrollToBottom() {
@@ -41,12 +50,13 @@
 			head.appendChild( documentFragment );
 		}
 	</script>
-	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 </head>
 <body onload="scrollToBottom()">
 %@
+<div id="Chat">
+</div>
 %@
 </body>
 </html>
