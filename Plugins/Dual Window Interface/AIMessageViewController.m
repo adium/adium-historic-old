@@ -332,10 +332,10 @@
 			[[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage
 													  object:chat
 													userInfo:nil];
-			
+
 			message = [AIContentMessage messageInChat:chat
 										   withSource:account
-										  destination:nil //meaningless, since we get better info from the AIChat
+										  destination:[chat listObject]
 												 date:nil //created for us by AIContentMessage
 											  message:outgoingAttributedString
 											autoreply:NO];
