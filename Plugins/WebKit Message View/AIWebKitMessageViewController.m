@@ -745,7 +745,7 @@ DeclareString(AppendNextMessage);
 	 If the day has changed since our last message (or if there was no previous message and 
 	 we are about to display context), insert a date line.
 	 */
-	if((!previousContent && [content isKindOfClass:[AIContentContext]]) ||
+	if((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
 	   (previousContent && ![content isFromSameDayAsContent:previousContent])){
 		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
