@@ -2,17 +2,25 @@
 				-----------------------
 Version 0.54
 - Added support for displaying strikethrough, subscript, and superscript text
+- Added support for basic formatting in MSN messages
+- Added an option when sorting by status to sort within the status groups alphabetically by last name
 - Consecutive messages are no longer combined after a 5 minutes of inactivity in the chat
 - Enabled user-sent colors in the Message View
 - Drastically reworked the web viewer for the SQL Logger.
+- Adding new message styles no longer requires restarting Adium
 - Fixed group dragging
-- Fixed the remaining problems with tooltips
+- Fixed the remaining problems with tooltips appearing unnecessarily 
 - Fixed Webkit Message View for Japanese and Chinese users (the fix in 0.53 was incomplete)
 - Fixed issues related to custom links
 - Fixed a cosmetic issue as the contact list loaded
 - Fixed a bug which caused colors in messages to be sent improperly (broken in 0.53)
 - Fixed AIM file sending (broken in 0.53)
 - Fixed Gadu-Gadu, Jabber, and Trepia account preferences to include password, server, and proxy fields (addition in 0.53 was incomplete)
+- Fixed the "Other..." option when creating a custom sound alert for a contact
+- Fixed a freeze when sending MSN messages containing certain characters including ampersand (&)
+- Fixed AIM .Mac support to allow email address screennames with underscores
+- Improved Novell GroupWise protocol support
+- Significant performance improvements, particularly during sign on
 
 Version 0.53 (4/30/2004)				
 - Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]

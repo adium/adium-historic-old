@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.97 2004/05/05 06:45:30 eevyl Exp $
+$Id: ToDoList.txt,v 1.98 2004/05/06 09:25:42 evands Exp $
 
 
 Legend
@@ -27,8 +27,8 @@ Bugs
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
-
 * We are prompting for passwords on auto-reconnect like crazy.
+* Update checker reporting a new version when non exists? (possibly a caching error?)
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -37,12 +37,9 @@ Contact List:
 * Adding a contact that's already online causes them to appear signed off on the list.
 * Adding buddies, sometimes they'll show up on the list twice until a restart
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
-* Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
-   - (Confirmed by Hanji)
 * For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
-* Can "add" a contact with no accounts (the button should dim with no accounts checked)
 * When connected to an msn account with no groups or contacts, clicking the drawer button on the contact list makes the contact list window disappear.
-* Adding an msn contact with no groups defined crashes adium.
+* Adding a contact with no groups defined crashes adium.
 * Adding a group makes the contact list window reappear.
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
 * Offline contacts are not always displaying
@@ -55,6 +52,7 @@ Unconfirmed bugs
     (Jorge: The dividing lines are not displaying because that was the way if was in SMV, and it is meant to be a carbon copy of that. The bug AFAIK is not such, please someone provide a way to trigger it, I tried with no succes.)
     
 * Tooltips are flashing when the contact list auto-resizes?
+* Deleting an idle contact may cause a crash when the idle updates next? http://www.visualdistortion.org/crash/view.jsp?crash=10088
 * Empty groups come back on next launch after being deleted?
 * Unicode (German) messages not working over ICQ ?
 * away messages aren't going away
@@ -64,15 +62,14 @@ Unconfirmed bugs
 	Evan: Official ICQ clients send RTF, not HTML.  SIM is an unofficial one that does.  Gaim intentionally escapes HTML coming from ICQ for this reason... Odd.
 * away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
 * We are having some text encoding issues with ICQ (multiple mentions)
-* Adding a contact that already exists on the list seems to cause problems
 * Do we support ISA proxies? (ISA and NTLM authorization).  Does gaim have support for these?
+	- Evan: No, gaim proxy support is ancient.
 * Yahoo ignore list is being ignored?
 * Message history and 'ignore formatting' option is doing some odd stuff (ignoring the ignore?)
 * We can crash MSN Messenger by sending it links copied from safari?
 
 * Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
 * Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
-* Update checker reporting a new version when non exists? (possibly a caching error?)
 * Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
 * We aren't fetching the display names of ICQ users, some icq users, when over AIM? (They still show up in the info, apparently)
 
@@ -119,10 +116,8 @@ Other:
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 	+ Add export option to log viewer
-	+ Add some indication of service to the 'enter password' window.  Multiple accounts with the same name are indistinguishable
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
-	+ Interact with libgaim via a thread to improve responsiveness during connect/disconnect/poor connectivity
     + Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
 
 -------------------------------------------------------------------------------------------------------
@@ -258,9 +253,6 @@ Contact List import/export:
 
 Sorting:  Allow a 'minor' sort option like iChat?  (iChat uses the last selected as the subsort).  Not sure if this would be useful.
 
-Magnetic Windows:  Use Fire's 'solution' of sliding them to screen edges after a drag.
-
-
 -------------------------------------------------------------------------------------------------------
 Unfixable(?) Issues
 -------------------------------------------------------------------------------------------------------
@@ -329,6 +321,11 @@ ced preference panes.
 = Message history 'date' timestamps are not using localized time strings
 = GROUP DRAGGING IS BROKEN.  Try it :)
 = MSN freezes in glib (g_ascii_strncasecmp) when sending a &
+= Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
+= Add some indication of service to the 'enter password' window.  Multiple accounts with the same name are indistinguishable
+= Interact with libgaim via a thread to improve responsiveness during connect/disconnect/poor connectivity
+= Adding a contact that already exists on the list seems to cause problems
+= Can "add" a contact with no accounts (the button should dim with no accounts checked)
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
@@ -377,3 +374,4 @@ Features & Changes:
 = Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
 = Contact list flippy triangles are white behind them in 10.2
 = Add Contact should have more intelligent defaults, and generally be less of a pain
+= Magnetic Windows:  Use Fire's 'solution' of sliding them to screen edges after a drag.
