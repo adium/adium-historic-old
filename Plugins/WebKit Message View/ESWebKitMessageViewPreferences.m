@@ -28,13 +28,13 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/ESBundleAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/JVFontPreviewField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
 #import <Adium/AIService.h>
+#import <Adium/JVFontPreviewField.h>
 
 #define PREVIEW_FILE	@"Preview"
 

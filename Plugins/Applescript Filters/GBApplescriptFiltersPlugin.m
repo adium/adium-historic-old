@@ -22,8 +22,8 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
-#import <AIUtilities/NDAppleScriptObject.h>
-#import <AIUtilities/NDComponentInstance.h>
+#import <Adium/NDAppleScriptObject.h>
+#import <Adium/NDComponentInstance.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 

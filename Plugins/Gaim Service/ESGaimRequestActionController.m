@@ -16,8 +16,8 @@
 
 #import "ESGaimRequestActionController.h"
 #import "ESTextAndButtonsWindowController.h"
-#import <AIUtilities/NDRunLoopMessenger.h>
 #import <Adium/AIHTMLDecoder.h>
+#import <Adium/NDRunLoopMessenger.h>
 
 @implementation ESGaimRequestActionController
 

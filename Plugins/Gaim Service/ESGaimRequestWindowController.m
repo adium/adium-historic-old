@@ -16,7 +16,7 @@
 
 #import "ESGaimRequestWindowController.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/NDRunLoopMessenger.h>
+#import <Adium/NDRunLoopMessenger.h>
 
 #define MULTILINE_WINDOW_NIB	@"GaimMultilineRequestWindow"
 #define SINGLELINE_WINDOW_NIB   @"GaimSinglelineRequestWindow"

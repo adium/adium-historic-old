@@ -16,8 +16,8 @@
 
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
+#import <Adium/JVFontPreviewField.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/JVFontPreviewField.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>

@@ -25,7 +25,6 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
-#import <AIUtilities/NDRunLoopMessenger.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -34,6 +33,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
+#import <Adium/NDRunLoopMessenger.h>
 
 @interface AIContentController (PRIVATE)
 

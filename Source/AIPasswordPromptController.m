@@ -17,7 +17,7 @@
 // $Id$
 
 #import "AIPasswordPromptController.h"
-#import <AIUtilities/AIUtilities.h>
+#import <AIUtilities/AITextFieldAdditions.h>
 
 #define 	PASSWORD_PROMPT_NIB 		@"PasswordPrompt"
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"

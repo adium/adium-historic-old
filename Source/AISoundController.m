@@ -20,9 +20,9 @@
 #import "AISoundController.h"
 #import <Adium/AIObject.h>
 #import <Adium/AIAccount.h>
-#import <AIUtilities/SUSpeaker.h>
+#import <Adium/SUSpeaker.h>
+#import <Adium/QTSoundFilePlayer.h>
 #import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/QTSoundFilePlayer.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 
 #define	PATH_SOUNDS					@"/Sounds"

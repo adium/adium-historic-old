@@ -17,8 +17,8 @@
 #import "AITextForcingPreferences.h"
 #import "AITextForcingPlugin.h"
 #import "AIPreferenceWindowController.h"
+#import <Adium/JVFontPreviewField.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/JVFontPreviewField.h>
 #import <AIUtilities/AIColorSelectionPopUpButton.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>

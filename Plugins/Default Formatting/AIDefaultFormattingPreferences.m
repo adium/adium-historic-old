@@ -16,10 +16,10 @@
 
 #import "AIDefaultFormattingPreferences.h"
 #import "AIDefaultFormattingPlugin.h"
+#import <Adium/JVFontPreviewField.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIColorSelectionPopUpButton.h>
 #import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/JVFontPreviewField.h>
 
 @interface AIDefaultFormattingPreferences (PRIVATE)
 - (void)changeFont:(id)sender;
