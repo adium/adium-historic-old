@@ -9,6 +9,8 @@
 #import "CSCurrentChatsListViewController.h"
 #import "AIMessageViewController.h"
 
+#define CURRENT_CHATS_NIB @"Current Chats List"
+
 @implementation CSCurrentChatsListViewController
 
 #pragma mark Initiation
@@ -16,19 +18,9 @@
 -(id)init
 {   
 	if (self = [super init]) {
-		NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"mo"];
-		[[column headerCell] setStringValue:@"Chats"];
 		messageViewControllerArray = [[NSMutableArray array] retain];
 		
-		view = [[AIAlternatingRowTableView alloc] initWithFrame:NSMakeRect(0,0,100,100)];
-		[view setTarget:self];
-		[view setAction:@selector(_tableClicked)];
-		[view setAllowsEmptySelection:NO];
-		[view setAllowsMultipleSelection:NO];
-		[view setDelegate:self];
-		[view addTableColumn:column];
-		[view setAutoresizesAllColumnsToFit:YES];
-		[view setDataSource:self];
+		[NSBundle loadNibNamed:CURRENT_CHATS_NIB owner:self];
 	}
 	
 	return self;
@@ -37,9 +29,11 @@
 -(void)dealloc
 {
 	[messageViewControllerArray release];
-	[view release];
+	
 	[super dealloc];
 }
+
+#pragma mark NIB Handling
 
 #pragma mark Message View Controller Handlers
 - (BOOL)messageViewControllerHasBeenCreatedForChat:(AIChat*)inChat

@@ -26998,6 +26998,7 @@
 				BF5D5E5805A38AA2001426E0,
 				BF5D5E5D05A38AAC001426E0,
 				BF318ED305A513C900D07184,
+				BFD02C9305A6B3DD00C7857F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -27110,8 +27111,7 @@
 				BF0F5BDA05A2B1E30034AD18,
 				BF0F5C3C05A2BDB70034AD18,
 				BF0F5C3D05A2BDB80034AD18,
-				BF318EC205A5015C00D07184,
-				BF318EC305A5015C00D07184,
+				BFD02C9105A6B27900C7857F,
 				BF318ED205A513C900D07184,
 			);
 			isa = PBXGroup;
@@ -27292,6 +27292,31 @@
 			name = "Disconnect All";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		BFD02C9105A6B27900C7857F = {
+			children = (
+				BF318EC205A5015C00D07184,
+				BF318EC305A5015C00D07184,
+				BFD02C9205A6B3DC00C7857F,
+			);
+			isa = PBXGroup;
+			name = "Current Chats List";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFD02C9205A6B3DC00C7857F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Current Chats List.nib";
+			path = "Plugins/Single Window Interface/Current Chats List.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFD02C9305A6B3DD00C7857F = {
+			fileRef = BFD02C9205A6B3DC00C7857F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //BF0
 //BF1

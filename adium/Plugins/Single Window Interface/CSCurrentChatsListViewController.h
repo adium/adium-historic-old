@@ -9,7 +9,7 @@
 @class AIMessageViewController;
 
 @interface CSCurrentChatsListViewController : AIObject {
-	AIAlternatingRowTableView			*view;
+	IBOutlet AIAlternatingRowTableView  *view;
 	NSMutableArray						*messageViewControllerArray;
 	AIChat								*activeChat;
 }

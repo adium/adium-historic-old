@@ -117,7 +117,7 @@ float _v(float m1, float m2, float hue);
     NSColor	*convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     
     return([NSColor colorWithCalibratedHue:[convertedColor hueComponent]
-                                saturation:([convertedColor saturationComponent] + amount)
+                                saturation:(([convertedColor saturationComponent] == 0.0) ? [convertedColor saturationComponent] : ([convertedColor saturationComponent] + amount))
                                 brightness:([convertedColor brightnessComponent] - amount)
                                      alpha:[convertedColor alphaComponent]]);
 }
