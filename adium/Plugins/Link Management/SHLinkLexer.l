@@ -20,10 +20,9 @@ mailSpecifier           [^:].+\@.+\.{domains}
 
 %option noyywrap 8bit caseless prefix="SHLinkLexer"
 
-%x CANONICAL MAILTO
+%x CANONICAL
 %%
-<MAILTO>{mailSpecifier}        {BEGIN INITIAL; return SH_MAILTO_VALID;}
-<MAILTO>.*                      {BEGIN INITIAL; return SH_URL_INVALID;}
+
 <CANONICAL>{urlSpecifier}	{BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>.*                   {BEGIN INITIAL; return SH_URL_INVALID;}
 
@@ -39,7 +38,7 @@ rstp:\/\/	|
 itms:\/\/	|
 gopher:\/\/                     {BEGIN CANONICAL;}
 
-mailto:                         {BEGIN MAILTO;}
+mailto:{mailSpecifier}          {return SH_MAILTO_VALID;}
 
 
 {mailSpecifier}			{return SH_MAILTO_DEGENERATE;}	

@@ -72,7 +72,7 @@
     
     //return the lexer's state
     state = SHLinkLexerlex();
-    if( state == SH_URL_VALID || state == SH_MAILTO_VALID || state == SH_MAILTO_DEGENERATE) {
+    if( state == SH_URL_VALID || state == SH_MAILTO_VALID) {
         SHLinkLexer_delete_buffer(buf);
         return YES;
     }else{
