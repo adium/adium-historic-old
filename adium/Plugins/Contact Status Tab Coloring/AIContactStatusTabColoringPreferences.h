@@ -42,6 +42,5 @@
     IBOutlet    NSButton	*checkBox_useCustomColors;
 
 }
--(void)customValidator;
 
 @end
