@@ -113,19 +113,22 @@
         }
     }
     
+	// We do NOT need to check if custom tab colors are enabled, since the normal
+	// status colors are automatically used if the custom colors are disabled
+	
     //Signed off, signed on, or typing (These do not show if there is unviewed content)
-    if(!color && (!unviewedContentEnabled || !unviewedContent)){
-		if(offlineEnabled && (![inObject integerStatusObjectForKey:@"Signed Off"] &&
-							  ![inObject integerStatusObjectForKey:@"Online"])){
+    if(!color && !unviewedContent){
+		if( ![inObject integerStatusObjectForKey:@"Signed Off"] &&
+			![inObject integerStatusObjectForKey:@"Online"]){
 			color = offlineColor;
 			
-        }else if(signedOffEnabled && [inObject integerStatusObjectForKey:@"Signed Off"]){
+        }else if( [inObject integerStatusObjectForKey:@"Signed Off"] ){
             color = signedOffColor;
         
-        }else if(signedOnEnabled && [inObject integerStatusObjectForKey:@"Signed On"]){
+        }else if( [inObject integerStatusObjectForKey:@"Signed On"] ){
             color = signedOnColor;
 
-        }else if(typingEnabled && [inObject integerStatusObjectForKey:@"Typing"]){
+        }else if( [inObject integerStatusObjectForKey:@"Typing"] ){
             color = typingColor;
 
         }
@@ -137,11 +140,11 @@
         idle = [inObject doubleStatusObjectForKey:@"Idle"];
 
         //Idle And Away, Away, or Idle
-        if(idleAndAwayEnabled && away && idle != 0){
+        if( away && (idle != 0) ){
             color = idleAndAwayColor;
-        }else if(awayEnabled && away){
+        }else if( away ){
             color = awayColor;
-        }else if(idleEnabled && idle != 0){
+        }else if( idle != 0 ){
             color = idleColor;
         }
     }
@@ -200,27 +203,77 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+		BOOL			customColorsEnabled = [[prefDict objectForKey:KEY_TAB_USE_CUSTOM_COLORS] boolValue];
+			
+		//Cache the tab enabled states
+		awayEnabled = [[prefDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue] && customColorsEnabled;
+        idleEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_ENABLED] boolValue] && customColorsEnabled;
+        signedOffEnabled = [[prefDict objectForKey:KEY_TAB_SIGNED_OFF_ENABLED] boolValue] && customColorsEnabled;
+        signedOnEnabled = [[prefDict objectForKey:KEY_TAB_SIGNED_ON_ENABLED] boolValue] && customColorsEnabled;
+        typingEnabled = [[prefDict objectForKey:KEY_TAB_TYPING_ENABLED] boolValue] && customColorsEnabled;
+        unviewedContentEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue] && customColorsEnabled;
+        idleAndAwayEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue] && customColorsEnabled;
+        offlineEnabled = [[prefDict objectForKey:KEY_TAB_OFFLINE_ENABLED] boolValue] && customColorsEnabled;
+        unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue] && customColorsEnabled;
 		
 		//Release the old values..
 		//Cache the new colors
-		[signedOffColor release];	signedOffColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_OFF_COLOR] representedColor] retain];
-        [signedOnColor release];	signedOnColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_ON_COLOR] representedColor] retain];
-        [awayColor release];		awayColor = [[[prefDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor] retain];
-        [idleColor release];		idleColor = [[[prefDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor] retain];
-        [typingColor release];		typingColor = [[[prefDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor] retain];
-        [unviewedContentColor release];	unviewedContentColor = [[[prefDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor] retain];
-        [idleAndAwayColor release];	idleAndAwayColor = [[[prefDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor] retain];
-		[offlineColor release];		offlineColor = [[[prefDict objectForKey:KEY_TAB_OFFLINE_COLOR] representedColor] retain];
-        //Cache which states are enabled
-        awayEnabled = [[prefDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue];
-        idleEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_ENABLED] boolValue];
-        signedOffEnabled = [[prefDict objectForKey:KEY_TAB_SIGNED_OFF_ENABLED] boolValue];
-        signedOnEnabled = [[prefDict objectForKey:KEY_TAB_SIGNED_ON_ENABLED] boolValue];
-        typingEnabled = [[prefDict objectForKey:KEY_TAB_TYPING_ENABLED] boolValue];
-        unviewedContentEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue];
-        idleAndAwayEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue];
-        offlineEnabled = [[prefDict objectForKey:KEY_TAB_OFFLINE_ENABLED] boolValue];
-        unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue];
+		[signedOffColor release];
+		if( signedOffEnabled ) {
+			signedOffColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_OFF_COLOR] representedColor] retain];
+		} else {
+			signedOffColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
+		}
+		
+		[signedOnColor release];
+		if( signedOnEnabled ) {
+			signedOnColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_ON_COLOR] representedColor] retain];
+		} else {
+			signedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
+		}
+		
+		[awayColor release];
+		if( awayEnabled ) {
+			awayColor = [[[prefDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor] retain];
+		} else {
+			awayColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor] retain];
+		}
+		
+		[idleColor release];
+		if( idleEnabled ) {
+			idleColor = [[[prefDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor] retain];
+		} else {
+			idleColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor] retain];
+		}
+		
+		[typingColor release];
+		if( typingEnabled ) {
+			typingColor = [[[prefDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor] retain];
+		} else {
+			typingColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor] retain];
+		}
+		
+		[unviewedContentColor release];
+		if( unviewedContentEnabled ) {
+			unviewedContentColor = [[[prefDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor] retain];
+		} else {
+			unviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
+		}
+		
+		[idleAndAwayColor release];
+		if( idleAndAwayEnabled ) {
+			idleAndAwayColor = [[[prefDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor] retain];
+		} else {
+			idleAndAwayColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor] retain];
+		}
+		
+		[offlineColor release];
+		if( offlineEnabled ) {
+			offlineColor = [[[prefDict objectForKey:KEY_TAB_OFFLINE_COLOR] representedColor] retain];
+		} else {
+			offlineColor = [[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor] retain];
+		}
+
 		
 		[[adium contactController] updateAllListObjectsForObserver:self];
     }
