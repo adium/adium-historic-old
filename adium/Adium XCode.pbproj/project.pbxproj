@@ -243,7 +243,6 @@
 				34BD9F9E05314796000AB133,
 				34BD9FB90531479C000AB133,
 				34BD9FD0053147A1000AB133,
-				BF380C3105A8FF9000A74E9F,
 				34BD9FEC053147A6000AB133,
 				34BDA000053147AF000AB133,
 				9E57136305B2146200283CAD,
@@ -361,7 +360,6 @@
 				34BD9F8B05314795000AB133,
 				34BD9F9F0531479B000AB133,
 				34BD9FBA053147A0000AB133,
-				BF380C3005A8FF9000A74E9F,
 				34BD9FD1053147A6000AB133,
 				34BD9FF1053147AE000AB133,
 				3479A8A005DCA0F900998B3D,
@@ -9686,7 +9684,6 @@
 				3419FDEC0531585600C68BA3,
 				3419FDED0531585600C68BA3,
 				3419FDEE0531585600C68BA3,
-				BF380DAF05A94B8400A74E9F,
 				3419FDEF0531585600C68BA3,
 				3419FDF00531585600C68BA3,
 				3479A91605DCA2CE00998B3D,
@@ -25551,30 +25548,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6E7D361B05D041B100F69A3C = {
-			fileRef = 6E7D361705D041B000F69A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6E7D361C05D041B200F69A3C = {
-			fileRef = 6E7D361805D041B000F69A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6E7D361D05D041B200F69A3C = {
-			fileRef = 6E7D361905D041B100F69A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6E7D361E05D041B200F69A3C = {
-			fileRef = 6E7D361A05D041B100F69A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6E7D362405D043AD00F69A3C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -25582,12 +25555,6 @@
 			path = Plugins/Checkmark/CheckmarkPreferences.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6E7D362505D043AE00F69A3C = {
-			fileRef = 6E7D362405D043AD00F69A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6E7D362905D043EF00F69A3C = {
 			fileEncoding = 30;
@@ -25597,12 +25564,6 @@
 			path = Plugins/Checkmark/CheckmarkDefaults.plist;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6E7D362A05D043F000F69A3C = {
-			fileRef = 6E7D362905D043EF00F69A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6E97F12F04A94C0100472FFF = {
 			children = (
@@ -28318,114 +28279,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		BF380C2B05A8FF9000A74E9F = {
-			buildActionMask = 2147483647;
-			files = (
-				6E7D361B05D041B100F69A3C,
-				6E7D361D05D041B200F69A3C,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BF380C2C05A8FF9000A74E9F = {
-			buildActionMask = 2147483647;
-			files = (
-				6E7D362505D043AE00F69A3C,
-				6E7D362A05D043F000F69A3C,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BF380C2D05A8FF9000A74E9F = {
-			buildActionMask = 2147483647;
-			files = (
-				6E7D361C05D041B200F69A3C,
-				6E7D361E05D041B200F69A3C,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BF380C2E05A8FF9000A74E9F = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BF380C2F05A8FF9000A74E9F = {
-			buildActionMask = 2147483647;
-			files = (
-				BF380C5905A9038A00A74E9F,
-				BF380C3C05A8FFF400A74E9F,
-				BF380C3D05A8FFF400A74E9F,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BF380C3005A8FF9000A74E9F = {
-			buildPhases = (
-				BF380C2B05A8FF9000A74E9F,
-				BF380C2C05A8FF9000A74E9F,
-				BF380C2D05A8FF9000A74E9F,
-				BF380C2E05A8FF9000A74E9F,
-				BF380C2F05A8FF9000A74E9F,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Checkmark.plist;
-				PRODUCT_NAME = Checkmark;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				BF380C3805A8FFA400A74E9F,
-				BF380C3A05A8FFA400A74E9F,
-			);
-			isa = PBXNativeTarget;
-			name = Checkmark;
-			productName = Checkmark;
-			productReference = BF380C3105A8FF9000A74E9F;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Checkmark</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Checkmark</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-	<key>CSResourcesFileMapped</key>
-	<string>yes</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		BF380C3105A8FF9000A74E9F = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = Checkmark.AdiumPlugin;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		BF380C3205A8FF9200A74E9F = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.xml;
@@ -28433,48 +28286,6 @@
 			path = Plists/Checkmark.plist;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
-		};
-		BF380C3705A8FFA400A74E9F = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
-		BF380C3805A8FFA400A74E9F = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = BF380C3705A8FFA400A74E9F;
-		};
-		BF380C3905A8FFA400A74E9F = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		BF380C3A05A8FFA400A74E9F = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = BF380C3905A8FFA400A74E9F;
-		};
-		BF380C3C05A8FFF400A74E9F = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF380C3D05A8FFF400A74E9F = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF380C5905A9038A00A74E9F = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		BF380D9C05A94B2300A74E9F = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -28485,14 +28296,7 @@
 		};
 		BF380D9D05A94B2300A74E9F = {
 			isa = PBXTargetDependency;
-			target = BF380C3005A8FF9000A74E9F;
 			targetProxy = BF380D9C05A94B2300A74E9F;
-		};
-		BF380DAF05A94B8400A74E9F = {
-			fileRef = BF380C3105A8FF9000A74E9F;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		BF5D5E5805A38AA2001426E0 = {
 			fileRef = 4BCFEF4C03F59F2800A8010A;
