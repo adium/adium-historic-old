@@ -83,9 +83,10 @@
     [libezv logout];
 }
 
-- (const char *)customServerToCheckForReachability
+//Rendezvous need not disconnect/reconnect as the network changes
+- (BOOL)connectivityBasedOnNetworkReachability
 {
-	return "localhost";
+	return NO;
 }
 
 - (void)removeContacts:(NSArray *)objects

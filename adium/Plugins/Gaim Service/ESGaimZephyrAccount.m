@@ -44,9 +44,10 @@ static BOOL didInitZephyr = NO;
 	return NO;
 }
 
-- (const char *)customServerToCheckForReachability
+//Zephyr connects to a local host so need not disconnect/reconnect as the network changes
+- (BOOL)connectivityBasedOnNetworkReachability
 {
-	return "localhost";
+	return NO;
 }
 
 @end
