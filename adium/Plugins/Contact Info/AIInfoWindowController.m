@@ -250,7 +250,6 @@ static AIInfoWindowController *sharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
-    [[owner contactController] unregisterListObjectObserver:self];
     [activeContactObject release];
 
     [super dealloc];
@@ -289,6 +288,8 @@ static AIInfoWindowController *sharedInstance = nil;
                                          forKey:KEY_TEXT_PROFILE_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
+    //Stop observine, and release the shared instance
+    [[owner contactController] unregisterListObjectObserver:self];
     [sharedInstance autorelease]; sharedInstance = nil;
 
     return(YES);

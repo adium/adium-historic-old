@@ -74,7 +74,7 @@
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     [view_accountPreferences release]; view_accountPreferences = nil;
-
+    [[owner notificationCenter] removeObserver:self];
 }
 
 //Configure our preference view

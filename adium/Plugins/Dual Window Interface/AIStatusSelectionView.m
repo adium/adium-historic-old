@@ -85,9 +85,21 @@
 
     //Correctly size our popup (IB won't let us make it this small normally)
     [popUp_status setFrameSize:NSMakeSize([popUp_status frame].size.width, 14)];
+
+    //Observe preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     //
     [[popUp_status menu] setAutoenablesItems:NO];
+}
+
+//Update our menu if the away list changes
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
+       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
+        [self configureStatusMenu]; //Rebuild our status menu
+    }
 }
 
 //Configures the status menu

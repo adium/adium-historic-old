@@ -90,8 +90,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 
         NSString	*link = [attributes objectForKey:NSLinkAttributeName];
 
-        NSMutableString	*chunk = [NSMutableString stringWithString:
-            [[inMessageString substringWithRange:searchRange] mutableCopy]];
+        NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
         
         //font
         if (encodeFullString 
@@ -158,7 +157,6 @@ int HTMLEquivalentForFontSize(int fontSize);
         }
         
         //Escape special HTML characters.
-        
         [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
             options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
         
@@ -178,6 +176,9 @@ int HTMLEquivalentForFontSize(int fontSize);
                 [string appendFormat:@"%c", [chunk characterAtIndex:i]];
             }
         }
+
+        //Release the chunk
+        [chunk release];
 
         //Disable Link
         if(link && [link length] != 0){

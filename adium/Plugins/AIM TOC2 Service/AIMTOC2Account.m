@@ -28,6 +28,8 @@
 
 #define AIM_PACKET_MAX_LENGTH	2048
 
+#define UPDATE_INTERVAL		(1.0 / 10.0)	//Rate to check for socket updates
+
 #define SIGN_ON_MAX_WAIT	10.0		//Max amount of time to wait for first sign on packet
 #define SIGN_ON_UPKEEP_INTERVAL	0.8		//Max wait before sign up updates
 
@@ -514,7 +516,7 @@
         //Init our socket and start connecting
         socket = [[AISocket socketWithHost:host port:port] retain];
         connectionPhase = 1;
-        updateTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0 / 10.0) //(1.0 / x) x times per second
+        updateTimer = [[NSTimer scheduledTimerWithTimeInterval:(UPDATE_INTERVAL) //(1.0 / x) x times per second
                                                         target:self
                                                         selector:@selector(update:)
                                                         userInfo:nil
@@ -800,7 +802,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.78 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.79 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

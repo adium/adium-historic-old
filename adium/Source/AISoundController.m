@@ -170,6 +170,9 @@
     }
     activeSoundThreads--;    
 
+    //Release the sound
+    [sound release];
+    
     //Release the autorelease pool
     [pool release];
 }

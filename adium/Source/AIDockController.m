@@ -232,7 +232,7 @@
     
     //Generate the composited icon state
     [currentIconState release];
-    currentIconState = [[[AIIconState alloc] initByCompositingStates:activeIconStateArray] retain];
+    currentIconState = [[AIIconState alloc] initByCompositingStates:activeIconStateArray];
 
     //
     if(![currentIconState animated]){ //Static icon

@@ -50,7 +50,7 @@
 
 - (void)removeAllItemsButFirst
 {
-    while([self numberOfItems] != 1){
+    while([self numberOfItems] > 1){
         [self removeItemAtIndex:1];
     }
 }

@@ -38,6 +38,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [linkTrackingController release];
 }
 
 - (void)mouseDown:(NSEvent*)theEvent

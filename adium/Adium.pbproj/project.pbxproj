@@ -1159,7 +1159,6 @@
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";

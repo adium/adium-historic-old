@@ -107,7 +107,6 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
-    NSLog(@"Close");
     [view_prefView release]; view_prefView = nil;
 
     //Stop animating

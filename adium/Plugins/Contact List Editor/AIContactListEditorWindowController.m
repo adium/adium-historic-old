@@ -315,7 +315,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             enumerator = [[plugin collectionsArray] objectEnumerator];
             while((object = [enumerator nextObject])){
                 if([object includeInOwnershipColumn] && [object enabled]){
-                    NSTableColumn	*tableColumn = [[NSTableColumn alloc] initWithIdentifier:object];
+                    NSTableColumn	*tableColumn = [[[NSTableColumn alloc] initWithIdentifier:object] autorelease];
 
                     [tableColumn setDataCell:[[[AIContactListCheckbox alloc] init] autorelease]];
                     [[tableColumn headerCell] setStringValue:[object name]];

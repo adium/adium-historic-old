@@ -84,6 +84,9 @@
 {
     [[owner notificationCenter] removeObserver:self name:Account_StatusChanged object:account];
 
+    //Cleanup our nib
+    [view_accountView release];
+    
     [owner release];
     [account release];
 
