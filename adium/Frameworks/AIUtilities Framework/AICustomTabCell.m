@@ -241,12 +241,12 @@ static NSImage		*tabCloseFrontRollover = nil;
 	//Left Icon
 	NSImage *leftIcon;
 	
-	if(highlighted && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])){		
-		if(hoveringClose){
+	if(hoveringClose && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])){		
+//		if(hoveringClose){
 			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
-		}else{
-			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
-		}
+//		}else{
+//			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
+//		}
 		
 		
 		NSRect	closeRect = [self _closeButtonRect];
