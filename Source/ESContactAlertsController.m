@@ -128,8 +128,9 @@ DeclareString(KeyOneTimeAlert);
 		NSDictionary		*alert;
 		NSMutableArray		*performedActionIDs = [NSMutableArray array];
 		
-		//Use a reverse enumerator so we go from contact->group->root; a given action will only fire once for this event
-		enumerator = [alerts reverseObjectEnumerator];
+		//We go from contact->group->root; a given action will only fire once for this event
+		enumerator = [alerts objectEnumerator];
+
 		//Process each alert (There may be more than one for an event)
 		while(alert = [enumerator nextObject]){
 			NSString	*actionID;
@@ -161,18 +162,20 @@ DeclareString(KeyOneTimeAlert);
 											userInfo:userInfo];
 }
 
-//
+/*
+ Append events for the passed object to the specified array.
+	Create the array if passed nil.
+	Return an array which contains the object's own events followed by its containingObject's events.
+	If the object is nil, we retrieve the global preferences.
+ 
+ This method is intended to be called recursively; it should generate an array which has alerts from:
+	contact->metaContact->group->global preferences (skipping any which don't exist).
+ */
 - (NSMutableArray *)appendEventsForObject:(AIListObject *)listObject eventID:(NSString *)eventID toArray:(NSMutableArray *)events
 {
 	NSArray			*newEvents;
 	id				preferenceSource;
-	
-	//Get all events from the contanining object if we have an object
-	if(listObject){
-		//If listObject doesn't have a containingObject, this will pass nil
-		events = [self appendEventsForObject:[listObject containingObject] eventID:eventID toArray:events];
-	}
-	
+
 	//If we don't have an object, we use the preference controller to get the global alerts
 	preferenceSource = listObject;
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
@@ -181,10 +184,18 @@ DeclareString(KeyOneTimeAlert);
 	newEvents = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
 											  group:PREF_GROUP_CONTACT_ALERTS
 							  ignoreInheritedValues:YES] objectForKey:eventID];
-	
+
 	if(newEvents && [newEvents count]){
 		if(!events) events = [NSMutableArray array];
 		[events addObjectsFromArray:newEvents];
+	}
+
+	//Get all events from the contanining object if we have an object
+	if(listObject){
+		//If listObject doesn't have a containingObject, this will pass nil
+		[self appendEventsForObject:[listObject containingObject]
+							eventID:eventID
+							toArray:events];
 	}
 	
 	return(events);
