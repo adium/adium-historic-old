@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-my $versionStr = '$Id: buildDMG.pl,v 1.1 2003/10/23 12:53:05 cronnix Exp $';
+my $versionStr = '$Id: buildDMG.pl,v 1.2 2003/11/03 06:23:23 evands Exp $';
 #
 #  Created by Jšrg Westheide on Fri Feb 13 2003.
 #  Copyright (c) 2003 Jšrg Westheide. All rights reserved.
@@ -120,11 +120,12 @@ eval { $output = `hdiutil create \"$buildDir/$dmgName\" -ov -megabytes $volSize 
 die "FATAL: Could not create image: $@\n" if $@;
 die "FATAL: Couldn't create dmg $dmgName.\nIs it possibly mounted?\n" if $?;
 
-($dmgName) = ($output =~ /created\s*:\s*(.+?)\s*$/m);
+# ($dmgName) = ($output =~ /created\s*:\s*(.+?)\s*$/m);
+$dmgName = ($dmgName . ".dmg");
 die "FATAL: Couldn't read created dmg name\n" unless $dmgName;
 
 # mount the dmg
-eval { $output = `hdiutil attach \"$buildDir/$dmgName\"` };
+eval { $output = `hdiutil attach \"$dmgName\"` };
 die "FATAL: Couldn't mount DMG $dmgName\n" if $@;
 
 my ($dev)  = ($output =~ /(\/dev\/.+?)\s*Apple_partition_scheme/im);
@@ -151,34 +152,34 @@ die "FATAL: Error while copying files\n" if $err;
 die "FATAL: Couldn't unmount device $dev: $@\n" if $@;
 
 # compress the dmg
-my $tmpDmgName = "~$dmgName";
-
+my $tmpDmgName = "../$dmgName";
 if ($compressionLevel) {
     print "Compressing $dmgName...\n";
-    eval { $output = `cp -f $buildDir/$dmgName $buildDir/$tmpDmgName`};
-    
-    eval { $output = `hdiutil convert $buildDir/$tmpDmgName -format UDZO -imagekey zlib-level=$compressionLevel -o $buildDir/$dmgName`};
+
+    eval { $output = `hdiutil convert $dmgName -format UDZO -imagekey zlib-level=$compressionLevel -o $tmpDmgName`};
     die "Error: Couldn't compress the dmg $dmgName: $@\n" if $@;
     
-    unlink "$buildDir/$tmpDmgName";
+    eval { $output = `cp -f $tmpDmgName $dmgName`};
+    eval { $output = `rm $tmpDmgName`};
+    unlink "$tmpDmgName";
 }
 
 # Adding the SLA
 if ($slaRsrcFile) {
     print "Adding SLA...\n";
-    eval { $output = `hdiutil unflatten $buildDir/$dmgName`};
+    eval { $output = `hdiutil unflatten $dmgName`};
     die "Couldn't unflatten dmg: $@\n" if $@;
     
-    eval { $output = `/Developer/Tools/Rez /Developer/Headers/FlatCarbon/*.r $slaRsrcFile -a -o $buildDir/$dmgName`};
+    eval { $output = `/Developer/Tools/Rez /Developer/Headers/FlatCarbon/*.r $slaRsrcFile -a -o $dmgName`};
     print "Couldn't add SLA: $@\n" if $@;
     
-    eval { $output = `hdiutil flatten $buildDir/$dmgName`}; 
+    eval { $output = `hdiutil flatten $dmgName`}; 
     die "Couldn't flatten dmg: $@\n" if $@;
 }
 
 # Enabling internet access
 if ($internetEnabled) {
-    eval { $output = `hdiutil internet-enable -yes $buildDir/$dmgName`};
+    eval { $output = `hdiutil internet-enable -yes $dmgName`};
     print "Couldn't enable internet access for $dmgName: $@\n" if $@;
 }
 
