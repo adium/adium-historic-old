@@ -11,6 +11,7 @@
 - (void)updateAllContacts;
 - (void)updateSelf;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (NSString *)nameForPerson:(ABPerson *)person;
 - (ABPerson *)searchForObject:(AIListObject *)inObject;
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
 - (void)rebuildAddressBookDict;
@@ -86,31 +87,14 @@
 			
 			//Load the name if appropriate
 			if (enableImport) {
-				NSString *firstName = [person valueForProperty:kABFirstNameProperty];
-				NSString *lastName = [person valueForProperty:kABLastNameProperty];
-				NSString *nickName;
-				NSString *displayName = nil;
-				
-				if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
-					displayName = nickName;
-				} else if (!lastName || (displayFormat == First)) {  //If no last name is available, use the first name
-					displayName = firstName;
-				} else if (!firstName) {                    //If no first name is available, use the last name
-					displayName = lastName;
-				} else {                                    //Look to the preference setting
-					if (displayFormat == FirstLast) {
-						displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
-					} else if (displayFormat == LastFirst) {
-						displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
-					}
-				}
+				NSString *displayName = [self nameForPerson:person];
 				
 				//Apply the values 
 				NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
-				if (!oldValue || ![oldValue isEqualToString:displayName]) {
+				if ([oldValue isEqualToString:displayName]) {
 					[[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
-				} 
+				}
 			} else {
 				//Clear any stored value
 				if ([[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]) {
@@ -137,6 +121,30 @@
     return(modifiedAttributes);
 }
 
+- (NSString *)nameForPerson:(ABPerson *)person
+{
+	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [person valueForProperty:kABLastNameProperty];
+	NSString *nickName;
+	NSString *displayName = nil;
+	
+	if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
+		displayName = nickName;
+	} else if (!lastName || (displayFormat == First)) {  //If no last name is available, use the first name
+		displayName = firstName;
+	} else if (!firstName) {                    //If no first name is available, use the last name
+		displayName = lastName;
+	} else {                                    //Look to the preference setting
+		if (displayFormat == FirstLast) {
+			displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
+		} else if (displayFormat == LastFirst) {
+			displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
+		}
+	}
+	
+	return displayName;
+}
+
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
@@ -160,9 +168,9 @@
 {
     if (inData) {
         //Check if we retrieved data from the 'me' address book card
-/*        if ((tag == meTag) && useABImages) {
-			[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
-            meTag = -1;
+		/*        if ((tag == meTag) && useABImages) {
+		[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+		meTag = -1;
         }else{
 */
 			NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
@@ -241,11 +249,42 @@
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if (me = [[ABAddressBook sharedAddressBook] me]) {
+			
+			//Default buddy icon
 			NSData *imageData = [me imageData];
 			if (imageData){
 				[[adium preferenceController] setPreference:imageData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
 			}
-//            meTag = [me beginLoadingImageDataForClient:self];
+			
+			//Set account display names
+			if (enableImport){
+				NSEnumerator	*servicesEnumerator = [[serviceDict allKeys] objectEnumerator];
+				NSString		*serviceID;
+				NSString		*myDisplayName = [self nameForPerson:me];
+				
+				//Check for each service the address book supports
+				while (serviceID = [servicesEnumerator nextObject]){
+					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
+					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithServiceID:serviceID] objectEnumerator];
+					AIAccount		*account;
+					
+					//Look at each account on this service, searching for one a matching UID
+					while (account = [accountsArray nextObject]){
+						//An ABPerson may have multiple names on a given service; iterate through them
+						ABMultiValue	*names = [me valueForProperty:addressBookKey];
+						
+						int				nameCount = [names count];
+						int				i;
+						for (i=0 ; i<nameCount ; i++){
+							if ([[account UID] isEqualToString:[[names valueAtIndex:i] compactedString]]){
+								[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
+																			  withOwner:self
+																		  priorityLevel:Low_Priority];	
+							}
+						}
+					}
+				}
+			}
         }
 	NS_HANDLER
 		NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
