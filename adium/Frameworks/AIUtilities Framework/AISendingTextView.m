@@ -552,7 +552,12 @@ static NSImage *pushIndicatorImage = nil;
 
 - (void)keyDown: (NSEvent*) inEvent
 {
-	unichar inChar = [[inEvent charactersIgnoringModifiers] characterAtIndex:0];
+	unichar inChar; // eevyl: fix to prevent crash when entering accented chars
+	if ([[inEvent charactersIgnoringModifiers] isEqualToString:@""]) {
+		[super keyDown:inEvent];
+	} else {
+		inChar = [[inEvent charactersIgnoringModifiers] characterAtIndex:0];
+	}
 	unsigned int flags = [inEvent modifierFlags];
 	//We have to test ctrl first, because otherwise we'd miss ctrl-option-* events
 	if(flags & NSControlKeyMask)
