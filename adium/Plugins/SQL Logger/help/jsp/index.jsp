@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 451 $ $Date: 2003/10/12 16:30:23 $ -->
+<!--$Rev: 454 $ $Date: 2003/10/21 17:02:22 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -134,19 +134,21 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
             <input type="reset">
             <input type="submit">
         </form>
-        <table border="1"><tr><td>
-        Search Words:<br />
         <%
-        for (int i = 0; i < hlWords.size(); i++) {
-            out.print("<b style=\"color:black;" +
-                "background-color:" + hlColor[i % hlColor.length] +
-                "\">" + hlWords.get(i).toString() + "</b> ");
+        if (hl != null) {
+            out.print("<table border=\"1\"><tr><td>");
+            out.print("Search Words:<br />");
+            for (int i = 0; i < hlWords.size(); i++) {
+                out.print("<b style=\"color:black;" +
+                    "background-color:" + hlColor[i % hlColor.length] +
+                    "\">" + hlWords.get(i).toString() + "</b> ");
+            }
+            out.print("</td></tr></table>");
         }
         %>
-        </td></tr></table>
         <a href="search.jsp">[Search Logs]</a>&nbsp;&nbsp;
         <a href="statistics.jsp">[Statistics]</a><br /><br />
-<%
+        <%
     }
 PreparedStatement pstmt = null;
 ResultSet rset = null;
