@@ -318,6 +318,7 @@
 				F55B416F03AB8C3201A8010A,
 				F55B417003AB8C3201A8010A,
 				F55B417103AB8C3201A8010A,
+				9E95316803C8E0BE00415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,6 +364,7 @@
 				F55B416503AB8BF501A8010A,
 				F55B416703AB8BFC01A8010A,
 				4BC3133503BCD2FA00A8010A,
+				9E95316A03C8E0C700415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1456,6 +1458,68 @@
 //4B2
 //4B3
 //4B4
+//9E0
+//9E1
+//9E2
+//9E3
+//9E4
+		9E95316303C8E08800415B22 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIIconFamily.h;
+			path = "Frameworks/Adium Framework/AIIconFamily.h";
+			refType = 4;
+		};
+		9E95316403C8E08800415B22 = {
+			fileRef = 9E95316303C8E08800415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E95316503C8E08F00415B22 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIIconFamily.m;
+			path = "Frameworks/Adium Framework/AIIconFamily.m";
+			refType = 4;
+		};
+		9E95316603C8E08F00415B22 = {
+			fileRef = 9E95316503C8E08F00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E95316703C8E0BE00415B22 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockController.h;
+			path = Source/AIDockController.h;
+			refType = 4;
+		};
+		9E95316803C8E0BE00415B22 = {
+			fileRef = 9E95316703C8E0BE00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E95316903C8E0C700415B22 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockController.m;
+			path = Source/AIDockController.m;
+			refType = 4;
+		};
+		9E95316A03C8E0C700415B22 = {
+			fileRef = 9E95316903C8E0C700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//9E0
+//9E1
+//9E2
+//9E3
+//9E4
 //F50
 //F51
 //F52
@@ -2857,6 +2921,7 @@
 				F59DB3E8033EB4B601A8010A,
 				4BED5A2B03C32B5B00A8010A,
 				4BED5A2D03C32CA500A8010A,
+				9E95316403C8E08800415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2882,6 +2947,7 @@
 				F579391F033E748F01A8010A,
 				4BED5A2C03C32B5C00A8010A,
 				4BED5A2E03C32CA600A8010A,
+				9E95316603C8E08F00415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2976,6 +3042,7 @@
 				F5793912033E748F01A8010A,
 				F579390B033E748F01A8010A,
 				F5793914033E748F01A8010A,
+				9E95316503C8E08F00415B22,
 				F5B89EFC033CA8CC01A8010A,
 				F5300A2B032F760B01A8010A,
 				F5300A2C032F761101A8010A,
@@ -5522,6 +5589,7 @@
 				F570A59803704B6101A8010A,
 				F57938F0033E745F01A8010A,
 				F57938FA033E745F01A8010A,
+				9E95316703C8E0BE00415B22,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -5794,6 +5862,7 @@
 				F5793927033E74C301A8010A,
 				F5793926033E74C301A8010A,
 				F579392B033E74C401A8010A,
+				9E95316303C8E08800415B22,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -7842,6 +7911,7 @@
 				F570A5B603704C6101A8010A,
 				F57938B0033E737001A8010A,
 				F570A60803704E9701A8010A,
+				9E95316903C8E0C700415B22,
 				F55B416003AB8BE301A8010A,
 				F5A3C2DD039A516E01A8010A,
 				F5174D7D0376B6D201A8010A,
