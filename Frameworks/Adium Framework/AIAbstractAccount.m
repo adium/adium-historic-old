@@ -320,9 +320,8 @@
         }
 		
     }else if([key isEqualToString:@"StatusState"]){
+
 		if(areOnline){
-			//XXX Check against 'offline' state, disconnect if it has been specified?
-			
 			//Set the status state after filtering its statusMessage as appropriate
 			[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
 												   selector:@selector(gotFilteredStatusMessage:forStatusState:)
@@ -330,9 +329,11 @@
 		}else{
 			//XXX behavior for setting a status when account is currently offline:
 			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
-			[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+			[self setPreference:[NSNumber numberWithBool:YES]
+						 forKey:@"Online"
+						  group:GROUP_ACCOUNT_STATUS];
 		}
-
+		
 	}else if([key isEqualToString:@"FullNameAttr"]) {
 		//Update the display name for this account
 		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
@@ -362,27 +363,34 @@
  */
 - (void)setStatusState:(AIStatus *)statusState
 {
-	//Store the status state as a status object so it can be easily used elsewhere
-	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyLater];
-	
-	//Update us to the new state
-	[self updateStatusForKey:@"StatusState"];
-
-	/* Set our IdleSince time if appropriate... this will just be set when the state is selected; the account
-		* is thereafter responsible for updating any serverside settings as needed.  All of our current services will handle
-		* updating idle time as it changes automatically. This is a per-account preference setting; it will override
-		* any global idle setting for this account but won't change it. */	
-	if([[self supportedPropertyKeys] containsObject:@"IdleSince"]){
-		NSDate	*idleSince;
+	if([statusState statusType] == AIOfflineStatusType){
+		[self setPreference:[NSNumber numberWithBool:NO] 
+					 forKey:@"Online"
+					  group:GROUP_ACCOUNT_STATUS];
 		
-		idleSince = ([statusState shouldForceInitialIdleTime] ?
-					 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
-					 nil);
-
-		[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+	}else{
+		//Store the status state as a status object so it can be easily used elsewhere
+		[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyLater];
+		
+		//Update us to the new state
+		[self updateStatusForKey:@"StatusState"];
+		
+		/* Set our IdleSince time if appropriate... this will just be set when the state is selected; the account
+			* is thereafter responsible for updating any serverside settings as needed.  All of our current services will handle
+			* updating idle time as it changes automatically. This is a per-account preference setting; it will override
+			* any global idle setting for this account but won't change it. */	
+		if([[self supportedPropertyKeys] containsObject:@"IdleSince"]){
+			NSDate	*idleSince;
+			
+			idleSince = ([statusState shouldForceInitialIdleTime] ?
+						 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
+						 nil);
+			
+			[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+		}
+		
+		[self notifyOfChangedStatusSilently:YES];
 	}
-	
-	[self notifyOfChangedStatusSilently:YES];
 }
 
 /*!
@@ -432,25 +440,34 @@
 
 - (AIStatusSummary)statusSummary
 {
-	if ([self integerStatusObjectForKey:@"Online"]){
-		AIStatus	*statusState = [self statusState];
-		if ([statusState statusType] == AIAwayStatusType){
+	AIStatusType	statusType = [[self statusState] statusType];
+	
+	if(statusType == AIOfflineStatusType){
+		return AIOfflineStatus;
+	}else{
+		if(statusType == AIAwayStatusType){
 			if ([self statusObjectForKey:@"IdleSince"]){
 				return AIAwayAndIdleStatus;
 			}else{
 				return AIAwayStatus;
 			}
 
-		}else if ([self statusObjectForKey:@"IdleSince"]){
+		}else if([self statusObjectForKey:@"IdleSince"]){
 			return AIIdleStatus;
 
 		}else{
 			return AIAvailableStatus;
 
 		}
+	}
+}
 
+- (AIStatus *)statusState
+{
+	if ([self integerStatusObjectForKey:@"Online"]){
+		return([super statusState]);
 	}else{
-		return AIOfflineStatus;
+		return([[adium statusController] offlineStatusState]);
 	}
 }
 

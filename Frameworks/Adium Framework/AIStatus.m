@@ -152,7 +152,7 @@
 {
 	NSString		*statusName;
 	AIStatusType	statusType;
-
+	
 	if([self shouldForceInitialIdleTime]){
 		statusName = @"idle";
 		statusType = AIAwayStatusType;
@@ -273,7 +273,8 @@
 {
 	NSAttributedString	*statusMessage, *autoReply;
 	NSString			*title = nil;
-
+	AIStatusType		statusType;
+	
 	//If the state has a title, we simply use it
 	if(!title){
 		NSString *string = [statusDict objectForKey:STATUS_TITLE];
@@ -296,6 +297,7 @@
 	
 	/* If the state is not an available state, or it's an available state with a non-default statusName,
  	 * use the description of the state itself. */
+	statusType = [self statusType];
 	if(!title &&
 	   (([self statusType] != AIAvailableStatusType) || (([self statusName] != nil) &&
 														 ![[self statusName] isEqualToString:STATUS_NAME_AVAILABLE]))){
@@ -307,6 +309,10 @@
 		title = AILocalizedString(@"Idle",nil);
 	}
 
+	if(!title && statusType == AIOfflineStatusType){
+		title = STATUS_DESCRIPTION_OFFLINE;
+	}
+	
 	//If the state is none of the above, use the string "Available"
 	if(!title) title = AILocalizedString(@"Available",nil);
 	

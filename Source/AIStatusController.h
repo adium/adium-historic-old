@@ -86,6 +86,7 @@
 #define STATUS_DESCRIPTION_INVISIBLE		AILocalizedString(@"Invisible",nil)
 
 #define STATUS_NAME_OFFLINE					@"Offline"
+#define STATUS_DESCRIPTION_OFFLINE			AILocalizedString(@"Offline",nil)
 
 //Current version state ID string
 #define STATE_SAVED_STATE					@"State"
@@ -102,13 +103,15 @@
 	//Status states
 	NSMutableArray			*stateArray;
 	NSMutableArray			*builtInStateArray;
+	AIStatus				*offlineStatusState; //Shared state used to symbolize the offline 'status'
+	
 	AIStatus				*_activeStatusState; //Cached active status state
 	NSMutableSet			*_allActiveStatusStates; //Cached all active status states
 	NSMutableDictionary		*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
 	NSMutableSet			*builtInStatusTypes[STATUS_TYPES_COUNT];
 
 	NSMutableSet			*accountsToConnect;
-	BOOL					isProcessingSelectedGlobalOffline;
+	BOOL					isProcessingGlobalChange;
 
 	//Machine idle tracking
 	BOOL					machineIsIdle;
@@ -128,9 +131,6 @@
 - (void)beginClosing;
 - (void)closeController;
 - (void)finishIniting;
-- (NSArray *)stateArray;
-- (NSArray *)sortedFullStateArray;
-- (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (NSNumber *)nextUniqueStatusID;
 
@@ -139,6 +139,11 @@
 				ofType:(AIStatusType)type 
 			forService:(AIService *)service;
 - (NSMenu *)menuOfStatusesForService:(AIService *)service withTarget:(id)target;
+
+- (NSArray *)stateArray;
+- (NSArray *)sortedFullStateArray;
+- (AIStatus *)offlineStatusState;
+- (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (void)setActiveStatusState:(AIStatus *)state;
 - (AIStatus *)activeStatusState;

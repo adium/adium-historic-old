@@ -22,5 +22,13 @@
 		<key>Unique ID</key>
 		<real>-1000</real>
 	</dict>
+	<dict>
+		<key>Status Type</key>
+		<real>3</real>
+		<key>Mutability Type</key>
+		<real>1</real>
+		<key>Unique ID</key>
+		<real>-1001</real>
+	</dict>
 </array>
 </plist>

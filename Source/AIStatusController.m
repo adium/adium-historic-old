@@ -80,7 +80,7 @@
 	_allActiveStatusStates = nil;
 
 	accountsToConnect = [[NSMutableSet alloc] init];
-	isProcessingSelectedGlobalOffline = NO;
+	isProcessingGlobalChange = NO;
 
 	//Init
 	[self _setMachineIsIdle:NO];
@@ -512,6 +512,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
 												![[adium accountController] oneOrMoreConnectedAccounts]);
 	
+	isProcessingGlobalChange = YES;
 	[self setDelayStateMenuUpdates:YES];
 	while(account = [enumerator nextObject]){
 		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
@@ -524,6 +525,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		}
 	}
 	[self setDelayStateMenuUpdates:NO];
+	isProcessingGlobalChange = YES;
 }
 
 /*!
@@ -578,12 +580,28 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		
 		enumerator = [savedBuiltInStateArray objectEnumerator];
 		while(dict = [enumerator nextObject]){
-			[builtInStateArray addObject:[AIStatus statusWithDictionary:dict]];
-		}
+			AIStatus	*status = [AIStatus statusWithDictionary:dict];
+			[builtInStateArray addObject:status];
+			
+			//Store a reference to our offline state if we just loaded it
+			if([status statusType] == AIOfflineStatusType){
+				[offlineStatusState release];
+				offlineStatusState = [status retain];
+			}
+		}		
 	}
 	
 	return(builtInStateArray);
 }
+
+- (AIStatus *)offlineStatusState
+{
+	//Ensure the built in states have been loaded
+	[self builtInStateArray];
+	
+	return offlineStatusState;
+}
+
 
 //Sort the status array
 int _statusArraySort(id objectA, id objectB, void *context)
@@ -657,35 +675,42 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		NSMutableDictionary	*statusCountDict = [NSMutableDictionary dictionary];
 		AIAccount			*account;
-		AIStatus			*statusState, *bestStatusState = nil;;
+		AIStatus			*statusState;
 		NSNumber			*count;
 		int					highestCount = 0;
-		BOOL				noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
+		BOOL				accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
 		
-		while(account = [enumerator nextObject]){
-			if([account online] || noAccountsAreOnline){
-				statusState = [account statusState];
-				
-				if(count = [statusCountDict objectForKey:statusState])
-					count = [NSNumber numberWithInt:([count intValue]+1)];
-				else
-					count = [NSNumber numberWithInt:1];
-				
-				[statusCountDict setObject:count
-									forKey:statusState];
+		if(accountsAreOnline){
+			AIStatus	*bestStatusState;
+	
+			while(account = [enumerator nextObject]){
+				if([account online]){
+					statusState = [account statusState];
+					
+					if(count = [statusCountDict objectForKey:statusState])
+						count = [NSNumber numberWithInt:([count intValue]+1)];
+					else
+						count = [NSNumber numberWithInt:1];
+					
+					[statusCountDict setObject:count
+										forKey:statusState];
+				}
 			}
-		}
-		
-		enumerator = [statusCountDict keyEnumerator];
-		while(statusState = [enumerator nextObject]){
-			int thisCount = [[statusCountDict objectForKey:statusState] intValue];
-			if(thisCount > highestCount){
-				bestStatusState = statusState;
-				highestCount = thisCount;
+			
+			enumerator = [statusCountDict keyEnumerator];
+			while(statusState = [enumerator nextObject]){
+				int thisCount = [[statusCountDict objectForKey:statusState] intValue];
+				if(thisCount > highestCount){
+					bestStatusState = statusState;
+					highestCount = thisCount;
+				}
 			}
-		}
+			
+			_activeStatusState = [bestStatusState retain];
 
-		_activeStatusState = [bestStatusState retain];
+		}else{
+			_activeStatusState = [offlineStatusState retain];
+		}
 	}
 	
 	return(_activeStatusState);
@@ -1066,7 +1091,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		if(thisStatusType == AIInvisibleStatusType) thisStatusType = AIAwayStatusType;
 		
 		//Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
-		if(currentStatusType != thisStatusType){
+		if((currentStatusType != thisStatusType) &&
+		   (currentStatusType != AIOfflineStatusType)){
 			menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
 												  target:self
 												  action:@selector(selectCustomState:)
@@ -1094,39 +1120,29 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		//NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
 		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
 		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setTag:currentStatusType];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
 		[menuItemArray addObject:menuItem];
 		[menuItem release];
 	}
 	
-	//Add the last "Custom..." state option (for the last statusType we handled, which didn't get a "Custom..." item yet)
-	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
-										  target:self
-										  action:@selector(selectCustomState:)
-								   keyEquivalent:@""];
-	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
-													 statusType:currentStatusType
-													   iconType:AIStatusIconList
-													  direction:AIIconNormal] copy] autorelease]];
-	[menuItem setTag:currentStatusType];
-	[menuItemArray addObject:menuItem];
-	[menuItem release];
-
-	//Now add a separator and the Offline state option
-	[menuItemArray addObject:[NSMenuItem separatorItem]];
-
-	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_OFFLINE
-										  target:self
-										  action:@selector(selectOffline:)
-								   keyEquivalent:@""];
-	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
-													 statusType:AIOfflineStatusType
-													   iconType:AIStatusIconList
-													  direction:AIIconNormal] copy] autorelease]];
-	[menuItem setTag:AIOfflineStatusType];
-	[menuItemArray addObject:menuItem];
-	[menuItem release];
+	if(currentStatusType != AIOfflineStatusType){
+		/* Add the last "Custom..." state optior for the last statusType we handled,
+		 * which didn't get a "Custom..." item yet.  At present, our last status type should always be
+		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness. */
+		menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
+											  target:self
+											  action:@selector(selectCustomState:)
+									   keyEquivalent:@""];
+		[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
+														 statusType:currentStatusType
+														   iconType:AIStatusIconList
+														  direction:AIIconNormal] copy] autorelease]];
+		[menuItem setTag:currentStatusType];
+		[menuItemArray addObject:menuItem];
+		[menuItem release];
+	}
 
 	//Now that we are done creating the menu items, tell the plugin about them
 	[stateMenuPlugin addStateMenuItems:menuItemArray];
@@ -1269,8 +1285,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		* the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
 		* all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
 		* reconnecting, so we check to see if we are disconnecting via that menu item with the
-		* isProcessingSelectedGlobalOffline BOOL. */
-		if(!isProcessingSelectedGlobalOffline){
+		* isProcessingGlobalChange BOOL. */
+		if(!isProcessingGlobalChange){
 			if([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
 				[accountsToConnect addObject:object];
 			}else{
@@ -1457,31 +1473,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 								  withSaveOption:YES
 										onWindow:nil
 								 notifyingTarget:self];
-}
-
-- (void)selectOffline:(id)sender
-{
-	NSDictionary	*dict = [sender representedObject];
-	AIAccount		*account;
-
-	if(account = [dict objectForKey:@"AIAccount"]){
-		[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	}else{
-		NSEnumerator		*enumerator;
-		AIAccount			*account;
-		
-		[accountsToConnect removeAllObjects];
-		
-		//Track all accounts which are online as we select to go globally offline
-		enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([account online]) [accountsToConnect addObject:account];
-		}
-		
-		isProcessingSelectedGlobalOffline = YES;
-		[[adium accountController] disconnectAllAccounts];
-		isProcessingSelectedGlobalOffline = NO;
-	}
 }
 
 /*!
