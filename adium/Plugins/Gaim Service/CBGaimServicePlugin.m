@@ -721,31 +721,33 @@ static GaimCoreUiOps adiumGaimCoreOps = {
                                    userInfo:nil
                                     repeats:YES];
     //Install the services
-    AIMService = [[[CBAIMService alloc] initWithService:self] retain];
-    MSNService = [[[ESMSNService alloc] initWithService:self] retain];
+    AIMService		= [[[CBAIMService alloc] initWithService:self] retain];
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
-    NapsterService = [[[ESNapsterService alloc] initWithService:self] retain];
+    MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
+    NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
+	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
 	
-	
-    YahooService = nil  /* [[[ESYahooService alloc] initWithService:self] retain] */;
-    JabberService = nil /* [[[ESJabberService alloc] initWithService:self] retain] */;
+    YahooService	= nil  /* [[[ESYahooService alloc] initWithService:self] retain] */;
+    JabberService   = nil /* [[[ESJabberService alloc] initWithService:self] retain] */;
     
 }
 
 - (void)uninstallPlugin
 {
 	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
+	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
 	
-    [_accountDict release];
-    _accountDict = nil;
+    [_accountDict release]; _accountDict = nil;
     
     //Services
-    [AIMService release];
-    [MSNService release];
-    [YahooService release];
-    [GaduGaduService release];
-    [NapsterService release];
-    [JabberService release];
+    [AIMService release]; AIMService = nil;
+    [GaduGaduService release]; GaduGaduService = nil;
+	[JabberService release]; JabberService = nil;
+    [NapsterService release]; NapsterService = nil;
+    [MSNService release]; MSNService = nil;
+	[TrepiaService release]; TrepiaService = nil;
+    [YahooService release]; YahooService = nil;
+
 }
 
 //Periodic timer to run libgaim's event loop
