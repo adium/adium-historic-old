@@ -125,13 +125,8 @@
 		[contactListView reloadData];
 		[contactListView performFullRecalculation];
 	}else{
-		AIListGroup *containingGroup;
-		if ([object isKindOfClass:[AIListGroup class]])
-			containingGroup = object; //I wonder..
-		else
-			containingGroup = [[object userInfo] objectForKey:@"ContainingGroup"];
-		
-		[contactListView reloadItem:containingGroup reloadChildren:YES];
+		//Reload the item, reloading its children if it is expanded
+		[contactListView reloadItem:object reloadChildren:[contactListView isItemExpanded:object]];
 		[contactListView updateHorizontalSizeForObject:object];
 	}
 }
