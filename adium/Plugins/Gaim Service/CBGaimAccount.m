@@ -13,6 +13,7 @@
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
 - (void)displayError:(NSString *)errorDesc;
+- (void)setAwayMessage:(id)msg;
 @end
 
 @implementation CBGaimAccount
@@ -39,6 +40,11 @@
     [[owner accountController]
         setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
         forKey:@"Status" account:self];
+    id awayMessage = [propertiesDict objectForKey:@"AwayMessage"];
+    if (awayMessage != nil) {
+        NSLog(@"Initial away message");
+        [self setAwayMessage:awayMessage];
+    }
 }
 
 - (void)accountConnectionDisconnected
@@ -278,6 +284,7 @@
 //    chatDict = [[NSMutableDictionary alloc] init];
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
+    gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 }
 
@@ -301,6 +308,7 @@
         @"IdleSince",
         @"BuddyImage",
         @"Away",
+        @"AwayMessage",
         nil]);
 }
 
@@ -333,7 +341,7 @@
             }
         }
     }
-    if ([key compare:@"IdleSince"] == 0)
+    else if ([key compare:@"IdleSince"] == 0)
     {
         // Even if we're setting a non-zero idle time, set it to zero first.
         // Some clients ignore idle time changes unless it moves to/from 0.
@@ -343,6 +351,25 @@
             serv_set_idle(gc, newIdle);
         }
     }
+    else if ([key compare:@"AwayMessage"] == 0)
+    {
+        if (status == STATUS_ONLINE)
+            [self setAwayMessage:inValue];
+    }
+}
+
+- (void)setAwayMessage:(id)message
+{
+    const char *newValue = NULL;
+    if (message) {
+        newValue = [[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+                                      headers:YES
+                                     fontTags:YES
+                                closeFontTags:YES
+                                    styleTags:YES
+                   closeStyleTagsOnFontChange:NO] UTF8String];
+    }
+    serv_set_away(gc, NULL, newValue);
 }
 
 - (void)finishConnect:(NSString *)inPassword
