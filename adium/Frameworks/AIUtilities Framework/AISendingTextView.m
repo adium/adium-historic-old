@@ -58,6 +58,7 @@ static NSImage *pushIndicatorImage = nil;
     indicator = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
+    insertingText = NO;
     returnArray = [[NSMutableArray alloc] init];
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
     pushArray = [[NSMutableArray alloc] init];
@@ -161,9 +162,6 @@ static NSImage *pushIndicatorImage = nil;
         theString = [aString string];
     }
 
-    //Let Adium know we're adding content
-    [[owner contentController] stringAdded:theString toTextEntryView:self];
-
     //Catch newlines as they're inserted
     if([theString length] && [theString characterAtIndex:0] == 10){
         NSParameterAssert([returnArray count] != 0);
@@ -177,8 +175,13 @@ static NSImage *pushIndicatorImage = nil;
     }
 
     if(insertText){
+        insertingText = YES; //insertText will cause our text changed method to get posted.  In this case, we can avoid calling contentsChangedInTextEntryView, and call stringAdded:toTextEntryView instead.  To make this happen, our textDidChange method checks for the insertingText flag, and doesn't call contentsChanged if YES.
         [super insertText:aString];
+        insertingText = NO;
     }
+
+    //Let Adium know we've adding content
+    [[owner contentController] stringAdded:theString toTextEntryView:self];
 }
 
 //Catch returns and enters as they're pressed
@@ -204,7 +207,7 @@ static NSImage *pushIndicatorImage = nil;
         
         index++;
     }
-    
+
     [super interpretKeyEvents:eventArray];
 }
 
@@ -440,6 +443,12 @@ static NSImage *pushIndicatorImage = nil;
 //Post a size changed notification (if necessary)
 - (void)textDidChange:(NSNotification *)notification
 {
+    //Let observers know our text changed (unless it was changed by text insertion, which they'll already have known about)
+    if(!insertingText){ 
+        [[owner contentController] contentsChangedInTextEntryView:self];
+    }
+
+    
     //Reset cache
     _desiredSizeCached = NSMakeSize(0,0); 
 
