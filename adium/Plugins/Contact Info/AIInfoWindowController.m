@@ -82,7 +82,7 @@ static AIInfoWindowController *sharedInstance = nil;
         [[[NSTextTab alloc] initWithType:NSRightTabStopType location:InfoIndentA] autorelease],
         [[[NSTextTab alloc] initWithType:NSLeftTabStopType location:InfoIndentB] autorelease],
         nil]];
-    [paragraphStyle setHeadIndent:75];
+    [paragraphStyle setHeadIndent:InfoIndentB];
 
     //Prepare the text attributes we will use
         labelAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
