@@ -55,9 +55,9 @@
 
 //Exposé code from Richard Wareham, Desktop Manager developer
 //Modified by Yann Bizeul, GeekTool Developer :-)
+//######## THIS CODE PREVENTS LAUNCH IN 10.2 #########
 -(void)setIgnoresExpose:(BOOL)flag
 {
-#warning this code prevents us from launching in 10.2
 //    CGSConnection cid;
 //    CGSWindow wid;
 //    SInt32 vers; 
