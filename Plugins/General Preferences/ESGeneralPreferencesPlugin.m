@@ -90,16 +90,13 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([group isEqualToString:PREF_GROUP_GENERAL]){
-		NSEnumerator	*enumerator;
-		id				entryView;
-		
-		//Set sending keys of all open views
-		enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-		while(entryView = [enumerator nextObject]){
-			[self _configureSendingKeysForObject:entryView];
-		}
-		
+	NSEnumerator	*enumerator;
+	id				entryView;
+	
+	//Set sending keys of all open views
+	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
+	while(entryView = [enumerator nextObject]){
+		[self _configureSendingKeysForObject:entryView];
 	}
 }
 
