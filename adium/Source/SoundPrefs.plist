@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Custom Volume Level</key>
+	<real>0.5</real>
+	<key>Use Custom Volume</key>
+	<false/>
+	<key>Warned About Custom Volume</key>
+	<false/>
+</dict>
+</plist>

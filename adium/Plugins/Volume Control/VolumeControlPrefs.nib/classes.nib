@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {selectVolume = id; }; 
+            CLASS = AIVolumeControlPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_mute" = NSButton; 
+                "slider_volume" = NSSlider; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -15,20 +15,34 @@
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
+#import <AIUtilities/AIUtilities.h>
 
 #define	PATH_SOUNDS			@"/Sounds"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
+#define SOUND_DEFAULT_PREFS		@"SoundPrefs"
+
+
+#define KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME	@"Warned About Custom Volume"
+
 
 @interface AISoundController (PRIVATE)
 - (void)addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AISoundController
 
 - (void)initController
 {
-    sharedMovie = nil;
+//    soundCacheDict = [[NSMutableDictionary alloc] init];
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
+
+    //observe pref changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 //close
@@ -119,149 +133,84 @@
 
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    if(sharedMovie){
-        //Stop any currently playing sound
-        StopMovie([sharedMovie QTMovie]);
-        [sharedMovie release]; sharedMovie = nil;
+    //If the user is specifying a custom volume, we must use quicktime to play our sounds.
+    if(useCustomVolume && customVolume != 0){
+        NSMovie	*movie; //We could get a nice performance boost by caching these NSMovies!
+        
+        //Search for this sound in our cache
+//        movie = [soundCacheDict objectForKey:inPath];
+//        if(!movie){ //If the sound is not cached, load it
+            movie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES];
+//            [soundCacheDict setObject:movie forKey:inPath];
+//        }else{
+//            GoToBeginningOfMovie([movie QTMovie]); //Reset to the begining of the sound
+//        }
+
+        //Set the volume & play sound
+        SetMovieVolume([movie QTMovie], customVolume);
+        StartMovie([movie QTMovie]);
+              
+    }else if(!useCustomVolume){ //Otherwise, we can use NSSound
+        //Detach a thead to play the sound
+        [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
+
     }
 
-    //Play the new sound
-    sharedMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES];
-    if(sharedMovie != nil){
-        StartMovie([sharedMovie QTMovie]);
-    }
 }
 
-
-
-
-//        SetMovieVolume([sharedMovie QTMovie],soundVolume);
-// returns the shared instance of AISound
-/*static AISound	*sharedInstance;
-+ (AISound *)sharedInstance
+//Play a sound using NSSound.  Meant to be detached as a new thread.
+- (void)_threadPlaySound:(NSString *)inPath
 {
-    if(sharedInstance == nil){
-        sharedInstance = [[self alloc] init];
-    }
+    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
+    NSSound		*sound;
 
-    return(sharedInstance);
-}*/
+    //Load the sound (The system apparently caches these)
+    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
 
-
-
-// Releases sound files if they are done playing - call periodically
-/*- (void)soundIdle:(NSTimer *)timer
-{
-    NSParameterAssert(timer != nil);
-
-    if(sharedMovie != nil && IsMovieDone([sharedMovie QTMovie])){
-        [sharedMovie release];
-        sharedMovie = nil;
-    }
-}*/
-
-// plays the specified sound - using the volume and soundset specified by settings
-/*- (void)playSound:(SoundType)soundID
-{
-    if([[AISettings sharedInstance] boolForKey:[NSString stringWithFormat:@"%@:%i",KEY_SOUND_ENABLED,soundID]]){
-
-        if([[AIAway sharedInstance] away] == NO || [[AISettings sharedInstance] boolForKey:KEY_AWAY_MUTE_SOUNDS] == NO){
-            NSString *soundName;
-            BOOL	 customSound;
-            float	 appVolume;
-            float 	 volume;
+    //Play the sound
+    [sound play];
     
-            soundName = [[AISettings sharedInstance] stringForKey:[NSString stringWithFormat:@"%@:%i",KEY_SOUND_FILENAME,soundID]];
-            if(soundName != nil && [soundName length] != 0){    
-                customSound = [[AISettings sharedInstance] boolForKey:[NSString stringWithFormat:@"%@:%i",KEY_SOUND_CUSTOM,soundID]];
-                appVolume = [[AISettings sharedInstance] intForKey:KEY_SOUND_APP_VOLUME];
-                volume = [[AISettings sharedInstance] intForKey:[NSString stringWithFormat:@"%@:%i",KEY_SOUND_VOLUME,soundID]];
+    //When run on a laptop using battery power, the play method may block while the audio hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.  To get around this, we check to make sure the sound is playing, and if it isn't - we call the play method again.
+    if(![sound isPlaying]){
+        [sound play];
+    }
+
+    //Release the autorelease pool
+    [pool release];
+}
+
+//
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){    
+        NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    
+        //Remember the values of some preferences
+        useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
+        customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue] * 512.0);
+        muteSounds = [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue];
+        if(customVolume <= 5) customVolume = 5; //Too quiet to hear is silly
         
-                [self playSound:soundName custom:customSound volume:(appVolume * (volume / 50.0) )];
+        //Display the custom volume performance warning
+        if(useCustomVolume && ![[preferenceDict objectForKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME] intValue]){
+            int result;
+    
+            result = NSRunInformationalAlertPanel(@"Notice", @"Setting a custom volume may cause delays when Adium plays a sound.\r\rThese delays are most noticeable to users:\r ¥ using a laptop (on battery power) or \r ¥ using an older computer\r\rIf you experience delays, please set volume back to 'Normal'.", nil, @"Cancel", nil);
+    
+            if(result == NSAlertAlternateReturn){
+                //If the user canceled, we turn the custom volume preference back off
+                [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+                                                    forKey:KEY_SOUND_USE_CUSTOM_VOLUME
+                                                    group:PREF_GROUP_GENERAL];
+    
             }else{
-                NSLog(@"invalid sound name");
+                //Otherwise we leave it on, and suppress the warning message
+                [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+                                                    forKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME
+                                                    group:PREF_GROUP_GENERAL];
             }
         }
     }
-}*/
-
-//  plays the specified sound - using the supplied volume and soundset
-/*- (void)playSound:(NSString *)fileName custom:(BOOL)custom volume:(int)soundVolume
-{
-    NSString 	*soundPath;
-
-    //---release the old sound---
-    if(sharedMovie != nil){
-        StopMovie([sharedMovie QTMovie]);
-        [sharedMovie release];
-        sharedMovie = nil;        
-    }
-
-    if(fileName != nil && [fileName length] != 0){
-        //---load the new sound---
-        if(custom){
-            soundPath = [[PATH_CUSTOM_SOUNDS
-                            stringByAppendingPathComponent:fileName] stringByExpandingTildeInPath];
-        }else{
-            soundPath = [[[[[NSBundle mainBundle] bundlePath]
-                            stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS] 
-                            stringByAppendingPathComponent:fileName]
-                            stringByExpandingTildeInPath];
-        }
-    
-        
-        sharedMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:soundPath] byReference:YES];
-    
-        //---set the volume & play---
-        if(sharedMovie != nil){
-            SetMovieVolume([sharedMovie QTMovie],soundVolume);
-            StartMovie([sharedMovie QTMovie]);
-        }
-    }
-}*/
-
-// init AISound
-/*- (id)init
-{
-    NSTimer	*soundCleanUpTimer;
-
-    [super init];
-
-    EnterMovies();
-    sharedMovie = nil;
-    
-    soundCleanUpTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) // (1.0 / X ) = X times per second
-                        target: self
-                        selector: @selector(soundIdle:)
-                        userInfo: nil
-                        repeats: true];
-    [[NSRunLoop currentRunLoop] addTimer:soundCleanUpTimer forMode:NSModalPanelRunLoopMode];
-
-    //There is a large delay when quicktime first loads - which causes an annoying pause during sign on.  
-    //Here Adium loads and plays a sound (stopping it quick enough that it isn't really played).  This
-    //causes the delay to happen during or immedientally after loading - which is much less noticable and
-    //not as annoying
-    {
-        NSString	*soundPath;
-        NSMovie		*tempMovie;
-        
-        soundPath = [[[[[NSBundle mainBundle] bundlePath]
-                        stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS] 
-                        stringByAppendingPathComponent:@"(Adium)Buddy_SignedOn.aif"]
-                        stringByExpandingTildeInPath];
-
-        tempMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:soundPath] byReference:YES];
-    
-        //---play & stop---
-        if(tempMovie != nil){
-            StartMovie([tempMovie QTMovie]);
-            StopMovie([tempMovie QTMovie]);
-        }
-
-        [tempMovie release]; //clean up
-    }
-
-    return(self);
-}*/
+}
 
 @end

@@ -113,6 +113,7 @@
 				4B7BD8640412584500A8010A,
 				4B4FA11504125F3F00A8010A,
 				4B0473C0043E443A00A8010A,
+				4B55411C044DF01600A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -170,6 +171,7 @@
 				4B7BD8630412584500A8010A,
 				4B4FA11404125F3F00A8010A,
 				4B0473BF043E443A00A8010A,
+				4B55411B044DF01600A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -261,6 +263,7 @@
 				4B7BD8650412584500A8010A,
 				4B4FA11604125F3F00A8010A,
 				4B0473C1043E443A00A8010A,
+				4B55411D044DF01600A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -368,6 +371,7 @@
 				9C82689F03D9B26500F1D4AF,
 				9CDF248A03EB394B000001C9,
 				4BF290CB03F9FE8D00A8010A,
+				4BDF17250450CBDE00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1324,6 +1328,14 @@
 			settings = {
 			};
 		};
+		4B3CFE04044DFF1B00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B3CFE05044DFF1B00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
 		4B3E502203EC538D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1410,6 +1422,7 @@
 				4B7BD8660412584500A8010A,
 				4B4FA11704125F3F00A8010A,
 				4B0473C2043E443A00A8010A,
+				4B55411E044DF01600A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1664,6 +1677,7 @@
 		};
 		4B4F5B2B042D641700A8010A = {
 			children = (
+				4B554115044DEFEF00A8010A,
 				40AC0EEA03B5BEDB00A80202,
 			);
 			isa = PBXGroup;
@@ -2133,6 +2147,199 @@
 		};
 		4B53714E03CEF61200A8010A = {
 			fileRef = 4B53714D03CEF61200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B554115044DEFEF00A8010A = {
+			children = (
+				4B55411F044DF04B00A8010A,
+				4B554120044DF04B00A8010A,
+				4B554123044DF05700A8010A,
+				4B554124044DF05700A8010A,
+				4B554127044DF5A200A8010A,
+			);
+			isa = PBXGroup;
+			name = "Volume Control";
+			path = "";
+			refType = 4;
+		};
+		4B554116044DF01600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B554121044DF04B00A8010A,
+				4B554125044DF05700A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B554117044DF01600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B554128044DF5A200A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B554118044DF01600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B554122044DF04B00A8010A,
+				4B554126044DF05700A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B554119044DF01600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BBE958B044E4D1F00A8010A,
+				4BBE958C044E4D2000A8010A,
+				4BBE958D044E4D2000A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B55411A044DF01600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B55411B044DF01600A8010A = {
+			buildPhases = (
+				4B554116044DF01600A8010A,
+				4B554117044DF01600A8010A,
+				4B554118044DF01600A8010A,
+				4B554119044DF01600A8010A,
+				4B55411A044DF01600A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Volume Control";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B3CFE04044DFF1B00A8010A,
+				4B3CFE05044DFF1B00A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Volume Control";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Volume Control";
+			productReference = 4B55411C044DF01600A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIVolumeControlPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B55411C044DF01600A8010A = {
+			isa = PBXBundleReference;
+			path = "Volume Control.AdiumPlugin";
+			refType = 3;
+		};
+		4B55411D044DF01600A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B55411B044DF01600A8010A;
+		};
+		4B55411E044DF01600A8010A = {
+			fileRef = 4B55411C044DF01600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B55411F044DF04B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIVolumeControlPlugin.h;
+			path = "Plugins/Volume Control/AIVolumeControlPlugin.h";
+			refType = 4;
+		};
+		4B554120044DF04B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIVolumeControlPlugin.m;
+			path = "Plugins/Volume Control/AIVolumeControlPlugin.m";
+			refType = 4;
+		};
+		4B554121044DF04B00A8010A = {
+			fileRef = 4B55411F044DF04B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B554122044DF04B00A8010A = {
+			fileRef = 4B554120044DF04B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B554123044DF05700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIVolumeControlPreferences.h;
+			path = "Plugins/Volume Control/AIVolumeControlPreferences.h";
+			refType = 4;
+		};
+		4B554124044DF05700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIVolumeControlPreferences.m;
+			path = "Plugins/Volume Control/AIVolumeControlPreferences.m";
+			refType = 4;
+		};
+		4B554125044DF05700A8010A = {
+			fileRef = 4B554123044DF05700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B554126044DF05700A8010A = {
+			fileRef = 4B554124044DF05700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B554127044DF5A200A8010A = {
+			isa = PBXFileReference;
+			name = VolumeControlPrefs.nib;
+			path = "Plugins/Volume Control/VolumeControlPrefs.nib";
+			refType = 4;
+		};
+		4B554128044DF5A200A8010A = {
+			fileRef = 4B554127044DF5A200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3827,6 +4034,24 @@
 			settings = {
 			};
 		};
+		4BBE958B044E4D1F00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBE958C044E4D2000A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBE958D044E4D2000A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
 			isa = PBXBuildFile;
@@ -4211,6 +4436,19 @@
 		};
 		4BDDCA1C04110A7100A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDF17240450CBDE00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = SoundPrefs.plist;
+			path = Source/SoundPrefs.plist;
+			refType = 4;
+		};
+		4BDF17250450CBDE00A8010A = {
+			fileRef = 4BDF17240450CBDE00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -11389,6 +11627,7 @@
 				F570A60703704E9701A8010A,
 				F570A60803704E9701A8010A,
 				F55B416003AB8BE301A8010A,
+				4BDF17240450CBDE00A8010A,
 				F5A3C2DD039A516E01A8010A,
 				F5CDCE460350758501A8010A,
 				F5D746FA0338D79801A8010A,
