@@ -226,8 +226,12 @@ static NSString                             *filterForContactName = nil;	//Conta
 			[logFromGroupDict setObject:logFromGroup forKey:folderName];
 
 			//Table access is easiest from an array
-			[fromArray addObject:fromUID];
-			[fromServiceArray addObject:serviceClass];
+                        if(fromUID != nil){
+                            [fromArray addObject:fromUID];
+                        }
+                        if(serviceClass != nil){
+                            [fromServiceArray addObject:serviceClass];
+                        }
 
 			//To processing
 			if (!(toSetForThisService = [toDict objectForKey:serviceClass])){
@@ -240,7 +244,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 			toEnum = [[logFromGroup toGroupArray] objectEnumerator];
 			while(currentToGroup = [toEnum nextObject]){
 				NSString	*currentTo = [currentToGroup to];
-				if(![currentTo isEqual:@".DS_Store"]){
+				if(![currentTo isEqual:@".DS_Store"] && currentTo != nil){
 					[toSetForThisService addObject:currentTo];
 
 					//Store currentToGroup on a key in the form "SERVICE.ACCOUNT_NAME/TARGET_CONTACT"
@@ -1176,7 +1180,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 							
 							//Add the log
 							[resultsLock lock];
-							[selectedLogArray addObject:theLog];
+                                                        if(theLog != nil){
+                                                            [selectedLogArray addObject:theLog];
+                                                        }
 							[resultsLock unlock];
 							
 							//Update our status
@@ -1315,7 +1321,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				 */
 				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-				if(theLog && ![selectedLogArray containsObjectIdenticalTo:theLog]){
+				if(theLog != nil && ![selectedLogArray containsObjectIdenticalTo:theLog]){
 					[theLog setRankingPercentage:outScoresArray[i]];
 					[selectedLogArray addObject:theLog];
 				}

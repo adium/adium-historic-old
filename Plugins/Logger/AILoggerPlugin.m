@@ -445,7 +445,9 @@ this problem is along the lines of:
 		if(dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]){
 			//Add to dirty array (Lock to ensure that no one changes its content while we are)
 			[dirtyLogLock lock];
-			[dirtyLogArray addObject:path];
+                        if(path != nil){
+                            [dirtyLogArray addObject:path];
+                        }
 			[dirtyLogLock unlock];
 			
 			//Save the dirty array immedientally
@@ -609,7 +611,9 @@ this problem is along the lines of:
 				//Add this log's path to our dirty array.  The dirty array is guarded with a lock
 				//since it will be accessed from outside this thread as well
 				[dirtyLogLock lock];
-				[dirtyLogArray addObject:[theLog path]];
+                                if(theLog != nil){
+                                    [dirtyLogArray addObject:[theLog path]];
+                                }
 				[dirtyLogLock unlock];
 			}
 			

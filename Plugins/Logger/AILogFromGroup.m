@@ -79,7 +79,7 @@
 												serviceClass:serviceClass];
 				
 				//Not sure why, but I've had that alloc fail on me before
-				if(toGroup) [toGroupArray addObject:toGroup];
+				if(toGroup != nil) [toGroupArray addObject:toGroup];
 			}
 			
 			[toGroup release];
