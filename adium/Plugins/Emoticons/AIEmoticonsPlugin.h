@@ -31,6 +31,7 @@
     BOOL			replaceEmoticons;
     
     NSMutableArray		*emoticons;
+    NSMutableDictionary	*indexedEmoticons;
     
     NSCharacterSet		*quickScanSet;
 	

@@ -41,6 +41,9 @@
 
 - (void)uninstallPlugin
 {
+    //Remove observers (general)
+    [[owner notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 }
 

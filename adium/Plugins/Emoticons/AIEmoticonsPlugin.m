@@ -51,6 +51,7 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     quickScanSet = [[NSCharacterSet alloc] init];
     
     emoticons = [[NSMutableArray alloc] init];
+    indexedEmoticons = [[NSMutableDictionary alloc] init];
     
     cachedPacks = [[NSMutableArray alloc] init];
 
@@ -76,6 +77,21 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 
     //Register our content filter
     [[owner contentController] registerDisplayingContentFilter:self];
+}
+
+- (void)uninstallPlugin
+{
+    [quickScanSet release];
+    quickScanSet = nil;
+    
+    [emoticons release];
+    emoticons = nil;
+    
+    [cachedPacks release];
+    cachedPacks = nil;
+    
+    [indexedEmoticons release];
+    indexedEmoticons = nil;
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -150,67 +166,69 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 
     while(currentLocation < [inMessage length]){
 	
-	emoEnumerator = [[self emoticonsStartingWithCharacter:[[[inMessage safeString] string] characterAtIndex:currentLocation]] objectEnumerator];
-	while(currentEmo = [emoEnumerator nextObject]){
-	    
-	    currentEmoText = [currentEmo representedText];
-
-	    //nifty info about the current search
-	    //NSLog(@"%d %d %@ %@ %@", currentLocation, [inMessage length], [[inMessage safeString] string], [[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)], currentEmoText);
-
-	    if(currentLocation+[currentEmoText length] <= [inMessage length]){
-
-		//look for the range of the emoticon
-		emoticonRange = [[[inMessage safeString] string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[currentEmoText length])];
-
-		//did we find one?
-		if(emoticonRange.location != NSNotFound){
+        emoEnumerator = [[self emoticonsStartingWithCharacter:[[[inMessage safeString] string] characterAtIndex:currentLocation]] objectEnumerator];
+        while(currentEmo = [emoEnumerator nextObject]){
+        
+            currentEmoText = [currentEmo representedText];
     
-		    //make sure this emoticon is not inside a link
-		    if([inMessage attribute:NSLinkAttributeName atIndex:emoticonRange.location effectiveRange:&attributeRange] == nil){
+            //nifty info about the current search
+            //NSLog(@"%d %d %@ %@ %@", currentLocation, [inMessage length], [[inMessage safeString] string], [[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)], currentEmoText);
     
-			NSMutableAttributedString *replacement = [[[currentEmo attributedEmoticon] mutableCopy] autorelease];
-
-			//grab the original attributes
-			//ensures that the background is not lost in a message consisting only of an emoticon
-			[replacement addAttributes:[inMessage attributesAtIndex:emoticonRange.location effectiveRange:nil] range:NSMakeRange(0,1)];
+            if(currentLocation+[currentEmoText length] <= [inMessage length]){
+            
+                //look for the range of the emoticon
+                //emoticonRange = [[[inMessage safeString] string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[currentEmoText length])];
+        
+                //did we find one?
+                if([[[inMessage safeString] string] compare:currentEmoText options:0 range:(emoticonRange = NSMakeRange(currentLocation,[currentEmoText length]))] == NSOrderedSame){
+                //if(emoticonRange.location != NSNotFound){
+            
+                    //make sure this emoticon is not inside a link
+                    if([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:&attributeRange] == nil){
+            
+                    NSMutableAttributedString *replacement = [[[currentEmo attributedEmoticon] mutableCopy] autorelease];
+        
+                    //grab the original attributes
+                    //ensures that the background is not lost in a message consisting only of an emoticon
+                    [replacement addAttributes:[inMessage attributesAtIndex:currentLocation effectiveRange:nil] range:NSMakeRange(0,1)];
+            
+                    //insert the emoticon
+                    [tempMessage replaceCharactersInRange:NSMakeRange(currentLocation-replacementCount,emoticonRange.length) withAttributedString:replacement];
+        
+                    //nifty info about where we found the emoticon and stopped looking
+                    //NSLog(@"break at %d for %@",currentLocation,currentEmoText);
+        
+                    //essential info about where we are in the original and replacement messages
+                    replacementCount += emoticonRange.length-1;
+                    currentLocation += emoticonRange.length-1;
+                    messageChanged = YES;
+                    
+                    break;
+                    }
+                }
+            }
+        }
     
-			//insert the emoticon
-			[tempMessage replaceCharactersInRange:NSMakeRange(emoticonRange.location-replacementCount,emoticonRange.length) withAttributedString:replacement];
-
-			//nifty info about where we found the emoticon and stopped looking
-			//NSLog(@"break at %d for %@",currentLocation,currentEmoText);
-
-			//essential info about where we are in the original and replacement messages
-			replacementCount += emoticonRange.length-1;
-			currentLocation += emoticonRange.length-1;
-			messageChanged = YES;
-			
-			break;
-		    }
-		}
-	    }
-	}
-
-	// find the next possible location of an emoticon
-	currentLocation ++;
-
-	//only continue parsing if we aren't at the end the message, or if no other emoticons may exist
-	if(currentLocation < [inMessage length]){
-	    nextOccurence = [[[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)] rangeOfCharacterFromSet:quickScanSet].location;
-	}else{
-	    nextOccurence = NSNotFound;
-	}
-
-	if(nextOccurence != NSNotFound){
-	    currentLocation += nextOccurence;
-	}else{
-	    break;
-	}
+        // find the next possible location of an emoticon
+        currentLocation ++;
+    
+        //only continue parsing if we aren't at the end the message, or if no other emoticons may exist
+        if(currentLocation < [inMessage length]){
+            //nextOccurence = [[[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)] rangeOfCharacterFromSet:quickScanSet].location;
+            nextOccurence = [[[inMessage safeString] string] rangeOfCharacterFromSet:quickScanSet options:0 range:NSMakeRange(currentLocation,[inMessage length]-currentLocation)].location;
+        }else{
+            nextOccurence = NSNotFound;
+        }
+    
+        if(nextOccurence != NSNotFound){
+            currentLocation = nextOccurence;
+        }else{
+            break;
+        }
     }
     
     if(!messageChanged){
-	tempMessage = nil;
+        tempMessage = nil;
     }
 
     return tempMessage;
@@ -243,19 +261,30 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     NSEnumerator	*enumerator = [textStrings objectEnumerator];
     NSString		*currentString = nil;
     AIEmoticon		*emo = nil;
+    NSMutableArray	*subEmoticons = nil;
 
     while(currentString = [enumerator nextObject]){
-	[currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	//don't add anything with path or string with length = 0
-	if([inPath length] && [currentString length]){
-	    emo = [[AIEmoticon alloc] initWithPath:inPath andText:currentString];
-	    [emoticons addObject:emo];
-	}
+        [currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        //don't add anything with path or string with length = 0
+        if([inPath length] && [currentString length]){
+            emo = [[AIEmoticon alloc] initWithPath:inPath andText:currentString];
+            [emoticons addObject:emo];
+            
+            if (!(subEmoticons = [indexedEmoticons objectForKey:[NSString stringWithFormat:@"%C", [currentString characterAtIndex:0]]]))
+            {
+                subEmoticons = [[NSMutableArray alloc] init];
+                [indexedEmoticons setObject:subEmoticons forKey:[NSString stringWithFormat:@"%C", [currentString characterAtIndex:0]]];
+                [subEmoticons release];	// Adding it to the dictionary will have retained it once
+            }
+            
+            [subEmoticons addObject:emo];
+        }
     }
 }
 
 - (NSArray *)emoticonsStartingWithCharacter:(unichar)firstCharacter
 {
+    /*
     NSMutableArray	*limitedEmoticons = [[NSMutableArray alloc] init];
     NSEnumerator	*enumerator = [emoticons objectEnumerator];
     AIEmoticon		*emo = nil;
@@ -267,11 +296,28 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     }
 
     return [limitedEmoticons copy];
+    */
+    NSMutableArray	*limitedEmoticons = [indexedEmoticons objectForKey:[NSString stringWithFormat:@"%C", firstCharacter]];
+    
+    if (limitedEmoticons == nil) {
+        limitedEmoticons = [[[NSMutableArray alloc] init] autorelease];
+    }
+    
+    return limitedEmoticons;
 }
 
 - (void)orderEmoticonArray
 {
+    // Sort master list
     [emoticons sortUsingFunction:sortByTextRepresentationLength context:nil];
+    
+    // Sort indexed sublists
+    NSEnumerator	*enumerator = [indexedEmoticons objectEnumerator];
+    NSMutableArray	*emoticonsSubset = nil;
+    
+    while (emoticonsSubset = [enumerator nextObject]) {
+        [emoticonsSubset sortUsingFunction:sortByTextRepresentationLength context:nil];
+    }
 }
 
 int sortByTextRepresentationLength(id objectA, id objectB, void *context)
