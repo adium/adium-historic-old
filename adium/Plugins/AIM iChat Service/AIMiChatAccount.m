@@ -214,7 +214,7 @@ extern void* objc_getClass(const char *name);
 }
 
 // Return YES if we're available for sending the specified content
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIChat *)inChat
 {
     AIListObject 	*listObject = [inChat object];
     BOOL 		available = NO;
