@@ -20,7 +20,7 @@
 
 - (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attrs;
 - (NSData *)dataRepresentation;
-- (NSString *)safeString;
+- (NSAttributedString *)safeString;
 
 @end
 
@@ -29,7 +29,7 @@
 - (float)heightWithWidth:(float)width;
 - (NSData *)dataRepresentation;
 + (NSAttributedString *)stringWithData:(NSData *)inData;
-- (NSString *)safeString;
+- (NSAttributedString *)safeString;
 
 @end
 

@@ -42,7 +42,7 @@
     return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
 }
 
-- (NSString *)safeString
+- (NSAttributedString *)safeString
 {
     return [[self copy] safeString];
 }
@@ -83,7 +83,7 @@
     return([[[NSAttributedString alloc] initWithRTF:inData documentAttributes:nil] autorelease]);
 }
 
-- (NSString *)safeString
+- (NSAttributedString *)safeString
 {
     if([self containsAttachments]){
 	NSMutableAttributedString *safeString = [self mutableCopy];
@@ -112,10 +112,10 @@
 	    attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
 	}
 	
-	return [safeString string];
+	return safeString;
 
     }else{
-	return [self string];
+	return self;
 
     }
 }

@@ -90,7 +90,7 @@
 	object	= [chat object];
 	source	= [content source];
 	
-	message = (NSString *)[[content message] safeString];
+	message = (NSString *)[[[content message] safeString] string];
 	
         if(account && object && source){
 	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [source UID], message];
