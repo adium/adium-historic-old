@@ -12,7 +12,7 @@
 //#define GROWL_DEBUG TRUE
 
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
-#define KEY_EVENT_BEZEL_SHOW_AWAY           AILocalizedString(@"Show While Away",nil)
+#define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
 #define GROWL_ALERT							AILocalizedString(@"Display Growl Notification",nil)
  
 #define GROWL_INSTALLATION_WINDOW_TITLE AILocalizedString(@"Growl Installation Recommended", "Growl installation window title")
@@ -22,6 +22,8 @@
 #define GROWL_UPDATE_EXPLANATION AILocalizedString(@"Adium can display contact status changes, incoming messages, and more via Growl, a centralized notification system.  A version of Growl is currently installed, but this release of Adium includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required.","Growl update explanation")
 
 #define GROWL_TEXT_SIZE 11
+
+#define GROWL_EVENT_ALERT_IDENTIFIER			@"Growl"
 
 @interface NEHGrowlPlugin (PRIVATE)
 - (NSDictionary *)growlRegistrationDict;
@@ -64,7 +66,7 @@
 	[GrowlAppBridge setGrowlDelegate:self];
 
 	//Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"Growl" withHandler:self];
+	[[adium contactAlertsController] registerActionID:GROWL_EVENT_ALERT_IDENTIFIER withHandler:self];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];	
 	
 #ifdef GROWL_DEBUG
@@ -114,9 +116,7 @@
 	NSDictionary		*clickContext = nil;
 	NSData				*iconData = nil;
 	
-	BOOL isMessageEvent = ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
-						   [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
-						   [eventID isEqualToString:CONTENT_MESSAGE_SENT]);
+	BOOL isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
 	
 	if(listObject){
 		if([listObject isKindOfClass:[AIListContact class]]){
