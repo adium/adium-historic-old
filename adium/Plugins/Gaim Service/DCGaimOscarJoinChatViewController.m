@@ -9,19 +9,13 @@
 
 @implementation DCGaimOscarJoinChatViewController
 
-#pragma mark Subclassed from DCJoinChatViewController
+//#pragma mark Subclassed from DCJoinChatViewController
 
 - (id)init
 {
 	[super init];
 	
-	contacts = nil;
 	account = nil;
-	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(updateContactsList)
-									   name:Contact_ListChanged
-									 object:nil];
 	
 	return self;
 }
@@ -29,7 +23,6 @@
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	account = inAccount;
-	contacts = [[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:account];
 }
 
 /*
@@ -77,21 +70,15 @@
 	//Note: Gaim expects that the name of the chat be the same as the first entry in the proto_info for that prpl
 	//For OSCAR, that's the value identified by the identifier "room"; it's an equally intuitive choice for
 	//other prpls.
-	[[adium contentController] chatWithName:room
+	chat = [[adium contentController] chatWithName:room
 								  onAccount:inAccount
 						   chatCreationInfo:chatCreationInfo];
 	
-	// Invite users to the chat
-	NSArray *usersArray = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
-	
-	NSLog(@"#### users to invite: %@",usersArray);
-	
-	[NSTimer scheduledTimerWithTimeInterval:0.01
-									 target:self
-								   selector:@selector(inviteUsers:)
-								   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:usersArray,@"contacts",[NSNumber numberWithInt:0],@"i",nil]
-									repeats:YES];
-	 
+	NSArray *contacts = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
+	NSLog(@"#### 1 contacts = %@",contacts);
+	[chat setStatusObject:contacts forKey:@"ContactsToInvite" notify:NotifyNever];
+	[[adium notificationCenter] addObserver:self selector:@selector(chatDidOpen:) name:Chat_DidOpen object:chat];
+
 }
 
 - (NSString *)nibName
@@ -99,22 +86,52 @@
 	return @"DCGaimOscarJoinChatView";
 }
 
+- (void)chatDidOpen:(NSNotification *)notification
+{
+	NSLog(@"#### chatDidOpen");
+
+	chat = [notification object];
+	NSArray *contacts = [chat statusObjectForKey:@"ContactsToInvite"];
+	[contacts retain];
+	[chat setStatusObject:nil forKey:@"ContactsToInvite" notify:NotifyNever];
+	NSLog(@"#### 2 contacts = %@",contacts);
+	[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:chat];
+	
+	if( contacts ) {
+		[NSTimer scheduledTimerWithTimeInterval:0.01
+										 target:self
+									   selector:@selector(inviteUsers:)
+									   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",contacts,@"contacts",nil]
+										repeats:YES];
+	}
+}
+
 - (void)inviteUsers:(NSTimer *)inTimer
 {
 	NSMutableDictionary *userInfo = [inTimer userInfo];
+	NSLog(@"#### userInfo: %@",userInfo);
+	
 	NSArray				*contactArray = [userInfo objectForKey:@"contacts"];
 	int					i = [(NSNumber *)[userInfo objectForKey:@"i"] intValue];
 	int					count = [contactArray count];
 	
+	NSLog(@"#### 3 contacts = %@",contactArray);
 	AIListContact *newContact = [[adium contactController] contactWithService:[[account service] identifier] 
 																	accountID:[account uniqueObjectID] 
 																		  UID:[[contactArray objectAtIndex:i] compactedString]];
-	NSLog(@"#### inviteUsers: (%d/%d) inviting %@",i,count,[contactArray objectAtIndex:i]);
-	//[chat inviteListContact:newContact withMessage:[textField_inviteMessage stringValue]];
-		
+	NSLog(@"#### inviteUsers: (%d/%d) inviting %@",i,0,[contactArray objectAtIndex:i]);
+	[chat inviteListContact:newContact withMessage:[textField_inviteMessage stringValue]];
+	
 	i++;
-    [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-    if(i >= count) [inTimer invalidate];
+	[userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
+	if(i >= count) {
+		[inTimer invalidate];
+		[contactArray release];
+	}
+	 
+	
+	//[inTimer invalidate];
+	
 }
 
 

@@ -8,7 +8,7 @@
 
 @interface DCGaimOscarJoinChatViewController : DCJoinChatViewController {
 	AIAccount						*account;					// Account we are configured for
-	NSArray							*contacts;					// List of contacts for invite table view
+	//NSArray							*contacts;					// List of contacts
 	
 	IBOutlet		NSTextField		*textField_roomName;
 	IBOutlet		NSTextField		*textField_inviteMessage;
