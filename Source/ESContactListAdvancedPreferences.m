@@ -78,8 +78,10 @@
 	[checkBox_showTransitions setLocalizedString:AILocalizedString(@"Show transitions as contacts sign on and off","Transitions in this context means the names fading in as the contact signs on and out as the contact signs off")];
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
 	[checkBox_showTooltipsInBackground setLocalizedString:AILocalizedString(@"While Adium is in the background", "This is a secondary preference underneath 'Show contact information tooltips'")];
+	[checkBox_windowHasShadow setLocalizedString:AILocalizedString(@"Show window shadow",nil)];
+	[checkBox_windowHasShadow setTooltip:@"Stay close to the Vorlon."];
 
-	[label_effects setLocalizedString:AILocalizedString(@"Effects",nil)];
+	[label_appearance setLocalizedString:AILocalizedString(@"Appearance",nil)];
 	[label_tooltips setLocalizedString:AILocalizedString(@"Tooltips",nil)];
 	[label_windowHandling setLocalizedString:AILocalizedString(@"Window Handling",nil)];
 	[label_orderTheContactList setLocalizedString:AILocalizedString(@"Order the contact list:",nil)];

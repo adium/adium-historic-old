@@ -18,7 +18,7 @@
 	IBOutlet	NSButton		*checkBox_showTooltipsInBackground;
 	IBOutlet	NSButton		*checkBox_windowHasShadow;
 
-	IBOutlet	NSTextField		*label_effects;
+	IBOutlet	NSTextField		*label_appearance;
 	IBOutlet	NSTextField		*label_tooltips;
 	IBOutlet	NSTextField		*label_windowHandling;
 	IBOutlet	NSTextField		*label_orderTheContactList;	
