@@ -63,13 +63,21 @@
 //Update our pane to reflect our contact
 - (void)updatePane
 {	
+	NSAttributedString	*infoString;
+	
 	//Text Profile
-	[self setAttributedString:[listObject statusObjectForKey:@"TextProfile"]
-				 intoTextView:textView_profile];
+	infoString = [[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"TextProfile"]
+												   usingFilterType:AIFilterDisplay
+														 direction:AIFilterIncoming
+														   context:listObject];
+	[self setAttributedString:infoString intoTextView:textView_profile];
 
 	//Away & Status
-	[self setAttributedString:[listObject statusObjectForKey:@"StatusMessage"]
-				 intoTextView:textView_status];
+	infoString = [[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"StatusMessage"]
+												   usingFilterType:AIFilterDisplay
+														 direction:AIFilterIncoming
+														   context:listObject];
+	[self setAttributedString:infoString intoTextView:textView_status];
 }
 
 //
