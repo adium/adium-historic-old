@@ -363,14 +363,16 @@
         gaim_conv_im_send(im, [body UTF8String]);
         sent = YES;
 	}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
-//		AIListContact	*contact = (AIListContact *)[[object chat] listObject];
-//		
-//		//Send the typing client event
-//		if(contact){
-//			[self AIM_SendClientEvent:([(AIContentTyping *)object typing] ? 2 : 0)
-//							 toHandle:[contact UID]];
-//			sent = YES;
-//		}
+        AIContentTyping *ct = (AIContentTyping*)object;
+        AIChat *chat = [ct chat];
+        GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+		
+        if(conv){
+			serv_send_typing(gaim_conversation_get_gc(conv),
+							 gaim_conversation_get_name(conv),
+							 ([ct typing] ? GAIM_TYPING : GAIM_NOT_TYPING));
+			sent = YES;
+		}
 	}
 	
     return sent;
