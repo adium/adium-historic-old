@@ -14,13 +14,22 @@
 	AIActionDetailsPane				*detailsPane;
 	NSView							*detailsView;
 	NSMutableDictionary				*alert;
+
 	id								target;
-	id								userInfo;
-	
+	NSDictionary					*oldAlert;
+
 	AIListObject					*listObject;
+	
+	BOOL							configureForGlobal;
 }
 
-+ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
++ (void)editAlert:(NSDictionary *)inAlert
+	forListObject:(AIListObject *)inObject
+		 onWindow:(NSWindow *)parentWindow
+  notifyingTarget:(id)inTarget 
+		 oldAlert:(NSDictionary *)inOldAlert
+	configureForGlobal:(BOOL)inConfigureForGlobal;
+
 - (IBAction)cancel:(id)sender;
 - (IBAction)save:(id)sender;
 
