@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPasswordPromptController.m,v 1.10 2004/03/24 14:43:30 evands Exp $
+// $Id: AIPasswordPromptController.m,v 1.11 2004/05/06 23:06:34 evands Exp $
 
 #import "AIPasswordPromptController.h"
 
@@ -124,10 +124,9 @@
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_PASSWORD_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
-
-    //
+	
     [self autorelease];
-
+	
     return(YES);
 }
 

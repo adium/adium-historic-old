@@ -13,19 +13,14 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;;
 @end
 
-static AIPasswordPromptController	*controller = nil;
-
 @implementation ESAccountPasswordPromptController
 
 + (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
-    if(!controller){
-        controller = [[self alloc] initWithWindowNibName:ACCOUNT_PASSWORD_PROMPT_NIB forAccount:inAccount notifyingTarget:inTarget selector:inSelector];
-    }else{
-        //Beep and return failure if a prompt is already open
-        NSBeep();        
-        [inTarget performSelector:inSelector withObject:nil];
-    }
+	ESAccountPasswordPromptController *controller = [[[self alloc] initWithWindowNibName:ACCOUNT_PASSWORD_PROMPT_NIB 
+																			  forAccount:inAccount 
+																		 notifyingTarget:inTarget
+																				selector:inSelector] autorelease];
 	
     //bring the window front
     [controller showWindow:nil];
@@ -36,6 +31,7 @@ static AIPasswordPromptController	*controller = nil;
     [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector];
     
     account = [inAccount retain];
+	[self retain];
 	
     return(self);
 }
@@ -58,13 +54,6 @@ static AIPasswordPromptController	*controller = nil;
 	[super windowDidLoad];
 }
 
-- (BOOL)windowShouldClose:(id)sender
-{
-    controller = nil;
-	
-	return [super windowShouldClose:sender];
-}
-
 - (NSString *)savedPasswordKey
 {
 	return @"SavedPassword";
@@ -76,7 +65,7 @@ static AIPasswordPromptController	*controller = nil;
 	if (password){
 		[[adium accountController] setPassword:password forAccount:account];	
 	}else{
-	   [[adium accountController] forgetPasswordForAccount:account];	
+		[[adium accountController] forgetPasswordForAccount:account];	
 	}
 }
 
