@@ -175,11 +175,11 @@
         NSRect		segmentRect = rect;
 
         if(colored && !selected){            
-            segmentRect.origin.x = 0;
-            segmentRect.size.width = [self frame].size.width;
+            //segmentRect.origin.x = 0;
+            //segmentRect.size.width = [self frame].size.width;
             
             [alternatingRowColor set];
-            [NSBezierPath fillRect:segmentRect];
+            [NSBezierPath fillRect:rect/*segmentRect*/];
         }
     }
 }

@@ -29,5 +29,6 @@
 - (void)_init;
 - (void)setDrawsAlternatingRows:(BOOL)flag;
 - (void)setAlternatingRowColor:(NSColor *)color;
+- (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
 
 @end

@@ -50,6 +50,7 @@
 - (void)setContentCell:(id)cell{
 	[contentCell release]; contentCell = [cell retain];
 	contentRowHeight = [contentCell cellSize].height;
+	[self setRowHeight:contentRowHeight];
 	[self resetRowHeightCache];
 }
 
@@ -129,9 +130,14 @@
 {
 	id		item = [self itemAtRow:row];
 	id		cell = ([self isExpandable:item] ? groupCell : contentCell);
-
-	[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
-	[cell drawWithFrame:[self frameOfCellAtColumn:0 row:row] inView:self];
+	
+	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
+		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+		[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
+					 colored:(!(row % 2) && ![self isRowSelected:row])
+					selected:(row == [self selectedRow])];
+		[cell drawWithFrame:[self frameOfCellAtColumn:0 row:row] inView:self];
+	}
 }
 
 
@@ -184,7 +190,7 @@
 {
 	if(!rowHeightCache && !rowOriginCache){
 		int	numberOfRows = [self numberOfRows];
-		
+
 		//Expand
 		while(numberOfRows > cacheSize){
 			cacheSize *= 2;

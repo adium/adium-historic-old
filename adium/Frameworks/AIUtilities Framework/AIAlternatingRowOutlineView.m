@@ -27,7 +27,6 @@
 #import "AIAlternatingRowOutlineView.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
-- (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
 - (void)_init;
 - (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView;
 - (void)_drawGridInClipRect:(NSRect)rect;
@@ -65,6 +64,8 @@
 
 - (void)_init
 {
+	[super _init];
+	
     drawsAlternatingRows = NO;
 	hidesSelectionWhenNotMain = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
@@ -88,78 +89,82 @@
 }
 
 
-
 // Drawing ----------------------------------------------------------------------
 //Draw the alternating colors and grid below the "bottom" of the outlineview
 - (void)drawRect:(NSRect)rect
 {
-    NSRect	rowRect;
-    int		rowHeight;
-    BOOL	coloredRow;
-    int		numberOfColumns, numberOfRows;
-
-    //Draw the rest of the outline view first
- [super drawRect:rect];
-
-    //Setup
-    numberOfRows = [self numberOfRows];
-    numberOfColumns = [self numberOfColumns];
-    rowHeight = [self rowHeight] + [self intercellSpacing].height;
-    if(numberOfRows == 0){
-        rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
-        coloredRow = YES;        
-    }else{
-        rowRect = [self rectOfRow:numberOfRows-1];
-        rowRect.origin.y += rowHeight;
-        coloredRow = !(numberOfRows % 2);        
-    }
-
-    //Draw the grid
-    while(rowRect.origin.y < rect.origin.y + rect.size.height){
-        [self _drawRowInRect:rowRect colored:coloredRow selected:NO];
-
-        //Move to the next row
-        coloredRow = !coloredRow;
-        rowRect.origin.y += rowHeight;            
-    }
-
-    if([self drawsGrid]){
-        [self _drawGridInClipRect:rect];
-    }
+	//Draw the rest of the outline view first
+	[super drawRect:rect];
+	
+    if(drawsAlternatingRows){
+		NSRect	rowRect;
+		int		rowHeight;
+		BOOL	coloredRow;
+		int		numberOfColumns, numberOfRows;
+		//Setup
+		numberOfRows = [self numberOfRows];
+		numberOfColumns = [self numberOfColumns];
+		rowHeight = [self rowHeight] + [self intercellSpacing].height;
+		if(numberOfRows == 0){
+			rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
+			coloredRow = YES;        
+		}else{
+			rowRect = [self rectOfRow:numberOfRows-1];
+			rowRect.origin.y += rowHeight;
+			coloredRow = !(numberOfRows % 2);        
+		}
+		
+		//Draw the grid
+		while(rowRect.origin.y < rect.origin.y + rect.size.height){
+			[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
+			
+			//Move to the next row
+			coloredRow = !coloredRow;
+			rowRect.origin.y += rowHeight;            
+		}
+		
+		if([self drawsGrid]){
+			[self _drawGridInClipRect:rect];
+		}
+	}
 }
 
 //Draw alternating colors
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-    [self _drawRowInRect:[self rectOfRow:row] colored:(!(row % 2) && ![self isRowSelected:row]) selected:(row == [self selectedRow])];
-
+    if(drawsAlternatingRows){
+		[self _drawRowInRect:[self rectOfRow:row] colored:(!(row % 2) && ![self isRowSelected:row]) selected:(row == [self selectedRow])];
+	}
+	
     [super drawRow:row clipRect:rect];
 }
 
 //Draw a row
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
-    if(drawsAlternatingRows){ //Draw alternating rows in the outline view
-        NSRect	segmentRect = rect;
-
-        if(colored && !selected){
-            segmentRect.origin.x = 0;
-            segmentRect.size.width = [self frame].size.width;
-
-            //Whipe any existing color
-            [[NSColor clearColor] set];
-            NSRectFill(segmentRect); //fillRect: doesn't work here... must behave differently w/ alpha
-
-            //Draw our grid color
-            [alternatingRowColor set];
-            [NSBezierPath fillRect:segmentRect];
-        }
-    }
+	NSRect	segmentRect = rect;
+	
+	if(colored && !selected){
+		segmentRect.origin.x = 0;
+		segmentRect.size.width = [self frame].size.width;
+		
+		//Whipe any existing color
+		[[NSColor clearColor] set];
+		NSRectFill(segmentRect); //fillRect: doesn't work here... must behave differently w/ alpha
+		
+		//Draw our grid color
+		[alternatingRowColor set];
+		[NSBezierPath fillRect:segmentRect];
+	}
 }
 
 - (void)drawGridInClipRect:(NSRect)rect
 {
-    //We do our grid drawing later
+    if(drawsAlternatingRows){
+		//We do our grid drawing later
+	}else{
+		[super drawGridInClipRect:rect];
+	}
 }
 
 - (void)_drawGridInClipRect:(NSRect)rect
