@@ -33,6 +33,8 @@ static NEHTicTacToePlugin * plugin;
 
 - (NEHGameController*)newController
 {
+	[super newController];
+	
 	return [[[NEHTicTacToeController alloc] initWithPlugin:self] autorelease];
 }
 
