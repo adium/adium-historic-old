@@ -17,6 +17,8 @@
 	IBOutlet	NSSecureTextField   *textField_proxyPassword;
 	
 	IBOutlet	NSTextField			*textField_alias;
+	
+	IBOutlet	NSButton			*checkBox_checkMail;
 }
 
 - (IBAction)changedConnectionPreference:(id)sender;

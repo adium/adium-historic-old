@@ -75,7 +75,7 @@
 - (void)configureAccountProxy;
 - (void)disconnect;
 - (NSString *)connectionStringForStep:(int)step;
-- (void)configureGaimAccountForConnect;
+- (void)configureGaimAccount;
 - (NSString *)host;
 - (NSString *)hostKey;
 - (int)port;

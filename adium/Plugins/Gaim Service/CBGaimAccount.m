@@ -49,7 +49,7 @@
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 
 - (void)displayError:(NSString *)errorDesc;
-
+- (BOOL)shouldCheckMail;
 @end
 
 @implementation CBGaimAccount
@@ -1226,15 +1226,14 @@ static id<GaimThread> gaimThread = nil;
 	   
 	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
 
-	[self configureGaimAccountForConnect];
+	[self configureGaimAccount];
 }
 
-
-- (void)configureGaimAccountForConnect
+- (void)configureGaimAccount
 {
 	NSString	*hostName;
 	int			portNumber;
-
+	
 	//Host (server)
 	hostName = [self host];
 	if (hostName && [hostName length]){
@@ -1245,7 +1244,15 @@ static id<GaimThread> gaimThread = nil;
 	portNumber = [self port];
 	if (portNumber){
 		gaim_account_set_int(account, "port", portNumber);
-	}	
+	}
+	
+	//E-mail checking
+	gaim_account_set_check_mail(account, [self shouldCheckMail]);
+}
+
+- (BOOL)shouldCheckMail
+{
+	return ([[self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]); 
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------
@@ -1495,6 +1502,11 @@ static id<GaimThread> gaimThread = nil;
 					serv_alias_buddy(buddy);
 				}
 			}
+		}
+	}else if (([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
+		//Update the mail checking setting
+		if (account){
+			gaim_account_set_check_mail(account, [self shouldCheckMail]);
 		}
 	}
 }

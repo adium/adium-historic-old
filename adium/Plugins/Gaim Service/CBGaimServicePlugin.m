@@ -105,17 +105,17 @@ static CBGaimServicePlugin  *servicePluginInstance;
 // AccountDict ---------------------------------------------------------------------------------------------------------
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct 
 {
-    [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
+ //   [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
 }
 
 - (void)removeAccount:(GaimAccount *)gaimAcct
 {
-    [_accountDict removeObjectForKey:[NSValue valueWithPointer:gaimAcct]];
+   // [_accountDict removeObjectForKey:[NSValue valueWithPointer:gaimAcct]];
 }
 
 - (void)removeAccountWithPointerValue:(NSValue *)inPointer
 {
-    [_accountDict removeObjectForKey:inPointer];	
+//    [_accountDict removeObjectForKey:inPointer];	
 }
 
 #pragma mark Systemwide Proxy Settings

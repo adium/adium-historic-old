@@ -10,6 +10,7 @@
 #define KEY_ACCOUNT_GAIM_PROXY_PORT			@"Proxy Port"
 #define KEY_ACCOUNT_GAIM_PROXY_USERNAME		@"Proxy Username"
 #define KEY_ACCOUNT_GAIM_PROXY_PASSWORD		@"Proxy Password"
+#define KEY_ACCOUNT_GAIM_CHECK_MAIL			@"Check Mail"
 
 //Events we care about explicitly via signals
 typedef enum

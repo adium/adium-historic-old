@@ -68,6 +68,10 @@
 	NSString *alias = [[[inAccount preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
 	[textField_alias setStringValue:(alias ? alias : @"")];
 	
+	//Check mail
+	NSLog(@"%@ %i",[inAccount UID],[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
+	[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
+		
 	[self configureConnectionControlDimming];
 }
 
@@ -144,7 +148,7 @@
 - (IBAction)changedPreference:(id)sender
 {
 	[super changedPreference:sender];
-	
+	NSLog(@"set %@",sender);
 	if (sender == textField_hostName){
 		//If we were given a blank hostName, revert to displaying the default
 		NSString	*hostName = [textField_hostName stringValue];
@@ -161,10 +165,17 @@
 		if (!length){
 			[textField_portNumber setIntValue:[(CBGaimAccount *)account port]];
 		}
+		
 	}else if(sender == textField_alias){
 		[account setPreference:[[NSAttributedString stringWithString:[sender stringValue]] dataRepresentation]
 						forKey:@"FullNameAttr"
-						 group:GROUP_ACCOUNT_STATUS];    
+						 group:GROUP_ACCOUNT_STATUS];
+		
+	}else if(sender == checkBox_checkMail){
+		[account setPreference:[NSNumber numberWithBool:[sender state]]
+						forKey:KEY_ACCOUNT_GAIM_CHECK_MAIL
+						 group:GROUP_ACCOUNT_STATUS];
+		NSLog(@"%@ %i",[account UID],[[account preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
 	}
 }
 	
