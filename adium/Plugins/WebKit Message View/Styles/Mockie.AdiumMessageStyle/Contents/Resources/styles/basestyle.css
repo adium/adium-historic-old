@@ -15,14 +15,14 @@ body {
 	font-weight: bold;
 	font-size: 11px;
 }
-                  
-.time_initial {
-	color: white;
+
+.protocol {
+	color: rgba(255,255,255,0.5);
 	font-weight: bold;
 	font-size: 11px;
 }
-
-.time_consecutive {
+            
+.time {
 	font-weight: normal;
 }
 
@@ -43,7 +43,7 @@ a, a:link {
 	color: rgba(0,0,0,0.6);
 }
 
-.context .time_consecutive {
+.context .time_consecutive, .context .time_initial {
 	color: rgba(0,0,0,0.6);
 }
 
@@ -63,7 +63,7 @@ a, a:link {
 	background: rgba(0,0,0,0.2);
 }
 
-.context .time_initial
+.context .protocol
 {
 	background: no-repeat url(../images/context/topright.png) right;
 }

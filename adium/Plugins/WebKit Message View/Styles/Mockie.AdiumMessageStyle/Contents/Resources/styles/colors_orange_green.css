@@ -18,12 +18,12 @@ body {
 	background: #FF7C00;
 }
 
-.incoming .time_initial
+.incoming .protocol
 {
 	background: no-repeat url(../images/orange/topright.png) right;
 }
 
-.incoming .time_consecutive {
+.incoming .time_consecutive, .incoming .time_initial {
 	color: #FF7C00;
 }
 
@@ -52,12 +52,12 @@ body {
 	background: #66CC32;
 }
 
-.outgoing .time_initial
+.outgoing .protocol
 {
 	background: no-repeat url(../images/green/topright.png) right;
 }
 
-.outgoing .time_consecutive {
+.outgoing .time_consecutive, .outgoing .time_initial {
 	color: #66CC32;
 }
 
