@@ -534,7 +534,7 @@
 //Contact status image
 - (NSImage *)statusImage
 {
-	return([listObject displayArrayObjectForKey:@"Tab Status Icon"]);
+	return([listObject displayArrayObjectForKey:@"List Status Icon"]);
 }
 
 //Contact service image
