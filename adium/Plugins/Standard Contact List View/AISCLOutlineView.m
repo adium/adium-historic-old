@@ -43,6 +43,7 @@
 
     [super initWithFrame:frameRect];
 
+	lastSelectedRow = -1;
     showLabels = YES;
     font = nil;
     groupFont = nil;
