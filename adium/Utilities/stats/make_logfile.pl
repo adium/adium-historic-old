@@ -1,6 +1,6 @@
 #!/usr/bin/perl -I/home/jmelloy/lib/perl5/site_perl/5.6.1/
 
-# $Id: make_logfile.pl,v 1.5 2003/12/09 17:50:54 jmelloy Exp $
+# $Id: make_logfile.pl,v 1.6 2003/12/13 00:52:56 jmelloy Exp $
 
 use warnings;
 use strict;
@@ -17,8 +17,9 @@ foreach my $file (@filelist) {
 
     my $contains_cvs  = /CVS/;
     my $contains_log = /\.log$/;
-
-    if(!$contains_cvs && !$contains_log) {
+    my $contains_plist = /Plist/;
+    
+    if(!$contains_cvs && !$contains_log && !$contains_plist) {
 
         my $logfile = $file . ".log";
         $logfile =~ s/^ *//;
