@@ -17429,6 +17429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52C623E006697B1D0006C387,
+				6CFB75BD06F5957D00091DC9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17513,6 +17514,7 @@
 		};
 		52C623DE06697AFA0006C387 = {
 			children = (
+				6CFB75BC06F5957D00091DC9,
 				9EE161AE06819C6F00AB822A,
 				9EE161AF06819C6F00AB822A,
 				52C623E106697B3B0006C387,
@@ -18019,6 +18021,20 @@
 			path = "Plugins/Event Sounds/EventSoundContactAlert.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		6CFB75BC06F5957D00091DC9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = GrowlAlert.png;
+			path = Plugins/Growl/GrowlAlert.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CFB75BD06F5957D00091DC9 = {
+			fileRef = 6CFB75BC06F5957D00091DC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //6C0
 //6C1
