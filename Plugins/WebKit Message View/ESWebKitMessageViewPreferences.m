@@ -642,17 +642,18 @@
 
 		}else if([msgType isEqualToString:CONTENT_STATUS_TYPE]){
 			//Create status content object
-			NSString		*message = [messageDict objectForKey:@"Message"];
-			NSString		*statusMessageType = [messageDict objectForKey:@"Status Message Type"];
-			NSString		*from = [messageDict objectForKey:@"From"];
-			AIListObject	*source = (from ? [participants objectForKey:from] : nil);
-			
+			NSString			*message = [messageDict objectForKey:@"Message"];
+			NSString			*statusMessageType = [messageDict objectForKey:@"Status Message Type"];
+			NSString			*from = [messageDict objectForKey:@"From"];
+			AIListObject		*source = (from ? [participants objectForKey:from] : nil);
+			NSAttributedString	*attributedMessage = [[[NSAttributedString alloc] initWithString:message
+																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
 			//Create our content object
 			content = [AIContentStatus statusInChat:nil
 										 withSource:source
 										destination:nil
 											   date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-											message:[NSAttributedString stringWithString:message]
+											message:attributedMessage
 										   withType:statusMessageType];
 			
 		}
