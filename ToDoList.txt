@@ -2,6 +2,35 @@
 // Adium 0.8
 //-------------------------------------------------------------------------------------------------------
 
+(incomplete list, feel free to add and assign issues)
+
+[Preferences]
+- Restore defaults broken?
+- Message formatting [Adam]
+- MSN preferences to Accounts Options
+- Typing preferences to Accounts Privacy
+
+[Accounts]
+- Window should save its size/position
+- Jabber account registration
+
+[Growl]
+- Growl sticky support [Colin]
+- Import Growl.framework from Growl .60 final [Evan]
+
+[Contacts]
+- Investigate Add Contact safety
+- Automatically respond YES to the MSN Synchronization dialog.  It's a stupid dialog and you would never want to say NO to it. [Evan]
+- Finish Blocking [Colin]
+
+//Flashing reduction [Evan (now that I have Growl, I'm sick of flashing, it's very OS 9)]
+  Make it possible to use Adium without any distracting flashing and blinking
+  - Add option to remove flashing unviewed content on the contact list
+  - Add option to prevent dock icon animations
+
+[Other]
+- Something is seriously slowing down our connection process. Shark it and fix. [Evan]
+
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
 //-------------------------------------------------------------------------------------------------------
@@ -46,11 +75,6 @@
   - Improve status sorting defaults [Evan: What's wrong with the current ones?]
   - Simplify custom sort window by removing duplicate/redundant options [Evan: What options are duplicate/redundant?]
  
-//Flashing reduction
-  Make it possible to use Adium without any distracting flashing and blinking
-  - Add option to remove flashing unviewed content on the contact list
-  - Add option to prevent dock icon animations
-
 //Formatted messages
   Some users like formatted and colored messages, other want messages to look
   the way they've decided in the preferences.  Let's make message formatting
@@ -153,9 +177,6 @@
         
 //Sound Preferences
 	- Provide a way to manage (delete at minimum) soundsets
-
-//Announcer Improvements
-	- Allow user to have more control over what is spoken by the announcer plugin
 
 //Service-Specific
 	- Add 'priority' support for jabber connections
