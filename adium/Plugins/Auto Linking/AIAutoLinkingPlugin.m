@@ -7,8 +7,6 @@
 //
 
 #import "AIAutoLinkingPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
 
 //Recognized URL types
 static int 	linkSubStringCount = 8;

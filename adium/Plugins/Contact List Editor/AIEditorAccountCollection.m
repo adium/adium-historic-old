@@ -17,8 +17,6 @@
 #import "AIEditorAccountCollection.h"
 #import "AIEditorListHandle.h"
 #import "AIEditorListGroup.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 @interface AIEditorAccountCollection (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;

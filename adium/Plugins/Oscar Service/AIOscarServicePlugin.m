@@ -21,9 +21,6 @@
     More information on Gaim is available at http://gaim.sourceforge.net
  -------------------------------------------------------------------------------------------------------*/
 
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "AIOscarServicePlugin.h"
 #import "AIOscarAccount.h"
 

@@ -7,9 +7,6 @@
 //
 
 #import "ESAnnouncerPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults.plist"

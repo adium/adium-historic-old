@@ -16,7 +16,6 @@
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
 
-#import <Adium/Adium.h>
 
 #import "AIAliasSupportPreferences.h"
 

@@ -8,9 +8,6 @@
 #import "ESContactAlertsWindowController.h"
 #import "ESContactAlerts.h"
 #import "ESContactAlertsPlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 #define CONTACT_ALERT_WINDOW_NIB	@"ContactAlerts"
 #define TABLE_COLUMN_ACTION		@"action"

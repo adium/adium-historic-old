@@ -15,7 +15,6 @@
 
 #import "AIListContact.h"
 #import "AIHandle.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define CONTENT_OBJECT_SCROLLBACK	5  //Number of content object that say in the scrollback
 

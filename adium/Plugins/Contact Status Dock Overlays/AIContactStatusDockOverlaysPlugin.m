@@ -16,9 +16,6 @@
 #import "AIContactStatusDockOverlaysPlugin.h"
 #import "AIStatusOverlayPreferences.h"
 #import "AIStatusOverlayAdvancedPreferences.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define DOCK_OVERLAY_DEFAULT_PREFS	@"DockOverlayDefaults"
 #define SMALLESTRADIUS			15

@@ -14,7 +14,6 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #import "AIEmoticon.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIEmoticon (PRIVATE)
 - (void)updateAttributedEmoticon;

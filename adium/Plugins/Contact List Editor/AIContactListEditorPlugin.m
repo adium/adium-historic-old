@@ -15,9 +15,6 @@
 
 #import "AIContactListEditorPlugin.h"
 #import "AIContactListEditorWindowController.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "AIEditorAccountCollection.h"
 #import "AIEditorImportCollection.h"
 #import "AIEditorAllContactsCollection.h"

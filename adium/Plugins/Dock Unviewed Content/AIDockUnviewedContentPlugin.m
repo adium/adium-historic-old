@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIDockUnviewedContentPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 
 @implementation AIDockUnviewedContentPlugin

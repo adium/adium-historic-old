@@ -6,8 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "LNStatusIconsPlugin.h"
 #import "LNStatusIconsPreferences.h"
 

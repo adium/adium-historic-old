@@ -8,9 +8,6 @@
 
 #import "ESAnnouncerPreferences.h"
 #import "ESAnnouncerPlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 @implementation ESAnnouncerPreferences
 

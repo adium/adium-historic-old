@@ -6,7 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <AIUtilities/AIUtilities.h>
 #import "AIPlasticButton.h"
 
 #define LABEL_OFFSET_X	1

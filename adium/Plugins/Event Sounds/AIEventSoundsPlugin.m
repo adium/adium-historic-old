@@ -15,9 +15,6 @@
 
 #import "AIEventSoundsPlugin.h"
 #import "AIEventSoundPreferences.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
 

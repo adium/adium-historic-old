@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountSelectionView.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 #define ACCOUNT_SELECTION_NIB		@"AccountSelectionView"
 

@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMiniToolbar.h"
-#import <AIUtilities/AIUtilities.h>
 #import "AIMiniToolbarItem.h"
 
 #define MINI_TOOLBAR_POOF		@"poof"			//Filename of the poof animation

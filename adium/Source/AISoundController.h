@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import "AIAdium.h"
-
 //typedef enum {
 //    SOUND_TEST = -1, SOUND_SIGNED_OFF, SOUND_SIGNED_ON, SOUND_IM_RECEIVE, SOUND_IM_RECEIVE_FIRST, SOUND_IM_SEND, SOUND_IM_STRANGER
 //    SOUND_SIGNED_ON, SOUND_SIGNED_OFF, SOUND_IM_SEND, SOUND_IM_RECEIVE, SOUND_IM_RECEIVE_FIRST, SOUND_IM_STRANGER, SOUND_CHAT_SEND, SOUND_CHAT_RECEIVE

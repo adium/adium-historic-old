@@ -8,9 +8,6 @@
 
 #import "AISpellCheckingPlugin.h"
 #import "AISpellCheckingPreferences.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 
 #define SPELL_CHECKING_DEFAULT_PREFS	@"SpellingDefaults"
 

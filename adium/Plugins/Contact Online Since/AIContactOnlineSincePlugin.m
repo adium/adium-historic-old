@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactOnlineSincePlugin.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation AIContactOnlineSincePlugin
 

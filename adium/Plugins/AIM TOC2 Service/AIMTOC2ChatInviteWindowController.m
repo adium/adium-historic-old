@@ -7,9 +7,6 @@
 //
 
 #import "AIMTOC2ChatInviteWindowController.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "AIMTOC2Account.h"
 
 #define	INVITE_WINDOW_NIB	@"ChatInviteWindow"	//Filename of the invite window nib

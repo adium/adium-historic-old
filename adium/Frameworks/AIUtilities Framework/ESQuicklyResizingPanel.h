@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on Sat Oct 25 2003.
 //
 
-#import <Cocoa/Cocoa.h>
-
 @interface ESQuicklyResizingPanel : NSPanel {
     NSTimeInterval resizeInterval;
 }

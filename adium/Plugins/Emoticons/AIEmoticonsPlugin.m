@@ -17,8 +17,6 @@
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define EMOTICON_DEFAULT_PREFS			@"EmoticonDefaults"
 #define PATH_EMOTICONS				@"/Emoticons"

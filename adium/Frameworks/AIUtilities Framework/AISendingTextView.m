@@ -15,8 +15,6 @@
 
 #import "AISendingTextView.h"
 #import "AIDictionaryAdditions.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define MAX_HISTORY			25
 #define ENTRY_TEXTVIEW_PADDING		6

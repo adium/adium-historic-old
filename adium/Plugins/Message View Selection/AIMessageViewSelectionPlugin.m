@@ -8,9 +8,6 @@
 
 #import "AIMessageViewSelectionPlugin.h"
 #import "AIMessageViewSelectionPreferences.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define MESSAGE_VIEW_DEFAULT_PREFS	@"MessageViewSelectionDefaults"
 

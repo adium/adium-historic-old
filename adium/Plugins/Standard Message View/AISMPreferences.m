@@ -15,8 +15,6 @@
 
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define AISM_PREFIX_COLORS		@"PrefixColors"
 

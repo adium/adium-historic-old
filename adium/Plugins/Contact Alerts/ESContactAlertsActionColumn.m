@@ -8,7 +8,6 @@
 
 #import "ESContactAlertsActionColumn.h"
 #import "ESContactAlerts.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation ESContactAlertsActionColumn
 

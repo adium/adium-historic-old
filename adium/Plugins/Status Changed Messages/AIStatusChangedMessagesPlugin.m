@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIStatusChangedMessagesPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
 - (void)statusMessage:(NSString *)message forObject:(AIListObject *)object;

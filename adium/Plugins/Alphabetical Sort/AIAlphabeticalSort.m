@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAlphabeticalSort.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 int alphabeticalSort(id objectA, id objectB, void *context);
 

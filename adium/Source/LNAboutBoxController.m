@@ -1,5 +1,4 @@
 #import "LNAboutBoxController.h"
-#import <AIUtilities/AIUtilities.h>
 
 
 #define ABOUT_BOX_NIB		@"AboutBox"

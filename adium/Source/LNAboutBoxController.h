@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 #import "AILinkTextView.h"
 
 @interface LNAboutBoxController : NSWindowController {

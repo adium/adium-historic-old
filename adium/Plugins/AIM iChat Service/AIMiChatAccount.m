@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMiChatAccount.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "InstantMessageFramework.h"
 
 #define SIGN_ON_EVENT_DURATION	30.0		//Amount of time to wait for initial sign on updates

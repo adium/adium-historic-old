@@ -14,8 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIListGroup.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation AIListGroup
 

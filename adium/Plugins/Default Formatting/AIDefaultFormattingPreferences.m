@@ -15,9 +15,6 @@
 
 #import "AIDefaultFormattingPreferences.h"
 #import "AIDefaultFormattingPlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 @interface AIDefaultFormattingPreferences (PRIVATE)
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;

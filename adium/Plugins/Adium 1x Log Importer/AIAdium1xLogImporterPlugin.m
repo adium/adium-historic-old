@@ -7,8 +7,6 @@
 //
 
 #import "AIAdium1xLogImporterPlugin.h"
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "AILogImporter.h"
 
 

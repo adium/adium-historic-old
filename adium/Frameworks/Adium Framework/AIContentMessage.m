@@ -16,7 +16,6 @@
 #import "AIContentMessage.h"
 #import "AIContentObject.h"
 #import "AIAccount.h"
-#import "AIAdium.h"
 
 @interface AIContentMessage (PRIVATE)
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply;

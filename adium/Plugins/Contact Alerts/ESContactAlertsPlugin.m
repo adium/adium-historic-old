@@ -8,9 +8,6 @@
 #import "ESContactAlertsPlugin.h"
 #import "ESContactAlertsWindowController.h"
 #import "ESContactAlertsPreferences.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 
 @interface ESContactAlertsPlugin(PRIVATE)
 - (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;

@@ -27,7 +27,6 @@
 #import "AIOscarPacket.h"
 #import "AIOscarTLVBlock.h"
 #import "AIOscarConnection.h"
-#import <AIUtilities/AIUtilities.h>
 #import <openssl/md5.h>
 
 //CLIENTINFO_AIM_5_1_3036

@@ -5,11 +5,6 @@
 //  Created by Evan Schoenberg on Sun Aug 03 2003.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
-
 @interface ESContactAlerts : NSObject {
     NSView				*view_main;
     AIAlternatingRowTableView		*tableView_actions;

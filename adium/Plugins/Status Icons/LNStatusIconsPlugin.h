@@ -1,5 +1,3 @@
-#import <Adium/Adium.h>
-#import <Cocoa/Cocoa.h>
 
 #define STATUS_ICONS_DEFAULT_PREFS	@"StatusIconsDefaults"
 #define PREF_GROUP_STATUS_ICONS		@"StatusIcons"

@@ -8,9 +8,6 @@
 #import "ESContactAlertsPreferences.h"
 #import "ESContactAlertsPlugin.h"
 #import "ESContactAlerts.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 #define	ALERTS_PREF_NIB			@"ContactAlertsPrefs"
 #define ALERTS_PREF_TITLE		@"Contact Alerts"

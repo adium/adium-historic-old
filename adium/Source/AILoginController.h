@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import "AIAdium.h"
-
 #define LOGIN_PREFERENCES_FILE_NAME 	@"Login Preferences"	//Login preferences file name
 #define LOGIN_HIDE_WINDOW 		@"Hide Login Window"	//Should hide the login window 
 #define LOGIN_LAST_USER			@"Last Login Name"	//Last logged in user

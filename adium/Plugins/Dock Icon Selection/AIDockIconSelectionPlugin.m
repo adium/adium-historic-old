@@ -15,9 +15,6 @@
 
 #import "AIDockIconSelectionPlugin.h"
 #import "AIDockIconPreferences.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 
 @implementation AIDockIconSelectionPlugin

@@ -6,7 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import <mach/mach_port.h>
 #import <mach/mach_interface.h>
 #import <mach/mach_init.h>

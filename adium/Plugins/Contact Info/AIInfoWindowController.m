@@ -7,9 +7,6 @@
 //
 
 #import "AIInfoWindowController.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 #define KEY_TEXT_PROFILE_WINDOW_FRAME	@"Text Profile Window"
 #define INFO_WINDOW_NIB			@"ContactInfo"

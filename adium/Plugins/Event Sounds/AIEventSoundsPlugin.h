@@ -13,10 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
-
 #define PREF_GROUP_SOUNDS		@"Sounds"
 
 #define SOUND_EVENT_START		@"\nSoundset:\n"	//String marking start of event list

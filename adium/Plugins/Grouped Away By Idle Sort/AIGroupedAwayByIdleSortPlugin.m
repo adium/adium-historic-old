@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIGroupedAwayByIdleSortPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 #import "AIGroupedAwayByIdleSortNoGroups.h"
 
 @implementation AIGroupedAwayByIdleSortPlugin

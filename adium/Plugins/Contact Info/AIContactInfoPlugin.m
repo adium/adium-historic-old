@@ -8,7 +8,6 @@
 
 #import "AIContactInfoPlugin.h"
 #import "AIInfoWindowController.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIContactInfoPlugin (PRIVATE)
 

@@ -6,8 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import "AIAdium.h"
 #import "AIContentObject.h"
 
 #define CONTENT_TYPING_TYPE		@"Typing"		//Type ID for this content

@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAliasSupportPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 #import "AIContactListEditorPlugin.h"
 
 #define	CONTACT_ALIAS_NIB		@"ContactAlias"		//Filename of the alias info view

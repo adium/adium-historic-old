@@ -8,7 +8,6 @@
 
 #import "MSNSBSocket.h"
 #import "MSNAccount.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface MSNSBSocket(PRIVATE)
 - (MSNSBSocket *)initWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account owner:(AIAdium *)setOwner;

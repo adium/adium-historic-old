@@ -14,8 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AITextToolbarItemsPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface AITextToolbarItemsPlugin (PRIVATE)
 - (void)convertString:(NSMutableAttributedString *)text toHave:(BOOL)applyTrait trait:(int)trait inRange:(NSRange)targetRange;

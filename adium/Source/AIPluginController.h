@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import "AIAdium.h"
-
 @interface AIPluginController (INTERNAL)
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 - (void)initController;

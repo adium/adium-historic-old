@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on Sun Aug 03 2003.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 #import "ESContactAlerts.h"
 #import "ESContactAlertsActionColumn.h"
 

@@ -7,9 +7,6 @@
 //
 
 #import "AIIdleAwayManualSort.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 int idleAwayManualSort(id objectA, id objectB, void *context);
 

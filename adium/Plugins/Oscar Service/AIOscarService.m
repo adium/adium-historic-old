@@ -27,7 +27,6 @@
 #import "AIOscarConnection.h"
 #import "AIOscarAuth.h"
 #import "AIOscarTLVBlock.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIOscarService (PRIVATE)
 - (void)handleRequest:(long)requestID type:(unsigned short)type flags:(unsigned short)flags packet:(AIOscarPacket *)inPacket;

@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIDefaultFormattingPlugin.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 #import "AIDefaultFormattingPreferences.h"
 
 #define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"

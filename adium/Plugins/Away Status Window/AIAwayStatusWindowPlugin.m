@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "AIAwayStatusWindowPlugin.h"
 #import "AIAwayStatusWindowController.h"
 #import "AIAwayStatusWindowPreferences.h"

@@ -8,9 +8,6 @@
 
 #import "AISpellCheckingPreferences.h"
 #import "AISpellCheckingPlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 @implementation AISpellCheckingPreferences
 

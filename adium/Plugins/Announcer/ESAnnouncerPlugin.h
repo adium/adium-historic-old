@@ -6,10 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import <Cocoa/Cocoa.h>
 #import "ESAnnouncerPreferences.h"
 
 

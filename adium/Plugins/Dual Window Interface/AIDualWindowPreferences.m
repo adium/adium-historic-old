@@ -8,8 +8,6 @@
 
 #import "AIDualWindowPreferences.h"
 #import "AIDualWindowInterfacePlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIDualWindowPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

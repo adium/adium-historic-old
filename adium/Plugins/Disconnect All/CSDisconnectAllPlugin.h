@@ -6,9 +6,6 @@
 //  Copyright (c) 2003 The Adium Group. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 @interface CSDisconnectAllPlugin : AIPlugin {
     NSMenuItem *connectItem;
     NSMenuItem *disconnectItem;

@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactListGeneration.h"
-#import "Adium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 /*
 

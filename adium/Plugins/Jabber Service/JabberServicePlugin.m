@@ -1,6 +1,3 @@
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "JabberServicePlugin.h"
 #import "JabberAccount.h"
 

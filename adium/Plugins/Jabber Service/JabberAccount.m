@@ -1,8 +1,5 @@
 #import "JabberAccount.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 #import <acid.h>
-#import "AIAdium.h"
 #import "JabberAccountViewController.h"
 #include <openssl/md5.h>
 #include <unistd.h>
