@@ -27,6 +27,7 @@
 - (void)stateChange:(NSTimer *)timer;
 - (void)_startAnimating;
 - (void)_stopAnimating;
+- (void)_createActiveFrameImageFromState:(AIIconState *)iconState;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -54,6 +55,7 @@
 	stateChangeTimer = nil;
 	selectedIconIndex = -1;
 	selectedIcon = nil;
+	activeFrameImage = nil;
 	
     //Configure the table view
     [tableView_icons setIntercellSpacing:NSMakeSize(4,2)];
@@ -221,15 +223,17 @@
 	
 	[stateToAnimate release]; stateToAnimate = nil;
 	[previewToAnimateEnumerator release]; previewToAnimateEnumerator = nil;
+	[activeFrameImage release]; activeFrameImage = nil;
 }
 
 //Animate the preview icons
 - (void)animate:(NSTimer *)timer
 {
 	[stateToAnimate nextFrame];
-	[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
 	
-	//Redisplay now.
+	[self _createActiveFrameImageFromState:stateToAnimate];
+	
+	//Update our view
 	[tableView_icons setNeedsDisplay:YES];
 }
 
@@ -259,8 +263,7 @@
 		[[iconArray objectAtIndex:selectedIconIndex] setObject:stateToAnimate
 														forKey:@"State"];
 		
-		//Set the image to the new state
-		[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
+		[self _createActiveFrameImageFromState:stateToAnimate];
 		
 		//Update our view
 		[tableView_icons setNeedsDisplay:YES];
@@ -280,6 +283,24 @@
 															  repeats:YES] retain];
 		}
 	}
+}
+
+- (void)_createActiveFrameImageFromState:(AIIconState *)iconState
+{
+	NSImage *image = [iconState image];
+	NSSize  size = [image size];
+	
+	[activeFrameImage release]; activeFrameImage = nil;
+
+	activeFrameImage = [[NSImage alloc] initWithSize:size];
+	
+	[activeFrameImage setFlipped:YES];
+	[activeFrameImage lockFocus];
+	[image drawAtPoint:NSMakePoint(0,0)
+							   fromRect:NSMakeRect(0,0,size.width,size.height)
+							  operation:NSCompositeSourceOver
+							   fraction:1.0];
+	[activeFrameImage unlockFocus];
 }
 
 //User selected an icon in the table view
@@ -394,7 +415,12 @@
     index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
 
     if(index >= 0 && index < icons){
-		return [[[iconArray objectAtIndex:index] objectForKey:@"State"] image];
+		AIIconState *iconState = [[iconArray objectAtIndex:index] objectForKey:@"State"];
+		if (iconState == stateToAnimate) {
+			return activeFrameImage;
+		} else {
+			return [iconState image];
+		}
     }else{
         return([[[NSImage alloc] init] autorelease]); //new blank for now
     }

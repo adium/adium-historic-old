@@ -24,17 +24,17 @@
     if(inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"UserIcon"]){
 		
-		if([inObject isKindOfClass:[AIListContact class]]){
-			NSImage *image = [[inObject statusArrayForKey:@"UserIcon"] firstImage];
-
-			//Apply the image at medium priority
-			[[inObject displayArrayForKey:@"UserIcon"] setObject:image 
-													   withOwner:self
-												   priorityLevel:Medium_Priority];
-			//Notify
-			[[adium contactController] listObjectAttributesChanged:inObject
-													  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];
-		}
+		//		if([inObject isKindOfClass:[AIListContact class]]){
+		NSImage *image = [[inObject statusArrayForKey:@"UserIcon"] firstImage];
+		
+		//Apply the image at medium priority
+		[[inObject displayArrayForKey:@"UserIcon"] setObject:image 
+												   withOwner:self
+											   priorityLevel:Medium_Priority];
+		//Notify
+		[[adium contactController] listObjectAttributesChanged:inObject
+												  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];
+		//		}
 	}
 	
 	return(nil);
