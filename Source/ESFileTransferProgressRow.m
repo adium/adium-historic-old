@@ -82,7 +82,6 @@
 - (void)awakeFromNib
 {	
 	//If we already know something about this file transfer, update since we missed delegate calls
-	[self updateSourceAndDestination];
 	[self fileTransfer:fileTransfer didSetSize:[fileTransfer size]];
 	[self fileTransfer:fileTransfer didSetLocalFilename:[fileTransfer localFilename]];
 	[self fileTransfer:fileTransfer didSetType:[fileTransfer type]];
@@ -90,9 +89,13 @@
 	//This always calls gotUpdate and display, so do it last
 	[self fileTransfer:fileTransfer didSetStatus:[fileTransfer status]];
 
+	//Once we've set up some basic information, tell our owner it can add the view
+	[owner progressRowDidAwakeFromNib:self];
+	/*
 	[self performSelector:@selector(informOfAwakefromNib)
 			   withObject:nil
 			   afterDelay:0.000001];
+	 */
 }
 
 - (void)informOfAwakefromNib
