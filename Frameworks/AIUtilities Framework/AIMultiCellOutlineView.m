@@ -39,6 +39,7 @@
 	groupRowHeight = 0;
 	totalHeight = 0;
 	drawHighlightOnlyWhenMain = NO;
+	drawsSelectedRowHighlight = YES;
 	
 	backgroundImage = nil;
 	backgroundFade = 1.0;
@@ -328,10 +329,15 @@
 	return drawHighlightOnlyWhenMain;
 }
 
+- (void)setDrawsSelectedRowHighlight:(BOOL)inFlag
+{
+	drawsSelectedRowHighlight = inFlag;
+}
+
 - (void)highlightSelectionInClipRect:(NSRect)clipRect
 {
 #warning 10.3 only
-	if(!drawHighlightOnlyWhenMain || [[self window] isMainWindow]){
+	if(drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])){
 		NSIndexSet *indices = [self selectedRowIndexes];
 		unsigned int bufSize = [indices count];
 		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
@@ -344,7 +350,7 @@
 			unsigned int endIndex = startIndex;
 			
 			//Process the selected rows in clumps
-#warning merging
+#warning This code merges consecutive selected rows into the same gradient, do we want this?
 			while(i < bufSize-1 && buf[i+1] == endIndex + 1){
 				i++;
 				endIndex++;

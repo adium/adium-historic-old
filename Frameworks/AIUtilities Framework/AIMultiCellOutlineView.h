@@ -27,6 +27,7 @@
 	NSColor		*backgroundColor;
 	
 	BOOL		drawHighlightOnlyWhenMain;
+	BOOL		drawsSelectedRowHighlight;
 }
 
 - (void)setContentCell:(id)cell;
@@ -41,6 +42,7 @@
 
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag;
 - (BOOL)drawHighlightOnlyWhenMain;
+- (void)setDrawsSelectedRowHighlight:(BOOL)inFlag;
 
 @end
 
