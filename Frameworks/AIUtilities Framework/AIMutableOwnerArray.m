@@ -342,7 +342,7 @@
 - (float)priorityOfObject:(id)inObject
 {
 	if (contentArray && priorityArray){
-        int	index = [contentArray indexOfObject:inOwner];
+        int	index = [contentArray indexOfObject:inObject];
 		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
 	}	
 }
