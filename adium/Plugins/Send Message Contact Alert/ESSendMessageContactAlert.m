@@ -168,7 +168,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         
         NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
         AIListObject	*contact;
-        NSString 	*groupName = [[[NSString alloc] init] autorelease];
+        //NSString 	*groupName = [[[NSString alloc] init] autorelease];
         BOOL		firstOfflineSearch = NO;
         
         while (contact = [enumerator nextObject])
