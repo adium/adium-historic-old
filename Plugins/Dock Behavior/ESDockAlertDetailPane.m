@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Thu Nov 27 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2004 The Adium Team. All rights reserved.
 //
 
 #import "ESDockAlertDetailPane.h"

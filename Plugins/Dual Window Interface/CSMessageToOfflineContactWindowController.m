@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Chris Serino on Sat Apr 24 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2004 The Adium Team. All rights reserved.
 //
 
 #import "CSMessageToOfflineContactWindowController.h"

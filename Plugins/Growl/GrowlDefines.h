@@ -3,7 +3,7 @@
 //  Growl
 //
 //  Created by Karl Adam on Mon May 17 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2004 The Adium Team. All rights reserved.
 //
 
 #import <CoreFoundation/CoreFoundation.h>
