@@ -40,6 +40,7 @@
 //
 - (void)dealloc
 {
+    
     [buildUser release];
     [buildDate release];
     [buildNumber release];
@@ -54,6 +55,8 @@
     [textView_details setPlaceholder:[textView_details string]];
     
     //Search for an exception log
+  //  NSFileManager *manager = [[[NSFileManager alloc] init]retain];
+//    if ([manager fileExistsAtPath:EXCEPTIONS_PATH]){
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
     }else{  
