@@ -44,15 +44,15 @@
 	
 	//Configure the protocols we want.  Note that this file needs to remain in MacRoman encoding for that ¥ (option-8)
 	//to be recognized properly.
-	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst];
-	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst];
-	[self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst];
+	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst]; //AIM, official
+	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst]; //Yahoo!, official
+	[self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst]; //Jabber, official
+	[self setHelperAppForKey:"\pHelper¥jabber" withInstance:ICInst]; //Jabber, unofficial
+	[self setHelperAppForKey:"\pHelper¥icq" withInstance:ICInst]; //ICQ, unofficial
+	[self setHelperAppForKey:"\pHelper¥msn" withInstance:ICInst]; //MSN, unofficial
+
+	//Adium xtras
 	[self setHelperAppForKey:"\pHelper¥adiumxtra" withInstance:ICInst];
-/*
-	[self setHelperAppForKey:"\pHelper¥jabber" withInstance:ICInst];
-	[self setHelperAppForKey:"\pHelper¥icq" withInstance:ICInst];
-	[self setHelperAppForKey:"\pHelper¥msn" withInstance:ICInst];
-*/	
 
 	//We're done with Internet Config, so stop it
 	Err = ICStop(ICInst);
@@ -86,83 +86,98 @@
 
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
-    /* TODO: 
-        * add suppport for "stuffing" the inputline with a particluar message. look @ bgannin's emoticon code for help w/ this.
-    */
-
     NSString *string = [[event descriptorAtIndex:1] stringValue];
     NSURL *url = [NSURL URLWithString:string];
     
-    if(url){        
+    if(url){
+		NSString	*scheme;
+		NSString	*service;
+		
+		static NSDictionary	*schemeToServiceDict = nil;
+		if(!schemeToServiceDict){
+			schemeToServiceDict = [[NSDictionary dictionaryWithObjectsAndKeys:
+				@"AIM", @"aim",
+				@"Yahoo!", @"ymsgr",
+				@"Yahoo!", @"yahoo"
+				@"Jabber", @"jabber",
+				@"ICQ", @"icq",
+				@"MSN", @"msn",
+				nil] retain];
+		}
+		
         if(![[url resourceSpecifier] hasPrefix:@"//"]){
             string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
             url = [NSURL URLWithString:string];
         }
+		
+		scheme = [url scheme];
         
-        if([[url scheme] isEqualToString:@"aim"]){
-            if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
+		if(service = [schemeToServiceDict objectForKey:scheme]){
+			if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
+				// aim://goim?screenname=tekjew
 				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
 				if (name){
 					[self _openChatToContactWithName:name
-										   onService:@"AIM" 
+										   onService:service 
 										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
 				}
-            } else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
+				
+            }else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
+				// aim://addbuddy?screenname=tekjew
 				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
-															service:[[adium accountController] firstServiceWithServiceID:@"AIM"]];
-			}
-            
-        }else if([[url scheme] isEqualToString:@"ymsgr"]){
-            if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
+															service:[[adium accountController] firstServiceWithServiceID:service]];
+
+			}else if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
+				// ymsgr://sendim?tekjew
 				NSString *name = [[[url query] stringByDecodingURLEscapes] compactedString];
                 [self _openChatToContactWithName:name
-									   onService:@"Yahoo!"
+									   onService:service
 									 withMessage:nil];
-            }
-        }else if([[url scheme] isEqualToString:@"xmpp"]){
-            NSString *name = [NSString stringWithFormat:@"%@@%@",[[url user] compactedString],[[url host] compactedString]];
+				
+            }else if([url queryArgumentForKey:@"openChatToScreenName"]){
+				// aim://openChatToScreenname?tekjew  [?]
+				NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
+				
+				if (name){
+					[self _openChatToContactWithName:name
+										   onService:service
+										 withMessage:nil];
+				}
+			}else{
+				//Default top opening the host as a name,
+
+				NSString	*user = [url user];
+				NSString	*host = [url host];
+				NSString	*name;
+				if(user && [user length]){
+					// jabber://tekjew@jabber.org
+					name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
+				}else{
+					// aim://tekjew
+					name = host;
+				}
+				
+				[self _openChatToContactWithName:[name compactedString]
+									   onService:service
+									 withMessage:nil];
+			}
 			
-            [self _openChatToContactWithName:name
+		}else if([scheme isEqualToString:@"xmpp"]){
+			// xmpp://tekjew@jabber.com
+            NSString *name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
+			
+            [self _openChatToContactWithName:[name compactedString]
 								   onService:@"Jabber"
 								 withMessage:nil];
-        }else if ([[url scheme] isEqualToString:@"jabber"]){
-			//Not an official URL scheme, used for internal applescript and such communication
-			NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
-			
-			if (name){
-				[self _openChatToContactWithName:name
-									   onService:@"Jabber"
-									 withMessage:nil];
-			}
-		}else if ([[url scheme] isEqualToString:@"icq"]){
-			//Not an official URL scheme, used for internal applescript and such communication
-			NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByDecodingURLEscapes] compactedString];
-			
-			if (name){
-				[self _openChatToContactWithName:name
-									   onService:@"ICQ"
-									 withMessage:nil];
-			}
-		}else if ([[url scheme] isEqualToString:@"msn"]){
-			//Not an official URL scheme, used for internal applescript and such communication
-			NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
-			
-			if (name){
-				[self _openChatToContactWithName:name
-									   onService:@"MSN"
-									 withMessage:nil];
-			}
-		}else if ([[url scheme] isEqualToString:@"adiumxtra"]){
+
+        }else if ([scheme isEqualToString:@"adiumxtra"]){
 			//Installs an adium extra
+			// adiumxtra://www.adiumxtras.com/path/to/xtra.zip
+
 			[[XtrasInstaller installer] installXtraAtURL:url];
 		}
     }
-}
-
-- (void)uninstallPlugin
-{
-
 }
 
 - (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
