@@ -16,6 +16,8 @@
 #define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
 #define KEY_CRASH_AIM_ACCOUNT		@"AdiumCrashReporterAIMAccount"
 
+#define DETAILED_INSTRUCTIONS           @"A detailed explanation of what you were doing when Adium crashed"
+
 #define CRASH_REPORT_SLAY_ATTEMPTS		100
 #define CRASH_REPORT_SLAY_INTERVAL		0.1
 
@@ -33,7 +35,7 @@
 	crashLog = nil;
     
     return(self);
-}
+} 
 
 //
 - (void)dealloc
@@ -45,24 +47,26 @@
 //
 - (void)awakeFromNib
 {
-	//Search for an exception log
+    //Search for an exception log
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
     }else{		
-		//Kill the apple crash reporter
-		[NSTimer scheduledTimerWithTimeInterval:CRASH_REPORT_SLAY_INTERVAL
-										 target:self
-									   selector:@selector(appleCrashReportSlayer:)
-									   userInfo:nil
-										repeats:YES];
-		
-		//Wait for a valid crash log to appear
-		[NSTimer scheduledTimerWithTimeInterval:CRASH_LOG_WAIT_INTERVAL
-										 target:self
-									   selector:@selector(delayedCrashLogDiscovery:)
-									   userInfo:nil
-										repeats:YES];
-	}
+        //Kill the apple crash reporter
+        [NSTimer scheduledTimerWithTimeInterval:CRASH_REPORT_SLAY_INTERVAL
+                                         target:self
+                                       selector:@selector(appleCrashReportSlayer:)
+                                       userInfo:nil
+                                        repeats:YES];
+        
+        //Wait for a valid crash log to appear
+        [NSTimer scheduledTimerWithTimeInterval:CRASH_LOG_WAIT_INTERVAL
+                                         target:self
+                                       selector:@selector(delayedCrashLogDiscovery:)
+                                       userInfo:nil
+                                        repeats:YES];
+    }
+    
+    [textView_details setPlaceholder:[textView_details string]];
 }
 
 //Actively tries to kill Apple's "Report this crash" dialog
