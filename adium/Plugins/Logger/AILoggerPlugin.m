@@ -195,7 +195,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContextContact:(id)sender
 {
-    [AILogViewerWindowController openForContact:[[adium menuController] contactualMenuContact] plugin:self];
+	[NSApp activateIgnoringOtherApps:YES];
+    [[[AILogViewerWindowController openForContact:[[adium menuController] contactualMenuContact] plugin:self] window] makeKeyAndOrderFront:nil];
 }
 
 
