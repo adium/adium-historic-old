@@ -25,9 +25,7 @@
     IBOutlet	AIPreferenceCategoryView	*view_ContactList_Groups;
     IBOutlet	AIPreferenceCategoryView	*view_ContactList_Contacts;
 
-    IBOutlet	NSTabView					*tabView_messages;
-    IBOutlet	AIPreferenceCategoryView	*view_Messages_Display;
-    IBOutlet	AIPreferenceCategoryView	*view_Messages_Sending;
+    IBOutlet	AIPreferenceCategoryView	*view_Messages;
 
     IBOutlet	NSTabView					*tabView_status;
     IBOutlet	AIPreferenceCategoryView	*view_Status_Away;

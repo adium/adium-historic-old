@@ -20,10 +20,10 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages_Sending);
+    return(AIPref_Messages);
 }
 - (NSString *)label{
-    return(@"B");
+    return(@"Z");
 }
 - (NSString *)nibName{
     return(@"SendingKeyPrefs");

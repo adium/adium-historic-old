@@ -24,10 +24,10 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages_Sending);
+    return(AIPref_Messages);
 }
 - (NSString *)label{
-    return(@"L");
+    return(@"Z");
 }
 - (NSString *)nibName{
     return(@"LoggerPrefs");
