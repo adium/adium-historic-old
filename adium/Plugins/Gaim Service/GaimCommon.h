@@ -27,8 +27,10 @@ typedef enum
 	GAIM_BUDDY_ICON				= 0x11, /**< The buddy's icon changed.     */
 	GAIM_BUDDY_MISCELLANEOUS	= 0x12, /**< The buddy's service-specific miscalleneous info changed.     */
 	GAIM_BUDDY_SIGNON_TIME		= 0x14, /**< The buddy's signon time changed.     */
-	GAIM_BUDDY_EVIL				= 0x18  /**< The buddy's warning level changed.     */
-
+	GAIM_BUDDY_EVIL				= 0x18,  /**< The buddy's warning level changed.     */
+	GAIM_BUDDY_DIRECTIM_CONNECTED = 0x21, /**< Connected to the buddy via DirectIM.  */
+	GAIM_BUDDY_DIRECTIM_DISCONNECTED = 0x22 /**< Disconnected from the buddy via DirectIM.  */
+	
 } GaimBuddyEvent;
 
 //Proxy types

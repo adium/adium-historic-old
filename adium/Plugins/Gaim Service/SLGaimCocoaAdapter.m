@@ -549,10 +549,13 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 	gaim_signal_connect(blist_handle, "buddy-idle",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
+	gaim_signal_connect(blist_handle, "buddy-idle-updated",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
 	gaim_signal_connect(blist_handle, "buddy-unidle",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_IDLE_RETURN));
-	
+
 	//Status
 	gaim_signal_connect(blist_handle, "buddy-away",
 						handle, GAIM_CALLBACK(buddy_event_cb),
@@ -585,7 +588,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));
 	
-	
+	//Signon / Signoff
 	gaim_signal_connect(blist_handle, "buddy-signed-on",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
@@ -595,6 +598,15 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 	gaim_signal_connect(blist_handle, "buddy-signed-off",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));
+	
+	//DirectIM
+	gaim_signal_connect(blist_handle, "buddy-direct-im-connected",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_CONNECTED));
+	//DirectIM
+	gaim_signal_connect(blist_handle, "buddy-direct-im-disconnected",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_DISCONNECTED));
 }
 
 #pragma mark Conversation

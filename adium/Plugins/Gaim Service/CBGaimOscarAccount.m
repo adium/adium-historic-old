@@ -20,6 +20,7 @@ static NSString *MobileServiceID = nil;
 @interface CBGaimOscarAccount (PRIVATE)
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact;
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
+-(NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
 @end
 
 @implementation CBGaimOscarAccount
@@ -80,8 +81,8 @@ static BOOL didInitOscar = NO;
 									   styleTags:YES
 					  closeStyleTagsOnFontChange:NO
 								  encodeNonASCII:NO
-									  imagesPath:@"/tmp"
-							   attachmentsAsText:NO
+									  imagesPath:nil
+							   attachmentsAsText:YES
 				  attachmentImagesOnlyForSending:YES
 								  simpleTagsOnly:NO];
 	}
@@ -90,28 +91,144 @@ static BOOL didInitOscar = NO;
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
-{
-	NSString *returnString = [self encodedAttributedString:inAttributedString forListObject:inListObject];
-
-	if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
-		//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
-		//and sending after it is if one is established
-		NSLog(@"No Direct Connect for you! Come back two year!");
-		returnString = [AIHTMLDecoder encodeHTML:inAttributedString
-										 headers:YES
-										fontTags:YES
-							  includingColorTags:YES
-								   closeFontTags:NO
-									   styleTags:YES
-					  closeStyleTagsOnFontChange:NO
-								  encodeNonASCII:NO
-									  imagesPath:nil
-							   attachmentsAsText:YES
-				  attachmentImagesOnlyForSending:YES
-								  simpleTagsOnly:NO];
+{	
+	if (accountIsICQ){
+		//As an ICQ account we should always send plain text, so no more complex checking is needed
+		return ([inAttributedString string]);
+		
+	}else{		
+		if(inListObject){
+			BOOL		nonHTMLUser = NO;
+			char		firstCharacter = [[inListObject UID] characterAtIndex:0];
+			nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
+			
+			if (nonHTMLUser){
+				//We don't want to send HTML to ICQ users, or mobile phone users
+				return ([inAttributedString string]);
+				
+			}else{
+				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
+				NSString	*returnString;
+				
+				returnString = [AIHTMLDecoder encodeHTML:inAttributedString
+												 headers:YES
+												fontTags:YES
+									  includingColorTags:YES
+										   closeFontTags:NO
+											   styleTags:YES
+							  closeStyleTagsOnFontChange:NO
+										  encodeNonASCII:NO
+											  imagesPath:@"/tmp"
+									   attachmentsAsText:NO
+						  attachmentImagesOnlyForSending:YES
+										  simpleTagsOnly:NO];
+				
+				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
+					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
+					//and sending after it is if one is established
+					NSLog(@"No Direct Connect for you! Come back two year!");
+					
+					//Check for a oscar_direct_im (dim) currently open
+					struct oscar_direct_im  *dim;
+					OscarData				*od;
+					const char				*who = [[inListObject UID] UTF8String];
+					
+					dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+					
+					if (dim && (dim->connected)){
+						//We have a connected dim already; process the string and keep the modified copy
+						returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
+						
+					}else{
+						//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
+						oscar_direct_im_initiate_immediately(account->gc, who);
+						
+						//Add this content message to the sending queue for this contact to be sent once a connection is established
+						//XXX
+						
+						//Return nil for now to indicate that the message should not be sent
+						returnString = nil;
+					}
+				}
+				
+				return (returnString);
+			}
+			
+		}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
+			return ([AIHTMLDecoder encodeHTML:inAttributedString
+									  headers:YES
+									 fontTags:YES
+						   includingColorTags:YES
+								closeFontTags:NO
+									styleTags:YES
+				   closeStyleTagsOnFontChange:NO
+							   encodeNonASCII:NO
+								   imagesPath:nil
+							attachmentsAsText:YES
+			   attachmentImagesOnlyForSending:YES
+							   simpleTagsOnly:NO]);
+		}
 	}
+}
 
-	return returnString;
+- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
+{
+	NSDictionary		*imgArguments;
+	NSScanner			*scanner;
+    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
+    NSString			*chunkString;
+	NSMutableString		*processedString;
+	
+    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
+    tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
+    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
+	
+    scanner = [NSScanner scannerWithString:inString];
+	[scanner setCaseSensitive:NO];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+	
+	processedString = [[NSMutableString alloc] init];
+	
+    //Parse the HTML
+    while(![scanner isAtEnd]){
+        //Find an HTML IMG tag
+        if([scanner scanUpToString:@"<img" intoString:&chunkString]){
+            [processedString appendString:chunkString];
+        }
+		
+        //Process the tag
+        if([scanner scanCharactersFromSet:tagCharStart intoString:nil]){ //If a tag wasn't found, we don't process.
+//            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
+			
+			//Get the tag itself
+			if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
+				
+				if([chunkString caseInsensitiveCompare:@"IMG"] == 0){
+					if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+
+						//Load the src image
+						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
+						NSString		*source = [imgArguments objectForKey:@"src"];
+						NSString		*alt = [imgArguments objectForKey:@"alt"];
+						
+						NSData			*imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:source]];
+
+						//Store the src image's data gaimside
+						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], (alt ? [alt UTF8String] : [source UTF8String]));
+						
+						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\">",imgstore];
+						[processedString appendString:newTag];
+					}
+				}
+				
+				if (![scanner isAtEnd]){
+					[scanner setScanLocation:[scanner scanLocation]+1];
+				}
+			}
+		}
+	}
+	
+	return ([processedString autorelease]);
 }
 
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
@@ -215,6 +332,14 @@ static BOOL didInitOscar = NO;
 		}
 		case GAIM_BUDDY_MISCELLANEOUS: {  
 			updateSelector = @selector(updateMiscellaneous:);
+			break;
+		}
+		case GAIM_BUDDY_DIRECTIM_CONNECTED: {
+			updateSelector = @selector(directIMConnected:);
+			break;
+		}
+		case GAIM_BUDDY_DIRECTIM_DISCONNECTED:{
+			updateSelector = @selector(directIMDisconnected:);
 			break;
 		}
 	}
@@ -416,6 +541,17 @@ static BOOL didInitOscar = NO;
 			}
 		}
 	}
+}
+
+//We are now connected via DirectIM to theContact
+- (void)directIMConnected:(AIListContact *)theContact
+{
+	//Send any pending directIM messages
+	NSLog(@"Direct IM Connected: %@",[theContact UID]);
+}
+- (void)directIMDisconnected:(AIListContact *)theContact
+{
+	NSLog(@"Direct IM Disconnected: %@",[theContact UID]);	
 }
 
 - (void)gotGroupForContact:(AIListContact *)theContact
