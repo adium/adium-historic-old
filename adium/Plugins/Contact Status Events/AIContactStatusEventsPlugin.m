@@ -57,7 +57,7 @@
     [super dealloc];
 }
 
-//To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't sent out any events when the contact list updates are delayed.
+//To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't send out any events when the contact list updates are delayed.
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     int		timeInterval = 15;//time interval that the status should remain
