@@ -326,6 +326,7 @@
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
 	[[adium interfaceController] chatDidBecomeActive:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat]];
+	NSLog(@"became key");
 }
 
 //Our selected tab is no longer the active chat
@@ -338,16 +339,18 @@
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
     if(tabViewItem != nil){
+		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
         [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
 		
         if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
-			[[adium interfaceController] chatDidBecomeActive:[(AIMessageTabViewItem *)tabViewItem chat]];
+			[[adium interfaceController] chatDidBecomeActive:chat];
         }
 		
         [self _updateWindowTitleAndIcon]; //Reflect change in window title
+		
+		NSLog(@"selected...");
+		[[adium interfaceController] chatDidBecomeVisible:chat inWindow:[self window]];
     }
-	
-	toolbar_selectedTabChanged = YES;
 }
 
 //Update our window title
@@ -381,6 +384,10 @@
 	}
 }
 
+- (AIChat *)activeChat
+{
+	return([(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat]);
+}
 
 //Custom Tabs Delegate -------------------------------------------------------------------------------------------------
 #pragma mark Custom Tabs Delegate
@@ -601,12 +608,6 @@
 - (void)_configureToolbar
 {
 	NSToolbar *toolbar;
-	//Toolbar item registration
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarWillAddItem:)
-												 name:NSToolbarWillAddItemNotification
-											   object:nil];
-	
     toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_MESSAGE_WINDOW] autorelease];
 	
     [toolbar setDelegate:self];
@@ -642,52 +643,6 @@
 			NSToolbarShowColorsItemIdentifier,
 			NSToolbarShowFontsItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
-}
-
-//After the toolbar has added the item we can set up the submenus
-- (void)toolbarWillAddItem:(NSNotification *)notification
-{
-	if ([notification object] == [[self window] toolbar]){
-		NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-		
-		if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
-			if ([item isKindOfClass:[ESFlexibleToolbarItem class]]){
-				[(ESFlexibleToolbarItem *)item setValidationDelegate:self];
-				[item setEnabled:YES];
-			}
-		}
-	}
-}
-
-- (void)validateFlexibleToolbarItem:(ESFlexibleToolbarItem *)inToolbarItem
-{
-	//If our selectedTab has changed since the last validation call, update the listObject
-	if(toolbar_selectedTabChanged){
-		AIChat			*chat;
-		AIListObject	*listObject;
-		NSImage			*image;
-		
-		chat = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat];
-		
-		if((listObject = [chat listObject]) && ![chat name]){
-			image = [listObject userIcon];
-			
-			//Use the serviceIcon if no image can be found
-			if(!image) image = [AIServiceIcons serviceIconForObject:listObject
-															   type:AIServiceIconLarge
-														  direction:AIIconNormal];
-		}else{
-			//If we have no listObject or we have a name, we are a group chat and
-			//should use the account's service icon
-			image = [AIServiceIcons serviceIconForObject:[chat account]
-													type:AIServiceIconLarge
-											   direction:AIIconNormal];
-		}
-		
-		[(ESFlexibleToolbarItem *)[inToolbarItem view] setImage:image];
-	
-		toolbar_selectedTabChanged = NO;
-	}
 }
 
 @end
