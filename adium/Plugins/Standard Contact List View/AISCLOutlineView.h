@@ -16,7 +16,7 @@
 //@protocol AIListObjectObserver;
 @class AIAdium;
 
-@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView,AIListObjectObserver> {    
+@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView> {    
     NSTrackingRectTag		trackingRectTag;	//Tracing rect for the whole outline view
     int				oldSelection;		//Holds the selection when it's hidden
     BOOL			editing;		//YES when the list is in edit mode... (temp)
@@ -54,6 +54,7 @@
 - (void)setGroupFont:(NSFont *)inFont;
 - (NSFont *)groupFont;
 
-- (BOOL)updateHorizontalSizeForObject:(AIListObject *)inObject;
+- (void)updateHorizontalSizeForObject:(AIListObject *)inObject;
 - (void)performFullRecalculation;
+
 @end

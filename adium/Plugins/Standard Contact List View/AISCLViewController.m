@@ -128,15 +128,20 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView]; //Resize
 }
 
-//Redisplay the modified object
+//Redisplay the modified object (Attribute change)
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     AIListObject	*object = [notification object];
-    if(object){ //Simply redraw the modified contact
-        int row = [contactListView rowForItem:object];
+    NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
-        if(row >= 0){
-            [contactListView setNeedsDisplayInRect:[contactListView rectOfRow:row]];
+    //Redraw the modified object
+    int row = [contactListView rowForItem:object];
+    if(row >= 0) [contactListView setNeedsDisplayInRect:[contactListView rectOfRow:row]];
+    
+    //Resize the contact list horizontally
+    if(horizontalResizingEnabled){
+        if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] || [keys containsObject:@"Right View"]){
+            [contactListView updateHorizontalSizeForObject:object];
         }
     }
 }
@@ -186,18 +191,17 @@
         [[contactListView window] setAlphaValue:(alpha == 100.0 ? 1.0 : 0.9999999)];
     }
    
+
+    //Resizing
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-        if ([[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue]) {
-            //register our observers - listObjectAttributes (for display name) and status through listObjectObserver
-            [[owner notificationCenter] addObserver:contactListView selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
-            [[owner contactController] registerListObjectObserver:contactListView];
-        } else {
-            //unregister our observers
-            [[owner notificationCenter] removeObserver:contactListView name:ListObject_AttributesChanged object:nil];
-            [[owner contactController] unregisterListObjectObserver:contactListView];
-        }
+        //This is sloppy, we shouldn't be reading the interface plugin's preferences
+        //We need to convert the desired size of SCLOutlineView to a lazy cache, so we can always tell it to resize from here
+        //and not care what the interface is doing with the informatin.
+        NSDictionary    *notOurPrefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        horizontalResizingEnabled = [[notOurPrefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
+        
     }
+
 }
 
 //Called when our view moves to another superview, update the traking rect
