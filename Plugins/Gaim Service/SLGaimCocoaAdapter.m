@@ -34,6 +34,9 @@
 //Jabber registration
 #include <libgaim/jabber.h>
 
+//Gaim slash command interface
+#include <libgaim/cmds.h>
+
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
@@ -1894,33 +1897,92 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-- (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags
+- (oneway void)sendEncodedMessage:(NSString *)encodedMessage
+				  originalMessage:(NSString *)originalMessage 
+					  fromAccount:(id)sourceAccount
+						   inChat:(AIChat *)chat
+						withFlags:(int)flags
 {
 	[runLoopMessenger target:self 
-			 performSelector:@selector(gaimThreadSendMessage:fromAccount:inChat:withFlags:) 
+			 performSelector:@selector(gaimThreadSendEncodedMessage:originalMessage:fromAccount:inChat:withFlags:) 
 				  withObject:encodedMessage
+				  withObject:originalMessage
 				  withObject:sourceAccount
 				  withObject:chat
 				  withObject:[NSNumber numberWithInt:flags]];
 }
-- (oneway void)gaimThreadSendMessage:(NSString *)encodedMessage
-						 fromAccount:(id)sourceAccount
-							  inChat:(AIChat *)chat
-						   withFlags:(NSNumber *)flags
+- (oneway void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
+							originalMessage:(NSString *)originalMessage
+								fromAccount:(id)sourceAccount
+									 inChat:(AIChat *)chat
+								  withFlags:(NSNumber *)flags
 {
-	GaimConversation *conv = convLookupFromChat(chat,sourceAccount);
+	BOOL				shouldSendMessage = YES;
+	GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
+	
+	if ([originalMessage hasPrefix:@"/"]){
+		/* If a content object makes it this far and still has a "/", Adium hasn't treated it as a command or
+		substitution.  Send it to Gaim for it to try to handle it.
+		XXX - do we want to not-eat non-commands, checking to see if Gaim handled the command and, if not,
+		sending it anyways? */
+		
+		GaimCmdStatus		status;
+		char				*markup, *error;
+		const char			*cmd;
+		
+		cmd = [originalMessage UTF8String];
+		
+		//cmd+1 will be the cmd without the leading character, which should be "/"
+		markup = gaim_escape_html(cmd+1);
+		status = gaim_cmd_do_command(conv, cmd+1, markup, &error);
+		g_free(markup);
 
-	switch (gaim_conversation_get_type(conv)) {				
-		case GAIM_CONV_IM: {
-			GaimConvIm			*im = gaim_conversation_get_im_data(conv);
-			gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],[flags intValue]);
-			break;
-		}
-			
-		case GAIM_CONV_CHAT: {
-			GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
-			gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);
-			break;
+		switch (status) {
+			case GAIM_CMD_STATUS_OK:
+				shouldSendMessage = NO;
+				break;
+			case GAIM_CMD_STATUS_NOT_FOUND:
+				//			gaim_notify_error(gaim_account_get_connection(conv->account),"Command not found",cmd,NULL);
+				break;
+			case GAIM_CMD_STATUS_WRONG_ARGS:			
+				shouldSendMessage = NO;
+				gaim_notify_error(gaim_account_get_connection(conv->account),"Wrong number of arguments",cmd,NULL);
+				break;
+			case GAIM_CMD_STATUS_FAILED:
+				shouldSendMessage = NO;
+				gaim_notify_error(gaim_account_get_connection(conv->account),"Command failed",cmd,NULL);
+				break;
+			case GAIM_CMD_STATUS_WRONG_TYPE:
+				
+				//XXX Do we want to error on this or pretend there was no command?
+				shouldSendMessage = NO;
+				if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+					gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
+				}else{
+					gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use IM command in Chat",cmd,NULL);
+				}
+				break;
+			case GAIM_CMD_STATUS_WRONG_PRPL:
+				//XXX Do we want to error on this or pretend there was no command?
+				shouldSendMessage = NO;
+				gaim_notify_error(gaim_account_get_connection(conv->account),"Command not for this protocol",cmd,NULL);
+				break;
+		}		
+	}
+	
+	if (shouldSendMessage){
+		switch (gaim_conversation_get_type(conv)) {				
+			case GAIM_CONV_IM: {
+				GaimConvIm			*im = gaim_conversation_get_im_data(conv);
+				gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],[flags intValue]);
+				break;
+			}
+				
+			case GAIM_CONV_CHAT: {
+				GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
+				gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);
+				break;
+			}
 		}
 	}
 }
@@ -2147,7 +2209,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
+- (oneway void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 {
 	[runLoopMessenger target:self
 			 performSelector:@selector(gaimThreadInviteContact:toChat:withMessage:)
