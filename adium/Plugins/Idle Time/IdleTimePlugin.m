@@ -94,7 +94,13 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
     [self _closeIdleState:idleState]; //Close down current state
     [IdleTimeWindowController closeSharedInstance]; //Close/release idle time window
-
+    
+    [menuItem_setIdle release]; menuItem_setIdle = nil;
+    if ([NSApp isOnPantherOrBetter]) {
+            [menuItem_removeIdle release]; menuItem_removeIdle = nil;
+            [menuItem_alternate release]; menuItem_alternate = nil;
+    }
+    
     [super dealloc];
 }
 
