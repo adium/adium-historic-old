@@ -15,7 +15,6 @@
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented
 - Finish implementing and commit state icons on the contact list code
-- Clean up layout in advanced messages pane
 - Default mininum font size to 8 or 9pt
 - MSN display names as extended status isn't working
 - Implement 'edit menu' sheets for deleting list layouts and themes
@@ -33,7 +32,6 @@
 - Rounded edges of the info window tab view are visible
 - Contact menu is inconsistent with menu item naming, item grouping
 - View menu is inconsistent with menu item grouping
-- Scrolling credits need more whitespace at the bottom so they don't snap
 - Wrapped messages in minimal are indenting into the margin
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists

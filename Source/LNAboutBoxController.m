@@ -26,7 +26,8 @@
 #define ABOUT_BOX_NIB					@"AboutBox"
 #define	ADIUM_SITE_LINK					@"http://www.adiumx.com/"
 
-#define ABOUT_SCROLL_FPS				24.0
+#define ABOUT_SCROLL_FPS				30.0
+#define ABOUT_SCROLL_RATE				1.0
 
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -82,7 +83,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     
     //Start scrolling    
     scrollLocation = 0; 
-    scrollRate = 1.0;
+    scrollRate = ABOUT_SCROLL_RATE;
     maxScroll = [[textView_credits textStorage] size].height - [[textView_credits enclosingScrollView] documentVisibleRect].size.height;
     scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/ABOUT_SCROLL_FPS)
 													target:self
@@ -150,9 +151,9 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 - (void)flagsChanged:(NSEvent *)theEvent
 {
     if([theEvent optionKey]) {
-        scrollRate = -1.0;
+        scrollRate = -ABOUT_SCROLL_RATE;
     }else{
-        scrollRate = 1.0;   
+        scrollRate = ABOUT_SCROLL_RATE;   
     }
 }
 
