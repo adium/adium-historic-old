@@ -57,7 +57,7 @@
 		return(tabContent);
 	}else if([listObject integerStatusObjectForKey:@"Typing"]){
 		return(tabTyping);
-	}else if([listObject statusObjectForKey:@"Stranger"]){
+	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
 		return(tabStranger);
 	}else if([listObject statusObjectForKey:@"Away"]){
 		return(tabAway);

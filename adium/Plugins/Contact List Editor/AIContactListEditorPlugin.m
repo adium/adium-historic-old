@@ -91,13 +91,11 @@
 	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
 		return([[adium contactController] selectedListObjectInContactList] != nil);
-	} else if(menuItem == menuItem_tabAddContact) {
+	}else if(menuItem == menuItem_tabAddContact){
 		AIListObject	*selectedObject = [[adium menuController] contactualMenuContact];
 		
-		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			NSString *containingGroupUID = [[selectedObject containingGroup] UID];
-			return( ([containingGroupUID isEqualToString:@"Orphans"]) ||
-					([containingGroupUID isEqualToString:@"__Strangers"]) );
+		if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+			return([selectedObject integerStatusObjectForKey:@"Stranger"]);
 		}
 		
 	}

@@ -92,7 +92,9 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName
 {
-	if(groupName && [groupName length] != 0){
+	if(groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]){
+		[theContact setRemoteGroupName:nil];
+	}else if(groupName && [groupName length] != 0){
 		[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
 	}else{
 		[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];

@@ -187,9 +187,9 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		if (!buddy) {
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
 			buddy = gaim_buddy_new(conv->account, conv->name, NULL);	//create a GaimBuddy
-			group = gaim_find_group(_("Orphans"));						//get the GaimGroup
+			group = gaim_find_group(_(GAIM_ORPHANS_GROUP_NAME));		//get the GaimGroup
 			if (!group) {												//if the group doesn't exist yet
-				group = gaim_group_new(_("Orphans"));					//create the GaimGroup
+				group = gaim_group_new(_(GAIM_ORPHANS_GROUP_NAME));		//create the GaimGroup
 				gaim_blist_add_group(group, NULL);						//add it gaimside
 			}
 			gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list

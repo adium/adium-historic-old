@@ -43,24 +43,24 @@
 	return(accountID);
 }
 
+
 //Remote Grouping ------------------------------------------------------------------------------------------------------
 #pragma mark Remote Grouping
 //Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
 - (void)setRemoteGroupName:(NSString *)inName
 {
-	NSString	*oldGroupName = remoteGroupName;
-
-	if(inName != nil || oldGroupName != nil){ //If both are nil, we can skip this operation
-		[oldGroupName retain];
-
+//	NSString	*oldGroupName = remoteGroupName;
+//
+//	if(inName != nil || oldGroupName != nil){ //If both are nil, we can skip this operation
 		//Change it here
-		remoteGroupName = [inName retain];
-
-		//Tell core it changed
-		[[adium contactController] listObjectRemoteGroupingChanged:self];
-
-		[oldGroupName release];
-	}
+	[remoteGroupName autorelease];
+	remoteGroupName = [inName retain];
+	
+	//Tell core it changed
+	[[adium contactController] listObjectRemoteGroupingChanged:self];
+//
+//		[oldGroupName release];
+//	}
 }
 
 - (NSString *)remoteGroupName
