@@ -460,7 +460,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return(argArray);
 }
 
-//Execute the script, returning it's output
+//Execute the script, returning its output
 - (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments
 {
 	NSURL 			*scriptURL = [infoDict objectForKey:@"Path"];
