@@ -101,7 +101,10 @@ float movementY = currentLocation.y - previousLocation.y;
 		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen visibleFrame] movementX:movementX movementY:movementY];
 		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen frame] movementX:movementX movementY:movementY];
 
+		[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowWillMoveNotification object:self];
 		[self setFrameOrigin:windowFrame.origin];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidMoveNotification object:self];
+		
     } else {
         [super mouseDragged:theEvent];
     }
