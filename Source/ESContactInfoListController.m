@@ -67,18 +67,36 @@
     }
 }
 
-//Change the info window as the selection changes
+/*
+ * @brief Change the info window as the selection changes
+ *
+ * We want to configure for contact-specific information when a contact is selected in the drawer
+ * If no row is selected, we configure for the contactList root (the metaContact itself)
+ */
 - (void)outlineViewSelectionDidChange:(NSNotification *)aNotification
 {
-	if ([aNotification object] == contactListView){
-		unsigned selectedRow;
-		if ((selectedRow = [contactListView selectedRow]) != -1){
-			[(AIContactInfoWindowController *)delegate configureForListObject:[contactListView itemAtRow:selectedRow]];
-		}
+	if (!aNotification || [aNotification object] == contactListView){
+		int selectedRow = [contactListView selectedRow];
+		NSLog(@"Selectedrow %i so %@",selectedRow,((selectedRow != -1) ?
+												   [contactListView itemAtRow:selectedRow] :
+												   contactList));
+		[(AIContactInfoWindowController *)delegate configureForListObject:((selectedRow != -1) ?
+																		   [contactListView itemAtRow:selectedRow] :
+																		   contactList)];
 	}
 }
 
-//
+/*
+ * @brief Remove the selected rows from the metaContact
+ */
+- (void)outlineViewDeleteSelectedRows:(NSOutlineView *)outlineView
+{
+	[(AIContactInfoWindowController *)delegate removeContact:outlineView];
+}
+
+/*
+ * @brief Validate a drag and drop operation
+ */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
 	NSPasteboard	*draggingPasteboard = [info draggingPasteboard];
@@ -135,7 +153,7 @@
 {
 	NSPasteboard	*draggingPasteboard = [info draggingPasteboard];
     NSString	*availableType = [draggingPasteboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
-    
+
 	//No longer in a drag, so allow tooltips again
     if([availableType isEqualToString:@"AIListObject"]){
 		
@@ -160,7 +178,7 @@
 				dragItems = [arrayOfDragItems retain];
 			}
 		}
-		
+
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if(item == nil) item = contactList;
 		
@@ -195,17 +213,10 @@
 			[outlineView reloadData];
 		}
 	}
-	
-    return(YES);
-}
 
-- (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
-{
-	if (operation == NSDragOperationNone){
-		//None
-	}
+	//Call super and return its value
+    return([super outlineView:outlineView acceptDrop:info item:item childIndex:index]);
 }
-
 
 //Due to a bug in NSDrawer, convertPoint:fromView reports a point too low by the trailingOffset 
 //when our contact list is in a drawer.
