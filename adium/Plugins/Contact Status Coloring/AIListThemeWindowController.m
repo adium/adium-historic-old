@@ -130,6 +130,9 @@
 	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
 
+	//
+	[slider_windowTransparency setFloatValue:([[preferenceDict objectForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY] floatValue] * 100.0)];
+	
 	[self updateSliderValues];
 	[self configureControlDimming];
 }
@@ -299,9 +302,12 @@
                                              forKey:KEY_LIST_THEME_GRID_ENABLED
                                               group:PREF_GROUP_LIST_THEME];
 	
-	}
-
-	
+    }else if(sender == slider_windowTransparency){
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
+                                             forKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
+                                              group:PREF_GROUP_LIST_THEME];
+		[self updateSliderValues];
+	}		
 	
 	[self configureControlDimming];
 }
@@ -324,6 +330,7 @@
 - (void)updateSliderValues
 {
 	[textField_backgroundFade setStringValue:[NSString stringWithFormat:@"%i%%", (int)([slider_backgroundFade floatValue] * 100.0)]];
+	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
 }
 
 //Configure control dimming

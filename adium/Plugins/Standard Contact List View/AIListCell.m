@@ -188,7 +188,7 @@
 }
 
 //Draw our display name
-- (void)drawDisplayNameWithFrame:(NSRect)rect
+- (NSRect)drawDisplayNameWithFrame:(NSRect)rect
 {	
 	NSAttributedString	*displayName = [self displayNameStringWithAttributes:YES];
 	NSSize				nameSize = [displayName size];
@@ -213,6 +213,9 @@
 									   rect.size.height - half)];
 	
 	
+	rect.origin.x += nameSize.width;
+	rect.size.width -= nameSize.width;
+	return(rect);
 	
 	
 //	[[self displayNameStringWithAttributes:YES] drawInRect:rect];
