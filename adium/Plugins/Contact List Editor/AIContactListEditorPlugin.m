@@ -27,7 +27,7 @@
     NSMenuItem		*menuItem;
 
     //Install the 'edit contact list' menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact List" target:self action:@selector(showContactListEditor:) keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact List…" target:self action:@selector(showContactListEditor:) keyEquivalent:@""] autorelease];
     [[owner menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 
     //Register our toolbar item

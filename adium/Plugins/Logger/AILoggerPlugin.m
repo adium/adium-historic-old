@@ -51,7 +51,7 @@
 
     [logViewerMenuItem setTarget:self];
     
-    [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_File_Additions];
+    [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 }
 
 - (void)adiumSentContent:(NSNotification *)notification {
