@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Benjamin Grabkowitz on Fri Sep 19 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIMessageAliasPlugin.h"
@@ -25,90 +24,62 @@
 							nil];
 }
 
-- (void)filterContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
+    NSMutableAttributedString   *mesg = nil;
+    if (inAttributedString)
     {
-        AIContentMessage *inObj = (AIContentMessage *)inObject;
-
-	NSMutableAttributedString *mesg = [[inObj message] mutableCopyWithZone:nil];
-	
-	NSString *pattern;
-	NSString *replaceWith;
-	
-	NSEnumerator *enumerator = [hash keyEnumerator];
-	
-	NSRange range;
-	int location;
-	int length;
-	
+        NSString                *originalAttributedString = [inAttributedString string];
+        NSEnumerator            *enumerator = [hash keyEnumerator];
+        NSString                *pattern;	
+        NSString                *replaceWith;
+        
+        //This loop gets run for every key in the dictionary
 	while (pattern = [enumerator nextObject])
-	{//This loop gets run for every key in the dictionary
-
-
-	    if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"])
-	    {//if key is a var go find out what the replacement text should be
-		replaceWith = [self hashLookup:pattern contentMessage:inObj];
-	    }
-
-	    //create a range...
-	    //	The initial position doesn't make sense...it gets set to 0 in a few lines
-	    // 	this is just to make things more dynamic in the do/while loop
-	    range = NSMakeRange( (0 - [replaceWith length])    , [[mesg string] length]);
-	    do
-	    {//execute this loop until we don't see any more instances of the pattern
-		location = range.location + [replaceWith length];
-		length = [[mesg string] length] - location;
-	
-		//find the pattern in the message
-		//	notice that the range gets moved to just behind the last replacement
-		//	this is to prevent infinite loops 
-		range = [[mesg string] rangeOfString:pattern options:nil range:(NSMakeRange(location, length))];
-		
-		if(range.location != NSNotFound)
-		{//If pattern was found in string do the replacement
-		    [mesg replaceCharactersInRange:range withString:replaceWith];
-		}
-	    }while( range.location != NSNotFound );
-	}
-
-	[inObj setMessage:mesg]; 
-	[mesg release];
+	{
+            //if the original string contained this pattern
+            if ([originalAttributedString rangeOfString:pattern].location != NSNotFound){
+                if (!mesg){
+                    mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+                }
+                
+                if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"])
+                {//if key is a var go find out what the replacement text should be
+                    replaceWith = [self hashLookup:pattern contentMessage:inObject];
+                }
+                
+                [mesg replaceOccurrencesOfString:pattern 
+                                      withString:replaceWith
+                                         options:NSLiteralSearch 
+                                           range:NSMakeRange(0,[mesg length])];
+            }
+        }
     }
+    return (mesg ? mesg : inAttributedString);
 }
 
-- (NSString*) hashLookup:(NSString*)pattern contentMessage:(AIContentMessage *)content
+
+- (NSString*)hashLookup:(NSString*)pattern contentMessage:(AIContentObject *)content
 {
-    if([pattern isEqualToString:@"%a"])
-    {
+    if([pattern isEqualToString:@"%a"]){
 	AIChat *chat = [content chat];
 	AIListObject *contact = [chat listObject];
 	
-	if(contact == nil)
-	{
+	if(contact == nil){
 	    return pattern;
-	}
-	else
-	{
+	}else{
 	    return [contact displayName];
 	} 
-    }
-    else if([pattern isEqualToString:@"%n"])
-    {
+    } else if([pattern isEqualToString:@"%n"]) {
 	AIChat *chat = [content chat];
 	AIListObject *contact = [chat listObject];
 	
-	if(contact == nil)
-	{
+	if(contact == nil){
 	    return pattern;
-	}
-	else
-	{
+	}else{
 	    return [contact UID];
 	} 
-    }
-    else if([pattern isEqualToString:@"%m"])
-    {
+    } else if([pattern isEqualToString:@"%m"]) {
 	id contact = [content source]; 	
 	
 	if( [contact isKindOfClass:[AIListContact class]] ) {
@@ -118,9 +89,7 @@
 	} else {
 	    return pattern;
 	}
-    }
-    else if([pattern isEqualToString:@"%t"])
-    {
+    } else if([pattern isEqualToString:@"%t"]) {
 	NSCalendarDate *timestamp = [NSCalendarDate calendarDate];
 	NSString *hour = [timestamp descriptionWithCalendarFormat:@"%I"];
 	NSMutableString *time;
@@ -129,42 +98,34 @@
 	charHour[0] = [hour characterAtIndex:0];
 	charHour[1] = [hour characterAtIndex:1];
 	
-	if(charHour[0] == '0')
-	{
+	if(charHour[0] == '0') {
 		charHour[0] = charHour[1];
-		time = [[NSMutableString alloc] initWithCharacters:charHour length:1];
-	}
-	else
-	{
-		time = [[NSMutableString alloc] initWithCharacters:charHour length:2];
+		time = [[[NSMutableString alloc] initWithCharacters:charHour length:1] autorelease];
+	} else {
+		time = [[[NSMutableString alloc] initWithCharacters:charHour length:2] autorelease];
 	}
 	
-	[time autorelease];
 	free(charHour);
 	
 	[time appendString:[timestamp descriptionWithCalendarFormat:@":%M %p"]];
 	
 	
 	return time;  
-    }
-    else if([pattern isEqualToString:@"%d"])
-    {
+    } else if([pattern isEqualToString:@"%d"]) {
 	NSCalendarDate *date = [NSCalendarDate calendarDate];
 	return [date descriptionWithCalendarFormat:@"%b %e, %Y"];  
     }
     
-    
     return pattern;
 }
 
-- (void) uninstallPlugin
+- (void)uninstallPlugin
 {
      [hash release];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
-    NSLog(@"Deallocating AIMessageAliasPlugin");
     [super dealloc];
 }
 @end
