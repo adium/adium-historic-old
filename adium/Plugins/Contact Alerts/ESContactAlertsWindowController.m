@@ -160,11 +160,19 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 -(IBAction)deleteEventAction:(id)sender
 {
-    if ([instance currentRow] != -1)
+    int currentRow = [instance currentRow];
+    if (currentRow != -1)
     {
-        [instance deleteEventAction:nil];
-        [self tableViewSelectionDidChange:nil];
-
+	[instance deleteEventAction:nil];
+	//[tableView_actions deselectRow:currentRow];
+	[tableView_actions reloadData];
+	if (currentRow < [instance count]){
+	    [tableView_actions selectRow:currentRow byExtendingSelection:NO];
+	} else if ([instance count]){
+	    [tableView_actions selectRow:([instance count]-1) byExtendingSelection:NO];
+	} else {
+	    [tableView_actions deselectRow:currentRow]; }
+     
         [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
                                                   object:activeContactObject
                                                 userInfo:nil];
