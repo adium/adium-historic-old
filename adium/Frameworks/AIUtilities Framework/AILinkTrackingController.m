@@ -26,6 +26,8 @@
 #import "AICursorAdditions.h"
 #import "AITooltipUtilities.h"
 
+#define COPY_LINK   AILocalizedString(@"Copy Link","Copy the link to the clipboard")
+
 @interface AILinkTrackingController (PRIVATE)
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;
 - (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSPoint)offset;
@@ -366,5 +368,59 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
     return newArray;
 }
 
+- (NSArray *)menuItemsForEvent:(NSEvent *)theEvent withOffset:(NSPoint)offset
+{
+    NSURL		*linkURL = nil;
+    NSPoint		mouseLoc;
+    unsigned int	glyphIndex;
+    unsigned int	charIndex;
+    
+    NSMutableArray      *menuItemsArray = nil;
+    
+    //Find clicked char index
+    mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
+    mouseLoc.x -= offset.x;
+    mouseLoc.y -= offset.y;
 
+    glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
+    charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+
+    if(charIndex >= 0 && charIndex < [textStorage length]){
+        NSString	*linkString;
+        NSRange		linkRange;
+    
+        //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
+        linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
+        if(linkString != nil && [linkString length] != 0){
+            //add http:// to the link string if a protocol wasn't specified
+            if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
+                linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
+            }else{
+                linkURL = [NSURL URLWithString:linkString];
+            }
+        }
+    }
+    
+    //If a linKURL was created, add menu items for it to the menuItemsArray
+    if (linkURL) {
+        NSMenuItem  *menuItem;
+        
+        menuItemsArray = [[[NSMutableArray alloc] init] autorelease];
+        menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_LINK
+                                               target:self
+                                               action:@selector(copyLink:)
+                                        keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:linkURL];
+        [menuItemsArray addObject:menuItem];
+    }
+    return menuItemsArray;
+}
+
+//Copy the absolute URL to the clipboard
+- (void)copyLink:(id)sender
+{
+    NSAttributedString *copyString = [[[NSAttributedString alloc] initWithString:[(NSURL *)[sender representedObject] absoluteString] attributes:nil] autorelease];
+    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
+    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+}
 @end
