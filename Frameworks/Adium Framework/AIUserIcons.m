@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/24/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIUserIcons.h"
@@ -14,20 +13,19 @@ static NSSize				iconCacheSize;
 
 @implementation AIUserIcons
 
-//+ (void)initialize
-//{
-//	[super initialize];
-//	
-//	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
-//}
++ (void)initialize
+{
+	iconCache = [[NSMutableDictionary alloc] init];
 	
+//	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+}
+
 //Retrieve a user icon sized for the contact list
 + (NSImage *)listUserIconForContact:(AIListContact *)inContact
 {
 	NSImage *userIcon;
 	
 	//Retrieve the icon from our cache
-	if(!iconCache) iconCache = [[NSMutableDictionary alloc] init];
 	userIcon = [iconCache objectForKey:[inContact internalObjectID]];
 
 	//Render the icon if it's not cached
@@ -51,8 +49,13 @@ static NSSize				iconCacheSize;
 //Flush all cached user icons
 + (void)flushListUserIconCache
 {
-	[iconCache release];
-	iconCache = nil;
+	[iconCache release]; iconCache = nil; 	
+	iconCache = [[NSMutableDictionary alloc] init];
+}
+
++ (void)flushCacheForContact:(AIListContact *)inContact
+{
+	[iconCache removeObjectForKey:[inContact internalObjectID]];
 }
 
 @end
