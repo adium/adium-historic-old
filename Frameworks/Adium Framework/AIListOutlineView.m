@@ -165,13 +165,14 @@
 		if(backgroundImage && enclosingScrollView){
 			NSRect	visRect = [enclosingScrollView documentVisibleRect];
 			NSSize	imageSize = [backgroundImage size];
-			
+			NSRect	imageRect = { NSZeroPoint, imageSize };
+
 			switch(backgroundStyle){
 				
 				case AINormalBackground:{
 					//Background image normal
 					[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
-									   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+									   fromRect:imageRect
 									  operation:NSCompositeSourceOver
 									   fraction:backgroundFade];
 					break;
@@ -187,7 +188,7 @@
 					
 					//Background image stretch
 					[backgroundImage drawInRect:visRect
-									   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+									   fromRect:imageRect
 									  operation:NSCompositeSourceOver
 									   fraction:backgroundFade];
 					break;
@@ -195,7 +196,7 @@
 				case AIFillStretchBackground:{
 					//Background image stretch
 					[backgroundImage drawInRect:visRect
-									   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+									   fromRect:imageRect
 									  operation:NSCompositeSourceOver
 									   fraction:backgroundFade];
 					break;
@@ -214,7 +215,7 @@
 						while(currentOrigin.x < visRect.size.width){
 							//Draw at the current x and y at least once with the original size
 							[backgroundImage drawInRect:NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height)
-											   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+											   fromRect:imageRect
 											  operation:NSCompositeSourceOver
 											   fraction:backgroundFade];
 							
