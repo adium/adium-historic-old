@@ -259,7 +259,7 @@
  */
 - (int)allowedLength
 {
-    return(0);
+    return(INT_MAX);
 }
 
 /*!
