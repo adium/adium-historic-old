@@ -109,100 +109,108 @@
 //Returns the object with the highest priority
 - (id)objectValue
 {
-    return([ownerArray count] ? [self _objectWithHighestPriority] : nil);
+    return((ownerArray && [ownerArray count]) ? [self _objectWithHighestPriority] : nil);
 }
 
 //Returns the greatest double value
 - (int)intValue
 {
-	int		count = [ownerArray count];
-	
-	//If we have more than one object and the object we want is not already in the front of our arrays, 
-	//we need to find the object with largest int value and move it to the front
-	if(count != 1 && !valueIsSortedToFront){
-		int 	currentMax = 0;
-		int		indexOfMax = 0;
-		int		index = 0;
-		
-		//Find the object with the largest int value
-		for(index = 0;index < count;index++){
-			int	value = [[contentArray objectAtIndex:index] intValue];
+	int count;
+	if (ownerArray && (count = [ownerArray count])) {
+		//If we have more than one object and the object we want is not already in the front of our arrays, 
+		//we need to find the object with largest int value and move it to the front
+		if(count != 1 && !valueIsSortedToFront){
+			int 	currentMax = 0;
+			int		indexOfMax = 0;
+			int		index = 0;
 			
-			if(value > currentMax){
-				currentMax = value;
-				indexOfMax = index;
+			//Find the object with the largest int value
+			for(index = 0;index < count;index++){
+				int	value = [[contentArray objectAtIndex:index] intValue];
+				
+				if(value > currentMax){
+					currentMax = value;
+					indexOfMax = index;
+				}
 			}
+			
+			//Move the object to the front, so we don't have to find it next time
+			[self _moveObjectToFront:indexOfMax];
+			
+			return(currentMax);
+		}else{
+			return([[contentArray objectAtIndex:0] intValue]);
 		}
-		
-		//Move the object to the front, so we don't have to find it next time
-		[self _moveObjectToFront:indexOfMax];
-		
-		return(currentMax);
-	}else{
-		return([[contentArray objectAtIndex:0] intValue]);
 	}
+	return 0;
 }
 
 //Returns the greatest double value
 - (double)doubleValue
 {
-	int		count = [ownerArray count];
-	
-	//If we have more than one object and the object we want is not already in the front of our arrays, 
-	//we need to find the object with largest double value and move it to the front
-	if(count != 1 && !valueIsSortedToFront){
-		double  currentMax = 0;
-		int		indexOfMax = 0;
-		int		index = 0;
+	int count;
+	if (ownerArray && (count = [ownerArray count])) {
 		
-		//Find the object with the largest double value
-		for(index = 0;index < count;index++){
-			double	value = [[contentArray objectAtIndex:index] doubleValue];
+		//If we have more than one object and the object we want is not already in the front of our arrays, 
+		//we need to find the object with largest double value and move it to the front
+		if(count != 1 && !valueIsSortedToFront){
+			double  currentMax = 0;
+			int		indexOfMax = 0;
+			int		index = 0;
 			
-			if(value > currentMax){
-				currentMax = value;
-				indexOfMax = index;
+			//Find the object with the largest double value
+			for(index = 0;index < count;index++){
+				double	value = [[contentArray objectAtIndex:index] doubleValue];
+				
+				if(value > currentMax){
+					currentMax = value;
+					indexOfMax = index;
+				}
 			}
+			
+			//Move the object to the front, so we don't have to find it next time
+			[self _moveObjectToFront:indexOfMax];
+			
+			return(currentMax);
+		}else{
+			return([[contentArray objectAtIndex:0] doubleValue]);
 		}
-		
-		//Move the object to the front, so we don't have to find it next time
-		[self _moveObjectToFront:indexOfMax];
-		
-		return(currentMax);
-	}else{
-		return([[contentArray objectAtIndex:0] doubleValue]);
 	}
+	
+	return 0;
 }
 
 //Returns the earliest date
 - (NSDate *)date
 {
-	int		count = [ownerArray count];
-	
-	//If we have more than one object and the object we want is not already in the front of our arrays, 
-	//we need to find the object with largest double value and move it to the front
-	if(count != 1 && !valueIsSortedToFront){
-		NSDate  *currentMax = nil;
-		int		indexOfMax = 0;
-		int		index = 0;
-		
-		//Find the object with the earliest date
-		for(index = 0;index < count;index++){
-			NSDate	*value = [contentArray objectAtIndex:index];
+	int count;
+	if (ownerArray && (count = [ownerArray count])) {
+		//If we have more than one object and the object we want is not already in the front of our arrays, 
+		//we need to find the object with largest double value and move it to the front
+		if(count != 1 && !valueIsSortedToFront){
+			NSDate  *currentMax = nil;
+			int		indexOfMax = 0;
+			int		index = 0;
 			
-			if([currentMax timeIntervalSinceDate:value] > 0){
-				currentMax = value;
-				indexOfMax = index;
+			//Find the object with the earliest date
+			for(index = 0;index < count;index++){
+				NSDate	*value = [contentArray objectAtIndex:index];
+				
+				if([currentMax timeIntervalSinceDate:value] > 0){
+					currentMax = value;
+					indexOfMax = index;
+				}
 			}
+			
+			//Move the object to the front, so we don't have to find it next time
+			[self _moveObjectToFront:indexOfMax];
+			
+			return(currentMax);
+		}else{
+			return([contentArray objectAtIndex:0]);
 		}
-		
-		//Move the object to the front, so we don't have to find it next time
-		[self _moveObjectToFront:indexOfMax];
-		
-		return(currentMax);
-	}else{
-		return([contentArray objectAtIndex:0]);
 	}
+	return nil;
 }
 
 //Return the object with highest priority in our arrays
@@ -297,7 +305,7 @@
 #pragma mark Array creation / Destruction
 //We don't actually create our arrays until needed.  There are many places where a mutable owner array
 //is created and not actually used to store anything, so this saves us a bit of ram.
-//Destroy our storage arrays
+//Create our storage arrays
 - (void)_createArrays
 {
     contentArray = [[NSMutableArray alloc] init];
