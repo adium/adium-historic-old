@@ -74,7 +74,8 @@
 - (NSData *)JPEGRepresentation
 {
 	/* JPEG does not support transparency, but NSImage does. We need to create a non-transparent NSImage
-	 * before creating our representation or transparent parts will become black.  White is preferable. */
+	 * before creating our representation or transparent parts will become black.  White is preferable.
+	 */
 
 	return ([[self opaqueBitmapImageRep] representationUsingType:NSJPEGFileType 
 													  properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] 
@@ -93,14 +94,15 @@
 - (NSData *)BMPRepresentation
 {
 	/* BMP does not support transparency, but NSImage does. We need to create a non-transparent NSImage
-	* before creating our representation or transparent parts will become black.  White is preferable. */
+	 * before creating our representation or transparent parts will become black.  White is preferable.
+	 */
 
 	return ([[self opaqueBitmapImageRep] representationUsingType:NSBMPFileType properties:nil]);
 }
 
 - (NSData *)GIFRepresentation
 {
-	/* This produces ugly output.  Very ugly. */
+	//This produces ugly output.  Very ugly.
 
 	NSData	*GIFRepresentation = nil;
 	
@@ -289,7 +291,7 @@
         [image addRepresentation:bitmap_rep];
         return image;
     }
-    return NULL;
+    return nil;
 }
 
 //Returns the current theme's miniature panel close button
