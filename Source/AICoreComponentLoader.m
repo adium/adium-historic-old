@@ -1,15 +1,15 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
@@ -25,7 +25,7 @@
 #import "AICoreComponentLoader.h"
 #import <Adium/AIPlugin.h>
 
-@class 	
+@class
 AIAccountListPreferencesPlugin,
 AIAccountMenuAccessPlugin,
 AIAliasSupportPlugin,
@@ -54,7 +54,7 @@ AIDualWindowInterfacePlugin,
 AIEmoticonsPlugin,
 AIEventSoundsPlugin,
 AIExtendedStatusPlugin,
-AILoggerPlugin,	
+AILoggerPlugin,
 AIMessageAliasPlugin,
 AINewMessagePanelPlugin,
 AIOfflineContactHidingPlugin,
@@ -117,7 +117,7 @@ ESSecureMessagingPlugin;
 - (void)initController
 {
 	components = [[NSMutableArray alloc] init];
-	
+
 	[self _loadComponentClass:[AIAccountListPreferencesPlugin class]];
 	[self _loadComponentClass:[AIAccountMenuAccessPlugin class]];
 	[self _loadComponentClass:[AIAliasSupportPlugin class]];
@@ -144,7 +144,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIEmoticonsPlugin class]];
 	[self _loadComponentClass:[AIEventSoundsPlugin class]];
 	[self _loadComponentClass:[AIExtendedStatusPlugin class]];
-	[self _loadComponentClass:[AILoggerPlugin class]];	
+	[self _loadComponentClass:[AILoggerPlugin class]];
 	[self _loadComponentClass:[AIMessageAliasPlugin class]];
 	[self _loadComponentClass:[AINewMessagePanelPlugin class]];
 	[self _loadComponentClass:[AIOfflineContactHidingPlugin class]];
@@ -155,7 +155,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIStateMenuPlugin class]];
 	[self _loadComponentClass:[AIStatusChangedMessagesPlugin class]];
 	[self _loadComponentClass:[AITabStatusIconsPlugin class]];
-	[self _loadComponentClass:[AITextForcingPlugin class]];
 	[self _loadComponentClass:[AITypingNotificationPlugin class]];
 	[self _loadComponentClass:[AIVideoChatInterfacePlugin class]];
 	[self _loadComponentClass:[BGContactNotesPlugin class]];
@@ -203,7 +202,7 @@ ESSecureMessagingPlugin;
 {
 	NSEnumerator	*enumerator = [components objectEnumerator];
 	AIPlugin		*plugin;
-		
+
 	while(plugin = [enumerator nextObject]){
 		[plugin uninstallPlugin];
 	}
@@ -213,9 +212,9 @@ ESSecureMessagingPlugin;
  * @brief Deallocate
  */
 - (void)dealloc
-{	
+{
 	[components release]; components = nil;
-	
+
 	[super dealloc];
 }
 
