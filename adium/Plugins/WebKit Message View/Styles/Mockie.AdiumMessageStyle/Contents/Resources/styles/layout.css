@@ -4,8 +4,14 @@ body {
 
 #Chat {
 	overflow: hidden;
-	margin-right: 10px;
-	margin-left: 10px;
+	padding: 0px 10px 0px 10px;
+}
+
+#curtain {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	height: 100%;
 }
 
 .incoming {

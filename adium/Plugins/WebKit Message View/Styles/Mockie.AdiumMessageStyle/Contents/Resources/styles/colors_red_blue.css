@@ -1,6 +1,9 @@
 body {
-	background: #f2e5e6;
-	font: 11px "Lucida Grande";
+	background-color: rgba(255,0,1,0.2);
+}
+
+#curtain {
+	background-color: rgba(255,255,255,0.8);
 }
 
 .incoming .buddyicon {
