@@ -73,6 +73,14 @@
  */
 - (void)setDrawsSelectedRowHighlight:(BOOL)inFlag;
 
+/*!
+ * @brief Cell corresponding to table column.
+ *
+ * Mostly useful for subclassing; by default, this is simple [tableColumn dataCell]
+ * @return NSCell object corresponding to the given table column.
+ */
+- (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item;
+
 @end
 
 @interface AIVariableHeightOutlineView (AIVariableHeightOutlineViewAndSubclasses)

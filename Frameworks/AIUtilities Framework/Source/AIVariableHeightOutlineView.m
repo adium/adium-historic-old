@@ -286,7 +286,7 @@
 			BOOL			selected;
 
 			tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
-			cell = [tableColumn dataCell];
+			cell = [self cellForTableColumn:tableColumn item:item];
 
 			[[self delegate] outlineView:self
 						 willDisplayCell:cell
@@ -356,7 +356,7 @@
 		for(tableColumnIndex = 0 ; tableColumnIndex < tableColumnsCount ; tableColumnIndex++){
 
 			NSTableColumn	*tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
-			id		cell = [tableColumn dataCell];
+			id		cell = [self cellForTableColumn:tableColumn item:item];
 
 			//Render the cell
 			[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:tableColumn item:item];
