@@ -59,9 +59,9 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	//New list object
+	//Configure for the list object, using the highest-up metacontact if necessary
 	[listObject release];
-	listObject = [inObject retain];
+	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
 
 	//Observe alert changes for our list object
 	[[adium notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil]; 
