@@ -67,7 +67,7 @@
     [super dealloc];
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
     
@@ -270,13 +270,14 @@
 	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
 
+        //Update all our status circles
 	NSEnumerator		*enumerator;
 	AIListObject		*object;
 
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(object = [enumerator nextObject]){
-            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil]];
+            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
         }
     }
 }

@@ -17,8 +17,7 @@
 #import <AIUtilities/AIUtilities.h>
 
 @interface AIContactIdlePlugin (PRIVATE)
-- (void)listObject:(AIListObject *)inObject isIdle:(BOOL)inIdle;
-- (void)setIdleForObject:(AIListObject *)inObject;
+- (void)setIdleForObject:(AIListObject *)inObject delayed:(BOOL)delayed silent:(BOOL)silent;
 - (void)updateIdleObjectsTimer:(NSTimer *)inTimer;
 @end
 
@@ -45,64 +44,50 @@
 }
 
 //Called when a handle's status changes
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
-    if(	inModifiedKeys == nil ||
-        [inModifiedKeys containsObject:@"IdleSince"]){
-        
-        //Start/Stop tracking the handle
-        [self listObject:inObject isIdle:([[inObject statusArrayForKey:@"IdleSince"] earliestDate] != nil)];
+    if(	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]){
+
+        if([[inObject statusArrayForKey:@"IdleSince"] earliestDate] != nil){
+            //Track the handle
+            if(!idleObjectArray){
+                idleObjectArray = [[NSMutableArray alloc] init];
+                idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleObjectsTimer:) userInfo:nil repeats:YES] retain];
+            }
+            [idleObjectArray addObject:inObject];
+
+        }else{
+            //Stop tracking the handle
+            [idleObjectArray removeObject:inObject];
+            if([idleObjectArray count] == 0){
+                [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
+                [idleObjectArray release]; idleObjectArray = nil;
+            }
+
+        }
+
+        //Set the correct idle value
+        [self setIdleForObject:inObject delayed:delayed silent:silent];
     }
 
     return(nil);
 }
         
-        
-//Adds or removes a handle from our idle tracking array
-//Handles in the array have their idle times increased every minute
-- (void)listObject:(AIListObject *)inObject isIdle:(BOOL)inIdle
-{
-    if(inIdle){
-        //Track the handle
-        if(!idleObjectArray){
-            idleObjectArray = [[NSMutableArray alloc] init];
-            idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleObjectsTimer:) userInfo:nil repeats:YES] retain];
-        }
-        [idleObjectArray addObject:inObject];
-        
-    }else{
-        //Stop tracking the handle
-        [idleObjectArray removeObject:inObject];
-        if([idleObjectArray count] == 0){
-            [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
-            [idleObjectArray release]; idleObjectArray = nil;
-        }
-
-    }
-
-    //Set the correct idle value
-    [self setIdleForObject:inObject];
-
-}
-
 //Updates the idle duration of all idle handles
 - (void)updateIdleObjectsTimer:(NSTimer *)inTimer
 {
     NSEnumerator	*enumerator;
     AIListObject	*object;
 
-    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates to prevent multiple updates and re-sorts
-
     enumerator = [idleObjectArray objectEnumerator];
     while((object = [enumerator nextObject])){
-        [self setIdleForObject:object]; //Update the contact's idle time
+        [self setIdleForObject:object delayed:YES silent:YES]; //Update the contact's idle time
+#warning should I really be muting here?  ?  (Does it matter either way?)
     }
-
-    [[owner contactController] setHoldContactListUpdates:NO]; //Resume updates
 }
 
 //Give a contact its correct idle value
-- (void)setIdleForObject:(AIListObject *)inObject
+- (void)setIdleForObject:(AIListObject *)inObject delayed:(BOOL)delayed silent:(BOOL)silent
 {
     NSDate	*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
     
@@ -116,7 +101,9 @@
 
     //Let everyone know we changed it
     [[owner contactController] listObjectStatusChanged:inObject
-                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
+                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]
+                                               delayed:delayed
+                                                silent:silent];
 }
 
 

@@ -117,10 +117,8 @@
 //Reload the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
-    if(![[owner contactController] holdContactListUpdates]){        
-        [contactListView reloadData]; //Redisplay
-        [self _desiredSizeChanged]; //Resize
-    }
+    [contactListView reloadData]; //Redisplay
+    [self _desiredSizeChanged]; //Resize
 }
 
 //Redisplay the modified object

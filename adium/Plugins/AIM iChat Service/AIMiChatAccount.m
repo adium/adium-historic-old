@@ -19,8 +19,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "InstantMessageFramework.h"
 
-#define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
-#define SIGN_ON_UPKEEP_INTERVAL	1.6		//Max wait before sign up updates
+#define SIGN_ON_EVENT_DURATION	30.0		//Amount of time to wait for initial sign on updates
 
 //
 extern void* objc_getClass(const char *name);
@@ -29,9 +28,9 @@ extern void* objc_getClass(const char *name);
 @interface AIMiChatAccount (PRIVATE)
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle;
-- (void)firstSignOnUpdateReceived;
-- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
 - (void)_sendTyping:(BOOL)typing to:(AIListContact *)object;
+- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
+- (void)_endSilenceAllUpdates;
 @end
 
 @implementation AIMiChatAccount
@@ -176,7 +175,7 @@ extern void* objc_getClass(const char *name);
         if(chat == nil || chat != chat){
             chat = [AIMService createChatForIMsWith:[handle UID] isDirect:NO];
             [[handle statusDictionary] setObject:chat forKey:@"iChat_Chat"];
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"iChat_Chat"]];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"iChat_Chat"] delayed:NO silent:NO];
         }
         
         //(I guess I could cache these chats)
@@ -336,12 +335,10 @@ extern void* objc_getClass(const char *name);
     switch(inStatus){
         case 0: //Offline
             //Flush all our handle status flags
-            [[owner contactController] setHoldContactListUpdates:YES];
             enumerator = [[handleDict allValues] objectEnumerator];
             while((handle = [enumerator nextObject])){
                 [self removeAllStatusFlagsFromHandle:handle];
             }
-            [[owner contactController] setHoldContactListUpdates:NO];
 
             //Remove all our handles
             [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
@@ -371,22 +368,12 @@ extern void* objc_getClass(const char *name);
         break;
 
         case 4: //Online
-            [[owner contactController] setHoldContactListUpdates:YES];
-
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
-            //Adium waits for the first sign on update, and then checks for aditional updates every X seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
-            //If no updates are receiced for X seconds, we assume 'no available contacts' and resume contact list updates.
-            numberOfSignOnUpdates = 0;
-            processingSignOnUpdates = YES;
-            waitingForFirstUpdate = 2;
-            [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_MAX_WAIT) //5 Seconds max
-                                             target:self
-                                           selector:@selector(firstSignOnUpdateReceived)
-                                           userInfo:nil
-                                            repeats:NO];
-
+            //
+            [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
+    
         break;
 
         default:
@@ -395,41 +382,26 @@ extern void* objc_getClass(const char *name);
     }
 }
 
-- (void)firstSignOnUpdateReceived
+//Update Silencing --------------------------------------------------------------------------------------------
+//
+- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
 {
-//    NSLog(@"firstSignOnUpdateReceived");
-    if(waitingForFirstUpdate){
-        waitingForFirstUpdate = 0;
-    
-        if(numberOfSignOnUpdates == 0){
-            //No available contacts after 5 seconds, assume noone is online and resume contact list updates
-            [self waitForLastSignOnUpdate:nil];
-        }else{
-            //Check every X seconds for additional updates
-            [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_UPKEEP_INTERVAL)
-                                            target:self
-                                        selector:@selector(waitForLastSignOnUpdate:)
-                                        userInfo:nil
-                                            repeats:YES];
-        }
-    }
+    silenceAndDelayBuddyUpdates = YES;
+    NSLog(@"silenceAllBuddyUpdatesForInterval");
+    [NSTimer scheduledTimerWithTimeInterval:interval
+                                     target:self
+                                   selector:@selector(_endSilenceAllUpdates)
+                                   userInfo:nil
+                                    repeats:NO];
 }
 
-- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
+//
+- (void)_endSilenceAllUpdates
 {
-    if(numberOfSignOnUpdates == 0){
-//        NSLog(@"waitForLastSignOnUpdate Done");
-        processingSignOnUpdates = NO;
-        //No updates received, sign on is complete
-        [inTimer invalidate]; //Stop this timer
-        [[owner contactController] handlesChangedForAccount:self]; //Let Adium know of our new handles
-        [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
-        
-    }else{
-//        NSLog(@"waitForLastSignOnUpdate %i",numberOfSignOnUpdates);
-        numberOfSignOnUpdates = 0;
-    }
+    NSLog(@"_endSilenceAllUpdates");
+    silenceAndDelayBuddyUpdates = NO;
 }
+
 
 //A message was received
 - (oneway void)service:(id)inService chat:(id)chat messageReceived:(id)inMessage
@@ -456,7 +428,7 @@ extern void* objc_getClass(const char *name);
         cachedChat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
         if(cachedChat == nil || cachedChat != chat){
             [[handle statusDictionary] setObject:chat forKey:@"iChat_Chat"];
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"iChat_Chat"]];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"iChat_Chat"] delayed:NO silent:NO];
         }
 
         //If the buddy is typing
@@ -464,7 +436,7 @@ extern void* objc_getClass(const char *name);
             NSNumber	*isTyping = [[handle statusDictionary] objectForKey:@"Typing"];
             if(!isTyping || [isTyping boolValue] == NO){
                 [[handle statusDictionary] setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
-                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
             }
         }
 
@@ -473,7 +445,7 @@ extern void* objc_getClass(const char *name);
             NSNumber	*isTyping = [[handle statusDictionary] objectForKey:@"Typing"];
             if(isTyping && [isTyping boolValue] == YES){
                 [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
-                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
             }
         }
 
@@ -498,13 +470,6 @@ extern void* objc_getClass(const char *name);
 {
     NSEnumerator	*buddyEnumerator;
     NSDictionary	*buddyPropertiesDict;
-
-    //Sign on update monitoring
-    if(processingSignOnUpdates) numberOfSignOnUpdates++;
-    if(waitingForFirstUpdate == 1) [self firstSignOnUpdateReceived];
-    if(waitingForFirstUpdate) waitingForFirstUpdate--;
-
-//    NSLog(@"buddyPropertiesChanged: %@", inProperties);
     
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){
@@ -536,15 +501,15 @@ extern void* objc_getClass(const char *name);
     
                 //Let the contact controller know about the new handle
                 // (This is not necessary when signing on, since we let the controller know about all the new handles at once after signon is complete)
-                if(!processingSignOnUpdates){
+               // if(!processingSignOnUpdates){
                     [[owner contactController] handle:handle addedToAccount:self];
-                }
+               // }
             }
     
             //Apply the properties, and inform the contact controller of any changes
             modifiedStatusKeys = [self applyProperties:buddyPropertiesDict toHandle:handle];
             if([modifiedStatusKeys count]){
-                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:modifiedStatusKeys];
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:modifiedStatusKeys delayed:(silenceAndDelayBuddyUpdates) silent:(silenceAndDelayBuddyUpdates)];
             }
         }
     }
@@ -684,9 +649,6 @@ extern void* objc_getClass(const char *name);
 
     NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
 
-    //Sign on update monitoring
-    if(processingSignOnUpdates) numberOfSignOnUpdates++;
-
     //Get the handle
     handle = [handleDict objectForKey:compactedName];
     if(handle){
@@ -694,7 +656,7 @@ extern void* objc_getClass(const char *name);
 
         if(image){
             [[handle statusDictionary] setObject:image forKey:@"BuddyImage"];
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"]];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"] delayed:(silenceAndDelayBuddyUpdates) silent:(silenceAndDelayBuddyUpdates)];
         }
     }
 }
@@ -761,7 +723,7 @@ extern void* objc_getClass(const char *name);
     NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",@"StatusMessage",@"BuddyImage",nil];
 
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
 }
 
 @end

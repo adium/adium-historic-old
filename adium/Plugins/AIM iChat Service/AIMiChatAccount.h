@@ -29,10 +29,7 @@
     NSMutableDictionary	*typingDict;
     
     BOOL		isOnline;
-
-    BOOL		processingSignOnUpdates;
-    BOOL		waitingForFirstUpdate;
-    int			numberOfSignOnUpdates;
+    BOOL		silenceAndDelayBuddyUpdates;
 }
 
 @end

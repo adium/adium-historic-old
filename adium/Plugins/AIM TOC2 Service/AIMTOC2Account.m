@@ -30,8 +30,7 @@
 
 #define UPDATE_INTERVAL		(1.0 / 10.0)	//Rate to check for socket updates
 
-#define SIGN_ON_MAX_WAIT	10.0		//Max amount of time to wait for first sign on packet
-#define SIGN_ON_UPKEEP_INTERVAL	0.8		//Max wait before sign up updates
+#define SIGN_ON_EVENT_DURATION	30.0		//Amount of time to wait for initial sign on updates
 
 #define AUTO_RECONNECT_DELAY_PING_FAILURE	2.0	//Delay in seconds
 #define AUTO_RECONNECT_DELAY_SOCKET_DROP	2.0	//Delay in seconds
@@ -82,17 +81,18 @@
 - (void)pingFailure:(NSTimer *)inTimer;
 - (void)autoReconnectAfterDelay:(int)delay;
 - (void)autoReconnectTimer:(NSTimer *)inTimer;
-- (void)firstSignOnUpdateReceived;
-- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
+- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
+- (void)_endSilenceAllUpdates;
+- (void)silenceUpdateFromHandle:(AIHandle *)inHandle;
 - (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
 - (NSString *)loginStringForName:(NSString *)name password:(NSString *)pass;
-- (void)holdUpdatesUntilConnectingIsComplete;
 - (IBAction)sendCommand:(NSString *)command;
 - (NSString *)hashPassword:(NSString *)pass;
 - (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
 - (NSString *)clientDescriptionForID:(NSString *)clientID;
 - (void)loadProfileFromURL:(NSString *)inURL;
 - (void)resetPingTimer;
+- (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage;
 @end
 
 @implementation AIMTOC2Account
@@ -107,6 +107,8 @@
     outQue = [[NSMutableArray alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
+    silenceUpdateArray = [[NSMutableArray alloc] init];
+    
     pingTimer = nil;
     pingInterval = nil;
     firstPing = nil;
@@ -189,6 +191,7 @@
     //Add the handle
     [self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
     [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+    [self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
 
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
@@ -395,13 +398,21 @@
 {
     AIListObject	*object = [inChat object];
 
-    //We only use AIChats for chat rooms at the moment
-    if([object isKindOfClass:[AIListChat class]]){
+    if([object isKindOfClass:[AIListChat class]]){ //This chat belongs to a chat room
         //Leave the chat room
         [self AIM_LeaveChat:[object UID]];
 
         //Remove it from our chat dict
         [chatDict removeObjectForKey:[object UID]];
+
+    }else if([object isKindOfClass:[AIListContact class]]){ //Chat belongs to a handle
+        AIHandle	*handle = [(AIListContact *)object handleForAccount:self];
+
+        //If this chat belongs to a temporary handle, we want to remove the temporary handle from our list.
+        if([handle temporary]){
+            [self removeHandleWithUID:[handle UID]];
+        }
+        
     }
 
     return(YES); //Success
@@ -534,18 +545,17 @@
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
 
     //Flush all our handle status flags
-    [[owner contactController] setHoldContactListUpdates:YES];
     enumerator = [[handleDict allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
         [self removeAllStatusFlagsFromHandle:handle];
     }
-    [[owner contactController] setHoldContactListUpdates:NO];
 
     //Remove all our handles
     [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
     [[owner contactController] handlesChangedForAccount:self];
 
     //Clean up and close down
+    [silenceUpdateArray release]; silenceUpdateArray = nil;
     [socket release]; socket = nil;
     [pingTimer invalidate];
     [pingTimer release]; pingTimer = nil;
@@ -668,8 +678,8 @@
 
                 }else if([command compare:@"CONFIG2"] == 0){
                     [self AIM_HandleConfig:message];
-                    
-                    [self holdUpdatesUntilConnectingIsComplete];
+
+                    [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
 
                     //Flag ourself as online
                     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
@@ -802,7 +812,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.80 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.81 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -921,7 +931,7 @@
     //Flag it as online and set the correct display name
     [[chatObject statusArrayForKey:@"Display Name"] setObject:chatName withOwner:chatObject];
     [[chatObject statusArrayForKey:@"Online"] setObject:[NSNumber numberWithBool:YES] withOwner:chatObject];
-    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObjects:@"Display Name", @"Online", nil]];
+    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObjects:@"Display Name", @"Online", nil] delayed:NO silent:YES];
 
     //Force open a chat window
     [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:chatObject, @"To", self, @"From", /*chat, @"Chat",*/ nil]];
@@ -1023,14 +1033,24 @@
             [self setTypingFlagOfHandle:handle to:YES];
         }
 
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
     }
 }
 
 - (void)AIM_HandleEncMessageIn:(NSString *)inCommand
 {
-    NSString		*name = [inCommand TOCStringArgumentAtIndex:1];
-    NSString		*rawMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:9];
+    [self _AIMHandleMessageInFromUID:[inCommand TOCStringArgumentAtIndex:1]
+                          rawMessage:[inCommand nonBreakingTOCStringArgumentAtIndex:9]];
+}
+
+- (void)AIM_HandleMessageIn:(NSString *)inCommand
+{
+    [self _AIMHandleMessageInFromUID:[inCommand TOCStringArgumentAtIndex:1]
+                          rawMessage:[inCommand nonBreakingTOCStringArgumentAtIndex:4]];
+}
+
+- (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage
+{
     AIHandle		*handle;
     AIContentMessage	*messageObject;
 
@@ -1043,36 +1063,18 @@
     //Clear the 'typing' flag
     [self setTypingFlagOfHandle:handle to:NO];
 
-    //Add a content object for the message
-    messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:[handle containingContact] onAccount:self]
-                                         withSource:[handle containingContact]
-                                        destination:self
-                                               date:nil
-                                            message:[AIHTMLDecoder decodeHTML:rawMessage]];
-    [[owner contentController] addIncomingContentObject:messageObject];
+    //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
+    if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
+        
+        //    [[owner contactController] setHoldContactListUpdates:YES];
+        //[contactListGeneration handle:inHandle addedToAccount:inAccount];
+        //    [[owner contactController] setHoldContactListUpdates:NO];
+        
 
-}
-
-- (void)AIM_HandleMessageIn:(NSString *)inCommand
-{
-    AIHandle		*handle;
-    NSString		*name;
-    NSString		*rawMessage;
-    AIContentMessage	*messageObject;
-
-    //Extract the handle and message from the command
-    name = [inCommand TOCStringArgumentAtIndex:1];
-    rawMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:4];
-
-    //Ensure a handle exists (creating a stranger if necessary)
-    handle = [handleDict objectForKey:[name compactedString]];
-    if(!handle){
-        handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
     }
 
-    //Clear typing flag
-    [self setTypingFlagOfHandle:handle to:NO];
-    
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:[handle containingContact] onAccount:self]
                                          withSource:[handle containingContact]
@@ -1080,8 +1082,8 @@
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:rawMessage]];
     [[owner contentController] addIncomingContentObject:messageObject];
-    
-}         
+}
+
 
 - (void)AIM_HandleUpdateBuddy:(NSString *)message
 {
@@ -1090,10 +1092,6 @@
     AIHandle		*handle = nil;
     NSMutableArray	*alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
 
-    //Sign on update monitoring
-    if(processingSignOnUpdates) numberOfSignOnUpdates++;
-    if(waitingForFirstUpdate) [self firstSignOnUpdateReceived];
-    
     //Get the handle
     if(handle = [handleDict objectForKey:compactedName]){
         NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
@@ -1174,7 +1172,15 @@
 
         //Let the contact list know a handle's status changed
         if([alteredStatusKeys count]){
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys];
+            BOOL silent = (silenceAndDelayBuddyUpdates);
+
+            //Temporary silence
+            if([silenceUpdateArray count] && [silenceUpdateArray containsObject:[handle UID]]){
+                silent = YES;
+                [silenceUpdateArray removeObject:[handle UID]];
+            }
+            
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys delayed:(silenceAndDelayBuddyUpdates) silent:silent];
         }
         
     }
@@ -1199,23 +1205,48 @@
     NSString		*errorMessage;
     BOOL		disconnect = NO;
     int			errorNumber = [[message TOCStringArgumentAtIndex:1] intValue];
+    BOOL		displayError = YES;
     
-    //Get the error message data
-    //Error messages (and if we should disconnect) come from keys within the AIMErrors.plist file
-    path = [[NSBundle bundleForClass:[self class]] pathForResource:AIM_ERRORS_FILE ofType:@"plist"];
-    errorDict = [NSDictionary dictionaryWithContentsOfFile:path];
+    //Special case error situations
+    if(errorNumber == 931){
+        NSString	*contactName = [message TOCStringArgumentAtIndex:2];
+        int		subError = [[message TOCStringArgumentAtIndex:3] intValue];
 
-    //Get the corrent message and disconnect flag
-    errorMessage = [[errorDict objectForKey:@"ErrorString"] objectForKey:[message TOCStringArgumentAtIndex:1]];
-    if(!errorMessage) errorMessage = @"Unknown Error";
-    disconnect = [[[errorDict objectForKey:@"ErrorDisc"] objectForKey:[message TOCStringArgumentAtIndex:1]] boolValue];
+        if(subError == 17){ //Contact list is full, could not add handle.
+            NSString	*handleKey = [contactName compactedString];
+            AIHandle	*handle = [[handleDict objectForKey:handleKey] retain];
 
-    //Display the error
-    [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, screenName] withDescription:errorMessage];
+            //If the handle is not temporary, we remove it from our local handle dict
+            if(![handle temporary]){
+                [handleDict removeObjectForKey:handleKey];
+                [[owner contactController] handle:handle removedFromAccount:self];
+            }
 
-    //Disconnecting Errors
-    if(disconnect){
-        [self disconnect];
+            //If the handle was temporary, we handle this error silently.
+            if([handle temporary]) displayError = NO;
+
+            [handle release];
+        }
+    }
+
+    if(displayError){
+        //Get the error message data
+        //Error messages (and if we should disconnect) come from keys within the AIMErrors.plist file
+        path = [[NSBundle bundleForClass:[self class]] pathForResource:AIM_ERRORS_FILE ofType:@"plist"];
+        errorDict = [NSDictionary dictionaryWithContentsOfFile:path];
+    
+        //Get the corrent message and disconnect flag
+        errorMessage = [[errorDict objectForKey:@"ErrorString"] objectForKey:[message TOCStringArgumentAtIndex:1]];
+        if(!errorMessage) errorMessage = @"Unknown Error";
+        disconnect = [[[errorDict objectForKey:@"ErrorDisc"] objectForKey:[message TOCStringArgumentAtIndex:1]] boolValue];
+    
+        //Display the error
+        [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, screenName] withDescription:errorMessage];
+    
+        //Disconnecting Errors
+        if(disconnect){
+            [self disconnect];
+        }
     }
 }
 
@@ -1486,49 +1517,30 @@
 
 
 
-//Connecting update holding --------------------------------------------------------------------------------------------------------
-//Adium waits for the first sign on update, and then checks for aditional updates every X seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.  If no updates are receiced for Y seconds, we assume 'no available contacts' and resume contact list updates.
-- (void)holdUpdatesUntilConnectingIsComplete
+//Update Silencing --------------------------------------------------------------------------------------------
+//
+- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
 {
-    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates until we're finished signing on
-
-    waitingForFirstUpdate = YES;
-    processingSignOnUpdates = YES;
-    numberOfSignOnUpdates = 0;
-    [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_MAX_WAIT) //5 Seconds max
+    silenceAndDelayBuddyUpdates = YES;
+    NSLog(@"silenceAllBuddyUpdatesForInterval");
+    [NSTimer scheduledTimerWithTimeInterval:interval
                                      target:self
-                                   selector:@selector(firstSignOnUpdateReceived)
+                                   selector:@selector(_endSilenceAllUpdates)
                                    userInfo:nil
                                     repeats:NO];
 }
 
-- (void)firstSignOnUpdateReceived
+//
+- (void)_endSilenceAllUpdates
 {
-    if(waitingForFirstUpdate){
-        waitingForFirstUpdate = NO;
-
-        if(numberOfSignOnUpdates == 0){
-            //No available contacts after 5 seconds, assume noone is online and resume contact list updates
-            [self waitForLastSignOnUpdate:nil];
-        }else{
-            //Check every X seconds for additional updates
-            [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_UPKEEP_INTERVAL) target:self selector:@selector(waitForLastSignOnUpdate:) userInfo:nil repeats:YES];
-        }
-    }
+    NSLog(@"_endSilenceAllUpdates");
+    silenceAndDelayBuddyUpdates = NO;
 }
 
-- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
+//Silence the next update from the specified handle
+- (void)silenceUpdateFromHandle:(AIHandle *)inHandle
 {
-    if(numberOfSignOnUpdates == 0){
-        //No updates received, sign on is complete
-        [inTimer invalidate]; //Stop this timer
-        [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
-        processingSignOnUpdates = NO;
-
-    }else{
-        numberOfSignOnUpdates = 0;
-
-    }
+    [silenceUpdateArray addObject:[inHandle UID]];
 }
 
 
@@ -1573,7 +1585,7 @@
 
         //Add profile to the handle
         [[handle statusDictionary] setObject:[AIHTMLDecoder decodeHTML:profile] forKey:@"TextProfile"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"]];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"] delayed:NO silent:NO];
     }
 
     //Cleanup
@@ -1703,7 +1715,7 @@
     NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
 
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
 }
 
 // Dealloc
@@ -1733,7 +1745,7 @@
     
     if((typing && !currentValue) || (!typing && currentValue)){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];        
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
     }
 }
 

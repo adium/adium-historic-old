@@ -24,7 +24,7 @@
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 
 @interface AIAliasSupportPlugin (PRIVATE)
-- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject;
+- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject delayed:(BOOL)delayed;
 @end
 
 @implementation AIAliasSupportPlugin
@@ -58,7 +58,7 @@
     NSString	*alias = [textField_alias stringValue];
     
     //Apply
-    [self _applyAlias:alias toObject:activeListObject];
+    [self _applyAlias:alias toObject:activeListObject delayed:NO];
 
     //Save the alias
     [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
@@ -83,13 +83,13 @@
 }
 
 //Called as contacts are created, load their alias
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     if(inModifiedKeys == nil){ //Only set an alias on contact creation
         NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject];
 
         if(alias != nil && [alias length] != 0){
-            [self _applyAlias:alias toObject:inObject];
+            [self _applyAlias:alias toObject:inObject delayed:delayed];
         }
     }
     
@@ -133,7 +133,7 @@
 
     if(contact){
         //Apply the alias
-        [self _applyAlias:value toObject:contact];
+        [self _applyAlias:value toObject:contact delayed:NO];
 
         //Save the alias
         [[owner preferenceController] setPreference:value
@@ -149,7 +149,7 @@
 
 //Private ---------------------------------------------------------------------------------------
 //Apply an alias to an object (Does not save the alias!)
-- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject
+- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject delayed:(BOOL)delayed
 {
     AIMutableOwnerArray	*displayNameArray;
     
@@ -159,8 +159,8 @@
     }else{
         [displayNameArray setObject:nil withOwner:self]; //Remove the alias
     }
-    
-    [[owner contactController] listObjectAttributesChanged:activeListObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+
+    [[owner contactController] listObjectAttributesChanged:activeListObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
 }
 
 @end

@@ -38,7 +38,7 @@
 }
 
 //Catch away message changes and display them
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     
     if([inModifiedKeys containsObject:@"StatusMessage"]){
