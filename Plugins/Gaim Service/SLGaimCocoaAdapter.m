@@ -2254,6 +2254,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	GaimConversation *conv = existingConvLookupFromChat(chat);
 	
 	if (conv){
+		[chatDict removeObjectForKey:[chat uniqueChatID]];
+		[chat release];
+			
+		conv->ui_data = nil;
+		
 		gaim_conversation_destroy(conv);
 	}
 }
