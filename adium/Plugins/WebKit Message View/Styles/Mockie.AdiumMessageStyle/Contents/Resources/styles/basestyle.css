@@ -16,6 +16,10 @@ body {
 	font-size: 11px;
 }
 
+.mask {
+	background-color: rgba(128,128,128,0.2);
+}
+
 .protocol {
 	color: rgba(255,255,255,0.5);
 	font-weight: bold;

@@ -7,3 +7,13 @@
 	float: left;
 	margin: 0px 5px 5px 0px;
 }
+
+.incoming .mask {
+	float: right;
+	margin-right: -37px;
+}
+
+.outgoing .mask {
+	float: left;
+	margin-left: -37px;
+}

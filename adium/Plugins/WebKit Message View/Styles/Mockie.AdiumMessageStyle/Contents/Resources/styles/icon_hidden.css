@@ -2,6 +2,10 @@
 	display: none;
 }
 
+.mask {
+	display: none;
+}
+
 p {
 	padding-right: 1px;
 }
