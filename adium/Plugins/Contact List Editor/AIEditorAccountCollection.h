@@ -16,7 +16,7 @@
     AIAdium				*owner;
     AIAccount<AIAccount_Handles>	*account;
     AIEditorListGroup			*list;
-    int					controlledChanges;
+    BOOL				controlledChanges;
 }
 
 + (AIEditorAccountCollection *)editorCollectionForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;

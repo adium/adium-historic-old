@@ -127,7 +127,10 @@
                 
                 //Correctly set the object's service ID (for now)
                 if(!serviceIDSet){
-                    [(AIEditorListHandle *)inObject setServiceID:[collection serviceID]];
+                    AIServiceType	*serviceType = [[owner accountController] serviceTypeWithID:[collection serviceID]];
+                    
+                    [(AIEditorListHandle *)inObject setServiceID:[serviceType identifier]];	//Set the correct serviceID
+                    [inObject setUID:[serviceType filterUID:[inObject UID]]];			//Correctly filter the UID
                     serviceIDSet = YES;
                 }
                 
@@ -323,6 +326,7 @@
 }
 
 
+
 //A collection's content has changed
 - (void)collectionContentChanged:(NSNotification *)notification
 {
@@ -353,12 +357,15 @@
 - (void)collectionAddedObject:(NSNotification *)notification
 {
     id <AIEditorCollection>	collection = [notification object];
-    AIEditorListHandle		*handle = [[notification userInfo] objectForKey:@"Object"];
+    AIEditorListHandle		*object = [[notification userInfo] objectForKey:@"Object"];
+    BOOL			isGroup = [object isKindOfClass:[AIEditorListGroup class]];
 
-    NSLog(@"collectionAddedObject: %@",[handle UID]);
+    NSLog(@"collectionAddedObject: %@",[object UID]);
+
     if([collection includeInOwnershipColumn] && collection != self){
+        
         //If object isn't already on our list
-        if(![self containsHandleWithUID:[handle UID] serviceID:[collection serviceID]]){
+        if(!isGroup && ![self containsHandleWithUID:[object UID] serviceID:[collection serviceID]]){
             //Rebuild our list (It'd be faster to just add the new handle here, however)
             [list release];
             list = [[self generateEditorListGroup] retain];

@@ -54,5 +54,6 @@
 - (void)moveObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(id <AIEditorCollection>)destCollection;
 - (void)deleteObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListGroup *)groupNamed:(NSString *)targetGroupName onCollection:(id <AIEditorCollection>)collection;
+- (void)importFile:(NSString *)inPath;
 
 @end

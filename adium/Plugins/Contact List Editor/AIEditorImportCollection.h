@@ -14,15 +14,14 @@
 @interface AIEditorImportCollection : NSObject <AIEditorCollection>
 {
     AIEditorListGroup			*list;
+    NSString				*path;
 }
 
-+ (AIEditorImportCollection *)editorCollection;
-+ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)path;
++ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath;
 - (NSString *)name;
 - (NSImage *)icon;
 - (BOOL)enabled;
 - (AIEditorListGroup *)list;
-- (void)importAndAppendContactsFromPath:(NSString *)path;
 //these functions are ignored (they are empty)
 - (void)addObject:(AIEditorListObject *)inObject;
 - (void)deleteObject:(AIEditorListObject *)inObject;

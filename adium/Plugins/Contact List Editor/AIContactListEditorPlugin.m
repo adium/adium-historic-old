@@ -251,7 +251,7 @@
 {
     [object retain]; //Hold onto the object until we're done with it
 
-    if(![object temporary]){ //Since temp objects aren't yet in the collecting, we skip this call
+    if(![object temporary]){ //Since temp objects aren't yet in the collection, we skip this call
         [collection deleteObject:object];
     }
     [[object containingGroup] removeObject:object];
@@ -261,6 +261,22 @@
     [object release];
 }
 
+//Import a file
+- (void)importFile:(NSString *)inPath
+{
+    AIEditorImportCollection *defaultCollection;
+
+    //Create a new import collection
+    defaultCollection = [AIEditorImportCollection editorCollectionWithPath:inPath];
+    [collectionsArray addObject:defaultCollection];
+
+    //Let everyone know the collection list changed
+    [[owner notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
+
+    //Select the new import collection
+//    selectedCollection = [[plugin collectionsArray] objectAtIndex:index]; //select it
+//    [tableView_sourceList selectRow:index byExtendingSelection:NO]; //highlight it
+}
 
 
 //Builds the collection array
@@ -288,7 +304,7 @@
     //    [collectionsArray addObject:[AIEditorBlockedCollection blockedCollectionWithOwner:owner]];
 
     //Add a single (empty) collection for imported contacts
-    [collectionsArray addObject:[AIEditorImportCollection editorCollection]];
+//    [collectionsArray addObject:[AIEditorImportCollection editorCollection]];
 
     //
     [[owner notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
