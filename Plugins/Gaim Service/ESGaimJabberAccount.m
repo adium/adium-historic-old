@@ -32,6 +32,51 @@
 
 @implementation ESGaimJabberAccount
 
+/*!
+* @brief The UID will be changed. The account has a chance to perform modifications
+ *
+ * Upgrade old Jabber accounts stored with the host in a separate key to have the right UID, in the form
+ * name@server.org
+ *
+ * Append @jabber.org to a proposed UID which has no domain name and does not need to be updated.
+ *
+ * @param proposedUID The proposed, pre-filtered UID (filtered means it has no characters invalid for this servce)
+ * @result The UID to use; the default implementation just returns proposedUID.
+ */
+- (NSString *)accountWillSetUID:(NSString *)proposedUID
+{
+	NSString	*correctUID;
+	
+	if((proposedUID && ([proposedUID length] > 0)) && 
+	   ([proposedUID rangeOfString:@"@"].location == NSNotFound)){
+		
+		NSString	*host;
+		//Upgrade code: grab a previously specified Jabber host
+		if(host = [self preferenceForKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]){
+			//Determine our new, full UID
+			correctUID = [NSString stringWithFormat:@"%@@%@",proposedUID, host];
+
+			//Clear the preference and then set the UID so we don't perform this upgrade again
+			[self setPreference:nil forKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS];
+			[self setPreference:correctUID forKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
+			
+			/* Save the accounts after the setting of the UID is complete, since we destroyed the information needed
+			 * to do it again. */
+			[[adium accountController] performSelector:@selector(saveAccounts)
+											withObject:nil
+											afterDelay:0];
+			
+		}else{
+			//Append @jabber.org to a Jabber account with no server
+			correctUID = [NSString stringWithFormat:@"%@@jabber.org",proposedUID];			
+		}
+	}else{
+		correctUID = proposedUID;
+	}
+
+	return correctUID;
+}
+
 - (const char*)protocolPlugin
 {
 	[self initSSL];
@@ -147,16 +192,6 @@
 	  attachmentImagesOnlyForSending:YES
 					  simpleTagsOnly:NO
 					  bodyBackground:NO]);
-}
-
-//Make sure the server is appended if something attempts to access the formattedUID
-- (NSString *)formattedUID
-{
-	if ([UID rangeOfString:@"@"].location != NSNotFound){
-		return UID;
-	}else{
-		return ([NSString stringWithFormat:@"%@@%@",UID,[self host]]);
-	}
 }
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object
