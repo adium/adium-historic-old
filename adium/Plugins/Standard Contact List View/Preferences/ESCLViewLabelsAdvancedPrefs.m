@@ -62,7 +62,11 @@
 
     [checkbox_labelAroundContact setState:[[preferenceDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue]];
     [checkbox_outlineLabels setState:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue]];
+    
     [slider_labelOpacity setFloatValue:[[preferenceDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue]];
+    [slider_labelOpacity setMinValue:0.05];
+    [slider_labelOpacity setMaxValue:1.00];
+    
     [checkbox_labelGroups setState:[[preferenceDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue]];
     [colorWell_labelGroupsColor setColor:[[preferenceDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor]];
 	[checkbox_useGradient setState:[[preferenceDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue]];
