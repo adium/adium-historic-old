@@ -165,15 +165,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	NSString					*serviceClassContext = nil;
     int                         currentLocation = 0;
 
-	NSLog(@"Converting emoticons in %@ ; context %@",inMessage, context);
-	
 	if(serviceAppropriateEmoticons){
 		if([context isKindOfClass:[AIContentObject class]]){
-			NSLog(@"content object %@ : destination %@ service %@ class %@",context,
-				  [(AIContentObject *)context destination],
-				  [[(AIContentObject *)context destination] service],
-				  [[[(AIContentObject *)context destination] service] serviceClass]);
 			serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
+	
 		}else if([context isKindOfClass:[AIListContact class]]){
 			serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																						   toContact:(AIListContact *)context] service] serviceClass];
@@ -297,9 +292,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		//If we are using service appropriate emoticons, check if this is on the right service and, if so, compare.
 		if(serviceAppropriateEmoticons){
 			AIEmoticon	*thisEmoticon = [candidateEmoticons objectAtIndex:i];
-			NSLog(@"%@; serviceClassContext %@; isAppropriate? %i",thisEmoticon,
-				  serviceClassContext,
-				  [thisEmoticon isAppropriateForServiceClass:serviceClassContext]);
 			if([thisEmoticon isAppropriateForServiceClass:serviceClassContext]){
 				bestServiceAppropriateLength = thisLength;
 				bestServiceAppropriateIndex = i;
