@@ -19,7 +19,7 @@ Bugs
 * 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
 * 'Auto-Away' menu does not refresh when away messages are changed
 * 'Auto-Away' menu dimming does not refresh when away messages are changed
-
+* Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
 
 
 -------------------------------------------------------------------------------------------------------
