@@ -250,14 +250,6 @@
         }
     }
 	
-	/*NSImage *finalImage = [[NSImage alloc] initWithSize:[workingImage size]];
-	[finalImage lockFocus];
-	[workingImage compositeToPoint:NSMakePoint(0,0)
-						 operation:NSCompositeSourceOver];
-	[finalImage unlockFocus];
-	
-	[workingImage release];
-	*/
     return([workingImage autorelease]);
 }
 
