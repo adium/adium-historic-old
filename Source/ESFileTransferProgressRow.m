@@ -43,17 +43,17 @@
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer withOwner:(id)inOwner
 {
-	[super init];
-	
-	sizeString = nil;
-	forceUpdate = NO;
-	
-	fileTransfer = [inFileTransfer retain];
-	[fileTransfer setDelegate:self];
+	if((self = [super init])) {
+		sizeString = nil;
+		forceUpdate = NO;
 
-	owner = inOwner;
-	
-	[NSBundle loadNibNamed:@"ESFileTransferProgressView" owner:self];
+		fileTransfer = [inFileTransfer retain];
+		[fileTransfer setDelegate:self];
+
+		owner = inOwner;
+
+		[NSBundle loadNibNamed:@"ESFileTransferProgressView" owner:self];
+	}
 	
 	return(self);
 }
