@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.56 2004/06/04 17:46:21 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.57 2004/06/13 07:24:34 evands Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -30,6 +30,7 @@
 #define PREFERENCE_PANE_ARRAY					@"PaneArray"
 #define PREFERENCE_GROUP_NAME					@"GroupName"
 #define ADVANCED_PANE_HEIGHT					350
+#define ADVANCED_PANE_TABVIEW_IDENTIFIER		@"9"
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -83,10 +84,11 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case AIPref_Dock: tabIdentifier = 5; break;
 		case AIPref_Sound: tabIdentifier = 6; break;
 		case AIPref_Emoticons: tabIdentifier = 7; break;
+		case AIPref_Keys: tabIdentifier = 8; break;
 		case AIPref_Advanced_ContactList:
 		case AIPref_Advanced_Messages:
 		case AIPref_Advanced_Status:
-		case AIPref_Advanced_Other: tabIdentifier = 8; break;
+		case AIPref_Advanced_Other: tabIdentifier = 9; break;
 		default: tabIdentifier = 1; break;
 	}
 	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
@@ -118,7 +120,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	if( shouldContinue == NO ) {
 		
 		// Open the Advanced Prefs category
-		tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"8"]];
+		tabViewItem = [tabView_category tabViewItemWithIdentifier:ADVANCED_PANE_TABVIEW_IDENTIFIER];
 		[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
 		[tabView_category selectTabViewItem:tabViewItem];
 		
