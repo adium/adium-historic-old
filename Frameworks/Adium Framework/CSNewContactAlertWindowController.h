@@ -52,7 +52,7 @@
 		 delegate:(id)inDelegate
 		 oldAlert:(NSDictionary *)inOldAlert
 	configureForGlobal:(BOOL)inConfigureForGlobal
- showEventsInEditSheet:(BOOL)showEventsInEditSheet;
+   defaultEventID:(NSString *)defaultEventID;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)save:(id)sender;

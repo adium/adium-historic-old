@@ -18,19 +18,21 @@
 
 #define CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED	@"ContactAlertDetailsForHeaderChanged"
 
-@class AIAlternatingRowTableView, AIListObject, AIAutoScrollView;
+@class AIVariableHeightFlexibleColumnsOutlineView, AIListObject, AIAutoScrollView;
 
 @interface ESContactAlertsViewController : AIObject {
 	IBOutlet	NSView						*view;
+
+	IBOutlet	AIVariableHeightFlexibleColumnsOutlineView	*outlineView_summary;
 	
-	IBOutlet	AIAlternatingRowTableView	*tableView_actions;
-	IBOutlet	AIAutoScrollView			*scrollView_actions;
+	NSMutableArray				*contactAlertsEvents;
+	NSMutableArray				*contactAlertsActions;
+	
 	IBOutlet	NSButton					*button_add;
     IBOutlet	NSButton					*button_delete;
     IBOutlet	NSButton					*button_edit;
     
 	AIListObject				*listObject;
-	NSMutableArray				*alertArray;
 	
 	id							delegate;
 	
@@ -67,9 +69,6 @@
 //Delegate is notified with the deleted dictionary when the user deletes an alert
 - (void)contactAlertsViewController:(ESContactAlertsViewController *)inController
 					   deletedAlert:(NSDictionary *)deletedAlert;
-
-//Delegate may specify the initial event ID when creating new contacts. If this is not implemented or returns nil, the default is used.
-- (NSString *)initialEventIDForNewContactAlert;
 @end
 
 @interface NSObject (AIActionHandlerOptionalMethods)

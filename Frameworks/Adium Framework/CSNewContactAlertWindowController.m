@@ -31,7 +31,8 @@
 			notifyingTarget:(id)inTarget
 				   delegate:(id)inDelegate 
 				   oldAlert:(id)inOldAlert
-		 configureForGlobal:(BOOL)inConfigureForGlobal;
+		 configureForGlobal:(BOOL)inConfigureForGlobal
+			 defaultEventID:(NSString *)inDefaultEventID;
 - (void)configureForEvent;
 - (void)saveDetailsPaneChanges;
 - (void)configureDetailsPane;
@@ -43,17 +44,18 @@
 @implementation CSNewContactAlertWindowController
 
 //Prompt for a new alert.  Pass nil for a panel prompt.
-+ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget delegate:(id)inDelegate oldAlert:(id)inOldAlert configureForGlobal:(BOOL)inConfigureForGlobal showEventsInEditSheet:(BOOL)showEventsInEditSheet
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget delegate:(id)inDelegate oldAlert:(id)inOldAlert configureForGlobal:(BOOL)inConfigureForGlobal defaultEventID:(NSString *)inDefaultEventID
 {
-	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:(showEventsInEditSheet ? 
-																							   NEW_ALERT_NIB :
+	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:(/*showEventsInEditSheet ? 
+																							   NEW_ALERT_NIB :*/
 																							   NEW_ALERT_NO_EVENTS_NIB)
 																						alert:inAlert
 																				forListObject:inObject
 																			  notifyingTarget:inTarget
 																					 delegate:inDelegate
 																					 oldAlert:inOldAlert
-																		   configureForGlobal:inConfigureForGlobal];
+																		   configureForGlobal:inConfigureForGlobal
+																			   defaultEventID:inDefaultEventID];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[newAlertwindow window]
@@ -74,6 +76,7 @@
 				   delegate:(id)inDelegate 
 				   oldAlert:(id)inOldAlert
 		 configureForGlobal:(BOOL)inConfigureForGlobal
+			 defaultEventID:(NSString *)inDefaultEventID
 {
 	[super initWithWindowNibName:windowNibName];
 	
@@ -87,19 +90,13 @@
 	
 	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
 	alert = [inAlert mutableCopy];
-	if(!alert){
-		NSString	*defaultEventID = nil;
-		
-		//The delegate can optionally specify what it desires as an initial event ID
-		if([delegate respondsToSelector:@selector(initialEventIDForNewContactAlert)]){
-			defaultEventID = [delegate initialEventIDForNewContactAlert];
-		}
-	
+	if(!alert){	
+		/*
 		if(!defaultEventID){
 			defaultEventID = [[adium contactAlertsController] defaultEventID];
 		}
-
-		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:defaultEventID, KEY_EVENT_ID,
+*/
+		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:inDefaultEventID, KEY_EVENT_ID,
 																	[[adium contactAlertsController] defaultActionID], KEY_ACTION_ID, nil];
 	}
 

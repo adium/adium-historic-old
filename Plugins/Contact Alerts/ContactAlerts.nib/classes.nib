@@ -20,9 +20,20 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {
+            CLASS = AIVariableHeightFlexibleColumnsOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIVariableHeightOutlineView; 
+        }, 
+        {
+            CLASS = AIVariableHeightOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
@@ -55,8 +66,7 @@
                 "button_delete" = NSButton; 
                 "button_edit" = NSButton; 
                 delegate = id; 
-                "scrollView_actions" = AIAutoScrollView; 
-                "tableView_actions" = AIAlternatingRowTableView; 
+                "outlineView_summary" = AIVariableHeightFlexibleColumnsOutlineView; 
                 view = NSView; 
             }; 
             SUPERCLASS = AIObject; 

@@ -25,25 +25,13 @@
 @interface ESGlobalEventsPreferences : AIPreferencePane {
 	IBOutlet	ESContactAlertsViewController	*contactAlertsViewController;
 	
-	IBOutlet	NSTabView		*tabView_summaryAndConfig;
-	
 	IBOutlet	NSPopUpButton	*popUp_eventPreset;
 	IBOutlet	NSPopUpButton	*popUp_soundSet;
-	IBOutlet	NSPopUpButton	*popUp_show;
 		
 	IBOutlet	NSTextField		*label_eventPreset;
-	IBOutlet	NSTextField		*label_show;
 	IBOutlet	NSTextField		*label_soundSet;
-	
-	IBOutlet	AIVariableHeightOutlineView	*outlineView_summary;
-	IBOutlet	NSButton		*button_configure;
-
-	NSMutableArray				*contactAlertsEvents;
-	NSMutableArray				*contactAlertsActions;
 }
 
-- (IBAction)selectShowSummary:(id)sender;
-- (IBAction)configureSelectedEvent:(id)sender;
 - (IBAction)selectedNameForPresetCopy:(id)sender;
 
 @end
