@@ -70,7 +70,7 @@
 
 -(IBAction)generatePreview:(id)sender
 {
-    NSLog(@"where's my screenshot, biatch!");
+    NSLog(@"where's my screenshot?");
 }
 
 -(IBAction)openThemesFolder:(id)sender
