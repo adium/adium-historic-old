@@ -6,9 +6,6 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#define KEY_NOVELL_HOST		@"Novell:Host"
-#define KEY_NOVELL_PORT		@"Novell:Port"
-
 #import "CBGaimAccount.h"
 
 @interface ESGaimNovellAccount : CBGaimAccount {

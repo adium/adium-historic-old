@@ -8,9 +8,6 @@
 
 #import "CBGaimAccount.h"
 
-#define KEY_MEANWHILE_HOST				@"Meanwhile:Host"
-#define KEY_MEANWHILE_PORT				@"Meanwhile:Port"
-
 #define	KEY_MEANWHILE_CONTACTLIST		@"Meanwhile:ContactList"
 
 #define MW_PRPL_OPT_BLIST_ACTION		"/plugins/prpl/meanwhile/blist_action"

@@ -8,14 +8,7 @@
 
 #import "ESGaimYahooJapanAccount.h"
 
-#define KEY_YAHOO_JAPAN_HOST  @"Yahoo Japan:Host"
-
 @implementation ESGaimYahooJapanAccount
-
-- (NSString *)hostKey
-{
-	return KEY_YAHOO_JAPAN_HOST;
-}
 
 - (void)createNewGaimAccount
 {

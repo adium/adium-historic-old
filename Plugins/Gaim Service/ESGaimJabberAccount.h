@@ -8,9 +8,6 @@
 
 #import "CBGaimAccount.h"
 
-#define KEY_JABBER_HOST				@"Jabber:Host"
-#define KEY_JABBER_PORT				@"Jabber:Port"
-
 #define KEY_JABBER_CONNECT_SERVER   @"Jabber:Connect Server"
 #define KEY_JABBER_RESOURCE			@"Jabber:Resource"
 #define KEY_JABBER_USE_TLS			@"Jabber:Use TLS"

@@ -14,9 +14,6 @@
 #include <Libgaim/yahoo_friend.h>
 #include <Libgaim/yahoo.h>
 
-#define KEY_YAHOO_HOST  @"Yahoo:Host"
-#define KEY_YAHOO_PORT  @"Yahoo:Port"
-
 @implementation ESGaimYahooAccount
 
 static BOOL				didInitYahoo = NO;
@@ -88,19 +85,6 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	
 	return shouldAttemptReconnect;
 }
-
-- (NSString *)hostKey
-{
-	return KEY_YAHOO_HOST;
-}
-
-- (NSString *)portKey
-{
-	return KEY_YAHOO_PORT;
-}
-
-#pragma mark Status
-
 
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
