@@ -287,7 +287,7 @@ this problem is along the lines of:
     //things faster if we start with a fresh log index as well.
     if(!dirtyLogArray){
 	if([[NSFileManager defaultManager] fileExistsAtPath:[self logIndexPath]]){
-	    if(![[NSFileManager defaultManager] removeFileAtPath:[self logIndexPath] handler:nil]){
+	    if(![[NSFileManager defaultManager] trashFileAtPath:[self logIndexPath] handler:nil]){
 		NSLog(@"Failed to delete log index.");
 	    }
 	}	

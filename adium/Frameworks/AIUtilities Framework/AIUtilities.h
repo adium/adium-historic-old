@@ -84,3 +84,4 @@
 #import "ESImageAdditions.h"
 #import "ESBorderlessWindow.h"
 #import "AIWindowAdditions.h"
+#import "AIFileManagerAdditions.h"

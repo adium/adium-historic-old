@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AILoginController.m,v 1.9 2003/12/08 06:32:42 jmelloy Exp $
+// $Id: AILoginController.m,v 1.10 2003/12/23 16:50:41 adamiser Exp $
 
 #import "AILoginController.h"
 #import "AILoginWindowController.h"
@@ -156,19 +156,13 @@
 // Delete a user
 - (void)deleteUser:(NSString *)inUserName
 {
-    NSString	*sourcePath, *destPath;
+    NSString	*sourcePath;
 
     NSParameterAssert(inUserName != nil);
 
-    //Create the source and dest paths
+    //Create the source and dest paths	
     sourcePath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
-    destPath = [[PATH_TRASH stringByAppendingPathComponent:inUserName] stringByExpandingTildeInPath];
-    
-    //delete the user's folder (by moving it to the trash)
-    if(![[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil]){
-        //The move operation failed.  A folder with that name probably already exists in the trash
-        NSLog(@"trashing of user failed");
-    }
+	[[NSFileManager defaultManager] trashFileAtPath:sourcePath];
 }
 
 // Add a user with the specified name

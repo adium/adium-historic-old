@@ -18,6 +18,26 @@
 
 @implementation NSString (AIStringAdditions)
 
+//Random alphanumeric string
++ (NSString *)randomStringOfLength:(int)inLength
+{
+	NSMutableString	*string = [[NSString alloc] init];
+	NSString		*randomCharacters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	NSString		*randomString;
+	int				i;
+	
+	//Prepare our random
+	srandom(TickCount());
+
+	//Add the random characters (This is a slow implementation, but it's not really important)
+	for(i = 0; i < inLength; i++){
+		char	randomChar = [randomCharacters characterAtIndex:(random() % [randomCharacters length])];
+		string = [string stringByAppendingString:[NSString stringWithFormat:@"%c",randomChar]];
+	}
+	
+	return([string autorelease]);
+}
+
 /* compactedString
 *   returns the string in all lowercase without spaces
 */

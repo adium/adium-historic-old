@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {send = id; }; 
+            CLASS = AICrashReporter; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"window_MainWindow" = NSWindow; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

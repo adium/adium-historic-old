@@ -338,6 +338,7 @@
 				342DC47505783AF0000E1D83,
 				B799BB0005793A6400338E54,
 				B72537BC058C4577004BA969,
+				4B7F78B50597F42400162728,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -449,6 +450,7 @@
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
 				B72537BB058C4577004BA969,
+				4B7F78B40597F42400162728,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -7821,6 +7823,7 @@
 				9C1040650571281200F3C158,
 				B774EFC4058C48F6009C7C67,
 				4B6EA1BE058FA6900070A9A1,
+				4B215DB0059896B000305B3C,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9327,6 +9330,7 @@
 				4B37AEEC058A8D0500E266A7,
 				4B37AEF0058A8D4A00E266A7,
 				341F08E8058A97AB00A5A7AB,
+				4B215D990598907100305B3C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10071,6 +10075,7 @@
 				4B37AEED058A8D0500E266A7,
 				4B37AEF1058A8D4A00E266A7,
 				341F08E7058A97AB00A5A7AB,
+				4B215D9A0598907100305B3C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17312,6 +17317,110 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B215D970598907100305B3C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFileManagerAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIFileManagerAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B215D980598907100305B3C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFileManagerAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIFileManagerAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B215D990598907100305B3C = {
+			fileRef = 4B215D970598907100305B3C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B215D9A0598907100305B3C = {
+			fileRef = 4B215D980598907100305B3C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B215DA70598965500305B3C = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B215DAA0598965C00305B3C = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B215DAC0598966800305B3C,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B215DAC0598966800305B3C = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B215DAD059896A000305B3C = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4B215DAE059896A000305B3C = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4B215DAD059896A000305B3C;
+		};
+		4B215DAF059896B000305B3C = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 4B7F78B40597F42400162728;
+			remoteInfo = "Adium Crash Reporter";
+		};
+		4B215DB0059896B000305B3C = {
+			isa = PBXTargetDependency;
+			target = 4B7F78B40597F42400162728;
+			targetProxy = 4B215DAF059896B000305B3C;
+		};
+		4B215DBD0598A71400305B3C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = crashDuck.icns;
+			path = "Adium Crash Reporter/crashDuck.icns";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B215DBE0598A71400305B3C = {
+			fileRef = 4B215DBD0598A71400305B3C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B215DBF0598A71D00305B3C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = crashDuck.tif;
+			path = "Adium Crash Reporter/crashDuck.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B215DC00598A71D00305B3C = {
+			fileRef = 4B215DBF0598A71D00305B3C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B24A2330482B34B00A8010A = {
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
@@ -19788,6 +19897,193 @@
 		};
 		4B7F27C705440DE900CDFC90 = {
 			fileRef = 4B7F278305440C0800CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F78B00597F42400162728 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F78BF0597F44D00162728,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F78B10597F42400162728 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F78C20597F5B700162728,
+				4B215DBE0598A71400305B3C,
+				4B215DC00598A71D00305B3C,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F78B20597F42400162728 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F78C00597F44D00162728,
+				4B7F78C40597F6F500162728,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F78B30597F42400162728 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F78C50597F71400162728,
+				4B215DA70598965500305B3C,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F78B40597F42400162728 = {
+			buildPhases = (
+				4B7F78B00597F42400162728,
+				4B7F78B10597F42400162728,
+				4B7F78B20597F42400162728,
+				4B7F78B30597F42400162728,
+				4B215DAA0598965C00305B3C,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
+				INSTALL_PATH = "$(USER_APPS_DIR)";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Adium Crash Reporter";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+			};
+			dependencies = (
+				4B215DAE059896A000305B3C,
+			);
+			isa = PBXNativeTarget;
+			name = "Adium Crash Reporter";
+			productName = "Adium Crash Reporter";
+			productReference = 4B7F78B50597F42400162728;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Adium Crash Reporter</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Adium_Crash_Reporter</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.application";
+		};
+		4B7F78B50597F42400162728 = {
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Adium Crash Reporter.app";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B7F78BA0597F42D00162728 = {
+			children = (
+				4B7F78C10597F5B700162728,
+				4B7F78C30597F6F500162728,
+				4B7F78BD0597F44D00162728,
+				4B7F78BE0597F44D00162728,
+				4B215DBD0598A71400305B3C,
+				4B215DBF0598A71D00305B3C,
+			);
+			isa = PBXGroup;
+			name = "Adium Crash Reporter";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F78BD0597F44D00162728 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AICrashReporter.h;
+			path = "Adium Crash Reporter/AICrashReporter.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F78BE0597F44D00162728 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AICrashReporter.m;
+			path = "Adium Crash Reporter/AICrashReporter.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F78BF0597F44D00162728 = {
+			fileRef = 4B7F78BD0597F44D00162728;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F78C00597F44D00162728 = {
+			fileRef = 4B7F78BE0597F44D00162728;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F78C10597F5B700162728 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = MainMenu.nib;
+			path = "Adium Crash Reporter/MainMenu.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F78C20597F5B700162728 = {
+			fileRef = 4B7F78C10597F5B700162728;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F78C30597F6F500162728 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = main.m;
+			path = "Adium Crash Reporter/main.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F78C40597F6F500162728 = {
+			fileRef = 4B7F78C30597F6F500162728;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F78C50597F71400162728 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -25018,6 +25314,7 @@
 		9EB3C52204F94D96001D1F74 = {
 			children = (
 				4BBEC8B70563E7CC0013C8F7,
+				4B7F78BA0597F42D00162728,
 				4BBEC8B80563E7CC0013C8F7,
 				4BE9FFE7055981AB00359B15,
 				F59DB6AD033EB74801A8010A,
@@ -28312,6 +28609,8 @@
 				F579393F033E74E401A8010A,
 				4B187A0303D59CCC00A8010A,
 				4B187A0403D59CCC00A8010A,
+				4B215D970598907100305B3C,
+				4B215D980598907100305B3C,
 				4BBC8E4B03BA0DB900A8010A,
 				4BBC8E4C03BA0DB900A8010A,
 				34004D86057C7DCA0022CA56,
