@@ -284,8 +284,6 @@
 //Save some of the information for next time on quit
 - (void)windowWillClose:(id)sender
 {
-	[super windowWillClose:sender];
-
     //Remember the user's email address, account name
     [[NSUserDefaults standardUserDefaults] setObject:[textField_emailAddress stringValue]
                                               forKey:KEY_CRASH_EMAIL_ADDRESS];	
