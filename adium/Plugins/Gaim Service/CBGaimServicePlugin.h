@@ -5,7 +5,7 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 //
 
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 //Gaim includes
 #include "internal.h"

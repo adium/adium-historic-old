@@ -11,6 +11,8 @@
 
 #define CONTACT_ALERT_ACTION_NIB @"EventSoundContactAlert"
 
+#define PLAY_A_SOUND    AILocalizedString(@"Play a sound",nil)
+
 @interface ESEventSoundContactAlert (PRIVATE)
 - (NSMenu *)soundListMenu;
 - (void)autosizeAndCenterPopUpButton:(NSPopUpButton *)button;
@@ -37,7 +39,7 @@
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"Play a sound"
+    NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:PLAY_A_SOUND
                                            target:self
                                            action:@selector(selectedAlert:)
                                     keyEquivalent:@""] autorelease];
@@ -117,7 +119,7 @@
             }
         }
         //Add the Other... item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other..."
+        menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER_ELLIPSIS
                                                target:self
                                                action:@selector(selectSound:)
                                         keyEquivalent:@""] autorelease];            
@@ -139,9 +141,9 @@
             NSMenuItem	*menuItem;
             
             //Add an "Other" header if necessary
-            if ([popUp_actionDetails indexOfItemWithTitle:@"Other"] == -1) {
+            if ([popUp_actionDetails indexOfItemWithTitle:OTHER] == -1) {
                 [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
-                menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other"
+                menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER
                                                        target:nil
                                                        action:nil
                                                 keyEquivalent:@""] autorelease];

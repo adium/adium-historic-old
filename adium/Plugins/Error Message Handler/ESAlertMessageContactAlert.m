@@ -11,6 +11,7 @@
 
 #define CONTACT_ALERT_ACTION_NIB @"AlertMessageContactAlert"
 
+#define SHOW_TEXT_ALERT AILocalizedString(@"Show a text alert",nil)
 
 @implementation ESAlertMessageContactAlert
 
@@ -21,7 +22,7 @@
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:@"Show a text alert"
+    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:SHOW_TEXT_ALERT
                                                         target:self
                                                         action:@selector(selectedAlert:)
                                                  keyEquivalent:@""] autorelease];

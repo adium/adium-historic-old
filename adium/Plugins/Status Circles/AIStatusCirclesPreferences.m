@@ -17,7 +17,7 @@
 #import "AIStatusCirclesPreferences.h"
 
 #define	STATUS_CIRCLES_PREF_NIB		@"StatusCirclesPrefs"
-#define STATUS_CIRCLES_PREF_TITLE	@"Status Display"
+#define STATUS_CIRCLES_PREF_TITLE	AILocalizedString(@"Status Display","Status Circles -Status Display-")
 
 @interface AIStatusCirclesPreferences (PRIVATE)
 - (void)configureView;

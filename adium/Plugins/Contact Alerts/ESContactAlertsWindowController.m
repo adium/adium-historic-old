@@ -13,6 +13,8 @@
 #define TABLE_COLUMN_ACTION		@"action"
 #define TABLE_COLUMN_EVENT		@"event"
 
+#define OFFLINE AILocazliedString(@"Offline",nil)
+
 @interface ESContactAlertsWindowController (PRIVATE)
 - (void)initialWindowConfig;
 - (void)configureWindowforObject:(AIListObject *)inContact;
@@ -109,7 +111,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 
     //Set window title
-    [[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[activeContactObject displayName]]];
+    [[self window] setTitle:[NSString stringWithFormat:@"%@'s %@",[activeContactObject displayName],AILocalizedString(@"Alerts",nil)]];
 
     //Build the contact list
 
@@ -398,7 +400,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
                 if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
                 {
                     NSMenuItem	*separatorItem;
-                    separatorItem = [[[NSMenuItem alloc] initWithTitle:@"Offline"
+                    separatorItem = [[[NSMenuItem alloc] initWithTitle:OFFLINE
                                                                 target:nil
                                                                 action:nil
                                                          keyEquivalent:@""] autorelease];

@@ -8,8 +8,8 @@
 
 #import "CSDisconnectAllPlugin.h"
 
-#define CONNECT_MENU_TITLE @"Connect All"
-#define DISCONNECT_MENU_TITLE @"Disconnect All"
+#define CONNECT_MENU_TITLE      AILocalizedString(@"Connect All","Connect all accounts)
+#define DISCONNECT_MENU_TITLE   AILocalizedString(@"Disconnect All","Disconnect all accounts)
 
 @implementation CSDisconnectAllPlugin
 

@@ -11,6 +11,10 @@
 
 #define SINGLE_WINDOW_NIB @"Single Window Interface"
 
+#define SHOW_MAIN_WINDOW    AILocalizedString(@"Show Main Window…",nil)
+#define CLOSE		    AILocalizedString(@"Close",nil)
+#define HIDE_CONTACT_LIST   AILocalizedString(@"Hide Contact List",nil)
+
 @interface CSSingleWindowInterfacePlugin (PRIVATE)
 
 - (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject;
@@ -31,13 +35,13 @@
 	[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
 	
-	menuItem_showMainWindow = [[NSMenuItem alloc] initWithTitle:@"Show Main Window…" target:self action:@selector(openInterface) keyEquivalent:@"N"];
+	menuItem_showMainWindow = [[NSMenuItem alloc] initWithTitle:SHOW_MAIN_WINDOW target:self action:@selector(openInterface) keyEquivalent:@"N"];
 	[[adium menuController] addMenuItem:menuItem_showMainWindow toLocation:LOC_File_New];
 	
-	menuItem_close = [[NSMenuItem alloc] initWithTitle:@"Close" target:nil action:@selector(performClose:) keyEquivalent:@"w"];
+	menuItem_close = [[NSMenuItem alloc] initWithTitle:CLOSE target:nil action:@selector(performClose:) keyEquivalent:@"w"];
 	[[adium menuController] addMenuItem:menuItem_close toLocation:LOC_File_Close];
 	
-	menuItem_collapseContactList = [[NSMenuItem alloc] initWithTitle:@"Hide Contact List" target:windowController action:@selector(collapseContactList:) keyEquivalent:@"/"];
+	menuItem_collapseContactList = [[NSMenuItem alloc] initWithTitle:HIDE_CONTACT_LIST target:windowController action:@selector(collapseContactList:) keyEquivalent:@"/"];
 	[[adium menuController] addMenuItem:menuItem_collapseContactList toLocation:LOC_Window_Fixed];
 }
 

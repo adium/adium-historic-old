@@ -11,7 +11,7 @@
 
 
 #define	CHECKMARK_PREF_NIB		@"CheckmarkPreferences"
-#define CHECKMARK_PREF_TITLE		@"Checkmark Display"
+#define CHECKMARK_PREF_TITLE		AILocalizedString(@"Checkmark Display",nil)
 
 @interface CSCheckmarkPreferences (PRIVATE)
 - (void)configureView;

@@ -3,10 +3,9 @@
 //  Adium XCode
 //
 //  Created by Chris Serino on Sun Jan 04 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#define PREF_GROUP_CHECKMARK		@"Checkmark"
+#define PREF_GROUP_CHECKMARK    @"Checkmark"
 #define KEY_DISPLAY_CHECKMARK	@"Display Checkmark"
 
 @class CSCheckmarkPreferences;

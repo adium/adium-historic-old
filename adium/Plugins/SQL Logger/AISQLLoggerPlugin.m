@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.35 $
- * $Date: 2003/12/22 21:36:49 $
- * $Author: jmelloy $
+ * $Revision: 1.36 $
+ * $Date: 2004/01/14 20:51:33 $
+ * $Author: evands $
  *
  */
 
@@ -26,6 +26,8 @@
 #import "libpq-fe.h"
 #import "JMSQLLogViewerWindowController.h"
 #import "JMSQLLoggerAdvancedPreferences.h"
+
+#define SQL_LOG_VIEWER  AILocalizedString(@"SQL Log Viewer",nil)
 
 @interface AISQLLoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service;
@@ -48,7 +50,7 @@
     advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
     
     //Install Menu item
-    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
+    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
 	//Watch for pref changes
@@ -185,7 +187,10 @@
 {
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
-    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:YES imagesPath:nil]];
+    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO 
+									   fontTags:NO closeFontTags:NO 
+									  styleTags:YES closeStyleTagsOnFontChange:NO 
+								     encodeNonASCII:YES imagesPath:nil]];
         
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];

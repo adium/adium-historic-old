@@ -30,6 +30,10 @@
 #define LOG_INDEX_STATUS_INTERVAL   20      //Interval before updating the log indexing status
 #define LOG_CLEAN_SAVE_INTERVAL     500     //Number of logs to index continuiously before saving the dirty array and index
 
+#define LOG_VIEWER	    AILocalizedString(@"Log Viewer",nil)
+#define VIEW_CONTACTS_LOGS  AILocalizedString(@"View Contact's Logs",nil)
+#define VIEW_LOGS	    AILocalizedString(@"View Logs",nil)
+
 @interface AILoggerPlugin (PRIVATE)
 - (NSString  *)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
 - (void)_markChatLogAsDirty:(AIChat *)chat atPath:(NSString *)path;
@@ -70,15 +74,15 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     advancedPreferences = [[AILoggerAdvancedPreferences preferencePane] retain];
 
     //Install the log viewer menu item
-    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"l"] autorelease];
+    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:LOG_VIEWER target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"l"] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
     //Install the 'view logs' menu item
-    viewContactLogsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"] autorelease];
+    viewContactLogsMenuItem = [[[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_LOGS target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"] autorelease];
     [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
 
     //Install a 'view logs' contextual menu item
-    viewContactLogsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""] autorelease];
+    viewContactLogsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:VIEW_LOGS target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
     
     //Create a logs directory
@@ -199,7 +203,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		    ([content isOutgoing] ? @"send" : @"receive"),
 		    dateString,
 		    [source UID],
-		    [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle encodeNonASCII:YES imagesPath:imagesPath]];
+		    [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont 
+				    styleTags:logStyle closeStyleTagsOnFontChange:closeStyle
+			       encodeNonASCII:YES imagesPath:imagesPath]];
             }else{
                 logMessage = [NSString stringWithFormat:@"(%@) %@: %@\n", dateString, [source UID], [message string]];
             }

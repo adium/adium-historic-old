@@ -11,6 +11,8 @@
 
 #define CONTACT_ALERT_ACTION_NIB @"OpenMessageWindowContactAlert"
 
+#define OPEN_MESSAGE_WINDOW AILocalizedString(@"Open empty message window","Contact alert: open a new message window")
+
 @interface ESOpenMessageWindowContactAlert (PRIVATE)
 -(IBAction)saveOpenMessageDetails:(id)sender;
 - (NSMenu *)accountForOpenMessageMenu;
@@ -25,7 +27,7 @@
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:@"Open empty message window"
+    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:OPEN_MESSAGE_WINDOW
                                                         target:self
                                                         action:@selector(selectedAlert:)
                                                  keyEquivalent:@""] autorelease];

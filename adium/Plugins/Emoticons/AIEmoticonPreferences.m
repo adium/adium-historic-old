@@ -20,7 +20,6 @@
 #import "AIEmoticonPackCell.h"
 
 #define	EMOTICON_PREF_NIB		@""
-#define EMOTICON_PREF_TITLE		@"Emoticons/Smilies"
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
 
@@ -37,7 +36,7 @@
     return(AIPref_Emoticons);
 }
 - (NSString *)label{
-    return(@"Emoticons");
+    return(AILocalizedString(@"Emoticons","Emoticons/Smilies"));
 }
 - (NSString *)nibName{
     return(@"EmoticonPrefs");

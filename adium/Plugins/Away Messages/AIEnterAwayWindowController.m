@@ -23,6 +23,8 @@
 #define DEFAULT_AWAY_MESSAGE		@""
 #define KEY_QUICK_AWAY_MESSAGE		@"Quick Away Message"
 
+#define NO_PRESET_AWAY			AILocalizedString(@"None",nil)
+
 @interface AIEnterAwayWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (BOOL)windowShouldClose:(id)sender;
@@ -339,7 +341,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     NSMenu		*savedAwaysMenu = [[NSMenu alloc] init];
     NSMenuItem		*menuItem;
     
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"None"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:NO_PRESET_AWAY
 					   target:self
 					   action:@selector(loadSavedAway:)
 				    keyEquivalent:@"N"] autorelease];

@@ -19,6 +19,9 @@
 
 int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
+#define SEND_MESSAGE    AILocalizedString(@"Send a message",nil)
+#define OFFLINE		AILocalizedString(@"Offline",nil)
+
 @implementation ESSendMessageContactAlert
 
 -(NSString *)nibName
@@ -28,7 +31,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
+    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:SEND_MESSAGE
                                                         target:self
                                                         action:@selector(selectedAlert:)
                                                  keyEquivalent:@""] autorelease];
@@ -210,7 +213,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                 if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
                 {
                     NSMenuItem	*separatorItem;
-                    separatorItem = [[[NSMenuItem alloc] initWithTitle:@"Offline"
+                    separatorItem = [[[NSMenuItem alloc] initWithTitle:OFFLINE
                                                                 target:nil
                                                                 action:nil
                                                          keyEquivalent:@""] autorelease];
