@@ -546,6 +546,7 @@
 	NSMutableDictionary	*listObjectDict = [NSMutableDictionary dictionary];
 	NSEnumerator		*enumerator = [participants objectEnumerator];
 	NSDictionary		*participant;
+	AIService			*aimService = [[adium accountController] firstServiceWithServiceID:@"AIM"];
 	
 	while(participant = [enumerator nextObject]){
 		NSString		*UID, *alias, *userIconName;
@@ -553,8 +554,7 @@
 		
 		//Create object
 		UID = [participant objectForKey:@"UID"];
-		listObject = [[[AIListObject alloc] initWithUID:UID
-											  serviceID:@"AIM"] autorelease];
+		listObject = [[[AIListObject alloc] initWithUID:UID service:aimService] autorelease];
 		
 		//Display name
 		if(alias = [participant objectForKey:@"Display Name"]){
