@@ -259,28 +259,3 @@
 }
 
 @end
-
-
-/*
- Default Dock Bounce behavior:
- <array>
- <dict>
- <key>Behavior</key>
- <integer>1</integer>
- <key>Notification</key>
- <string>Content_MessageReceivedFirst</string>
- </dict>
- <dict>
- <key>Behavior</key>
- <integer>1</integer>
- <key>Notification</key>
- <string>Content_MessageReceived</string>
- </dict>
- <dict>
- <key>Behavior</key>
- <integer>2</integer>
- <key>Notification</key>
- <string>Interface_ErrorMessageRecieved</string>
- </dict>
- </array>
- */
