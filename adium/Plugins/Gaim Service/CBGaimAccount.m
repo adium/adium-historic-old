@@ -156,7 +156,6 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 //Signed online
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data
 {
-	NSLog(@"sign on %@!",[theContact UID]);
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 		[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -225,18 +224,17 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 }
 
 //Idletime
-- (oneway void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
+- (void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
 {
 	NSDate *currentIdleDate = [theContact statusObjectForKey:@"IdleSince"];
-	
+
 	if ((idleSinceDate && !currentIdleDate) ||
 		(!idleSinceDate && currentIdleDate) ||
 		([idleSinceDate compare:currentIdleDate] != 0)){
 		
-		[theContact setStatusObject:[[idleSinceDate copy] autorelease]
+		[theContact setStatusObject:idleSinceDate
 							 forKey:@"IdleSince"
 							 notify:NO];
-		
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
@@ -251,7 +249,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 
 	if (evil > 0){
 		if (!currentWarningLevel || ([currentWarningLevel intValue] != evil)) {
-			[theContact setStatusObject:[[evilNumber copy] autorelease]
+			[theContact setStatusObject:evilNumber
 								 forKey:@"Warning"
 								 notify:NO];
 			//Apply any changes
@@ -1119,12 +1117,12 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 	gaim_account_set_password(account, [password UTF8String]);
 
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
-//	[gaimThread makeAccount:(id)self performSelector:@selector(performConnect)];
+
 	[gaimThread connectAccount:self];
-	NSLog(@"finished connect");
+
 	while (!gc){
 		gc = gaim_account_get_connection(account);
-		NSLog(@"GOT gc %x",gc);
+		if (!gc) NSLog(@"no gc, retrying");
 	}
 	
 	//	gc = gaim_account_connect(account);	
@@ -1421,6 +1419,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
     gaim_accounts_add(account);
 	
 #warning Not quite right yet
+#if 0
 	{
 		NSPort 			*port1 = [NSPort port];
 		NSPort 			*port2 = [NSPort port];
@@ -1477,10 +1476,14 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 	//			NSLog(@"setting %@",incomingConnection);
 	//	account->ui_data = [[NSValue valueWithPointer:incomingConnection] retain];
 	}
-
+#endif
+	if (!gaimThread){
+		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
+	}
+	[gaimThread addAdiumAccount:self];
 	   
 	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
-		NSLog(@"7");
+
 	[self configureGaimAccountForConnect];
 }
 

@@ -77,6 +77,7 @@ static NSConnection			*servicePluginConnection;
     return;
 }
 
+/*
 - (void)gotNewAccount:(NSNotification *)notification
 {
 	GaimAccount		*account = [[notification object] pointerValue];
@@ -114,7 +115,17 @@ static NSConnection			*servicePluginConnection;
 	
 	account->ui_data = [[NSValue valueWithPointer:incomingConnection] retain];
 }
+*/
++ (SLGaimCocoaAdapter *)sharedInstance
+{
+	return myself;
+}
 
+- (void)addAdiumAccount:(id)adiumAccount
+{
+	GaimAccount *account = [adiumAccount gaimAccount];
+	account->ui_data = adiumAccount;
+}
 #pragma mark Init
 - (id)init
 {
@@ -174,7 +185,8 @@ static NSDistantObject<AdiumGaimDO>* accountLookup(GaimAccount *acct)
 
 static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount)
 {
-	return [[accountDict objectForKey:[adiumAccount uniqueObjectID]] pointerValue];
+	return [(CBGaimAccount *)adiumAccount gaimAccount];
+//	return [[accountDict objectForKey:[adiumAccount uniqueObjectID]] pointerValue];
 }
 
 static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
@@ -475,7 +487,6 @@ static void *gaim_adium_get_handle(void)
 
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
-//	NSLog(@"%i %s",event,(buddy ? buddy->name : ""));
 	if (buddy){
 		SEL updateSelector = nil;
 		id data = nil;
@@ -509,30 +520,29 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			case GAIM_BUDDY_IDLE:
 			case GAIM_BUDDY_IDLE_RETURN: {
 				updateSelector = @selector(updateIdle:withData:);
+				if (buddy->idle){
+					data = [NSDate dateWithTimeIntervalSince1970:buddy->idle];
+				}
 				break;
 			}
 			case GAIM_BUDDY_EVIL: {
 				updateSelector = @selector(updateEvil:withData:);
+				if (buddy->evil){
+					data = [NSNumber numberWithInt:buddy->evil];
+				}
 				break;
 			}
 			case GAIM_BUDDY_ICON: {
-//				NSLog(@"buddy icon %@!",[theContact UID]);
 				GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
-				//Only create a new NSImage if the GamBuddyIcon points to a new icon
-				//				if(buddyIcon && (buddyIcon != [[_buddyIconDict statusObjectForKey:[theContact uniqueObjectID]] pointerValue])) {
-				
-				//					[_buddyIconDict setObject:[NSValue valueForPointer:buddyIcon] 
-				//									   forKey:[theContact uniqueObjectID]];
-				
+
 				updateSelector = @selector(updateIcon:withData:);
 				data = [NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
 									  length:buddyIcon->len];
 				break;
-				}
 			}
+		}
 		
 		if (updateSelector){
-			//			NSLog(@"%@ %@ %@",theContact,data,[accountLookup(buddy->account) description]);
 			[accountLookup(buddy->account) performSelector:updateSelector
 															withObject:theContact
 															withObject:data];
@@ -1273,7 +1283,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 					  GaimInputFunction func, gpointer user_data)
 {
     struct SourceInfo *info = g_new(struct SourceInfo, 1);
-	NSLog(@"input add");
+
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
@@ -1294,7 +1304,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
 	
 	//    CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
-	NSLog(@"addSource: runLoop %x ; %x",runLoop, [NSRunLoop currentRunLoop]);
+	if (GAIM_DEBUG) NSLog(@"addSource: runLoop %x ; %x",runLoop, [NSRunLoop currentRunLoop]);
 	CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
 	
 	sourceId++;
@@ -1381,7 +1391,7 @@ static void adiumGaimCoreDebugInit(void)
 
 static void adiumGaimCoreUiInit(void)
 {
-	NSLog(@"%x: Registering core functions",[NSRunLoop currentRunLoop]);
+if (GAIM_DEBUG)	NSLog(@"%x: Registering core functions",[NSRunLoop currentRunLoop]);
 	gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
     gaim_blist_set_ui_ops(&adiumGaimBlistOps);
     gaim_connections_set_ui_ops(&adiumGaimConnectionOps);
@@ -1438,7 +1448,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)connectAccount:(id)adiumAccount
 {
-	NSLog(@"connectAccount: %@",[adiumAccount uniqueObjectID]);
 	gaim_account_connect(accountLookupFromAdiumAccount(adiumAccount));
 }
 
