@@ -1443,7 +1443,7 @@ guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
-	if (GAIM_DEBUG) NSLog(@"***SOURCE REMOVE : %i",tag);
+//	if (GAIM_DEBUG) NSLog(@"***SOURCE REMOVE : %i",tag);
     if (sourceInfo){
 		if (sourceInfo->timer != NULL) { 
 			//Got a timer; invalidate and release
@@ -1451,9 +1451,11 @@ guint adium_source_remove(guint tag) {
 			[sourceInfo->timer release];
 			
 		}else{
-			//Got a file handle; invalidate the source and the socket
+			//Got a file handle; invalidate and release the source and the socket
 			CFRunLoopSourceInvalidate(sourceInfo->rls);
+			CFRelease(sourceInfo->rls);
 			CFSocketInvalidate(sourceInfo->socket);
+			CFRelease(sourceInfo->socket);
 		}
 		
 		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
@@ -1472,27 +1474,28 @@ static void socketCallback(CFSocketRef s,
 					const void *data,
 					void *infoVoid)
 {
-    struct SourceInfo *info = (struct SourceInfo*) infoVoid;
+    struct SourceInfo *sourceInfo = (struct SourceInfo*) infoVoid;
 	
     GaimInputCondition c = 0;
     if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
     if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
 //	if ((callbackType & kCFSocketConnectCallBack) != 0) c |= GAIM_INPUT_CONNECT;
 
-	if (GAIM_DEBUG) NSLog(@"***SOCKETCALLBACK : %i (%i)",info->fd,c);
+//	if (GAIM_DEBUG) NSLog(@"***SOCKETCALLBACK : %i (%i)",info->fd,c);
 	
 	if ((callbackType & kCFSocketConnectCallBack) != 0) {
-		//Got a file handle; invalidate the source and the socket
-		if (GAIM_DEBUG) NSLog(@"got a connect callback %i",info->fd);
-		CFRunLoopSourceInvalidate(info->rls);
-		CFSocketInvalidate(info->socket);
+		//Got a file handle; invalidate and release the source and the socket
+		CFRunLoopSourceInvalidate(sourceInfo->rls);
+		CFRelease(sourceInfo->rls);
+		CFSocketInvalidate(sourceInfo->socket);
+		CFRelease(sourceInfo->socket);
 		
-		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:info->tag]];
-		info->ioFunction(info->user_data, info->fd, c);
-		free(info);
+		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:sourceInfo->tag]];
+		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
+		free(sourceInfo);
 		
 	}else{
-		info->ioFunction(info->user_data, info->fd, c);
+		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
 	}
 	
 }
