@@ -131,16 +131,19 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
             
             //Update the cache
             if(newActionArray){
+                newActionArray = [newActionArray mutableCopy];
                 [cachedAlertsDict setObject:newActionArray forKey:UID]; //cache it
             }else{
                 [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
-                newActionArray = [NSMutableArray arrayWithCapacity:0]; //Create a new, empty action array
             }
         }
         
         //If this is our currently active contact
         if([[object UID] compare:[activeContactObject UID]] == 0) {
-            [eventActionArray release]; eventActionArray = [newActionArray retain];
+            if (!newActionArray) {
+                newActionArray = [[NSMutableArray alloc] init]; //Create a new, empty action array   
+            }
+            [eventActionArray release]; eventActionArray = newActionArray;
             
             //inform the controller
             [[adium contactAlertsController] updateOwner:self toArray:eventActionArray forObject:object];
