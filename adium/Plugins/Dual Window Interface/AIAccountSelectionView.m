@@ -50,7 +50,7 @@
 
 - (void)dealloc
 {
-    [delegate release]; delegate = nil;
+    delegate = nil;
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
@@ -90,43 +90,45 @@
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
-    AIListObject	*listObject = [delegate listObject];
-    NSEnumerator	*enumerator;
-    AIAccount		*anAccount;
-    int			selectedIndex;
-
-    //remove any existing menu items
-    [[popUp_accounts menu] removeAllItems];
-
-    //insert a menu for each account
-    enumerator = [[[adium accountController] accountArray] objectEnumerator];
-    while((anAccount = [enumerator nextObject])){
-
-        //Accounts only show up in the menu if they're the correct handle type.
-        if(!listObject || [[listObject serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
-            NSMenuItem	*menuItem;
-
-            menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount displayName]
-						   target:self
-						   action:@selector(selectNewAccount:)
-					    keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:anAccount];
-
-            //They are disabled if the account is offline
-            if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
-							     toListObject:nil
-								onAccount:anAccount]){
-                [menuItem setEnabled:NO];
-            }
-
-            [[popUp_accounts menu] addItem:menuItem];
-        }
+    if (delegate){
+	AIListObject	*listObject = [delegate listObject];
+	NSEnumerator	*enumerator;
+	AIAccount		*anAccount;
+	int			selectedIndex;
+	
+	//remove any existing menu items
+	[[popUp_accounts menu] removeAllItems];
+	
+	//insert a menu for each account
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	while((anAccount = [enumerator nextObject])){
+	    
+	    //Accounts only show up in the menu if they're the correct handle type.
+	    if(!listObject || [[listObject serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
+		NSMenuItem	*menuItem;
+		
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount displayName]
+						       target:self
+						       action:@selector(selectNewAccount:)
+						keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:anAccount];
+		
+		//They are disabled if the account is offline
+		if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+								 toListObject:nil
+								    onAccount:anAccount]){
+		    [menuItem setEnabled:NO];
+		}
+		
+		[[popUp_accounts menu] addItem:menuItem];
+	    }
+	}
+	
+	//Select our current account
+	selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
+	[popUp_accounts selectItemAtIndex:selectedIndex];
+	[self updateMenu];
     }
-
-    //Select our current account
-    selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
-    [popUp_accounts selectItemAtIndex:selectedIndex];
-    [self updateMenu];
 }
 
 //An account's status changed
