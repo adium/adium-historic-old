@@ -491,7 +491,7 @@
 }
 
 //Update the status of a contact
-- (void)updateContactStatus:(AIListContact *)inContact
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //AIM requires a delayed load of profiles...
     if([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
@@ -738,7 +738,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.115 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.116 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

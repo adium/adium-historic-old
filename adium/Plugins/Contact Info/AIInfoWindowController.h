@@ -6,19 +6,18 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-@class AIListContact;
 @protocol AIListObjectObserver;
 
 @interface AIInfoWindowController : AIWindowController <AIListObjectObserver> {
     IBOutlet	NSTextView	*textView_contactProfile;
 
-    AIListContact	*activeContactObject;
-    NSTimer             *timer;
+    AIListObject			*activeListObject;
+    NSTimer             	*timer;
 }
 
-+ (id)showInfoWindowForContact:(AIListObject *)inContact;
++ (id)showInfoWindow;
 + (void)closeTextProfileWindow;
-- (void)configureWindowForContact:(AIListContact *)inContact;
+- (void)configureWindowForListObject:(AIListObject *)inObject;
 - (void)displayInfo:(NSAttributedString *)infoString;
 - (IBAction)closeWindow:(id)sender;
 

@@ -456,7 +456,7 @@
 #pragma mark Contacts
 
 //Update the status of a contact (Request their profile)
-- (void)updateContactStatus:(AIListContact *)inContact
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
     if([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue]){

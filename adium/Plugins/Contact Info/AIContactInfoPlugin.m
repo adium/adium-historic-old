@@ -74,12 +74,12 @@
 
 - (IBAction)showContactInfo:(id)sender
 {
-    [AIInfoWindowController showInfoWindowForContact:[[adium contactController] selectedListObject]];
+    [AIInfoWindowController showInfoWindow];
 }
 
 - (IBAction)showContextContactInfo:(id)sender
 {
-    [AIInfoWindowController showInfoWindowForContact:[[adium menuController] contactualMenuContact]];
+    [AIInfoWindowController showInfoWindow];
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
