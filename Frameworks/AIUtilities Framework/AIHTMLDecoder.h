@@ -98,6 +98,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 - (BOOL)includesColorTags;
 - (void)setIncludesColorTags:(BOOL)newValue;
 
+- (BOOL)includesStyleTags;
+- (void)setIncludesStyleTags:(BOOL)newValue;
+
 //turn non-printable characters into entities.
 - (BOOL)encodesNonASCII;
 - (void)setEncodesNonASCII:(BOOL)newValue;
