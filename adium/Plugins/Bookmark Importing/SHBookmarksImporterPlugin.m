@@ -20,9 +20,9 @@
 
 static NSMenuItem   *bookmarkRootMenuItem;
 static NSMenuItem   *bookmarkRootContextualMenuItem;
-static NSMenuItem   *firstMenuItem;
-static NSMenu       *firstSubmenu;
-static NSMenu       *bookmarkSets;
+//static NSMenuItem   *firstMenuItem;
+//static NSMenu       *firstSubmenu;
+//static NSMenu       *bookmarkSets;
 - (void)installPlugin
 {
     importerArray = [[[NSMutableArray alloc] init] autorelease];
@@ -84,19 +84,19 @@ static NSMenu       *bookmarkSets;
     if([bookmarkRootContextualMenuItem submenu]) [[bookmarkRootContextualMenuItem submenu] removeAllItems];
     
     // create a new menu
-    bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+    NSMenu  *bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
     // iterate through each importer, and build a menu if it's bookmark file exists
     while(importer = [enumerator nextObject]){
         if([importer bookmarksExist]){
-            firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
+            NSMenuItem  *firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
                                                               target:self
                                                               action:nil
                                                        keyEquivalent:@""] autorelease];
             [firstMenuItem setRepresentedObject:importer];
             [bookmarkSets addItem:firstMenuItem];
 
-            firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
+            NSMenu  *firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
             [firstMenuItem setSubmenu:firstSubmenu];
         }
     }
@@ -136,8 +136,6 @@ static NSMenu       *bookmarkSets;
                     }
                 }
             }
-        }else{
-            return NO; // disable if no sets are active (which would only happen if no browsers were installed... hey, it could happen!
         }
         
         if(responder && [responder isKindOfClass:[NSTextView class]]){
