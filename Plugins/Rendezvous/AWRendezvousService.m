@@ -59,5 +59,16 @@
 - (BOOL)supportsProxySettings{
 	return(NO);
 }
+- (void)registerStatuses{
+	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
+							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+									  ofType:AIAvailableStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_AWAY
+							 withDescription:STATUS_DESCRIPTION_AWAY
+									  ofType:AIAwayStatusType
+								  forService:self];
+}
 
 @end
