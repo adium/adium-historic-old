@@ -75,7 +75,13 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 	//Observe accounts so we can display accurate status
     [[adium contactController] registerListObjectObserver:self];
-	
+
+	//Observe status icon pack changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(statusIconsChanged:)
+									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];
+
 	[super windowDidLoad];
 }
 
@@ -266,6 +272,14 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[tableView_accountList reloadData];
 	[self updateControlAvailability];
 	[self updateAccountOverview];
+}
+
+/*
+ * @brief Status icons changed, refresh our table
+ */
+- (void)statusIconsChanged:(NSNotification *)notification
+{
+	[tableView_accountList reloadData];
 }
 
 /*
