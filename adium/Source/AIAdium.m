@@ -146,14 +146,14 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	//Display the license agreement
-	NSNumber	*viewedLicense = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_VIEWED_LICENSE];
-	if(!viewedLicense || [viewedLicense intValue] < 1){
-		if([AILicenseWindowController displayLicenseAgreement]){
-			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:1] forKey:KEY_USER_VIEWED_LICENSE];
-		}else{
-			[NSApp terminate:nil];
-		}
-	}
+//	NSNumber	*viewedLicense = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_VIEWED_LICENSE];
+//	if(!viewedLicense || [viewedLicense intValue] < 1){
+//		if([AILicenseWindowController displayLicenseAgreement]){
+//			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:1] forKey:KEY_USER_VIEWED_LICENSE];
+//		}else{
+//			[NSApp terminate:nil];
+//		}
+//	}
 	
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
