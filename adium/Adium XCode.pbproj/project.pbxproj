@@ -509,36 +509,6 @@
 //342
 //343
 //344
-		340023B905A96D230047226F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = GBiTunerPlugin.h;
-			path = "Plugins/iTunes Integration/GBiTunerPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340023BA05A96D240047226F = {
-			fileRef = 340023B905A96D230047226F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		340023C605A96D430047226F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = GBiTunerPlugin.m;
-			path = "Plugins/iTunes Integration/GBiTunerPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340023CB05A96D440047226F = {
-			fileRef = 340023C605A96D430047226F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3400240005A96D910047226F = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -550,6 +520,36 @@
 			isa = PBXTargetDependency;
 			target = 34F8A7E605A8920F00577775;
 			targetProxy = 3400240005A96D910047226F;
+		};
+		340042CF05AA98C00047226F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = GBiTunerPlugin.m;
+			path = "Plugins/iTunes Integration/GBiTunerPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340042D005AA98C00047226F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GBiTunerPlugin.h;
+			path = "Plugins/iTunes Integration/GBiTunerPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340042D505AA98C10047226F = {
+			fileRef = 340042CF05AA98C00047226F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340042D605AA98C10047226F = {
+			fileRef = 340042D005AA98C00047226F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34004D86057C7DCA0022CA56 = {
 			fileEncoding = 4;
@@ -9824,6 +9824,7 @@
 				3419FE0B0531585600C68BA3,
 				3419FE0C0531585600C68BA3,
 				3419FE0D0531585600C68BA3,
+				34D9C11C05AAAF4300AC2E4D,
 				B774EFC9058C4948009C7C67,
 				3419FE0E0531585600C68BA3,
 				3419FE0F0531585600C68BA3,
@@ -17530,6 +17531,71 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34D9C0E405AAACF300AC2E4D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = iTunesIntegrationPrefs.plist;
+			path = "Plugins/iTunes Integration/iTunesIntegrationPrefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D9C0E505AAACF300AC2E4D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GBiTunerPreferences.h;
+			path = "Plugins/iTunes Integration/GBiTunerPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D9C0E605AAACF300AC2E4D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = GBiTunerPreferences.m;
+			path = "Plugins/iTunes Integration/GBiTunerPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D9C0E705AAACF400AC2E4D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GBiTuner.nib;
+			path = "Plugins/iTunes Integration/GBiTuner.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D9C0E805AAACF400AC2E4D = {
+			fileRef = 34D9C0E405AAACF300AC2E4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D9C0E905AAACF400AC2E4D = {
+			fileRef = 34D9C0E505AAACF300AC2E4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D9C0EA05AAACF400AC2E4D = {
+			fileRef = 34D9C0E605AAACF300AC2E4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D9C0EB05AAACF400AC2E4D = {
+			fileRef = 34D9C0E705AAACF400AC2E4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D9C11C05AAAF4300AC2E4D = {
+			fileRef = 34F8A7E705A8920F00577775;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E0F188053AE56F00031341 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -17710,7 +17776,8 @@
 		34F8A7E205A8920F00577775 = {
 			buildActionMask = 2147483647;
 			files = (
-				340023BA05A96D240047226F,
+				340042D605AA98C10047226F,
+				34D9C0E905AAACF400AC2E4D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17718,6 +17785,8 @@
 		34F8A7E305A8920F00577775 = {
 			buildActionMask = 2147483647;
 			files = (
+				34D9C0E805AAACF400AC2E4D,
+				34D9C0EB05AAACF400AC2E4D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17725,7 +17794,8 @@
 		34F8A7E405A8920F00577775 = {
 			buildActionMask = 2147483647;
 			files = (
-				340023CB05A96D440047226F,
+				340042D505AA98C10047226F,
+				34D9C0EA05AAACF400AC2E4D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17835,8 +17905,12 @@
 		};
 		34F8A7FA05A8927F00577775 = {
 			children = (
-				340023B905A96D230047226F,
-				340023C605A96D430047226F,
+				340042D005AA98C00047226F,
+				340042CF05AA98C00047226F,
+				34D9C0E405AAACF300AC2E4D,
+				34D9C0E505AAACF300AC2E4D,
+				34D9C0E605AAACF300AC2E4D,
+				34D9C0E705AAACF400AC2E4D,
 			);
 			isa = PBXGroup;
 			name = "iTunes Integration";
@@ -18007,7 +18081,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_ALTIVEC_EXTENSIONS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -18026,7 +18100,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_ALTIVEC_EXTENSIONS = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
