@@ -75,7 +75,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	//Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
 	//createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
 	//than once.
-	//If the user puts the uesrname in username@server format, which is common for Jabber, we should
+	//If the user puts the username in username@server format, which is common for Jabber, we should
 	//handle this gracefully, ignoring the server preference entirely.
 	serverAppendedToUID = ([UID rangeOfString:@"@"].location != NSNotFound);
 
@@ -90,7 +90,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
 	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 
-	//	NSLog(@"So %@ --> %@",userNameWithHost,completeUserName);
+	AILog(@"Jabber user name: \"%@\"",completeUserName);
 	gaim_account_set_username(account, [completeUserName UTF8String]);
 }
 
@@ -175,6 +175,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			[[adium accountController] forgetPasswordForAccount:self];
 		}else if ([disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound){
 			shouldReconnect = NO;
+		}else if ([disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound){
+			shouldReconnect = NO;			
 		}
 	}
 	
@@ -206,6 +208,11 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
     [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super cancelFileTransfer:fileTransfer];
 }
 
 #pragma mark Status Messages

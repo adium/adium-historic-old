@@ -5,6 +5,7 @@
 //  Created by Evan Schoenberg on Sun Dec 28 2003.
 
 #import "ESAIMService.h"
+#import "ESAntepoService.h"
 #import "ESICQService.h"
 #import "ESDotMacService.h"
 #import "ESGaduGaduService.h"
