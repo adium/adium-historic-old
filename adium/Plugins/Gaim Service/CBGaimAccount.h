@@ -12,6 +12,8 @@
 
     NSMutableArray      *filesToSendArray;
         
+	NSString			*lastDisconnectionError;
+	
     GaimAccount         *account;
     GaimConnection      *gc;
     

@@ -608,8 +608,9 @@
 - (void)initAccount
 {
     chatDict = [[NSMutableDictionary alloc] init];
-    filesToSendArray = [[NSMutableArray alloc] init];
-
+//    filesToSendArray = [[NSMutableArray alloc] init];
+	lastDisconnectionError = nil;
+	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
 	//gc will be set once we are connecting
