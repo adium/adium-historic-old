@@ -89,8 +89,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Create the text system
     textStorage = [[self createTextSystemWithString:string size:NSMakeSize(1e7, 1e7) container:&textContainer layoutManager:&layoutManager] retain];
-    [textContainer retain];
-    [layoutManager retain];
 
     //Check if our string contains any links
     scanRange = NSMakeRange(0, 0);
@@ -114,11 +112,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     aTextStorage = [[NSTextStorage alloc] initWithAttributedString:inString];
     aContainer = [[NSTextContainer alloc] initWithContainerSize:inSize];
     aLayoutManager = [[NSLayoutManager alloc] init];
-
+  
     //Setup
     [aContainer setLineFragmentPadding:1.0]; //A value of 0.0 appears to be invalid (it causes attribute display issues when the text container is resized to certain widths), so we'll use 1.0 since it's close though to 0 :)
-    [aLayoutManager addTextContainer:[aContainer autorelease]];
-    [aTextStorage addLayoutManager:[aLayoutManager autorelease]];
+    [aLayoutManager addTextContainer:aContainer];
+	[aContainer release];
+    [aTextStorage addLayoutManager:aLayoutManager];
+	[aLayoutManager release];
 
     //Return
     if(outContainer) *outContainer = aContainer;
@@ -130,8 +130,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 - (void)dealloc
 {    
     [textStorage release];
-    [textContainer release];
-    [layoutManager release];
     [string release];
     [linkTrackingController release];
 
@@ -158,6 +156,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     if(glyphRange.length != 0){
         if (isOpaque) {
+			//drawBackgroundForGlyphRange:atPoint: doesn't actually invalidate the glyphs properly, so call glyphRangeForTextContainer: first
+			[layoutManager glyphRangeForTextContainer:textContainer];
             [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
             [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
         } else {
@@ -169,7 +169,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
             [image addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:cellFrame] autorelease]];
             
             [controlView lockFocus];
-            //Draw our glyphs
+            
+			//Draw our glyphs
+			
+			//drawBackgroundForGlyphRange:atPoint: doesn't actually invalidate the glyphs properly, so call glyphRangeForTextContainer: first
+			[layoutManager glyphRangeForTextContainer:textContainer];
             [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
             [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
             
