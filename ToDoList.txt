@@ -6,7 +6,6 @@
 - Move window shadow preference from layout to advanced
 - Move opacity preference from layout to main pane or advanced
 - Move maximum width slider from layout to main pane
-- Webkit background image type selector needs to be re-implemented
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented [Evan]
 - MSN display names as extended status isn't working
@@ -27,7 +26,7 @@
 	with the current status
 - Message views are ignoring variant specific info.plist keys
 - %_statusmessage script is broken
-- Contact list status selector isn't updating to reflect the correct status all the time
+- Status controller needs to return an offline state from activeState when we are offline
 - installation of various xtras doesn't go to the right pref pane now.
 
 //-------------------------------------------------------------------------------------------------------
