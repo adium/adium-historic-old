@@ -23,11 +23,8 @@
     [self buildThemesList];
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
-    [table setDoubleAction:@selector(showPreview:)];   
-    [table reloadData];
-    [self configureControlDimming];
-	
-	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
+    [table reloadData];	
+    [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
 }
 
 -(void)dealloc
@@ -38,7 +35,6 @@
 -(void)themesChanged:(NSNotification *)notification
 {
     [self buildThemesList];
-    [self configureControlDimming];
 }
 
 -(void)buildThemesList
@@ -53,8 +49,9 @@
         }
     }  
     themeCount = [tempThemesList count];
+    [themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
+    [self configureControlDimming];
 
-	[themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -93,14 +90,6 @@
 	} else {
 		return nil;
 	}
-}
-
--(void)showPreview:(id)sender
-{
-    // get selected row's item and then set it :)
-    NSDictionary *previewedTheme = [NSDictionary dictionaryWithContentsOfFile:[self selectedTheme]];
-    [previewName setObjectValue:[NSString stringWithFormat:@"Now previewing \'%@\' by %@",[previewedTheme objectForKey:@"themeName"],[previewedTheme objectForKey:@"themeAuthor"]]];
-    [previewWindow makeKeyAndOrderFront:previewWindow];
 }
 
 -(IBAction)removeTheme:(id)sender

@@ -35,8 +35,7 @@
 {
     [nameField setObjectValue:@""];
     [createStatus setObjectValue:@""];
-    [manageStatus setObjectValue:@"Double click a theme to open a preview."];
-    [generatePreviewButton setEnabled:NO];
+    [manageStatus setObjectValue:@""];
     [themesList setPlugin:themePlugin];
 }
 
