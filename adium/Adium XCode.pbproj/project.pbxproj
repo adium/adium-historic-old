@@ -347,6 +347,7 @@
 				52AEBD6105ABA95700B19C56,
 				C42C16FF05BA682C00135D3C,
 				6EB4AC3405BCB81D00D0042B,
+				520FE3A105BE1FC5002D063D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -466,6 +467,7 @@
 				B72537BB058C4577004BA969,
 				52AEBD6005ABA95700B19C56,
 				C42C16F205BA682C00135D3C,
+				520FE3A005BE1FC5002D063D,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -480,6 +482,7 @@
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
+				520FE3A805BE1FC6002D063D,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -8644,6 +8647,8 @@
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
 				6E99206C05BDCA250070E854,
+				520FE47005BE2494002D063D,
+				520FE46A05BE2118002D063D,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9488,6 +9493,7 @@
 				4B7F279F05440CB900CDFC90,
 				4B7845F4059B53E50048A8BA,
 				4B7845F5059B54680048A8BA,
+				520FE46305BE20EB002D063D,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9555,6 +9561,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				3419FDF20531585600C68BA3,
 				4B7F27C705440DE900CDFC90,
 				3419FDE10531585600C68BA3,
 				3419FDE30531585600C68BA3,
@@ -9574,7 +9581,6 @@
 				3419FDF00531585600C68BA3,
 				9EBAC78205B230AF00A98ADC,
 				3419FDF10531585600C68BA3,
-				3419FDF20531585600C68BA3,
 				4BFC7F9B05B10FD30015E1EA,
 				3419FDF40531585600C68BA3,
 				6C05CA1D054930AF0088ECBF,
@@ -18995,6 +19001,7 @@
 			children = (
 				F53B9A1302CCEDCA01A8010A,
 				F53EA2AC02C7F2A001A8010A,
+				520FE3B305BE206D002D063D,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
@@ -23204,6 +23211,256 @@
 //522
 //523
 //524
+		520FE39C05BE1FC5002D063D = {
+			buildActionMask = 2147483647;
+			files = (
+				520FE3AD05BE2065002D063D,
+				520FE3AF05BE2065002D063D,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		520FE39D05BE1FC5002D063D = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		520FE39E05BE1FC5002D063D = {
+			buildActionMask = 2147483647;
+			files = (
+				520FE3AE05BE2065002D063D,
+				520FE3B005BE2065002D063D,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		520FE39F05BE1FC5002D063D = {
+			buildActionMask = 2147483647;
+			files = (
+				520FE46C05BE22B8002D063D,
+				520FE46D05BE22B8002D063D,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		520FE3A005BE1FC5002D063D = {
+			buildPhases = (
+				520FE39C05BE1FC5002D063D,
+				520FE39D05BE1FC5002D063D,
+				520FE39E05BE1FC5002D063D,
+				520FE39F05BE1FC5002D063D,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "plists/AdiumGames-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = AdiumGames;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = "-Wmost";
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = AdiumGames.framework;
+			productName = AdiumGames;
+			productReference = 520FE3A105BE1FC5002D063D;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>AdiumGames</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.AdiumGames</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.framework";
+		};
+		520FE3A105BE1FC5002D063D = {
+			explicitFileType = wrapper.framework;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = AdiumGames.framework;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		520FE3A805BE1FC6002D063D = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "AdiumGames-Info.plist";
+			path = "/Users/nelson/Code/adium/AdiumGames-Info.plist";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		520FE3A905BE2065002D063D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHGameController.h;
+			path = "Frameworks/AdiumGames Framework/NEHGameController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		520FE3AA05BE2065002D063D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHGameController.m;
+			path = "Frameworks/AdiumGames Framework/NEHGameController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		520FE3AB05BE2065002D063D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHGamePlugin.h;
+			path = "Frameworks/AdiumGames Framework/NEHGamePlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		520FE3AC05BE2065002D063D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHGamePlugin.m;
+			path = "Frameworks/AdiumGames Framework/NEHGamePlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		520FE3AD05BE2065002D063D = {
+			fileRef = 520FE3A905BE2065002D063D;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		520FE3AE05BE2065002D063D = {
+			fileRef = 520FE3AA05BE2065002D063D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		520FE3AF05BE2065002D063D = {
+			fileRef = 520FE3AB05BE2065002D063D;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		520FE3B005BE2065002D063D = {
+			fileRef = 520FE3AC05BE2065002D063D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		520FE3B305BE206D002D063D = {
+			children = (
+				520FE3A905BE2065002D063D,
+				520FE3AA05BE2065002D063D,
+				520FE3AB05BE2065002D063D,
+				520FE3AC05BE2065002D063D,
+			);
+			isa = PBXGroup;
+			name = AdiumGames.Framework;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		520FE3B705BE209D002D063D = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 520FE3A005BE1FC5002D063D;
+			remoteInfo = AdiumGames.framework;
+		};
+		520FE3B805BE209D002D063D = {
+			isa = PBXTargetDependency;
+			target = 520FE3A005BE1FC5002D063D;
+			targetProxy = 520FE3B705BE209D002D063D;
+		};
+		520FE46305BE20EB002D063D = {
+			fileRef = 520FE3A105BE1FC5002D063D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		520FE46605BE20F8002D063D = {
+			fileRef = 520FE3A105BE1FC5002D063D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		520FE46905BE2118002D063D = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 52AEBD6005ABA95700B19C56;
+			remoteInfo = TicTacToe;
+		};
+		520FE46A05BE2118002D063D = {
+			isa = PBXTargetDependency;
+			target = 52AEBD6005ABA95700B19C56;
+			targetProxy = 520FE46905BE2118002D063D;
+		};
+		520FE46C05BE22B8002D063D = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		520FE46D05BE22B8002D063D = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		520FE46F05BE2494002D063D = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 520FE3A005BE1FC5002D063D;
+			remoteInfo = AdiumGames.framework;
+		};
+		520FE47005BE2494002D063D = {
+			isa = PBXTargetDependency;
+			target = 520FE3A005BE1FC5002D063D;
+			targetProxy = 520FE46F05BE2494002D063D;
+		};
 		5233D6A705B606FA00E9A4EC = {
 			children = (
 				5233D6A805B606FA00E9A4EC,
@@ -23264,6 +23521,7 @@
 		52AEBD5F05ABA95700B19C56 = {
 			buildActionMask = 2147483647;
 			files = (
+				520FE46605BE20F8002D063D,
 				52AEBDD005ABAD0F00B19C56,
 				52AEBDD105ABAD0F00B19C56,
 				52AEBDD205ABAD0F00B19C56,
@@ -23288,6 +23546,7 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				520FE3B805BE209D002D063D,
 			);
 			isa = PBXNativeTarget;
 			name = TicTacToe;
