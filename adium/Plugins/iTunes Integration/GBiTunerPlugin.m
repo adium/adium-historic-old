@@ -19,7 +19,7 @@
 - (NSMenu *)loadScriptsAndBuildScriptMenu;
 - (NSString*)hashLookup:(NSString *)pattern;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
-- (NSString *)_executeScript:(NSDictionary *)infoDict;
+- (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
@@ -286,7 +286,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 			   (!prefixOnly && [inString rangeOfString:keyword].location != NSNotFound)){
 								
 				//Execute the script
-				NSString	*scriptResult = [self _executeScript:infoDict];
+				NSString	*scriptResult = [self _executeScript:infoDict withArguments:nil];
 				
 				//Swap the result into our string
 				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];
@@ -302,12 +302,12 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 }
 
 //Execute the script, returning it's output
-- (NSString *)_executeScript:(NSDictionary *)infoDict
+- (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments
 {
 	NSURL 			*scriptURL = [infoDict objectForKey:@"Path"];
 	NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
 		
-	return([[script executeFunction:@"substitute" error:nil] stringValue]);
+	return([[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue]);
 }
 
 @end
