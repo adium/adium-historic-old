@@ -19,18 +19,21 @@ sTLD		(com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD		(aero|coop|museum)
 
 domains		({ccTLD}|{sTLD}|{uTLD}|arpa)
-urlSpecifier	[^\/]+((.*:)?.*@)?(.*\/)*\.{domains}(:\d+)?(\/.*)?
+urlSpecifier	[^\/]+((.*:)?.*@)?(.*\/)*\.{domains}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
+jabberSpec      "xmpp:".*@.+\.{domains}(\/.*)?
+aolIMSpec       "aim:goim?screenname="[^\s&]+("&message=".+)?
 
-%option noyywrap 8bit caseless prefix="SHLinkLexer"
+
+%option noyywrap 8bit caseless debug prefix="SHLinkLexer"
 
 %x CANONICAL
 %%
 
-<CANONICAL>{urlSpecifier}	    {BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>.*			    {BEGIN INITIAL; return SH_URL_INVALID;}
+<CANONICAL>{urlSpecifier}   {BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>.*		    {BEGIN INITIAL; return SH_URL_INVALID;}
 
-file:\/\/\/.*			    {return SH_FILE_VALID;}
+file:\/\/\/.*		    {return SH_FILE_VALID;}
 
 https?:\/\/	|
 ftp:\/\/	|
@@ -41,16 +44,16 @@ irc:\/\/	|
 nntp:\/\/       |
 rstp:\/\/	|
 itms:\/\/	|
-gopher:\/\/			    {BEGIN CANONICAL;}
+gopher:\/\/		    {BEGIN CANONICAL;}
 
-mailto:{mailSpecifier}		    {return SH_MAILTO_VALID;}
-
-xmpp:.*@.*(\/.*)?		    {return SH_URL_VALID; /*jabber*/}
-aim:goim\?screenname=[^\s&]*(&message=.*)?   {return SH_URL_VALID; /* aim */}
+mailto:{mailSpecifier}      {return SH_MAILTO_VALID;}
 
 
-{mailSpecifier}			    {return SH_MAILTO_DEGENERATE;}	
-{urlSpecifier}			    {return SH_URL_DEGENERATE;}
+{mailSpecifier}		    {return SH_MAILTO_DEGENERATE;}	
+{urlSpecifier}		    {return SH_URL_DEGENERATE;}
 
-.*				    {return SH_URL_INVALID;}
+{jabberSpec}		    {return SH_URL_VALID;}
+{aolIMSpec}		    {return SH_URL_VALID;}
+
+.			    {return SH_URL_INVALID;}
 %%
