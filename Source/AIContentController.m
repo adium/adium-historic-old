@@ -21,8 +21,10 @@
 #import "ESContactAlertsController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
+//XXX - why are we importing specific headers here, rather than just importing the umbrella headers? --boredzo
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
 #import <Adium/AIAccount.h>
