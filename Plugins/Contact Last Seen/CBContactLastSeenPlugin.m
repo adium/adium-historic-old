@@ -113,7 +113,7 @@
 			sinceDateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSString stringWithFormat:@"%@, %@", 
 																				[[NSDateFormatter localizedShortDateFormatter] dateFormat],
 																				[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]]
-														allowNaturalLanguage:YES] autorelease];
+														 allowNaturalLanguage:YES] autorelease];
 									
 			entry = [[NSAttributedString alloc] 
 						initWithString:[NSString stringWithFormat:
@@ -121,8 +121,6 @@
 							lastSeenStatus,
 							[NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate],
 							[sinceDateFormatter stringForObjectValue:lastSeenDate]]]; 
-		} else {
-			entry = [[NSAttributedString alloc] initWithString:@"Never"];
 		}
 	}
 	
