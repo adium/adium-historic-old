@@ -286,11 +286,11 @@ this problem is along the lines of:
     //If we're going to need to re-index all our logs from scratch, it will make
     //things faster if we start with a fresh log index as well.
     if(!dirtyLogArray){
-	if([[NSFileManager defaultManager] fileExistsAtPath:[self logIndexPath]]){
-	    if(![[NSFileManager defaultManager] trashFileAtPath:[self logIndexPath] handler:nil]){
-		NSLog(@"Failed to delete log index.");
-	    }
-	}	
+		if([[NSFileManager defaultManager] fileExistsAtPath:[self logIndexPath]]){
+			if(![[NSFileManager defaultManager] trashFileAtPath:[self logIndexPath]]){
+				NSLog(@"Failed to delete log index.");
+			}
+		}	
     }
     
     //Load the index and start indexing to make it current
