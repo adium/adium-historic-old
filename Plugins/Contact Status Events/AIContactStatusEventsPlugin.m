@@ -106,23 +106,23 @@
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
 {
-	NSString	*description;
+	NSString	*format;
 	NSString	*name;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
-		description = AILocalizedString(@"When %@ connects",nil);
+		format = AILocalizedString(@"When %@ connects",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
-		description = AILocalizedString(@"When %@ disconnects",nil);
+		format = AILocalizedString(@"When %@ disconnects",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
-		description = AILocalizedString(@"When %@ goes away",nil);
+		format = AILocalizedString(@"When %@ goes away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
-		description = AILocalizedString(@"When %@ returns from away",nil);
+		format = AILocalizedString(@"When %@ returns from away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
-		description = AILocalizedString(@"When %@ goes idle",nil);
+		format = AILocalizedString(@"When %@ goes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
-		description = AILocalizedString(@"When %@ returns from idle",nil);
+		format = AILocalizedString(@"When %@ returns from idle",nil);
 	}else{
-		description = AILocalizedString(@"Unknown",nil);
+		format = @"";
 	}
 	
 	if(listObject){
@@ -133,9 +133,54 @@
 		name = AILocalizedString(@"a contact",nil);
 	}
 
-	return([NSString stringWithFormat:description,name]);
+	return([NSString stringWithFormat:format,name]);
 }
 
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	NSString	*description = nil;
+	
+	if(includeSubject){
+		NSString	*format;
+		
+		if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
+			format = AILocalizedString(@"%@ connected",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
+			format = AILocalizedString(@"%@ disconnected",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
+			format = AILocalizedString(@"%@ went away",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
+			format = AILocalizedString(@"%@ came back",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
+			format = AILocalizedString(@"%@ went idle",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
+			format = AILocalizedString(@"%@ became active",nil);
+		}
+		
+		description = [NSString stringWithFormat:format,[listObject displayName]];
+	}else{
+		if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
+			description = AILocalizedString(@"connected",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
+			description = AILocalizedString(@"disconnected",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
+			description = AILocalizedString(@"went away",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
+			description = AILocalizedString(@"came back",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
+			description = AILocalizedString(@"went idle",nil);
+		}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
+			description = AILocalizedString(@"became active",nil);
+		}
+	}
+	
+	return(description);
+}
+
+#pragma mark Caching and event generation
 //
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
