@@ -3262,24 +3262,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34831CF006A6635E0093D0ED = {
-			fileRef = 349DDCE8064064DC00542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34831CF306A6635F0093D0ED = {
-			fileRef = 349DDCE7064064DC00542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34831CF906A6635F0093D0ED = {
-			fileRef = 349DDCE6064064DC00542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3483928405E68B05002BC6C0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3712,30 +3694,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		349DDCE6064064DC00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Account_Online.png;
-			path = "Frameworks/Adium Framework/Account_Online.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDCE7064064DC00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Account_Offline.png;
-			path = "Frameworks/Adium Framework/Account_Offline.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDCE8064064DC00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Account_Connecting.png;
-			path = "Frameworks/Adium Framework/Account_Connecting.png";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		349DDCF30640650B00542726 = {
 			isa = PBXFileReference;
@@ -6055,9 +6013,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				349DDD5306406A7D00542726,
-				34831CF006A6635E0093D0ED,
-				34831CF306A6635F0093D0ED,
-				34831CF906A6635F0093D0ED,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11823,9 +11778,6 @@
 				F5793912033E748F01A8010A,
 				4BFC3412058D48A8008F7FA2,
 				4BFC3413058D48A8008F7FA2,
-				349DDCE6064064DC00542726,
-				349DDCE7064064DC00542726,
-				349DDCE8064064DC00542726,
 			);
 			isa = PBXGroup;
 			name = Other;
