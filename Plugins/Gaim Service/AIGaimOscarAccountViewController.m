@@ -22,7 +22,7 @@
     return(@"ESGaimOscarAccountView");
 }
 
-//Configure our controls
+//Configure controls
 - (void)configureForAccount:(AIAccount *)inAccount
 {
     [super configureForAccount:inAccount];
@@ -41,16 +41,10 @@
 	}
 }
 
-//Profile text was changed
-- (void)textDidEndEditing:(NSNotification *)notification
+//Save controls
+- (void)saveConfiguration
 {
-    [account setPreference:[[textView_textProfile textStorage] dataRepresentation] 
-					forKey:@"TextProfile"
-					 group:GROUP_ACCOUNT_STATUS];
-}
-
-- (void)saveFieldsImmediately
-{
+    [super saveConfiguration];
 	[account setPreference:[[textView_textProfile textStorage] dataRepresentation] 
 					forKey:@"TextProfile"
 					 group:GROUP_ACCOUNT_STATUS];	
