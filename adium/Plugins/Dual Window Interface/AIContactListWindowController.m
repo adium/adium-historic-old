@@ -29,10 +29,9 @@
 #define SCROLL_VIEW_PADDING_Y		2
 
 #define PREF_GROUP_CONTACT_LIST			@"Contact List"
-#define PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
 #define KEY_CLWH_ALWAYS_ON_TOP			@"Always on Top"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
-#define KEY_SCL_BORDERLESS                      @"Borderless"
+
 
 @interface AIContactListWindowController (PRIVATE)
 - (id)initWithInterface:(id <AIContainerInterface>)inInterface;
@@ -123,23 +122,6 @@
 
         [self _configureAutoResizing];
     }
-    
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
-        BOOL        newBorderless = [[[adium preferenceController] preferenceForKey:KEY_SCL_BORDERLESS group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-
-        if (borderless != newBorderless) {
-            borderless = newBorderless;
-            //we're going to be closing, and nothing's going to change that at this point
-            //but if the user changes her mind, we'll get a second message in the middle of close, which won't be pretty - the new instance of AIContactListWindowController will handle it; we don't need to
-            //Remove observers (general)
-            [[adium notificationCenter] removeObserver:self];
-            [[NSNotificationCenter defaultCenter] removeObserver:self];
-            
-            [[self window] performClose:nil];
-            [(AIDualWindowInterfacePlugin *)interface showContactList:nil];
-        }
-        
-    }    
 }
 
 //Called when the user selects a new contact object

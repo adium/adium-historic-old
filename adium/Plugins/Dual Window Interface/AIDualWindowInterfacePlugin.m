@@ -174,6 +174,16 @@
         //Cache the window spawning preferences
 	alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
 	useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
+    } else if( contactListWindowController &&
+	       ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) ){
+	
+	BOOL windowIsBorderless = [[contactListWindowController window] isBorderless];
+	BOOL borderlessPref = [[[adium preferenceController] preferenceForKey:KEY_SCL_BORDERLESS group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+	
+	if (windowIsBorderless != borderlessPref) {
+	    [[contactListWindowController window] performClose:nil];
+	    [self showContactList:nil];
+	}
     }
 }
 
