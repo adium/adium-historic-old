@@ -15,10 +15,7 @@
 
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_WillSendContent						@"Content_WillSendContent"
-#define Content_DidSendContent						@"Content_DidSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
-#define Content_DidReceiveContent					@"Content_DidReceiveContent"
-#define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
 
 @protocol AITextEntryView;
 
@@ -56,18 +53,6 @@ typedef enum {
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context;
 @end
 
-//Auxiliary filter type to the primary AIContentFilter
-//for simple filtering which uses no attributedString characteristics
-//@protocol AIStringFilter
-//- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
-//@end
-
-//Dummy protocol used in several filters
-//@protocol DummyStringProtocol
-//- (NSString *)string;
-//- (NSMutableString *)mutableString;
-//@end
-//
 @interface NSObject (AITextEntryFilter)
 //required
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; 
@@ -77,13 +62,8 @@ typedef enum {
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
-@interface AIContentController : NSObject {
+@interface AIContentController : NSObject<AIEventHandler> {
     IBOutlet	AIAdium		*adium;
-	
-//    NSMutableArray			*outgoingContentFilterArray;
-//    NSMutableArray			*incomingContentFilterArray;
-//    NSMutableArray			*displayingContentFilterArray;
-//    NSMutableArray			*stringFilterArray;
 	
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
@@ -145,16 +125,6 @@ typedef enum {
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)setDefaultFormattingAttributes:(NSDictionary *)inDict;
 - (NSDictionary *)defaultFormattingAttributes;
-
-//Registering filters
-//- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
-//- (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter;
-//- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
-//- (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter;
-//- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
-//- (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
-//- (void)registerStringFilter:(id <AIStringFilter>)inFilter;
-//- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter;
 
 //Filtering content
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter

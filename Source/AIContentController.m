@@ -62,6 +62,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
     //Emoticons array
     emoticonsArray = nil;
+	
+	//Register the events we generate
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_SENT withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 }
 
 //close
@@ -542,9 +547,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 			
 			if([inObject trackContent]){
 				//Did send content
-				[[adium notificationCenter] postNotificationName:Content_DidSendContent 
-														  object:chat 
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+				[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_SENT
+												 forListObject:[chat listObject]
+													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:chat,@"AIChat",inObject,@"AIContentObject",nil]
+								  previouslyPerformedActionIDs:nil];				
 			}
 			
 			mostRecentChat = chat;
@@ -661,36 +667,51 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
     //Check if the object should display
     if([inObject displayContent]){
-		AIChat		*chat = [inObject chat];
-		BOOL		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
-									   (![inObject isOutgoing]));
+		AIChat			*chat = [inObject chat];
+		NSDictionary	*userInfo;
 		
-		//Tell the interface to open the chat
-		//For incoming messages, we don't open the chat until we're sure that new content is being received.
-		if(![chat isOpen]){
+		BOOL		contentReceived, shouldPostContentReceivedEvents, chatIsOpen;
+
+		chatIsOpen = [chat isOpen];
+		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
+						   (![inObject isOutgoing]));
+		shouldPostContentReceivedEvents = contentReceived && [inObject trackContent];
+		
+		if(!chatIsOpen){
+			/*
+			 Tell the interface to open the chat
+			 For incoming messages, we don't open the chat until we're sure that new content is being received.
+			 */
 			[[adium interfaceController] openChat:chat];
+		}
+		
+		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
+
+		if (shouldPostContentReceivedEvents){
+			NSSet			*previouslyPerformedActionIDs = nil;
+			AIListObject	*listObject = [chat listObject];
 			
-			//If the chat wasn't open before, and this is received content, post the firstContentReceived notification
-			if (contentReceived && [inObject trackContent]){
-				[[adium notificationCenter] postNotificationName:Content_FirstContentRecieved 
-														  object:chat
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+			if(!chatIsOpen){
+				//If the chat wasn't open before, post the firstContentReceived notification
+				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
+																				forListObject:listObject
+																					 userInfo:userInfo
+																 previouslyPerformedActionIDs:nil];	
 			}
-		}else{
-			if (contentReceived && [inObject trackContent]){
-				[[adium notificationCenter] postNotificationName:Content_DidReceiveContent
-														  object:chat
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
-			}
+			
+			[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED
+											 forListObject:listObject
+												  userInfo:userInfo
+							  previouslyPerformedActionIDs:previouslyPerformedActionIDs];
 		}
 		
 		//Add this content to the chat
 		[chat addContentObject:inObject];
-		
+
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
 												  object:chat
-												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+												userInfo:userInfo];
     }
 }
 
@@ -1202,6 +1223,139 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (NSArray *)emoticonsArray
 {
     return emoticonsArray;   
+}
+
+#pragma mark Contact Alerts
+
+- (NSString *)shortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+		description = AILocalizedString(@"Is sent a message",nil);
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+		description = AILocalizedString(@"Sends a message",nil);
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+		description = AILocalizedString(@"Sends an initial message",nil);
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
+
+- (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+		description = AILocalizedString(@"You sent a message",nil);
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+		description = AILocalizedString(@"You receive any message",nil);
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+		description = AILocalizedString(@"You receive an initial message",nil);
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
+
+//Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
+//a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+- (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+		description = @"Message Sent";
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+		description = @"Message Received";
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+		description = @"Message Received (New)";
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
+
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
+{
+	NSString	*description = nil;
+	
+	if(listObject){
+		NSString	*name;
+		NSString	*format;
+		
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			format = AILocalizedString(@"When you send %@ a message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+			format = AILocalizedString(@"When %@ sends a message to you",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			format = AILocalizedString(@"When %@ sends an initial message to you",nil);
+		}else{
+			format = nil;
+		}
+		
+		if(format){
+			name = ([listObject isKindOfClass:[AIListGroup class]] ?
+					[NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
+					[listObject displayName]);
+			
+			description = [NSString stringWithFormat:format, name];
+		}
+		
+	}else{
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			description = AILocalizedString(@"When you send a message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+			description = AILocalizedString(@"When you receive any message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			description = AILocalizedString(@"When you receive an initial message",nil);
+		}
+	}
+	
+	return(description);
+}
+
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	NSString		*description = nil;
+	AIContentObject	*contentObject;
+	NSString		*messageText;
+	NSString		*displayName;
+	
+	NSParameterAssert([userInfo isKindOfClass:[NSDictionary class]]);
+	
+	contentObject = [(NSDictionary *)userInfo objectForKey:@"AIContentObject"];
+	messageText = [[[contentObject message] safeString] string];
+	displayName = [listObject displayName];
+	
+	if(includeSubject){
+		
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			description = [NSString stringWithFormat:
+				AILocalizedString(@"You said %@ to %@","You said Message to Contact"),
+				messageText,
+				displayName];
+			
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			description = [NSString stringWithFormat:
+				AILocalizedString(@"%@ said %@","Contact said Message"),
+				displayName,
+				messageText];
+		}	
+		
+	}else{
+		description = messageText;
+	}
+	
+	return(description);
 }
 
 @end
