@@ -1,0 +1,67 @@
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
+
+#import "AIContactOnlineSincePlugin.h"
+#import <AIUtilities/AIUtilities.h>
+
+@implementation AIContactOnlineSincePlugin
+
+- (void)installPlugin
+{
+    //Install our tooltip entry
+    [[owner interfaceController] registerContactListTooltipEntry:self];
+}
+
+//Tooltip entry ---------------------------------------------------------------------------------------
+- (NSString *)label
+{
+    return(@"Online Since");
+}
+
+- (NSString *)entryForObject:(AIListObject *)inObject
+{
+    if([inObject isKindOfClass:[AIListContact class]]){
+        NSDate	*signonDate, *currentDate;
+
+        currentDate = [NSDate date];
+        signonDate = [[(AIListContact *)inObject statusArrayForKey:@"Signon Date"] earliestDate];
+        
+        if(signonDate){
+            NSString		*currentDay, *signonDay, *signonTime;
+            NSDateFormatter	*dayFormatter, *timeFormatter;
+    
+            //Create the formatters
+            dayFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m/%d/%y" allowNaturalLanguage:YES] autorelease];
+            timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%1I:%M%p" allowNaturalLanguage:YES] autorelease];
+            
+            //Get day & time strings
+            currentDay = [dayFormatter stringForObjectValue:currentDate];
+            signonDay = [dayFormatter stringForObjectValue:signonDate];
+            signonTime = [timeFormatter stringForObjectValue:signonDate];
+
+            if([currentDay compare:signonDay] == 0){ //Show time
+                return(signonTime);
+                
+            }else{ //Show date and time
+                return([NSString stringWithFormat:@"%@, %@", signonDay, signonTime]);
+                
+            }
+        }
+    }
+
+    return(nil);
+}
+
+@end
