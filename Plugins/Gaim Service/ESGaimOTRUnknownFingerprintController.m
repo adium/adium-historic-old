@@ -17,7 +17,7 @@
 #import "ESGaimOTRUnknownFingerprintController.h"
 #import "ESTextAndButtonsWindowController.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/NDRunLoopMessenger.h>
+#import <Adium/NDRunLoopMessenger.h>
 
 @implementation ESGaimOTRUnknownFingerprintController
 

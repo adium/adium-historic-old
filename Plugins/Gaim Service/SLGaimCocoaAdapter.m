@@ -23,11 +23,11 @@
 #import "adiumGaimCore.h"
 #import "adiumGaimOTR.h"
 #import <AIUtilities/CBObjectAdditions.h>
-#import <AIUtilities/NDRunLoopMessenger.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIListContact.h>
+#import <Adium/NDRunLoopMessenger.h>
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
 #include <Libgaim/libgaim.h>
