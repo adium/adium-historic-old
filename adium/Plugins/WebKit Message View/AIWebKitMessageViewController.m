@@ -119,7 +119,7 @@ DeclareString(AppendNextMessage);
 	//[self prefrencesChanged:nil] call here.
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
+									   name:Preference_GroupChanged
 									 object:nil];
 
 	[self refreshView];
@@ -390,6 +390,7 @@ DeclareString(AppendNextMessage);
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	NSString		*CSS;
 	NSBundle		*style;
+	NSImage			*oldImageMask = [imageMask retain];
 	
 	//Release the old preference cache
 	[self _flushPreferenceCache];
@@ -434,13 +435,20 @@ DeclareString(AppendNextMessage);
 								   variant:loadedVariantID
 							   boolDefault:NO];
 
+	//Create a new tracking array for objects who have had their icons handled
+	objectsWithUserIconsArray = [[NSMutableArray alloc] init];
+
 	NSString	*maskPath = [plugin valueForKey:@"ImageMask" style:style variant:loadedVariantID];
 	if (maskPath){
 		//Load the image mask if one is specified (it will be nil otherwise due to _flushPreferenceCache)
 		imageMask = [[NSImage alloc] initByReferencingFile:[[style resourcePath] stringByAppendingPathComponent:maskPath]];
 	}
-	//Create a new tracking array for objects who have had their icons handled
-	objectsWithUserIconsArray = [[NSMutableArray alloc] init];
+	
+	//Refresh the webkitimages for objects if needed because the mask changed
+	if (oldImageMask != imageMask){
+		[self participatingListObjectsChanged:nil];
+		[self accountChanged:nil];
+	}
 
 	//Background Preferences [Style specific]
 	if(allowBackgrounds){
@@ -449,9 +457,12 @@ DeclareString(AppendNextMessage);
 	}
 	
 	stylePath = [[style resourcePath] retain];
+
 	
 	[self loadStyle:style 
 			withCSS:CSS];
+	
+	[oldImageMask release];
 }
 
 - (void)_flushPreferenceCache
