@@ -163,10 +163,10 @@
 	NSDictionary 	*iconPackDict = [[adium dockController] iconPackAtPath:path];
 	NSDictionary	*stateDict = [iconPackDict objectForKey:@"State"];
 	
-	return([[AIIconState alloc] initByCompositingStates:[NSArray arrayWithObjects:
+	return([[[AIIconState alloc] initByCompositingStates:[NSArray arrayWithObjects:
 		[stateDict objectForKey:@"Base"],
 		[stateDict objectForKey:@"Online"],
-		[stateDict objectForKey:@"Alert"], nil]]);
+		[stateDict objectForKey:@"Alert"], nil]] autorelease]);
 }
 
 //Animate the hovered icon
@@ -175,7 +175,6 @@
 	[animatedIconState nextFrame];
 	[imageGridView_icons setNeedsDisplayOfImageAtIndex:animatedIndex];
 }
-
 
 //ImageGridView Delegate -----------------------------------------------------------------------------------------------
 #pragma mark ImageGridView Delegate
