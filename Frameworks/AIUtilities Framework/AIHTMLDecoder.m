@@ -149,11 +149,11 @@ DeclareString(SpaceHTML);
 {
     if(encodeFullString){
         return([self encodeHTML:inMessage headers:YES fontTags:YES includingColorTags:YES closeFontTags:YES
-					  styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil 
+					  styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES encodeSpaces:YES imagesPath:nil 
 			  attachmentsAsText:YES attachmentImagesOnlyForSending:NO simpleTagsOnly:NO]);
     }else{
         return([self encodeHTML:inMessage headers:NO fontTags:NO includingColorTags:NO closeFontTags:NO 
-					  styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO imagesPath:nil
+					  styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO encodeSpaces:NO imagesPath:nil
 			  attachmentsAsText:YES attachmentImagesOnlyForSending:NO simpleTagsOnly:NO]);
     }
 }
@@ -165,6 +165,7 @@ DeclareString(SpaceHTML);
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
+// encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
 // attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
 // attachmentImagesOnlyForSending: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
 // simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
@@ -175,7 +176,8 @@ DeclareString(SpaceHTML);
 		   closeFontTags:(BOOL)closeFontTags
 			   styleTags:(BOOL)includeStyleTags
  closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange 
-		  encodeNonASCII:(BOOL)encodeNonASCII 
+		  encodeNonASCII:(BOOL)encodeNonASCII
+			encodeSpaces:(BOOL)encodeSpaces
 			  imagesPath:(NSString *)imagesPath
 	   attachmentsAsText:(BOOL)attachmentsAsText
 attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
@@ -468,7 +470,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			[chunk replaceOccurrencesOfString:GreaterThan withString:GreaterThanHTML
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			
-			if(!simpleOnly){
+			if(encodeSpaces){
 				// Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
 				// so subsequent tab formatting is preserved.
 				[chunk replaceOccurrencesOfString:Tab withString:TabHTML
