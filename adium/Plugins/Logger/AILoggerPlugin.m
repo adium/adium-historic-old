@@ -132,7 +132,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil];
 	NSString	*extension = (plainText ? @"adiumLog" : @"html");
 	
-	return([NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension]);
+	return([NSString stringWithFormat:@"%@ (%@).%@", [object safeFilenameString], dateString, extension]);
 }
 
 //Takes the RELATIVE path to a log, and returns a FULL path
