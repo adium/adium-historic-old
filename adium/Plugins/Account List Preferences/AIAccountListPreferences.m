@@ -132,27 +132,7 @@
     [view_accountDetails addSubview:accountView];
 	float accountViewHeight = [accountView frame].size.height;
     [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
-	
-    //Hook up the responder chain
-#warning This responder chain stuff is not working properly.
-    [textField_accountName setNextKeyView:[accountView nextValidKeyView]];
-    NSView	*nextView = accountView;
-	NSLog(@"start with %@",nextView);
-    while([nextView nextKeyView]) nextView = [nextView nextKeyView];
-	//The accountView's nextKeyView isn't registering for some reason; nextView ends up the same as it started
-	NSLog(@"telling %@",nextView);
-	//which makes this setKeyView not do anything useful (we want to be telling the password field, for example, not the view itself)
-    [nextView setNextKeyView:tableView_accountList];
-	
-	[tableView_accountList setNextKeyView:popupMenu_serviceList];
-	//this is always null
-	NSLog(@"nextValid is %@",[tableView_accountList nextValidKeyView] );
-	//which seems possibly logical if popups can't accept first responder (if accessibility features aren't on)
-	if ([tableView_accountList nextValidKeyView] != popupMenu_serviceList)
-		[tableView_accountList setNextKeyView:textField_accountName];
-	//except even after the check, the nextKeyView is set but the nextValidKeyView is null
-	NSLog(@"nextValid is now %@ versus set %@",[tableView_accountList nextValidKeyView],[tableView_accountList nextKeyView] );
-	
+
 	//Swap in the account auxiliary tabs
     enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
@@ -167,6 +147,18 @@
     for(i = 1;i < [tabView_auxiliary numberOfTabViewItems];i++){
         [tabView_auxiliary selectPreviousTabViewItem:nil];
     }
+	
+    //Hook up the responder chain
+	//Name field goes to first control in account view
+	[textField_accountName setNextKeyView:[accountView nextValidKeyView]];
+
+	//Last control in account view goes to account list
+	NSView	*nextView = [accountView nextKeyView];
+	while([nextView nextKeyView]) nextView = [nextView nextKeyView];
+	[nextView setNextKeyView:tableView_accountList];
+
+	//Account list goes to service menu
+	[tableView_accountList setNextKeyView:popupMenu_serviceList];
 }
 
 //Remove any existing custom views
@@ -239,6 +231,7 @@
 //causing it to save any outstanding changes.
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
+	NSLog(@"makeFirstResponder:%@",popupMenu_serviceList);
 	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 	return(YES);
 }
