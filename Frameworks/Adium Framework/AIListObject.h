@@ -115,6 +115,7 @@ typedef enum {
 			   statusType:(AIStatusType)type
 			statusMessage:(NSAttributedString *)statusMessage
 				   notify:(NotifyTiming)notify;
+- (NSAttributedString *)contactListStatusMessage;
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify;
 - (AIStatusSummary)statusSummary;
 

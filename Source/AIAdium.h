@@ -61,7 +61,7 @@
 - (AIContactController *)contactController;
 - (AIContentController *)contentController;
 - (AIDockController *)dockController;
-- (AIEmoticonController *)emoticionController;
+- (AIEmoticonController *)emoticonController;
 - (AIInterfaceController *)interfaceController;
 - (AILoginController *)loginController;
 - (AIMenuController *)menuController;

@@ -17,6 +17,7 @@
 #import "AIContactController.h"
 #import "AIContactStatusEventsPlugin.h"
 #import "ESContactAlertsController.h"
+#import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 
 @interface AIContactStatusEventsPlugin (PRIVATE)

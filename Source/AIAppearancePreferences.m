@@ -18,12 +18,14 @@
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
+#import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <Adium/AIEmoticonController.h>
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
