@@ -71,6 +71,8 @@
 	//Update the display for this name
 	scriptName = [[scriptPath lastPathComponent] stringByDeletingPathExtension];
 	[textField_scriptName setStringValue:(scriptName ? scriptName : @"")];
+	
+	[self detailsForHeaderChanged];
 }
 
 @end
