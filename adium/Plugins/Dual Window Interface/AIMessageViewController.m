@@ -301,10 +301,10 @@
 
             superFrame.size.height -= ACCOUNTS_VIEW_HEIGHT;
         }else{
-            [view_account setFrameOrigin:NSMakePoint(100,0)];
-            #warning really big # constant?
+            [view_account setFrameOrigin:NSMakePoint(1000,0)];
+            #warning really big # constant?  i need to hide this view a better way
         }
-        
+
         //Handle
         frame = [view_handle frame];
         [view_handle setFrame:NSMakeRect(0, superFrame.size.height - frame.size.height, superFrame.size.width, frame.size.height)];
@@ -312,7 +312,7 @@
         
         //Buttons
         frame = [view_buttons frame];
-        [view_handle setFrame:NSMakeRect(0, 0, superFrame.size.width, frame.size.height)];
+        [view_buttons setFrame:NSMakeRect(0, 0, superFrame.size.width, frame.size.height)];
         superFrame.size.height -= frame.size.height;
         superFrame.origin.y += frame.size.height;
         
