@@ -4,7 +4,7 @@
 <%@ page import='java.util.Properties' %>
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/crash/post-comments.jsp $-->
-<!--$Rev: 504 $ $Date: 2004/07/11 22:30:23 $-->
+<!--$Rev: 504 $ $Date: 2004/07/20 19:50:04 $-->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -51,7 +51,7 @@ try {
     }
     out.println("<br /> " + rowsAffected);
 
-    response.sendRedirect("meta.jsp");
+    response.sendRedirect("users.jsp");
 } catch(SQLException e) {
     out.println("<br />Error!\n");
     out.print(e.getMessage());

@@ -5,11 +5,12 @@
 <%@ page import = 'java.util.StringTokenizer' %>
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
+<%@ page import = 'java.net.URLEncoder' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 836 $ $Date: 2004/07/11 22:30:23 $ -->
+<!--$Rev: 838 $ $Date: 2004/07/20 19:50:04 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -354,24 +355,24 @@ try {
 
                 <p><a href="#"
                 onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent Links</a></p>
-
 <%
-    String safeSend = new String();
-    String safeRec = new String();
-    String safeCont = new String();
+    String safeTo = to_sn;
+    if(safeTo == null) {
+        safeTo = "";
+    }
 
-    if(to_sn != null)
-        safeSend = to_sn.replaceAll("%", "%25");
+    String safeFrom = from_sn;
+    if(safeFrom == null) {
+        safeFrom = "";
+    }
 
-    if(from_sn != null)
-        safeRec = from_sn.replaceAll("%", "%25");
-
-    if(contains_sn != null)
-        safeCont = contains_sn.replaceAll("%", "%25");
+    String safeCont = contains_sn;
+    if(safeCont == null) {
+        safeCont = "";
+    }
 %>
-
                 <p><a href="#"
-                onClick="window.open('simpleViewer.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>&from=<%=safeSend%>&to=<%= safeRec %>&contains=<%= safeCont %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
+                onClick="window.open('simpleViewer.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>&from=<%= URLEncoder.encode(safeFrom, "UTF-8")  %>&to=<%= URLEncoder.encode(safeTo, "UTF-8")  %>&contains=<%= URLEncoder.encode(safeCont, "UTF-8") %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
 <%
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
@@ -441,7 +442,7 @@ try {
                 <a href="javascript:show_calendar('control.start');"
                     onmouseover="window.status='Date Picker';return true;"
                     onmouseout="window.status='';return true;">
-                <img src="calicon.jpg" border=0></a>
+                <img src="images/calicon.jpg" border=0></a>
 
                 <label for="finish_date">&nbsp;--&nbsp;</label>
                 <input type="text" name="finish" <% if (dateFinish != null)
@@ -449,7 +450,7 @@ try {
                 <a href="javascript:show_calendar('control.finish');"
                     onmouseover="window.status='Date Picker';return true;"
                     onmouseout="window.status='';return true;">
-                    <img src="calicon.jpg" border=0></a>
+                    <img src="images/calicon.jpg" border=0></a>
 
                     </td>
                 </tr>
