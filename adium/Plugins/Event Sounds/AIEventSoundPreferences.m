@@ -122,11 +122,11 @@
         NSString	*soundSetFile;
 
         //Ensure this folder contains a soundset file (Otherwise, we ignore it)
-        soundSetFile = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", setPath, [setPath lastPathComponent]]];
+        soundSetFile = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", setPath, [[setPath stringByDeletingPathExtension] lastPathComponent]]];
         if(soundSetFile && [soundSetFile length] != 0){
 
             //Add a menu item for the set
-            menuItem = [[[NSMenuItem alloc] initWithTitle:[setPath lastPathComponent]
+            menuItem = [[[NSMenuItem alloc] initWithTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]
                                                    target:self
                                                    action:@selector(selectSoundSet:)
                                             keyEquivalent:@""] autorelease];
