@@ -125,6 +125,9 @@ typedef enum {
  */
 - (id <AIServiceController>)service;
 
+//Methods that might be subclassed
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString;
+
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window

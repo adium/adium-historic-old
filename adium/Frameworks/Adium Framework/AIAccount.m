@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.27 2003/12/26 18:32:32 adamiser Exp $
+// $Id: AIAccount.m,v 1.28 2003/12/30 08:05:57 evands Exp $
 
 #import "AIAccount.h"
 
@@ -162,12 +162,15 @@
 	}
 }
 
-
-//
-
-
-
-
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+{
+    return ([AIHTMLDecoder encodeHTML:inAttributedString
+                              headers:YES
+                             fontTags:YES   closeFontTags:YES
+                            styleTags:YES   closeStyleTagsOnFontChange:YES
+                       encodeNonASCII:NO
+                           imagesPath:nil]);
+}
 
 
 //Return the account-specific user icon, or the default user icon from the account controlelr if none exists (thee default user icon returns nil if none is set)
@@ -192,13 +195,8 @@
 
 
 
-
-
-
-
-
-
 //Auto-Reconnect -------------------------------------------------------------------------------------
+
 //Attempts to auto-reconnect (after an X second delay)
 - (void)autoReconnectAfterDelay:(int)delay
 {
@@ -225,6 +223,7 @@
 
 
 //Update Silencing --------------------------------------------------------------------------------------------
+
 //Silence update for the specified interval
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
 {
