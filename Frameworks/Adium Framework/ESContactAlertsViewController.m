@@ -50,6 +50,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 //Configure the preference view
 - (void)awakeFromNib
 {
+	[expandStateDict release]; expandStateDict = [[NSMutableDictionary alloc] init];
+
 	//Configure Table view
 	[self configureEventSummaryOutlineView];
 	
@@ -86,7 +88,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (void)dealloc
 {
     [listObject release]; listObject = nil;
-	
+	[expandStateDict release]; expandStateDict = nil;
+
 	[super dealloc];
 }
 
@@ -309,8 +312,22 @@ int actionSort(id objectA, id objectB, void *context)
 	NSDictionary	*contactAlertsDict;
 	NSEnumerator	*enumerator;
 	NSString		*eventID;
+	NSString		*selectedEventID = nil;
 	
+	int		row = [outlineView_summary selectedRow];
 	
+	if(row != -1){
+		id item = [outlineView_summary itemAtRow:row];
+
+		if([contactAlertsActions containsObjectIdenticalTo:item]){
+			selectedEventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]];
+			[[selectedEventID retain] autorelease];
+
+		}else{
+			selectedEventID = [[[item objectForKey:KEY_EVENT_ID] retain] autorelease];
+		}
+	}
+		
 	contactAlertsDict = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
 																 group:PREF_GROUP_CONTACT_ALERTS
 											 objectIgnoringInheritance:listObject];
@@ -337,7 +354,19 @@ int actionSort(id objectA, id objectB, void *context)
 		}
 	}
 	
-	[outlineView_summary reloadData];	
+	[outlineView_summary reloadData];
+	
+	if(selectedEventID){
+		int actionsIndex = [contactAlertsEvents indexOfObject:selectedEventID];
+		if(actionsIndex != NSNotFound){
+			int rowToSelect;
+			
+			rowToSelect = [outlineView_summary rowForItem:[contactAlertsActions objectAtIndex:actionsIndex]];
+			
+			[outlineView_summary selectRow:rowToSelect
+					  byExtendingSelection:NO];
+		}
+	}
 }
 
 /*
@@ -386,7 +415,11 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 }
 
-//No items are expandable for the outline view
+/*
+ * @brief Is an item expandable?
+ *
+ * Events are expandable.  Actions are not.
+ */
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView isItemExpandable:(id)item
 {
 	if([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]){
@@ -394,6 +427,34 @@ int actionSort(id objectA, id objectB, void *context)
 	}else{
 		return NO;
 	}
+}
+
+/*
+ * @brief An item's expanded state was set
+ *
+ * Cache this so we can use it in outlineView:expandStateOfItem:
+ *
+ * We cache by the associated Event ID so we can expand/contract the same perceived item, which is actually a different
+ * NSArray instance, after a reload.
+ */
+- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
+{
+	[expandStateDict setObject:[NSNumber numberWithBool:state]
+						forKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
+}
+
+/*
+ * @brief Should an item be expanded?
+ *
+ * Used when reloading to determine if items should be expanded or not.
+ *
+ * We cache by the associated Event ID so we can expand/contract the same perceived item, which is actually a different
+ * NSArray instance, after a reload.
+ */
+- (BOOL)outlineView:(NSOutlineView *)inOutlineView expandStateOfItem:(id)item
+{
+	NSNumber	*expandState = [expandStateDict objectForKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
+	return(expandState ? [expandState boolValue] : NO);
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
