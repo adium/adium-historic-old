@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.25 2004/04/08 12:06:48 adamiser Exp $
+$Id: ToDoList.txt,v 1.26 2004/04/08 21:32:37 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -26,6 +26,10 @@ Bugs
 * Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue
 * Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
+* Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
+
+
+
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -117,6 +121,7 @@ Contact list display:
 	+ User can toggle each component (except user name) on/off with view menu items
 	+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
 	+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
+	+ Add option to not display groups on the contact list (Be careful with this and manual ordering)
 
 Status badges:
 	- Remove status icons plugin
