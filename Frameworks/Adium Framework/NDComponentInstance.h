@@ -8,7 +8,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "NDAppleScriptObject_Protocols.h"
+#import "NDScriptData_Protocols.h"
 
 extern const NSString	* NDAppleScriptOffendingObject,
 								* NDAppleScriptPartialResult;
