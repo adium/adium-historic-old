@@ -107,6 +107,9 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	}
 	
 	[[self window] display];
+	
+	[controller configureForAccount:inAccount];
+
 }
 
 //Init
@@ -135,7 +138,8 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		[popUp_service selectItemAtIndex:serviceIndex];
 	}
 	
-	[self configureForAccount:[[popUp_service selectedItem] representedObject]];
+	AIAccount *account = [[popUp_service selectedItem] representedObject];
+	[self configureForAccount:account];
 	
     //Center the window
     [[self window] center];
