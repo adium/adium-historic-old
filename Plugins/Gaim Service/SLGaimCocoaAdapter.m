@@ -82,11 +82,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 + (void)createThreadedGaimCocoaAdapter
 {
 	SLGaimCocoaAdapter  *gaimCocoaAdapter;
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 
+	//Will not return until the program terminates
     gaimCocoaAdapter = [[self alloc] init];
-	
-    [currentAutoreleasePool release];
 	
 	[gaimCocoaAdapter release];
 	
@@ -121,6 +119,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	NSTimer	*autoreleaseTimer;
 	
+	
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+	
 	[super init];
 	
 	isOnTigerOrBetter = [NSApp isOnTigerOrBetter];
@@ -138,10 +139,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 											 selector:@selector(gotNewAccount:) 
 												 name:@"AddAccount"
 											   object:nil];
-
-//	NSConnection *myConnection = [NSConnection defaultConnection];
 	
-	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
+	runLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 
 	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
 														 target:self
@@ -152,7 +151,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	CFRunLoopRun();
 
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-	runLoopMessenger = nil;
+	[runLoopMessenger release]; runLoopMessenger = nil;
+    [currentAutoreleasePool release];
 	
     return self;
 }
@@ -187,10 +187,10 @@ static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount)
 static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 {
 	//Get the node's ui_data
-	AIListContact *theContact = (AIListContact *)buddy->node.ui_data;
-	
+	AIListContact *theContact = (buddy ? (AIListContact *)buddy->node.ui_data : nil);
+
 	//If the node does not have ui_data yet, we need to create a contact and associate it
-	if (!theContact){
+	if (!theContact && buddy){
 		NSString	*name;
 		GaimAccount	*account;
 		const char	*normalized;
@@ -1183,22 +1183,23 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls, GCallback cb,void *userData)
 {
     //Values passed can be null
-    return ([myself handleNotifyEmails:count detailed:detailed subjects:subjects froms:froms tos:tos urls:urls]);
+    return([myself handleNotifyEmails:count detailed:detailed subjects:subjects froms:froms tos:tos urls:urls]);
 }
 
 static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)
 {
-	return adiumGaimNotifyEmails(1, TRUE,
-								 (subject == NULL ? NULL : &subject),
-								 (from    == NULL ? NULL : &from),
-								 (to      == NULL ? NULL : &to),
-								 (url     == NULL ? NULL : &url),
-								 cb, userData);
+	return(adiumGaimNotifyEmails(1,
+								 TRUE,
+								 (subject ? &subject : NULL),
+								 (from ? &from : NULL),
+								 (to ? &to : NULL),
+								 (url ? &url : NULL),
+								 cb, userData));
 }
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
 {
-    return(nil);
+    return(gaim_adium_get_handle());
 }
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
@@ -1220,7 +1221,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const 
 										 withObject:textString];
 	}
 	
-    return(nil);
+    return(gaim_adium_get_handle());
 }
 
 static void *adiumGaimNotifyUri(const char *uri)
@@ -1230,7 +1231,7 @@ static void *adiumGaimNotifyUri(const char *uri)
 		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
 	}
 
-	return(nil);
+	return(gaim_adium_get_handle());
 }
 
 static void adiumGaimNotifyClose(GaimNotifyType type,void *uiHandle)
@@ -1327,7 +1328,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
 										  withObject:titleString];
 	
-	return nil;
+	return(gaim_adium_get_handle());
 }
 
 - (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls
@@ -1413,7 +1414,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 														withObject:message
 													   withObject:(urls ? [NSString stringWithUTF8String:urls[0]] : nil)];
 	
-	return(nil);
+	return(gaim_adium_get_handle());
 }
 
 #pragma mark Request
@@ -1454,13 +1455,13 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 													withObject:infoDict
 												 waitUntilDone:YES];
 
-    return(nil);
+    return(gaim_adium_get_handle());
 }
 
 static void *adiumGaimRequestChoice(const char *title, const char *primary, const char *secondary, unsigned int defaultValue, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData, size_t choiceCount, va_list choices)
 {
     GaimDebug (@"adiumGaimRequestChoice");
-    return(nil);
+    return(gaim_adium_get_handle());
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
@@ -1513,7 +1514,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 															  withObject:infoDict
 														   waitUntilDone:YES];
 	}
-    return(nil);
+    return(gaim_adium_get_handle());
 }
 
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
@@ -1554,7 +1555,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 		((GaimRequestFieldsCb)okCb)(userData, fields);
 	}
     
-	return(nil);
+	return(gaim_adium_get_handle());
 }
 
 static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
@@ -1593,7 +1594,7 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 		
 	}
     
-	return(nil);
+	return(gaim_adium_get_handle());
 }
 
 static void adiumGaimRequestClose(GaimRequestType type,void *uiHandle)
