@@ -123,7 +123,8 @@
 		
     }else{
         needsReload = NO;
-		selectedItems = [self arrayOfSelectedItems];
+#warning I think selected items needs to be monitored at the time selections are made and removed... this crashes.
+//		selectedItems = [self arrayOfSelectedItems];
 		[super reloadData];
 	
 		//After reloading data, we correctly expand/collaps all groups
@@ -148,7 +149,7 @@
 		}
 		
 		//Restore (if possible) the previously selected objects
-		[self selectItemsInArray:selectedItems];
+//		[self selectItemsInArray:selectedItems];
 	}
 }
 
@@ -160,12 +161,13 @@
 //Preserve selection through a reload
 - (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
 {
-	NSArray		*selectedItems = [self arrayOfSelectedItems];
+	//See warning in -(void)reloadData
+//	NSArray		*selectedItems = [self arrayOfSelectedItems];
 
 	[super reloadItem:item reloadChildren:reloadChildren];
 	
 	//Restore (if possible) the previously selected object
-	[self selectItemsInArray:selectedItems];
+//	[self selectItemsInArray:selectedItems];
 }
 
 @end
