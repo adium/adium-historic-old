@@ -9,6 +9,7 @@
         {
             ACTIONS = {
                 confirmQuit = id; 
+                launchJeeves = id; 
                 reportABug = id; 
                 sendFeedback = id; 
                 showAboutBox = id; 
