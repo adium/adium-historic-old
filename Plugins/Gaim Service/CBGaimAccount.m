@@ -1773,7 +1773,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 								[self encodedAttributedString:statusMessage
 											forGaimStatusType:gaimStatusType]  :
 								nil);
-		
+
 		[self setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:encodedStatusMessage];
 		
 		[self setStatusObject:statusState

@@ -21,6 +21,7 @@
 @implementation ESGaimMSNAccount
 
 static BOOL didInitMSN = NO;
+static NSDictionary		*presetStatusesDictionary = nil;
 
 //Intercept account creation to ensure the UID will have a domain ending -- the default is @hotmail.com
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
@@ -46,7 +47,17 @@ static BOOL didInitMSN = NO;
 	currentFriendlyName = nil;
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
+
+	if (!presetStatusesDictionary){
+		/* Only define preset statuses which we actually want to show a string for. */
+		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
+			STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:MSN_BRB],
+			STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:MSN_BUSY],
+			STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:MSN_PHONE],
+			STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:MSN_LUNCH],nil] retain];
+	}
 }
+
 
 - (const char*)protocolPlugin
 {
@@ -263,13 +274,71 @@ static BOOL didInitMSN = NO;
 	}
 }
 
+#pragma mark Status messages
+- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
+{
+	SEL updateSelector = nil;
+	
+	switch ([event intValue]){
+		case GAIM_BUDDY_STATUS_MESSAGE: {
+			updateSelector = @selector(updateStatusMessage:);
+			break;
+		}
+	}
+	
+	if (updateSelector){
+		[self performSelector:updateSelector
+				   withObject:theContact];
+	}
+	
+	[super updateContact:theContact forEvent:event];
+}
+
+- (void)updateStatusMessage:(AIListContact *)theContact
+{
+	GaimBuddy	*buddy;
+	const char	*uidUTF8String = [[theContact UID] UTF8String];
+	
+	if ((gaim_account_is_connected(account)) &&
+		(buddy = gaim_find_buddy(account, uidUTF8String))) {
+
+		MsnAwayType type = MSN_AWAY_TYPE(buddy->uc);
+
+		NSString		*statusMsgString = nil;
+		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+		
+		statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:type]];
+
+		if (statusMsgString && [statusMsgString length]) {
+			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+				NSAttributedString *attrStr;
+				
+				attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
+				
+				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
+				
+				[attrStr release];
+			}
+			
+		} else if (oldStatusMsgString && [oldStatusMsgString length]) {
+			//If we had a message before, remove it
+			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		}
+		
+		//apply changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
+}
+
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Initiate Chat") == 0){
+	if((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)){
 		return([NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]]);
 	}
-	
+
 	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
 
@@ -322,7 +391,7 @@ static BOOL didInitMSN = NO;
 	
 	//If we are setting one of our custom statuses, don't use a status message
 	if(gaimStatusType != NULL) 	*statusMessage = nil;
-	
+	NSLog(@"msn says %@",*statusMessage);
 	//If we didn't get a gaim status type, request one from super
 	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
