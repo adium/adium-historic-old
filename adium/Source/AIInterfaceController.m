@@ -236,6 +236,8 @@
                 tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
 
                 [paragraphStyleTitle setTabStops:tabArray];
+                [tabArray release];
+                tabArray = nil;
                 [paragraphStyleTitle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
                 
                 [tooltipTitle addAttribute:NSParagraphStyleAttributeName value:paragraphStyleTitle range:NSMakeRange(0,[tooltipTitle length])];
