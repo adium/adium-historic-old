@@ -380,7 +380,7 @@ static NSImage *pushIndicatorImage = nil;
 {
     if(currentHistoryLocation == 0){
 		//Store current message
-        [historyArray replaceObjectAtIndex:0 withObject:[[self textStorage] copy]];
+        [historyArray replaceObjectAtIndex:0 withObject:[[[self textStorage] copy] autorelease]];
     }
 	
     if(currentHistoryLocation < [historyArray count]-1){
@@ -437,7 +437,7 @@ static NSImage *pushIndicatorImage = nil;
 - (void)pushContent
 {
 	if([[self textStorage] length] != 0 && pushPopEnabled){
-		[pushArray addObject:[[self textStorage] copy]];
+		[pushArray addObject:[[[self textStorage] copy] autorelease]];
 		[self setString:@""];
 		[self _setPushIndicatorVisible:YES];
 	}
@@ -532,13 +532,13 @@ static NSImage *pushIndicatorImage = nil;
 
 #pragma mark Contextual Menus
 
-static NSMenu *contextualMenu = nil;
-
 + (NSMenu *)defaultMenu
 {
+	static NSMenu *contextualMenu = nil;
+
 	if (!contextualMenu){
 		NSArray			*itemsArray = nil;
-		NSEnumerator            *enumerator;
+		NSEnumerator	*enumerator;
 		NSMenuItem		*menuItem;
 		
 		//Grab NSTextView's default menu, copying so we don't mess effect menus elsewhere
