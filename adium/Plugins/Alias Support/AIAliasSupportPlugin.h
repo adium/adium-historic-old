@@ -26,6 +26,8 @@
 #define SCREEN_NAME_DISPLAY_NAME	3	
 #define SCREEN_NAME			4
 #define ADDRESS_BOOK_FIRST_LAST		5
+#define ADDRESS_BOOK_LAST_FIRST         6
+#define ADDRESS_BOOK_FIRST		7
 
 
 #define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"		//Preference group to store aliases in
