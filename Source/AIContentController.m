@@ -1424,4 +1424,53 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	return(description);
 }
 
+/*! 
+* @brief Generate a menu of encryption preference choices
+*/
+- (NSMenu *)encryptionMenuNotifyingTarget:(id)target
+{
+	NSMenu		*encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMenuItem	*menuItem;
+	
+	[encryptionMenu setAutoenablesItems:NO];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Disable chat encryption",nil)
+										  target:target
+										  action:@selector(selectedEncryptionPreference:)
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Never];
+	[encryptionMenu addItem:menuItem];
+	[menuItem release];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats as requested",nil)
+										  target:target
+										  action:@selector(selectedEncryptionPreference:)
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Manually];
+	[encryptionMenu addItem:menuItem];
+	[menuItem release];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats automatically",nil)
+										  target:target
+										  action:@selector(selectedEncryptionPreference:)
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Automatically];
+	[encryptionMenu addItem:menuItem];
+	[menuItem release];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Force encryption and refuse plaintext",nil)
+										  target:target
+										  action:@selector(selectedEncryptionPreference:)
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_RejectUnencryptedMessages];
+	[encryptionMenu addItem:menuItem];
+	[menuItem release];
+	
+	return([encryptionMenu autorelease]);
+}
+
 @end
