@@ -339,13 +339,16 @@
             [sender expandItem:selectedObject];
         }
     
-    }else if([selectedObject isKindOfClass:[AIListContact class]]){
+    }else if([selectedObject isKindOfClass:[AIMetaContact class]]){
         //Open a new message with the contact
 		AIListContact	*contact;
-		contact = [[adium contactController] preferredContactForReceivingContentType:CONTENT_MESSAGE_TYPE
-																	   forListObject:selectedObject];
+		contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+															  forMetaContact:(AIMetaContact *)selectedObject];
 		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
-    }
+		
+    }else if([selectedObject isKindOfClass:[AIListContact class]]){
+		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:selectedObject]];		
+	}
 }
 
 //Outline View data source ---------------------------------------------------------------------------------------------
