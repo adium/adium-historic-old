@@ -13,6 +13,7 @@
 					      | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 					      \------------------------------------------------------------------------------------------------------ */
 
+//$Id: AIPluginController.m,v 1.12 2003/12/08 06:07:36 jmelloy Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
