@@ -24,6 +24,9 @@
 
 	IBOutlet	NSSlider		*slider_volume;
 	IBOutlet	NSPopUpButton   *popUp_outputDevice; 	
+	
+	IBOutlet	NSPopUpButton	*popUp_statusIcons;
+	IBOutlet	NSPopUpButton	*popUp_serviceIcons;
 }
 
 - (IBAction)selectVolume:(id)sender;
