@@ -409,6 +409,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 	//Visibility
 	if(isOnPantherOrBetter){
+		NSWindow	*window = [self window];
+		
 		[scrollView_autoReply setHidden:(![checkbox_autoReply state] || ![checkbox_customAutoReply state])];
 		[checkbox_customAutoReply setHidden:![checkbox_autoReply state]];
 		[box_idle setHidden:![checkbox_idle state]];
@@ -426,10 +428,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 		current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
 		current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
 		current = [self _positionControl:box_idle relativeTo:current height:&height];
-		
-		[[self window] setContentSize:NSMakeSize([[[self window] contentView] frame].size.width, height)
-							  display:YES
-							  animate:NO];
+
+		[window setContentSize:NSMakeSize([[window contentView] frame].size.width, height)
+					   display:YES
+					   animate:NO];
 
 	}else{
 		/* Jaguar gets to be ugly.  Enable/disable controls rather than hiding them. Upgrade, fools! */
