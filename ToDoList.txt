@@ -99,14 +99,6 @@
 	- Enabling or disabling the feature
 	- Changing the status message used when switched
 
-//Drop 10.2 support
-  Dropping 10.2 support would provide us with the following changes
-	- Remove 10.2 message view code
-	- Remove 10.2 specific log viewer
-	- Remove all other 10.2 specific compatability code
-	- Remove preference controller, delete all our glue code and use cocoa bindings
-  The preference changes would be huge, and result in a huge reduction of code.
-
 //Kill Plugins
   Refactoring is fun, refactoring is scary, refactoring could greatly simplify our code
 	- Remove the menu controller, hook plugins directly to their menu items
@@ -114,12 +106,96 @@
 	- Remove many unneeded plugin classes, interfaces, clutter
   Keeping the modular design, but ditching all the negative effects of it could be very beneficial
 	
+//Message Tabs
+  - Truncate tab names with ellipses instead of clipping
+  - Enforce a larger minimum width for tabs
+  - Use a chevron to display tabs that don't fit on the tab bar (like safari)
+  - New close button graphic
+	
+//Sorting Improvements
+  - Improve status sorting defaults
+  - Simplify custom sort window by removing duplicate/redundant options
+  - Move sort menu items out of their submenu (into the main view menu)
+ 
+//Flashing reduction
+  Make it possible to use Adium without any distracting flashing and blinking
+  - Add option to remove flashing unviewed content on the contact list
+  - Add option to prevent dock icon animations
+
+//Formatted messages
+  Some users like formatted and colored messages, other want messages to look
+  the way they've decided in the preferences.  Let's make message formatting
+  preferences follow this distinction
+  - Preference "Send Formatted Messages", off by default.  When enabled, user
+    can pick font, size, color of their messages.  This formatting is used
+    when typing, displaying, and sending their message.
+  - Preference "Display formatting of received messages", off by default.  When
+    enabled, the font, size, and color of incoming messages will be displayed.
+  By default we will completely ignore message formatting.  Users who want
+  formatting will look for a way to set their font/color and find the options
+  in general preferences.
+  
+//Plugin Version Control
+  Simple solution to compatibility with 3rd party plugins
+  - Every release of Adium has a plugin version number
+  - When the interfaces change (only .x releases), this number will increment
+  - Plugins have a version number in their info.plist
+  - Adium will only load plugins if their plugin number matches Adium's
+  This means that every major upgrade of Adium will require a new plugin download.
+  Since releases are bigger and further apart, this will not be a major issue.
+
+//Offline contacts
+  Add group specific offline visibility toggles to the contact list.
+  
+//Deferring of initial messages
+  In certain situations the user may not want new messages to automatically open
+  windows.
+  - Add an option to not open windows for incoming messages
+  - Allow this option to be set/unset depending on our status (State system)
+  - Display the number of new messages in the dock (Similar to mail)
+  - Allow retrieval of these messages from the status/dock menu and contact list
+
+//Growl notifications
+  - Remove existing notification code
+  - Add global preferences for which events to display
+  - Add contact alerts for contact or group notifications
+
+//Contact list editing
+  We need contact list editing to feel safe
+  - Improve drag images
+  - Improve drop targeting, especially when dragging contacts with sorting on
+  - Prevent list from flickering states when editing (contacts appearing to sign on, off, etc)
+  - Improve reliability of moving, deleting, and adding contacts
+  - Improve error handling with full lists
+  - Improve error handling when adding contacts that already exist
+  	
+//Improved info window
+  Update the info window appearance and profile display
+  - Use a regular window instead of a panel
+  - Improve link tracking and tooltips in profiles
+  - Fix support for sub-profile links
+  - Display profiles for other services in addition to AIM
+  
+//Preferences
+  - Improve organization of advanced preferences
+  - Add advanced categories for service specific preferences
+  - Make heights of preference panes equal where possible
+  - Fade between preference panes when switching
+
+//Alerts
+  - Display time stamps in the panel alert
+  - Support %escapes in spoken alert (such as %n to speak the contact's name)
+
+//Saving and Exporting
+  - Allow 'save as' from within the log viewer to export logs
+  - Allow 'save as' from a message window to export the current conversation
+
+
 
 //-------------------------------------------------------------------------------------------------------
 // Incomplete Thoughts
 //-------------------------------------------------------------------------------------------------------
 //Message Preferences
-	- Clean up confusion with message display versus message sending
 	- Clean up variant submenus and other message preference aspects
 
 //Privacy Preferences
@@ -132,13 +208,8 @@
 //Announcer Improvements
 	- Allow user to have more control over what is spoken by the announcer plugin
 
-//Alerts
-	- Display time stamps in the panel alert
-	- Support %escapes in spoken alert (such as %n to speak the contact's name)
-
 //Log viewer
 	- Make contact drawer behave as additional filter to the search field
-	- Make file menu save export the selected log
 
 //Service-Specific
 	- Add 'priority' support for jabber connections
@@ -147,19 +218,21 @@
 //Contact List
 	- Easy identification of mobile users
 	- Option to not display groups
+	- Round label caps for events
+	- Improve status heir-achy 
 
-//Messages
-	- Solution to handle display of tabs when too many are present
+//Alerts
+  - Organize event and action menus
+  - Clarify wording, clean up alert panes
+
+//Status on message window
+  - Show our current status on the message window
 
 //Emoticons
 	- Symlink in iChat emoticons
 
-//Notifications
-	- Growl Integration
-	- Remove the existing bezel/notification code
-
 //Documentation
 	- User documentation
 
-//Deferring of initial messages
-	- Some system to not have messages pop up when received
+//Message context improvements
+  The message context system will not work well with deferred messages.
