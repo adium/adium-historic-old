@@ -41,19 +41,19 @@
 	//Be sure we've set the last changes before changing which object we are editing
 	[textField_alias fireImmediately];
 	
-	//Hold onto the object
+	//Hold onto the object, using the highest-up metacontact if necessary
 	[listObject release];
-	listObject = [inObject retain];
-	
+	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
+
 	//Fill in the current alias
-	if(alias = [inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
+	if(alias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
 		[textField_alias setStringValue:alias];
 	}else{
 		[textField_alias setStringValue:@""];
 	}
 	
 	//Current note
-    if(notes = [inObject notes]){
+    if(notes = [listObject notes]){
         [textField_notes setStringValue:notes];
     }else{
         [textField_notes setStringValue:@""];
