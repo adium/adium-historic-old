@@ -89,15 +89,17 @@
 
 	//Get the messageView from the controller
 	controllerView_messages = [messageViewController messageView];
-	[controllerView_messages setNextResponder:textView_outgoing];
 	
 	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
 	[[scrollView_messages superview] replaceSubview:scrollView_messages with:controllerView_messages];
 	
-	//scrollView_messages should now be a scroll view from the controller; it may or may not be the same as controllerView_messages
+	//scrollView_messages should now be a containing view from the controller; it may or may not be the same as controllerView_messages
 	scrollView_messages = [messageViewController messageScrollView];
-	[scrollView_messages setNextResponder:textView_outgoing];
-
+	
+	[controllerView_messages setNextResponder:textView_outgoing];
+	/*if (controllerView_messages != scrollView_messages)
+		[scrollView_messages setNextResponder:controllerView_messages];
+*/
 //	[[scrollView_messages superview] addSubview:[messageViewController messageView]];
 //	[[messageViewController messageView] setFrame:[scrollView_messages frame]];
 //	[scrollView_messages removeFromSuperview];
@@ -116,16 +118,12 @@
     //Configure the outgoing text view
 	[textView_outgoing setChat:chat];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-	[textView_outgoing setAssociatedScrollView:scrollView_messages];
+	[textView_outgoing setAssociatedView:scrollView_messages];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
 		[textView_outgoing setUsesFindPanel:YES];
     }
 	[[adium contentController] didOpenTextEntryView:textView_outgoing];
-    
-    //Send button
-    [button_send setTitle:@"Send"];
-    [button_send setButtonType:NSMomentaryPushInButton];
 
     //Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self 
