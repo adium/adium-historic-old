@@ -158,6 +158,12 @@
 	return(description);
 }
 
+- (NSImage *)imageForEventID:(NSString *)eventID
+{
+	static NSImage	*eventImage = nil;
+	if(!eventImage) eventImage = [[NSImage imageNamed:@"pref-accounts" forClass:[self class]] retain];
+	return eventImage;
+}
 
 #pragma mark Aggregation and event generation
 /*!

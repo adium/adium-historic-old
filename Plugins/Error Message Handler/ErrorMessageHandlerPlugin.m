@@ -179,4 +179,12 @@
 	
 	return(description);
 }
+
+- (NSImage *)imageForEventID:(NSString *)eventID
+{
+	static NSImage	*eventImage = nil;
+	if(!eventImage) eventImage = [[NSImage imageNamed:@"ErrorAlert" forClass:[self class]] retain];
+	return eventImage;
+}
+
 @end

@@ -252,6 +252,13 @@
 	return(description);
 }
 
+- (NSImage *)imageForEventID:(NSString *)eventID
+{
+	static NSImage	*eventImage = nil;
+	if(!eventImage) eventImage = [[NSImage imageNamed:@"DefaultIcon" forClass:[self class]] retain];
+	return eventImage;
+}
+
 #pragma mark Caching and event generation
 /*
  * @brief Cache list object updates
@@ -295,38 +302,50 @@
 		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
 			if([inModifiedKeys containsObject:@"StatusState"]){
 				AIStatus	*statusState = [inObject statusState];
-				id			newValue;
+				NSNumber	*newAwayNumber;
+				NSString	*newStatusMessage;
+				BOOL		awayChanged, statusMessageChanged;
+				NSSet		*previouslyPerformedActionIDs = nil;
 
 				//Update away/not-away
-				newValue = [NSNumber numberWithBool:([statusState statusType] == AIAwayStatusType)];
-					
-				if([self updateCache:awayCache
-							  forKey:@"Away"
-							newValue:newValue
-						  listObject:inObject
-					  performCompare:YES] && !silent){
-					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
-					[[adium contactAlertsController] generateEvent:event
-													 forListObject:inObject
-														  userInfo:nil
-									  previouslyPerformedActionIDs:nil];
-				}
+				newAwayNumber = [NSNumber numberWithBool:([statusState statusType] == AIAwayStatusType)];
+				
+				awayChanged = [self updateCache:awayCache
+										 forKey:@"Away"
+									   newValue:newAwayNumber
+									 listObject:inObject
+								 performCompare:YES];
 				
 				//Update status message
-				newValue = [[statusState statusMessage] string];
-		
-				if([self updateCache:statusMessageCache 
-							  forKey:@"StatusMessage"
-							newValue:newValue
-						  listObject:inObject
-					  performCompare:YES] && !silent){
-					if (newValue != nil){
+				newStatusMessage = [[statusState statusMessage] string];
+				statusMessageChanged = [self updateCache:statusMessageCache 
+												  forKey:@"StatusMessage"
+												newValue:newStatusMessage
+											  listObject:inObject
+										  performCompare:YES];
+				
+				if(statusMessageChanged && !silent){
+					if (newStatusMessage != nil){
 						//Evan: Not yet a contact alert, but we use the notification - how could/should we use this?
-						[[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
-														 forListObject:inObject
-															  userInfo:nil
-										  previouslyPerformedActionIDs:nil];
+						previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
+																						forListObject:inObject
+																							 userInfo:nil
+																		 previouslyPerformedActionIDs:nil];
 					}
+				}
+				
+				//Don't repeat notifications for the away change which the status message already covered
+				if(awayChanged && !silent){
+					NSString		*event = ([newAwayNumber boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
+					NSDictionary	*userInfo;
+					
+					userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:(statusMessageChanged && (newStatusMessage != nil))]
+														   forKey:@"Already Posted StatusMessage"];
+
+					[[adium contactAlertsController] generateEvent:event
+													 forListObject:inObject
+														  userInfo:userInfo
+									  previouslyPerformedActionIDs:previouslyPerformedActionIDs];
 				}
 			}
 

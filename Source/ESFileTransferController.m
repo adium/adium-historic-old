@@ -538,6 +538,13 @@ static ESFileTransferPreferences *preferences;
 	return(description);
 }
 
+- (NSImage *)imageForEventID:(NSString *)eventID
+{
+	static NSImage	*eventImage = nil;
+	if(!eventImage) eventImage = [[NSImage imageNamed:@"pref-ft" forClass:[self class]] retain];
+	return eventImage;
+}
+
 #pragma mark Strings for sizes
 
 #define	ZERO_BYTES			AILocalizedString(@"Zero bytes", "no file size")
