@@ -41,8 +41,18 @@
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
 @end
 
+/*
+ * @class ESUserIconHandlingPlugin
+ * @brief User icon handling component
+ *
+ * This component manages the Adium user icon cache.  It also provides a toolbar icon which shows the user icon
+ * or service icon of the current chat in its window.
+ */
 @implementation ESUserIconHandlingPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//Register our observers
@@ -60,18 +70,20 @@
 	[self registerToolbarItem];
 }
 
-- (void)dealloc
-{
-	[super dealloc];
-}
-
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
-//Handle object creation and changes to the userIcon status object, which should be set by account code
-//when a user icon is retrieved for the object
+/*
+ * @brief Update list object
+ *
+ * Handle object creation and changes to the userIcon status object, which should be set by account code
+ * when a user icon is retrieved for the object.
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {    
     if(inModifiedKeys == nil){
@@ -130,7 +142,11 @@
 	return(nil);
 }
 
-//A plugin, or this plugin, modified the display array for the object; ensure our cache is up to date
+/*
+ * @brief List object attributes changes
+ *
+ * A plugin, or this plugin, modified the display array for the object; ensure our cache is up to date.
+ */
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     AIListObject	*inObject = [notification object];
@@ -159,7 +175,9 @@
 	}
 }
 
-//The user icon preference was changed
+/*
+ * @brief The user icon preference was changed
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -170,6 +188,15 @@
 	}
 }
 
+/*
+ * @brief Cache and set the user icon from a listObject's preference
+ *
+ * This loads the user-set preference for a listObject, sets it at highest priority, and then caches the
+ * newly set image.
+ *
+ * @param inObject The listObject to modify if necessary.
+ * @result YES if the method resulted in setting an image
+ */
 - (BOOL)cacheAndSetUserIconFromPreferenceForListObject:(AIListObject *)inObject
 {
 	NSData  *imageData = [inObject preferenceForKey:KEY_USER_ICON 
@@ -223,7 +250,14 @@
  }
  */
 
-
+/*
+ * @brief Cache user icon data for an object
+ *
+ * @param inData Image data to cache
+ * @param inObject AIListObject to cache the data for
+ *
+ * @result YES if successful
+ */
 - (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject
 {
 	BOOL		success;
@@ -239,6 +273,11 @@
 	
 	return success;
 }
+/*
+ * @brief Trash a list object's cached icon
+ *
+ * @result YES if successful
+ */
 - (BOOL)destroyCacheForListObject:(AIListObject *)inObject
 {
 	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
@@ -253,6 +292,9 @@
 	return (success);
 }
 
+/*
+ * @brief Retrieve the path at which to cache an <tt>AIListObject</tt>'s image
+ */
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
 {
 	return [[adium cachesPath] stringByAppendingPathComponent:[inObject internalObjectID]];
@@ -260,6 +302,11 @@
 
 #pragma mark Toolbar Item
 
+/*
+ * @brief Register our toolbar item
+ *
+ * Our toolbar item shows an image for the current chat, displaying it full size/animating if clicked.
+ */
 - (void)registerToolbarItem
 {
 	ESImageButton	*button;
@@ -298,8 +345,9 @@
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
 
-
-//After the toolbar has added the item we can set up the submenus
+/*
+ * @brief After the toolbar has added the item we can set up the submenus
+ */
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
@@ -319,6 +367,13 @@
 	}
 }
 
+/*
+ * @brief Toolbar removed an item.
+ *
+ * If the item is one of ours, stop tracking it.
+ *
+ * @param notification Notification with an @"item" userInfo key for an NSToolbarItem.
+ */
 - (void)toolbarDidRemoveItem: (NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
@@ -333,13 +388,25 @@
 	}
 }
 
-//A chat became visible in a window.  Update the item with the @"UserIcon" identifier if necessary
+/*
+ * @brief A chat became visible in a window.
+ *
+ * Update the item with the @"UserIcon" identifier if necessary
+ *
+ * @param notification Notification with an AIChat object and an @"NSWindow" userInfo key 
+ */
 - (void)chatDidBecomeVisible:(NSNotification *)notification
 {
 	[self _updateToolbarIconOfChat:[notification object]
 						  inWindow:[[notification userInfo] objectForKey:@"NSWindow"]];
 }
 
+/*
+ * @brief Update the user image toolbar icon in a chat
+ *
+ * @param chat The chat for which to retrieve an image
+ * @param window The window in which the chat resides
+ */
 - (void)_updateToolbarIconOfChat:(AIChat *)chat inWindow:(NSWindow *)window
 {
 	NSToolbar		*toolbar = [window toolbar];
@@ -373,6 +440,9 @@
 	}	
 }
 
+/*
+ * @brief Empty action for menu item validation purposes
+ */
 - (IBAction)dummyAction:(id)sender {};
 
 @end
