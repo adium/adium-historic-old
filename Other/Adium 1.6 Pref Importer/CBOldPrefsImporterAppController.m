@@ -46,6 +46,8 @@
 	[popUpButton_Clients setAutoenablesItems:NO];
         
 	
+	
+	
     NSString				*file;
     NSString				*dirPath = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
     NSDirectoryEnumerator *enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
@@ -59,12 +61,14 @@
 	
     dirPath = [@"~/Library/Application Support/Adium 2.0/Users" stringByExpandingTildeInPath];
     enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
+	[popUpButton_user removeAllItems];
 	
     while(file = [enumer nextObject])
 	{
 		[enumer skipDescendents];
 		if([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
-			[popUpButton_user addItemWithTitle:file];
+			NSLog(file);
+		[popUpButton_user addItemWithTitle:file];
 	}
 	
     [window_main makeKeyAndOrderFront:nil];
@@ -81,20 +85,22 @@
 	
 	}
 	
+	/*
 	//No Adium 2.0 prefs
 	if([popUpButton_user numberOfItems] == 0){
 		NSBeginAlertSheet(@"Run Adium 2 first", @"Quit", nil, nil, window_main, NSApp, @selector(terminate:), nil, nil, @"You must run Adium 2 before any settings can be imported");
 	}
-	
+	*/
+	 
 	//Multiple Adium 2.0 users
-	if([popUpButton_user numberOfItems] > 1)
-	{
-		[NSApp beginSheet:theSheet
-		   modalForWindow:window_main
-			modalDelegate:self
-		   didEndSelector:nil
-			  contextInfo:nil];
-	}
+	//if([popUpButton_user numberOfItems] > 1)
+//	{
+//		[NSApp beginSheet:theSheet
+//		   modalForWindow:window_main
+//			modalDelegate:self
+//		   didEndSelector:nil
+//			  contextInfo:nil];
+//	}
 	
 	//Here comes the other client stuff yeah yeah yeah!!
 	NSMenuItem  *item;
