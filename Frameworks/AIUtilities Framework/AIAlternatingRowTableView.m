@@ -163,7 +163,7 @@
 //Draw alternating colors
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-    [self _drawRowInRect:[self rectOfRow:row] colored:(!(row % 2) && row != [self selectedRow]) selected:(row == [self selectedRow])];
+    [self _drawRowInRect:[self rectOfRow:row] colored:!(row % 2) selected:(row == [self selectedRow])];
 
     [super drawRow:row clipRect:rect];
 }
@@ -172,13 +172,8 @@
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
     if(drawsAlternatingRows){ //Draw alternating rows in the outline view
-//        NSRect		segmentRect = rect;
-
         if(colored && !selected){            
-            //segmentRect.origin.x = 0;
-            //segmentRect.size.width = [self frame].size.width;
-            
-            [alternatingRowColor set];
+			[alternatingRowColor set];
             [NSBezierPath fillRect:rect/*segmentRect*/];
         }
     }
