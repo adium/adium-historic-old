@@ -29,29 +29,31 @@
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	NSMutableAttributedString	*filteredMessage = nil;
-
-	//Filter keywords in the message
-	filteredMessage = [self replaceKeywordsInString:inAttributedString context:context];
-
-	//Filter keywords in URLs (For AIM subprofile links, mostly)
-	int	length = [(filteredMessage ? filteredMessage : inAttributedString) length];
-    NSRange scanRange = NSMakeRange(0, 0);
-    while(NSMaxRange(scanRange) < length){
-        NSString *linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
-																						atIndex:NSMaxRange(scanRange)
-																				 effectiveRange:&scanRange];
-		if([linkURL isKindOfClass:[NSURL class]]) linkURL = [(NSURL *)linkURL absoluteString];
+	
+	if(inAttributedString){
+		//Filter keywords in the message
+		filteredMessage = [self replaceKeywordsInString:inAttributedString context:context];
 		
-		//If we found a URL, replace any keywords within it
-		if(linkURL){
-			NSString	*result = [[self replaceKeywordsInString:[NSAttributedString stringWithString:linkURL]
-														 context:context] string];
-
-			if(result){
-				if(!filteredMessage) filteredMessage = [inAttributedString mutableCopy];
-				[filteredMessage addAttribute:NSLinkAttributeName
-										value:result
-										range:scanRange];
+		//Filter keywords in URLs (For AIM subprofile links, mostly)
+		int	length = [(filteredMessage ? filteredMessage : inAttributedString) length];
+		NSRange scanRange = NSMakeRange(0, 0);
+		while(NSMaxRange(scanRange) < length){
+			NSString *linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
+																							atIndex:NSMaxRange(scanRange)
+																					 effectiveRange:&scanRange];
+			if([linkURL isKindOfClass:[NSURL class]]) linkURL = [(NSURL *)linkURL absoluteString];
+			
+			//If we found a URL, replace any keywords within it
+			if(linkURL){
+				NSString	*result = [[self replaceKeywordsInString:[NSAttributedString stringWithString:linkURL]
+															 context:context] string];
+				
+				if(result){
+					if(!filteredMessage) filteredMessage = [inAttributedString mutableCopy];
+					[filteredMessage addAttribute:NSLinkAttributeName
+											value:result
+											range:scanRange];
+				}
 			}
 		}
 	}
@@ -79,17 +81,19 @@
 
 		if([context isKindOfClass:[AIContentObject class]]){
 			replacement = [[context destination] UID]; //This exists primarily for AIM compatibility; AIM uses the UID (no formatting).
-		}else if([context isKindOfClass:[AIListObject class]]){
+		}else if([context isKindOfClass:[AIListContact class]]){
 			replacement = [[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																				  toContact:context] formattedUID];
 		}
 
-		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
-
-		[newAttributedString replaceOccurrencesOfString:@"%n"
-										  withString:replacement
-											 options:NSLiteralSearch
-											   range:NSMakeRange(0, [newAttributedString length])];
+		if(replacement){
+			if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+			
+			[newAttributedString replaceOccurrencesOfString:@"%n"
+												 withString:replacement
+													options:NSLiteralSearch
+													  range:NSMakeRange(0, [newAttributedString length])];
+		}
 	}
 
 	//Current Date
