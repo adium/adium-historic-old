@@ -8,7 +8,7 @@
                 "button_Import" = NSButton; 
                 "button_proteusAddAccount" = NSButton; 
                 "button_proteusDelAccount" = NSButton; 
-                "image_proteusImage" = NSImageView; 
+                "image_clientImage" = NSImageView; 
                 "panel_importPanel" = NSPanel; 
                 "tabView_ClientTab" = NSTabView; 
                 "table_proteusAccounts" = NSTableView; 
