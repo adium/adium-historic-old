@@ -21,7 +21,7 @@
 #import <Adium/ESFileTransfer.h>
 
 //Jabber registration
-#include <libgaim/jabber.h>
+#include <Libgaim/jabber.h>
 
 static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, gchar *hint,const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {

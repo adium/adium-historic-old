@@ -43,10 +43,10 @@
 
 
 //Gaim slash command interface
-#include <libgaim/cmds.h>
+#include <Libgaim/cmds.h>
 
 //Webcam
-#include <libgaim/webcam.h>
+#include <Libgaim/webcam.h>
 
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)initLibGaim;
