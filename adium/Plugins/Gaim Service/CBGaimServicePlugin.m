@@ -30,7 +30,7 @@ NSMutableDictionary *_accountDict;
  */
 static CBGaimAccount* accountLookup(GaimAccount *acct)
 {
-    NSLog(@"Looking up GaimAccount 0x%x", acct);
+//    NSLog(@"Looking up GaimAccount 0x%x", acct);
     CBGaimAccount *ret = (CBGaimAccount*) [_accountDict objectForKey:[NSValue valueWithPointer:acct]];
     NSCAssert(ret != nil, @"Account not found in dictionary");
     return ret;

@@ -3,11 +3,8 @@
 //  Adium XCode
 //
 //  Created by Colin Barrett on Sat Nov 01 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 #import "CBGaimAccount.h"
 #import "aim.h"
 
@@ -18,4 +15,11 @@
 //Overriden from CBGAimAccount
 - (NSString *)UID;
 - (NSString *)serviceID;
+- (NSString *)UIDAndServiceID;
+- (NSString *)accountDescription;
+- (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
+//- (void)accountBlistNewNode:(GaimBlistNode *)node;
+
+extern gchar *oscar_encoding_to_utf8(const char *encoding, char *text, int textlen);
+
 @end
