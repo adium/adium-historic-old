@@ -186,12 +186,10 @@
 //Our default drag image will be cropped incorrectly, so we need a custom one here
 - (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
 {
-	NSTableColumn	*column;
-	NSCell			*cell;
 	NSImage			*image;
 	NSEnumerator	*enumerator;
 	NSNumber		*rowNumber;
-	NSRect			rowRect, cellRect;
+	NSRect			rowRect;
 	int				count, firstRow, row;
 	float			yOffset;
 	
@@ -365,34 +363,6 @@
 
 	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
 }
-
-//
-- (void)drawBackgroundInClipRect:(NSRect)clipRect
-{
-	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
-	
-	[super drawBackgroundInClipRect:clipRect];
-	
-	if([self drawsBackground]){
-		//BG Color
-		[backgroundColor set];
-		NSRectFill(clipRect);
-		
-		//Image
-		if(backgroundImage){
-			NSSize	imageSize = [backgroundImage size];
-			
-			[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
-							   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
-							  operation:NSCompositeSourceOver
-							   fraction:backgroundFade];
-		}	
-	}else{
-		[[NSColor clearColor] set];
-		NSRectFill(clipRect);
-	}
-}
-
 
 //Custom highlight management
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag

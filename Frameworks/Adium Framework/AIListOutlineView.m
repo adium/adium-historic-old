@@ -116,6 +116,68 @@
 }
 
 
+//Background image ---------------------------------------------------------------
+//Draw our background image or color with transparency
+- (void)drawBackgroundInClipRect:(NSRect)clipRect
+{
+	if([self drawsBackground]){
+		//BG Color
+		[backgroundColor set];
+		NSRectFill(clipRect);
+		
+		//Image
+		if(backgroundImage){
+			NSRect 	visRect = [[self enclosingScrollView] documentVisibleRect];
+			NSSize	imageSize = [backgroundImage size];
+			
+			[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
+							   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+							  operation:NSCompositeSourceOver
+							   fraction:backgroundFade];
+		}	
+	}else{
+		[[NSColor clearColor] set];
+		NSRectFill(clipRect);
+	}
+}
+
+/* ######################## Crappy code alert ########################
+Drawing the background image/color should be as simple as subclassing
+drawBackgroundInClipRect: but that method is only called in 10.3 and
+we need 10.2 compatability.
+
+We need to get called after the background draws, but before the rows
+start drawing.  A crappy solution is to draw our background right
+before the outline view tries to draw its first row.  We only need to
+do this when running in 10.2
+*/
+- (void)drawRect:(NSRect)rect
+{	
+	if(![NSApp isOnPantherOrBetter]) _drawBackground = YES;
+	[super drawRect:rect];
+	
+	/* #################### More Crappy Code ###################
+	This time for 10.3 compatability.  10.3 does NOT invalidate the shadow
+	of a transparent window correctly, forcing us to do it manually each
+	time the window content is changed.  This is absolutely horrible for
+	performance, but the only way to avoid shadow ghosting in 10.3 :(
+	*/
+	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
+}
+- (void)drawRow:(int)row clipRect:(NSRect)rect
+{
+	if(_drawBackground){
+		_drawBackground = NO;
+		[self drawBackgroundInClipRect:[self frame]];
+	}
+	[super drawRow:row clipRect:rect];
+}
+- (void)setUpdateShadowsWhileDrawing:(BOOL)update{
+	updateShadowsWhileDrawing = update;
+}
+// ###################################################################
+
+
 
 //Contact menu ---------------------------------------------------------------
 //Return the selected object (to auto-configure the contact menu)
@@ -133,20 +195,6 @@
 - (NSArray *)arrayOfListObjects
 {
 	return([self arrayOfSelectedItems]);
-}
-
-//Parent window transparency -----------------------------------------------------------------
-//This is a hack and a complete performance disaster, but required because of bugs with transparency in 10.3 :(
-- (void)setUpdateShadowsWhileDrawing:(BOOL)update
-{
-	updateShadowsWhileDrawing = update;
-}
-
-//If we DO NOT subcalss drawRect, the system will not update our view correctly while resizing (10.3.3)
-- (void)drawRect:(NSRect)rect
-{
-	[super drawRect:rect];
-	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
 }
 
 @end

@@ -22,6 +22,7 @@
 	
 	NSImage		*backgroundImage;
 	float 		backgroundFade;
+	BOOL		_drawBackground;
 	
 	NSColor		*backgroundColor;
 	
