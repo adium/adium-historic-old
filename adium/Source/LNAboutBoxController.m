@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.32 2004/03/24 22:30:26 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.33 2004/03/25 04:00:33 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -65,7 +65,6 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     
     //Load our build information and avatar list
     [self _loadBuildInformation];
-    //avatarArray = [[self _availableAvatars] retain];
 
     //Credits
     creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits.rtf" ofType:nil] documentAttributes:nil] autorelease];
