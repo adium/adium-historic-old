@@ -19,7 +19,10 @@
 @protocol AIMiniToolbarItemDelegate;
 
 @interface AITextToolbarItemsPlugin : AIPlugin <AIMiniToolbarItemDelegate> {
-
+    int		tag;
 }
+
+- (void)setTag:(int)inTag;
+- (int)tag;
 
 @end
