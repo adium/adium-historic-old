@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.29 2004/04/08 23:17:41 adamiser Exp $
+$Id: ToDoList.txt,v 1.30 2004/04/09 04:13:03 evands Exp $
 
 Legend
 + Change or Addition
@@ -17,21 +17,17 @@ Bugs
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
-= If preferences are selected to advanced on close, the window will be vertically small on re-open.
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
-* Deleting the default theme makes the prefs crash on subsequent loads: http://www.visualdistortion.org/crash/view.jsp?crash=7709
 * Is TOC2 hiding somewhere? Check out: http://www.visualdistortion.org/crash/view.jsp?crash=7680
-* Contact alerts window is still registering for a notification when the account changed, but not implementing an action method: http://www.visualdistortion.org/crash/view.jsp?crash=7568
-* accountXferDestroy in CBGaimAccount appears to be doing.. something.. wrong, causing a lot of file transfer crashes: http://www.visualdistortion.org/crash/view.jsp?crash=7660
-* Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue
-* Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
+* Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue [Fixed in Patch Tracker, waiting on sourceforge to stop being dumb]
+* Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?) [Fixed in Patch Tracker, waiting on sourceforge to stop being dumb]
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 * User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
 * Changing an alias in the inspector does not correctly update the contact list
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
-
-
+* Some URLs in profiles aren't allowing clicks properly.
+* Spaces in the address book STILL don't work properly, and they really should be better now. Grr.
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -235,11 +231,16 @@ ced preference panes.
 = Pushing escape clears the text field, instead of allowing you to convert from kanji to roman. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
 	Evan: I say we just take this nonstandard 'feature' out.
 	Colin: It's not nonstandard and it's a good feature.
+	Evan: Okay, okay, popular response has been that they love it.  We'll think about a revised Keybaord preferences, perhaps in the Sending tab, to encapsulate this and maybe other preferences?
 = 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
 = 'Auto-Away' menu does not refresh when away messages are changed
 = 'Auto-Away' menu dimming does not refresh when away messages are changed
 = Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
 = In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
+= Contact alerts window is still registering for a notification when the account changed, but not implementing an action method.
+= Deleting the default theme makes the prefs crash on subsequent loads.
+= accountXferDestroy in CBGaimAccount appears to be doing.. something.. wrong, causing a lot of file transfer crashes.
+= If preferences are selected to advanced on close, the window will be vertically small on re-open.
 
 Features & Changes:
 = Add support for displaying emoticon images (webkit message view)
