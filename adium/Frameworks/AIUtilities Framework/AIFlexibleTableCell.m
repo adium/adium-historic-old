@@ -64,6 +64,11 @@
     textStorage = nil;
     textContainer = nil;
     layoutManager = nil;
+
+    leftPadding = 0;
+    rightPadding = 0;
+    topPadding = 0;
+    leftPadding = 0;
     
     cellSize = [inString size];
     string = [inString retain];

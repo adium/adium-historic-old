@@ -21,6 +21,18 @@
 - (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow;
 - (int)numberOfRows;
 @end
+//Optional
+//I've created additional protocols here ONLY for the reason of stopping compiler warnings.  There is no reason to claim conformance to these protocols.
+@protocol AIFlexibleTableViewDelegate_shouldEditTableColumn
+- (BOOL)shouldEditTableColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow;
+@end
+@protocol AIFlexibleTableViewDelegate_setObjectValue
+- (void)setObjectValue:(id)object forTableColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow;
+@end
+@protocol AIFlexibleTableViewDelegate_shouldSelectRow
+- (BOOL)shouldSelectRow:(int)row;
+@end
+
 
 @interface AIFlexibleTableView : NSControl {
     //Display
@@ -28,16 +40,25 @@
     float				contentsHeight;		//Total height of our content
     NSMutableArray			*rowHeightArray; 	//Height of every row
 
-    //Configuration
+    //Delegate
     id <AIFlexibleTableViewDelegate>	delegate;		//Our delegate
+    BOOL				respondsTo_shouldEditTableColumn;
+    BOOL				respondsTo_setObjectValue;
+    BOOL				respondsTo_shouldSelectRow;
+
+    //Configuration
     NSMutableArray			*columnArray;		//Our columns
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
     BOOL				scrollsOnNewContent;	//YES to enable autoscroll
+
+    //Selecting
     int					selectedRow;		//The currently selected row
     
     //Editing
-    NSTextView		*editor;
-    NSScrollView	*editorScroll;
+    NSTextView			*editor;
+    NSScrollView		*editorScroll;
+    AIFlexibleTableColumn	*editedColumn;
+    int				editedRow;
 
 }
 
