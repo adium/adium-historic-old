@@ -40,6 +40,13 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	
 	[self _initGaim];
 
+	/*
+	static char buf[10];
+	g_snprintf(buf, sizeof(buf), "%s", nil);
+	
+	NSLog(@"%s",buf);
+	*/
+	
     //Install the services
 	AIMService			= [[ESAIMService alloc] init];
 	ICQService			= [[ESICQService alloc] init];

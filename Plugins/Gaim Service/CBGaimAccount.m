@@ -533,10 +533,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	AIListContact	*listContact;
 	
+	/* The #if 0'd block below causes crashes in msn_tooltip_text() on MSN */
+#if 0
 	//Obtain the contact's information if it's a stranger
 	if ((listContact = [chat listObject]) && ([listContact isStranger])){
 		[self delayedUpdateContactStatus:listContact];
 	}
+#endif
 	
 	//Correctly enable/disable the chat
 	[chat setStatusObject:[NSNumber numberWithBool:YES]
@@ -544,6 +547,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				   notify:YES];
 	
 	//Track
+	AILog(@"gaim openChat:%@ for %@",chat,[chat uniqueChatID]);
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
 
 	//Inform gaim that we have opened this chat
@@ -559,7 +563,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Be sure any remaining typing flag is cleared as the chat closes
 	[self setTypingFlagOfChat:chat to:nil];
-	
+	AILog(@"gaim closeChat:%@",[chat uniqueChatID]);
 	[chatDict removeObjectForKey:[chat uniqueChatID]];
 	
     return YES;
@@ -798,6 +802,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 								encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
 																		   toContact:(AIListContact *)[chat listObject]];
 							}
+							
+							AILog(@"sendContentObject: %@",encodedMessage);
 							[gaimThread sendEncodedMessage:encodedMessage
 										   originalMessage:[thisPart string]
 											   fromAccount:self
@@ -824,6 +830,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
 																   toContact:(AIListContact *)[chat listObject]];
 					}
+					
+					AILog(@"sendContentObject: %@",encodedMessage);
 					[gaimThread sendEncodedMessage:encodedMessage
 								   originalMessage:[message string]
 									   fromAccount:self

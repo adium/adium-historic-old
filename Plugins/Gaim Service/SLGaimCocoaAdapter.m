@@ -71,20 +71,25 @@ int gaim_xfer_choose_file(GaimXfer *xfer);
 
 static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount);
 
+//The autorelease pool presently in use; it will be periodically released and recreated
+static NSAutoreleasePool *currentAutoreleasePool = nil;
+#define	AUTORELEASE_POOL_REFRESH	1.0
+
 @implementation SLGaimCocoaAdapter
 
 #pragma mark Init
 
 + (void)createThreadedGaimCocoaAdapter
 {
-	NSAutoreleasePool   *pool;
 	SLGaimCocoaAdapter  *gaimCocoaAdapter;
-	pool = [[NSAutoreleasePool alloc] init];
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 
     gaimCocoaAdapter = [[self alloc] init];
 	
-    [pool release];
-
+    [currentAutoreleasePool release];
+	
+	[gaimCocoaAdapter release];
+	
     return;
 }
 
@@ -114,6 +119,8 @@ static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount);
 #pragma mark Init
 - (id)init
 {
+	NSTimer	*autoreleaseTimer;
+	
 	[super init];
 	
 	isOnTigerOrBetter = [NSApp isOnTigerOrBetter];
@@ -127,18 +134,36 @@ static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount);
 	
 	[self initLibGaim];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNewAccount:) name:@"AddAccount" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(gotNewAccount:) 
+												 name:@"AddAccount"
+											   object:nil];
 
 //	NSConnection *myConnection = [NSConnection defaultConnection];
 	
 	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 
+	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
+														 target:self
+													   selector:@selector(refreshAutoreleasePool:)
+													   userInfo:nil
+														repeats:YES] retain];
+		
 	CFRunLoopRun();
 
-	NSAssert(FALSE,@"Should we ever make it here?");
+	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
 	runLoopMessenger = nil;
 	
     return self;
+}
+
+//Our autoreleased objects will only be released when the outermost autorelease pool is released.
+//This is handled automatically in the main thread, but we need to do it manually here.
+//Release the current pool, then create a new one.
+- (void)refreshAutoreleasePool:(NSTimer *)inTimer
+{
+	[currentAutoreleasePool release];
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 #pragma mark Gaim wrapper
@@ -166,7 +191,16 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	
 	//If the node does not have ui_data yet, we need to create a contact and associate it
 	if (!theContact){
-		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:[NSString stringWithUTF8String:buddy->name]];
+		NSString	*name;
+		GaimAccount	*account;
+		const char	*normalized;
+		
+		account = buddy->account;
+		normalized = gaim_normalize(account, buddy->name);
+		name  = [NSString stringWithUTF8String:normalized];
+		GaimDebug (@"contactLookupFromBuddy: buddy->name %s ; normalizes to %s",buddy->name,normalized);
+
+		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:name];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];
@@ -209,13 +243,19 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		AIListContact   *sourceContact;
 		GaimBuddy		*buddy;
 		GaimGroup		*group;
+		GaimAccount		*account;
+		char			*name;
+		
+		account = conv->account;
+		GaimDebug (@"%x conv->name %s ; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
+		name = g_strdup(gaim_normalize(account, conv->name));
 		
 		//First, find the GaimBuddy with whom we are conversing
-		buddy = gaim_find_buddy(conv->account, conv->name);
+		buddy = gaim_find_buddy(account, name);
 		if (!buddy) {
-			GaimDebug (@"imChatLookupFromConv: Creating %s %s",conv->account->username,conv->name);
+			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,name);
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
-			buddy = gaim_buddy_new(conv->account, conv->name, NULL);	//create a GaimBuddy
+			buddy = gaim_buddy_new(account, name, NULL);	//create a GaimBuddy
 			group = gaim_find_group(_(GAIM_ORPHANS_GROUP_NAME));		//get the GaimGroup
 			if (!group) {												//if the group doesn't exist yet
 				group = gaim_group_new(_(GAIM_ORPHANS_GROUP_NAME));		//create the GaimGroup
@@ -224,7 +264,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 			gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
 			
 //#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
-//			serv_add_buddy(conv->account->gc, buddy);				//add it to the serverside list
+//			serv_add_buddy(account->gc, buddy);				//add it to the serverside list
 		}
 		
 		NSCAssert(buddy != nil, @"buddy was nil");
@@ -232,11 +272,13 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		sourceContact = contactLookupFromBuddy(buddy);
 
 		// Need to start a new chat, associating with the GaimConversation
-		chat = [accountLookup(conv->account) mainThreadChatWithContact:sourceContact];
+		chat = [accountLookup(account) mainThreadChatWithContact:sourceContact];
 		
 		//Associate the GaimConversation with the AIChat
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
+		
+		g_free(name);
 	}
 
 	return chat;	
@@ -252,11 +294,17 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 		
 		//If we have a listObject, we are dealing with a one-on-one chat, so proceed accordingly
 		if (listObject){
-			const char			*destination = [[listObject UID] UTF8String];
+			char *destination;
+			
+			destination = g_strdup(gaim_normalize(account, [[listObject UID] UTF8String]));
+			
 			conv = gaim_conversation_new(GAIM_CONV_IM,account, destination);
 			
 			//associate the AIChat with the gaim conv
 			imChatLookupFromConv(conv);
+			
+			g_free(destination);
+			
 		}else{
 			//Otherwise, we have a multiuser chat.
 			
@@ -2120,12 +2168,15 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)gaimThreadAddUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	char		*buddyUTF8String;
+	const char	*groupUTF8String;
 	BOOL		performAdd = NO;
 	GaimGroup	*group;
 	GaimBuddy	*buddy;
+	
+	buddyUTF8String = g_strdup(gaim_normalize(account,[objectUID UTF8String]));
+	groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	
 	//Get the group (Create if necessary)
 	if(!(group = gaim_find_group(groupUTF8String))){
@@ -2134,7 +2185,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 	
 	//Verify the buddy does not already exist and create it
-	if(buddy = gaim_find_buddy(account,buddyUID)){
+	if(buddy = gaim_find_buddy(account,buddyUTF8String)){
 		GaimGroup *oldGroup;
 		
 		oldGroup = gaim_find_buddys_group(buddy);
@@ -2151,13 +2202,15 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	if (performAdd){
 		//Add the buddy locally to libgaim and then to the serverside list
 		if(!buddy){
-			GaimDebug (@"gaimThreadAddUID: Creating %s %s",account->username,buddyUID);
+			GaimDebug (@"gaimThreadAddUID: Creating new buddy %s on %s",buddyUTF8String,account->username);
 
-			buddy = gaim_buddy_new(account, buddyUID, NULL);
+			buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
 		}
 		gaim_blist_add_buddy(buddy, NULL, group, NULL);
-		serv_add_buddy(account->gc, buddy);
+		serv_add_buddy(gaim_account_get_connection(account), buddy);
 	}
+	
+	g_free(buddyUTF8String);
 }
 
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
@@ -2170,18 +2223,23 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)gaimThreadRemoveUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	const char  *buddyUID = [objectUID UTF8String];
-	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	char		*buddyUTF8String;
+	const char	*groupUTF8String;
 	
-	GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUID);
+	buddyUTF8String =  g_strdup(gaim_normalize(account, [objectUID UTF8String]));
+	groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	
+	GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUTF8String);
 	if (buddy){
 		GaimGroup *group = gaim_find_group(groupUTF8String);
 		if (group){
 			//Remove this contact from the server-side and gaim-side lists
-			serv_remove_buddy(account->gc, buddy, group);
+			serv_remove_buddy(gaim_account_get_connection(account), buddy, group);
 			gaim_blist_remove_buddy(buddy);
 		}
 	}
+	
+	g_free(buddyUTF8String);
 }
 
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
@@ -2193,14 +2251,15 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	const char  *buddyUTF8String, *groupUTF8String;
 	GaimAccount *account;
 	GaimGroup 	*oldGroup, *destGroup;
 	GaimBuddy	*buddy;
+	char		*buddyUTF8String;
+	const char	*groupUTF8String;
 	BOOL		didMove = NO;
 	
-	buddyUTF8String = [objectUID UTF8String];
 	account = accountLookupFromAdiumAccount(adiumAccount);
+	buddyUTF8String = g_strdup(gaim_normalize(account, [objectUID UTF8String]));
 	
 	//Get the destination group (creating if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "");
@@ -2222,6 +2281,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		//No GaimBuddy was found, so despite all appearances this 'move' is really an add.
 		[self gaimThreadAddUID:objectUID onAccount:adiumAccount toGroup:groupName];
 	}
+	
+	g_free(buddyUTF8String);
 }
 
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
