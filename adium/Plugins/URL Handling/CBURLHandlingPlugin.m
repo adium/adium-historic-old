@@ -24,16 +24,33 @@
 
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
-    NSLog([[event descriptorAtIndex:1] stringValue]);
-    NSURL *url = [NSURL URLWithString:[[event descriptorAtIndex:1] stringValue]];
+    NSString *longPrefix, *shortPrefix, *newString, *recipient = nil, *message = nil;
+    NSString *string = [[event descriptorAtIndex:1] stringValue];
+    NSURL *url = [NSURL URLWithString:string];
     
     if(url){
-        if([[url scheme] isEqualToString:@"aim"]){
-            NSLog([url path]);
-            NSLog([url host]);
-        }else{
-            NSLog(@"not aim://");
+        shortPrefix = [NSString stringWithFormat:@"%@:", [url scheme]];
+        longPrefix = [NSString stringWithFormat:@"%@//", shortPrefix];
+        
+        if(![string hasPrefix:longPrefix] && [string hasPrefix:shortPrefix]){
+            newString = [string substringFromIndex:[shortPrefix length]];
+            newString = [NSString stringWithFormat:@"%@%@", longPrefix, newString];
+            url = [NSURL URLWithString:newString];
         }
+        
+        if([[url scheme] isEqualToString:@"aim"]){
+            if([[url host] compare:@"goim" options:NSCaseInsensitiveSearch] == 0){
+                recipient = [url propertyForKey:@"screenname"];
+                message = [url propertyForKey:@"message"];
+                
+                //figure this out later
+            }
+        /*}else if([[url scheme] isEqualToString:@"ymsgr"]){
+            if([[url host] compare:@"sendim" options:NSCaseInsensitiveSearch] == 0){
+                recipient = [url query];
+                
+                //figure this out later
+            }*/
     }else{
         NSLog(@"invalid URL");
     }
