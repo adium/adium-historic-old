@@ -184,12 +184,10 @@ pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset
 	AIVideoCapture	*videoCapture = [videoCaptureInstances objectForKey:[NSNumber numberWithLong:refCon]];
     CodecFlags 		ignore;
     
-    if([videoCapture gWorld]){
-		//Process the new data
-		[videoCapture _captureFrameReadyInGWorld];
-		
-		//Request another frame
-        DecompressSequenceFrameS([videoCapture _decodeSeq], p, len, 0, &ignore, NULL);
-	}
+	//Process the new data
+	[videoCapture _captureFrameReadyInGWorld];
+	
+	//Request another frame
+	DecompressSequenceFrameS([videoCapture _decodeSeq], p, len, 0, &ignore, NULL);
 }
 
