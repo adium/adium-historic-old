@@ -246,7 +246,7 @@ static Class		NSMutableIndexSetClass = nil;
 			while (selectedItem = [enumerator nextObject]){
 				selectedRow = [self rowForItem:selectedItem];
 				if(selectedRow != NSNotFound){
-					[self selectRow:selectedRow byExtendingSelection:YES];
+					[self selectRow:selectedRow byExtendingSelection:[self allowsMultipleSelection]];
 				}
 			}			
 		}
@@ -297,7 +297,7 @@ static Class		NSMutableIndexSetClass = nil;
 		while (selectedItem = [enumerator nextObject]){
 			selectedRow = [self rowForItem:selectedItem];
 			if(selectedRow != NSNotFound){
-				[self selectRow:selectedRow byExtendingSelection:YES];
+				[self selectRow:selectedRow byExtendingSelection:[self allowsMultipleSelection]];
 			}
 		}			
 	}
