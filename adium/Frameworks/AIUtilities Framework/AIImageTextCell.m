@@ -19,6 +19,7 @@
 
 #import "AIImageTextCell.h"
 
+#define DEFAULT_MAX_IMAGE_WIDTH 24
 
 @implementation AIImageTextCell
 
@@ -29,7 +30,8 @@
 
     font = nil;
     subString = nil;
-    
+    maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
+		
     return(self);
 }
 
@@ -48,6 +50,7 @@
 	AIImageTextCell	*newCell = [[AIImageTextCell alloc] init];
 	[newCell setFont:font];
 	[newCell setSubString:subString];
+	[newCell setMaxImageWidth:maxImageWidth];
 	return(newCell);
 }
 
@@ -74,7 +77,7 @@
 
 - (void)setMaxImageWidth:(float)inWidth
 {
-	
+	maxImageWidth = inWidth;
 }
 
 //Draw
@@ -107,9 +110,9 @@
 			 destSize.width = size.width * proportionChange;
 		 }
 		 
-		 if (destSize.width > 24){
-			 float proportionChange = 24 / destSize.width;
-			 destSize.width = 24;
+		 if (destSize.width > maxImageWidth){
+			 float proportionChange = maxImageWidth / destSize.width;
+			 destSize.width = maxImageWidth;
 			 destSize.height = destSize.height * proportionChange;
 		 }
 		 
@@ -126,7 +129,6 @@
 			flippedIt = YES;
 		}
 		
-//		NSLog(@"%f %f",destPoint.y,destSize.height);
 		[image drawInRect:NSMakeRect(destPoint.x,destPoint.y,destSize.width,destSize.height)
 				 fromRect:NSMakeRect(0,0,size.width,size.height)
 				operation:NSCompositeSourceOver
@@ -134,8 +136,7 @@
 		if (flippedIt){
 			[image setFlipped:NO];
 		}
-       // [image compositeToPoint:destPoint operation:NSCompositeSourceOver];
-    }
+	}
     
     //Draw the cell's text
     if(title != nil){
