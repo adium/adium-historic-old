@@ -204,14 +204,9 @@
 	AIListObject	*selectedObject;
 	AIListGroup		*group;
 	
-	//Empty the menu
-	[popUp_targetGroup removeAllItems];
-	
-	//Rebuild it
-	[self _buildGroupMenu:[popUp_targetGroup menu]
-				 forGroup:[[adium contactController] contactList]
-					level:0];
-	
+	//Rebuild the menu
+	[popUp_targetGroup setMenu:[[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self]];
+
 	//Select the group of the currently selected object on the contact list
 	selectedObject = [[adium contactController] selectedListObject];
 
@@ -221,28 +216,6 @@
 		else
 			group = [selectedObject containingGroup];
 		[popUp_targetGroup selectItemWithRepresentedObject:group];			
-	}
-}
-
-- (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level
-{
-	NSEnumerator	*enumerator = [group objectEnumerator];
-	AIListObject	*object;
-	
-	while(object = [enumerator nextObject]){
-		if([object isKindOfClass:[AIListGroup class]]){
-			NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[object displayName]
-																target:nil
-																action:nil
-														 keyEquivalent:@""] autorelease];
-			[menuItem setRepresentedObject:object];
-			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]){
-				[menuItem setIndentationLevel:level];
-			}
-			[menu addItem:menuItem];
-			
-			[self _buildGroupMenu:menu forGroup:(AIListGroup *)object level:level+1];
-		}
 	}
 }
 

@@ -10,6 +10,7 @@
 
 @interface AIContactAccountsPane (PRIVATE)
 - (void)updateAccountList;
+- (void)updateGroupList;
 @end
 
 @implementation AIContactAccountsPane
@@ -28,17 +29,16 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-//	AIImageTextCell *actionsCell;
-//	
 	//Configure Table view
 	[tableView_accounts setDrawsAlternatingRows:YES];
-//    [tableView_actions setTarget:self];
-//    [tableView_actions setDoubleAction:@selector(editAlert:)];
-//	actionsCell = [[[AIImageTextCell alloc] init] autorelease];
-//    [actionsCell setFont:[NSFont systemFontOfSize:12]];
-//	[actionsCell setIgnoresFocus:YES];
-//	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
+	[tableView_accounts setAcceptsFirstMouse:YES];
 	
+	//Observe contact list changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateGroupList)
+									   name:Contact_ListChanged
+									 object:nil];
+	[self updateGroupList];
 	
 	//Observe account changes
 	[[adium notificationCenter] addObserver:self
@@ -78,6 +78,24 @@
 	[tableView_accounts reloadData];
 }
 
+//Update our list of groups
+- (void)updateGroupList
+{
+	//Get the new groups
+	NSMenu		*groupMenu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
+	NSMenuItem	*unlistedItem = [[[NSMenuItem alloc] initWithTitle:@"(Not Listed)"
+															target:self
+															action:@selector(selectGroup:)
+													 keyEquivalent:@""] autorelease];
+	[groupMenu insertItem:[NSMenuItem separatorItem] atIndex:0];
+	[groupMenu insertItem:unlistedItem atIndex:0];
+			
+	[[[tableView_accounts tableColumnWithIdentifier:@"group"] dataCell] setMenu:groupMenu];
+	
+	//Refresh our table
+	[tableView_accounts reloadData];
+}
+
 
 //Table View Data Sources ----------------------------------------------------------------------------------------------
 #pragma mark TableView Data Sources
@@ -90,22 +108,95 @@
 {
 	NSString		*identifier = [tableColumn identifier];
 	AIAccount		*account = [accounts objectAtIndex:row];
+
+	if([identifier isEqualToString:@"account"]){
+		if([account integerStatusObjectForKey:@"Online"]){
+			return([account displayName]);
+			
+		}else{
+			//Gray the names of offline accounts
+			NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:[account displayName] attributes:attributes];
+			return([string autorelease]);
+		}
+		
+	}
+	
+	return(@"");
+}
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	NSString		*identifier = [tableColumn identifier];
+	AIAccount		*account = [accounts objectAtIndex:row];
 	AIListContact	*existing = [[adium contactController] existingContactWithService:[listObject serviceID]
 																			accountID:[account uniqueObjectID]
 																				  UID:[listObject UID]];
-
-	if([identifier isEqualToString:@"check"]){
-		return([NSNumber numberWithBool:(existing != nil)]);
-		
-	}else if([identifier isEqualToString:@"account"]){
-		return([account displayName]);
-
-	}else{// if([identifier isEqualToString:@"group"]){
-		return([existing containingGroup]);
-
+	BOOL			accountOnline = ([account integerStatusObjectForKey:@"Online"]);
+	
+	
+	//Disable cells for offline accounts
+	[cell setEnabled:accountOnline];
+	
+	//Select active group
+	if([identifier isEqualToString:@"group"]){
+		if(accountOnline){
+			//Get the containing group (taking into account meta contacts)
+			AIListGroup	*group = [existing containingGroup];
+			if([group isKindOfClass:[AIMetaContact class]]) group = [group containingGroup];
+			
+			if(group){
+				[cell selectItemWithRepresentedObject:group];			
+			}else{
+				[cell selectItemAtIndex:0];			
+			}
+		}else{
+			[cell setTitle:@"(Unavailable)"];
+		}
 	}
-
+	
 }
 
+- (void)selectGroup:(id)sender
+{
+	//Empty.  This method is the target of our menus, and needed for menu validation.
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	NSString		*identifier = [tableColumn identifier];
+	AIAccount		*account = [accounts objectAtIndex:row];
+	AIListContact	*existing = [[adium contactController] existingContactWithService:[listObject serviceID]
+																			accountID:[account uniqueObjectID]
+																				  UID:[listObject UID]];
+	
+	if([identifier isEqualToString:@"group"]){
+		NSMenu		*menu = [[tableColumn dataCell] menu];
+		int			menuIndex = [object intValue];
+		
+		if(menuIndex >= 0 && menuIndex < [menu numberOfItems]){
+			AIListGroup	*group = [[menu itemAtIndex:menuIndex] representedObject];
+			
+			if(group){
+				if(existing){ //Move contact
+					[[adium contactController] addContacts:[NSArray arrayWithObject:existing] toGroup:group];
+
+				}else{ //Add contact
+					AIListContact	*contact = [[adium contactController] contactWithService:[listObject serviceID]
+																				   accountID:[account uniqueObjectID]
+																						 UID:[listObject UID]];
+					[[adium contactController] addContacts:[NSArray arrayWithObject:contact] toGroup:group];
+
+				}
+				
+			}else{
+				//User selected not listed, so we'll remove that contact
+				if(existing){
+					[[adium contactController] removeListObjects:[NSArray arrayWithObject:existing]];
+				}
+			}
+		}
+	}
+}
 
 @end

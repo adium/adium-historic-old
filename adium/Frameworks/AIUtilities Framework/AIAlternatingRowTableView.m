@@ -59,10 +59,12 @@
 - (void)_init
 {
     drawsAlternatingRows = NO;
+	acceptFirstMouse = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
 }
 
-// Configuring ----------------------------------------------------------------------
+
+//Configuring ----------------------------------------------------------------------
 - (void)setDrawsAlternatingRows:(BOOL)flag
 {
     drawsAlternatingRows = flag;
@@ -102,6 +104,16 @@
     }
 }
 
+
+// First mouse ----------------------------------------------------------------------
+- (void)setAcceptsFirstMouse:(BOOL)inAcceptFirstMouse
+{
+	acceptFirstMouse = inAcceptFirstMouse;
+}
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
+{
+	return(acceptFirstMouse);
+}
 
 
 // Scrolling ----------------------------------------------------------------------
