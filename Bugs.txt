@@ -22,6 +22,9 @@
 - Status labels are covering selected cells
 - Extended status doesn't update on the list when it changes
 - Extended status sometimes draws outside the cell (and is therefore cropped) instead of increasing cell height
+- Extended status should be able to be forced below the name
+- Group gradients flicker in and out as preferences change
+- Horizontal sizing doesn't work properly
 - Selected cells need to draw with inverted text
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
