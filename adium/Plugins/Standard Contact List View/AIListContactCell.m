@@ -160,7 +160,7 @@ int		textHeight = [attrString heightWithWidth:1e7];
 //Draw the user icon
 - (void)drawUserIconInRect:(NSRect)inRect
 {
-	NSImage	*image = [[listObject displayArrayForKey:KEY_USER_ICON] objectValue];
+	NSImage	*image = [listObject userIcon];
 	if(!image) image = [self genericUserIcon];
 	
 	if(image){

@@ -272,8 +272,7 @@ DeclareString(AppendNextMessage);
 {
 	//We probably already have a userIcon waiting for us, the active display icon; use that
 	//rather than loading one from disk
-	AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
-	NSImage				*userIcon = [userIconDisplayArray objectValue];
+	NSImage				*userIcon = [inObject userIcon];
 	NSString			*webKitUserIconPath;
 	NSImage				*webKitUserIcon;
 	
@@ -1009,7 +1008,7 @@ DeclareString(AppendNextMessage);
 			NSString		*iconPath = nil;
 			
 			if (listObject){
-				iconPath = [listObject statusObjectForKey:@"WebKitUserIconPath"];
+				iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
 				if (!iconPath){
 					iconPath = [listObject statusObjectForKey:@"UserIconPath"];
 				}
