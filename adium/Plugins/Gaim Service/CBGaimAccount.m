@@ -106,31 +106,24 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
+	BOOL changes = NO;
+
 	//Insert the new display name
 	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
-		BOOL changes = NO;
-		
 		//Remove any display name we'd previously placed
-		if ([theContact statusObjectForKey:@"Server Display Name"]){
+		if([theContact statusObjectForKey:@"Server Display Name"]){
 			[theContact setStatusObject:nil
 								 forKey:@"Server Display Name"
 								 notify:NO];
 			
 			[[theContact displayArrayForKey:@"Display Name" create:NO] setObject:nil withOwner:self];
-			
 			changes = YES;
 		}
 		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
-			
 			changes = YES;
-		}
-		
-		if (changes){
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 		
 	}else{
@@ -145,23 +138,25 @@ static id<GaimThread> gaimThread = nil;
 			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
 															 withOwner:self
 														 priorityLevel:Lowest_Priority];
-			
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			changes = YES;
 		}
 	}
 
-	//Notify of display name changes
-	[[adium contactController] listObjectAttributesChanged:theContact
-											  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-	
-#warning There must be a cleaner way to do this alias stuff!  This works for now :)
-	//Request an alias change
-	[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-											  object:theContact
-											userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+	if(changes){
+		//Apply any changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 
-																				 forKey:@"Notify"]];
+		//Notify of display name changes
+		[[adium contactController] listObjectAttributesChanged:theContact
+												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+		
+#warning There must be a cleaner way to do this alias stuff!  This works for now
+		//Request an alias change
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:theContact
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
+	}
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
