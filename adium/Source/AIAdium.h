@@ -397,9 +397,10 @@ typedef enum {
 
     NSMutableDictionary		*listOrderDict;
     NSMutableDictionary		*reverseListOrderDict;
+    NSMutableDictionary         *delayedDict;
     int				largestOrder;
 
-    AIContactListGeneration	*contactListGeneration;
+    AIContactListGeneration	*contactListGeneration;    
 }
 
 //Account available handles changed
