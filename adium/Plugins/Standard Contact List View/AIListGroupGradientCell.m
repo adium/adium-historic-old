@@ -18,6 +18,17 @@
 	return(newCell);
 }
 
+- (void)setShadowColor:(NSColor *)inColor
+{
+	if(inColor != shadowColor){
+		[shadowColor release];
+		shadowColor = [inColor retain];
+	}
+}
+- (NSColor *)shadowColor{
+	return(shadowColor);
+}
+
 //
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor
 {
@@ -53,7 +64,7 @@
 	
 	[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
 	[shadow setShadowBlurRadius:2.0];
-	[shadow setShadowColor:[NSColor grayColor]];
+	[shadow setShadowColor:shadowColor];
 	
 	return([NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName]);
 }

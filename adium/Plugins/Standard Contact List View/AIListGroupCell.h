@@ -9,7 +9,6 @@
 #import "AIListCell.h"
 
 @interface AIListGroupCell : AIListCell {
-
 }
 
 - (int)flippyIndent;

@@ -389,9 +389,6 @@
 		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[layoutDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue])];
 	}
 	
-	//
-	[groupCell setTextColor:[[themeDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
-		
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
 	[[self window] setOpaque:(backgroundAlpha == 1.0)];
 	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
@@ -407,6 +404,11 @@
 						gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 	}
 	
+	if([groupCell respondsToSelector:@selector(setShadowColor:)]){
+		[groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
+	}
+	
+	[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
 }
 
 

@@ -67,6 +67,8 @@
 	<key>Group Background Gradient</key>
 	<string>106,169,255</string>
 	<key>Group Text Color</key>
-	<string>0,0,0</string>    
+	<string>0,0,0</string> 
+	<key>Group Shadow Color</key>
+	<string>128,128,128</string> 
 </dict>
 </plist>

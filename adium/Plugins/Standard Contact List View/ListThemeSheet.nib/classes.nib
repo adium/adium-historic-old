@@ -22,6 +22,7 @@
                 "colorWell_grid" = NSColorWell; 
                 "colorWell_groupBackground" = NSColorWell; 
                 "colorWell_groupBackgroundGradient" = NSColorWell; 
+                "colorWell_groupShadow" = NSColorWell; 
                 "colorWell_groupText" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
