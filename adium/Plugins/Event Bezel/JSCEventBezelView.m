@@ -46,7 +46,7 @@ BOOL pantherOrLater;
                     [NSColor whiteColor], NSForegroundColorAttributeName,
                     textShadow, NSShadowAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-    mainAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
+    mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
         convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
                     [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
@@ -92,6 +92,8 @@ BOOL pantherOrLater;
     NSString        *tempString;
     NSShadow        *tempShadow = [[[NSShadow alloc] init] autorelease];
     NSShadow        *noShadow = [[[NSShadow alloc] init] autorelease];
+    NSSize          buddyNameSize;
+    float           buddyNameFontSize = 24.0;
     
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
@@ -157,17 +159,34 @@ BOOL pantherOrLater;
     if (buddyIconBadge) {
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
-
+    
+    
+    [mainAttributes setObject:[[NSFontManager sharedFontManager] 
+        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+    [mainAttributesMask setObject:[[NSFontManager sharedFontManager] 
+        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+    buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
+    
+    while (buddyNameSize.width > (187.0 - (buddyNameSize.height / 2.0))) {
+        buddyNameFontSize-= 1.0;
+        [mainAttributes setObject:[[NSFontManager sharedFontManager] 
+            convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+        [mainAttributesMask setObject:[[NSFontManager sharedFontManager] 
+            convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+        buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
+    }
+    
+    buddyNameRect.size.height = buddyNameSize.height;
+    
     // Paint the main name label if selected, and the strings
     if (useBuddyNameLabel && buddyIconLabelColor) {
-        NSSize  labelSize = [mainBuddyName sizeWithAttributes: mainAttributes];
         NSRect  labelRect;
-        int     borderWidth = (labelSize.height / 2.0);
-        int     maxWidth = (187.0 - labelSize.height);
-        if (labelSize.width > maxWidth) {
-            labelRect = NSMakeRect(12.0 + borderWidth,buddyNameRect.origin.y,maxWidth,labelSize.height);
+        int     borderWidth = (buddyNameSize.height / 2.0);
+        int     maxWidth = (187.0 - buddyNameSize.height);
+        if (buddyNameSize.width > maxWidth) {
+            labelRect = NSMakeRect(12.0 + borderWidth,buddyNameRect.origin.y-2.0,maxWidth,buddyNameSize.height);
         } else {
-            labelRect = NSMakeRect(106.0 - (labelSize.width / 2.0),buddyNameRect.origin.y,labelSize.width,labelSize.height);
+            labelRect = NSMakeRect(106.0 - (buddyNameSize.width / 2.0),buddyNameRect.origin.y-2.0,buddyNameSize.width,buddyNameSize.height);
         }
         [buddyIconLabelColor set];
         [NSBezierPath fillRect: labelRect];

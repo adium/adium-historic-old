@@ -18,7 +18,7 @@
     NSString *queueField;
     
     NSMutableDictionary    *mainAttributes;
-    NSDictionary    *mainAttributesMask;
+    NSMutableDictionary    *mainAttributesMask;
     NSDictionary    *secondaryAttributes;
     NSDictionary    *secondaryAttributesMask;
     NSDictionary    *mainStatusAttributes;
