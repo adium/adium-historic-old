@@ -23,7 +23,6 @@
 
 
 @interface AIAccountListPreferences (PRIVATE)
-- (void)buildServicePopup;
 - (void)configureViewForAccount:(AIAccount *)inAccount;
 - (void)configureViewForService:(id <AIServiceController>)inService;
 - (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
@@ -59,7 +58,7 @@
 	[self enableDisableControls];
 
 	//
-	[self buildServicePopup];
+	[popupMenu_serviceList setMenu:[[adium accountController] menuOfServicesWithTarget:self]];
 	[self configureAccountList];
 
 	//Observe account list objects so we can enable/disable our controls for connected accounts
@@ -76,24 +75,6 @@
     [view_accountPreferences release]; view_accountPreferences = nil;
     [accountViewController release]; accountViewController = nil;
     [[adium notificationCenter] removeObserver:self];
-}
-
-//Build the popup of available services
-- (void)buildServicePopup
-{
-    NSEnumerator				*enumerator;
-    id <AIServiceController>	service;
-	
-    [popupMenu_serviceList removeAllItems];
-	enumerator = [[[adium accountController] availableServices] objectEnumerator];
-	while((service = [enumerator nextObject])){
-        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description]
-														target:self 
-														action:@selector(selectServiceType:) 
-												 keyEquivalent:@""] autorelease];
-        [item setRepresentedObject:service];
-        [[popupMenu_serviceList menu] addItem:item];
-    }
 }
 
 
