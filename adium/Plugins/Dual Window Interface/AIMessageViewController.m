@@ -25,7 +25,6 @@
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
 #define ENTRY_TEXTVIEW_MIN_HEIGHT	20
 #define ENTRY_TEXTVIEW_MAX_HEIGHT	70
-#define ENTRY_TEXTVIEW_PADDING		3
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
 #define TEXT_ENTRY_PADDING 2
 #define SEND_BUTTON_PADDING 2
@@ -398,7 +397,7 @@
                                      [button_send frame].size.height)];
 
     //Text entry
-    textHeight = [textView_outgoing desiredSize].height + ENTRY_TEXTVIEW_PADDING;
+    textHeight = [textView_outgoing desiredSize].height;
     if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
         textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
     }else if(textHeight < ENTRY_TEXTVIEW_MIN_HEIGHT){

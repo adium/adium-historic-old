@@ -18,7 +18,8 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
-#define MAX_HISTORY	25
+#define MAX_HISTORY			25
+#define ENTRY_TEXTVIEW_PADDING		6
 
 @interface AISendingTextView (PRIVATE)
 - (void)dealloc;
@@ -430,7 +431,7 @@ static NSImage *pushIndicatorImage = nil;
 
         }
 
-        _desiredSizeCached = NSMakeSize([self frame].size.width, textHeight);
+        _desiredSizeCached = NSMakeSize([self frame].size.width, textHeight + ENTRY_TEXTVIEW_PADDING);
     }
 
     return(_desiredSizeCached);
