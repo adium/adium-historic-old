@@ -123,7 +123,7 @@
 		[delegate gotUpdateForFileTransfer:self];
 		
 		if (percentDone >= 1.0){
-			[[adium fileTransferController] transferComplete:fileTransfer];
+			[[adium fileTransferController] transferComplete:self];
 		}
 	}
 }
