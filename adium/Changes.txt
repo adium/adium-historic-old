@@ -4,6 +4,7 @@ Version 0.54
 - Added support for displaying strikethrough, subscript, and superscript text
 - Consecutive messages are no longer combined after a 5 minutes of inactivity in the chat
 - Enabled user-sent colors in the Message View
+- Drastically reworked the web viewer for the SQL Logger.
 - Fixed group dragging
 - Fixed the remaining problems with tooltips
 - Fixed Webkit Message View for Japanese and Chinese users (the fix in 0.53 was incomplete)
