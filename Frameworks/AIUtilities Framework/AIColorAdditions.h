@@ -45,8 +45,17 @@ char intToHex(int digit);
 - (NSColor *)colorWithInvertedLuminance;
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
 
-//this accepts HTML/SVG colour names (e.g. 'blue', 'yellow') and
-//	hex colour specifications (e.g. '#00f', '#ffff00').
+/*this accepts HTML/SVG colour names (e.g. 'blue', 'yellow') and
+ *	hex colour specifications (e.g. '#00f', '#ffff00').
+ *it is the same as [colorWithHTMLString:str defaultColor:nil].
+ */
 + (id)colorWithHTMLString:(NSString *)str;
+/*if the string is not a recognised colour name, or it's an invalid colour
+ *	constant (meaning less than three digits - shorter-than-expected long
+ *	colours such as #ff000 are handled gracefully in the same fashion as
+ *	WebKit, by zero-extending the input), defaultColor is returned.
+ *it is safe for defaultColor to be nil.
+ */
++ (id)colorWithHTMLString:(NSString *)str defaultColor:(NSColor *)defaultColor;
 
 @end

@@ -20,6 +20,7 @@
 #import "AIColorAdditions.h"
 #import "AIStringAdditions.h"
 #include <string.h>
+#include <c.h>
 
 static const float ONE_THIRD = 1.0/3.0;
 static const float ONE_SIXTH = 1.0/6.0;
@@ -132,8 +133,8 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 	//you can call this method on NSMutableDictionary and get a mutable dictionary back.
 	result = [[self alloc] initWithDictionary:mutableDict];
 end:
-		[pool release];
-	
+	[pool release];
+
 	return [result autorelease];
 }
 
@@ -452,32 +453,49 @@ float _v(float m1, float m2, float hue){
 
 + (id)colorWithHTMLString:(NSString *)str
 {
-	NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called: str is %@", str);
+	return [self colorWithHTMLString:str defaultColor:nil];
+}
++ (id)colorWithHTMLString:(NSString *)str defaultColor:(NSColor *)defaultColor
+{
+	NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called: str is \"%@\"", str);
 	if(!str) return nil;
 
+	unsigned strLength = [str length];
+
 	NSString *colorValue = str;
-	if((![str length]) || ([str characterAtIndex:0] != '#')) {
+	if((!strLength) || ([str characterAtIndex:0] != '#')) {
 		//look it up; it's a colour name
 		NSDictionary *colorValues = [self colorNamesDictionary];
 		colorValue = [colorValues objectForKey:str];
 		if(!colorValue) colorValue = [colorValues objectForKey:[str lowercaseString]];
 		if(!colorValue) {
-			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name: str is %@", str);
-			return nil;
+			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name (str is %@); returning %@", str, defaultColor);
+			return defaultColor;
 		}
 	}
 
-	const char	*hexString = [colorValue UTF8String];
+	//we need room for at least 9 characters (#00ff00ff) plus the NUL terminator.
+	//this array is 12 bytes long because I like multiples of four. ;)
+	enum { hexStringArrayLength = 12 };
+	size_t hexStringLength = 0;
+	char hexStringArray[hexStringArrayLength] = { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0, };
+	{
+		NSData *stringData = [str dataUsingEncoding:NSUTF8StringEncoding];
+		hexStringLength = [stringData length];
+		//subtract 1 because we don't want to overwrite that last NUL.
+		memcpy(hexStringArray, [stringData bytes], MIN(hexStringLength, hexStringArrayLength - 1));
+	}
+	const char *hexString = hexStringArray;
+
 	float 	red,green,blue;
 	float	alpha = 1.0;
 
 	//skip # if present.
 	if(*hexString == '#') ++hexString;
-	size_t hexStringLength = strlen(hexString);
 
-	if((hexStringLength != 3) && (hexStringLength != 4) && (hexStringLength != 6) && (hexStringLength != 8)) {
-		NSLog(@"+[%@ colorWithHTMLString:] called with a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08); string: %@ input: %@", NSStringFromClass(self), colorValue, str);
-		return nil;
+	if(hexStringLength < 3) {
+		NSLog(@"+[%@ colorWithHTMLString:] called with a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08) (string: %@ input: %@); returning %@", NSStringFromClass(self), colorValue, str, defaultColor);
+		return defaultColor;
 	}
 
 	//long specification:  #rrggbb[aa]
