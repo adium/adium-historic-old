@@ -83,6 +83,8 @@ static AIContactInfoWindowController *sharedInstance = nil;
     }else{
         //show the "No Contact Selected" view
         [scrollView_contents setDocumentView:view_noContact];
+
+        [[self window] setTitle:@"Contact Info"];
     }
 }
 
