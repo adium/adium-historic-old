@@ -842,6 +842,7 @@
 			files = (
 				11C157DA04A88E04008E0C76,
 				11C157DC04A88E04008E0C76,
+				F5F0FE9E04B12CAC01A80106,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -850,6 +851,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1172BC8A04A8BCB2004F4C8B,
+				F5F0FEA104B1336C01A80106,
+				F5F0FEA304B133AB01A80106,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -859,6 +862,7 @@
 			files = (
 				11C157DB04A88E04008E0C76,
 				11C157DD04A88E04008E0C76,
+				F5F0FE9F04B12CAC01A80106,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -907,8 +911,12 @@
 			children = (
 				11C157D604A88E04008E0C76,
 				11C157D704A88E04008E0C76,
+				F5F0FE9C04B12CAC01A80106,
+				F5F0FE9D04B12CAC01A80106,
 				11C157D804A88E04008E0C76,
 				11C157D904A88E04008E0C76,
+				F5F0FEA004B1336C01A80106,
+				F5F0FEA204B133AB01A80106,
 				1172BC7704A8BCB2004F4C8B,
 			);
 			isa = PBXGroup;
@@ -17553,6 +17561,54 @@
 			name = developer;
 			path = Documentation/developer;
 			refType = 4;
+		};
+		F5F0FE9C04B12CAC01A80106 = {
+			isa = PBXFileReference;
+			name = AIEmoticonPreferences.h;
+			path = Plugins/Emoticons/AIEmoticonPreferences.h;
+			refType = 4;
+		};
+		F5F0FE9D04B12CAC01A80106 = {
+			isa = PBXFileReference;
+			name = AIEmoticonPreferences.m;
+			path = Plugins/Emoticons/AIEmoticonPreferences.m;
+			refType = 4;
+		};
+		F5F0FE9E04B12CAC01A80106 = {
+			fileRef = F5F0FE9C04B12CAC01A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F0FE9F04B12CAC01A80106 = {
+			fileRef = F5F0FE9D04B12CAC01A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F0FEA004B1336C01A80106 = {
+			isa = PBXFileReference;
+			name = EmoticonPrefs.nib;
+			path = Plugins/Emoticons/EmoticonPrefs.nib;
+			refType = 4;
+		};
+		F5F0FEA104B1336C01A80106 = {
+			fileRef = F5F0FEA004B1336C01A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F0FEA204B133AB01A80106 = {
+			isa = PBXFileReference;
+			name = EmoticonDefaults.plist;
+			path = Plugins/Emoticons/EmoticonDefaults.plist;
+			refType = 4;
+		};
+		F5F0FEA304B133AB01A80106 = {
+			fileRef = F5F0FEA204B133AB01A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA;
