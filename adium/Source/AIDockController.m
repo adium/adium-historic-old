@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.64 2004/07/05 22:38:13 evands Exp $
+// $Id: AIDockController.m,v 1.65 2004/07/10 21:41:27 evands Exp $
 
 #import "AIDockController.h"
 
@@ -467,10 +467,11 @@
 			break;
 		}
         case BOUNCE_ONCE: {
-			if (currentBounceInterval > SINGLE_BOUNCE_INTERVAL){
+			if (currentBounceInterval >= SINGLE_BOUNCE_INTERVAL){
 				currentBounceInterval = SINGLE_BOUNCE_INTERVAL;
-				[self _singleBounce]; break;
+				[self _singleBounce];
 			}
+			break;
 		}
         case BOUNCE_REPEAT: [self _continuousBounce]; break;
         case BOUNCE_DELAY5: [self _bounceWithInterval:5.0]; break;
