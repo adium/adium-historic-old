@@ -18,6 +18,7 @@
 
 #define ICON_SIZE 32.0
 #define QUEUED_MESSAGE_OPACITY 0.5
+#define NEW_BUBBLE_TIME 600
 
 @interface AISMViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
@@ -398,6 +399,10 @@
        (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source])){
         contentIsSimilar = YES;
     }
+	
+	//Always start a new bubble if enough time has elapsed since the last content
+	if(contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentMessage*)previousContent date]] >= NEW_BUBBLE_TIME)
+		contentIsSimilar = NO;
     
     //If we are using inline prefixes, and this message is different from the previous one, insert a prefix row 
     if(inlinePrefixes && !contentIsSimilar){
