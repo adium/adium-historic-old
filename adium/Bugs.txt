@@ -2,6 +2,9 @@
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
 
+- MSN Emoticon key equivalents
+- Push/Pop indicator spacing
+
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
@@ -65,9 +68,8 @@
 	not enough to make the scrollbar visible, then type a two line message into the
 	entry field.  The message view will incorrectly render extra bottom margin.
 
-- MSN Emoticon key equivalents
-	The key equivelants for MSN's blush emoticon do not include :$.  Other emoticons
-	may be incorrect.
+- MSN Emoticons
+	Not all MSN emoticons are supported by our default pack [see its plist]
 
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
