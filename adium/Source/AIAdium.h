@@ -255,6 +255,8 @@ typedef enum {
     NSMutableArray		*availableServiceArray;
     NSString			*lastAccountIDToSendContent;
     NSMutableDictionary		*accountStatusDict;
+
+    NSMutableArray		*sleepingOnlineAccounts;
 }
 
 //Access to the account list
