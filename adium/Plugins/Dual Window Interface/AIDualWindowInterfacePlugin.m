@@ -766,10 +766,20 @@
     //Create a new window if nil was passed
     if(!newMessageWindow) {
         newMessageWindow = [self _createMessageWindow];
+     }   
+    
+    //Transfer container from one one window to another
+    oldMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)tabViewItem];
+    if(oldMessageWindow != newMessageWindow){
+        [tabViewItem retain];
+        [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
+        
+        //Set the new preference for window location _after_ closing the tab
+        //so we don't get overriden if it was the last tab.
         if ( !(screenPoint.x == 0 && screenPoint.y == 0) ) {
             NSString	*savedFrame;
             NSRect 	newFrame;
-
+            
             //We want to use the saved frame's width and height (if one has been saved)
             savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
                                                                   group:PREF_GROUP_WINDOW_POSITIONS 
@@ -787,14 +797,8 @@
                                                  forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                                   group:PREF_GROUP_WINDOW_POSITIONS
                                                  object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
-        }
-    }   
-    
-    //Transfer container from one one window to another
-    oldMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)tabViewItem];
-    if(oldMessageWindow != newMessageWindow){
-        [tabViewItem retain];
-        [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
+        }        
+        
         [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem atIndex:index];
         [tabViewItem release];
     }
