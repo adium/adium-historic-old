@@ -28,6 +28,7 @@
 
 //Contact menu 
 - (AIListObject *)listObject;
+- (NSArray *)arrayOfListObjects;
 
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
 

@@ -131,7 +131,10 @@
     }
 }
 
-
+- (NSArray *)arrayOfListObjects
+{
+	return([self arrayOfSelectedItems]);
+}
 
 #warning still need this?
 //Our default drag image will be cropped incorrectly, so we need a custom one here
