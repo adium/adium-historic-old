@@ -11,6 +11,39 @@
 			settings = {
 			};
 		};
+		078C5CD0079EFF87004C75A4 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILocalizationButtonCell.h;
+			path = "Frameworks/Adium Framework/AILocalizationButtonCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		078C5CD1079EFF87004C75A4 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILocalizationButtonCell.m;
+			path = "Frameworks/Adium Framework/AILocalizationButtonCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		078C5CD2079EFF88004C75A4 = {
+			fileRef = 078C5CD0079EFF87004C75A4;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		078C5CD3079EFF88004C75A4 = {
+			fileRef = 078C5CD1079EFF87004C75A4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07CE05590661D7E600C50929 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -7235,6 +7268,7 @@
 				34C69E6F07794B9200EB423C,
 				34C6A4CB077AB3AA00EB423C,
 				4BE8AF6F0796EC1300B6E49B,
+				078C5CD2079EFF88004C75A4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7417,6 +7451,7 @@
 				34C69E7007794B9200EB423C,
 				34C6A4CC077AB3AD00EB423C,
 				4BE8AF700796EC1300B6E49B,
+				078C5CD3079EFF88004C75A4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8432,6 +8467,9 @@
 			fileRef = 34C69E6D07794B9200EB423C;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34C69E7007794B9200EB423C = {
@@ -8477,6 +8515,9 @@
 			fileRef = 34C6A4C9077AB3A900EB423C;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34C6A4CC077AB3AD00EB423C = {
@@ -8646,6 +8687,8 @@
 			children = (
 				34D189B1076131850075A380,
 				34D188DB0760F0F50075A380,
+				078C5CD0079EFF87004C75A4,
+				078C5CD1079EFF87004C75A4,
 				340833EA075C3A7900703011,
 				340833EB075C3A7900703011,
 				34D1897D076114C00075A380,
@@ -17143,6 +17186,9 @@
 			fileRef = 4BE8AF6D0796EC1200B6E49B;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		4BE8AF700796EC1300B6E49B = {
