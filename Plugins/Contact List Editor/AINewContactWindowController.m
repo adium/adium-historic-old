@@ -150,7 +150,7 @@
 //Add the contact
 - (IBAction)addContact:(id)sender
 {
-	NSString		*UID = [textField_contactName stringValue];
+	NSString		*UID = [service filterUID:[textField_contactName stringValue] removeIgnoredCharacters:YES];
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIListGroup		*group ;
 	AIAccount		*account;
