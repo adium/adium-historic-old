@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.54 2004/05/24 06:04:03 evands Exp $
+// $Id: AIDockController.m,v 1.55 2004/06/04 04:27:16 evands Exp $
 
 #import "AIDockController.h"
 
@@ -30,6 +30,7 @@
 - (void)_bounceWithInterval:(double)delay;
 - (NSString *)_pathOfIconPackWithName:(NSString *)name;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (AIIconState *)iconStateFromStateDict:(NSDictionary *)stateDict folderPath:(NSString *)folderPath;
 @end
 
 @implementation AIDockController
@@ -151,84 +152,112 @@
 //Load an icon pack
 - (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath
 {
-    NSMutableDictionary	*iconStateDict = [[[NSMutableDictionary alloc] init] autorelease];
-    AIIconState		*iconState;
-    NSDictionary	*iconPackDict;
-    NSEnumerator	*stateEnumerator;
-    NSString		*stateNameKey;
+    NSMutableDictionary	*iconStateDict;
+    NSDictionary		*iconPackDict;
+    NSEnumerator		*stateNameKeyEnumerator;
+    NSString			*stateNameKey;
 
     //Load the icon pack
     iconPackDict = [NSDictionary dictionaryWithContentsOfFile:[folderPath stringByAppendingPathComponent:@"IconPack.plist"]];
 
-    //Process each state in the icon pack
-    stateEnumerator = [[[iconPackDict objectForKey:@"State"] allKeys] objectEnumerator];
-    while((stateNameKey = [stateEnumerator nextObject])){
-        NSDictionary	*stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
+    //Process each state in the icon pack, adding it to the iconStateDict
+	iconStateDict = [NSMutableDictionary dictionary];
+	
+    stateNameKeyEnumerator = [[[iconPackDict objectForKey:@"State"] allKeys] objectEnumerator];
+    while((stateNameKey = [stateNameKeyEnumerator nextObject])){
+		NSDictionary	*stateDict;
+		
+		stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
+		[iconStateDict setObject:[self iconStateFromStateDict:stateDict folderPath:folderPath] forKey:stateNameKey];
+	}
+	
+	return([NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
+}
 
-        if([[stateDict objectForKey:@"Animated"] intValue]){ //Animated State
-            NSMutableDictionary	*tempIconCache = [NSMutableDictionary dictionary];
-            NSEnumerator	*imageNameEnumerator;
-            NSString		*imageName;
-            NSMutableArray	*imageArray;
-            BOOL		overlay, looping;
-            float		delay;
+- (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath
+{
+	NSDictionary	*iconPackDict;
+	NSDictionary	*stateDict;
+	
+	//Load the icon pack
+    iconPackDict = [NSDictionary dictionaryWithContentsOfFile:[folderPath stringByAppendingPathComponent:@"IconPack.plist"]];
+	
+	//Load the preview state
+	stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:@"Preview"];
+	
+	return ([self iconStateFromStateDict:stateDict folderPath:folderPath]);
+}
 
-            //Get the state information
-            overlay = [[stateDict objectForKey:@"Overlay"] intValue];
-            looping = [[stateDict objectForKey:@"Looping"] intValue];
-            delay = [[stateDict objectForKey:@"Delay"] floatValue];
-            imageNameEnumerator = [[stateDict objectForKey:@"Images"] objectEnumerator];
-            
-            //Load the images
-            imageArray = [[[NSMutableArray alloc] init] autorelease];
-            while((imageName = [imageNameEnumerator nextObject])){
-                NSString	*imagePath;
-                NSImage		*image;
+- (AIIconState *)iconStateFromStateDict:(NSDictionary *)stateDict folderPath:(NSString *)folderPath
+{
+	AIIconState		*iconState = nil;
+	
+	if([[stateDict objectForKey:@"Animated"] intValue]){ //Animated State
+		NSMutableDictionary	*tempIconCache = [NSMutableDictionary dictionary];
+		NSArray				*imageNameArray;
+		NSEnumerator		*imageNameEnumerator;
+		NSString			*imageName;
+		NSMutableArray		*imageArray;
+		BOOL				overlay, looping;
+		float				delay;
+		
+		//Get the state information
+		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
+		looping = [[stateDict objectForKey:@"Looping"] intValue];
+		delay = [[stateDict objectForKey:@"Delay"] floatValue];
+		imageNameArray = [stateDict objectForKey:@"Images"];
+		imageNameEnumerator = [imageNameArray objectEnumerator];
+		
+		//Load the images
+		imageArray = [NSMutableArray arrayWithCapacity:[imageNameArray count]];
+		while((imageName = [imageNameEnumerator nextObject])){
+			NSString	*imagePath;
+			NSImage		*image;
+			
+			imagePath = [folderPath stringByAppendingPathComponent:imageName];
+			
+			image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
+			if(!image){
+				image = [[[NSImage alloc] initByReferencingFile:imagePath] autorelease];
+				if(image) [tempIconCache setObject:image forKey:imagePath];
+			}
+			
+			if(image && [image isValid]){
+				[imageArray addObject:image];
+			}else{
+				NSLog(@"Failed to load image %@",imagePath);
+			}
+		}
+		
+		//Create the state
+		if(delay != 0 && [imageArray count] != 0){
+			iconState = [[AIIconState alloc] initWithImages:imageArray
+													  delay:delay
+													looping:looping
+													overlay:overlay];
+		}else{
+			NSLog(@"Invalid animated icon state (%@)",imageName);
+		}
+		
+	}else{ //Static State
+		NSString	*imagePath;
+		NSImage	*image;
+		BOOL	overlay;
+		
+		//Get the state information
+		imagePath = [stateDict objectForKey:@"Image"];
+		image = [[[NSImage alloc] initByReferencingFile:[folderPath stringByAppendingPathComponent:imagePath]] autorelease];
+		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
+		
+		//Create the state
+		if(image){
+			iconState = [[AIIconState alloc] initWithImage:image overlay:overlay];
+		}else{
+			NSLog(@"Invalid static icon state (%@)",imagePath);
+		}
+	}
 
-                imagePath = [folderPath stringByAppendingPathComponent:imageName];
-
-                image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
-                if(!image){
-                    image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
-                    if(image) [tempIconCache setObject:image forKey:imagePath];
-                }
-
-                if(image && [image isValid]){
-                    [imageArray addObject:image];
-                }else{
-                    NSLog(@"Failed to load image %@",imagePath);
-                }
-            }
-
-            //Create the state
-            if(delay != 0 && [imageArray count] != 0){
-                iconState = [[[AIIconState alloc] initWithImages:imageArray delay:delay looping:looping overlay:overlay] autorelease];
-                [iconStateDict setObject:iconState forKey:stateNameKey];
-            }else{
-                NSLog(@"Invalid animated icon state (%@)",stateNameKey);
-            }
-            
-        }else{ //Static State
-            NSString	*imagePath;
-            NSImage	*image;
-            BOOL	overlay;
-
-            //Get the state information
-            imagePath = [stateDict objectForKey:@"Image"];
-            image = [[[NSImage alloc] initWithContentsOfFile:[folderPath stringByAppendingPathComponent:imagePath]] autorelease];
-            overlay = [[stateDict objectForKey:@"Overlay"] intValue];
-            
-            //Create the state
-            if(image){
-                iconState = [[[AIIconState alloc] initWithImage:image overlay:overlay] autorelease];
-                [iconStateDict setObject:iconState forKey:stateNameKey];
-            }else{
-                NSLog(@"Invalid static icon state (%@)",stateNameKey);
-            }
-        }
-    }
-
-    return([NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
+	return ([iconState autorelease]);
 }
 
 //Set an icon state from our currently loaded icon pack

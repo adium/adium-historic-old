@@ -58,6 +58,7 @@ typedef enum {
 
 //Special access to icon pack loading
 - (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath;
+- (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath;
 
 //Bouncing & behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;
