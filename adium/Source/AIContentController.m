@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.103 2004/08/11 23:22:47 evands Exp $
+// $Id: AIContentController.m,v 1.104 2004/08/12 14:18:27 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -399,8 +399,6 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 //Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
-    AIChat		*chat = [inObject chat];    	
-
     //Run the object through our outgoing content filters
     if([inObject filterContent]){
 		[self filterAttributedString:[inObject message]
