@@ -27,6 +27,7 @@
 - (id)initForAccount:(AIAccount *)inAccount
 {
     [super init];
+	NSLog(@"[%@ initForAccount]",self);
 
 	name = nil;
     account = [inAccount retain];
@@ -42,6 +43,7 @@
 
 - (void)dealloc
 {
+	NSLog(@"[%@ dealloc]",self);
     [account release];
     [contentObjectArray release];
     [participatingListObjects release];
