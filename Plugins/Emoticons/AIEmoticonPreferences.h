@@ -18,7 +18,9 @@
 @interface AIEmoticonPreferences : AIPreferencePane
 {
     IBOutlet    AIAlternatingRowTableView   *table_emoticonPacks;
-    IBOutlet    AIAlternatingRowTableView   *table_emoticons;
+    NSMutableArray							*emoticonPackPreviewControllers;
+	
+	IBOutlet    AIAlternatingRowTableView   *table_emoticons;
     
     IBOutlet    NSTextField                 *textField_packTitle;
         
@@ -30,6 +32,7 @@
 	BOOL									viewIsOpen;
 }
 
--(void)emoticonXtrasDidChange;
+- (void)toggledPackController:(id)packController;
+- (void)emoticonXtrasDidChange;
 
 @end
