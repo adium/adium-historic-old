@@ -199,15 +199,25 @@
 //Apply an alias to an object (Does not save the alias!)
 - (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify
 {
-	NSArray			*modifiedAttributes;
-    NSString		*displayName = nil;
-    NSString		*longDisplayName = nil;
-    NSString		*serverDisplayName = nil;
-    
+	NSArray				*modifiedAttributes;
+    NSString			*displayName = nil;
+    NSString			*longDisplayName = nil;
+    NSString			*serverDisplayName = nil;
+
     //Setup the display names
     if(inAlias != nil && [inAlias length] != 0) {
+		// Use the passed alias as the display name
         displayName = inAlias;
-    }
+    } else {
+		// For purposes of constructing the long display name, we want to use any display name set elsewhere in Adium
+		// so long as that display name doesn't come from the alias plugin itself (which would happen if we were passed nil
+		// in order to clear out an alias).
+		AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
+		
+		displayName = [displayNameArray objectValue];
+		if (displayName == [displayNameArray objectWithOwner:self])
+			displayName = nil;
+	}
     
     //Long Display Name
     switch(displayFormat)
@@ -245,7 +255,8 @@
 	
     //Apply the values
     [[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
-    [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self priorityLevel:High_Priority];
+	if (inAlias)
+		[[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self priorityLevel:High_Priority];
     [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
 	
 	//notify
