@@ -8,9 +8,15 @@
 #import "GBiTunerPlugin.h"
 #import "GBiTunerPreferences.h"
 
+#define ITUNES_IDENTIFIER		@"com.apple.iTunes"
+#define APP_BUNDLE_IDENTIFIER	@"NSApplicationBundleIdentifier"
+
+
+
 @interface GBiTunerPlugin (PRIVATE)
 - (NSString *)hashLookup:(NSString *)pattern;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (BOOL)iTunesIsOpen;
 @end
 
 @implementation GBiTunerPlugin
@@ -70,19 +76,19 @@
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
     NSMutableAttributedString   *mesg = nil;
-    if (inAttributedString)
-    {
+
+    if(inAttributedString){
         NSString                    *originalAttributedString = [inAttributedString string];
-        
-	NSEnumerator                *enumerator = [scriptDict keyEnumerator];
+		NSEnumerator                *enumerator = [scriptDict keyEnumerator];
         NSString                    *pattern;	
         
         //This loop gets run for every key in the dictionary
-	while (pattern = [enumerator nextObject])
-	{
+		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
-            if ([originalAttributedString rangeOfString:pattern].location != NSNotFound){
-                if (!mesg){
+            if([originalAttributedString rangeOfString:pattern].location != NSNotFound){
+				if(![self iTunesIsOpen]) break; //Abort if iTunes isn't running
+				
+                if(!mesg){
                     mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
                 }
                 
@@ -92,9 +98,23 @@
                                            range:NSMakeRange(0,[mesg length])];
             }
         }
-        
     }
+	
     return (mesg ? mesg : inAttributedString);
+}
+
+//Check if iTunes is open
+- (BOOL)iTunesIsOpen
+{
+	NSEnumerator	*enumerator;
+	NSDictionary	*appDict;
+
+	enumerator = [[[NSWorkspace sharedWorkspace] launchedApplications] objectEnumerator];
+	while(appDict = [enumerator nextObject]){
+		if([(NSString *)[appDict objectForKey:APP_BUNDLE_IDENTIFIER] compare:ITUNES_IDENTIFIER] == 0) return(YES);
+	}
+
+	return(NO);
 }
 
 - (NSString*)hashLookup:(NSString*)pattern
