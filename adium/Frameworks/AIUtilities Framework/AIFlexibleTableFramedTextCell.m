@@ -117,7 +117,7 @@
     inOffset.x += FRAME_PAD_LEFT;
     inOffset.y += FRAME_PAD_BOTTOM;
 
-    return([super selectContentFrom:source to:dest offset:inOffset mode:selectMode]);
+    [super selectContentFrom:source to:dest offset:inOffset mode:selectMode];
 }
     
 //Draw our contents

@@ -621,7 +621,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F2E605314B6500C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Idle Away Manual Sort.AdiumPlugin";
@@ -744,7 +744,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F2F605314B6E00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Idle Away Sort.AdiumPlugin";
@@ -881,7 +881,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F30805314B7700C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Idle Message.AdiumPlugin";
@@ -1006,7 +1006,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F31805314B8100C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Idle Sort.AdiumPlugin";
@@ -1173,7 +1173,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F32E05314B8D00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Idle Time.AdiumPlugin";
@@ -1312,7 +1312,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F34005314B9700C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = IdleTimeDisplay.AdiumPlugin;
@@ -1472,7 +1472,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F35505314BA200C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = Logger.AdiumPlugin;
@@ -1595,7 +1595,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F36505314BAB00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Manual Sort.AdiumPlugin";
@@ -1704,7 +1704,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F37305314BB500C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Message Alias Support.AdiumPlugin";
@@ -1815,7 +1815,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F38105314BBF00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Offline Contact Hiding.AdiumPlugin";
@@ -1952,7 +1952,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F39305314BCA00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Sending Key Preferences.AdiumPlugin";
@@ -2089,7 +2089,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3A505314BD400C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Spell Checking.AdiumPlugin";
@@ -2203,7 +2203,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -2312,7 +2312,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3C105314BEB00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Changed Messages.AdiumPlugin";
@@ -2472,7 +2472,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3D605314BF700C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Circles.AdiumPlugin";
@@ -2618,7 +2618,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3E905314C0600C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Icons.AdiumPlugin";
@@ -2799,7 +2799,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F40105314C1300C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Standard Contact List View.AdiumPlugin";
@@ -2974,7 +2974,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F41805314C2700C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Standard Message View.AdiumPlugin";
@@ -3113,7 +3113,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F42A05314C3200C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Standard Toolbar Items.AdiumPlugin";
@@ -3250,7 +3250,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F43C05314C3F00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Text Forcing.AdiumPlugin";
@@ -3382,7 +3382,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F44D05314C4C00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Text Toolbar Items.AdiumPlugin";
@@ -3491,7 +3491,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F45B05314C5A00C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Typing Notification.AdiumPlugin";
@@ -3621,7 +3621,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F47005314C6900C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Volume Control.AdiumPlugin";
@@ -9451,7 +9451,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BD9EDF0531476A000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Message View Selection.AdiumPlugin";
@@ -9575,7 +9575,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BD9EF10531476E000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Stress Test.AdiumPlugin";
@@ -12686,7 +12686,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA0B5053147E8000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Contact Status Tab Coloring.AdiumPlugin";
@@ -13317,7 +13317,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA1110531480F000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Disconnect All.AdiumPlugin";
@@ -14302,7 +14302,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA19F05314849000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = Emoticons.AdiumPlugin;
@@ -14434,7 +14434,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA1B205314852000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Error Message Handler.AdiumPlugin";
@@ -14573,7 +14573,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA1C60531485C000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Event Sounds.AdiumPlugin";
@@ -14696,7 +14696,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA1D805314867000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Grouped Away By Idle Sort.AdiumPlugin";
@@ -14820,7 +14820,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA1EA05314875000AB133 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Grouped Idle Away Sort.AdiumPlugin";
