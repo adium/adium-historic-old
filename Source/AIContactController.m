@@ -624,7 +624,11 @@ DeclareString(UID);
 		if ([[containedContact objectForKey:KEY_IS_METACONTACT] boolValue]){
 			//This contained contact is a meta contact, so it'll just have an objectID
 			listContact = [self metaContactWithObjectID:[containedContact objectForKey:KEY_OBJECTID]];
-			[self _performAddListObject:listContact toMetaContact:metaContact];
+			
+			//This shouldn't be necessary, but some old preference files may be corrupted
+			if (listContact != metaContact){
+				[self _performAddListObject:listContact toMetaContact:metaContact];
+			}
 
 	 	}else{
 			//This contained contact is a regular AIListContact uniqueObjectID.  Get all matching contacts on all accounts.

@@ -381,7 +381,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	//Search for an available contact
 	for (index = 0; index < count; index++){
 		AIListObject	*listObject = [inContacts objectAtIndex:index];
-		if ([listObject isKindOfClass:[AIMetaContact class]]){
+		if (([listObject isKindOfClass:[AIMetaContact class]]) && (listObject != self)){
 			//Parse the contained metacontact recrusively
 			[self _addListContacts:[(AIMetaContact *)listObject containedObjects]
 						   toArray:listContacts
