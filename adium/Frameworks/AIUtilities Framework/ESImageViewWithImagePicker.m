@@ -183,7 +183,7 @@
 		}
 		[pickerController selectionChanged];
 		[[pickerController window] makeKeyAndOrderFront: nil];
-		NSLog(@"%@",[pickerController window]);
+//		NSLog(@"%@",[pickerController window]);
 	}
 }
 
@@ -204,7 +204,10 @@
 		
 		//Add the image to the list of recent images
 		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture"); //HACK so we don't crash on launch in 10.2
-		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
+		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image/* 
+																		   crop:NSMakeRect(0,0,[image size].width,[image size].height)
+																	  smallIcon:image*/] autorelease];
+		//NSLog(@"%i %i %i %i",[recentPicture crop].origin.x,[recentPicture crop].origin.y,[recentPicture crop].size.width,[recentPicture crop].size.height);
 		[recentPicture setCurrent];
 		[ipRecentPictureClass _saveChanges]; //Saves to ~/Library/Images/iChat Recent Pictures... but whatever, it works.
 
