@@ -51,7 +51,14 @@
 	
 	[checkBox_treatDisplayNamesAsStatus setState:[[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue]];
 	[checkBox_conversationClosed setState:[[prefDict objectForKey:KEY_MSN_CONVERSATION_CLOSED] boolValue]];
-	[checkBox_conversationTimedOut setState:[[prefDict objectForKey:KEY_MSN_CONVERSATION_TIMED_OUT] boolValue]];
+//	[checkBox_conversationTimedOut setState:[[prefDict objectForKey:KEY_MSN_CONVERSATION_TIMED_OUT] boolValue]];
+	
+	[checkBox_treatDisplayNamesAsStatus setLocalizedString:AILocalizedString(@"Show display names as status messages",nil)];
+	[checkBox_conversationClosed setLocalizedString:AILocalizedString(@"Display conversation closed notices",nil)];
+	
+	[label_displayNames setLocalizedString:AILocalizedString(@"Display names (friendly names)",nil)];
+	[label_displayNamesWarning setLocalizedString:AILocalizedString(@"(Takes effect the next time Adium launches)","Indicates a preference will not take effect until the next time Adium is loaded")];
+	[label_conversationNotices setLocalizedString:AILocalizedString(@"Conversation notices",nil)];
 }
 
 - (IBAction)changePreference:(id)sender

@@ -20,7 +20,10 @@
 	IBOutlet		NSButton		*checkBox_treatDisplayNamesAsStatus;
 	IBOutlet		NSButton		*checkBox_conversationClosed;
 	IBOutlet		NSButton		*checkBox_conversationTimedOut;
-	
+
+	IBOutlet		NSTextField		*label_displayNames;
+	IBOutlet		NSTextField		*label_displayNamesWarning;
+	IBOutlet		NSTextField		*label_conversationNotices;
 }
 
 @end
