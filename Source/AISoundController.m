@@ -91,6 +91,8 @@
 
 - (void)dealloc
 {
+	[super dealloc];
+	
 	[voiceArray release]; voiceArray = nil;
 	[speechArray release]; speechArray = nil;
 	[soundCacheDict release]; soundCacheDict = nil;
