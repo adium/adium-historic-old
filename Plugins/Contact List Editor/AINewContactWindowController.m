@@ -194,7 +194,8 @@
 	[[popUp_contactType menu] update];
 	
 	//If there is no selection or the current selection is now disabled, select the first valid service type
-	if (!(selectedItem = (NSMenuItem *)[popUp_contactType selectedItem]) ||
+	if (!service ||
+		!(selectedItem = (NSMenuItem *)[popUp_contactType selectedItem]) ||
 		(![selectedItem isEnabled])){
 		[self selectFirstValidServiceType];
 	}else{
