@@ -20,6 +20,7 @@
 #import "AIEditorCollection.h"
 #import "AIContactListEditorPlugin.h"
 #import "AIEditorImportCollection.h"
+#import "AIListEditorCell.h"
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
@@ -93,7 +94,20 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-//    NSString				*savedFrame;
+    //Make the browser user our custom browser cell.
+    [browser_contactList setCellClass:[AIListEditorCell class]];
+	
+    //Tell the browser to send us messages when it is clicked.
+    [browser_contactList setTarget: self];
+    [browser_contactList setAction: @selector(browserSingleClick:)];
+    [browser_contactList setDoubleAction: @selector(browserDoubleClick:)];
+	
+	
+	
+	
+	
+	
+	//    NSString				*savedFrame;
 //
 //    //Restore the window position
 //    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME];
@@ -1195,46 +1209,47 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 	
 	
 	
+	
+- (void)browserSingleClick:(NSBrowser *)sender
+{
+	NSLog(@"browserSingleClick");
+}
+
+- (void)browserDoubleClick:(NSBrowser *)sender
+{
+	NSLog(@"browserDoubleClick");
+}
+	
 // Browser delegate ----------------------------------------------------------------------------------------------------
+- (AIListGroup *)browser:(NSBrowser *)browser groupForColumn:(int)column
+{
+	AIListGroup *group = [[adium contactController] contactList];
+	int 		i;
+	
+	for(i = 0; i < column; i++)
+	{
+		int index = [browser selectedRowInColumn:i];
+		group = [group objectAtIndex:index];
+		
+		if(![group isKindOfClass:[AIListGroup class]]) return(nil);
+	}
+
+	return(group);
+}
+
 - (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column
 {
-	return(3);
+	return([[self browser:sender groupForColumn:column] count]);
 }
 
 - (void)browser:(NSBrowser *)sender willDisplayCell:(id)cell atRow:(int)row column:(int)column
 {
+	AIListGroup		*group = [self browser:sender groupForColumn:column];
+	AIListObject	*object = [group objectAtIndex:row];
 	
+	[cell setStringValue:[object displayName]];
+	[cell setLeaf:![object isKindOfClass:[AIListGroup class]]];
 }
-	
-- (NSString *)browser:(NSBrowser *)sender titleOfColumn:(int)column
-{
-	return(@"title");
-}
-
-- (BOOL)browser:(NSBrowser *)sender selectCellWithString:(NSString *)title inColumn:(int)column
-{
-	return(YES);
-}
-
-- (BOOL)browser:(NSBrowser *)sender selectRow:(int)row inColumn:(int)column
-{
-	return(YES);
-}
-
-- (BOOL)browser:(NSBrowser *)sender isColumnValid:(int)column
-{
-	return(YES);
-}
-
-- (void)browserWillScroll:(NSBrowser *)sender
-{
-	
-}
-
-- (void)browserDidScroll:(NSBrowser *)sender
-{
-	
-}	
 	
 @end
 
