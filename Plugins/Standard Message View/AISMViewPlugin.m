@@ -29,7 +29,7 @@
 - (void)installPlugin
 {
 	//This plugin should ONLY be used in 10.2 or as a fallback if webkit isn't available for some reason.
-	if(![NSApp isOnPantherOrBetter] || ![NSApp isWebKitAvailable]){
+//	if(![NSApp isOnPantherOrBetter] || ![NSApp isWebKitAvailable]){
 		//Register ourself as a message list view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
 		
@@ -44,7 +44,7 @@
 												 forKey:KEY_SMV_TIME_STAMP_FORMAT
 												  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 		}
-	}
+//	}
 }
 
 //Return a message view controller

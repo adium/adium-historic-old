@@ -155,7 +155,8 @@
             int	rowHeight = [row height];
             
             cellPoint.y -= rowHeight;
-            if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || (foundVisible && [row spansRows])){ //If visible
+            if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || 
+			   (foundVisible && [row spansRows])){ //If visible
                 [row drawAtPoint:cellPoint visibleRect:documentVisibleRect inView:self];
                 if(!foundVisible) foundVisible = YES;
             }else{
@@ -458,6 +459,8 @@
 - (void)viewDidEndLiveResize
 {
     [self _resizeContents:YES]; //Resize our cells, our view vertically, and redisplay
+	
+	[super viewDidEndLiveResize];
 }
 
 
@@ -476,7 +479,7 @@
     
     //Resize the row above (if necessary) to update any spanning
     if([inRow isSpannedInto]){
-	[self resizeRow:[rowArray objectAtIndex:(index+1)]];
+		[self resizeRow:[rowArray objectAtIndex:(index+1)]];
     }
     
     //Resize the new row
@@ -767,7 +770,8 @@
     if(!NSEqualSizes([self frame].size, size)){
         [self setFrameSize:size];
     }
-    [self setNeedsDisplay:YES];
+
+	[self setNeedsDisplay:YES];
 }
 
 //
