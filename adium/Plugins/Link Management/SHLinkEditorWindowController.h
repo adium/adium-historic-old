@@ -24,20 +24,18 @@
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
-//                NSRange                      selectionRange;
-                NSResponder                 *editableView;
-
-                NSMutableArray				*favoritesDict;
+	NSTextView					*textView;
+	id							target;
+	NSMutableArray				*favoritesDict;
 }
 
-+ (void)showLinkEditorForResponder:(NSResponder *)responder onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites;
++ (void)showLinkEditorForTextView:(NSTextView *)inTextView onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites notifyingTarget:(id)inTarget;
 
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 
 - (IBAction)acceptURL:(id)sender;
 - (IBAction)selectFavoriteURL:(id)sender;
-- (IBAction)addURLToFavorites:(id)sender;
 
 - (void)favoritesChanged:(NSNotification *)notification;
 @end

@@ -47,7 +47,7 @@
 #pragma mark Favorites Editing
 - (IBAction)addLink:(id)sender
 {
-	[SHLinkEditorWindowController showLinkEditorForResponder:view onWindow:[view window] showFavorites:NO];
+	[SHLinkEditorWindowController showLinkEditorForTextView:nil onWindow:[view window] showFavorites:NO notifyingTarget:self];
 }
 
 - (IBAction)removeLink:(id)sender
@@ -59,6 +59,18 @@
 
         [favoritesList buildLinksList];
     }
+}
+
+//Add a new link created by the link editor
+- (void)linkEditorLinkDidChange:(NSDictionary *)linkDictionary
+{
+	NSMutableArray *favoritesDict = [[[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
+	if(!favoritesDict) favoritesDict = [[NSMutableArray alloc] init];
+	
+	[favoritesDict addObject:linkDictionary];
+	[[adium preferenceController] setPreference:favoritesDict forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
+	
+	[favoritesDict release];
 }
 
 @end

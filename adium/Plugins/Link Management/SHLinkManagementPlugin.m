@@ -70,9 +70,10 @@
     NSResponder *responder = [keyWindow firstResponder];
 	
     if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
-		[SHLinkEditorWindowController showLinkEditorForResponder:responder
-														onWindow:keyWindow
-												   showFavorites:YES];
+		[SHLinkEditorWindowController showLinkEditorForTextView:(NSTextView *)responder
+													   onWindow:keyWindow
+												  showFavorites:YES
+												notifyingTarget:nil];
     }
 }
 
