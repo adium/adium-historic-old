@@ -309,6 +309,10 @@ DeclareString(FormattedUID);
 {
     return([statusDictionary objectForKey:key]);
 }
+- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
+{
+   return([[statusDictionary objectForKey:key] string]);
+}
 
 //Subclasses may choose to override these
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key

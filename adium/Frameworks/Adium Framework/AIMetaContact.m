@@ -125,7 +125,10 @@
 {
 	return([[statusCacheDict objectForKey:key] numberValue]);
 }
-
+- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
+{
+	return([[statusCacheDict objectForKey:key] string]);
+}
 
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
