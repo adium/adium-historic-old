@@ -124,6 +124,10 @@ typedef enum {
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
 - (void)removeAllListObjectsMatching:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
 
+//Return either the highest metaContact containing this list object, or the list object itself.  Appropriate for when
+//preferences should be read from/to the most generalized contact possible.
+- (AIListObject *)parentContactForListObject:(AIListObject *)listObject;
+
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline;
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target;
 
