@@ -88,7 +88,7 @@
     NSAttributedString	*displayName;
     NSSize		displayNameSize;
     NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
-    NSMutableArray      *cellSizeArray = [[NSMutableArray alloc] init];
+    NSMutableArray      *cellSizeArray = [NSMutableArray array];
 
     //Text Font
     font = [(AISCLOutlineView *)controlView font];
