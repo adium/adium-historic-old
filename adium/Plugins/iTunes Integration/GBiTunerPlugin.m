@@ -39,7 +39,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	
 	//Start building the script menu
 	scriptMenu = nil;
-	[self _buildScriptMenuThread];
+	[self buildScriptMenu];
 	//[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
 	
 	//Perform substitutions on outgoing content
