@@ -161,11 +161,12 @@
 		NSRectFill(clipRect);
 		
 		//Image
-		if(backgroundImage){
-			NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
+		NSScrollView	*enclosingScrollView = [self enclosingScrollView];
+		if(backgroundImage && enclosingScrollView){
+			NSRect	visRect = [enclosingScrollView documentVisibleRect];
 			NSSize	imageSize = [backgroundImage size];
 			
-			switch(backgroundStyle) {
+			switch(backgroundStyle){
 				
 				case AINormalBackground:{
 					//Background image normal
