@@ -76,7 +76,11 @@ DeclareString(GreaterThanHTML);
 DeclareString(Semicolon);
 DeclareString(SpaceGreaterThan);
 DeclareString(TagCharStartString);
-							
+DeclareString(Space);
+DeclareString(SpaceHTML);
+DeclareString(Tab);
+DeclareString(TabHTML);
+
 + (void)load
 {
 	InitString(HTML,@"HTML");
@@ -127,6 +131,12 @@ DeclareString(TagCharStartString);
 	InitString(Semicolon,@";");
 	InitString(SpaceGreaterThan,@" >");
 	InitString(TagCharStartString,@"<&");
+
+	InitString(Space,@"  ");
+	InitString(SpaceHTML,@" &nbsp;");
+	
+	InitString(Tab,[NSString stringWithCString:"\t"]);
+	InitString(TabHTML,@"&nbsp;&nbsp;&nbsp;&nbsp;");
 }
 
 //For compatability
@@ -449,7 +459,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			[chunk replaceOccurrencesOfString:GreaterThan withString:GreaterThanHTML
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-        
+			[chunk replaceOccurrencesOfString:Space withString:SpaceHTML
+									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			[chunk replaceOccurrencesOfString:Tab withString:TabHTML
+									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			
 			//If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
 			//escape sequence.
 			if (encodeNonASCII) {
