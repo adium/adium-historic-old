@@ -26,6 +26,7 @@
 #define KEY_UNVIEWED_ENABLED		@"Unviewed Content Enabled"
 #define KEY_ONLINE_ENABLED		@"Online Enabled"
 #define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
+#define KEY_OFFLINE_ENABLED		@"Offline Enabled"
 
 #define KEY_AWAY_COLOR			@"Away Color"
 #define KEY_IDLE_COLOR			@"Idle Color"
@@ -35,6 +36,7 @@
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
 #define KEY_ONLINE_COLOR		@"Online Color"
 #define KEY_IDLE_AWAY_COLOR		@"Idle And Away Color"
+#define KEY_OFFLINE_COLOR		@"Offline Color"
 
 #define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
 #define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
@@ -44,6 +46,7 @@
 #define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
 #define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
 #define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
+#define KEY_LABEL_OFFLINE_COLOR		@"Offline Label Color"
 
 #define	PREF_GROUP_CONTACT_LIST		@"Contact List Display"
 #define KEY_SCL_OPACITY			@"Opacity"
@@ -63,6 +66,7 @@
     BOOL		unviewedContentEnabled;
     BOOL		onlineEnabled;
     BOOL		idleAndAwayEnabled;
+	BOOL		offlineEnabled;
     
     NSColor		*awayColor;
     NSColor		*idleColor;
@@ -72,6 +76,7 @@
     NSColor		*unviewedContentColor;
     NSColor		*onlineColor;
     NSColor		*idleAndAwayColor;
+	NSColor		*offlineColor;
     
     NSColor		*awayInvertedColor;
     NSColor		*idleInvertedColor;
@@ -81,7 +86,8 @@
     NSColor		*unviewedContentInvertedColor;
     NSColor		*onlineInvertedColor;
     NSColor		*idleAndAwayInvertedColor;
-
+	NSColor		*offlineInvertedColor;
+	
     NSColor		*awayLabelColor;
     NSColor		*idleLabelColor;
     NSColor		*signedOffLabelColor;
@@ -90,7 +96,8 @@
     NSColor		*unviewedContentLabelColor;
     NSColor		*onlineLabelColor;
     NSColor		*idleAndAwayLabelColor;
-
+	NSColor		*offlineLabelColor;
+	
     float		alpha;
 }
 

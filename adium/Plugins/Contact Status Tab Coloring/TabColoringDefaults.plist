@@ -34,6 +34,10 @@
     <string>0,18,114</string>
     <key>Tab Unviewed Content Enabled</key>
     <true/>
+	<key>Tab Offline Color</key>
+	<string>50,50,50</string>
+	<key>Tab Offline Color Enabled</key>
+	<true/>
     <key>Tab Unviewed Flash Enabled</key>
     <true/>
     <key>Tab Use Custom Colors</key>

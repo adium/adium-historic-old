@@ -74,7 +74,12 @@
                                              forKey:KEY_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-
+    }else if(sender == colorWell_offline){
+        [[adium preferenceController] setPreference:[[colorWell_offline color] stringRepresentation]
+                                             forKey:KEY_OFFLINE_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+		
+		
         
     }else if(sender == colorWell_signedOffLabel){
         [[adium preferenceController] setPreference:[[colorWell_signedOffLabel color] stringRepresentation]
@@ -116,7 +121,11 @@
                                              forKey:KEY_LABEL_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         
-
+    }else if(sender == colorWell_offlineLabel){
+        [[adium preferenceController] setPreference:[[colorWell_offlineLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_OFFLINE_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+		
         
     }else if(sender == checkBox_signedOff){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -166,6 +175,11 @@
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
+	}else if(sender == checkBox_offline){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_OFFLINE_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
     }
 }
 
@@ -217,6 +231,7 @@
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
     [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_offline setColor:[[preferenceDict objectForKey:KEY_OFFLINE_COLOR] representedColor]];
 
     [colorWell_awayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
     [colorWell_idleLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
@@ -226,6 +241,7 @@
     [colorWell_unviewedContentLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
     [colorWell_onlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
     [colorWell_idleAndAwayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_offlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor]];
 
     [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
     [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
@@ -235,7 +251,7 @@
     [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
     [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
-
+    [checkBox_offline setState:[[preferenceDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
 
     
     [self configureControlDimming];
@@ -267,6 +283,9 @@
 
     [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
     [colorWell_idleAndAwayLabel setEnabled:[checkBox_idleAndAway state]];
+	
+	[colorWell_offline setEnabled:[checkBox_offline state]];
+    [colorWell_offlineLabel setEnabled:[checkBox_offline state]];
 }
 
 @end

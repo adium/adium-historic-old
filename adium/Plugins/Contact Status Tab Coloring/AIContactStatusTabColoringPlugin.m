@@ -40,6 +40,7 @@
     unviewedContentColor = nil;
     onlineColor = nil;
     idleAndAwayColor = nil;
+	offlineColor = nil;
 
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS
@@ -114,8 +115,11 @@
     
     //Signed off, signed on, or typing (These do not show if there is unviewed content)
     if(!color && (!unviewedContentEnabled || !unviewedContent)){
-        if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"] ||
-                                ![inObject integerStatusObjectForKey:@"Online"])){
+		if(offlineEnabled && (![inObject integerStatusObjectForKey:@"Signed Off"] &&
+							  ![inObject integerStatusObjectForKey:@"Online"])){
+			color = offlineColor;
+			
+        }else if(signedOffEnabled && [inObject integerStatusObjectForKey:@"Signed Off"]){
             color = signedOffColor;
         
         }else if(signedOnEnabled && [inObject integerStatusObjectForKey:@"Signed On"]){
@@ -127,7 +131,7 @@
         }
     }
 
-    if(!color){
+    if(!color && [inObject integerStatusObjectForKey:@"Online"]){
         //Prefetch these values, we need them multiple times below
         away = [inObject integerStatusObjectForKey:@"Away"];
         idle = [inObject doubleStatusObjectForKey:@"Idle"];
@@ -206,7 +210,7 @@
         [typingColor release];		typingColor = [[[prefDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor] retain];
         [unviewedContentColor release];	unviewedContentColor = [[[prefDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor] retain];
         [idleAndAwayColor release];	idleAndAwayColor = [[[prefDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor] retain];
-		
+		[offlineColor release];		offlineColor = [[[prefDict objectForKey:KEY_TAB_OFFLINE_COLOR] representedColor] retain];
         //Cache which states are enabled
         awayEnabled = [[prefDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue];
         idleEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_ENABLED] boolValue];
@@ -215,6 +219,7 @@
         typingEnabled = [[prefDict objectForKey:KEY_TAB_TYPING_ENABLED] boolValue];
         unviewedContentEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue];
+        offlineEnabled = [[prefDict objectForKey:KEY_TAB_OFFLINE_ENABLED] boolValue];
         unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue];
 		
 		[[adium contactController] updateAllListObjectsForObserver:self];

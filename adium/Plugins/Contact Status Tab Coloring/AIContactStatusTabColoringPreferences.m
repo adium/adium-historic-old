@@ -48,7 +48,8 @@
     [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor]];
     [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor]];
-    
+	[colorWell_offline setColor:[[preferenceDict objectForKey:KEY_TAB_OFFLINE_COLOR] representedColor]];
+
     [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_TAB_SIGNED_OFF_ENABLED] boolValue]];
     [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_TAB_SIGNED_ON_ENABLED] boolValue]];
     [checkBox_away setState:[[preferenceDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue]];
@@ -56,6 +57,7 @@
     [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TAB_TYPING_ENABLED] boolValue]];
     [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue]];
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue]];
+    [checkBox_offline setState:[[preferenceDict objectForKey:KEY_TAB_OFFLINE_ENABLED] boolValue]];
     [checkBox_unviewedFlash setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue]];
     [checkBox_useCustomColors setState:[[preferenceDict objectForKey:KEY_TAB_USE_CUSTOM_COLORS] boolValue]];
 
@@ -72,6 +74,7 @@
     [colorWell_typing setEnabled:[checkBox_typing state]];
     [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
     [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
+	[colorWell_offline setEnabled:[checkBox_offline state]];
 }
 
 //Save changed preference
@@ -119,6 +122,12 @@
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self customValidator];
         
+	}else if(sender == colorWell_offline){
+        [[adium preferenceController] setPreference:[[colorWell_offline color] stringRepresentation]
+                                             forKey:KEY_TAB_OFFLINE_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self customValidator];
+		
     }else if(sender == checkBox_signedOff){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_SIGNED_OFF_ENABLED
@@ -160,6 +169,13 @@
                                              forKey:KEY_TAB_IDLE_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self customValidator];
+		
+	}else if(sender == checkBox_offline){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_TAB_OFFLINE_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self customValidator];
+		
 
     }else if(sender == checkBox_unviewedFlash){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -195,6 +211,7 @@
         [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
         [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
         [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];        
+        [colorWell_offline setColor:[[preferenceDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor]];        
         // disable all checkboxes 
         [colorWell_away setEnabled:NSOffState];
         [colorWell_idle setEnabled:NSOffState];
@@ -202,6 +219,7 @@
         [colorWell_signedOff setEnabled:NSOffState];
         [colorWell_signedOn setEnabled:NSOffState];
         [colorWell_typing setEnabled:NSOffState];
+		[colorWell_offline setEnabled:NSOffState];
         [colorWell_unviewedContent setEnabled:NSOffState];
     }
 }

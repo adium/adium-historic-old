@@ -24,6 +24,7 @@
 #define KEY_TAB_UNVIEWED_ENABLED	@"Tab Unviewed Content Enabled"
 #define KEY_TAB_ONLINE_ENABLED		@"Tab Online Enabled"
 #define KEY_TAB_IDLE_AWAY_ENABLED	@"Tab Idle And Away Enabled"
+#define KEY_TAB_OFFLINE_ENABLED		@"Tab Offline Color Enabled"
 #define KEY_TAB_UNVIEWED_FLASH_ENABLED	@"Tab Unviewed Flash Enabled"
 #define KEY_TAB_USE_CUSTOM_COLORS       @"Tab Use Custom Colors"
 
@@ -35,6 +36,7 @@
 #define KEY_TAB_UNVIEWED_COLOR		@"Tab Unviewed Content Color"
 #define KEY_TAB_ONLINE_COLOR		@"Tab Online Color"
 #define KEY_TAB_IDLE_AWAY_COLOR		@"Tab Idle And Away Color"
+#define KEY_TAB_OFFLINE_COLOR		@"Tab Offline Color"
 
 #define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
 #define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
@@ -44,6 +46,7 @@
 #define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
 #define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
 #define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
+#define KEY_LABEL_OFFLINE_COLOR		@"Offline Label Color"
 
 @class AIContactStatusTabColoringPreferences;
 
@@ -59,6 +62,7 @@
     BOOL		typingEnabled;
     BOOL		unviewedContentEnabled;
     BOOL		idleAndAwayEnabled;
+	BOOL		offlineEnabled;
     BOOL		unviewedFlashEnabled;
     
     NSColor		*awayColor;
@@ -69,6 +73,7 @@
     NSColor		*unviewedContentColor;
     NSColor		*onlineColor;
     NSColor		*idleAndAwayColor;
+	NSColor		*offlineColor;
 }
 
 @end

@@ -20,6 +20,8 @@
     <false/>
     <key>Idle And Away Enabled</key>
     <false/>
+	<key>Offline Enabled</key>
+	<true/>
     <key>Away Color</key>
     <string>49,49,49</string>
     <key>Idle Color</key>
@@ -52,5 +54,9 @@
     <string>209,234,220</string>
     <key>Idle And Away Label Color</key>
     <string>233,233,214</string>
+	<key>Offline Color</key>
+	<string>50,50,50</string>
+	<key>Offline Label Color</key>
+	<string>240,240,240</string>
 </dict>
 </plist>
