@@ -320,6 +320,14 @@
     return(nil);
 }
 
+- (float)priorityOfObjectWithOwner:(id)inOwner
+{
+	if (ownerArray && priorityArray){
+        int	index = [ownerArray indexOfObject:inOwner];
+		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
+	}
+}
+
 //Returns the owner of the specified object
 - (id)ownerWithObject:(id)inObject
 {
@@ -331,12 +339,12 @@
     return(nil);
 }
 
-- (float)priorityOfObjectWithOwner:(id)inOwner
+- (float)priorityOfObject:(id)inObject
 {
-	if (ownerArray && contentArray){
-        int	index = [ownerArray indexOfObject:inOwner];
+	if (contentArray && priorityArray){
+        int	index = [contentArray indexOfObject:inOwner];
 		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
-	}
+	}	
 }
 
 //Return a value enumerator
