@@ -60,17 +60,16 @@
     [[AIObject sharedAdiumInstance] createResourcePathForName:PATH_SOUNDS];
     
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_SOUNDS];
     
     //Ensure the temporary mute is off
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+    [[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
                                          forKey:KEY_SOUND_TEMPORARY_MUTE
                                           group:PREF_GROUP_SOUNDS];   
     
     //observe pref changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 }
 
 //close
@@ -99,51 +98,48 @@
 }
 
 //
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){    
-        NSDictionary		*preferenceDict;
-		NSEnumerator		*enumerator;
-		QTSoundFilePlayer   *soundFilePlayer;
-        SoundDeviceType		oldSoundDeviceType;
-		
-		preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-		useCustomVolume = YES;
-		customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]);
+	NSEnumerator		*enumerator;
+	QTSoundFilePlayer   *soundFilePlayer;
+	SoundDeviceType		oldSoundDeviceType;
+	
+	useCustomVolume = YES;
+	customVolume = ([[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]);
 				
-        muteSounds = ([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] ||
-					  [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue]);
-  
-		oldSoundDeviceType = soundDeviceType;
-		soundDeviceType = [[preferenceDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue];
-		
-		
-		//Clear out our cached sounds and our speech aray if either
-		// -We're probably not going to be using them for a while
-		// -We've changed output device types so will want to recreate our sound output objects
-		//
-		//If neither of these things happened, we need to update our currently playing songs
-		//to the new volume setting.
-
-		BOOL needToStopAndRelease = (muteSounds || (soundDeviceType != oldSoundDeviceType));
-		
-		enumerator = [soundCacheDict objectEnumerator];
-		while (soundFilePlayer = [enumerator nextObject]){
-			if (needToStopAndRelease){
-				[soundFilePlayer stop];
-			}else{
-				[soundFilePlayer setVolume:customVolume];
-			}
-		}
-
+	muteSounds = ([[prefDict objectForKey:KEY_SOUND_MUTE] intValue] ||
+				  [[prefDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue]);
+	
+	oldSoundDeviceType = soundDeviceType;
+	soundDeviceType = [[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue];
+	
+	
+	//Clear out our cached sounds and our speech aray if either
+	// -We're probably not going to be using them for a while
+	// -We've changed output device types so will want to recreate our sound output objects
+	//
+	//If neither of these things happened, we need to update our currently playing songs
+	//to the new volume setting.
+	
+	BOOL needToStopAndRelease = (muteSounds || (soundDeviceType != oldSoundDeviceType));
+	
+	enumerator = [soundCacheDict objectEnumerator];
+	while (soundFilePlayer = [enumerator nextObject]){
 		if (needToStopAndRelease){
-			[speechArray removeAllObjects];
-			[soundCacheDict removeAllObjects];
-			[soundCacheArray removeAllObjects];
+			[soundFilePlayer stop];
+		}else{
+			[soundFilePlayer setVolume:customVolume];
 		}
-		
-		muteWhileAway = [[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue];
 	}
+	
+	if (needToStopAndRelease){
+		[speechArray removeAllObjects];
+		[soundCacheDict removeAllObjects];
+		[soundCacheArray removeAllObjects];
+	}
+	
+	muteWhileAway = [[prefDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue];
 }
 
 
@@ -178,7 +174,7 @@
 //Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+    if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
 		if (inPath){
 			[self _coreAudioPlaySound:inPath];
 		}
@@ -403,7 +399,7 @@ NSSound finished playing callback
     soundSetArray = [[NSMutableArray alloc] init];
     
     //Scan sounds
-	enumerator = [[owner resourcePathsForName:@"Sounds"] objectEnumerator];
+	enumerator = [[adium resourcePathsForName:@"Sounds"] objectEnumerator];
 	while (path = [enumerator nextObject]){
 		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
 	}
@@ -496,7 +492,7 @@ NSSound finished playing callback
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate
 {
     if(text && [text length]){
-		if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+		if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
 			NSMutableDictionary *dict;
 			
 			dict = [[NSMutableDictionary alloc] init];
