@@ -15,6 +15,8 @@
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
 - (void)_removeCustomViewAndTabs;
+
+- (void)saveConfiguration;
 @end
 
 @implementation AIEditAccountWindowController
@@ -129,9 +131,18 @@
 //Okay.  Save changes and close
 - (IBAction)okay:(id)sender
 {
+	[self saveConfiguration];
 	[accountViewController saveConfiguration];
 	[accountProxyController saveConfiguration];
 	[self closeWindow:nil];
+}
+
+- (void)saveConfiguration
+{
+	//User icon
+	[account setPreference:[[imageView_userIcon image] PNGRepresentation]
+					ForKey:KEY_USER_ICON 
+					 group:GROUP_ACCOUNT_STATUS];
 }
 
 //Add the custom views for a controller
@@ -226,5 +237,6 @@
     [view_accountSetup removeAllSubviews];
     [accountViewController release]; accountViewController = nil;
 }
+
 
 @end
