@@ -46,7 +46,7 @@
             ACTIONS = {showContactInfo = id; }; 
             CLASS = AIContactController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {activeSortController = id; owner = AIAdium; }; 
+            OUTLETS = {"menuItem_getInfo" = NSMenuItem; owner = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
