@@ -121,6 +121,24 @@
 	return(![self integerStatusObjectForKey:@"NotAStranger"]);
 }
 
+/*!
+ * @brief Is this object connected via a mobile device?
+ */
+- (BOOL)isMobile
+{
+	return [self integerStatusObjectForKey:@"IsMobile"];
+}
+
+/*!
+ * @brief Set if this contact is mobile
+ */
+- (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify
+{
+	[self setStatusObject:[NSNumber numberWithBool:isMobile]
+				   forKey:@"IsMobile"
+				   notify:notify];
+}
+
 
 //AppleScript ----------------------------------------------------------------------------------------------------------
 #pragma mark AppleScript
