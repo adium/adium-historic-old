@@ -17,14 +17,12 @@
 @class SHMozillaCommonParser;
 
 @interface SHOmniWebBookmarksImporter(PRIVATE)
-- (void)parseBookmarksFile:(NSString *)inString;
+- (NSArray *)parseBookmarksFile:(NSString *)inString;
+-(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
+-(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 @end
 
 @implementation SHOmniWebBookmarksImporter
-
-static NSMenu   *omniBookmarksMenu = nil;
-static NSMenu   *omniBookmarksSupermenu = nil;
-static NSMenu   *omniTopMenu = nil;
 
 DeclareString(gtSign)
 DeclareString(Hopen)
@@ -34,6 +32,7 @@ DeclareString(closeQuote)
 DeclareString(Aclose)
 DeclareString(DLclose)
 DeclareString(ltSign)
+DeclareString(untitledString)
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -41,10 +40,6 @@ DeclareString(ltSign)
     return [[[self alloc] init] autorelease];
 }
 
-+(NSString *)importerTitle
-{
-    return OW_TITLE;
-}
 
 - (id)init
 {
@@ -53,39 +48,23 @@ DeclareString(ltSign)
     return self;
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject
+- (NSArray *)availableBookmarks
 {
-    owner = inObject;
-    NSString        *bookmarkString = [NSString stringWithContentsOfFile:useOW5? [OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] : [OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+    NSString    *bookmarkPath = useOW5? [OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] : [OW45_BOOKMARKS_PATH stringByExpandingTildeInPath];
+    NSString    *bookmarkString = [NSString stringWithContentsOfFile:bookmarkPath];
     
-    // remove our root menu, if it exists
-    if(omniBookmarksMenu){
-        [omniBookmarksMenu removeAllItems];
-        [omniBookmarksMenu release];
-    }
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    // store the modification date for future reference
-    if (lastModDate) [lastModDate release];
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:useOW5? [OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] : [OW45_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
-    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:useOW5? OW5_ROOT_MENU_TITLE : OW45_ROOT_MENU_TITLE] autorelease];
-    omniBookmarksSupermenu = omniBookmarksMenu;
-    omniTopMenu = omniBookmarksMenu;
-    [self parseBookmarksFile:bookmarkString];
-    
-    return omniBookmarksMenu;
+    return [self parseBookmarksFile:bookmarkString];
 }
+
 
 -(BOOL)bookmarksExist
 {
     return (useOW5 || [[NSFileManager defaultManager] fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]]);
 }
 
--(NSString *)menuTitle
-{
-    return useOW5? OW5_ROOT_MENU_TITLE : OW45_ROOT_MENU_TITLE;
-}
 
 -(BOOL)bookmarksUpdated
 {
@@ -96,12 +75,13 @@ DeclareString(ltSign)
 }
 
 #pragma mark private methods
-- (void)parseBookmarksFile:(NSString *)inString
+- (NSArray *)parseBookmarksFile:(NSString *)inString
 {
+    NSMutableArray      *bookmarksArray = [NSMutableArray array];
+    NSMutableArray      *arrayStack = [NSMutableArray array];
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *omniTitleString = nil;
     NSString    *urlString = nil;
-    NSString    *untitledString = @"untitled";
     
     unsigned int stringLength = [inString length];
     
@@ -117,6 +97,7 @@ DeclareString(ltSign)
     InitString(Aclose,@"</a")
     InitString(DLclose,@"/dl>")
     InitString(ltSign,@"<")
+    InitString(untitledString,@"untitled")
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
@@ -136,15 +117,11 @@ DeclareString(ltSign)
                 omniTitleString = nil;
             }
             
-            omniBookmarksSupermenu = omniBookmarksMenu;
-            omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:omniTitleString? omniTitleString : untitledString] autorelease];
-        
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:omniTitleString? omniTitleString : untitledString
-                                                                         target:owner
-                                                                         action:nil
-                                                                  keyEquivalent:@""] autorelease];
-            [omniBookmarksSupermenu addItem:mozillaSubmenuItem];
-            [omniBookmarksSupermenu setSubmenu:omniBookmarksMenu forItem:mozillaSubmenuItem];
+            [arrayStack addObject:bookmarksArray];
+            bookmarksArray = [NSMutableArray array];
+            [[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
+                                                             menuItems:bookmarksArray]];
+                                                             
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
@@ -160,22 +137,14 @@ DeclareString(ltSign)
                     omniTitleString = nil;
                 }
 
-                SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
-                                                                     withValidationStatus:SH_URL_VALID
-                                                                             parentString:omniTitleString? omniTitleString : urlString
-                                                                                 andRange:NSMakeRange(0,omniTitleString? [omniTitleString length] : [urlString length])] autorelease];
-                                                                          
-                [omniBookmarksMenu addItemWithTitle:omniTitleString? omniTitleString : urlString
-                                             target:owner
-                                             action:@selector(injectBookmarkFrom:)
-                                      keyEquivalent:@""
-                                  representedObject:markedLink];
+                [bookmarksArray addObject:[self hyperlinkForTitle:omniTitleString URL:urlString]];
+
             }
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-            if([omniBookmarksMenu isNotEqualTo:omniTopMenu]){
-                omniBookmarksMenu = omniBookmarksSupermenu;
-                omniBookmarksSupermenu = [omniBookmarksSupermenu supermenu];
+            if([arrayStack count]){
+                bookmarksArray = [arrayStack lastObject];
+                [arrayStack removeLastObject];
             }
         }else{
             [linkScanner scanUpToString:ltSign intoString:nil];
@@ -183,6 +152,22 @@ DeclareString(ltSign)
                 [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
     }
+    return bookmarksArray;
+}
+
+-(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
+{
+    NSString    *title = inString? inString : untitledString;
+    return [[[SHMarkedHyperlink alloc] initWithString:inURLString
+                                 withValidationStatus:SH_URL_VALID
+                                         parentString:title
+                                             andRange:NSMakeRange(0,[title length])] autorelease];
+}
+
+-(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
+{
+    NSString    *titleString = inTitle? inTitle : untitledString;
+    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
 }
 
 @end

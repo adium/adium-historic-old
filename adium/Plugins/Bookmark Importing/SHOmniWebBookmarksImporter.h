@@ -14,8 +14,4 @@
     BOOL     useOW5;
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject;
--(NSString *)menuTitle;
--(BOOL)bookmarksExist;
--(BOOL)bookmarksUpdated;
 @end
