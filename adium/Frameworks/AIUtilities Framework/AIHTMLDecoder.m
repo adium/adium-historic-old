@@ -242,8 +242,8 @@ DeclareString(TagCharStartString);
             }
 
             //Color
-            if((includeColorTags && ([color compare:currentColor] || (currentColor && !color))) || closeFontTags){
-				if (simpleOnly){
+            if(includeColorTags && (([color compare:currentColor] || (currentColor && !color)) || closeFontTags)){
+				if(simpleOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
 				}else{
 					[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
