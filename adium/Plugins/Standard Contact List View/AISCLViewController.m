@@ -280,7 +280,6 @@
 		[[contactListView window] setOpaque:(alpha == 1.0)];
 		[contactListView setUpdateShadowsWhileDrawing:((alpha != 1.0) && hasShadow)];
 
-		
 		//Force a redraw of the window and shadow
 		[[contactListView window] compatibleInvalidateShadow];
 		[[contactListView window] setViewsNeedDisplay:YES];
@@ -387,9 +386,7 @@
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
-{
-    [[contactListView window] display];
-    
+{    
     AIListObject	*selectedObject = nil;
     NSOutlineView	*outlineView = [notification object];
     int			selectedRow;
@@ -409,15 +406,6 @@
         [[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
     }
     
-}
-
-- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
-{
-    //update the shadows
-    //[[contactListView window] display];
-    
-    //Don't need to fix shadows after the selection changes
-//    fixedShadows = YES;
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item

@@ -80,7 +80,6 @@
     borderless = (borderlessNum ? [borderlessNum boolValue] : NO);
     
     [super initWithWindowNibName:(borderless ? CONTACT_LIST_WINDOW_TRANSPARENT_NIB : CONTACT_LIST_WINDOW_NIB)];
-    //NSTexturedBackgroundWindowMask?
         
     interface = [inInterface retain];
 
