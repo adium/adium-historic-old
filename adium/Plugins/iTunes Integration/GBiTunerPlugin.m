@@ -45,6 +45,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	[self buildScriptMenu]; //this also sets the submenu for the menu item.
 
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
+        [[adium menuController] addContextualMenuItem:[scriptMenuItem copy] toLocation:Context_TextView_General];
 	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
