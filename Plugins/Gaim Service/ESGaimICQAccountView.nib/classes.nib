@@ -53,7 +53,7 @@
         {
             CLASS = ESGaimICQAccountViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_encoding" = NSTextField; }; 
+            OUTLETS = {"popUp_encoding" = NSPopUpButton; }; 
             SUPERCLASS = ESGaimAccountViewController; 
         }, 
         {
