@@ -526,7 +526,15 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 									  length:buddyIcon->len];
 				break;
 			}
+			default: {
+				data = [NSNumber numberWithInt:event];
+			}
 		}
+		
+		//The account will release when it is done; this is done since there is no guarantee
+		//that the current run loop iteration won't finish (releasing the autorelease pool) before
+		//the account is done with the data.
+		[data retain];
 		
 		if (updateSelector){
 			[accountLookup(buddy->account) mainPerformSelector:updateSelector
@@ -535,7 +543,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 		}else{
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:forEvent:)
 													withObject:theContact
-													withObject:[NSNumber numberWithInt:event]];
+													withObject:data];
 		}
 	}
 }

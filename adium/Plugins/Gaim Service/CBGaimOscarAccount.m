@@ -260,8 +260,6 @@ static BOOL didInitOscar = NO;
 #pragma mark Buddy updates
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
-	[super updateContact:theContact forEvent:event];
-	
 	SEL updateSelector = nil;
 	
 	switch([event intValue]){
@@ -291,6 +289,8 @@ static BOOL didInitOscar = NO;
 		[self performSelector:updateSelector
 				   withObject:theContact];
 	}
+	
+	[super updateContact:theContact forEvent:event];
 }
 	
 - (void)updateStatusMessage:(AIListContact *)theContact

@@ -98,7 +98,6 @@
 
 - (oneway void)newContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
-- (oneway void)updateContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event;
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
