@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.34 2004/03/25 06:06:55 evands Exp $
+//$Id: AIPluginController.m,v 1.35 2004/03/26 01:34:04 ramoth4 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -42,7 +42,7 @@ AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
-CBStatusMenuItemPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
+CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
@@ -98,10 +98,11 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
 	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
-	//[self loadPluginWithClass:[CPFVersionChecker class]];
+//	[self loadPluginWithClass:[CPFVersionChecker class]];
 	[self loadPluginWithClass:[BGThemesPlugin class]];
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
+    	[self loadPluginWithClass:[CBURLHandlingPlugin class]];
 	[self loadPluginWithClass:[CSDisconnectAllPlugin class]];
 	[self loadPluginWithClass:[DCMessageContextDisplayPlugin class]];
 	[self loadPluginWithClass:[ErrorMessageHandlerPlugin class]];
@@ -122,7 +123,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
 
-//  [self loadPluginWithClass:[AISMViewPlugin class]];
+//	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
 	
