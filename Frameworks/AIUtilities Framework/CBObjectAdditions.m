@@ -26,23 +26,55 @@
 // Clever addition by Jonathan Jansson found on cocoadev.com (http://www.cocoadev.com/index.pl?ThreadCommunication)
 @implementation NSObject (RunLoopMessenger)
 
+//Included to allow uniform coding
 - (void)mainPerformSelector:(SEL)aSelector
 {
 	[self mainPerformSelector:aSelector waitUntilDone:NO];
 }
+//Included to allow uniform coding - wrapped for performSelectorOnMainThread:withObject:waitUntilDone:
 - (void)mainPerformSelector:(SEL)aSelector waitUntilDone:(BOOL)flag
 {
 	[self performSelectorOnMainThread:aSelector withObject:nil waitUntilDone:flag];
 }
 
+//Included to allow uniform coding
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1
 {
 	[self mainPerformSelector:aSelector withObject:argument1 waitUntilDone:NO];
 }
+
+//Included to allow uniform coding - wrapped for performSelectorOnMainThread:withObject:waitUntilDone:
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 waitUntilDone:(BOOL)flag
 {
 	[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:flag];
 }
+
+//Perform a selector on the main thread, optionally taking an argument, and return its return value
+- (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 returnValue:(BOOL)flag
+{
+	id returnValue;
+	
+	if (flag){
+		NSInvocation *invocation;
+		
+		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+		[invocation setSelector:aSelector];
+		[invocation setArgument:&argument1 atIndex:2];
+		
+		[self performSelectorOnMainThread:@selector(handleInvocation:)
+							   withObject:invocation
+							waitUntilDone:YES];
+
+		[invocation getReturnValue:&returnValue];
+		
+	}else{
+		returnValue = nil;
+		[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:NO];
+	}
+	
+	return(returnValue);
+}
+
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2
 {
