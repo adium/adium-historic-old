@@ -51,7 +51,8 @@
     if ([theEvent cmdKey]) {
         NSPoint currentLocation;
 
-        NSRect  screenFrame = [[self screen] visibleFrame];
+		NSScreen *currentScreen = [self screen];
+		//[[[currentScreen deviceDescription] objectForKey:@"NSScreenNumber"] intValue]
         NSRect  windowFrame = [self frame];
         NSPoint newOrigin = windowFrame.origin;
         
@@ -62,20 +63,32 @@
         newOrigin.x += currentLocation.x - previousLocation.x;
         newOrigin.y += currentLocation.y - previousLocation.y;
         previousLocation = currentLocation;
-                   
-//        NSLog(@"%f + %f > %f + %f",newOrigin.y,windowFrame.size.height,screenFrame.origin.y,screenFrame.size.height);
-        // Don't let window get dragged up under the menu bar
-        if( (newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ){
-
-            newOrigin.y=screenFrame.origin.y + (screenFrame.size.height-windowFrame.size.height);
-        } else if ( (newOrigin.y+windowFrame.size.height) < 10 ) {
+		
+		//        NSLog(@"%f + %f > %f + %f",newOrigin.y,windowFrame.size.height,screenFrame.origin.y,screenFrame.size.height);
+		
+		//Keep the window from going under the menu bar (on the main screen)
+		if (currentScreen == [[NSScreen screens] objectAtIndex:0]) {
+			NSRect  screenFrame = [currentScreen visibleFrame];
+			if( (newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ){
+				
+				newOrigin.y = screenFrame.origin.y + (screenFrame.size.height-windowFrame.size.height);
+			}
+		}
+		
+		// Keep the topmost part of the window on the screen (if it goes onto another screen in the process,
+		// that screen should become [self screen] so this check shouldn't fire).
+		if ( (newOrigin.y+windowFrame.size.height) < 10 ) {
             newOrigin.y = 10 - windowFrame.size.height;
         }
-        
+  
+//		NSLog(@"%f + %f = %f ; screenFrame width is %f",newOrigin.x,windowFrame.size.width,(newOrigin.x + windowFrame.size.width),screenFrame.size.width);
+
+		/*
         if((newOrigin.x + windowFrame.size.width) < 1)
             newOrigin.x = 1 - windowFrame.size.width;
-        
-        //go ahead and move the window to the new location
+        */
+		
+        //Move the window to the new location
         [self setFrameOrigin:newOrigin];
     } else {
         [super mouseDragged:theEvent];
