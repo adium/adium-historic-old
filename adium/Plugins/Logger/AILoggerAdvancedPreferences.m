@@ -20,7 +20,6 @@
 #import "AILoggerPlugin.h"
 
 @interface AILoggerAdvancedPreferences (PRIVATE)
-- (void)autoDim;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end;
 
@@ -56,7 +55,7 @@
         [checkBox_enableStatus setState:[[preferenceDict objectForKey:KEY_LOGGER_STATUS] boolValue]];
         [checkBox_enableHTML setState:[[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue]];
         
-        [self autoDim];
+        [self configureControlDimming];
     }
 }
 
@@ -87,7 +86,7 @@
 }
 
 //Dims style and font if HTML logs are not selected, all if enable logging is not selected.
-- (void)autoDim
+- (void)configureControlDimming
 {
     BOOL    loggingEnabled = [checkBox_enableLogging state];
     BOOL    htmlEnabled = [checkBox_enableHTML state];

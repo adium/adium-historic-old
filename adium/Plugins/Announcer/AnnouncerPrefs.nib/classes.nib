@@ -2,6 +2,18 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             CLASS = ESAnnouncerPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -10,11 +22,11 @@
                 "checkBox_sender" = NSButton; 
                 "checkBox_status" = NSButton; 
                 "checkBox_time" = NSButton; 
-                "view_prefView" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

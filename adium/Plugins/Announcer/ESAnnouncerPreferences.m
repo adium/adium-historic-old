@@ -12,21 +12,34 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 
-#define ANNOUNCER_PREF_TITLE 	@"Speak Messages"
-#define ANNOUNCER_PREF_NIB 	@"AnnouncerPrefs.nib"
-@interface ESAnnouncerPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
-- (void)configureView;
-- (void)configureDimming;
-@end
-
 @implementation ESAnnouncerPreferences
-+ (ESAnnouncerPreferences *)announcerPreferencesWithOwner:(id)inOwner
-{
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Advanced_Messages);
+}
+- (NSString *)label{
+    return(@"Speak Messages");
+}
+- (NSString *)nibName{
+    return(@"AnnouncerPrefs");
 }
 
-//Called in response to all preference controls, applies new settings
+//Configures our view for the current preferences
+- (void)viewDidLoad
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
+    
+    [checkBox_outgoing setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue]];
+    [checkBox_incoming setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue]];
+    [checkBox_status setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_STATUS] boolValue]];
+    [checkBox_time setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_TIME] boolValue]];
+    [checkBox_sender setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue]];
+    
+    [self configureControlDimming];
+}
+
+//Save changed preference
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_outgoing){
@@ -51,68 +64,17 @@
 									group:PREF_GROUP_ANNOUNCER];
     }
 
-    [self configureDimming];
+    [self configureControlDimming];
 }
 
-//Private ---------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //Init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Receiving withDelegate:self label:ANNOUNCER_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:ANNOUNCER_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-}
-
-//Configures our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
-
-    [checkBox_outgoing setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue]];
-    [checkBox_incoming setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue]];
-    [checkBox_status setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_STATUS] boolValue]];
-    [checkBox_time setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_TIME] boolValue]];
-    [checkBox_sender setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue]];
-
-    [self configureDimming];
-}
-
-- (void)configureDimming
+//Dim unavailable controls
+- (void)configureControlDimming
 {
     BOOL messages = ([checkBox_outgoing state] || [checkBox_incoming state]);
-    if (messages)
-	[checkBox_sender setEnabled:YES];
-    else
-	[checkBox_sender setEnabled:NO];
-
-    if (messages || [checkBox_status state])
-	[checkBox_time setEnabled:YES];
-    else
-	[checkBox_time setEnabled:NO];
+    
+    [checkBox_sender setEnabled:(messages)];
+    [checkBox_time setEnabled:(messages || [checkBox_status state])];
+    
 }
+
 @end

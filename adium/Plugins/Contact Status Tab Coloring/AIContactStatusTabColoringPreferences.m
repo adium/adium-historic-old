@@ -18,23 +18,57 @@
 #import "AIContactStatusTabColoringPlugin.h"
 #import "AIContactStatusTabColoringPreferences.h"
 
-#define	TAB_COLORING_PREF_NIB		@"TabColoringPrefs"
-#define TAB_COLORING_PREF_TITLE		@"Tab Status Coloring"
-
-@interface AIContactStatusTabColoringPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
-- (void)configureView;
-- (void)configureControlDimming;
-@end
-
 @implementation AIContactStatusTabColoringPreferences
-//
-+ (AIContactStatusTabColoringPreferences *)contactStatusTabColoringPreferencesWithOwner:(id)inOwner
-{
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Advanced_Status);
+}
+- (NSString *)label{
+    return(@"Tab Status Coloring");
+}
+- (NSString *)nibName{
+    return(@"TabColoringPrefs");
 }
 
-//Called in response to all preference controls, applies new settings
+//Configures our view for the current preferences
+- (void)viewDidLoad
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    
+    [colorWell_away setColor:[[preferenceDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor]];
+    [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor]];
+    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_TAB_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_TAB_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor]];
+    [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor]];
+    [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor]];
+    
+    [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_TAB_SIGNED_OFF_ENABLED] boolValue]];
+    [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_TAB_SIGNED_ON_ENABLED] boolValue]];
+    [checkBox_away setState:[[preferenceDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue]];
+    [checkBox_idle setState:[[preferenceDict objectForKey:KEY_TAB_IDLE_ENABLED] boolValue]];
+    [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TAB_TYPING_ENABLED] boolValue]];
+    [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue]];
+    [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue]];
+    [checkBox_unviewedFlash setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue]];
+    
+    [self configureControlDimming];
+}
+
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
+    [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
+    [colorWell_away setEnabled:[checkBox_away state]];
+    [colorWell_idle setEnabled:[checkBox_idle state]];
+    [colorWell_typing setEnabled:[checkBox_typing state]];
+    [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
+    [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
+}
+
+//Save changed preference
 - (IBAction)changePreference:(id)sender
 {
     if(sender == colorWell_away){
@@ -122,77 +156,6 @@
         [self configureControlDimming];
 
     }
-}
-
-//Private ---------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //Init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:TAB_COLORING_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:TAB_COLORING_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-}
-
-//Configures our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-
-    [colorWell_away setColor:[[preferenceDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor]];
-    [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor]];
-    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_TAB_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_TAB_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor]];
-    [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor]];
-    [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor]];
-
-    [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_TAB_SIGNED_OFF_ENABLED] boolValue]];
-    [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_TAB_SIGNED_ON_ENABLED] boolValue]];
-    [checkBox_away setState:[[preferenceDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue]];
-    [checkBox_idle setState:[[preferenceDict objectForKey:KEY_TAB_IDLE_ENABLED] boolValue]];
-    [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TAB_TYPING_ENABLED] boolValue]];
-    [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue]];
-    [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue]];
-    [checkBox_unviewedFlash setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue]];
-
-    [self configureControlDimming];
-}
-
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
-    [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
-    [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
-    [colorWell_away setEnabled:[checkBox_away state]];
-    [colorWell_idle setEnabled:[checkBox_idle state]];
-    [colorWell_typing setEnabled:[checkBox_typing state]];
-    [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
-    [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
 }
 
 @end
