@@ -255,7 +255,7 @@
 {
 	//Ignore requests to show the selection menu if there are no options present
 	if(![AIAccountSelectionView optionsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
-														 toListObject:[chat listObject]]){
+															toContact:[chat listObject]]){
 		visible = NO;
 	}
 
@@ -340,9 +340,9 @@
 		NSMutableDictionary *detailsDict, *alertDict;
 		
 		detailsDict = [NSMutableDictionary dictionary];
-		[detailsDict setObject:[[chat account] uniqueObjectID] forKey:@"Account ID"];
+		[detailsDict setObject:[[chat account] internalObjectID] forKey:@"Account ID"];
 		[detailsDict setObject:[NSNumber numberWithBool:YES] forKey:@"Allow Other"];
-		[detailsDict setObject:[listObject uniqueObjectID] forKey:@"Destination ID"];
+		[detailsDict setObject:[listObject internalObjectID] forKey:@"Destination ID"];
 		[detailsDict setObject:[[textView_outgoing textStorage] dataRepresentation] forKey:@"Message"];
 		
 		alertDict = [NSMutableDictionary dictionary];
