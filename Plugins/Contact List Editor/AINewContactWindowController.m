@@ -311,7 +311,7 @@
 	NSString	*name = [textField_contactName stringValue];
 	BOOL		enabled = YES;
 	
-	if([name length] != 0 && [name length] < [service allowedLength]){
+	if([name length] != 0 && [name length] <= [service allowedLength]){
 		BOOL		caseSensitive = [service caseSensitive];
 		NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? name : [name lowercaseString])];
 		NSString	*validSegment = nil;
