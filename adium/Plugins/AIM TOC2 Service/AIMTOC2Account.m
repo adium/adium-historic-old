@@ -636,7 +636,7 @@
                 }else if([command compare:@"CONFIG2"] == 0){
                     [self AIM_HandleConfig:message];
 					
-                    [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
+                    [self silenceAllContactUpdatesForInterval:SIGN_ON_EVENT_DURATION];
 					
                     //Flag ourself as online
 					[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
@@ -749,7 +749,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.134 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.135 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
