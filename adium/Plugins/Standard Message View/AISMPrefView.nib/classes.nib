@@ -1,0 +1,29 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AISMPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_setPrefixFont" = NSButton; 
+                "checkBox_displayGridlines" = NSButton; 
+                "checkBox_hideDuplicatePrefixes" = NSButton; 
+                "checkBox_hideDuplicateTimeStamps" = NSButton; 
+                "checkBox_senderGradient" = NSButton; 
+                "checkBox_showSeconds" = NSButton; 
+                "checkBox_showTimeStamps" = NSButton; 
+                "popUp_incomingPrefix" = NSPopUpButton; 
+                "popUp_outgoingPrefix" = NSPopUpButton; 
+                "slider_gradientDarkness" = NSSlider; 
+                "slider_gridDarkness" = NSSlider; 
+                "textField_prefixFontName" = NSTextField; 
+                "view_gridding" = NSView; 
+                "view_prefixes" = NSView; 
+                "view_timeStamps" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -27,6 +27,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 @interface AIHTMLDecoder (PRIVATE)
 + (NSDictionary *)parseArguments:(NSString *)arguments;
 + (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
++ (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 @end
 
 @implementation AIHTMLDecoder
@@ -210,6 +211,8 @@ int HTMLEquivalentForFontSize(int fontSize)
     AITextAttributes		*textAttributes;
     int				asciiChar;
 
+    NSLog(@"%@",inMessage);
+    
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
     attrString = [[NSMutableAttributedString alloc] init];
@@ -256,8 +259,9 @@ int HTMLEquivalentForFontSize(int fontSize)
 
                     //Body
                     }else if([chunkString caseInsensitiveCompare:@"BODY"] == 0){
-                        //Ignore tab and any arguments
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+                            [self processBodyTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
+                        }
 
                     }else if([chunkString caseInsensitiveCompare:@"/BODY"] == 0){
                         //ignore
@@ -367,11 +371,9 @@ int HTMLEquivalentForFontSize(int fontSize)
 
     enumerator = [[inArgs allKeys] objectEnumerator];
     while((arg = [enumerator nextObject])){
-        //Face
         if([arg caseInsensitiveCompare:@"FACE"] == 0){
             [textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
-        //Size
         }else if([arg caseInsensitiveCompare:@"SIZE"] == 0){
             int	size;
 
@@ -391,15 +393,28 @@ int HTMLEquivalentForFontSize(int fontSize)
                 [textAttributes setFontSize:size];
             }
 
-        //ABSZ
         }else if([arg caseInsensitiveCompare:@"ABSZ"] == 0){
             [textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
-        //Color
         }else if([arg caseInsensitiveCompare:@"COLOR"] == 0){
             [textAttributes setTextColor:[[inArgs objectForKey:arg] hexColor]];
         }
     }
+}
+
++ (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+    NSEnumerator 	*enumerator;
+    NSString		*arg;
+
+    enumerator = [[inArgs allKeys] objectEnumerator];
+    while((arg = [enumerator nextObject])){
+        if([arg caseInsensitiveCompare:@"BGCOLOR"] == 0){
+            [textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
+            NSLog(@"BG: %@",[inArgs objectForKey:arg]);
+        }
+    }
+
 }
 
 

@@ -83,6 +83,12 @@
     [dictionary setObject:inColor forKey:NSForegroundColorAttributeName];
 }
 
+//Set the text background color
+- (void)setBackgroundColor:(NSColor *)inColor
+{
+    [dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
+}
+
 //Enable a masked trait (bold, italic)
 - (void)enableTrait:(NSFontTraitMask)inTrait
 {

@@ -18,6 +18,9 @@
 #import "AISMViewPlugin.h"
 #import "AIAdium.h"
 #import "AISMViewController.h"
+#import "AISMPreferences.h"
+
+#define SMV_DEFAULT_PREFS	@"SMVDefaults"
 
 @implementation AISMViewPlugin
 
@@ -26,6 +29,12 @@
     controllerArray = [[NSMutableArray alloc] init];
     
     [[owner interfaceController] registerMessageViewController:self];
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
+    //Install the preference view
+    preferences = [[AISMPreferences messageViewPreferencesWithOwner:owner] retain];
 }
 
 - (void)uninstallPlugin

@@ -62,7 +62,13 @@ char intToHex(int val);
 
 @implementation NSColor (AIColorAdditions)
 
-//Percent should be 0.0 to 1.0
+//Returns YES if this color is dark
+- (BOOL)colorIsDark
+{
+    return([[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] brightnessComponent] < 0.5);
+}
+
+//Percent should be -1.0 to 1.0 (negatives will make the color brighter)
 - (NSColor *)darkenBy:(float)amount
 {
     NSColor	*convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];

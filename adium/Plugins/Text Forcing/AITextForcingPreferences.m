@@ -35,14 +35,14 @@
 {
     if(sender == button_setFont){
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-        NSFont		*contactListFont = [[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont];
+        NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont];
 
         //In order for the font panel to work, we must be set as the window's delegate
         [[textField_desiredFont window] setDelegate:self];
 
         //Setup and show the font panel
         [[textField_desiredFont window] makeFirstResponder:[textField_desiredFont window]];
-        [fontManager setSelectedFont:contactListFont isMultiple:NO];
+        [fontManager setSelectedFont:selectedFont isMultiple:NO];
         [fontManager orderFrontFontPanel:self];
 
     }else if(sender == colorWell_textColor){

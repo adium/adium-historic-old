@@ -63,7 +63,11 @@
             [message addAttribute:NSForegroundColorAttributeName value:force_desiredTextColor range:NSMakeRange(0, [message length])];
             [contentMessage setMessage:message];
         }
-
+        if(forceBackground){
+            [message addAttribute:NSBackgroundColorAttributeName value:force_desiredBackgroundColor range:NSMakeRange(0, [message length])];
+            [contentMessage setMessage:message];
+        }
+        
     }
 }
 
