@@ -109,7 +109,7 @@
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
     //We only need to redraw if the text color has changed
-    if(/*[keys containsObject:@"Tab Color"] ||*/ [keys containsObject:@"Tab Text Color"]){
+    if(keys == nil || /*[keys containsObject:@"Tab Color"] ||*/ [keys containsObject:@"Tab Text Color"]){
         //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
         //[self setColor:[[listObject displayArrayForKey:@"Tab Color"] averageColor]];
 
@@ -117,7 +117,7 @@
     }
 
     //If the list object's display name changed, we resize the tabs
-    if([keys containsObject:@"Display Name"]){
+    if(keys == nil || [keys containsObject:@"Display Name"]){
         //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
         [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
     }
