@@ -64,7 +64,7 @@
 - (void)_init
 {
     drawsAlternatingRows = NO;
-    alternatingRowColor = nil;
+    alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
     
     //Group expand/collapse notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];

@@ -19,14 +19,12 @@
 @class AIAlternatingRowTableView, AIEventSoundsPlugin, AIEventSoundCustom;
 
 @interface AIEventSoundPreferences : AIPreferencePane {
-    AIEventSoundsPlugin			*plugin;
     IBOutlet	NSPopUpButton		*popUp_soundSet;
     IBOutlet    NSButton                *button_muteWhileAway;
 
     AIEventSoundCustom			*eventSoundCustomPanel;
 }
 
-+ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner;
 - (IBAction)selectSoundSet:(id)sender;
 - (IBAction)toggleMuteWhileAway:(id)sender;
 

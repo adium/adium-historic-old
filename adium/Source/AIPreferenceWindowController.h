@@ -29,7 +29,6 @@
     IBOutlet	AIFlippedCategoryView		*view_Messages_Display;
     IBOutlet	AIFlippedCategoryView		*view_Messages_Sending;
     IBOutlet	AIFlippedCategoryView		*view_Messages_Receiving;
-    IBOutlet	AIFlippedCategoryView		*view_Messages_Emoticons;
 
     IBOutlet	NSTabView			*tabView_status;
     IBOutlet	AIFlippedCategoryView		*view_Status_Away;
@@ -40,6 +39,8 @@
     IBOutlet	AIFlippedCategoryView		*view_Sound;
 
     IBOutlet 	AIFlippedCategoryView		*view_Alerts;
+    
+    IBOutlet 	AIFlippedCategoryView		*view_Emoticons;
 
     IBOutlet	NSOutlineView			*outlineView_advanced;
     IBOutlet	AIFlippedCategoryView		*view_Advanced;

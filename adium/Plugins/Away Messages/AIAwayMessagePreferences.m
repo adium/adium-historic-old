@@ -162,7 +162,6 @@
 {
     //Configure our view
     [outlineView_aways setDrawsAlternatingRows:YES];
-    [outlineView_aways setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [outlineView_aways registerForDraggedTypes:[NSArray arrayWithObject:@"AIAwayMessage"]];
     [scrollView_awayList setAutoHideScrollBar:YES];
     [scrollView_awayList setAutoScrollToBottom:NO];

@@ -16,90 +16,144 @@
 #import "AIEmoticon.h"
 
 @interface AIEmoticon (PRIVATE)
-- (void)updateAttributedEmoticon;
+- (AIEmoticon *)initFromPath:(NSString *)inPath;
+- (NSString *)_stringWithMacEndlines:(NSString *)inString;
+- (void)setTextEquivalents:(NSArray *)inArray;
+- (void)setCachedString:(NSAttributedString *)inString image:(NSImage *)inImage;
 @end
 
 @implementation AIEmoticon
 
-+ (id)emoticon
+//Create a new emoticon
++ (id)emoticonFromPath:(NSString *)inPath
 {
-    return([[[self alloc] init] autorelease]);
+    return([[[self alloc] initFromPath:inPath] autorelease]);
 }
 
-- (id)init
+//Init
+- (AIEmoticon *)initFromPath:(NSString *)inPath
 {
     [super init];
-
-    path = nil;
-    representedText = nil;
-    attributedEmoticon = nil;
-
+    path = [inPath retain];
+    textEquivalents = nil;
+    _cachedAttributedString = nil;
+    
     return(self);
 }
 
-- (id)initWithPath:(NSString *)inPath andText:(NSString *)inText
-{
-    [self setRepresentedText:inText];
-    [self setPath:inPath];
-
-    return(self);
-}
-
+//Dealloc
 - (void)dealloc
 {
     [path release];
-    [representedText release];
-    [attributedEmoticon release];
-
-    [super dealloc];
+    [textEquivalents release];
+    [_cachedAttributedString release];
+    [_cachedImage release];
 }
 
-- (NSString *)path
+//Returns an array of the text equivalents for this emoticon
+- (NSArray *)textEquivalents
 {
-    return path;
-}
-- (NSString *)representedText
-{
-    return representedText;
-}
-- (NSString *)string
-{
-    return representedText;
-}
+    if(!textEquivalents){
+        NSString    *equivFilePath = [path stringByAppendingPathComponent:@"TextEquivalents.txt"];
+        
+        //Fetch the text equivalents
+        if([[NSFileManager defaultManager] fileExistsAtPath:equivFilePath]){
+            NSString	*equivString;
+            
+            //Convert the text file into an array of strings
+            equivString = [NSMutableString stringWithContentsOfFile:equivFilePath];
+            equivString = [self _stringWithMacEndlines:equivString];
+            textEquivalents = [[equivString componentsSeparatedByString:@"\r"] retain];
+        }
 
-- (NSAttributedString *)attributedEmoticon
-{
-    return attributedEmoticon;
-}
-
-- (void)setRepresentedText:(NSString *)inString
-{
-    if(representedText != inString){
-        [representedText release];
-        representedText = [inString retain];
+        //If we didn't get any equivelants, just create an empty array
+        if(!textEquivalents) textEquivalents = [[NSMutableArray alloc] init];
     }
+    
+    return(textEquivalents);
 }
 
-- (void)setPath:(NSString *)inPath
+//Flush any cached emoticon images (and image attachment strings)
+- (void)flushEmoticonImageCache
 {
-    if(path != inPath){
-        [path release];
-        path = [inPath retain];
+    [_cachedAttributedString release]; _cachedAttributedString = nil;
+    [_cachedImage release]; _cachedImage = nil;
+}
+    
+//Convert any unix/windows line endings to mac line endings
+- (NSString *)_stringWithMacEndlines:(NSString *)inString
+{
+    NSCharacterSet      *newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+    NSMutableString     *newString = nil; //We avoid creating a new string if not necessary
+    NSRange             charRange;
+    
+    //Step through all the invalid endlines
+    charRange = [inString rangeOfCharacterFromSet:newlineSet];
+    while(charRange.length != 0){
+        if(!newString) newString = [[inString mutableCopy] autorelease];
+
+        //Replace endline and continue
+        [newString replaceCharactersInRange:charRange withString:@"\r"];
+        charRange = [newString rangeOfCharacterFromSet:newlineSet];
+    }
+    
+    return(newString ? newString : inString);
+}
+
+//Returns the display name of this emoticon
+- (NSString *)name
+{
+    return([[path lastPathComponent] stringByDeletingPathExtension]);
+}
+
+//Enable/Disable this emoticon
+- (void)setEnabled:(BOOL)inEnabled
+{
+    enabled = inEnabled;
+}
+- (BOOL)isEnabled{
+    return(enabled);
+}
+
+//Returns the image for this emoticon (cached)
+- (NSImage *)image
+{
+    if(!_cachedImage){
+        NSString    *imagePath = [path stringByAppendingPathComponent:@"Emoticon.tiff"];
+        _cachedImage = [[NSImage alloc] initWithContentsOfFile:imagePath];
     }
 
-    [self updateAttributedEmoticon];
+    return(_cachedImage);
 }
 
-- (void)updateAttributedEmoticon
+//Returns an attributed string containing this emoticon
+- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent
 {
-    NSFileWrapper		*emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
-    AITextAttachmentExtension	*emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
+    NSMutableAttributedString   *attributedString;
+    AITextAttachmentExtension   *attachment;
+    
+    //Cache this attachment for ourself
+    if(!_cachedAttributedString){
+        NSString                    *imagePath = [path stringByAppendingPathComponent:@"Emoticon.tiff"];
+        NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:imagePath] autorelease];
+        AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
+        
+        [emoticonAttachment setFileWrapper:emoticonFileWrapper];
+        _cachedAttributedString = [[NSAttributedString attributedStringWithAttachment:emoticonAttachment] retain];
+    }
+    
+    //Create a copy of our cached string, and update it for the new text equivalent
+    attributedString = [_cachedAttributedString mutableCopy];
+    attachment = [attributedString attribute:NSAttachmentAttributeName atIndex:0 effectiveRange:nil];
+    [attachment setString:textEquivalent];
+    
+    return([attributedString autorelease]);
+}
 
-    [emoticonAttachment setFileWrapper:emoticonFileWrapper];
-    [emoticonAttachment setString:[self string]];
-
-    [attributedEmoticon release];
-    attributedEmoticon = [[NSAttributedString attributedStringWithAttachment:emoticonAttachment] retain];
+//A more useful debug description
+- (NSString *)description
+{
+    return([NSString stringWithFormat:@"%@ (%@)", [[path lastPathComponent] stringByDeletingPathExtension], [[self textEquivalents] objectAtIndex:0]]);
 }
 
 @end

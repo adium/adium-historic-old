@@ -33,6 +33,19 @@
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
 }
 
+//Return a new preference pane, passing plugin
++ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner
+{
+    return([[[self alloc] initWithPlugin:inPlugin owner:inOwner] autorelease]);
+}
+
+//Init, passing plugin
+- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner
+{
+    plugin = inPlugin;
+    return([self initWithOwner:inOwner]);
+}
+
 //Init
 - (id)initWithOwner:(id)inOwner
 {

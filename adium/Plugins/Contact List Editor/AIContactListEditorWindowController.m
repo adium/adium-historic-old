@@ -130,7 +130,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     //Content view colors and alternating rows
     [outlineView_contactList setBackgroundColor:[NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0]];
     [outlineView_contactList setDrawsAlternatingRows:YES];
-    [outlineView_contactList setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [outlineView_contactList setNeedsDisplay:YES];
     [outlineView_contactList setDrawsGrid:YES];
     [outlineView_contactList setGridColor:[NSColor colorWithCalibratedRed:(217.0/255.0) green:(217.0/255.0) blue:(217.0/255.0) alpha:0.7]];

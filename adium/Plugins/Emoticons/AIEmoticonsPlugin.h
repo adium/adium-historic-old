@@ -13,37 +13,33 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 #define PREF_GROUP_EMOTICONS		@"Emoticons"
-#define	KEY_EMOTICON_PACK_PATH		@"EmoticonPackPath"
-#define KEY_EMOTICON_PACK_CONTENTS	@"EmoticonPackContents"
-#define KEY_EMOTICON_PACK_TITLE		@"EmoticonPackTitle"
-#define KEY_EMOTICON_PACK_SOURCE	@"EmoticonPackSource"
-#define KEY_EMOTICON_PACK_PREFS		@"EmoticonPackPrefsDict"
-#define KEY_EMOTICON_PACK_ABOUT		@"EmoticonPackAbout"
+#define KEY_EMOTICON_ACTIVE_PACKS       @"Active Emoticon Packs"
+#define KEY_EMOTICON_DISABLED           @"Disabled Emoticons"
 
 @protocol AIContentFilter;
-@class AIEmoticonPreferences;
+@class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
 
 @interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
-    BOOL			replaceEmoticons;
-    BOOL                        emoticonsEnabled;
-    NSMutableArray		*emoticons;
-    NSMutableDictionary	*indexedEmoticons;
-    
-    NSCharacterSet		*quickScanSet;
-	
     AIEmoticonPreferences	*prefs;
-    NSMutableArray		*cachedPacks;
+    BOOL                        observingContent;
+
+    NSMutableArray              *_availableEmoticonPacks;
+    NSMutableArray              *_activeEmoticons;
+    NSMutableArray              *_activeEmoticonPacks;
+    NSMutableCharacterSet       *_emoticonHintCharacterSet;
+    NSMutableCharacterSet       *_emoticonStartCharacterSet;
+    NSMutableDictionary         *_emoticonIndexDict;
 }
 
-- (void)preferencesChanged:(NSNotification *)notification;
-- (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray;
-- (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray forceReload:(BOOL)reload;
-- (BOOL)loadEmoticonsFromPacks;
-- (void)loadEmoticonsIfNecessary:(BOOL)load;
-- (NSArray *)getEmoticons;
+- (NSArray *)availableEmoticonPacks;
+- (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName;
+- (NSArray *)activeEmoticons;
+- (NSArray *)activeEmoticonPacks;
+- (void)removeActiveEmoticonPacks:(NSArray *)inPacks;
+- (void)addActiveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index;
+- (void)moveActiveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index;
+- (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
+- (void)flushEmoticonImageCache;
 
 @end

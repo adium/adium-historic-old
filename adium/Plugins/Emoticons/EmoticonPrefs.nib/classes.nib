@@ -1,25 +1,52 @@
 {
     IBClasses = (
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AICheckboxList; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {preferenceChanged = id; tableClicked = id; }; 
+            ACTIONS = {removeEmoticons = id; }; 
             CLASS = AIEmoticonPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_enable" = NSButton; 
-                "checkBox_enableEmoticon" = NSButton; 
-                "image_emoticonImage" = NSImageView; 
-                "table_curEmoticonTexts" = NSTableView; 
-                "table_curEmoticons" = NSTableView; 
-                "table_packList" = NSTableView; 
-                "text_emoticonName" = NSTextField; 
-                "text_emoticonPack" = NSTextField; 
-                "text_packInfo" = NSTextView; 
-                "view_prefView" = NSView; 
+                "button_addEmoticons" = NSPopUpButton; 
+                "button_removeEmoticons" = NSButton; 
+                "table_emoticonPacks" = NSTableView; 
+                "table_emoticons" = AIAlternatingRowTableView; 
+                "textField_packTitle" = NSTextField; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                plugin = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {
+            CLASS = AIVariableRowHeightOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

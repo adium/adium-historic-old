@@ -86,7 +86,6 @@ AIDockCustomBehavior	*sharedInstance = nil;
 
     //Configure the table view
     [tableView_events setDrawsAlternatingRows:YES];
-    [tableView_events setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_events setTarget:self];
 
     //Observer preference changes
