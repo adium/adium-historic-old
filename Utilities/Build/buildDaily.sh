@@ -250,7 +250,7 @@ if [ "$replace_running_adium" == "yes" ] && [ -x "$adium_co_dir/build/Adium.app"
 		rm -r "$install_dir/$adium_app_name.old.app"
 		mv "$install_dir/$adium_app_name.app" "$install_dir/$adium_app_name.old.app"
 		mv "$adium_co_dir/build/Adium.app" "$install_dir/$adium_app_name.app"
-		"$install_dir/$adium_app_name.app/Contents/MacOS/Adium" $launch_options
+		"$install_dir/$adium_app_name.app/Contents/MacOS/Adium" $launch_options &
 else
 		cp -r "$adium_co_dir/build/Adium.app" "$install_dir/$adium_app_name.app"
 fi
