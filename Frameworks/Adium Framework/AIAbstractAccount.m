@@ -249,18 +249,16 @@ Adium, Copyright 2001-2005, Adam Iser
         }
 		
     }else if([key isEqualToString:@"FullNameAttr"]) {
-        //Account's full name (alias) formatting changed
-		if([self superclassManagesDisplayName]){
-			//Update the display name for this account
-			NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
-			if([displayName length] == 0) displayName = nil;
-			
-			[[self displayArrayForKey:@"Display Name"] setObject:displayName
-													   withOwner:self];
-			//notify
-			[[adium contactController] listObjectAttributesChanged:self
-													  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
-		}
+		//Update the display name for this account
+		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
+		if([displayName length] == 0) displayName = nil;
+		
+		[[self displayArrayForKey:@"Display Name"] setObject:displayName
+												   withOwner:self];
+		//notify
+		[[adium contactController] listObjectAttributesChanged:self
+												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+
     }else if([key isEqualToString:@"FormattedUID"]){
 		//Transfer formatted UID to status dictionary
 		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
