@@ -3643,7 +3643,6 @@
 				34BD9D2A053146CC000AB133,
 				34BD9D2B053146CC000AB133,
 				34BD9D2C053146CC000AB133,
-				34BD9D2D053146CC000AB133,
 				34BD9D2F053146CC000AB133,
 				34BD9D30053146CC000AB133,
 				34BD9D31053146CC000AB133,
@@ -3838,6 +3837,7 @@
 				7E824CDE06387FAF00813072,
 				7E824CDF06387FAF00813072,
 				BF00023B063A4FFE0019910B,
+				4B494B45063AB63000E2EF06,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3874,12 +3874,6 @@
 		};
 		34BD9D2C053146CC000AB133 = {
 			fileRef = F55B416803AB8C0501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D2D053146CC000AB133 = {
-			fileRef = F55B416A03AB8C0B01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8801,6 +8795,20 @@
 			path = "Frameworks/Adium Framework/stackImage.tiff";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B494B44063AB63000E2EF06 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = keys.png;
+			path = Source/keys.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B494B45063AB63000E2EF06 = {
+			fileRef = 4B494B44063AB63000E2EF06;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B4ABB4D04CC9F9C00A8010A = {
 			fileEncoding = 30;
@@ -19811,14 +19819,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F55B416A03AB8C0B01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = keys.tiff;
-			path = Source/keys.tiff;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F55B416E03AB8C3201A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -21262,7 +21262,7 @@
 				3420E65E0611D80000AE67E3,
 				F55B416803AB8C0501A8010A,
 				3420E65F0611D80000AE67E3,
-				F55B416A03AB8C0B01A8010A,
+				4B494B44063AB63000E2EF06,
 			);
 			isa = PBXGroup;
 			name = "Password Prompt";
