@@ -46,9 +46,9 @@
 	IBOutlet NSView					*view_details;
 	IBOutlet NSTextField			*textField_rate;
 	IBOutlet NSTextField			*textField_source;
-	IBOutlet NSImageView			*imageView_source;
+	IBOutlet NSButton				*imageView_source;
 	IBOutlet NSTextField			*textField_destination;
-	IBOutlet NSImageView			*imageView_destination;
+	IBOutlet NSButton				*imageView_destination;
 	
 	BOOL							isSelected;
 	BOOL							progressVisible;
