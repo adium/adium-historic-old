@@ -99,7 +99,7 @@ JSCEventBezelController *sharedInstance = nil;
             [bezelView setQueueField: @""];
         }
         
-        [bezelView setMainBuddyName: [NSString stringWithFormat: @"%@ (%@)",[contact displayName],[contact UID]]];
+        [bezelView setMainBuddyName: [NSString stringWithFormat: @"%@",[contact displayName]]];
         
         if ([event isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
             [bezelView setMainBuddyStatus: @"is now online"];
