@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.27 2004/03/12 03:20:02 adamiser Exp $
+// $Id: AIMenuController.m,v 1.28 2004/03/24 06:55:22 evands Exp $
 
 #import "AIMenuController.h"
 
@@ -124,7 +124,7 @@
     destination = location;
     menuItem = [locationArray objectAtIndex:destination];
     if([menuItem isKindOfClass:[NSMenuItem class]]){
-		while(menuItem == nilMenuItem){
+		while((menuItem == nilMenuItem) && (destination > 0)){
 			destination--;
 			menuItem = [locationArray objectAtIndex:destination];
 		}
