@@ -1856,7 +1856,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#Current\nif !([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\" ]); then\nmkdir \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\"\n#Root\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Libgaim\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\nfi";
+			shellScript = "if !([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\" ]); then\n#Current\nmkdir \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\"\n#Root\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Libgaim\"\nln -s \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\nfi";
 		};
 		344ECBA90620F323007256C6 = {
 			isa = PBXFileReference;
@@ -7230,12 +7230,11 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = NO;
-				GCC_DEBUGGING_SYMBOLS = used;
+				GCC_DEBUGGING_SYMBOLS = default;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-mcpu=7450 -Os -pipe -fsigned-char -maltivec -mabi=altivec -mpowerpc-gfxopt -mtune=7450";
 				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS";
 				ZERO_LINK = NO;
 			};
