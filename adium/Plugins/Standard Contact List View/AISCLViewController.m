@@ -22,6 +22,9 @@
 #define TOOL_TIP_CHECK_INTERVAL	5.0	//Check for mouse movement 5 times a second
 #define TOOL_TIP_DELAY 		3	//Number of check intervals of no movement before a tip is displayed
 
+#define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
+#define KEY_DUAL_RESIZE_HORIZONTAL              @"Autoresize Horizontal"
+
 @interface AISCLViewController (PRIVATE)
 - (AISCLViewController *)initWithOwner:(id)inOwner;
 - (void)contactListChanged:(NSNotification *)notification;
@@ -81,6 +84,7 @@
 {    
     //Remove observers (general)
     [[owner notificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:contactListView name:ListObject_AttributesChanged object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Hide any open tooltips
@@ -111,21 +115,20 @@
 
     //Redisplay and resize
     [contactListView reloadData];
-    [self _desiredSizeChanged];
+    [contactListView performFullRecalculation]; //recalculate all sizes now rather than waiting for random updates to recache them
 }
 
 //Reload the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
     [contactListView reloadData]; //Redisplay
-    [self _desiredSizeChanged]; //Resize
+    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView]; //Resize
 }
 
 //Redisplay the modified object
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     AIListObject	*object = [notification object];
-
     if(object){ //Simply redraw the modified contact
         int row = [contactListView rowForItem:object];
 
@@ -178,7 +181,19 @@
             However, setting a window to opaque causes it's contents to be shadowed.  It is a pain (and a major speed hit) to maintain shadows beneath the contact list text.  A little trick to prevent the window manager from shadowing the window content is to set the window itself as non-opaque.  The contents of a window that is non-opaque will not cast a shadow.  Setting the window's alpha value to 0.9999999 removes the shadowing without giving the slightest appearance of opacity to the window titlebar and widgets.
             */
         [[contactListView window] setAlphaValue:(alpha == 100.0 ? 1.0 : 0.9999999)];
-
+    }
+   
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        if ([[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue]) {
+            //register our observers - listObjectAttributes (for display name) and status through listObjectObserver
+            [[owner notificationCenter] addObserver:contactListView selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
+            [[owner contactController] registerListObjectObserver:contactListView];
+        } else {
+            //unregister our observers
+            [[owner notificationCenter] removeObserver:contactListView name:ListObject_AttributesChanged object:nil];
+            [[owner contactController] unregisterListObjectObserver:contactListView];
+        }
     }
 }
 
@@ -296,7 +311,14 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
+    NSMutableArray      *contactArray =  [[owner contactController] allContactsInGroup:item subgroups:YES];
+    NSEnumerator        *enumerator = [contactArray objectEnumerator];
+    AIListObject        *object;
     [item setExpanded:state];
+
+    while(object=[enumerator nextObject]) {
+        [contactListView updateHorizontalSizeForObject:object]; 
+    }
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item

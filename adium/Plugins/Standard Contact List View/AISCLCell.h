@@ -23,6 +23,6 @@
 }
 
 - (void)setContact:(AIListObject *)inObject;
-- (NSSize)cellSizeForBounds:(NSRect)aRect inView:(NSView *)controlView;
+- (NSArray *)cellSizeArrayForBounds:(NSRect)aRect inView:(NSView *)controlView;
 
 @end

@@ -26,12 +26,14 @@
 #define DESIRED_MIN_HEIGHT	20
 #define EMPTY_HEIGHT		-2
 #define EMPTY_WIDTH		140
+#define UPDATE_CLUMP_INTERVAL		1.0
 
 @interface AISCLOutlineView (PRIVATE)
 - (void)configureView;
 - (void)configureTransparency;
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow;
 - (void)_sizeColumnToFit;
+- (void)performFullRecalculationFor:(int)j;
 @end
 
 @implementation AISCLOutlineView
@@ -49,7 +51,13 @@
     invertedColor = nil;
     groupColor = nil;
     invertedGroupColor = nil;
-        
+    
+    int i;
+    for (i=0 ; i < 3; i++) {
+        desiredWidth[i] = 0;
+        hadMax[i] = nil;
+    }
+    
     //Set up the table view
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
     [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
@@ -173,56 +181,111 @@
 
 
 // Auto Sizing --------------------------------------------------------------------------
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+{
+    [self updateHorizontalSizeForObject:inObject ];
+    return nil; //we don't change any attributes
+}
+
+- (void)listObjectAttributesChanged:(NSNotification *)notification
+{
+    NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
+    if([keys containsObject:@"Display Name"]){
+        if ([self updateHorizontalSizeForObject:[notification object]])   
+            [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
+    }
+}
+
+- (BOOL)updateHorizontalSizeForObject:(AIListObject *)inObject
+{
+    NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
+    AISCLCell 		*cell = [column dataCell];
+    NSSize		cellSize;
+    NSArray             *cellSizeArray;
+    BOOL                changed = NO;
+    BOOL                isHidden = [[inObject displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    int                 j;
+    
+    if ( (isHidden) || !([[inObject containingGroup] isExpanded]) ) { //if it's hidden it shouldn't be part of our current cache
+        for (j=0 ; j < 3; j++) {  //check left, middle, and right
+            if (hadMax[j] == inObject) {   //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
+                [self performFullRecalculationFor:j];
+                changed = YES;
+            }
+        }
+    } else { //contact is in the active contact list and is 
+        [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
+        for (j=0 ; j < 3; j++) {  //check left, middle, and right
+            cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
+            cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
+            if(cellSize.width > desiredWidth[j]) {
+                desiredWidth[j] = cellSize.width;
+                hadMax[j] = inObject;
+                changed = YES;
+            } else if ((hadMax[j] == inObject) && (cellSize.width != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
+                [self performFullRecalculationFor:j];
+                changed = YES;
+            }
+        }   
+    }
+    
+    return changed;
+}
+
+- (void)performFullRecalculation
+{
+    int j;
+    for (j=0 ; j < 3 ; j++) {
+        [self performFullRecalculationFor:j];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
+}
+
+- (void)performFullRecalculationFor:(int)j {
+    
+    NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
+    AISCLCell           *cell = [column dataCell];
+    AIListObject	*object;
+    NSSize		cellSize;
+    NSArray             *cellSizeArray;
+    int                 i;
+    
+    desiredWidth[j]=0;
+    for(i = 0; i < [self numberOfRows]; i++){
+        object = [self itemAtRow:i];
+        [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:object];
+        
+        cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
+    
+        cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
+        if(cellSize.width > desiredWidth[j]){
+            desiredWidth[j] = cellSize.width;
+            hadMax[j] = object;
+        }
+    } 
+}
+
 // Returns our desired size
 - (NSSize)desiredSize
 {
     if([self numberOfRows] == 0){
         return( NSMakeSize(EMPTY_WIDTH, EMPTY_HEIGHT) );
-
     }else{
-        int	desiredHeight;//, desiredWidth;
-
+        float	desiredHeight;
+        int     j;
+        float   totalWidth = 0;
+        
         desiredHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
-
-        int desiredWidth = 160;
-/*
- What we're doing here is way to computationally intense, and doesn't even work right.  The desired behavior would resize the list like:
-
- Buddy 1               
- Idle Buddy            1:02
- Buddy has a long name
-
- The commented behavior below resizes to this:
-
- Buddy 1
- Idle Buddy       1:02
- Buddy has a long name
-
- Which doesn't look good with a large list.  Not sure of an easy or fast way to fix this at the moment.  What's wrong is that views are only applied to specific contacts.  So the idle view is only present on the idle buddy, and not the one with a long name.  I guess a fix for this would involve custom desired size methods for AISCLCell that would return the desired left/middle/right widths separately.  That will still be slow, but would atleast work right.  We'd need caching of those widths to improve speed.  I probably should tackle this.
- */
-/*
- //        int i;
-
- for(i = 0; i < [self numberOfRows]; i++){
-            NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-            AISCLCell 		*cell = [column dataCell];
-            NSSize		cellSize;
-
-            [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:i]];
-
-            cellSize = [cell cellSizeForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
-            cellSize.width += [self intercellSpacing].width;
-            //cellSize.width += [self levelForRow:i] * [self indentationPerLevel];
-
-            if(cellSize.width > desiredWidth){
-                desiredWidth = cellSize.width;
-            }
-        }*/
-
-        if(desiredWidth < DESIRED_MIN_WIDTH) desiredWidth = DESIRED_MIN_WIDTH;
-        if(desiredHeight < DESIRED_MIN_HEIGHT) desiredHeight = DESIRED_MIN_HEIGHT;
-
-        return( NSMakeSize(desiredWidth, desiredHeight) );
+         for (j = 0; j < 3; j++) {
+             totalWidth += desiredWidth[j];   
+         }
+         
+         totalWidth += [self intercellSpacing].width + 3; //+3 is to account for variable-width letters.  stupid things.
+         
+         if(totalWidth < DESIRED_MIN_WIDTH) totalWidth = DESIRED_MIN_WIDTH;
+         if(desiredHeight < DESIRED_MIN_HEIGHT) desiredHeight = DESIRED_MIN_HEIGHT;
+         
+         return( NSMakeSize(totalWidth, desiredHeight) );
     }
 }
 
