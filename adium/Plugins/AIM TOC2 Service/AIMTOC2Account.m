@@ -562,7 +562,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.62 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.63 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -1047,7 +1047,7 @@ static char *hash_password(const char * const password);
             client = @"Unknown Client";
         }
         
-        //There is an extra unknown parameter at the end of the update message.  In my experience, the only possible value is '0'.  I'm sure the value has some purpose though (Contact is typing notification?)
+        //There is an extra unknown parameter at the end of the update message.  In my experience, the only possible value is '0'.  I'm sure the value has some purpose though
 //        if([[message TOCStringArgumentAtIndex:7] compare:@"0"] != 0){
 //            NSLog(@"****%@ has a mystery value of [%@]****",name,[message TOCStringArgumentAtIndex:7]);
 //        }
@@ -1069,12 +1069,13 @@ static char *hash_password(const char * const password);
         //Idle time (seconds)
         storedDate = [handleStatusDict objectForKey:@"IdleSince"];
         if(storedDate == nil || (idleTime != -[storedDate timeIntervalSinceNow])){
-            if(idleTime == 0){
+            if(idleTime == 0 && storedDate){
                 [handleStatusDict removeObjectForKey:@"IdleSince"];
-            }else{
+                [alteredStatusKeys addObject:@"IdleSince"];
+            }else if(idleTime > 0){
                 [handleStatusDict setObject:[NSDate dateWithTimeIntervalSinceNow:-idleTime] forKey:@"IdleSince"];
+                [alteredStatusKeys addObject:@"IdleSince"];
             }
-            [alteredStatusKeys addObject:@"IdleSince"];
         }
 
         //Sign on date

@@ -526,6 +526,7 @@ extern void* objc_getClass(const char *name);
 
     //Status (Online, Away, and Idle)
     if((storedValue = [inProperties objectForKey:@"FZPersonStatus"])){
+        BOOL			touchAway = YES;
         BOOL			online;
         BOOL			away;
         NSDate			*idleSince;
@@ -538,10 +539,9 @@ extern void* objc_getClass(const char *name);
             break;
             case 2: //Idle (or Idle & Away)
                 online = YES;
-
                 idleSince = [inProperties objectForKey:@"FZPersonAwaySince"];
-
-                away = NO; //iChat doesn't differentiate between idle and idle+away :(
+                away = NO;
+                touchAway = NO; //iChat doesn't differentiate between idle and idle+away :(  So we leave away alone.
             break;
             case 3: //Away
                 online = YES;
@@ -574,19 +574,22 @@ extern void* objc_getClass(const char *name);
         //Idle time (seconds)
         storedDate = [handleStatusDict objectForKey:@"IdleSince"];
         if(storedDate == nil || ![storedDate isEqualToDate:idleSince]){
-            if(!idleSince){
+            if(!idleSince && storedDate){
                 [handleStatusDict removeObjectForKey:@"IdleSince"];
-            }else{
+                [alteredStatusKeys addObject:@"IdleSince"];
+            }else if(idleSince){
                 [handleStatusDict setObject:idleSince forKey:@"IdleSince"];
+                [alteredStatusKeys addObject:@"IdleSince"];
             }
-            [alteredStatusKeys addObject:@"IdleSince"];
         }
 
         //Away
-        storedValue = [handleStatusDict objectForKey:@"Away"];
-        if(storedValue == nil || away != [storedValue intValue]){
-            [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
-            [alteredStatusKeys addObject:@"Away"];
+        if(touchAway){
+            storedValue = [handleStatusDict objectForKey:@"Away"];
+            if(storedValue == nil || away != [storedValue intValue]){
+                [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
+                [alteredStatusKeys addObject:@"Away"];
+            }
         }
     }
 

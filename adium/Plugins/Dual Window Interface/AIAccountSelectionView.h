@@ -17,7 +17,7 @@
 
 @class AIAdium, AIAccount, AIListContact;
 
-@protocol AIAccountSelectionViewDelegate
+@protocol AIAccountSelectionViewDelegate <NSObject>
 - (void)setAccount:(AIAccount *)inAccount;
 - (AIAccount *)account;
 - (AIListContact *)contact;

@@ -117,7 +117,6 @@
     BOOL insertText = YES;
 
     //working...
-//    NSLog(@"Insert:\"%@\"",aString);
     [[owner contentController] stringAdded:aString toTextEntryView:self];
 
     if([aString length] && [aString characterAtIndex:0] == 10){
