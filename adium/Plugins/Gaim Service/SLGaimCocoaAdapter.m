@@ -468,7 +468,7 @@ static void adiumGaimBlistSetVisible(GaimBuddyList *list, gboolean show)
 
 static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *username, const char *group, const char *alias)
 {
-    NSLog(@"adiumGaimBlistRequestAddBuddy");
+	[accountLookup(account) requestAddContactWithUID:[NSString stringWithUTF8String:username]];
 }
 
 static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias)
