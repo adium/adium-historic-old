@@ -107,7 +107,6 @@
 	// Get the current http helper app, to fill the Spec and TheSize variables and determine the default browser
 	Err = ICGetPref(ICInst, "\pHelper¥http", &Junk, &Spec, &TheSize);
 	
-	
 	switch(Spec.fCreator){
 		case 'sfri': /* Safari */
 			importerClass = [SHSafariBookmarksImporter class];
