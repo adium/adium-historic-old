@@ -674,47 +674,38 @@ int _statusArraySort(id objectA, id objectB, void *context)
 {
 	if(!_activeStatusState){
 		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		NSMutableDictionary	*statusCountDict = [NSMutableDictionary dictionary];
+		NSCountedSet		*statusCounts = [NSCountedSet set];
 		AIAccount			*account;
 		AIStatus			*statusState;
 		NSNumber			*count;
-		int					highestCount = 0;
-		BOOL				accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
-		
+		unsigned			 highestCount = 0;
+		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
+
 		if(accountsAreOnline){
 			AIStatus	*bestStatusState = nil;
 	
 			while(account = [enumerator nextObject]){
 				if([account online]){
-					statusState = [account statusState];
-					
-					if(count = [statusCountDict objectForKey:statusState])
-						count = [NSNumber numberWithInt:([count intValue]+1)];
-					else
-						count = [NSNumber numberWithInt:1];
-					
-					[statusCountDict setObject:count
-										forKey:statusState];
+					[statusCounts addObject:[account statusState]];
 				}
 			}
 			
-			enumerator = [statusCountDict keyEnumerator];
-			while(statusState = [enumerator nextObject]){
-				int thisCount = [[statusCountDict objectForKey:statusState] intValue];
+			enumerator = [statusCounts objectEnumerator];
+			while((statusState = [enumerator nextObject])) {
+				unsigned thisCount = [statusCounts countForObject:statusState];
 				if(thisCount > highestCount){
 					bestStatusState = statusState;
 					highestCount = thisCount;
 				}
 			}
-			
-			_activeStatusState = [bestStatusState retain];
 
-		}else{
+			_activeStatusState = [bestStatusState retain];
+		} else {
 			_activeStatusState = [offlineStatusState retain];
 		}
 	}
-	
-	return(_activeStatusState);
+
+	return _activeStatusState;
 }
 
 - (AIStatusType)activeStatusType
