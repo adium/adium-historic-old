@@ -6,6 +6,7 @@
 //
 
 #import "DCGaimNovellJoinChatViewController.h"
+#import "DCJoinChatWindowController.h"
 
 @implementation DCGaimNovellJoinChatViewController
 
@@ -13,7 +14,7 @@
 {
 	[super configureForAccount:inAccount];
 	if( delegate )
-		[delegate setJoinChatEnabled:NO];
+		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:NO];
 }
 
 - (NSString *)nibName

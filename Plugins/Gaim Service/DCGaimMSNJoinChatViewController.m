@@ -6,6 +6,7 @@
 //
 
 #import "DCGaimMSNJoinChatViewController.h"
+#import "DCJoinChatWindowController.h"
 
 @implementation DCGaimMSNJoinChatViewController
 
@@ -13,7 +14,7 @@
 {
 	[super configureForAccount:inAccount];
 	if( delegate )
-		[delegate setJoinChatEnabled:NO];
+		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:NO];
 }
 
 - (void)joinChatWithAccount:(AIAccount *)inAccount
