@@ -7,7 +7,7 @@
 //
 
 @interface DCGaimOscarJoinChatViewController : DCJoinChatViewController {
-
+	IBOutlet		NSTextField		*textField_roomName;
 }
 
 @end

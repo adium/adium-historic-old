@@ -34,7 +34,7 @@
 															   target:self
 															   action:@selector(dummyTarget:)
 														keyEquivalent:@""] autorelease];
-	[[adium menuController] addContextualMenuItem:menuItem_inviteToChatContext toLocation:Context_Contact_ListAction];	
+	[[adium menuController] addContextualMenuItem:menuItem_inviteToChatContext toLocation:Context_Contact_Action];	
 	
 }
 
@@ -46,8 +46,7 @@
 
 		if( shouldRebuildChatList ) {
 			AIListObject *object = [[adium contactController] selectedListObjectInContactList];
-			if( ![object isKindOfClass:[AIListGroup class]] )
-				[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:object]];
+			[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:object]];
 		}
 		return ([[menuItem_inviteToChat submenu] numberOfItems] > 0);
 
@@ -56,8 +55,7 @@
 		
 		if( shouldRebuildChatList ) {
 			AIListContact *object = [[adium menuController] contactualMenuContact];
-			if( ![object isKindOfClass:[AIListGroup class]] )
-				[menuItem_inviteToChatContext setSubmenu:[self groupChatMenuForContact:object]];
+			[menuItem_inviteToChatContext setSubmenu:[self groupChatMenuForContact:object]];
 		}
 		return ([[menuItem_inviteToChatContext submenu] numberOfItems] > 0);
 
@@ -87,7 +85,7 @@
 	NSString		*serviceID;
 	int i;
 	
-	if( contact ) {
+	if( contact && ![contact isKindOfClass:[AIListGroup class]] ) {
 				
 		// Get a dictionary of (service, contacts in that service)
 		if( [contact isKindOfClass:[AIMetaContact class]] )
@@ -108,19 +106,22 @@
 				// Is this the same service as this contact?				
 				if( [[[[[chat account] service] handleServiceType] identifier] isEqualToString:serviceID] ) {
 					
+					NSLog(@"#   Considering chat %@. Name: %@. Participants: %d",chat,[chat name],[[chat participatingListObjects] count]);
 					// Is this a group chat?
-					if( [[chat participatingListObjects] count] > 1 ) {
-						if( ![chat name] )
-							[chat setName:@"BOZO THE CLOWN"];
+					if( [chat name] ) {
+						NSLog(@"##  Chat %@ has a name: %@",chat,[chat name]);
 						
-						// Future: sort by service, add dividers
-						NSMenuItem *chatItem = [[NSMenuItem alloc] initWithTitle:[chat name]
-															   target:self
-															   action:@selector(inviteToChat:)
-														keyEquivalent:@""];
-						[chatItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,serviceID,nil]];
-						[menu_chatMenu addItem:chatItem];
-						[chatItem release];
+						if( [menu_chatMenu indexOfItemWithTitle:[chat name]] == -1 ) {
+
+							NSLog(@"### and it's not in the menu!");
+							NSMenuItem *chatItem = [[NSMenuItem alloc] initWithTitle:[chat name]
+																			  target:self
+																			  action:@selector(inviteToChat:)
+																	   keyEquivalent:@""];
+							[chatItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,serviceID,nil]];
+							[menu_chatMenu addItem:chatItem];
+							[chatItem release];
+						}
 					}
 				}
 			}

@@ -9,7 +9,12 @@
             ACTIONS = {closeWindow = id; joinChat = id; }; 
             CLASS = DCJoinChatViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_service" = NSPopUpButton; view = NSView; "view_customView" = NSView; }; 
+            OUTLETS = {
+                "popUp_service" = NSPopUpButton; 
+                "textField_roomName" = NSTextField; 
+                view = NSView; 
+                "view_customView" = NSView; 
+            }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {

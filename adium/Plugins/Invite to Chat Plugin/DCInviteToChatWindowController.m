@@ -49,7 +49,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	if( contact && chat ) {
 		
 		// Sanity check: is it a group chat?
-		if( [[chat participatingListObjects] count] > 1 ) {
+		if( [chat name] ) {
 			BOOL res = [chat inviteListContact:contact withMessage:[textField_message stringValue]];
 			NSLog(@"#### Invited %@, result was %d",contact,res);
 		} else {

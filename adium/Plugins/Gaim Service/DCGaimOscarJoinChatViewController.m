@@ -31,7 +31,8 @@
 	NSDictionary	*chatCreationInfo;
 	
 	//Obtain room and exchange from the view
-	room = [NSString stringWithFormat:@"Chat %@",[NSString randomStringOfLength:5]];
+	//room = [NSString stringWithFormat:@"Chat %@",[NSString randomStringOfLength:5]];
+	room = [textField_roomName stringValue];
 	exchange = 4;
 
 	NSLog(@"#### OSCAR joinChatWithAccount: %@ joining %@ on exchange %i",inAccount,room,exchange);
@@ -50,8 +51,7 @@
 	 indicate if any keys were missed in this method.
 	 */
 	
-	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",
-		[NSNumber numberWithInt:exchange],@"exchange"];
+	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",[NSNumber numberWithInt:exchange],@"exchange",nil];
 	
 	//Open a chat, using the room as the name, and passing the chatCreationInfo we just built
 	//Note: Gaim expects that the name of the chat be the same as the first entry in the proto_info for that prpl
