@@ -11,12 +11,8 @@
 
 @implementation ESGaimGaduGaduAccountViewController
 
-- (NSString *)nibName{
-    return(@"ESGaimGaduGaduAccountView");
-}
-
 - (NSString *)userNameLabel{
-    return(@"GG Number"); //
+    return(@"GG Number");
 }
 
 @end
