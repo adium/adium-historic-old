@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.21 2003/12/24 15:31:13 adamiser Exp $
+// $Id: AIAccount.m,v 1.22 2003/12/24 18:51:39 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -140,7 +140,6 @@
 //Callback after the user enters their password for connecting
 - (void)passwordReturnedForConnect:(NSString *)inPassword
 {
-	NSLog(@"passwordReturnedForConnect:%@",inPassword);
 	if(inPassword && [inPassword length] != 0){
         //Save the new password
 		if(password != inPassword){
