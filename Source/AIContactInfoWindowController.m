@@ -90,6 +90,12 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     [super dealloc];
 }	
 
+//
+- (NSString *)adiumFrameAutosaveName
+{
+	return(KEY_INFO_WINDOW_FRAME);
+}
+
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {    
@@ -97,7 +103,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	int             selectedTab;
     NSTabViewItem   *tabViewItem;
-	NSString		*savedFrame;
 
     //
 	loadedPanes = [[NSMutableSet alloc] init];
@@ -124,14 +129,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 									   name:Interface_ContactSelectionChanged 
 									 object:nil];
     
-	//Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_INFO_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }else{
-        [[self window] center];
-    }
-	
 	[self setupMetaContactDrawer];
 }
 
@@ -149,6 +146,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSEnumerator 		*enumerator;
     AIContactInfoPane	*pane;
 	
+	[super windowShouldClose:sender];
+	
 	//Take focus away from any controls to ensure that they register changes and save
     [[self window] makeFirstResponder:tabView_category];
 	
@@ -162,12 +161,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     [[adium preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfSelectedTabViewItem]]
 										 forKey:KEY_INFO_SELECTED_CATEGORY
 										  group:PREF_GROUP_WINDOW_POSITIONS];
-	
-	
-    //Save the window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_INFO_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
 	
 	//Close down
 	[[adium notificationCenter] removeObserver:self];
