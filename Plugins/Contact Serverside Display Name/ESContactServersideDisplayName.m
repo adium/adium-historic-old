@@ -18,20 +18,38 @@
 #import "ESContactServersideDisplayName.h"
 #import <Adium/AIListObject.h>
 
+/*
+ * @class ESContactServersideDisplayName
+ * @brief Tooltip component: Serverside Display Name
+ *
+ * Only shows the serverside display name if it is not the same as the normal display name.
+ */
 @implementation ESContactServersideDisplayName
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Display Name");
+    return(AILocalizedString(@"Display Name",nil));
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSString			*serverDisplayName;
