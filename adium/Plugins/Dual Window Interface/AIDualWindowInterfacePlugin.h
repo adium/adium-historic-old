@@ -27,6 +27,8 @@
 #define KEY_AUTOHIDE_TABBAR			@"Autohide Tab Bar"
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME           @"Dual Message Window Frame"
 
+#define TAB_CELL_IDENTIFIER                     @"Tab Cell Identifier"
+
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, ESDualWindowMessageWindowPreferences;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
