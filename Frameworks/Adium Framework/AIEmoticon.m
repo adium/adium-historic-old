@@ -25,7 +25,6 @@ Adium, Copyright 2001-2005, Adam Iser
 
 @implementation AIEmoticon
 
-//Create a new emoticon
 /*
  * @brief Create an autoreleased emoticon object
  *
