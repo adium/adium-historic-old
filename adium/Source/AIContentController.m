@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.95 2004/07/27 19:16:41 evands Exp $
+// $Id: AIContentController.m,v 1.96 2004/07/28 21:30:20 evands Exp $
 
 #import "AIContentController.h"
 
@@ -33,6 +33,8 @@
     textEntryContentFilterArray = [[NSMutableArray alloc] init];
     textEntryViews = [[NSMutableArray alloc] init];
     defaultFormattingAttributes = nil;
+	emoticonPacks = nil;
+	emoticonsArray = nil;
 	
     //Chat tracking
     chatArray = [[NSMutableArray alloc] init];
@@ -50,6 +52,8 @@
 //dealloc
 - (void)dealloc
 {
+	[emoticonPacks release]; emoticonPacks = nil;
+	[emoticonsArray release]; emoticonsArray = nil;
     [textEntryFilterArray release];
     [textEntryContentFilterArray release];
     [textEntryViews release];
@@ -699,7 +703,8 @@
 // primary use: emoticon menu for grouping by pack, if you find another, congrats!
 - (void)setEmoticonPacks:(NSArray *)inEmoticonPacks
 {
-    emoticonPacks = inEmoticonPacks;
+	[emoticonPacks release];
+    emoticonPacks = [inEmoticonPacks retain];
 }
 - (NSArray *)emoticonPacks
 {
@@ -708,7 +713,8 @@
 //emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
 {
-    emoticonsArray = inEmoticonsArray;
+	[emoticonsArray release];
+    emoticonsArray = [inEmoticonsArray retain];
 }
 - (NSArray *)emoticonsArray
 {
