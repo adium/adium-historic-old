@@ -6047,7 +6047,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > build/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
 		346E640C05153395003B2F21 = {
 			children = (
@@ -6519,7 +6519,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > build/Adium\\ Crash\\ Reporter.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > $SYMROOT/Adium\\ Crash\\ Reporter.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
 		34ADDFFF05158D4B003B2F21 = {
 			isa = PBXFileReference;
@@ -20216,7 +20216,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "@executable_path/../../../../Frameworks/";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
@@ -21419,7 +21419,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd $SYMROOT\ncd \"Adium Crash Reporter.app/Contents/\"\n\necho \"Symlinking AIUtilities framework...\"\npwd\necho \"ln -fhs \\\"../../../Frameworks\\\" \\\"Frameworks\\\"\"\nln -fhs \"../../../Frameworks\" \"Frameworks\"\necho \"Done\"";
+			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd $SYMROOT\ncd \"Adium Crash Reporter.app/Contents/\"\nif [ -e Frameworks ] ; then\n    rm Frameworks\nfi\n\necho \"Symlinking AIUtilities framework...\"\npwd\necho \"ln -fhs \\\"../../../Frameworks\\\" \\\"Frameworks\\\"\"\nln -fhs \"../../../Frameworks\" \"Frameworks\"\necho \"Done\"";
 		};
 		4BC8AFD604FD3C1000A8010A = {
 			children = (
@@ -25325,7 +25325,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = Plists/Status_Menu_Item.plist;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
