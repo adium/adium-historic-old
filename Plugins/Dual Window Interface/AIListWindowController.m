@@ -336,19 +336,24 @@
 		NSRect  currentFrame = [[self window] frame];
         NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:autoResizeHorizontally
 															desiredHeight:autoResizeVertically];
-
+		/*
+		NSLog(@"DesiredSizeChanged:\nWas %f %f %f %f\nNow %f %f %f %f",
+			  currentFrame.origin.x,
+			  currentFrame.origin.y,
+			  currentFrame.size.width,
+			  currentFrame.size.height,
+			  desiredFrame.origin.x,
+			  desiredFrame.origin.y,
+			  desiredFrame.size.width,
+			  desiredFrame.size.height);
+		*/
 		if(!NSEqualRects(currentFrame, desiredFrame)){
-
-			NSRect	newFrame = NSMakeRect((autoResizeHorizontally ? desiredFrame.origin.x : currentFrame.origin.x),
-										  (autoResizeHorizontally ? desiredFrame.origin.y : currentFrame.origin.y),
-										  (autoResizeVertically ? desiredFrame.size.width : currentFrame.size.width),
-										  (autoResizeVertically ? desiredFrame.size.height : currentFrame.size.height));
 			
-			[[self window] setFrame:newFrame display:YES animate:NO];
-			[[self window] setMinSize:NSMakeSize((autoResizeHorizontally ? newFrame.size.width : minWindowSize.width),
-												 (autoResizeVertically ? newFrame.size.height : minWindowSize.height))];
-			[[self window] setMaxSize:NSMakeSize((autoResizeHorizontally ? newFrame.size.width : 10000),
-												 (autoResizeVertically ? newFrame.size.height : 10000))];
+			[[self window] setFrame:desiredFrame display:YES animate:NO];
+			[[self window] setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
+												 (autoResizeVertically ? desiredFrame.size.height : minWindowSize.height))];
+			[[self window] setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
+												 (autoResizeVertically ? desiredFrame.size.height : 10000))];
 		}
     }
 }
@@ -359,13 +364,19 @@
     return([self _desiredWindowFrameUsingDesiredWidth:YES desiredHeight:YES]);
 }
 
-//Desired frame of our window
+//Desired frame of our window - if one of the BOOL values is NO, don't modify that value from the current frame
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight
 {
-	NSRect      windowFrame = [[self window] frame];
-	NSRect		viewFrame = [scrollView_contactList frame];
-	NSRect		newWindowFrame = windowFrame;//NSMakeRect(windowFrame, 0, windowFrame.size.width, windowFrame.size.height);
-		
+	NSRect      windowFrame, viewFrame, newWindowFrame, screenFrame, visibleScreenFrame;
+	NSScreen	*currentScreen = [[self window] screen];
+
+	windowFrame = [[self window] frame];
+	newWindowFrame = windowFrame;//NSMakeRect(windowFrame, 0, windowFrame.size.width, windowFrame.size.height);
+	viewFrame = [scrollView_contactList frame];
+
+	screenFrame = [currentScreen frame];
+	visibleScreenFrame = [currentScreen visibleFrame];
+	
 	//Width
 	if(useDesiredWidth){
 		//Subtract the current size of the view from our frame
@@ -375,13 +386,18 @@
 		//Now, figure out how big the view wants to be and add that to our frame
 		//newWindowSize.width += desiredViewSize.width;
 		newWindowFrame.size.width += [contactListView desiredWidth];
-	}
 		
+		if ((windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width)){
+			
+			newWindowFrame.origin.x = windowFrame.origin.x + (windowFrame.size.width - newWindowFrame.size.width);
+			if((newWindowFrame.origin.x + newWindowFrame.size.width) < (visibleScreenFrame.origin.x + EDGE_CATCH_X)){
+				newWindowFrame.origin.x = visibleScreenFrame.origin.x - newWindowFrame.size.width + EDGE_CATCH_X;
+			}
+		}
+	}
+	
 	//Height
 	if(useDesiredHeight){
-		NSScreen	*currentScreen = [[self window] screen];
-		NSRect		screenFrame = [currentScreen frame];
-		NSRect		visibleScreenFrame = [currentScreen visibleFrame];
 		NSRect		applicableScreenFrame;
 		
 		//Subtract the current size of the view from our frame
@@ -403,39 +419,35 @@
 		}
 		
 		//Don't let the new frame be taller than the applicable screen frame's height.
-		if (newWindowFrame.size.height > applicableScreenFrame.size.height){
-			newWindowFrame.size.height = applicableScreenFrame.size.height;
-		}
+//		if (newWindowFrame.size.height > applicableScreenFrame.size.height){
+//			newWindowFrame.size.height = applicableScreenFrame.size.height;
+//		}
 		
 		//If the window is not near the bottom edge of the screen, or the titlebar is near the top,
 		//keep the titlebar in place
-		if(windowFrame.origin.y > applicableScreenFrame.origin.y + EDGE_CATCH_Y ||
-		   windowFrame.origin.y + windowFrame.size.height > applicableScreenFrame.origin.y + applicableScreenFrame.size.height - EDGE_CATCH_Y ){
+		if((windowFrame.origin.y > applicableScreenFrame.origin.y + EDGE_CATCH_Y) /*||
+		   (windowFrame.origin.y + windowFrame.size.height > applicableScreenFrame.origin.y + applicableScreenFrame.size.height - EDGE_CATCH_Y)*/){
 			newWindowFrame.origin.y = windowFrame.origin.y + (windowFrame.size.height - newWindowFrame.size.height);
 		}else{
 			newWindowFrame.origin.y = windowFrame.origin.y;
 		}
 		
 		//If the new window frame has an origin below the applicable screen frame, correct the situation
-		if (newWindowFrame.origin.y < applicableScreenFrame.origin.y){
-			newWindowFrame.origin.y = applicableScreenFrame.origin.y;
+		if (newWindowFrame.origin.y < applicableScreenFrame.origin.y + 1){
+			newWindowFrame.origin.y = applicableScreenFrame.origin.y + 1;
 		}
 		
-		//Keep the window from going under the menu bar (on the main screen)
-		if (currentScreen == [[NSScreen screens] objectAtIndex:0]) {	
-			float visibleScreenTop = (visibleScreenFrame.origin.y+visibleScreenFrame.size.height);
-			
-			if((newWindowFrame.origin.y + newWindowFrame.size.height) > visibleScreenTop){
-				//If the window would go above the top of the screen (the menu bar), set the origin to the origin of
-				//whichever is our applicable screen...
-				newWindowFrame.origin.y = applicableScreenFrame.origin.y;
-				//...and set our height to the maximal height which will fit on the visible screen from that origin.
-				newWindowFrame.size.height = visibleScreenTop - newWindowFrame.origin.y;
-			}
+		//Keep the window from going off the top of the visible area (which means not under the menu bar, too)
+		float visibleScreenTop = (visibleScreenFrame.origin.y+visibleScreenFrame.size.height);
+
+		if((newWindowFrame.origin.y + newWindowFrame.size.height) > visibleScreenTop){
+			//If the window would go above the top of the screen (the menu bar), set the origin to the origin of
+			//whichever is our applicable screen...
+			newWindowFrame.origin.y = applicableScreenFrame.origin.y + 1;
+			//...and set our height to the maximal height which will fit on the visible screen from that origin.
+			newWindowFrame.size.height = visibleScreenTop - newWindowFrame.origin.y;
 		}
-		
-		newWindowFrame.origin.x = windowFrame.origin.x;
-		
+
 		/*
 		NSLog(@"\nnew: %f %f %f %f\nvisible: %f %f %f %f\nscreen: %f %f %f %f\napplicable: %f %f %f %f",
 			  newWindowFrame.origin.x,
@@ -579,7 +591,7 @@
     NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
     //Redraw the modified object
-	[contactListView redisplayItem:[notification object]];
+	[contactListView redisplayItem:object];
 	
     //Resize the contact list horizontally
     if(autoResizeHorizontally){
