@@ -7,12 +7,14 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
+            ACTIONS = {collapseContactList = id; }; 
             CLASS = CSSingleWindowInterfaceWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "box_messageView" = NSBox; 
                 contactListViewController = id; 
                 "scrollView_contactList" = AIAutoScrollView; 
+                "scrollView_currentChatsList" = AIAutoScrollView; 
                 "view_noActiveChat" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
