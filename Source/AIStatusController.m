@@ -681,7 +681,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		BOOL				accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
 		
 		if(accountsAreOnline){
-			AIStatus	*bestStatusState;
+			AIStatus	*bestStatusState = nil;
 	
 			while(account = [enumerator nextObject]){
 				if([account online]){
@@ -798,11 +798,15 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID
 {
-	NSEnumerator	*enumerator = [[self sortedFullStateArray] objectEnumerator];
-	AIStatus		*statusState;
-	while(statusState = [enumerator nextObject]){
-		if([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
-			break;
+	AIStatus		*statusState = nil;
+
+	if(uniqueStatusID){
+		NSEnumerator	*enumerator = [[self sortedFullStateArray] objectEnumerator];
+		
+		while(statusState = [enumerator nextObject]){
+			if([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
+				break;
+		}
 	}
 
 	return statusState;
@@ -1456,7 +1460,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 																				  group:PREF_GROUP_STATUS_PREFERENCES];
 		
 		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[NSNumber numberWithInt:statusType]];
-		AIStatus	*lastStatusStateOfThisType = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData];
+		AIStatus	*lastStatusStateOfThisType = (lastStatusStateData ?
+												  [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData] :
+												  nil);
 
 		baseStatusState = [[lastStatusStateOfThisType retain] autorelease];
 	}
