@@ -1029,7 +1029,6 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action,void *userData, size_t actionCount, va_list actions)
 {
-	if (GAIM_DEBUG) NSLog(@"adiumGaimRequestAction");
     int		    alertReturn, i;
 	
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
@@ -1051,10 +1050,8 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     }
     
     //Make default_action the last one
-    if (default_action != -1){
-		NSCAssert(default_action < actionCount, @"default_action is too big");
+    if (default_action != -1 && (default_action < actionCount)){
 		int actualCount = [buttonNamesArray count];
-		NSCAssert((actionCount == actualCount), @"actionCount != actualCount");
 			
 		GCallback tempCallBack = callBacks[actionCount-1];
 		callBacks[actionCount-1] = callBacks[default_action];
