@@ -9,12 +9,12 @@
 #import "ESContactAlertsViewController.h"
 #import "CSNewContactAlertWindowController.h"
 
-
 @interface ESContactAlertsViewController (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 int alertAlphabeticalSort(id objectA, id objectB, void *context);
+int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 @implementation ESContactAlertsViewController
 
@@ -27,6 +27,8 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	[tableView_actions setDrawsAlternatingRows:YES];
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(editAlert:)];
+	[tableView_actions setDelegate:self];
+	[tableView_actions setDataSource:self];
 	
 	actionsCell = [[AIImageTextCell alloc] init];
     [actionsCell setFont:[NSFont systemFontOfSize:12]];
@@ -38,6 +40,8 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	[button_edit setTitle:@"Edit"];
 	[button_delete setEnabled:NO];
 	[button_edit setEnabled:NO];
+
+	configureForGlobal = NO;
 	
 	//
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
@@ -52,6 +56,19 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
     [listObject release]; listObject = nil;
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
+
+- (void)setDelegate:(id)inDelegate
+{
+	NSParameterAssert([inDelegate respondsToSelector:@selector(contactAlertsViewController:updatedAlert:oldAlert:)]);
+	NSParameterAssert([inDelegate respondsToSelector:@selector(contactAlertsViewController:deletedAlert:)]);
+	delegate = inDelegate;
+}
+
+- (id)delegate
+{
+	return(delegate);
+}
+
 
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inObject
@@ -74,7 +91,8 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject] mutableCopy];
 		
 		//Sort them
-		[alertArray sortUsingFunction:alertAlphabeticalSort context:nil];
+		[alertArray sortUsingFunction:(configureForGlobal ? globalAlertAlphabeticalSort : alertAlphabeticalSort)
+							  context:nil];
 		
 		//Refresh
 		[tableView_actions reloadData];
@@ -92,7 +110,16 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 	return(result);
 }
 
+int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
+{
+	NSComparisonResult	result = [(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]];
 
+	if(result == NSOrderedSame){
+		result = [(NSString *)[objectA objectForKey:KEY_EVENT_ID] compare:(NSString *)[objectB objectForKey:KEY_EVENT_ID]];
+	}
+	
+	return(result);
+}
 
 //Alert Editing --------------------------------------------------------------------------------------------------------
 #pragma mark Actions
@@ -103,7 +130,8 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 								   forListObject:listObject
 										onWindow:[view window]
 								 notifyingTarget:self
-										userInfo:nil];
+										oldAlert:nil
+							  configureForGlobal:configureForGlobal];
 }
 
 //Edit existing alert
@@ -117,7 +145,8 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 									   forListObject:listObject
 											onWindow:[view window]
 									 notifyingTarget:self
-											userInfo:alert];
+											oldAlert:alert
+								  configureForGlobal:configureForGlobal];
 	}
 }
 
@@ -126,19 +155,40 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 {
 	unsigned int selectedRow = [tableView_actions selectedRow];
 	if (selectedRow != -1){
-		[[adium contactAlertsController] removeAlert:[alertArray objectAtIndex:selectedRow]
+		NSDictionary	*deletedAlert = [alertArray objectAtIndex:selectedRow];
+
+		[deletedAlert retain];
+		
+		[[adium contactAlertsController] removeAlert:deletedAlert
 									  fromListObject:listObject];
+		if(delegate){
+			[delegate contactAlertsViewController:self
+									 deletedAlert:deletedAlert];
+		}
+		
+		[deletedAlert release];
+		
 	}
 }
 
 //Callback from 'new alert' panel.  (Add the alert, or update existing alert)
-- (void)alertUpdated:(NSDictionary *)newAlert userInfo:(NSDictionary *)userInfo
+- (void)alertUpdated:(NSDictionary *)newAlert oldAlert:(NSDictionary *)oldAlert
 {
+	[oldAlert retain];
+	
 	//If this was an edit, remove the old alert first
-	if(userInfo) [[adium contactAlertsController] removeAlert:userInfo fromListObject:listObject];
+	if(oldAlert) [[adium contactAlertsController] removeAlert:oldAlert fromListObject:listObject];
 	
 	//Add the new alert
 	[[adium contactAlertsController] addAlert:newAlert toListObject:listObject];
+	
+	if(delegate){
+		[delegate contactAlertsViewController:self
+								 updatedAlert:newAlert
+									 oldAlert:oldAlert];
+	}
+	
+	[oldAlert release];
 }
 
 
@@ -159,11 +209,12 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 	NSDictionary			*alert = [alertArray objectAtIndex:row];
 	NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
 	NSString				*eventID = [alert objectForKey:KEY_EVENT_ID];
+	NSString				*eventDescription = [[adium contactAlertsController] longDescriptionForEventID:eventID 
+																							 forListObject:listObject];
 	id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
-	id <AIEventHandler>		eventHandler = [[[adium contactAlertsController] eventHandlers] objectForKey:eventID];
 	
-	if(actionHandler && eventHandler){
-		[cell setStringValue:[eventHandler longDescriptionForEventID:eventID forListObject:listObject]];
+	if(actionHandler && eventDescription){
+		[cell setStringValue:eventDescription];
 		[cell setImage:[actionHandler imageForActionID:actionID]];
 		[cell setSubString:[actionHandler longDescriptionForActionID:actionID
 														 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]];
@@ -185,5 +236,10 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 	[self deleteAlert:nil];
 }
 
+#pragma mark Global configuration
+- (void)setConfigureForGlobal:(BOOL)inConfigureForGlobal
+{
+	configureForGlobal = inConfigureForGlobal;
+}
 
 @end

@@ -12,7 +12,12 @@
 #define NEW_ALERT_NIB @"NewAlert"
 
 @interface CSNewContactAlertWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
+- (id)initWithWindowNibName:(NSString *)windowNibName 
+					  alert:(NSDictionary *)inAlert
+			  forListObject:(AIListObject *)inObject
+			notifyingTarget:(id)inTarget
+				   oldAlert:(id)inOldAlert
+		 configureForGlobal:(BOOL)inConfigureForGlobal;
 - (void)configureForEvent;
 - (void)saveDetailsPaneChanges;
 - (void)configureDetailsPane;
@@ -22,9 +27,14 @@
 @implementation CSNewContactAlertWindowController
 
 //Prompt for a new alert.  Pass nil for a panel prompt.
-+ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget oldAlert:(id)inOldAlert configureForGlobal:(BOOL)inConfigureForGlobal
 {
-	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB alert:inAlert forListObject:inObject notifyingTarget:inTarget userInfo:inUserInfo];
+	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB
+																						alert:inAlert
+																				forListObject:inObject
+																			  notifyingTarget:inTarget
+																					 oldAlert:inOldAlert
+																		   configureForGlobal:inConfigureForGlobal];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[newAlertwindow window]
@@ -38,15 +48,21 @@
 }
 	
 //Init
-- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
+- (id)initWithWindowNibName:(NSString *)windowNibName 
+					  alert:(NSDictionary *)inAlert
+			  forListObject:(AIListObject *)inListObject
+			notifyingTarget:(id)inTarget
+				   oldAlert:(id)inOldAlert
+		 configureForGlobal:(BOOL)inConfigureForGlobal
 {
 	[super initWithWindowNibName:windowNibName];
 	
 	//
-	userInfo = [inUserInfo retain];
+	oldAlert = [inOldAlert retain];
 	listObject = [inListObject retain];
 	target = inTarget;
 	detailsPane = nil;
+	configureForGlobal = inConfigureForGlobal;
 	
 	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
 	alert = [inAlert mutableCopy];
@@ -62,7 +78,7 @@
 - (void)dealloc
 {
 	[alert release];
-	[userInfo release];
+	[oldAlert release];
 	[detailsPane release];
 	[listObject release];
 	
@@ -74,7 +90,7 @@
 {
 	//Configure window
 	[[self window] center];
-	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:NO]];
+	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:configureForGlobal]];
 	[popUp_action setMenu:[[adium contactAlertsController] menuOfActionsWithTarget:self]];
 
 	//Set things up for the current event
@@ -126,7 +142,7 @@
 	[self saveDetailsPaneChanges];
 
 	//Pass the modified alert to our target
-	[target performSelector:@selector(alertUpdated:userInfo:) withObject:alert withObject:userInfo];
+	[target performSelector:@selector(alertUpdated:oldAlert:) withObject:alert withObject:oldAlert];
 	[self closeWindow:nil];
 }
 
@@ -160,7 +176,15 @@
 	}
 	
 	//Setup our single-fire option
-	[checkbox_oneTime setState:[[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]];
+	if(configureForGlobal){
+		if([checkbox_oneTime respondsToSelector:@selector(setHidden:)]){
+			[checkbox_oneTime setHidden:YES];
+		}else{
+			[checkbox_oneTime setFrame:NSZeroRect];
+		}
+	}else{
+		[checkbox_oneTime setState:[[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]];
+	}
 	
 	//Configure the action details pane
 	[self configureDetailsPane];
