@@ -92,7 +92,7 @@ DeclareString(AppendNextMessage);
 	
 	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
     while(resourcePath = [enumerator nextObject]) {
-        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:resourcePath];
+        fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
         
         //Find all the message styles
         while((filePath = [fileEnumerator nextObject])){
@@ -460,10 +460,7 @@ DeclareString(AppendNextMessage);
 	}else if ([content isKindOfClass:[AIContentStatus class]]){
 		date = [(AIContentStatus *)content date];
 	}
-		
-		
-		
-
+	
 	//Replacements applicable to any AIContentObject
 	//	if (date){
 	do{
@@ -498,7 +495,7 @@ DeclareString(AppendNextMessage);
 		}
 	} while(range.location != NSNotFound);
 	//	}
-
+	
 	//message stuff
 	if ([content isKindOfClass:[AIContentMessage class]]) {
 		do{
@@ -509,7 +506,7 @@ DeclareString(AppendNextMessage);
 				
 				if (showUserIcons && (userIconPath = [[content source] statusObjectForKey:@"UserIconPath"])){
 					replacementString = [NSString stringWithFormat:@"file://%@", userIconPath];
-
+					
 				}else{
 					replacementString = ([content isOutgoing]
 										 ? @"Outgoing/buddy_icon.png" 
@@ -572,44 +569,35 @@ DeclareString(AppendNextMessage);
 			if(range.location != NSNotFound){
 				[inString replaceCharactersInRange:range withString:[[content source] displayServiceID]];
 			}
+		} while(range.location != NSNotFound);	
+		
+	}else if ([content isKindOfClass:[AIContentStatus class]]) {
+		do{
+			range = [inString rangeOfString:@"%status%"];
+			if(range.location != NSNotFound) {
+				[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
+			}
 		} while(range.location != NSNotFound);
+	}			
+	
+	//Message (must do last)
+	range = [inString rangeOfString:@"%message%"];
+	if(range.location != NSNotFound){
+		NSLog(@"%@",[content message]);
+		[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																			  headers:NO 
+																			 fontTags:YES
+																   includingColorTags:allowColors
+																		closeFontTags:YES
+																			styleTags:YES
+														   closeStyleTagsOnFontChange:YES
+																	   encodeNonASCII:YES 
+																		   imagesPath:@"/tmp"
+																	attachmentsAsText:NO
+													   attachmentImagesOnlyForSending:NO
+																	   simpleTagsOnly:NO]];
 	}
 	
-	
-		//message (must do last)
-		if ([content isKindOfClass:[AIContentMessage class]]) {
-			range = [inString rangeOfString:@"%message%"];
-			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
-																					  headers:NO 
-																					 fontTags:YES
-																		   includingColorTags:allowColors
-																				closeFontTags:YES
-																					styleTags:YES
-																   closeStyleTagsOnFontChange:YES
-																			   encodeNonASCII:YES 
-																				   imagesPath:@"/tmp"
-																			attachmentsAsText:NO
-															   attachmentImagesOnlyForSending:NO
-																			   simpleTagsOnly:NO]];
-			}
-		}else if ([content isKindOfClass:[AIContentStatus class]]) {
-			do{
-				range = [inString rangeOfString:@"%message%"];
-				if(range.location != NSNotFound){
-					[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content message] string]];
-				}
-			} while(range.location != NSNotFound);
-			
-			do{
-				range = [inString rangeOfString:@"%status%"];
-				if(range.location != NSNotFound) {
-					[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
-				}
-			} while(range.location != NSNotFound);
-		}			
-		
-		
 	return(inString);
 }
 
