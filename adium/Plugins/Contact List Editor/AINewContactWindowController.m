@@ -130,7 +130,7 @@
 - (IBAction)addContact:(id)sender
 {
 	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
-	NSString		*serviceID = [serviceType identifier];
+	NSString		*currentServiceID = [serviceType identifier];
 	NSString		*UID = [textField_contactName stringValue];
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
@@ -139,7 +139,7 @@
 		if([account conformsToProtocol:@protocol(AIAccount_List)] &&
 		   [(AIAccount<AIAccount_List> *)account contactListEditable] &&
 		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
-			AIListContact	*contact = [[adium contactController] contactWithService:serviceID
+			AIListContact	*contact = [[adium contactController] contactWithService:currentServiceID
 																		   accountID:[account uniqueObjectID]
 																				 UID:UID];
 			[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
