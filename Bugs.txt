@@ -20,9 +20,6 @@
 //------------------------------------------------------------------------------------
 [HIGH]
 Vertical resizing errors
-  - In Mockie style, with offline contacts hidden and a contact from an empty group (the
-    contact is the first to connect from that group) signs on, the vertical scrollbar
-    appears although it is not needed.
   - Vertical resizing is initially too small by the height of the toolbar in Standard
 	with the toolbar showing
 
