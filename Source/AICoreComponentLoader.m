@@ -25,87 +25,134 @@
 #import "AICoreComponentLoader.h"
 #import <Adium/AIPlugin.h>
 
-@class
-AIAccountListPreferencesPlugin,
-AIAccountMenuAccessPlugin,
-AIAliasSupportPlugin,
-AIAppearancePreferencesPlugin,
-AIAutoIdlePlugin,
-AIAutoLinkingPlugin,
-AIAutoReplyPlugin,
-AIAwayMessagesPlugin,
-AIAwayStatusWindowPlugin,
-AIChatConsolidationPlugin,
-AIChatCyclingPlugin,
-AIContactAwayPlugin,
-AIContactIdlePlugin,
-AIContactListEditorPlugin,
-AIContactOnlineSincePlugin,
-AIContactSortSelectionPlugin,
-AIContactStatusColoringPlugin,
-AIContactStatusDockOverlaysPlugin,
-AIContactStatusEventsPlugin,
-AIContactWarningLevelPlugin,
-AIDefaultFormattingPlugin,
-AIDockAccountStatusPlugin,
-AIDockBehaviorPlugin,
-AIDockIconSelectionPlugin,
-AIDockUnviewedContentPlugin,
-AIDualWindowInterfacePlugin,
-AIEmoticonsPlugin,
-AIEventSoundsPlugin,
-AIExtendedStatusPlugin,
-AILoggerPlugin,
-AIMessageAliasPlugin,
-AINewMessagePanelPlugin,
-AIOfflineContactHidingPlugin,
-AISCLViewPlugin,
-AISpellCheckingPlugin,
-AIStandardToolbarItemsPlugin,
-AIStateMenuPlugin,
-AIStatusChangedMessagesPlugin,
-AITabStatusIconsPlugin,
-AITypingNotificationPlugin,
-AIVideoChatInterfacePlugin,
-BGContactNotesPlugin,
-BGEmoticonMenuPlugin,
-CBActionSupportPlugin,
-CBContactCountingDisplayPlugin,
-CBContactLastSeenPlugin,
-CBStatusMenuItemPlugin,
-CBURLHandlingPlugin,
-CPFVersionChecker,
-DCInviteToChatPlugin,
-DCJoinChatPanelPlugin,
-DCMessageContextDisplayPlugin,
-ESAccountEvents,
-ESAccountNetworkConnectivityPlugin,
-ESAddressBookIntegrationPlugin,
-ESAnnouncerPlugin,
-ESApplescriptContactAlertPlugin,
-ESBlockingPlugin,
-ESContactClientPlugin,
-ESContactServersideDisplayName,
-ESFastUserSwitchingSupportPlugin,
-ESFileTransferMessagesPlugin,
-ESMessageEvents,
-ESMetaContactContentsPlugin,
-ESOpenMessageWindowContactAlertPlugin,
-ESSafariLinkToolbarItemPlugin,
-ESSendMessageContactAlertPlugin,
-ESUserIconHandlingPlugin,
-ErrorMessageHandlerPlugin,
-GBApplescriptFiltersPlugin,
-IdleMessagePlugin,
-SAContactOnlineForPlugin,
-SHBookmarksImporterPlugin,
-SHLinkManagementPlugin,
-ESGlobalEventsPreferencesPlugin,
-ESGeneralPreferencesPlugin,
-NEHGrowlPlugin,
-ESSecureMessagingPlugin,
-ESStatusPreferencesPlugin,
-ESAutoAwayPlugin;
+/* Source */
+#import "AIAccountListPreferencesPlugin.h"
+#import "AIAccountMenuAccessPlugin.h"
+#import "AIAliasSupportPlugin.h"
+#import "AIAppearancePreferencesPlugin.h"
+#import "AIAutoIdlePlugin.h"
+#import "AIAutoLinkingPlugin.h"
+#import "AIAutoReplyPlugin.h"
+#import "AIChatConsolidationPlugin.h"
+#import "AIChatCyclingPlugin.h"
+#import "AIContactAwayPlugin.h"
+#import "AIContactIdlePlugin.h"
+#import "AIContactListEditorPlugin.h"
+#import "AIContactOnlineSincePlugin.h"
+#import "AIContactSortSelectionPlugin.h"
+#import "AIContactStatusEventsPlugin.h"
+#import "AIContactWarningLevelPlugin.h"
+#import "AIDefaultFormattingPlugin.h"
+#import "AIDockAccountStatusPlugin.h"
+#import "AIDockBehaviorPlugin.h"
+#import "AIEventSoundsPlugin.h"
+#import "AIExtendedStatusPlugin.h"
+#import "AINewMessagePanelPlugin.h"
+#import "AIOfflineContactHidingPlugin.h"
+#import "AIStandardToolbarItemsPlugin.h"
+#import "AIStateMenuPlugin.h"
+#import "AIStatusChangedMessagesPlugin.h"
+#import "AITabStatusIconsPlugin.h"
+#import "AITypingNotificationPlugin.h"
+#import "BGContactNotesPlugin.h"
+#import "CBActionSupportPlugin.h"
+#import "CBContactCountingDisplayPlugin.h"
+#import "CBContactLastSeenPlugin.h"
+#import "CPFVersionChecker.h"
+#import "GBApplescriptFiltersPlugin.h"
+#import "NEHGrowlPlugin.h"
+#import "SAContactOnlineForPlugin.h"
+#import "SHBookmarksImporterPlugin.h"
+#import "ESAccountEvents.h"
+#import "ESAccountNetworkConnectivityPlugin.h"
+#import "ESAddressBookIntegrationPlugin.h"
+#import "ESAnnouncerPlugin.h"
+#import "ESApplescriptContactAlertPlugin.h"
+#import "ESAutoAwayPlugin.h"
+#import "ESBlockingPlugin.h"
+#import "ESContactClientPlugin.h"
+#import "ESContactServersideDisplayName.h"
+#import "ESFastUserSwitchingSupportPlugin.h"
+#import "ESMetaContactContentsPlugin.h"
+#import "ESStatusPreferencesPlugin.h"
+#import "ESUserIconHandlingPlugin.h"
+
+/* Plugins/Contact List */
+#import "AISCLViewPlugin.h"
+
+/* Plugins/Contact Status Coloring */
+#import "AIContactStatusColoringPlugin.h"
+
+/* Plugins/Contact Status Dock Overlays */
+#import "AIContactStatusDockOverlaysPlugin.h"
+
+/* Plugins/Dock Unviewed Content */
+#import "AIDockUnviewedContentPlugin.h"
+
+/* Plugins/Dual Window Interface */
+#import "AIDualWindowInterfacePlugin.h"
+
+/* Plugins/Emoticon Menu */
+#import "BGEmoticonMenuPlugin.h"
+
+/* Plugins/Error Message Handler */
+#import "ErrorMessageHandlerPlugin.h"
+
+/* Plugins/File Transfer Messages */
+#import "ESFileTransferMessagesPlugin.h"
+
+/* Plugins/General Preferences */
+#import "ESGeneralPreferencesPlugin.h"
+
+/* Plugins/Global Events Preferences */
+#import "ESGlobalEventsPreferencesPlugin.h"
+
+/* Plugins/Invite to Chat Plugin */
+#import "DCInviteToChatPlugin.h"
+
+/* Plugins/Join Chat Panel */
+#import "DCJoinChatPanelPlugin.h"
+
+/* Plugins/Link Management */
+#import "SHLinkManagementPlugin.h"
+
+/* Plugins/Logger */
+#import "AILoggerPlugin.h"
+
+/* Plugins/Message Alias Support */
+#import "AIMessageAliasPlugin.h"
+
+/* Plugins/Message Context Display */
+#import "DCMessageContextDisplayPlugin.h"
+
+/* Plugins/Message Events */
+#import "ESMessageEvents.h"
+
+/* Plugins/Open Message Window Contact Alert */
+#import "ESOpenMessageWindowContactAlertPlugin.h"
+
+/* Plugins/Safari Link Toolbar Item */
+#import "ESSafariLinkToolbarItemPlugin.h"
+
+/* Plugins/Secure Messaging */
+#import "ESSecureMessagingPlugin.h"
+
+/* Plugins/Send Message Contact Alert */
+#import "ESSendMessageContactAlertPlugin.h"
+
+/* Plugins/Spell Checking */
+#import "AISpellCheckingPlugin.h"
+
+/* Plugins/Status Menu Item */
+#import "CBStatusMenuItemPlugin.h"
+
+/* Plugins/URL Handling */
+#import "AIVideoChatInterfacePlugin.h"
+
+/* Plugins/Video Chat Interface */
+#import "CBURLHandlingPlugin.h"
+
+//AIAwayMessagesPlugin, AIAwayStatusWindowPlugin, AIDockIconSelectionPlugin, AIEmoticonsPlugin, IdleMessagePlugin
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -205,7 +252,7 @@ ESAutoAwayPlugin;
 	NSEnumerator	*enumerator = [components objectEnumerator];
 	AIPlugin		*plugin;
 
-	while(plugin = [enumerator nextObject]){
+	while (plugin = [enumerator nextObject]) {
 		[plugin uninstallPlugin];
 	}
 }
@@ -215,7 +262,8 @@ ESAutoAwayPlugin;
  */
 - (void)dealloc
 {
-	[components release]; components = nil;
+	[components release];
+	components = nil;
 
 	[super dealloc];
 }
@@ -229,10 +277,10 @@ ESAutoAwayPlugin;
 {
 	id object;
 
-	if(object = [inClass newInstanceOfPlugin]){
+	if (object = [inClass newInstanceOfPlugin]) {
 		[components addObject:object];
-	}else{
-		NSString	*error = [NSString stringWithFormat:@"Failed to load %@",NSStringFromClass(inClass)];
+	} else {
+		NSString	*error = [NSString stringWithFormat:@"Failed to load %@", NSStringFromClass(inClass)];
 		NSAssert(object, error);
 	}
 }
