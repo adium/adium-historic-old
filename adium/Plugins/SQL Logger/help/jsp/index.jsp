@@ -10,14 +10,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 854 $ $Date: 2004/08/04 16:31:54 $ -->
+<!--$Rev: 858 $ $Date: 2004/08/07 19:42:01 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-String dateStart, dateFinish, from_sn, to_sn, contains_sn, hl;
+String dateStart, dateFinish, from_sn, to_sn, contains_sn, hl, service;
 boolean showDisplay = true;
 boolean showMeta = false;
 
@@ -36,6 +36,7 @@ to_sn = request.getParameter("to");
 contains_sn = request.getParameter("contains");
 String screenDisplayMeta = request.getParameter("screen_or_display");
 hl = request.getParameter("hl");
+service = request.getParameter("service");
 ArrayList hlWords = new ArrayList();
 
 String title = new String("");
@@ -88,6 +89,12 @@ if (hl != null && hl.equals("")) {
     while (st.hasMoreTokens()) {
         hlWords.add(st.nextToken());
     }
+}
+
+if(service != null && service.equals("0")) {
+    service = null;
+} else if (service != null) {
+    formURL += "&amp;service=" + service;
 }
 
 if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
@@ -336,6 +343,13 @@ try {
         }
     }
 
+
+    if (service != null) {
+        queryText += " and (sender_service = ? or recipient_service = ?)";
+        commandArray[aryCount++] = new String(service);
+        commandArray[aryCount++] = new String(service);
+    }
+
     if (meta_id != 0) {
         queryText += " and (send.meta_id = ? or rec.meta_id = ?)";
     }
@@ -352,12 +366,12 @@ try {
         "messages.</i><br><br></div>\n");
     }
 
-    String query = "select username as username " +
+    String query = "select service as service, username as username " +
     "from im.users natural join "+
-    "(select distinct sender_id as user_id from im.messages "+
+    "(select sender_id as user_id from im.messages "+
     concurrentWhereClause + " union " +
-    "select distinct recipient_id as user_id from im.messages " +
-    concurrentWhereClause + ") messages";
+    "select recipient_id as user_id from im.messages " +
+    concurrentWhereClause + ") messages order by username";
 
     pstmt = conn.prepareStatement(query);
 
@@ -383,10 +397,17 @@ try {
         rset = pstmt.executeQuery();
 
         while(rset.next()) {
-            out.print("<p><a href=\"index.jsp?start=" + dateStart +
-            "&finish=" + dateFinish + "&contains=" +
-            rset.getString("username") + "\">"+
-            rset.getString("username") + "</a></p>\n");
+            out.print("<p>" +
+                "<a href=\"index.jsp?start=" + dateStart +
+                "&finish=" + dateFinish + "&service=" +
+                rset.getString("service") + "\">" +
+                "<img src=\"images/services/" +
+                rset.getString("service").toLowerCase() +
+                ".png\" width=\"12\" height=\"12\" /></a> " +
+                "<a href=\"index.jsp?start=" + dateStart +
+                "&finish=" + dateFinish + "&contains=" +
+                rset.getString("username") + "\">"+
+                rset.getString("username") + "</a></p>\n");
         }
 
         out.print("<a href=\"index.jsp?start=" + dateStart +
@@ -486,6 +507,27 @@ try {
                     </td>
                 </tr>
                 <tr>
+                    <td align=\"right\"
+                        <label for="service">Service:</label>
+                    </td>
+                    <td>
+                        <select name="service">
+                            <option value=\"0\">Choose One</option>
+<%
+    pstmt = conn.prepareStatement("select distinct service from users");
+    rset = pstmt.executeQuery();
+    while(rset.next()) {
+        out.print("<option value=\"" + rset.getString("service") + "\"" );
+        if(rset.getString("service").equals(service)) {
+            out.print(" selected=\"selected\"");
+        }
+        out.print(">" + rset.getString("service") + "</option>\n");
+    }
+%>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <td align="right">
                         <label for="meta">Meta Contact:</label>
                     </td>
@@ -526,11 +568,16 @@ try {
                     onmouseover="window.status='Date Picker';return true;"
                     onmouseout="window.status='';return true;">
                     <img src="images/calicon.jpg" border=0></a>
-
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td valign="top">
+                        <p><i>(YYYY-MM-DD hh:mm:ss)</i></p>
                     </td>
                 </tr>
                 </table>
-                <p style="text-indent: 80px"><i>(YYYY-MM-DD hh:mm:ss)</i></p><br />
 
                 <input type="radio" name="screen_or_display" value
                 = "screen" id = "sn" <% if (!showDisplay && !showMeta)

@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
-<!--$Rev: 854 $ $Date: 2004/08/04 16:31:54 $ -->
+<!--$Rev: 857 $ $Date: 2004/08/07 19:42:01 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -53,6 +53,7 @@ try {
 
     pstmt = conn.prepareStatement("select username as username, "+
     " display_name as display_name, " +
+    " lower(service) as service, " +
     " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+
     " \'1 day\'::interval) as last_day, "+
     " ?::timestamp + \'1 month\'::interval as end_month, " +
@@ -89,8 +90,13 @@ try {
     rset = pstmt.executeQuery();
     rset.next();
 
-    title = rset.getString("display_name");
-
+    if(meta_id != 0) {
+        title = rset.getString("display_name");
+    } else {
+        title = "<img src=\"images/services/" + rset.getString("service") +
+            ".png\" width=\"28\" height=\"28\" /> " +
+            rset.getString("display_name");
+    }
     month = rset.getString("month");
 
     lastDayOfMonth = rset.getInt("last_day");
@@ -207,8 +213,9 @@ try {
 <%
     rset = stmt.executeQuery("select user_id, " +
         " display_name as display_name, " +
-        " username " +
-        " as username from im.users " +
+        " username as username, " +
+        " lower(service) as service " +
+        " from im.users " +
         " natural join im.user_display_name udn" +
         " where case when true = " + loginUsers +
         " then login = true" +
@@ -218,23 +225,28 @@ try {
         " order by display_name, username");
 
     if(!loginUsers) {
-        out.print("<p><i><a href=\"statistics.jsp?sender=" +
-            sender + "&login=true\">Login Users</a></i></p>");
+        out.print("<p><i><a href=\"details.jsp?sender=" +
+            sender + "&login=true&meta_id=" + meta_id + "&date=" +
+            date + "\">Login Users</a></i></p>");
     } else {
-        out.print("<p><i><a href=\"statistics.jsp?sender=" +
-            sender + "&login=false\">" +
+        out.print("<p><i><a href=\"details.jsp?sender=" +
+            sender + "&meta_id=" + meta_id + "&login=false&date=" +
+            date + "\">" +
             "All Users</a></i></p>");
     }
     out.println("<p></p>");
 
     while (rset.next())  {
         if (rset.getInt("user_id") != sender) {
-            out.println("<p><a href=\"statistics.jsp?sender=" +
-            rset.getString("user_id") + "&login=" +
-            Boolean.toString(loginUsers) +
-            "\" + title=\"" + rset.getString("username") + "\">" +
-            rset.getString("display_name") +
-            "</a></p>");
+            out.println("<p><img src=\"images/services/" +
+                rset.getString("service") +
+                ".png\" width=\"12\" height=\"12\" /> " +
+                "<a href=\"statistics.jsp?sender=" +
+                rset.getString("user_id") + "&login=" +
+                Boolean.toString(loginUsers) +
+                "\" + title=\"" + rset.getString("username") + "\">" +
+                rset.getString("display_name") +
+                "</a></p>");
         }
         else {
             out.println("<p>" + rset.getString("username") + "</p>");

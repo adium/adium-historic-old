@@ -144,8 +144,14 @@ try {
 <%
     if(query != null) {
         pstmt = conn.prepareStatement(query);
+
+        long beginTime = System.currentTimeMillis();
         rset = pstmt.executeQuery();
+        long queryTime = System.currentTimeMillis() - beginTime;
+
         rsmd = rset.getMetaData();
+
+        out.println("<div align=\"right\">Query Time: " + queryTime + " ms</div>");
 
         out.print("<table>");
 
