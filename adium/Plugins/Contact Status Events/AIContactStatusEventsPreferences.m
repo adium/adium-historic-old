@@ -48,11 +48,6 @@
                                              forKey:KEY_SIGNED_ON_LENGTH
                                               group:PREF_GROUP_STATUS_EVENTS];
 
-    }else if(sender == textField_typingLength){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
-                                             forKey:KEY_TYPING_LENGTH
-                                              group:PREF_GROUP_STATUS_EVENTS];
-
     }
 
     [self configureControlDimming];
@@ -87,7 +82,6 @@
 
     [textField_signedOffLength setIntValue:[[preferenceDict objectForKey:KEY_SIGNED_OFF_LENGTH] intValue]];
     [textField_signedOnLength setIntValue:[[preferenceDict objectForKey:KEY_SIGNED_ON_LENGTH] intValue]];
-    [textField_typingLength setIntValue:[[preferenceDict objectForKey:KEY_TYPING_LENGTH] intValue]];
 
     [self configureControlDimming]; //disable the unavailable controls
 }

@@ -24,7 +24,6 @@
 
     IBOutlet	NSTextField		*textField_signedOffLength;
     IBOutlet	NSTextField		*textField_signedOnLength;
-    IBOutlet	NSTextField		*textField_typingLength;
 
 }
 
