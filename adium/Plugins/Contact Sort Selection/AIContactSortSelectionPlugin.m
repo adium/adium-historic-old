@@ -39,12 +39,6 @@
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTACT_SORTING];
 
-	//Observe
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(sortControllerListChanged:)
-									   name:Contact_SortSelectorListChanged 
-									 object:nil];
-	
 	//Create the menu item
 	menuItem_sort = [[[NSMenuItem alloc] initWithTitle:SORT_MENU_TITLE
 												target:nil
@@ -54,11 +48,15 @@
 	//Add the menu item (which will have _sortSelectionMenu as its submenu)
 	[[adium menuController] addMenuItem:menuItem_sort toLocation:LOC_View_Unnamed_A];
 	
-	[self sortControllerListChanged:nil];
+	//Wait for Adium to finish launching before we set up the sort controller
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_PluginsDidFinishLoading
+									 object:nil];
 }
 
 //Our available sort controllers changed
-- (void)sortControllerListChanged:(NSNotification *)notification
+- (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	AISortController	*activeSortController;
 	int					index;
