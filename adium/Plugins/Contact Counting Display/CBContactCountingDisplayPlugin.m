@@ -28,14 +28,13 @@
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-    [[adium menuController] addMenuItem:(NSMenuItem *)[NSMenuItem separatorItem] toLocation:LOC_View_General];		
-    [[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_General];		
+    [[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_Unnamed_C];		
 
     allCountingMenuItem     = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:allCountingMenuItem toLocation:LOC_View_General];		
+	[[adium menuController] addMenuItem:allCountingMenuItem toLocation:LOC_View_Unnamed_C];		
     
 	//set up the prefs
     [self preferencesChanged:nil];

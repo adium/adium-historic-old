@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.26 2004/02/11 01:31:54 evands Exp $
+// $Id: AIMenuController.m,v 1.27 2004/03/12 03:20:02 adamiser Exp $
 
 #import "AIMenuController.h"
 
@@ -21,14 +21,6 @@
 @end
 
 @implementation AIMenuController
-
-/*
- Outside code SHOULD USE the enum defined in Adium.h
- 
- Since the internal locations of the menu items may change in the future, those values aren't used directly.
- Instead, they're used to lookup the correct offset in locationArray of the desired menu.
- */
-static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16,  17,18,19,  20,21,22,23,24,  25,  26};
 
 //init
 - (void)initController
@@ -41,7 +33,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 		menu_Window_Top, menu_Window_Commands, menu_Window_Auxiliary, menu_Window_Fixed,
 		menu_Help_Local, menu_Help_Web, menu_Help_Additions,
 		menu_Contact_Editing, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions,
-		menu_View_General,
+		menu_View_General, menu_View_Unnamed_A, menu_View_Unnamed_B, menu_View_Unnamed_C, 
 		menu_Dock_Status, nil];
 	
     //Set up our contextual menu stuff
@@ -54,62 +46,61 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 - (void)closeController
 {
     //There's no need to remove the menu items, the system will take them out for us.
-    
     //Unless, of course, we are only switching users, and not quitting.  This might be better in a separate method,
-    //not sure.
-    NSMutableArray	*tempArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxiliary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
-    int i, o;
-    
-    NSMenuItem *topItem = [[tempArray objectAtIndex:0] retain],
-                *lastItem = nil,
-                *curItem = nil;
-                
-    for (o = i = 0; i < [tempArray count]; i++, o++)
-    {
-        //if (menuArrayOffset[o] != i)
-        //    i = menuArrayOffset[o];
-        if ([[tempArray objectAtIndex:i] retain] != nilMenuItem)
-            topItem = [[tempArray objectAtIndex:i] retain];
-        lastItem = [locationArray objectAtIndex:i];
-        curItem = lastItem;
-        NSMenu	   *targetMenu = [[locationArray objectAtIndex:i] menu]; 
-        //int		curCount = 1, ind = [targetMenu indexOfItem:topItem] + 1, count = [targetMenu indexOfItem:lastItem] - [targetMenu indexOfItem:topItem];
-        
-        if (lastItem == nilMenuItem)
-            continue;
-        
-        //while(curItem == nilMenuItem){
-        //    curItem = [[tempArray objectAtIndex:++i] retain];
-        //}
-        
-        //lastItem = [locationArray objectAtIndex:--i];
-        //curItem = lastItem;
-        targetMenu = [lastItem menu];
-        
-        //NSLog (@"About to remove item %@", curItem);
-        while (curItem != topItem)
-        //for (; curCount <= count; curCount ++)
-        {
-            int nextInd = [targetMenu indexOfItem:curItem] - 1;
-            //curItem = [targetMenu itemAtIndex:ind];
-            //NSLog (@"Removing item %@", curItem);
-            
-            if (nextInd >= 0)
-            {
-                [targetMenu removeItem:curItem];
-            
-                curItem = (NSMenuItem *)[targetMenu itemAtIndex:nextInd];
-            }
-            else
-            {
-                //NSLog (@"Couldn't remove item %@", curItem);
-                curItem = topItem;
-                //ind++;
-            }
-        }
-    }
-    
-    [tempArray release];
+    //not sure.  But we don't switch users, so this is scary code we don't need :)
+//    NSMutableArray	*tempArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxiliary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
+//    int i, o;
+//    
+//    NSMenuItem *topItem = [[tempArray objectAtIndex:0] retain],
+//                *lastItem = nil,
+//                *curItem = nil;
+//                
+//    for (o = i = 0; i < [tempArray count]; i++, o++)
+//    {
+//        //if (menuArrayOffset[o] != i)
+//        //    i = menuArrayOffset[o];
+//        if ([[tempArray objectAtIndex:i] retain] != nilMenuItem)
+//            topItem = [[tempArray objectAtIndex:i] retain];
+//        lastItem = [locationArray objectAtIndex:i];
+//        curItem = lastItem;
+//        NSMenu	   *targetMenu = [[locationArray objectAtIndex:i] menu]; 
+//        //int		curCount = 1, ind = [targetMenu indexOfItem:topItem] + 1, count = [targetMenu indexOfItem:lastItem] - [targetMenu indexOfItem:topItem];
+//        
+//        if (lastItem == nilMenuItem)
+//            continue;
+//        
+//        //while(curItem == nilMenuItem){
+//        //    curItem = [[tempArray objectAtIndex:++i] retain];
+//        //}
+//        
+//        //lastItem = [locationArray objectAtIndex:--i];
+//        //curItem = lastItem;
+//        targetMenu = [lastItem menu];
+//        
+//        //NSLog (@"About to remove item %@", curItem);
+//        while (curItem != topItem)
+//        //for (; curCount <= count; curCount ++)
+//        {
+//            int nextInd = [targetMenu indexOfItem:curItem] - 1;
+//            //curItem = [targetMenu itemAtIndex:ind];
+//            //NSLog (@"Removing item %@", curItem);
+//            
+//            if (nextInd >= 0)
+//            {
+//                [targetMenu removeItem:curItem];
+//            
+//                curItem = (NSMenuItem *)[targetMenu itemAtIndex:nextInd];
+//            }
+//            else
+//            {
+//                //NSLog (@"Couldn't remove item %@", curItem);
+//                curItem = topItem;
+//                //ind++;
+//            }
+//        }
+//    }
+//    
+//    [tempArray release];
     
     // Releases to match allocs in initController
     [locationArray release];
@@ -118,9 +109,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 
 - (void)dealloc
 {
-    //[locationArray release];
-    //[contactualMenuContact release];
-
     [super dealloc];
 }
 
@@ -132,9 +120,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
     int			targetIndex;
     int			destination;
     
-    //Offset
-    location = menuArrayOffset[location];
-	
     //Find the menu item (or the closest one above it)
     destination = location;
     menuItem = [locationArray objectAtIndex:destination];
@@ -280,12 +265,4 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 }
 
 @end
-
-
-
-
-
-
-
-
 

@@ -107,6 +107,9 @@
                 "menu_Help_Local" = NSMenuItem; 
                 "menu_Help_Web" = NSMenuItem; 
                 "menu_View_General" = NSMenuItem; 
+                "menu_View_Unnamed_A" = NSMenuItem; 
+                "menu_View_Unnamed_B" = NSMenuItem; 
+                "menu_View_Unnamed_C" = NSMenuItem; 
                 "menu_Window_Auxiliary" = NSMenuItem; 
                 "menu_Window_Commands" = NSMenuItem; 
                 "menu_Window_Fixed" = NSMenuItem; 

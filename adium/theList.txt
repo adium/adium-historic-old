@@ -12,17 +12,11 @@ Legend
 ----
 Bugs
 ----
-= Account name not displaying correctly after service switch
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
-= Message tabs are not refreshing correctly when status changes (Fixed?)
-= Stray tab divider is displaying when dragging tabs
-= When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
 * Don't spawn new windows when we're hidden, doing so will unhide us
 * Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
-= Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
-= Contact list display format preference not applying correctly on launch
 * Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 
 -------------
@@ -31,8 +25,6 @@ Minor Changes
 
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
-	= Add Offline status coloring
-	= Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
 	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip
 
@@ -51,7 +43,7 @@ Accounts:
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
 Menu Bar:
-	+/= Add dividers to view menu - The current solution is imperfect; it would be better to define new menu locations in the menu controller.
+	= Add dividers to view menu - The current solution is imperfect; it would be better to define new menu locations in the menu controller.
 	= Change window cycling menu items to 'Previous Chat' 'Next Chat'
 	
 Message Window:
@@ -428,3 +420,32 @@ Themes
 - Remove or specialize.  We need themes because of how difficult it is to configure the contact list.  With the contact list much less difficult to configure the focus of themes should be reconsidered.  Either expand their scope, or narrow it.  If keeping:
 opening incoming messages automatically?
 make dock flap for a bit, and then stop and show unread messages
+
+
+
+-------------
+DONE!
+----------------
+Bug Fixes:
+= Account name not displaying correctly after service switch
+= Message tabs are not refreshing correctly when status changes (Fixed?)
+= Stray tab divider is displaying when dragging tabs
+= When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
+= Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
+= Contact list display format preference not applying correctly on launch
+
+Features:
+= Add Offline status coloring
+= Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
+
+
+
+
+
+
+
+
+
+
+
+
