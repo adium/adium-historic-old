@@ -68,8 +68,10 @@
 @implementation AIAdium
 
 //Init
-- (id)init{
+- (id)init
+{
     [AIObject _setSharedAdiumInstance:self];
+	
     return([super init]);
 }
 
@@ -78,6 +80,19 @@
 {
     return([ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Core Controllers -----------------------------------------------------------------------------------------------------
@@ -140,6 +155,7 @@
     return(notificationCenter);
 }
 
+
 //Startup and Shutdown -------------------------------------------------------------------------------------------------
 #pragma mark Startup and Shutdown
 //Adium is almost done launching, init
@@ -161,21 +177,9 @@
 //	}
 
 #ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
-#warning Using ~/Library/Application Support/Adium X
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSString *oldPath = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"];
-    NSString *newPath = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"];
-    BOOL isDir = NO;
-    BOOL oldExists = ([manager fileExistsAtPath:[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"] 
-                                    isDirectory:&isDir] && isDir);
-    BOOL newExists = ([manager fileExistsAtPath:[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"] 
-                                    isDirectory:&isDir] && isDir);
-                                                           
-    //Move that directory!
-    if(oldExists & !newExists){
-        [manager movePath:oldPath toPath:newPath handler:nil];
-    }
+	[self upgradePreferenceFolderFromAdium2ToAdium];
 #endif
+	
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.
@@ -336,6 +340,7 @@
     [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_IMPORTER];
 }
 
+
 //Crash Reporter -------------------------------------------------------------------------------------------------------
 #pragma mark Crash Reporter
 //Handle a singal by loading the crash reporter and closing Adium down
@@ -368,6 +373,7 @@ void Adium_HandleSignal(int i){
 	//I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
 	signal(SIGABRT, SIG_IGN);
 }
+
 
 //Other -------------------------------------------------------------------------------------------------------
 #pragma mark Other
