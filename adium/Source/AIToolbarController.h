@@ -19,6 +19,7 @@
 }
 
 - (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
+- (void)unregisterToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
 - (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types;
 
 //Private
