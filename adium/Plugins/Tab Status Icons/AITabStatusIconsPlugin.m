@@ -56,14 +56,14 @@
 		return(tabContent);
 	}else if([listObject integerStatusObjectForKey:@"Typing"]){
 		return(tabTyping);
-	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
-		return(tabStranger);
 	}else if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
 		return(tabAway);
 	}else if([listObject statusObjectForKey:@"IdleSince"]){
 		return(tabIdle);
 	}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
 		return(tabAvailable);
+	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
+		return(tabStranger);
 	}else{
 		return(tabOffline);
 	}
