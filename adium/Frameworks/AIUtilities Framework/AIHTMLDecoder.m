@@ -133,7 +133,7 @@ DeclareString(TabHTML);
 	InitString(TagCharStartString,@"<&");
 
 	InitString(Space,@"  ");
-	InitString(SpaceHTML,@" &nbsp;");
+	InitString(SpaceHTML,@"&nbsp;&nbsp;");
 	
 	InitString(Tab,[NSString stringWithCString:"\t"]);
 	InitString(TabHTML,@"&nbsp;&nbsp;&nbsp;&nbsp;");
