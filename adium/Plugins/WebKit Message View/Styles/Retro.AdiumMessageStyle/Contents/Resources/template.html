@@ -76,6 +76,7 @@
 			img.setAttribute('src', node.src);
 			img.setAttribute('alt', node.firstChild.nodeValue);
 			node.parentNode.replaceChild(img, node);
+			alignChat();
 		}
 		function alignChat() {
 			var windowHeight = window.innerHeight;
