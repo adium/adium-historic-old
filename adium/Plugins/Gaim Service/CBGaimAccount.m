@@ -1006,7 +1006,7 @@ static id<GaimThread> gaimThread = nil;
 	proxy_info = gaim_proxy_info_new();
 	gaim_account_set_proxy_info(account, proxy_info);
 	
-	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default_SOCKS);
+	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default_SOCKS5);
 	
 	if (proxyType == Gaim_Proxy_None){
 		//No proxy
@@ -1014,12 +1014,14 @@ static id<GaimThread> gaimThread = nil;
 		
 		[self continueConnectWithConfiguredProxy];
 		
-	}else if ((proxyType == Gaim_Proxy_Default_SOCKS) || (proxyType == Gaim_Proxy_Default_HTTP)) {
+	}else if ((proxyType == Gaim_Proxy_Default_SOCKS5) || 
+			  (proxyType == Gaim_Proxy_Default_HTTP) || 
+			  (proxyType == Gaim_Proxy_Default_SOCKS4)) {
 		//Load and use systemwide proxy settings
 		NSDictionary *systemProxySettingsDictionary;
 		ProxyType adiumProxyType = Proxy_None;
 		
-		if (proxyType == Gaim_Proxy_Default_SOCKS){
+		if (proxyType == Gaim_Proxy_Default_SOCKS5){
 			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
 			adiumProxyType = Proxy_SOCKS5;
 			
@@ -1027,8 +1029,10 @@ static id<GaimThread> gaimThread = nil;
 			gaimAccountProxyType = GAIM_PROXY_HTTP;
 			adiumProxyType = Proxy_HTTP;
 			
+		}else if (proxyType == Gaim_Proxy_Default_SOCKS4){
+				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
+				adiumProxyType = Proxy_SOCKS4;
 		}
-		
 		
 		if((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
 			
@@ -1120,6 +1124,7 @@ static id<GaimThread> gaimThread = nil;
 //Our account has connected
 - (oneway void)accountConnectionConnected
 {
+	NSLog(@"connection connected");
     //We are now online
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -1155,6 +1160,13 @@ static id<GaimThread> gaimThread = nil;
 	[self notifyOfChangedStatusSilently:NO];
 }
 
+//Account is finishing login
+- (oneway void)accountFinishLogin
+{
+	NSLog(@"finish login!");
+	[self updateStatusForKey:@"AwayMessage"];
+	[self updateStatusForKey:@"IdleSince"];
+}
 
 - (void)createNewGaimAccount
 {
