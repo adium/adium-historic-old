@@ -19,7 +19,7 @@
 }
 
 - (AIAccountViewController *)accountView{
-    return([ESGaimTrepiaAccountViewController accountView]);
+    return([ESGaimTrepiaAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{

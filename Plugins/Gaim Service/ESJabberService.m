@@ -19,7 +19,7 @@
 }
 
 - (AIAccountViewController *)accountView{
-    return([ESGaimJabberAccountViewController accountView]);
+    return([ESGaimJabberAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{

@@ -18,7 +18,7 @@
 }
 
 - (AIAccountViewController *)accountView{
-    return([ESGaimZephyrAccountViewController accountView]);
+    return([ESGaimZephyrAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{

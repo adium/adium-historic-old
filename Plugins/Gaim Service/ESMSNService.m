@@ -33,7 +33,7 @@
 }
 
 - (AIAccountViewController *)accountView{
-    return([ESGaimMSNAccountViewController accountView]);
+    return([ESGaimMSNAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{

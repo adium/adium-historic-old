@@ -17,7 +17,7 @@
 }
 
 - (AIAccountViewController *)accountView{
-    return([ESGaimICQAccountViewController accountView]);
+    return([ESGaimICQAccountViewController accountViewController]);
 }
 
 //Service Description

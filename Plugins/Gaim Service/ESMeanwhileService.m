@@ -19,7 +19,7 @@
 }
 
 - (AIAccountViewController *)accountView{
-    return([ESGaimMeanwhileAccountViewController accountView]);
+    return([ESGaimMeanwhileAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{

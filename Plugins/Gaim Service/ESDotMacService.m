@@ -18,7 +18,7 @@
 
 //
 - (AIAccountViewController *)accountView{
-    return([ESGaimDotMacAccountViewController accountView]);
+    return([ESGaimDotMacAccountViewController accountViewController]);
 }
 
 //Service Description
