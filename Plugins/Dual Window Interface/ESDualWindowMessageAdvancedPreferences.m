@@ -15,7 +15,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced_Messages);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(AILocalizedString(@"Messages",nil));
