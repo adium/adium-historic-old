@@ -13,11 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.43 2004/03/05 04:39:05 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.44 2004/03/12 06:26:58 evands Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
 #import "AIPreferenceCategory.h"
+
+#define PREFS_DEFAULT_PREFS @"PrefsPrefs.plist"
 
 @interface AIPreferenceController (PRIVATE)
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
@@ -47,6 +49,9 @@
 	//
 	userDirectory = [[[owner loginController] userDirectory] retain];
 	
+	//Register our default preferences
+    [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+    
 }
 
 //We can't do these in initing, since the toolbar controller hasn't loaded yet
