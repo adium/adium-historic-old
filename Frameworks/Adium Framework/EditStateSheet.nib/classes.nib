@@ -23,6 +23,8 @@
                 "popUp_state" = NSPopUpButton; 
                 "scrollView_autoReply" = AIAutoScrollView; 
                 "scrollView_statusMessage" = AIAutoScrollView; 
+                "stepper_idleHours" = NSStepper; 
+                "stepper_idleMinutes" = NSStepper; 
                 target = id; 
                 "textField_idleHours" = NSTextField; 
                 "textField_idleMinutes" = NSTextField; 

@@ -44,7 +44,9 @@
 	IBOutlet	NSButton			*checkbox_idle;
 	IBOutlet	NSBox				*box_idle;
 	IBOutlet	NSTextField			*textField_idleMinutes;
+	IBOutlet	NSStepper			*stepper_idleMinutes;
 	IBOutlet	NSTextField			*textField_idleHours;
+	IBOutlet	NSStepper			*stepper_idleHours;
 
 	IBOutlet	NSButton			*checkBox_save;
 	IBOutlet	NSButton			*checkBox_okay;
@@ -55,6 +57,8 @@
 	AIAccount	*account;
 
 	id			target;
+	
+	BOOL		isOnPantherOrBetter;
 }
 
 + (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)allowSave onWindow:(id)parentWindow notifyingTarget:(id)inTarget;

@@ -110,6 +110,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[self setAccount:inAccount];
 		
 		target = inTarget;
+		isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
 	}
 	
 	return(self);
@@ -160,7 +161,8 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (void)windowDidLoad
 {
-	BOOL sendOnEnter;
+	NSNumberFormatter	*intFormatter;
+	BOOL				sendOnEnter;
 	
 	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
 															group:PREF_GROUP_GENERAL] boolValue];
@@ -184,6 +186,15 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[textView_autoReply setSendOnEnter:sendOnEnter];
 
 	[self configureForAccountAndWorkingStatusState];
+	
+	/*
+	intFormatter = [[NSNumberFormatter alloc] init];
+	[intFormatter setAllowsFloats:NO];
+	[intFormatter setMinimum:0];
+	[textField_idleHours setFormatter:intFormatter];
+	[textField_idleMinutes setFormatter:intFormatter];
+	[intFormatter release];
+	*/
 	
 	[super windowDidLoad];
 }
@@ -386,27 +397,37 @@ static	NSMutableDictionary	*controllerDict = nil;
 - (void)updateControlVisibilityAndResizeWindow
 {
 	//Visibility
-	[scrollView_autoReply setHidden:(![checkbox_autoReply state] || ![checkbox_customAutoReply state])];
-	[checkbox_customAutoReply setHidden:![checkbox_autoReply state]];
-	[box_idle setHidden:![checkbox_idle state]];
-	
-	//Sizing
-	//XXX - This is quick & dirty -ai
-	id	current = box_title;
-	int	height = WINDOW_HEIGHT_PADDING + [current frame].size.height;
+	if(isOnPantherOrBetter){
+		[scrollView_autoReply setHidden:(![checkbox_autoReply state] || ![checkbox_customAutoReply state])];
+		[checkbox_customAutoReply setHidden:![checkbox_autoReply state]];
+		[box_idle setHidden:![checkbox_idle state]];
+		
+		//Sizing
+		//XXX - This is quick & dirty -ai
+		id	current = box_title;
+		int	height = WINDOW_HEIGHT_PADDING + [current frame].size.height;
+		
+		current = [self _positionControl:box_separatorLine relativeTo:current height:&height];
+		current = [self _positionControl:box_state relativeTo:current height:&height];	
+		current = [self _positionControl:box_statusMessage relativeTo:current height:&height];
+		current = [self _positionControl:checkbox_autoReply relativeTo:current height:&height];
+		current = [self _positionControl:checkbox_customAutoReply relativeTo:current height:&height];
+		current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
+		current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
+		current = [self _positionControl:box_idle relativeTo:current height:&height];
+		
+		[[self window] setContentSize:NSMakeSize([[[self window] contentView] frame].size.width, height)
+							  display:YES
+							  animate:NO];
 
-	current = [self _positionControl:box_separatorLine relativeTo:current height:&height];
-	current = [self _positionControl:box_state relativeTo:current height:&height];	
-	current = [self _positionControl:box_statusMessage relativeTo:current height:&height];
-	current = [self _positionControl:checkbox_autoReply relativeTo:current height:&height];
-	current = [self _positionControl:checkbox_customAutoReply relativeTo:current height:&height];
-	current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
-	current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
-	current = [self _positionControl:box_idle relativeTo:current height:&height];
-	
-	[[self window] setContentSize:NSMakeSize([[[self window] contentView] frame].size.width, height)
-						  display:YES
-						  animate:NO];
+	}else{
+		/* Jaguar gets to be ugly.  Enable/disable controls rather than hiding them. Upgrade, fools! */
+		[textView_autoReply setEditable:([checkbox_autoReply state] && [checkbox_customAutoReply state])];
+		[checkbox_customAutoReply setEnabled:[checkbox_autoReply state]];
+		
+		[textField_idleMinutes setEnabled:[checkbox_idle state]];
+		[textField_idleHours setEnabled:[checkbox_idle state]];
+	}
 }
 
 /*!
