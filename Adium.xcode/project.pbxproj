@@ -6088,7 +6088,6 @@
 				34D5B281061263B300B98336,
 				9E6417070613C55D006AF387,
 				3404893306173DAB004D0B7E,
-				BF99B529061D74EE00BF2252,
 				6E7C19BC0623BF80008A1C99,
 				4BAA1B420632EDF100D8B92C,
 				4BAA1B480632EE2700D8B92C,
@@ -6332,7 +6331,6 @@
 				4BD6759906001E510049CAF7,
 				3420E6640611D80100AE67E3,
 				4B0DB3B506123423004F47D9,
-				BF99B520061D74C300BF2252,
 				344ECBAE0620F323007256C6,
 				344ECBB00620F323007256C6,
 				6E7C19BE0623BF80008A1C99,
@@ -6692,7 +6690,6 @@
 				34D5B262061260AE00B98336,
 				9E6417080613C55D006AF387,
 				3404893406173DAB004D0B7E,
-				BF99B52A061D74EE00BF2252,
 				6E7C19BD0623BF80008A1C99,
 				4BAA1B430632EDF100D8B92C,
 				4BAA1B490632EE2700D8B92C,
@@ -12402,17 +12399,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEmoticonPackCell.m;
 			path = Plugins/Emoticons/AIEmoticonPackCell.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B584F060638C01B0019FAD2 = {
-			children = (
-				BF99B527061D74EE00BF2252,
-				BF99B528061D74EE00BF2252,
-				BF99B51F061D74C300BF2252,
-			);
-			isa = PBXGroup;
-			name = "New Alert Panel";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21555,50 +21541,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		BF99B51F061D74C300BF2252 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = NewAlert.nib;
-			path = "Plugins/Contact Alerts/NewAlert.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF99B520061D74C300BF2252 = {
-			fileRef = BF99B51F061D74C300BF2252;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF99B527061D74EE00BF2252 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSNewContactAlertWindowController.h;
-			path = "Plugins/Contact Alerts/CSNewContactAlertWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF99B528061D74EE00BF2252 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSNewContactAlertWindowController.m;
-			path = "Plugins/Contact Alerts/CSNewContactAlertWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF99B529061D74EE00BF2252 = {
-			fileRef = BF99B527061D74EE00BF2252;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF99B52A061D74EE00BF2252 = {
-			fileRef = BF99B528061D74EE00BF2252;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		BFEBDBF90669025600CBF845 = {
 			children = (
 				BFEBDC010669029900CBF845,
@@ -22537,7 +22479,6 @@
 				F52707A104E203EA0114B3C0,
 				F52707A004E203EA0114B3C0,
 				F5148D9604C8B4AA018B6CC7,
-				4B584F060638C01B0019FAD2,
 			);
 			isa = PBXGroup;
 			name = "Contact Alerts";
