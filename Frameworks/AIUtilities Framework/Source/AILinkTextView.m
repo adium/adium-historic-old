@@ -29,19 +29,21 @@
 //Init
 - (id)initWithFrame:(NSRect)frame
 {
-    [super initWithFrame:frame];
-    [self _initLinkTextView];
+	if((self = [super initWithFrame:frame])) {
+		[self _initLinkTextView];
+	}
 
-    return(self);
+	return self;
 }
 
 //Init from nib
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initLinkTextView];
-    
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initLinkTextView];
+	}
+
+	return self;
 }
 
 //Common init

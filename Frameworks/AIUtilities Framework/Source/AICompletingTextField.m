@@ -33,27 +33,29 @@
 //Init the field
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _init];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _init];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _init];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _init];
+	}
+	return self;
 }
 
 - (id)_init
 {
-    stringSet = nil;
+	stringSet = nil;
 	impliedCompletionDictionary = nil;
-    minLength = 1;
-    oldUserLength = 0;
+	minLength = 1;
+	oldUserLength = 0;
 	completeAfterSeparator = NO;
 
-    return(self);
+	return self;
 }
 
 - (void)dealloc

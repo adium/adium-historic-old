@@ -25,46 +25,45 @@
 //
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
+    if((self = [super initWithCoder:aDecoder])) {
+		Class myClass = [self class];
 
-    if([[self cell] controlSize] != NSMiniControlSize){
-        //Preload some images
-        popUpRolloverCaps = [[NSImage imageNamed:@"PopUpRollover_Caps" forClass:[self class]] retain];
-        popUpRolloverMiddle = [[NSImage imageNamed:@"PopUpRollover_Middle" forClass:[self class]] retain];
-        popUpPressedCaps = [[NSImage imageNamed:@"PopUpPressed_Caps" forClass:[self class]] retain];
-        popUpPressedMiddle = [[NSImage imageNamed:@"PopUpPressed_Middle" forClass:[self class]] retain];
-        popUpTriangle = [[NSImage imageNamed:@"PopUpArrow" forClass:[self class]] retain];
-        popUpTriangleWhite = [[NSImage imageNamed:@"PopUpArrowWhite" forClass:[self class]] retain];
+		if([[self cell] controlSize] != NSMiniControlSize){
+			//Preload normal-size images
+			popUpRolloverCaps   = [[NSImage imageNamed:@"PopUpRollover_Caps"   forClass:myClass] retain];
+			popUpRolloverMiddle = [[NSImage imageNamed:@"PopUpRollover_Middle" forClass:myClass] retain];
+			popUpPressedCaps    = [[NSImage imageNamed:@"PopUpPressed_Caps"    forClass:myClass] retain];
+			popUpPressedMiddle  = [[NSImage imageNamed:@"PopUpPressed_Middle"  forClass:myClass] retain];
+			popUpTriangle       = [[NSImage imageNamed:@"PopUpArrow"           forClass:myClass] retain];
+			popUpTriangleWhite  = [[NSImage imageNamed:@"PopUpArrowWhite"      forClass:myClass] retain];
+		}else{
+			//Preload small images
+			popUpRolloverCaps   = [[NSImage imageNamed:@"SmallPopUpRollover_Caps"   forClass:myClass] retain];
+			popUpRolloverMiddle = [[NSImage imageNamed:@"SmallPopUpRollover_Middle" forClass:myClass] retain];
+			popUpPressedCaps    = [[NSImage imageNamed:@"SmallPopUpPressed_Caps"    forClass:myClass] retain];
+			popUpPressedMiddle  = [[NSImage imageNamed:@"SmallPopUpPressed_Middle"  forClass:myClass] retain];
+			popUpTriangle       = [[NSImage imageNamed:@"SmallPopUpArrow"           forClass:myClass] retain];
+			popUpTriangleWhite  = [[NSImage imageNamed:@"SmallPopUpArrowWhite"      forClass:myClass] retain];
+		}
 
-    }else{
-        //Preload some images
-        popUpRolloverCaps = [[NSImage imageNamed:@"SmallPopUpRollover_Caps" forClass:[self class]] retain];
-        popUpRolloverMiddle = [[NSImage imageNamed:@"SmallPopUpRollover_Middle" forClass:[self class]] retain];
-        popUpPressedCaps = [[NSImage imageNamed:@"SmallPopUpPressed_Caps" forClass:[self class]] retain];
-        popUpPressedMiddle = [[NSImage imageNamed:@"SmallPopUpPressed_Middle" forClass:[self class]] retain];
-        popUpTriangle = [[NSImage imageNamed:@"SmallPopUpArrow" forClass:[self class]] retain];
-        popUpTriangleWhite = [[NSImage imageNamed:@"SmallPopUpArrowWhite" forClass:[self class]] retain];
-        
-    }
+		mouseIn = NO;
+		trackingTag = 0;
+		popUpTitle = nil;
+	}
 
-    //
-    mouseIn = NO;
-    trackingTag = 0;
-    popUpTitle = nil;
-
-    return(self);    
+    return self;    
 }
 
 //
 - (void)dealloc
 {
     //
-    [popUpRolloverCaps release];
+    [popUpRolloverCaps   release];
     [popUpRolloverMiddle release];
-    [popUpPressedCaps release];
-    [popUpPressedMiddle release];
-    [popUpTriangle release];
-    [popUpTriangleWhite release];
+    [popUpPressedCaps    release];
+    [popUpPressedMiddle  release];
+    [popUpTriangle       release];
+    [popUpTriangleWhite  release];
 
     [popUpTitle release];
     

@@ -79,29 +79,28 @@ static  NSImage			*tabDivider = nil;
 //init
 - (id)initWithFrame:(NSRect)frameRect
 {
-    //Init
-    [super initWithFrame:frameRect];
-    arrangeCellTimer = nil;
-    removingLastTabHidesWindow = YES;
-	allowsTabRearranging = YES;
-    tabCellArray = nil;
-    selectedCustomTabCell = nil;
-	ignoreTabNumberChange = NO;
+	if((self = [super initWithFrame:frameRect])) {
+		arrangeCellTimer = nil;
+		removingLastTabHidesWindow = YES;
+		allowsTabRearranging = YES;
+		tabCellArray = nil;
+		selectedCustomTabCell = nil;
+		ignoreTabNumberChange = NO;
 
-    //register as a drag observer
-    [self registerForDraggedTypes:[self acceptableDragTypes]];
-    [self rebuildTabCells];
-
-    return(self);
+		//register as a drag observer
+		[self registerForDraggedTypes:[self acceptableDragTypes]];
+		[self rebuildTabCells];
+	}
+	return self;
 }
 
 //Dealloc
 - (void)dealloc
 {
-	[dragCell release]; dragCell = nil;
-    [arrangeCellTimer invalidate]; [arrangeCellTimer release]; arrangeCellTimer = nil;
-    [tabCellArray release]; tabCellArray = nil;
-    [super dealloc];
+	[dragCell release];
+	[arrangeCellTimer invalidate]; [arrangeCellTimer release];
+	[tabCellArray release];
+	[super dealloc];
 }
 
 //Allow tab switching from the background

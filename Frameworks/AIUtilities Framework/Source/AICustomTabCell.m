@@ -62,35 +62,37 @@ static NSSize		rightCapSize;
 {
     static BOOL haveLoadedImages = NO;
     
-    [super init];
-	
-    //Share these images between all AICustomTabCell instances
-    if(!haveLoadedImages){
-		tabFrontLeft = [[NSImage imageNamed:@"Aqua_Tab_Left" forClass:[self class]] retain];
-		tabFrontMiddle = [[NSImage imageNamed:@"Aqua_Tab_Middle" forClass:[self class]] retain];
-		tabFrontRight = [[NSImage imageNamed:@"Aqua_Tab_Right" forClass:[self class]] retain];
-		
-		tabCloseFront = [[NSImage imageNamed:@"aquaTabClose" forClass:[self class]] retain];
-		tabCloseBack = [[NSImage imageNamed:@"aquaTabCloseBack" forClass:[self class]] retain];
-		tabCloseFrontPressed = [[NSImage imageNamed:@"aquaTabClosePressed" forClass:[self class]] retain];
-		tabCloseFrontRollover = [[NSImage imageNamed:@"aquaTabCloseRollover" forClass:[self class]] retain];
+    if((self = [super init])) {
+		//Share these images between all AICustomTabCell instances
+		if(!haveLoadedImages){
+			Class myClass = [self class];
 
-		leftCapSize = [tabFrontLeft size];
-		rightCapSize = [tabFrontRight size];
-		
-        haveLoadedImages = YES;
-    }
-	
-    tabViewItem = [inTabViewItem retain];
-	view = inView;
-    allowsInactiveTabClosing = NO;
-    trackingClose = NO;
-    hoveringClose = NO;
-    selected = NO;
-    trackingTag = 0;
-    closeTrackingTag = 0;
-	
-    return(self);
+			tabFrontLeft          = [[NSImage imageNamed:@"Aqua_Tab_Left"        forClass:myClass] retain];
+			tabFrontMiddle        = [[NSImage imageNamed:@"Aqua_Tab_Middle"      forClass:myClass] retain];
+			tabFrontRight         = [[NSImage imageNamed:@"Aqua_Tab_Right"       forClass:myClass] retain];
+
+			tabCloseFront         = [[NSImage imageNamed:@"aquaTabClose"         forClass:myClass] retain];
+			tabCloseBack          = [[NSImage imageNamed:@"aquaTabCloseBack"     forClass:myClass] retain];
+			tabCloseFrontPressed  = [[NSImage imageNamed:@"aquaTabClosePressed"  forClass:myClass] retain];
+			tabCloseFrontRollover = [[NSImage imageNamed:@"aquaTabCloseRollover" forClass:myClass] retain];
+
+			leftCapSize = [tabFrontLeft size];
+			rightCapSize = [tabFrontRight size];
+
+			haveLoadedImages = YES;
+		}
+
+		tabViewItem = [inTabViewItem retain];
+		view = inView;
+		allowsInactiveTabClosing = NO;
+		trackingClose = NO;
+		hoveringClose = NO;
+		selected = NO;
+		trackingTag = 0;
+		closeTrackingTag = 0;
+	}
+
+	return self;
 }
 
 //dealloc

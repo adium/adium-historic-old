@@ -25,16 +25,18 @@
 //Init
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initSplitView];
-    return(self);
+	if(([super initWithCoder:aDecoder])) {
+		[self _initSplitView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _initSplitView];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initSplitView];
+	}
+	return self;
 }
 
 - (void)_initSplitView

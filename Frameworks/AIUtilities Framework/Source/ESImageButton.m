@@ -14,8 +14,10 @@
 //
 - (id)initWithFrame:(NSRect)frame
 {
-	[super initWithFrame:frame];
-	imageFloater = nil;
+	if((self = [super initWithFrame:frame])) {
+		imageFloater = nil;
+	}
+
 	return(self);
 }
 
@@ -30,7 +32,7 @@
 
 - (void)dealloc
 {
-	[imageFloater release]; imageFloater = nil;
+	[imageFloater release];
 	
 	[super dealloc];
 }

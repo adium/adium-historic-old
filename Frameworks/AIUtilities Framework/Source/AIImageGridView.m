@@ -30,16 +30,18 @@ Adium, Copyright 2001-2005, Adam Iser
 //Init
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initImageGridView];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initImageGridView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _initImageGridView];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initImageGridView];
+	}
+	return self;
 }
 
 - (void)_initImageGridView

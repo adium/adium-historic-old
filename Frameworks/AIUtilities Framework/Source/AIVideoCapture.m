@@ -37,23 +37,22 @@ static long instanceCounter = 0L;
 //Init
 - (id)initWithSize:(NSSize)inSize captureInterval:(NSTimeInterval)inInterval delegate:(id)inDelegate
 {
-	[super init];
+	if((self = [super init])) {
+		delegate = inDelegate;
+		uniqueID = 0;
+		gWorld = NULL;
+		decodeSeq = 0;
+		captureSize = inSize;
+		captureInterval = inInterval;
 	
-	delegate = inDelegate;
-	uniqueID = 0;
-	gWorld = nil;
-	decodeSeq = 0;
-	captureSize = inSize;
-	captureInterval = inInterval;
+		//Delegate must implement frameReady
+		if(delegate){
+			NSParameterAssert([delegate respondsToSelector:@selector(videoCapture:frameReady:)]);
+		}
 	
-	//Delegate must implement frameReady
-	if(delegate){
-		NSParameterAssert([delegate respondsToSelector:@selector(videoCapture:frameReady:)]);
+		//Init our video capture (Reserve the device and prepare for capture)
+		[self _initVideoCapture];
 	}
-	
-	//Init our video capture (Reserve the device and prepare for capture)
-	[self _initVideoCapture];
-	
 	return(self);
 }
 

@@ -27,16 +27,18 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initColorSelectionPopUpButton];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initColorSelectionPopUpButton];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)buttonFrame pullsDown:(BOOL)flag
 {
-    [super initWithFrame:buttonFrame pullsDown:flag];
-    [self _initColorSelectionPopUpButton];
-    return(self);
+	if((self = [super initWithFrame:buttonFrame pullsDown:flag])) {
+		[self _initColorSelectionPopUpButton];
+	}
+	return self;
 }
 
 - (void)_initColorSelectionPopUpButton

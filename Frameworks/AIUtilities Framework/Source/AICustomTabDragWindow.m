@@ -32,23 +32,23 @@
 - (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 
 {
-	[super init];
-	
-	floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
-	floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
-	useFancyAnimations = ([NSApp isOnPantherOrBetter] && floaterWindowImage);
-	
-	if(useFancyAnimations){
-		//Create a floating window for our tab
-		dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask];
-		[dragTabFloater setMaxOpacity:1.0];
-		
-		//Create a floating window for the stand-alone window our tab would produce
-		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask];
-		[dragWindowFloater setMaxOpacity:(transparent ? 0.75 : 1.00)];
+	if((self = [super init])) {
+		floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
+		floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
+		useFancyAnimations = ([NSApp isOnPantherOrBetter] && floaterWindowImage);
+
+		if(useFancyAnimations){
+			//Create a floating window for our tab
+			dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask];
+			[dragTabFloater setMaxOpacity:1.0];
+
+			//Create a floating window for the stand-alone window our tab would produce
+			dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask];
+			[dragWindowFloater setMaxOpacity:(transparent ? 0.75 : 1.00)];
+		}
 	}
-		
-	return(self);
+
+	return self;
 }
 
 - (void)closeWindow

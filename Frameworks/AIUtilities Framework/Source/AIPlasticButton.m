@@ -28,21 +28,23 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
+	if((self = [super initWithFrame:frameRect])) {
+		//Default title and image
+		[self setTitle:@""];
+		[self setImage:nil];
 
-    //Default title and image
-    [self setTitle:@""];
-    [self setImage:nil];
+		Class myClass = [self class];
     
-    //Load images
-    plasticCaps = [[NSImage imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
-    plasticMiddle = [[NSImage imageNamed:@"PlasticButtonNormal_Middle" forClass:[self class]] retain];
-    plasticPressedCaps = [[NSImage imageNamed:@"PlasticButtonPressed_Caps" forClass:[self class]] retain];
-    plasticPressedMiddle = [[NSImage imageNamed:@"PlasticButtonPressed_Middle" forClass:[self class]] retain];
-    plasticDefaultCaps = [[NSImage imageNamed:@"PlasticButtonDefault_Caps" forClass:[self class]] retain];
-    plasticDefaultMiddle = [[NSImage imageNamed:@"PlasticButtonDefault_Middle" forClass:[self class]] retain];
+		//Load images
+		plasticCaps          = [[NSImage imageNamed:@"PlasticButtonNormal_Caps"    forClass:myClass] retain];
+		plasticMiddle        = [[NSImage imageNamed:@"PlasticButtonNormal_Middle"  forClass:myClass] retain];
+		plasticPressedCaps   = [[NSImage imageNamed:@"PlasticButtonPressed_Caps"   forClass:myClass] retain];
+		plasticPressedMiddle = [[NSImage imageNamed:@"PlasticButtonPressed_Middle" forClass:myClass] retain];
+		plasticDefaultCaps   = [[NSImage imageNamed:@"PlasticButtonDefault_Caps"   forClass:myClass] retain];
+		plasticDefaultMiddle = [[NSImage imageNamed:@"PlasticButtonDefault_Middle" forClass:myClass] retain];
+	}
 
-    return(self);    
+	return self;    
 }
 
 - (void)drawRect:(NSRect)rect

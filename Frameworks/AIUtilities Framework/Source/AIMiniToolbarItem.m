@@ -25,14 +25,13 @@
 //Init
 - (id)initWithIdentifier:(NSString *)inIdentifier
 {
-    [super init];
-    
-    identifier = [inIdentifier retain];
-    paletteLabel = nil;
-    allowsDuplicatesInToolbar = NO;
-    flexibleWidth = NO;
-    
-    return(self);
+	if((self = [super init])) {
+		identifier = [inIdentifier retain];
+		paletteLabel = nil;
+		allowsDuplicatesInToolbar = NO;
+		flexibleWidth = NO;
+	}
+	return(self);
 }
 
 - (void)dealloc

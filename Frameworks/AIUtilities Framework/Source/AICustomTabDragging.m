@@ -26,17 +26,25 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	return(sharedTabDragInstance);
 }
 
-//Init
 - (id)init
 {
-	[super init];
-	_destinationOfLastDrag = nil;
-	dragTabCell = nil;
-	sourceTabBar = nil;
-	destTabBar = nil;
-	tabDragWindow = nil;
-	
-	return(self);
+	if((self = [super init])) {
+		_destinationOfLastDrag = nil;
+		dragTabCell = nil;
+		sourceTabBar = nil;
+		destTabBar = nil;
+		tabDragWindow = nil;
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+[dragTabCell release];
+[sourceTabBar release];
+[destTabBar release];
+[super dealloc];
 }
 
 //Set the currently hovered destination tab view
@@ -104,9 +112,9 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	int height = [inTabCell frame].size.height;
 	
 	dragOffset = NSMakeSize([inTabCell frame].origin.x - clickLocation.x, [inTabCell frame].origin.y - clickLocation.y);
-	if(dragOffset.width > width) dragOffset.width = width;
-	if(dragOffset.width < -width) dragOffset.width = -width;
-	if(dragOffset.height > height) dragOffset.height = height;
+	if(dragOffset.width   > width)  dragOffset.width  =  width;
+	if(dragOffset.width  < -width)  dragOffset.width  = -width;
+	if(dragOffset.height  > height) dragOffset.height =  height;
 	if(dragOffset.height < -height) dragOffset.height = -height;
 	
 	//Create the drag window for our custom drag tracking

@@ -38,16 +38,18 @@
 #pragma mark Init
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initImageViewWithImagePicker];
-    return(self);
+    if((self = [super initWithCoder:aDecoder])) {
+		[self _initImageViewWithImagePicker];
+	}
+    return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-	[self _initImageViewWithImagePicker];
-	return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initImageViewWithImagePicker];
+	}
+	return self;
 }
 
 - (void)_initImageViewWithImagePicker

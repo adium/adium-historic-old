@@ -31,25 +31,25 @@
 
 + (AIMiniToolbarCustomizeController *)customizationWindowControllerForToolbar:(AIMiniToolbar *)inToolbar
 {
-    return([[[self alloc] initWithWindowNibName:MINI_TOOLBAR_CUSTOMIZE_NIB forToolbar:inToolbar] autorelease]);
+	return([[[self alloc] initWithWindowNibName:MINI_TOOLBAR_CUSTOMIZE_NIB forToolbar:inToolbar] autorelease]);
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forToolbar:(AIMiniToolbar *)inToolbar
 {
-    NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
+	NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
 
-    toolbar = [inToolbar retain];
-    
-    [super initWithWindowNibName:windowNibName];
+	if((self = [super initWithWindowNibName:windowNibName])) {
+		toolbar = [inToolbar retain];
+	}
 
-    return(self);
+	return self;
 }
 
 - (void)dealloc
 {
-    [toolbar release];
+	[toolbar release];
     
-    [super dealloc];
+	[super dealloc];
 }
 
 //Close the window

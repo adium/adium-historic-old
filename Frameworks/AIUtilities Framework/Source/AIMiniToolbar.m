@@ -43,21 +43,20 @@
 //Init the toolbar view
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    
-    //Init
-    identifier = nil;
-    representedObjects = nil;
-    itemIdentifierArray = nil;
-    itemArray = nil;
-    itemsRearranging = NO;
-    toolbarBackground = [[NSImage imageNamed:@"toolbar_Background" forClass:[self class]] retain];
+	if((self = [super initWithFrame:frameRect])) {
+		//Init
+		identifier = nil;
+		representedObjects = nil;
+		itemIdentifierArray = nil;
+		itemArray = nil;
+		itemsRearranging = NO;
+		toolbarBackground = [[NSImage imageNamed:@"toolbar_Background" forClass:[self class]] retain];
 
-    //setup the toolbar view
-    [self registerForDraggedTypes:[NSArray arrayWithObject:MINI_TOOLBAR_ITEM_DRAGTYPE]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:self];
-
-    return(self);
+		//setup the toolbar view
+		[self registerForDraggedTypes:[NSArray arrayWithObject:MINI_TOOLBAR_ITEM_DRAGTYPE]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:self];
+	}
+	return self;
 }
 
 - (void)dealloc

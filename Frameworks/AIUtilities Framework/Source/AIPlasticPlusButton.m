@@ -16,12 +16,18 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
-	arrowPath = nil;
-    return(self);    
+	if((self = [super initWithFrame:frameRect])) {
+		[self setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
+		arrowPath = [[self popUpArrowPath] retain];
+	}
+	return self;    
 }
 
+- (void)dealloc
+{
+	[arrowPath release];
+	[super dealloc];
+}
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
@@ -40,17 +46,13 @@
 //Path for the little popup arrow (Cached)
 - (NSBezierPath *)popUpArrowPath
 {
-	if(!arrowPath){
-		NSRect	frame = [self frame];
-		
-		arrowPath = [[NSBezierPath bezierPath] retain];
-		[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-8, NSHeight(frame)-6)];
-		[arrowPath relativeLineToPoint:NSMakePoint( 6, 0)];
-		[arrowPath relativeLineToPoint:NSMakePoint(-3, 3)];
-		[arrowPath closePath];
-	}
+	arrowPath = [NSBezierPath bezierPath];
+	[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-8, NSHeight(frame)-6)];
+	[arrowPath relativeLineToPoint:NSMakePoint( 6, 0)];
+	[arrowPath relativeLineToPoint:NSMakePoint(-3, 3)];
+	[arrowPath closePath];
 
-	return(arrowPath);
+	return arrowPath;
 }
 
 @end
