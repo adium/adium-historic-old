@@ -24,7 +24,7 @@
 #define AIMessageTabDragCompleteNotification    @"AIMessageTabDragCompleteNotification"
 #define	MESSAGE_WINDOW_NIB                      @"MessageWindow"		//Filename of the message window nib
 #define TAB_BAR_FPS                             20.0
-#define TAB_BAR_STEP                            0.2
+#define TAB_BAR_STEP                            0.6
 
 //The tabbed window that contains messages
 @interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
