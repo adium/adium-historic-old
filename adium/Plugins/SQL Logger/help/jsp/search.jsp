@@ -53,7 +53,7 @@ String notes = new String();
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
-SQLWarning warning;
+SQLWarning warning = null;
 
 long beginTime = 0;
 long queryTime = 0;
@@ -118,6 +118,7 @@ try {
                     <li><span id="current">Search</span></li>
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
+                    <li><a href="meta.jsp">Meta-Contacts</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -399,7 +400,16 @@ try {
                     out.print("<br>" + warning.getMessage());
                 }
             }
+            
             warning = rset.getWarnings();
+            if(warning != null) {
+                out.print("<br />" + warning.getMessage());
+                while(warning.getNextWarning() != null) {
+                    out.print("<br />" + warning.getMessage());
+                }
+            }
+
+            warning = pstmt.getWarnings();
             if(warning != null) {
                 out.print("<br />" + warning.getMessage());
                 while(warning.getNextWarning() != null) {
@@ -478,7 +488,7 @@ try {
     }
     
 } catch (SQLException e) {
-    out.print(e.getMessage() + "<br>");
+    out.print("<br />" + e.getMessage() + "<br>");
 } finally {
     if (pstmt != null) {
         pstmt.close();

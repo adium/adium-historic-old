@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 487 $ $Date: 2004/05/04 21:29:54 $ -->
+<!--$Rev: 487 $ $Date: 2004/05/15 17:56:46 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -159,7 +159,7 @@ try {
 </table>
 <%
 } catch (SQLException e) {
-    out.print(e.getMessage());
+    out.print("<br />" + e.getMessage());
 } finally {
     if (stmt != null) {
         stmt.close();

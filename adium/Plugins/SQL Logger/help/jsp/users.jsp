@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/09 17:13:20 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/15 17:56:46 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -27,7 +27,7 @@ try {
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger Users</title>
+<title>Adium SQL Logger: Users</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -40,10 +40,10 @@ try {
 </script>
 </head>
 <body>
-	<div id="container">
-	   <div id="header">
-	   </div>
-	   <div id="banner">
+    <div id="container">
+        <div id="header">
+        </div>
+        <div id="banner">
             <div id="bannerTitle">
                 <img class="adiumIcon" src="images/adiumy/yellow.png" width="128" height="128" border="0" alt="Adium X Icon" />
                 <div class="text">
@@ -58,6 +58,7 @@ try {
                     <li><a href="search.jsp">Search</a></li>
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><span id="current">Users</span></li>
+                    <li><a href="meta.jsp">Meta-Contacts</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -92,12 +93,12 @@ try {
                 <div class="boxThinBottom"></div>
             </div>
             <div id="content">
-                <h1>Meta-Contacts/Grouping</h1>
+                <h1>Users</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 125 as height from adium.information_keys where delete = false");
+    pstmt = conn.prepareStatement("select count(*) * 31 + 100 as height from adium.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
 
@@ -105,31 +106,39 @@ try {
 
     int height = rset.getInt("height");
 
-    pstmt = conn.prepareStatement("select meta_id, name " +
-        " from adium.meta_container order by name");
+    pstmt = conn.prepareStatement("select user_id, scramble(username) " +
+        " as username, scramble(display_name) as display_name " +
+        " from adium.users natural join user_display_name udn " +
+        " where not exists (select 'x' from user_display_name " + 
+        " where user_id = udn.user_id  and effdate > udn.effdate) " + 
+        " order by not exists (select 'x' from meta_contact " +
+        " where user_id = users.user_id), not exists (select 'x' from " +
+        " user_contact_info where user_id = users.user_id), " +
+        " display_name, username");
 
     rset = pstmt.executeQuery();
 
     while(rset.next()) {
 
-        String editURL = "editMeta.jsp?meta_id=" + rset.getInt("meta_id");
+        String editURL = "editUser.jsp?user_id=" + rset.getInt("user_id");
 %>
 <span class="edit"<a href="#" 
-    onClick="window.open('<%= editURL %>', 'Edit Meta Contact', 'width=275,height=<%= height %>')">Edit ...</a></span>
+    onClick="window.open('<%= editURL %>', 'Edit User', 'width=275,height=<%= height %>')">Edit Info ...</a></span>
 <%
 
-        out.print("<h2>" + rset.getString("name") + "</h2>");
+        out.print("<h2>" + rset.getString("display_name") + " (" +
+            rset.getString("username") + ")</h2>");
         out.println("<div class=\"meta\">");
         out.print("<div class=\"personal_info\">");
-        
-        infoStmt = conn.prepareStatement("select key_name, value from adium.meta_contact_info where meta_id = ? order by key_name");
 
-        infoStmt.setInt(1, rset.getInt("meta_id"));
+        infoStmt = conn.prepareStatement("select key_name, value from adium.user_contact_info where user_id = ? order by key_name");
+
+        infoStmt.setInt(1, rset.getInt("user_id"));
 
         infoSet = infoStmt.executeQuery();
-        
+
         out.println("<table>");
-        
+
         while(infoSet.next()) {
             out.println("<tr><td class=\"left\">" + 
                 infoSet.getString("key_name") + "</td>" +
@@ -139,41 +148,43 @@ try {
         out.println("</table>");
         out.println("</div>");
 
-        metaStmt = conn.prepareStatement("select user_id, service, scramble(username) as username, display_name from adium.users natural join adium.meta_contact natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where effdate > udn.effdate and user_id = users.user_id)");
-        
-        metaStmt.setInt(1, rset.getInt("meta_id"));
-        
-        metaSet = metaStmt.executeQuery();
-        
-        while(metaSet.next()) {
-            out.println("<p>" + metaSet.getString("display_name")  + 
-                " (" + metaSet.getString("service") + "." + 
-                metaSet.getString("username") + ")");
-            out.println("<span class=\"remove\">" +
-            "<a href=\"removeMetaContact.jsp?meta_id=" + 
-                rset.getString("meta_id") + "&amp;user_id=" +
-                metaSet.getString("user_id") + "\">Remove</a></span></p>");
-        }
-        
-        String formURL = new String("addContact.jsp?meta_id=" + 
-            rset.getString("meta_id"));
-%>
-<p><a href="#" 
-    onClick="window.open('<%= formURL %>', 'Add Contact', 'width=450,height=100')">
-                Add Contact ...
-            </a></p>
 
+        metaStmt = conn.prepareStatement("select meta_id, name, preferred from meta_container natural join meta_contact where user_id = ?");
+
+        metaStmt.setInt(1, rset.getInt("user_id"));
+
+        metaSet = metaStmt.executeQuery();
+
+        if(metaSet != null && metaSet.isBeforeFirst()) {
+            out.println("<p>Select preferred meta-contact for this user</p>");
+
+            out.println("<form action=\"updatePreferredMeta.jsp\" method=\"post\">");
+            out.println("<input type=\"hidden\" name=\"user_id\" value=\"" + 
+                rset.getInt("user_id") + "\" />");
+            out.println("<select name=\"meta_id\">");
+            out.println("<option value=\"0\" selected=\"selected\">Choose One</option>");
+            while(metaSet.next()) {
+                out.print("<option value=\"" + metaSet.getString("meta_id") + 
+                    "\"");
+                if(metaSet.getBoolean("preferred")) {
+                    out.print(" selected=\"selected\"");
+                }
+                out.print(" />" + metaSet.getString("name") + "</option>");
+            }
+
+            out.println("</select>");
+            
+            out.println("<br /><br/><span style=\"float:right; padding-right: 225px\"><input type=\"submit\"></span>");
+            out.println("</form>");
+        }
+%>
             <div style="clear:both">&nbsp;</div>
+        </div>
 <%
-        out.println("</div>");
 
     }
-    
-%>
-    <h2>
-<a href="#" 
-    onClick="window.open('addMeta.jsp', 'Add Meta Contact', 'width=275,height=<%= height %>')">Add Meta Contact ...</a></h2>
 
+%>
                 </div>
                 <div class="boxWideBottom"></div>
             </div>
@@ -185,7 +196,8 @@ try {
     </div>
 <%
 } catch (SQLException e) {
-    out.print(e.getMessage());
+    out.print("<br />" + e.getMessage());
+    out.println("<br />You may need to run <code>psql < update.sql</code>");
 } finally {
     if (stmt != null) {
         stmt.close();

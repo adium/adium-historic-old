@@ -142,6 +142,22 @@ body {
     height: 32px;
 }
 
+.boxExtraWideTop {
+	width: 731px;
+	height: 12px;
+}
+
+.boxExtraWideContent {
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+
+.boxExtraWideBottom {
+	width: 731px;
+	height: 32px;
+}
+
 /*<group=Weblog>*/
 
 .weblogDateHeader {
