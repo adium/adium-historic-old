@@ -291,6 +291,27 @@
 		enabled = NO;
 	}
 	
+	
+	//If enabled so far, make sure an account is checked
+	if (enabled){
+		NSEnumerator	*enumerator = [accounts objectEnumerator];
+		AIAccount		*account;
+		
+		BOOL anAccountIsChecked = NO;
+		
+		while(account = [enumerator nextObject]){
+			if([account conformsToProtocol:@protocol(AIAccount_List)] &&
+			   [(AIAccount<AIAccount_List> *)account contactListEditable] &&
+			   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
+				anAccountIsChecked = YES;
+				break;
+			}
+		}	
+		
+		enabled = anAccountIsChecked;
+	}
+	
+	
 	[button_add setEnabled:enabled];
 }
 
@@ -314,7 +335,8 @@
 	while(account = [enumerator nextObject]) {
 		addTo = [account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
 		if(!addTo)
-			[account setPreference:[NSNumber numberWithBool:YES] forKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
+			[account setPreference:[NSNumber numberWithBool:YES] forKey:KEY_ADD_CONTACT_TO 
+							 group:PREF_GROUP_ADD_CONTACT];
 	}
 	[tableView_accounts reloadData];
 }
@@ -332,10 +354,11 @@
 	
 	if([identifier compare:@"check"] == 0){
 		return([[accounts objectAtIndex:row] contactListEditable] ?
-			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] :
+			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO 
+														group:PREF_GROUP_ADD_CONTACT] :
 			   [NSNumber numberWithBool:NO]);
 	}else if([identifier compare:@"account"] == 0){
-		return([[accounts objectAtIndex:row] displayName]);
+		return([[accounts objectAtIndex:row] formattedUID]);
 	}else{
 		return(@"");
 	}
@@ -352,7 +375,10 @@
 	NSString	*identifier = [tableColumn identifier];
 
 	if([identifier compare:@"check"] == 0){
-		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] forKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
+		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] 
+											 forKey:KEY_ADD_CONTACT_TO 
+											  group:PREF_GROUP_ADD_CONTACT];
+		[self validateEnteredName];
 	}
 }
 
