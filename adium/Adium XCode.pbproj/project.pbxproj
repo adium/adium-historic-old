@@ -6165,6 +6165,36 @@
 			settings = {
 			};
 		};
+		346C970505FF8EEB000F5A8A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESDelayedTextField.h;
+			path = "Frameworks/AIUtilities Framework/ESDelayedTextField.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346C970605FF8EEB000F5A8A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESDelayedTextField.m;
+			path = "Frameworks/AIUtilities Framework/ESDelayedTextField.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346C970705FF8EEC000F5A8A = {
+			fileRef = 346C970505FF8EEB000F5A8A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346C970805FF8EEC000F5A8A = {
+			fileRef = 346C970605FF8EEB000F5A8A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		346E640C05153395003B2F21 = {
 			children = (
 				346E640D051533C0003B2F21,
@@ -9728,6 +9758,7 @@
 				07A07AE605F9335A00179FDC,
 				4BC5216A05FF5D8D00B03139,
 				4BC5216C05FF5D8D00B03139,
+				346C970705FF8EEC000F5A8A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10386,6 +10417,7 @@
 				07A07AE705F9335C00179FDC,
 				4BC5216B05FF5D8D00B03139,
 				4BC5216D05FF5D8D00B03139,
+				346C970805FF8EEC000F5A8A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28632,6 +28664,8 @@
 				F570A59103704AB901A8010A,
 				F57938F8033E745F01A8010A,
 				F57938B8033E739101A8010A,
+				346C970505FF8EEB000F5A8A,
+				346C970605FF8EEB000F5A8A,
 				34F2BC67059CC2840005B238,
 				34F2BC68059CC2840005B238,
 				9E49CC5C04BF6F8700415B22,
