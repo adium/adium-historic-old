@@ -86,7 +86,7 @@
         NSString    *directory;
     
         while(directory = [enumerator nextObject]){
-            NSRange found = [directory rangeOfString:@".4uv"];
+            NSRange found = [directory rangeOfString:@"default."];
             if(found.location != NSNotFound)
                 return [NSString stringWithFormat:@"%@/%@/%@",[FIREFOX_9_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, FIREFOX_BOOKMARKS_FILE_NAME];
         }
