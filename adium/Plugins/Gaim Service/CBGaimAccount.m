@@ -95,7 +95,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {	
-//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
+	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
     AIListContact           *theContact;
 	
@@ -108,14 +108,26 @@
 		
     //Group changes - gaim buddies start off in no group, so this is an important update for us
     if(theContact && ![theContact remoteGroupName]){
+	//	NSLog(@"checking the group");
         GaimGroup *g = gaim_find_buddys_group(buddy);
 		if(g && g->name){
+		//	NSLog(@"found group %s",g->name);
 		    NSString *groupName = [NSString stringWithUTF8String:g->name];
 			if(groupName && [groupName length] != 0){
 				[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+			}else{
+				[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
 			}
         }
     }
+	
+#warning Evan: This was me hacking away.  It does not fix the stupid jabber buddy signon problems.
+	//Make sure we know the online status of this buddy
+	if (GAIM_BUDDY_IS_ONLINE(buddy)){
+		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
+	}else{
+		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNOFF];	
+	}
 	
 	//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
 	//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
@@ -151,7 +163,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
+	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
@@ -166,6 +178,7 @@
 		//Online / Offline
 		case GAIM_BUDDY_SIGNON:
 		{
+		//	NSLog(@"signing %@ on to %@",[theContact UID],[theContact remoteGroupName]);
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -872,7 +885,7 @@
 //outgoing before being used.
 - (NSString *)_mapIncomingGroupName:(NSString *)name
 {
-	if([[name compactedString] caseInsensitiveCompare:[self UID]] == 0){
+	if(!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)){
 		return(ADIUM_ROOT_GROUP_NAME);
 	}else{
 		return(name);
