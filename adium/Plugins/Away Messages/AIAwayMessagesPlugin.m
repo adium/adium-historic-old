@@ -16,12 +16,14 @@
 #define	REMOVE_AWAY_MESSAGE_MENU_TITLE		@"Remove Away Message"
 #define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		@"Custom Message…"
 #define AWAY_MENU_HOTKEY			@"y"
+#define MENU_AWAY_DISPLAY_LENGTH		30
 
 @interface AIAwayMessagesPlugin (PRIVATE)
 - (void)accountStatusChanged:(NSNotification *)notification;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 - (void)installAwayMenu;
 - (void)updateAwayMenu;
+- (void)rebuildSavedAways;
 @end
 
 @implementation AIAwayMessagesPlugin
@@ -39,17 +41,26 @@
     
     //Observe
     [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
+    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
+//Display the enter away message window
 - (IBAction)enterAwayMessage:(id)sender
 {
     [[AIEnterAwayWindowController enterAwayWindowControllerForOwner:owner] showWindow:nil];
 }
 
+//Called by the away menu, sets the selected away (sender)
+- (IBAction)setAwayMessage:(id)sender
+{
+    NSAttributedString	*awayMessage = [sender representedObject];
+    [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
+}
+
+//Remove the active away message
 - (IBAction)removeAwayMessage:(id)sender
 {
-    //Remove the away status flag
-    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
+    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil]; //Remove the away status flag
 }
 
 
@@ -66,12 +77,23 @@
     }
 }
 
+//Update our menu if the away list changes
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
+       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
+
+        //Rebuild the away menu
+        [self rebuildSavedAways];
+    }
+}
+
 //Called as our menu item is displayed, update it to reflect option key status
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
 
-    //    if(menuItem == menuItem_away || menuItem == menuItem_removeAway){
+//    if(menuItem == menuItem_away || menuItem == menuItem_removeAway){
         [self updateAwayMenu]; //Update the away message menu
 //    }
 
@@ -103,6 +125,10 @@
     [menu_awaySubmenu addItem:[NSMenuItem separatorItem]];
 
     [menuItem_away setSubmenu:menu_awaySubmenu];
+
+    //Add the saved away messages
+    [self rebuildSavedAways];
+
     
     //Add it to the menubar
     [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
@@ -135,4 +161,40 @@
     }
 }
 
+- (void)rebuildSavedAways
+{
+    NSArray		*awayArray;
+    NSEnumerator	*enumerator;
+    NSData		*awayData;
+
+    //Remove the existing away menu items
+    while([menu_awaySubmenu numberOfItems] > 2){
+        [menu_awaySubmenu removeItemAtIndex:2];
+    }
+    
+    //Load the aways
+    awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+
+    //Build the menu items
+    enumerator = [awayArray objectEnumerator];
+    while((awayData = [enumerator nextObject])){
+        NSString		*away = [[NSAttributedString stringWithData:awayData] string];
+        NSMenuItem		*menuItem;
+
+        //Cap the away menu title (so they're not incredibly long)
+        if([away length] > MENU_AWAY_DISPLAY_LENGTH){
+            away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"…"];
+        }
+        
+        menuItem = [[NSMenuItem alloc] initWithTitle:away  target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
+        [menuItem setRepresentedObject:awayData];        
+        [menu_awaySubmenu addItem:menuItem];
+    }
+}
+
 @end
+
+
+
+
+
