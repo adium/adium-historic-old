@@ -50,6 +50,7 @@
 - (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString;
+- (NSAttributedString *)_stringByRemovingAllStyles:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor;
 @end
 
@@ -144,9 +145,8 @@
 		colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
 		
 		//Ignorance
-		ignoreTextColor = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_COLOR] boolValue];
-		ignoreBackgroundColor = [[prefDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue];
-		
+		ignoreTextStyles = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue];
+
 		//Force icons off for side prefixes
         if([prefixIncoming rangeOfString:@"%m"].location != NSNotFound) showUserIcons = NO;
 		
@@ -686,7 +686,7 @@
 		bodyColor = [[content message] attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil];
 	}
     if(![content isOutgoing]){
-		if(ignoreBackgroundColor || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+		if(ignoreTextStyles || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
 			[messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
 		}else{
 			[messageCell setFrameBackgroundColor:bodyColor
@@ -714,17 +714,19 @@
     if([content isOutgoing]) {
         return([content message]);
         
-    } else if (!ignoreTextColor && !ignoreBackgroundColor){ //just fix the colors
-        return([self _stringByFixingTextColor:[content message] forColor:nil]);
-        
-    }else if (!ignoreTextColor && ignoreBackgroundColor){ //should fix the text color for the colorIncoming, taking into account its background colors as sent, then remove the background colors
-        NSAttributedString *messageString = [self _stringByFixingTextColor:[content message] forColor:colorIncoming];
-        return([self _stringByRemovingBackgroundColor:messageString]);
-        
-    } else if (!ignoreBackgroundColor && ignoreTextColor) { //remove the text color, then fix the resulting string to match its background
-        NSAttributedString *messageString = [self _stringByRemovingTextColor:[content message]];
-        return([self _stringByFixingTextColor:messageString forColor:nil]);
-        
+    //} else if (!ignoreTextColor && !ignoreBackgroundColor){ //just fix the colors
+    //    return([self _stringByFixingTextColor:[content message] forColor:nil]);
+    //    
+    //}else if (!ignoreTextColor && ignoreBackgroundColor){ //should fix the text color for the colorIncoming, taking into account its background colors as sent, then remove the background colors
+    //    NSAttributedString *messageString = [self _stringByFixingTextColor:[content message] forColor:colorIncoming];
+    //    return([self _stringByRemovingBackgroundColor:messageString]);
+    //    
+    //} else if (!ignoreBackgroundColor && ignoreTextColor) { //remove the text color, then fix the resulting string to match its background
+    //    NSAttributedString *messageString = [self _stringByRemovingTextColor:[content message]];
+    //    return([self _stringByFixingTextColor:messageString forColor:nil]);
+	//
+	} else if( ignoreTextStyles ) {
+		return([self _stringByRemovingAllStyles:[content message]]);
     } else { //strip it of all coloration
         return([self _stringByRemovingAllColors:[content message]]);
     }    
@@ -885,6 +887,17 @@
     NSRange range = NSMakeRange(0,[mutableTemp length]);
     [mutableTemp removeAttribute:NSForegroundColorAttributeName range:range];
     [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:range];
+    return(mutableTemp);
+}
+
+//Remove text and background color from an attributed string
+- (NSAttributedString *)_stringByRemovingAllStyles:(NSAttributedString *)inString
+{
+    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
+    NSRange range = NSMakeRange(0,[mutableTemp length]);
+    [mutableTemp removeAttribute:NSForegroundColorAttributeName range:range];
+    [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:range];
+	[mutableTemp removeAttribute:NSFontAttributeName range:range];
     return(mutableTemp);
 }
 

@@ -65,9 +65,8 @@
 	[checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
 	[checkBox_showUserIcons setEnabled:YES];
     }
-    [checkBox_ignoreTextColor setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_TEXT_COLOR] boolValue]];
-    [checkBox_ignoreBackgroundColor setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue]];
-    
+    [checkBox_ignoreTextStyles setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue]];
+
     [checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
     
     [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
@@ -90,17 +89,11 @@
                                              forKey:KEY_SMV_COMBINE_MESSAGES
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
-    }else if(sender == checkBox_ignoreTextColor){
+    }else if(sender == checkBox_ignoreTextStyles){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SMV_IGNORE_TEXT_COLOR
+                                             forKey:KEY_SMV_IGNORE_TEXT_STYLES
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-	
-    }else if(sender == checkBox_ignoreBackgroundColor){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SMV_IGNORE_BACKGROUND_COLOR
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        
-    }else if(sender == popUp_timeStamps){
+	}else if(sender == popUp_timeStamps){
         [[adium preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
                                              forKey:KEY_SMV_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];

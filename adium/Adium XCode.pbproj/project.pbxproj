@@ -300,7 +300,6 @@
 				3419F41805314C2700C68BA3,
 				3419F42A05314C3200C68BA3,
 				34BD9EF10531476E000AB133,
-				3419F43C05314C3F00C68BA3,
 				3419F44D05314C4C00C68BA3,
 				C42C16FF05BA682C00135D3C,
 				52AEBD6105ABA95700B19C56,
@@ -418,7 +417,6 @@
 				3419F41905314C3200C68BA3,
 				9E87CF570574909B001CB886,
 				34BD9EE00531476D000AB133,
-				3419F42B05314C3E00C68BA3,
 				3419F43D05314C4C00C68BA3,
 				C42C16F205BA682C00135D3C,
 				52AEBD6005ABA95700B19C56,
@@ -3183,139 +3181,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3419F42B05314C3E00C68BA3 = {
-			buildPhases = (
-				3419F42E05314C3E00C68BA3,
-				3419F43105314C3E00C68BA3,
-				3419F43405314C3E00C68BA3,
-				3419F43705314C3E00C68BA3,
-				3419F43905314C3E00C68BA3,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Text_Forcing.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Text Forcing";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				3419F42C05314C3E00C68BA3,
-				3419F42D05314C3E00C68BA3,
-			);
-			isa = PBXNativeTarget;
-			name = "Text Forcing";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Text Forcing";
-			productReference = 3419F43C05314C3F00C68BA3;
-			productType = "com.apple.product-type.bundle";
-		};
-		3419F42C05314C3E00C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98CB0531467B000AB133;
-		};
-		3419F42D05314C3E00C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98CA0531467B000AB133;
-		};
-		3419F42E05314C3E00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F42F05314C3E00C68BA3,
-				3419F43005314C3E00C68BA3,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F42F05314C3E00C68BA3 = {
-			fileRef = 4B720F9503DD857400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43005314C3E00C68BA3 = {
-			fileRef = 4B720F9903DD859700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43105314C3E00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F43205314C3E00C68BA3,
-				3419F43305314C3E00C68BA3,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F43205314C3E00C68BA3 = {
-			fileRef = 4B720F9003DD819700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43305314C3E00C68BA3 = {
-			fileRef = 4B72128C03DD898100A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43405314C3E00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F43505314C3E00C68BA3,
-				3419F43605314C3E00C68BA3,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F43505314C3E00C68BA3 = {
-			fileRef = 4B720F9603DD857400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43605314C3E00C68BA3 = {
-			fileRef = 4B720F9A03DD859700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43705314C3E00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F76C0531502300C68BA3,
-				3419F76D0531502300C68BA3,
-				3419F43805314C3E00C68BA3,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F43805314C3E00C68BA3 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F43905314C3E00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F43C05314C3F00C68BA3 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Text Forcing.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		3419F43D05314C4C00C68BA3 = {
 			buildPhases = (
 				3419F44005314C4C00C68BA3,
@@ -4353,18 +4218,6 @@
 			settings = {
 			};
 		};
-		3419F76C0531502300C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F76D0531502300C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3419F76E0531502900C68BA3 = {
 			fileRef = 34BD9DE105314751000AB133;
 			isa = PBXBuildFile;
@@ -4733,12 +4586,6 @@
 		};
 		3419FE1A0531585600C68BA3 = {
 			fileRef = 3419F42A05314C3200C68BA3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419FE1B0531585600C68BA3 = {
-			fileRef = 3419F43C05314C3F00C68BA3;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7911,20 +7758,6 @@
 			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
 			remoteInfo = AIUtilities.Framework;
 		};
-		34BD98CA0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
-		34BD98CB0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD98CC0531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -9032,7 +8865,6 @@
 		};
 		34BD9D05053146CC000AB133 = {
 			isa = PBXTargetDependency;
-			target = 3419F42B05314C3E00C68BA3;
 			targetProxy = 34BD98EB0531467B000AB133;
 		};
 		34BD9D06053146CC000AB133 = {
@@ -9748,7 +9580,6 @@
 				3419FE190531585600C68BA3,
 				3419FE1A0531585600C68BA3,
 				3419FDE40531585600C68BA3,
-				3419FE1B0531585600C68BA3,
 				3419FE1C0531585600C68BA3,
 				349E247A05C6DE2D00231A84,
 				520FE47505BE2984002D063D,
