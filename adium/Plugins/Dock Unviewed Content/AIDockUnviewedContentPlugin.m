@@ -36,7 +36,11 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-    if([inModifiedKeys containsObject:@"UnviewedContent"]){
+	//Don't watch unviewed content for meta contacts, since this status object has already been noted
+	//for their contained contacts as applicable
+    if((![inObject isKindOfClass:[AIMetaContact class]]) &&
+	   ([inModifiedKeys containsObject:@"UnviewedContent"])){
+		
         if([inObject integerStatusObjectForKey:@"UnviewedContent"]){
             //If this is the first contact with unviewed content, animate the dock
             if(!unviewedState){
