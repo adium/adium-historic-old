@@ -217,5 +217,10 @@ static NSImage *genericOfflineMenuImage = nil;
     [super dealloc];
 }
 
+- (BOOL)isEqual:(id)anObject
+{
+	return ([anObject isKindOfClass:[self class]] && 
+			[[self identifier] isEqualToString:[anObject identifier]]);
+}
 
 @end
