@@ -29,6 +29,8 @@
 #define EMOTICON_EQUIVALENTS			@"Equivalents"
 #define EMOTICON_NAME					@"Name"
 
+#define	EMOTICON_SERVICE_CLASS			@"Service Class"
+
 @interface AIEmoticonPack (PRIVATE)
 - (AIEmoticonPack *)initFromPath:(NSString *)inPath;
 - (void)setEmoticonArray:(NSArray *)inArray;
@@ -67,7 +69,8 @@
     [path release];
     [name release];
     [emoticonArray release];
-    
+	[serviceClass release];
+
     [super dealloc];
 }
 
@@ -81,6 +84,16 @@
 - (NSString *)path
 {
     return(path);
+}
+
+/*
+ * @brief Service class of this emoticon pack
+ *
+ * @result A service class, or nil if the emoticon pack is not associated with any service class
+ */
+- (NSString *)serviceClass
+{
+	return(serviceClass);
 }
 
 //Our emoticons
@@ -121,18 +134,11 @@
 {
     AIEmoticonPack	*newPack = [[AIEmoticonPack alloc] initFromPath:path];   
     
-    [newPack setEmoticonArray:emoticonArray];
+	newPack->emoticonArray = [emoticonArray mutableCopy];
+	newPack->serviceClass = [serviceClass release];
 	
     return(newPack);
 }
-
-//Used for copying, set this pack's emoticon array
-- (void)setEmoticonArray:(NSArray *)inArray
-{
-    [emoticonArray release]; emoticonArray = nil;
-    emoticonArray = [inArray mutableCopy];
-}
-
 
 //Loading Emoticons ----------------------------------------------------------------------------------------------------
 #pragma mark Loading Emoticons
@@ -140,6 +146,7 @@
 - (void)loadEmoticons
 {
 	[emoticonArray release]; emoticonArray = [[NSMutableArray alloc] init];
+	[serviceClass release]; serviceClass = nil;
 
 	//
 	NSString		*infoDictPath = [path stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
@@ -159,6 +166,17 @@
 			case 0: [self loadProteusEmoticons:infoDict]; break;
 			case 1: [self loadAdiumEmoticons:[infoDict objectForKey:EMOTICON_LIST]]; break;
 			default: break;
+		}
+		
+		serviceClass = [[infoDict objectForKey:EMOTICON_SERVICE_CLASS] retain];
+		if(!serviceClass){
+			if([name rangeOfString:@"AIM"].location != NSNotFound){
+				serviceClass = [@"AIM-compatible" retain];
+			}else if([name rangeOfString:@"MSN"].location != NSNotFound){
+				serviceClass = [@"MSN" retain];
+			}else if([name rangeOfString:@"Yahoo"].location != NSNotFound){
+				serviceClass = [@"Yahoo!" retain];
+			}
 		}
 	}
 	
@@ -336,6 +354,11 @@
     }
     
     return(newString ? newString : inString);
+}
+
+- (NSString *)description
+{
+	return ([NSString stringWithFormat:@"[%@: ServiceClass %@]",[super description],serviceClass]);
 }
 
 @end
