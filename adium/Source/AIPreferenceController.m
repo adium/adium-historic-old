@@ -174,7 +174,7 @@
 //Set an object specific preference
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
-    [self setPreference:value forKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@.%@)", [object serviceID], [object UID]]];
+    [self setPreference:value forKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]];
 }
 
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey
