@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.138 2004/06/04 14:30:26 adamiser Exp $
+// $Id: AIContactController.m,v 1.139 2004/06/04 20:55:44 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -513,7 +513,17 @@
 //Show info for the selected contact
 - (IBAction)showContactInfo:(id)sender
 {
-    [AIContactInfoWindowController showInfoWindowForListObject:[self selectedListObject]];
+	AIListObject *listObject = nil;
+	
+	if (sender = menuItem_getInfoContextual){
+		listObject = [[owner menuController] contactualMenuContact];
+	}else{
+		listObject = [self selectedListObject];
+	}
+	
+	if (listObject){
+		[AIContactInfoWindowController showInfoWindowForListObject:listObject];
+	}
 }
 
 //Add a contact info view
@@ -555,7 +565,13 @@
 //Always be able to show the inspector
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    return(YES);
+	if(menuItem == menuItem_getInfo){
+		return([self selectedListObject] != nil);
+	}else if (menuItem == menuItem_getInfoContextual){
+		return([[owner menuController] contactualMenuContact] != nil);
+	}
+	
+	return YES;
 }
 
 //
