@@ -27,48 +27,48 @@
     NSString					*sizeString = [NSString stringWithFormat:@"%0.2f",fontSize];
     NSMutableDictionary			*sizeDict = nil;
     NSFont						*font = nil;
-	
+
     if(!fontDict){
         fontDict = [[NSMutableDictionary alloc] init];
     }
-	
+
 	if (fontName){
 		sizeDict = [fontDict objectForKey:fontName];
 		if(!sizeDict){
 			sizeDict = [NSMutableDictionary dictionary];
 			[fontDict setObject:sizeDict forKey:fontName];
 		}
-		
+
 		font = [sizeDict objectForKey:sizeString];
-		
+
 		if(!font){
-			font = [NSFont fontWithName:fontName size:fontSize];
-			
+			font = [self fontWithName:fontName size:fontSize];
+
 			//If the font doesn't exist on the system, use the controlContentFont
 			if (!font){
-				font = [NSFont controlContentFontOfSize:fontSize];
+				font = [self controlContentFontOfSize:fontSize];
 				NSAssert(font != nil, @"controlContentFont not found.");
 			}
-			
+
 			[sizeDict setObject:font
 						 forKey:sizeString];
 			[fontDict setObject:sizeDict forKey:fontName];
 		}
 	}else{
 		//Use the control content font if we are passed a nil fontName
-		font = [NSFont controlContentFontOfSize:fontSize];
+		font = [self controlContentFontOfSize:fontSize];
 		fontName = [font fontName];
-		
+
 		sizeDict = [fontDict objectForKey:fontName];
 		if(!sizeDict){
 			sizeDict = [NSMutableDictionary dictionary];
 		}
-		
+
 		[sizeDict setObject:font
                      forKey:sizeString];
         [fontDict setObject:sizeDict forKey:fontName];
 	}
-	
+
     return(font);
 }
 
