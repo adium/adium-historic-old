@@ -7143,6 +7143,32 @@
 			settings = {
 			};
 		};
+		4B9AB61704D2C84700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISmartStepper.h;
+			path = "Frameworks/AIUtilities Framework/AISmartStepper.h";
+			refType = 4;
+		};
+		4B9AB61804D2C84700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISmartStepper.m;
+			path = "Frameworks/AIUtilities Framework/AISmartStepper.m";
+			refType = 4;
+		};
+		4B9AB61904D2C84700A8010A = {
+			fileRef = 4B9AB61704D2C84700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B9AB61A04D2C84700A8010A = {
+			fileRef = 4B9AB61804D2C84700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B9BF6CB03F8704000A8010A = {
 			isa = PBXFileReference;
 			name = SortingPrefs.nib;
@@ -13606,6 +13632,7 @@
 				4BDB240E04AF502B00A8010A,
 				9E49CC5E04BF6F8700415B22,
 				4B95210504C049E900A8010A,
+				4B9AB61904D2C84700A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13709,6 +13736,7 @@
 				4BDB240F04AF502B00A8010A,
 				9E49CC5F04BF6F8700415B22,
 				4B95210604C049E900A8010A,
+				4B9AB61A04D2C84700A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14426,6 +14454,8 @@
 				F5793945033E74E401A8010A,
 				4BC030360452E86200A8010A,
 				4BC030370452E86200A8010A,
+				4B9AB61704D2C84700A8010A,
+				4B9AB61804D2C84700A8010A,
 				4B3E502603EC651400A8010A,
 				4B3E502703EC651400A8010A,
 				F5793953033E74E401A8010A,

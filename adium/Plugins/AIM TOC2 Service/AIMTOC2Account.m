@@ -802,7 +802,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.79 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.80 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1275,6 +1275,10 @@
                 }else if([type compare:@"d"] == 0){
                 }else if([type compare:@"m"] == 0){
                 }else if([type compare:@"pref"] == 0){
+                    if([value compare:@"0"] == 0){
+                        NSLog(@"Idle is disabled server-side for %@",screenName);
+                    }
+
                 }else if([type compare:@"20"] == 0){
                 }else if([type compare:@"done"] == 0){
                 }else{

@@ -25,6 +25,7 @@
 @interface IdleTimePreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
+- (void)configureControlDimming;
 @end
 
 @implementation IdleTimePreferences
@@ -41,8 +42,10 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_TIME_ENABLED
                                               group:PREF_GROUP_IDLE_TIME];
+        [self configureControlDimming];
 
     }else if(sender == textField_idleMinutes){
+        NSLog(@"textField_idleMinutes %i",[textField_idleMinutes intValue]);
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_IDLE_TIME_IDLE_MINUTES
                                               group:PREF_GROUP_IDLE_TIME];
@@ -83,7 +86,6 @@
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     [view_prefView release]; view_prefView = nil;
-
 }
 
 //Configures our view for the current preferences
@@ -94,6 +96,16 @@
     //Idle
     [checkBox_enableIdle setState:[[preferenceDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue]];
     [textField_idleMinutes setIntValue:[[preferenceDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue]];
+
+    //
+    [self configureControlDimming];
 }
 
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [textField_idleMinutes setEnabled:[checkBox_enableIdle state]];
+    [stepper_idleMinutes setEnabled:[checkBox_enableIdle state]];
+}
+    
 @end

@@ -34,6 +34,7 @@
             SUPERCLASS = AIService; 
         }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {changePreference = id; }; 
@@ -41,6 +42,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_enableIdle" = NSButton; 
+                "stepper_idleMinutes" = NSStepper; 
                 "textField_idleMinutes" = NSTextField; 
                 "view_prefView" = NSView; 
             }; 

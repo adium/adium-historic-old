@@ -156,14 +156,17 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         case AINotIdle:
             //Set idle to 0 seconds (Not idle)
             [self _setAllAccountsIdleTo:0];
-            
-            //Install a timer to check the user's activity every 30 seconds.
-            [idleTimer invalidate]; [idleTimer release];
-            idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_ACTIVE_INTERVAL)
-                                                          target:self
-                                                        selector:@selector(notIdleTimer:)
-                                                        userInfo:nil
-                                                         repeats:YES] retain];
+
+            if(idleEnabled){
+                //Install a timer to check the user's activity every 30 seconds.
+                [idleTimer invalidate]; [idleTimer release];
+                idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_ACTIVE_INTERVAL)
+                                                              target:self
+                                                            selector:@selector(notIdleTimer:)
+                                                            userInfo:nil
+                                                             repeats:YES] retain];
+            }
+                
         break;
         case AIAutoIdle:
             //Set idle to the user's current system idle
@@ -238,12 +241,20 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Set the idle time of all accounts
 - (void)_setAllAccountsIdleTo:(double)inSeconds
 {
+    NSDate	*currentIdle = [[owner accountController] statusObjectForKey:@"IdleSince" account:nil];
+        
     if(inSeconds){
-        [[owner accountController] setStatusObject:[NSDate dateWithTimeIntervalSinceNow:(-inSeconds)] forKey:@"IdleSince" account:nil];
-        [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:nil];
+        NSDate	*newIdle = [NSDate dateWithTimeIntervalSinceNow:(-inSeconds)];
+
+        if(![currentIdle isEqualToDate:newIdle]){
+            [[owner accountController] setStatusObject:newIdle forKey:@"IdleSince" account:nil];
+        }
+        
     }else{
-        [[owner accountController] setStatusObject:nil forKey:@"IdleSince" account:nil];
-        [[owner accountController] setStatusObject:nil forKey:@"IdleSetManually" account:nil];
+        if(currentIdle != nil){
+            [[owner accountController] setStatusObject:nil forKey:@"IdleSince" account:nil];
+        }
+
     }
     
 }
@@ -320,10 +331,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 @end
-
-
-
-
 
 
 

@@ -23,6 +23,7 @@
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSButton		*checkBox_enableIdle;
     IBOutlet	NSTextField		*textField_idleMinutes;
+    IBOutlet	NSStepper		*stepper_idleMinutes;
 }
 
 + (IdleTimePreferences *)idleTimePreferencesWithOwner:(id)inOwner;
