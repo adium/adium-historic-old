@@ -150,8 +150,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		BOOL awayA = ([objectA integerStatusObjectForKey:@"Away"]);
 		BOOL awayB = ([objectB integerStatusObjectForKey:@"Away"]);
 		
-		double idleA = ([objectA doubleStatusObjectForKey:@"Idle"]);
-		double idleB = ([objectB doubleStatusObjectForKey:@"Idle"]);
+		double idleA = ([[objectA numberStatusObjectForKey:@"Idle"] doubleValue]);
+		double idleB = ([[objectB numberStatusObjectForKey:@"Idle"] doubleValue]);
 		
 		//If grouping by availability and one is either idle or away and the other is neither, we have our ordering
 		if (groupAvailable){

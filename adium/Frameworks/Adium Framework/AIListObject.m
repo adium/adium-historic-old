@@ -248,12 +248,6 @@
 	NSNumber *number = [statusDictionary objectForKey:key];
     return(number ? [number intValue] : 0);
 }
-#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
-- (double)doubleStatusObjectForKey:(NSString *)key
-{
-	NSNumber *number = [statusDictionary objectForKey:key];
-    return(number ? [number doubleValue] : 0);
-}
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
    return([statusDictionary objectForKey:key]);

@@ -121,7 +121,7 @@
 //Tooltip entry ---------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    int 	idle = (int)[inObject doubleStatusObjectForKey:@"Idle"];
+    double 		idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
     NSString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
@@ -135,7 +135,7 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 		idle = (int)[inObject doubleStatusObjectForKey:@"Idle"];
+    double 				idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
     NSAttributedString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
@@ -143,7 +143,7 @@
 		
     }else if(idle != 0){
 		int	hours = (int)(idle / 60);
-		int	minutes = (int)(idle % 60);
+		int	minutes = (int)((int)idle % 60);
 		
 		if(hours){
 			entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
