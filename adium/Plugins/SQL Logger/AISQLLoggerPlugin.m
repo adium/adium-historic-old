@@ -22,7 +22,7 @@
 #import "libpq-fe.h"
 
 @interface AISQLLoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message dest:(NSString *)destName source:(NSString *)sourceName date:(NSDate *)date sendServe:(NSString *)s_service recServe:(NSString *)r_service;
+- (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName date:(NSDate *)date sendServe:(NSString *)s_service recServe:(NSString *)r_service;
 @end
 
 @implementation AISQLLoggerPlugin
@@ -65,7 +65,7 @@
         //Source and destination are valid (account & handle)
         if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIHandle class]]){
             //Log the message
-            [self _addMessage:[[content message] string]
+            [self _addMessage:[content message]
                         dest:[destination UID]
                        source:[source UID]
                          date:[content date]
@@ -79,7 +79,7 @@
 - (void)adiumReceivedContent:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
-
+    
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         AIHandle	*source = [content source];
@@ -88,7 +88,7 @@
         //Destination are valid (handle)
         if([source isKindOfClass:[AIHandle class]]){
             //Log the message
-            [self _addMessage:[[content message] string]
+            [self _addMessage:[content message]
                         dest:[destination UID]
                        source:[source UID]
                          date:[content date]
@@ -106,7 +106,7 @@
 
 //Add a message to the specified log file
 - (void)_addMessage:
-(NSString *)message 
+(NSAttributedString *)message 
 dest:(NSString *)destName 
 source:(NSString *)sourceName
 date:(NSDate *)date
@@ -114,13 +114,22 @@ sendServe:(NSString *)s_service
 recServe:(NSString *)r_service
 {
     NSString	*sqlStatement;
-    char	escapeMessage[[message length] * 2 + 1];
+    NSMutableString 	*escapeHTMLMessage;
+    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message]];
+    
+    [escapeHTMLMessage replaceOccurrencesOfString:@"<HTML>" withString:@"" 
+        options:NSCaseInsensitiveSearch range:NSMakeRange(0, [escapeHTMLMessage length])];
+    
+    [escapeHTMLMessage replaceOccurrencesOfString:@"</HTML>" withString:@"" 
+        options:NSCaseInsensitiveSearch range:NSMakeRange(0, [escapeHTMLMessage length])];
+    
+    char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
     char	escapeRecip[[destName length] * 2 + 1];
     
     PGresult *res;
         
-    PQescapeString(escapeMessage, [message UTF8String], [message length]);
+    PQescapeString(escapeMessage, [escapeHTMLMessage UTF8String], [escapeHTMLMessage length]);
     PQescapeString(escapeSender, [sourceName UTF8String], [sourceName length]);
     PQescapeString(escapeRecip, [destName UTF8String], [destName length]);
     
