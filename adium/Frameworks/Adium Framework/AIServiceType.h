@@ -18,6 +18,7 @@
     NSString		*identifier;
     NSString		*description;
     NSImage			*image;
+	NSImage			*menuImage;
     BOOL			caseSensitive;
     NSCharacterSet 	*allowedCharacters;
     NSCharacterSet 	*ignoredCharacters;
@@ -26,11 +27,13 @@
 }
 
 + (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+					  menuImage:(NSImage *)inMenuImage
 				  caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
 			  ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength;
 - (NSString *)identifier;
 - (NSString *)description;
 - (NSImage *)image;
+- (NSImage *)menuImage;
 - (NSCharacterSet *)allowedCharacters;
 - (NSCharacterSet *)ignoredCharacters;
 - (BOOL)caseSensitive;
