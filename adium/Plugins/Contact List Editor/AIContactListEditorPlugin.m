@@ -35,7 +35,7 @@
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT
 										   target:self
 										   action:@selector(addContact:)
-									keyEquivalent:@""] autorelease];
+									keyEquivalent:@"+"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Add contact context menu item
@@ -56,7 +56,8 @@
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP
 										   target:self
 										   action:@selector(addGroup:) 
-									keyEquivalent:@""] autorelease];
+									keyEquivalent:@"+"] autorelease];
+	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Delete selection menu item
