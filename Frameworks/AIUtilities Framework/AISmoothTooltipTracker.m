@@ -41,6 +41,7 @@
 	view = [inView retain];
 	delegate = inDelegate;
 	tooltipTrackingTag = -1;
+	tooltipLocation = NSZeroPoint;
 
 	//Reset cursor tracking when the view's frame changes
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -169,10 +170,15 @@
 - (void)_hideTooltip
 {
 	tooltipCount = 0;
-	lastMouseLocation = NSMakePoint(0,0);
-	
-	//Hide tooltip
-	[delegate hideTooltip];
+
+	//If the tooltip was being shown before, hide it
+	if (!NSEqualPoints(tooltipLocation,NSZeroPoint)){
+		lastMouseLocation = NSZeroPoint;
+		tooltipLocation = NSZeroPoint;
+		
+		//Hide tooltip
+		[delegate hideTooltip];
+	}
 }
 
 //Time to poll mouse location
@@ -215,6 +221,9 @@
 		//If the cursor has left our frame or the window is no logner visible, manually hide the tooltip.
 		//This protects us in the cases where we do not receive a mouse exited message; we don't stop tracking
 		//because we could reenter the tracking area without receiving a mouseEntered: message.
+#if LOG_TRACKING_INFO
+		NSLog(@"Mouse moved out; hiding the tooltip.");
+#endif
 		[self _hideTooltip];
 	}
 }
