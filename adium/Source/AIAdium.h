@@ -103,7 +103,6 @@ typedef enum {
 #define Preference_GroupChanged					@"Preference_GroupChanged"
 #define DockIconChanged						@"DockIconChanged"
 
-
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIHandleObserver //notified of changes
     - (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
@@ -393,8 +392,7 @@ typedef enum {
 - (void)setIconFamily:(AIIconFamily *)iconFamily;
 
 - (void)bounce;
-- (void)bounceWithInterval:(float)delay;
-- (void)bounceWithInterval:(float)delay times:(int)num;
+- (void)bounceWithInterval:(float)delay times:(int)num; //if num = 0, bounce forever
 - (void)stopBouncing;
 
 @end
