@@ -12,4 +12,6 @@
 
 }
 
+- (NSRect)bubbleRectForFrame:(NSRect)rect;
+
 @end
