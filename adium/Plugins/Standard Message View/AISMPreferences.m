@@ -24,6 +24,7 @@
 #define AISM_PREF_TITLE_PREFIX		@"Message Prefixes"
 #define AISM_PREF_TITLE_TIMES		@"Message Time Stamps"
 #define AISM_PREF_TITLE_GRID		@"Message Gridding"
+#define AISM_PREF_TITLE_ALIAS		@"Message Alias"
 
 #define COLOR_SAMPLE_WIDTH		16
 #define COLOR_SAMPLE_HEIGHT		10
@@ -125,7 +126,12 @@
         [[owner preferenceController] setPreference:[colorDict objectForKey:@"Dark"]
                                              forKey:KEY_SMV_OUTGOING_PREFIX_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        
+
+    }else if(sender == textField_alias){
+        [[owner preferenceController] setPreference:[sender stringValue]
+                                             forKey:KEY_SMV_OUTGOING_ALIAS
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];        
+
     }
 
     
@@ -173,6 +179,9 @@
     preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_GRID categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_gridding];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
+    //Aliases
+    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_ALIAS categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_alias];
+    [[owner preferenceController] addPreferenceView:preferenceViewController];
     
     //Load the preferences, and configure our view
     preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] retain];
@@ -214,6 +223,9 @@
     [slider_gridDarkness setFloatValue:[[preferenceDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue]];
     [slider_gradientDarkness setFloatValue:[[preferenceDict objectForKey:KEY_SMV_SENDER_GRADIENT_DARKNESS] floatValue]];
 
+    //Text fields
+    [textField_alias setStringValue:[preferenceDict objectForKey:KEY_SMV_OUTGOING_ALIAS]];
+    
     [self configureControlDimming];
 }
 

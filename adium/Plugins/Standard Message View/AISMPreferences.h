@@ -41,6 +41,11 @@
     IBOutlet	NSButton	*checkBox_senderGradient;
     IBOutlet	NSSlider	*slider_gradientDarkness;
 
+    //Alias
+    IBOutlet	NSView		*view_alias;
+    IBOutlet	NSTextField	*textField_alias;
+    
+    
     NSDictionary		*prefixColors;
 
     NSDictionary		*preferenceDict;
