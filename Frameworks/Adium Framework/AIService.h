@@ -3,10 +3,11 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/24/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
+
+@class AIAccountViewController, DCJoinChatViewController;
 
 //Service importance, used to group and order services
 typedef enum {
