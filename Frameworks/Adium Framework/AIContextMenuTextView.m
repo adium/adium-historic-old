@@ -9,7 +9,6 @@
 
 @implementation AIContextMenuTextView
 
-
 + (NSMenu *)defaultMenu
 {
 	NSMenu			*contextualMenu;
@@ -36,12 +35,12 @@
 		}
 	}
 	
-	return [contextualMenu autorelease];
+	return([contextualMenu autorelease]);
 }
 
 - (void)textDidChange:(NSNotification *)notification
 {
-    if((0 == [self selectedRange].location) && (0 == [self selectedRange].length)){ //remove attributes if we're changing text at (0,0)
+    if(([self selectedRange].location == 0) && ([self selectedRange].length == 0)){ //remove attributes if we're changing text at (0,0)
 		NSDictionary		*currentTextAttribs = [self typingAttributes];
 		
         if([currentTextAttribs objectForKey:NSLinkAttributeName]){ // but only if we currently have a link there.
@@ -60,11 +59,4 @@
     }
 }
 
-/*
-- (void)dealloc
-{
-    [[self menu] removeAllItems];
-    [super dealloc];
-}
-*/
 @end
