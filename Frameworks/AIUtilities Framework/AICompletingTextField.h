@@ -13,13 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+@class AITextFieldWithDraggingDelegate;
+
 /*!
  * @class AICompletingTextField
  * @brief A text field that auto-completes known strings
  *
  * A text field that auto-completes known strings. It supports a minimum string length before autocompletion as well as optionally completing any number of comma-separated strings.
  */
-@interface AICompletingTextField : NSTextField {
+
+#import "AITextFieldWithDraggingDelegate.h"
+
+@interface AICompletingTextField : AITextFieldWithDraggingDelegate {
     NSMutableSet			*stringSet;
 	NSMutableDictionary		*impliedCompletionDictionary;
 	
