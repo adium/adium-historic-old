@@ -102,14 +102,19 @@
 - (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
 
 - (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
-- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName;
+- (oneway void)updateContact:(AIListContact *)theContact
+				 toGroupName:(NSString *)groupName
+				 contactName:(NSString *)contactName;
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event;
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data;
 - (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
-- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data;
-- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data;
+- (void)updateStatusForContact:(AIListContact *)theContact
+				  toStatusType:(NSNumber *)statusTypeNumber
+					statusName:(NSString *)statusName 
+				 statusMessage:(NSAttributedString *)statusMessage;
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b;
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b;
 - (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
@@ -129,7 +134,9 @@
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
-- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
+- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
+									 percent:(NSNumber *)percent
+								   bytesSent:(NSNumber *)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
@@ -145,15 +152,16 @@
 
 - (void)gotGroupForContact:(AIListContact *)contact;
 
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage;
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType;
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString 
+						forListObject:(AIListObject *)inListObject
+					   contentMessage:(AIContentMessage *)contentMessage;
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString
+					forGaimStatusType:(const char *)gaimStatusType;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact;
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label;
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object;
-
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway;
 
 @end
