@@ -29,6 +29,12 @@ typedef enum {
 	Screen_Name = 4
 } NameFormat;
 
+typedef enum {
+	BackgroundNormal = 0,
+	BackgroundCenter,
+	BackgroundTile
+} AIWebkitBackgroundType;
+
 @interface AIWebkitMessageViewStyle : NSObject {
 	int					styleVersion;
 	NSBundle			*styleBundle;
@@ -62,6 +68,7 @@ typedef enum {
 	BOOL				allowTextBackgrounds;
 	BOOL				showIncomingFonts;
 	BOOL				showIncomingColors;
+	int					customBackgroundType;
 	NSString			*customBackgroundPath;
 	NSColor				*customBackgroundColor;
 }
@@ -89,6 +96,7 @@ typedef enum {
 - (void)setNameFormat:(int)inValue;
 - (void)setAllowTextBackgrounds:(BOOL)inValue;
 - (void)setCustomBackgroundPath:(NSString *)inPath;
+- (void)setCustomBackgroundType:(AIWebkitBackgroundType)inType;
 - (void)setCustomBackgroundColor:(NSColor *)inColor;
 - (void)setShowIncomingMessageColors:(BOOL)inValue;
 - (void)setShowIncomingMessageFonts:(BOOL)inValue;

@@ -391,7 +391,8 @@
 		}
 	}
 	[messageStyle setCustomBackgroundPath:cachePath];
-	
+	[messageStyle setCustomBackgroundType:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:activeStyle]] intValue]];
+
 	//Custom background color
 	if([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]){
 		[messageStyle setCustomBackgroundColor:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:activeStyle]] representedColor]];
