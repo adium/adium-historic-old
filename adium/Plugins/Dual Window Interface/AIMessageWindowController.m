@@ -158,9 +158,6 @@
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index
 {    
-    AIListObject    *listObject = [[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject];
-    NSString	    *savedFrame;
-    
     [self window]; //Ensure our window has loaded
     if (index == -1) {
         [tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
