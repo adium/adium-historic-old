@@ -67,7 +67,7 @@
 	return(YES);
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"AIM Screen Name",nil)); //ScreenName
+    return(AILocalizedString(@"Screen Name",nil)); //ScreenName
 }
 
 @end
