@@ -127,6 +127,7 @@ typedef enum
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
+- (BOOL)oneOrMoreConnectedOrConnectingAccounts;
 
 //Password Storage
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;

@@ -1040,13 +1040,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     NSEnumerator		*enumerator;
     AIAccount			*account;
-    
-	NSString			*ONLINE = @"Online";
-	
+
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([[account supportedPropertyKeys] containsObject:ONLINE] &&
-		   [[account preferenceForKey:ONLINE group:GROUP_ACCOUNT_STATUS] boolValue]){
+        if([[account supportedPropertyKeys] containsObject:@"Online"] &&
+		   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             [account setPreference:nil forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
         }
     }
@@ -1065,6 +1063,21 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     }	
 	
 	return NO;
+}
+
+- (BOOL)oneOrMoreConnectedOrConnectingAccounts
+{
+	NSEnumerator		*enumerator;
+    AIAccount			*account;
+	
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+			return YES;
+        }
+    }	
+
+	return NO;	
 }
 
 //Password Storage -----------------------------------------------------------------------------------------------------
