@@ -12959,10 +12959,9 @@
 				F5148D9704C8B4AA018B6CC7,
 				F5148D9804C8B4AA018B6CC7,
 				F5148D9504C8B4AA018B6CC7,
-				F519B01304D480C60196D3C4,
-				F519B01404D480C60196D3C4,
 				F5319C3704CF3900015DA2B6,
 				F5148D9604C8B4AA018B6CC7,
+				F519B09504D54D480196D3C4,
 			);
 			isa = PBXGroup;
 			name = "Contact Alerts";
@@ -13056,6 +13055,16 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		F519B09504D54D480196D3C4 = {
+			children = (
+				F519B01304D480C60196D3C4,
+				F519B01404D480C60196D3C4,
+			);
+			isa = PBXGroup;
+			name = "Speech-To-Text files";
+			path = "";
+			refType = 2;
 		};
 		F51DEC0D03262FB501A8010A = {
 			children = (
