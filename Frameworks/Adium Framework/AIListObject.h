@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMutableOwnerArray, AIListGroup, AISortController, ESObjectWithStatus;
+@class AIService, AIMutableOwnerArray, AIListGroup, AISortController, ESObjectWithStatus;
 
 #import "ESObjectWithStatus.h"
 
@@ -26,42 +26,48 @@ typedef enum {
 	AIUnknownStatus = 'unkN'
 } AIStatusSummary;
 
-@interface AIListObject : ESObjectWithStatus {
+@protocol AIContainingObject
+- (NSArray *)containedObjects;
+- (unsigned)containedObjectsCount;
+- (BOOL)containsObject:(AIListObject *)inObject;
+- (id)objectAtIndex:(unsigned)index;
+- (int)indexOfObject:(AIListObject *)inObject;
+- (NSEnumerator *)objectEnumerator;
+- (void)removeAllObjects;
+- (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
+@end
+
+@interface AIListObject : ESObjectWithStatus{
+	AIService				*service;
+	
     NSString				*UID;
-    NSString				*serviceID;
-	NSString				*uniqueObjectID;
+	NSString				*internalObjectID;
 	BOOL					visible;				//Visibility of this object
 
 	//Grouping, Manual ordering
-    AIListObject			*containingObject;		//The group this object is in
-	float					orderIndex;				//Placement of this contact within a group
-	
-	NSMutableArray			*containedObjects;			//Manually ordered array of contents
-    BOOL					expanded;			//Exanded/Collapsed state of this object
+    AIListObject <AIContainingObject>	*containingObject;		//The group/metacontact this object is in
+	float								orderIndex;				//Placement of this contact within a group
 }
 
 //
-- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
+- (id)initWithUID:(NSString *)inUID service:(AIService *)inService;
 
 //Identifying information
 - (NSString *)UID;
-- (NSString *)serviceID;
-- (NSString *)uniqueObjectID;
-- (NSString *)ultraUniqueObjectID;
-+ (NSString *)uniqueObjectIDForUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
+- (AIService *)service;
+- (NSString *)internalObjectID;
 
 //Visibility
 - (void)setVisible:(BOOL)inVisible;
 - (BOOL)visible;
 
 //Grouping
-- (AIListObject *)containingObject;
+- (AIListObject <AIContainingObject> *)containingObject;
 - (float)orderIndex;
 
 //Display
 - (NSString *)formattedUID;
 - (NSString *)longDisplayName;
-- (NSString *)displayServiceID;
 
 //Prefs
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
@@ -74,7 +80,7 @@ typedef enum {
 - (void)setOrderIndex:(float)inIndex;
 
 //Grouping (PRIVATE: These are for AIListGroup and AIMetaContact ONLY)
-- (void)setContainingObject:(AIListObject *)inGroup;
+- (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup;
 
 //Key-Value pairing
 - (BOOL)online;
@@ -86,35 +92,12 @@ typedef enum {
 - (NSString *)notes;
 - (void)setNotes:(NSString *)notes;
 
-- (NSImage *)cachedListUserIconOfSize:(NSSize)inSize;
 - (NSImage *)userIcon;
 - (NSData *)userIconData;
 - (void)setUserIconData:(NSData *)inData;
 
-//Containing contacts (for subclassing)
-- (BOOL)addObject:(AIListObject *)inObject;
-- (void)removeObject:(AIListObject *)inObject;
-- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
-- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController;
-
-//Containing contacts (handled for subclasses)
-- (NSEnumerator *)objectEnumerator;
-- (id)objectAtIndex:(unsigned)index;
-- (int)indexOfObject:(AIListObject *)inObject;
-- (NSArray *)containedObjects;
-- (unsigned)containedObjectsCount;
-- (NSArray *)listContacts;
-- (NSDictionary *)dictionaryOfServicesAndListContacts;
-- (NSSet *)arrayOfServices;
-- (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
-
 //mutableOwnerArray delegate and methods
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner;
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner;
-
-
-//Expanded State (PRIVATE: For the contact list view to let us know our state)
-- (void)setExpanded:(BOOL)inExpanded;
-- (BOOL)isExpanded;
 
 @end
