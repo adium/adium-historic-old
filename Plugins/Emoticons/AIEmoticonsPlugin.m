@@ -39,8 +39,11 @@
 - (void)resetAvailableEmoticons;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath;
-- (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage;
-- (NSString *)_longestReplacement:(NSDictionary *)inDict;
+- (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage context:(id)context;
+- (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
+							   withEquivalents:(NSArray *)candidateEmoticonTextEquivalents
+									   context:(id)context
+							  equivalentLength:(int *)textLength;
 - (void)_buildCharacterSetsAndIndexEmoticons;
 - (void)_saveActiveEmoticonPacks;
 - (void)_saveEmoticonPackOrdering;
@@ -122,7 +125,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         //This avoids having to do the slower, more complicated scan for the majority of messages.
         if([[inAttributedString string] rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound){
             //If an emoticon character was found, we do a more thorough scan
-            replacementMessage = [self _convertEmoticonsInMessage:inAttributedString];            
+            replacementMessage = [self _convertEmoticonsInMessage:inAttributedString context:context];
         }
     }
     return (replacementMessage ? replacementMessage : inAttributedString);
@@ -135,7 +138,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 }
 
 //Insert graphical emoticons into a string
-- (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage
+- (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage context:(id)context
 {
     NSCharacterSet              *emoticonStartCharacterSet = [self emoticonStartCharacterSet];
     NSDictionary                *emoticonIndex = [self emoticonIndex];
@@ -152,7 +155,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                                                          options:0 
                                                            range:NSMakeRange(currentLocation, [messageString length] - currentLocation)].location;
 
-        NSMutableDictionary  *possibleReplacements = nil;
+		//Use paired arrays so multiple emoticons can qualify for the same text equivalent
+        NSMutableArray  *candidateEmoticons = nil;
+		NSMutableArray  *candidateEmoticonTextEquivalents = nil;
+		
         if(currentLocation != NSNotFound){
             unichar         currentCharacter = [messageString characterAtIndex:currentLocation];
             NSString        *currentCharacterString = [NSString stringWithFormat:@"%C", currentCharacter];
@@ -175,11 +181,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                             if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == 0){
                                 //Ignore emoticons within links
                                 if([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:nil] == nil){
-									if (!possibleReplacements){
-										possibleReplacements = [[NSMutableDictionary alloc] init];
+									if (!candidateEmoticons){
+										candidateEmoticons = [[NSMutableArray alloc] init];
+										candidateEmoticonTextEquivalents = [[NSMutableArray alloc] init];
 									}
-                                    if(![possibleReplacements objectForKey:text])
-                                        [possibleReplacements setObject:emoticon forKey:text];
+									
+									[candidateEmoticons addObject:emoticon];
+									[candidateEmoticonTextEquivalents addObject:text];
                                 }
                             }
                         }
@@ -187,16 +195,17 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                 }
             }
 			
-            if([possibleReplacements count]){
+            if([candidateEmoticons count]){
                 NSString    *replacementString;
                 int			textLength;
                 AIEmoticon  *emoticon;
                 NSMutableAttributedString   *replacement;
 				
-				//Use the longest string of those which could be used for the emoticon text we found here
-				replacementString = [self _longestReplacement:possibleReplacements];
-				textLength =  [replacementString length];
-				emoticon = [possibleReplacements objectForKey:replacementString];
+				//Use the most appropriate, longest string of those which could be used for the emoticon text we found here
+				emoticon = [self _bestReplacementFromEmoticons:candidateEmoticons
+											   withEquivalents:candidateEmoticonTextEquivalents
+													   context:context
+											  equivalentLength:&textLength];
 				replacement = [emoticon attributedStringWithTextEquivalent:replacementString];
                                     
                 //grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
@@ -216,8 +225,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                 //textEnumerator = nil; emoticonEnumerator = nil;
             }
         }
-		[possibleReplacements release];
-
+		[candidateEmoticons release];
+		[candidateEmoticonTextEquivalents release];
         
         //Move to the next possible location of an emoticon
         currentLocation++;
@@ -226,16 +235,30 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return(newMessage ? newMessage : inMessage);
 }
 
-- (NSString *)_longestReplacement:(NSDictionary *)inDict
+- (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
+							   withEquivalents:(NSArray *)candidateEmoticonTextEquivalents
+									   context:(id)context
+							  equivalentLength:(int *)textLength
 {
-    NSString *replacement = nil, *temp = nil;
-    NSEnumerator    *enumerator = [inDict keyEnumerator];
-    while(temp = [enumerator nextObject]){
-        if(nil == replacement || [temp length] > [replacement length]){
-            replacement = temp;
-        }
-    }
-    return replacement;
+	unsigned		i = 0, bestIndex = 0, bestLength = 0;
+	unsigned		count;
+	
+	count = [candidateEmoticonTextEquivalents count];
+	while(i < count){
+		unsigned thisLength = [(NSString *)[candidateEmoticonTextEquivalents objectAtIndex:i] length];
+		if(thisLength > bestLength){
+			bestLength = thisLength;
+			bestIndex = i;
+		}
+		
+		i++;
+	}
+
+	//Return the length by reference
+	*textLength = bestLength;
+
+	//Return the AIEmoticon we found to be best
+    return [candidateEmoticons objectAtIndex:bestIndex];
 }
 
 //Active emoticons -----------------------------------------------------------------------------------------------------
