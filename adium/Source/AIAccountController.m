@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.76 2004/04/09 21:37:28 evands Exp $
+// $Id: AIAccountController.m,v 1.77 2004/04/11 04:38:48 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -499,13 +499,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
 	
+	BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
+	
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];
     while(account = [enumerator nextObject]){
         NSMenuItem	*menuItem;
         
         //Create
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName]
+        menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
+													   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]] :
+													   [account formattedUID])
 											   target:target
 											   action:@selector(selectAccount:)
 										keyEquivalent:@""] autorelease];
@@ -535,7 +539,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	NSMenu		*menu;
 	NSArray		*topAccounts, *bottomAccounts;
-
+		
 	//Get the list of accounts for each section of our menu
 	topAccounts = [self _accountsForSendingContentType:CONTENT_MESSAGE_TYPE
 										  toListObject:inObject
@@ -560,7 +564,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount		*anAccount;
 	
 	while(anAccount = [enumerator nextObject]){
-		NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount displayName]
+		NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount formattedUID]
 															target:target
 															action:@selector(selectAccount:)
 													 keyEquivalent:@""] autorelease];
