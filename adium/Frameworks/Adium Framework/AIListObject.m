@@ -227,6 +227,14 @@ DeclareString(FormattedUID);
 	
 	[delayedStatusTimerLock unlock];
 }
+
+- (void)delayedStatusChange:(NSDictionary *)statusChangeDict
+{
+	[self setStatusObject:[statusChangeDict objectForKey:@"Value"] 
+				   forKey:[statusChangeDict objectForKey:@"Key"]
+			   afterDelay:[[statusChangeDict objectForKey:@"Delay"] intValue]];
+}
+
 - (void)_applyDelayedStatus:(NSTimer *)inTimer
 {
 	NSDictionary	*infoDict = [inTimer userInfo];
