@@ -1082,6 +1082,7 @@
 //Update an ESFileTransfer object progress
 - (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent
 {
+	NSLog(@"File Transfer: %f%% complete",percent);
     [(ESFileTransfer *)(xfer->ui_data) setPercentDone:percent bytesSent:(xfer->bytes_sent)];
 }
 
