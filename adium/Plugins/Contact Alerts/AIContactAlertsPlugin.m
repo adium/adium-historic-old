@@ -115,7 +115,7 @@
             }
             else if ([action compare:@"Alert"] == 0) {
                 NSAttributedString *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
-                NSRunInformationalAlertPanel(@"Buddy Alert", [message string], @"Okay", nil, nil);
+                NSRunInformationalAlertPanel(@"Contact Alert", [message string], @"Okay", nil, nil);
             }
         }
     }
