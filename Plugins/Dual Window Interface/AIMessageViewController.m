@@ -40,6 +40,7 @@
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
 - (void)listObjectStatusChanged:(NSNotification *)notification;
 - (void)chatStatusChanged:(NSNotification *)notification;
+- (void)redisplaySourceAndDestinationSelector:(NSNotification *)notification;
 @end
 
 @implementation AIMessageViewController
@@ -89,8 +90,12 @@
 									   name:Chat_ParticipatingListObjectsChanged
 									 object:chat];
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatAccountChanged:) 
-									   name:Chat_AccountChanged
+								   selector:@selector(redisplaySourceAndDestinationSelector:) 
+									   name:Chat_SourceChanged
+									 object:chat];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(redisplaySourceAndDestinationSelector:) 
+									   name:Chat_DestinationChanged
 									 object:chat];
 	
 	//Create the message view
@@ -424,7 +429,7 @@
 
 
 //Our chat's account changed, re-show the from selector
-- (void)chatAccountChanged:(NSNotification *)notification
+- (void)redisplaySourceAndDestinationSelector:(NSNotification *)notification
 {
 	[self setAccountSelectionMenuVisible:YES];
 }
