@@ -12,7 +12,6 @@
 
 [Accounts]
 - Jabber account registration
-- Jabber does not save "server" field
 
 [Growl]
 - Growl sticky support [Colin]
@@ -31,7 +30,6 @@
 [Other]
 - Something is seriously slowing down our connection process. Shark it and fix. [Evan]
 - The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
-- Our tableview subclasses are no longer producing valid drag images? (Accounts, status, etc)
 
 [Menu Items]
 - Block/Unblock as a single menu item [Colin]
