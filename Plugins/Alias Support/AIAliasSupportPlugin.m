@@ -17,7 +17,6 @@
 #import "AIContactListEditorPlugin.h"
 #import "AIContactInfoWindowController.h"
 
-#define	CONTACT_ALIAS_NIB			@"ContactAlias"		//Filename of the alias info view
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
