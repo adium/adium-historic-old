@@ -95,6 +95,7 @@
 		[[textView textStorage] setAttributedString:[NSAttributedString stringWithString:@""]];	
 	}
 	[textView setBackgroundColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView];
 }
 
 

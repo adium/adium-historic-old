@@ -80,7 +80,7 @@
 {
     NSPoint	containerOrigin;
     NSRect	visibleRect;
-    
+
     containerOrigin = [self textContainerOrigin];
     visibleRect = NSOffsetRect ([self visibleRect], -containerOrigin.x, -containerOrigin.y);
 
