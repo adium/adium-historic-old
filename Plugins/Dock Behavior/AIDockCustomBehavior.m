@@ -87,11 +87,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
     [tableView_events setTarget:self];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged 
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 }
 
 //Close this window
@@ -106,9 +102,9 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [behaviorArray release]; behaviorArray = nil;
-
+	
     //Clean up shared instance
     [self autorelease];
     sharedDockCustomInstance = nil;
@@ -117,18 +113,16 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 }
 
 //Called when the preferences change, update our preference display
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
-
-        //Load the custom behavior
-        [behaviorArray release];
-        behaviorArray = [[plugin customBehavior] mutableCopy];
-        if(!behaviorArray) behaviorArray = [[NSMutableArray alloc] init];
-
-        //Update the outline view
-        [tableView_events reloadData];
-    }
+	//Load the custom behavior
+	[behaviorArray release];
+	behaviorArray = [[plugin customBehavior] mutableCopy];
+	if(!behaviorArray) behaviorArray = [[NSMutableArray alloc] init];
+	
+	//Update the outline view
+	[tableView_events reloadData];
 }
 
 //The user selected a behavior

@@ -51,10 +51,7 @@
     preferences = [[AIDockBehaviorPreferences preferencePaneForPlugin:self] retain];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
+ 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 	
 	//Wait for Adium to finish launching before we set up our dock behavior so the event plugins are ready
 	[[adium notificationCenter] addObserver:self
@@ -66,9 +63,9 @@
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	//If no upgrade occurred, call preferences manually
-	if (![self _upgradeCustomDockBehavior]){
-		[self preferencesChanged:nil];
-	}
+//	if (![self _upgradeCustomDockBehavior]){
+//		[self preferencesChanged:nil];
+//	}
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_CompletedApplicationLoad
@@ -77,6 +74,7 @@
 
 - (void)uninstallPlugin
 {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[adium notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
     //Uninstall our contact alert
@@ -84,41 +82,39 @@
 }
 
 //Called when the preferences change, reregister for the notifications
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
-        NSArray			*behaviorArray;
-        NSString		*activeBehaviorSet;
-        NSEnumerator	*enumerator;
-        NSDictionary	*dictionary;
-
-        //Load the behaviorSet
-        activeBehaviorSet = [preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
-        if(activeBehaviorSet && [activeBehaviorSet length] != 0){ //preset
-            behaviorArray = [self behaviorForPreset:activeBehaviorSet];
-
-        }else{ //Custom
-            behaviorArray = [preferenceDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR];
-
-        }
-
-		//Clear out old global sound alerts
-		[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER];
+	NSArray			*behaviorArray;
+	NSString		*activeBehaviorSet;
+	NSEnumerator	*enumerator;
+	NSDictionary	*dictionary;
+	
+	//Load the behaviorSet
+	activeBehaviorSet = [prefDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
+	if(activeBehaviorSet && [activeBehaviorSet length] != 0){ //preset
+		behaviorArray = [self behaviorForPreset:activeBehaviorSet];
 		
-		//
-        enumerator = [behaviorArray objectEnumerator];
-        while((dictionary = [enumerator nextObject])){
-			
-            NSString		*eventID = [dictionary objectForKey:KEY_EVENT_DOCK_EVENT_ID];
-            NSNumber		*behavior = [dictionary objectForKey:KEY_EVENT_DOCK_BEHAVIOR];
-			NSDictionary	*soundAlert = [NSDictionary dictionaryWithObjectsAndKeys:eventID, KEY_EVENT_ID,
-				DOCK_BEHAVIOR_ALERT_IDENTIFIER, KEY_ACTION_ID, 
-				[NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE], KEY_ACTION_DETAILS,nil];
-			
-            [[adium contactAlertsController] addGlobalAlert:soundAlert];
-        }
-    }
+	}else{ //Custom
+		behaviorArray = [prefDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR];
+		
+	}
+	
+	//Clear out old global sound alerts
+	[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER];
+	
+	//
+	enumerator = [behaviorArray objectEnumerator];
+	while((dictionary = [enumerator nextObject])){
+		
+		NSString		*eventID = [dictionary objectForKey:KEY_EVENT_DOCK_EVENT_ID];
+		NSNumber		*behavior = [dictionary objectForKey:KEY_EVENT_DOCK_BEHAVIOR];
+		NSDictionary	*soundAlert = [NSDictionary dictionaryWithObjectsAndKeys:eventID, KEY_EVENT_ID,
+			DOCK_BEHAVIOR_ALERT_IDENTIFIER, KEY_ACTION_ID, 
+			[NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE], KEY_ACTION_DETAILS,nil];
+		
+		[[adium contactAlertsController] addGlobalAlert:soundAlert];
+	}
 }
 
 //Active behavior preset.  Pass and return nil for custom behavior

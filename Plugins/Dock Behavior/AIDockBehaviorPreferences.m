@@ -45,38 +45,30 @@
     //Build the behavior set menu
     [popUp_behaviorSet setMenu:[self behaviorSetMenu]];
 
-    //Observer preference changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 }
 
 //Preference view is closing
 - (void)viewWillClose
 {
     [AIDockCustomBehavior closeDockBehaviorCustomPanel];
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Called when the preferences change, update our preference display
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
-        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-
-        //If the Behavior set changed
-        if(notification == nil || [key isEqualToString:KEY_DOCK_ACTIVE_BEHAVIOR_SET]){
-            NSString	*activePreset = [plugin activePreset];
-
-            if(activePreset && ([activePreset length] != 0)){
-                [popUp_behaviorSet selectItemWithRepresentedObject:activePreset];
-            }else{
-                [popUp_behaviorSet selectItem:[popUp_behaviorSet lastItem]];
-            }
-        }
-    }
+	//If the Behavior set changed
+	if(!key || [key isEqualToString:KEY_DOCK_ACTIVE_BEHAVIOR_SET]){
+		NSString	*activePreset = [plugin activePreset];
+		
+		if(activePreset && ([activePreset length] != 0)){
+			[popUp_behaviorSet selectItemWithRepresentedObject:activePreset];
+		}else{
+			[popUp_behaviorSet selectItem:[popUp_behaviorSet lastItem]];
+		}
+	}
 }
 
 //The user selected a dock behavior preset
