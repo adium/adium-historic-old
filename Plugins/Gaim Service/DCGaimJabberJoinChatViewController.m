@@ -30,8 +30,13 @@
 	NSString		*password = [textField_password stringValue];
 	NSDictionary	*chatCreationInfo;
 			
+	if( !handle || ![handle length] )
+		handle = [inAccount UID];
+	
+	if( !password || ![password length] )
+		password = @"temp";
+	
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",server,@"server",handle,@"handle",password,@"password",nil];
-
 
 	[self doJoinChatWithName:room
 				   onAccount:inAccount
@@ -56,14 +61,15 @@
 {
 	NSString *roomLen = [textField_roomName stringValue];
 	NSString *serverLen = [textField_server stringValue];
-	NSString *handleLen = [textField_handle stringValue];
-	NSString *passwordLen = [textField_password stringValue];
+	//NSString *handleLen = [textField_handle stringValue];
+	//NSString *passwordLen = [textField_password stringValue];
 	BOOL enabled = NO;
 	
 	if( roomLen && [roomLen length] &&
-		serverLen && [serverLen length] && 
-		handleLen && [handleLen length] && 
-		passwordLen && [passwordLen length]) {
+		serverLen && [serverLen length]
+		//&& handleLen && [handleLen length]
+		//&& passwordLen && [passwordLen length]
+		) {
 		enabled = YES;
 	}
 	
