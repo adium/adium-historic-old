@@ -28,8 +28,18 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
+/*
+ * @class AIExtendedStatusPlugin
+ * @brief Manage the 'extended status' shown in the contact list
+ *
+ * If the contact list layout calls for displaying a status message or idle time (or both), this component manages
+ * generating the appropriate string, storing it in the @"ExtendedStatus" status object, and updating it as necessary.
+ */
 @implementation AIExtendedStatusPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
@@ -37,9 +47,17 @@
 	whitespaceAndNewlineCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
 }
 
+/*
+ * @brief Preferences changes
+ *
+ * PREF_GROUP_LIST_LAYOUT changed; update our list objects if needed.
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	BOOL oldShowStatus = showStatus;
+	BOOL oldShowIdle = showIdle;
+	
 	EXTENDED_STATUS_STYLE statusStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue];
 	showStatus = ((statusStyle == STATUS_ONLY) || (statusStyle == IDLE_AND_STATUS));
 	showIdle = ((statusStyle == IDLE_ONLY) || (statusStyle == IDLE_AND_STATUS));
@@ -47,17 +65,23 @@
 	if(firstTime){
 		[[adium contactController] registerListObjectObserver:self];
 	}else{
-		[[adium contactController] updateAllListObjectsForObserver:self];
+		if((oldShowStatus != showStatus) || (oldShowIdle != oldShowIdle)){
+			[[adium contactController] updateAllListObjectsForObserver:self];
+		}
 	}
 }
 
-//Called when a handle's status changes
+/*
+ * @brief Update list object's extended status messages
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	NSSet		*modifiedAttributes = nil;
 
 	//Idle time
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"] || [inModifiedKeys containsObject:@"StatusMessage"]){
+    if(inModifiedKeys == nil || 
+	   (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
+	   (showStatus && [inModifiedKeys containsObject:@"StatusMessage"])){
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
@@ -118,7 +142,12 @@
 }
 
 
-//
+/*
+ * @brief Determine the idle string
+ *
+ * @param seconds Number of seconds idle
+ * @result A localized string to display for the idle time
+ */
 - (NSString *)idleStringForSeconds:(int)seconds
 {
 	NSString	*idleString;
