@@ -7,7 +7,6 @@
 <%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
 <%@ page import = 'java.io.File' %>
-<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -15,32 +14,68 @@ DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
 String searchFormURL = new String("saveForm.jsp?action=saveSearch.jsp");
-int search_id = Util.checkInt(request.getParameter("search_id"));
-
+int search_id = 0;
 String date_start, date_finish;
 
-String sender = Util.checkNull(request.getParameter("sender"), false);
-searchFormURL += "&amp;sender=" + Util.safeString(sender);
+try {
+    search_id = Integer.parseInt(request.getParameter("search_id"));
+} catch (NumberFormatException e) {
+    search_id = 0;
+}
 
-String recipient = Util.checkNull(request.getParameter("recipient"), false);
-searchFormURL += "&amp;recipient=" + Util.safeString(recipient);
+String sender = request.getParameter("sender");
+if (sender != null && sender.equals("")) {
+    sender = null;
+} else if (sender != null) {
+    searchFormURL += "&amp;sender=" + sender;
+}
 
-String searchString = Util.checkNull(request.getParameter("search"), false);
-searchFormURL += "&amp;searchString=" + Util.safeString(searchString);
+String recipient = request.getParameter("recipient");
+if (recipient != null && recipient.equals("")) {
+    recipient = null;
+} else if (recipient != null) {
+    searchFormURL += "&amp;recipient=" + recipient;
+}
 
-String service = Util.checkNull(request.getParameter("service"));
-searchFormURL += "&amp;service=" + Util.safeString(service);
+String searchString = request.getParameter("search");
+if (searchString == null || searchString.equals("")) {
+    searchString = null;
+} else {
+    searchFormURL += "&amp;searchString=" + searchString;
+}
 
-String orderBy = Util.checkNull(request.getParameter("order_by"));
+String service = request.getParameter("service");
+if (service == null || service.equals("0")) {
+    service = null;
+} else {
+    searchFormURL += "&amp;service=" + service;
+}
 
-String ascDesc = Util.checkNull(request.getParameter("asc_desc"));
-searchFormURL += "&amp;orderBy=" + Util.safeString(orderBy);
+String orderBy = request.getParameter("order_by");
 
-date_finish = Util.checkNull(request.getParameter("finish"));
-searchFormURL += "&amp;date_finish=" + Util.safeString(date_finish);
+if (orderBy != null && orderBy.equals("")) {
+    orderBy = null;
+}
 
-date_start = Util.checkNull(request.getParameter("start"));
-searchFormURL += "&amp;date_start=" + Util.safeString(date_start);
+String ascDesc = request.getParameter("asc_desc");
+if(orderBy != null){
+    orderBy += ascDesc;
+    searchFormURL += "&amp;orderBy=" + orderBy;
+}
+
+date_finish = request.getParameter("finish");
+if(date_finish != null && date_finish.equals("")) {
+    date_finish = null;
+} else {
+    searchFormURL += "&amp;date_finish=" + date_finish;
+}
+
+date_start = request.getParameter("start");
+if(date_start != null && date_start.equals("")) {
+    date_start = null;
+} else {
+    searchFormURL += "&amp;date_start=" + date_start;
+}
 
 String title = new String();
 String notes = new String();
@@ -226,8 +261,8 @@ if(search_id != 0) {
                                 <label for="sender">Sender: </label>
                             </td>
                             <td><input type="text" name="sender"
-                                value="<%= Util.safeString(sender) %>"
-                                id="sender" />
+                        <% if (sender != null)
+                            out.print("value=\"" + sender + "\""); %> id="sender" />
                             </td>
                         </tr>
                         <tr>
@@ -236,8 +271,8 @@ if(search_id != 0) {
                             </td>
                             <td>
                                 <input type="text" name="recipient"
-                                    value="<%= Util.safeString(recipient) %>"
-                                    id="recipient" />
+                        <% if (recipient != null)
+                            out.print("value=\"" + recipient + "\""); %> id="recipient" />
                             </td>
                         </tr>
                         <tr>
@@ -266,9 +301,11 @@ if(search_id != 0) {
                                 <label for="start_date">Date Range: </label>
                             </td>
                             <td colspan="2">
-                                <input type="text" name="start"
-                                    value="<%= Util.safeString(date_start) %>"
-                                    id="start_date" />
+                                <input type="text" name="start" <%
+                                    if (date_start != null)
+                                        out.print("value=\"" + date_start +
+                                        "\"");
+                                %> id="start_date" />
                                 <a
                         href="javascript:show_calendar('control.start');"
                         onmouseover="window.status='Date Picker';return true;"
@@ -369,7 +406,7 @@ if(search_id != 0) {
 
         beginTime = System.currentTimeMillis();
         try {
-            rset = lc.executeQuery(searchType, params);
+            rset = lc.executeQuery(searchType, params, orderBy);
         } catch (SQLException e) {
             out.println("<span style=\"color:red\">" + e.getMessage() +
                 "</span>");
