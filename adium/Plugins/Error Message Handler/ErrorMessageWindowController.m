@@ -49,7 +49,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
     }
 }
 
-- (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc
+- (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 {
     //force the window to load
     [sharedInstance window];
@@ -58,6 +58,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
     if([errorTitleArray count] < MAX_ERRORS){ //Stop logging errors after too many
         [errorTitleArray addObject:inTitle];
         [errorDescArray addObject:inDesc];
+        [errorWindowTitleArray addObject:inWindowTitle];
     }
 
     [self refreshErrorDialog];
@@ -71,6 +72,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
     }else{ //remove the first error and display the next one
         [errorTitleArray removeObjectAtIndex:0];
         [errorDescArray removeObjectAtIndex:0];
+        [errorWindowTitleArray removeObjectAtIndex:0];
 
         [self refreshErrorDialog];
     }
@@ -101,6 +103,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
     errorTitleArray = [[NSMutableArray alloc] init];
     errorDescArray =  [[NSMutableArray alloc] init];
+    errorWindowTitleArray = [[NSMutableArray alloc] init];
 
     return(self);
 }
@@ -109,7 +112,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
 {
     [errorTitleArray release]; errorTitleArray = nil;
     [errorDescArray release]; errorDescArray = nil;
-
+    [errorWindowTitleArray release]; errorWindowTitleArray = nil;
     [owner release];
 
     [super dealloc];
@@ -136,12 +139,12 @@ static ErrorMessageWindowController *sharedInstance = nil;
     //Display the current error count
     if([errorTitleArray count] == 1){
         [tabView_multipleErrors selectTabViewItemAtIndex:0]; //hide the 'okay all' button and error count
-        [[self window] setTitle:@"Adium : Error"];
+        [[self window] setTitle:[errorWindowTitleArray objectAtIndex:0]];
         [button_okay setTitle:@"Okay"];
 
     }else{
         [tabView_multipleErrors selectTabViewItemAtIndex:1]; //show the 'okay all' button and error count
-        [[self window] setTitle:[NSString stringWithFormat:@"Adium : Error (x%i)",[errorTitleArray count]]];
+        [[self window] setTitle:[NSString stringWithFormat:@"%@ (x%i)",[errorWindowTitleArray objectAtIndex:0],[errorTitleArray count]]];
         [button_okay setTitle:@"Next"];
 
     }

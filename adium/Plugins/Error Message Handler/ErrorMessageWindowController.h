@@ -31,13 +31,13 @@
 
     NSMutableArray	*errorTitleArray;
     NSMutableArray	*errorDescArray;
-
+    NSMutableArray	*errorWindowTitleArray;
     AIAdium	*owner;
 }
 
 + (id)errorMessageWindowControllerWithOwner:(id)inOwner;
 + (void)closeSharedInstance;
-- (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc;
+- (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 - (IBAction)okay:(id)sender;
 - (IBAction)okayToAll:(id)sender;
 - (IBAction)closeWindow:(id)sender;

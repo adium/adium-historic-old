@@ -36,17 +36,19 @@
     NSDictionary	*userInfo;
     NSString		*errorTitle;
     NSString		*errorDesc;
-
+    NSString		*windowTitle;
+    
     //Get the error info
     userInfo = [notification userInfo];
     errorTitle = [userInfo objectForKey:@"Title"];
-    errorDesc = [userInfo objectForKey:@"Description"];;
+    errorDesc = [userInfo objectForKey:@"Description"];
+    windowTitle = [userInfo objectForKey:@"Window Title"];
 
     //Log to console
-    NSLog([NSString stringWithFormat:@"ERROR: %@ (%@)",errorTitle,errorDesc]);
+    NSLog([NSString stringWithFormat:@"%@: %@ (%@)",windowTitle,errorTitle,errorDesc]);
 
     //Display an alert
-    [[ErrorMessageWindowController errorMessageWindowControllerWithOwner:owner] displayError:errorTitle withDescription:errorDesc];
+    [[ErrorMessageWindowController errorMessageWindowControllerWithOwner:owner] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
 }
 
 @end
