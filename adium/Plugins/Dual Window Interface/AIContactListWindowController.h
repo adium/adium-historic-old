@@ -26,7 +26,6 @@
 
     id <AIContactListViewController>	contactListViewController;
     NSView				*contactListView;
-    NSSize				contactViewPadding;
 
     NSView				*view_statusSelection;
 
