@@ -244,11 +244,10 @@
 
 - (IBAction)toggleContactList:(id)sender
 {
-    if(contactListWindowController){ //The window is loaded
+    if(contactListWindowController && [[contactListWindowController window] isMainWindow]){ //The window is loaded and main
         [[contactListWindowController window] performClose:nil];
-    } else {
-        contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];   
-        [contactListWindowController makeActive:nil];
+    }else{
+	[self showContactList:nil];
     } 
  
 }
