@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.134 2004/05/16 18:13:55 adamiser Exp $
+$Id: ToDoList.txt,v 1.135 2004/05/16 18:33:38 adamiser Exp $
 
 
 Legend
@@ -13,7 +13,6 @@ If you are working on something big and it may take a while, please tag it with 
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
-* Our message view scrollbar is 1 pixel off the edge of the window
 * "Custom..." sound option is not working.
 * We are not processing HTML that arrives over an ICQ connection.  Some clients (such as iChat) send HTML over ICQ.
 * If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
@@ -423,3 +422,4 @@ Features & Changes:
 = Our 'new message' toolbar button is gooooone gone gone gone gone
 = For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
 = Offline contacts are not always displaying (Show them, disconnect, and then re-connect.  They are gone)
+= Our message view scrollbar is 1 pixel off the edge of the window
