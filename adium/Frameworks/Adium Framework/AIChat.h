@@ -15,6 +15,7 @@
     NSMutableArray		*participatingListObjects;
 
 	NSString			*name;
+	NSString			*uniqueChatID;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary;
