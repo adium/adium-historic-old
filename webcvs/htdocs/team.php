@@ -110,7 +110,7 @@
                         <img class="teamAvatar" width="64" height="64" border="0" src="images/avatars/avatar_Evan Schoenberg.png" alt="avatar" />
                         <span class="teamData">Email:</span>evan[at]adiumx[dot]com<br />
                         <span class="teamData">AIM:</span>TekJew<br />
-			<span class="teamData">Gadu-Gadu:</span>5183727<br />
+			<span class="teamData">Gadu-Gadu:</span>5183727 (English only)<br />
 			<span class="teamData">Jabber:</span>tekjew@jabber.org<br />
                         <span class="teamData">MSN:</span>evan[dot]s[at]dreskin[dot]net<br />
                         <span class="teamData">Yahoo:</span>eschoenberg
@@ -136,6 +136,7 @@
                         <span class="teamData">Website:</span><a href="http://www.fourx.org/">http://www.fourx.org/</a><br />
                         <span class="teamData">Email:</span><a href="mailto:timber@lava.net">timber@lava.net</a><br />
                         <span class="teamData">AIM:</span>mactigerz<br />
+			<span class="teamData">MSN:</span>ramoth4x@hotmail.com<br />
                         <span class="teamData">Yahoo:</span>ramoth4_com
                     </div>
                     <div class="teamMember">
