@@ -946,6 +946,9 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 						
 					}
 					
+				}else if([messageString rangeOfString:@"Message may have not been sent because a time out occurred"].location != NSNotFound){
+					errorType = AIChatMessageSendingTimeOutOccurred;
+					
 				}else if([messageString isEqualToString:@"Command failed"]){
 					errorType = AIChatCommandFailed;
 					

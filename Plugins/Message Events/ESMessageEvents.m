@@ -46,6 +46,11 @@
 					message = AILocalizedString(@"Could not send the last message because it was too large.",nil);
 					type = @"sending-tooLarge";
 					break;
+					
+				case AIChatMessageSendingTimeOutOccurred:
+					message = AILocalizedString(@"A message may not have been sent; a timeout occurred.",nil);
+					type = @"sending-timeOut";
+					break;
 
 				case AIChatMessageReceivingMissedTooLarge:
 					message = AILocalizedString(@"Could not receive the last message because it was too large.",nil);
