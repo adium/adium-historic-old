@@ -14,6 +14,7 @@
 	IBOutlet		NSButton		*button_cancel;
 	
 	DCJoinChatViewController		*controller;				//Current view controller
+	NSView							*currentView;				//
 }
 
 + (void)joinChatWindow;

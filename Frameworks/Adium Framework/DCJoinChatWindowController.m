@@ -33,7 +33,6 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 - (IBAction)joinChat:(id)sender
 {
-	
 	// If there is a controller, it handles all of the join-chat work
 	if( controller ) {
 		[controller joinChatWithAccount:[[popUp_service selectedItem] representedObject]];
@@ -44,71 +43,27 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
+	NSRect 	windowFrame = [[self window] frame];
+	int		diff;
 	
-	NSView  *currentView;
-	NSEnumerator *enumerator = [[view_customView subviews] objectEnumerator];
-	NSRect frame, existingViewFrame;
-	int diff;
+	//Remove the previous view controller's view
+	[currentView removeFromSuperview];
+	[currentView release]; currentView = nil;
 	
-	// Remove the previous view controller's view (even if there is no new controller)
-	while( currentView = [enumerator nextObject] ) {
-		[currentView removeFromSuperview];
-		[currentView release];
-	}
-	
-	// Get a view controller for this account if there is one
+	//Get a view controller for this account if there is one
 	controller = [[[inAccount service] joinChatView] retain];
-	existingViewFrame = [view_customView frame];
+	currentView = [controller view];
 
-	if( controller ) {
-		currentView = [controller view];
-		frame = [currentView frame];
-		diff = (NSHeight(existingViewFrame) - NSHeight(frame));
-		frame.origin=[view_customView frame].origin;
-		[view_customView setFrame:frame];
-	} else {
-		currentView = nil;
-		frame = NSMakeRect(0,0,0,0);
-		diff = NSHeight(existingViewFrame);
-		[view_customView setFrame:NSMakeRect(0,0,0,0)];
-	}
-	
-	NSRect windowFrame = [[self window] frame];
+	//Resize the window to fit the new view
+	diff = [view_customView frame].size.height - [currentView frame].size.height;
 	windowFrame.size.height -= diff;
+	windowFrame.origin.y += diff;
 	[[self window] setFrame:windowFrame display:YES animate:YES];
 
-	// Get the old frames
-	NSRect labelFrame = [textField_accountLabel frame];
-	NSRect accountFrame = [popUp_service frame];
-	NSRect cancelFrame = [button_cancel frame];
-	NSRect joinFrame = [button_joinChat frame];
-
-	// Get sizes for the new view
-	//windowFrame.origin.y += diff;
-	labelFrame.origin.y -= diff;
-	accountFrame.origin.y -= diff;
-	cancelFrame.origin.y += diff;
-	joinFrame.origin.y += diff;
-		
-	// Actually do the resizing
-	[textField_accountLabel setFrame:labelFrame];
-	[popUp_service setFrame:accountFrame];
-	[button_cancel setFrame:cancelFrame];
-	[button_joinChat setFrame:joinFrame];
-	
-	[textField_accountLabel setNeedsDisplay:YES];
-	[popUp_service setNeedsDisplay:YES];
-	[button_joinChat setNeedsDisplay:YES];
-	[button_cancel setNeedsDisplay:YES];
-
-	if( controller ) {
+	if(controller && currentView){
 		[view_customView addSubview:currentView];
+		[controller configureForAccount:inAccount];
 	}
-	
-	[[self window] display];
-	
-	[controller configureForAccount:inAccount];
-
 }
 
 //Init
