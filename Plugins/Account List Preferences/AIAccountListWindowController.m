@@ -168,7 +168,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[self _addCustomViewAndTabsForController:[inService accountView]];
 	
 	//Custom username string
-	NSString *userNameLabel = [accountViewController userNameLabel];
+	NSString *userNameLabel = [inService userNameLabel];
 	[textField_userNameLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
 	
 	//Restrict the account name field to valid characters and length

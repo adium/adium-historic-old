@@ -11,8 +11,4 @@
 
 @implementation ESGaimDotMacAccountViewController
 
-- (NSString *)userNameLabel{
-    return(AILocalizedString(@".Mac Name",nil)); //.Mac Member Name
-}
-
 @end

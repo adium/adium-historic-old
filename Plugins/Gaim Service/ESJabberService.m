@@ -50,7 +50,8 @@
 }
 - (NSCharacterSet *)allowedCharactersForUIDs{ 
 	/* Allow % for use in transport names, username%hotmail.com@msn.blah.jabber.org */
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()%"]);
+	/* Allow / for specifying a resource */
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()%/"]);
 }
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@""]);
@@ -66,6 +67,9 @@
 }
 - (BOOL)canRegisterNewAccounts{
 	return(YES);
+}
+- (NSString *)userNameLabel{
+    return(AILocalizedString(@"Jabber ID",nil)); //Jabber ID
 }
 
 @end

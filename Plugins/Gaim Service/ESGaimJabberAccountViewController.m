@@ -12,9 +12,6 @@
 - (NSString *)nibName{
     return(@"ESGaimJabberAccountView");
 }
-- (NSString *)userNameLabel{
-    return(AILocalizedString(@"Jabber ID",nil)); //Jabber ID
-}
 
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount
@@ -92,8 +89,7 @@
 
 //Update display for account status change
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	
+{	
 	if(inObject == nil || inObject == account){
 		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
 			BOOL shouldEnable = ![[account statusObjectForKey:@"Online"] boolValue];

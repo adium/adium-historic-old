@@ -12,9 +12,6 @@
 - (NSString *)nibName{
     return(@"ESGaimMSNAccountView");
 }
-- (NSString *)userNameLabel{
-    return(AILocalizedString(@"MSN Passport",""));    //Sign-in name
-}
 
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount

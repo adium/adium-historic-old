@@ -2110,6 +2110,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 
 	if(sendMessage){
+		AILog(@"Sending %@ from %@ to %@",encodedMessage,sourceAccount,chat);
 		[runLoopMessenger target:self 
 				 performSelector:@selector(gaimThreadSendEncodedMessage:originalMessage:fromAccount:inChat:withFlags:) 
 					  withObject:encodedMessage

@@ -69,5 +69,7 @@
 - (AIServiceImportance)serviceImportance{
 	return(AIServicePrimary);
 }
-
+- (NSString *)userNameLabel{
+    return(AILocalizedString(@"MSN Passport",""));    //Sign-in name
+}
 @end
