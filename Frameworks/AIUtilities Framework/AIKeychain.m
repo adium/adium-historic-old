@@ -18,6 +18,7 @@
  */
 
 #import "AIKeychain.h"
+#import "AIWiredData.h"
 #include <CoreServices/CoreServices.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <Security/Security.h>
@@ -62,10 +63,12 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordBytes,&passwordLength,NULL);
 	
 	if (ret == noErr){
-		NSData	*passwordData = [NSData dataWithBytes:passwordBytes length:passwordLength];
+		NSData	*passwordData = [AIWiredData dataWithBytes:passwordBytes length:passwordLength];
 		passwordString = [[[NSString alloc] initWithData:passwordData
 												encoding:NSUTF8StringEncoding] autorelease];			
 	}
+	if(passwordBytes)
+		SecKeychainItemFreeContent(/*attrList*/ NULL, passwordBytes);
 
     return passwordString;
 }
