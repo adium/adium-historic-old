@@ -597,7 +597,7 @@
 {
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     if (group != NULL) {                                        //if we find the GaimGroup
-        NSLog(@"serv_rename_group(%@,%@,%@)",gc,inGroup,newName);
+        NSLog(@"serv_rename_group(%@,%@)",inGroup,newName);
         serv_rename_group(gc, group, [newName UTF8String]);     //rename
         NSLog(@"gaim_blist_remove_group(%@)",inGroup);
         gaim_blist_remove_group(group);                         //remove the old one gaimside
