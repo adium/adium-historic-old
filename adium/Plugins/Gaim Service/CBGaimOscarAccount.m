@@ -192,8 +192,9 @@ struct buddyinfo {
 					
 				case GAIM_BUDDY_INFO_UPDATED:
 				{
-					//Update the profile if necessary
-					if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
+					//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
+					//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
+					if ((userinfo->info_len > 1) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
 						
 						//Away message
 						NSString *profileString = [self stringWithBytes:userinfo->info
@@ -393,18 +394,21 @@ aim_srv_setavailmsg(od->sess, text);
 
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
 {
-	NSString			*encodingString = [NSString stringWithUTF8String:encoding];
-	
-	//Defalt to Unicode
+	//Default to UTF8
 	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
-	
-	if ([encodingString rangeOfString:@"unicode"].location != NSNotFound){
-		desiredEncoding = NSUnicodeStringEncoding;
-	}else if ([encodingString rangeOfString:@"iso"].location != NSNotFound){
-		desiredEncoding = NSISOLatin1StringEncoding;
-	}else if ([encodingString rangeOfString:@"ascii"].location != NSNotFound){
-		desiredEncoding = NSASCIIStringEncoding;
+
+	//Only attempt to check encoding if we were passed one
+	if (encoding && (encoding[0] != '\0')){
+		NSString			*encodingString = [NSString stringWithUTF8String:encoding];
+				
+		if ([encodingString rangeOfString:@"unicode-2-0"].location != NSNotFound){
+			desiredEncoding = NSUnicodeStringEncoding;
+		}else if ([encodingString rangeOfString:@"iso-8859-1"].location != NSNotFound){
+			desiredEncoding = NSISOLatin1StringEncoding;
+		}
 	}
+	
+	//NSLog(@"[%s] [%i] [%s]",bytes,length,encoding);
 	
 	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
