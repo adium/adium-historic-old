@@ -50,7 +50,6 @@
 
 	//Set the name and creator codes
 	if (Spec.fCreator != 'AdIM'){
-		NSLog(@"must set");
 		Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
 		Spec.fCreator = 'AdIM';
 		
