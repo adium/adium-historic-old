@@ -1661,8 +1661,8 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
-	NSLog(@"Transfer update: %s is now %f%% done",xfer->filename,(percent*100));
-	GaimDebug (@"Transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+	NSLog(@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
+	GaimDebug (@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
 	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
