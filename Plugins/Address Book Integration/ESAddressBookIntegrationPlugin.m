@@ -274,8 +274,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	}else if(useABImages){
 		NSNumber		*tagNumber;
 		NSImage			*image;
-		AIListObject	*listObject;
-		id				setOrObject;
+		AIListObject		*listObject;
+		NSString		*uniqueID;
+		id			setOrObject;
 		
 		tagNumber = [NSNumber numberWithInt:tag];
 		
@@ -308,8 +309,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		//No further need for the dictionary entries
 		[trackingDict removeObjectForKey:tagNumber];
 		
-		[trackingDictPersonToTagNumber removeObjectForKey:[trackingDictTagNumberToPerson objectForKey:tagNumber]];
-		[trackingDictTagNumberToPerson removeObjectForKey:tagNumber];
+		if(uniqueID = [trackingDictTagNumberToPerson objectForKey:tagNumber]){
+			[trackingDictPersonToTagNumber removeObjectForKey:uniqueID];
+			[trackingDictTagNumberToPerson removeObjectForKey:tagNumber];
+		}
 	}
 }
 
