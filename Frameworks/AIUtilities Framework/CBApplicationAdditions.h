@@ -17,4 +17,6 @@
 
 - (BOOL)isWebKitAvailable;
 - (BOOL)isURLLoadingAvailable;
+- (NSString *)applicationVersion;
+
 @end
