@@ -61,6 +61,7 @@
 - (AIMessageWindowController *)_primaryMessageWindow;
 - (AIMessageWindowController *)_createMessageWindow;
 - (void)_destroyMessageWindow:(AIMessageWindowController *)inWindow;
+- (NSString *)_groupIDForChatListObject:(AIListObject *)listObject;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -1156,15 +1157,8 @@
 		while( tabCell = [tabCellEnumerator nextObject] ) {
 			tabViewItem = (AIMessageTabViewItem *)[tabCell tabViewItem];
 			listObject = [[[tabViewItem messageViewController] chat] listObject];
-			
-			// Group chats don't have list objects
-			if( listObject ) {
-				listGroupID = [[listObject containingGroup] uniqueObjectID];
-				//It's possible the listObject isn't on our contact list; group it with all those cute little orphans
-				if (!listGroupID) listGroupID = @"Orphans";
-			} else {
-				listGroupID = @"Group Chats";
-			}
+			listGroupID = [self _groupIDForChatListObject:listObject];
+
 			// Is there an array for this group yet?
 			if( splitArray = [arrangeByGroupCache objectForKey:listGroupID]) {
 				
@@ -1183,19 +1177,24 @@
 		}
 		
 	}
-		
+	
+	NSArray		*tempArray;
+	
 	arrangeByGroupWindowList = [[NSMutableDictionary alloc] init];
-	NSArray *tempArray;
 	dictionaryEnumerator = [arrangeByGroupCache objectEnumerator];
 	
 	// Pre-process the controller list to use as many existing windows as possible
 	// This should be made smarter in the future
 	while( splitArray = [dictionaryEnumerator nextObject] ) {
 		tempArray = [splitArray objectAtIndex:0];
-		if( [[arrangeByGroupWindowList allValues] indexOfObject:[tempArray objectAtIndex:1]] == NSNotFound )
+		if( [[arrangeByGroupWindowList allValues] indexOfObject:[tempArray objectAtIndex:1]] == NSNotFound ) {
+			
+			listObject = [[[[tempArray objectAtIndex:0] messageViewController] chat] listObject];
+			
 			[arrangeByGroupWindowList
 				setObject:[tempArray objectAtIndex:1]
-				   forKey:[[[[[[tempArray objectAtIndex:0] messageViewController] chat] listObject] containingGroup] uniqueObjectID]];
+				   forKey:[self _groupIDForChatListObject:listObject]];
+		}
 		
 	}
 	
@@ -1208,7 +1207,8 @@
 			
 			arrayEnumerator = [splitArray objectEnumerator];
 			tabViewItem = [[arrayEnumerator nextObject] objectAtIndex:0];
-			listGroupID = [[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID];
+			listObject = [[[tabViewItem messageViewController] chat] listObject];
+			listGroupID = [self _groupIDForChatListObject:listObject];
 
 			// This MAY return nil, but that's ok: it means we need to open in a new window anyhow
 			controller = [arrangeByGroupWindowList objectForKey:listGroupID];
@@ -1216,9 +1216,9 @@
 
 			if( controller == nil ) {
 				controller = [self _messageWindowForContainer:tabViewItem];
-				[arrangeByGroupWindowList
-				setObject:controller
-				   forKey:[[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID]];				
+				
+				[arrangeByGroupWindowList setObject:controller
+											 forKey:listGroupID];				
 			}
 			
 			while( tempArray = [arrayEnumerator nextObject] ) {
@@ -1233,14 +1233,31 @@
 		while( splitArray = [dictionaryEnumerator nextObject] ) {
 			
 			tempArray = [splitArray objectAtIndex:0];
+			listObject = [[[[tempArray objectAtIndex:0] messageViewController] chat] listObject];
 			
 			[arrangeByGroupWindowList
 				setObject:[tempArray objectAtIndex:1]
-				   forKey:[[[[[[tempArray objectAtIndex:0] messageViewController] chat] listObject] containingGroup] uniqueObjectID]];
+				   forKey:[self _groupIDForChatListObject:listObject]];
 			}
 		
 	}
 
+}
+
+- (NSString *)_groupIDForChatListObject:(AIListObject *)listObject
+{
+	NSString	*listGroupID;
+	
+	// Group chats don't have list objects
+	if( listObject ) {
+		listGroupID = [[listObject containingGroup] uniqueObjectID];
+		//It's possible the listObject isn't on our contact list; group it with all those cute little orphans
+		if (!listGroupID) listGroupID = @"Orphans";
+	} else {
+		listGroupID = @"Group Chats";
+	}
+	
+	return listGroupID;
 }
 
 //Returns the message window containing only tabs from 'group', or a new one if there was none previously.
