@@ -155,14 +155,12 @@ Standardize/enhance Xtras pref panes [brian]
   - Improve reliability of moving, deleting, and adding contacts
   - Improve error handling with full lists
   - Improve error handling when adding contacts that already exist
-  	
+
 //Improved info window
   Update the info window appearance and profile display
-  - Use a regular window instead of a panel
-  - Improve link tracking and tooltips in profiles
   - Fix support for sub-profile links
   - Display profiles for other services in addition to AIM
-  - Use WedKit to handle the HTML unless there is some overwhelming reason we parse it
+  - Use WebKit to handle the HTML unless there is some overwhelming reason we parse it
     // this should resolve several issues and gives great benefits - like tooltips & copy link
   
 //Preferences
