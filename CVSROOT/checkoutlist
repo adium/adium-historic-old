@@ -13,3 +13,4 @@
 # comment lines begin with '#'
 syncmail
 ciabot.pl
+cia_mailbucket.pl
