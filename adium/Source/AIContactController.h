@@ -85,8 +85,10 @@ typedef enum {
 	
     NSTimer					*delayedUpdateTimer;
     int						delayedStatusChanges;
+	NSMutableSet			*delayedModifiedStatusKeys;
     int						delayedAttributeChanges;
-    int						delayedContentChanges;
+	NSMutableSet			*delayedModifiedAttributeKeys;
+    int						delayedContactChanges;
 	int						delayedUpdateRequests;
 	BOOL					updatesAreDelayed;
 	
