@@ -12,6 +12,16 @@
 
 @implementation AIListGroupBubbleCell
 
+- (id)init
+{
+	[super init];
+	
+	outlineBubble = NO;
+	outlineBubbleLineWidth = 1.0;
+	drawBubble = YES;
+	
+	return(self);
+}
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -30,12 +40,24 @@
 //Draw a regular bubble background for our cell if gradient background drawing is disabled
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(drawsBackground){
-		[super drawBackgroundWithFrame:[self bubbleRectForFrame:rect]];
-	}else{
-		if(![self cellIsSelected]){
-			[[self backgroundColor] set];
-			[[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]] fill];
+	if (drawBubble){
+		if(drawsBackground){
+			[super drawBackgroundWithFrame:[self bubbleRectForFrame:rect]];
+		}else{
+			if(![self cellIsSelected]){
+				NSBezierPath	*bezierPath;
+				
+				[[self backgroundColor] set];
+				bezierPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]];
+				
+				[bezierPath fill];
+				
+				if(outlineBubble){
+					[bezierPath setLineWidth:outlineBubbleLineWidth];
+					[[self textColor] set];
+					[bezierPath stroke];
+				}
+			}
 		}
 	}
 }
@@ -52,8 +74,20 @@
 //Draw our background gradient bubble
 - (void)drawBackgroundGradientInRect:(NSRect)inRect
 {
-	[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:inRect]]];
+	if (drawBubble){
+		NSBezierPath	*bezierPath;
+		
+		bezierPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:inRect]];
+		[[self backgroundGradient] drawInBezierPath:bezierPath];
+		
+		if(outlineBubble){
+			[bezierPath setLineWidth:outlineBubbleLineWidth];
+			[[self textColor] set];
+			[bezierPath stroke];
+		}
+	}
 }
+
 
 //Pass drawing rects through this method before drawing a bubble.  This allows us to make adjustments to bubble
 //positioning and size.
@@ -67,6 +101,20 @@
 - (BOOL)drawGridBehindCell
 {
 	return(NO);
+}
+
+- (void)setOutlineBubble:(BOOL)flag
+{
+	outlineBubble = flag;
+}
+- (void)setOutlineBubbleLineWidth:(float)inWidth
+{
+	outlineBubbleLineWidth = inWidth;
+}
+
+- (void)setHideBubble:(BOOL)flag
+{
+	drawBubble = !(flag);
 }
 
 @end

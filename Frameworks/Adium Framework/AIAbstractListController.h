@@ -47,6 +47,10 @@
 #define KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT		@"Contact Left Indent"
 #define KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT	@"Contact Right Indent"
 
+#define	KEY_LIST_LAYOUT_OUTLINE_BUBBLE			@"Outline Bubble"
+#define	KEY_LIST_LAYOUT_CONTACT_BUBBLE_GRADIENT	@"Contact Bubble Draw With Gradient"
+#define	KEY_LIST_LAYOUT_GROUP_HIDE_BUBBLE		@"Group Hide Bubble"
+#define	KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH	@"Outline Bubble Line Width"
 
 typedef enum {
 	WINDOW_STYLE_STANDARD = 0,

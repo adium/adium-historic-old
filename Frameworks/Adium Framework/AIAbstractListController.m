@@ -133,6 +133,7 @@
 	LIST_WINDOW_STYLE	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 	float				backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 	NSTextAlignment		contentCellAlignment;
+	BOOL				pillowsOrPillowsFittedWindowStyle;
 	
 	//Cells
 	[groupCell release];
@@ -226,7 +227,8 @@
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 	
 	//Bubbles special cases
-	if(windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+	pillowsOrPillowsFittedWindowStyle = (windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED);
+	if(pillowsOrPillowsFittedWindowStyle){
 		//Treat the padding as spacing
 		[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
@@ -245,20 +247,30 @@
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
 	if(windowStyle == WINDOW_STYLE_MOCKIE ||
-	   windowStyle == WINDOW_STYLE_PILLOWS ||
-	   windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+	   pillowsOrPillowsFittedWindowStyle){
 		[contactListView setDrawsSelectedRowHighlight:NO];
 	}
 	
-	//Background
-	//Disable background image if we're in mockie or pillows
-	if([contentCell respondsToSelector:@selector(setBackgroundOpacity:)]){
-		[contentCell setBackgroundOpacity:backgroundAlpha];
+	//Pillows special cases
+	if (pillowsOrPillowsFittedWindowStyle){
+		BOOL	outlineBubble = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE] boolValue];
+		int		outlineBubbleLineWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH] intValue];
+
+		[(AIListContactBubbleCell *)contentCell setOutlineBubble:outlineBubble];
+		[(AIListContactBubbleCell *)contentCell setOutlineBubbleLineWidth:outlineBubbleLineWidth];
+		[(AIListContactBubbleCell *)contentCell setDrawWithGradient:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_BUBBLE_GRADIENT] boolValue]];		
+
+		[(AIListGroupBubbleCell *)groupCell setOutlineBubble:outlineBubble];
+		[(AIListGroupBubbleCell *)groupCell setOutlineBubbleLineWidth:outlineBubbleLineWidth];
+		[(AIListGroupBubbleCell *)groupCell setHideBubble:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_HIDE_BUBBLE] boolValue]];
 	}
+	
+	//Background
+	[contentCell setBackgroundOpacity:backgroundAlpha];
 	[contactListView setDrawsAlternatingRows:[[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	//Disable background image if we're in mockie or pillows
 	[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
-										 windowStyle != WINDOW_STYLE_PILLOWS &&
-										 windowStyle != WINDOW_STYLE_PILLOWS_FITTED)];
+										 !(pillowsOrPillowsFittedWindowStyle))];
 
 	//Shadow
 	[[contactListView window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];

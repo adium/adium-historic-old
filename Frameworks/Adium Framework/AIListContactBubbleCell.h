@@ -9,8 +9,16 @@
 
 @interface AIListContactBubbleCell : AIListContactCell {
 	NSBezierPath	*lastBackgroundBezierPath;
+	BOOL			outlineBubble;
+	BOOL			drawWithGradient;
+	float			outlineBubbleLineWidth;
 }
 
 - (NSRect)bubbleRectForFrame:(NSRect)rect;
+
+- (void)setOutlineBubble:(BOOL)flag;
+- (void)setOutlineBubbleLineWidth:(float)inWidth;
+
+- (void)setDrawWithGradient:(BOOL)flag;
 
 @end

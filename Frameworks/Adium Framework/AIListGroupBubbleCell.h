@@ -3,15 +3,22 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/12/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListGroupCell.h"
 
 @interface AIListGroupBubbleCell : AIListGroupCell {
-
+	BOOL			outlineBubble;
+	BOOL			drawBubble;
+	
+	float			outlineBubbleLineWidth;
 }
 
 - (NSRect)bubbleRectForFrame:(NSRect)rect;
+- (void)setOutlineBubble:(BOOL)flag;
+- (void)setOutlineBubbleLineWidth:(float)inWidth;
+
+//This is the inverse of drawBubble so a default of NO will draw the bubble
+- (void)setHideBubble:(BOOL)flag;
 
 @end
