@@ -224,8 +224,28 @@
 	// Empty input array
 	[emoticonPackArray	removeAllObjects];
 	
+    // Check that all emoticon-packs are still there
+    if (!reload)
+    {
+        NSEnumerator*	numer = [cachedPacks objectEnumerator];
+        NSDictionary*	pack = nil;
+        
+        while (pack = [numer nextObject])
+        {
+            BOOL	isFolder;
+            if ([[NSFileManager defaultManager] fileExistsAtPath:[pack objectForKey:KEY_EMOTICON_PACK_PATH] isDirectory:&isFolder])
+            {
+                if (!isFolder)
+                    reload = TRUE;
+            }
+            else
+                reload = TRUE;
+        }
+    }
+    
+    // Reload if requested
 	if ([cachedPacks count] == 0 || reload)
-	{
+	{	
 		[cachedPacks removeAllObjects];
 	
 		//Scan internal packs
@@ -240,7 +260,7 @@
 	}
 	else
 	{
-		// Make sure prefs are up-to-date
+		// Make sure prefs are up-to-date (Done for each emoticon-pack upon pref-change
 		/*NSEnumerator	*numer = [cachedPacks objectEnumerator];
 		NSMutableDictionary	*packDict = nil;
 
@@ -284,6 +304,7 @@
 			
 			if (/*o == 0*/[[prefDict	objectForKey:@"inUse"] intValue] && prefDict) {
 				int				i;
+                BOOL			smileyGood;
 				AIEmoticon		*emo = nil;
 				NSMutableString*	emoText = nil;
 				NSRange			charRange;
@@ -294,19 +315,35 @@
 				for (i = 0;	i < [smileyList count]; i++)
 				{
 					path = [smileyList objectAtIndex:i];
-					
-					emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
-					
-					// Check string for UNIX or Windows line end encoding, repairing if needed.
-					charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-					while (charRange.length != 0)	{
-						[emoText replaceCharactersInRange:charRange withString:@"\r"];
-						charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-					}
-					
-					// Make the emoticon object, add it to the master list
-					emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:emoText];
-					[emoticons addObject:emo];
+                    
+                    // Check that files are present
+                    smileyGood = TRUE;
+                    if (![[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]])
+                        smileyGood = FALSE;
+                        
+                    if (![[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"]])
+                        smileyGood = FALSE;
+                    
+                    if (smileyGood)
+                    {
+                        // Load text
+                        emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
+                        
+                        // Check string for UNIX or Windows line end encoding, repairing if needed.
+                        charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+                        while (charRange.length != 0)	{
+                            [emoText replaceCharactersInRange:charRange withString:@"\r"];
+                            charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+                        }
+                        
+                        // Make the emoticon object, add it to the master list
+                        emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:emoText];
+                        [emoticons addObject:emo];
+                    }
+                    else
+                    {
+                        NSLog (@"Incomplete emoticon, lacking files: %@", path);
+                    }
 				}
 			}
 		}
@@ -358,6 +395,27 @@
 			
 				[self _scanEmoticonsFromPath:fullPath intoArray:heldEmoticons];
 				
+                // Get ReadMe, if available
+                NSAttributedString* about = nil;
+                
+                if ([[NSFileManager defaultManager] fileExistsAtPath:[fullPath stringByAppendingPathComponent:@"ReadMe.rtf"]])
+                {
+                    if ([NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.rtf"]])
+                    {
+                        about = [[[NSAttributedString alloc] initWithURL:[NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.rtf"]] documentAttributes:nil] retain];
+                    }
+                }
+                else if ([[NSFileManager defaultManager] fileExistsAtPath:[fullPath stringByAppendingPathComponent:@"ReadMe.html"]])
+                {
+                    if ([NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.html"]])
+                        about = [[NSAttributedString alloc] initWithURL:[NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.html"]] documentAttributes:nil];
+                }
+                else if ([[NSFileManager defaultManager] fileExistsAtPath:[fullPath stringByAppendingPathComponent:@"ReadMe.txt"]])
+                {
+                    if ([NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.txt"]])
+                        about = [[NSAttributedString alloc] initWithURL:[NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.txt"]] documentAttributes:nil];
+                }
+                
 				// Get pref dictionary
 				NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", source, title];
 				prefDict =	[[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
@@ -368,7 +426,7 @@
 					[[owner preferenceController] setPreference:prefDict forKey:packKey group:PREF_GROUP_EMOTICONS];
 				}
 
-				[emoticonPackArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, prefDict, KEY_EMOTICON_PACK_PREFS, nil]];
+				[emoticonPackArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, about, KEY_EMOTICON_PACK_ABOUT, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, prefDict, KEY_EMOTICON_PACK_PREFS, nil]];
 				
 				if ([heldEmoticons count] > 0)	foundGoodPack = TRUE;
 				

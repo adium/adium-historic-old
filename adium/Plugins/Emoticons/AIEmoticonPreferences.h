@@ -31,10 +31,12 @@
 	IBOutlet NSView         *view_prefView;
     IBOutlet NSButton       *checkBox_enable;
     IBOutlet NSTableView    *table_packList;
+    IBOutlet NSTextView     *text_packInfo;
     //IBOutlet AICheckboxList    *checkList_packList;
 }
 
 + (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;
 - (IBAction)preferenceChanged:(id)sender;
+- (IBAction)tableClicked:(id)sender;
 
 @end

@@ -44,6 +44,25 @@
     }
 }
 
+// User performed action in table
+- (IBAction)tableClicked:(id)sender
+{
+    int row = [table_packList clickedRow];
+    
+    NSAttributedString*	about = [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_ABOUT];
+    NSMutableAttributedString     *display = [text_packInfo textStorage];
+    
+    if (about)
+    {
+        [display setAttributedString:about];
+    }
+    else
+    {
+        [display setAttributedString:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
+        //NSLog (@"No about string");
+    }
+}
+
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet
@@ -92,24 +111,11 @@
 	//Emoticon Packs
 	[plugin allEmoticonPacks:packs];
 	[table_packList reloadData];
-	//NSLog (@"plugin = %d", plugin);
-	//NSLog (@"emoticon pack count, configureView = %d", [packs count]);
-	
-    //Font
-    //[self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
-
-    //Text
-    //[colorWell_textColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor]];
-
-    //Background
-    //[colorWell_backgroundColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor]];
 }
 
 //Emoticon Packs Table View ----------------------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	//NSLog (@"RowCount request");
-	//NSLog (@"pack count = %d", [packs count]);
     return([packs count]);
 }
 
