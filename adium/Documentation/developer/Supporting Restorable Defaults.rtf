@@ -1,0 +1,85 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\froman\fcharset77 Times-Roman;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\froman\fcharset77 Times-Bold;
+\f3\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red128\green0\blue0;\red118\green15\blue80;}
+\margl720\margr885\vieww12340\viewh12980\viewkind1\viewscale100
+\deftab720
+\pard\pardeftab720\qc
+
+\f0\fs32 \cf0 Supporting Restorable Default Preferences\
+\pard\pardeftab720\ql\qnatural
+
+\fs24 \cf0 \
+Adium has a built-in system to store and restore default preferences. Your plugin's preference code must include certain items to successfully use this system.\
+\
+\
+\pard\pardeftab720\ql\qnatural
+
+\f1\b \cf2 Registering Default Preferences\
+\pard\pardeftab720\ql\qnatural
+
+\f0\b0 \cf0 Every preference pane should register default preferences. These are used when a preference key is requested whose value has not yet been set. There are only a few steps:\
+\
+\pard\pardeftab720\li720\ql\qnatural
+
+\f2\b \cf0 Create a defaults plist\
+\pard\pardeftab720\li720\ql\qnatural
+
+\f0\b0 \cf0 Your preference pane's target (usually a plugin) should include a default preferences plist. The easiest way to do this is to write the rest of the plugin, install and set all preferences as you wish, and then copy the preferences plist from ~/Library/Application Support/Adium 2.0/Users/YourUserName/yourprefs.plist. Add this file to your target and name it <PluginName>Defaults.plist.\
+\
+\pard\pardeftab720\li720\ql\qnatural
+
+\f2\b \cf0 Register your defaults\
+\pard\pardeftab720\li720\ql\qnatural
+
+\f0\b0 \cf0 The plugin itself should do this if the preference pane is part of a plugin. Use a line like this:\
+\
+\pard\li720\ql\qnatural
+
+\f3\fs20 \cf0 \CocoaLigature0 [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:PLUGIN_NAME_DEFAULT_PREFS forClass:[\cf3 self\cf0  class]] forGroup:PREF_GROUP_PLUGIN_NAME];
+\f2\b\fs24 \CocoaLigature1 \
+\
+\pard\li720\ql\qnatural
+
+\f0\b0 \cf0 Where 
+\f3\fs20 \CocoaLigature0 PLUGIN_NAME_DEFAULT_PREFS
+\f0\fs24 \CocoaLigature1  and 
+\f3\fs20 \CocoaLigature0 PREF_GROUP_PLUGIN_NAME 
+\f0\fs24 \CocoaLigature1 have been previously defined. The 
+\f3\fs20 \CocoaLigature0 PLUGIN_NAME_DEFAULT_PREFS 
+\f0\fs24 \CocoaLigature1 value should be the name of the defaults file 
+\f2\b without
+\f0\b0  ".plist".\
+\
+\pard\pardeftab720\ql\qnatural
+
+\f1\b \cf2 Respond to restorablePreferences\
+\pard\pardeftab720\ql\qnatural
+
+\f0\b0 \cf0 When the "Restore Defaults" button is clicked in your advanced preference pane, AIPreferenceWindowController tries to call the restorablePreferences method in your AIPreferencePane subclass. The method is defined as:\
+\
+	
+\f3\fs20 \CocoaLigature0 - (NSDictionary *)restorablePreferences\
+\
+
+\f0\fs24 \CocoaLigature1 You must return a NSDictionary containing your default preferences, in the format described below. The stub function in AIPreferencePane returns nil, so if you have no restorable preferences, you need not implement this.\
+\
+The dictionary returned by restorablePreferences must contain, as keys, the names of preference groups which your preference pane modifies. The object associated with each key should be a dictionary containing keys-value pairs for preference keys and default values within that particular preference group. For most plugins, which create their own preference group and modify all preferences within that group, this is a simple matter. Use this code:\
+\pard\pardeftab720\li720\ql\qnatural
+\cf0 \
+\pard\li720\ql\qnatural
+
+\f3\fs20 \cf0 \CocoaLigature0 - (NSDictionary *)restorablePreferences\
+\{\
+\pard\tx1440\li720\ql\qnatural
+\cf0 	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:	PLUGIN_NAME_DEFAULT_PREFS forClass:[\cf3 self\cf0  class]];\
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs 	forKey:PREF_GROUP_PLUGIN_NAME];\
+	\cf3 return\cf0 (defaultsDict);\
+\}
+\f2\b\fs24 \CocoaLigature1 \
+\
+\pard\pardeftab720\ql\qnatural
+
+\f0\b0 \cf0 This creates a NSDictionary with one key: the name of your preference group. The defaults plist which you previously created is in the correct format for the object of this key. That's all there is to it!\
+\
+If your plugin modifies multiple preference groups, or only modifies certain keys in a preference group, you will need to do a little more work. You will most likely have to construct a dictionary with keys for each pref group manually, and then add in specific keys and default values manually. Use the defaults plists as you can, they are your friiends.}
