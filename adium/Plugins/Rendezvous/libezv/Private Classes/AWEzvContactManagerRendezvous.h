@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.h,v 1.3 2004/06/16 08:20:31 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.h,v 1.4 2004/06/19 03:34:47 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -74,5 +74,6 @@
 /* REALLY PRIVATE STUFF */
 - (NSString *)myname;
 - (NSString *)myavname;
+- (void) regCallBack:(int)errorCode;
 
 @end

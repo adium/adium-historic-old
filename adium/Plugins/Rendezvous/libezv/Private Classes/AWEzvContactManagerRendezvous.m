@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.7 2004/06/18 15:20:41 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.8 2004/06/19 03:34:47 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -119,6 +119,8 @@ void av_resolve_reply (struct sockaddr	*interface,
     NSString		*avInstanceName;
     NSEnumerator        *enumerator;
     NSRange             range;
+    
+    regCount = 0;
     
     /* create data structure we'll advertise with */
     userAnnounceData = [[AWEzvRendezvousData alloc] init];
@@ -345,7 +347,7 @@ void av_resolve_reply (struct sockaddr	*interface,
 }
 
 - (void) updatedStatus {
-    [self setStatus:[client status] withMessage:nil];
+    [self setStatus:[client status] withMessage:[userAnnounceData getField:@"msg"]];
 }
 
 - (void)setImageData:(NSData *)JPEGData {
@@ -861,18 +863,7 @@ NSData *decode_dns(char* buffer, int len )
     return myavname;
 }
 
-
-@end
-
-#pragma mark Mach port callbacks
-/* Mach port routines */
-void handleMachMessage (CFMachPortRef port, void *msg, CFIndex size, void *info) {
-    DNSServiceDiscovery_handleReply(msg);
-}
-
-void reg_reply (int errorCode, void *context) {
-    AWEzvContactManager *self = context;
-
+- (void) regCallBack:(int)errorCode {
     if (errorCode != 0) {
 	switch (errorCode) {
 	    case kDNSServiceDiscoveryUnknownErr:
@@ -893,8 +884,25 @@ void reg_reply (int errorCode, void *context) {
 	[self disconnect];
     } else {
 	/* notify that we're online */
-	[self setConnected:YES];
+	if (++regCount == 2)
+	    [self setConnected:YES];
     }
+
+}
+
+
+@end
+
+#pragma mark Mach port callbacks
+/* Mach port routines */
+void handleMachMessage (CFMachPortRef port, void *msg, CFIndex size, void *info) {
+    DNSServiceDiscovery_handleReply(msg);
+}
+
+void reg_reply (int errorCode, void *context) {
+    AWEzvContactManager *self = context;
+
+    [self regCallBack:errorCode];
 }
 
 /* when we receive a reply to a browse request */

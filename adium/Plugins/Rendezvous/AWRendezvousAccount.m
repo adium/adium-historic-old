@@ -104,6 +104,8 @@
 
     //Apply any changes
     [self notifyOfChangedStatusSilently:NO];
+    
+    [self updateAllStatusKeys];
 }
 
 - (void) reportLoggedOut {
@@ -142,7 +144,8 @@
     [user setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
     [user setStatusObject:[contact statusMessage] forKey:@"StatusMessageString" notify:NO];
 
-     //[user setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+    [user setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Away" notify:NO];
+    [user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
     
     switch ([contact status]) {
 	case AWEzvOnline:
@@ -166,7 +169,10 @@
     if ([contact statusMessage])
 	[user setStatusObject:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
 		       forKey:@"StatusMessage" notify:NO];
+    else
+	[user setStatusObject:nil forKey:@"StatusMessage" notify:NO];
 
+    [user setStatusObject:[contact contactImage] forKey:KEY_USER_ICON notify:NO];
     
     [[adium contactController] listObjectAttributesChanged:user 
 			       modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
@@ -311,25 +317,18 @@
         NSData  *data;
         if([key isEqualToString:@"IdleSince"]){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-			
-			[libezv setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
+	    
+	    [libezv setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
             [self setAccountIdleTo:idleSince];
 			
         } else if ( ([key isEqualToString:@"AwayMessage"])){
-            NSAttributedString	*attributedString = nil;
-            
-            if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
-                attributedString = [NSAttributedString stringWithData:data];
-            }
-            
-	    if (attributedString != nil)
-		[libezv setStatus:AWEzvAway withMessage:[attributedString string]];
-	    else
-		[libezv setStatus:AWEzvOnline withMessage:nil];
+            [self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
+        } else if ( ([key isEqualToString:KEY_USER_ICON])) {
+	    if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
+		[libezv setContactImage:[[[NSImage alloc] initWithData:data] autorelease]];
+	    }
 	    
-	    [self setStatusObject:[NSNumber numberWithBool:(attributedString != nil)] forKey:@"Away" notify:YES];
-	    [self setStatusObject:attributedString forKey:@"StatusMessage" notify:YES];
-        }
+	}
     }
 }
 
@@ -339,6 +338,20 @@
 
 	//We are now idle
 	[self setStatusObject:idle forKey:@"IdleSince" notify:YES];
+}
+
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage
+{
+	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
+		if (awayMessage != nil)
+		    [libezv setStatus:AWEzvAway withMessage:[NSString stringWithString:[awayMessage string]]];
+		else
+		    [libezv setStatus:AWEzvOnline withMessage:nil];
+		
+		//We are now away or not
+		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
+		[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+	}
 }
 
 //Status keys this account supports
@@ -353,11 +366,10 @@
         @"Offline",
 	@"IdleSince",
 	@"IdleManuallySet",
-//      KEY_USER_ICON,
+	KEY_USER_ICON,
         @"Away",
         @"AwayMessage",
 //      @"TextProfile",
-//      KEY_USER_ICON,
 //      @"DefaultUserIconFilename",
         nil];
 	

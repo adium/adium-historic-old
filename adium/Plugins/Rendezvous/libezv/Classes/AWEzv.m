@@ -3,7 +3,7 @@
  * File:        AWEzv.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzv.m,v 1.3 2004/06/18 15:20:41 proton Exp $
+ * CVS tag:     $Id: AWEzv.m,v 1.4 2004/06/19 03:34:46 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -80,7 +80,7 @@
 
 - (void) setStatus:(AWEzvStatus)newStatus withMessage:(NSString *)message{
     status = newStatus;
-    [manager updatedStatus];
+    [manager setStatus:status withMessage:message];
 }
 
 - (void) setIdleTime:(NSDate *)date {
