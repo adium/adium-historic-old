@@ -89,7 +89,7 @@
 {
 	if (sender == popUp_outputDevice){
 		SoundDeviceType soundType = [[popUp_outputDevice selectedItem] tag];
-		
+		NSLog(@"%i",soundType);
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:soundType]
 											 forKey:KEY_SOUND_SOUND_DEVICE_TYPE
 											  group:PREF_GROUP_SOUNDS];
