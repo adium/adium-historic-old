@@ -88,7 +88,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         //Send message to:
         NSString *uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
         NSString *service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-        AIListContact *contact = [[adium contactController] contactInGroup:nil withService:service UID:uid];
+        AIListContact *contact = [[adium contactController] contactWithService:service UID:uid];
         [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:contact]];
         
         //Send from account:
@@ -186,6 +186,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                 [menuItem setIndentationLevel:1];
 #endif
             
+#warning Again, this can not work as-is now.
+            /*
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
             {
                 NSMenuItem	*groupItem;
@@ -202,7 +204,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }
-            
+            */
             if (firstOfflineSearch)
             {
                 if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
@@ -220,7 +222,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
             
             [contactMenu addItem:menuItem];
             
-            groupName = [[contact containingGroup] displayName];
+ //           groupName = [[contact containingGroup] displayName];
         }
         [contactMenu setAutoenablesItems:NO];
     }

@@ -103,7 +103,7 @@
     //intended recipient
     uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
     service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-    contact = [[adium contactController] contactInGroup:nil withService:service UID:uid];
+    contact = [[adium contactController] contactWithService:service UID:uid];
     
     //error message
     displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];
