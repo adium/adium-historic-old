@@ -559,7 +559,7 @@ static NSImage *pushIndicatorImage = nil;
 		inChar = [[inEvent charactersIgnoringModifiers] characterAtIndex:0];
 	
 		unsigned int flags = [inEvent modifierFlags];
-		//We have to test ctrl first, because otherwise we'd miss ctrl-option-* events
+		//We have to test ctrl before option, because otherwise we'd miss ctrl-option-* events
 		if(flags & NSControlKeyMask)
 		{
 			if(inChar == NSUpArrowFunctionKey)
@@ -600,6 +600,19 @@ static NSImage *pushIndicatorImage = nil;
 			}
 			else
 				[super keyDown:inEvent];
+		}
+		else if(inChar == NSHomeFunctionKey)
+		{
+			NSRect visibleRect = [messageScrollView documentVisibleRect];
+			visibleRect.origin.y = 0;
+			[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+		}
+		else if(inChar == NSEndFunctionKey)
+		{
+			NSRect frame = [[messageScrollView documentView] frame];
+			frame.origin.y = frame.size.height;
+			frame.size.height = 0;
+			[[messageScrollView documentView] scrollRectToVisible:frame];
 		}
 		else [super keyDown:inEvent];
 	}
