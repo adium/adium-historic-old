@@ -79,6 +79,11 @@
     [self setNeedsDisplay:YES];
 }
 
+- (BOOL)drawsAlternatingRows
+{
+	return(drawsAlternatingRows);
+}
+
 - (void)setAlternatingRowColor:(NSColor *)color
 {
     if(color != alternatingRowColor){

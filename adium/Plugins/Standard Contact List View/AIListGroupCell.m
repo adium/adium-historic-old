@@ -11,7 +11,7 @@
 #define VERTICAL_GROUP_PADDING	2
 #define GROUP_FONT_SIZE			11
 
-#define GROUP_TEXT_ALIGN		NSCenterTextAlignment
+#define GROUP_TEXT_ALIGN		NSLeftTextAlignment //NSCenterTextAlignment
 
 //NSLeftTextAlignment		= 0, /* Visually left aligned */
 //NSRightTextAlignment	= 1, /* Visually right aligned */
