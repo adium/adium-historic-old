@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_AWAY_MESSAGES 			@"Away Messages"
-#define KEY_SAVED_AWAYS					@"Saved Away Messages"
+#define PREF_GROUP_AWAY_MESSAGES		@"Away Messages"
+#define KEY_SAVED_AWAYS				@"Saved Away Messages"
 
 #define MENU_AWAY_DISPLAY_LENGTH		30
 

@@ -14,6 +14,6 @@
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
-- (IBAction)selectNewStatus:(id)sender;
+//- (IBAction)selectNewStatus:(id)sender;
 
 @end

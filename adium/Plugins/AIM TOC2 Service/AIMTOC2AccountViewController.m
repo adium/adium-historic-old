@@ -19,9 +19,7 @@
 
 @interface AIMTOC2AccountViewController (PRIVATE)
 - (id)initForAccount:(id)inAccount;
-- (void)dealloc;
 - (void)accountPropertiesChanged:(NSNotification *)notification;
-- (void)initAccountView;
 - (void)_configurePasswordField;
 @end
 
@@ -44,18 +42,31 @@
 
 - (void)configureViewAfterLoad
 {
-    //highlight the accountname field
+    NSString		*savedScreenName;
+
+    //Highlight the accountname field
     [[[view_accountView superview] window] setInitialFirstResponder:textField_handle];
+    
+    //ScreenName
+    savedScreenName = [account preferenceForKey:AIM_TOC2_KEY_USERNAME group:GROUP_ACCOUNT_STATUS];
+    if(savedScreenName != nil && [savedScreenName length] != 0){
+        [textField_handle setStringValue:savedScreenName];
+    }else{
+        [textField_handle setStringValue:[account UID]];
+    }
+    
+    //Password
+    [self _configurePasswordField];
 
     //Fill in our host & port
-    [textField_host setStringValue:[[adium accountController] propertyForKey:AIM_TOC2_KEY_HOST account:account]];
-    [textField_port setStringValue:[[adium accountController] propertyForKey:AIM_TOC2_KEY_PORT account:account]];
+    [textField_host setStringValue:[account preferenceForKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS]];
+    [textField_port setStringValue:[account preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS]];
 
     //Full name
-    [textField_fullName setStringValue:[[adium accountController] propertyForKey:@"FullName" account:account]];
+    [textField_fullName setStringValue:[account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS]];
     
     //Profile
-    NSAttributedString	*profile = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:AIM_TOC2_KEY_PROFILE account:account]];
+    NSAttributedString	*profile = [NSAttributedString stringWithData:[account preferenceForKey:AIM_TOC2_KEY_PROFILE group:GROUP_ACCOUNT_STATUS]];
     if(!profile) profile = [[[NSAttributedString alloc] initWithString:@""] autorelease];
 
     [[textView_textProfile textStorage] setAttributedString:profile];
@@ -66,35 +77,36 @@
 - (id)initForAccount:(id)inAccount
 {
     [super init];
-
-    //Retain the owner and account
-    account = [inAccount retain];
+    account = inAccount;
 
     //Open a new instance of the account view
-    if([NSBundle loadNibNamed:@"AIMTOCAccountView" owner:self]){
-        [self initAccountView];
-    }else{
+    if(![NSBundle loadNibNamed:@"AIMTOCAccountView" owner:self]){
         NSLog(@"couldn't load account view bundle");
     }
 
-    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
-    [self accountPropertiesChanged:nil];
-
     //Configure the account name field
-    [textField_handle setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789 "] length:16 caseSensitive:NO errorMessage:@"You user name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
-
+    [textField_handle setFormatter:
+	[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789 "]
+						      length:16
+					       caseSensitive:NO
+						errorMessage:@"You user name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
+    
     //Pull out our tabs
     auxilaryTabs = [[view_auxilaryTabView tabViewItems] copy];
     [view_auxilaryTabView removeTabViewItem:[view_auxilaryTabView tabViewItemAtIndex:0]];
     [view_auxilaryTabView removeTabViewItem:[view_auxilaryTabView tabViewItemAtIndex:0]];
     [[view_auxilaryTabView window] release];
     
-    //Observer account name changes
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userNameChanged:) name:NSControlTextDidChangeNotification object:textField_handle];
+    //Observer account changes
+    [[adium notificationCenter] addObserver:self
+				   selector:@selector(accountPreferencesChanged:)
+				       name:Preference_GroupChanged
+				     object:account];
     
     return(self);
 }
 
+//
 - (void)dealloc
 {    
     [[adium notificationCenter] removeObserver:self];
@@ -103,41 +115,67 @@
     //Cleanup our nib
     [view_accountView release];
     [auxilaryTabs release];
-   
-    [account release];
 
     [super dealloc];
+}
+
+//Account preferences changed
+- (void)accountPreferencesChanged:(NSNotification *)notification
+{
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
+    
+    if(notification == nil || [group compare:GROUP_ACCOUNT_STATUS] == 0){
+	NSString    *key = [[notification userInfo] objectForKey:@"Key"];
+
+	//Redisplay if the username changes
+	if([key compare:AIM_TOC2_KEY_USERNAME] == 0){
+	    [self configureViewAfterLoad];
+	}
+    }
 }
 
 //User changed the username
 - (IBAction)userNameChanged:(id)sender
 {
-    //Apply the changes
-    [[adium accountController] setProperty:[textField_handle stringValue]
-                                    forKey:AIM_TOC2_KEY_USERNAME
-                                   account:account];
-
-    //Reset the password field
-    [self _configurePasswordField];
+    NSString    *userName = [textField_handle stringValue];
+    
+    //If the name has changed completely, create a new account
+    //
+    // ####
+    // When we call changeUIDOfAccount, the account controller will delete us from the account list.
+    // This deletion will spawn a rebuild of the account preferences window, which will in turn delete
+    // this account view controller and all it's views.  The act of deleting the view which sent us this
+    // message will cause a crash as we exit below.
+    // 
+    // I've implemented a quick 'patchy' fix.  If you see a real fix for this problem, make it be :)
+    // ####
+    //
+    if([[userName compactedString] compare:[account UID]] != 0){
+	[self performSelector:@selector(_delayedChangeTo:) withObject:userName afterDelay:0.0001];
+    }
+}
+- (void)_delayedChangeTo:(NSString *)toName{
+    NSString    *flatUserName = [toName compactedString];
+    AIAccount   *targetAccount = account;
+    
+    //Create a new account
+    targetAccount = [[adium accountController] changeUIDOfAccount:account to:flatUserName];
+    
+    //Update our custom formatting
+    [targetAccount setPreference:toName forKey:AIM_TOC2_KEY_USERNAME group:GROUP_ACCOUNT_STATUS];
 }
 
 //Save changes made to a preference control
-- (IBAction)preferenceChanged:(id)sender
+- (IBAction)changedPreference:(id)sender
 {
     if(sender == textField_host){
-        [[adium accountController] setProperty:[sender stringValue]
-                                        forKey:AIM_TOC2_KEY_HOST
-                                       account:account];
+        [account setPreference:[sender stringValue] forKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS];
 
     }else if(sender == textField_port){
-        [[adium accountController] setProperty:[sender stringValue]
-                                        forKey:AIM_TOC2_KEY_PORT
-                                       account:account];
+        [account setPreference:[sender stringValue] forKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS];
 
     }else if(sender == textField_fullName){
-        [[adium accountController] setProperty:[sender stringValue]
-                                        forKey:@"FullName"
-                                       account:account];    
+        [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
 
     }else if(sender == textField_password){
         NSString	*password = [sender stringValue];
@@ -148,47 +186,14 @@
         }else{
             [[adium accountController] forgetPasswordForAccount:account];
         }
-        
+
     }
 }
 
 //Profile text was changed
 - (void)textDidEndEditing:(NSNotification *)notification
 {
-    [[adium accountController] setProperty:[[textView_textProfile textStorage] dataRepresentation]
-                                        forKey:AIM_TOC2_KEY_PROFILE
-                                       account:account];
-}
-
-//The properties of our account changed
-- (void)accountPropertiesChanged:(NSNotification *)notification
-{
-    NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-
-    //Dim unavailable controls
-    if(notification == nil || [key compare:@"Online"] == 0){
-        BOOL	isOnline = [[[adium accountController] propertyForKey:@"Online" account:account] boolValue];
-
-        [textField_handle setEnabled:!isOnline];
-        [textField_password setEnabled:!isOnline];
-    }
-}
-
-//Set up the connect view using the saved properties
-- (void)initAccountView
-{
-    NSString		*savedScreenName;
-
-    //ScreenName
-    savedScreenName = [[adium accountController] propertyForKey:AIM_TOC2_KEY_USERNAME account:account];
-    if(savedScreenName != nil && [savedScreenName length] != 0){
-        [textField_handle setStringValue:savedScreenName];
-    }else{
-        [textField_handle setStringValue:@""];
-    }
-
-    //Password
-    [self _configurePasswordField];
+    [account setPreference:[[textView_textProfile textStorage] dataRepresentation] forKey:AIM_TOC2_KEY_PROFILE group:GROUP_ACCOUNT_STATUS];
 }
 
 //

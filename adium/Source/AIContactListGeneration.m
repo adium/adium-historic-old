@@ -100,11 +100,16 @@
     [self _breakDownGroup:contactList];
     [groupDict release]; groupDict = [[NSMutableDictionary alloc] init];
     
+    
     //Process every handle of every account
     accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [accountEnumerator nextObject])){
         if([account conformsToProtocol:@protocol(AIAccount_Handles)]){
-            NSEnumerator	*handleEnumerator;
+	    //Add an accounts group to the contact list :)
+	    //[[self _getGroupNamed:@"*Accounts*"] addObject:account];
+	    //[[adium contactController] listObjectStatusChanged:account modifiedStatusKeys:nil delayed:YES silent:YES];
+
+	    NSEnumerator	*handleEnumerator;
             AIHandle		*handle;
 
             handleEnumerator = [[[(AIAccount<AIAccount_Handles> *)account availableHandles] allValues] objectEnumerator];

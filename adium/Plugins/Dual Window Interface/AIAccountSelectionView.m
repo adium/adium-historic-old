@@ -30,14 +30,18 @@
     [self configureAccountMenu];
 
     //register for notifications
-    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+				   selector:@selector(accountListChanged:)
+				       name:Account_ListChanged
+				     object:nil];
+    [[adium contactController] registerListObjectObserver:self];
 
     return(self);
 }
 
 - (void)dealloc
 {
+    [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
     [super dealloc];
@@ -92,11 +96,16 @@
         if(!listObject || [[listObject serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
             NSMenuItem	*menuItem;
 
-            menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount accountDescription] target:self action:@selector(selectNewAccount:) keyEquivalent:@""] autorelease];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount displayName]
+						   target:self
+						   action:@selector(selectNewAccount:)
+					    keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
-            if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:anAccount]){
+            if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+							     toListObject:nil
+								onAccount:anAccount]){
                 [menuItem setEnabled:NO];
             }
 
@@ -108,6 +117,16 @@
     selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
     [popUp_accounts selectItemAtIndex:selectedIndex];
     [self updateMenu];
+}
+
+//An account's status changed
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
+{
+    if([inObject isKindOfClass:[AIAccount class]]){
+	[self configureAccountMenu]; //rebuild the account menu
+    }
+    
+    return(nil);
 }
 
 //The account list/status changed

@@ -117,7 +117,7 @@ static AIInfoWindowController *sharedInstance = nil;
         nil];
     
     //Buddy Icon
-    ownerArray = [inContact statusArrayForKey:@"BuddyImage"];
+    ownerArray = [inContact statusArrayForKey:@"UserIcon"];
     if(ownerArray && [ownerArray count]){
         buddyImage = [ownerArray objectAtIndex:0];
     }else{

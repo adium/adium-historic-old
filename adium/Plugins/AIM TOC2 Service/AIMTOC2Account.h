@@ -22,7 +22,6 @@
     AISocket 		*socket;		// The connection socket
     int			connectionPhase;	// Offline/Connecting/Online/Disconnecting
 
-    NSString		*screenName;		// Current signed on screenName
     NSString		*password;		// Current signed on password
     BOOL		connectedWithICQ;
 
@@ -56,8 +55,6 @@
 
 - (IBAction)sendDirectDebugCommand:(id)sender;
 - (void)initAccount;
-- (NSString *)accountID;
-- (NSString *)accountDescription;
 - (void)dealloc;
 - (void)acceptInvitationForChatID:(NSString *)chatID;
 - (void)declineInvitationForChatID:(NSString *)chatID;

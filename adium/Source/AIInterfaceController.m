@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.44 2003/12/13 08:56:58 evands Exp $
+// $Id: AIInterfaceController.m,v 1.45 2003/12/22 17:54:38 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -224,7 +224,7 @@
 
             //Buddy Icon
             [tooltipImage release]; tooltipImage = nil;
-            AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"BuddyImage"];
+            AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"UserIcon"];
             if(ownerArray && [ownerArray count]){
                 tooltipImage = [[ownerArray objectAtIndex:0] retain];
             }else{

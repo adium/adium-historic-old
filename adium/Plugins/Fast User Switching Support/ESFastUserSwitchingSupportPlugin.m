@@ -39,12 +39,10 @@
     {       //Deactivation
  
         //Go away if we aren't already away
-        if ([[adium accountController] propertyForKey:@"AwayMessage" account:nil] == nil)
+        if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)
         {
             NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING];
-            [[adium accountController] setProperty:[away dataRepresentation]
-                                            forKey:@"AwayMessage" 
-                                           account:nil];
+            [[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
             [away release];
             setAwayThroughFastUserSwitch = YES;
         }
@@ -54,8 +52,8 @@
         //Remove the away status flag if we set it originally
         if (setAwayThroughFastUserSwitch) {
             //Remove the away status flag	
-            [[adium accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-            [[adium accountController] setProperty:nil forKey:@"Autoresponse" account:nil];
+            [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+            [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
             setAwayThroughFastUserSwitch = NO;
         }
     }    

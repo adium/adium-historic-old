@@ -76,7 +76,7 @@
         NSLog(@"couldn't load account view bundle");
     }
 
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
+#warning    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
 
     //Configure the account name field
     [textField_handle setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@. "] length:16 caseSensitive:NO errorMessage:@"You account name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
@@ -87,7 +87,7 @@
 //
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
+#warning    [[owner notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
 
     //Cleanup our nib
     [view_accountView release];

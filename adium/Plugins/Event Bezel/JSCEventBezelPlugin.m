@@ -180,15 +180,15 @@
     // If Adium is hidden, check if we want it to show (and unhide Adium in the process)
     BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
     // If you are away, check if we want it to show
-    BOOL showIfAway = ![[adium accountController] propertyForKey:@"AwayMessage" account:nil]
-        || ([[adium accountController] propertyForKey:@"AwayMessage" account:nil] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
+    BOOL showIfAway = ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]
+        || ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
     
     if (contactEnabled && /*groupEnabled &&*/ showIfHidden && showIfAway){
         if ([NSApp isHidden]) {
             [NSApp unhideWithoutActivation];
         }
         
-        ownerArray = [contact statusArrayForKey:@"BuddyImage"];
+        ownerArray = [contact statusArrayForKey:@"UserIcon"];
         if(ownerArray && [ownerArray count]) {
             tempBuddyIcon = [ownerArray objectAtIndex:0];
         }

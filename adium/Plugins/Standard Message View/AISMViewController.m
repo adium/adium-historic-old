@@ -523,14 +523,8 @@
     NSImage			*userImage;
     
     //Get the user icon
-    if([content isOutgoing]){
-        userImage = [(AIAccount *)[content source] userIcon];
-        if (!userImage)
-            userImage = iconOutgoing;
-    }else{
-	userImage = [[[chat listObject] statusArrayForKey:@"BuddyImage"] firstImage];
-	if(!userImage) userImage = iconIncoming;
-    }
+    userImage = [[[chat listObject] statusArrayForKey:@"UserIcon"] firstImage];
+    if(!userImage) userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
     
     //Create the spanning image cell
     imageCell = [AIFlexibleTableImageCell cellWithImage:userImage];

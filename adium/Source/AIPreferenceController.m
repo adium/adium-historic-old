@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.35 2003/12/19 04:00:49 evands Exp $
+// $Id: AIPreferenceController.m,v 1.36 2003/12/22 17:54:38 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -38,8 +38,9 @@
     //
     [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];    
 
-    //Create the 'ByObject' object specific preference directory
+    //Create the 'ByObject' and 'Accounts' object specific preference directory
     [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
+    [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
 
 }
 
@@ -131,22 +132,25 @@
 //
 - (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
-    NSString		    *objectKey = [NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]];
-    NSMutableDictionary	    *prefDict = [self loadPreferenceGroup:groupName];
-    NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
-    id			    oldValue;
-    
-    if(oldValue = [objectPrefDict objectForKey:inKey]){
-	NSLog(@"Imported preference: %@ : %@",objectKey,inKey);
-	[object setPreference:oldValue forKey:inKey group:groupName];
-
-	//Delete old
-	[objectPrefDict removeObjectForKey:inKey];
-	[prefDict setObject:objectPrefDict forKey:objectKey];
-	[self savePreferences:prefDict forGroup:groupName];
+    if(![object isKindOfClass:[AIAccount class]]){
+	NSString		*objectKey = [NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]];
+	NSMutableDictionary     *prefDict = [self loadPreferenceGroup:groupName];
+	NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
+	id			oldValue;
 	
-	return(YES);
+	if(oldValue = [objectPrefDict objectForKey:inKey]){
+	    NSLog(@"Imported preference: %@ : %@",objectKey,inKey);
+	    [object setPreference:oldValue forKey:inKey group:groupName];
+	    
+	    //Delete old
+	    [objectPrefDict removeObjectForKey:inKey];
+	    [prefDict setObject:objectPrefDict forKey:objectKey];
+	    [self savePreferences:prefDict forGroup:groupName];
+	    
+	    return(YES);
+	}
     }
+
     return(NO);
 }
 
@@ -246,7 +250,7 @@
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
 {
     NSMutableDictionary	*prefDict;
-
+    
     //Load the preferences
     prefDict = [self loadPreferenceGroup:groupName];
 

@@ -101,7 +101,7 @@
                 }
             }
         }
-    } else if (automaticSync && [inModifiedKeys containsObject: @"BuddyImage"]) {
+    } else if (automaticSync && [inModifiedKeys containsObject: @"UserIcon"]) {
         
         NSArray *results = [self searchForObject:inObject];
         
@@ -112,8 +112,8 @@
                 AIHandle * handle = [(AIListContact *)inObject handleForAccount:nil];
                 NSMutableDictionary *statusDict = [handle statusDictionary];
                 //apply the image
-                if ([statusDict objectForKey:@"BuddyImage"]) {
-                    [person setImageData: [[statusDict objectForKey:@"BuddyImage"] TIFFRepresentation]];
+                if ([statusDict objectForKey:@"UserIcon"]) {
+                    [person setImageData: [[statusDict objectForKey:@"UserIcon"] TIFFRepresentation]];
                 }
             }
         }
@@ -162,17 +162,16 @@
         NSNumber * tagNumber = [NSNumber numberWithInt:tag];
         
         //Get the object from our tracking dictionary
-        AIHandle * handle = [(AIListContact *)[trackingDict objectForKey:tagNumber] handleForAccount:nil];
-        NSMutableDictionary *statusDict = [handle statusDictionary];
-        
+	AIListObject		*listObject = [trackingDict objectForKey:tagNumber];
+	AIMutableOwnerArray	*statusArray = [listObject statusArrayForKey:@"UserIcon"];
+	
         //apply the image
-        if (![statusDict objectForKey:@"BuddyImage"]) {
-            [[handle statusDictionary] setObject:image forKey:@"BuddyImage"];
-            //tell the contact controller, silencing if necessary
-            [[adium contactController] handleStatusChanged:handle
-                                        modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"]
-                                                   delayed:NO
-                                                    silent:NO];
+	if([statusArray count] == 0) {
+	    [statusArray setObject:image withOwner:self];
+            [[adium contactController] listObjectStatusChanged:listObject
+					    modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
+						       delayed:NO
+							silent:NO];
         }
         
         //No further need for the dictionary entry
@@ -189,7 +188,7 @@
     if (me) {
         NSData *myImage = [me imageData];
         if (myImage) {
-            [[adium accountController] setDefaultUserIcon:[[[NSImage alloc] initWithData:myImage] autorelease]];
+	    [[adium preferenceController] setPreference:myImage forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
         }
     }
 }

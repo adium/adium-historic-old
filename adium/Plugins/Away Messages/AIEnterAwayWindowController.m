@@ -67,8 +67,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [[adium preferenceController] setPreference:newAway forKey:KEY_QUICK_AWAY_MESSAGE group:PREF_GROUP_AWAY_MESSAGES];
 
     //Set the away
-    [[adium accountController] setProperty:newAway  forKey:@"AwayMessage"   account:nil];
-    [[adium accountController] setProperty:nil      forKey:@"Autoresponse"  account:nil];
+    [[adium preferenceController] setPreference:newAway forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+    [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+    
     //Close our window
     [self closeWindow:nil];
 }

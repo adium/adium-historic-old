@@ -27,28 +27,33 @@
 - (void)installPlugin
 {
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_MESSAGE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_MESSAGE];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_MESSAGE_DEFAULT_PREFS forClass:[self class]]
+					  forGroup:PREF_GROUP_IDLE_MESSAGE];
     preferences = [[IdleMessagePreferences preferencePane] retain];
 
     //Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(accountIdleStatusChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+				   selector:@selector(preferencesChanged:)
+				       name:Preference_GroupChanged
+				     object:nil];
 }
 
-- (void)accountIdleStatusChanged:(NSNotification *)notification
+//Account preferences changed
+- (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [notification object] == nil){
-        //We ignore account-specific status changes
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
+    
+    if([group compare:GROUP_ACCOUNT_STATUS] == 0){
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
-        
-        if([modifiedKey compare:@"IdleSince"] == 0){
-
-            if([[[[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE] objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue] == TRUE) {
+	
+        if([modifiedKey compare:@"IdleSince"] == 0 && [notification object] == nil){ //We ignore account specific idle (why?)
+            if([[[adium preferenceController] preferenceForKey:KEY_IDLE_MESSAGE_ENABLED group:PREF_GROUP_IDLE_MESSAGE] boolValue] == TRUE) {
 
                 //Remove existing content sent/received observer, and install new (if away)
                 [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
                 [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
                 [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-                if([[adium accountController] propertyForKey:@"IdleSince" account:nil] != nil){
+                if([[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != nil){
                     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
                     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
                     [[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
@@ -56,7 +61,6 @@
 
                 //Flush our array of 'responded' contacts
                 [receivedIdleMessage release]; receivedIdleMessage = [[NSMutableArray alloc] init];
-            
             }
         }
     }
@@ -66,13 +70,13 @@
 - (void)didReceiveContent:(NSNotification *)notification
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"IdleMessage" account:nil]];
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS]];
 
     //If the user received a message, send our idle message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         if(idleMessage && [idleMessage length] != 0){
             //Only send if there's no away message up!
-            if([[adium accountController] propertyForKey:@"AwayMessage" account:nil] == nil) {
+            if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
                 AIListContact	*contact = [contentObject source];
 
                 //Create and send an idle bounce message (If the sender hasn't received one already)

@@ -44,7 +44,10 @@
     [self generateEditorListArray];
 
     //Observe our account's changes
-    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
+    //There's no notification of an account's contact list editability changing ... this code was assuming that
+    //any status change could cause editability to change.  I really don't feel like fixing it since this editor
+    //is in for a major overhaul
+//    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
     [[adium notificationCenter] addObserver:self selector:@selector(accountHandlesChanged:) name:Account_HandlesChanged object:account];
     
     return(self);    
@@ -63,7 +66,7 @@
 
 //Large black drawer label
 - (NSString *)name{
-    return([account accountDescription]); //Return our account's description
+    return([account displayName]); //Return our account's description
 }
 - (NSString *)UID{
     return([account UID]); //Our UID is just the account UID, this is unique enough
@@ -87,10 +90,10 @@
     return([account serviceID]); //All handles are of the service type of our account
 }
 - (NSString *)collectionDescription{
-    return([NSString stringWithFormat:@"%@'s Contacts",[account accountDescription]]);
+    return([NSString stringWithFormat:@"%@'s Contacts",[account displayName]]);
 }
 - (BOOL)enabled{
-    return([account contactListEditable]);
+    return(YES/*[account contactListEditable]*/);
 }
 
 //Quickly check if a handle with the specified UID is on our account.  For accounts we can figure this out quicker than the default method in AIEditorCollection!

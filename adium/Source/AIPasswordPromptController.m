@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPasswordPromptController.m,v 1.8 2003/12/15 03:25:00 adamiser Exp $
+// $Id: AIPasswordPromptController.m,v 1.9 2003/12/22 17:54:38 adamiser Exp $
 
 #import "AIPasswordPromptController.h"
 
@@ -76,8 +76,8 @@ AIPasswordPromptController	*controller = nil;
     }
 
     //    
-    [textField_account setStringValue:[account accountDescription]];
-    [checkBox_savePassword setState:[[[adium accountController] propertyForKey:@"SavedPassword" account:account] boolValue]];
+    [textField_account setStringValue:[account displayName]];
+    [checkBox_savePassword setState:[[account preferenceForKey:@"SavedPassword" group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
 - (IBAction)cancel:(id)sender

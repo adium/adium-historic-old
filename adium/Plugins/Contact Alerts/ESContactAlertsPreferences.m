@@ -67,7 +67,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:nil];
         //Observe account changes
         [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-
     }
 
     return(view_prefView);

@@ -50,7 +50,7 @@
 									    menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 
-    //Observe account changes
+    //Observe account list changes
     [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
 }
 

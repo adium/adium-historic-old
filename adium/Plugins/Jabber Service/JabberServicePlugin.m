@@ -11,7 +11,7 @@
                           caseSensitive:NO
                           allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
                           
-        [[owner accountController] registerService:self];
+        //[[owner accountController] registerService:self];
 }
 
 - (void)uninstallPlugin

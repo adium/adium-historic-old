@@ -101,7 +101,7 @@
 - (void)eventNotification:(NSNotification *)notification
 {
     NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-    if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue] && [[adium accountController] propertyForKey:@"AwayMessage" account:nil]))
+    if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue] && [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]))
         [[adium soundController] playSoundAtPath:[soundPathDict objectForKey:[notification name]]];
 }
 

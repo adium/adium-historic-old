@@ -49,12 +49,12 @@
         AIAccount       *account;
         
         //enumerate until we find an online account
-        while( (account = [accountEnumerator nextObject]) && ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) );
+        while( (account = [accountEnumerator nextObject]) && (![[account statusObjectForKey:@"Online"] boolValue]) );
         
          //if we found an online account, set it as the default account choice
         if (account)
         {
-            NSString *accountID = [account accountID];
+            NSString *accountID = [account UIDAndServiceID];
             [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]]; //set the menu view
             
             [self setObject:accountID forKey:KEY_EVENT_DETAILS];
@@ -101,7 +101,7 @@
     while(account = [accountEnumerator nextObject]){
         NSMenuItem 	*menuItem;
         NSString	*accountDescription;
-        accountDescription = [account accountDescription];
+        accountDescription = [account displayName];
         menuItem = [[[NSMenuItem alloc] initWithTitle:accountDescription
                                                target:self
                                                action:@selector(selectAccount:)
@@ -116,7 +116,7 @@
 {
     AIAccount * account = [sender representedObject];
     
-    [self setObject:[account accountID] forKey:KEY_EVENT_DETAILS];
+    [self setObject:[account UIDAndServiceID] forKey:KEY_EVENT_DETAILS];
     
     //Save event preferences
     [self saveEventActionArray];

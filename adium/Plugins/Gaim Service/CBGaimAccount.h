@@ -70,13 +70,9 @@
 - (void)initAccount;
 - (void)dealloc;
 - (NSArray *)supportedPropertyKeys;
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;
+- (void)updateStatusForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
 - (id <AIAccountViewController>)accountView;
-- (NSString *)accountID;
-- (NSString *)UID;
-- (NSString *)serviceID;
-- (NSString *)accountDescription;
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account

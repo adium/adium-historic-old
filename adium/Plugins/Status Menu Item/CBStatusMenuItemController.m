@@ -54,7 +54,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         
         //Install our observers
         [[adium notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_ListChanged object:nil];
-        [[adium notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_PropertiesChanged object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     }
     
     return self;
@@ -62,11 +62,21 @@ CBStatusMenuItemController *sharedInstance = nil;
 
 - (void)dealloc
 {
+    [[adium notificationCenter] removeObserver:self];
     [accountsMenuItems release];
     //[groupsMenuItems release];
     [statusItem release];
     [theMenu release];
     [super dealloc];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
+    
+    if([group compare:GROUP_ACCOUNT_STATUS] == 0){
+	[self accountsChanged:nil];
+    }
 }
 
 - (void)accountsChanged:(NSNotification *)notification
@@ -82,31 +92,23 @@ CBStatusMenuItemController *sharedInstance = nil;
     //Add and install menu items for each account
     while(account = [numer nextObject])
     {
-        item = [[[NSMenuItem alloc] initWithTitle:[account accountDescription] target:self action:@selector(toggleConnection:) keyEquivalent:@""] autorelease];
+        item = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(toggleConnection:) keyEquivalent:@""] autorelease];
         [item setRepresentedObject:[account retain]];
-        
-        switch([[[adium accountController] propertyForKey:@"Status" account:account] intValue])
-        {
-            case STATUS_OFFLINE:
-                [item setImage:[AIImageUtilities imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
-                [item setEnabled:YES];
-                break;
-            case STATUS_CONNECTING:
-                [item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
-                [item setEnabled:NO];
-                break;
-            case STATUS_ONLINE:
-                [item setImage:[AIImageUtilities imageNamed:@"Account_Online.tiff" forClass:[self class]]];
-                [item setEnabled:YES];
-                break;
-            case STATUS_DISCONNECTING:
-                [item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
-                [item setEnabled:NO];
-                break;
-            default:
-                [item setEnabled:NO];
-                break;
-        }
+
+	if([[[account statusArrayForKey:@"Online"] objectWithOwner:account] boolValue]){
+	    [item setImage:[AIImageUtilities imageNamed:@"Account_Online.tiff" forClass:[self class]]];
+	    [item setEnabled:YES];
+	}else if([[[account statusArrayForKey:@"Connecting"] objectWithOwner:account] boolValue]){
+	    [item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
+	    [item setEnabled:NO];
+	}else if([[[account statusArrayForKey:@"Disconnecting"] objectWithOwner:account] boolValue]){
+	    [item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
+	    [item setEnabled:NO];
+	    break;
+	}else{
+	    [item setImage:[AIImageUtilities imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
+	    [item setEnabled:YES];
+	}
         
         [accountsMenuItems addObject:item];
     }
@@ -119,12 +121,10 @@ CBStatusMenuItemController *sharedInstance = nil;
 - (IBAction)toggleConnection:(id)sender
 {
     AIAccount   *targetAccount = [sender representedObject];
-    NSNumber    *status = [[adium accountController] propertyForKey:@"Status" account:targetAccount];
 
     //Toggle the connection
-    BOOL newOnlineProperty = !([status intValue] == STATUS_ONLINE);
-    [[adium accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
-                                    forKey:@"Online" account:targetAccount];
+    BOOL newOnlineProperty = !([[targetAccount statusObjectForKey:@"Online"] boolValue]);
+    [targetAccount setPreference:[NSNumber numberWithBool:newOnlineProperty] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 }
 
 - (void)buildMenu

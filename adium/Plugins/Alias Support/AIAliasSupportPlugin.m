@@ -275,4 +275,5 @@
     [self setAlias:nil];
     [(AIContactInfoWindowController *)[[contactView window] windowController] ignoreSelectionChanges:NO];
 }
+
 @end

@@ -649,8 +649,8 @@ extern void* objc_getClass(const char *name);
         NSImage	*image = [[[NSImage alloc] initWithData:data] autorelease];
 
         if(image){
-            [[handle statusDictionary] setObject:image forKey:@"BuddyImage"];
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"] delayed:(silenceAndDelayBuddyUpdates) silent:(silenceAndDelayBuddyUpdates)];
+            [[handle statusDictionary] setObject:image forKey:@"UserIcon"];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"] delayed:(silenceAndDelayBuddyUpdates) silent:(silenceAndDelayBuddyUpdates)];
         }
     }
 }
@@ -714,7 +714,7 @@ extern void* objc_getClass(const char *name);
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",@"StatusMessage",@"BuddyImage",nil];
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",@"StatusMessage",@"UserIcon",nil];
 
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
     [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];

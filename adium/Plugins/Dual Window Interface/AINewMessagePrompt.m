@@ -121,7 +121,7 @@ static AINewMessagePrompt *sharedInstance = nil;
         NSMenuItem	*menuItem;
         
         //Create the menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[account accountDescription] target:self action:@selector(selectAccount:) keyEquivalent:@""] autorelease];
+        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(selectAccount:) keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:account];
 
         //Disabled the menu item if the account is offline
