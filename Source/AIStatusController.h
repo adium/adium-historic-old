@@ -92,7 +92,7 @@
 	//Status states
 	NSMutableArray			*stateArray;
 	NSMutableArray			*builtInStateArray;
-	AIStatus				*activeStatusState;
+	AIStatus				*_activeStatusState; //Cached active status state
 	NSMutableDictionary		*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
 	NSMutableSet			*builtInStatusTypes[STATUS_TYPES_COUNT];
 

@@ -411,18 +411,20 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  * @brief Set the active status state
  *
  * Sets the currently active status state.  This applies throughout Adium and to all accounts.  The state will become
- * effective immediately.  When the active state changes, an AIActiveStateChangedNotification is broadcast.
+ * effective immediately.
  */ 
 - (void)setActiveStatusState:(AIStatus *)statusState
 {	
-	//Apply the state to our accounts and notify
-	[self _applyStateToAllAccounts:activeStatusState];
+	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
+	[self performSelector:@selector(_applyStateToAllAccounts:)
+			   withObject:statusState
+			   afterDelay:0];
 }
 
 - (void)setInitialStatusState
 {
 	AIStatus	*statusState = [self defaultInitialStatusState];
-	
+
 	//Apply the state to our accounts without notifying
 	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
 															  withObject:statusState];
@@ -432,10 +434,13 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  * @brief Retrieve active status state
  *
  * @result The currently active status state.
+ *
+ * This is defined as the status state which the most accounts are currently using.  The behavior in case of a tie
+ * is currently undefined but will yield one of the tying states.
  */ 
 - (AIStatus *)activeStatusState
 {
-	if(!activeStatusState){
+	if(!_activeStatusState){
 		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		NSMutableDictionary	*statusCountDict = [NSMutableDictionary dictionary];
 		AIAccount			*account;
@@ -458,7 +463,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			}
 		}
 		
-		highestCount;
 		enumerator = [statusCountDict keyEnumerator];
 		while(statusState = [enumerator nextObject]){
 			int thisCount = [[statusCountDict objectForKey:statusState] intValue];
@@ -467,10 +471,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			}
 		}
 		
-		activeStatusState = [bestStatusState retain];
+		_activeStatusState = [bestStatusState retain];
 	}
 	
-	return(activeStatusState);
+	return(_activeStatusState);
 }
 
 /*!
@@ -634,7 +638,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (void)addStatusState:(AIStatus *)statusState
 {
-	[stateArray addObject:statusState];
+	[stateArray addObject:statusState];	
 	[self _saveStateArrayAndNotifyOfChanges];
 }
 
@@ -1014,7 +1018,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)rebuildAllStateMenus
 {
-	[activeStatusState release]; activeStatusState = nil;
+	[_activeStatusState release]; _activeStatusState = nil;
 
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 	id <StateMenuPlugin>	stateMenuPlugin;
