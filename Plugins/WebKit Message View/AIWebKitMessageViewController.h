@@ -11,6 +11,7 @@
 	AIChat						*chat;
 	
 	BOOL						webViewIsReady;
+	BOOL						shouldRefreshContent;
 	
 	AIContentObject				*previousContent;
 	NSMutableArray				*newContent;
