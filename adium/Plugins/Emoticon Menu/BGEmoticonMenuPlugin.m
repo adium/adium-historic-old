@@ -129,8 +129,18 @@
     }
     else if([emoticonPacks count] > 1)
     {
-        AIEmoticonPack *selectedPack; // = [eMenu indexOfItem:[sender menu]]; // der, figure out which pack it is bitch :P
-        AIEmoticon *selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
+        AIEmoticonPack *selectedPack;
+        AIEmoticon *selectedEmoticon;
+        id object;
+        NSEnumerator *menuEnum = [[eMenu itemArray] objectEnumerator];
+        while(object = [menuEnum nextObject])
+        {
+            if([object submenu] == [sender menu])
+            {
+                selectedPack = [emoticonPacks objectAtIndex:[[eMenu itemArray] indexOfObject:object]];
+            }
+        }
+        selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
         emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
     }
     NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
