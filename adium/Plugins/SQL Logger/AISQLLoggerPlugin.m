@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.36 $
- * $Date: 2004/01/14 20:51:33 $
- * $Author: evands $
+ * $Revision: 1.37 $
+ * $Date: 2004/01/20 05:06:32 $
+ * $Author: jmelloy $
  *
  */
 
@@ -42,16 +42,13 @@
 	NSString	*connInfo;
 	id			tmp;
 	
-	//Initially observe some stuff.
-	[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
-	
     //Install some prefs.
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SQL_LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SQL_LOGGING];
     advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
     
     //Install Menu item
-    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
-    [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+    //logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
+    //[[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
 	//Watch for pref changes
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
