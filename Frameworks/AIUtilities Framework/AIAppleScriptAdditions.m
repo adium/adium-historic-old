@@ -38,7 +38,7 @@
 	[containerEvent setParamDescriptor:[NSAppleEventDescriptor descriptorWithString:functionName]
 							forKeyword:keyASSubroutineName];
 	
-	//Pass arguments - arguments is expecting an NSArray with only NSData objects
+	//Pass arguments - arguments is expecting an NSArray with only NSString objects
 	if([argumentArray count]){
 		NSAppleEventDescriptor  *arguments = [[[NSAppleEventDescriptor alloc] initListDescriptor] autorelease];
 		NSEnumerator			*enumerator = [argumentArray objectEnumerator];
