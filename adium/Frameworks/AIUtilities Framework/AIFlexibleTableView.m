@@ -156,44 +156,41 @@
     //Give the cell a chance to process the mouse down
     if(![cell handleMouseDown:theEvent]){
         //Text selection within the cell
-        NSPoint		localPoint;        //Deselect all text
-        [self deselectAll];
+        NSPoint		localPoint;      
+        int clicks = [theEvent clickCount];
+
+        [self deselectAll];	  //Deselect all text
+
         localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
         selection_startRow = row;
         selection_startColumn = column;
         selection_endRow = selection_startRow;
         selection_endColumn = selection_startColumn;
 
-        switch([theEvent clickCount])
-        {
-            //single click: selection is cleared; this is our new starting/ending point for a drag operation
-            case 1:
-            {
-                selection_startIndex = [cell characterIndexAtPoint:localPoint];
-                selection_endIndex = selection_startIndex;
-                break;
-            }
-
-            //double click: select word
-            case 2:
-            {
-                NSRange wordRange = [cell rangeForWordAtIndex:[cell characterIndexAtPoint:localPoint]];
-                selection_startIndex = wordRange.location;
-                selection_endIndex = selection_startIndex + wordRange.length;
-                [cell selectFrom:selection_startIndex to:selection_endIndex];
-                break;
-            }
-
+        if (clicks % 3 == 0)
             //triple click: select the whole cell
-            case 3:
-            {
-                selection_startIndex = 0;
-                selection_endIndex = 10000; //insert generic big number here
-
-                [cell selectFrom:selection_startIndex to:selection_endIndex];
-                break;
-            }
+        {
+            selection_startIndex = 0;
+            selection_endIndex = 10000; //insert generic big number here
+            [cell selectFrom:selection_startIndex to:selection_endIndex];
         }
+
+        else if (clicks % 2 == 0)
+            //double click: select word
+        {
+            NSRange wordRange = [cell rangeForWordAtIndex:[cell characterIndexAtPoint:localPoint]];
+            selection_startIndex = wordRange.location;
+            selection_endIndex = selection_startIndex + wordRange.length;
+            [cell selectFrom:selection_startIndex to:selection_endIndex];
+        }
+
+        else
+            //single click: selection is cleared; this is our new starting/ending point for a drag operation 
+        {
+            selection_startIndex = [cell characterIndexAtPoint:localPoint];
+            selection_endIndex = selection_startIndex;
+        }        
+        
         //Redisplay
         [self setNeedsDisplay:YES];
     }
