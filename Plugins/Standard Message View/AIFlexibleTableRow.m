@@ -183,7 +183,8 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     while(cell = [enumerator nextObject]){
         NSSize	cellSize = [cell cellSize];
         
-        [cell drawWithFrame:NSMakeRect(x, point.y, cellSize.width, (cellSize.height > height ? cellSize.height : height)) inView:controlView];
+        [cell drawWithFrame:NSMakeRect(x, point.y, cellSize.width, (cellSize.height > height ? cellSize.height : height)) 
+					 inView:controlView];
 
         x += cellSize.width;
     }

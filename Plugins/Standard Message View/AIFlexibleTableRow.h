@@ -17,10 +17,10 @@
 
 @interface AIFlexibleTableRow : NSObject {
     AIFlexibleTableView	*tableView;
-    NSArray		*cellArray;
-    int			height;
-    BOOL		spansRows;
-    BOOL		isSpannedInto;
+    NSArray				*cellArray;
+    int					height;
+    BOOL				spansRows;
+    BOOL				isSpannedInto;
     id                  representedObject;
     float               headIndent;
     
