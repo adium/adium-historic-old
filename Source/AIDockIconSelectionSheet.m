@@ -114,7 +114,7 @@
 		
 		while(path = [enumerator nextObject]){
 			AIIconState		*previewState = [[adium dockController] previewStateForIconPackAtPath:path];
-			[iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"Path", previewState, @"State"]];    
+			[iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"Path", previewState, @"State", nil]];    
 		}
 		
 		[imageGridView_icons reloadData];
