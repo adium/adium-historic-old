@@ -219,8 +219,14 @@
     [AIFileUtilities createDirectory:logPath];
 
     //Append the new content (We use fopen/fputs/fclose for max speed)
-    file = fopen([[logPath stringByAppendingPathComponent:logFileName] cString], "a");
-    fputs([message cString], file);
+    file = fopen([[logPath stringByAppendingPathComponent:logFileName] fileSystemRepresentation], "a");
+    if (ftell(file) == 0) {
+        const unichar bom = 0xFEFF;
+        NSString *bomString = [[NSString alloc] initWithCharacters:&bom length:1];
+        fputs([bomString UTF8String], file);
+        [bomString release];
+    }
+    fputs([message UTF8String], file);
     fclose(file);
 }
 
