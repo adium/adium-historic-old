@@ -370,7 +370,7 @@ static BOOL didInitOscar = NO;
 	if(!strcmp(gaimStatusType, "Available")){
 		return([inAttributedString string]);
 	}else{
-		return([self encodedAttributedString:inAttributedString forListObject:nil]);
+		return([super encodedAttributedString:inAttributedString forGaimStatusType:inAttributedString]);
 	}
 }
 
