@@ -13,11 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AISendingKeyPreferences, AISendingKeyPreferencesAdvanced;
-
-@interface AISendingKeyPreferencesPlugin : AIPlugin {
-    AISendingKeyPreferences             *preferences;
-    AISendingKeyPreferencesAdvanced	*preferencesAdvanced;
+@interface AISendingKeyPreferencesAdvanced : AIPreferencePane {
+    IBOutlet	NSButton	*checkBox_sendOnReturn;
+    IBOutlet	NSButton	*checkBox_sendOnEnter;
 }
 
 @end

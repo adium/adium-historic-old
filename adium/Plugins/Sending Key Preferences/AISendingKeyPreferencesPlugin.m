@@ -15,6 +15,7 @@
 
 #import "AISendingKeyPreferencesPlugin.h"
 #import "AISendingKeyPreferences.h"
+#import "AISendingKeyPreferencesAdvanced.h"
 
 #define SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
 
@@ -30,7 +31,8 @@
     //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
     preferences = [[AISendingKeyPreferences preferencePaneWithOwner:owner] retain];
-
+    preferencesAdvanced = [[AISendingKeyPreferencesAdvanced preferencePaneWithOwner:owner] retain];
+    
     //Register as a text entry filter
     [[owner contentController] registerTextEntryFilter:self];
 
