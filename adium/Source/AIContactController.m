@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.96 2004/02/08 00:23:00 adamiser Exp $
+// $Id: AIContactController.m,v 1.97 2004/02/08 17:53:10 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -54,6 +54,7 @@
 
 - (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListGroup *)group;
 - (void)_moveObject:(AIListObject *)listObject toGroup:(AIListGroup *)group;
+- (void)_renameGroup:(AIListGroup *)listGroup to:(NSString *)newName;
 @end
 
 //Used to suppress compiler warnings
@@ -811,8 +812,8 @@
 		//Move the object to the new group if necessary
 		if(group != [listObject containingGroup]){			
 
-			//Move the object (or, if this is a meta contact, move the objects within it)
 			if([listObject isKindOfClass:[AIMetaContact class]]){
+				//This is a meta contact, move the objects within it
 				NSEnumerator	*metaEnumerator = [[(AIMetaContact *)listObject containedObjects] objectEnumerator];
 				AIListObject	*metaObject;
 				
@@ -820,7 +821,17 @@
 					[self _moveObject:metaObject toGroup:group];
 				}
 			}else if([listObject isKindOfClass:[AIListContact class]]){
+				//Move the object 
 				[self _moveObject:listObject toGroup:group];
+			}else if([listObject isKindOfClass:[AIListGroup class]]){
+				NSString	*newNestName = [[[listObject UID] componentsSeparatedByString:@":"] lastObject];
+				do{
+					NSArray		*groupNest = [[group UID] componentsSeparatedByString:@":"];
+					newNestName = [[groupNest lastObject] stringByAppendingFormat:@":%@",newNestName];
+				}while((group = [group containingGroup]) && group != contactList);
+				
+				//Rename the group to re-nest it
+				[self _renameGroup:(AIListGroup *)listObject to:newNestName];
 			}
 
 		}
@@ -837,6 +848,26 @@
 																	   UID:[(AIListContact *)listObject accountUID]];
 	if([account conformsToProtocol:@protocol(AIAccount_List)]){
 		[(AIAccount<AIAccount_List> *)account moveListObjects:[NSArray arrayWithObject:listObject] toGroup:group];
+	}
+}
+
+//Rename a group
+- (void)_renameGroup:(AIListGroup *)listGroup to:(NSString *)newName
+{
+	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
+	AIAccount		*account;
+	
+	//Since Adium has no memory of what accounts a group is on, we have to send this message to all available accounts
+	//The accounts without this group will just ignore it
+	while(account = [enumerator nextObject]){
+		if([account conformsToProtocol:@protocol(AIAccount_List)]){
+			[(AIAccount<AIAccount_List> *)account renameGroup:listGroup to:newName];
+		}
+	}
+	
+	//Remove the old group if it's empty
+	if([listGroup count] == 0){
+		[self removeListObjects:[NSArray arrayWithObject:listGroup]];
 	}
 }
 

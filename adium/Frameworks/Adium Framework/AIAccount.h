@@ -52,6 +52,7 @@ typedef enum {
 	- (void)removeContacts:(NSArray *)objects;
 	- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
 	- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
+	- (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
 
     - (BOOL)contactListEditable;
 
