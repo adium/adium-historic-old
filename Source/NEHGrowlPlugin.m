@@ -22,6 +22,7 @@
 #import "ESContactAlertsController.h"
 #import "NEHGrowlPlugin.h"
 #import "CBGrowlAlertDetailPane.h"
+#import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -66,10 +67,13 @@
  */
 - (void)installPlugin
 {
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
-									 object:nil];	
+	//Growl only works in 10.3 and later
+	if([NSApp isOnPantherOrBetter]){
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(adiumFinishedLaunching:)
+										   name:Adium_CompletedApplicationLoad
+										 object:nil];	
+	}
 }
 
 /*
