@@ -156,7 +156,7 @@ Adium, Copyright 2001-2004, Adam Iser
 	//Draw all images that lie in the dirty rect
 	for(i = 0; i < numberOfImages; i++){
 		NSRect	imageRect = [self rectForImageAtIndex:i];
-		
+
 		if(NSIntersectsRect(drawRect, imageRect)){
 			[cell setImage:[delegate imageGridView:self imageAtIndex:i]];
 			[cell setHighlighted:(selectedIndex == i)];
@@ -185,7 +185,7 @@ Adium, Copyright 2001-2004, Adam Iser
 	columns = newFrame.size.width / (imageSize.width + MIN_PADDING);
 	
 	//Increase padding to stretch the columns to the full width of our view
-	padding.width = (newFrame.size.width - (columns * imageSize.width)) / (columns + 1);
+	padding.width = round((newFrame.size.width - (columns * imageSize.width)) / (columns + 1));
 	padding.height = padding.width;
 	
 	//Resize our view so it's tall enuogh to display enough rows for all our images and that it always

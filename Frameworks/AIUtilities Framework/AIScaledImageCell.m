@@ -49,9 +49,9 @@
 			
             if ((imgSize.height / cellFrame.size.height) >
                 (imgSize.width / cellFrame.size.width)) {
-                targetRect.size.width = imgSize.width / (imgSize.height / cellFrame.size.height);
+                targetRect.size.width = round(imgSize.width / (imgSize.height / cellFrame.size.height));
             } else {
-                targetRect.size.height = imgSize.height / (imgSize.width / cellFrame.size.width);
+                targetRect.size.height = round(imgSize.height / (imgSize.width / cellFrame.size.width));
             }
 			
         }else{
@@ -60,10 +60,13 @@
         }
 		
         //Centering
-        targetRect = NSOffsetRect(targetRect, (cellFrame.size.width - targetRect.size.width) / 2, (cellFrame.size.height - targetRect.size.height) / 2);
+        targetRect = NSOffsetRect(targetRect, round((cellFrame.size.width - targetRect.size.width) / 2), round((cellFrame.size.height - targetRect.size.height) / 2));
         
         //Draw Image
-        [img drawInRect:targetRect fromRect:imgRect operation:NSCompositeSourceOver fraction:([self isEnabled] ? 1.0 : 0.5)];
+        [img drawInRect:targetRect
+			   fromRect:imgRect
+			  operation:NSCompositeSourceOver 
+			   fraction:([self isEnabled] ? 1.0 : 0.5)];
 		
         //Clean-up
 		[img setFlipped:![img isFlipped]];
