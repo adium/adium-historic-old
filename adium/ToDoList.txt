@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.40 2004/04/14 10:53:24 eevyl Exp $
+$Id: ToDoList.txt,v 1.41 2004/04/15 05:13:36 ramoth4 Exp $
 
 Legend
 + Change or Addition
@@ -234,6 +234,8 @@ Unfixable(?) Issues
 	- (Tick: Maybe we can use steganography, crysflame in irc brought it up, and eevyl and I have discussed it before:
 			19:45 < crysflame> http://www.mirrors.wiretapped.net/security/steganography/outguess/outguess-0.2.tar.gz and 
 http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0.5.tar.gz
+
+* Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
 
 -------------------------------------------------------------------------------------------------------
 Waiting On
