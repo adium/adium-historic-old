@@ -68,8 +68,7 @@
     [table_emoticons setDrawsAlternatingRows:YES];
         
     //Observe prefs    
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
     
     //Configure the right pane to display the emoticons for the current selection
     [self _configureEmoticonListForSelection];
@@ -88,7 +87,7 @@
 	[checkCell release]; checkCell = nil;
 	[selectedEmoticonPack release]; selectedEmoticonPack = nil;
 	
-	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
     //Flush all the images we loaded
     [plugin flushEmoticonImageCache];
@@ -138,13 +137,12 @@
 }
 
 //Reflect new preferences in view
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [PREF_GROUP_EMOTICONS isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){        
-        //Refresh our emoticon tables
-        [table_emoticonPacks reloadData];
-        [self _configureEmoticonListForSelection];
-	}
+	//Refresh our emoticon tables
+	[table_emoticonPacks reloadData];
+	[self _configureEmoticonListForSelection];
 }
 
 //Emoticon table view
