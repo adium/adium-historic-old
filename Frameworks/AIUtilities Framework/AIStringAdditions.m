@@ -608,13 +608,17 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 			//escape this character using a named escape
 			static unichar escapeNames[] = {
 				0, 0, 0, 0, 0, 0, 0,
-				'a', //0x07 BEL: \a 
+				'a', //0x07 BEL: '\a' 
 				0,
-				't', //0x09 HT: \t 
-				'n', //0x0a LF: \n 
+				't', //0x09 HT: '\t'
+				'n', //0x0a LF: '\n'
 				0,
-				'f', //0x0c FF: \f 
-				'r', //0x0d CR: \r 
+				'f', //0x0c FF: '\f'
+				'r', //0x0d CR: '\r'
+				0, 0, //0x0e-0x0f
+				0, 0, 0, 0,  0, 0, 0, 0, //0x10-0x17
+				0, 0, 0, 0,  0, 0, 0, 0, //0x18-0x1f
+				' ', //0x20 SP: '\ '
 			};
 			buf[i++] = '\\';
 			SBEFS_BOUNDARY_GUARD;
