@@ -251,7 +251,7 @@ DeclareString(AppendNextMessage);
 	newHTML = [[template mutableCopy] autorelease];
 	newHTML = [self fillKeywords:newHTML forContent:content];
 	newHTML = [self escapeString:newHTML];
-	
+
 	if(!contentIsSimilar){
 		[webView stringByEvaluatingJavaScriptFromString:
 			[NSString stringWithFormat:AppendMessage, newHTML]];
@@ -280,6 +280,8 @@ DeclareString(AppendNextMessage);
 {
 	NSDate  *date;
 	NSRange	range;
+
+	BOOL	allowColors = YES;
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
 		do{
@@ -327,6 +329,7 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
 																					  headers:NO 
 																					 fontTags:YES
+																		   includingColorTags:allowColors
 																				closeFontTags:YES
 																					styleTags:YES
 																   closeStyleTagsOnFontChange:YES
