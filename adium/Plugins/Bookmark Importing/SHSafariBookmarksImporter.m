@@ -36,6 +36,11 @@ static NSArray *emptyArray;
     return [[[self alloc] init] autorelease];
 }
 
++(NSString *)importerTitle
+{
+    return SAFARI_ROOT_MENU_TITLE;
+}
+
 - (id)init
 {
     [super init];

@@ -31,6 +31,11 @@ static NSMenu   *firefoxBookmarksMenu;
     return [[[self alloc] init] autorelease];
 }
 
++(NSString *)importerTitle
+{
+    return FIREFOX_ROOT_MENU_TITLE;
+}
+
 -(NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;

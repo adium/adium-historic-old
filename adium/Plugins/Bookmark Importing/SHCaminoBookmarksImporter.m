@@ -31,6 +31,11 @@ static NSArray *emptyArray;
     return [[[self alloc] init] autorelease];
 }
 
++(NSString *)importerTitle
+{
+    return CAMINO_ROOT_MENU_TITLE;
+}
+
 - (id)init
 {
     [super init];

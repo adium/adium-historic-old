@@ -23,6 +23,11 @@ static NSMenu   *abTopMenu;
     return [[[self alloc] init] autorelease];
 }
 
++(NSString *)importerTitle
+{
+    return AB_ROOT_MENU_TITLE;
+}
+
 -(NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;

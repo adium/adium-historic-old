@@ -8,6 +8,7 @@
 // protocol bookmark importer classes must impliment
 @protocol SHBookmarkImporter
 +(id)newInstanceOfImporter;
++(NSString *)importerTitle;
 -(NSMenu *)parseBookmarksForOwner:(id)owner;    // returns a NSMenu with the full hierarchy
 -(NSString *)menuTitle;                         // title for the menu item
 -(BOOL)bookmarksExist;                          // if the bookmarks file exists
