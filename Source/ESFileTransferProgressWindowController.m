@@ -193,12 +193,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 //Add a file transfer's progress row if we don't already have one for the fileTransfer.
 //This will call back on progressRowDidAwakeFromNib: if it adds a new row.
-- (void)addFileTransfer:(ESFileTransfer *)fileTransfer
+- (void)addFileTransfer:(ESFileTransfer *)inFileTransfer
 {
 	ESFileTransferProgressRow *progressRow;
 	
 	if(!(progressRow = [self existingRowForFileTransfer:inFileTransfer])){
-		progressRow = [ESFileTransferProgressRow rowForFileTransfer:fileTransfer withOwner:self];
+		progressRow = [ESFileTransferProgressRow rowForFileTransfer:inFileTransfer withOwner:self];
 		
 		//Depending on how the nib is loaded, we may or may not already have called progressRowDidAwakeFromNib:
 		//and added the row there.
