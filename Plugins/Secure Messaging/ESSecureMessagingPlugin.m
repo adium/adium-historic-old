@@ -35,8 +35,8 @@
 
 #define TITLE_ENCRYPTION		AILocalizedString(@"Encryption",nil)
 
-#define CHAT_NOW_SECURE			AILocalizedString(@"This line secured, sir.", nil)
-#define CHAT_NO_LONGER_SECURE	AILocalizedString(@"Warning: Project Carnivore detected.", nil)
+#define CHAT_NOW_SECURE			AILocalizedString(@"Encrypted OTR chat initiated.", nil)
+#define CHAT_NO_LONGER_SECURE	AILocalizedString(@"Ended encrypted OTR chat.", nil)
 
 @interface ESSecureMessagingPlugin (PRIVATE)
 - (void)registerToolbarItem;
