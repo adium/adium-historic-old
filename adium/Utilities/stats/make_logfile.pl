@@ -1,6 +1,6 @@
 #!/usr/bin/perl -I/home/jmelloy/lib/perl5/site_perl/5.6.1/
 
-# $Id: make_logfile.pl,v 1.8 2003/12/22 21:12:57 jmelloy Exp $
+# $Id: make_logfile.pl,v 1.9 2003/12/22 22:01:05 jmelloy Exp $
 
 use warnings;
 use strict;
@@ -25,7 +25,7 @@ foreach my $file (@filelist) {
 }
 
 foreach my $key (keys %directories) {
-    my $logfile = $key . "/" . "directory.log";
+    my $logfile = $key . "directory.log";
     
 
     if(!-e $logfile) {

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: update.pl,v 1.6 2003/12/22 21:12:57 jmelloy Exp $
+# $Id: update.pl,v 1.7 2003/12/22 22:01:05 jmelloy Exp $
 
 use warnings;
 use strict;
@@ -28,7 +28,7 @@ foreach my $key (keys %directories) {
 
     chomp ($key);
 
-    my $filename = $key . "/" . "directory.log";
+    my $filename = $key . "directory.log";
 
     unlink $filename;
 
