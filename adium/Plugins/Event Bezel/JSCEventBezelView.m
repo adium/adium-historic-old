@@ -21,9 +21,12 @@
 	float   innerSize;
 	NSBezierPath	*tempPath;
     NSParagraphStyle    *parrafo = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment];
+	NSPoint			localPoint;
+	NSRect			bezelRect = NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE);
 	
 	ignoringClicks = NO;
 	useGradient = NO;
+	drawBorder = NO;
 	
 	// Set the attributes for the main buddy name and the other strings
 	mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -35,11 +38,14 @@
 
 	innerSize = BEZEL_SIZE - (OUTER_BORDER*2.0);	
 	tempPath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(OUTER_BORDER,OUTER_BORDER,innerSize,innerSize) radius:(BORDER_RADIUS - OUTER_BORDER)];
-	backgroundContent = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) radius:BORDER_RADIUS] retain];
+	backgroundContent = [[NSBezierPath bezierPathWithRoundedRect:bezelRect radius:BORDER_RADIUS] retain];
 	backgroundBorder = [[NSBezierPath bezierPath] retain];
 	[backgroundBorder appendBezierPath: [tempPath bezierPathByReversingPath]];
 	[backgroundBorder appendBezierPath: backgroundContent];
-	[self addTrackingRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) owner:self userData: nil assumeInside:YES]; 
+	//Local mouse location
+	localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
+	localPoint = [self convertPoint:localPoint fromView:nil];
+	[self addTrackingRect:bezelRect owner:self userData: nil assumeInside:NSPointInRect(localPoint,bezelRect)]; 
 }
 
 - (void)dealloc
@@ -64,7 +70,11 @@
 	NSSize			buddyIconSize;
 	BOOL			minFontSize;
 	float			accumulator;
-        
+	NSPoint			localPoint;	
+
+	//Local mouse location	
+	localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
+	localPoint = [self convertPoint:localPoint fromView:nil];
     // Clear the view
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
@@ -84,10 +94,13 @@
 			[buddyIconLabelColor set];
 			[backgroundContent fill];
 		}
+	}
+	if (!ignoringClicks && (drawBorder || NSPointInRect(localPoint,NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE)))) {
 		// Paint the white border
 		[[NSColor whiteColor] set];
 		[backgroundBorder fill];
 	}
+	
     // Resize the buddy icon if needed
 	buddyIconSize = NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION);
     
@@ -221,12 +234,14 @@
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	[NSCursor setOpenGrabHandCursor];
+	drawBorder = YES;
+	[self setNeedsDisplay: YES];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	[[NSCursor arrowCursor] set];
+	drawBorder = NO;
+	[self setNeedsDisplay: YES];
 }
 
 @end

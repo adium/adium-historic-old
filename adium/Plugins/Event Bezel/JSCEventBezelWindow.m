@@ -131,14 +131,12 @@
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-	[NSCursor setOpenGrabHandCursor];
 	[self startTimer];
 	[super mouseUp: theEvent];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	[NSCursor setClosedGrabHandCursor];
 	if ([self displayTimer]) {
 		[self setAlphaValue:1.0];
 		[self stopTimer];
