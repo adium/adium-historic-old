@@ -44,7 +44,7 @@ static NSImage *pushIndicatorImage = nil;
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
+    self = [super initWithFrame:frameRect];
 
     //
     adium = [AIObject sharedAdiumInstance];
@@ -72,8 +72,14 @@ static NSImage *pushIndicatorImage = nil;
     if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
 
     //
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(textDidChange:)
+												 name:NSTextDidChangeNotification 
+											   object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(frameDidChange:) 
+												 name:NSViewFrameDidChangeNotification 
+											   object:self];
 	
     return(self);
 }
@@ -86,6 +92,7 @@ static NSImage *pushIndicatorImage = nil;
     [associatedView release];
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
+
     [super dealloc];
 }
 
