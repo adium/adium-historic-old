@@ -1679,6 +1679,7 @@
 				3481DF4F05704F4C00CD38D6,
 				3481DF5105704F6400CD38D6,
 				3481DF5305704F7D00CD38D6,
+				34DFEC2507A4865000B92233,
 				3481DF5505704F9A00CD38D6,
 				3481DF5605704F9A00CD38D6,
 			);
@@ -3017,14 +3018,6 @@
 			settings = {
 			};
 		};
-		3453667A059BA7E200A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = CLViewLabelsAdvancedPrefs.nib;
-			path = "Plugins/Standard Contact List View/Preferences/CLViewLabelsAdvancedPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34536750059BA8ED00A83D9E = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.executable";
@@ -3366,7 +3359,6 @@
 				346C9D1206004645000F5A8A,
 				346C9D3006004650000F5A8A,
 				34C2D70506338E2E0018E5D2,
-				3498914C064C48020095598E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3379,7 +3371,6 @@
 				34C2DBE6063449AF0018E5D2,
 				34C2DF02063498ED0018E5D2,
 				34C2DF03063498EF0018E5D2,
-				34989147064C47F20095598E,
 				4B03711606595A70008F5981,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -3393,7 +3384,6 @@
 				346C9D1006004644000F5A8A,
 				346C9D1606004646000F5A8A,
 				34C2D70606338E2E0018E5D2,
-				3498914D064C48020095598E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3893,28 +3883,6 @@
 				);
 			};
 		};
-		3484644C05910DFF00241F68 = {
-			children = (
-				4BBF449E0661354F001D31E1,
-				4BBF449F0661354F001D31E1,
-				4B6C4647066FEB180082199C,
-				3484645305910E7E00241F68,
-				3453667A059BA7E200A83D9E,
-			);
-			isa = PBXGroup;
-			name = OldPreferences;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3484645305910E7E00241F68 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = CLViewAdvancedPrefs.nib;
-			path = "Plugins/Standard Contact List View/Preferences/CLViewAdvancedPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34878F710518289B003B2F21 = {
 			children = (
 				34878F7505182ACD003B2F21,
@@ -4266,50 +4234,6 @@
 		};
 		348E5ACB06D2A74C004C051C = {
 			fileRef = 348E5ACA06D2A74C004C051C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34989146064C47F20095598E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = WebKitAdvancedPreferencesView.nib;
-			path = "Plugins/WebKit Message View/WebKitAdvancedPreferencesView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34989147064C47F20095598E = {
-			fileRef = 34989146064C47F20095598E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3498914A064C48020095598E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESWKMVAdvancedPreferences.h;
-			path = "Plugins/WebKit Message View/ESWKMVAdvancedPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3498914B064C48020095598E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESWKMVAdvancedPreferences.m;
-			path = "Plugins/WebKit Message View/ESWKMVAdvancedPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3498914C064C48020095598E = {
-			fileRef = 3498914A064C48020095598E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3498914D064C48020095598E = {
-			fileRef = 3498914B064C48020095598E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6437,7 +6361,6 @@
 				34A65B0606A5A15300898470,
 				9E20910C06A601A500E33E27,
 				9E20910F06A601B100E33E27,
-				9E217B7906A74CA8002A3F27,
 				4B9A684206AEB44B0010BF69,
 				344C0D5106B6D63800DA7200,
 				6E4D961306B739AC005235E9,
@@ -6645,7 +6568,6 @@
 				4B2DC069066F6B1200AD5AAD,
 				4BB1E43F067F2CA100D1DB86,
 				4B60991F06A4483400EC8D78,
-				9E217B7C06A74CA8002A3F27,
 				6EC1685006C170A000F9FAD3,
 				343EAB8F06EF859C001CDAFF,
 				34A48A0C06F64376002C7C5F,
@@ -6819,6 +6741,7 @@
 				3433673307949E2200C84B15,
 				4BDAF69707A1561000276D68,
 				4B7A567C07A1754400BDC540,
+				34DFEC2607A4865000B92233,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7019,7 +6942,6 @@
 				34A65B0706A5A15300898470,
 				9E20910E06A601AF00E33E27,
 				9E20911006A601B200E33E27,
-				9E217B7A06A74CA8002A3F27,
 				4B9A684306AEB44B0010BF69,
 				344C0D5006B6D63800DA7200,
 				6E4D961406B739AC005235E9,
@@ -8138,8 +8060,6 @@
 		};
 		34C2CFE6063340780018E5D2 = {
 			children = (
-				34BBE55407A342AF00663CC9,
-				34BBE55507A342AF00663CC9,
 				34BBE10907A2EE3700663CC9,
 				34BBE10A07A2EE3700663CC9,
 				34BBE0E907A2ECCF00663CC9,
@@ -8154,6 +8074,8 @@
 				34BBE11107A2EED600663CC9,
 				34BBE12207A2EFF800663CC9,
 				34BBE12307A2EFF800663CC9,
+				34BBE55407A342AF00663CC9,
+				34BBE55507A342AF00663CC9,
 				34BBE11607A2EF2B00663CC9,
 				34BBE11707A2EF2B00663CC9,
 				34BBE11C07A2EF7F00663CC9,
@@ -8164,9 +8086,9 @@
 				34BBE1B907A2F4C500663CC9,
 				34BBE18407A2F20E00663CC9,
 				34BBE18507A2F20E00663CC9,
-				4BDF2C91061E376C00EA75C5,
 				34048AC50617CB4C004D0B7E,
 				34048AC60617CB4C004D0B7E,
+				4BDF2C91061E376C00EA75C5,
 			);
 			isa = PBXGroup;
 			name = Libgaim;
@@ -8897,6 +8819,20 @@
 		};
 		34D5B281061263B300B98336 = {
 			fileRef = 83DB8F230611460E00A5C28C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFEC2507A4865000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = AddressBook.png;
+			path = "Plugins/Address Book Integration/AddressBook.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFEC2607A4865000B92233 = {
+			fileRef = 34DFEC2507A4865000B92233;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12786,14 +12722,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B6C4647066FEB180082199C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AICLGroupPrefView.nib;
-			path = "Plugins/Standard Contact List View/Preferences/AICLGroupPrefView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B6D0E43047D490700A8010A = {
 			children = (
 				4B7FAEA1047D6A3400A8010A,
@@ -13549,7 +13477,7 @@
 				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\" \"Plugins/Gaim Service/Include/\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "";
@@ -14175,32 +14103,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B970BE00535B6AC002F28F9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactListAdvancedPrefs.h;
-			path = "Plugins/Dual Window Interface/AIContactListAdvancedPrefs.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B970BE10535B6AC002F28F9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactListAdvancedPrefs.m;
-			path = "Plugins/Dual Window Interface/AIContactListAdvancedPrefs.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B970BE40535B6BE002F28F9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactListAdvanced.nib;
-			path = "Plugins/Dual Window Interface/ContactListAdvanced.nib";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B970BF80535B864002F28F9 = {
 			fileEncoding = 30;
@@ -15247,24 +15149,6 @@
 			settings = {
 			};
 		};
-		4BBF449E0661354F001D31E1 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AICLGroupPreferences.h;
-			path = "Plugins/Standard Contact List View/Preferences/AICLGroupPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBF449F0661354F001D31E1 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AICLGroupPreferences.m;
-			path = "Plugins/Standard Contact List View/Preferences/AICLGroupPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BC15BE90524CE5E00A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -15628,10 +15512,6 @@
 				4B31E8C304C46A9100A8010A,
 				4B31E8C504C46A9100A8010A,
 				4B25363306BECC97003498D4,
-				4B970BE00535B6AC002F28F9,
-				4B970BE10535B6AC002F28F9,
-				4B970BE40535B6BE002F28F9,
-				3484644C05910DFF00241F68,
 			);
 			isa = PBXGroup;
 			name = "OLD Crap";
@@ -18841,7 +18721,7 @@
 				6E7C19BB0623BF80008A1C99,
 			);
 			isa = PBXGroup;
-			name = "Message Context Display";
+			name = "Message History";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20397,10 +20277,7 @@
 				4B539C5205EFD6FB00E5921A,
 				34C2D70306338E2E0018E5D2,
 				34C2D70406338E2E0018E5D2,
-				3498914A064C48020095598E,
-				3498914B064C48020095598E,
 				34C2D8C00633BBA80018E5D2,
-				34989146064C47F20095598E,
 				347065E406015DC5004F0D20,
 				34C2DBE5063449AF0018E5D2,
 				34C2DF00063498ED0018E5D2,
@@ -20469,24 +20346,6 @@
 			settings = {
 			};
 		};
-		9E217B7506A74CA7002A3F27 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBStatusMenuItemPreferences.h;
-			path = "Plugins/Status Menu Item/CBStatusMenuItemPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E217B7606A74CA7002A3F27 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBStatusMenuItemPreferences.m;
-			path = "Plugins/Status Menu Item/CBStatusMenuItemPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9E217B7706A74CA7002A3F27 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -20496,34 +20355,8 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		9E217B7806A74CA7002A3F27 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = StatusMenuItemPrefs.nib;
-			path = "Plugins/Status Menu Item/StatusMenuItemPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E217B7906A74CA8002A3F27 = {
-			fileRef = 9E217B7506A74CA7002A3F27;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E217B7A06A74CA8002A3F27 = {
-			fileRef = 9E217B7606A74CA7002A3F27;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E217B7B06A74CA8002A3F27 = {
 			fileRef = 9E217B7706A74CA7002A3F27;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E217B7C06A74CA8002A3F27 = {
-			fileRef = 9E217B7806A74CA7002A3F27;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20723,9 +20556,6 @@
 				9E791D9505768B7A00547562,
 				9E791DA30577094300547562,
 				9E791DA40577094400547562,
-				9E217B7506A74CA7002A3F27,
-				9E217B7606A74CA7002A3F27,
-				9E217B7806A74CA7002A3F27,
 			);
 			isa = PBXGroup;
 			name = "Status Menu Item";
