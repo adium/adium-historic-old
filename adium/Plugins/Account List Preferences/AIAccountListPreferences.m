@@ -15,8 +15,8 @@
 
 #import "AIAccountListPreferences.h"
 
-#define	ACCOUNT_DRAG_TYPE			@"AIAccount"			//ID for an account drag
-#define	ACCOUNT_CONNECT_BUTTON_TITLE		@"Connect"			//Menu item title for the connect item
+#define	ACCOUNT_DRAG_TYPE					@"AIAccount"			//ID for an account drag
+#define	ACCOUNT_CONNECT_BUTTON_TITLE		@"Connect"				//Menu item title for the connect item
 #define	ACCOUNT_DISCONNECT_BUTTON_TITLE		@"Disconnect"			//Menu item title
 #define	ACCOUNT_CONNECTING_BUTTON_TITLE		@"Connecting…"			//Menu item title
 #define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	@"Disconnecting…"		//Menu item title
@@ -103,18 +103,18 @@
 {
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
-    NSView		*accountView;
-    BOOL		autoConnect;
-    int			selectedTabIndex;
+    NSView			*accountView;
+    BOOL			autoConnect;
+    int				selectedTabIndex;
 
     //Remove any tabs
     if([tabView_auxilary selectedTabViewItem]){
-	selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
+		selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
     }
     while([tabView_auxilary numberOfTabViewItems] > 1){
         [tabView_auxilary removeTabViewItem:[tabView_auxilary tabViewItemAtIndex:[tabView_auxilary numberOfTabViewItems] - 1]];
     }
-    
+
     //Close any currently open controllers
     [view_accountDetails removeAllSubviews];
     if(accountViewController){
@@ -123,11 +123,12 @@
 
     //select the correct service in the service menu
     [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[selectedAccount service]]];
+	[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
 
     //Configure the auto-connect button
     autoConnect = [[selectedAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
     [button_autoConnect setState:autoConnect];
-    
+
     //Correctly size the sheet for the account details view
     accountViewController = [[selectedAccount accountView] retain];
     accountView = [accountViewController view];
@@ -144,20 +145,20 @@
     NSView	*nextView = accountView;
     while([nextView nextKeyView]) nextView = [nextView nextKeyView];
     [nextView setNextKeyView:button_autoConnect];
-
+	
     //Swap in the account auxilary tabs
     enumerator = [[accountViewController auxilaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
         [tabView_auxilary addTabViewItem:tabViewItem];
     }
-
+	
     //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll work for now.
     [tabView_auxilary selectLastTabViewItem:nil];
     int i;
     for(i = 1;i < [tabView_auxilary numberOfTabViewItems];i++){
         [tabView_auxilary selectPreviousTabViewItem:nil];
     }
-
+	
     //Re-select same index (if possible)
     if(selectedTabIndex > 0 && selectedTabIndex < [tabView_auxilary numberOfTabViewItems]){
         [tabView_auxilary selectTabViewItemAtIndex:selectedTabIndex];
@@ -175,17 +176,17 @@
     
     //Refresh the table (if the window is loaded)
     if(tableView_accountList != nil){
-	[tableView_accountList reloadData];
-	[self tableViewSelectionDidChange:nil];
+		[tableView_accountList reloadData];
+		[self tableViewSelectionDidChange:nil];
     }
 }
 
 //Account status changed
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
-    if([inObject isKindOfClass:[AIAccount class]]){
+    if(inObject == selectedAccount){
 		if([inModifiedKeys containsObject:@"Online"]){
-			[popupMenu_serviceList setEnabled:![[(AIAccount *)inObject statusObjectForKey:@"Online"] boolValue]];
+			[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
 		}
     }
     
@@ -250,7 +251,7 @@
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     AIAccount 	*targetAccount = contextInfo;
-    int		index;
+    int			index;
     
     NSParameterAssert(targetAccount != nil); NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
     
@@ -258,7 +259,7 @@
         //Delete it
         index = [accountArray indexOfObject:targetAccount];
         [[adium accountController] deleteAccount:targetAccount];
-	
+		
         //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
         if(index >= [accountArray count]){
             index = [accountArray count]-1;
@@ -294,7 +295,7 @@
 {
     AIAccount		*account = [accountArray objectAtIndex:row];
     NSImage		*image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
-
+	
     [cell setImage:image];
     [cell setSubString:[account serviceID]];
 }
@@ -302,7 +303,7 @@
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
     tempDragAccount = [accountArray objectAtIndex:[[rows objectAtIndex:0] intValue]];
-
+	
     [pboard declareTypes:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE] owner:self];
     [pboard setString:@"Account" forType:ACCOUNT_DRAG_TYPE];
     
@@ -321,7 +322,7 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     int	selectedRow = [tableView_accountList selectedRow];
-
+	
     if(selectedRow >=0 && selectedRow < [accountArray count]){
         //Correctly enable/disable our delete button
         if([accountArray count] > 1){
@@ -329,11 +330,11 @@
         }else{
             [button_deleteAccount setEnabled:NO];
         }
-
+		
         //Configure for the newly selected account
         selectedAccount = [accountArray objectAtIndex:selectedRow];
         [self configureAccountOptionsView];
-
+		
     }else{
         [button_deleteAccount setEnabled:NO];
     }
@@ -342,14 +343,14 @@
 - (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
-
+	
     if([avaliableType compare:@"AIAccount"] == 0){
         int	newIndex;
         
         //Select the moved account
         newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
         [tableView_accountList selectRow:newIndex byExtendingSelection:NO];
-   
+		
         return(YES);
     }else{
         return(NO);
@@ -362,7 +363,7 @@
     
     //Take focus away from any controls to ensure that they register changes and save
     [[tabView window] makeFirstResponder:tabView];
-
+	
     //Put focus back
     [[tabView window] makeFirstResponder:existingResponder];
 }
