@@ -119,7 +119,7 @@
 	
 	//Get account view
 	accountViewController = [inControler retain];
-	accountView = [accountViewController view];
+	accountView = [accountViewController accountView];
 	
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
