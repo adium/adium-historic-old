@@ -28,7 +28,6 @@
                 "view_Dock" = AIFlippedCategoryView; 
                 "view_Emoticons" = AIFlippedCategoryView; 
                 "view_Messages_Display" = AIFlippedCategoryView; 
-                "view_Messages_Receiving" = AIFlippedCategoryView; 
                 "view_Messages_Sending" = AIFlippedCategoryView; 
                 "view_Sound" = AIFlippedCategoryView; 
                 "view_Status_Away" = AIFlippedCategoryView; 

@@ -275,7 +275,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
             case 3:
                 [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display showContainers:YES];
                 [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending showContainers:YES];
-                [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving showContainers:YES];
                 [self _sizeWindowToFitTabView:tabView_messages];
             break;
             case 4:

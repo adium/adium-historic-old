@@ -99,7 +99,7 @@ typedef enum {
     AIPref_ContactList_Contacts,
     AIPref_Messages_Display,
     AIPref_Messages_Sending,
-    AIPref_Messages_Receiving,
+    //AIPref_Messages_Receiving,
     AIPref_Status_Away,
     AIPref_Status_Idle,
     AIPref_Dock,
