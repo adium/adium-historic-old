@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/24/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -16,5 +15,6 @@
 + (NSImage *)listUserIconForContact:(AIListContact *)inContact;
 + (void)setListUserIconSize:(NSSize)inSize;
 + (void)flushListUserIconCache;
++ (void)flushCacheForContact:(AIListContact *)inContact;
 
 @end
