@@ -1342,19 +1342,34 @@
 - (void)accountConnectionConnected
 {
     //We are now online
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
+	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
+	
+	[self notifyOfChangedStatusSilently:NO];
     
     //Silence updates
     [self silenceAllHandleUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
-    
+
     //Set our initial status
     [self updateAllStatusKeys];
 	
     //Reset reconnection attempts
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 }
+
+- (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
+{
+	[self setStatusObject:[self connectionStringForStep:step] forKey:@"ConnectionProgressString" notify:NO];
+	[self setStatusObject:[NSNumber numberWithFloat:(step/step_count)] forKey:@"ConnectionProgressPercent" notify:NO];	
+
+	[self notifyOfChangedStatusSilently:NO];
+}
+
+//Sublcasses should override to provide a string for each progress step
+- (NSString *)connectionStringForStep:(int)step { return nil; };
 
 //Reset the libgaim account, causing it to forget all saved information
 //We don't want libgaim keeping track of anything between sessions... we handle all that on our own
