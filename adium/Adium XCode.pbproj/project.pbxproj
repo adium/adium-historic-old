@@ -2926,7 +2926,6 @@
 				3419F40605314C2600C68BA3,
 				3419F40705314C2600C68BA3,
 				3419F40805314C2600C68BA3,
-				34CDB7AB0571D66800D50469,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2958,7 +2957,6 @@
 				3419F40C05314C2600C68BA3,
 				3419F40D05314C2600C68BA3,
 				3419F40E05314C2600C68BA3,
-				34CDB7A90571D66800D50469,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2999,7 +2997,6 @@
 				3419F41005314C2600C68BA3,
 				3419F41105314C2600C68BA3,
 				3419F41205314C2600C68BA3,
-				34CDB7AA0571D66800D50469,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16753,58 +16750,11 @@
 			settings = {
 			};
 		};
-		34CDB7A60571D66800D50469 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ESSMAdvancedPrefView.nib;
-			path = "Plugins/Standard Message View/ESSMAdvancedPrefView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34CDB7A70571D66800D50469 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESSMAdvancedPreferences.m;
-			path = "Plugins/Standard Message View/ESSMAdvancedPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34CDB7A80571D66800D50469 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESSMAdvancedPreferences.h;
-			path = "Plugins/Standard Message View/ESSMAdvancedPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34CDB7A90571D66800D50469 = {
-			fileRef = 34CDB7A60571D66800D50469;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34CDB7AA0571D66800D50469 = {
-			fileRef = 34CDB7A70571D66800D50469;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34CDB7AB0571D66800D50469 = {
-			fileRef = 34CDB7A80571D66800D50469;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34CDB7AE0571D67800D50469 = {
 			children = (
 				4BE9200A03DED0E500A8010A,
 				4BE9200B03DED0E500A8010A,
 				4BE9200E03DED34C00A8010A,
-				34CDB7A80571D66800D50469,
-				34CDB7A70571D66800D50469,
-				34CDB7A60571D66800D50469,
 				4BE9201003DEE2FE00A8010A,
 				C497516205BBAEB1009958A6,
 				4B5AAA1F03E02EB900A8010A,

@@ -30,7 +30,6 @@
     //Register our default preferences and install our preference view
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     preferences = [[AISMPreferences preferencePane] retain];
-    advancedPreferences = [[ESSMAdvancedPreferences preferencePane] retain];
     
     //Register themable preferences
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SMV_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
