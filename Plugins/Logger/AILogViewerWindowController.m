@@ -20,32 +20,32 @@
 #import "AILogToGroup.h"
 #import "ESRankingCell.h" 
 
-#define LOG_VIEWER_NIB                          @"LogViewer"
-#define LOG_VIEWER_JAG_NIB			@"LogViewerJag"
-#define KEY_LOG_VIEWER_WINDOW_FRAME             @"Log Viewer Frame"
+#define LOG_VIEWER_NIB					@"LogViewer"
+#define LOG_VIEWER_JAG_NIB				@"LogViewerJag"
+#define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
-#define TOOLBAR_LOG_VIEWER			@"Log Viewer Toolbar"
+#define TOOLBAR_LOG_VIEWER				@"Log Viewer Toolbar"
 
 #define MAX_LOGS_TO_SORT_WHILE_SEARCHING	3000	//Max number of logs we will live sort while searching
-#define LOG_SEARCH_STATUS_INTERVAL		20	//1/60ths of a second to wait before refreshing search status
+#define LOG_SEARCH_STATUS_INTERVAL			20	//1/60ths of a second to wait before refreshing search status
 
-#define LOG_CONTENT_SEARCH_MAX_RESULTS		10000	//Max results allowed from a search
+#define LOG_CONTENT_SEARCH_MAX_RESULTS	10000	//Max results allowed from a search
 #define LOG_RESULT_CLUMP_SIZE			10	//Number of logs to fetch at a time
 
-#define SEARCH_MENU                             AILocalizedString(@"Search Menu",nil)
-#define FROM                                    AILocalizedString(@"From",nil)
-#define TO                                      AILocalizedString(@"To",nil)
-#define DATE                                    AILocalizedString(@"Date",nil)
-#define CONTENT                                 AILocalizedString(@"Content",nil)
+#define SEARCH_MENU						AILocalizedString(@"Search Menu",nil)
+#define FROM							AILocalizedString(@"From",nil)
+#define TO								AILocalizedString(@"To",nil)
+#define DATE							AILocalizedString(@"Date",nil)
+#define CONTENT							AILocalizedString(@"Content",nil)
 
-#define HIDE_EMOTICONS				AILocalizedString(@"Hide Emoticons",nil)
-#define SHOW_EMOTICONS				AILocalizedString(@"Show Emoticons",nil)
+#define HIDE_EMOTICONS					AILocalizedString(@"Hide Emoticons",nil)
+#define SHOW_EMOTICONS					AILocalizedString(@"Show Emoticons",nil)
 
-#define IMAGE_EMOTICONS_OFF			@"emoticonsOff"
-#define IMAGE_EMOTICONS_ON			@"emoticonsOn"
+#define IMAGE_EMOTICONS_OFF				@"emoticonsOff"
+#define IMAGE_EMOTICONS_ON				@"emoticonsOn"
 
-#define	REFRESH_RESULTS_INTERVAL                0.5 //Interval between results refreshes while searching
+#define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
@@ -226,13 +226,9 @@ static NSString                             *filterForContactName = nil;	//Conta
 			[logFromGroupDict setObject:logFromGroup forKey:folderName];
 
 			//Table access is easiest from an array
-                        if(fromUID != nil){
-                            [fromArray addObject:fromUID];
-                        }
-                        if(serviceClass != nil){
-                            [fromServiceArray addObject:serviceClass];
-                        }
-
+			[fromArray addObject:fromUID];
+			[fromServiceArray addObject:serviceClass];
+			
 			//To processing
 			if (!(toSetForThisService = [toDict objectForKey:serviceClass])){
 				toSetForThisService = [NSMutableSet set];
@@ -244,7 +240,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 			toEnum = [[logFromGroup toGroupArray] objectEnumerator];
 			while(currentToGroup = [toEnum nextObject]){
 				NSString	*currentTo = [currentToGroup to];
-				if(![currentTo isEqual:@".DS_Store"] && currentTo != nil){
+				if(currentTo && ![currentTo isEqual:@".DS_Store"]){
 					[toSetForThisService addObject:currentTo];
 
 					//Store currentToGroup on a key in the form "SERVICE.ACCOUNT_NAME/TARGET_CONTACT"
@@ -1177,14 +1173,12 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 						if((mode != LOG_SEARCH_DATE) ||
 						   (!searchString) ||
 						   (searchStringDate && [theLog isFromSameDayAsDate:searchStringDate])){
-							
+
 							//Add the log
 							[resultsLock lock];
-                                                        if(theLog != nil){
-                                                            [selectedLogArray addObject:theLog];
-                                                        }
+							[selectedLogArray addObject:theLog];
 							[resultsLock unlock];
-							
+
 							//Update our status
 							if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_SEARCH_STATUS_INTERVAL){
 								[self updateProgressDisplay];
