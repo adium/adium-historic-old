@@ -19326,6 +19326,10 @@
 		4B539C4505EFD35400E5921A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B539C5B05EFDCDB00E5921A,
+				4B539C5C05EFDCDE00E5921A,
+				4B539C5D05EFDCE100E5921A,
+				4B539C5E05EFDCE200E5921A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19347,6 +19351,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4B539C6005EFDD9F00E5921A,
+				4B539C6205EFDD9F00E5921A,
 			);
 			isa = PBXNativeTarget;
 			name = "Webkit Message View";
@@ -19466,6 +19472,54 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		4B539C5B05EFDCDB00E5921A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5C05EFDCDE00E5921A = {
+			fileRef = 9C103FAE057127A500F3C158;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5D05EFDCE100E5921A = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5E05EFDCE200E5921A = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5F05EFDD9F00E5921A = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4B539C6005EFDD9F00E5921A = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4B539C5F05EFDD9F00E5921A;
+		};
+		4B539C6105EFDD9F00E5921A = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4B539C6205EFDD9F00E5921A = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4B539C6105EFDD9F00E5921A;
 		};
 		4B54D1020502865F00A8010A = {
 			fileEncoding = 4;
