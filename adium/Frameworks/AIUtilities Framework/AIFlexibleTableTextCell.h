@@ -37,6 +37,7 @@
 
 }
 
++ (AIFlexibleTableTextCell *)cellWithString:(NSString *)inString color:(NSColor *)inTextColor font:(NSFont *)inFont alignment:(NSTextAlignment)inAlignment;
 + (AIFlexibleTableTextCell *)cellWithAttributedString:(NSAttributedString *)inString;
 - (AIFlexibleTableTextCell *)initWithAttributedString:(NSAttributedString *)inString;
 
