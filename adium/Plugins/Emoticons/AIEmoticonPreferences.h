@@ -21,15 +21,19 @@
 
 @interface AIEmoticonPreferences : NSObject
 {
-    AIAdium			*owner;
+    AIAdium					*owner;
     AIEmoticonsPlugin		*plugin;
         
-    NSMutableArray		*packs;
+    NSMutableArray			*packs;
     
-    IBOutlet NSView		*view_prefView;
+    NSMutableArray			*curEmoticons;
+    //NSArray				*previewEmoticons;
+    
+    IBOutlet NSView			*view_prefView;
     IBOutlet NSButton		*checkBox_enable;
     IBOutlet NSTableView	*table_packList;
     IBOutlet NSTextView		*text_packInfo;
+    IBOutlet NSTableView	*table_curEmoticons;
     //IBOutlet AICheckboxList	*checkList_packList;
 }
 

@@ -18,6 +18,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 #import "AIEmoticonsPlugin.h"
+#import "AIEmoticon.h"
 
 #define	EMOTICON_PREF_NIB		@"EmoticonPrefs"
 #define EMOTICON_PREF_TITLE		@"Emoticons/Smilies"
@@ -25,6 +26,8 @@
 @interface AIEmoticonPreferences (PRIVATE)
 - (void)configureView;
 - (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;
+- (void)getCurrentEmoticons;
+- (void)initTable:(NSTableView *)table	withEmoticons:(NSArray *)emoticons;
 @end
 
 @implementation AIEmoticonPreferences
@@ -62,6 +65,14 @@
     }
 }
 
+- (void)dealloc
+{
+    [packs release];
+    if (curEmoticons)
+        [curEmoticons release];
+    [owner release];
+}
+
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet
@@ -71,6 +82,7 @@
     owner = [inOwner retain];
     plugin = pluginSet;
     packs = [[NSMutableArray alloc] init];
+    curEmoticons = nil;
 
     //Register our preference pane
     [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Emoticons withDelegate:self label:EMOTICON_PREF_TITLE]];
@@ -124,83 +136,184 @@
     //Emoticon Packs
     [plugin allEmoticonPacks:packs];
     [table_packList reloadData];
+    
+    //Init NSTableView of current emoticons
+    [self getCurrentEmoticons];
+    [table_curEmoticons setDataSource:self];
+    [self initTable:table_curEmoticons  withEmoticons:curEmoticons];
+}
+
+- (void)getCurrentEmoticons
+{
+    if (curEmoticons)
+        [curEmoticons release];
+        
+    curEmoticons = [[plugin getEmoticons] retain];
+    
+    // Stopgap measure: until we write the emoticon-gathering right,
+    // go through and remove duplicates from the array
+    NSEnumerator	*enumerator = [curEmoticons objectEnumerator];
+    AIEmoticon		*emoticon = nil;
+    NSMutableArray	*pathsUsed = [NSMutableArray array],
+                    *emoticonsToRemove = [NSMutableArray array];
+    while (emoticon = [enumerator nextObject]) {
+        if ([pathsUsed indexOfObject:[emoticon path]] != NSNotFound) {
+            [emoticonsToRemove addObject:emoticon];
+        } else {
+            [pathsUsed addObject:[emoticon path]];
+        }
+    }
+    
+    //NSLog (@"Removing %d emoticons from an array of %d.", [emoticonsToRemove count], [curEmoticons count]);
+    enumerator = [emoticonsToRemove objectEnumerator];
+    while (emoticon = [enumerator nextObject]) {
+        [curEmoticons removeObject:emoticon];
+    }
+}
+
+- (void)initTable:(NSTableView *)table	withEmoticons:(NSArray *)emoticons
+{
+    // Determine optimal cell size
+    float	dim = 5;
+    NSEnumerator	*enumerator = [emoticons objectEnumerator];
+    AIEmoticon		*emoticon = nil;
+    NSImage			*image = nil;
+    
+    while (emoticon = [enumerator nextObject]) {
+        image = [[[NSImage alloc] initWithContentsOfFile:[emoticon path]] autorelease];
+        
+        if ([image size].height > dim)
+            dim = [image size].height;
+            
+        if ([image size].width > dim)
+            dim = [image size].width;
+    }
+    
+    if (dim > 32.0)		dim = 32.0;
+    
+    // Compare cell size to table dimensions
+    //float targetColCount = [table frame].size.width / (dim + 4);
+    float targetColCount = [table visibleRect].size.width / (dim + 4);
+    //NSLog (@"Target column count: %f, Table width: %f", targetColCount, [table bounds].size.width);
+    [table setRowHeight:dim]; 
+    
+    // Remove old columns
+    NSArray	*oldColumns = [table tableColumns];
+    enumerator = [oldColumns objectEnumerator];
+    NSTableColumn	*curColumn = nil;
+    
+    while (curColumn = [enumerator nextObject]) {
+        [table removeTableColumn:curColumn];
+    }
+    
+    // Create new columns
+    unsigned int i;	// i starts at 2 because the numbers mesh to make the right number of columns that way.
+    for (i = 2; i < targetColCount; i++)
+    {
+        curColumn = [[[NSTableColumn alloc] initWithIdentifier:@"EmoticonColumn"] autorelease];
+        [curColumn setWidth:dim + 4];	// "+ 4" adds padding since we are viewing a string w/ attachment
+        [curColumn setResizable:false];
+        [curColumn setEditable:false];
+        [curColumn setTableView:table];
+        
+        //NSLog (@"Adding column #%d", i);
+        
+        [table addTableColumn:curColumn];
+        //[table addTableColumn:[curColumn copy]];
+    }
 }
 
 //Emoticon Packs Table View ----------------------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return([packs count]);
+    if (tableView == table_packList)
+        return([packs count]);
+    else if (tableView == table_curEmoticons)
+    {
+        return(([curEmoticons count] / [tableView numberOfColumns]) + 1);	// Should check remainder, I am assuming there is one and adding one.
+    }
+    else
+    {
+        NSLog (@"Emoticon prefs Rowcount request: Unrecognized table %@", tableView);
+        return 0;
+    }
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSString	*identifier = [tableColumn identifier];
-    if([identifier compare:@"check"] == 0){
-        //if(row == 0/*[usersToImport containsObject:[availableUsers objectAtIndex:row]]*/){
-        //    return([NSNumber numberWithBool:YES]);
-        //}else{
-        //    return([NSNumber numberWithBool:NO]);
-        //}
-	return([[[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_PREFS] objectForKey:@"inUse"]);
-    }else{
-	/*if (row == 0)
-    {
-	    return @"First Item :-)";
+    if  (tableView == table_packList)
+    {	// Return either whether the pack is enabled, or the pack name
+        NSString	*identifier = [tableColumn identifier];
+        if([identifier compare:@"check"] == 0){
+            return([[[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_PREFS] objectForKey:@"inUse"]);
+        }else{
+            return([[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_TITLE]);
+        }
     }
-	else
+    else if (tableView == table_curEmoticons)
     {
-	    return @"Other Item :-)";
-    }*/
-
-	return([[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_TITLE]);
-        //return([availableUsers objectAtIndex:row]);
-}
+        unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
+        
+        if (index < [curEmoticons count])
+            return [[curEmoticons objectAtIndex:index] attributedEmoticon];
+        else
+            return nil;
+    }
+    else
+        return nil;
 }
 
 // Received when checkboxes are checked and unchecked
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_SOURCE], [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_TITLE]];
-    NSMutableDictionary*	prefDict = [NSMutableDictionary dictionaryWithDictionary:[[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_PREFS]];
-
-    switch ([object intValue])
+    if (tableView == table_packList)
     {
-	case	NSOffState:
-	    // Turn off selected emoticon-pack
-	    [prefDict setObject:[NSNumber numberWithInt:NSOffState] forKey:@"inUse"];
-	    break;
-
-	case	NSOnState:
-	{	// Turn on selected emoticon-pack
-			//Conflict resolution
-   // For now, this just turns off the other packs.  Later it will check for individual conflicts
-	    NSEnumerator	*numer = [packs objectEnumerator];
-	    NSMutableDictionary	*packDict = nil;
-
-	    while (packDict = [numer nextObject])
-	    {
-		if ([[[packDict objectForKey:KEY_EMOTICON_PACK_PREFS] objectForKey:@"inUse"] intValue] != NSOffState)
-		{
-		    NSString* curPackKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
-
-		    NSMutableDictionary* tempPrefs = [NSMutableDictionary dictionaryWithDictionary:[packDict objectForKey:KEY_EMOTICON_PACK_PREFS]];
-		    [tempPrefs setObject:[NSNumber numberWithInt:NSOffState] forKey:@"inUse"];
-
-		    [[owner preferenceController] setPreference:tempPrefs forKey:curPackKey group:PREF_GROUP_EMOTICONS];
-		}
-	    }
-
-	    //Action
-	    [prefDict setObject:[NSNumber numberWithInt:NSOnState] forKey:@"inUse"];
-	    break;
-	}
-	case	NSMixedState:
-	    NSLog (@"Mixed State checkbox in pack list, right after click.");
+        NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_SOURCE], [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_TITLE]];
+        NSMutableDictionary*	prefDict = [NSMutableDictionary dictionaryWithDictionary:[[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_PREFS]];
+    
+        switch ([object intValue])
+        {
+        case	NSOffState:
+            // Turn off selected emoticon-pack
+            [prefDict setObject:[NSNumber numberWithInt:NSOffState] forKey:@"inUse"];
+            break;
+    
+        case	NSOnState:
+        {	// Turn on selected emoticon-pack
+                //Conflict resolution
+    // For now, this just turns off the other packs.  Later it will check for individual conflicts
+            NSEnumerator	*numer = [packs objectEnumerator];
+            NSMutableDictionary	*packDict = nil;
+    
+            while (packDict = [numer nextObject])
+            {
+            if ([[[packDict objectForKey:KEY_EMOTICON_PACK_PREFS] objectForKey:@"inUse"] intValue] != NSOffState)
+            {
+                NSString* curPackKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
+    
+                NSMutableDictionary* tempPrefs = [NSMutableDictionary dictionaryWithDictionary:[packDict objectForKey:KEY_EMOTICON_PACK_PREFS]];
+                [tempPrefs setObject:[NSNumber numberWithInt:NSOffState] forKey:@"inUse"];
+    
+                [[owner preferenceController] setPreference:tempPrefs forKey:curPackKey group:PREF_GROUP_EMOTICONS];
+            }
+            }
+    
+            //Action
+            [prefDict setObject:[NSNumber numberWithInt:NSOnState] forKey:@"inUse"];
+            break;
+        }
+        case	NSMixedState:
+            NSLog (@"Mixed State checkbox in pack list, right after click.");
+        }
+    
+        [[owner preferenceController] setPreference:prefDict forKey:packKey group:PREF_GROUP_EMOTICONS];
+        [plugin	loadEmoticonsFromPacks];
+        [self configureView];	// Maybe we can take this out later.  I want to make sure the dicts in the emoticon
+                // packs are up-to-date.  Right now, we certainly need it.
     }
-
-    [[owner preferenceController] setPreference:prefDict forKey:packKey group:PREF_GROUP_EMOTICONS];
-    [plugin	loadEmoticonsFromPacks];
-    [self configureView];	// Maybe we can take this out later.  I want to make sure the dicts in the emoticon
-			  // packs are up-to-date.  Right now, we certainly need it.
+    else
+    {
+        NSLog (@"Emoticon prefs, setObjectValue ignored.");
+    }
 }
 @end
