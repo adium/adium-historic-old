@@ -2454,24 +2454,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 				  withObject:inUID
 				  withObject:adiumAccount];
 }
-#warning This may no longer be needed. Check if Gaim is now updating MSN icons automagically.
-- (oneway void)gaimThreadMSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
-{
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
-		
-		MsnSession *session;
-		MsnUserList *userlist;
-		MsnUser *user;
-		
-		if ((session = account->gc->proto_data) &&
-			(userlist = session->userlist) &&
-			(user = msn_userlist_find_user(userlist, [inUID UTF8String]))){
-			msn_queue_buddy_icon_request(user);
-		}
-	}
-}
-
 
 #pragma mark Request callbacks
 - (oneway void)doRequestInputCbValue:(NSValue *)callBackValue
