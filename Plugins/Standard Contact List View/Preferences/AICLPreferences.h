@@ -14,8 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
-#define KEY_LIST_LAYOUT_NAME			@"List Layout Name"
-#define KEY_LIST_THEME_NAME				@"List Theme Name"
 
 @interface AICLPreferences : AIPreferencePane {
 	IBOutlet	NSTableView		*tableView_layout;
@@ -38,13 +36,23 @@
 	NSImage		*layoutPillows;
 }
 
-+ (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
-+ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
+- (void)xtrasChanged:(NSNotification *)notification;
+- (void)updateLayouts;
+- (void)updateThemes;
+- (void)updateSelectedLayoutAndTheme;
+
+//Editing
 - (IBAction)spawnLayout:(id)sender;
 - (IBAction)spawnTheme:(id)sender;
-- (IBAction)deleteLayout:(id)sender;
-- (IBAction)deleteTheme:(id)sender;
 - (IBAction)editTheme:(id)sender;
 - (IBAction)editLayout:(id)sender;
+- (IBAction)deleteLayout:(id)sender;
+- (IBAction)deleteTheme:(id)sender;
+
+//Table Delegate
+- (int)numberOfRowsInTableView:(NSTableView *)tableView;
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row;
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 
 @end

@@ -13,6 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#define KEY_LIST_LAYOUT_NAME			@"List Layout Name"
+#define KEY_LIST_THEME_NAME				@"List Theme Name"
+
 @class AIListWindowController, AICLPreferences;
 @protocol AIContactListController;
 
@@ -22,6 +25,17 @@
 	int							windowStyle;
 }
 
+//Contact List Controller
 - (void)contactListDidClose;
+- (void)showContactListAndBringToFront:(BOOL)bringToFront;
+- (BOOL)contactListIsVisibleAndMain;
+- (void)closeContactList;
+- (void)contactListDidClose;
+
+//Themes and Layouts
++ (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup;
++ (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
++ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
++ (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
 
 @end

@@ -8,13 +8,12 @@
 
 #import "AIListLayoutWindowController.h"
 #import "AICLPreferences.h"
+#import "AISCLViewPlugin.h"
 
 @interface AIListLayoutWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
-
 - (void)configureControls;
 - (void)configureControlDimming;
-
 - (void)updateSliderValues;
 @end
 
@@ -95,7 +94,11 @@
 //Cancel
 - (IBAction)cancel:(id)sender
 {
-    [self closeWindow:sender];
+	//Revert
+	[[adium preferenceController] setPreference:layoutName
+										 forKey:KEY_LIST_LAYOUT_NAME
+										  group:PREF_GROUP_CONTACT_LIST];
+	[self closeWindow:sender];
 }
 
 //
@@ -105,22 +108,22 @@
 	
 	//If the user has renamed this layout, delete the old one
 	if(![newName isEqualTo:layoutName]){
-		[AICLPreferences deleteSetWithName:layoutName
+		[AISCLViewPlugin deleteSetWithName:layoutName
 								 extension:LIST_LAYOUT_EXTENSION
 								  inFolder:LIST_LAYOUT_FOLDER];
 	}
 	
 	//Save the layout
-	if([AICLPreferences createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
+	if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
 											withName:[textField_layoutName stringValue]
 										   extension:LIST_LAYOUT_EXTENSION
 											inFolder:LIST_LAYOUT_FOLDER]){
+		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_LAYOUT_EXTENSION];
 
 		[[adium preferenceController] setPreference:newName
 											 forKey:KEY_LIST_LAYOUT_NAME
 											  group:PREF_GROUP_CONTACT_LIST];
 		
-		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_LAYOUT_EXTENSION];
 		[self closeWindow:sender];
 	}
 }
