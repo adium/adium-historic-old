@@ -39,20 +39,6 @@
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
 //-------------------------------------------------------------------------------------------------------
-//Status Menu
-  Add a 'Status' menu between view and contact.  This menu would contain
-	- Selectable user-defined states (Offline, available, at school, busy, afk, ...)
-	- Account-specific connectivity & convenience (Moved from the file menu)
-  These changes allow for removal of account and status related menu items
-  from the file menu.
-
-//Status Window
-  The new state system should focus on ways for the user to
-	- Quickly set a specific status (quick away, idle, dnd, available message, alias)
-	- Define 'states' which apply status across services and alter adium behavior
-  The new state system should be contained within its own window, continuing
-  with the trend to move 'content' out of the preference window.
-
 //Auto-completion
   Tab auto-completion in the message window [Evan: How would one insert a tab with this implemented?]
 	- Contact names (Mainly for multi-user chat)
