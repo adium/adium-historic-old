@@ -173,7 +173,7 @@ static NSMutableArray *targetsToNotifyArray = nil;
 
 + (void)_growlIsReady:(NSNotification *)notification
 {
-	NSLog(@"Received %@",notification);
+	AILog(@"Growl is installed and ready.");
 	NSEnumerator	*enumerator = [targetsToNotifyArray objectEnumerator];
 	NSDictionary	*infoDict;
 	while( (infoDict = [enumerator nextObject] ) ) {
