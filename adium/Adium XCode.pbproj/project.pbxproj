@@ -8937,6 +8937,7 @@
 				B774EFC4058C48F6009C7C67,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
+				4B539C5605EFD9D500E5921A,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9876,6 +9877,7 @@
 				3419FE1D0531585600C68BA3,
 				34086AAD05E5E5E100ABB759,
 				3419FE1E0531585600C68BA3,
+				4B539C5705EFDA0E00E5921A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19340,7 +19342,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plists/Webkit_Message_View-Info.plist";
+				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
 				PRODUCT_NAME = "Webkit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -19443,6 +19445,24 @@
 		};
 		4B539C5405EFD6FB00E5921A = {
 			fileRef = 4B539C5205EFD6FB00E5921A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C5505EFD9D500E5921A = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 4B539C4605EFD35400E5921A;
+			remoteInfo = "Webkit Message View";
+		};
+		4B539C5605EFD9D500E5921A = {
+			isa = PBXTargetDependency;
+			target = 4B539C4605EFD35400E5921A;
+			targetProxy = 4B539C5505EFD9D500E5921A;
+		};
+		4B539C5705EFDA0E00E5921A = {
+			fileRef = 4B539C4705EFD35400E5921A;
 			isa = PBXBuildFile;
 			settings = {
 			};
