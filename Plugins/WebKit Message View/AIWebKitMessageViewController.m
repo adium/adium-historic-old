@@ -6,9 +6,11 @@
 //
 
 #import "AIWebKitMessageViewController.h"
-//#import "ESWebFrameViewAdditions.h"
+
+//#define	WEBKIT_DEBUG
 
 #define KEY_WEBKIT_USER_ICON @"WebKitUserIconPath"
+
 @interface AIWebKitMessageViewController (PRIVATE)
 //Loading
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -387,7 +389,10 @@ DeclareString(AppendNextMessage);
 	//Load and apply the new variant
 	NSString	*cssPath = ([variantID length] ? [NSString stringWithFormat:@"Variants/%@.css",variantID] : @"main.css");
 	NSString	*setStylesheetJavaScript =   [NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");", cssPath];
-	
+
+#ifdef WEBKIT_DEBUG
+	AILog(@"_completeVariantIDSet: %@ similar: %i : %@",variantID,setStylesheetJavaScript);
+#endif
 	[webView stringByEvaluatingJavaScriptFromString:setStylesheetJavaScript];
 	//Remember this variant ID
 	[loadedVariantID release]; loadedVariantID = [variantID retain];
@@ -737,6 +742,10 @@ DeclareString(AppendNextMessage);
 	}else{
 		format = (contentIsSimilar ? AppendNextMessageWithScroll : AppendMessageWithScroll);
 	}
+	
+#ifdef WEBKIT_DEBUG
+	AILog(@"_addContentMessage: %@ similar: %i : %@",content,contentIsSimilar,[NSString stringWithFormat:format, newHTML]);
+#endif
 	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:format, newHTML]];
 	
 	[newHTML release];
@@ -758,6 +767,9 @@ DeclareString(AppendNextMessage);
 	}else{
 		format = AppendMessageWithScroll;
 	}
+#ifdef WEBKIT_DEBUG
+	AILog(@"_addContentStatus: %@ similar: %i : %@",content,contentIsSimilar,[NSString stringWithFormat:AppendMessage, newHTML]);
+#endif
 	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:AppendMessage, newHTML]];
 	
 	[newHTML release];
