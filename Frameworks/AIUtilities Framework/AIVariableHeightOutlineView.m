@@ -81,7 +81,9 @@
 		}else{
 			[self expandItem:item];
 		}
-	}	
+	}else{
+		[super mouseDown:theEvent];
+	}
 	
 //	if((expandOnClick) && 
 //	   (item) && 
