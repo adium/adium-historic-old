@@ -116,6 +116,11 @@
 					<string>AdiumSuite.AIChat</string>
 				</dict>
 			</dict>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>AdiumSuite.CreateChat</key>
+				<string>createChatCommand:</string>
+			</dict>
 		</dict>
 		
 		<key>AIInterfaceController</key>
@@ -203,10 +208,19 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-				<key>displayServiceID</key>
+				<key>serviceID</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>AsID</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>				
+				</dict>
+				<key>serviceClass</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>AsSC</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -633,6 +647,42 @@
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+		</dict>
+		
+		<key>CreateChat</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>AdIM</string>
+			<key>AppleEventCode</key>
+			<string>cCdM</string>
+			
+			<key>Arguments</key>
+			<dict>
+				<key>UID</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>TO  </string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>serviceID</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>cCsI</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>Acht</string>
+			<key>Type</key>
+			<string>AdiumSuite.AIChat</string>
 		</dict>
 	</dict>
 	
