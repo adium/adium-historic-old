@@ -99,7 +99,7 @@
 //Called by a context menu
 - (IBAction)renameGroup:(id)sender
 {
-	AIListObject	*object = [[adium menuController] contactualMenuContact];
+//	AIListObject	*object = [[adium menuController] contactualMenuContact];
 	
 }
 
