@@ -222,14 +222,14 @@
 	desiredStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
 																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[stylePath release];
-	style = [[plugin messageStyleBundleWithName:desiredStyle] retain];
+	style = [plugin messageStyleBundleWithName:desiredStyle];
 	
 	//If the preferred style is unavailable, load Smooth Operator
 	if (!style){
 		desiredStyle = @"Smooth Operator";
-		style = [[plugin messageStyleBundleWithName:desiredStyle] retain];
+		style = [plugin messageStyleBundleWithName:desiredStyle];
 	}
-	stylePath = [style resourcePath];
+	stylePath = [[style resourcePath] retain];
 	
 	desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:desiredStyle]
 																		   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
