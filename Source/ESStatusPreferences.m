@@ -101,7 +101,7 @@
     [scrollView_stateList setAutoHideScrollBar:YES];
 	
 	//Enable dragging of states
-	[tableView_stateList registerForDraggedTypes:[NSArray arrayWithObjects:STATE_DRAG_TYPE,nil]];
+	[tableView_stateList registerForDraggedTypes:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
 	
     //Custom vertically-centered text cell for status state names
     cell = [[AIVerticallyCenteredTextCell alloc] init];
