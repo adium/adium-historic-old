@@ -747,7 +747,7 @@ DeclareString(UID);
 			 fromContainedContactsArray:containedContactsArray
 					updatingPreferences:updatePreferences];
 	
-	[metaContact setDelayContainedObjectSorting:YES];
+	[metaContact setDelayContainedObjectSorting:NO];
 }
 
 - (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray updatingPreferences:(BOOL)updatePreferences
@@ -802,8 +802,6 @@ DeclareString(UID);
 	}
 	
 	if(shouldSaveMetaContacts) [self _saveMetaContacts:allMetaContactsDict];
-
-	[metaContact setDelayContainedObjectSorting:NO];
 }
 
 
@@ -2009,10 +2007,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	NSEnumerator	*enumerator;
 	AIListContact	*listObject;
 	
+	[self delayListObjectNotifications];
+	
 	enumerator = [contactArray objectEnumerator];
 	while(listObject = [enumerator nextObject]){
 		[[listObject account] addContacts:[NSArray arrayWithObject:listObject] toGroup:group];
 	}
+	
+	[self endListObjectNotificationsDelay];
 }
 
 - (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService
@@ -2028,16 +2030,33 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	NSEnumerator	*enumerator;
 	AIListContact	*listContact;
 
+	[self delayListObjectNotifications];
+
+	if([group respondsToSelector:@selector(setDelayContainedObjectSorting:)]){
+		[(id)group setDelayContainedObjectSorting:YES];
+	}
+	
 	enumerator = [objectArray objectEnumerator];
 	while(listContact = [enumerator nextObject]){
 		[self moveContact:listContact toGroup:group];
-		
+
 		//Set the new index / position of the object
 		[self _positionObject:listContact atIndex:index inGroup:group];
 	}
 
-	//Resort
-	[self sortContactList];
+	[self endListObjectNotificationsDelay];
+
+	if([group respondsToSelector:@selector(setDelayContainedObjectSorting:)]){
+		[(id)group setDelayContainedObjectSorting:NO];
+	}
+	
+	/*
+	 Resort the entire list if we are moving within or between AIListGroup objects
+	 (other containing objects such as metaContacts will handle their own sorting).
+	*/
+	if([group isKindOfClass:[AIListGroup class]]){
+		[self sortContactList];
+	}
 }
 
 - (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group

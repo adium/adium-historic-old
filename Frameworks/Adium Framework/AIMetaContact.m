@@ -875,7 +875,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Number of containd objects
 - (unsigned)containedObjectsCount
 {
-    return([containedObjects count]);
+    return([[self containedObjects] count]);
 }
 
 //Test for the presence of an object in our group
