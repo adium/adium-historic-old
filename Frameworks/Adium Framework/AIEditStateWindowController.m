@@ -268,16 +268,22 @@ Adium, Copyright 2001-2005, Adam Iser
 	if(needToRebuildPopUpState){
 		[self configureStateMenu];
 	}
-	
+
 	description = [[adium statusController] descriptionForStateOfStatus:statusState];
 	index = (description ? [popUp_state indexOfItemWithTitle:description] : -1);
 	if(index != -1){
 		[popUp_state selectItemAtIndex:index];
+
 	}else{
-		[popUp_state setTitle:[NSString stringWithFormat:@"%@ (%@)",
-			(description ? description : @"Unknown"),
-			AILocalizedString(@"No compatible accounts connected",nil)]];
-		
+		if(description){
+			[popUp_state setTitle:[NSString stringWithFormat:@"%@ (%@)",
+				description,
+				AILocalizedString(@"No compatible accounts connected",nil)]];
+
+		}else{
+			[popUp_state setTitle:AILocalizedString(@"Unknown",nil)];			
+		}
+
 		needToRebuildPopUpState = YES;
 	}
 
