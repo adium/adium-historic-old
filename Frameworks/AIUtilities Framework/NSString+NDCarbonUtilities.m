@@ -81,7 +81,7 @@
  */
 + (NSString *)stringWithPascalString:(const ConstStr255Param )aPStr
 {
-	return (NSString*)CFStringCreateWithPascalString( kCFAllocatorDefault, aPStr, kCFStringEncodingMacRomanLatin1 );
+	return (NSString*)CFStringCreateWithPascalString( kCFAllocatorDefault, aPStr, kCFStringEncodingMacRoman );
 }
 
 /*
@@ -89,7 +89,7 @@
  */
 - (BOOL)getPascalString:(StringPtr)aBuffer length:(short)aLength
 {
-	return CFStringGetPascalString( (CFStringRef)self, aBuffer, aLength, kCFStringEncodingMacRomanLatin1) != 0;
+	return CFStringGetPascalString( (CFStringRef)self, aBuffer, aLength, kCFStringEncodingMacRoman) != 0;
 }
 
 /*
