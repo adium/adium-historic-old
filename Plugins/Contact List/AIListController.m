@@ -21,6 +21,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/ESOutlineViewAdditions.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
