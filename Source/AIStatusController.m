@@ -122,7 +122,8 @@
 		NSString		*internalObjectID;
 		
 		while(internalObjectID = [enumerator nextObject]){
-			[accountsToConnect addObject:[[adium accountController] accountWithInternalObjectID:internalObjectID]];
+			AIAccount	*account = [[adium accountController] accountWithInternalObjectID:internalObjectID];
+			if(account) [accountsToConnect addObject:account];
 		}
 	}else{
 		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
