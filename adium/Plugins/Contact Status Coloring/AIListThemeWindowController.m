@@ -119,6 +119,10 @@
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
     [checkBox_offline setState:[[preferenceDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
 	
+	//Groups
+	[colorWell_groupBackground setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
+	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
+	
 	//Background Image
 	[checkBox_useBackgroundImage setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
 	NSString *backgroundImagePath = [[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
@@ -293,7 +297,19 @@
                                               group:PREF_GROUP_LIST_THEME];
 		[self updateSliderValues];
 		
+    }else if(sender == colorWell_groupBackground){
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_GROUP_BACKGROUND
+                                              group:PREF_GROUP_LIST_THEME];
+		
+    }else if(sender == colorWell_groupBackgroundGradient){
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT
+                                              group:PREF_GROUP_LIST_THEME];
+		
 	}		
+
+	
 	
 	[self configureControlDimming];
 }

@@ -299,4 +299,80 @@
     return(closeImage);
 }
 
+//Fun drawing toys
+//Draw an image, altering and returning the available destination rect
+- (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position
+{
+	NSRect	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
+
+	//If we're passed a 0,0 size, use the image's size
+	if(size.width == 0 || size.height == 0) size = [self size];
+	
+	//Draw
+	[self drawInRect:drawRect
+			fromRect:NSMakeRect(0, 0, [self size].width, [self size].height)
+		   operation:NSCompositeSourceOver
+			fraction:1.0];
+	
+	if(position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
+	rect.size.width -= size.width;
+	
+	return(rect);
+}
+
+- (NSRect)rectForDrawingInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position
+{
+	NSRect	drawRect;
+	
+	//If we're passed a 0,0 size, use the image's size
+	if(size.width == 0 || size.height == 0) size = [self size];
+	
+	//Adjust
+	switch(position){
+		case IMAGE_POSITION_LEFT:
+			drawRect = NSMakeRect(rect.origin.x,
+								  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),
+								  size.width,
+								  size.height);
+		break;
+		case IMAGE_POSITION_RIGHT:
+			drawRect = NSMakeRect(rect.origin.x + rect.size.width - size.width,
+								  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),
+								  size.width,
+								  size.height);
+		break;
+		case IMAGE_POSITION_LOWER_LEFT:
+			drawRect = NSMakeRect(rect.origin.x,
+								  rect.origin.y + (rect.size.height - size.height),
+								  size.width,
+								  size.height);
+		break;
+		case IMAGE_POSITION_LOWER_RIGHT:
+			drawRect = NSMakeRect(rect.origin.x + (rect.size.width - size.width),
+								  rect.origin.y + (rect.size.height - size.height),
+								  size.width,
+								  size.height);
+		break;
+	}
+	
+	return(drawRect);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @end

@@ -9,9 +9,6 @@
 #import "AIListGroupCell.h"
 
 #define FLIPPY_TEXT_PADDING		3
-#define GROUP_FONT_SIZE			11
-
-#define GROUP_TEXT_ALIGN		NSCenterTextAlignment// NSLeftTextAlignment //NSCenterTextAlignment
 
 @implementation AIListGroupCell
 
@@ -49,11 +46,6 @@
 - (NSColor *)flippyColor
 {
 	return([NSColor blackColor]);
-}
-
-- (NSFont *)font
-{
-	return([NSFont boldSystemFontOfSize:GROUP_FONT_SIZE]);
 }
 
 - (NSColor *)textColor

@@ -19,6 +19,29 @@
 	return(newCell);
 }
 
+
+
+- (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor
+{
+	if(inBackgroundColor != backgroundColor){
+		[backgroundColor release];
+		backgroundColor = [inBackgroundColor retain];
+	}
+	if(inGradientColor != gradientColor){
+		[gradientColor release];
+		gradientColor = [inGradientColor retain];
+	}
+}
+
+
+
+
+
+
+
+
+
+
 //
 - (NSColor *)flippyColor
 {
@@ -39,8 +62,8 @@
 //Gradient (caaache me)
 - (AIGradient *)backgroundGradient
 {
-	return([AIGradient gradientWithFirstColor:[NSColor colorWithCalibratedRed:0.542 green:0.726 blue:1.0 alpha:1.0]
-								  secondColor:[NSColor colorWithCalibratedRed:0.416 green:0.660 blue:1.0 alpha:1.0]
+	return([AIGradient gradientWithFirstColor:backgroundColor
+								  secondColor:gradientColor
 									direction:AIVertical]);
 }
 

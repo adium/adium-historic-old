@@ -62,5 +62,9 @@
 	<string>255,255,255</string>
 	<key>Grid Color</key>
 	<string>245,245,245</string>
+	<key>Group Background</key>
+	<string>138,186,255</string>
+	<key>Group Background Gradient</key>
+	<string>106,169,255</string>
 </dict>
 </plist>

@@ -46,6 +46,13 @@
 - (void)windowDidLoad
 {
 	[self configureControls];
+
+	[fontField_contact setShowPointSize:YES];
+	[fontField_contact setShowFontFace:YES];
+	[fontField_status setShowPointSize:YES];
+	[fontField_status setShowFontFace:YES];
+	[fontField_group setShowPointSize:YES];
+	[fontField_group setShowFontFace:YES];
 }
 
 //Window is closing
@@ -105,8 +112,9 @@
 	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	[slider_groupBottomSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING] intValue]];
 	[slider_windowTransparency setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue] * 100.0)];
+	[slider_contactLeftIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 	[self updateSliderValues];
-
+	
 	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
@@ -115,6 +123,11 @@
 	[checkBox_drawGrid setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue]];
 	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
 	
+	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
+	[fontField_status setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
+	[fontField_group setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
+	NSLog(@"%@",[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT]);
+	NSLog(@"%@",[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]);
 	[self configureControlDimming];
 }
 
@@ -225,6 +238,38 @@
                                              forKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self updateSliderValues];
+
+    }else if(sender == slider_contactLeftIndent){
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+                                             forKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		[self updateSliderValues];
+	}
+}
+
+- (BOOL)fontPreviewField:(JVFontPreviewField *)field shouldChangeToFont:(NSFont *)font
+{
+	return(YES);
+}
+
+- (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
+{
+	if(field == fontField_contact){
+        [[adium preferenceController] setPreference:[font stringRepresentation]
+                                             forKey:KEY_LIST_LAYOUT_CONTACT_FONT
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(field == fontField_status){
+        [[adium preferenceController] setPreference:[font stringRepresentation]
+                                             forKey:KEY_LIST_LAYOUT_STATUS_FONT
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(field == fontField_group){
+		NSLog(@"%@",[font stringRepresentation]);
+        [[adium preferenceController] setPreference:[font stringRepresentation]
+                                             forKey:KEY_LIST_LAYOUT_GROUP_FONT
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		
 	}
 }
 
@@ -238,6 +283,7 @@
 	[textField_groupTopSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupTopSpacing intValue]]];
 	[textField_groupBottomSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupBottomSpacing intValue]]];
 	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
+	[textField_contactLeftIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactLeftIndent intValue]]];
 }
 
 //Configure control dimming

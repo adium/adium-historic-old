@@ -46,6 +46,8 @@
 #define KEY_LIST_THEME_BACKGROUND_COLOR			@"Background Color"
 #define KEY_LIST_THEME_GRID_COLOR				@"Grid Color"
 
+#define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"
+#define KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT	@"Group Background Gradient"
 
 @interface AIListThemeWindowController : AIWindowController {
     IBOutlet	NSButton	*checkBox_signedOff;
@@ -93,6 +95,11 @@
 	
 	IBOutlet	NSSlider	*slider_backgroundFade;
 	IBOutlet	NSTextField	*textField_backgroundFade;
+	
+	
+	IBOutlet	NSColorWell	*colorWell_groupBackground;
+	IBOutlet	NSColorWell	*colorWell_groupBackgroundGradient;
+
 }
 
 + (id)listThemeOnWindow:(NSWindow *)parentWindow;

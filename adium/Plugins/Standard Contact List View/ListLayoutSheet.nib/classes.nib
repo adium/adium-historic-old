@@ -12,6 +12,9 @@
                 "checkBox_userIconVisible" = NSButton; 
                 "checkBox_verticalAutosizing" = NSButton; 
                 "checkBox_windowHasShadow" = NSButton; 
+                "fontField_contact" = JVFontPreviewField; 
+                "fontField_group" = JVFontPreviewField; 
+                "fontField_status" = JVFontPreviewField; 
                 "popUp_contactCellStyle" = NSPopUpButton; 
                 "popUp_contactTextAlignment" = NSPopUpButton; 
                 "popUp_groupCellStyle" = NSPopUpButton; 
@@ -20,11 +23,13 @@
                 "popUp_statusIconPosition" = NSPopUpButton; 
                 "popUp_userIconPosition" = NSPopUpButton; 
                 "popUp_windowStyle" = NSPopUpButton; 
+                "slider_contactLeftIndent" = NSSlider; 
                 "slider_contactSpacing" = NSSlider; 
                 "slider_groupBottomSpacing" = NSSlider; 
                 "slider_groupTopSpacing" = NSSlider; 
                 "slider_userIconSize" = NSSlider; 
                 "slider_windowTransparency" = NSSlider; 
+                "textField_contactLeftIndent" = NSTextField; 
                 "textField_contactSpacing" = NSTextField; 
                 "textField_groupBottomSpacing" = NSTextField; 
                 "textField_groupTopSpacing" = NSTextField; 
@@ -38,7 +43,14 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

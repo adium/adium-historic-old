@@ -33,6 +33,12 @@
 #define KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE		@"Vertical Autosizing"
 #define KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY		@"Window Transparency"
 
+#define KEY_LIST_LAYOUT_CONTACT_FONT			@"Contact Font"
+#define KEY_LIST_LAYOUT_STATUS_FONT				@"Status Font"
+#define KEY_LIST_LAYOUT_GROUP_FONT				@"Group Font"
+
+#define KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT		@"Contact Left Indent"
+
 typedef enum {
 	WINDOW_STYLE_STANDARD = 0,
     WINDOW_STYLE_MOCKIE,
@@ -83,7 +89,13 @@ typedef enum {
 	IBOutlet		NSSlider			*slider_groupBottomSpacing;
 	IBOutlet		NSTextField			*textField_groupBottomSpacing;
 	IBOutlet		NSSlider			*slider_windowTransparency;
-	IBOutlet		NSTextField			*textField_windowTransparency;	
+	IBOutlet		NSTextField			*textField_windowTransparency;
+	IBOutlet		NSSlider			*slider_contactLeftIndent;
+	IBOutlet		NSTextField			*textField_contactLeftIndent;
+	
+	IBOutlet		JVFontPreviewField	*fontField_contact;	
+	IBOutlet		JVFontPreviewField	*fontField_status;	
+	IBOutlet		JVFontPreviewField	*fontField_group;	
 }
 
 + (id)listLayoutOnWindow:(NSWindow *)parentWindow;

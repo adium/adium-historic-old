@@ -20,6 +20,8 @@
                 "colorWell_awayLabel" = NSColorWell; 
                 "colorWell_background" = NSColorWell; 
                 "colorWell_grid" = NSColorWell; 
+                "colorWell_groupBackground" = NSColorWell; 
+                "colorWell_groupBackgroundGradient" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
                 "colorWell_idleAndAwayLabel" = NSColorWell; 
