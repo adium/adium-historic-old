@@ -306,11 +306,11 @@
 //Status Object Handling -----------------------------------------------------------------------------------------------
 #pragma mark Status Object Handling
 //Update our status cache as object we contain change status
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
+- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
 	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
-		[super listObject:self didSetStatusObject:value forKey:key notify:notify];
+		[super object:self didSetStatusObject:value forKey:key notify:notify];
 	}
 	
 	//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
@@ -318,7 +318,6 @@
 		//If the online status of a contained object changed, we should also check if our one-contact-only
 		//in terms of online contacts has changed
 		if ([key isEqualToString:@"Online"]){
-			NSLog(@"%@ set %@ for %@",inObject,value,key);
 			_preferredContact = nil;
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
@@ -359,28 +358,36 @@
 //---- fromAnyContainedObject status object behavior ----
 //If fromAnyContainedObject is YES, return the best value from any contained object if the preferred object returns nil.
 //If it is NO, only look at the preferred object.
+
+//General status object
 - (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(objectValue) : nil)];
 }
+
+//NSDate
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	NSDate *returnValue = [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)];
 	
 	return([[statusCacheDict objectForKey:key] date]);
 }
+
+//NSNumber
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return([self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(numberValue) : nil)]);
 }
 
-// Convenience accessors utilizing other statusObjectForKey methods
+//Integer (uses numberStatusObjectForKey:)
 - (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	NSNumber *returnValue = [self numberStatusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject];
 	
     return(returnValue ? [returnValue intValue] : 0);
 }
+
+//String from attributed string (uses statusObjectForKey:)
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return([[self statusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject] string]);

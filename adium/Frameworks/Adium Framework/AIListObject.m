@@ -43,7 +43,6 @@ DeclareString(FormattedUID);
 	InitString(DisplayServiceID,@"DisplayServiceID");
 	InitString(FormattedUID,@"FormattedUID");
 	
-    displayDictionary = [[NSMutableDictionary alloc] init];
     containingObject = nil;
     UID = [inUID retain];	
     serviceID = [inServiceID retain];
@@ -55,8 +54,6 @@ DeclareString(FormattedUID);
 	containedObjects = nil;
 	
 	visible = YES;
-    statusDictionary = [[NSMutableDictionary alloc] init];
-    changedStatusKeys = [[NSMutableArray alloc] init];
 
 	
 	NSString *formattedUID = [self preferenceForKey:FormattedUID 
@@ -73,21 +70,8 @@ DeclareString(FormattedUID);
 }
 
 - (void)dealloc
-{
-	NSEnumerator	*enumerator;
-	NSTimer			*timer;
-
-	//Invalidate any outstanding delayed status changes
-	enumerator = [delayedStatusTimers objectEnumerator];
-	while(timer = [enumerator nextObject]){
-		[timer invalidate];
-	}
-	[delayedStatusTimers release];
-	
+{	
 	//
-    [displayDictionary release];
-    [statusDictionary release];
-	[changedStatusKeys release];
     [serviceID release];
 	[UID release];
 	[uniqueObjectID release];
@@ -179,170 +163,41 @@ DeclareString(FormattedUID);
 	orderIndex = inIndex;
 }
 
+//Status objects ------------------------------------------------------------------------------------------------------
+#pragma mark Status objects
 
-//Dynamic Status and Display -------------------------------------------------------------------------------------------
-#pragma mark Dynamic Status and Display
-//Access to the display arrays for this object.  Will alloc and init an array if none exists.
-- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
+- (void)didModifyStatusKeys:(NSArray *)keys silent:(BOOL)silent
 {
-    AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
-	
-    if(!array){
-        array = [[AIMutableOwnerArray alloc] init];
-		[array setDelegate:self];
-        [displayDictionary setObject:array forKey:inKey];
-        [array release];
-    }
-	
-    return(array);
+	[[adium contactController] listObjectStatusChanged:self
+									modifiedStatusKeys:keys
+												silent:silent];
 }
 
-//With create:YES, this is identical to displayArrayForKey:
-//With create:NO, just perform the lookup and return either a mutableOwnerArray or nil
-- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey create:(BOOL)create
+//When we notify of queued status changes, our containing group should as well as it stays in sync with
+//any changes it may have made in object:didSetStatusObject:forKey:notify:
+- (void)didNotifyOfChangedStatusSilently:(BOOL)silent
 {
-	AIMutableOwnerArray	*array;
-	
-	if (create){
-		array = [self displayArrayForKey:inKey];
-	}else{
-		array = [displayDictionary objectForKey:inKey];
-	}
-	
-	return array;
-}
-
-//Quickly set a status key for this object
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
-{
-	if(key){
-		BOOL changedStatusDict = YES;
-		
-		if(value){
-			[statusDictionary setObject:value forKey:key];
-		}else{
-			//If we are already nil and being told to set nil, we don't need to do anything at all
-			if ([statusDictionary objectForKey:key]){
-				[statusDictionary removeObjectForKey:key];
-			}else{
-				changedStatusDict = NO;
-			}
-		}
-		
-		if (changedStatusDict){
-			//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
-			if (containingObject)
-				[containingObject listObject:self didSetStatusObject:value forKey:key notify:notify];
-			[self listObject:self didSetStatusObject:value forKey:key notify:notify];
-		}
-	}
-}
-
-//Perform a status change after a short delay
-- (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
-{
-	if(!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
-	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
-														  target:self
-														selector:@selector(_applyDelayedStatus:)
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-															key, Key,
-															value, @"Value",
-															nil]
-														 repeats:NO];
-	[delayedStatusTimers addObject:timer];
-}
-
-- (void)delayedStatusChange:(NSDictionary *)statusChangeDict
-{
-	[self setStatusObject:[statusChangeDict objectForKey:@"Value"] 
-				   forKey:[statusChangeDict objectForKey:@"Key"]
-			   afterDelay:[[statusChangeDict objectForKey:@"Delay"] intValue]];
-}
-
-- (void)_applyDelayedStatus:(NSTimer *)inTimer
-{
-	NSDictionary	*infoDict = [inTimer userInfo];
-	id				object = [infoDict objectForKey:@"Value"];
-	NSString		*key = [infoDict objectForKey:Key];
-	
-	[self setStatusObject:object forKey:key notify:YES];
-
-	[delayedStatusTimers removeObject:inTimer];
-	if([delayedStatusTimers count] == 0){
-		[delayedStatusTimers release]; delayedStatusTimers = nil;
-	}
-}
-
-//Nofity of any queued status changes
-- (void)notifyOfChangedStatusSilently:(BOOL)silent
-{
-    if([changedStatusKeys count]){
-		//Clear changedStatusKeys in case this status change invokes another, and we re-enter this code
-		NSArray	*keys = changedStatusKeys;
-		changedStatusKeys = nil;
-		
-		//
-		[[adium contactController] listObjectStatusChanged:self
-										modifiedStatusKeys:keys
-													silent:silent];
-		
-		//Let our containing object know about the notification request
-		if (containingObject)
-			[containingObject notifyOfChangedStatusSilently:silent];
-
-		[keys release];
-    }
-}
-
-//Quickly retrieve a status key enumerator for this object
-- (NSEnumerator	*)statusKeyEnumerator
-{
-	return([statusDictionary keyEnumerator]);
-}
-
-- (id)statusObjectForKey:(NSString *)key
-{
-    return([statusDictionary objectForKey:key]);
-}
-- (int)integerStatusObjectForKey:(NSString *)key
-{
-	NSNumber *number = [statusDictionary objectForKey:key];
-    return(number ? [number intValue] : 0);
-}
-- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
-{
-   return([statusDictionary objectForKey:key]);
-}
-- (NSNumber *)numberStatusObjectForKey:(NSString *)key
-{
-    return([statusDictionary objectForKey:key]);
-}
-- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
-{
-   return([[statusDictionary objectForKey:key] string]);
+	//Let our containing object know about the notification request
+	if (containingObject)
+		[containingObject notifyOfChangedStatusSilently:silent];
 }
 
 //Subclasses may wish to override these - they must be sure to call super's implementation, too!
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
+- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {				
-	//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
-	if (notify){
-		[[adium contactController] listObjectStatusChanged:self
-										modifiedStatusKeys:[NSArray arrayWithObject:key]
-													silent:NO];
-	}else{
-		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
-		[changedStatusKeys addObject:key];
-		
+	//Inform our containing group about the new status object value
+	if (containingObject){
+		[containingObject object:self didSetStatusObject:value forKey:key notify:notify];
 	}
-	
+
 	//Cache the setting of a formatted UID so we'll have it while offline after the next launch
 	if (inObject == self) {
 		if ([key isEqualToString:FormattedUID]){
 			[self setPreference:value forKey:key group:ObjectStatusCache];
 		}
 	}
+	
+	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
 }
 
 //AIMutableOwnerArray delegate ------------------------------------------------------------------------------------------

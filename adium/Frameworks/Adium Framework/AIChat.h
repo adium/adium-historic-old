@@ -4,11 +4,13 @@
 //
 //  Created by Adam Iser on Sun Jun 15 2003.
 
-@class AIAccount, AIContentObject, AIListObject;
+@class AIAccount, AIContentObject, AIListObject, ESObjectWithStatus;
 
-@interface AIChat : AIObject {
+#define KEY_UNVIEWED_CONTENT	@"UnviewedContent"
+#define KEY_TYPING				@"Typing"
+
+@interface AIChat : ESObjectWithStatus {
     AIAccount			*account;
-    NSMutableDictionary *statusDictionary;
 	NSDate				*dateOpened;
 	
     NSMutableArray		*contentObjectArray;
@@ -22,8 +24,8 @@
 	NSImage				*_cachedMiniImage; 	//Cache of our mini image, so we only need to render it once
 }
 
-+ (id)chatForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary;
-- (NSMutableDictionary *)statusDictionary;
++ (id)chatForAccount:(AIAccount *)inAccount;
+
 - (AIAccount *)account;
 - (void)setAccount:(AIAccount *)inAccount;
 
@@ -32,11 +34,11 @@
 
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListObject *)inObject;
-- (BOOL)inviteListObject:(AIListObject *)inObject;
 - (void)removeParticipatingListObject:(AIListObject *)inObject;
 - (AIListObject *)listObject;
 - (AIListObject *)preferredListObject;
 - (void)setPreferredListObject:(AIListObject *)inObject;
+- (BOOL)inviteListContact:(AIListContact *)inObject withMessage:(NSString *)inviteMessage;
 
 - (NSArray *)contentObjectArray;
 - (BOOL)hasContent;
