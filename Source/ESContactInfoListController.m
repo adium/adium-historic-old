@@ -199,6 +199,14 @@
     return(YES);
 }
 
+- (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+	if (operation == NSDragOperationNone){
+		NSLog(@"None!");
+	}
+}
+
+
 //Due to a bug in NSDrawer, convertPoint:fromView reports a point too low by the trailingOffset 
 //when our contact list is in a drawer.
 - (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint
@@ -215,6 +223,11 @@
 //We want to just show UIDs whereever possible
 - (BOOL)useAliasesInContactListAsRequested
 {
+	return NO;
+}
+
+//We don't want to change text colors based on the user's status or state
+- (BOOL)shouldUseContactTextColors{
 	return NO;
 }
 
