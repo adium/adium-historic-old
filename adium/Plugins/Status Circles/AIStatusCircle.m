@@ -46,6 +46,7 @@
     string = nil;
     state = AICircleNormal;
     bezeled = NO;
+    flashColorUnique = YES;
 
     _attributedString = nil;
     _attributedStringSize = NSMakeSize(0,0);
@@ -90,6 +91,8 @@
     if(color != inColor){
         [color release];
         color = [inColor retain];
+
+        flashColorUnique = ![color isEqual:flashColor];
     }
 }
 
@@ -99,6 +102,8 @@
     if(flashColor != inColor){
         [flashColor release];
         flashColor = [inColor retain];
+
+        flashColorUnique = ![color isEqual:flashColor];
     }
 }
 
@@ -193,7 +198,7 @@
         }
     
         //Draw the inner circle (for unviewed messages)
-        if(state == AICircleFlashA || state == AICircleFlashB || state == AICirclePreFlash){
+        if(flashColorUnique && (state == AICircleFlashA || state == AICircleFlashB || state == AICirclePreFlash)){
             NSBezierPath *insideCircle;
     
             //Create the circle path
