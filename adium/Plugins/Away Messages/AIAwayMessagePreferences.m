@@ -577,7 +577,7 @@
                 [dragItem retain];
                 [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!
 
-				if (index = -1){
+				if (index == -1){
 					[awayMessageArray addObject:dragItem];
 				}else {
 					[awayMessageArray insertObject:dragItem atIndex:(oldIndex > index ? index : index - 1)]; //Add to new location
