@@ -126,29 +126,27 @@
  */
 - (NSArray *)availableDockIconPacks
 {
-	if(!dockIconPacks){
-		NSDirectoryEnumerator	*fileEnumerator;
-		NSString				*iconPath;
-		NSString				*filePath;
-		NSEnumerator			*enumerator;
+	NSDirectoryEnumerator	*fileEnumerator;
+	NSString				*iconPath;
+	NSString				*filePath;
+	NSEnumerator			*enumerator;
+	
+	//Create a fresh icon array
+	NSMutableArray	*dockIconPacks = [[NSMutableArray alloc] init];
+	enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
+	
+	while(iconPath = [enumerator nextObject]) {            
+		fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
 		
-		//Create a fresh icon array
-		dockIconPacks = [[NSMutableArray alloc] init];
-		enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
-		
-		while(iconPath = [enumerator nextObject]) {            
-			fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
-			
-			//Find all the .AdiumIcon's and add them to our array
-			while((filePath = [fileEnumerator nextObject])){
-				if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
-					[dockIconPacks addObject:[iconPath stringByAppendingPathComponent:filePath]];    
-				}
+		//Find all the .AdiumIcon's and add them to our array
+		while((filePath = [fileEnumerator nextObject])){
+			if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
+				[dockIconPacks addObject:[iconPath stringByAppendingPathComponent:filePath]];    
 			}
 		}
 	}
-		
-	return(dockIconPacks);
+	
+	return([dockIconPacks autorelease]);
 }
 
 
