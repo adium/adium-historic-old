@@ -16,7 +16,7 @@
 #import "AIStatusChangedMessagesPlugin.h"
 
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
-- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object;
+- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object withType:(NSString *)type;
 @end
 
 @implementation AIStatusChangedMessagesPlugin
@@ -40,9 +40,10 @@
     
     if([inModifiedKeys containsObject:@"StatusMessage"]){
         NSString	*statusMessage = [[inObject statusObjectForKey:@"StatusMessage"] string];
-
+		NSString	*statusType = [NSString stringWithString:@"away_message"];
+		
 		if(statusMessage && [statusMessage length] != 0){
-			[self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forObject:inObject];
+			[self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forObject:inObject withType:statusType];
 		}
     }
 
@@ -52,38 +53,45 @@
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
     AIListObject *object = [notification object];
-    [self statusMessage:[NSString stringWithFormat:@"%@ went away",[object displayName]] forObject:object];
+	NSString *statusType = [NSString stringWithString:@"away"];
+	
+    [self statusMessage:[NSString stringWithFormat:@"%@ went away",[object displayName]] forObject:object withType:statusType];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
     AIListObject *object = [notification object];
+	NSString *statusType = [NSString stringWithString:@"active"];
     
     if([object integerStatusObjectForKey:@"Online"])
-		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[object displayName]] forObject:object];
+		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[object displayName]] forObject:object withType:statusType];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
 	AIListObject *object = [notification object];
+	NSString *statusType = [NSString stringWithString:@"online"];
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ connected",[object displayName]] forObject:object];
+	[self statusMessage:[NSString stringWithFormat:@"%@ connected",[object displayName]] forObject:object withType:statusType];
 }
 - (void)Contact_StatusOnlineNO:(NSNotification *)notification{
 	AIListObject *object = [notification object];
+	NSString *statusType = [NSString stringWithString:@"offline"];
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ disconnected",[object displayName]] forObject:object];
+	[self statusMessage:[NSString stringWithFormat:@"%@ disconnected",[object displayName]] forObject:object withType:statusType];
 }
 - (void)Contact_StatusIdleYes:(NSNotification *)notification{
 	AIListObject *object = [notification object];
+	NSString *statusType = [NSString stringWithString:@"idle"];
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ went idle",[object displayName]] forObject:object];
+	[self statusMessage:[NSString stringWithFormat:@"%@ went idle",[object displayName]] forObject:object withType:statusType];
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
 	AIListObject *object = [notification object];
+	NSString *statusType = [NSString stringWithString:@"active"];
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[object displayName]] forObject:object];
+	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[object displayName]] forObject:object withType:statusType];
 }
 
 
 //Post a status message on all active chats for this object
-- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object
+- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object withType:(NSString *)type
 {
     NSEnumerator	*enumerator;
     AIChat			*chat;
@@ -97,7 +105,8 @@
                                      withSource:object
                                     destination:[chat account]
                                            date:[NSDate date]
-                                        message:message];
+                                        message:message
+									 withType:type];
 		
         //Add the object
         [[adium contentController] addIncomingContentObject:content];
