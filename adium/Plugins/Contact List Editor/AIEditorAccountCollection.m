@@ -76,6 +76,12 @@
     return([AIImageUtilities imageNamed:@"AccountLarge" forClass:[self class]]);
 }
 
+- (NSString *)serviceID
+{
+    return([account serviceID]);
+}
+
+
 - (NSString *)collectionDescription{
     return([NSString stringWithFormat:@"%@'s Server-Side Contacts",[account accountDescription]]);
 }
