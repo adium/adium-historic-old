@@ -72,12 +72,12 @@
 - (IBAction)changePreference:(id)sender
 {
 
-    NSData	*newMessage;
+    // NSData	*newMessage;
 
     if(sender == checkBox_enableIdleMessage) {
 
         //Save the button's state
-        newMessage = [[textView_idleMessage textStorage] dataRepresentation];
+        // newMessage = [[textView_idleMessage textStorage] dataRepresentation];
 
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_MESSAGE_ENABLED

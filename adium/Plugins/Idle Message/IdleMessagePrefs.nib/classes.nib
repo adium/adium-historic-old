@@ -5,7 +5,7 @@
             CLASS = AITextProfilePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_enableIdleMessage" = id; 
+                "checkBox_enableIdleMessage" = id; 
                 "textView_idleMessage" = NSTextView; 
                 "view_prefView" = NSView; 
             }; 
