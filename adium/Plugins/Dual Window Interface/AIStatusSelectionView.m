@@ -143,10 +143,10 @@
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
         [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-        NSLog(@"available");
+//        NSLog(@"available");
         
     }else if([title compare:STATUS_NAME_OFFLINE] == 0){ //Offline
-        NSLog(@"offline");
+//        NSLog(@"offline");
         
     }
 }
@@ -196,8 +196,10 @@
         int status = [[account propertyForKey:@"Status"] intValue];
 
         if(status == STATUS_ONLINE){
+//	    NSLog(@"%@ is online",[account UID]);
             onlineAccounts++;
         }else if(status == STATUS_CONNECTING){
+//	    NSLog(@"%@ is connecting",[account UID]);
             connectingAccounts++;
         }
     }
@@ -245,6 +247,17 @@
         }
     }
 
+    //Both available and offline have no represented object, but one should be checked and the other off if one is selected.
+    if ( selectedMenuItem == [[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE])
+    {
+	[[[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE] setState:NSOnState];
+	[[[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE] setState:NSOffState];
+    } else if ( selectedMenuItem == [[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE])
+    {
+	[[[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE] setState:NSOnState];
+	[[[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE] setState:NSOffState];
+    }
+    
     //Size the menu to fit
     [popUp_status sizeToFit];
 }
