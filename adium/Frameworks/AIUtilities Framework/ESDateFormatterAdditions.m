@@ -64,8 +64,7 @@ typedef enum
     }
     
     if(screwedOver)
-	return @"%h:%M %p"; //we are screeeeewwwwwed! we're not even 
-gonna honor their settings here, just get out!
+	return @"%h:%M %p"; //we are screeeeewwwwwed! we're not even gonna honor their settings here, just get out!
     if(!isCache)
         cacheCheck = checkString; //save the cache
     
