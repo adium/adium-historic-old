@@ -21,7 +21,7 @@ extern NSString *AITag_ContentsKey;
 	NSMutableArray *attributeValues;
 	
 	/*the contents of a tag are mixed: each sub-item can be either a tag or a string.
-	/*for example,
+	 *for example,
 	 *	<a href="foo.xhtml">Click <b>here</b> for Foo's description</a>
 	 *could be represented as:
 	 *	tag: name "a", attributes: ("href", "foo.xhtml"), contents: {
