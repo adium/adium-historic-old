@@ -28393,7 +28393,6 @@
 		C42C16F705BA682C00135D3C = {
 			buildActionMask = 2147483647;
 			files = (
-				C42C171105BA68A000135D3C,
 				C42C171205BA68A000135D3C,
 				4BE8CF2805EA62EB00F87407,
 				4BE8CF2905EA62EB00F87407,
@@ -28455,7 +28454,6 @@
 				C42C170605BA68A000135D3C,
 				C42C170705BA68A000135D3C,
 				C42C170805BA68A000135D3C,
-				C42C170905BA68A000135D3C,
 				C42C170A05BA68A000135D3C,
 			);
 			isa = PBXGroup;
@@ -28517,14 +28515,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		C42C170905BA68A000135D3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			name = ThemesFolder.icns;
-			path = Plugins/Themes/ThemesFolder.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		C42C170A05BA68A000135D3C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -28565,12 +28555,6 @@
 		};
 		C42C171005BA68A000135D3C = {
 			fileRef = C42C170805BA68A000135D3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C42C171105BA68A000135D3C = {
-			fileRef = C42C170905BA68A000135D3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
