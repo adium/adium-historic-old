@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.155 2004/07/12 22:24:34 adamiser Exp $
+// $Id: AIContactController.m,v 1.156 2004/07/22 14:33:43 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -440,7 +440,7 @@
 	
     //Let all observers know the contact's status has changed before performing any sorting or further notifications
 	modifiedAttributeKeys = [self _informObserversOfObjectStatusChange:inObject withKeys:inModifiedKeys silent:silent];
-	
+	NSLog(@"%@ status changed (%@)", inObject, inModifiedKeys);
     //Resort the contact list
 	if(updatesAreDelayed){
 		delayedStatusChanges++;
@@ -774,8 +774,6 @@
 		delayedContactChanges++;
 	}else{
 		AIListGroup		*group = [inObject containingGroup];
-
-		NSLog(@"Sort object %@",[inObject displayName]);
 
 		//Sort the groups containing this object
 		[group sortListObject:inObject sortController:activeSortController];
