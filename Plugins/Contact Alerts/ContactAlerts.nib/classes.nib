@@ -29,15 +29,35 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
             CLASS = ESContactAlertsPane; 
             LANGUAGE = ObjC; 
+            OUTLETS = {contactAlertsViewController = ESContactAlertsViewController; }; 
+            SUPERCLASS = AIContactInfoPane; 
+        }, 
+        {
+            ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
+            CLASS = ESContactAlertsView; 
+            LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_add" = NSButton; 
                 "button_delete" = NSButton; 
                 "button_edit" = NSButton; 
                 "tableView_actions" = AIAlternatingRowTableView; 
             }; 
-            SUPERCLASS = AIContactInfoPane; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
+            CLASS = ESContactAlertsViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_add" = NSButton; 
+                "button_delete" = NSButton; 
+                "button_edit" = NSButton; 
+                "tableView_actions" = AIAlternatingRowTableView; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = AIObject; 
         }, 
         {
             ACTIONS = {addAlert = id; closeWindow = id; deleteAlert = id; editAlert = id; }; 
