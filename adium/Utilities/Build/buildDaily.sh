@@ -75,8 +75,8 @@ elif !([ -z "$diffuser" ]) ; then
        	username=$diffuser
 fi
 
-if [ -z "$CVSROOT" ] ; then
-	export CVSROOT=":ext:$username@cvs.adium.sourceforge.net:/cvsroot/adium"
+if !([ -z "$CVSROOT" ]) ; then
+	export CVSROOT=":ext:$username@cvs.adiumx.com:/cvsroot/adium"
 fi
 
 # If you want to use the script to build without updating via CVS, set this to
@@ -88,7 +88,7 @@ should_update="yes"
 clean_build="yes"
 
 # Don't do this unless you are a developer and want to automatically upload the .dmg to adium.sourceforge.net
-copy_to_sourceforge="yes"
+copy_to_sourceforge="no"
 
 # Where all the nightly build files are kept
 # adium/ is created by CVS checkout beneath this dir
@@ -215,6 +215,8 @@ if [ "$should_update" == "yes" ] ; then
 			cvs -z3 login
 		fi
 		cvs -z3 co adium
+		cd adium
+		cvs -z3 update -Pd
 	else							# Update from CVS
 		echo "Begin CVS Update in $adium_co_dir"
 	
