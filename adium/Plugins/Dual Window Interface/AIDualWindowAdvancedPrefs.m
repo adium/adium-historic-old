@@ -31,8 +31,6 @@
 
     [checkBox_autoResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
     [checkBox_horizontalResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue]];
-
-    [self configureControlDimming];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -48,14 +46,6 @@
                                              forKey:KEY_DUAL_RESIZE_HORIZONTAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }
-    
-    [self configureControlDimming];
-}
-
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
-    [checkBox_horizontalResize setEnabled:[checkBox_autoResize state]];
 }
 
 @end
