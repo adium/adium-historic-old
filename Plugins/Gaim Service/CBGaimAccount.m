@@ -10,7 +10,6 @@
 #import "AIAccount.h"
 
 #define NO_GROUP						@"__NoGroup__"
-#define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 
 #define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS		4
@@ -1962,10 +1961,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
-    	
-    //ensure our user icon cache path exists
-	[[NSFileManager defaultManager] createDirectoriesForPath:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
-	
+
 	//Observe preferences changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
 }
@@ -2094,7 +2090,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSString *)_userIconCachePath
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self internalObjectID], [NSString randomStringOfLength:4]];
-    return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
+    return([[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename]);
 }
 
 - (AIListContact *)contactWithUID:(NSString *)inUID
