@@ -43,7 +43,7 @@
 
 		//If the font doesn't exist on the system, use the controlContentFont
 		if (!font){
-			font = [controlContentFontOfSize:fontSize];
+			font = [NSFont controlContentFontOfSize:fontSize];
 		}
 		
         [sizeDict setObject:font
