@@ -158,10 +158,6 @@ static NSMutableSet							*accountsToConnect = nil;
 		}
 	}
 
-	// Don't autoconnect if the Shift key is held down.
-    if (![[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
-    {	
-
 	//Attempt to connect them immediately; if this fails, they will be connected when the network
 	//becomes available.
 	if ([accountsToConnect count]){	
@@ -174,7 +170,6 @@ static NSMutableSet							*accountsToConnect = nil;
 									   userInfo:nil
 										repeats:NO];
 		 */
-	}
 	}
 }
 
