@@ -11,32 +11,46 @@
 
 @implementation AIStandardListOutlineView
 
-//- (void)viewWillMoveToSuperview:(NSView *)newSuperview
-//{
-//	[super viewWillMoveToSuperview:newSuperview];
-//	
-//	[(NSClipView *)newSuperview setCopiesOnScroll:NO];
-//}
-//
-////
-//- (void)drawBackgroundInClipRect:(NSRect)clipRect
-//{
-//	static NSImage *image = nil;
-//	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
-//
-//	[super drawBackgroundInClipRect:clipRect];
-//	
-//	//Draw
-//	if(!image) image = [[NSImage imageNamed:@"Awake" forClass:[self class]] retain];
-//	if(image){
-//		[image setFlipped:YES];
-//		[image drawInRect:NSMakeRect(visRect.origin.x,visRect.origin.y,[image size].width, [image size].height)
-//				 fromRect:NSMakeRect(0,0,[image size].width, [image size].height)
-//				operation:NSCompositeCopy
-//				 fraction:1.0];
-//		[image setFlipped:NO];
-//	}	
-//}
+- (void)dealloc
+{
+	[backgroundImage release];
+	[super dealloc];
+}
 
+//
+- (void)setBackgroundImage:(NSImage *)inImage
+{
+	[backgroundImage release]; backgroundImage = nil;
+
+	backgroundImage = [inImage retain];
+	[backgroundImage setFlipped:YES];
+
+	[[self superview] setCopiesOnScroll:(backgroundImage != nil)];
+	[self setNeedsDisplay:YES];
+}
+
+//
+- (void)viewWillMoveToSuperview:(NSView *)newSuperview
+{
+	[super viewWillMoveToSuperview:newSuperview];
+	[(NSClipView *)newSuperview setCopiesOnScroll:(backgroundImage != nil)];
+}
+
+//
+- (void)drawBackgroundInClipRect:(NSRect)clipRect
+{
+	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
+
+	[super drawBackgroundInClipRect:clipRect];
+	
+	if(backgroundImage){
+		NSSize	imageSize = [backgroundImage size];
+
+		[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
+				 fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+				operation:NSCompositeCopy
+				 fraction:1.0];
+	}	
+}
 
 @end

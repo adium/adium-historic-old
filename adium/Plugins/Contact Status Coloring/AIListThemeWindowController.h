@@ -39,6 +39,10 @@
 #define KEY_IDLE_AWAY_COLOR			@"Idle And Away Color"
 #define KEY_OFFLINE_COLOR			@"Offline Color"
 
+#define KEY_LIST_THEME_TRANSPARENCY				@"Transparency"
+#define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED	@"Use Background Image"
+#define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH	@"Background Image Path"
+
 @interface AIListThemeWindowController : AIWindowController {
     IBOutlet	NSButton	*checkBox_signedOff;
     IBOutlet	NSColorWell	*colorWell_signedOff;
@@ -76,11 +80,16 @@
     IBOutlet	NSColorWell	*colorWell_offline;
     IBOutlet	NSColorWell	*colorWell_offlineLabel;
 	
+	IBOutlet	NSButton	*checkBox_useBackgroundImage;
+	IBOutlet	NSButton	*button_setBackgroundImage;
+	IBOutlet	NSTextField	*textField_backgroundImagePath;
+	
 }
 
 + (id)listThemeOnWindow:(NSWindow *)parentWindow;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (void)preferenceChanged:(id)sender;
+- (IBAction)selectBackgroundImage:(id)sender;
 
 @end
