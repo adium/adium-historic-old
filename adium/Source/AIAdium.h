@@ -148,8 +148,6 @@ typedef enum {
 @protocol AITextEntryView //Handles any attributed text entry
 - (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
-- (NSRange)selectedRange;
-- (void)setSelectedRange:(NSRange)inRange;
 @end
 
 @protocol AIContentHandler //Handles the display of a content type
@@ -167,8 +165,8 @@ typedef enum {
 @end
 
 @protocol AITextEntryFilter //Interpret text as it's entered
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSView<AITextEntryView> *)inTextEntryView; //keypress
-- (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //keypress
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
 @protocol AIServiceController <NSObject>
@@ -270,8 +268,8 @@ typedef enum {
 //- (NSArray *)textEntryFilters;
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSView<AITextEntryView> *)inTextEntryView;
-- (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView;
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 
 @end
 

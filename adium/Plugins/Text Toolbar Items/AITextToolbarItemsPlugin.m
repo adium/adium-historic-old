@@ -64,106 +64,44 @@
     //[[AIMiniToolbarCenter defaultCenter] unregisterItem:[toolbarItem autorelease]];
 }
 
+- (void)setTag:(int)inTag
+{
+    tag = inTag;    
+}
+- (int)tag{
+    return(tag);
+}
+
 - (IBAction)bold:(AIMiniToolbarItem *)toolbarItem
 {
-    NSView<AITextEntryView>	*textEntryView;
-    NSMutableAttributedString	*text;
-    NSRange			selectedRange;
-    BOOL			currentState;
+    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 
-    //Get the text
-    textEntryView = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
-    text = [[textEntryView attributedString] mutableCopy];
-    selectedRange = [textEntryView selectedRange];
-    
-    //Change the attribute
-    currentState = [self string:text containsTrait:NSBoldFontMask inRange:selectedRange];
-    [self convertString:text
-                 toHave:(!currentState)
-                  trait:NSBoldFontMask
-                inRange:selectedRange];
-    
-    //Apply the changes
-    [textEntryView setAttributedString:text]; 
+    [self setTag:NSBoldFontMask];
+    if([fontManager traitsOfFont:[fontManager selectedFont]] & NSBoldFontMask){
+        [fontManager removeFontTrait:self];
+    }else{
+        [fontManager addFontTrait:self];
+    }
 }
 
 - (IBAction)italic:(AIMiniToolbarItem *)toolbarItem
 {
-    NSView<AITextEntryView>	*textEntryView;
-    NSMutableAttributedString	*text;
-    NSRange			selectedRange;
-    BOOL			currentState;
-
-    //Get the text
-    textEntryView = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
-    text = [[textEntryView attributedString] mutableCopy];
-    selectedRange = [textEntryView selectedRange];
-
-    //Change the attribute
-    currentState = [self string:text containsTrait:NSItalicFontMask inRange:selectedRange];
-    [self convertString:text
-                 toHave:(!currentState)
-                  trait:NSItalicFontMask
-                inRange:selectedRange];
-
-    //Apply the changes
-    [textEntryView setAttributedString:text];
+    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+    
+    [self setTag:NSItalicFontMask];
+    if([fontManager traitsOfFont:[fontManager selectedFont]] & NSItalicFontMask){
+        [fontManager removeFontTrait:self];
+    }else{
+        [fontManager addFontTrait:self];
+    }
 }
 
 - (IBAction)underline:(AIMiniToolbarItem *)toolbarItem
 {
-    NSView<AITextEntryView>	*textEntryView;
-    NSMutableAttributedString	*text;
-    NSRange			selectedRange;
-    BOOL			currentState;
+    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 
-    //Get the text
-    textEntryView = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
-    text = [[textEntryView attributedString] mutableCopy];
-    selectedRange = [textEntryView selectedRange];
-
-    //Change the attribute
-    currentState = [[text attribute:NSUnderlineStyleAttributeName atIndex:selectedRange.location effectiveRange:nil] intValue];
-    [text addAttribute:NSUnderlineStyleAttributeName
-                 value:[NSNumber numberWithInt:(!currentState)]
-                 range:selectedRange];
-
-    //Apply the changes
-    [textEntryView setAttributedString:text];
-}
-
-
-
-- (BOOL)string:(NSAttributedString *)text containsTrait:(int)trait inRange:(NSRange)targetRange 
-{
-    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSFont		*currentFont = [text attribute:NSFontAttributeName atIndex:targetRange.location effectiveRange:nil];
-
-    return([fontManager traitsOfFont:currentFont] & trait);
-}
-
-- (void)convertString:(NSMutableAttributedString *)text toHave:(BOOL)applyTrait trait:(int)trait inRange:(NSRange)targetRange 
-{
-    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSFont		*currentFont;
-    NSRange		effectiveRange;
-    
-    //Change the text
-    effectiveRange = targetRange;
-    while(effectiveRange.location < (targetRange.location + targetRange.length) ){
-        currentFont = [text attribute:NSFontAttributeName atIndex:effectiveRange.location effectiveRange:&effectiveRange];
-
-        if(applyTrait){ //Apply the trait
-            currentFont = [fontManager convertFont:currentFont toHaveTrait:trait];
-        }else{ //remove the trait
-            currentFont = [fontManager convertFont:currentFont toNotHaveTrait:trait];
-        }
-
-        //Apply the new attributes
-        [text addAttribute:NSFontAttributeName
-                     value:currentFont
-                     range:NSIntersectionRange(effectiveRange, targetRange)];
-        effectiveRange.location += effectiveRange.length;
+    if(responder && [responder isKindOfClass:[NSText class]]){
+        [(NSText *)responder underline:nil];
     }
 }
 
@@ -174,7 +112,7 @@
 
     if([identifier compare:@"Bold"] == 0 || [identifier compare:@"Italic"] == 0){
         AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
-        NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
+        NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
         enabled = (object && [object isKindOfClass:[AIListContact class]] && text);
     }

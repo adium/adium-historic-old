@@ -65,7 +65,7 @@
     return(textEntryFilterArray);
 }*/
 
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSView<AITextEntryView> *)inTextEntryView
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator		*enumerator;
     id <AITextEntryFilter>	filter;
@@ -76,7 +76,7 @@
     }
 }
 
-- (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator		*enumerator;
     id <AITextEntryFilter>	filter;

@@ -182,14 +182,6 @@
     return(handle);
 }*/
 
-//Handled automatically by our superclasses:
-- (void)setSelectedRange:(NSRange)inRange{
-    [super setSelectedRange:inRange];
-}
-- (NSRange)selectedRange{
-    return([super selectedRange]);
-}
-
 - (void)textDidChange:(NSNotification *)notification
 {
 //working...

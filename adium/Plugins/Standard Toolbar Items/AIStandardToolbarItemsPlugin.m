@@ -148,13 +148,13 @@
 
     if([identifier compare:@"NewMessage"] == 0){
         AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
-        NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
+        NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
         enabled = (object && [object isKindOfClass:[AIListContact class]] && !text);
 
     }else if([identifier compare:@"SendMessage"] == 0 || [identifier compare:@"SendMessageButton"] == 0){
         AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
-        NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
+        NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
         enabled = (object && [object isKindOfClass:[AIListContact class]] && text);
     }
