@@ -94,12 +94,14 @@ DeclareString(ltSign)
     InitString(Hclose,@"</H")
     InitString(Hopen,@"H3 ")
     InitString(Aopen,@"A ")
-    InitString(hrefStr,@"HREF=\"")
+    InitString(hrefStr,@"HREF=")
     InitString(closeQuote,@"\"")
     InitString(closeLink,@"\">")
     InitString(Aclose,@"</A")
     InitString(DLclose,@"/DL>")
     InitString(ltSign,@"<")
+    
+    NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
@@ -127,10 +129,9 @@ DeclareString(ltSign)
         }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:closeQuote intoString:&urlString];
-                
-            [linkScanner scanUpToString:closeLink intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+            [linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString];
+            [linkScanner scanUpToString:gtSign intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             [linkScanner scanUpToString:Aclose intoString:&titleString];
 
             if(titleString){

@@ -96,12 +96,14 @@ DeclareString(ltSign)
     
     unsigned int stringLength = [inString length];
     
+    NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
+    
     [linkScanner setCaseSensitive:NO];
     
     InitString(gtSign,@">")
     InitString(Hopen,@"h3")
     InitString(Aopen,@"a ")
-    InitString(hrefStr,@"href=\"")
+    InitString(hrefStr,@"href=")
     InitString(closeQuote,@"\"")
     InitString(Aclose,@"</a")
     InitString(DLclose,@"/dl>")
@@ -135,7 +137,7 @@ DeclareString(ltSign)
         }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:closeQuote intoString:&urlString];
+            [linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString];
 
             [linkScanner scanUpToString:gtSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];

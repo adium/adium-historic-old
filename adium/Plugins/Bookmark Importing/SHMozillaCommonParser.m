@@ -43,6 +43,8 @@ DeclareString(ltSign)
     InitString(DLclose,@"/DL>")
     InitString(ltSign,@"<")
     
+    NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
+    
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
             [linkScanner setScanLocation:[inString length]];
@@ -69,10 +71,10 @@ DeclareString(ltSign)
         }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:closeQuote intoString:&urlString];
+            [linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString];
                 
-            [linkScanner scanUpToString:closeLink intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+            [linkScanner scanUpToString:gtSign intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             [linkScanner scanUpToString:Aclose intoString:&titleString];
 
             if(titleString){
