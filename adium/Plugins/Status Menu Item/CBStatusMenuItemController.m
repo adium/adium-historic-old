@@ -76,6 +76,7 @@ CBStatusMenuItemController *sharedInstance = nil;
 - (void)accountsChanged:(NSNotification *)notification
 {
     //we'll be building from scrach for now, so clear the array out.
+    [accountsMenuItems release];
     accountsMenuItems = [[NSMutableArray alloc] init];
     
     AIAccount *account = nil;        
@@ -132,6 +133,10 @@ CBStatusMenuItemController *sharedInstance = nil;
 
 - (void)buildMenu
 {
+    //clear out the old menu
+    [theMenu release];
+    theMenu = [[NSMenu alloc] init];
+    
     NSEnumerator *numer;
     NSMenuItem *item;
     
@@ -157,6 +162,8 @@ CBStatusMenuItemController *sharedInstance = nil;
     //numer = [accountsMenuItems objectEnumerator];
     //while(item = [numer nextObject])
     //    [theMenu addItem:item];
+
+    [statusItem setMenu:theMenu];
 }
 
 @end
