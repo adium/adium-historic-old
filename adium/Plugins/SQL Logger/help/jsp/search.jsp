@@ -100,6 +100,31 @@ try {
         title = "Search";
     }
 
+    String searchType = new String();
+
+    // First, check which kind of search we're doing
+    // Do this by querying the system catalog to see if tsearch
+    // types exist
+    pstmt = conn.prepareStatement("select typname " +
+        " from pg_catalog.pg_type t "+
+        " where typname ~ '^txtidx$' " +
+        " or typname ~ '^tsquery$' and " +
+        " pg_catalog.pg_type_is_visible(t.oid) " +
+        " order by typname");
+
+    rset = pstmt.executeQuery();
+
+    if (rset != null && !rset.isBeforeFirst()) {
+        searchType = "none";
+    } else {
+        rset.next();
+        if(rset.getString(1).equals("txtidx")) {
+            searchType = "tsearch1";
+        } else if (rset.getString(1).equals("tsquery")) {
+            searchType = "tsearch2";
+        }
+    }
+
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -200,16 +225,23 @@ try {
                                 && !orderBy.startsWith("message_date"))
                                 %> selected="selected" <% ; %> >Message</option>
 
+<% if(searchType.equals("tsearch2")) { %>
                                 <option value="rank(idxfti, q)"
-                                <% if (orderBy != null && orderBy.startsWith("rank"))
-                                %> selected="selected" <% ; %> >Rank</option>
+                                <% if ((searchKey != null &&
+                                            orderBy == null) ||
+                                    (orderBy != null &&
+                                        orderBy.startsWith("rank")))
+                                    out.print("selected=\"selected\"") ; %> >Rank</option>
+<% } %>
                             </select><br />
                             <input type="radio" name="asc_desc" value=" asc"
-                        <% if (orderBy == null || orderBy.endsWith("asc")) %> checked="checked"
+                        <% if (orderBy != null && orderBy.endsWith("asc")) %> checked="checked"
                         <%;%> />Ascending<br />
 
                             <input type="radio" name="asc_desc" value=" desc"
-                            <% if (orderBy != null && orderBy.endsWith("desc")) %> checked="checked"
+                            <% if ((searchKey != null && orderBy == null) ||
+                                (orderBy != null && orderBy.endsWith("desc")))
+                                    %> checked="checked"
                             <%;%> />Descending
                             </td>
                         </tr>
@@ -271,30 +303,6 @@ try {
         searchKey = searchString;
         ArrayList exactMatch = new ArrayList();
         int quoteMatch = 1;
-        String searchType = new String();
-
-        // First, check which kind of search we're doing
-        // Do this by querying the system catalog to see if tsearch
-        // types exist
-        pstmt = conn.prepareStatement("select typname " +
-            " from pg_catalog.pg_type t "+
-            " where typname ~ '^txtidx$' " +
-            " or typname ~ '^tsquery$' and " +
-            " pg_catalog.pg_type_is_visible(t.oid) " +
-            " order by typname");
-
-        rset = pstmt.executeQuery();
-
-        if (rset != null && !rset.isBeforeFirst()) {
-            searchType = "none";
-        } else {
-            rset.next();
-            if(rset.getString(1).equals("txtidx")) {
-                searchType = "tsearch1";
-            } else if (rset.getString(1).equals("tsquery")) {
-                searchType = "tsearch2";
-            }
-        }
 
         //If the user hasn't installed tsearch, be slow & simple
         if(searchType.equals("none")) {
@@ -502,16 +510,16 @@ try {
 
                 Timestamp dateTime = rset.getTimestamp("message_date");
                 long time = dateTime.getTime();
-                long finishTime = time + 15*60*1000;
-                long startTime = time - 15*60*1000;
-                long finishThirty = time + 30*60*1000;
-                long startThirty = time - 30*60*1000;
+                long fifteenAfter = time + 15*60*1000;
+                long fifteenBefore = time - 15*60*1000;
+                long thirtyAfter = time + 30*60*1000;
+                long thirtyBefore = time - 30*60*1000;
 
-                Timestamp finish = new Timestamp(finishTime);
-                Timestamp start = new Timestamp(startTime);
+                Timestamp finish = new Timestamp(fifteenAfter);
+                Timestamp start = new Timestamp(fifteenBefore);
 
-                Timestamp thirtyFinish = new Timestamp(finishThirty);
-                Timestamp thirtyStart = new Timestamp(startThirty);
+                Timestamp thirtyFinish = new Timestamp(thirtyAfter);
+                Timestamp thirtyStart = new Timestamp(thirtyBefore);
 
                 String cleanString = searchKey;
                 cleanString = cleanString.replaceAll("&", " ");
