@@ -7,7 +7,7 @@ Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-String searchFormURL = new String("saveSearchForm.jsp?action=saveSearch.jsp");
+String searchFormURL = new String("saveForm.jsp?action=saveSearch.jsp");
 int search_id = 0;
 
 try {
