@@ -20,7 +20,7 @@
 
 #define GROUP_ACCOUNT_STATUS   @"Account Status"
 
-#define NEW_ACCOUNT_DISPLAY_TEXT	NSLocalizedString(@"<New Account>",nil)
+#define NEW_ACCOUNT_DISPLAY_TEXT	AILocalizedString(@"<New Account>",nil)
 
 typedef enum {
     STATUS_NA = -1,

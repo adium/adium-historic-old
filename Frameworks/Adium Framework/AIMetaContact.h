@@ -6,7 +6,7 @@
 
 #import "AIListContact.h"
 
-#define META_SERVICE_STRING				NSLocalizedString(@"Meta",nil)
+#define META_SERVICE_STRING				AILocalizedString(@"Meta",nil)
 
 @interface AIMetaContact : AIListContact <AIContainingObject> {
 	NSNumber				*objectID;
