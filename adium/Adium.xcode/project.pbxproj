@@ -5005,7 +5005,7 @@
 				4BCC20AD066B9A00007C8449,
 				4BCC20AE066B9A00007C8449,
 				4B2DC069066F6B1200AD5AAD,
-				4B6C4644066FD4EF0082199C,
+				4B6C4646066FEA160082199C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11589,16 +11589,16 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B6C4643066FD4EF0082199C = {
+		4B6C4645066FEA160082199C = {
 			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = pref9.tif;
-			path = Source/icons/pref9.tif;
+			lastKnownFileType = image.png;
+			name = pref9.png;
+			path = Source/icons/pref9.png;
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B6C4644066FD4EF0082199C = {
-			fileRef = 4B6C4643066FD4EF0082199C;
+		4B6C4646066FEA160082199C = {
+			fileRef = 4B6C4645066FEA160082199C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19675,7 +19675,7 @@
 				4B0AABAD05228F9700A8010A,
 				4B0AABAE05228F9700A8010A,
 				4B03DDF30533AC59002B2CA3,
-				4B6C4643066FD4EF0082199C,
+				4B6C4645066FEA160082199C,
 			);
 			isa = PBXGroup;
 			name = Icons;
