@@ -9,6 +9,7 @@
     NSMutableDictionary	*chatDict;
 
     AIChat			*commandChat;
+	AIChat			*groupChat;
     AIListContact	*commandContact;
 	NSMutableArray  *listObjectArray;
 }
