@@ -436,13 +436,13 @@
 /*
  * @brief Retrieve all the preferences in a group
  *
- * @result A dictionary of preferenced for the group, including default values as appropriate
+ * @result A dictionary of preferences for the group, including default values as appropriate
  */
 - (NSDictionary *)preferencesForGroup:(NSString *)group
 {
-    return([self cachedPreferencesWithDefaultsForGroup:group object:nil]);    
+	
+    return([self cachedPreferencesWithDefaultsForGroup:group object:nil]);
 }
-
 
 //Defaults -------------------------------------------------------------------------------------------------------------
 #pragma mark Defaults
@@ -615,10 +615,9 @@
 
 	}
 	
-	if(!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])){
+	if(!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])){		
 		NSDictionary	*userPrefs = [self cachedPreferencesForGroup:group object:object];
 		NSDictionary	*defaultPrefs = [sourceDefaultsDict objectForKey:cacheKey];
-
 		if(defaultPrefs){
 			//Add the object's own preferences to the defaults dictionary to get a dict with the object's keys
 			//overriding the default keys
@@ -632,7 +631,7 @@
 		//And cache the result; the cache should be updated or cleared when the dictionary changes
 		[activeDefaultsCache setObject:prefWithDefaultsDict forKey:cacheKey];
 	}
-	
+
 	return(prefWithDefaultsDict);
 }
 
@@ -650,16 +649,27 @@
 		NSString	*uniqueID = [object internalObjectID];
 		NSString	*cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
 
+		//Store to our object pref cache
 		[objectPrefCache setObject:prefDict forKey:cacheKey];
 		
+		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
+		 * able to depend upon a retrieved prefDict remaining usable without bracketing a set of 
+		 * -[AIPreferenceController setPreference:forKey:group:] calls with retain/release. */
+		[[[objectPrefWithDefaultsCache objectForKey:group] retain] autorelease];
+
 		//Clear the cache so the union of defaults and preferences will be recalculated on next call
 		[objectPrefWithDefaultsCache removeObjectForKey:cacheKey];
-		
+
 		//Save the preference change immediately (Probably not the best idea?)
 		[prefDict writeToPath:[userDirectory stringByAppendingPathComponent:path]
 					 withName:[uniqueID safeFilenameString]];
 
 	}else{
+		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
+		 * able to depend upon a retrieved prefDict remaining usable without bracketing a set of 
+		 * -[AIPreferenceController setPreference:forKey:group:] calls with retain/release. */
+		[[[prefWithDefaultsCache objectForKey:group] retain] autorelease];
+		
 		//Clear the cache so the union of defaults and preferences will be recalculated on next call
 		[prefWithDefaultsCache removeObjectForKey:group];
 		
