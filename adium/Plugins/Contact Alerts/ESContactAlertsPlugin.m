@@ -13,7 +13,7 @@
 #import "AIAdium.h"
 
 @interface ESContactAlertsPlugin(PRIVATE)
-- (void)processEventActionArrayForObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
+- (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
 @end
 
 @implementation ESContactAlertsPlugin
@@ -50,23 +50,30 @@
 
 - (void)uninstallPlugin
 {
-
+    [[owner contactController] unregisterListObjectObserver:self];
 }
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     if (!silent) //We do things.  If silent, don't do them.
     {
-        [self processEventActionArrayForObject:inObject keys:inModifiedKeys];
-        [self processEventActionArrayForObject:[inObject containingGroup] keys:inModifiedKeys]; //process the group's array, as well
+        NSMutableArray * eventActionArray;
+        
+        //load inObject events
+        eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+        //process inObject events
+        [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
+
+        //load [inObject containingGroup] events
+        eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:[inObject containingGroup]];
+        //process the group events
+        [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
     }
     return nil; //we don't change any attributes
 }
 
-- (void)processEventActionArrayForObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
+- (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
-    NSMutableArray * eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
-
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
     NSString * event;
@@ -271,13 +278,6 @@
     AIListObject		*object = [objects objectForKey:@"ContactObject"];
     
     [ESContactAlertsWindowController showContactAlertsWindowWithOwner:owner forObject:object];
-}
-
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ALERTS] == 0){
-        NSLog(@"prefs changed.");
-    }
 }
 
 @end
