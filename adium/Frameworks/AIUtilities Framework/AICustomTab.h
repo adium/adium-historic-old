@@ -24,22 +24,17 @@
     NSImage		*tabFrontLeft;
     NSImage		*tabFrontMiddle;
     NSImage		*tabFrontRight;
-    NSImage		*tabPushLeft;
-    NSImage		*tabPushMiddle;
-    NSImage		*tabPushRight;
-    NSImage	*tabDivider;
+    NSImage		*tabDivider;
     
     //Properties
     BOOL		selected;
     BOOL		depressed;
     BOOL		dragging;
-    BOOL	drawDivider;
+    BOOL		drawDivider;
     
     NSTrackingRectTag	trackingRectTag;
-
     NSTabViewItem	*tabViewItem;
     NSSize		oldSize;
-
     NSPoint		clickLocation;
 }
 
@@ -49,5 +44,6 @@
 - (NSTabViewItem *)tabViewItem;
 - (NSSize)size;
 - (NSComparisonResult)compareWidth:(AICustomTab *)tab;
+- (void)setDrawDivider:(BOOL)inDrawDivider;
 
 @end

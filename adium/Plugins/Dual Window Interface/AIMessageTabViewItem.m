@@ -131,10 +131,10 @@
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
-    AIMutableOwnerArray	*leftViewArray;
+/*    AIMutableOwnerArray	*leftViewArray;
 
     //Draw icon
-/*    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
+    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
 
     //If a left view is present
     if(leftViewArray && [leftViewArray count]){
@@ -169,7 +169,7 @@
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
 {
-    AIMutableOwnerArray	*leftViewArray;
+//    AIMutableOwnerArray	*leftViewArray;
     NSSize		size;
 
     //Name width

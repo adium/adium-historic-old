@@ -25,6 +25,9 @@
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
 
 //The tabbed window that contains messages
+@interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
+- (void)setBottomCornerRounded:(BOOL)rounded;
+@end
 
 @interface AIMessageWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;

@@ -85,19 +85,6 @@
     [super dealloc];
 }
 
-//The display name for this account
-#warning- (NSString *)displayName
-/*{
-    NSString	*displayName;
-
-    displayName = [[self statusArrayForKey:@"Display Name"] objectWithOwner:self];
-    if(displayName != nil && [displayName length] != 0){
-        return(displayName);
-    }else{
-        return(UID);
-    }
-}*/
-
 //Functions for subclasses to override
 - (void)initAccount{};
 - (NSView *)accountView{return(nil);};

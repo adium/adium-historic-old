@@ -60,7 +60,6 @@
     [[self superview] setNeedsDisplay:YES]; //Since tabs overlap, we must redisplay them all
 }
 
-
 //Set the depressed state of this tab
 - (void)setDepressed:(BOOL)inDepressed
 {
@@ -99,41 +98,16 @@
 {
     [super initWithFrame:frameRect];
 
-  //  tabFrontLeft = [[AISystemTabRendering tabFrontLeft] retain];
-
-
     tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left.tiff" forClass:[self class]] retain];
     tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle.tiff" forClass:[self class]] retain];
     tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right.tiff" forClass:[self class]] retain];
-
-        //[[AISystemTabRendering tabFrontMiddle] retain];
-
 
     tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left.tiff" forClass:[self class]] retain];
     tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right.tiff" forClass:[self class]] retain];
     tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle.tiff" forClass:[self class]] retain];
 
     tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider.tiff" forClass:[self class]] retain];
-    
- //   tabFrontRight = [[AISystemTabRendering tabFrontRight] retain];
-//    tabBackLeft = [[AISystemTabRendering tabBackLeft] retain];
-//    tabBackMiddle = [[AISystemTabRendering tabBackMiddle] retain];
-//    tabBackRight = [[AISystemTabRendering tabBackRight] retain];
-    tabPushLeft = [[AISystemTabRendering tabPushLeft] retain];
-    tabPushMiddle = [[AISystemTabRendering tabPushMiddle] retain];
-    tabPushRight = [[AISystemTabRendering tabPushRight] retain];
 
-    //Flip our images
-/*    [tabFrontLeft setFlipped:YES];
-    [tabFrontMiddle setFlipped:YES];
-    [tabFrontRight setFlipped:YES];
-    [tabBackLeft setFlipped:YES];
-    [tabBackMiddle setFlipped:YES];
-    [tabBackRight setFlipped:YES];
-    [tabPushLeft setFlipped:YES];
-    [tabPushMiddle setFlipped:YES];
-    [tabPushRight setFlipped:YES];*/
-    
     tabViewItem = [inTabViewItem retain];
     selected = NO;
     dragging = NO;
@@ -152,9 +126,6 @@
     [tabFrontLeft release];
     [tabFrontMiddle release];
     [tabFrontRight release];
-    [tabPushLeft release];
-    [tabPushMiddle release];
-    [tabPushRight release];
 
     [super dealloc];
 }
@@ -164,28 +135,23 @@
     return(YES);
 }
 
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
+{
+    return(YES);
+}
+
 //Draw
 - (void)drawRect:(NSRect)rect
 {
-    NSImage	*left, *middle, *right;
     int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
-  
-    //Pick the correct images depending on our state
-/*    if(depressed){
-        left = tabPushLeft; middle = tabPushMiddle; right = tabPushRight;
-    }else if(selected){*/
-        left = tabFrontLeft; middle = tabFrontMiddle; right = tabFrontRight;
-/*    }else{
-        left = tabBackLeft; middle = tabBackMiddle; right = tabBackRight;
-    }*/
-    
+      
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
-    leftCapWidth = [left size].width;
-    rightCapWidth = [right size].width;
-    middleSourceWidth = [middle size].width;
+    leftCapWidth = [tabFrontLeft size].width;
+    rightCapWidth = [tabFrontRight size].width;
+    middleSourceWidth = [tabFrontMiddle size].width;
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
     middleLeftEdge = (rect.origin.x + leftCapWidth);
     middleWidth = middleRightEdge - middleLeftEdge;
@@ -195,10 +161,10 @@
         [tabBackLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
 
         //Draw the left cap
-        [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        [tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
     
         //Draw the middle
-        sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
+        sourceRect = NSMakeRect(0, 0, [tabFrontMiddle size].width, [tabFrontMiddle size].height);
         destRect = NSMakeRect(middleLeftEdge, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
     
         while(destRect.origin.x < middleRightEdge){
@@ -208,7 +174,7 @@
             }
 
             [tabBackMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
-            [middle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
+            [tabFrontMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
             destRect.origin.x += destRect.size.width;
         }
 
@@ -216,7 +182,7 @@
         [tabBackRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
 
         //Draw the right cap
-        [right compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
     }else{
         if(drawDivider){
             //Draw the divider
@@ -259,11 +225,8 @@
 //Mouse tracking / Clicking -------------------------------------------
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    clickLocation = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
-
-    if(!selected){
-        [self setDepressed:YES];
-    }
+    //Select our tab
+    [[tabViewItem tabView] selectTabViewItem:tabViewItem];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -280,16 +243,6 @@
             //if we've moved enough, initiate a drag
             [(AICustomTabsView *)[self superview] beginDragOfTab:self fromOffset:NSMakeSize(location.x, location.y)];
             dragging = YES;
-
-        }else{
-            //Update the 'pressed' highlighting
-            if(!selected){
-                if(NSPointInRect(location, [self frame])){
-                    if(!depressed) [self setDepressed:YES];
-                }else{
-                    if(depressed) [self setDepressed:NO];
-                }
-            }
         }
     }
 
@@ -297,24 +250,13 @@
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    NSPoint	location = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
-    
     if(dragging){
         //End dragging
         dragging = NO;
         [[self window] invalidateCursorRectsForView:self];
-        if(![(AICustomTabsView *)[self superview] concludeDrag]){
-            [[tabViewItem tabView] selectTabViewItem:tabViewItem];
-        }
-        [self setDepressed:NO];
+        [(AICustomTabsView *)[self superview] concludeDrag];
 
-    }else{
-        if(NSPointInRect(location, [self frame])){
-            //Select our tab
-            [[tabViewItem tabView] selectTabViewItem:tabViewItem];
-        }
-        
-        [self setDepressed:NO];
+        [[tabViewItem tabView] selectTabViewItem:tabViewItem];
     }
 }
 
