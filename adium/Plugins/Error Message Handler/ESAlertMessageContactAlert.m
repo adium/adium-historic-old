@@ -39,7 +39,8 @@
     
     //Set the menu to its previous setting if the stored event matches
     if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:CONTACT_ALERT_IDENTIFIER]) {
-        [textField_actionDetails setStringValue:[currentDict objectForKey:KEY_EVENT_DETAILS]];
+		NSString	*details = [currentDict objectForKey:KEY_EVENT_DETAILS];
+        [textField_actionDetails setStringValue:details ? details : @""];
     } else {
         [textField_actionDetails setStringValue:@""];   
     }
