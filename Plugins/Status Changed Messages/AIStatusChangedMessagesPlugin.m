@@ -16,7 +16,7 @@
 #import "AIStatusChangedMessagesPlugin.h"
 
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
-- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object withType:(NSString *)type;
+- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type;
 @end
 
 @implementation AIStatusChangedMessagesPlugin
@@ -34,69 +34,69 @@
 }
 
 - (void)Contact_StatusMessage:(NSNotification *)notification{
-	AIListObject	*object = [notification object];
-	NSString		*statusMessage = [[object statusObjectForKey:@"StatusMessage"] string];
+	AIListContact	*contact = [notification object];
+	NSString		*statusMessage = [[contact statusObjectForKey:@"StatusMessage"] string];
 	NSString		*statusType = @"away_message";
 	
 	if(statusMessage && [statusMessage length] != 0){
-		[self statusMessage:[NSString stringWithFormat:@"Away Message: %@",statusMessage] forObject:object withType:statusType];
+		[self statusMessage:[NSString stringWithFormat:@"Away Message: %@",statusMessage] forContact:contact withType:statusType];
 	}
 }
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
-    AIListObject *object = [notification object];
+    AIListContact *contact = [notification object];
 	NSString *statusType = @"away";
 	
-    [self statusMessage:[NSString stringWithFormat:@"%@ went away",[object displayName]] forObject:object withType:statusType];
+    [self statusMessage:[NSString stringWithFormat:@"%@ went away",[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
-    AIListObject *object = [notification object];
+    AIListContact *contact = [notification object];
 	NSString *statusType = @"return_away";
     
-    if([object integerStatusObjectForKey:@"Online"])
-		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[object displayName]] forObject:object withType:statusType];
+    if([contact integerStatusObjectForKey:@"Online"])
+		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
-	AIListObject *object = [notification object];
+    AIListContact *contact = [notification object];
 	NSString *statusType = @"online";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ connected",[object displayName]] forObject:object withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:@"%@ connected",[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusOnlineNO:(NSNotification *)notification{
-	AIListObject *object = [notification object];
+    AIListContact *contact = [notification object];
 	NSString *statusType = @"offline";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ disconnected",[object displayName]] forObject:object withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:@"%@ disconnected",[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusIdleYes:(NSNotification *)notification{
-	AIListObject *object = [notification object];
+    AIListContact *contact = [notification object];
 	NSString *statusType = @"idle";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ went idle",[object displayName]] forObject:object withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:@"%@ went idle",[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
-	AIListObject *object = [notification object];
+    AIListContact *contact = [notification object];
 	NSString *statusType = @"return_idle";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[object displayName]] forObject:object withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[contact displayName]] forContact:contact withType:statusType];
 }
 
 
 //Post a status message on all active chats for this object
-- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object withType:(NSString *)type
+- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type
 {
     NSEnumerator		*enumerator;
     AIChat				*chat;
 	NSAttributedString	*attributedMessage = [[[NSAttributedString alloc] initWithString:message
 																			  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
 	
-    enumerator = [[[adium contentController] allChatsWithListObject:object] objectEnumerator];
+    enumerator = [[[adium contentController] allChatsWithContact:contact] objectEnumerator];
     while((chat = [enumerator nextObject])){
         AIContentStatus	*content;
 
         //Create our content object
         content = [AIContentStatus statusInChat:chat
-                                     withSource:object
+                                     withSource:contact
                                     destination:[chat account]
                                            date:[NSDate date]
                                         message:attributedMessage
