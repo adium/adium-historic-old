@@ -31,10 +31,11 @@
 - Metacontact drawer in get info crashes upon dragging
 - Contactlist does not allow dragging of contacts/groups
 - Extended status doesn't update on the list when it changes
+- Extended status sometimes draws outside the cell (and is therefore cropped) instead of increasing cell height
 - If mouse is over the list when it closes we crash in tooltip code
 - Selected cells need to draw with inverted text
 - Create default layouts & styles for the contact list preferences
-
+- Thread filter can cause beachballing at startup.
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
