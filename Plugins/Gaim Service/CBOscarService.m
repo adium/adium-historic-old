@@ -11,51 +11,46 @@
 
 @implementation CBOscarService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-
-	NSImage *image = [NSImage imageNamed:@"aim" forClass:[self class]];
-		
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
-                                                      description:@"AIM, ICQ, and .Mac"
-                                                            image:image
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@" "]
-													allowedLength:24] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([CBGaimOscarAccount class]);
 }
 
-//Warning this should be @"AIM" but there are too many preferences relying upon AIM-LIBGAIM right now to worry about it
-- (NSString *)identifier
-{
-    return(@"AIM-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"AIM, ICQ, and .Mac";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[CBGaimOscarAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([AIGaimOscarAccountViewController accountView]);
 }
 
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimOscarJoinChatViewController joinChatView]);
+}
+
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-oscar");
+}
+- (NSString *)serviceID{
+	return(@"");
+}
+- (NSString *)serviceClass{
+	return(@"AIM-compatible");
+}
+- (NSString *)shortDescription{
+	return(@"");
+}
+- (NSString *)longDescription{
+	return(@"");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
+}
+- (int)allowedLength{
+	return(24);
+}
+- (BOOL)caseSensitive{
+	return(NO);
 }
 
 @end
