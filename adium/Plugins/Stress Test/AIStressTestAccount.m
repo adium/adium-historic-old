@@ -17,17 +17,37 @@
 {
     chatDict = [[NSMutableDictionary alloc] init];
 	listObjectArray = [[NSMutableArray alloc] init];
+	commandContact = nil;
 	
+	//Wait for Adium to finish launching before we create our command contact and sign it online
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
+}
+
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
 	commandContact = [[[adium contactController] contactWithService:STRESS_TEST_SERVICE_IDENTIFIER 
 														  accountID:[self uniqueObjectID]
 																UID:@"Command"] retain];
     [commandContact setRemoteGroupName:@"Command"];
     [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
-    
-    //
-    [self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash"];
+	
+	[[adium notificationCenter] removeObserver:self
+										  name:Adium_CompletedApplicationLoad
+										object:nil];
 }
 
+- (void)dealloc
+{
+	[groupChat release];
+	[commandChat release];
+	[chatDict release];
+	[listObjectArray release];
+	
+	[super dealloc];
+}
 //Return the default properties for this account
 - (NSDictionary *)defaultProperties
 {
@@ -221,8 +241,7 @@
 													  accountID:[self uniqueObjectID]
 															UID:buddyUID])){
         AIContentMessage *messageObject;
-        messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact 
-																					 initialStatus:nil]
+        messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
 											 withSource:contact
                                             destination:self
 												   date:nil
@@ -256,8 +275,7 @@
 															UID:buddyUID])){
         AIContentMessage *messageObject;
         if(msgIn){
-            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact
-																						 initialStatus:nil]
+            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
                                                  withSource:self
                                                 destination:contact
                                                        date:nil
@@ -266,8 +284,7 @@
                                                   autoreply:YES];
             [[adium contentController] sendContentObject:messageObject];
         }else{
-            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact
-																						 initialStatus:nil]
+            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
                                                  withSource:contact
                                                 destination:self
                                                        date:nil
@@ -295,10 +312,8 @@
     AIListContact	*contact;
 	AIContentMessage *messageObject;
 	
+	//Ensure our contacts and group are created when we get to the first contact
 	if( i == 0 ) {
-		
-		//listObjectArray = [NSMutableArray arrayWithCapacity:4];
-
 		for(j = 0; j < count; j++) {
 			NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",j];
 			[listObjectArray addObject:[[adium contactController] contactWithService:[[service handleServiceType] identifier]
@@ -306,33 +321,23 @@
 																				 UID:buddyUID]];
 		}
 		
+		groupChat = [[[adium contentController] chatWithName:[NSString stringWithFormat:@"%@'s Chat",[[listObjectArray objectAtIndex:0] displayName]]
+												  onAccount:self
+											chatCreationInfo:nil] retain];
 		
-		commandChat = [[adium contentController] chatWithContact:[listObjectArray objectAtIndex:0] initialStatus:nil];
-		
-		messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:[listObjectArray objectAtIndex:0] 
-																					 initialStatus:nil]
-											 withSource:[listObjectArray objectAtIndex:0]
-											destination:self
-												   date:nil
-												message:[[[NSAttributedString alloc] initWithString:message
-																						 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											  autoreply:NO];
-		[[adium contentController] receiveContentObject:messageObject];
-		
-	} else if( i < count ) {
-		[commandChat addParticipatingListObject:[listObjectArray objectAtIndex:i]];
-		messageObject = [AIContentMessage messageInChat:commandChat
-											 withSource:[listObjectArray objectAtIndex:i]
-											destination:self
-												   date:nil
-												message:[[[NSAttributedString alloc] initWithString:message
-																						 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											  autoreply:NO];
-		[[adium contentController] receiveContentObject:messageObject];
-		
-		
-	}	
+	}
 	
+	[groupChat addParticipatingListObject:[listObjectArray objectAtIndex:i]];
+	messageObject = [AIContentMessage messageInChat:groupChat
+										 withSource:[listObjectArray objectAtIndex:i]
+										destination:nil
+											   date:nil
+											message:[[[NSAttributedString alloc] initWithString:message
+																					 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+										  autoreply:NO];
+	[[adium contentController] receiveContentObject:messageObject];
+	
+	//Increment our object counter, invalidating this timer if we're done sending messages
 	i++;
     [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
     if(i == count) [inTimer invalidate];
@@ -353,17 +358,25 @@
 //Initiate a new chat
 - (BOOL)openChat:(AIChat *)chat
 {
-	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+	AIListObject	*listObject = [chat listObject];
+	if (listObject && (listObject == commandContact)){
+		//
+		[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash"];
+	}
 	
-	[chatDict setObject:chat forKey:[[chat listObject] UID]];
+	[chat setStatusObject:[NSNumber numberWithBool:YES]
+				   forKey:@"Enabled"
+				   notify:YES];
 	
+	[chatDict setObject:chat forKey:[chat uniqueChatID]];
+
     return(YES);
 }
 
 //Close a chat instance
-- (BOOL)closeChat:(AIChat *)inChat
+- (BOOL)closeChat:(AIChat *)chat
 {
-    [chatDict removeObjectForKey:[[inChat listObject] UID]];
+    [chatDict removeObjectForKey:[chat uniqueChatID]];
     return(YES); //Success
 }
 
@@ -376,8 +389,7 @@
 - (void)_echo:(NSString *)string
 {
     AIContentMessage *messageObject;
-    messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:commandContact
-																				 initialStatus:nil]
+    messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:commandContact]
                                          withSource:commandContact
                                         destination:self
                                                date:nil
