@@ -7,6 +7,7 @@
 //
 
 #import "CBContactCountingDisplayPlugin.h"
+#import "CBContactCountingDisplayPreferences.h"
 
 #define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS @"ContactCountingDisplayDefaults"
 
@@ -17,23 +18,31 @@
     allCount = YES;
     visibleCount = YES;
     
-    /*//Set up preferences
+	[self preferencesChanged:nil];
+	
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
     prefs = [[CBContactCountingDisplayPreferences contactCountingDisplayPreferences] retain];
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];*/ 
 
     //install our observers
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[adium contactController] registerListObjectObserver:self];
+	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST])
-    {
-        allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)
+	{
+		NSEnumerator		*enumerator;
+		AIListObject		*object;
+				
+		allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
         visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
-        
-        //tell the prefs thing we're updated?
+        		
+		enumerator = [[[adium contactController] contactList] objectEnumerator]; //We need all the groups
+		
+		while(object = [enumerator nextObject]){
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
+        }
     }
 }
 
@@ -59,6 +68,8 @@
 
 - (void)uninstallPlugin
 {
+	[prefs release];
+	
     //we are no longer an observer
     [[adium notificationCenter] removeObserver:self];
     [[adium contactController] unregisterListObjectObserver:self];
