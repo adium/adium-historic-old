@@ -7,13 +7,12 @@
 
 #import "GBiTunerPlugin.h"
 
-#define PATH_INTERNAL_SCRIPTS	@"/Contents/Resources/Scripts/"
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
-#define PATH_EXTERNAL_SCRIPTS   [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Scripts"]
-#define SCRIPT_PATH_EXTENSION	@"scpt"
+#define SCRIPT_BUNDLE_EXTENSION	@"AdiumScripts"
+#define SCRIPTS_PATH_NAME		@"Scripts"
+#define SCRIPT_EXTENSION		@"scpt"
 
 @interface GBiTunerPlugin (PRIVATE)
-- (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu atLevel:(int)level;
+- (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
@@ -87,42 +86,67 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray
 {
  	NSMutableArray		*scripts = [NSMutableArray array];
-	NSEnumerator		*enumerator;
-    NSString			*file;
+	NSEnumerator		*fileEnumerator;
+    NSString			*filePath;
+	NSBundle			*scriptBundle;
+	NSString			*AdiumScripts = SCRIPT_BUNDLE_EXTENSION;
+	
+	fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:dirPath] objectEnumerator];
+	
+	//Find all the script bundles at this path
+	while((filePath = [fileEnumerator nextObject])){
 
-	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:dirPath] objectEnumerator];
-    while((file = [enumerator nextObject])){
-		if([[file lastPathComponent] characterAtIndex:0] != '.'){
-			BOOL			isDirectory;
-			NSString		*fullPath;
-			
-            fullPath = [dirPath stringByAppendingPathComponent:file];
-            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
-			if(isDirectory){
-				//Load all the scripts within this directory
-				[scripts addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-					@"Group", @"Type",
-					[file lastPathComponent], @"Title",
-					[self _loadScriptsFromDirectory:fullPath intoUsageArray:useArray], @"Content",
-					nil]];
+		if([[filePath pathExtension] caseInsensitiveCompare:AdiumScripts] == 0){
+
+			if(scriptBundle = [NSBundle bundleWithPath:[dirPath stringByAppendingPathComponent:filePath]]){
 				
-			}else{
-				//Load this script
-				NSURL			*scriptURL = [NSURL fileURLWithPath:fullPath];
-				NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
-				NSString		*keyword = [[script executeFunction:@"keyword" error:nil] stringValue];
-				NSString		*title = [[script executeFunction:@"title" error:nil] stringValue];
-				NSString		*arguments = [[script executeFunction:@"arguments" error:nil] stringValue];
-				BOOL			prefixOnly = [[script executeFunction:@"prefixonly" error:nil] booleanValue];
+				NSString		*scriptsSetName;
+				NSEnumerator	*scriptEnumerator;
+				NSDictionary	*scriptDict;
 				
-				if(keyword && [keyword length] && title && [title length]){
-					NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Script", @"Type",
-						scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
-						[NSNumber numberWithBool:prefixOnly], @"PrefixOnly", arguments, @"Arguments", nil];
+				//Get the name of the set these scripts will go into
+				scriptsSetName = [scriptBundle objectForInfoDictionaryKey:@"Set"];
+				
+				//Now enumerate each script the bundle claims as its own
+				scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
+				
+				while (scriptDict = [scriptEnumerator nextObject]){
+					NSString		*scriptFileName, *keyword, *title, *arguments;
+					NSURL			*scriptURL;
+					NSNumber		*prefixOnlyNumber;
 					
-					//Place the entry in our script arrays
-					[scripts addObject:infoDict];
-					[useArray addObject:infoDict];
+					scriptFileName = [scriptDict objectForKey:@"File"];
+					scriptURL = [NSURL fileURLWithPath:[scriptBundle pathForResource:scriptFileName
+																			  ofType:SCRIPT_EXTENSION]];
+					keyword = [scriptDict objectForKey:@"Keyword"];
+					title = [scriptDict objectForKey:@"Title"];
+					
+					if(scriptURL && keyword && [keyword length] && title && [title length]){
+						NSMutableDictionary	*infoDict;
+						
+						arguments = [scriptDict objectForKey:@"Arguments"];
+						
+						//Assume "Prefix Only" is NO unless told otherwise
+						prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
+						if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
+						
+						infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+							scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
+							prefixOnlyNumber, @"PrefixOnly", nil];
+						
+						//The bundle may not be part of (or for defining) a set of scripts
+						if (scriptsSetName){
+							[infoDict setObject:scriptsSetName forKey:@"Set"];
+						}
+						//Arguments may be nil
+						if (arguments){
+							[infoDict setObject:arguments forKey:@"Arguments"];
+						}
+
+						//Place the entry in our script arrays
+						[scripts addObject:infoDict];
+						[useArray addObject:infoDict];
+					}
 				}
 			}
 		}
@@ -151,79 +175,93 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	if(!scriptArray) [self loadScripts];
 	
 	//Sort the scripts
-	[self _sortScriptsByTitle:scriptArray];
+	[scriptArray sortUsingFunction:_scriptTitleSort context:nil];
 	
 	//Build the menu
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:SCRIPTS_MENU_NAME];
-	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
+	[self _appendScripts:scriptArray toMenu:scriptMenu];
 	[scriptMenuItem setSubmenu:scriptMenu];
 	
 	buildingScriptMenu = NO;
 }
 
-//Alphabetize scripts
-- (void)_sortScriptsByTitle:(NSMutableArray *)sortArray
-{
-	NSEnumerator	*enumerator;
-	NSDictionary	*sortDict;
+//Sort first by set, then by title within sets
+int _scriptTitleSort(id scriptA, id scriptB, void *context){
+	NSComparisonResult result;
 	
-	//Sort the scripts
-	[sortArray sortUsingFunction:_scriptTitleSort context:nil];
+	NSString	*setA = [scriptA objectForKey:@"Set"];
+	NSString	*setB = [scriptB objectForKey:@"Set"];
 	
-	//Sort the scripts of any subgroups
-	enumerator = [sortArray objectEnumerator];
-	while(sortDict = [enumerator nextObject]){
-		if([(NSString *)[sortDict objectForKey:@"Type"] isEqualToString:@"Group"]){
-			[self _sortScriptsByTitle:[sortDict objectForKey:@"Content"]];
+	if (setA && setB){
+		
+		//If both are within sets, sort by set; if they are within the same set, sort by title
+		if ((result = [setA caseInsensitiveCompare:setB]) == NSOrderedSame){
+			result = [(NSString *)[scriptA objectForKey:@"Title"] caseInsensitiveCompare:[scriptB objectForKey:@"Title"]];
+		}
+	}else{
+		//Sort by title if neither is in a set; otherwise sort the one in a set to the top
+		
+		if (!setA && !setB){
+			result = [(NSString *)[scriptA objectForKey:@"Title"] caseInsensitiveCompare:[scriptB objectForKey:@"Title"]];
+		
+		}else if (!setA){
+			result = NSOrderedDescending;
+		}else{
+			result = NSOrderedAscending;
 		}
 	}
-}
-int _scriptTitleSort(id scriptA, id scriptB, void *context){
-	return([(NSString *)[scriptA objectForKey:@"Title"] compare:[scriptB objectForKey:@"Title"]]);
+	
+	return(result);
 }
 
-//Append menu items for the scripts to a menu
-- (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu atLevel:(int)level
+//Append menu items for the scripts to a menu; the array scripts must already have been 
+- (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu
 {
 	NSEnumerator	*enumerator;
 	NSDictionary	*appendDict;
+	NSString		*lastSet = nil;
+	NSString		*set;
+	int				indentationLevel;
 	
 	enumerator = [scripts objectEnumerator];
 	while(appendDict = [enumerator nextObject]){
-		NSString	*type = [appendDict objectForKey:@"Type"];
+		NSString	*title;
+		NSMenuItem	*item;
 		
-		//Get the item
-		if([type isEqualToString:@"Script"]){
-			NSString	*title;
+		if (set = [appendDict objectForKey:@"Set"]){
+			indentationLevel = 1;
 			
-			if([appendDict objectForKey:@"Title"]){
-				title = [NSString stringWithFormat:@"%@ (%@)", [appendDict objectForKey:@"Title"], [appendDict objectForKey:@"Keyword"]];
-			}else{
-				title = [appendDict objectForKey:@"Keyword"];
+			if (![set isEqualToString:lastSet]){
+				//We have a new set of scripts; create a section header for them
+				item = [[[NSMenuItem alloc] initWithTitle:set
+																target:nil
+																action:nil
+														 keyEquivalent:@""] autorelease];
+				if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:0];
+				[menu addItem:item];
+				
+				[lastSet release]; lastSet = [set retain];
 			}
-			
-			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:title
-															target:self
-															action:@selector(selectScript:)
-													 keyEquivalent:@""] autorelease];
-			
-			[item setRepresentedObject:appendDict];
-			if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:level];
-			[menu addItem:item];
-			
-		}else if([type isEqualToString:@"Group"]){
-			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[appendDict objectForKey:@"Title"]
-															target:nil
-															action:nil
-													 keyEquivalent:@""] autorelease];
-			
-			[item setRepresentedObject:appendDict];
-			if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:level];
-			[menu addItem:item];
-			
-			//Add the items in this group
-			[self _appendScripts:[appendDict objectForKey:@"Content"] toMenu:menu atLevel:level+1];
+		}else{
+			//Scripts not in sets need not be indented
+			indentationLevel = 0;
+			[lastSet release]; lastSet = nil;
 		}
+	
+		if([appendDict objectForKey:@"Title"]){
+			title = [NSString stringWithFormat:@"%@ (%@)", [appendDict objectForKey:@"Title"], [appendDict objectForKey:@"Keyword"]];
+		}else{
+			title = [appendDict objectForKey:@"Keyword"];
+		}
+		
+		item = [[[NSMenuItem alloc] initWithTitle:title
+										   target:self
+										   action:@selector(selectScript:)
+									keyEquivalent:@""] autorelease];
+		
+		[item setRepresentedObject:appendDict];
+		if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:indentationLevel];
+		[menu addItem:item];
 	}
 }
 
