@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {searchGoogle = id; }; 
+            CLASS = CSWebViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                progress = NSProgressIndicator; 
+                "searchField_google" = NSSearchField; 
+                "textField_location" = NSTextField; 
+                "textField_status" = NSTextField; 
+                "view_main" = NSView; 
+                "webView_main" = WebView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
