@@ -14,11 +14,6 @@
 
 @implementation AITabStatusIconsPlugin
 
-+ (NSImage *)iconForListObject:(AIListObject *)listObject
-{
-	return [[[AITabStatusIconsPlugin alloc] init] _iconForListObject:listObject];
-}
-
 //
 - (void)installPlugin
 {
