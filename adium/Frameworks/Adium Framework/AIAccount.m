@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.67 2004/07/10 06:13:35 evands Exp $
+// $Id: AIAccount.m,v 1.68 2004/07/15 08:12:41 evands Exp $
 
 #import "AIAccount.h"
 
@@ -24,8 +24,8 @@
 - (void)_setAccountProfileTo:(NSAttributedString *)profile;
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
-- (void)_startStringRefreshTimer;
-- (void)_stopStringRefreshTimer;
+//- (void)_startStringRefreshTimer;
+//- (void)_stopStringRefreshTimer;
 @end
 
 @implementation AIAccount
@@ -91,7 +91,7 @@
 	[reconnectTimer invalidate]; [reconnectTimer release];
 	
 	[self _stopAttributedRefreshTimer];
-	[self _stopStringRefreshTimer];
+//	[self _stopStringRefreshTimer];
 	[autoRefreshingKeys release]; autoRefreshingKeys = nil;
 	
     [[adium notificationCenter] removeObserver:self];
@@ -116,15 +116,29 @@
 }
 
 //By default, just return the image associated with our handleServiceType
-- (NSImage *)serviceImage
+- (NSImage *)image
 {
-	return [[[self service] handleServiceType] image];
+	return([[service handleServiceType] image]);
 }
 
-- (NSImage *)serviceMenuImage
+- (NSImage *)menuImage
 {
-	return [[[self service] handleServiceType] menuImage];	
+	return([[service handleServiceType] menuImage]);
 }
+
+- (NSImage *)onlineMenuImage{
+	return([[service handleServiceType] onlineMenuImage]);
+}
+
+- (NSImage *)connectingMenuImage{
+	return([[service handleServiceType] connectingMenuImage]);
+}
+
+- (NSImage *)offlineMenuImage{
+	return([[service handleServiceType] offlineMenuImage]);
+}
+
+
 
 //Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
