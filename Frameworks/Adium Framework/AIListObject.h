@@ -85,6 +85,7 @@ typedef enum {
 //Grouping
 - (AIListObject <AIContainingObject> *)containingObject;
 - (float)orderIndex;
+- (AIListGroup *)parentGroup;
 
 //Display
 - (NSString *)formattedUID;
