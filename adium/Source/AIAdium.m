@@ -262,9 +262,9 @@ void Adium_HandleSignal(int i){
     signal(SIGTRAP, Adium_HandleSignal);	/* 5:   trace trap (not reset when caught) */
     signal(SIGEMT, Adium_HandleSignal);		/* 7:   EMT instruction */
     signal(SIGFPE, Adium_HandleSignal);		/* 8:   floating point exception */
-    signal(SIGBUS, Adium_HandleSignal);     /* 10:  bus error */
+    signal(SIGBUS, Adium_HandleSignal);		/* 10:  bus error */
     signal(SIGSEGV, Adium_HandleSignal);	/* 11:  segmentation violation */
-    signal(SIGSYS, Adium_HandleSignal);     /* 12:  bad argument to system call */
+    signal(SIGSYS, Adium_HandleSignal);		/* 12:  bad argument to system call */
     signal(SIGXCPU, Adium_HandleSignal);	/* 24:  exceeded CPU time limit */
     signal(SIGXFSZ, Adium_HandleSignal);	/* 25:  exceeded file size limit */    
     

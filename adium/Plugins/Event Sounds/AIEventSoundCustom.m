@@ -13,8 +13,6 @@
 #define	TABLE_COLUMN_EVENT		@"event"
 #define ADD_EVENT_MENU_ITEM		AILocalizedString(@"Add Event…",nil)
 
-#define OTHER_ELLIPSIS   AILocalizedString(@"Other…",nil)
-#define OTHER		    AILocalizedString(@"Other",nil)
 
 @interface AIEventSoundCustom (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;

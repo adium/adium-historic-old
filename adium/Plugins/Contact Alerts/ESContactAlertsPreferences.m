@@ -16,6 +16,7 @@
 #define TABLE_COLUMN_ACTION		@"action"
 #define TABLE_COLUMN_EVENT		@"event"
 
+#define OFFLINE AILocalizedString(@"Offline",nil)
 
 @interface ESContactAlertsPreferences (PRIVATE)
 -(void)configureView;
@@ -475,7 +476,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                 if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
                 {
                     NSMenuItem	*separatorItem;
-                    separatorItem = [[[NSMenuItem alloc] initWithTitle:@"Offline"
+                    separatorItem = [[[NSMenuItem alloc] initWithTitle:OFFLINE
                                                                 target:nil
                                                                 action:nil
                                                          keyEquivalent:@""] autorelease];

@@ -13,7 +13,7 @@
 #define TABLE_COLUMN_ACTION		@"action"
 #define TABLE_COLUMN_EVENT		@"event"
 
-#define OFFLINE AILocazliedString(@"Offline",nil)
+#define OFFLINE AILocalizedString(@"Offline",nil)
 
 @interface ESContactAlertsWindowController (PRIVATE)
 - (void)initialWindowConfig;
