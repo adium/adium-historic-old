@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.18 2003/12/22 17:54:28 adamiser Exp $
+// $Id: AIAccount.m,v 1.19 2003/12/24 01:30:18 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -36,9 +36,9 @@
 
     //Handle the preference changed monitoring (for account status) for our subclass
     [[adium notificationCenter] addObserver:self
-				   selector:@selector(_accountPreferencesChanged:)
-				       name:Preference_GroupChanged
-				     object:nil];
+								   selector:@selector(_accountPreferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
@@ -77,9 +77,9 @@
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     
     if([group compare:GROUP_ACCOUNT_STATUS] == 0){
-	NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-
-	[self updateStatusForKey:key];
+		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+		
+		[self updateStatusForKey:key];
     }
 }
 
@@ -90,8 +90,8 @@
     [changedStatusKeys addObject:key];
     
     if(notify){
-	[[adium contactController] listObjectStatusChanged:self modifiedStatusKeys:changedStatusKeys delayed:NO silent:NO];
-	[changedStatusKeys release]; changedStatusKeys = [[NSMutableArray alloc] init];
+		[[adium contactController] listObjectStatusChanged:self modifiedStatusKeys:changedStatusKeys delayed:NO silent:NO];
+		[changedStatusKeys release]; changedStatusKeys = [[NSMutableArray alloc] init];
     }
 }
 
