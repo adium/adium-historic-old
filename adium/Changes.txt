@@ -7,13 +7,13 @@ Version 0.63 (7/23/2004)
 - New message windows now appear behind existing windows
 - Improved window position saving when not using tabs
 - Added emoticon, edit link, bookmarks, and safari link toolbar items
-- Improvements to tab auto-grouping and auto-arranging, including performance and visual improvements.
-- Improvements to status display when not using tabs.  Typing and new content are now displayed in the window titlebar.
+- Improvements to tab auto-grouping and auto-arranging, including performance and visual improvements
+- Improvements to status display when not using tabs.  Typing and new content are now displayed in the window titlebar
 - User icons no longer animate in the message window, improved user icon updating
-- Improved sound code.  Better performance, wider support for formats, finer volume control, and output device selection.
-- Improved typing support.  We now correctly support the 'entered text' state that occures when a user stops typing.
-- Improved support for installing xtras.  Preferences now update when new xtras are installed.
-- Cleaned up contextual menus, window menu, 
+- Improved sound code.  Better performance, wider support for formats, finer volume control, and output device selection
+- Improved typing support.  We now correctly support the 'entered text' state that occures when a user stops typing
+- Improved support for installing xtras.  Preferences now update when new xtras are installed
+- Cleaned up contextual menus, window menu
 - Added a preference to turn off contact list tooltips
 - Aliases can now be set from the add contact window
 - Improved and simplified the theme preferences
