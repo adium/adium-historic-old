@@ -260,7 +260,12 @@ Accessing & finding objects\
 - (NSMutableArray *)
 \f3\b allContactsInGroup
 \f0\b0 :(AIContactGroup *)inGroup subgroups:(BOOL)subGroups;\
-\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\ql\qnatural
+\cf0 - (AIListContact *)
+\f3\b contactInGroup
+\f0\b0 :(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID;\
+\pard\ql\qnatural
+\cf0 \
 \pard\ql\qnatural
 
 \f1 \cf0 If you need it, the root contact list group can be retrieved using contactController's contactList method.\
@@ -274,20 +279,20 @@ Your code is allowed to retain and hold onto the group returned by this method. 
 \
 groupWithName will search the contact list for a group with the passed name.  The placement of the group is not important.  Nil is returned is the group does not exist.\
 \
-\
 handleWithService searches the contact list for a handle with the passed name and service type.  The placement of the handle is not important.\
 If the handle does not exist, it will be created in the strangers group, set as owned by the passed account, and returned.\
 \
 The implementation details of the strangers group are not important.  All that you need to know is this method always returns the requested contact, even if it doesn't exist on the user's contact list.\
 \
-\
 allContactsInGroup is useful when building a list of available contacts. It will return an array of all the contacts within the specified group.\
-\
-inGroup - the group to search in (nil for the contact list root)\
 subgroups - if yes, subgroups will be searched as well\
+\
+for allContactsInGroup and contactIngroup:\
+inGroup - the group to search in (nil for the contact list root)\
 \pard\ql\qnatural
 
 \f0 \cf0 \
+\
 \
 \pard\ql\qnatural
 
