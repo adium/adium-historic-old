@@ -169,6 +169,21 @@ static  NSImage			*tabDivider = nil;
     }
 }
 
+//Tell our delegate to close all tabs except for the one passed
+- (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell
+{
+    if([delegate respondsToSelector:@selector(customTabView:closeTabViewItem:)]){
+		NSEnumerator 	*enumerator = [tabCellArray objectEnumerator];
+		AICustomTabCell *tabCell;
+		
+		while(tabCell = [enumerator nextObject]){
+			if(tabCell != targetCell){
+				[delegate customTabView:self closeTabViewItem:[tabCell tabViewItem]];
+			}
+		}
+    }
+}
+
 //Returns an array of all the tab cells
 - (NSArray *)tabCells
 {

@@ -68,6 +68,7 @@
 - (int)totalWidthOfTabs;
 - (int)numberOfTabViewItems;
 - (void)closeTab:(AICustomTabCell *)tabCell;
+- (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
 - (NSArray *)tabCells;
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
 - (void)resetCursorTracking;

@@ -359,16 +359,10 @@ static NSImage		*tabCloseFrontRollover = nil;
 {
     BOOL	hovering = NSPointInRect(stopPoint, [self _closeButtonRect]);
 	
-	//Closes all the other tabs in the current window if option is held down.
-	if (hovering && ([[[controlView window] currentEvent] modifierFlags] & NSAlternateKeyMask) && [[tabViewItem tabView] numberOfTabViewItems] > 1) {
-		NSEnumerator *enumerator = [[(AICustomTabsView *)controlView tabCells] objectEnumerator];
-		AICustomTabCell *tabCell;
-		while (tabCell = [enumerator nextObject]) {
-			if (tabCell != self) {
-				[(AICustomTabsView *)controlView closeTab:tabCell];
-			}
-		}
-	} else if (hovering) {  //If the mouse was released over the close button, close our tab
+	//Closes all the other tabs in the current window if option is held down (And we have more than one tab)
+	if(hovering && ([[[controlView window] currentEvent] modifierFlags] & NSAlternateKeyMask) && [[tabViewItem tabView] numberOfTabViewItems] > 1){
+		[(AICustomTabsView *)controlView closeAllTabsExceptFor:self];
+	}else if(hovering){ //If the mouse was released over the close button, close our tab
         [(AICustomTabsView *)controlView closeTab:self];
     }
 	
