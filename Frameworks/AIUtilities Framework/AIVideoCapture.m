@@ -144,7 +144,7 @@ pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset
 	}	
 }
 
-//Being capturing frames
+//Stop capturing frames
 - (void)stopCapturingVideo
 {
 	[videoCaptureInstances removeObjectForKey:[NSNumber numberWithLong:uniqueID]];
