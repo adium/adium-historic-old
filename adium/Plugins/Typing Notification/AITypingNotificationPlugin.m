@@ -58,15 +58,11 @@
 {
     AIChat		*chat = [inTextEntryView chat];
 
-    if(chat){
-        if([[inTextEntryView attributedString] length] == 0 && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
-            [self _sendTyping:NO toChat:chat]; //Not typing
-
-        }else{
-            if(![[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue] && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
-                [self _sendTyping:YES toChat:chat]; //Typing
-            }
-        }
+    if(chat && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
+        BOOL    previousTyping = [[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue];
+        BOOL    currentTyping = ([[inTextEntryView attributedString] length] != 0);
+        
+        if(previousTyping != currentTyping) [self _sendTyping:currentTyping toChat:chat];
     }    
 }
 
