@@ -36,6 +36,9 @@
 //Other
 #define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
 
+//XXX
+#import "AIAccountListWindowController.h"
+
 @interface AIAccountController (PRIVATE)
 - (void)loadAccounts;
 - (void)saveAccounts;
@@ -91,7 +94,7 @@
 	
 	//First launch, open the account prefs
 	if([accountArray count] == 0){
-		[[owner preferenceController] openPreferencesToCategory:AIPref_Accounts];
+		[[AIAccountListWindowController accountListWindowController] showWindow:nil];
 	}
 	
 }
@@ -531,7 +534,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     NSParameterAssert(inAccount != nil);
     NSParameterAssert(accountArray != nil);
-    NSParameterAssert([accountArray indexOfObject:inAccount] != NSNotFound);
 
 	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
 	[accountArray removeObject:inAccount];
@@ -545,10 +547,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(AIService *)inService
 {
     //Add an account with the new service
-	AIAccount	*newAccount = [self createAccountWithService:inService
-														 UID:[inAccount UID]
-											   accountNumber:[inAccount accountNumber]];
-    [self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount] save:NO];
+	AIAccount	*newAccount;
+	int			accountIndex;
+	
+	newAccount = [self createAccountWithService:inService
+											UID:[inAccount UID]
+								  accountNumber:[inAccount accountNumber]];
+	accountIndex = [accountArray indexOfObject:inAccount]
+		
+    [self insertAccount:newAccount
+				atIndex:((accountIndex != NSNotFound) ? accountIndex : 0)
+				   save:NO];
     
     //Delete the old account
     [self deleteAccount:inAccount save:YES];
