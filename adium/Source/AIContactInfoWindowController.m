@@ -75,6 +75,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
     //
 	loadedPanes = [[NSMutableArray alloc] init];
+	[[self window] setHidesOnDeactivate:NO];
 	
     //Select the previously selected category
     selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
@@ -215,7 +216,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
-	[self configureForListObject:[[adium contactController] selectedListObject]];
+	AIListObject	*object = [[adium contactController] selectedListObject];
+	if(object) [self configureForListObject:[[adium contactController] selectedListObject]];
 }
 
 //Change the list object
