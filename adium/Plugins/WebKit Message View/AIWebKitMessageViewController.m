@@ -134,6 +134,8 @@
 
 				[plugin loadStyle:style withName:styleName withCSS:CSS forChat:chat intoWebView:webView];
 			}
+			
+			allowColors = [plugin boolForKey:@"AllowTextColors" style:style variant:variant boolDefault:YES];
 		}
 	}
 }
