@@ -317,6 +317,16 @@ Adium, Copyright 2001-2005, Adam Iser
 	return NO;
 }
 
+/*!
+ * @brief Supports proxy settings?
+ *
+ * Does this service support connecting via a proxy?
+ * @return Supports rpoxy settings
+ */
+- (BOOL)supportsProxySettings
+{
+	return YES;
+}
 
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities
