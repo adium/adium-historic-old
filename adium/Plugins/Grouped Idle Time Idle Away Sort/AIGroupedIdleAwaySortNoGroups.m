@@ -91,6 +91,10 @@ int groupedIdleAwaySortNoGroups(id objectA, id objectB, void *context)
 	    }else if(countA < countB){
 		return NSOrderedAscending;
 	    }else{
+		if([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] == [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue])
+		{//If the idle times are equal do alphabetical sort (this makes the contact list less jumpy and adds familiarity to the list)
+		    return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+		}
 		if([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] > [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
 		    return NSOrderedDescending;
 		}else{
