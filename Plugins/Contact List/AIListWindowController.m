@@ -307,14 +307,7 @@
     }else if([selectedObject isKindOfClass:[AIListContact class]]){
         //Open a new message with the contact
 		AIListContact	*contact = (AIListContact *)selectedObject;
-		
-		/*
-		//If the contact is a meta contact, find the preferred contact for it
-		if([contact isKindOfClass:[AIMetaContact class]]){
-			contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
-																 forListContact:contact];
-		}
-		*/
+
 		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
 		
     }
