@@ -151,7 +151,7 @@
 
 	[tabViewItemImage release];
 	if (listObject){
-		NSImage		*userIcon = [[listObject displayArrayForKey:KEY_USER_ICON] objectValue];
+		NSImage		*userIcon = [listObject userIcon];
 		if (userIcon){
 			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
 		}else{
