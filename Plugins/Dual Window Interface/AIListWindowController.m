@@ -97,19 +97,15 @@
 {
 	[super windowDidLoad];
 	
-	[contactListView setDrawHighlightOnlyWhenMain:YES];
-	
-    NSString	*frameString;
-    
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
-    
-    minWindowSize = [[self window] minSize];
+	minWindowSize = [[self window] minSize];
 	
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(contactListDesiredSizeChanged:)
 												 name:AIViewDesiredSizeDidChangeNotification
 											   object:contactListView];
+	[contactListView setDrawHighlightOnlyWhenMain:YES];
     
     //Watch for resolution and screen configuration changes
     [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
