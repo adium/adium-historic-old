@@ -10,6 +10,7 @@
 #define SCRIPT_BUNDLE_EXTENSION	@"AdiumScripts"
 #define SCRIPTS_PATH_NAME		@"Scripts"
 #define SCRIPT_EXTENSION		@"scpt"
+#define	SCRIPT_IDENTIFIER		@"InsertScript"
 
 @interface GBApplescriptFiltersPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
@@ -20,6 +21,7 @@
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(id)toObject;
 - (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSDictionary *)scriptDict;
 - (void)buildScriptMenu;
+- (void)registerToolbarItem;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
@@ -40,13 +42,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	//Prepare our script menu item (which will have the Scripts menu as its submenu)
 	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:SCRIPTS_MENU_NAME target:self action:@selector(dummyTarget:) keyEquivalent:@""];
 
-	//Start building the script menu
-	scriptMenu = nil;
-	[self buildScriptMenu]; //this also sets the submenu for the menu item.
-
-	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
-        [[adium menuController] addContextualMenuItem:[scriptMenuItem copy] toLocation:Context_TextView_Edit];
-	
 	//Perform substitutions on outgoing content in a thread
 	[[adium contentController] registerContentFilter:self 
 											  ofType:AIFilterContent
@@ -58,6 +53,17 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
 									 object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];	
+	
+	//Start building the script menu
+	scriptMenu = nil;
+	[self buildScriptMenu]; //this also sets the submenu for the menu item.
+	
+	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
+	[[adium menuController] addContextualMenuItem:[scriptMenuItem copy] toLocation:Context_TextView_Edit];
 }
 
 //Uninstall
@@ -73,7 +79,12 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 - (void)xtrasChanged:(NSNotification *)notification
 {
 	if ([[notification object] caseInsensitiveCompare:@"AdiumScripts"] == 0){
-		[self buildScriptMenu]; 
+		[self buildScriptMenu];
+				
+		[self registerToolbarItem];
+		
+		//Update our toolbar item's menu
+		//[self toolbarWillAddItem:nil];
 	}
 }
 
@@ -193,6 +204,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:SCRIPTS_MENU_NAME];
 	[self _appendScripts:scriptArray toMenu:scriptMenu];
 	[scriptMenuItem setSubmenu:scriptMenu];
+	
+	[self registerToolbarItem];
 }
 
 //Sort first by set, then by title within sets
@@ -541,5 +554,55 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		
 	return([returnValue autorelease]);
 }
+
+#pragma mark Toolbar item
+- (void)registerToolbarItem
+{
+	MVMenuButton *button;
+	
+	//Unregister the existing toolbar item first
+	if(toolbarItem){
+		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+		[toolbarItem release]; toolbarItem = nil;
+	}
+	
+	//Register our toolbar item
+	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
+	[button setImage:[NSImage imageNamed:@"scriptToolbar" forClass:[self class]]];
+	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:SCRIPT_IDENTIFIER
+														   label:AILocalizedString(@"Scripts",nil)
+													paletteLabel:AILocalizedString(@"Insert Script",nil)
+														 toolTip:AILocalizedString(@"Insert a script",nil)
+														  target:self
+												 settingSelector:@selector(setView:)
+													 itemContent:button
+														  action:@selector(selectScript:)
+															menu:nil] retain];
+	[toolbarItem setMinSize:NSMakeSize(32,32)];
+	[toolbarItem setMaxSize:NSMakeSize(32,32)];
+	[button setToolbarItem:toolbarItem];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+}
+
+//After the toolbar has added the item we can set up the submenus
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if(!notification || ([[item itemIdentifier] isEqualToString:SCRIPT_IDENTIFIER])){
+		NSLog(@"GBApplescriptFilters: %@ ; %@",item,toolbarItem);
+		NSMenu		*menu = [[[scriptMenuItem submenu] copy] autorelease];
+		
+		//Add menu to view
+		[[item view] setMenu:menu];
+		
+		//Add menu to toolbar item (for text mode)
+		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+		[mItem setSubmenu:menu];
+		[mItem setTitle:[menu title]];
+		[item setMenuFormRepresentation:mItem];
+	}
+}
+
 
 @end
