@@ -18,15 +18,15 @@
 
 /**
  * 
- * $Revision: 1.9 $
- * $Date: 2003/12/22 18:22:24 $
+ * $Revision: 1.10 $
+ * $Date: 2004/04/28 19:50:16 $
  * $Author: jmelloy $
  *
  **/
 
 #define KEY_SQL_LOGGER_ENABLE		@"Enable SQL Logging"
 #define PREF_GROUP_SQL_LOGGING		@"SQLLogging"
-#define SQL_LOGGING_DEFAULT_PREFS   @"SQLLogging.plist"
+#define SQL_LOGGING_DEFAULT_PREFS   @"SQLLogging"
 #define KEY_SQL_USERNAME			@"Username"
 #define KEY_SQL_PASSWORD			@"Password"
 #define KEY_SQL_URL					@"URL"

@@ -4,16 +4,6 @@
 <dict>
 	<key>Enable SQL Logging</key>
 	<true/>
-	<key>Username</key>
-	<string></string>
-	<key>Password</key>
-	<string></string>
-	<key>URL</key>
-	<string></string>
-	<key>Port</key>
-	<string></string>
-	<key>Database</key>
-	<string></string>
 	<key>Enable SSL</key>
 	<false/>
 </dict>
