@@ -4635,6 +4635,7 @@
 				7EC35CAD066B0CBA002129B7,
 				4B2DC05A066F689A00AD5AAD,
 				4B2DC06D066F705800AD5AAD,
+				7E6FDD660672B89A00B5C3D4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5258,6 +5259,7 @@
 				7EC35CAE066B0CBA002129B7,
 				4B2DC05B066F689A00AD5AAD,
 				4B2DC06E066F705800AD5AAD,
+				7E6FDD670672B89A00B5C3D4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18966,6 +18968,8 @@
 		};
 		7E64083E06629DEE006A5552 = {
 			children = (
+				7E6FDD640672B89A00B5C3D4,
+				7E6FDD650672B89A00B5C3D4,
 				7ED1148F066D65C400E81906,
 				7ED11490066D65C500E81906,
 				7EC35CAB066B0CB9002129B7,
@@ -19313,6 +19317,36 @@
 		};
 		7E66430C065337C80050E8C8 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E6FDD640672B89A00B5C3D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMozillaCommonParser.h;
+			path = "Plugins/Bookmark Importing/SHMozillaCommonParser.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E6FDD650672B89A00B5C3D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMozillaCommonParser.m;
+			path = "Plugins/Bookmark Importing/SHMozillaCommonParser.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E6FDD660672B89A00B5C3D4 = {
+			fileRef = 7E6FDD640672B89A00B5C3D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E6FDD670672B89A00B5C3D4 = {
+			fileRef = 7E6FDD650672B89A00B5C3D4;
 			isa = PBXBuildFile;
 			settings = {
 			};
