@@ -14,8 +14,11 @@
 
 static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
-static NSImage  *ICQServiceImage = nil;
-static NSImage  *ICQServiceMenuImage = nil;
+static NSImage  *ICQImage = nil;
+static NSImage  *ICQMenuImage = nil;
+static NSImage  *ICQOnlineMenuImage = nil;
+static NSImage  *ICQConnectingMenuImage = nil;
+static NSImage  *ICQOfflineMenuImage = nil;
 
 @interface CBGaimOscarAccount (PRIVATE)
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact;
@@ -38,20 +41,32 @@ static BOOL didInitOscar = NO;
 	[super initAccount];
 	
 	accountIsICQ = NO;
-	serviceImage = nil;
-		
+	image = nil;
+	menuImage = nil;
+	onlineMenuImage = nil;
+	connectingMenuImage = nil;
+	offlineMenuImage = nil;
+				
 	if ([UID length]){
 		char firstCharacter = [UID characterAtIndex:0];
 		if (firstCharacter >= '0' && firstCharacter <= '9') {
-			if (!ICQServiceID) ICQServiceID = @"ICQ";
-			if (!ICQServiceImage){
-				ICQServiceImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
-				ICQServiceMenuImage = [[ICQServiceImage imageByScalingToSize:NSMakeSize(16,16)] retain];
+			if (!ICQServiceID) ICQServiceID = [@"ICQ" retain];
+			if (!ICQImage){
+				ICQImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
+				ICQMenuImage = [[ICQImage imageByScalingToSize:NSMakeSize(16,16)] retain];
+				
+				//Online is the same as the menuImage
+				ICQOnlineMenuImage = [ICQMenuImage retain];
+				ICQConnectingMenuImage = [[ICQMenuImage imageByFadingToFraction:CONNECTING_MENU_IMAGE_FRACTION] retain];				
+				ICQOfflineMenuImage = [[ICQMenuImage imageByFadingToFraction:OFFLINE_MENU_IMAGE_FRACTION] retain];
 			}
 			
 			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
-			serviceImage = ICQServiceImage;
-			serviceMenuImage = ICQServiceMenuImage;
+			image = ICQImage;
+			menuImage = ICQMenuImage;
+			onlineMenuImage = ICQOnlineMenuImage;
+			connectingMenuImage = ICQConnectingMenuImage;
+			offlineMenuImage = ICQOfflineMenuImage;
 			
 			accountIsICQ = YES;
 		}
@@ -61,22 +76,26 @@ static BOOL didInitOscar = NO;
 	delayedSignonUpdateTimer = nil;
 }
 
-- (NSImage *)serviceImage
+- (NSImage *)image
 {
-	if (serviceImage){
-		return (serviceImage);
-	}else{
-		return ([super serviceImage]);
-	}
+	return (image ? image : [super image]);
 }
 
-- (NSImage *)serviceMenuImage
+- (NSImage *)menuImage
 {
-	if (serviceMenuImage){
-		return (serviceMenuImage);
-	}else{
-		return ([super serviceMenuImage]);
-	}
+	return (menuImage ? menuImage : [super menuImage]);
+}
+
+- (NSImage *)onlineMenuImage{
+	return (onlineMenuImage ? onlineMenuImage : [super onlineMenuImage]);
+}
+
+- (NSImage *)connectingMenuImage{
+	return (connectingMenuImage ? connectingMenuImage : [super connectingMenuImage]);
+}
+
+- (NSImage *)offlineMenuImage{
+	return (offlineMenuImage ? offlineMenuImage : [super offlineMenuImage]);
 }
 
 - (void)dealloc
