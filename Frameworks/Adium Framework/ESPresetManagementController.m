@@ -193,10 +193,24 @@
 {
 	int selectedRow = [tableView_presets selectedRow];
 	
-	BOOL	enable = (selectedRow != -1);
-	[button_duplicate setEnabled:enable];
-	[button_delete setEnabled:enable];
-	[button_rename setEnabled:enable];
+	if(selectedRow != -1){
+		id	preset = [presets objectAtIndex:selectedRow];
+		BOOL	allowDelete = (![delegate respondsToSelector:@selector(allowDeleteOfPreset:)] ||
+							   [delegate allowDeleteOfPreset:preset]);
+		BOOL	allowRename = (![delegate respondsToSelector:@selector(allowRenameOfPreset:)] ||
+							   [delegate allowRenameOfPreset:preset]);
+
+		[button_delete setEnabled:allowDelete];
+		[button_rename setEnabled:allowRename];
+		
+		//Always allow duplication
+		[button_duplicate setEnabled:YES];
+		
+	}else{
+		[button_duplicate setEnabled:NO];
+		[button_delete setEnabled:NO];
+		[button_rename setEnabled:NO];
+	}
 }
 
 #pragma mark Table view data source and delegate

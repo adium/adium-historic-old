@@ -37,3 +37,12 @@
 - (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset;
 - (NSArray *)deletePreset:(NSDictionary *)preset inPresets:(NSArray *)presets;
 @end
+
+@interface NSObject (ESPresetManagementControllerDelegate_Optional)
+- (NSArray *)movePreset:(NSDictionary *)preset
+				toIndex:(int)index
+			  inPresets:(NSArray *)presets
+		presetAfterMove:(id *)presetAfterMove;
+- (BOOL)allowDeleteOfPreset:(NSDictionary *)preset;
+- (BOOL)allowRenameOfPreset:(NSDictionary *)preset;
+@end
