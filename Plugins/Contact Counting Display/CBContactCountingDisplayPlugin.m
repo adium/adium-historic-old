@@ -28,8 +28,8 @@
 
 #define VISIBLE_COUNTING_MENU_ITEM_TITLE		@"Count Visible Contacts"
 #define ALL_COUNTING_MENU_ITEM_TITLE			@"Count All Contacts"
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
-#define KEY_SHOW_OFFLINE_CONTACTS               @"Show Offline Contacts"
+#define	PREF_GROUP_CONTACT_LIST_DISPLAY			@"Contact List Display"
+#define KEY_SHOW_OFFLINE_CONTACTS				@"Show Offline Contacts"
 
 @implementation CBContactCountingDisplayPlugin
 
