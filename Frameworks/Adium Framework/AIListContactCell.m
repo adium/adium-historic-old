@@ -133,16 +133,11 @@
 //Font used to display status text
 - (void)setStatusFont:(NSFont *)inFont
 {
-	NSDictionary		*attributes;
-	NSAttributedString 	*statusString;
-	
 	[statusFont autorelease];
 	statusFont = [inFont retain];
 	
 	//Calculate and cache the height of this font
-	attributes = [NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName];
-	statusString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
-	statusFontHeight = [statusString heightWithWidth:1e7];
+	statusFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName]];
 	
 	//Flush the status attributes cache
 	[_statusAttributes release]; _statusAttributes = nil;
