@@ -6,7 +6,7 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-@interface AITabStatusIconsPlugin : AIPlugin <AIListObjectObserver> {
+@interface AITabStatusIconsPlugin : AIPlugin <AIListObjectObserver, AIChatObserver> {
 	NSImage		*tabUnknown;
 	NSImage		*tabAway;
 	NSImage		*tabIdle;

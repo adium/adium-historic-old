@@ -8,7 +8,7 @@
 #import "AITabStatusIconsPlugin.h"
 
 @interface AITabStatusIconsPlugin (PRIVATE)
-- (NSImage *)_stateIconForListObject:(AIListObject *)listObject;
+- (NSImage *)_stateIconForChat:(AIChat *)inChat;
 - (NSImage *)_statusIconForListObject:(AIListObject *)listObject;
 @end
 
@@ -29,6 +29,9 @@
 	
 	//Observe list object changes
 	[[adium contactController] registerListObjectObserver:self];
+	
+	//Observe chat changes
+	[[adium contentController] registerChatObserver:self];
 }
 
 //Apply the correct tab icon according to status
@@ -37,30 +40,44 @@
     NSArray		*modifiedAttributes = nil;
 	
 	if(inModifiedKeys == nil ||
-	   [inModifiedKeys containsObject:@"UnviewedContent"] ||
-	   [inModifiedKeys containsObject:@"Typing"] ||
 	   [inModifiedKeys containsObject:@"Stranger"] ||
 	   [inModifiedKeys containsObject:@"Away"] ||
 	   [inModifiedKeys containsObject:@"IdleSince"] ||
 	   [inModifiedKeys containsObject:@"Online"]){
 		
-		[[inObject displayArrayForKey:@"Tab Status Icon"] setObject:[self _statusIconForListObject:inObject] withOwner:self];
-		[[inObject displayArrayForKey:@"Tab State Icon"] setObject:[self _stateIconForListObject:inObject] withOwner:self];
+		[[inObject displayArrayForKey:@"Tab Status Icon"] setObject:[self _statusIconForListObject:inObject]
+														  withOwner:self];
 		
-		modifiedAttributes = [NSArray arrayWithObjects:@"Tab State Icon", @"Tab Status Icon", nil];
+		modifiedAttributes = [NSArray arrayWithObject:@"Tab Status Icon"];
 	}
 	
 	return(modifiedAttributes);
 }
 
-//Returns the state icon for the passed contact (away, idle, online, stranger, ...)
-- (NSImage *)_stateIconForListObject:(AIListObject *)listObject
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-	if([listObject integerStatusObjectForKey:@"UnviewedContent"]){
+	NSArray		*modifiedAttributes = nil;
+	if (inModifiedKeys == nil ||
+		[inModifiedKeys containsObject:KEY_TYPING] ||
+		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+		
+		[[inChat displayArrayForKey:@"Tab State Icon"] setObject:[self _stateIconForChat:inChat] 
+													   withOwner:self];
+		
+		modifiedAttributes = [NSArray arrayWithObject:@"Tab State Icon"];
+	}
+	
+	return(modifiedAttributes);
+}
+
+//Returns the state icon for the passed chat (new content, tpying, ...)
+- (NSImage *)_stateIconForChat:(AIChat *)inChat
+{
+	if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
 		return(tabContent);
 		
 	}else{
-		AITypingState typingState = [listObject integerStatusObjectForKey:@"Typing"];
+		AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
 
 		if(typingState == AITyping){
 			return(tabTyping);
@@ -69,6 +86,9 @@
 			return(tabEnteredText);
 		}
 	}
+	
+	//If the chat has no list object, return the online icon for the state since there will be no status
+	if(![inChat listObject]) return (tabAvailable);
 	
 	return(nil);
 }
