@@ -198,4 +198,5 @@ extern const NSString	* NDAppleScriptOffendingObject,
  */
 - (BOOL)isEqualToComponentInstance:(NDComponentInstance *)componentInstance;
 
+	static OSErr		AppleScriptActiveProc( long aRefCon );
 @end

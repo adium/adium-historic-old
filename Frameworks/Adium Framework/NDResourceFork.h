@@ -292,6 +292,13 @@
   */
 - (BOOL)writeEntireResourceFork:(NSData *)data;
 
+	static BOOL getDataFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+	static BOOL removeResourceFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+	static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+	static BOOL getIdFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+	static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+	static BOOL	setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+
 @end
 
 /*!
