@@ -19,14 +19,16 @@
     
     NSMutableDictionary    *mainAttributes;
     NSMutableDictionary    *mainAttributesMask;
-    NSDictionary    *secondaryAttributes;
-    NSDictionary    *secondaryAttributesMask;
-    NSDictionary    *mainStatusAttributes;
-    NSDictionary    *mainStatusAttributesMask;
+    NSMutableDictionary    *secondaryAttributes;
+    NSMutableDictionary    *secondaryAttributesMask;
+    NSMutableDictionary    *mainStatusAttributes;
+    NSMutableDictionary    *mainStatusAttributesMask;
     
     NSColor         *buddyIconLabelColor;
     NSColor         *buddyNameLabelColor;
     BOOL            useBuddyIconLabel, useBuddyNameLabel;
+    
+    NSSize          bezelSize;
 }
 
 - (NSImage *)buddyIconImage;
@@ -50,5 +52,6 @@
 - (void)setUseBuddyIconLabel:(BOOL)b;
 - (BOOL)useBuddyNameLabel;
 - (void)setUseBuddyNameLabel:(BOOL)b;
-
+- (NSSize)bezelSize;
+- (void)setBezelSize:(NSSize)newSize;
 @end

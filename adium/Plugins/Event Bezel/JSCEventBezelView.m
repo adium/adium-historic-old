@@ -7,6 +7,8 @@
 //
 
 #import "JSCEventBezelView.h"
+#define ORIGINAL_WIDTH              211.0
+#define ORIGINAL_HEIGHT             206.0
 #define IMAGE_DIMENSION             48.0
 
 BOOL pantherOrLater;
@@ -22,7 +24,6 @@ BOOL pantherOrLater;
     
     buddyIconImage = [NSImage imageNamed: @"DefaultIcon"];
     [buddyIconImage setScalesWhenResized:YES];
-    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
     
     [self setBuddyIconLabelColor: nil];
     
@@ -46,19 +47,15 @@ BOOL pantherOrLater;
         mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
                     [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
+        secondaryAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor whiteColor], NSForegroundColorAttributeName,
                     textShadow, NSShadowAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+        secondaryAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
+        mainStatusAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor whiteColor], NSForegroundColorAttributeName,
                     textShadow, NSShadowAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+        mainStatusAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
     } else {
     
@@ -69,17 +66,13 @@ BOOL pantherOrLater;
         mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
                     [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
+        secondaryAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor whiteColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+        secondaryAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
+        mainStatusAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor whiteColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-        mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+        mainStatusAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
     }
 }
@@ -111,31 +104,43 @@ BOOL pantherOrLater;
     NSShadow        *noShadow = nil;
     NSSize          buddyNameSize;
     float           buddyNameFontSize = 24.0;
+    float           relativeX = 1.0;
+    float           relativeY = 1.0;
         
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
+    [backdropImage setScalesWhenResized:YES];
+    if ((bezelSize.width != ORIGINAL_WIDTH) || (bezelSize.height != ORIGINAL_HEIGHT)) {
+        // Calculate the transformations
+        relativeX = bezelSize.width / ORIGINAL_WIDTH;
+        relativeY = bezelSize.height / ORIGINAL_HEIGHT;
+    }   
+    [backdropImage setSize: NSMakeSize(bezelSize.width,bezelSize.height)];
     [backdropImage compositeToPoint: NSZeroPoint operation:NSCompositeSourceOver];
-        
+    
+    // Resize the buddy icon if needed
+    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION*relativeX,IMAGE_DIMENSION*relativeX)];
+    
     // Set up the Rects
     if (queueField && (![queueField isEqualToString:@""])) {
         // Buddy Icon Image and label
-        buddyIconPoint = NSMakePoint(82.0,150.0);
-        buddyIconLabelRect = NSMakeRect(80.0,148.0,52.0,52.0);
+        buddyIconPoint = NSMakePoint(82.0*relativeX,150.0*relativeY);
+        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,52.0*relativeX,52.0*relativeX);
         // Main buddy name
-        buddyNameRect = NSMakeRect(12.0,116.0,187.0,30.0);
+        buddyNameRect = NSMakeRect(12.0,116.0*relativeY,187.0*relativeX,30.0*relativeY);
         // Main buddy Status
-        buddyStatusRect = NSMakeRect(12.0,73.0,187.0,44.0);
+        buddyStatusRect = NSMakeRect(12.0,73.0*relativeY,187.0*relativeX,44.0*relativeY);
         // Queue stack
-        queueRect = NSMakeRect(12.0,8.0,187.0,52.0);
+        queueRect = NSMakeRect(12.0,8.0,187.0*relativeX,52.0*relativeY);
     } else {
         // Buddy Icon Image and label
-        buddyIconPoint = NSMakePoint(82.0,120.0);
-        buddyIconLabelRect = NSMakeRect(80.0,118.0,52.0,52.0);
+        buddyIconPoint = NSMakePoint(82.0*relativeX,120.0*relativeY);
+        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,52.0*relativeX,52.0*relativeX);
         // Main buddy name
-        buddyNameRect = NSMakeRect(12.0,80.0,187.0,30.0);
+        buddyNameRect = NSMakeRect(12.0,80.0*relativeY,187.0*relativeX,30.0*relativeY);
         // Main buddy Status
-        buddyStatusRect = NSMakeRect(12.0,37.0,187.0,44.0);
+        buddyStatusRect = NSMakeRect(12.0,37.0*relativeY,187.0*relativeX,44.0*relativeY);
         // Queue stack empty, no rect
         queueRect = NSMakeRect(0.0,0.0,0.0,0.0);
     }
@@ -166,10 +171,10 @@ BOOL pantherOrLater;
             [noShadow set];
         }
         [[NSColor whiteColor] set];
-        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
+        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0*relativeX,48.0*relativeX)];
     } else {
         [[NSColor whiteColor] set];
-        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
+        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0*relativeX,48.0*relativeX)];
         if(pantherOrLater) {
             [noShadow set];
         }
@@ -186,7 +191,7 @@ BOOL pantherOrLater;
         convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
     buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     
-    while (buddyNameSize.width > (187.0 - (buddyNameSize.height / 2.0))) {
+    while (buddyNameSize.width > ((187.0*relativeX) - (buddyNameSize.height / 2.0))) {
         buddyNameFontSize-= 1.0;
         [mainAttributes setObject:[[NSFontManager sharedFontManager] 
             convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
@@ -201,11 +206,11 @@ BOOL pantherOrLater;
     if (useBuddyNameLabel && buddyIconLabelColor) {
         NSRect  labelRect;
         int     borderWidth = (buddyNameSize.height / 2.0);
-        int     maxWidth = (187.0 - buddyNameSize.height);
+        int     maxWidth = ((187.0*relativeX) - buddyNameSize.height);
         if (buddyNameSize.width > maxWidth) {
-            labelRect = NSMakeRect(12.0 + borderWidth,buddyNameRect.origin.y-2.0,maxWidth,buddyNameSize.height);
+            labelRect = NSMakeRect(12.0 + borderWidth,buddyNameRect.origin.y,maxWidth,buddyNameSize.height-2.0);
         } else {
-            labelRect = NSMakeRect(106.0 - (buddyNameSize.width / 2.0),buddyNameRect.origin.y-2.0,buddyNameSize.width,buddyNameSize.height);
+            labelRect = NSMakeRect(106.0*relativeX - (buddyNameSize.width / 2.0),buddyNameRect.origin.y,buddyNameSize.width,buddyNameSize.height-2.0);
         }
         [buddyIconLabelColor set];
         [NSBezierPath fillRect: labelRect];
@@ -222,6 +227,9 @@ BOOL pantherOrLater;
     [tempString drawInRect: NSMakeRect(buddyNameRect.origin.x + 1.0, buddyNameRect.origin.y - 1.0, buddyNameRect.size.width, buddyNameRect.size.height) withAttributes: mainAttributesMask];
     [mainBuddyName drawInRect: buddyNameRect withAttributes: mainAttributes];
     
+    [mainStatusAttributes setObject:[NSFont systemFontOfSize:18.0*relativeX] forKey:NSFontAttributeName];
+    [mainStatusAttributesMask setObject:[NSFont systemFontOfSize:18.0*relativeX] forKey:NSFontAttributeName];
+    
     tempString = [NSString stringWithString: mainBuddyStatus];
     [tempString drawInRect: NSMakeRect(buddyStatusRect.origin.x + 1.0,buddyStatusRect.origin.y - 1.0, buddyStatusRect.size.width, buddyStatusRect.size.height) withAttributes: mainStatusAttributesMask];
     [mainBuddyStatus drawInRect: buddyStatusRect withAttributes: mainStatusAttributes];
@@ -229,8 +237,11 @@ BOOL pantherOrLater;
     if (queueField && (![queueField isEqualToString:@""])) {
         // Paint the divider line
         [[NSColor whiteColor] set];
-        [NSBezierPath fillRect:NSMakeRect(12.0,66.0,187.0,1.0)];
-        
+        [NSBezierPath fillRect:NSMakeRect(12.0,66.0*relativeY,187.0*relativeX,1.0)];
+
+        [secondaryAttributes setObject:[NSFont systemFontOfSize:14.0*relativeX] forKey:NSFontAttributeName];
+        [secondaryAttributesMask setObject:[NSFont systemFontOfSize:14.0*relativeX] forKey:NSFontAttributeName];
+
         tempString = [NSString stringWithString: queueField];
         [tempString drawInRect: NSMakeRect(queueRect.origin.x + 1.0,queueRect.origin.y - 1.0, queueRect.size.width, queueRect.size.height) withAttributes: secondaryAttributesMask];
         [queueField drawInRect: queueRect withAttributes: secondaryAttributes];
@@ -358,6 +369,16 @@ BOOL pantherOrLater;
 - (void)setUseBuddyNameLabel:(BOOL)b
 {
     useBuddyNameLabel = b;
+}
+
+- (NSSize)bezelSize
+{
+    return bezelSize;
+}
+
+- (void)setBezelSize:(NSSize)newSize
+{
+    bezelSize = newSize;
 }
 
 @end

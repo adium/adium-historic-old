@@ -98,7 +98,14 @@
         NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
         
         showEventBezel = [[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
-        //prefsPosition = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue];
+        switch ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_SIZE] intValue]) {
+            case SIZE_NORMAL:
+                [ebc setBezelSize: NSMakeSize(211.0,206.0)];
+            break;
+            case SIZE_SMALL:
+                [ebc setBezelSize: NSMakeSize(158.0,155.0)];
+            break;
+        }
         [ebc setBezelPosition: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
         [ebc setImageBadges: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
         [ebc setUseBuddyIconLabel: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
@@ -251,10 +258,6 @@
         }
         
         
-        
-        /*if ([ebc bezelPosition] != prefsPosition) {
-            [ebc setBezelPosition: prefsPosition];
-        }*/
         [ebc showBezelWithContact: [contact longDisplayName]
                         withImage: tempBuddyIcon
                          forEvent: tempEvent

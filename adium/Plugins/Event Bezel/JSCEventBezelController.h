@@ -17,6 +17,9 @@
     int                             bezelPosition, bezelDuration;
     BOOL                            imageBadges, useBuddyIconLabel, useBuddyNameLabel;
     NSRect                          bezelFrame;
+    NSSize                          bezelSize;
+    NSColor                         *buddyIconLabelColor;
+    NSColor                         *buddyNameLabelColor;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
@@ -30,12 +33,16 @@ withMessage:(NSString *)message;
 - (void)setBezelPosition:(int)newPosition;
 - (int)bezelDuration;
 - (void)setBezelDuration:(int)newDuration;
+- (NSColor *)buddyIconLabelColor;
 - (void)setBuddyIconLabelColor:(NSColor *)newColor;
+- (NSColor *)buddyNameLabelColor;
 - (void)setBuddyNameLabelColor:(NSColor *)newColor;
 - (void)setImageBadges:(BOOL)b;
 - (BOOL)useBuddyIconLabel;
 - (void)setUseBuddyIconLabel:(BOOL)b;
 - (BOOL)useBuddyNameLabel;
 - (void)setUseBuddyNameLabel:(BOOL)b;
+- (NSSize)bezelSize;
+- (void)setBezelSize:(NSSize)newSize;
 
 @end

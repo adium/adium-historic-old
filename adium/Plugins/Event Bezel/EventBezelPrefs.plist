@@ -28,5 +28,7 @@
         <integer>3</integer>
         <key>Show Name Labels</key>
         <false/>
+        <key>Size</key>
+        <integer>0</integer>
 </dict>
 </plist>

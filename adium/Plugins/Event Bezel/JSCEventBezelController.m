@@ -45,6 +45,8 @@ JSCEventBezelController *sharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
+    [buddyIconLabelColor release];
+    [buddyNameLabelColor release];
     [super dealloc];
 }
 
@@ -102,6 +104,11 @@ withMessage:(NSString *)message
         [bezelView setUseBuddyIconLabel: useBuddyIconLabel];
         [bezelView setUseBuddyNameLabel: useBuddyNameLabel];
         
+        [bezelView setBuddyIconLabelColor: [self buddyIconLabelColor]];
+        [bezelView setBuddyNameLabelColor: [self buddyNameLabelColor]];
+        
+        [bezelView setBezelSize: [self bezelSize]];
+        
         [bezelWindow setDisplayDuration: bezelDuration];
                 
         if (pantherOrLater) {
@@ -121,26 +128,23 @@ withMessage:(NSString *)message
 
 -(void)setBezelPosition:(int)newPosition
 {
-    NSSize mainScreenSize, windowSize;
+    NSSize mainScreenSize;
     NSPoint mainScreenOrigin, newOrigin;
     
     bezelPosition = newPosition;
     mainScreenSize = [[NSScreen mainScreen] frame].size;
     mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
-    // current window size hardcoded, could be made into a preference (needs bezelview overhaul)
-    windowSize.width = 211.0;
-    windowSize.height = 206.0;
     switch (bezelPosition) {
         case 0: // Default system position
-            newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.width / 2.0));
+            newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(bezelSize.width / 2.0));
             newOrigin.y = mainScreenOrigin.y + 140.0;
         break;
         case 1: // Top right
-            newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.width);
-            newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.height);
+            newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + bezelSize.width);
+            newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + bezelSize.height);
         break; // Bottom right
         case 2:
-            newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.width);
+            newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + bezelSize.width);
             newOrigin.y = mainScreenOrigin.y + 10;
         break;
         case 3: // Bottom left
@@ -149,21 +153,35 @@ withMessage:(NSString *)message
         break;
         case 4: // Top left
             newOrigin.x = mainScreenOrigin.x + 10;
-            newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.height);
+            newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + bezelSize.height);
         break;
     }
     bezelFrame.origin = newOrigin;
-    bezelFrame.size = windowSize;
+    bezelFrame.size = bezelSize;
+}
+
+- (NSColor *)buddyIconLabelColor
+{
+    return buddyIconLabelColor;
 }
 
 - (void)setBuddyIconLabelColor:(NSColor *)newColor
 {
-    [bezelView setBuddyIconLabelColor: newColor];
+    [newColor retain];
+    [buddyIconLabelColor release];
+    buddyIconLabelColor = newColor;
+}
+
+- (NSColor *)buddyNameLabelColor
+{
+    return buddyNameLabelColor;
 }
 
 - (void)setBuddyNameLabelColor:(NSColor *)newColor
 {
-    [bezelView setBuddyNameLabelColor: newColor];
+    [newColor retain];
+    [buddyNameLabelColor release];
+    buddyNameLabelColor = newColor;
 }
 
 - (BOOL)imageBadges
@@ -204,6 +222,16 @@ withMessage:(NSString *)message
 - (void)setUseBuddyNameLabel:(BOOL)b
 {
     useBuddyNameLabel = b;
+}
+
+- (NSSize)bezelSize
+{
+    return bezelSize;
+}
+
+- (void)setBezelSize:(NSSize)newSize
+{
+    bezelSize = newSize;
 }
 
 @end
