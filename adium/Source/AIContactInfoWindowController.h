@@ -19,10 +19,12 @@
 
 @interface AIContactInfoWindowController : NSWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
-
+    IBOutlet	NSView		*view_noContact;
+    AIAdium 			*owner;
+    
     AIPreferenceCategory	*mainCategory;
 }
 
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIListContact *)inContact;
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory owner:(AIAdium*)inOwner;
 
 @end

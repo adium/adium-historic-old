@@ -104,7 +104,7 @@
 //Show the info window for a contact
 - (void)showInfoForContact:(AIListContact *)inContact
 {
-    [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory forContact:inContact] showWindow:nil];
+    [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory owner:owner] showWindow:nil];
 }
 
 //Add a contact info view
@@ -143,7 +143,7 @@
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    return([self selectedContact] != nil);
+    return(YES); //Always be able to show the inspector
 }
 
 

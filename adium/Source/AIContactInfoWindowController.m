@@ -21,7 +21,7 @@
 #define	CONTACT_INFO_NIB	@"ContactInfoWindow"		//Filename of the contact info nib
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIListContact *)inContact;
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory  owner:(AIAdium*)inOwner;
 - (void)configureForContact:(AIListContact *)inContact;
 @end
 
@@ -29,16 +29,13 @@
 
 //Return the shared contact info window
 static AIContactInfoWindowController *sharedInstance = nil;
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIListContact *)inContact
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory owner:(AIAdium*)inOwner
 {
     //Create the window
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory contact:inContact];
+        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory owner:inOwner];
     }
     
-    //Configure
-    [sharedInstance configureForContact:inContact];
-
 
     return(sharedInstance);
 }
@@ -53,21 +50,40 @@ static AIContactInfoWindowController *sharedInstance = nil;
 
 // Internal --------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIListContact *)inContact
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory owner:(AIAdium*)inOwner
 {
     [super initWithWindowNibName:windowNibName owner:self];
 
     //Retain our owner
     mainCategory = [inCategory retain];
+    owner = [inOwner retain];
 
+    [[self window] setLevel:NSNormalWindowLevel];
+    [[owner notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
+    
     return(self);    
 }
 
 - (void)dealloc
 {
     [mainCategory release];
-
+    [sharedInstance autorelease]; sharedInstance = nil;
+    
     [super dealloc];
+}
+
+//When the contact list selection changes, then configure the window for the new contact
+- (void)selectionChanged:(NSNotification *)notification
+{
+    if ([[owner contactController] selectedContact] != nil) {
+        //install the category
+        [scrollView_contents setDocumentView:[mainCategory contentView]];
+
+        [self configureForContact:[[owner contactController] selectedContact]];
+    }else{
+        //show the "No Contact Selected" view
+        [scrollView_contents setDocumentView:view_noContact];
+    }
 }
 
 //Configure our views for the specified contact
@@ -76,15 +92,24 @@ static AIContactInfoWindowController *sharedInstance = nil;
     //Configure the preference views
     [mainCategory configureForObject:inContact];
 
-    [[self window] setTitle:[inContact UID]];
+    [[self window] setTitle:[NSString stringWithFormat:@"%@ Info",[inContact UID]]];
 }
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    //install the category
-    [scrollView_contents setDocumentView:[mainCategory contentView]];
+    if ([[owner contactController] selectedContact] != nil) {
+        //install the category
+        [scrollView_contents setDocumentView:[mainCategory contentView]];
 
+        [self configureForContact:[[owner contactController] selectedContact]];
+    }else{
+        //show the "No Contact Selected" view
+        [scrollView_contents setDocumentView:view_noContact];
+        
+        [[self window] setTitle:@"Contact Info"];
+    }
+    
     [[self window] center];
 }
 
@@ -97,11 +122,6 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    //save
-    
-    //autorelease the shared instance
-    [sharedInstance autorelease]; sharedInstance = nil;
-
     return(YES);
 }
 
