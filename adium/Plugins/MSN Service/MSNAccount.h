@@ -77,4 +77,7 @@
 - (NSArray *)supportedStatusKeys;		//Return an array of supported status keys
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
 
+//Special shiny methods
++ (NSDictionary *)parseMessage:(NSData *)payload;
+
 @end
