@@ -20,7 +20,7 @@
 - (void)installPlugin
 { 
     // if there is no themes directory, create it
-    [[AIObject sharedAdiumInstance] createResourcePathForName:THEME_FOLDER_PATH];
+    [[AIObject sharedAdiumInstance] createResourcePathForName:THEME_FOLDER_NAME];
 	
     themePane = [[BGThemesPreferences preferencePane] retain];
 }
