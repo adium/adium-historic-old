@@ -7,16 +7,21 @@
 
 @interface IdleTimeWindowController : NSWindowController
 {
-    IBOutlet 	NSPopUpButton 	*accountPopup;
-    IBOutlet	NSTextField	*text_SetIdleDays;
-    IBOutlet	NSTextField	*text_SetIdleHours;
-    IBOutlet	NSTextField	*text_SetIdleMinutes;
+    IBOutlet 	NSPopUpButton 	*popUp_Accounts;
+    IBOutlet	NSButton	*checkBox_SetManually;
+    IBOutlet	NSTextField	*textField_IdleDays;
+    IBOutlet	NSTextField	*textField_IdleHours;
+    IBOutlet	NSTextField	*textField_IdleMinutes;
+    IBOutlet	NSStepper	*stepper_IdleDays;
+    IBOutlet	NSStepper	*stepper_IdleHours;
+    IBOutlet	NSStepper	*stepper_IdleMinutes;
+    IBOutlet	NSButton	*button_Apply;
     AIAdium	*owner;
 }
 + (id)IdleTimeWindowControllerWithOwner:(id)inOwner;
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)buildAccountsPopup;
-- (IBAction)setIdle:(id)sender;
-- (IBAction)unIdle:(id)sender;
-- (IBAction)cancel:(id)sender;
+- (IBAction)apply:(id)sender;
+- (IBAction)configureControls:(id)sender;
+
 @end

@@ -2,14 +2,19 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {cancel = id; setIdle = id; unIdle = id; }; 
+            ACTIONS = {apply = id; configureControls = id; setDaysStepper = id; stepDaysValue = id; }; 
             CLASS = IdleTimeWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                accountPopup = NSPopUpButton; 
-                "text_SetIdleDays" = NSTextField; 
-                "text_SetIdleHours" = NSTextField; 
-                "text_SetIdleMinutes" = NSTextField; 
+                "button_Apply" = NSButton; 
+                "checkBox_SetManually" = NSButton; 
+                "popUp_Accounts" = NSPopUpButton; 
+                "stepper_IdleDays" = NSStepper; 
+                "stepper_IdleHours" = NSStepper; 
+                "stepper_IdleMinutes" = NSStepper; 
+                "textField_IdleDays" = NSTextField; 
+                "textField_IdleHours" = NSTextField; 
+                "textField_IdleMinutes" = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
         }

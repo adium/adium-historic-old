@@ -40,6 +40,7 @@ static IdleTimeWindowController *sharedInstance = nil;
                                       name:Account_ListChanged
                                     object:nil];
     [self buildAccountsPopup];
+    [self configureControls:nil];
 }
 
 - (void)dealloc
@@ -56,57 +57,54 @@ static IdleTimeWindowController *sharedInstance = nil;
     NSArray	*accountArray;
     AIAccount	*theAccount;
 
-    [accountPopup removeAllItems];
+    [popUp_Accounts removeAllItems];
     accountArray = [[owner accountController] accountArray];
 
     for(loop = 0;loop < [accountArray count];loop++){
         theAccount = [accountArray objectAtIndex:loop];
         if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)] && ([(AIAccount <AIAccount_Status> *)theAccount status]==STATUS_ONLINE)) {
-            [accountPopup addItemWithTitle:[theAccount accountDescription]];
+            [popUp_Accounts addItemWithTitle:[theAccount accountDescription]];
         }
     }
 
-    if ([accountPopup numberOfItems]==0) [accountPopup setEnabled:NO];
-    else [accountPopup setEnabled:YES];
+    [self configureControls:nil];
 }
 
-- (IBAction)setIdle:(id)sender
+- (IBAction)configureControls:(id)sender
 {
-    NSArray	*accountArray;
-    AIAccount	*theAccount;
-    int d, h, m, t;
+    if ([popUp_Accounts numberOfItems]==0) [popUp_Accounts setEnabled:NO];
+    else [popUp_Accounts setEnabled:YES];
     
-    accountArray = [[owner accountController] accountArray];
-    theAccount = [accountArray objectAtIndex:[accountPopup indexOfSelectedItem]];
-
-    d = [text_SetIdleDays intValue];
-    h = [text_SetIdleHours intValue];
-    m = [text_SetIdleMinutes intValue];
-    t = (d * 86400) + (h * 3600) + (m * 60);
-    if(t!=0)
-        [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:t manually:TRUE];
-    else
-        [self unIdle:nil];
-
-    [self close];
+    [checkBox_SetManually setEnabled:[popUp_Accounts isEnabled]];
+    if (![checkBox_SetManually isEnabled]) [checkBox_SetManually setState:FALSE];
+    [button_Apply setEnabled:[popUp_Accounts isEnabled]];
+        
+    [textField_IdleDays setEnabled:[checkBox_SetManually state]];
+    [textField_IdleHours setEnabled:[checkBox_SetManually state]];
+    [textField_IdleMinutes setEnabled:[checkBox_SetManually state]];
+    [stepper_IdleDays setEnabled:[checkBox_SetManually state]];
+    [stepper_IdleHours setEnabled:[checkBox_SetManually state]];
+    [stepper_IdleMinutes setEnabled:[checkBox_SetManually state]];
 }
 
-- (IBAction)unIdle:(id)sender
+- (IBAction)apply:(id)sender
 {
     NSArray	*accountArray;
     AIAccount	*theAccount;
 
     accountArray = [[owner accountController] accountArray];
-    theAccount = [accountArray objectAtIndex:[accountPopup indexOfSelectedItem]];
-
-    [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:0 manually:FALSE];
-
-    [self close];
-}
-
-- (IBAction)cancel:(id)sender
-{
-    [self close];
+    theAccount = [accountArray objectAtIndex:[popUp_Accounts indexOfSelectedItem]];
+    
+    if([checkBox_SetManually state]){
+        int d, h, m, t;
+        d = [textField_IdleDays intValue];
+        h = [textField_IdleHours intValue];
+        m = [textField_IdleMinutes intValue];
+        t = (d * 86400) + (h * 3600) + (m * 60);
+        [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:t manually:TRUE];
+    }else{
+        [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:0 manually:FALSE];
+    }
 }
 
 @end
