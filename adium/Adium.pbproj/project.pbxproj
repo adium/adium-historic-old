@@ -1362,9 +1362,6 @@
 				F55B416B03AB8C0B01A8010A,
 				4BF1F0E903D888EB00A8010A,
 				F5A137FD03421FEB01A8010A,
-				9C82689D03D9B26500F1D4AF,
-				9C82689E03D9B26500F1D4AF,
-				9C82689F03D9B26500F1D4AF,
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
 				4B24A26B0482B34B00A8010A,
@@ -1372,6 +1369,13 @@
 				4BAC8C8E05012AD900A8010A,
 				34ADE00C05159261003B2F21,
 				34878FA105182CC8003B2F21,
+				4B0AABAF05228F9700A8010A,
+				4B0AABB005228F9700A8010A,
+				4B0AABB105228F9700A8010A,
+				4B0AABB205228F9700A8010A,
+				4B0AABB305228F9700A8010A,
+				4B0AABB405228F9700A8010A,
+				4B0AABB505228F9700A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2531,6 +2535,90 @@
 		};
 		4B0473CA043E453B00A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABA805228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref1.tif;
+			path = Source/icons/pref1.tif;
+			refType = 4;
+		};
+		4B0AABA905228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref2.tif;
+			path = Source/icons/pref2.tif;
+			refType = 4;
+		};
+		4B0AABAA05228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref3.tif;
+			path = Source/icons/pref3.tif;
+			refType = 4;
+		};
+		4B0AABAB05228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref4.tif;
+			path = Source/icons/pref4.tif;
+			refType = 4;
+		};
+		4B0AABAC05228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref5.tif;
+			path = Source/icons/pref5.tif;
+			refType = 4;
+		};
+		4B0AABAD05228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref6.tif;
+			path = Source/icons/pref6.tif;
+			refType = 4;
+		};
+		4B0AABAE05228F9700A8010A = {
+			isa = PBXFileReference;
+			name = pref7.tif;
+			path = Source/icons/pref7.tif;
+			refType = 4;
+		};
+		4B0AABAF05228F9700A8010A = {
+			fileRef = 4B0AABA805228F9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABB005228F9700A8010A = {
+			fileRef = 4B0AABA905228F9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABB105228F9700A8010A = {
+			fileRef = 4B0AABAA05228F9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABB205228F9700A8010A = {
+			fileRef = 4B0AABAB05228F9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABB305228F9700A8010A = {
+			fileRef = 4B0AABAC05228F9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABB405228F9700A8010A = {
+			fileRef = 4B0AABAD05228F9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0AABB505228F9700A8010A = {
+			fileRef = 4B0AABAE05228F9700A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12778,49 +12866,17 @@
 //9C4
 		9C82689903D9B23F00F1D4AF = {
 			children = (
-				9C82689A03D9B26500F1D4AF,
-				9C82689B03D9B26500F1D4AF,
-				9C82689C03D9B26500F1D4AF,
+				4B0AABA805228F9700A8010A,
+				4B0AABA905228F9700A8010A,
+				4B0AABAA05228F9700A8010A,
+				4B0AABAB05228F9700A8010A,
+				4B0AABAC05228F9700A8010A,
+				4B0AABAD05228F9700A8010A,
+				4B0AABAE05228F9700A8010A,
 			);
 			isa = PBXGroup;
 			name = Icons;
 			refType = 4;
-		};
-		9C82689A03D9B26500F1D4AF = {
-			isa = PBXFileReference;
-			name = connectionsprefs.png;
-			path = Source/icons/connectionsprefs.png;
-			refType = 4;
-		};
-		9C82689B03D9B26500F1D4AF = {
-			isa = PBXFileReference;
-			name = interfaceprefs.png;
-			path = Source/icons/interfaceprefs.png;
-			refType = 4;
-		};
-		9C82689C03D9B26500F1D4AF = {
-			isa = PBXFileReference;
-			name = statusprefs.png;
-			path = Source/icons/statusprefs.png;
-			refType = 4;
-		};
-		9C82689D03D9B26500F1D4AF = {
-			fileRef = 9C82689A03D9B26500F1D4AF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9C82689E03D9B26500F1D4AF = {
-			fileRef = 9C82689B03D9B26500F1D4AF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9C82689F03D9B26500F1D4AF = {
-			fileRef = 9C82689C03D9B26500F1D4AF;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9C8C7F9703CBA08400267226 = {
 			buildActionMask = 2147483647;
