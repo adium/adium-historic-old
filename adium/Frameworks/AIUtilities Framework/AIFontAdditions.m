@@ -20,6 +20,7 @@
 
 //Returns the requested font
 //NSFont's 'FontWithName' method leaks memory.  This wrapper attempts to minimize the leaking.
+//It appears to be leaking an NSString somehow.
 + (NSFont *)cachedFontWithName:(NSString *)fontName size:(float)fontSize
 {
     static NSMutableDictionary	*fontDict = nil;
@@ -47,7 +48,7 @@
 		}
 		
         [sizeDict setObject:font
-                     forKey:[NSString stringWithFormat:@"%0.2f",fontSize]];
+                     forKey:sizeString];
         [fontDict setObject:sizeDict forKey:fontName];
     }
 
