@@ -24,6 +24,8 @@
 	IBOutlet	NSBrowser		*browser_contactList;
 
 	NSMutableArray	*columns;
+	NSMutableDictionary	*serviceImageDict;
+	NSImage				*groupImage;
 	
 //    IBOutlet	AIAlternatingRowOutlineView	*outlineView_contactList;	//The contact list outline view
 //    IBOutlet	NSScrollView			*scrollView_contactList;	//The contact list's scroll view
