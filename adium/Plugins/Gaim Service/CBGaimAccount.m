@@ -194,7 +194,6 @@
 			if(currentIdle != (int)([idleDate timeIntervalSince1970])){
 				//If there is an idle time, or if there was one before, then update
 				if ((buddy->idle > 0) || idleDate) {
-					NSLog(@"%s is idle %i",buddy->name,buddy->idle);
 					[theContact setStatusObject:((currentIdle > 0) ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)currentIdle] : nil)
 									  withOwner:self
 										 forKey:@"IdleSince"
@@ -350,9 +349,7 @@
 	NSString			*bodyString = [NSString stringWithUTF8String:message];
 
 	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
-		NSLog(@"got me an image! %@",bodyString);
 		bodyString = [self _processGaimImagesInString:bodyString];
-		NSLog(@"done processing. %@",bodyString);
 	}
 	
     NSAttributedString *body = [AIHTMLDecoder decodeHTML:bodyString];
@@ -426,7 +423,7 @@
     //create an initial gaim account
     [self createNewGaimAccount];
     gc = NULL;
-    NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+    if (GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -1245,10 +1242,7 @@
     }
     serv_set_info(gc, profileHTML);
     
-    
-    if (GAIM_DEBUG) {
-        NSLog(@"updating profile to %@",[profile string]);
-    }
+    if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
     
     //We now have a profile
     [self setStatusObject:profile forKey:@"TextProfile" notify:NO];
