@@ -40,4 +40,5 @@
 - (NSString *)name;
 - (void)setName:(NSString *)inName;
 
+- (NSString *)uniqueChatID;
 @end
