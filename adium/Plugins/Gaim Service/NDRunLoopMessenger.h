@@ -30,7 +30,9 @@ extern NSString		* kConnectionDoesNotExistsException;
 @interface NDRunLoopMessenger : NSObject
 {
 @private
-	NSPort		* port;
+	NSPort			* port;
+	NSMutableArray  * queuedPortMessageArray;
+	NSTimer			* queuedPortMessageTimer;
 }
 
 /*!

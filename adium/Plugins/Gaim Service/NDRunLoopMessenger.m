@@ -4,9 +4,14 @@
  *
  *  Created by Nathan Day on Fri Feb 08 2002.
  *  Copyright (c) 2002 Nathan Day. All rights reserved.
+ *  Changes to add a silly number of withObject: options to target:performSelector: and to queue messages instead of threadlocking
+ *		by Evan Schoenberg.
  */
 
 #import "NDRunLoopMessenger.h"
+
+#define PORT_MESSAGE_RETRY_TIMEOUT  0.5
+#define PORT_MESSAGE_RETRY			0.5
 
 static NSString		* kThreadDictionaryKey = @"NDRunLoopMessengerInstance";
 static NSString		* kSendMessageException = @"NDRunLoopMessengerSendException",
@@ -19,11 +24,6 @@ struct message
 	NSConditionLock		* resultLock;
 	NSInvocation			* invocation;
 };
-
-/*
- * function sendData
- */
-void sendData( NSData * aData, NSPort * aPort );
 
 /*
  * interface NDRunLoopMessengerForwardingProxy
@@ -45,6 +45,7 @@ void sendData( NSData * aData, NSPort * aPort );
 @interface NDRunLoopMessenger (Private)
 - (void)createPortForRunLoop:(NSRunLoop *)aRunLoop;
 - (void)registerNotificationObservers;
+- (void)sendData:(NSData *)aData;
 @end
 
 /*
@@ -52,7 +53,6 @@ void sendData( NSData * aData, NSPort * aPort );
  */
 @implementation NDRunLoopMessenger
 
-void sendData( NSData * aData, NSPort * aPort );
 
 /*
  * +runLoopMessengerForThread
@@ -84,7 +84,7 @@ void sendData( NSData * aData, NSPort * aPort );
 	if( self = [super init] )
 	{
 		NSMutableDictionary		* theThreadDictionary;
-		id								theOneForThisThread;
+		id						theOneForThisThread;
 
 		theThreadDictionary = [[NSThread currentThread] threadDictionary];
 		if( theOneForThisThread = [theThreadDictionary objectForKey:kThreadDictionaryKey] )
@@ -94,6 +94,9 @@ void sendData( NSData * aData, NSPort * aPort );
 		}
 		else
 		{
+			queuedPortMessageArray = nil;
+			queuedPortMessageTimer = nil;
+			
 			[self createPortForRunLoop:[NSRunLoop currentRunLoop]];
 			[theThreadDictionary setObject:self forKey:kThreadDictionaryKey];
 			[self registerNotificationObservers];
@@ -366,7 +369,7 @@ void sendData( NSData * aData, NSPort * aPort );
 
 	theMessage->invocation = [anInvocation retain];		// will be released by handlePortMessage
 	theMessage->resultLock = aResultFlag ? [[NSConditionLock alloc] initWithCondition:NO] : nil;
-	sendData( theData, port );
+	[self sendData:theData];
 
 	if( aResultFlag )
 	{
@@ -429,22 +432,50 @@ void sendData( NSData * aData, NSPort * aPort );
 /*
  * sendData
  */
-void sendData( NSData * aData, NSPort * aPort )
+- (void)sendData:(NSData *)aData
 {
 	NSPortMessage		* thePortMessage;
 
-	if( aPort )
+	if( port )
 	{
-		thePortMessage = [[NSPortMessage alloc] initWithSendPort:aPort receivePort:nil components:[NSArray arrayWithObject:aData]];
+		thePortMessage = [[NSPortMessage alloc] initWithSendPort:port receivePort:nil components:[NSArray arrayWithObject:aData]];
 
-		if( ![thePortMessage sendBeforeDate:[NSDate distantFuture]] )
-			[NSException raise:kSendMessageException format:@"An error occured will trying to send the message data %@", [aData description]];
+		if( ![thePortMessage sendBeforeDate:[NSDate dateWithTimeIntervalSinceNow:PORT_MESSAGE_RETRY_TIMEOUT]] ){
+			//If the message can't be sent before the timeout, add it to a queue array and ensure a timer is firing to send it later
+			if (!queuedPortMessageArray){
+				queuedPortMessageArray = [[NSMutableArray alloc] init];
+			}
+			
+			[queuedPortMessageArray addObject:thePortMessage];
+			
+			if (!queuedPortMessageTimer){
+				queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:PORT_MESSAGE_RETRY
+																		   target:self 
+																		 selector:@selector(sendQueuedDataTimer:) 
+																		 userInfo:nil 
+																		  repeats:YES] retain];
+			}
+		}
 
 		[thePortMessage release];
 	}
 	else
 	{
 		[NSException raise:kConnectionDoesNotExistsException format:@"The connection to the runLoop does not exist"];
+	}
+}
+
+//Send the first item in the queue, or destroy the queue and timer if the queue is empty
+- (void)sendQueuedDataTimer:(NSTimer *)inTimer
+{
+	if ([queuedPortMessageArray count]){
+		NSPortMessage *thePortMessage = [queuedPortMessageArray objectAtIndex:0];
+		if( [thePortMessage sendBeforeDate:[NSDate dateWithTimeIntervalSinceNow:PORT_MESSAGE_RETRY_TIMEOUT]] ){
+			[queuedPortMessageArray removeObjectAtIndex:0];
+		}
+	}else{
+		[queuedPortMessageArray release]; queuedPortMessageArray = nil;
+		[queuedPortMessageTimer invalidate]; [queuedPortMessageTimer release]; queuedPortMessageTimer = nil;
 	}
 }
 

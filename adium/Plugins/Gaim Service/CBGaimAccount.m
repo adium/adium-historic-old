@@ -456,6 +456,7 @@ static id<GaimThread> gaimThread = nil;
 //Add a new chat - this will ultimately call -(BOOL)openChat:(AIChat *)chat below.
 - (oneway void)addChat:(AIChat *)chat
 {
+	NSLog(@"add chat %@",chat);
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 }
@@ -463,6 +464,7 @@ static id<GaimThread> gaimThread = nil;
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
 {	
+	NSLog(@"open chat %@",chat);
 	//Correctly enable/disable the chat
 #warning All opened chats assumed valid until a better system for doing this reliably is figured out.
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
@@ -480,6 +482,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (BOOL)closeChat:(AIChat*)chat
 {
+	NSLog(@"close chat %@",chat);
 	[gaimThread closeChat:chat];
 	
 	//Be sure any remaining typing flag is cleared as the chat closes
