@@ -60,7 +60,7 @@
     iconOutgoing = [[AIImageUtilities imageNamed:@"green" forClass:[self class]] retain];
     
     //Configure our table view
-    messageView = [[AIFlexibleTableView alloc] init];
+    messageView = [[AIFlexibleTableView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
     [messageView setForwardsKeyEvents:YES];
     
     //Observe
