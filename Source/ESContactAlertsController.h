@@ -65,7 +65,7 @@ typedef enum {
 
 //Events
 - (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler inGroup:(AIEventHandlerGroupType)inGroup globalOnly:(BOOL)global;
-- (NSDictionary *)eventHandlers;
+- (NSDictionary *)allEventIDs;
 - (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
 - (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo;
 - (NSString *)defaultEventID;
@@ -75,7 +75,7 @@ typedef enum {
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
-									includeSubject:(BOOL)includeSubject
+									includeSubject:(BOOL)includeSubject;
 
 //Actions
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
