@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.70 2004/04/26 04:23:53 adamiser Exp $
+$Id: ToDoList.txt,v 1.71 2004/04/27 05:26:44 evands Exp $
 
 Legend
 + Change or Addition
@@ -9,32 +9,37 @@ Legend
 
 If you are working on something big and it may take a while, please tag it with your [name].
 
-
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
 ** GROUP DRAGGING IS BROKEN.  Try it :)
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
-* Adium will unhide if hidden (via cmd-H) while a tooltip is visible
-* Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
-* Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
-* Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
-* Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
+* We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
+* Multi-user chat (MSN) - sent messages appear twice.
+* Message history 'date' timestamps are not using localized time strings
+
+Applescripts:
+* Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
+
+Contact List:
+* Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Adding a contact that's already online causes them to appear signed off on the list.
 * Adding buddies, sometimes they'll show up on the list twice until a restart
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
 * Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
-* We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
-* Multi-user chat (MSN) - sent messages appear twice.
-* Message history 'date' timestamps are not using localized time strings
-* Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
 * For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
+
+Tooltips:
+* Adium will unhide if hidden (via cmd-H) while a tooltip is visible
+* Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
+* Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
+* Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -52,7 +57,6 @@ Unconfirmed bugs
 * Adding a contact that already exists on the list seems to cause problems
 * Do we support ISA proxies? (ISA and NTLM authorization).  Does gaim have support for these?
 * Yahoo ignore list is being ignored?
-* Users are still reporting issues with the contact list display format pref not being correct on launch.
 * Message history and 'ignore formatting' option is doing some odd stuff (ignoring the ignore?)
 * We can crash MSN Messenger by sending it links copied from safari?
 
@@ -61,10 +65,8 @@ Minor Changes
 -------------------------------------------------------------------------------------------------------
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
-	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
                 // notes in, tooltips spacing funky [tooltips off] Evan: tooltip indentation sucks right now.  I'll fix it next week.
-	+ AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
 	+ Add Contact should have more intelligent defaults, and generally be less of a pain [Nelson, but if anyone has any nice ideas for ways this should work, do tell]
 
 Alerts:
@@ -80,11 +82,7 @@ Accounts:
 	+ Auto-complete aliases in log viewer
 	+ Add account specific proxy fields (Type, host, port) for all libgaim connections [Evan]
 
-	
-WebKit Message View:
-	+ Add preference to switch active style, preview styles
-	+ Add preference to switch variants for the active style
-    
+
 Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
         I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
@@ -304,6 +302,7 @@ ced preference panes.
 = Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
 = Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well)
 = We have issues with not notifying the user when a message fails to send
+= Users are still reporting issues with the contact list display format pref not being correct on launch.
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
@@ -341,3 +340,7 @@ Features & Changes:
 = Standardize on the service description for Oscar accounts - do something like "AIM, ICQ, and .Mac" in the services dropdown, in the new message prompt, etc.
 = Insert/Edit link menu item, accompanying link entry panel.
 = Edit link context menu
+= WebKit Message View: Add preference to switch active style, preview styles
+= WebKit Message View: Add preference to switch variants for the active style
+= AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
+= Add to buddy list menu item, contextual menu item (for strangers)
