@@ -70,6 +70,7 @@
 #import <AIUtilities/AIPlasticMinusButton.h>
 #import <AIUtilities/AIPlasticPlusButton.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIRolloverButton.h>
 #import <AIUtilities/AIScaledImageCell.h>
 #import <AIUtilities/AIScrollViewAdditions.h>
 #import <AIUtilities/AISendingTextView.h>
