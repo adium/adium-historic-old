@@ -51,7 +51,10 @@
 - (void)requestUserNotifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
     NSMutableDictionary	*loginDict;
-
+	NSArray				*arguments;
+	unsigned			argumentIndex;
+	NSString			*userName = nil;
+	
     //Retain the target and selector
     target = inTarget;
     selector = inSelector;
@@ -68,18 +71,29 @@
         [loginDict setObject:DEFAULT_USER_NAME forKey:LOGIN_LAST_USER];
 		[loginDict writeToPath:[AIAdium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME];
     }
+	
+	//Retrieve the desired user from the command line if possible
+	arguments = [[NSProcessInfo processInfo] arguments];
+	argumentIndex = [arguments indexOfObject:@"--user"];
+	if((argumentIndex != NSNotFound) && ([arguments count] > argumentIndex + 1)){
+		userName = [arguments objectAtIndex:argumentIndex+1];
+	}
 
     //Show the login select window?
-    if([NSEvent optionKey] || [[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue] || [loginDict objectForKey:LOGIN_LAST_USER] == nil){
+	if(!userName){
+		if([NSEvent optionKey] || [[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue] || [loginDict objectForKey:LOGIN_LAST_USER] == nil){
 
-        //Prompt for the user
-        loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
-        [loginWindowController showWindow:nil];
+			//Prompt for the user
+			loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
+			[loginWindowController showWindow:nil];
 
-    }else{
-        //Auto-login as the saved user
-        [self loginAsUser:[loginDict objectForKey:LOGIN_LAST_USER]];
+		}else{
+			//Auto-login as the saved user
+			userName = [loginDict objectForKey:LOGIN_LAST_USER];
+		}
     }
+
+	[self loginAsUser:userName];
 }
 
 // Returns the current user's Adium home directory
@@ -106,7 +120,7 @@
     }
 
     //Save the user directory
-    currentUser = [userName copy];
+    currentUser = [userName retain];
     userDirectory = [[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:userName] retain];
     
     //Tell Adium to complete login
