@@ -3,62 +3,29 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Jun 10 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIInfoWindowController.h"
 
 #define KEY_TEXT_PROFILE_WINDOW_FRAME	@"Text Profile Window"
-#define INFO_WINDOW_NIB			@"ContactInfo"
-#define InfoIndentA			75
-#define InfoIndentB			80
+#define INFO_WINDOW_NIB					@"ContactInfo"
+#define InfoIndentA						75
+#define InfoIndentB						80
 #define REFRESH_RATE                    300
 
 @interface AIInfoWindowController (PRIVATE)
-- (void)contactSelectionChanged:(NSNotification *)notification;
+- (void)displayInfo:(NSAttributedString *)infoString;
 @end
 
 @implementation AIInfoWindowController
 
 //Open a new info window
-static AIInfoWindowController *sharedInstance = nil;
-+ (id)showInfoWindow
-{
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB];
-    }
+static AIInfoWindowController   *sharedInstance = nil;
+static AIListObject				*activeListObject = nil;
 
-	//Show the window and configure it for the contact
-	[sharedInstance showWindow:nil];
-        
-    return(sharedInstance);
-}
-
-//Close the profile window
-+ (void)closeTextProfileWindow
-{
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
-    }
-}
-
-//Refresh the information we're displaying
-- (void)refresh:(NSTimer *)timer
-{
-    [self configureWindowForListObject:activeListObject];
-}
-
-//Refresh if changes are made to the object we're displaying
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
-{
-    if(inObject == activeListObject){
-        [self configureWindowForListObject:activeListObject];
-    }
-    return(nil);
-}
-
+#pragma mark configureWindow
 //Configure our window for the specified object
-- (void)configureWindowForListObject:(AIListObject *)inObject
+- (void)configureWindow
 {
     NSMutableAttributedString	*infoString;
     NSDictionary				*labelAttributes, *valueAttributes, *bigValueAttributes;
@@ -67,11 +34,8 @@ static AIInfoWindowController *sharedInstance = nil;
     NSTextAttachmentCell 		*imageAttatchment;
     NSTextAttachment 			*attatchment;
     NSImage 					*buddyImage;
-    BOOL                        online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+    BOOL                        online = [[activeListObject statusArrayForKey:@"Online"] greatestIntegerValue];
     
-    //Remember who we're displaying info for
-    [activeListObject release]; activeListObject = [inObject retain];
-
 	//
     [timer invalidate]; [timer release];
     timer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RATE
@@ -110,7 +74,7 @@ static AIInfoWindowController *sharedInstance = nil;
         nil];
     
     //Buddy Icon
-    ownerArray = [inObject statusArrayForKey:@"UserIcon"];
+    ownerArray = [activeListObject statusArrayForKey:@"UserIcon"];
     if(ownerArray && [ownerArray count]){
         buddyImage = [[[ownerArray objectAtIndex:0] copy] autorelease]; 
         // resize to default buddy icon size for consistency
@@ -129,35 +93,39 @@ static AIInfoWindowController *sharedInstance = nil;
     
     //Display Name
 	//"<DisplayName>" (or) "<DisplayName> (<UID>)"
-	NSString	*displayName = [inObject displayName];
-	NSString	*serverDisplayName = [inObject serverDisplayName];
+	NSString	*displayName = [activeListObject displayName];
+	NSString	*serverDisplayName = [activeListObject serverDisplayName];
     [infoString appendString:@"\t" withAttributes:labelAttributes];
     if([displayName compare:serverDisplayName] == 0){
         [infoString appendString:[NSString stringWithFormat:@"%@",displayName] withAttributes:bigValueAttributes];
     }else{
-        [infoString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,serverDisplayName] withAttributes:bigValueAttributes];
+        [infoString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,serverDisplayName] 
+				  withAttributes:bigValueAttributes];
     }
     
     //Client
-    ownerArray = [inObject statusArrayForKey:@"Client"];
+    ownerArray = [activeListObject statusArrayForKey:@"Client"];
     if(ownerArray && [ownerArray count]){
         [infoString appendString:@"\r\r\tClient:\t" withAttributes:labelAttributes];
         [infoString appendString:[ownerArray objectAtIndex:0] withAttributes:valueAttributes];
     }
     
     //Signon Date
-    NSDate *signonDate = [[inObject statusArrayForKey:@"Signon Date"] earliestDate];
+    NSDate *signonDate = [[activeListObject statusArrayForKey:@"Signon Date"] earliestDate];
     if(signonDate && online){
         NSString        *currentDay, *signonDay, *signonTime;
         NSDateFormatter	*dayFormatter, *timeFormatter;
 
         [infoString appendString:@"\r\r\tOnline For:\t" withAttributes:labelAttributes];
-        [infoString appendString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO] withAttributes:valueAttributes];
+		[infoString appendString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 
+																  showingSeconds:NO
+																	 abbreviated:NO] withAttributes:valueAttributes];
         [infoString appendString:@"\r\tOnline Since:\t" withAttributes:labelAttributes];
             
         //Create the formatters
         dayFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m/%d/%y" allowNaturalLanguage:YES] autorelease];
-        timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES] allowNaturalLanguage:YES] autorelease];
+        timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]
+												allowNaturalLanguage:YES] autorelease];
         
         //Get day & time strings
         currentDay = [dayFormatter stringForObjectValue:[NSDate date]];
@@ -168,19 +136,20 @@ static AIInfoWindowController *sharedInstance = nil;
             [infoString appendString:signonTime withAttributes:valueAttributes];
             
         }else{ //Show date and time
-            [infoString appendString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime] withAttributes:valueAttributes];
+            [infoString appendString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime] 
+					  withAttributes:valueAttributes];
         }
     }
     
     //Online
-    /*    int online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+    /*    int online = [[activeListObject statusArrayForKey:@"Online"] greatestIntegerValue];
     [infoString appendString:@"\r\tOnline:\t" withAttributes:labelAttributes];
     [infoString appendString:(online ? @"Yes" : @"No") withAttributes:valueAttributes];*/
     
     //Away & Status
     NSAttributedString *status = nil;
-    int away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-    ownerArray = [inObject statusArrayForKey:@"StatusMessage"];
+    int away = [[activeListObject statusArrayForKey:@"Away"] greatestIntegerValue];
+    ownerArray = [activeListObject statusArrayForKey:@"StatusMessage"];
     
     if(ownerArray && [ownerArray count]){
         status = [ownerArray objectAtIndex:0];
@@ -194,7 +163,7 @@ static AIInfoWindowController *sharedInstance = nil;
         }
         
         if (status) {
-            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status listObjectContext:inObject] mutableCopy];
+            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status listObjectContext:activeListObject] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -203,12 +172,16 @@ static AIInfoWindowController *sharedInstance = nil;
             //[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
             
             //Set correct indent & tabbing on the first line of the profile
-            [statusString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            [statusString addAttribute:NSParagraphStyleAttributeName 
+								 value:paragraphStyle
+								 range:NSMakeRange(0,firstLineRange.length)];
             
             //Indent the remaining lines of profile
             indentStyle = [paragraphStyle mutableCopy];
             [indentStyle setFirstLineHeadIndent:InfoIndentB];
-            [statusString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [statusString length] - firstLineRange.length)];
+            [statusString addAttribute:NSParagraphStyleAttributeName
+								 value:indentStyle
+								 range:NSMakeRange(firstLineRange.length, [statusString length] - firstLineRange.length)];
             [indentStyle release];
             
             [infoString appendAttributedString:statusString];
@@ -219,7 +192,7 @@ static AIInfoWindowController *sharedInstance = nil;
     }
     
     //Idle Since
-    int idle = (int)[[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+    int idle = (int)[[activeListObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     if(idle != 0){
         int	hours = (int)(idle / 60);
         int	minutes = (int)(idle % 60);
@@ -241,20 +214,20 @@ static AIInfoWindowController *sharedInstance = nil;
     }
 
     //Warning
-    int warning = [[inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
+    int warning = [[activeListObject statusArrayForKey:@"Warning"] greatestIntegerValue];
     if(warning > 0){
         [infoString appendString:@"\r\r\tWarning:\t" withAttributes:labelAttributes];
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
     }
     
     //Text Profile
-    ownerArray = [inObject statusArrayForKey:@"TextProfile"];
+    ownerArray = [activeListObject statusArrayForKey:@"TextProfile"];
     if(ownerArray && [ownerArray count]){
         NSAttributedString 	*textProfile = [ownerArray objectAtIndex:0];
         //Only show the profile is one exists
         if (textProfile && [textProfile length]) {
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:inObject] mutableCopy];
+            NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:activeListObject] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -263,12 +236,16 @@ static AIInfoWindowController *sharedInstance = nil;
             //[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
             
             //Set correct indent & tabbing on the first line of the profile
-            [textProfileString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            [textProfileString addAttribute:NSParagraphStyleAttributeName 
+									  value:paragraphStyle 
+									  range:NSMakeRange(0,firstLineRange.length)];
             
             //Indent the remaining lines of profile
             indentStyle = [paragraphStyle mutableCopy];
             [indentStyle setFirstLineHeadIndent:InfoIndentB];
-            [textProfileString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
+            [textProfileString addAttribute:NSParagraphStyleAttributeName 
+									  value:indentStyle 
+									  range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
             [indentStyle release];
             
             [infoString appendAttributedString:textProfileString];
@@ -300,8 +277,73 @@ static AIInfoWindowController *sharedInstance = nil;
     [textView_contactProfile setNeedsDisplay:YES];
 }
 
+#pragma mark activeListObject management
+//Refresh if changes are made to the object we're displaying
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+    if(inObject == activeListObject){
+        [self configureWindow];
+    }
+    return(nil);
+}
+
+//
+- (void)contactSelectionChanged:(NSNotification *)notification
+{
+	AIListObject	*object = [[adium contactController] selectedListObject];
+	
+	if(object){
+		//Remember who we're displaying info for
+		[activeListObject release]; activeListObject = [object retain];
+		
+		[self configureWindow];
+		
+		//Refresh the window's content (Contacts only)
+		if([object isKindOfClass:[AIListContact class]]){
+			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)object];
+		}
+	}
+}
+
+#pragma mark Window loading/unloading
++ (id)showInfoWindowForListObject:(AIListObject *)listObject
+{
+	
+    if(!sharedInstance){
+        sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB];
+    }
+	
+	if (listObject) {
+		//Remember who we're displaying info for
+		[activeListObject release]; activeListObject = [listObject retain];
+		
+		[sharedInstance configureWindow];
+	} else {
+		[sharedInstance contactSelectionChanged:nil];
+	}
+	
+	//Show the window and configure it for the contact
+	[sharedInstance showWindow:nil];
+	
+    return(sharedInstance);
+}
+
+//Close the profile window
++ (void)closeTextProfileWindow
+{
+    if(sharedInstance){
+        [sharedInstance closeWindow:nil];
+    }
+}
 
 //Private ---------------------------------------------------------------------------
+
+//Refresh the information we're displaying
+- (void)refresh:(NSTimer *)timer
+{
+    [self configureWindow];
+}
+
 //init
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
@@ -325,7 +367,6 @@ static AIInfoWindowController *sharedInstance = nil;
 								   selector:@selector(contactSelectionChanged:)
 									   name:Interface_ContactSelectionChanged
 									 object:nil];
-	[self contactSelectionChanged:nil];
 	
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
@@ -337,21 +378,6 @@ static AIInfoWindowController *sharedInstance = nil;
     }else{
         [[self window] center];
     }
-}
-
-//
-- (void)contactSelectionChanged:(NSNotification *)notification
-{
-	AIListObject	*object = [[adium contactController] selectedListObject];
-	
-	if(object){
-		[self configureWindowForListObject:object];
-	
-		//Refresh the window's content (Contacts only)
-		if([object isKindOfClass:[AIListContact class]]){
-			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)object];
-		}
-	}
 }
 
 //Close the window
