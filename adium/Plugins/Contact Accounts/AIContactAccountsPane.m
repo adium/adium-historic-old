@@ -170,9 +170,7 @@
 {
 	NSString		*identifier = [tableColumn identifier];
 	AIAccount		*account = [accounts objectAtIndex:row];
-	AIListContact	*existing = [[adium contactController] existingContactWithService:[listObject serviceID]
-																			accountID:[account uniqueObjectID]
-																				  UID:[listObject UID]];
+	AIListContact	*exactContact;
 	
 	if([identifier isEqualToString:@"group"]){
 		NSMenu		*menu = [[tableColumn dataCell] menu];
@@ -181,22 +179,29 @@
 		if(menuIndex >= 0 && menuIndex < [menu numberOfItems]){
 			AIListGroup	*group = [[menu itemAtIndex:menuIndex] representedObject];
 			
-			if(group && (group != [listObject containingObject])){
-				if(existing){ //Move contact
-					[[adium contactController] addContacts:[NSArray arrayWithObject:existing] toGroup:group];
-
-				}else{ //Add contact
-					AIListContact	*contact = [[adium contactController] contactWithService:[listObject serviceID]
-																				   accountID:[account uniqueObjectID]
-																						 UID:[listObject UID]];
-					[[adium contactController] addContacts:[NSArray arrayWithObject:contact] toGroup:group];
-
+			exactContact = [[adium contactController] existingContactWithService:[listObject serviceID]
+																	   accountID:[account uniqueObjectID]
+																			 UID:[listObject UID]];
+			
+			if (group){
+				if (group != [exactContact containingObject]){
+					
+					if (exactContact && [exactContact containingObject]){  //Move contact
+						[[adium contactController] moveContact:exactContact toGroup:group];
+					}else{  //Add contact
+						if (!exactContact){
+							exactContact = [[adium contactController] contactWithService:[listObject serviceID]
+																			   accountID:[account uniqueObjectID]
+																					 UID:[listObject UID]];
+						}
+						
+						[[adium contactController] addContacts:[NSArray arrayWithObject:exactContact] toGroup:group];
+					}
 				}
-				
-			}else if (!group){
-				//User selected not listed, so we'll remove that contact
-				if(existing){
-					[[adium contactController] removeListObjects:[NSArray arrayWithObject:existing]];
+			}else{
+				if(exactContact){
+					//User selected not listed, so we'll remove that contact
+					[[adium contactController] removeListObjects:[NSArray arrayWithObject:exactContact]];
 				}
 			}
 		}
