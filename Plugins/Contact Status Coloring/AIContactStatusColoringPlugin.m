@@ -139,6 +139,7 @@
 			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 			
 			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
+				NSLog(@"Add %@",inObject);
 				[self addToFlashArray:inObject];
 			}else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
 				[self removeFromFlashArray:inObject];
@@ -166,7 +167,7 @@
 		/* Use the unviewed content settings if:
 		 *	- we aren't flashing or
 		 *  - every other flash. */
-        if(!flashUnviewedContentEnabled || !([[adium interfaceController] flashState] % 2)){
+        if(!flashUnviewedContentEnabled || ([[adium interfaceController] flashState] % 2)){
             color = unviewedContentColor;
             invertedColor = unviewedContentInvertedColor;
             labelColor = unviewedContentLabelColor;
@@ -515,17 +516,22 @@
 		}
 
 	}else if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
+		BOOL oldFlashUnviewedContentEnabled = flashUnviewedContentEnabled;
+		
 		transitionsEnabled = [[prefDict objectForKey:KEY_CL_SHOW_TRANSITIONS] boolValue];
 		flashUnviewedContentEnabled = [[prefDict objectForKey:KEY_CL_FLASH_UNVIEWED_CONTENT] boolValue];
-		
-		//Clear our flash array if we aren't flashing for unviewed content now
-		if(!flashUnviewedContentEnabled){
+
+		if(oldFlashUnviewedContentEnabled && !flashUnviewedContentEnabled){
+			//Clear our flash array if we aren't flashing for unviewed content now but we were before
 			NSEnumerator	*enumerator = [[[flashingListObjectArray copy] autorelease] objectEnumerator];
 			AIListContact	*listContact;
 
 			while(listContact = [enumerator nextObject]){
 				[self removeFromFlashArray:listContact];
 			}
+			
+			//Make our colors end up right (if we were on an off-flash) by updating all list objects
+			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 	}
 }
