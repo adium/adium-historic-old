@@ -1570,7 +1570,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	NSMenu			*statusStatesMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	NSEnumerator	*enumerator;
 	AIStatus		*statusState;
-	AIStatusType	currentStatusType;
+	AIStatusType	currentStatusType = AIAvailableStatusType;
 	NSMenuItem		*menuItem;
 
 	[statusStatesMenu setMenuChangedMessagesEnabled:NO];
