@@ -35,6 +35,11 @@
 
 }
 
+- (void)viewWillClose
+{
+	[[adium notificationCenter] removeObserver:self];
+}
+
 //Reflect new preferences in view
 - (void)preferencesChanged:(NSNotification *)notification
 {
