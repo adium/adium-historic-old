@@ -78,15 +78,6 @@
     }
 }
 
-//The user toggled the mute when away checkbox
-- (IBAction)toggleMuteWhileAway:(id)sender
-{
-    [[adium preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhileAway state]]
-                                         forKey:KEY_EVENT_MUTE_WHILE_AWAY
-                                          group:PREF_GROUP_SOUNDS];
-}
-
-
 //Called when the preferences change, update our preference display
 - (void)preferencesChanged:(NSNotification *)notification
 {
@@ -104,7 +95,6 @@
                 [popUp_soundSet selectItem:[popUp_soundSet lastItem]];
             }
         }
-        [button_muteWhileAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
     }
 }
 
