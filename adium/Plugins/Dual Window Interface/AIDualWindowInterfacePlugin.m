@@ -189,6 +189,8 @@
         [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
         
         if(!newMessageWindow) {
+	    AIListObject    *listObject = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
+
             //Set the new preference for window location _after_ closing the tab
             //so we don't get overriden if it was the last tab.
             NSString        *savedFrame = nil;
@@ -196,9 +198,7 @@
             
             //If a spawn point wasn't specified, we want to use the saved frame's width and height (if one has been saved)
             if(screenPoint.x == -1 || screenPoint.y == -1){
-                savedFrame = [[adium preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
-                                                                    group:PREF_GROUP_WINDOW_POSITIONS 
-                                                                    object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
+                savedFrame = [listObject preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME group:PREF_GROUP_WINDOW_POSITIONS];
             }
             if(savedFrame){
                 newFrame = NSRectFromString(savedFrame);
@@ -213,10 +213,9 @@
             //Create a new window, set the frame, and save it
             newMessageWindow = [self _createMessageWindow];
             [[newMessageWindow window] setFrame:newFrame display:NO];
-            [[adium preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
-                                                    forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                                    group:PREF_GROUP_WINDOW_POSITIONS
-                                                    object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
+            [listObject setPreference:[[newMessageWindow window] stringWithSavedFrame]
+			       forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+				group:PREF_GROUP_WINDOW_POSITIONS];
         }
         
         [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem atIndex:index];

@@ -167,13 +167,13 @@
 	    NSString	*voice = nil;
 	    NSNumber	*pitchNumber = nil;	float pitch = 0;
 	    NSNumber	*rateNumber = nil;	int rate = 0;
-	    voice = [[adium preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    voice = [otherPerson preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
 	    
-	    pitchNumber = [[adium preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    pitchNumber = [otherPerson preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER];
 	    if(pitchNumber)
 		pitch = [pitchNumber floatValue];
 
-	    rateNumber = [[adium preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    rateNumber = [otherPerson preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER];
 	    if(rateNumber)
 		rate = [rateNumber intValue];
 
@@ -189,25 +189,25 @@
     NSString	*voice = nil;
     NSNumber	*pitchNumber = nil;
     NSNumber	*rateNumber = nil;
-    
+    NSLog(@"%@",inObject);
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
-    voice = [[adium preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    voice = [activeListObject preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER  ignoreInheritedValues:YES];
     if(voice) {
         [popUp_voice selectItemWithTitle:voice];
     } else {
         [popUp_voice selectItemAtIndex:0]; //"Default"
     }
 
-    pitchNumber = [[adium preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    pitchNumber = [activeListObject preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
     if(pitchNumber) {
 	[slider_pitch setFloatValue:[pitchNumber floatValue]];
     } else {
 	[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
     }
 
-    rateNumber = [[adium preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    rateNumber = [activeListObject preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
     if(rateNumber) {
 	[slider_rate setIntValue:[rateNumber intValue]];
     } else {
@@ -221,11 +221,11 @@
 	NSString * voice = [popUp_voice titleOfSelectedItem];
 	if ([voice compare:@"Default"] == 0)
 	    voice = nil;
-	[[adium preferenceController] setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
+	[activeListObject setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
     } else if (sender == slider_pitch) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
+        [activeListObject setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER];
     } else if (sender == slider_rate) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
+        [activeListObject setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER];
     }
 }
 

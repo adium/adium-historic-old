@@ -137,6 +137,7 @@ typedef enum {
 #define PREF_GROUP_TOOLBARS 		@"Toolbars"
 #define PREF_GROUP_WINDOW_POSITIONS 	@"Window Positions"
 #define PREF_GROUP_SPELLING 		@"Spelling"
+#define OBJECT_PREFS_PATH		@"ByObject"		//Path to object specific preference folder
 
 //Adium events
 #define KEY_EVENT_DISPLAY_NAME		@"DisplayName"
@@ -601,11 +602,13 @@ typedef enum {
 //Defaults and access to preferencecs
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName;
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
+
+//- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
+//- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
+//- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
+//- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay;
 
 @end

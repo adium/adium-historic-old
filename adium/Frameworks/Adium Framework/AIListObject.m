@@ -30,6 +30,9 @@
     orderIndex = -1;
     statusDictionary = [[NSMutableDictionary alloc] init];
 
+    //
+    prefDict = [[NSMutableDictionary dictionaryWithContentsOfFile:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]] retain];
+    
     return(self);
 }
 
@@ -39,6 +42,7 @@
     [containingGroup release];
     [statusDictionary release];
     [serviceID release];
+    [prefDict release];
 
     [super dealloc];
 }
@@ -124,6 +128,62 @@
 
     return(array);
 }
+
+
+//Object specific preferences -------------------------------------------------------------------
+//Set a preference value
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
+{    
+    //Set the new value
+    if(value != nil){
+	if(!prefDict) prefDict = [[NSMutableDictionary alloc] init];
+	[prefDict setObject:value forKey:inKey];
+    }else{
+        [prefDict removeObjectForKey:inKey];
+    }
+    
+    //Save
+    [prefDict writeToPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]
+		 withName:[self UIDAndServiceID]];
+    
+    //Broadcast a preference changed notification
+    [[adium notificationCenter] postNotificationName:Preference_GroupChanged object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+}
+
+//Retrieve a preference value (with the option of ignoring inherited values)
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore
+{
+    //If ignore is yes, retrieve a preference value for this list object only, returning nil if no value is present
+    if(ignore){
+	return([prefDict objectForKey:inKey]);
+    }else{
+	return([self preferenceForKey:inKey group:groupName]);
+    }
+}
+
+//Retrieve a preference value
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName
+{
+    id		value = nil;
+    
+    //Get our value for the preference
+    if(prefDict) value = [prefDict objectForKey:inKey];
+    
+    //If we don't have a value
+    if(!value){
+	if(containingGroup){
+	    //return the value of the group that contains us
+	    value = [containingGroup preferenceForKey:inKey group:groupName];
+	    
+	}else{
+	    //If we are the root group, return Adium's global preference for this key
+	    value = [[adium preferenceController] preferenceForKey:inKey group:groupName];
+	}
+    }
+    
+    return(value);
+}
+
 
 
 // Display Name Convenience Methods -----------------------------------------------------------------------

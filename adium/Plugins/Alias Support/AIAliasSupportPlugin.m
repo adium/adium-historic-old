@@ -43,7 +43,7 @@
     prefs = [[AIAliasSupportPreferences displayFormatPreferences] retain];
 
     //load the formatting pref
-    displayFormat = [[[adium preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue];
+    displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue];
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
@@ -74,7 +74,7 @@
     [self _applyAlias:alias toObject:activeListObject delayed:NO];
     
     //Save the alias
-    [[adium preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
+    [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
@@ -86,8 +86,7 @@
     activeListObject = [inObject retain];
 
     //Fill in the current alias
-    alias = [[adium preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject];
-    if(alias){
+    if(alias = [inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
         [textField_alias setStringValue:alias];
     }else{
         [textField_alias setStringValue:@""];
@@ -99,7 +98,7 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     if(inModifiedKeys == nil){ //Only set an alias on contact creation
-        [self _applyAlias:[[adium preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject]
+        [self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
                  toObject:inObject
                   delayed:delayed];
     }
@@ -111,7 +110,7 @@
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
         //load new displayFormat
-        displayFormat = [[[adium preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]; 
+        displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]; 
 
         //Update all existing contacts
         NSEnumerator * contactEnumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
@@ -132,7 +131,7 @@
     if([keys containsObject:@"Display Name"]){
         AIListObject 	*inObject = [notification object];
         
-        [self _applyAlias:[[adium preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject]
+        [self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
                  toObject:inObject
                   delayed:YES];
     }
@@ -146,10 +145,10 @@
 //In response to this notification, we need to register our editor column for editing aliases.
 - (void)registerColumn:(NSNotification *)notification
 {
-    id <AIListEditor>	editorController = [notification object];
+    //id <AIListEditor>	editorController = [notification object];
 
     //Register our editor column
-    [editorController registerListEditorColumnController:self];
+    //[editorController registerListEditorColumnController:self];
 
     //Remove the observer so we only register once
     [[adium notificationCenter] removeObserver:self name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
@@ -162,14 +161,14 @@
 
 - (NSString *)editorColumnStringForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-    NSString	*alias = [[adium preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES objectKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
-
-    return(alias != nil ? alias : @"");
+//    NSString	*alias = [[adium preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES objectKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
+    return(@"__Broken__");    
+//    return(alias != nil ? alias : @"");
 }
 
 - (BOOL)editorColumnSetStringValue:(NSString *)value forServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-    AIListContact	*contact;
+/*    AIListContact	*contact;
 
     contact = [[adium contactController] contactInGroup:nil
                                             withService:inServiceID
@@ -185,7 +184,7 @@
                                               group:PREF_GROUP_ALIASES
                                           objectKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
     }
-
+*/
     return(YES);
 }
 
