@@ -26,7 +26,7 @@
         compressionFactor = 0.0;
     */
     return ([imageRep representationUsingType:NSJPEGFileType 
-                                   properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor]]);
+                                   properties:/*[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor]*/nil]);
 }
 
 @end
