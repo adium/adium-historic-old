@@ -103,6 +103,14 @@
 	return([super rightPadding] + 4);
 }
 
+//Fixed spacing around groups.  No spacing looks bad, too much spacing looks awkward
+- (int)topSpacing{
+	return(1);
+}
+- (int)bottomSpacing{
+	return(1);
+}
+
 //Cell height and width
 - (NSSize)cellSize
 {
@@ -224,7 +232,26 @@
 //Draw our background gradient
 - (void)drawBackgroundGradientInRect:(NSRect)inRect
 {
+	float backgroundL;
+	float gradientL;
+
+	//Gradient
 	[[self backgroundGradient] drawInRect:inRect];
+
+	//Add a sealing line at the light side of the gradient to make it look more polished.  Apple does this with
+	//most gradients in OS X.
+	[backgroundColor getHue:nil luminance:&backgroundL saturation:nil];
+	[gradientColor getHue:nil luminance:&gradientL saturation:nil];
+	
+	NSLog(@"Calculating the darker color.  If this logs a lot let me know and we'll cache it or something");
+	if(gradientL < backgroundL){ //Seal the top
+		[gradientColor set];
+		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y, inRect.size.width, 1)];
+	}else{ //Seal the bottom
+		[backgroundColor set];
+		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y + inRect.size.height - 1, inRect.size.width, 1)];
+	}
+
 }
 
 //Group background gradient
