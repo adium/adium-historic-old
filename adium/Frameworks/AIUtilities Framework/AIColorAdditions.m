@@ -164,50 +164,56 @@ float _v(float m1, float m2, float hue);
     
     //Get the current RGB values
     rgbColor = [self colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-    r = [rgbColor redComponent];
-    g = [rgbColor greenComponent];
-    b = [rgbColor blueComponent];
+	[rgbColor getRed:&r green:&g blue:&b alpha:NULL];
 
     //Determine the smallest and largest color component
     minValue = min(r, g, b);
     maxValue = max(r, g, b);
 
     //Calculate the luminance
-    *luminance = (minValue + maxValue) / 2.0;
+	float lum = (minValue + maxValue) / 2.0f;
+
+	if(luminance) *luminance = lum;
 
     //Special case for grays (They'll make us divide by zero below)
-    if(minValue == maxValue){
-        *hue = 0.0;
-        *saturation = 0.0;
+    if(minValue == maxValue)
+	{
+		if(hue)
+			*hue = 0.0f;
+		if(saturation)
+			*saturation = 0.0f;
         return;
     }
 
     //Calculate Saturation
-    if(*luminance < 0.5){
-        *saturation = (maxValue - minValue) / (maxValue + minValue);
-    }else{
-        *saturation = (maxValue - minValue) / (2.0 - maxValue - minValue);
-    }
+	if(saturation)
+	{
+		if(lum < 0.5f)
+			*saturation = (maxValue - minValue) / (maxValue + minValue);
+		else
+			*saturation = (maxValue - minValue) / (2.0 - maxValue - minValue);
+	}
 
-    //Calculate hue
-    rc = (maxValue - r) / (maxValue - minValue);
-    gc = (maxValue - g) / (maxValue - minValue);
-    bc = (maxValue - b) / (maxValue - minValue);
+	if(hue)
+	{
+		//Calculate hue
+		r = (maxValue - r) / (maxValue - minValue);
+		g = (maxValue - g) / (maxValue - minValue);
+		b = (maxValue - b) / (maxValue - minValue);
 
-    if(r == maxValue){
-        *hue = bc - gc;
-    }else if(g == maxValue){
-        *hue = 2.0 + rc - bc;
-    }else{
-        *hue = 4.0 + gc - rc;
-    }
+		if(r == maxValue)
+			*hue = b - g;
+		else if(g == maxValue)
+			*hue = 2.0f + r - b;
+		else
+			*hue = 4.0f + g - r;
 
-    *hue = (*hue / 6.0);// % 1.0;
+		*hue = (*hue / 6.0f);// % 1.0f;
 
-    //hue = hue % 1.0
-    while(*hue < 0.0) *hue += 1.0;
-    while(*hue > 1.0) *hue -= 1.0;
-        
+		//hue = hue % 1.0f
+		while(*hue < 0.0f) *hue += 1.0f;
+		while(*hue > 1.0f) *hue -= 1.0f;
+	}
 }
 
 + (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha
