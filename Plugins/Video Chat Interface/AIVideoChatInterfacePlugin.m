@@ -23,15 +23,15 @@
 
 - (void)installPlugin
 {
-	NSMenuItem	*menuItem;
-	
-	//View my webcam menu
-	menuItem = [[NSMenuItem alloc] initWithTitle:@"My Webcam"
-										  target:self 
-										  action:@selector(openSelfVideo:)
-								   keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Window_Auxiliary];
-	
+//	NSMenuItem	*menuItem;
+//	
+//	//View my webcam menu
+//	menuItem = [[NSMenuItem alloc] initWithTitle:@"My Webcam"
+//										  target:self 
+//										  action:@selector(openSelfVideo:)
+//								   keyEquivalent:@""];
+//	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Window_Auxiliary];
+//	
 	
 	
 	//Observe video chat creation and destruction

@@ -29,7 +29,6 @@
 - List editing "Too many buddies" error is frequent and random
 - Contact list, file transfers, and MANY other windows not remembering their positions (did the switch from windowShouldClose to windowWillClose in AIWindowController break this?)
 - Adding an invisible state makes a third section in the state menu (including another custom... item)
-- Disable the my webcam window so people don't expect video chat to work
 - Log viewer drawer defaults to about 2 pixels wide
 - Rounded edges of the info window tab view are visible
 - Contact menu is inconsistent with menu item naming, item grouping
