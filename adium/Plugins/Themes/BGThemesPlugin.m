@@ -55,10 +55,8 @@
 {
     // write a file containing the theme's dictionary to the themes folder   
     NSString *savePath = [THEME_PATH stringByAppendingPathComponent:[[saveTheme objectForKey:@"themeName"] stringByAppendingString:@".AdiumTheme"]];
-	
     [saveTheme writeToFile:savePath atomically:YES];
     [themePane createDone];
-    [[adium notificationCenter] postNotificationName:Themes_Changed object:nil];
 }
 
 // ======= efficiency by evands =========
