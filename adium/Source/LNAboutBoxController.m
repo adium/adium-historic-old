@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.26 2003/12/15 23:05:01 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.27 2003/12/24 13:42:46 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -111,14 +111,14 @@ LNAboutBoxController *sharedInstance = nil;
 //Scroll credits
 - (void)scrollTimer:(NSTimer *)scrollTimer
 {    
-    if([[textView_credits window] isMainWindow]){
-	scrollLocation += scrollRate;
-	
-	if(scrollLocation > maxScroll) scrollLocation = 0;    
-	if(scrollLocation < 0) scrollLocation = maxScroll;
-	
-	[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
-    }
+//    if([[textView_credits window] isMainWindow]){
+		scrollLocation += scrollRate;
+		
+		if(scrollLocation > maxScroll) scrollLocation = 0;    
+		if(scrollLocation < 0) scrollLocation = maxScroll;
+		
+		[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
+//    }
 }
 
 //Visit the Adium homepage
