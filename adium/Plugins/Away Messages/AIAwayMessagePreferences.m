@@ -431,7 +431,11 @@
 {
     NSString *type = [item objectForKey:@"Type"];
     if([type compare:@"Away"] == 0){ //Away message
-        [item setObject:object forKey:@"Title"];
+        if(object && [(NSString *)object length] != 0){
+            [item setObject:object forKey:@"Title"];
+        }else{
+            [item removeObjectForKey:@"Title"];
+        }
         [self saveAwayMessages];
     }
 }
