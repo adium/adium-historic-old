@@ -7,6 +7,7 @@
 //
 
 #import "AIEnterAwayWindowController.h"
+#import "AIAwayStatusWindowController.h"
 #import "AIAwayMessagesPlugin.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
@@ -64,6 +65,11 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
     //Close our window
     [self closeWindow:nil];
+
+    // Open the "you're away" window
+    [[AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner] showWindow:nil];
+    // Tell it to update in case we were already away
+    [AIAwayStatusWindowController updateAwayStatusWindow];
 }
 
 
