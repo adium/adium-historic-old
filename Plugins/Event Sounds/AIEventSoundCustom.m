@@ -388,9 +388,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
         newSoundPath = [selectedMenuItem representedObject];
         setRow = row;
         if(newSoundPath && ![newSoundPath isEqualToString:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]]){ //Ignore a duplicate selection
-																												   //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.
-																												   //[self saveEventSoundArray];
-			
+																												   //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.			
             //Set the new sound path
             [selectedSoundDict setObject:newSoundPath forKey:KEY_EVENT_SOUND_PATH];
             [eventSoundArray replaceObjectAtIndex:row withObject:selectedSoundDict];
