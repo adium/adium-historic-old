@@ -8,7 +8,7 @@
 - (void)_loadAvailableWebkitStyles;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content allowingColors:(BOOL)allowColors;
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
@@ -224,6 +224,9 @@ DeclareString(AppendNextMessage);
 	NSString		*templateFile;
 	NSString		*template = nil;
 	BOOL			isContext = [[content type] isEqualToString:CONTENT_CONTEXT_TYPE];
+//	BOOL			allowColors = (isContext ? NO : YES);
+#warning Disabling colors for now
+	BOOL			allowColors = NO;
 	
 	//
 	currentStylePath = [stylePath stringByAppendingPathComponent:([content isOutgoing] ? @"Outgoing" : @"Incoming")];
@@ -249,7 +252,7 @@ DeclareString(AppendNextMessage);
 
 	//
 	newHTML = [[template mutableCopy] autorelease];
-	newHTML = [self fillKeywords:newHTML forContent:content];
+	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:allowColors];
 	newHTML = [self escapeString:newHTML];
 
 	if(!contentIsSimilar){
@@ -268,7 +271,7 @@ DeclareString(AppendNextMessage);
     NSString	    *statusTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]];
 	
 	newHTML = [[statusTemplate mutableCopy] autorelease];
-	newHTML = [self fillKeywords:newHTML forContent:content];
+	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:YES];
 	newHTML = [self escapeString:newHTML];
 	
 	[webView stringByEvaluatingJavaScriptFromString:
@@ -276,12 +279,10 @@ DeclareString(AppendNextMessage);
 }
 
 //
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content allowingColors:(BOOL)allowColors
 {
 	NSDate  *date;
 	NSRange	range;
-
-	BOOL	allowColors = YES;
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
 		do{

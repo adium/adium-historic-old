@@ -350,7 +350,7 @@
 		}
 		
 		//Load preferences for the style and update the popup menus
-//		[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
+		[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
 
 		//Retain the stylePath
 		stylePath = [[style resourcePath] retain];
