@@ -25,6 +25,7 @@
 #define KEY_TAB_ONLINE_ENABLED		@"Tab Online Enabled"
 #define KEY_TAB_IDLE_AWAY_ENABLED	@"Tab Idle And Away Enabled"
 #define KEY_TAB_UNVIEWED_FLASH_ENABLED	@"Tab Unviewed Flash Enabled"
+#define KEY_TAB_USE_CUSTOM_COLORS       @"Tab Use Custom Colors"
 
 #define KEY_TAB_AWAY_COLOR		@"Tab Away Color"
 #define KEY_TAB_IDLE_COLOR		@"Tab Idle Color"

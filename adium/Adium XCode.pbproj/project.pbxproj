@@ -14528,6 +14528,7 @@
 				C497518F05BBBB7B009958A6,
 				34BDA097053147E1000AB133,
 				34BDA098053147E1000AB133,
+				C4947B0005BD177F00780FE2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17692,6 +17693,7 @@
 				4B31E8C204C46A9100A8010A,
 				4B31E8C304C46A9100A8010A,
 				4B31E8C504C46A9100A8010A,
+				C4947AFF05BD177E00780FE2,
 				4B31E8C404C46A9100A8010A,
 			);
 			isa = PBXGroup;
@@ -24945,7 +24947,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Message Push Preferences-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -28558,6 +28559,20 @@
 		};
 		C494631705BC620C00780FE2 = {
 			fileRef = C497514605BB99DC009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4947AFF05BD177E00780FE2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = "Contact Status Coloring Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4947B0005BD177F00780FE2 = {
+			fileRef = C4947AFF05BD177E00780FE2;
 			isa = PBXBuildFile;
 			settings = {
 			};

@@ -36,6 +36,7 @@
     IBOutlet	NSColorWell	*colorWell_idleAndAway;
 
     IBOutlet	NSButton	*checkBox_unviewedFlash;
+    IBOutlet    NSButton        *checkBox_useCustomColors;
 
 }
 

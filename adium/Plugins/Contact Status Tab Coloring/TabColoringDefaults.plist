@@ -36,5 +36,7 @@
     <true/>
     <key>Tab Unviewed Flash Enabled</key>
     <true/>
+    <key>Tab Use Custom Colors</key>
+    <true/>
 </dict>
 </plist>

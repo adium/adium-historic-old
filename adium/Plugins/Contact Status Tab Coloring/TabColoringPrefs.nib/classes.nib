@@ -12,6 +12,7 @@
                 "checkBox_typing" = NSButton; 
                 "checkBox_unviewedContent" = NSButton; 
                 "checkBox_unviewedFlash" = NSButton; 
+                "checkBox_useCustomColors" = NSButton; 
                 "colorWell_away" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
