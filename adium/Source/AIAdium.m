@@ -217,6 +217,9 @@
 }
 
 void Adium_HandleSignal(int i){
+    NSLog(@"Launching the Adium Crash Reporter because Adium went *boom* (Signal %i)",i);
+    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
+    //Move along, citizen, nothing more to see here.
     exit(-1);
 }
 
@@ -239,7 +242,7 @@ void Adium_HandleSignal(int i){
     signal(12, Adium_HandleSignal);     /* bad argument to system call */
     signal(24, Adium_HandleSignal);     /* exceeded CPU time limit */
     signal(25, Adium_HandleSignal);     /* exceeded file size limit */
-    
+        
     //Load and init the components
     [loginController initController];
     

@@ -200,6 +200,9 @@ typedef enum {
 
 #define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
 
+//Crash reporter
+#define PATH_TO_CRASH_REPORTER  [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium Crash Reporter.app"] stringByExpandingTildeInPath]
+
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIListObjectObserver //notified of changes
     - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
