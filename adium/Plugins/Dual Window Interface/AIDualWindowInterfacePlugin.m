@@ -428,16 +428,15 @@
 
     //Add our other menu items
     {
-        /* Using the cursor keys
+        // Using the cursor keys
         unichar 	left = NSLeftArrowFunctionKey;
         NSString	*leftKey =[NSString stringWithCharacters:&left length:1];
         unichar 	right = NSRightArrowFunctionKey;
         NSString	*rightKey = [NSString stringWithCharacters:&right length:1];
-        */
-
+        
         /* Using the [ ] keys */
-        NSString	*leftKey = @"[";
-        NSString	*rightKey = @"]";
+/*        NSString	*leftKey = @"[";
+        NSString	*rightKey = @"]";*/
 
         menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:leftKey];
         [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
