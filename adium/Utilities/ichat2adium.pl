@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: ichat2adium.pl,v 1.3 2003/11/29 18:17:41 jmelloy Exp $
+# $Id: ichat2adium.pl,v 1.4 2003/11/30 01:15:55 jmelloy Exp $
 #
 # This program imports iChat logs using the program Logorrhea.  Get it from
 # http://spiny.com/logorrhea/
@@ -18,10 +18,9 @@
 use warnings;
 use strict;
 
-system('mkdir', 'adiumLogs');
-
 my $file;
 my $users = 0;
+my $primary;
 my @usernames;
 my @chatnames;
 
@@ -30,17 +29,32 @@ if(@ARGV > 0) {
 } else {
     $file = "iChat Export.txt";
 }
-
-if ($ARGV[1] eq "--usernames") {
-    $users = 1;
+for (my $i = 1; $i < @ARGV; $i++) {
+    if ($ARGV[$i] eq "--usernames") {
+        $users = 1;
+    }
+    if($ARGV[$i] eq "--primary-user" ) {
+        $primary = $ARGV[$i + 1];
+    }
 }
-
 open(FILE, $file) or die qq{Unable to open "$file": $!};
 
 $/ = "\r";
 
 my @input = <FILE>;
-my $outfile = "adiumLogs/bad";
+
+my $base_out;
+
+if ($primary) {
+    $base_out = "AIM.$primary";
+} else {
+    $base_out = "AIM.iChatLogs";
+}
+
+umask(000);
+mkdir($base_out, 0777) unless (-d $base_out);
+
+my $outfile = "$base_out/bad";
 
 close(FILE);
 
@@ -69,7 +83,7 @@ for (my $i = 0; $i < @input; $i++) {
         }
         if($userfound == 0) {
             push(@chatnames, $chatname);
-            print "What username is associated with $chatname [$sender]:";
+            print "Enter username associated with $chatname [$sender]:";
             $/ = "\n";
             my $input = <STDIN>;
             chomp($input);
@@ -86,15 +100,17 @@ for (my $i = 0; $i < @input; $i++) {
     $chatname =~ s/ //g;
 
     if($chatname && $sender && $date && $month && $day && $year && $message) {
-        $outfile = "adiumLogs/$chatname ($year|$month|$day).adiumLog";
-
+        umask(000);
+        mkdir("$base_out/$chatname", 0777) unless (-d "$base_out/$chatname");
+        
+        $outfile = "$base_out/$chatname/$chatname ($year|$month|$day).adiumLog";
         open(OUT, ">>$outfile");
         print OUT "$time $sender: $message\n";
     } else {
-        $outfile = "adiumLogs/bad";
+        $outfile = "$base_out/bad";
         open(OUT, ">>$outfile");
         print OUT "$input[$i]";
-        print "Bad record found at line $i.  Logged in adiumLogs/bad.\n";
+        print "Bad record found at line $i.  Logged in $base_out/bad.\n";
     }
     close OUT;
 }
