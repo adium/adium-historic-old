@@ -124,6 +124,7 @@
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
     //Tell the interface to unload our window
+    [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
 	[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
 
     return(YES);
@@ -314,6 +315,7 @@
 	//this instance of AIContactListWindowController, and we would be deallocated.  The call to [self window] will
 	//crash if we are deallocated.  A dirty, but functional fix is to temporarily retain ourself here.
     [self retain];
+
     if([self windowShouldClose:nil]){
         [[self window] close];
     }
