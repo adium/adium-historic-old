@@ -42,7 +42,8 @@
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
-	Libgaim is escaping all incoming HTML characters over ICQ.
+	Libgaim is escaping all incoming HTML characters over ICQ. (Bug report filed 
+	on the Gaim tracker)
 	
 - [ICQ] Encoding problems
 	Encoding, specifically in Hebrew, is not being received properly.  Sending
@@ -55,9 +56,11 @@
 	Japanese isn't being sent properly.  I would guess this limits the usefulness
 	of the protocol ;)
 	
-- [ALL] File transfer limitations
-	File transfers often fails to navigate firewalls and routers
+- [AIM / Jabber] File transfer limitations
+	File transfers often fail to navigate firewalls and routers
 
+- [Yahoo] Fil transfer limitations
+	Files over 1 MB in size fail to send
 
 //------------------------------------------------------------------------------------
 // Bugs - Resources
