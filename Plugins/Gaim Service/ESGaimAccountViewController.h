@@ -19,7 +19,6 @@
 	IBOutlet	NSTextField					*textField_alias;
 	
 	IBOutlet	NSButton					*checkBox_checkMail;
-	IBOutlet	ESImageViewWithImagePicker  *imageView_userIcon;
 }
 
 - (IBAction)changedConnectionPreference:(id)sender;
