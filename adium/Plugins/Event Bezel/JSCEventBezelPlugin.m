@@ -91,6 +91,8 @@
         
         showEventBezel = [[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
         prefsPosition = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue];
+        [ebc setImageBadges: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
+        useColorLabels = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue];
         
         [eventArray removeAllObjects];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
@@ -165,26 +167,49 @@
     // Prepare the event string and label color
     if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
         tempEvent = @"is now online";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     } else if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
         tempEvent = @"has gone offline";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
         tempEvent = @"has gone away";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
         tempEvent = @"is available";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
         tempEvent = @"is idle";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
         tempEvent = @"is no longer idle";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     } else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
         tempEvent = @"says";
-        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+        if (useColorLabels)
+            [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+        else
+            [ebc setBuddyIconLabelColor: nil];
     }
+    
+    
     
     if ([ebc bezelPosition] != prefsPosition) {
         [ebc setBezelPosition: prefsPosition];

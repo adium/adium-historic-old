@@ -15,6 +15,7 @@
     AIAdium                         *owner;
     
     int                             bezelPosition;
+    BOOL                            imageBadges;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
@@ -27,5 +28,6 @@ withMessage:(NSString *)message;
 - (int)bezelPosition;
 - (void)setBezelPosition:(int)newPosition;
 - (void)setBuddyIconLabelColor:(NSColor *)newColor;
+- (void)setImageBadges:(BOOL)b;
 
 @end

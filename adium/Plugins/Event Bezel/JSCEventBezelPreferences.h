@@ -16,6 +16,8 @@
     IBOutlet NSButton       *checkBox_noIdle;
     IBOutlet NSButton       *checkBox_idle;
     IBOutlet NSButton       *checkBox_firstMessage;
+    IBOutlet NSButton       *checkBox_imageBadges;
+    IBOutlet NSButton       *checkBox_colorLabels;
 }
 
 - (IBAction)toggleShowBezel:(id)sender;
@@ -27,5 +29,7 @@
 - (IBAction)toggleNoIdle:(id)sender;
 - (IBAction)toggleIdle:(id)sender;
 - (IBAction)toggleFirstMessage:(id)sender;
+- (IBAction)toggleImageBadges:(id)sender;
+- (IBAction)toggleColorLabels:(id)sender;
 
 @end

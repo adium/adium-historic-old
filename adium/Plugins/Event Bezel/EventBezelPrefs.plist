@@ -20,5 +20,9 @@
         <true/>
         <key>Display if First Message</key>
         <true/>
+        <key>Show Image Badges</key>
+        <true/>
+        <key>Show Color Labels</key>
+        <true/>
 </dict>
 </plist>
