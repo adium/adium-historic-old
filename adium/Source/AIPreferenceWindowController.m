@@ -235,52 +235,51 @@ static AIPreferenceWindowController *sharedInstance = nil;
 {
     int	identifier = [[tabViewItem identifier] intValue];
 
-    switch(identifier){
-        case 1:
-            [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections];
-            [self _insertPanesForCategory:AIPref_Accounts_Profile intoView:view_Accounts_Profile];
-            [self _insertPanesForCategory:AIPref_Accounts_Hosts intoView:view_Accounts_Hosts];
-            [self _sizeWindowToFitTabView:tabView_accounts];
-        break;
-        case 2:
-            [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
-            [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups];
-            [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts];
-            [self _sizeWindowToFitTabView:tabView_contactList];
-        break;
-        case 3:
-            [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display];
-            [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending];
-            [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving];
-            [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Messages_Emoticons];
-            [self _sizeWindowToFitTabView:tabView_messages];
-        break;
-        case 4:
-            [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
-            [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
-            [self _sizeWindowToFitTabView:tabView_status];
-        break;
-        case 5:
-            [self _insertPanesForCategory:AIPref_Dock_General intoView:view_Dock_General];
-            [self _insertPanesForCategory:AIPref_Dock_Icon intoView:view_Dock_Icon];
-            [self _sizeWindowToFitTabView:tabView_dock];
-        break;
-        case 6:
-            [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
-            [self _sizeWindowToFitFlatView:view_Sound];
-        break;
-        case 7:
-            [self _insertPanesForCategory:AIPref_Alerts	intoView:view_Alerts];
-            [self _sizeWindowToFitFlatView:view_Alerts];
-        break;
-            
+    //Take focus away from any controls to ensure that they register changes and save
+    [[self window] makeFirstResponder:tabView_category];
+
+    if(tabView == tabView_category){
+        switch(identifier){
+            case 1:
+                [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections];
+                [self _insertPanesForCategory:AIPref_Accounts_Profile intoView:view_Accounts_Profile];
+                [self _insertPanesForCategory:AIPref_Accounts_Hosts intoView:view_Accounts_Hosts];
+                [self _sizeWindowToFitTabView:tabView_accounts];
+            break;
+            case 2:
+                [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
+                [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups];
+                [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts];
+                [self _sizeWindowToFitTabView:tabView_contactList];
+            break;
+            case 3:
+                [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display];
+                [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending];
+                [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving];
+                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Messages_Emoticons];
+                [self _sizeWindowToFitTabView:tabView_messages];
+            break;
+            case 4:
+                [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
+                [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
+                [self _sizeWindowToFitTabView:tabView_status];
+            break;
+            case 5:
+                [self _insertPanesForCategory:AIPref_Dock_General intoView:view_Dock_General];
+                [self _insertPanesForCategory:AIPref_Dock_Icon intoView:view_Dock_Icon];
+                [self _sizeWindowToFitTabView:tabView_dock];
+            break;
+            case 6:
+                [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
+                [self _sizeWindowToFitFlatView:view_Sound];
+            break;
+            case 7:
+                [self _insertPanesForCategory:AIPref_Alerts	intoView:view_Alerts];
+                [self _sizeWindowToFitFlatView:view_Alerts];
+            break;
+        }
     }
 
-}
-
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{
-    
 }
 
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView
