@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.22 2003/12/24 18:51:39 adamiser Exp $
+// $Id: AIAccount.m,v 1.23 2003/12/25 16:51:50 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -108,21 +108,23 @@
 - (void)updateStatusForKey:(NSString *)key
 {
 	BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
-	
+
     //Online status changed
 	//Call connect or disconnect as appropriate
 	//
     if([key compare:@"Online"] == 0){
-        if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] && !areOnline){
-			//Retrieve the user's password and then call connect
-			[[adium accountController] passwordForAccount:self 
-										  notifyingTarget:self
-												 selector:@selector(passwordReturnedForConnect:)];
-			
-        }else if(areOnline){
-			//Disconnect
-			[self disconnect];
-			
+        if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+			if(!areOnline){
+				//Retrieve the user's password and then call connect
+				[[adium accountController] passwordForAccount:self 
+											  notifyingTarget:self
+													 selector:@selector(passwordReturnedForConnect:)];
+			}
+        }else{
+			if(areOnline){
+				//Disconnect
+				[self disconnect];
+			}
         }
     }
 
