@@ -461,6 +461,48 @@
 												 forListObject:listObject]);
 }
 
+- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*containedObject;
+	int row = -1;
+	
+	if([contactList isKindOfClass:[AIMetaContact class]]){
+		enumerator = [[(AIMetaContact *)contactList listContacts] objectEnumerator];				
+	}else{
+		enumerator = [[contactList containedObjects] objectEnumerator];		
+	}
+	
+	//Enumerate the contact list
+	while((row == -1) && (containedObject = [enumerator nextObject])){
+		if([containedObject isKindOfClass:[AIListGroup class]]){
+			//Enumerator contained groups
+			NSEnumerator	*thisGroupEnumerator = [[(AIListGroup *)containedObject containedObjects] objectEnumerator];
+			AIListObject	*groupContainedObject;
+			while((row == -1) && (groupContainedObject = [thisGroupEnumerator nextObject])){
+				if([[groupContainedObject longDisplayName] rangeOfString:inputString
+														   options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
+					row = [outlineView rowForItem:groupContainedObject];
+				}				
+			}
+		}else{
+			if([[containedObject longDisplayName] rangeOfString:inputString
+												  options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
+				row = [outlineView rowForItem:containedObject];
+			}
+		}
+	}
+	
+	if(row != -1){
+		if([NSApp isOnTigerOrBetter]){
+			[outlineView selectRowIndexes:[NSClassFromString(@"NSIndexSet") indexSetWithIndex:row]	byExtendingSelection:NO];
+			
+		}else{
+			[outlineView selectRow:row byExtendingSelection:NO];
+		}
+	}
+}
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
 	//Kill any selections
