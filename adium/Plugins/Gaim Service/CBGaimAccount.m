@@ -1373,7 +1373,6 @@
     //Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
-//	gaim_account_set_username(account, [[self serverDisplayName] UTF8String]);
     
 	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
 }
