@@ -6022,7 +6022,6 @@
 				34E3860C068FAA7900303451,
 				4B2E560A06A33D85008866CF,
 				4B2E560C06A33D85008866CF,
-				4B60991D06A4483400EC8D78,
 				4B60992406A4485200EC8D78,
 				34A65B0606A5A15300898470,
 				9E20910C06A601A500E33E27,
@@ -6070,6 +6069,7 @@
 				34D2E8690758BB0C0054C56D,
 				4BC5A5DB0764F75B0080ECF7,
 				4BC5A5DD0764F75B0080ECF7,
+				34E8298D0766B18500EFB3BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6621,7 +6621,6 @@
 				34E3860D068FAA7900303451,
 				4B2E560B06A33D85008866CF,
 				4B2E560D06A33D85008866CF,
-				4B60991E06A4483400EC8D78,
 				4B60992506A4485200EC8D78,
 				34A65B0706A5A15300898470,
 				9E20910E06A601AF00E33E27,
@@ -6669,6 +6668,7 @@
 				34D2E86A0758BB0C0054C56D,
 				4BC5A5DC0764F75B0080ECF7,
 				4BC5A5DE0764F75B0080ECF7,
+				34E8298C0766B18500EFB3BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8513,6 +8513,36 @@
 		};
 		34E829850766B0FE00EFB3BC = {
 			fileRef = 34E829830766B0FE00EFB3BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E8298A0766B18500EFB3BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AINewMessagePromptController.m;
+			path = "Plugins/New Message Panel/AINewMessagePromptController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E8298B0766B18500EFB3BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AINewMessagePromptController.h;
+			path = "Plugins/New Message Panel/AINewMessagePromptController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E8298C0766B18500EFB3BC = {
+			fileRef = 34E8298A0766B18500EFB3BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E8298D0766B18500EFB3BC = {
+			fileRef = 34E8298B0766B18500EFB3BC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12316,30 +12346,12 @@
 			children = (
 				4B60992206A4485200EC8D78,
 				4B60992306A4485200EC8D78,
-				4B60991A06A4483400EC8D78,
-				4B60991B06A4483400EC8D78,
+				34E8298B0766B18500EFB3BC,
+				34E8298A0766B18500EFB3BC,
 				4B60991C06A4483400EC8D78,
 			);
 			isa = PBXGroup;
 			name = "New Message Panel";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B60991A06A4483400EC8D78 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AINewMessagePrompt.h;
-			path = "Plugins/New Message Panel/AINewMessagePrompt.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B60991B06A4483400EC8D78 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AINewMessagePrompt.m;
-			path = "Plugins/New Message Panel/AINewMessagePrompt.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12350,18 +12362,6 @@
 			path = "Plugins/New Message Panel/NewMessagePrompt.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B60991D06A4483400EC8D78 = {
-			fileRef = 4B60991A06A4483400EC8D78;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B60991E06A4483400EC8D78 = {
-			fileRef = 4B60991B06A4483400EC8D78;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B60991F06A4483400EC8D78 = {
 			fileRef = 4B60991C06A4483400EC8D78;
