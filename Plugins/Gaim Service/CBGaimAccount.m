@@ -47,6 +47,8 @@
 
 - (void)updateStatusForKey:(NSString *)key immediately:(BOOL)immediately;
 
+- (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector;
+
 @end
 
 @implementation CBGaimAccount
@@ -1181,8 +1183,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
 	//Make sure our settings are correct
-	[self configureGaimAccount];
-	
+	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredGaimAccount)];
+}
+
+- (void)continueConnectWithConfiguredGaimAccount
+{
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueConnectWithConfiguredProxy)];
 }
@@ -1200,6 +1205,29 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 
+//Make sure our settings are correct; notify target/selector when we're finished
+- (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector
+{
+	NSInvocation	*contextInvocation;
+	
+	//Perform the synchronous configuration activities (subclasses may want to take action in this function)
+	[self configureGaimAccount];
+	
+	contextInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+	
+	[contextInvocation setTarget:target];
+	[contextInvocation setSelector:selector];
+	[contextInvocation retainArguments];
+
+	//Set the text profile BEFORE beginning the connect process, to avoid problems with setting it while the
+	//connect occurs. Once that's done, contextInvocation will be invoked, continuing the configureGaimAccount process.
+	[self autoRefreshingOutgoingContentForStatusKey:@"TextProfile" 
+										   selector:@selector(setAccountProfileTo:configureGaimAccountContext:)
+											context:contextInvocation];
+}
+
+//Synchronous gaim account configuration activites, always performed after an account is created.
+//This is a definite subclassing point so prpls can apply their own account settings.
 - (void)configureGaimAccount
 {
 	NSString	*hostName;
@@ -1222,9 +1250,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Update a few status keys before we begin connecting.  Libgaim will send these automatically
     [self updateStatusForKey:KEY_USER_ICON];
-	
-	//We must do the TextProfile immediately so it doesn't try to happen while we are in the middle of connecting
-    [self updateStatusForKey:@"TextProfile" immediately:YES];
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1541,8 +1566,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
 	//Make sure our settings are correct
-	[self configureGaimAccount];
-	
+	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredGaimAccount)];
+}
+
+- (void)continueRegisterWithConfiguredGaimAccount
+{
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredProxy)];
 }
@@ -1614,22 +1642,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (void)updateStatusForKey:(NSString *)key immediately:(BOOL)immediately
-{
-	BOOL handled = NO;
-	
-	if (immediately){
-		if([key isEqualToString:@"TextProfile"]){
-			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
-			handled = YES;
-		}
-	}
-	
-	if (!handled){
-		[self updateStatusForKey:key];
-	}
-}
-
 //Set our idle (Pass nil for no idle)
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince
 {
@@ -1659,6 +1671,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
+//Set the profile, then invoke the passed invocation to return control to the target/selector specified
+//by a configureGaimAccountNotifyingTarget:selector: call.
+- (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation
+{
+	[self setAccountProfileTo:profile];
+	
+	[inInvocation invoke];
+}
+
+//Set our profile immediately on the gaimThread
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
 	if(!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]){

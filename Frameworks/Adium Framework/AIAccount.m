@@ -300,15 +300,25 @@
 //back the filtered attributedString to self on selector "selector" whenever it's complete.
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector
 {
+	[self autoRefreshingOutgoingContentForStatusKey:key
+										   selector:selector
+											context:nil];
+}
+
+- (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext
+{
 	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
-	NSDictionary		*contextDict;
-	if (originalValue){
-		contextDict = [NSDictionary dictionaryWithObjectsAndKeys:originalValue, @"originalValue",
-			NSStringFromSelector(selector), @"selectorString",
-			key, @"key", nil];
-	}else{
-		contextDict = [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromSelector(selector), @"selectorString",
-			key, @"key", nil];
+	NSMutableDictionary	*contextDict;
+	
+	contextDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromSelector(selector), @"selectorString",
+						key, @"key", nil];
+	
+	if(originalValue){
+		[contextDict setObject:originalValue forKey:@"originalValue"];
+	}
+
+	if(originalContext){
+		[contextDict setObject:originalContext forKey:@"originalContext"];
 	}
 	
 	//Filter the content
@@ -327,12 +337,19 @@
 	NSString			*key = [contextDict objectForKey:@"key"];
 	
 	SEL					selector = NSSelectorFromString([contextDict objectForKey:@"selectorString"]);
+	id					originalContext = [contextDict objectForKey:@"originalContext"];
 	
 	//Refresh periodically if the filtered string is different from the original one
 	[self _updateAutoRefereshingKeysForFilteredValue:filteredValue originalValue:originalValue key:key];
 	
-	[self performSelector:selector
-			   withObject:filteredValue];
+	if (originalContext){
+		[self performSelector:selector
+				   withObject:filteredValue
+				   withObject:originalContext];
+	}else{
+		[self performSelector:selector
+				   withObject:filteredValue];
+	}
 }
 
 - (void)_updateAutoRefereshingKeysForFilteredValue:(NSAttributedString *)filteredValue originalValue:(NSAttributedString *)originalValue key:(NSString *)key
