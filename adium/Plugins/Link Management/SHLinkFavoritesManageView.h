@@ -7,15 +7,19 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+@class SHLinkEditorWindowController;
+
 @interface SHLinkFavoritesManageView : NSView {
     IBOutlet    AIAlternatingRowTableView   *table;
     IBOutlet    NSButton                    *removeButton;
+    IBOutlet    NSButton                    *addButton;
                 NSArray                     *favorites;
                 int                          favoriteCount;
 }
--(NSString *)selectedLink;
--(IBAction)removeLink:(id)sender;
--(void)buildLinksList;
+- (NSString *)selectedLink;
+- (IBAction)removeLink:(id)sender;
+- (IBAction)addLink:(id)sender;
+- (void)buildLinksList;
 - (void)openLinkInBrowser:(id)sender;
 
 @end
