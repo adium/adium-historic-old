@@ -289,6 +289,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 													   group:PREF_GROUP_USERICONS
 									   ignoreInheritedValues:YES]){
 		NSImage *userImage;
+		
 		//Remove the preference
 		[displayedObject setPreference:nil
 								forKey:KEY_USER_ICON
