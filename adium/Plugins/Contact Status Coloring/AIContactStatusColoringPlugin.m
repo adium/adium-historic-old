@@ -15,6 +15,7 @@
 
 #import "AIContactStatusColoringPlugin.h"
 #import "AIContactStatusColoringPreferences.h"
+#import "AIListThemeWindowController.h"
 
 @interface AIContactStatusColoringPlugin (PRIVATE)
 - (void)addToFlashArray:(AIListObject *)inObject;
@@ -64,13 +65,13 @@
     alpha = 100.0;
 
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-    preferences = [[AIContactStatusColoringPreferences preferencePane] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LIST_THEME];
+//    preferences = [[AIContactStatusColoringPreferences preferencePane] retain];
     
     //Register themable preferences
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:CONTACT_STATUS_THEMABLE_PREFS 
 																  forClass:[self class]] 
-											  forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+											  forGroup:PREF_GROUP_LIST_THEME];
 
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
@@ -235,8 +236,8 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_STATUS_COLORING]){
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME]){
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		
 		//Release the old values..
         [signedOffColor release];

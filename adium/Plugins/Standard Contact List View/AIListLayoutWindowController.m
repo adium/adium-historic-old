@@ -30,15 +30,13 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName];
-	NSLog(@"%@ initWithWindowNibName",self);
-	
+    [super initWithWindowNibName:windowNibName];	
+
 	return(self);
 }
 
 - (void)dealloc
 {
-	NSLog(@"%@ dealloc",self);
     [super dealloc];
 }
 
@@ -103,7 +101,10 @@
 	[popUp_groupCellStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE] intValue]];
 	
 	[slider_userIconSize setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
-	[self updateDisplayedUserIconSize];
+	[slider_contactSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
+	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
+	[slider_groupBottomSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING] intValue]];
+	[self updateSliderValues];
 	
 	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
@@ -150,6 +151,7 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE
 											  group:PREF_GROUP_LIST_LAYOUT];
+		[self configureControlDimming];
 		
 	}else if(sender == popUp_groupCellStyle){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
@@ -160,12 +162,29 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
 											 forKey:KEY_LIST_LAYOUT_USER_ICON_SIZE
 											  group:PREF_GROUP_LIST_LAYOUT];
-		[self updateDisplayedUserIconSize];
+		[self updateSliderValues];
+		
+	}else if(sender == slider_contactSpacing){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_LIST_LAYOUT_CONTACT_SPACING
+											  group:PREF_GROUP_LIST_LAYOUT];
+		[self updateSliderValues];
+	}else if(sender == slider_groupTopSpacing){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING
+											  group:PREF_GROUP_LIST_LAYOUT];
+		[self updateSliderValues];
+	}else if(sender == slider_groupBottomSpacing){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING
+											  group:PREF_GROUP_LIST_LAYOUT];
+		[self updateSliderValues];
 		
 	}else if(sender == checkBox_userIconVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_ICON
 											  group:PREF_GROUP_LIST_LAYOUT];
+		[self configureControlDimming];
 		
 	}else if(sender == checkBox_extendedStatusVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -183,49 +202,42 @@
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
 	}
-	
 }
 
-- (void)updateDisplayedUserIconSize
+//
+- (void)updateSliderValues
 {
 	int	iconSize = [slider_userIconSize intValue];
 	[textField_userIconSize setStringValue:[NSString stringWithFormat:@"%ix%i",iconSize,iconSize]];
+
+	[textField_contactSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactSpacing intValue]]];
+	[textField_groupTopSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupTopSpacing intValue]]];
+	[textField_groupBottomSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupBottomSpacing intValue]]];
 }
 
 //Configure control dimming
 - (void)configureControlDimming
 {
-	BOOL	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-																	group:PREF_GROUP_LIST_LAYOUT] intValue];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+	LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
+	BOOL			windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	
+	//
+	[slider_userIconSize setEnabled:[checkBox_userIconVisible state]];
+	[textField_userIconSize setEnabled:[checkBox_userIconVisible state]];
+	[popUp_userIconPosition setEnabled:[checkBox_userIconVisible state]];
 	
 	//Disable the style selectors when in mockie mode
 	[popUp_groupCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
 	[popUp_contactCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
+
+	//Disable contact spacing when not using bubbles
+//	[slider_contactSpacing setEnabled:(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)];
+//	[textField_contactSpacing setEnabled:(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)];
+
+	//Disable group spacing when not using mockie
+	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
+	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end

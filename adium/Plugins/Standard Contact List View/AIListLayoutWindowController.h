@@ -20,6 +20,10 @@
 #define KEY_LIST_LAYOUT_STATUS_ICON_POSITION	@"Status Icon Position"
 #define KEY_LIST_LAYOUT_SERVICE_ICON_POSITION	@"Service Icon Position"
 
+#define KEY_LIST_LAYOUT_CONTACT_SPACING			@"Contact Spacing"
+#define KEY_LIST_LAYOUT_GROUP_TOP_SPACING		@"Group Top Spacing"
+#define KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING	@"Group Bottom Spacing"
+
 #define KEY_LIST_LAYOUT_CONTACT_CELL_STYLE		@"Contact Cell Style"
 #define KEY_LIST_LAYOUT_GROUP_CELL_STYLE		@"Group Cell Style"
 
@@ -63,7 +67,12 @@ typedef enum {
 	
 	IBOutlet		NSSlider			*slider_userIconSize;
 	IBOutlet		NSTextField			*textField_userIconSize;
-	
+	IBOutlet		NSSlider			*slider_contactSpacing;
+	IBOutlet		NSTextField			*textField_contactSpacing;
+	IBOutlet		NSSlider			*slider_groupTopSpacing;
+	IBOutlet		NSTextField			*textField_groupTopSpacing;
+	IBOutlet		NSSlider			*slider_groupBottomSpacing;
+	IBOutlet		NSTextField			*textField_groupBottomSpacing;
 }
 
 + (id)listLayoutOnWindow:(NSWindow *)parentWindow;

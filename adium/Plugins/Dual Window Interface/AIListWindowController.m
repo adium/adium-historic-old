@@ -61,7 +61,7 @@
 
 #define GROUPS_USE_MOCKIE_CELL		YES 
 #define GROUPS_USE_GRADIENT_CELL	YES
-#define DRAW_ALTERNATING_GRID	YES
+#define DRAW_ALTERNATING_GRID	NO
 #define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
 
@@ -292,6 +292,20 @@
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
 
+		//Only valid with bubbles
+		LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
+		if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
+			[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
+		}else{
+			[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
+		}
+
+		//Only valid with mockie
+//		BOOL windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		if(windowStyle == WINDOW_STYLE_MOCKIE){
+			[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
+		}
+		
 		//Redisplay
 		[contactListView setGroupCell:groupCell];
 		[contactListView setContentCell:contentCell];

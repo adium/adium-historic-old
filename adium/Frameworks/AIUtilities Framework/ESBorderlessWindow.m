@@ -90,8 +90,8 @@
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
 		windowFrame.origin = newOrigin;
 		
-		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen visibleFrame] movementX:movementX movementY:movementY];
-		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen frame] movementX:movementX movementY:movementY];
+//		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen visibleFrame] movementX:movementX movementY:movementY];
+//		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen frame] movementX:movementX movementY:movementY];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowWillMoveNotification object:self];
 		[self setFrameOrigin:windowFrame.origin];
@@ -116,35 +116,35 @@
 }
 
 //Dock the passed window frame if it's close enough to the screen edges
-- (BOOL)dockWindowFrame:(NSRect *)windowFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY
-{
-	BOOL	changed = NO;
-	//Left
-	if((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX < 0){
-		(*windowFrame).origin.x = screenFrame.origin.x;
-		changed = YES;
-	}
-	
-	//Bottom
-	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY < 0){
-		(*windowFrame).origin.y = screenFrame.origin.y;
-		changed = YES;
-	}
-	
-	//Right
-	if((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX > 0){
-		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
-		changed = YES;
-	}
-	
-	//Top
-	if((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY > 0){
-		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
-		changed = YES;
-	}
-	
-	return(changed);
-}
+//- (BOOL)dockWindowFrame:(NSRect *)windowFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY
+//{
+//	BOOL	changed = NO;
+//	//Left
+//	if((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX < 0){
+//		(*windowFrame).origin.x = screenFrame.origin.x;
+//		changed = YES;
+//	}
+//	
+//	//Bottom
+//	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY < 0){
+//		(*windowFrame).origin.y = screenFrame.origin.y;
+//		changed = YES;
+//	}
+//	
+//	//Right
+//	if((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX > 0){
+//		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
+//		changed = YES;
+//	}
+//	
+//	//Top
+//	if((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY > 0){
+//		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
+//		changed = YES;
+//	}
+//	
+//	return(changed);
+//}
 
 
 

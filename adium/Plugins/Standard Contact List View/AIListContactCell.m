@@ -66,12 +66,12 @@
 }
 
 //Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
-- (int)topPadding{
-	return([super topPadding] + 1);
-}
-- (int)bottomPadding{
-	return([super bottomPadding] + 1);
-}
+//- (int)topPadding{
+//	return([super topPadding] + 1);
+//}
+//- (int)bottomPadding{
+//	return([super bottomPadding] + 1);
+//}
 - (int)leftPadding{
 	return([super leftPadding] + 4);
 }
