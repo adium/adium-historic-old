@@ -1,4 +1,4 @@
-blargh
+<<<<<<< test.txt awefoij blargh
 
 asdlkj
 asdfaa
