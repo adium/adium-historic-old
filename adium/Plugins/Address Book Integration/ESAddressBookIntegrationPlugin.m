@@ -174,10 +174,10 @@
 {
 	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
 	NSString *lastName = [person valueForProperty:kABLastNameProperty];
-	NSString *nickName = [person valueForProperty:kABNicknameProperty];
+	NSString *nickName;
 	NSString *displayName = nil;
 	
-	if (useNickName && nickName) {
+	if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
 		displayName = nickName;
 	} else if (!lastName || (displayFormat == First)) {  //If no last name is available, use the first name
 		displayName = firstName;
