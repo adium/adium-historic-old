@@ -12,7 +12,7 @@
 #import "CBGaimServicePlugin.h"
 
 #define NO_GROUP						@"__NoGroup__"
-#define ACCOUNT_IMAGE_CACHE_PATH	@"~/Library/Caches/Adium"
+#define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define USER_ICON_CACHE_NAME			@"UserIcon_%@"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
@@ -1528,6 +1528,8 @@
 	[[adium contactController] endListObjectNotificationDelay];
 	
 	[lastDisconnectionError release]; lastDisconnectionError = [[NSString stringWithUTF8String:text] retain];
+
+	[self accountConnectionDisconnected];
 }
 - (void)accountConnectionNotice:(const char*)text
 {
@@ -1569,6 +1571,9 @@
 				[self displayError:lastDisconnectionError];
 				[lastDisconnectionError release]; lastDisconnectionError = nil;
 			}
+			
+			//Reset reconnection attempts
+			reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 		}
     }
 }
