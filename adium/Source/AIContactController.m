@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.98 2004/02/09 13:54:35 adamiser Exp $
+// $Id: AIContactController.m,v 1.99 2004/02/13 06:19:53 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -317,7 +317,7 @@
 		}
 	}
 	
-	//Add this object to it's new group
+	//Add this object to its new group
 	if(remoteGroup){
 		//Fun :)
 		//remoteGroup = [NSString stringWithFormat:@"%@:%@",[inObject accountUID],remoteGroup];
