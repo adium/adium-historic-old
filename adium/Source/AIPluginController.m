@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.71 2004/06/03 15:00:25 adamiser Exp $
+//$Id: AIPluginController.m,v 1.72 2004/06/04 19:20:36 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -123,19 +123,18 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[ESStatusSortPlugin class]];
 	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
 	[self loadPluginWithClass:[GBiTunerPlugin class]];
-	[self loadPluginWithClass:[IdleMessagePlugin class]]; //Crash on launch = 2
-	[self loadPluginWithClass:[JSCEventBezelPlugin class]]; //Crash on launch = 1
+	[self loadPluginWithClass:[IdleMessagePlugin class]];
+	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
-//	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]]; //Crash on launch = 1
+//	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
         [self loadPluginWithClass:[SHLinkManagementPlugin class]];
         [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
 	
-	//Crash on launch = 2
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:NO];
 	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:YES];
 }
