@@ -33,6 +33,13 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    [[owner notificationCenter] removeObserver:self];
+
+    [super dealloc];
+}
+
 //Load and configure our contents
 - (void)configureView
 {

@@ -40,5 +40,8 @@
 - (NSView *)view;
 - (AIContactHandle *)handle;
 - (void)setAccountSelectionMenuVisible:(BOOL)visible;
+- (void)makeTextEntryViewFirstResponder;
+- (void)setAccount:(AIAccount *)inAccount;
+- (AIAccount *)account;
 
 @end

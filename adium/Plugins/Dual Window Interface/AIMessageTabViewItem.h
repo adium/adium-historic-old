@@ -19,6 +19,6 @@
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 - (NSString *)labelString;
-- (void)setAccountSelectionMenuVisible:(BOOL)visible;
+- (AIMessageViewController *)messageViewController;
 
 @end
