@@ -6,8 +6,15 @@
 #Chat .incoming .message { background: #e5f2ff }
 #Chat .outgoing .message { background: #e6ffea }
 
-body { margin: 3px; font: 12px Helvetica }
-	.chatbox { margin: 0 0 6px }
+#Chat {
+	overflow: hidden;
+	margin-bottom: -3px;
+}
+
+#Chat .context .message { background: #FFF;color: gray; }
+
+body { margin: -3px 3px 3px 3px; font: 12px Helvetica }
+	.chatbox { margin: 6px 0 6px 0;}
 
 		.buddyicon { margin: 3px 0 0; float: left }
 		.name { margin: -3px 0 2px 36px; font: 11px "Lucida Grande"; font-weight: bold }
@@ -18,7 +25,8 @@ body { margin: 3px; font: 12px Helvetica }
 
 		.message { margin: 0 0 0 35px; padding: 3px 6px; position: relative }
 
-            .status_message { text-align: center; font: 11px Helvetica, sans-serif; color: gray }
+            .status_message { text-align: center; font: 11px Helvetica, sans-serif; color: gray;
+ }
 
 			.message p { margin: 0; overflow: hidden }
 			.message p.additional { margin: 2px 0 0; padding: 2px 0 0; border-style: solid; border-width: 1px 0 0 }

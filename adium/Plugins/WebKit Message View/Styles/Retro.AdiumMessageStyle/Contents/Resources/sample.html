@@ -89,58 +89,52 @@
 				else {
 					contentElement.style.position = 'static';
 				}
+				scrollToBottom();
 			}
 		}
 		window.onresize = alignChat;
 
 	</script>
 </head>
-<body onload="scrollToBottom();alignChat();">
+<body onload="alignChat();">
 <div id="Chat">
-<div class="incoming context">
-    <img class="icon" src="%userIconPath%" width="28" height="28" />
+<div class="chatbox incoming context">
+	<img src="Incoming/buddy_icon.png" width="32" height="32" class="buddyicon" />
     <div class="name">%sender%<span class="timestamp">%time%</span></div>
-	<div class="topleft"></div>
-	<div class="topmiddle"><div class="topright"></div></div>
-    <div class="messagebody">%message%</div>
-    <div class="nextmessagebody">%message%</div>
-<div id="insert"></div>
-    <div class="bottomleft"></div>
-    <div class="bottommiddle"><div class="bottomright"></div></div>
-</div>
-<div class="incoming context">
-    <img class="icon" src="Incoming/buddy_icon.png" width="28" height="28" />
-    <div class="name">%sender%<span class="timestamp">%time%</span></div>
-	<div class="topleft"></div>
-	<div class="topmiddle"><div class="topright"></div></div>
-    <div class="messagebody">huhuhuhu</div>
-    <div class="nextmessagebody">huhuhu</div>
-    <div class="nextmessagebody">whatever we may take</div>
-    <div class="bottomleft"></div>
-    <div class="bottommiddle"><div class="bottomright"></div></div>
-</div>
-<div class="outgoing">
-    <img class="icon" src="Outgoing/buddy_icon.png" width="28" height="28" />
-    <div class="name">%sender%<span class="timestamp">%time%</span></div>
-	<div class="topleft"></div>
-	<div class="topmiddle"><div class="topright"></div></div>
-    <div class="messagebody">hu</div>
-	<div class="bottomleft"></div>
-    <div class="bottommiddle"><div class="bottomright"></div></div>
-</div>
-<div class="incoming">
-    <img class="icon" src="Incoming/buddy_icon.png" width="28" height="28" />
-	<div class="messagehead">
-	   <span class="name">eevyl</span>
-	   <span class="timestamp">16:19</span>
+	<div class="message">
+        <div class="r tb"></div><div class="r lr"></div><div class="r tl"></div><div class="r tr"></div><div class="r bl"></div><div class="r br"></div>
+        <p>%message%</p>
 	</div>
-	<div class="topleft"></div>
-	<div class="topmiddle"><div class="topright"></div></div>
-    <div class="messagebody">huhuhuhu</div>
-    <div class="nextmessagebody">huhuhu</div>
-    <div class="nextmessagebody">whatever we may take</div>
-    <div class="bottomleft"></div>
-    <div class="bottommiddle"><div class="bottomright"></div></div>
+</div>
+<div class="chatbox outgoing context">
+	<img src="Outgoing/buddy_icon.png" width="32" height="32" class="buddyicon" />
+    <div class="name">%sender%<span class="timestamp">%time%</span></div>
+	<div class="message">
+        <div class="r tb"></div><div class="r lr"></div><div class="r tl"></div><div class="r tr"></div><div class="r bl"></div><div class="r br"></div>
+        <p>%message%</p>
+        <p class="additional">%message%</p>
+        <p class="additional">%message%</p>
+	</div>
+</div>
+<div class="chatbox outgoing">
+	<img src="Outgoing/buddy_icon.png" width="32" height="32" class="buddyicon" />
+    <div class="name">%sender%<span class="timestamp">%time%</span></div>
+	<div class="message">
+        <div class="r tb"></div><div class="r lr"></div><div class="r tl"></div><div class="r tr"></div><div class="r bl"></div><div class="r br"></div>
+        <p>%message%</p>
+        <p class="additional">%message%</p>
+        <p class="additional">%message%</p>
+	</div>
+</div>
+<div class="chatbox incoming">
+	<img src="Incoming/buddy_icon.png" width="32" height="32" class="buddyicon" />
+    <div class="name">%sender%<span class="timestamp">%time%</span></div>
+	<div class="message">
+        <div class="r tb"></div><div class="r lr"></div><div class="r tl"></div><div class="r tr"></div><div class="r bl"></div><div class="r br"></div>
+        <p>%message%</p>
+        <p class="additional">%message%</p>
+        <p class="additional">%message%</p>
+	</div>
 </div>
   <div class="status_message">
     eevyl went away
@@ -154,20 +148,16 @@
     eevyl came back
     <span class="status_time"> (16:19)</span>
   </div>
-<div class="incoming">
-    <img class="icon" src="Incoming/buddy_icon.png" width="28" height="28" />
-	<div class="messagehead">
-	   <span class="name">eevyl</span>
-	   <span class="timestamp">16:19</span>
+<div class="chatbox incoming">
+	<img src="Incoming/buddy_icon.png" width="32" height="32" class="buddyicon" />
+    <div class="name">Sender with a name so long it hurts the eyes<span class="timestamp">%time%</span></div>
+	<div class="message">
+        <div class="r tb"></div><div class="r lr"></div><div class="r tl"></div><div class="r tr"></div><div class="r bl"></div><div class="r br"></div>
+        <p>%message%</p>
+        <p class="additional">%message%</p>
+        <p class="additional">%message%</p>
 	</div>
-	<div class="topleft"></div>
-	<div class="topmiddle"><div class="topright"></div></div>
-    <div class="messagebody">huhuhuhu</div>
-    <div class="nextmessagebody">huhuhu</div>
-    <div class="nextmessagebody">whatever we may take</div>
-    <div class="bottomleft"></div>
-    <div class="bottommiddle"><div class="bottomright"></div></div>
-</div> 
+</div>
 </div>
 <div class="bottomdivider"></div>
 </body>
