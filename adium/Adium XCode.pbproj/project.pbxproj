@@ -8709,7 +8709,6 @@
 				34BD9CDC053146CC000AB133,
 				34BD9CDD053146CC000AB133,
 				34BD9CDE053146CC000AB133,
-				BF380D9D05A94B2300A74E9F,
 				34BD9CDF053146CC000AB133,
 				34BD9CE0053146CC000AB133,
 				3479A91B05DCA2E800998B3D,
@@ -17123,17 +17122,7 @@
 			files = (
 				34D9C0E805AAACF400AC2E4D,
 				34D9C0EB05AAACF400AC2E4D,
-				6C8CCED605C93D8100B449CE,
-				6C8CCEE205C944D200B449CE,
-				6C8CCEE305C944D200B449CE,
-				6C8CCEE405C944D200B449CE,
-				6C8CCEE505C944D200B449CE,
-				6C8CCEE605C944D200B449CE,
-				6C8CCEE705C944D200B449CE,
-				6C8CCEE805C944D200B449CE,
-				6C8CCEE905C944D200B449CE,
-				6C8CCEEA05C944D200B449CE,
-				BF8F366805CC3CE90092DA7C,
+				4BA7F23405E2E1EF00ABF4FC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17244,17 +17233,7 @@
 				34D9C0E505AAACF300AC2E4D,
 				34D9C0E605AAACF300AC2E4D,
 				34D9C0E705AAACF400AC2E4D,
-				6C8CCED505C93D8100B449CE,
-				6C8CCED905C944CD00B449CE,
-				6C8CCEDA05C944CE00B449CE,
-				6C8CCEDB05C944CE00B449CE,
-				6C8CCEDC05C944CF00B449CE,
-				6C8CCEDD05C944CF00B449CE,
-				6C8CCEDE05C944D000B449CE,
-				6C8CCEDF05C944D100B449CE,
-				6C8CCEE005C944D100B449CE,
-				6C8CCEE105C944D200B449CE,
-				BF8F366705CC3CE80092DA7C,
+				4BA7F22405E2E1EF00ABF4FC,
 			);
 			isa = PBXGroup;
 			name = "iTunes Integration";
@@ -21569,6 +21548,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BA7F22405E2E1EF00ABF4FC = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Scripts;
+			path = "Plugins/iTunes Integration/Scripts";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA7F23405E2E1EF00ABF4FC = {
+			fileRef = 4BA7F22405E2E1EF00ABF4FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BA80057046C63DF00C50DA9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -25103,146 +25096,6 @@
 			settings = {
 			};
 		};
-		6C8CCED505C93D8100B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentAlbum.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentAlbum.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCED605C93D8100B449CE = {
-			fileRef = 6C8CCED505C93D8100B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCED905C944CD00B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentArtist.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentArtist.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEDA05C944CE00B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentComposer.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentComposer.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEDB05C944CE00B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentGenre.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentGenre.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEDC05C944CF00B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentName.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentName.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEDD05C944CF00B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentPlayCount.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentPlayCount.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEDE05C944D000B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentPosition.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentPosition.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEDF05C944D100B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentRating.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentRating.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEE005C944D100B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentStatus.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentStatus.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEE105C944D200B449CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentYear.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentYear.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C8CCEE205C944D200B449CE = {
-			fileRef = 6C8CCED905C944CD00B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE305C944D200B449CE = {
-			fileRef = 6C8CCEDA05C944CE00B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE405C944D200B449CE = {
-			fileRef = 6C8CCEDB05C944CE00B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE505C944D200B449CE = {
-			fileRef = 6C8CCEDC05C944CF00B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE605C944D200B449CE = {
-			fileRef = 6C8CCEDD05C944CF00B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE705C944D200B449CE = {
-			fileRef = 6C8CCEDE05C944D000B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE805C944D200B449CE = {
-			fileRef = 6C8CCEDF05C944D100B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEE905C944D200B449CE = {
-			fileRef = 6C8CCEE005C944D100B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C8CCEEA05C944D200B449CE = {
-			fileRef = 6C8CCEE105C944D200B449CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6CC851C10574B314008A5F66 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -28287,17 +28140,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		BF380D9C05A94B2300A74E9F = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = BF380C3005A8FF9000A74E9F;
-			remoteInfo = Checkmark;
-		};
-		BF380D9D05A94B2300A74E9F = {
-			isa = PBXTargetDependency;
-			targetProxy = BF380D9C05A94B2300A74E9F;
-		};
 		BF5D5E5805A38AA2001426E0 = {
 			fileRef = 4BCFEF4C03F59F2800A8010A;
 			isa = PBXBuildFile;
@@ -28384,20 +28226,6 @@
 		};
 		BF818D7C05C7AD460067008D = {
 			fileRef = BF818D7A05C7AD460067008D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF8F366705CC3CE80092DA7C = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = getiTunesCurrentComment.scpt;
-			path = "Plugins/iTunes Integration/getiTunesCurrentComment.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF8F366805CC3CE90092DA7C = {
-			fileRef = BF8F366705CC3CE80092DA7C;
 			isa = PBXBuildFile;
 			settings = {
 			};
