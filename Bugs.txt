@@ -24,18 +24,10 @@ Contacts
 
 List and Tabs
   - Tooltip alignment fails in long away messages and other large blocks of text.
-  - Double clicking two names in succession causes the first name to highlight
-    the second time.
   - An incoming message which opens a new tab will also unminimize the associated window
-  - Tooltips appear in the contact list even when over the scroll bar
-  - If an initial contact list display has only one group, and that group is collapsed,
-    an infinite scrollbar is shown.  This is probably indicative of a problem somewhere in
-	our autosizing code.
 
 Other
   - Links without protocol specifiers do not open when clicked.
-  - Deleting all contact list themes or styles results in a crash.  Don't allow the last to be
-    deleted
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
