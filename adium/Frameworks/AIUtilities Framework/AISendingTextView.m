@@ -129,16 +129,16 @@ static NSImage *pushIndicatorImage = nil;
         break;
     }
 	
-	// Command-Arrow moves through history
+	// Command-Arrow pushes and pops
     if([theEvent modifierFlags] & NSCommandKeyMask) { //command is being held
         switch(theChar){
             case NSUpArrowFunctionKey:
-                [self _historyUp];
+                [self _popContent];
                 result = YES;
 				break;
 				
             case NSDownArrowFunctionKey:
-                [self _historyDown];
+                [self _pushContent];
 				result = YES;
 				break;
 		}
@@ -495,16 +495,16 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 
-// Push and Pop content
+// Scroll through history
 // These methods are invoked on Option-Up or Option-Down
 - (void)moveToEndOfParagraph:(id)sender
 {
-	[self _pushContent];  
+	[self _historyDown];  
 }
 
 - (void)moveToBeginningOfParagraph:(id)sender
 {
-	[self _popContent];
+	[self _historyUp];
 }
 
 
