@@ -39,7 +39,7 @@
 
 - (void)buildLinksList
 {
-    favorites =  [[[[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:PREF_GROUP_LINK_FAVORITES] allKeys] copy];
+    favorites = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
     favoriteCount = [favorites count];
     [self configureControlDimming];
     [table reloadData];
@@ -47,14 +47,7 @@
 
 - (void)_writePrefs
 {
-    NSEnumerator    *enumerator = [favorites objectEnumerator];
-    NSString        *key = nil;
-    NSDictionary    *prefDict = [[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:PREF_GROUP_LINK_FAVORITES];
-    while((key = [enumerator nextObject])){
-        [[[AIObject sharedAdiumInstance] preferenceController] setPreference:[prefDict objectForKey:key]
-                                                                      forKey:key
-                                                                       group:PREF_GROUP_LINK_FAVORITES];
-    }
+    [[[AIObject sharedAdiumInstance] preferenceController] setPreference:favorites forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -69,19 +62,18 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSString    *linkText = [favorites objectAtIndex:row];
-    NSString    *urlText = [[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:[favorites objectAtIndex:row] group:PREF_GROUP_LINK_FAVORITES];
+	NSDictionary	*favorite = [favorites objectAtIndex:row];
     
     if([[tableColumn identifier] isEqualToString:@"linkText"]) {
-        return(linkText);
+        return([favorite objectForKey:KEY_LINK_TITLE]);
     }else if([[tableColumn identifier] isEqualToString:@"urlText"]) {
-        return(urlText);
+        return([favorite objectForKey:KEY_LINK_URL]);
     }else{
         return(nil);
     }
 }
 
--(NSString *)selectedLink
+-(NSDictionary *)selectedLink
 {
     int selectedRow = [table selectedRow];
     if (selectedRow != -1) {
@@ -102,7 +94,7 @@
 
 - (void)openLinkInBrowser:(id)sender
 {
-    NSString    *urlText = [[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:[self selectedLink] group:PREF_GROUP_LINK_FAVORITES];
+    NSString    *urlText = [[self selectedLink] objectForKey:KEY_LINK_URL];
     
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:urlText]];
 }

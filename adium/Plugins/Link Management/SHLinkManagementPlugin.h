@@ -9,15 +9,8 @@
 
 
 @interface SHLinkManagementPlugin : AIPlugin {
-
-    NSMenuItem                          *menu_AddLink;
-    NSMenuItem                          *contextMenu_AddLink;
-    NSMenuItem                          *menu_EditLink;
-    NSMenuItem                          *contextMenu_EditLink;
-        
     SHLinkEditorWindowController        *editorWindow;
     SHLinkFavoritesPreferences          *preferences;
-
 }
 
 @end

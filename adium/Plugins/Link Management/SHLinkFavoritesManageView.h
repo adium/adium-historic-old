@@ -13,10 +13,10 @@
     IBOutlet    AIAlternatingRowTableView   *table;
     IBOutlet    NSButton                    *removeButton;
     IBOutlet    NSButton                    *addButton;
-                NSArray                     *favorites;
+                NSMutableArray				*favorites;
                 int                          favoriteCount;
 }
-- (NSString *)selectedLink;
+-(NSDictionary *)selectedLink;
 - (int)favoritesCount;
 - (void)buildLinksList;
 - (void)openLinkInBrowser:(id)sender;
