@@ -1104,13 +1104,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)setPrivacyOptions:(PRIVACY_OPTION)option
 {
-    account->perm_deny = option;
-    serv_set_permit_deny(gaim_account_get_connection(account));
+	if(account){
+		account->perm_deny = option;
+		serv_set_permit_deny(gaim_account_get_connection(account));
+	}
 }
 
+#warning To Colin: If account is nil (the GaimAccount has not been made) we do not have access to account->perm_deny.
 - (PRIVACY_OPTION)privacyOptions
 {
-	return account->perm_deny;
+	return (account ? account->perm_deny : -1);
 }
 
 /*****************************************************/
