@@ -657,7 +657,7 @@
     menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:TOGGLE_TAB_BAR
 													   target:nil 
 													   action:@selector(toggleForceTabBarVisible:)
-												keyEquivalent:@""];
+												keyEquivalent:@"\\"];
     [[adium menuController] addMenuItem:menuItem_toggleTabBar toLocation:LOC_Window_Commands];
 }
 
