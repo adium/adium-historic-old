@@ -472,9 +472,6 @@
 	//Does the bookmark menu need an update?
 	if(([importer bookmarksUpdated]) &&
 	   (!updatingMenu)){
-		[bookmarkRootMenuItem setSubmenu:nil];
-		[bookmarkRootContextualMenuItem setSubmenu:nil];
-		
 		[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
 								 toTarget:self
 							   withObject:nil];
