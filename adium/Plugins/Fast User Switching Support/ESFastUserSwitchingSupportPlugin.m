@@ -42,7 +42,8 @@
         //Go away if we aren't already away
         if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)
         {
-            NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING];
+            NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING
+																	   attributes:[[adium contentController] defaultFormattingAttributes]];
             [[adium preferenceController] setPreference:[away dataRepresentation] 
 												 forKey:@"AwayMessage"
 												  group:GROUP_ACCOUNT_STATUS];
