@@ -11,7 +11,7 @@
 
 @implementation NSBezierPath (CSBezierPathAdditions)
 
-+ (NSBezierPath *)bezierPathWithRect:(NSRect)rect roundedBy:(float)radius
++ (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius
 {
     NSBezierPath	*path = [NSBezierPath bezierPath];
     NSPoint 		topLeft, topRight, bottomLeft, bottomRight;
