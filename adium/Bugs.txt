@@ -47,7 +47,10 @@
 	Animating buddy icons in the message view are annoying.  Caching the animation is good; displaying it
 	is bad.  Perhaps this could be fixed at the same time as the implementation of style-based image
 	masking as Brad described.
-	
+
+- Initial message events
+
+- Double history on chat re-open
 	
 	
 //------------------------------------------------------------------------------------
