@@ -625,24 +625,7 @@
 - (void)openChat:(AIChat *)inChat
 {
     AIMessageTabViewItem	*messageTabContainer = nil;
-//    AIListObject		*listObject;
-	
-    //Check for an existing message container with this list object
- //   if(listObject = [inChat listObject]){
- //       messageTabContainer = [self _messageTabForListObject:listObject];
-      //If one already exists, we want to use it for this new chat
-//        if(messageTabContainer){
-			//            [[messageTabContainer messageViewController] setChat:inChat];
-			//
-			//            //Honor any temporary preference override for window spawning
-			//            if(forceIntoNewWindow || forceIntoTab){
-			//                [self _transferMessageTabContainer:messageTabContainer toWindow:(forceIntoNewWindow ? nil : [self _primaryMessageWindow])];
-			//            }
-			
-			//            [messageTabContainer makeActive:nil];
-//        }
-  //  }
-#warning Evan: Potential problem: We now use the chat instead of the listobject to check for a unique tab.  Any problems?
+
 	//Use the current message tab for this chat if one exists
 	messageTabContainer = [self _messageTabForChat:inChat];
 	
@@ -652,6 +635,8 @@
 			NSString *group;
 			if( [inChat listObject] ) {
 				group = [[[inChat listObject] containingGroup] uniqueObjectID];
+				//It's possible the listObject isn't on our contact list; group it with all those cute little orphans
+				if (!group) group = @"Orphans";
 			} else {
 				group = @"Group Chats";
 			}
