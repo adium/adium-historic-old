@@ -15,9 +15,9 @@
 
 #import "AIAccountMenuAccessPlugin.h"
 
-#define	ACCOUNT_CONNECT_MENU_TITLE		AILocalizedString(@"Connect","Connect an account")	    /Menu item title for the connect item
+#define	ACCOUNT_CONNECT_MENU_TITLE		AILocalizedString(@"Connect","Connect an account")	    //Menu item title for the connect item
 #define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocaliedString(@"Connecting…",nil)		//Menu item title
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Connecting…",nil)		//Menu item title
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting…",nil)	//Menu item title
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)   //Menu item title for the auto-connect item
 
