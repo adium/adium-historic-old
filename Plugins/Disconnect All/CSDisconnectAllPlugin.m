@@ -71,13 +71,17 @@
 -(void)disconnectAll:(id)sender
 {
     //disconnects all the accounts
-    [[adium accountController] disconnectAllAccounts];
+    [[adium accountController] performSelector:@selector(disconnectAllAccounts) 
+									withObject:nil
+									afterDelay:0.0001];
 }
 
 -(void)connectAll:(id)sender
 {
     //connects all the accounts
-    [[adium accountController] connectAllAccounts];
+    [[adium accountController] performSelector:@selector(connectAllAccounts) 
+									withObject:nil
+									afterDelay:0.0001];
 }
 
 -(void)cancelAll:(id)sender
