@@ -17779,6 +17779,8 @@
 		52C623D806697AC00006C387 = {
 			buildActionMask = 2147483647;
 			files = (
+				52C623ED066A559A0006C387,
+				52C623EC066A558E0006C387,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17919,6 +17921,18 @@
 		};
 		52C623E606697B3B0006C387 = {
 			fileRef = 52C623E306697B3B0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52C623EC066A558E0006C387 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52C623ED066A559A0006C387 = {
+			fileRef = 34BD9E9305314755000AB133;
 			isa = PBXBuildFile;
 			settings = {
 			};
