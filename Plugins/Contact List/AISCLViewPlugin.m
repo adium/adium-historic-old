@@ -51,11 +51,6 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 									   name:Interface_ContactListDidClose
 									 object:nil];
 	
-    //Observe window style changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
 	//Apply the default contact list layout and style (If no style is currently active)
 	if(![[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST]){
 		[[adium preferenceController] setPreference:DEFAULT_LIST_THEME_NAME
@@ -68,7 +63,9 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 											  group:PREF_GROUP_CONTACT_LIST];
 	}
 	
-    [self preferencesChanged:nil];
+	//Observe window style changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 }
 
 
@@ -115,38 +112,32 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 //Themes and Layouts ---------------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
 //Apply any theme/layout changes
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	NSString	*group = [[notification userInfo] objectForKey:@"Group"];
 
-	if(notification == nil || [group isEqualToString:PREF_GROUP_CONTACT_LIST]){
-		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-
+	if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
 		//Theme
-		if(notification == nil || !key || [key isEqualToString:KEY_LIST_THEME_NAME]){
-			[AISCLViewPlugin applySetWithName:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME
-			 																		   group:PREF_GROUP_CONTACT_LIST]
+		if(!key || [key isEqualToString:KEY_LIST_THEME_NAME]){
+			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
 									extension:LIST_THEME_EXTENSION
 									 inFolder:LIST_THEME_FOLDER
 							toPreferenceGroup:PREF_GROUP_LIST_THEME];
 		}
 		
 		//Layout
-		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
-			[AISCLViewPlugin applySetWithName:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
-			 																		   group:PREF_GROUP_CONTACT_LIST]
+		if(!key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
+			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]
 									extension:LIST_LAYOUT_EXTENSION
 									 inFolder:LIST_LAYOUT_FOLDER
 							toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
 		}
 	}
 	
-	if(notification == nil || [group isEqualToString:PREF_GROUP_LIST_LAYOUT]){
-		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-		
-		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
-			int	newWindowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-																		   group:PREF_GROUP_LIST_LAYOUT] intValue];
+	if([group isEqualToString:PREF_GROUP_LIST_LAYOUT]){
+		if(!key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
+			int	newWindowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+
 			if(newWindowStyle != windowStyle){
 				windowStyle = newWindowStyle;
 				

@@ -104,11 +104,10 @@
 															 object:nil];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
 
 //Close the contact list window
@@ -117,7 +116,7 @@
 	[super windowShouldClose:sender];
 	
     //Stop observing
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
@@ -128,10 +127,10 @@
 }
 
 //Preferences have changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST])){
-		NSDictionary 	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
 		int				windowPosition = [[prefDict objectForKey:KEY_CLWH_WINDOW_POSITION] intValue];
 		int				level;
 		
@@ -142,7 +141,6 @@
 		}
 		[[self window] setLevel:level];
 		[[self window] setIgnoresExpose:(windowPosition == 2)]; //Ignore expose while on the desktop
-
 
 		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];
     }
@@ -162,8 +160,8 @@
 //        [self _configureAutoResizing];
 //    }
 
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
-		if([(NSString *)[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_SCL_BORDERLESS]){
+    if([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
+		if([key isEqualToString:KEY_SCL_BORDERLESS]){
 			[self retain];
 			[[adium interfaceController] closeContactList:nil];
 			[[adium interfaceController] showContactList:nil];
@@ -172,14 +170,14 @@
 	}
 
 	//Layout and Theme ------------
-	BOOL groupLayout = ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT]);
-	BOOL groupTheme = ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME]);
-    if((notification == nil) || groupLayout || groupTheme){
+	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
+	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
+    if(!group || groupLayout || groupTheme){
         NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		
 		//Layout only
-		if (groupLayout || (notification == nil)){
+		if(groupLayout || !group){
 			int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 			BOOL			autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 			BOOL			autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
@@ -252,7 +250,7 @@
 		}
 		
 		//Theme only
-		if (groupTheme || (notification == nil)){
+		if (groupTheme || !group){
 			NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
 			
 			//Background Image
