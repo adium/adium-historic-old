@@ -55,7 +55,7 @@
 	shouldDrawFocusRing = NO;
 	
 	useNSImagePickerController = [NSApp isOnPantherOrBetter];
-	[self setImageFrameStyle:NSImageFramePhoto];
+//	[self setImageFrameStyle:NSImageFramePhoto];
 }
 
 - (void)dealloc
@@ -195,6 +195,12 @@
 
 // NSImagePicker Access and Delegate ----------------------------------------------------------------
 #pragma mark NSImagePicker Access and Delegate
+//Public method for showing the image picker
+- (IBAction)showImagePicker:(id)sender
+{
+	[self showPickerController];
+}
+
 - (void)showPickerController
 {
 	if (useNSImagePickerController)
