@@ -19,15 +19,14 @@
 {
     AIFlexibleTableStringCell	*cell;
     NSDictionary		*attributes;
-    NSMutableParagraphStyle	*paragraphStyle;
     NSAttributedString		*attributedString;
 
-    //Create a paragraph style with the correct alignment
-    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setAlignment:inAlignment];
-
     //Create the attributed string
-    attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName, inFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+	inTextColor, NSForegroundColorAttributeName,
+	inFont, NSFontAttributeName,
+	[NSParagraphStyle styleWithAlignment:inAlignment], NSParagraphStyleAttributeName,
+	nil];
     attributedString = [[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease];
 
     //Build the cell

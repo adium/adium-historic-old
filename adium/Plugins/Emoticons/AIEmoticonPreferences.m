@@ -201,9 +201,8 @@
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
     
     if(center){
-        NSMutableParagraphStyle	*paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-        [paragraphStyle setAlignment:NSCenterTextAlignment];
-        [attributes setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+        [attributes setObject:[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment]
+		       forKey:NSParagraphStyleAttributeName];
     }
 
     return([[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease]);

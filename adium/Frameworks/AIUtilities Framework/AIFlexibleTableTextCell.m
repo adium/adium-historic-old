@@ -45,12 +45,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     AIFlexibleTableTextCell	*cell;
     NSDictionary		*attributes;
-    NSMutableParagraphStyle	*paragraphStyle;
+    NSParagraphStyle		*paragraphStyle;
     NSAttributedString		*attributedString;
     
     //Create a paragraph style with the correct alignment
-    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setAlignment:inAlignment];
+    paragraphStyle = [NSParagraphStyle styleWithAlignment:inAlignment];
     
     //Create the attributed string
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName, inFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];

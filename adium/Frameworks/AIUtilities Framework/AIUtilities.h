@@ -79,3 +79,4 @@
 #import "NSString+CarbonFSSpecCreation.h"
 #import "SUSpeaker.h"
 #import "ESQuicklyResizingPanel.h"
+#import "AIParagraphStyleAdditions.h"

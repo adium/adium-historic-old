@@ -8083,6 +8083,7 @@
 				348E4EE0053667A40021E541,
 				34E0F18B053AE56F00031341,
 				34BD83DD054E530800EB2652,
+				4BCB9ACA0567E7A9001D3559,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8812,6 +8813,7 @@
 				348E4EDE053667A40021E541,
 				34E0F18A053AE56F00031341,
 				34BD83DC054E530800EB2652,
+				4BCB9ACB0567E7A9001D3559,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19420,6 +19422,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BCB9AC80567E7A8001D3559 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIParagraphStyleAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIParagraphStyleAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCB9AC90567E7A9001D3559 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIParagraphStyleAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIParagraphStyleAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCB9ACA0567E7A9001D3559 = {
+			fileRef = 4BCB9AC80567E7A8001D3559;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCB9ACB0567E7A9001D3559 = {
+			fileRef = 4BCB9AC90567E7A9001D3559;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BCD96A5047E40A600A8010A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -26182,6 +26214,8 @@
 				4BBC8E4C03BA0DB900A8010A,
 				F570A5B103704C3701A8010A,
 				F570A5B203704C3701A8010A,
+				4BCB9AC80567E7A8001D3559,
+				4BCB9AC90567E7A9001D3559,
 				4B8EFC0403E18F2D00A8010A,
 				4B8EFC0503E18F2D00A8010A,
 				9EAE8FAB0520371600415B25,

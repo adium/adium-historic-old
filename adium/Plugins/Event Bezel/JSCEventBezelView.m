@@ -15,8 +15,8 @@ BOOL pantherOrLater;
 
 - (void)awakeFromNib
 {
-    NSMutableParagraphStyle     *parrafo = [[[NSMutableParagraphStyle alloc] init] autorelease];
-    NSShadow    *textShadow = nil;
+    NSParagraphStyle    *parrafo = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment];
+    NSShadow		*textShadow = nil;
     
     backdropImage = [[NSImage alloc] initWithContentsOfFile:
         [[NSBundle bundleForClass:[self class]] pathForResource:@"backdrop" ofType:@"png"]];
@@ -41,8 +41,6 @@ BOOL pantherOrLater;
     }
     
     // Set the attributes for the main buddy name and the other strings
-    [parrafo setAlignment: NSCenterTextAlignment];
-    
     mainAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
         convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
                     [NSColor whiteColor], NSForegroundColorAttributeName,

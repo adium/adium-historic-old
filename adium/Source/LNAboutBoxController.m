@@ -95,15 +95,11 @@ LNAboutBoxController *sharedInstance = nil;
 
     //Set up the link
     NSAttributedString		*siteLink;
-    NSMutableParagraphStyle	*paragraphStyle;
     NSDictionary		*attributes;
-
-    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setAlignment:NSCenterTextAlignment]; 
 
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:ADIUM_SITE_LINK, NSLinkAttributeName,
         [NSFont cachedFontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
-        paragraphStyle, NSParagraphStyleAttributeName,
+        [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
         [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, nil];
 
     siteLink = [[NSAttributedString alloc] initWithString:ADIUM_LINK_TEXT attributes:attributes];

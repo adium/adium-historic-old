@@ -226,17 +226,20 @@
 //
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
 {
-    NSFont			*font = [NSFont boldSystemFontOfSize:11];
-    NSAttributedString		*displayName;
-    NSMutableParagraphStyle	*paragraphStyle;
+    NSFont		    *font = [NSFont boldSystemFontOfSize:11];
+    NSAttributedString      *displayName;
+    NSParagraphStyle	    *paragraphStyle;
 
     //Paragraph Style (Turn off clipping by word)
-    paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
-    [paragraphStyle setAlignment:NSCenterTextAlignment];
+    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment lineBreakMode:NSLineBreakByClipping];
 
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
+    displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:
+	[NSDictionary dictionaryWithObjectsAndKeys:
+	    font, NSFontAttributeName,
+	    paragraphStyle, NSParagraphStyleAttributeName,
+	    textColor, NSForegroundColorAttributeName,
+	    nil]];
 
     return([displayName autorelease]);
 }
