@@ -45,6 +45,18 @@
     [toolbarItem setPaletteLabel:@"Italic text"];
     [toolbarItem setAllowsDuplicatesInToolbar:NO];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Underline
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Underline"];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]];
+    [toolbarItem setTarget:self];
+    [toolbarItem setAction:@selector(underline:)];
+    [toolbarItem setToolTip:@"Underline"];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setDelegate:self];
+    [toolbarItem setPaletteLabel:@"Underline text"];
+    [toolbarItem setAllowsDuplicatesInToolbar:NO];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 }
 
 - (void)uninstallPlugin
@@ -98,6 +110,27 @@
     [textEntryView setAttributedString:text];
 }
 
+- (IBAction)underline:(AIMiniToolbarItem *)toolbarItem
+{
+    NSView<AITextEntryView>	*textEntryView;
+    NSMutableAttributedString	*text;
+    NSRange			selectedRange;
+    BOOL			currentState;
+
+    //Get the text
+    textEntryView = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
+    text = [[textEntryView attributedString] mutableCopy];
+    selectedRange = [textEntryView selectedRange];
+
+    //Change the attribute
+    currentState = [[text attribute:NSUnderlineStyleAttributeName atIndex:selectedRange.location effectiveRange:nil] intValue];
+    [text addAttribute:NSUnderlineStyleAttributeName
+                 value:[NSNumber numberWithInt:(!currentState)]
+                 range:selectedRange];
+
+    //Apply the changes
+    [textEntryView setAttributedString:text];
+}
 
 
 

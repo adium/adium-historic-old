@@ -16,6 +16,12 @@
 #define KEY_IDLE_TIME_ENABLED		@"Idle Enabled"
 #define KEY_IDLE_TIME_IDLE_MINUTES	@"Threshold"
 
+typedef enum {
+    AINotIdle = 0,
+    AIAutoIdle,
+    AIManualIdle,
+    AIDelayedManualIdle
+} AIIdleState;
 
 @protocol AIMiniToolbarItemDelegate;
 
@@ -29,10 +35,18 @@
 
     BOOL		idleEnabled;
     double		idleThreshold;
+
+    NSMenuItem		*menuItem;
+
+    AIIdleState		idleState;
+    double		manualIdleTime;
+
 }
 
 - (void)installPlugin;
 - (void)uninstallPlugin;
-- (IBAction)showIdleTimeWindow:(id)sender;
+- (void)setIdleState:(AIIdleState)inState;
+- (void)setManualIdleTime:(double)inSeconds;
+- (void)showManualIdleWindow:(id)sender;
 
 @end

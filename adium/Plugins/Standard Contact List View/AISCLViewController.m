@@ -237,7 +237,20 @@
 {
     trackingMouseMovedEvents = YES;
     [contactListView setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
-    [self _showTooltipForEvent:theEvent]; //Show the tooltip
+
+    //Start our mouse movement timer
+    tooltipTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/5.0)
+                                                     target:self
+                                                   selector:@selector(tooltipTimer:)
+                                                   userInfo:nil
+                                                    repeats:YES] retain];
+}
+#define TOOL_TIP_DELAY 3
+- (void)tooltipTimer:(NSTimer *)inTimer
+{
+    if(toolTipCount > TOOL_TIP_DELAY){
+        [self _showTooltipForEvent:/*theEvent*/nil]; //Show the tooltip
+    }
 }
 
 //Called when the mouse leaves the view
@@ -252,13 +265,20 @@
     trackingMouseMovedEvents = NO;
     [contactListView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
     [self _showTooltipForEvent:nil]; //Hide the tooltip
+
+    toolTipCount = 0;
+    [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil;
 }
 
 //Called as the mouse moves across the view
 - (void)mouseMoved:(NSEvent *)theEvent
 {
     if(trackingMouseMovedEvents){
-        [self _showTooltipForEvent:theEvent];    
+        if(toolTipCount > TOOL_TIP_DELAY){
+            [self _showTooltipForEvent:theEvent];    
+        }else{
+            toolTipCount = 0;
+        }
     }
 }
 
