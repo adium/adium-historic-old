@@ -8739,6 +8739,7 @@
 			files = (
 				3419FE230531586A00C68BA3,
 				4B7845FA059B558C0048A8BA,
+				4BFEA735059B679200874BD5,
 				3419FE240531586A00C68BA3,
 				4B7F279C05440CB900CDFC90,
 				4B7F279D05440CB900CDFC90,
@@ -19744,7 +19745,7 @@
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service/LIBS\"";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -22330,6 +22331,12 @@
 			path = "Frameworks/Adium Framework/AIContentStatus.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BFEA735059B679200874BD5 = {
+			fileRef = 34535740059AEE1000A83D9E;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //4B0
 //4B1
