@@ -123,10 +123,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 			
 		}else{ //Start Logging
 			[[adium notificationCenter] addObserver:self 
-                                                       selector:@selector(contentObjectAdded:) 
-                                                           name:Content_ContentObjectAdded 
-                                                         object:nil];
-                }
+										   selector:@selector(contentObjectAdded:) 
+											   name:Content_ContentObjectAdded 
+											 object:nil];
+		}
 	}
 }
 
@@ -234,7 +234,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Log any content that is sent or received
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
+    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 	if ([content postProcessContent]){
 		AIChat				*chat = [notification object];
 		NSString			*logString = nil;
