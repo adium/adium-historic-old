@@ -53,7 +53,8 @@
 	}
 	
 	//Current note
-    if(notes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
+    if((notes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]) ||
+	   (notes = [inObject statusObjectForKey:@"Notes"])){
         [textField_notes setStringValue:notes];
     }else{
         [textField_notes setStringValue:@""];
