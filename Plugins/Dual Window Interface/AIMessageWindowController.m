@@ -80,9 +80,9 @@
 	
     //Prefs
 	[[adium notificationCenter] addObserver:self selector:@selector(updateTabArrangingBehavior) name:Interface_TabArrangingPreferenceChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
+	
 	//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
     	
@@ -184,6 +184,8 @@
 	windowIsClosing = YES;
 	[super windowShouldClose:sender];
 
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
     enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
@@ -199,22 +201,21 @@
 }
 
 //
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-				
-		alwaysShowTabs = ![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
-		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+    if([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
+		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		[tabView_customTabs setAllowsInactiveTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 			
 		[self updateTabArrangingBehavior];
-		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
+		[self updateTabBarVisibilityAndAnimate:(group != nil)];
 		[self _updateWindowTitleAndIcon];
     }
-	
+
 #warning Temporary setup for multiple windows
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_INTERFACE]){
-		if(![[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING group:PREF_GROUP_INTERFACE] boolValue]) alwaysShowTabs = NO;
+    if([group isEqualToString:PREF_GROUP_INTERFACE]){
+		if(![[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue]) alwaysShowTabs = NO;
 	}
 }
 
