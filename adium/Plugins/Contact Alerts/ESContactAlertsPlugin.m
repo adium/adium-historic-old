@@ -98,54 +98,38 @@
                 AIContentMessage * responseContent;
                 NSString * errorReason;
                 NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
-                account = [[owner accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
+
                 NSAttributedString  *message = [[NSAttributedString alloc] initWithString:details];
                 int displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];
                 NSString * uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
                 NSString * service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
                 AIListContact * contact = [[owner contactController] contactInGroup:nil withService:service UID:uid];
 
-                if ([[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]) //desired account is available
-                {	success = YES;	}
-                else
-                {
-                    if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
-                    {
-                        NSMutableArray * onlineAccounts = [NSMutableArray array];
-                        NSEnumerator * accountEnumerator;
-                        accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-                        //use first acccount on the same service as the handle which is also available to send content
-                        while(account = [accountEnumerator nextObject]){
-                            if ( [[contact serviceID] compare:[[[account service] handleServiceType] identifier]] == 0 &&
-                                 [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account])
-                            {
-                                [onlineAccounts addObject:account];
-                            }
-                        }
+                account = [[owner accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
 
-                        if (![onlineAccounts count]) //no appropriate accounts found
-                        {
+                if ([[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact onAccount:account]) { //desired account is available to send to contact
+                    success = YES;
+                } else {
+                    if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
+
+                        account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact];
+
+                        if (!account) {//no appropriate accounts found
+
                             errorReason = [[NSString alloc] initWithString:@"failed because no appropriate accounts are online."];
                             success = NO;
-                        }
-                        else
-                        {
+                        } else
                             success = YES;
-                            account = [onlineAccounts objectAtIndex:0]; //pick first account in our array of possibilities
-                        }
                     }
-                    else
-                    {
+                    else {
+
                         errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"with %@ failed because the account %@ is currently offline.",[account accountDescription],[account accountDescription]]];
                         success = NO;
                     }
                 }
-                if (success) //we're good so far...
-                {
-                    if (!onlyWhileActive || (![[owner accountController] statusObjectForKey:@"IdleSince" account:account] && ![[owner accountController] statusObjectForKey:@"AwayMessage" account:account]))
-                    {
-                        if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue])
-                        {
+                if (success) { //we're good so far...
+                    if (!onlyWhileActive || (![[owner accountController] statusObjectForKey:@"IdleSince" account:account] && ![[owner accountController] statusObjectForKey:@"AwayMessage" account:account])) {
+                        if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) {
                             AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
 
                             [[owner interfaceController] setActiveChat:chat];
@@ -159,32 +143,27 @@
                             if (!success)
                                 errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"failed while sending the message."]];
                         }
-                        else //target contact is not online
-                        {
+                        else { //target contact is not online
                             errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"failed because %@ is currently unavailable.",[contact displayName]]];
                             success = NO;
                         }
 
                     }
-                    else //target account not active
-                    {
+                    else { //target account not active
                         displayError = NO; //don't display an error message, even if the preference is to do so
                         success = NO;
                     }
                 }
 
-                if (!success && displayError) //Would have had it if it weren't for those pesky account and contact kids...
-                {
+                if (!success && displayError) { //Would have had it if it weren't for those pesky account and contact kids...
                     NSString *alertMessage = [[NSString alloc] initWithString:[NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason]];
                     NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
                     [[owner interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
                 }
             }
 
-            else//use Only While Active in a global sense from here on out
-            {
-                if (!onlyWhileActive || (![[owner accountController] statusObjectForKey:@"IdleSince" account:nil] && ![[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]))
-                {
+            else { //use Only While Active in a global sense from here on out
+                if (!onlyWhileActive || (![[owner accountController] statusObjectForKey:@"IdleSince" account:nil] && ![[owner accountController] statusObjectForKey:@"AwayMessage" account:nil])) {
                     if ([action compare:@"Sound"] == 0) {
                         if (details != nil && [details length] != 0) {
                             [[owner soundController] playSoundAtPath:details]; //Play the sound
@@ -215,42 +194,26 @@
                         NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
                         AIAccount * account = [[owner accountController] accountWithID:details];
                         success = YES;
-                        if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) //desired account not available
-                        {
+                        if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
                             success = NO; //as of now, we can't open our window
-                            if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
-                            {
-                                NSMutableArray * onlineAccounts = [NSMutableArray array];
-                                NSEnumerator * accountEnumerator;
-                                accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-                                //use first acccount on the same service as the handle and available to send content
-                                while(account = [accountEnumerator nextObject]){
-                                    if ( [[account statusObjectForKey:@"Status"] intValue] == STATUS_ONLINE)
-                                    {
-                                        [onlineAccounts addObject:account];
-                                    }
-                                }
-                                if ([onlineAccounts count])
-                                {
-                                    account = [onlineAccounts objectAtIndex:0]; //pick first account in our array of possibilities
+                            if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
+                                account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
+                                if (account)
                                     success = YES; //now we can open our window
-                                }
                             }
                         }
-                        if (success)
-                        {
+                        if (success) {
                             AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:inObject];
                             [[owner interfaceController] setActiveChat:chat];
                         }
                     } //end of action code
-                    
-                  } //close if (test for active)
+
+                } //close if (test for active)
 
             } //close else
-            
+
             //after all tests
-            if (delete && success) //delete the action from the array
-            {
+            if (delete && success) { //delete the action from the array
                 [eventActionArray removeObject:actionDict];
                 [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
 
@@ -259,7 +222,7 @@
                                                           object:inObject
                                                         userInfo:nil];
             }
-            
+
         } //close status_matches && containsKey
     } //close while
 } //end function
@@ -267,7 +230,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL valid = YES;
-    if(menuItem == editContactAlertsMenuItem){
+    if(menuItem == editContactAlertsMenuItem) {
 
         AIListContact	*selectedContact = [[owner contactController] selectedContact];
 
@@ -277,7 +240,7 @@
             [editContactAlertsMenuItem setTitle:@"Edit Contact's Alerts"];
             valid = NO;
         }
-    }else if(menuItem == contactAlertsContextMenuItem){
+    }else if(menuItem == contactAlertsContextMenuItem) {
         return([[owner menuController] contactualMenuContact] != nil);
     }
     return(valid);
