@@ -7,8 +7,25 @@
 
 #import "CBApplicationAdditions.h"
 
+//Make sure the version number defines exist - compiling in 10.3, for example, NSAppKitVersionNumber10_3 isn't defined.
+#ifndef NSAppKitVersionNumber10_1
+#define NSAppKitVersionNumber10_1 620
+#endif
+
+#ifndef NSAppKitVersionNumber10_2
+#define NSAppKitVersionNumber10_2 663
+#endif
+
+#ifndef NSAppKitVersionNumber10_3
+#define NSAppKitVersionNumber10_3 743
+#endif
 
 @implementation NSApplication (CBApplicationAdditions)
+- (BOOL)isOnTigerOrBetter
+{
+    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);	
+}
+
 - (BOOL)isOnPantherOrBetter
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
