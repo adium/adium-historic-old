@@ -22,15 +22,11 @@
     [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
     
     //
-    commandChat = [[self chatForContact:commandContact] retain];
+    //commandChat = [[[adium contentController] chatWithContact:commandContact initialStatus:nil] retain];
 
     //
-    [self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
-}
-
-- (AIChat *)chatForContact:(AIListContact *)inContact
-{
-    return([[adium contentController] chatWithContact:inContact initialStatus:nil]);
+	NSLog(@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash");
+    //[self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
 }
 
 //Return the default properties for this account
@@ -83,7 +79,7 @@
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				AIListContact	*contact;
 				
-				contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID];
+				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID];
 				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)]];
             }
 
@@ -100,7 +96,7 @@
 				AIListContact	*contact;
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-				contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID];
+				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID];
 				[handleArray addObject:contact];
             }
 
@@ -118,7 +114,7 @@
 				AIListContact	*contact;
                 NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-				contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID];
+				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID];
 				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
             }
 
@@ -173,9 +169,10 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID]){
+    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID]){
+		NSLog(@"%@ (%@) chat:%@",contact, buddyUID, [[adium contentController] chatWithContact:contact initialStatus:nil]);
         AIContentMessage *messageObject;
-        messageObject = [AIContentMessage messageInChat:[self chatForContact:contact]
+        messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
 											 withSource:contact
                                             destination:self
 												   date:nil
@@ -203,10 +200,10 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID]){
+    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID]){
         AIContentMessage *messageObject;
         if(msgIn){
-            messageObject = [AIContentMessage messageInChat:[self chatForContact:contact]
+            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
                                                  withSource:self
                                                 destination:contact
                                                        date:nil
@@ -214,7 +211,7 @@
                                                   autoreply:YES];
             [[adium contentController] sendContentObject:messageObject];
         }else{
-            messageObject = [AIContentMessage messageInChat:[self chatForContact:contact]
+            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
                                                  withSource:contact
                                                 destination:self
                                                        date:nil
