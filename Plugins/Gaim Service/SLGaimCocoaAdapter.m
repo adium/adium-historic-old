@@ -1861,7 +1861,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     //Disable gaim away handling - we do it ourselves
     gaim_prefs_set_bool("/core/conversations/away_back_on_send", FALSE);
     gaim_prefs_set_bool("/core/away/auto_response/enabled", FALSE);
-    
+    gaim_prefs_set_string("/core/away/auto_reply","never");
+
     //Disable gaim conversation logging
     gaim_prefs_set_bool("/gaim/gtk/logging/log_chats", FALSE);
     gaim_prefs_set_bool("/gaim/gtk/logging/log_ims", FALSE);
