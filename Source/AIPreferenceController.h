@@ -66,7 +66,6 @@ typedef enum {
 //Observing
 - (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group;
 - (void)unregisterPreferenceObserver:(id)observer;
-- (void)unregisterPreferenceObserver:(id)observer forGroup:(NSString *)group;
 - (void)informObserversOfChangedKey:(NSString *)key inGroup:(NSString *)group object:(AIListObject *)object;
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay;
 
