@@ -6,7 +6,6 @@
 - Preference window needs to default to account prefs
 - Account string should read "click the + to add a new account" when there are no accounts
 - Account add button needs a triangle to indicate that it's a popup
-- Align controls in Privacy tab of account prefs
 - Default new accounts (or atleast the first new account) to online
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
 - Move window shadow preference from layout to advanced
