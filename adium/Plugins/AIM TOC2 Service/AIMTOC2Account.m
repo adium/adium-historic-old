@@ -736,7 +736,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.107 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.108 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -949,11 +949,11 @@
 
 - (void)AIM_HandleClientEvent:(NSString *)inCommand
 {
-    int				event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
+    int                 event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
     NSString		*name = [inCommand TOCStringArgumentAtIndex:1];
-	AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																		 UID:[name compactedString]];
-	
+    AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+                                                                             UID:[name compactedString]];
+    
     //Post the correct typing state
     if(contact){
         if(event == 0){ //Not typing
@@ -1059,7 +1059,7 @@
 				}
 			}
 			
-            //Enable/disable any instant messages with this handle
+            //Enable/disable any instant messages with this contact
             [self _setInstantMessagesWithContact:contact enabled:online];
         }
 		
