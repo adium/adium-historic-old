@@ -1,7 +1,7 @@
 %{
 /* SHLinkLexer.l
  * lex source to verify and identify URL types and completeness
- * 
+ *
  * Written by Stephen Holt for Adium, released under the GPL
  *
  * Options used:	noyywrap            : act as if yywrap always returns 1
@@ -32,7 +32,7 @@ sTLD		(com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD		(aero|coop|museum)
 
 domains		({ccTLD}|{sTLD}|{uTLD}|arpa|local)
-urlSpecifier	([[:alnum:]-]*\.)+{domains}(:[0-9]+)?(\/.*)?
+urlSpecifier	([[:alnum:]-]+\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
@@ -70,7 +70,7 @@ svn(\+ssh)?:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
-{mailSpecifier}		    {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}	
+{mailSpecifier}		    {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}
 
 {jabberSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
