@@ -274,7 +274,6 @@ DeclareString(FormattedUID);
 {
     return([statusDictionary objectForKey:key]);
 }
-#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	NSNumber *number = [statusDictionary objectForKey:key];
