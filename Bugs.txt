@@ -27,7 +27,6 @@ Messages & Chat
   - Initial messages from invisible contacts sometimes don't open new message windows
   - Chat windows can re-open when contact status changed (If using cmd-n to change source
     account)
-  - Issues with time crossing midnight and messages not appearing in the window afterwards
 	  
 Meta Contacts
   - To/From bar in messages can get into a weird infinite loop when multiple possible source
