@@ -129,11 +129,19 @@
     }
 	
     //Idletime
-	if(buddy->idle != (int)([[theContact statusObjectForKey:@"IdleSince" withOwner:self] timeIntervalSince1970])){
-		[theContact setStatusObject:(buddy->idle ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle] : nil)
-						  withOwner:self
-							 forKey:@"IdleSince"
-							 notify:NO];
+	{
+		NSDate *idleDate = [theContact statusObjectForKey:@"IdleSince" withOwner:self];
+		int currentIdle = buddy->idle;
+		if(currentIdle != (int)([idleDate timeIntervalSince1970])){
+			//If there is an idle time, or if there was one before, then update
+			if ((buddy->idle > 0) || idleDate) {
+				NSLog(@"%s is idle %i",buddy->name,buddy->idle);
+				[theContact setStatusObject:((currentIdle > 0) ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)currentIdle] : nil)
+								  withOwner:self
+									 forKey:@"IdleSince"
+									 notify:NO];
+			}
+		}
 	}
     
     //Group changes - gaim buddies start off in no group, so this is an important update for us
@@ -168,7 +176,7 @@
     {
         BOOL newAway = ((buddy->uc & UC_UNAVAILABLE) != 0);
 		NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
-        if(storedValue == nil || newAway != [storedValue boolValue]) {
+        if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
             [theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:NO];
         }
     }
