@@ -142,10 +142,11 @@ enum {
 	CGRect *cgRect = (CGRect *)&inRect;
 
 	//the transform shifts the CGPath to origin = 0,0 and scales it down to an integer width (and height).
-	float roundFactor = ((int)inRect.size.width) / inRect.size.width;
+	float wscale = ((int)inRect.size.width)  / inRect.size.width;
+	float hscale = ((int)inRect.size.height) / inRect.size.height;
 	CGAffineTransform transform = CGAffineTransformMake(
-		/*a*/ roundFactor, /*b*/ 0.0f,
-		/*c*/ 0.0f,        /*d*/ roundFactor,
+		/*a*/ wscale, /*b*/ 0.0f,
+		/*c*/ 0.0f,   /*d*/ hscale,
 		/*tx*/ -(inRect.origin.x), /*ty*/ -(inRect.origin.y)
 	);
 	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
