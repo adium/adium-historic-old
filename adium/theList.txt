@@ -40,7 +40,7 @@ Accounts:
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
 Emoticons:
-	+ Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
+	+ Clean up emoticon preference layout.  Move checkbox next to pack name, [align icons - Evan:done], adjust padding, etc.
 	
 WebKit Message View:
     + Add keypress forwarding
