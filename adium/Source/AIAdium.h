@@ -455,54 +455,54 @@ typedef enum {
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
 
-    AIListGroup			*contactList;
-    AIListGroup			*strangerGroup;
-    NSMutableArray		*contactObserverArray;
+	NSMutableDictionary		*contactDict;
+	NSMutableDictionary		*groupDict;
+	
+    AIListGroup				*contactList;
+    AIListGroup				*strangerGroup;
+    NSMutableArray			*contactObserverArray;
 
-    NSTimer			*delayedUpdateTimer;
-    int				delayedUpdates;
+    NSTimer					*delayedUpdateTimer;
+    int						delayedStatusChanges;
+    int						delayedAttributeChanges;
+    int						delayedContentChanges;
+	BOOL					updatesAreDelayed;
 
-    NSMutableArray		*sortControllerArray;
-    id<AIListSortController> 	activeSortController;
+    NSMutableArray			*sortControllerArray;
+    AISortController	 	*activeSortController;
 
     AIPreferenceCategory	*contactInfoCategory;
 
-    NSMenuItem			*menuItem_getInfo;
+    NSMenuItem				*menuItem_getInfo;
 
     NSMutableDictionary		*listOrderDict;
     NSMutableDictionary		*reverseListOrderDict;
-    NSMutableDictionary         *delayedDict;
-    int				largestOrder;
-
-    AIContactListGeneration	*contactListGeneration;    
+    int						largestOrder;
 }
-
-//Account available handles changed
-- (void)handlesChangedForAccount:(AIAccount *)inAccount;
-- (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
-- (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 
 //Contact list access
 - (AIListGroup *)contactList;
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID;
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup;
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup create:(BOOL)create;
+- (AIListContact *)contactWithService:(NSString *)serviceID UID:(NSString *)UID;
+- (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
-- (AIListGroup *)groupInGroup:(AIListGroup *)inGroup withUID:(NSString *)UID;
 
 //Contact status & Attributes
-- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
-- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
 - (void)unregisterListObjectObserver:(id)inObserver;
-- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed;
+
+//
+- (void)delayListObjectNotifications;
+- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject oldGroupName:(NSString *)oldGroupName;
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
 //Contact list sorting
 - (NSArray *)sortControllerArray;
-- (void)registerListSortController:(id <AIListSortController>)inController;
-- (void)setActiveSortController:(id <AIListSortController>)inController;
-- (id <AIListSortController>)activeSortController;
-- (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode;
+- (void)registerListSortController:(AISortController *)inController;
+- (void)setActiveSortController:(AISortController *)inController;
+- (AISortController *)activeSortController;
+- (void)sortContactList;
+- (void)sortListObject:(AIListObject *)inObject;
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
@@ -511,14 +511,7 @@ typedef enum {
 
 //Interface selection
 - (AIListContact *)selectedContact;
-
-//Contact ordering
-- (float)orderIndexOfContact:(AIListContact *)contact;
-- (float)orderIndexOfGroup:(AIListGroup *)group;
-- (float)orderIndexOfKey:(NSString *)key;
-- (float)setOrderIndexOfContactWithServiceID:(NSString *)serviceID UID:(NSString *)UID to:(float)index;
-- (float)setOrderIndexOfGroupWithUID:(NSString *)UID to:(float)index;
-        
+    
 @end
 
 //*** Interface ***//
