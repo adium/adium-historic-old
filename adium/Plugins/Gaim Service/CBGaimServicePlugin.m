@@ -396,11 +396,66 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
     return(nil);
 }
 
+//Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action, void *userData, size_t actionCount, va_list actions)
 {
-    //Called when someone attempts to add you to:
-        //their MSN buddy list
-    NSLog(@"adiumGaimRequestAction");
+    int		    alertReturn, i;
+    //XXX evands: we can't use AILocalizedString here because there is no self (nor is there a spoon).
+    /*AILocalizedString(@"Request","Title: General request from gaim")*/
+    NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"Request");
+    NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
+	(primary ? primary : ""),
+	((primary && secondary) ? "\n\n" : ""),
+	(secondary ? secondary : "")];
+    
+    NSMutableArray  *buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
+    GCallback 	    *callBacks = g_new0(GCallback, actionCount);
+    
+    //Generate the actions names and callbacks into useable forms
+    for (i = 0; i < actionCount; i += 1) {
+	//Get the name - XXX evands:need to localize!
+	[buttonNamesArray addObject:[NSString stringWithUTF8String:(va_arg(actions, char *))]];
+	
+	//Get the callback for that name
+	callBacks[i] = va_arg(actions, GCallback);
+    }
+    
+    //Make default_action the last one
+    if (default_action != -1){
+	GCallback tempCallBack = callBacks[actionCount-1];
+	callBacks[actionCount-1] = callBacks[default_action];
+	callBacks[default_action] = tempCallBack;
+	
+	[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
+    }
+    
+    switch (actionCount)
+    { 
+	case 1:
+	    alertReturn = NSRunInformationalAlertPanel(titleString,msg,
+						       [buttonNamesArray objectAtIndex:0],nil,nil);
+	    break;
+	case 2:
+	    alertReturn = NSRunInformationalAlertPanel(titleString,msg,
+						       [buttonNamesArray objectAtIndex:1],
+						       [buttonNamesArray objectAtIndex:0],nil);
+	    break;
+	case 3:
+	    alertReturn = NSRunInformationalAlertPanel(titleString,msg,
+						       [buttonNamesArray objectAtIndex:2],
+						       [buttonNamesArray objectAtIndex:1],
+						       [buttonNamesArray objectAtIndex:0]);
+	    break;		    
+    }
+    
+    //Convert the return value to an array index
+    alertReturn = (alertReturn + (actionCount - 2));
+
+    if (callBacks[alertReturn] != NULL) 
+	((GaimRequestActionCb)callBacks[alertReturn])(userData, alertReturn);
+    
+    //    gaim_request_close(GAIM_REQUEST_INPUT, nil);
+    
     return(nil);
 }
 
