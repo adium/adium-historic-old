@@ -39,7 +39,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     preferences = [[IdleTimePreferences idleTimePreferencesWithOwner:owner] retain]; 
 
     //Observe preference changed notifications, and setup our initial values
-    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
     //Install the menu item to manually set idle time

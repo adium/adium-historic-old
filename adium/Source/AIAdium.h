@@ -31,6 +31,8 @@
     IBOutlet	AIToolbarController	*toolbarController;
     IBOutlet	AISoundController	*soundController;
     IBOutlet	AIDockController	*dockController;
+
+    NSNotificationCenter 	*notificationCenter;
 }
 
 
@@ -44,6 +46,7 @@
 - (AIPreferenceController *)preferenceController;
 - (AIMenuController *)menuController;
 - (AIDockController *)dockController;
+- (NSNotificationCenter *)notificationCenter;
 
 @end
 
@@ -198,7 +201,6 @@ typedef enum {
     IBOutlet	AIAdium		*owner;	
 
     NSMutableArray		*accountArray;			//Array of active accounts
-    NSNotificationCenter 	*accountNotificationCenter;	//Shared account notification center
 
     NSMutableArray		*availableServiceArray;
     NSString			*lastAccountIDToSendContent;
@@ -206,7 +208,6 @@ typedef enum {
     NSMutableDictionary		*accountStatusDict;
 }
 
-- (NSNotificationCenter *)accountNotificationCenter;
 - (NSArray *)accountArray;
 - (AIAccount *)accountWithID:(NSString *)inID;
 - (AIAccount *)newAccountAtIndex:(int)index;
@@ -226,14 +227,12 @@ typedef enum {
 @interface AIContentController : NSObject {
     IBOutlet	AIAdium		*owner;
 
-    NSNotificationCenter	*contentNotificationCenter;
     NSMutableArray		*textEntryFilterArray;
 
     NSMutableArray		*outgoingContentFilterArray;
     NSMutableArray		*incomingContentFilterArray;
 }
 
-- (NSNotificationCenter *)contentNotificationCenter;
 - (void)registerDefaultHandler:(id <AIContentHandler>)inHandler forContentType:(NSString *)inType;
 - (void)invokeDefaultHandlerForObject:(id <AIContentObject>)inObject;
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle;
@@ -252,15 +251,12 @@ typedef enum {
 
     AIContactGroup		*contactList;
     AIContactGroup		*strangerGroup;
-    NSNotificationCenter	*contactNotificationCenter;
     NSMutableArray		*handleObserverArray;
     NSMutableArray		*sortControllerArray;
     int				delayedUpdating;
 
     AIPreferenceCategory	*contactInfoCategory;
 }
-
-- (NSNotificationCenter *)contactNotificationCenter;
 
 - (void)addAccount:(AIAccount *)inAccount toObject:(AIContactObject *)inObject;
 - (void)removeAccount:(AIAccount *)inAccount fromObject:(AIContactObject *)inObject;
@@ -295,8 +291,6 @@ typedef enum {
 @interface AIInterfaceController : NSObject {
     IBOutlet	AIAdium		*owner;
 
-    NSNotificationCenter	*interfaceNotificationCenter;
-
     NSMutableArray		*contactListViewArray;
     NSMutableArray		*messageViewArray;
     NSMutableArray		*interfaceArray;
@@ -305,7 +299,6 @@ typedef enum {
     NSString		*errorDesc;
 }
 
-- (NSNotificationCenter *)interfaceNotificationCenter;
 - (void)registerContactListViewController:(id <AIContactListViewController>)inController;
 - (id <AIContactListViewController>)contactListViewController;
 - (void)registerMessageViewController:(id <AIMessageViewController>)inController;
@@ -326,12 +319,9 @@ typedef enum {
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium			*owner;
 
-    NSNotificationCenter		*preferenceNotificationCenter;
     NSMutableArray			*categoryArray;
     NSMutableDictionary			*groupDict;		//A dictionary of pref dictionaries
 }
-
-- (NSNotificationCenter *)preferenceNotificationCenter;
 
 - (void)addPreferenceView:(AIPreferenceViewController *)inView;
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
@@ -398,9 +388,7 @@ typedef enum {
 
 @interface AIDockController: NSObject {
     IBOutlet	AIAdium 	*owner;
-    
-    NSNotificationCenter	*dockNotificationCenter;
-    
+        
     AIIconFamily		*iconFamily;
     
     NSTimer 			*currentTimer;

@@ -42,7 +42,7 @@
     [[owner contentController] registerIncomingContentFilter:self];
     
     //Observe
-    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)filterContentObject:(id <AIContentObject>)inObject

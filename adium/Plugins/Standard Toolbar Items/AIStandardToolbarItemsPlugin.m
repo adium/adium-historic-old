@@ -114,7 +114,7 @@
     NSDictionary	*objects = [toolbarItem configurationObjects];
     AIContactObject	*handle = [objects objectForKey:@"ContactObject"];
 
-    [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handle,@"To",nil]];
+    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handle,@"To",nil]];
 }
 
 - (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
@@ -125,7 +125,7 @@
 
 //    if(handle && /*[handle canReceiveContent...]*/ &&
 //       text && [[text attributedString] length]){
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_SendEnteredMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:handle userInfo:nil];
 //    }
 }
 
@@ -137,7 +137,7 @@
 
 //    if(handle && /*[handle canReceiveContent...]*/ &&
 //       text && [[text attributedString] length]){
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];
 //    }
 }
 

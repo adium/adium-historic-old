@@ -43,9 +43,7 @@
     [contactListViewArray release]; contactListViewArray = nil;
     [messageViewArray release]; messageViewArray = nil;
     [interfaceArray release]; interfaceArray = nil;
-    
-    [interfaceNotificationCenter release]; interfaceNotificationCenter = nil;
-    
+        
     [super dealloc];
 }
 
@@ -60,19 +58,8 @@
 - (IBAction)initiateMessage:(id)sender
 {
     //initiate message with a nil Handle, the interface should prompt for a handle
-    [[self interfaceNotificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:nil];
+    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:nil];
 }
-
-//Notification center for interface notifications
-- (NSNotificationCenter *)interfaceNotificationCenter
-{
-    if(interfaceNotificationCenter == nil){
-        interfaceNotificationCenter = [[NSNotificationCenter alloc] init];
-    }
-    
-    return(interfaceNotificationCenter);
-}
-
 
 // Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController
@@ -112,7 +99,7 @@
 
     //Post a notification that an error was recieved
     errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",nil];    
-    [[self interfaceNotificationCenter] postNotificationName:Interface_ErrorMessageRecieved object:nil userInfo:errorDict];
+    [[owner notificationCenter] postNotificationName:Interface_ErrorMessageRecieved object:nil userInfo:errorDict];
 }
 
 

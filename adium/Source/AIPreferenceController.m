@@ -82,16 +82,6 @@
     [[AIPreferenceWindowController preferenceWindowControllerWithOwner:self] showWindow:nil];
 }
 
-//Notification center for preference notifications
-- (NSNotificationCenter *)preferenceNotificationCenter
-{
-    if(preferenceNotificationCenter == nil){
-        preferenceNotificationCenter = [[NSNotificationCenter alloc] init];
-    }
-
-    return(preferenceNotificationCenter);
-}
-
 
 //Adding Preferences ----------------------------------------------------------------------
 //Add a view to the preferences
@@ -184,7 +174,7 @@
     [self savePreferences:prefDict forGroup:groupName];
     
     //Broadcast a group changed notification
-    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+    [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
 }
     
 //Using General Preferences ----------------------------------------------------------------------
@@ -207,7 +197,7 @@
     [self savePreferences:prefDict forGroup:groupName];
 
     //Broadcast a group changed notification
-    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+    [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
 }
 
 //Internal ----------------------------------------------------------------------

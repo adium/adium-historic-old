@@ -32,7 +32,7 @@
     handle = [inHandle retain];
 
     //observe
-    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
             
 
     //prefetch our colors
@@ -68,7 +68,7 @@
     [messageView reloadData];
     
     //Observe
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:handle];
+    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:handle];
 
     return(self);
 }

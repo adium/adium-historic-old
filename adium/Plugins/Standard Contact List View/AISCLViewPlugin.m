@@ -70,10 +70,10 @@
 
     //Install the necessary observers (general)
     if([SCLViewArray count] == 1){ //If this is the first view opened
-        [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-        [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactObjectChanged:) name:Contact_ObjectChanged object:nil];
-        [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
-        [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactObjectChanged:) name:Contact_ObjectChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     }
 
     //View specific
@@ -98,10 +98,10 @@
 
         //Remove observers (general)
         if([SCLViewArray count] == 1){ //If this is the last view closed
-            [[[owner contactController] contactNotificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
-            [[[owner contactController] contactNotificationCenter] removeObserver:self name:Contact_ObjectChanged object:nil];
-            [[[owner contactController] contactNotificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
-            [[[owner preferenceController] preferenceNotificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
+            [[owner notificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
+            [[owner notificationCenter] removeObserver:self name:Contact_ObjectChanged object:nil];
+            [[owner notificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
+            [[owner notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
         }
     
         //View specific
@@ -230,7 +230,7 @@
 
         //Open a new message with the contact
         notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"To", nil];
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:notificationDict];
+        [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:notificationDict];
     }
 }
 
@@ -291,10 +291,10 @@
     //Post a 'contact list selection changed' notification on the interface center
     if(selectedObject){
         NSDictionary	*notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"Object", nil];
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:notificationDict];
+        [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:notificationDict];
     
     }else{
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
     
     }
 

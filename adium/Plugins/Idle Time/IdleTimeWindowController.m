@@ -31,18 +31,16 @@ static IdleTimeWindowController *sharedInstance = nil;
 
 - (void)windowDidLoad
 {
-    NSNotificationCenter	*accountNotificationCenter;
     //Install our observers
-    accountNotificationCenter = [[owner accountController] accountNotificationCenter];
-    [accountNotificationCenter addObserver:self
+    [[owner notificationCenter] addObserver:self
                                   selector:@selector(buildAccountsPopup)
                                       name:Account_PropertiesChanged
                                     object:nil];
-    [accountNotificationCenter addObserver:self
+    [[owner notificationCenter] addObserver:self
                                   selector:@selector(buildAccountsPopup)
                                       name:Account_StatusChanged
                                     object:nil];
-    [accountNotificationCenter addObserver:self
+    [[owner notificationCenter] addObserver:self
                                   selector:@selector(buildAccountsPopup)
                                       name:Account_ListChanged
                                     object:nil];
@@ -71,7 +69,7 @@ static IdleTimeWindowController *sharedInstance = nil;
 {
     [owner release];
     [AIIdleTimePlugin release];
-    [[[owner accountController] accountNotificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
     
     [super dealloc];
 }

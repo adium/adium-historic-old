@@ -69,7 +69,6 @@
 {
     [contactList release];
     [handleObserverArray release]; handleObserverArray = nil;
-    [contactNotificationCenter release]; contactNotificationCenter = nil;
     [contactInfoCategory release];
 
     [super dealloc];
@@ -79,22 +78,12 @@
 {
     //Load the contact list
     contactList = [[self loadContactList] retain];
-    [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
+    [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 
     //Create a dynamic strangers group
     strangerGroup = [self createGroupNamed:STRANGER_GROUP_NAME inGroup:contactList];
     [[strangerGroup displayArrayForKey:@"Dynamic"] addObject:[NSNumber numberWithBool:YES] withOwner:self];
     [self updateListForObject:strangerGroup saveChanges:NO];
-}
-
-//Notification center for contact notifications
-- (NSNotificationCenter *)contactNotificationCenter
-{
-    if(contactNotificationCenter == nil){
-        contactNotificationCenter = [[NSNotificationCenter alloc] init];
-    }
-    
-    return(contactNotificationCenter);
 }
 
 // Contact Info --------------------------------------------------------------------------------
@@ -393,14 +382,14 @@
 
     //Post a 'status' changed message, signaling that the object's status has changed.
     if(inModifiedKeys){
-        [[self contactNotificationCenter] postNotificationName:Contact_StatusChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
     }else{
-        [[self contactNotificationCenter] postNotificationName:Contact_StatusChanged object:inHandle];
+        [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:inHandle];
     }
 
     //Post an attributes changed message (if necessary)
     if([modifiedAttributeKeys count] != 0){
-        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:Contact_ObjectChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
     }
 }
 
@@ -416,9 +405,9 @@
 
     //Post an attributes changed message (if necessary)
     if(inModifiedKeys){
-        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:Contact_ObjectChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
     }else{
-        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
+        [[owner notificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
     }
 }
 
@@ -522,7 +511,7 @@
     }
 
     //Post an 'object' changed message, signaling that the object's status has changed.
-    [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
+    [[owner notificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
 
     //Save the changes 
     if(saveChanges && !delayedUpdating){ //Skip saving when updates are delayed
@@ -586,7 +575,7 @@
 {
     //Resort and redisplay the entire list at once (since sorting has been skipped while delayed)
     [self sortContactGroup:contactList mode:AISortGroupAndSubGroups];
-    [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
+    [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 
     //decrease the counter
     delayedUpdating--;

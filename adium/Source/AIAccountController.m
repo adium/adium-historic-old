@@ -52,7 +52,6 @@
 // init
 - (void)initController
 {
-    accountNotificationCenter = nil;
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
     lastAccountIDToSendContent = nil;
@@ -77,7 +76,6 @@
 - (void)dealloc
 {
     [accountArray release];
-    [accountNotificationCenter release];
     [availableServiceArray release];
     [lastAccountIDToSendContent release];
     [accountStatusDict release];
@@ -92,23 +90,13 @@
     [self accountListChanged];
 
     //Observe the newly loaded account list
-    [[self accountNotificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
 
     //Observe content (for accountForSendingContentToHandle)
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
     
     //Autoconnect
     [self autoConnectAccounts];
-}
-
-// Returns the account notification center
-- (NSNotificationCenter *)accountNotificationCenter
-{
-    if(accountNotificationCenter == nil){
-        accountNotificationCenter = [[NSNotificationCenter alloc] init];
-    }
-    
-    return(accountNotificationCenter);
 }
 
 // Create a new account
@@ -312,7 +300,7 @@
         [inAccount setStatusObject:inValue forKey:key];
     }
 
-    [[self accountNotificationCenter] postNotificationName:Account_StatusChanged object:inAccount userInfo:[NSDictionary dictionaryWithObject:key forKey:@"Key"]];
+    [[owner notificationCenter] postNotificationName:Account_StatusChanged object:inAccount userInfo:[NSDictionary dictionaryWithObject:key forKey:@"Key"]];
 }
 
 - (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount
@@ -395,7 +383,7 @@
     [self saveAccounts];
 
     //Broadcast an account list changed message
-    [[self accountNotificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+    [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
 // Loads the saved accounts and returns them (as AIAccounts) in a mutable array

@@ -37,9 +37,9 @@
 
 - (void)installPlugin
 {
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
     
     accountMenuArray = [[NSMutableArray alloc] init];
     [self buildAccountMenus];
@@ -140,7 +140,7 @@
 
     //Switch it
     [[account properties] setObject:[NSNumber numberWithBool:!autoConnect] forKey:@"AutoConnect"];
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];    
+    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];    
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)

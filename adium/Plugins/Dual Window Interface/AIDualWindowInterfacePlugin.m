@@ -70,9 +70,9 @@
     [self showContactList:nil];
 
     //Register for the necessary notifications
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(initiateMessage:) name:Interface_InitiateMessage object:nil];
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(closeMessage:) name:Interface_CloseMessage object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(initiateMessage:) name:Interface_InitiateMessage object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(closeMessage:) name:Interface_CloseMessage object:nil];
 
     //Install our menu items
     [self addMenuItems];
@@ -86,8 +86,7 @@
     if(contactListWindowController) [contactListWindowController closeWindow:nil];
     
     //Stop observing
-    [[[owner contentController] contentNotificationCenter] removeObserver:self];
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
 
     //Remove our menu items
     [self removeMenuItems];
@@ -182,9 +181,9 @@
     //Unload the window if it's now empty
     if(windowIsEmpty){ 
         //stop observing
-        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllersChanged object:messageWindow];
-        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllerOrderChanged object:messageWindow];
-        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_SelectedControllerChanged object:messageWindow];
+        [[owner notificationCenter] removeObserver:self name:AIMessageWindow_ControllersChanged object:messageWindow];
+        [[owner notificationCenter] removeObserver:self name:AIMessageWindow_ControllerOrderChanged object:messageWindow];
+        [[owner notificationCenter] removeObserver:self name:AIMessageWindow_SelectedControllerChanged object:messageWindow];
 
         //release the window
         [messageWindow closeWindow:nil];
@@ -390,21 +389,21 @@
     if(!messageWindow){
         //Create the window
         messageWindow = [[AIMessageWindowController messageWindowControllerWithOwner:owner interface:self] retain];
-        
-        //Observe for the tab order changed notification
-        [[[owner interfaceController] interfaceNotificationCenter] addObserver:self
-                                                             selector:@selector(messageWindowControllersChanged:)
-                                                                 name:AIMessageWindow_ControllersChanged
-                                                               object:messageWindow];
-        [[[owner interfaceController] interfaceNotificationCenter] addObserver:self
-                                                             selector:@selector(messageWindowControllerOrderChanged:)
-                                                                 name:AIMessageWindow_ControllerOrderChanged
-                                                               object:messageWindow];
-        [[[owner interfaceController] interfaceNotificationCenter] addObserver:self
-                                                             selector:@selector(messageWindowSelectedControllerChanged:)
-                                                                 name:AIMessageWindow_SelectedControllerChanged
-                                                               object:messageWindow];
 
+        //Observe for the tab order changed notification
+        [[owner notificationCenter] addObserver:self
+                                       selector:@selector(messageWindowControllersChanged:)
+                                           name:AIMessageWindow_ControllersChanged
+                                         object:messageWindow];
+        [[owner notificationCenter] addObserver:self
+                                       selector:@selector(messageWindowControllerOrderChanged:)
+                                           name:AIMessageWindow_ControllerOrderChanged
+                                         object:messageWindow];
+        [[owner notificationCenter] addObserver:self
+                                       selector:@selector(messageWindowSelectedControllerChanged:)
+                                           name:AIMessageWindow_SelectedControllerChanged
+                                         object:messageWindow];
+        
         //Rebuild the window menu
         [self buildWindowMenu];
     }
