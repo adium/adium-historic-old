@@ -26,8 +26,8 @@
 	
 	IBOutlet NSView         *view_prefView;
     IBOutlet NSButton       *checkBox_enable;
-    //IBOutlet NSTableView    *table_packList;
-    IBOutlet AICheckboxList    *checkList_packList;
+    IBOutlet NSTableView    *table_packList;
+    //IBOutlet AICheckboxList    *checkList_packList;
 }
 
 + (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner;

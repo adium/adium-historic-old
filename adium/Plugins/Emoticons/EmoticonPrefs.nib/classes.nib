@@ -7,7 +7,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_enable" = NSButton; 
-                "checkList_packList" = AICheckboxList; 
+                "table_packList" = NSTableView; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 

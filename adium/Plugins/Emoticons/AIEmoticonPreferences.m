@@ -56,6 +56,16 @@
     //Load the pref view nib
     [NSBundle loadNibNamed:EMOTICON_PREF_NIB owner:self];
 
+	//Init NSTableView of Packs
+    NSButtonCell	*newCell;
+    newCell = [[[NSButtonCell alloc] init] autorelease];
+    [newCell setButtonType:NSSwitchButton];
+    [newCell setControlSize:NSSmallControlSize];
+    [newCell setTitle:@""];
+    [newCell setRefusesFirstResponder:YES];
+    [[[table_packList tableColumns] objectAtIndex:0] setDataCell:newCell];
+	NSLog (@"table_packList: %d", table_packList);
+
     //Install our preference view
     preferenceViewController = [AIPreferenceViewController controllerWithName:EMOTICON_PREF_TITLE categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
@@ -63,8 +73,8 @@
     //Load our preferences and configure the view
     preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] retain];
     [self configureView];
-	[checkList_packList addItemName:@"Test1" state:NSOnState];
-	[checkList_packList addItemName:@"Test2" state:NSOffState];
+	//[checkList_packList addItemName:@"Test1" state:NSOnState];
+	//[checkList_packList addItemName:@"Test2" state:NSOffState];
 
     return(self);
 }
@@ -85,4 +95,49 @@
     //[colorWell_backgroundColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor]];
 }
 
+//Emoticon Packs Table View ----------------------------------------------------------------------
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	NSLog (@"RowCount request");
+    return(2/*[availableUsers count]*/);
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    NSString	*identifier = [tableColumn identifier];
+	NSLog (@"CellData request");
+
+    if([identifier compare:@"check"] == 0){
+        if(row == 1/*[usersToImport containsObject:[availableUsers objectAtIndex:row]]*/){
+            return([NSNumber numberWithBool:YES]);
+        }else{
+            return([NSNumber numberWithBool:NO]);
+        }
+    }else{
+		if (row == 1)
+		{
+			return @"First Item :-)";
+		}
+		else
+		{
+			return @"Other Item :-)";
+		}
+		
+		
+        //return([availableUsers objectAtIndex:row]);
+    }
+}
+
+ // Received when checkboxes are checked and unchecked
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	NSLog (@"SetObjectValue request");
+    /*NSString	*user = [availableUsers objectAtIndex:row];
+    
+    if([object intValue] == 0){
+        [usersToImport removeObject:user];
+    }else{
+        [usersToImport addObject:user];
+    }    */
+}
 @end

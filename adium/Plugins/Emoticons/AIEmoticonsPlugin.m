@@ -32,7 +32,7 @@
 - (NSMutableAttributedString *)convertSmiliesInMessage:(NSAttributedString *)inMessage;
 - (BOOL)loadEmoticonsFromPacks;
 - (void)setupForTesting;
-- (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray;
+- (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray tagKey:(NSString *)source;
 - (void)_scanEmoticonsFromPath:(NSString *)emoticonPackPath intoArray:(NSMutableArray *)emoticonPackArray;
 - (void)updateQuickScanList;
 @end
@@ -197,24 +197,31 @@
     }
 }
 
-- (BOOL)loadEmoticonsFromPacks
+- (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray
 {
-	BOOL				foundGoodPack = FALSE;
 	NSString			*path;
-	NSMutableArray		*emoticonPackArray;
-	
-	//Setup
-	emoticonPackArray = [[NSMutableArray alloc] init];
 	
     //Scan internal packs
     path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
-    foundGoodPack = [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray];
+    [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray tagKey:@"bundle"];
 
     //Scan user packs
 		// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
 		// "directly" FIX
     path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS];
-    foundGoodPack |= [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray];
+    [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray tagKey:@"addons"];
+}
+
+- (BOOL)loadEmoticonsFromPacks
+{
+	BOOL				foundGoodPack = TRUE;
+	NSString*			path = nil;
+	NSMutableArray		*emoticonPackArray;
+	
+	//Setup
+	emoticonPackArray = [[NSMutableArray alloc] init];
+	
+	[self allEmoticonPacks:emoticonPackArray];
 	
 	//Load the appropriate emoticons from the appropriate paths
 	//(Right now, just load everything from the first pack)
@@ -222,41 +229,53 @@
 		foundGoodPack = FALSE;
 	
 	if (foundGoodPack) {
-		NSDictionary*	smileyPack = [emoticonPackArray objectAtIndex:0];
-		NSArray*		smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
-		int				i;
-		AIEmoticon		*emo = nil;
-		NSMutableString*	emoText = nil;
-		NSRange			charRange;
-		NSCharacterSet*	newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
-		//NSArray*		fakeSeparation = nil;
-		
-		for (i = 0;	i < [smileyList count]; i++)
-		{
-			path = [smileyList objectAtIndex:i];
+		int o;
+		for (o = 0; o < [emoticonPackArray count]; o++) {
+			NSDictionary*	smileyPack = [emoticonPackArray objectAtIndex:o];
+			NSArray*		smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
 			
-			emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
+			NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", [smileyPack objectForKey:KEY_EMOTICON_PACK_SOURCE], [smileyPack objectForKey:KEY_EMOTICON_PACK_TITLE]];
+			NSDictionary*	prefDict = [[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
 			
-			// Check string for UNIX or Windows line end encoding, repairing if needed.
-			charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-			while (charRange.length != 0)	{
-				[emoText replaceCharactersInRange:charRange withString:@"\r"];
-				charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+			if (o == 0/*[[prefDict	objectForKey:@"inUse"] intValue] && prefDict*/) {
+				int				i;
+				AIEmoticon		*emo = nil;
+				NSMutableString*	emoText = nil;
+				NSRange			charRange;
+				NSCharacterSet*	newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+				//NSArray*		fakeSeparation = nil;
+				
+						
+				for (i = 0;	i < [smileyList count]; i++)
+				{
+					path = [smileyList objectAtIndex:i];
+					
+					emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
+					
+					// Check string for UNIX or Windows line end encoding, repairing if needed.
+					charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+					while (charRange.length != 0)	{
+						[emoText replaceCharactersInRange:charRange withString:@"\r"];
+						charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+					}
+					
+					// Make the emoticon object, add it to the master list
+					emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:emoText];
+					[emoticons addObject:emo];
+				}
 			}
-			
-			// Make the emoticon object, add it to the master list
-			emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:emoText];
-			[emoticons addObject:emo];
 		}
 	}
+	
+	[emoticonPackArray release];
 	
 	return foundGoodPack;
 }
 
-- (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray
+- (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray tagKey:(NSString *)source
 {
-    NSDirectoryEnumerator	*enumerator;			//Sound folder directory enumerator
-    NSString			*file;				//Current Path (relative to sound folder)
+    NSDirectoryEnumerator	*enumerator;			//Emoticon folder directory enumerator
+    NSString			*file;				//Current Path (relative to Emoticon folder)
     NSString			*emoticonSetPath;			//Name of the set
     //NSMutableArray		*soundSetContents;		//Array of sounds in the set
 	BOOL				foundGoodPack = FALSE;
@@ -269,7 +288,7 @@
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:emoticonFolderPath];
     while((file = [enumerator nextObject])){
         BOOL			isDirectory;
-        NSString		*fullPath;
+        NSString		*fullPath = nil,	*title = nil;
 
         if([[file lastPathComponent] characterAtIndex:0] != '.' &&
            [[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0 /*&&
@@ -280,19 +299,13 @@
             [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
 
             if(isDirectory){
-                /*if([soundSetContents count] != 0){
-                    //Close the current soundset, adding it to our sound set array
-                    [self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
-                }
-
-                //Open a new soundset for this directory
-                soundSetPath = fullPath;
-                soundSetContents = [[[NSMutableArray alloc] init] autorelease];*/
 				NSMutableArray	*heldEmoticons = [[[NSMutableArray alloc] init] autorelease];
+				
+				title = [file stringByDeletingPathExtension];
 			
 				[self _scanEmoticonsFromPath:fullPath intoArray:heldEmoticons];
 
-				[emoticonPackArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, nil]];
+				[emoticonPackArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, nil]];
 				
 				if ([heldEmoticons count] > 0)	foundGoodPack = TRUE;
 				
