@@ -30,7 +30,7 @@
 
 - (NSSize)desiredSize
 {
-	return(NSMakeSize(536,406));
+	return(NSMakeSize(536,418));
 }
 
 - (IBAction)okay:(id)sender

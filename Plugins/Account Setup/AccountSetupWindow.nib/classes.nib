@@ -21,7 +21,13 @@
             ACTIONS = {cancel = id; }; 
             CLASS = AIAccountSetupNewAccountView; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"image_serviceIcon" = NSImageView; "textField_serviceName" = NSTextField; }; 
+            OUTLETS = {
+                "image_serviceIcon" = NSImageView; 
+                "radio_registerNew" = NSButtonCell; 
+                "radio_useExisting" = NSButtonCell; 
+                "textField_serviceHelp" = NSTextField; 
+                "textField_serviceName" = NSTextField; 
+            }; 
             SUPERCLASS = AIAccountSetupView; 
         }, 
         {
