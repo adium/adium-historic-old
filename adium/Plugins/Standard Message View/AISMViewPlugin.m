@@ -23,23 +23,25 @@
 
 - (void)installPlugin
 {
-    //Register ourself as a message list view plugin
-    [[adium interfaceController] registerMessageViewPlugin:self];
-
-    //Register our default preferences and install our preference view
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-    preferences = [[AISMPreferences preferencePane] retain];
-    
-    //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SMV_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	if(![NSApp isOnPantherOrBetter]){
+		//Register ourself as a message list view plugin
+		[[adium interfaceController] registerMessageViewPlugin:self];
+		
+		//Register our default preferences and install our preference view
+		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		preferences = [[AISMPreferences preferencePane] retain];
+		
+		//Register themable preferences
+		[[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SMV_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
-    //Set up a time stamp format based on this user's locale
-    NSString    *format = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
-    if(!format || [format length] == 0){
-        [[adium preferenceController] setPreference:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]
-                                             forKey:KEY_SMV_TIME_STAMP_FORMAT
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-    }
+		//Set up a time stamp format based on this user's locale
+		NSString    *format = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
+		if(!format || [format length] == 0){
+			[[adium preferenceController] setPreference:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]
+												 forKey:KEY_SMV_TIME_STAMP_FORMAT
+												  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		}
+	}
 }
 
 //Return a message view controller
