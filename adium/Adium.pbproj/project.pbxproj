@@ -5374,6 +5374,38 @@
 			name = "Default Formatting";
 			refType = 4;
 		};
+		4B707E6C04B8A50B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAccountSelectionToolbarItem.h;
+			path = "Plugins/Dual Window Interface/AIAccountSelectionToolbarItem.h";
+			refType = 4;
+		};
+		4B707E6D04B8A50B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAccountSelectionToolbarItem.m;
+			path = "Plugins/Dual Window Interface/AIAccountSelectionToolbarItem.m";
+			refType = 4;
+		};
+		4B707E6E04B8A50B00A8010A = {
+			fileRef = 4B707E6C04B8A50B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B707E6F04B8A50B00A8010A = {
+			fileRef = 4B707E6D04B8A50B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B707E7104B8B34800A8010A = {
+			fileRef = 4B6660C204ADF36600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B70F28803D1C55C00A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -7757,6 +7789,8 @@
 			children = (
 				4B25494603F6A32700A8010A,
 				4B25494703F6A32700A8010A,
+				4B707E6C04B8A50B00A8010A,
+				4B707E6D04B8A50B00A8010A,
 				4BCFEF4C03F59F2800A8010A,
 				4B25494803F6A32700A8010A,
 				4B25494903F6A32700A8010A,
@@ -14149,6 +14183,7 @@
 				4BACB70303C8CB5E00A8010A,
 				4B25494A03F6A32700A8010A,
 				4B25494C03F6A32700A8010A,
+				4B707E6E04B8A50B00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14162,6 +14197,7 @@
 				4B64797903DC29B200A8010A,
 				4BCFEC5A03F574A400A8010A,
 				4BCFEF4D03F59F2800A8010A,
+				4B707E7104B8B34800A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14176,6 +14212,7 @@
 				4BACB70403C8CB5E00A8010A,
 				4B25494B03F6A32700A8010A,
 				4B25494D03F6A32700A8010A,
+				4B707E6F04B8A50B00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

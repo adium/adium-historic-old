@@ -36,7 +36,12 @@
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIMiniToolbar; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {representedObject = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

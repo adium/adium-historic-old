@@ -21,6 +21,7 @@
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
     AIMessageViewController 	*messageView;
     AIAdium			*owner;
+    NSColor			*color;
 }
 
 + (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
@@ -30,5 +31,7 @@
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
 - (BOOL)tabShouldClose:(id)sender;
+- (void)setColor:(NSColor *)inColor;
+- (NSColor *)color;
 
 @end

@@ -89,14 +89,25 @@
 
     //Draw Label
     if([self title]){
-        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, nil];
-        NSSize	size = [[self title] sizeWithAttributes:attributes];
-        NSPoint	centeredPoint;
+        NSColor		*color;
+        NSDictionary 	*attributes;
+        NSSize		size;
+        NSPoint		centeredPoint;
 
+        //Prep attributes
+        if([self isEnabled]){
+            color = [NSColor blackColor];
+        }else{
+            color = [NSColor colorWithCalibratedWhite:0.0 alpha:0.5];
+        }
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, color, NSForegroundColorAttributeName, nil];
 
+        //Calculate center
+        size = [[self title] sizeWithAttributes:attributes];
         centeredPoint = NSMakePoint(frame.origin.x + ((frame.size.width - size.width) / 2.0) + LABEL_OFFSET_X,
                                     frame.origin.y + ((capHeight - size.height) / 2.0) + LABEL_OFFSET_Y);
 
+        //Draw
         [[self title] drawAtPoint:centeredPoint withAttributes:attributes];
     }
 
@@ -111,7 +122,7 @@
                                   size.height);
 
         [[self image] setFlipped:YES];
-        [[self image] drawInRect:centeredRect fromRect:NSMakeRect(0,0,size.width,size.height) operation:NSCompositeSourceOver fraction:1.0];
+        [[self image] drawInRect:centeredRect fromRect:NSMakeRect(0,0,size.width,size.height) operation:NSCompositeSourceOver fraction:([self isEnabled] ? 1.0 : 0.5)];
     }
     
 }

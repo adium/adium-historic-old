@@ -28,6 +28,8 @@
     AIAdium			*owner;
     BOOL			windowIsClosing;
     id <AIContainerInterface> 	interface;
+
+    NSMutableDictionary		*toolbarItems;
 }
 
 + (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;

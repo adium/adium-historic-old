@@ -601,6 +601,9 @@ extern void* objc_getClass(const char *name);
             break;
             default:
                 NSLog(@"%@: unknown status %i",[inHandle UID], [storedValue intValue]);
+                online = NO;
+                away = NO;
+                idleSince = nil;
             break;
         }
 
