@@ -393,6 +393,35 @@ void Adium_HandleSignal(int i){
     return success;
 }
 
+//create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
+//pass it the name of the folder (e.g. @"Scripts").
+//if it is found to already in a library folder, returns that pathname (using
+//  the same order of preference as resourcePathsForName:).
+//otherwise, creates it in the user library and returns the pathname to it.
+- (NSString *)createResourcePathForName:(NSString *)name
+{
+    BOOL             createIt;
+    //this is the subfolder for the user domain (i.e. ~/L/AS/Adium\ 2.0).
+    NSString        *targetPath            = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:name];
+    NSFileManager   *mgr                   = [NSFileManager defaultManager];
+    static NSString *bundleResourcesFolder = nil;
+    NSArray         *existing              = [self resourcePathsForName:name];
+
+    if(bundleResourcesFolder == nil) bundleResourcesFolder = [[NSBundle mainBundle] resourcePath];
+
+    //if any resource paths exist *besides* the one in the application bundle,
+    //  then we create the one in ~/L/AS/Adium\ 2.0.
+    createIt = !([existing count] - ([existing indexOfObject:[bundleResourcesFolder stringByAppendingPathComponent:name]] != NSNotFound));
+    if(createIt) {
+        NSLog(@"Creating directory %@ for resource folder name %@\n", [targetPath stringByAbbreviatingWithTildeInPath], name);
+        [mgr createDirectoryAtPath:targetPath attributes:nil];
+    } else {
+        targetPath = [existing objectAtIndex:0];
+    }
+
+    return targetPath;
+}
+
 //return zero or more pathnames to objects in the Application Support folders
 //  and the resources folder of the application bundle.
 //only those pathnames that exist are returned.
