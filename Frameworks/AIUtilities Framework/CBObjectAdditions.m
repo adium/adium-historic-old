@@ -18,7 +18,8 @@
 
 - (unsigned int) hash
 {
-   return( ((unsigned int) self >> 4) | (unsigned int) self << (32 - 4));
+	enum { numBitsPerUnsignedInt = sizeof(unsigned int) * 8 };
+	return( ((unsigned int) self >> 4) | (unsigned int) self << (numBitsPerUnsignedInt - 4));
 }
 
 @end
@@ -106,7 +107,7 @@
 	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 waitUntilDone:NO];
 }
 
-//Perform a selector on the main thread, optionally taking an argument, and return its return value
+//Perform a selector on the main thread, taking 0-2 arguments, and return its return value
 - (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 returnValue:(BOOL)flag
 {
 	id returnValue;
@@ -150,7 +151,7 @@
 {
 	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 waitUntilDone:NO];
 }
-//Perform a selector on the main thread, optionally taking an argument, and return its return value
+//Perform a selector on the main thread, taking 0-3 arguments, and return its return value
 - (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 returnValue:(BOOL)flag
 {
 	id returnValue;
