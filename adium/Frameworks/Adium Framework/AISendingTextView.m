@@ -217,6 +217,8 @@ static NSImage *pushIndicatorImage = nil;
     //notify target
     [target performSelector:selector];
 
+	//clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
+	[[self undoManager] removeAllActions];
 }
 
 // Required protocol methods --------------------------------------------------------

@@ -30360,7 +30360,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AISendingTextView.h;
-			path = "Frameworks/AIUtilities Framework/AISendingTextView.h";
+			path = "Frameworks/Adium Framework/AISendingTextView.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -30369,7 +30369,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AISendingTextView.m;
-			path = "Frameworks/AIUtilities Framework/AISendingTextView.m";
+			path = "Frameworks/Adium Framework/AISendingTextView.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
