@@ -58,7 +58,7 @@
 	}
 	
 	//Configure the remaining controls
-	if(sourceAccount = [[adium accountController] accountWithAccountNumber:[[inDetails objectForKey:KEY_MESSAGE_SEND_FROM] intValue]]){
+	if(sourceAccount = [[adium accountController] accountWithInternalObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]]){
 		[popUp_messageFrom selectItemWithRepresentedObject:sourceAccount];
 	}
 	
