@@ -1706,12 +1706,12 @@
 		};
 		343C89B005704DEC005E0632 = {
 			children = (
-				34E2A2EA07B018B0006735BC,
-				34E2A2EB07B018B1006735BC,
-				34E2A2EC07B018B1006735BC,
-				34E2A2ED07B018B1006735BC,
 				34E2A2EE07B018B1006735BC,
+				34E2A2EA07B018B0006735BC,
+				34E2A2EC07B018B1006735BC,
 				34E2A2EF07B018B2006735BC,
+				34E2A2ED07B018B1006735BC,
+				34E2A2EB07B018B1006735BC,
 				34E2A2F907B018E5006735BC,
 			);
 			isa = PBXGroup;
@@ -6228,7 +6228,6 @@
 				4BD6737306001BF00049CAF7,
 				4BD6737506001BF00049CAF7,
 				4BD6737E06001BF60049CAF7,
-				4BD6738C06001C2D0049CAF7,
 				4BD6739906001C3F0049CAF7,
 				4BD6739C06001C440049CAF7,
 				4BD673A206001C4D0049CAF7,
@@ -6403,6 +6402,7 @@
 				34E2A1DC07AF6504006735BC,
 				34E2A2F207B018B2006735BC,
 				34E2A2F407B018B2006735BC,
+				34E2A3E907B08CCB006735BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6573,8 +6573,6 @@
 				34254F4C05EC0C4300F11AD7,
 				34BD9D29053146CC000AB133,
 				4B29094005F944BF0087D16F,
-				4BD6739006001C2F0049CAF7,
-				4BD6739106001C2F0049CAF7,
 				4BD673A606001C4E0049CAF7,
 				4BD673AC06001C510049CAF7,
 				4BD673F506001CC00049CAF7,
@@ -6721,6 +6719,8 @@
 				34E2A2F107B018B2006735BC,
 				34E2A2F307B018B2006735BC,
 				34E2A2FA07B018E5006735BC,
+				34E2A3EA07B08CCB006735BC,
+				34E2A3F107B08CDD006735BC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6798,7 +6798,6 @@
 				4BD6737406001BF00049CAF7,
 				4BD6737606001BF10049CAF7,
 				4BD6737D06001BF50049CAF7,
-				4BD6738D06001C2E0049CAF7,
 				4BD6739B06001C410049CAF7,
 				4BD6739D06001C450049CAF7,
 				4BD673A306001C4E0049CAF7,
@@ -6973,6 +6972,7 @@
 				34E2A1DB07AF6504006735BC,
 				34E2A2F007B018B2006735BC,
 				34E2A2F507B018B2006735BC,
+				34E2A3E807B08CCB006735BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9423,11 +9423,72 @@
 		34E2A2FD07B0193B006735BC = {
 			children = (
 				343C89B005704DEC005E0632,
+				4B28907503C1D14200A8010A,
 			);
 			isa = PBXGroup;
 			name = Contacts;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34E2A3E507B08CC9006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAliasSupportPlugin.m;
+			path = Source/AIAliasSupportPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A3E607B08CC9006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAliasSupportPlugin.h;
+			path = Source/AIAliasSupportPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A3E707B08CCA006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = "Alias Defaults.plist";
+			path = "Source/Alias Defaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A3E807B08CCB006735BC = {
+			fileRef = 34E2A3E507B08CC9006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A3E907B08CCB006735BC = {
+			fileRef = 34E2A3E607B08CC9006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A3EA07B08CCB006735BC = {
+			fileRef = 34E2A3E707B08CCA006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A3F007B08CDD006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = "Display Format Defaults.plist";
+			path = "Source/Display Format Defaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A3F107B08CDD006735BC = {
+			fileRef = 34E2A3F007B08CDD006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34E38235068F7F0300303451 = {
 			children = (
@@ -12197,32 +12258,14 @@
 		};
 		4B28907503C1D14200A8010A = {
 			children = (
-				4B28909D03C1D37700A8010A,
-				4B28909E03C1D37700A8010A,
-				4B7764BB03C3E78200A8010A,
-				F555906704F0C18D01925A3C,
+				34E2A3E507B08CC9006735BC,
+				34E2A3E607B08CC9006735BC,
+				34E2A3E707B08CCA006735BC,
+				34E2A3F007B08CDD006735BC,
 			);
 			isa = PBXGroup;
 			name = "Alias Support";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B28909D03C1D37700A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAliasSupportPlugin.h;
-			path = "Plugins/Alias Support/AIAliasSupportPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B28909E03C1D37700A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAliasSupportPlugin.m;
-			path = "Plugins/Alias Support/AIAliasSupportPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12836,7 +12879,6 @@
 		};
 		4B4F5B25042D637700A8010A = {
 			children = (
-				4B28907503C1D14200A8010A,
 				34C2D31006334A460018E5D2,
 				4B052C9B067E399300A43B4A,
 				4BBF41DC06611949001D31E1,
@@ -13862,15 +13904,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B7764BB03C3E78200A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = "Alias Defaults.plist";
-			path = "Plugins/Alias Support/Alias Defaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B7845EB059B50820048A8BA = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -16370,30 +16403,6 @@
 		};
 		4BD6737E06001BF60049CAF7 = {
 			fileRef = 348E54C00539D04C0021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738C06001C2D0049CAF7 = {
-			fileRef = 4B28909D03C1D37700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738D06001C2E0049CAF7 = {
-			fileRef = 4B28909E03C1D37700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739006001C2F0049CAF7 = {
-			fileRef = 4B7764BB03C3E78200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739106001C2F0049CAF7 = {
-			fileRef = F555906704F0C18D01925A3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22622,15 +22631,6 @@
 			lastKnownFileType = image.icns;
 			name = Adium.icns;
 			path = Source/Adium.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F555906704F0C18D01925A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = "Display Format Defaults.plist";
-			path = "Plugins/Alias Support/Display Format Defaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
