@@ -2236,7 +2236,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	//MSN preferences
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
-		
+	
+	//Without saving the gaim buddy list, gaim's caching is useless; Adium does its own caching
+	gaim_buddy_icons_set_caching(FALSE);
+	
 	//Configure signals for receiving gaim events
 	[self configureSignals];
 }
