@@ -361,7 +361,7 @@
 					   action:@selector(enterAwayMessage:)
 				    keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")] autorelease];
     [awayMenu addItem:menuItem];
-    [awayMenu addItem:[NSMenuItem separatorItem]];
+	if([awayArray count]) [awayMenu addItem:[NSMenuItem separatorItem]];
     
     //Add a menu item for each away message
     [self _appendAwaysFromArray:awayArray toMenu:awayMenu];
