@@ -153,9 +153,10 @@ DeclareString(FormattedUID);
 //Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
-	[containingObject release];
-	containingObject = [inGroup retain];
-	
+    if (containingObject != inGroup){
+	   [containingObject release];
+	   containingObject = [inGroup retain];
+	}
 #if 0
 	BOOL hadContainingObject = (containingObject != nil);
 

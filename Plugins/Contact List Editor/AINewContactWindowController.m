@@ -315,14 +315,18 @@
 
 - (void)setContactName:(NSString *)contact
 {
-	[contactName release];
-	contactName = [contact retain];
+    if(contactName != contact){
+	   [contactName release];
+	   contactName = [contact retain];
+	}
 }
 
 - (void)setService:(AIService *)inService
 {
-	[service release];
-	service = [inService retain];
+    if(service != inService){
+        [service release];
+        service = [inService retain];
+    }
 }
 
 //Entered name is changing
