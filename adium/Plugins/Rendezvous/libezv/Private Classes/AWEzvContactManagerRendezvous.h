@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.h,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.h,v 1.2 2004/06/15 16:08:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -64,11 +64,14 @@
 	name:(const char *)replyName
 	type:(const char *)replyType
 	domain:(const char *)replyDomain
-	flags:(DNSServiceDiscoveryReplyFlags)flags;
+	flags:(DNSServiceDiscoveryReplyFlags)flags
+		  av:(BOOL)av;
 - (void)updateContact:(AWEzvContact *)iccontact
 	withData:(AWEzvRendezvousData *)rendezvousData
 	withAddress:(struct sockaddr *) address;
-	
+
+/* REALLY PRIVATE STUFF */
 - (NSString *)myname;
+- (NSString *)myavname;
 
 @end

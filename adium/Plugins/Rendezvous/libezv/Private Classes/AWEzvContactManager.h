@@ -3,7 +3,7 @@
  * File:        AWEzvContactManager.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManager.h,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvContactManager.h,v 1.2 2004/06/15 16:08:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -50,9 +50,12 @@
     /* Rendezvous related instance variables */
     AWEzvRendezvousData		*userAnnounceData;
     dns_service_discovery_ref	dnsRef;
+    dns_service_discovery_ref	avDnsRef;
     dns_service_discovery_ref	browseRef;
+    dns_service_discovery_ref	avBrowseRef;
     NSString			*myname;
-    DNSRecordReference		imageRef;;
+    NSString			*myavname;
+    DNSRecordReference		imageRef;
 }
 
 - (id) initWithClient:(AWEzv *)client;

@@ -3,7 +3,7 @@
  * File:        AWEzvRendezvousData.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvRendezvousData.h,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvRendezvousData.h,v 1.2 2004/06/15 16:08:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -44,6 +44,7 @@
 - (AWEzvRendezvousData *) initWithData:(NSData *)data;
 - (AWEzvRendezvousData *) initWithPlist:(NSString *)plist;
 - (AWEzvRendezvousData *) initWithDictionary:(NSDictionary *)dictionary;
+- (AWEzvRendezvousData *) initWithAVTxt:(NSString *)txt;
 - (void) setField:(NSString *)fieldName content:(NSString *)content;
 - (NSString *) getField:(NSString *)fieldName;
 - (BOOL) fieldExists:(NSString *)fieldName;
@@ -51,6 +52,8 @@
 - (UInt32) serial;
 - (NSDictionary *)dictionary;
 - (NSString *) dataAsDNSTXT;
+- (NSString *) avDataAsDNSTXT;
 - (NSData *) dataAsPackedPString;
+- (NSData *) avDataAsPackedPString;
 
 @end
