@@ -127,7 +127,8 @@ static NSMenu       *eContextualMenu = nil;
         if([anEmoticon isEnabled] == YES)
         {
             NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name] target:self action:@selector(insertEmoticon:) keyEquivalent:@""];
-            [newItem setImage:[anEmoticon image]];
+#warning Evan:[[foobar copy] autorelease] versus just 'foobar' fixes the flipping. Why is it necessary? Perhaps an emoticon preferences bug?
+            [newItem setImage:[[[anEmoticon image] copy] autorelease]];
             [packMenu addItem:newItem];
             //[eMenu addItem:[newItem copy]];
         }
