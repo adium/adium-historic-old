@@ -13,7 +13,7 @@
 	<key>Custom Icon Path</key>
 	<string></string>
 	<key>Disk Image Name</key>
-	<string>~/Desktop/AdiumX_0.55.dmg</string>
+	<string>~/Desktop/AdiumX_0.56.dmg</string>
 	<key>Encode Format</key>
 	<string>None</string>
 	<key>Encryption Type</key>
@@ -64,8 +64,8 @@
 	<key>Show Toolbar</key>
 	<string>TRUE</string>
 	<key>Volume Name</key>
-	<string>Adium X 0.55</string>
+	<string>Adium X 0.56</string>
 	<key>Window Frame</key>
-	<string>{{23, 109}, {527, 491}}</string>
+	<string>{{40, 92}, {527, 491}}</string>
 </dict>
 </plist>
