@@ -1128,8 +1128,8 @@
 		3420E65F0611D80000AE67E3 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ProxyPasswordPrompt.nib;
-			path = Source/ProxyPasswordPrompt.nib;
+			name = English;
+			path = Source/English.lproj/ProxyPasswordPrompt.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1153,12 +1153,6 @@
 		};
 		3420E6630611D80100AE67E3 = {
 			fileRef = 3420E65E0611D80000AE67E3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3420E6640611D80100AE67E3 = {
-			fileRef = 3420E65F0611D80000AE67E3;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4824,7 +4818,7 @@
 				349FE300074D01D300E36B3B,
 				349FE2FF074D01D300E36B3B,
 				349FE2FE074D01D300E36B3B,
-				349FE302074D01D300E36B3B,
+				34A1A79E078634BF005FA1A5,
 				349FE2FD074D01D300E36B3B,
 				349FE2FC074D01D200E36B3B,
 				07CE05590661D7E600C50929,
@@ -4907,8 +4901,8 @@
 		349FE302074D01D300E36B3B = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESFileTransferProgressView.nib;
-			path = Source/ESFileTransferProgressView.nib;
+			name = English;
+			path = Source/English.lproj/ESFileTransferProgressView.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4938,12 +4932,6 @@
 		};
 		349FE308074D01D300E36B3B = {
 			fileRef = 349FE301074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FE309074D01D300E36B3B = {
-			fileRef = 349FE302074D01D300E36B3B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5022,6 +5010,81 @@
 		};
 		349FFA050750755200E36B3B = {
 			fileRef = 349FFA030750755200E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A1A74A07863132005FA1A5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILocalizationButtonCell.m;
+			path = "Frameworks/Adium Framework/AILocalizationButtonCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A1A74B07863132005FA1A5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILocalizationButtonCell.h;
+			path = "Frameworks/Adium Framework/AILocalizationButtonCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A1A74C07863132005FA1A5 = {
+			fileRef = 34A1A74A07863132005FA1A5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A1A74D07863132005FA1A5 = {
+			fileRef = 34A1A74B07863132005FA1A5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A1A7960786348F005FA1A5 = {
+			children = (
+				F55B416803AB8C0501A8010A,
+			);
+			isa = PBXVariantGroup;
+			name = PasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A1A7970786348F005FA1A5 = {
+			fileRef = 34A1A7960786348F005FA1A5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A1A79C078634AF005FA1A5 = {
+			children = (
+				3420E65F0611D80000AE67E3,
+			);
+			isa = PBXVariantGroup;
+			name = ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A1A79D078634AF005FA1A5 = {
+			fileRef = 34A1A79C078634AF005FA1A5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A1A79E078634BF005FA1A5 = {
+			children = (
+				349FE302074D01D300E36B3B,
+			);
+			isa = PBXVariantGroup;
+			name = ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A1A79F078634BF005FA1A5 = {
+			fileRef = 34A1A79E078634BF005FA1A5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6236,6 +6299,7 @@
 				4B50419507831843005490C8,
 				4B360F370785D1FD00650101,
 				4B360F390785D1FD00650101,
+				34A1A74D07863132005FA1A5,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6352,7 +6416,7 @@
 				4BD6735206001BD50049CAF7,
 				34BD9D28053146CC000AB133,
 				34BD9D27053146CC000AB133,
-				34BD9D2C053146CC000AB133,
+				34A1A7970786348F005FA1A5,
 				4BD6736906001BEA0049CAF7,
 				4BD6736A06001BEA0049CAF7,
 				4BD6737106001BED0049CAF7,
@@ -6378,7 +6442,7 @@
 				4BD6757F06001E410049CAF7,
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
-				3420E6640611D80100AE67E3,
+				34A1A79D078634AF005FA1A5,
 				344ECBAE0620F323007256C6,
 				344ECBB00620F323007256C6,
 				6E7C19BE0623BF80008A1C99,
@@ -6400,7 +6464,7 @@
 				34445922070B613600D8E932,
 				342E2B1B072976060054D77A,
 				34F1022F0734499700890D3B,
-				349FE309074D01D300E36B3B,
+				34A1A79F078634BF005FA1A5,
 				349FF5E5074D6D6400E36B3B,
 				34D2EB6D0758D65D0054C56D,
 				34BD9D30053146CC000AB133,
@@ -6585,12 +6649,6 @@
 		};
 		34BD9D2A053146CC000AB133 = {
 			fileRef = F5CDCE4B0350760A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D2C053146CC000AB133 = {
-			fileRef = F55B416803AB8C0501A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6826,6 +6884,7 @@
 				4B50419607831843005490C8,
 				4B360F380785D1FD00650101,
 				4B360F3A0785D1FD00650101,
+				34A1A74C07863132005FA1A5,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8514,6 +8573,8 @@
 				340833EB075C3A7900703011,
 				34D1897D076114C00075A380,
 				34D1897E076114C00075A380,
+				34A1A74A07863132005FA1A5,
+				34A1A74B07863132005FA1A5,
 			);
 			isa = PBXGroup;
 			name = "Localization Assistance";
@@ -22565,8 +22626,8 @@
 		F55B416803AB8C0501A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = PasswordPrompt.nib;
-			path = Source/PasswordPrompt.nib;
+			name = English;
+			path = Source/English.lproj/PasswordPrompt.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23107,8 +23168,8 @@
 				3420E65C0611D80000AE67E3,
 				3420E65D0611D80000AE67E3,
 				3420E65E0611D80000AE67E3,
-				F55B416803AB8C0501A8010A,
-				3420E65F0611D80000AE67E3,
+				34A1A7960786348F005FA1A5,
+				34A1A79C078634AF005FA1A5,
 				4B494B44063AB63000E2EF06,
 			);
 			isa = PBXGroup;
