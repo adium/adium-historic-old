@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {help = id; upgrade = id; }; 
+            CLASS = ESAdiumPasswordUpgrader; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {progressBar = NSProgressIndicator; text = NSTextField; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
