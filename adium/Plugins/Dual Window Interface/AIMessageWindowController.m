@@ -316,6 +316,7 @@
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
+			[NSNumber numberWithInt:Context_Contact_TabAction],
             [NSNumber numberWithInt:Context_Contact_Additions], nil]
 													 forListObject:selectedObject]);
         

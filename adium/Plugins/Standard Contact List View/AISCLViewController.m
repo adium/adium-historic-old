@@ -449,12 +449,14 @@
 		locationsArray = [NSArray arrayWithObjects:
 			[NSNumber numberWithInt:Context_Group_Manage],
 			[NSNumber numberWithInt:Context_Contact_Action],
+			[NSNumber numberWithInt:Context_Contact_ListAction],
 			[NSNumber numberWithInt:Context_Contact_NegativeAction],
 			[NSNumber numberWithInt:Context_Contact_Additions], nil];
 	}else{
 		locationsArray = [NSArray arrayWithObjects:
 			[NSNumber numberWithInt:Context_Contact_Manage],
 			[NSNumber numberWithInt:Context_Contact_Action],
+			[NSNumber numberWithInt:Context_Contact_ListAction],
 			[NSNumber numberWithInt:Context_Contact_NegativeAction],
 			[NSNumber numberWithInt:Context_Contact_Additions], nil];	
 	}
