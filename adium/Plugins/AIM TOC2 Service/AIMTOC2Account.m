@@ -193,6 +193,7 @@ static char *hash_password(const char * const password);
     return(YES);
 }
 
+
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {

@@ -32,6 +32,7 @@
 - (NSString *)UID;
 - (NSString *)serviceID;
 - (NSString *)serverGroup;
+- (BOOL)temporary;
 
 //Ownership
 - (AIAccount *)account;
