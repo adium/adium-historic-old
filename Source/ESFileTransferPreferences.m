@@ -105,12 +105,12 @@
 	[label_defaultReceivingFolder setStringValue:AILocalizedString(@"Default receiving folder:","FT Preferences")];
 	[label_safeFilesDescription setStringValue:AILocalizedString(@"\"Safe\" files include movies, pictures,\nsounds, text documents, and archives.","Description of safe files (files which Adium can open automatically without danger to the user). This description should be on two lines; the lines are separated by \n.")];
 	[label_transferProgress setStringValue:AILocalizedString(@"Transfer progress:","FT Preferences")];
-
-	[checkBox_autoAcceptFiles setStringValue:AILocalizedString(@"Automatically accept files...","FT Preferences")];
-	[checkBox_autoAcceptOnlyFromCLList setStringValue:AILocalizedString(@"only from contacts on my Contact List","FT Preferences")];
-	[checkBox_autoOpenFiles setStringValue:AILocalizedString(@"Opoen \"Safe\" files after receiving","FT Preferences")];
-	[checkBox_autoClearCompleted setStringValue:AILocalizedString(@"Show the progress window automatically","FT Preferences")];
-	[checkBox_showProgress setStringValue:AILocalizedString(@"Clear completed transfers automatically","FT Preferences")];
+	
+	[checkBox_autoAcceptFiles setTitle:AILocalizedString(@"Automatically accept files...","FT Preferences")];
+	[checkBox_autoAcceptOnlyFromCLList setTitle:AILocalizedString(@"only from contacts on my Contact List","FT Preferences")];
+	[checkBox_autoOpenFiles setTitle:AILocalizedString(@"Open \"Safe\" files after receiving","FT Preferences")];
+	[checkBox_autoClearCompleted setTitle:AILocalizedString(@"Show the progress window automatically","FT Preferences")];
+	[checkBox_showProgress setTitle:AILocalizedString(@"Clear completed transfers automatically","FT Preferences")];
 }
 
 - (void)buildDownloadLocationMenu
