@@ -68,7 +68,6 @@
 	
     //Cleanup
 	[preferenceMessageAdvController release];
-	[preferenceMessageController release];
     [containers release];
 	[delayedContainerShowArray release];
 }	
