@@ -78,8 +78,10 @@
 	}
 	
 	//User Icon Height
-	if(userIconSize.height > largestElementHeight){
-		largestElementHeight = userIconSize.height;
+	if(userIconVisible){
+		if(userIconSize.height > largestElementHeight){
+			largestElementHeight = userIconSize.height;
+		}
 	}
 	
 	//Status text height (If beside name)
