@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/23/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIServiceIcons.h"
@@ -27,10 +26,6 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 			serviceIcons[i][j] = [[NSMutableDictionary alloc] init];
 		}
 	}
-
-	//Hard coded icon pack for now
-	NSString *path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Service Icons"] stringByExpandingTildeInPath];
-	[self setActiveServiceIconsFromPath:[path stringByAppendingPathComponent:@"Gaim.AdiumServiceIcons"]];
 }
 
 //Retrive the correct service icon for a contact
