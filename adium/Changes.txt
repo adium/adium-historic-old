@@ -2,7 +2,11 @@
 				-----------------------
 				
 Version 0.53 (4/  /2004)				
-- 
+- Cleaned up address book integration advanced preferences
+
+
+
+
 				
 				
 				
