@@ -25,7 +25,7 @@
         @"tell application \"iTunes\" \n set theGenre to genre of current track \n end tell \n return theGenre as string",@"%_genre",
         @"tell application \"iTunes\" \n set theTrack to name of current track \n end tell \n return theTrack as string",@"%_track",
         @"tell application \"iTunes\" \n  set theYear to year of current track \n end tell \n return theYear as string",@"%_year",
-        @"tell application \"iTunes\" \n  set theRating to the rating of current track \n end tell \n return theRating & \"/5\" as string",@"%_rating",
+        @"tell application \"iTunes\" \n  set theRating to the rating of current track \n end tell \n return theRating * 5 div 100 & \"/5\" as string",@"%_rating",
         @"tell application \"iTunes\" \n  set theComposer to the composer of current track \n end tell \n return theComposer as string",@"%_composer",
         @"tell application \"iTunes\" \n  set theStatus to player state \n end tell \n return theStatus as string",@"%_status",
         @"tell application \"iTunes\" \n  set thePosition to player position \n end tell \n return thePosition div 60 & \":\" & thePosition mod 60 as string",@"%_position",
