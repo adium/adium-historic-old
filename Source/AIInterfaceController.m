@@ -1267,7 +1267,9 @@
 		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil);
 	
 	}else if(menuItem == menuItem_showToolbar){
-		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
+		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 
+										AILocalizedString(@"Hide Toolbar",nil) : 
+										AILocalizedString(@"Show Toolbar",nil))];
 		return([keyWindow toolbar] != nil);
 	
 	}else if(menuItem == menuItem_customizeToolbar){
