@@ -160,9 +160,15 @@
 
 //Preferences ---------------------------------------------
 #pragma mark Preferences
+
+- (LIST_WINDOW_STYLE)windowStyle
+{
+	return WINDOW_STYLE_STANDARD;
+}
+
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
-	LIST_WINDOW_STYLE	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
+	LIST_WINDOW_STYLE	windowStyle = [self windowStyle];
 	float				backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 	NSTextAlignment		contentCellAlignment;
 	BOOL				pillowsOrPillowsFittedWindowStyle;

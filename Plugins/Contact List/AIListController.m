@@ -32,6 +32,8 @@
 
 #define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
 
+#define PREF_GROUP_APPEARANCE		@"Appearance"
+
 typedef enum {
 	AIDockToBottom_No = 0,
     AIDockToBottom_VisibleFrame,
@@ -512,6 +514,15 @@ typedef enum {
 - (void)outlineViewUserDidCollapseItem:(NSNotification *)notification
 {
 	[self contactListDesiredSizeChanged];
+}
+
+#pragma mark Preferences
+
+- (LIST_WINDOW_STYLE)windowStyle
+{
+	NSNumber	*windowStyleNumber = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE 
+																			  group:PREF_GROUP_APPEARANCE];
+	return (windowStyleNumber ? [windowStyleNumber intValue] : WINDOW_STYLE_STANDARD);
 }
 
 @end
