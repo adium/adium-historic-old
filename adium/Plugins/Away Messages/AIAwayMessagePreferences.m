@@ -49,7 +49,6 @@
 //Create a new away message
 - (IBAction)newAwayMessage:(id)sender
 {
-    NSString		*newAwayTitle;
     NSAttributedString	*newAwayString;
     NSMutableDictionary	*newAwayDict;
 
