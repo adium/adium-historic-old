@@ -19,11 +19,11 @@
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 
-#define TOOL_TIP_CHECK_INTERVAL	5.0	//Check for mouse movement 5 times a second
-#define TOOL_TIP_DELAY 		3	//Number of check intervals of no movement before a tip is displayed
+#define TOOL_TIP_CHECK_INTERVAL		5.0		//Check for mouse movement 5 times a second
+#define TOOL_TIP_DELAY 				3		//Number of check intervals of no movement before a tip is displayed
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
-#define KEY_DUAL_RESIZE_HORIZONTAL              @"Autoresize Horizontal"
+#define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
 @interface AISCLViewController (PRIVATE)
 - (void)contactListChanged:(NSNotification *)notification;
@@ -39,6 +39,12 @@
 - (void)updateTooltipTrackingRect;
 - (void)_desiredSizeChanged;
 - (void)_endTrackingMouse;
+
+- (void)_configureTransparencyAndShadows;
+@end
+
+@interface NSObject (_AIRespondsToUpdateShadows)
+- (void)setUpdateShadowsWhileScrolling:(BOOL)update;
 @end
 
 @implementation AISCLViewController
@@ -122,10 +128,6 @@
 		[contactListView reloadItem:object reloadChildren:YES];
 		[contactListView updateHorizontalSizeForObject:object];
 	}
-    
-#warning Adam: These are slow, we dont want to do them unless absolutely necessary
-//    [[contactListView window] compatibleInvalidateShadow];
-//    [[contactListView window] display];
 }
 
 //Reload the contact list (if updates aren't delayed)
@@ -140,10 +142,6 @@
 	}
 	
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
-
-#warning Adam: These are slow, we dont want to do them unless absolutely necessary
-	//[[contactListView window] compatibleInvalidateShadow];
-	//[[contactListView window] display];
 }
 
 //Redisplay the modified object (Attribute change)
@@ -169,12 +167,8 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-        float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
         NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
-        NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
-        NSColor		*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
         NSColor		*groupColor = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor];
-        NSFont		*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
         BOOL		customGroupColor = [[prefDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue];
         BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
@@ -185,8 +179,6 @@
 		BOOL			useGradient = [[prefDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue];
 		float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
         
-        
-        float           spacing = [[prefDict objectForKey:KEY_SCL_SPACING] floatValue];
         BOOL            outlineGroups = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue];
         NSColor         *outlineGroupsColor = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor];
         BOOL            labelGroups = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue];
@@ -194,44 +186,38 @@
         
         allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
         
+        float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
 		
-		//Opacity, Shadows -----
-#warning        shadows = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
+				
+		//Opacity, Shadows
+		[self _configureTransparencyAndShadows];
 		
+        //Contact and group fonts
+        NSFont  *font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
+		NSFont	*boldFont = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
+		if(!boldFont) boldFont = font;
+		[contactListView setFont:font];
+		[contactListView setGroupFont:(boldGroups ? boldFont : font)];
 		
-		
-		
-		
-		
-        //Borderless
-		
-		
-		
-		
-        //Configure shadow drawing
-#warning        if ([contactListView window])
-#warning            [[contactListView window] setHasShadow:shadows];
-
-        //Fonts
-        NSFont		*boldFont = nil;
-        [contactListView setFont:font];
-        if(boldGroups){
-            boldFont = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
-         //   if (TRANSPARENT_SKIN)
-         //       boldFont = [[NSFontManager sharedFontManager] convertFont:boldFont toSize:([font pointSize]+2.0)];
-        }
-        [contactListView setGroupFont:(boldFont ? boldFont : font)];
-
-        //Row Height
-        float fontHeight = [font defaultLineHeightForFont];
-        if (boldFont) {
+        //Row Height and spacing
+        float 	fontHeight = [font defaultLineHeightForFont];
+        if(boldFont){
             float boldHeight = [boldFont defaultLineHeightForFont];            
-            if (boldHeight > fontHeight) fontHeight = boldHeight;
+            if(boldHeight > fontHeight) fontHeight = boldHeight;
         }            
         [contactListView setRowHeight:fontHeight];
-        
-        //Spacing between rows
-        [contactListView setIntercellSpacing:NSMakeSize(3.0,spacing)];      
+        [contactListView setIntercellSpacing:NSMakeSize(3.0,[[prefDict objectForKey:KEY_SCL_SPACING] floatValue])];      
+		
+
+		
+		
+		
+		
+		
+        NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
+        NSColor		*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
+		
+		
           
         //Colors
         [contactListView setShowLabels:showLabels];
@@ -261,20 +247,9 @@
         [contactListView setDrawsAlternatingRows:alternatingGrid];
         [contactListView setAlternatingRowColor:gridColor];
 
-        /*
-            For this view to be transparent, it's containing window must be set as non-opaque.  It would make sense to use: [[contactListView window] setOpaque:(alpha == 100.0)];
-
-            However, setting a window to opaque causes it's contents to be shadowed.  It is a pain (and a major speed hit) to maintain shadows beneath the contact list text.  A little trick to prevent the window manager from shadowing the window content is to set the window itself as non-opaque.  The contents of a window that is non-opaque will not cast a shadow.  Setting the window's alpha value to 0.9999999 removes the shadowing without giving the slightest appearance of opacity to the window titlebar and widgets.
-            */
-    //    [[contactListView window] setOpaque:NO];
-        [[contactListView window] setAlphaValue:(/*alpha == 1.0 ? 1.0 :*/ 0.9999999)];
 
         [contactListView performFullRecalculation];
         
-#warning Adam: These are slow, we dont want to do them unless absolutely necessary
-//        [[contactListView window] compatibleInvalidateShadow];
-//        [[contactListView window] display];
-//        [[contactListView window] compatibleInvalidateShadow];
     }
    
 
@@ -287,6 +262,29 @@
         horizontalResizingEnabled = [[notOurPrefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
     }
 
+}
+
+//Configure the transparency and shadowing of the window containing our list
+- (void)_configureTransparencyAndShadows
+{
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	float   		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
+	BOOL			hasShadow = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
+	
+	if([contactListView window]){
+		//Shadow
+		[[contactListView window] setHasShadow:hasShadow];
+		if([[contactListView enclosingScrollView] respondsToSelector:@selector(setUpdateShadowsWhileScrolling:)]){
+			[[contactListView enclosingScrollView] setUpdateShadowsWhileScrolling:((alpha != 1.0) && hasShadow)];
+		}
+		[[contactListView window] setOpaque:(alpha == 1.0)];
+		[contactListView setUpdateShadowsWhileDrawing:((alpha != 1.0) && hasShadow)];
+
+		
+		//Force a redraw of the window and shadow
+		[[contactListView window] compatibleInvalidateShadow];
+		[[contactListView window] setViewsNeedDisplay:YES];
+	}
 }
 
 //Called when our view moves to another superview, update the traking rect
@@ -307,7 +305,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSWindowDidBecomeKeyNotification object:[inSuperview window]]; //Force a frame update when window becomes key
     
     //Configure shadow drawing
-#warning    [[inSuperview window] setHasShadow:shadows];
+	[self _configureTransparencyAndShadows];
 }
 
 //Frame changed, reinstall cursor tracking rect

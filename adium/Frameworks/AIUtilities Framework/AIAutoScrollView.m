@@ -123,7 +123,7 @@
 }
 
 //Called as the view resizes or scrolls
-- (void)reflectScrolledClipView:(NSClipView *)cView;
+- (void)reflectScrolledClipView:(NSClipView *)cView
 {
     [super reflectScrolledClipView:cView];
 
@@ -131,10 +131,11 @@
     if(autoHideScrollBar){
         [self setCorrectScrollbarVisibility];
     }
-    if(updateShadowsWhileScrolling){
-#warning Adam: These are slow, we dont want to do them unless absolutely necessary
-//        [[self window] compatibleInvalidateShadow];
-    }
+//    if(updateShadowsWhileScrolling){
+//		[[self window] performSelector:@selector(compatibleInvalidateShadow) withObject:nil afterDelay:0.001];
+//		[[self window] compatibleInvalidateShadow];
+//		[[self window] display];
+//    }
 }
 
 //Scroll to the top of our view
@@ -177,6 +178,7 @@
 {
     updateShadowsWhileScrolling = inValue;   
 }
+
 @end
 
 

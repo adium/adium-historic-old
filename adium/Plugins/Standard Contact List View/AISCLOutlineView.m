@@ -53,6 +53,7 @@
     labelGroupColor = nil;
     selectedItem = nil;
     outlineLabels = NO;
+	updateShadowsWhileDrawing = NO;
     labelOpacity = 1.0;
     
     int i;
@@ -105,9 +106,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:[newSuperview window]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedMain:) name:NSWindowDidResignMainNotification object:[newSuperview window]];
     }
-
-    //Turn on transparency for our destination window (if necessary)
-    [self configureTransparencyForWindow:[newSuperview window]];
 }
 
 - (void)viewDidMoveToSuperview
@@ -166,11 +164,6 @@
 {
     lastSelectedRow = [self selectedRow];
     [self deselectAll:nil];
-    
-    //Updates shadows from the change in selection
-#warning Adam: These are slow, we dont want to do them unless absolutely necessary
-//    [[self window] compatibleInvalidateShadow];
-//    [[self window] display];
 }
 
 
@@ -186,18 +179,6 @@
 }
 
     
-// Transparency ------------------------------------------------------------------------
-- (void)configureTransparencyForWindow:(NSWindow *)inWindow
-{
-    float	backgroundAlpha;
-
-    //This is handled automatically by AISCLViewPlugin when the transparency preference is altered - but the first time preferences are applied our view is not yet installed.  The solution is to re-set the window transparency here, as our view is being inserted into the window.
-    //Needed for proper transparency... but not the cleanest way.
-    backgroundAlpha = [[[self backgroundColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] alphaComponent];
-    [inWindow setAlphaValue:(backgroundAlpha == 1.0 ? 1.0 : 0.9999999)];
-}
-
-
 // Auto Sizing --------------------------------------------------------------------------
 //Updates the horizontal size of an object, posting a desired size did change notification if necessary
 - (void)updateHorizontalSizeForObject:(AIListObject *)inObject
@@ -465,6 +446,19 @@
 }
 - (BOOL)labelAroundContactOnly{
     return labelAroundContactOnly;   
+}
+
+
+//Parent window transparency -----------------------------------------------------------------
+- (void)setUpdateShadowsWhileDrawing:(BOOL)update
+{
+	updateShadowsWhileDrawing = update;
+}
+
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
+	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
 }
 
 

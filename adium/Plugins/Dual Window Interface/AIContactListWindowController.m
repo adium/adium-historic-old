@@ -348,7 +348,6 @@
     contactListViewController = [[[adium interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
     [scrollView_contactList setAndSizeDocumentView:contactListView];
-    [scrollView_contactList setUpdateShadowsWhileScrolling:YES];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
     [[self window] makeFirstResponder:contactListView];
