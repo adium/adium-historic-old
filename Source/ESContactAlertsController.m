@@ -31,20 +31,29 @@
 int eventMenuItemSort(id menuItemA, id menuItemB, void *context);
 int actionMenuItemSort(id menuItemA, id menuItemB, void *context);
 
-DeclareString(KeyActionID);
-DeclareString(KeyEventID);
-DeclareString(KeyActionDetails);
-DeclareString(KeyOneTimeAlert);
+static	NSMutableDictionary		*eventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
+static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 
+/*
+ * @brief Initialize
+ */
++ (void)initialize
+{
+	static BOOL didInitialize = NO;
+	if(!didInitialize){
+		int i;
+		for(i = 0; i < EVENT_HANDLER_GROUP_COUNT; i++){
+			eventHandlersByGroup[i] = nil;
+			globalOnlyEventHandlersByGroup[i] = nil;
+		}
+
+		didInitialize = YES;
+	}
+}
 
 //init and close
 - (void)initController
 {
-	InitString(KeyActionID,KEY_ACTION_ID);
-	InitString(KeyEventID,KEY_EVENT_ID);
-	InitString(KeyActionDetails,KEY_ACTION_DETAILS);
-	InitString(KeyOneTimeAlert,KEY_ONE_TIME_ALERT);
-
 	globalOnlyEventHandlers = [[NSMutableDictionary alloc] init];
 	eventHandlers = [[NSMutableDictionary alloc] init];
 	actionHandlers = [[NSMutableDictionary alloc] init];
@@ -184,6 +193,50 @@ DeclareString(KeyOneTimeAlert);
     }
 }
 
+int eventIDSort(id objectA, id objectB, void *context){
+	int					groupA, groupB;
+	id <AIEventHandler> eventHandlerA;
+	id <AIEventHandler> eventHandlerB;
+	
+	//Determine the group of each eventID
+	for(groupA = 0; groupA < EVENT_HANDLER_GROUP_COUNT; groupA++){
+		eventHandlerA = [eventHandlersByGroup[groupA] objectForKey:objectA];
+		if(!eventHandlerA){
+			eventHandlerA = [globalOnlyEventHandlersByGroup[groupA] objectForKey:objectA];
+		}
+		
+		if(eventHandlerA) break;
+	}
+	
+	//Determine the group of each eventID
+	for(groupB = 0; groupB < EVENT_HANDLER_GROUP_COUNT; groupB++){
+		eventHandlerB = [eventHandlersByGroup[groupB] objectForKey:objectB];
+		if(!eventHandlerB){
+			eventHandlerB = [globalOnlyEventHandlersByGroup[groupB] objectForKey:objectB];
+		}
+		
+		if(eventHandlerB) break;
+	}
+	
+	if(groupA < groupB){
+		return NSOrderedAscending;
+		
+	}else if(groupB < groupA){
+		return NSOrderedDescending;
+		
+	}else{
+		NSString	*descriptionA = [eventHandlerA globalShortDescriptionForEventID:objectA];
+		NSString	*descriptionB = [eventHandlerA globalShortDescriptionForEventID:objectB];
+		
+		return ([descriptionA caseInsensitiveCompare:descriptionB]);
+	}
+}
+
+- (NSArray *)sortedArrayOfEventIDsFromArray:(NSArray *)inArray
+{
+	return([inArray sortedArrayUsingFunction:eventIDSort context:NULL]);
+}
+
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	id <AIEventHandler>	eventHandler;
@@ -220,18 +273,18 @@ DeclareString(KeyOneTimeAlert);
 			NSString	*actionID;
 			id <AIActionHandler>	actionHandler;			
 			
-			actionID = [alert objectForKey:KeyActionID];
+			actionID = [alert objectForKey:KEY_ACTION_ID];
 			actionHandler = [actionHandlers objectForKey:actionID];		
 			
 			if((![performedActionIDs containsObject:actionID]) || ([actionHandler allowMultipleActionsWithID:actionID])){
 				[actionHandler performActionID:actionID
 								 forListObject:listObject
-								   withDetails:[alert objectForKey:KeyActionDetails] 
+								   withDetails:[alert objectForKey:KEY_ACTION_DETAILS] 
 							 triggeringEventID:eventID
 									  userInfo:userInfo];
 				
 				//If this alert was a single-fire alert, we can delete it now
-				if([[alert objectForKey:KeyOneTimeAlert] intValue]){
+				if([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]){
 					[self removeAlert:alert fromListObject:listObject];
 				}
 				
@@ -453,7 +506,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		
 		while(alert = [alertEnumerator nextObject]){
 			//If we don't have a specific actionID, or this one is right, add it
-			if(!actionID || [actionID isEqualToString:[alert objectForKey:KeyActionID]]){
+			if(!actionID || [actionID isEqualToString:[alert objectForKey:KEY_ACTION_ID]]){
 				[alertArray addObject:alert];
 			}
 		}
@@ -472,7 +525,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 			alertEnumerator = [[contactAlerts objectForKey:anEventID] objectEnumerator];
 			while(alert = [alertEnumerator nextObject]){
 				//If we don't have a specific actionID, or this one is right, add it
-				if(!actionID || [actionID isEqualToString:[alert objectForKey:KeyActionID]]){
+				if(!actionID || [actionID isEqualToString:[alert objectForKey:KEY_ACTION_ID]]){
 					[alertArray addObject:alert];
 				}
 			}
@@ -485,7 +538,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 //Add an alert (passed as a dictionary) to a list object
 - (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject setAsNewDefaults:(BOOL)setAsNewDefaults
 {
-	NSString			*newAlertEventID = [newAlert objectForKey:KeyEventID];
+	NSString			*newAlertEventID = [newAlert objectForKey:KEY_EVENT_ID];
 	NSMutableDictionary	*contactAlerts;
 	NSMutableArray		*eventArray;
 	
@@ -520,7 +573,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		[[adium preferenceController] setPreference:newAlertEventID
 											 forKey:KEY_DEFAULT_EVENT_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];
-		[[adium preferenceController] setPreference:[newAlert objectForKey:KeyActionID]
+		[[adium preferenceController] setPreference:[newAlert objectForKey:KEY_ACTION_ID]
 											 forKey:KEY_DEFAULT_ACTION_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];	
 	}
@@ -539,7 +592,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	NSMutableDictionary	*contactAlerts = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
 																				   group:PREF_GROUP_CONTACT_ALERTS
 															   objectIgnoringInheritance:listObject] mutableCopy];
-	NSString			*victimEventID = [victimAlert objectForKey:KeyEventID];
+	NSString			*victimEventID = [victimAlert objectForKey:KEY_EVENT_ID];
 	NSMutableArray		*eventArray;
 	
 	//Get the event array containing the victim alert, making a copy so we can modify it
@@ -594,7 +647,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		while (alertDict = [alertArrayEnumerator nextObject]){
 			
 			//We found an alertDict which needs to be removed
-			if ([[alertDict objectForKey:KeyActionID] isEqualToString:actionID]){
+			if ([[alertDict objectForKey:KEY_ACTION_ID] isEqualToString:actionID]){
 				//If this is the first modification to the current eventArray, make a mutableCopy with which to work
 				if (!newEventArray) newEventArray = [[eventArray mutableCopy] autorelease];
 				[newEventArray removeObject:alertDict];
@@ -633,7 +686,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	enumerator = [allGlobalAlerts objectEnumerator];
 	while(eventDict = [enumerator nextObject]){
 		NSMutableArray		*eventArray;
-		NSString			*eventID = [eventDict objectForKey:KeyEventID];
+		NSString			*eventID = [eventDict objectForKey:KEY_EVENT_ID];
 
 		/* Get the event array for this alert. Since we are creating the entire dictionary, we can be sure we are working
 		 * with an NSMutableArray.
