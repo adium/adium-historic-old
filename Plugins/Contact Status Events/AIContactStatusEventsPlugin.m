@@ -23,8 +23,15 @@
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare;
 @end
 
+/*
+ * @class AIContactStatusEventsPlugin
+ * @brief Component to provide events for contact status changes (online, offline, away, idle, etc.)
+ */
 @implementation AIContactStatusEventsPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//
@@ -47,6 +54,10 @@
     [[adium contactController] registerListObjectObserver:self];
 }
 
+/*!
+ * @brief Short description
+ * @result A short localized description of the passed event
+ */
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
@@ -74,6 +85,9 @@
 	return(description);
 }
 
+/*!
+ * @brief Global short description for an event
+ */
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
@@ -101,8 +115,14 @@
 	return(description);
 }
 
-//Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
-//a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+/*!
+ * @brief English, non-translated global short description for an event
+ *
+ * This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
+ * a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+ *
+ * @result English global short description which should only be used internally
+ */
 - (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
@@ -130,6 +150,9 @@
 	return(description);
 }
 
+/*!
+ * @brief Long description for an event
+ */
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
 {
 	NSString	*format;
@@ -166,6 +189,15 @@
 	return([NSString stringWithFormat:format,name]);
 }
 
+/*!
+ * @brief Natural language description for an event
+ *
+ * @param eventID The event identifier
+ * @param listObject The listObject triggering the event
+ * @param userInfo Event-specific userInfo
+ * @param includeSubject If YES, return a full sentence.  If not, return a fragment.
+ * @result The natural language description.
+ */
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
@@ -221,11 +253,16 @@
 }
 
 #pragma mark Caching and event generation
-//
+/*
+ * @brief Cache list object updates
+ *
+ * We cache list object updates so we can avoid generating the same event for the same contact on two accounts
+ * or for multiple identical changes within a metaContact.
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	//Ignore accounts.
-	//Ignore meta contact children since the actual meta contact provides a better event.
+	/* Ignore accounts.
+	 * Ignore meta contact children since the actual meta contact provides a better event. */
 	if((![inObject isKindOfClass:[AIAccount class]]) &&		//Ignore accounts
 	   (![[inObject containingObject] isKindOfClass:[AIMetaContact class]])){	
 		
@@ -252,11 +289,17 @@
 			}
 		}
 		
-		//Events which are irrelevent if the contact is not online - these changes occur when we are just doing bookkeeping
-		//e.g. an away contact signs off, we clear the away flag, but they didn't actually come back from away.
+		/* Events which are irrelevent if the contact is not online - these changes occur when we are
+		 * just doing bookkeeping e.g. an away contact signs off, we clear the away flag, but they didn't actually
+		 * come back from away. */
 		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
-			if([inModifiedKeys containsObject:@"Away"]){
-				id newValue = [inObject numberStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
+			if([inModifiedKeys containsObject:@"StatusState"]){
+				AIStatus	*statusState = [inObject statusState];
+				id			newValue;
+
+				//Update away/not-away
+				newValue = [NSNumber numberWithBool:([statusState statusType] == AIAwayStatusType)];
+					
 				if([self updateCache:awayCache
 							  forKey:@"Away"
 							newValue:newValue
@@ -268,24 +311,10 @@
 														  userInfo:nil
 									  previouslyPerformedActionIDs:nil];
 				}
-			}
-			if([inModifiedKeys containsObject:@"IsIdle"]){
-				id newValue = [inObject numberStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO];
-				if([self updateCache:idleCache
-							  forKey:@"IsIdle"
-							newValue:newValue
-						  listObject:inObject
-					  performCompare:YES] && !silent){
-					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
-					[[adium contactAlertsController] generateEvent:event
-													 forListObject:inObject
-														  userInfo:nil
-									  previouslyPerformedActionIDs:nil];
-				}
-			}
-			if([inModifiedKeys containsObject:@"StatusMessage"]){
-				id	newValue = [inObject stringFromAttributedStringStatusObjectForKey:@"StatusMessage"
-															   fromAnyContainedObject:YES];
+				
+				//Update status message
+				newValue = [[statusState statusMessage] string];
+		
 				if([self updateCache:statusMessageCache 
 							  forKey:@"StatusMessage"
 							newValue:newValue
@@ -300,15 +329,38 @@
 					}
 				}
 			}
+
+			if([inModifiedKeys containsObject:@"IsIdle"]){
+				id newValue = [inObject numberStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO];
+				if([self updateCache:idleCache
+							  forKey:@"IsIdle"
+							newValue:newValue
+						  listObject:inObject
+					  performCompare:YES] && !silent){
+					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
+					[[adium contactAlertsController] generateEvent:event
+													 forListObject:inObject
+														  userInfo:nil
+									  previouslyPerformedActionIDs:nil];
+				}
+			}
 		}
 	}
 
 	return(nil);	
 }
 
-//Caches status changes, returning YES if it was a true change and NO if the change already happened for this listObject via another account
-//If performCompare is NO, we are only concerned about the existance of the statusObject.  
-//If it is YES, a change from one value to another is considered worthy of an update.
+/*
+ * @brief Update the cache
+ *
+ * @param cache The cache
+ * @param key The key
+ * @param newStatus The new value
+ * @param inObject The list object
+ * @param performCompare If NO, we are only concerned about whether any object exists. If YES, a change from one value to another means we've updated.
+ *
+ * @result YES if the cache changed; NO if it remained the same (event has already occurred on another associated contact)
+ */
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
 {
 	id		oldStatus = [cache objectForKey:[inObject internalObjectID]];
