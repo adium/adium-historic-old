@@ -137,7 +137,7 @@
 	//We're done with Internet Config, so stop it
 	Err = ICStop(ICInst);
 
-	AILog(@"%@ returning importer class %@",self,NSStringFromClass(importerClass));
+	//AILog(@"%@ determined importer class: %@",self,NSStringFromClass(importerClass));
 
 	return(importerClass);
 }
