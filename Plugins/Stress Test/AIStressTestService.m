@@ -17,7 +17,7 @@
 	return([AIStressTestAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return(nil);
 }
 
