@@ -16,7 +16,6 @@
 #import "AISMViewPlugin.h"
 #import "AISMViewController.h"
 #import "AISMPreferences.h"
-#import "ESSMAdvancedPreferences.h"
 
 @implementation AISMViewPlugin
 
