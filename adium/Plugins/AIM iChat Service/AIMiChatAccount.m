@@ -52,6 +52,9 @@ extern void* objc_getClass(const char *name);
     //Register as a listener
     [FZDaemon addListener:self capabilities:15]; //15 is what iChat uses... dunno the meaning    
     [AIMService addListener:self signature:@"com.adiumX.adium" capabilities:15]; //15 is what iChat uses... dunno the meaning
+
+    //Clear the online state flag - this account should always load as offline (online state is not restored)
+    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
 // Return a view for the connection window
