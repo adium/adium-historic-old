@@ -24,10 +24,6 @@
 	return([DCGaimOscarJoinChatViewController joinChatView]);
 }
 
-- (BOOL)canCreateGroupChats{
-	return YES;
-}
-
 //Service Description
 - (NSString *)serviceCodeUniqueID{
 	return(@"libgaim-oscar");
@@ -64,6 +60,9 @@
 }
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceUnsupported);
+}
+- (BOOL)canCreateGroupChats{
+	return(YES);
 }
 
 @end
