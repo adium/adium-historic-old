@@ -52,27 +52,35 @@
 {
     //Create our toGroups if necessary
     if(!toGroupArray){
-	NSEnumerator    *enumerator;
-	NSString	*folderName;
-	NSString	*fullPath;
-	
-	//
-	toGroupArray = [[NSMutableArray alloc] init];
-	
-	//
-	fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
-	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
-	while(folderName = [enumerator nextObject]){
-	    AILogToGroup    *toGroup;
-	    
-	    toGroup = [[AILogToGroup alloc] initWithPath:[path stringByAppendingPathComponent:folderName]
-					            from:from
-					              to:folderName];
-	    [toGroupArray addObject:toGroup];
-	    [toGroup release];
-	
-	}
-
+		NSEnumerator    *enumerator;
+		NSString	*folderName;
+		NSString	*fullPath;
+		
+		//
+		toGroupArray = [[NSMutableArray alloc] init];
+		
+		//
+		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
+		enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
+		while(folderName = [enumerator nextObject]){
+			AILogToGroup    *toGroup = nil;
+			
+			while(!toGroup){
+#warning why does this alloc fail sometimes?
+				toGroup = [[AILogToGroup alloc] initWithPath:[path stringByAppendingPathComponent:folderName]
+														from:from
+														  to:folderName];
+				
+				//Not sure why, but I've had that alloc fail on me before
+				if(toGroup){
+					[toGroupArray addObject:toGroup];
+				}else{
+					NSLog(@"FAILED to alloc toGroup %@, trying again",[path stringByAppendingPathComponent:folderName]);
+				}
+			}
+			
+			[toGroup release];
+		}
     }
     
     return(toGroupArray);

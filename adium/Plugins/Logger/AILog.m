@@ -24,7 +24,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo date:(NSCalendarDate *)inDate
 {
     [super init];
-    
+	
     path = [inPath retain];
     from = [inFrom retain];
     to = [inTo retain];
@@ -63,15 +63,15 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     
     //Setup our shared date formatter
     if(!dateSearchFormatter){
-	NSString    *searchFormat = [NSString stringWithFormat:@"%@ %@",
-	    [[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString],
-	    [[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString]];
-	dateSearchFormatter = [[NSDateFormatter alloc] initWithDateFormat:searchFormat allowNaturalLanguage:YES];
+		NSString    *searchFormat = [NSString stringWithFormat:@"%@ %@",
+			[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString],
+			[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString]];
+		dateSearchFormatter = [[NSDateFormatter alloc] initWithDateFormat:searchFormat allowNaturalLanguage:YES];
     }
     
     //Load and cache our search string
     if(!dateSearchString){
-	dateSearchString = [[dateSearchFormatter stringForObjectValue:date] retain];
+		dateSearchString = [[dateSearchFormatter stringForObjectValue:date] retain];
     }
     
     return(dateSearchString);
@@ -82,14 +82,14 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 {
     NSComparisonResult  result = [to caseInsensitiveCompare:[inLog to]];
     if(result == NSOrderedSame) result = [date compare:[inLog date]];
-
+	
     return(result);
 }
 - (NSComparisonResult)compareToReverse:(AILog *)inLog
 {
     NSComparisonResult  result = [[inLog to] caseInsensitiveCompare:to];
     if(result == NSOrderedSame) result = [date compare:[inLog date]];
-
+	
     return(result);
 }
 //Sort by From, then Date
@@ -130,7 +130,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     unsigned long   year = 0;
     unsigned long   month = 0;
     unsigned long   day = 0;
-        
+	
     scandate([fileName cString], &year, &month, &day);
     if(year && month && day){
         return([NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]]);
@@ -147,18 +147,18 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     sample += 2; //skip over the ' ('
     
     /*get the year*/ {
-	while(*sample < '0' || *sample > '9') ++sample;
-	*outyear = strtoul(sample, (char **)&sample, 10);
+		while(*sample < '0' || *sample > '9') ++sample;
+		*outyear = strtoul(sample, (char **)&sample, 10);
     }
     
     /*get the month*/ {
-	while(*sample < '0' || *sample > '9') ++sample;
-	*outmonth = strtoul(sample, (char **)&sample, 10);
+		while(*sample < '0' || *sample > '9') ++sample;
+		*outmonth = strtoul(sample, (char **)&sample, 10);
     }
     
     /*get the date*/ {
-	while(*sample < '0' || *sample > '9') ++sample;
-	*outdate = strtoul(sample, (char **)&sample, 10);
+		while(*sample < '0' || *sample > '9') ++sample;
+		*outdate = strtoul(sample, (char **)&sample, 10);
     }
 }
 

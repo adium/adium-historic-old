@@ -140,15 +140,15 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     NSString		*logFolderPath;
     NSEnumerator	*enumerator;
     NSString		*folderName;
-    
+
     //Process each account folder (/Logs/SERVICE.ACCOUNT_NAME/)
     logFolderPath = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
     enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator];
     while((folderName = [enumerator nextObject])){
-	AILogFromGroup  *logFromGroup = [[AILogFromGroup alloc] initWithPath:folderName from:folderName];
-	
-	[availableLogArray addObject:logFromGroup];
-	[logFromGroup release];
+		AILogFromGroup  *logFromGroup = [[AILogFromGroup alloc] initWithPath:folderName from:folderName];
+		
+		[availableLogArray addObject:logFromGroup];
+		[logFromGroup release];
     }
 }
 
@@ -287,7 +287,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 {
     NSAttributedString	*logText = nil;
     NSString			*logFileText = nil;
-	
+
     if(displayedLog != theLog){
 		[displayedLog release];
 		displayedLog = [theLog retain];
@@ -527,6 +527,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     //Stop any existing searches
     [self stopSearching];
     
+    NSLog(@"startSearching");
+
     //Once all searches have exited, we can start a new one
     [resultsLock lock];
     [selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];

@@ -52,14 +52,28 @@
     
 }
 
+//Paths
 + (NSString *)logBasePath;
-+ (NSString *)logPathWithAccount:(AIAccount *)account andObject:(NSString *)object;
++ (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account;
++ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText;
++ (NSString *)fullPathOfLogAtRelativePath:(NSString *)relativePath;
+
+//Log viewer
+- (void)showLogViewerToSelectedContact:(id)sender;
+- (void)showLogViewerToSelectedContextContact:(id)sender;
+
+//Log indexing
 - (void)initLogIndexing;
 - (void)prepareLogContentSearching;
-- (SKIndexRef)logContentIndex;
 - (void)cleanUpLogContentSearching;
+- (SKIndexRef)logContentIndex;
+- (void)markLogDirtyAtPath:(NSString *)path forChat:(AIChat *)chat;
 - (BOOL)getIndexingProgress:(int *)complete outOf:(int *)total;
-- (void)markChatLogAsDirty:(AIChat *)chat atPath:(NSString *)path;
+
+//
+- (void)stopIndexingThreads;
+- (void)dirtyAllLogs;
+- (void)cleanDirtyLogs;
 
 @end
 
