@@ -3,7 +3,7 @@
  * File:        AWEzvStack.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvStack.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvStack.m,v 1.2 2004/06/04 17:39:17 adamiser Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -52,6 +52,8 @@
 	free (top);
 	top = next;
     }
+	
+	[super dealloc];
 }
 
 - (void) push:(id)value {

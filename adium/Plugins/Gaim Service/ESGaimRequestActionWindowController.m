@@ -143,6 +143,8 @@
 {
 	[userData release];
 	[callBacks release];
+	
+	[super dealloc];
 }
 
 @end

@@ -49,6 +49,8 @@
     [textEquivalents release];
     [_cachedAttributedString release];
     [_cachedImage release];
+
+	[super dealloc];
 }
 
 //Returns an array of the text equivalents for this emoticon
