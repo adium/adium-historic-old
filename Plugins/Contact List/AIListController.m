@@ -7,7 +7,7 @@
 
 #import "AIListController.h"
 
-#define EDGE_CATCH_X				10
+#define EDGE_CATCH_X				40
 #define EDGE_CATCH_Y				40
 
 #define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
@@ -41,17 +41,23 @@
 									   name:ListObject_AttributesChanged
 									 object:nil];
     [self contactListChanged:nil];
+	
+	//Observe group expansion for resizing
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(outlineViewUserDidExpandItem:)
+												 name:AIOutlineViewUserDidExpandItemNotification
+											   object:contactListView];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(outlineViewUserDidCollapseItem:)
+												 name:AIOutlineViewUserDidCollapseItemNotification
+											   object:contactListView];
+	
+	//Observe list objects for visiblity changes
+	[[adium contactController] registerListObjectObserver:self];
 
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 																	group:PREF_GROUP_WINDOW_POSITIONS] boolValue];
-	
-
-	//Listen to when the list view changes size
-    [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(contactListDesiredSizeChanged:)
-												 name:AIViewDesiredSizeDidChangeNotification
-											   object:contactListView];
 
 	return(self);
 }
@@ -78,6 +84,7 @@
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
 	
 	[super dealloc];
 }
@@ -85,7 +92,7 @@
 //Resizing And Positioning ---------------------------------------------------------------------------------------------
 #pragma mark Resizing And Positioning
 //Dynamically resize the contact list
-- (void)contactListDesiredSizeChanged:(NSNotification *)notification
+- (void)contactListDesiredSizeChanged
 {
     if(autoResizeVertically || autoResizeHorizontally){
 		NSWindow	*theWindow = [contactListView window];
@@ -230,7 +237,7 @@
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
-	
+
 	//Redisplay and resize
 	if(!object || object == contactList){
 		[self setContactListRoot:[[adium contactController] contactList]];
@@ -247,21 +254,40 @@
 			[contactListView reloadItem:containingGroup reloadChildren:YES];
 		}
 	}
-	
-	[self contactListDesiredSizeChanged:nil];
+
+	[self contactListDesiredSizeChanged];
+}
+
+//Update auto-resizing when object visibility changes
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	if([inModifiedKeys containsObject:@"VisibleObjectCount"]){
+		//If the visible count changes, we'll need to resize our list - but we wait until the group is resorted
+		//to actually perform the resizing.  This prevents the scrollbar from flickering up and some issues with
+		//us resizing before the outlineview is aware that the view has grown taller/shorter.
+		needsAutoResize = YES;
+	}
+
+	return(nil);
 }
 
 //Update the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
 	id		object = [[notification object] containingObject];
-	
+
 	//The notification passes the contact who's order changed.  This means that we must reload the group containing
 	//that contact in order to correctly update the list.
 	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
 		[contactListView reloadData];
 	}else{
 		[contactListView reloadItem:object reloadChildren:YES];
+	}
+	
+	//If we need a resize we can do that now that the outline view has been reloaded
+	if(needsAutoResize){
+		[self contactListDesiredSizeChanged];
+		needsAutoResize = NO;
 	}
 }
 
@@ -270,14 +296,14 @@
 {
     AIListObject	*object = [notification object];
     NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
-	
-    //Redraw the modified object
+    
+	//Redraw the modified object
 	[contactListView redisplayItem:object];
 	
     //Resize the contact list horizontally
     if(autoResizeHorizontally){
 		if(object && [keys containsObject:@"Display Name"]){
-			[self contactListDesiredSizeChanged:nil];
+			[self contactListDesiredSizeChanged];
 		}
     }
 }
@@ -373,14 +399,14 @@
     return(YES);
 }
 
-- (void)outlineViewItemDidExpand:(NSNotification *)notification
+- (void)outlineViewUserDidExpandItem:(NSNotification *)notification
 {
-	[self contactListDesiredSizeChanged:nil];
+	[self contactListDesiredSizeChanged];
 }
 
-- (void)outlineViewItemDidCollapse:(NSNotification *)notification
+- (void)outlineViewUserDidCollapseItem:(NSNotification *)notification
 {
-	[self contactListDesiredSizeChanged:nil];
+	[self contactListDesiredSizeChanged];
 }
 
 @end
