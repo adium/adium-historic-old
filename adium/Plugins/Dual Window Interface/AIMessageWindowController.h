@@ -40,6 +40,8 @@
 	NSDictionary	*toolbarItems;
 	NSMutableArray	*containedChats;
 	
+	BOOL			hasShownDocumentButton;
+	
 }
 
 + (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface

@@ -65,6 +65,7 @@
 	containerName = [inName retain];
 	containerID = [inContainerID retain];
 	containedChats = [[NSMutableArray alloc] init];
+	hasShownDocumentButton = NO;
 
     //Load our window
     [super initWithWindowNibName:windowNibName];
@@ -122,9 +123,6 @@
 
     //Remember the initial tab height
     tabBarHeight = [tabView_customTabs frame].size.height;
-	if([[self window] respondsToSelector:@selector(addDocumentIconButton)]){
-		[[self window] addDocumentIconButton];
-	}
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -339,6 +337,7 @@
 {
 	NSString	*label = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label];
 	NSString	*title;
+	NSButton	*button;
 	
 	//Window Title
     if([tabView_messages numberOfTabViewItems] == 1){
@@ -349,7 +348,14 @@
 	[[self window] setTitle:title];
 	
 	//Window Icon (We display state in the window title if tabs are not visible)
-	NSButton	*button = [[self window] standardWindowButton:NSWindowDocumentIconButton];
+	if(!hasShownDocumentButton){
+		if([[self window] respondsToSelector:@selector(addDocumentIconButton)]){
+			[[self window] addDocumentIconButton];
+		}
+		hasShownDocumentButton = YES;
+	}
+	
+	button = [[self window] standardWindowButton:NSWindowDocumentIconButton];
 	if(!tabBarIsVisible){
 		[button setImage:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon]];
 	}else{
