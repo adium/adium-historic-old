@@ -11,51 +11,53 @@
 #define OSCAR_DELAYED_UPDATE_INTERVAL   3
 
 //From oscar.c
-struct oscar_data {
-    aim_session_t *sess;
-    aim_conn_t *conn;
-    
-    guint cnpa;
-    guint paspa;
-    guint emlpa;
-    guint icopa;
-    
-    gboolean iconconnecting;
-    gboolean set_icon;
-    
-    GSList *create_rooms;
-    
-    gboolean conf;
-    gboolean reqemail;
-    gboolean setemail;
-    char *email;
-    gboolean setnick;
-    char *newsn;
-    gboolean chpass;
-    char *oldp;
-    char *newp;
-    
-    GSList *oscar_chats;
-    GSList *direct_ims;
-    GSList *file_transfers;
-    GHashTable *buddyinfo;
-    GSList *requesticon;
-    
-    gboolean killme;
-    gboolean icq;
-    guint icontimer;
-    guint getblisttimer;
-    
-    struct {
-        guint maxwatchers; /* max users who can watch you */
-        guint maxbuddies; /* max users you can watch */
-        guint maxgroups; /* max groups in server list */
-        guint maxpermits; /* max users on permit list */
-        guint maxdenies; /* max users on deny list */
-      guint maxsiglen; /* max size (bytes) of profile */
-        guint maxawaymsglen; /* max size (bytes) of posted away message */
-    } rights;
+typedef struct _OscarData OscarData;
+struct _OscarData {
+	aim_session_t *sess;
+	aim_conn_t *conn;
+	
+	guint cnpa;
+	guint paspa;
+	guint emlpa;
+	guint icopa;
+	
+	gboolean iconconnecting;
+	gboolean set_icon;
+	
+	GSList *create_rooms;
+	
+	gboolean conf;
+	gboolean reqemail;
+	gboolean setemail;
+	char *email;
+	gboolean setnick;
+	char *newsn;
+	gboolean chpass;
+	char *oldp;
+	char *newp;
+	
+	GSList *oscar_chats;
+	GSList *direct_ims;
+	GSList *file_transfers;
+	GHashTable *buddyinfo;
+	GSList *requesticon;
+	
+	gboolean killme;
+	gboolean icq;
+	guint icontimer;
+	guint getblisttimer;
+	
+	struct {
+		guint maxwatchers; /* max users who can watch you */
+		guint maxbuddies; /* max users you can watch */
+		guint maxgroups; /* max groups in server list */
+		guint maxpermits; /* max users on permit list */
+		guint maxdenies; /* max users on deny list */
+		guint maxsiglen; /* max size (bytes) of profile */
+		guint maxawaymsglen; /* max size (bytes) of posted away message */
+	} rights;
 };
+
 struct buddyinfo {
 	gboolean typingnot;
 	gchar *availmsg;
@@ -140,8 +142,8 @@ struct buddyinfo {
     AIListContact           *theContact = (AIListContact *)buddy->node.ui_data;
 
 	if (buddy != nil) {
-		struct oscar_data *od;
-		aim_userinfo_t *userinfo;
+		OscarData		*od;
+		aim_userinfo_t  *userinfo;
 		
 		if (GAIM_BUDDY_IS_ONLINE(buddy) && 
 			(od = gc->proto_data) &&
@@ -169,6 +171,14 @@ struct buddyinfo {
 						if (away_utf8 != NULL) {
 							statusMsgString = [NSString stringWithUTF8String:away_utf8];
 							g_free(away_utf8);
+							
+							//If the away message changed, make sure the contact is marked as away
+							BOOL newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
+							NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
+							if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
+								[theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:NO];
+							}
+
 						}
 					}
 					
@@ -261,6 +271,54 @@ struct buddyinfo {
     }
 }*/
 
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
+{
+	//See if the super account can handle it
+	BOOL returnValue = [super availableForSendingContentType:inType toListObject:inListObject];
+	
+	//If not, check if we can
+	if (!returnValue) {
+		BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
+		
+		//Check their capabilities here?
+		if([inType compare:FILE_TRANSFER_TYPE] == 0){
+			if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online" withOwner:self] boolValue])){ 
+				returnValue  = YES;
+			}
+		}
+	}
+	
+	return returnValue;
+}
+- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+	
+	//Needed until gaim 0.76 (or until I compile a patched libgaim...)
+	gaim_prefs_set_string("/core/ft/public_ip", "129.59.47.229");
+	
+	GaimXfer *xfer = oscar_xfer_new(gc,destsn);
+	
+	//gaim will free filename when necessary
+	char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
+	
+	//Associate the fileTransfer and the xfer with each other
+	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+    xfer->ui_data = fileTransfer;
+	
+	//Set the filename
+	//gaim_xfer_set_local_filename(xfer, filename);
+	
+	//Set the file size?
+	//
+	
+    //accept the request
+    gaim_xfer_request_accepted(xfer, filename);
+    
+    //tell the fileTransferController to display appropriately
+    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+}
+
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     [super acceptFileTransferRequest:fileTransfer];    
@@ -334,3 +392,35 @@ if ((bi != NULL) && (bi->availmsg != NULL) && !(b->uc & UC_UNAVAILABLE)) {
     g_free(escaped);
 }
 */
+
+#if 0
+//**Adium
+GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn) {
+	OscarData *od = (OscarData *)gc->proto_data;
+	GaimXfer *xfer;
+	struct aim_oft_info *oft_info;
+	
+	/* You want to send a file to someone else, you're so generous */
+	
+	/* Build the file transfer handle */
+	xfer = gaim_xfer_new(gaim_connection_get_account(gc), GAIM_XFER_SEND, destsn);
+	xfer->local_port = 5190;
+	
+	/* Create the oscar-specific data */
+	oft_info = aim_oft_createinfo(od->sess, NULL, destsn, xfer->local_ip, xfer->local_port, 0, 0, NULL);
+	xfer->data = oft_info;
+	
+	/* Setup our I/O op functions */
+	gaim_xfer_set_init_fnc(xfer, oscar_xfer_init);
+	gaim_xfer_set_start_fnc(xfer, oscar_xfer_start);
+	gaim_xfer_set_end_fnc(xfer, oscar_xfer_end);
+	gaim_xfer_set_cancel_send_fnc(xfer, oscar_xfer_cancel_send);
+	gaim_xfer_set_cancel_recv_fnc(xfer, oscar_xfer_cancel_recv);
+	gaim_xfer_set_ack_fnc(xfer, oscar_xfer_ack);
+	
+	/* Keep track of this transfer for later */
+	od->file_transfers = g_slist_append(od->file_transfers, xfer);
+	
+	return xfer;
+}
+#endif

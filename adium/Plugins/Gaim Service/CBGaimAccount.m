@@ -97,10 +97,6 @@
         }
     }
     
-
-    
-	
-    
     //Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
@@ -849,6 +845,7 @@
 }
 */
 
+/*
 - (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer
 {
     //set up our fileTransfer object
@@ -866,7 +863,7 @@
     //begin transferring the file
     [self acceptFileTransferRequest:fileTransfer];    
 }
-
+*/
 
 //Create an ESFileTransfer object from an xfer, associating the xfer with the object and the object with the xfer
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
@@ -1142,7 +1139,9 @@
     //Recreate a fresh version of the account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
-    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+//	gaim_account_set_username(account, [[self serverDisplayName] UTF8String]);
+    
+	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------
