@@ -18,6 +18,9 @@
 #import <Libgaim/dialogs.h>
 #import <Libgaim/otr-plugin.h>
 
+/* Adium headers */
+#import "ESGaimOTRUnknownFingerprintController.h"
+
 #pragma mark Adium convenience functions
 
 //Return the ConnContext for a GaimConversation, or NULL if none exists
@@ -194,24 +197,53 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 												OtrlMessageAppOps *ops, void *opdata,
 												OTRConfirmResponse *response_data)
 {
-    char hash[45];
-    NSString *label_text;
-//    struct ufcbdata *cbd = malloc(sizeof(struct ufcbdata));
-    GaimPlugin *p = gaim_find_prpl(protocol);
-    
-    otrl_privkey_hash_to_human(hash, kem->key_fingerprint);
-    label_text = [NSString stringWithFormat:@"%s (%s) has presented us with an unknown fingerprint:\n\n%s\n\nDo you want to accept this fingerprint as valid?", 
-		who, (p && p->info->name) ? p->info->name : "Unknown", hash];
-	
-//    label = adium_label_new(NULL);
+    GaimPlugin			*p = gaim_find_prpl(protocol);
+	NSDictionary		*responseInfo;
+    char				hash[45];
 
-	GaimDebug(@"otrg_adium_dialog_unknown_fingerprint label_text is %@",label_text);
+	/*
+	GaimAccount			*account;
+	GaimConversation	*conv;
+	AIChat				*chat;	
+	//Find the AIChat which has an unknown fingerprint
+	account = gaim_accounts_find(accountname, protocol);
+	conv = gaim_find_conversation_with_account(username, account);
+	chat = chatLookupFromConv(conv);
+	 */
+
+	//Get the human readable fingerprint hash
+    otrl_privkey_hash_to_human(hash, kem->key_fingerprint);
 	
-	if ((NSRunAlertPanel(@"Unknown OTR fingerprint",label_text,@"Yes",@"No",nil)) == NSAlertDefaultReturn){
-		response_cb(us, ops, opdata, response_data, 1);
-	}else{
-		response_cb(us, ops, opdata, response_data, 0);		
-	}
+	responseInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSValue valueWithPointer:response_cb], @"response_cb",
+		[NSValue valueWithPointer:us], @"OtrlUserState",
+		[NSValue valueWithPointer:ops], @"OtrlMessageAppOps",
+		[NSValue valueWithPointer:opdata], @"opdata",
+		[NSValue valueWithPointer:response_data], @"OTRConfirmResponse",
+		nil];
+
+	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showUnknownFingerprintPromptForUsername:protocol:hash:responseInfo:)
+													withObject:who
+													withObject:((p && p->info->name) ? p->info->name : nil)
+													withObject:hash
+													withObject:responseInfo];
+}
+
+/*
+ * @brief Send the fingerprint response to OTR
+ *
+ * Called on the gaim thread by SLGaimCocoaAdapter.
+ */
+void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL accepted)
+{
+	OtrlUserState us = [[responseInfo objectForKey:@"OtrlUserState"] pointerValue];
+	void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
+						void *opdata, OTRConfirmResponse *response_data, int resp) = [[responseInfo objectForKey:@"response_cb"] pointerValue];
+	OtrlMessageAppOps *ops = [[responseInfo objectForKey:@"OtrlMessageAppOps"] pointerValue];
+	void *opdata = [[responseInfo objectForKey:@"opdata"] pointerValue];
+	OTRConfirmResponse *response_data = [[responseInfo objectForKey:@"OTRConfirmResponse"] pointerValue];
+
+	response_cb(us, ops, opdata, response_data, (accepted ? 1 : 0));
 }
 
 /* Call this when a context transitions from (a state other than
