@@ -37,6 +37,8 @@
 
     BOOL		tabHasBeenDragged;
     BOOL		viewsRearranging;	//YES if our views are currently animating/rearranging
+
+    int			tabXOrigin;
 }
 
 - (void)beginDragOfTab:(AICustomTab *)inTab fromOffset:(NSSize)inOffset;

@@ -66,6 +66,24 @@
     return( NSMakeSize([tabFrontLeft size].width + [tabViewItem sizeOfLabel:NO].width - (TAB_LABEL_INSET * 2) + [tabFrontRight size].width, [tabFrontLeft size].height) ); //the label is inset into each cap
 }
 
+- (NSComparisonResult)compareWidth:(AICustomTab *)tab
+{
+    int	tabWidth = [tab size].width;
+    int	ourWidth = [self size].width;
+
+    if(tabWidth > ourWidth){
+        return(NSOrderedAscending);
+        
+    }else if(tabWidth < ourWidth){
+        return(NSOrderedDescending);
+        
+    }else{
+        return(NSOrderedSame);
+        
+    }
+}
+
+
 
 // Private ---------------------------------------------------------------------
 //init
@@ -128,7 +146,7 @@
 - (void)drawRect:(NSRect)rect
 {
     NSImage	*left, *middle, *right;
-    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge;
+    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
     
@@ -147,13 +165,15 @@
     rightCapWidth = [right size].width;
     middleSourceWidth = [middle size].width;
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
-
+    middleLeftEdge = (rect.origin.x + leftCapWidth);
+    middleWidth = middleRightEdge - middleLeftEdge;
+    
     //Draw the left cap
     [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
 
     //Draw the middle
     sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
-    destRect = NSMakeRect(rect.origin.x + leftCapWidth, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
+    destRect = NSMakeRect(middleLeftEdge, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
 
     while(destRect.origin.x < middleRightEdge){
         //Crop
@@ -171,7 +191,7 @@
     //Draw the title
     destRect = NSMakeRect(rect.origin.x + leftCapWidth - TAB_LABEL_INSET,
                           rect.origin.y - 1 + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
-                          labelSize.width,
+                          middleWidth + (TAB_LABEL_INSET * 2),
 			  labelSize.height);
 
     [tabViewItem drawLabel:YES inRect:destRect];

@@ -204,11 +204,11 @@
 //
 - (NSAttributedString *)attributedLabelString
 {
-    AIListObject	*object = [messageView listObject];
-    NSFont		*font = [NSFont systemFontOfSize:11];
-    NSAttributedString	*displayName;
-    NSColor		*textColor;
-
+    AIListObject		*object = [messageView listObject];
+    NSFont			*font = [NSFont systemFontOfSize:11];
+    NSAttributedString		*displayName;
+    NSColor			*textColor;
+    NSMutableParagraphStyle	*paragraphStyle;
     
     //Color
     textColor = [[object displayArrayForKey:@"Text Color"] averageColor];
@@ -216,8 +216,12 @@
         textColor = [NSColor blackColor];
     }
 
+    //Paragraph Style (Turn off clipping by word)
+    paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
+
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[object displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
+    displayName = [[NSAttributedString alloc] initWithString:[object displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
 
     return([displayName autorelease]);
 }
