@@ -57,14 +57,27 @@
 			}
 			
 			//Linebreaks in the status message cause vertical alignment issues.  We can either cut off at the first break
-			//or prune them all.
+			//or prune them all.  First, we remove duplicate linebreaks
+			while([statusMessage replaceOccurrencesOfString:@"\r\r"
+												 withString:@"\r"
+													options:NSLiteralSearch
+													  range:NSMakeRange(0,[statusMessage length])]);
+			while([statusMessage replaceOccurrencesOfString:@"\n\n"
+												 withString:@"\n"
+													options:NSLiteralSearch
+													  range:NSMakeRange(0,[statusMessage length])]);
+			while([statusMessage replaceOccurrencesOfString:@"\r\n"
+												 withString:@"\n"
+													options:NSLiteralSearch
+													  range:NSMakeRange(0,[statusMessage length])]);
+			
 			[statusMessage replaceOccurrencesOfString:@"\r"
 										   withString:@" / "
-											  options:0
+											  options:NSLiteralSearch
 												range:NSMakeRange(0,[statusMessage length])];
 			[statusMessage replaceOccurrencesOfString:@"\n"
 										   withString:@" / "
-											  options:0
+											  options:NSLiteralSearch
 												range:NSMakeRange(0,[statusMessage length])];
 		}
 		
