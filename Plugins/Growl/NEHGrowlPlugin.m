@@ -11,7 +11,8 @@
 #import "GrowlApplicationBridge.h"
 
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
-#define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
+#define KEY_EVENT_BEZEL_SHOW_AWAY           AILocalizedString(@"Show While Away",nil)
+#define GROWL_ALERT							AILocalizedString(@"Show Growl Notification",nil)
 
 @implementation NEHGrowlPlugin
 
@@ -38,6 +39,9 @@
 		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object: nil];
 	}
 	
+    //Install our contact alert
+	[[adium contactAlertsController] registerActionID:@"Growl" withHandler:self];
+
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	
 	[self preferencesChanged:nil];
@@ -143,5 +147,30 @@
 	}
 }
 
+#pragma mark AIActionHandler
 
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
+{
+	return(GROWL_ALERT);
+}
+
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
+{
+	return(GROWL_ALERT);
+}
+
+- (NSImage *)imageForActionID:(NSString *)actionID
+{
+	return([NSImage imageNamed:@"GrowlAlert" forClass:[self class]]);
+}
+
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+{
+    [self handleEvent:[NSNotification notificationWithName:eventID object:listObject]];
+}
+
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+    return nil;
+}
 @end

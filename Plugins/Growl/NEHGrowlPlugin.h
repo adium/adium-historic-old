@@ -5,7 +5,7 @@
 //  Created by Nelson Elhage on Sat May 29 2004.
 //
 
-@interface NEHGrowlPlugin : AIPlugin {
+@interface NEHGrowlPlugin : AIPlugin <AIActionHandler> {
 	NSDictionary	*events;
 	BOOL			 showWhileAway;
 }
