@@ -36,7 +36,8 @@
         [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentStatus" ofType:@"scpt"]],@"%_status",
         [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentPosition" ofType:@"scpt"]],@"%_position",
         [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentPlayCount" ofType:@"scpt"]],@"%_playcount",
-        nil];
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentComment" ofType:@"scpt"]],@"%_comment",
+		nil];
     
     //Register us as a filter
 //    [[adium contentController] registerOutgoingContentFilter:self];
