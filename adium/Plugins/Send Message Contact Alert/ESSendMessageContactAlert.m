@@ -20,6 +20,12 @@
 int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 @implementation ESSendMessageContactAlert
+
+-(NSString *)nibName
+{
+    return CONTACT_ALERT_ACTION_NIB;
+}
+
 - (NSMenuItem *)alertMenuItem
 {
     NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
@@ -35,8 +41,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 -(IBAction)selectedAlert:(id)sender
 {  
     //Get the current dictionary
-    NSDictionary *currentDict = [[owner contactAlertsController] currentDictForContactAlert:self];
-    AIListObject *activeContactObject = [[owner contactAlertsController] currentObjectForContactAlert:self];
+    NSDictionary *currentDict = [[[owner contactAlertsController] currentDictForContactAlert:self] retain];
+    AIListObject *activeContactObject = [[[owner contactAlertsController] currentObjectForContactAlert:self] retain];
     
     NSString            *details = [currentDict objectForKey:KEY_EVENT_DETAILS];
     NSMutableDictionary *detailsDict;
@@ -54,7 +60,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [popUp_message_actionDetails_two setMenu:[self sendToContactMenu]];
     
     detailsDict = [currentDict objectForKey:KEY_EVENT_DETAILS_DICT];
-    
     if (!detailsDict) { //new message
         //Configure buttons
         [button_anotherAccount setState:NSOnState]; //default: use another account if needed
@@ -76,6 +81,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         }
         [self saveMessageDetails:nil];
     } else { //restore the old settings
+        NSLog(@"old message");
         //Configure the buttons
         [button_anotherAccount setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
         [button_displayAlert setState:[[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]];
@@ -90,10 +96,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         account = [[owner accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
         [popUp_message_actionDetails_one selectItemAtIndex:[popUp_message_actionDetails_one indexOfItemWithRepresentedObject:account]];
     }
-    
     [self configureWithSubview:view_details_message];
     
     [[view_details_message window] makeFirstResponder:textField_message_actionDetails];
+    [currentDict release]; [activeContactObject release];
 }
 
 //Send Message
