@@ -370,12 +370,8 @@ static NSImage *pushIndicatorImage = nil;
             textHeight = [[self layoutManager] usedRectForTextContainer:[self textContainer]].size.height;
 
         }else{
-            NSAttributedString	*attrString;
-
             //Otherwise, we use the current typing attributes to guess what the height of a line should be
-            attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[self typingAttributes]] autorelease];
-            textHeight = [attrString heightWithWidth:1e7];
-
+			textHeight = [NSAttributedString stringHeightForAttributes:[self typingAttributes]];
         }
 
         _desiredSizeCached = NSMakeSize([self frame].size.width, textHeight + ENTRY_TEXTVIEW_PADDING);
