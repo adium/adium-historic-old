@@ -57,8 +57,6 @@
     
     if([NSBundle loadNibNamed:@"JabberAccountView" owner:self]){
         [self initAccountView];
-    }else{
-        NSLog(@"couldn't load account view bundle");
     }
     
     [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];

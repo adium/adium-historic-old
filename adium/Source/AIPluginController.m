@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.84 2004/07/21 15:23:46 adamiser Exp $
+//$Id: AIPluginController.m,v 1.85 2004/07/22 16:46:26 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -244,7 +244,6 @@ ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
 				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
 				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
 					pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-					// NSLog(@"loadPluginsFromPath:%@ : Loaded %@ (%@)",pluginPath,pluginBundle,[pluginPath stringByAppendingPathComponent:pluginName]);
 					if(pluginBundle != nil){						
 #if 1
 						//Create an instance of the plugin
@@ -264,7 +263,7 @@ ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
 						plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
 						
 						timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
-						NSLog(@"%@ %f",compactedName, timeInterval);
+						NSLog(@"Plugin Timing: %@ %f",compactedName, timeInterval);
 #endif
 						
 						if(plugin != nil){

@@ -158,29 +158,27 @@
 }
 
 /*
-- (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
-{
-	BOOL		success = NO;
-	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
-	
-	
-	NSBitmapImageRep* imageRep = [[inImage representations] objectAtIndex:0];
-	NSLog(@"ImageRep %@",imageRep);
-		unsigned char *imageBytes = [imageRep bitmapData];
-		NSData  *imageData = [NSData dataWithBytes:imageBytes 
-											length:[imageRep bytesPerRow] * [imageRep pixelsHigh]];
-		success = ([imageData writeToFile:cachedImagePath
-							   atomically:YES]);
-		if (success){
-			NSLog(@"Success!");
-			[inObject setStatusObject:cachedImagePath 
-							   forKey:@"UserIconPath"
-						   notify:YES];
-		}
-
-	return success;
-}
-*/
+ - (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
+ {
+	 BOOL		success = NO;
+	 NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
+	 
+	 
+	 NSBitmapImageRep* imageRep = [[inImage representations] objectAtIndex:0];
+	 unsigned char *imageBytes = [imageRep bitmapData];
+	 NSData  *imageData = [NSData dataWithBytes:imageBytes 
+										 length:[imageRep bytesPerRow] * [imageRep pixelsHigh]];
+	 success = ([imageData writeToFile:cachedImagePath
+							atomically:YES]);
+	 if (success){
+		 [inObject setStatusObject:cachedImagePath 
+							forKey:@"UserIconPath"
+							notify:YES];
+	 }
+	 
+	 return success;
+ }
+ */
 
 
 - (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject

@@ -119,7 +119,7 @@
     //Restore window position
     NSString *savedFrame = [[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS];
     if(savedFrame) [[self window] setFrameFromString:savedFrame];
-	NSLog(@"load (%@) %@", [self _frameSaveKey], savedFrame);
+
     //Remember the initial tab height
     tabBarHeight = [tabView_customTabs frame].size.height;
 	[[self window] addDocumentIconButton];
@@ -183,7 +183,6 @@
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:[self _frameSaveKey]
                                           group:PREF_GROUP_WINDOW_POSITIONS];
-	NSLog(@"save (%@) %@", [self _frameSaveKey], [[self window] stringWithSavedFrame]);
 
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
     enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];

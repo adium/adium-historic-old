@@ -83,7 +83,6 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-	NSLog(@"prepare %@ %@",sender,draggingDelegate);
 	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(prepareForDragOperation:)]){
 		return [draggingDelegate prepareForDragOperation:sender];
 	}else{
@@ -93,7 +92,6 @@
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-		NSLog(@"performDragOperation %@ %@",sender,draggingDelegate);
 	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(performDragOperation:)]){
 		return [draggingDelegate performDragOperation:sender];
 	}else{

@@ -65,11 +65,8 @@
     NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
-    //--save the dictionary--
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
-    if(![self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES]){
-        NSLog(@"Unable to write preference dictionary %@ (%@)",name,path);
-    }
+    [self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES];
 }
 
 - (BOOL)boolForKey:(NSString *)inKey{

@@ -482,14 +482,13 @@ void Adium_HandleSignal(int i){
     createIt = !([existing count] - ([existing indexOfObject:[bundleResourcesFolder stringByAppendingPathComponent:name]] != NSNotFound));
     if(createIt) {
         if(![mgr createDirectoryAtPath:targetPath attributes:nil]) {
-			NSLog(@"\tFAILED!\n");
 			targetPath = nil;
 			//future expansion: provide a button to launch Disk Utility --boredzo
-			NSRunAlertPanel(/*title*/ [NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder",nil), name],
-							/*msg*/ AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
-							/*defaultButton*/ @"OK", 
-							/*alternateButton*/ nil, 
-							/*otherButton*/ nil);
+			NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder",nil), name],
+							AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
+							@"OK", 
+							nil, 
+							nil);
 		}
     } else {
         targetPath = [existing objectAtIndex:0];

@@ -25,11 +25,7 @@
     [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
     
     //
-    //commandChat = [[[adium contentController] chatWithContact:commandContact initialStatus:nil] retain];
-	
-    //
-	NSLog(@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash");
-    //[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
+    [self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash"];
 }
 
 //Return the default properties for this account
@@ -207,7 +203,6 @@
     if((contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
 													  accountID:[self uniqueObjectID]
 															UID:buddyUID])){
-		NSLog(@"%@ (%@) chat:%@",contact, buddyUID, [[adium contentController] chatWithContact:contact initialStatus:nil]);
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact 
 																					 initialStatus:nil]
@@ -292,7 +287,6 @@
 			[listObjectArray addObject:[[adium contactController] contactWithService:[[service handleServiceType] identifier]
 																		   accountID:[self uniqueObjectID]
 																				 UID:buddyUID]];
-			//NSLog(@"######## added %@ to listObjectArray",buddyUID);
 		}
 		
 		
@@ -308,11 +302,8 @@
 											  autoreply:NO];
 		[[adium contentController] receiveContentObject:messageObject];
 		
-		//NSLog(@"#### commandChat: %@ listObjectArray: %@",commandChat,listObjectArray);
-		
 	} else if( i < count ) {
 		[commandChat addParticipatingListObject:[listObjectArray objectAtIndex:i]];
-		//NSLog(@"#### should add (%d) in listObjectArray: %@ to %@",i,listObjectArray,commandChat);
 		messageObject = [AIContentMessage messageInChat:commandChat
 											 withSource:[listObjectArray objectAtIndex:i]
 											destination:self

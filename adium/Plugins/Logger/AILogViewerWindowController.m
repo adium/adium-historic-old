@@ -529,9 +529,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     
     //Stop any existing searches
     [self stopSearching];
-    
-    NSLog(@"startSearching");
-	
+    	
     //Once all searches have exited, we can start a new one
     [resultsLock lock];
     [selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];

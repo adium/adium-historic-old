@@ -64,15 +64,12 @@
         //grab the current global mouse location; we could just as easily get the mouse location 
         //in the same way as we do in -mouseDown:
         currentLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
-//        NSLog(@"mouse was (%f,%f) now (%f,%f) move of (%f,%f) newOrigin will be (%f,%f)",previousLocation.x,previousLocation.y,currentLocation.x,currentLocation.y,currentLocation.x - previousLocation.x,currentLocation.y - previousLocation.y,newOrigin.x +(currentLocation.x - previousLocation.x),newOrigin.y+(currentLocation.y - previousLocation.y));
-float movementX = currentLocation.x - previousLocation.x;
-float movementY = currentLocation.y - previousLocation.y;
+		float movementX = currentLocation.x - previousLocation.x;
+		float movementY = currentLocation.y - previousLocation.y;
         newOrigin.x += movementX;
         newOrigin.y += movementY;
         previousLocation = currentLocation;
-		
-//		NSLog(@"%@: %f + %f > %f + %f",currentScreen,newOrigin.y,windowFrame.size.height,[currentScreen visibleFrame].origin.y,[currentScreen visibleFrame].size.height);
-		
+			
 		//Keep the window from going under the menu bar (on the main screen)
 		NSRect  screenFrame = [currentScreen visibleFrame];
 		if (currentScreen == [[NSScreen screens] objectAtIndex:0]) {
@@ -89,13 +86,6 @@ float movementY = currentLocation.y - previousLocation.y;
             newOrigin.y = 10 + screenFrame.origin.y - windowFrame.size.height;
         }
   
-//		NSLog(@"%f + %f = %f ; screenFrame width is %f",newOrigin.x,windowFrame.size.width,(newOrigin.x + windowFrame.size.width),screenFrame.size.width);
-
-		/*
-        if((newOrigin.x + windowFrame.size.width) < 1)
-            newOrigin.x = 1 - windowFrame.size.width;
-        */
-		
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
 		windowFrame.origin = newOrigin;
 		
@@ -136,7 +126,6 @@ float movementY = currentLocation.y - previousLocation.y;
 	
 	//Bottom
 	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY < 0){
-//	NSLog(@"%f %f (%i) versus %i setting %f to %f",NSMinY(windowFrame),NSMinY(screenFrame),(abs(NSMinY(windowFrame) - NSMinY(screenFrame))),BORDERLESS_WINDOW_DOCKING_DISTANCE,windowFrame.origin.y,screenFrame.origin.y);
 		(*windowFrame).origin.y = screenFrame.origin.y;
 		changed = YES;
 	}

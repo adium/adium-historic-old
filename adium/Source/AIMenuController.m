@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.36 2004/07/13 18:53:14 adamiser Exp $
+// $Id: AIMenuController.m,v 1.37 2004/07/22 16:46:26 adamiser Exp $
 
 #import "AIMenuController.h"
 
@@ -261,8 +261,6 @@
     
     //Remove all items from the existing menu
     [textViewContextualMenu removeAllItems];
-//    textViewContextualMenu = [[NSMenu alloc] init];
-//    NSLog(@"new menu inited");
     
     //remember menu config
     [contextualMenu_TextView release];

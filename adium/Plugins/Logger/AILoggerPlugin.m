@@ -439,9 +439,7 @@ this problem is along the lines of:
 - (void)resetLogIndex
 {
 	if([[NSFileManager defaultManager] fileExistsAtPath:[self _logIndexPath]]){
-		if(![[NSFileManager defaultManager] trashFileAtPath:[self _logIndexPath]]){
-			NSLog(@"Failed to delete log index.");
-		}
+		[[NSFileManager defaultManager] trashFileAtPath:[self _logIndexPath]];
 	}	
 }
 
@@ -467,7 +465,6 @@ this problem is along the lines of:
 		if(logVersion >= CURRENT_LOG_VERSION){
 			dirtyLogArray = [[NSArray arrayWithContentsOfFile:[self _dirtyLogArrayPath]] mutableCopy];
 		}else{
-			NSLog(@"Resetting log index...");
 			[self resetLogIndex];
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:CURRENT_LOG_VERSION]
 												 forKey:KEY_LOG_INDEX_VERSION

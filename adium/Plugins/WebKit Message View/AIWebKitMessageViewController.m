@@ -1227,10 +1227,8 @@ DeclareString(AppendNextMessage);
 		NSString		*path;
 		while (path = [enumerator nextObject]){
 			AIListObject *listObject = [chat listObject];
-			if (listObject){
+			if(listObject){
 				[[adium fileTransferController] sendFile:path toListContact:(AIListContact *)listObject];
-			}else{
-				NSLog(@"Crazy talk.");
 			}
 		}
 		success = YES;

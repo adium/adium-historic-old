@@ -74,7 +74,6 @@
 	NSEnumerator	*enumerator;
 	NSDictionary	*soundSetDict;
 	NSMenuItem		*menuItem;
-	NSLog(@"build soundListMenu");
 	
 	//Add all soundsets to our menu
 	enumerator = [[[adium soundController] soundSetArray] objectEnumerator];

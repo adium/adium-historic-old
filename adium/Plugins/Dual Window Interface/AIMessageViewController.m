@@ -51,9 +51,7 @@
 - (id)initForChat:(AIChat *)inChat
 {
     [super init];
-	
-	NSLog(@"%@ initForChat %@",self,inChat);
-	
+
     //
     view_accountSelection = nil;
     delegate = nil;
@@ -101,7 +99,6 @@
 	scrollView_messages = [messageViewController messageScrollView];
 		
 	[controllerView_messages setNextResponder:textView_outgoing];
-	NSLog(@"%@ %@",controllerView_messages,scrollView_messages);
 	/*if (controllerView_messages != scrollView_messages)
 		[scrollView_messages setNextResponder:controllerView_messages];
 */
