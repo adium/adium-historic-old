@@ -1,5 +1,5 @@
 //
-//  ESContactAlertsView.h
+//  ESContactAlertsViewController.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/14/04.
@@ -7,6 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
+#define CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED	@"ContactAlertDetailsForHeaderChanged"
 
 @class AIAlternatingRowTableView;
 
