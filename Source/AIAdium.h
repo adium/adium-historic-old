@@ -16,20 +16,21 @@
 #define	BETA_RELEASE FALSE
 
 #import "AIAccountController.h"
-#import "ESContactAlertsController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
+#import "AICorePluginLoader.h"
 #import "AIDockController.h"
-#import "ESFileTransferController.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "AIMenuController.h"
-#import "AICorePluginLoader.h"
 #import "AIPreferenceController.h"
 #import "AISoundController.h"
+#import "AIStatusController.h"
 #import "AIToolbarController.h"
 #import "ESApplescriptabilityController.h"
+#import "ESContactAlertsController.h"
 #import "ESDebugController.h"
+#import "ESFileTransferController.h"
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AICorePluginLoader, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
@@ -41,20 +42,21 @@
 @class SUSpeaker;
 
 @interface AIAdium : NSObject {
-    IBOutlet	AIMenuController				*menuController;
-    IBOutlet	AILoginController				*loginController;
     IBOutlet	AIAccountController				*accountController;
-    IBOutlet	AIInterfaceController			*interfaceController;
     IBOutlet	AIContactController				*contactController;
     IBOutlet	AIContentController				*contentController;
-    IBOutlet	AIPreferenceController			*preferenceController;
-    IBOutlet	AIToolbarController				*toolbarController;
-    IBOutlet	AISoundController				*soundController;
     IBOutlet	AIDockController				*dockController;
-    IBOutlet    ESFileTransferController		*fileTransferController;
-    IBOutlet    ESContactAlertsController		*contactAlertsController;
+    IBOutlet	AIInterfaceController			*interfaceController;
+    IBOutlet	AILoginController				*loginController;
+    IBOutlet	AIMenuController				*menuController;
+    IBOutlet	AIPreferenceController			*preferenceController;
+    IBOutlet	AISoundController				*soundController;
+    IBOutlet	AIStatusController				*statusController;
+    IBOutlet	AIToolbarController				*toolbarController;
     IBOutlet	ESApplescriptabilityController	*applescriptabilityController;
-	IBOutlet	ESDebugController				*debugController;
+    IBOutlet	ESDebugController				*debugController;
+    IBOutlet    ESContactAlertsController		*contactAlertsController;
+    IBOutlet    ESFileTransferController		*fileTransferController;
 
 	IBOutlet	AICoreComponentLoader			*componentLoader;
 	IBOutlet	AICorePluginLoader				*pluginLoader;
@@ -74,20 +76,20 @@
 }
 
 + (NSString *)applicationSupportDirectory;
-- (AILoginController *)loginController;
 - (AIAccountController *)accountController;
 - (AIContactController *)contactController;
 - (AIContentController *)contentController;
-- (AIToolbarController *)toolbarController;
-- (AISoundController *)soundController;
-- (AIInterfaceController *)interfaceController;
-- (AIPreferenceController *)preferenceController;
-- (AIMenuController *)menuController;
 - (AIDockController *)dockController;
-- (ESFileTransferController *)fileTransferController;
+- (AIInterfaceController *)interfaceController;
+- (AILoginController *)loginController;
+- (AIMenuController *)menuController;
+- (AIPreferenceController *)preferenceController;
+- (AISoundController *)soundController;
+- (AIStatusController *)statusController;
+- (AIToolbarController *)toolbarController;
 - (ESContactAlertsController *)contactAlertsController;
 - (ESDebugController *)debugController;
-//- (BZActivityWindowController *)activityWindowController;
+- (ESFileTransferController *)fileTransferController;
 
 - (NSNotificationCenter *)notificationCenter;
 
