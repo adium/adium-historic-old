@@ -21,4 +21,7 @@
 - (id)delegate;
 
 - (void)setTitle:(NSString *)inTitle;
+
+- (void)copy:(id)sender;
+- (void)paste:(id)sender;
 @end

@@ -117,20 +117,7 @@
 	}
 }
 
-- (void)showPickerController
-{
-	if (useNSImagePickerController)
-	{
-		if (!pickerController){
-			pickerController = [[NSImagePickerController sharedImagePickerControllerCreate:YES] retain];
-			[pickerController setDelegate:self];
-			[pickerController initAtPoint:[NSEvent mouseLocation] inWindow: nil];
-			[pickerController setHasChanged: NO];
-		}
-		[[pickerController window] makeKeyAndOrderFront: nil];
-	}
-}
-
+//A new image was dragged into our view, changing [self image] to match it (NSImageView handles that)
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	[super concludeDragOperation:sender];
@@ -149,9 +136,53 @@
 
 // Copy / Paste ----------------------------------------------------------------
 #pragma mark Copy / Paste
+- (void)copy:(id)sender
+{
+	NSImage *image = [self image];
+	if (image){
+		[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSTIFFPboardType] owner:nil];
+		[[NSPasteboard generalPasteboard] setData:[image TIFFRepresentation] forType:NSTIFFPboardType];
+	}
+}
 
-// NSImagePicker delegate ----------------------------------------------------------------
-#pragma mark NSImagePicker delegate
+- (void)paste:(id)sender
+{
+	NSPasteboard	*pb = [NSPasteboard generalPasteboard];
+    NSData			*imageData = [pb dataForType:NSTIFFPboardType];
+	if (imageData){
+		NSImage *image = [[[NSImage alloc] initWithData:imageData] autorelease];
+		if (image){
+			[self setImage:image];
+			
+			if (pickerController){
+				[pickerController selectionChanged];
+			}
+			
+			//Inform the delegate
+			if (delegate && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+							   withObject:self
+							   withObject:image];
+			}
+		}
+	}
+}
+
+// NSImagePicker Access and Delegate ----------------------------------------------------------------
+#pragma mark NSImagePicker Access and Delegate
+- (void)showPickerController
+{
+	if (useNSImagePickerController)
+	{
+		if (!pickerController){
+			pickerController = [[NSImagePickerController sharedImagePickerControllerCreate:YES] retain];
+			[pickerController setDelegate:self];
+			[pickerController initAtPoint:[NSEvent mouseLocation] inWindow: nil];
+			[pickerController setHasChanged: NO];
+		}
+		[[pickerController window] makeKeyAndOrderFront: nil];
+	}
+}
 
 // This gets called when the user selects OK on a new image
 - (void)imagePicker: (id) sender selectedImage: (NSImage *) image
@@ -200,28 +231,46 @@
 - (BOOL)needsDisplay
 {
 	NSResponder *resp = nil;
-	if ([[self window] isKeyWindow]) {
-		resp = [[self window] firstResponder];
-		if (resp == lastResp) return [super needsDisplay];
+	NSWindow	*window = [self window];
+	
+	if ([window isKeyWindow]) {
+		resp = [window firstResponder];
+		if (resp == lastResp){
+			return [super needsDisplay];
+		}
+		
 	} else if (lastResp == nil) {
 		return [super needsDisplay];
+		
 	}
 	
 	shouldDrawFocusRing = (resp != nil &&
-						   [resp isKindOfClass: [NSView class]] &&
-						   [(NSView *)resp isDescendantOf: self]); // [sic]
+						   [resp isKindOfClass:[NSView class]] &&
+						   [(NSView *)resp isDescendantOf:self]); // [sic]
 	lastResp = resp;
 	
-	[self setKeyboardFocusRingNeedsDisplayInRect: [self bounds]];
+	[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
 	return YES;
 }
 
 - (void)drawRect:(NSRect)rect {
+	
+	NSImageFrameStyle oldImageFrameStyle = [self imageFrameStyle];
+	
+	//Suppress the image frame when drawing the focus ring
+	if (shouldDrawFocusRing){
+		[self setImageFrameStyle:NSImageFrameNone];
+	}
+	
 	[super drawRect: rect];
 	
 	if (shouldDrawFocusRing) {
+		//Draw the focus ring
 		NSSetFocusRingStyle(NSFocusRingOnly);
 		NSRectFill(rect);
+		
+		//Restore the old frame style
+		[self setImageFrameStyle:oldImageFrameStyle];
 	}
 } 
 
