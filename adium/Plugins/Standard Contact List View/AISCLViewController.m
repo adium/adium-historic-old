@@ -361,16 +361,18 @@
 // When the user holds the mouse still over the contact list, tooltipCount will eventually get larger than TOOL_TIP_DELAY.  When this happens, we begin displaying tooltips.
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    trackingMouseMovedEvents = YES;
-    [[contactListView window] setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
+    if(!trackingMouseMovedEvents){
+        trackingMouseMovedEvents = YES;
+        [[contactListView window] setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
 
-    //Start our mouse movement timer
-    tooltipCount = 0;
-    tooltipTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/TOOL_TIP_CHECK_INTERVAL)
-                                                     target:self
-                                                   selector:@selector(tooltipTimer:)
-                                                   userInfo:nil
-                                                    repeats:YES] retain];
+        //Start our mouse movement timer
+        tooltipCount = 0;
+        tooltipTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/TOOL_TIP_CHECK_INTERVAL)
+                                                         target:self
+                                                       selector:@selector(tooltipTimer:)
+                                                       userInfo:nil
+                                                        repeats:YES] retain];
+    }
 }
 
 //Increment the tooltipCount variable
@@ -393,10 +395,12 @@
 //Stop tracking mouse events, stop displaying tooltips
 - (void)_endTrackingMouse
 {
-    trackingMouseMovedEvents = NO;
-    [[contactListView window] setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
-    [self _showTooltipAtPoint:NSMakePoint(0,0)]; //Hide the tooltip
-    [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+    if(trackingMouseMovedEvents){
+        trackingMouseMovedEvents = NO;
+        [[contactListView window] setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
+        [self _showTooltipAtPoint:NSMakePoint(0,0)]; //Hide the tooltip
+        [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+    }
 }
 
 
