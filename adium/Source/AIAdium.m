@@ -279,8 +279,12 @@ void Adium_HandleSignal(int i){
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
         requiresRestart = NO;
         fileDescription = AILocalizedString(@"Adium theme",nil);
-    }
-    
+    } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
+        destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
+        requiresRestart = NO;
+        fileDescription = AILocalizedString(@"dock icon set",nil);
+	}
+	
     if (destination){
         NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
         
