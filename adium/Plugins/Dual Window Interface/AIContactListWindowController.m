@@ -277,7 +277,7 @@
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-    NSRect	contactListFrame;
+//    NSRect	contactListFrame;
     
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
