@@ -44,7 +44,11 @@
 //Return our current configuration
 - (NSDictionary *)actionDetails
 {
-	return([NSDictionary dictionaryWithObject:scriptPath forKey:KEY_APPLESCRIPT_TO_RUN]);
+	if(scriptPath){
+		return([NSDictionary dictionaryWithObject:scriptPath forKey:KEY_APPLESCRIPT_TO_RUN]);
+	}else{
+		return(nil);
+	}
 }
 
 - (IBAction)chooseFile:(id)sender
