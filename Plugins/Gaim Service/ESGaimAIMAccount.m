@@ -498,8 +498,6 @@
 	struct buddyinfo	*bi;
 	const char			*uidUTF8String = [[theContact UID] UTF8String];
 	
-	NSLog(@"%@: Update status message for %@",self, theContact);
-	
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, uidUTF8String))){
