@@ -388,7 +388,7 @@ typedef enum {
 
 @interface AIDockController: NSObject {
     IBOutlet	AIAdium 	*owner;
-        
+    
     AIIconFamily		*iconFamily;
     
     NSTimer 			*currentTimer;
@@ -399,6 +399,7 @@ typedef enum {
 
 - (void)bounce;
 - (void)bounceWithInterval:(double)delay times:(int)num;
+- (void)bounceForeverWithInterval:(double)delay;
 - (void)stopBouncing;
 
 @end

@@ -19,6 +19,8 @@
 @interface AIDockController (PRIVATE)
 - (void)privBounce;
 - (void)bounceWithTimer:(NSTimer *)timer;
+- (void)bounceForeverWithTimer:(NSTimer *)timer;
+- (void)setAppIcon:(NSImage *)newIcon;
 @end
 
 @implementation AIDockController
@@ -60,6 +62,16 @@
     }
 }
 
+- (void)bounceForeverWithInterval:(double)delay
+{
+    if(!currentTimer && ![NSApp isActive])
+    {
+        [self privBounce]; // do one right away
+
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceForeverWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",nil] repeats:YES]; // delay+1 so we take into account the time it takes to bounce. num-1 to because we did one already.
+    }
+}
+
 - (void)stopBouncing
 {
     if([currentTimer isValid])
@@ -96,6 +108,22 @@
         currentTimer = nil;
     }
 
+}
+
+- (void)bounceForeverWithTimer:(NSTimer *)timer
+{
+    if ([NSApp isActive])
+    {
+        [timer invalidate];
+        currentTimer = nil;
+    } else {
+        [self privBounce];
+    }
+}
+
+- (void)setAppIcon:(NSImage *)newIcon
+{
+    [[NSApplication sharedApplication] setApplicationIconImage:newIcon];
 }
 
 @end

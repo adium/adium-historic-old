@@ -43,17 +43,25 @@
 
 - (void)messageIn:(NSNotification *)notification
 {
-    if([[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] boolValue]) // are we bouncing at all?
+    BOOL bounce = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] boolValue];
+    int bounceNum = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] intValue];
+    double bounceDelay = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] doubleValue];
+    
+    if(bounce) // are we bouncing at all?
     {
-        if([[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] intValue] == 1 && [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] doubleValue] == 0.0) //if we only bounce once, and don't have a delay, use the method with less overhead
+        if(bounceNum == 1 && bounceDelay == 0.0) //if we only bounce once, and don't have a delay, use the method with less overhead
         {
             [[owner dockController] bounce];
+        }
+        else if(bounceNum == 0) //forever
+        {
+            [[owner dockController] bounceForeverWithInterval:bounceDelay];
         }
         else
         {
             [[owner dockController] 
-                bounceWithInterval:[[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] doubleValue] 
-                times:[[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] intValue]];
+                bounceWithInterval:bounceDelay 
+                times:bounceNum];
         }
     }
 }
