@@ -104,6 +104,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         [textView_awayMessage setString:DEFAULT_AWAY_MESSAGE];
     }
 
+    //Select the away text
+    [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
+
     //Configure out sending view
     [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
     [textView_awayMessage setSendOnReturn:NO]; //Pref for these later :)
