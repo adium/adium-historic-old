@@ -74,51 +74,49 @@
 		   didEndSelector:nil
 			  contextInfo:nil];
 	}
-        
-        //Here comes the other client stuff yeah yeah yeah!!
-        NSMenuItem  *item;
-        NSImage     *icon;
-        NSString *path;
-        NSString *settingsPath;
-        NSFileManager *manager = [NSFileManager defaultManager];
-        [popUpButton_Clients removeItemAtIndex:0];
-      
-        path = [[NSString alloc]init];
-        path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iChat"];
-        settingsPath = [[NSString stringWithString:@"~/Library/Preferences/com.apple.iChat.plist"] stringByExpandingTildeInPath];
-       
-        if([manager fileExistsAtPath:settingsPath]){
-            
-        [popUpButton_Clients addItemWithTitle:@"iChat"];
-        item = [popUpButton_Clients lastItem];
-        icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-        [icon setSize:NSMakeSize(16,16)];
-        [item setImage:icon];
-        }
-        
-        
-        
-        path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Proteus"];
-        settingsPath = [@"~/Library/Application Support/Proteus/" stringByExpandingTildeInPath];
-        if([manager fileExistsAtPath:settingsPath]){
-        [popUpButton_Clients addItemWithTitle:@"Proteus"];
-        item = [popUpButton_Clients lastItem];
-        icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-        [icon setSize:NSMakeSize(16,16)];
-        [item setImage:icon];
-        [item setEnabled:NO];
-        }
-        
-        path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Fire"];
-        settingsPath = [@"~/Library/Application Support/Fire/" stringByExpandingTildeInPath];
-        if([manager fileExistsAtPath:settingsPath]){
-        [popUpButton_Clients addItemWithTitle:@"Fire"];
-        item = [popUpButton_Clients lastItem];
-        icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-        [icon setSize:NSMakeSize(16,16)];
-        [item setImage:icon];
-        [item setEnabled:NO];
-        }
+	
+	//Here comes the other client stuff yeah yeah yeah!!
+	NSMenuItem  *item;
+	NSImage     *icon;
+	NSString *path;
+	NSString *settingsPath;
+	NSFileManager *manager = [NSFileManager defaultManager];
+	[popUpButton_Clients removeItemAtIndex:0];
+	
+	path = [[NSString alloc]init];
+	path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iChat"];
+	settingsPath = [[NSString stringWithString:@"~/Library/Preferences/com.apple.iChat.plist"] stringByExpandingTildeInPath];
+	
+	if([manager fileExistsAtPath:settingsPath]){
+		
+		[popUpButton_Clients addItemWithTitle:@"iChat"];
+		item = [popUpButton_Clients lastItem];
+		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		[icon setSize:NSMakeSize(16,16)];
+		[item setImage:icon];
+	}
+
+	path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Proteus"];
+	settingsPath = [@"~/Library/Application Support/Proteus/" stringByExpandingTildeInPath];
+	if([manager fileExistsAtPath:settingsPath]){
+		[popUpButton_Clients addItemWithTitle:@"Proteus"];
+		item = (NSMenuItem *)[popUpButton_Clients lastItem];
+		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		[icon setSize:NSMakeSize(16,16)];
+		[item setImage:icon];
+		[item setEnabled:NO];
+	}
+	
+	path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Fire"];
+	settingsPath = [@"~/Library/Application Support/Fire/" stringByExpandingTildeInPath];
+	if([manager fileExistsAtPath:settingsPath]){
+		[popUpButton_Clients addItemWithTitle:@"Fire"];
+		item = (NSMenuItem *)[popUpButton_Clients lastItem];
+		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		[icon setSize:NSMakeSize(16,16)];
+		[item setImage:icon];
+		[item setEnabled:NO];
+	}
 }
 
 - (void)dealloc
