@@ -30,9 +30,6 @@
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
-
-    //Initialize our text-to-speech object
-    speaker = [[SUSpeaker alloc] init];
 }
 
 - (void)uninstallPlugin
@@ -61,9 +58,14 @@
 
             if(!observingContent){ //Stop Announcing
 				   //Stop Observing
+		[speaker release]; speaker = nil;
                 [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 
-            }else{ //Start Logging & Update remaining preferences
+            }else{ //Start Announcing
+		if (!speaker) {
+		//Initialize our text-to-speech object if it doesn't already exist (which it shouldn't if we make it to this point)
+		speaker = [[SUSpeaker alloc] init];
+		}
                 [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
 
 	    }
@@ -102,7 +104,6 @@
 	    BOOL isOutgoing = ([source isKindOfClass:[AIAccount class]]);
 
 	    if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
-
 		if (speakSender) {
 		    NSString * senderString;
 		    //Get the sender string
@@ -122,9 +123,7 @@
 		}
 
 		[theMessage appendFormat:@" %@",message];
-
 	    }
-
 	}
     }
     else if(speakStatus && ([[content type] compare:CONTENT_STATUS_TYPE] == 0) ){
