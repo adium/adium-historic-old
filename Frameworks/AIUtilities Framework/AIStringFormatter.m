@@ -112,7 +112,7 @@
 		if(errorMessage != nil && errorCount > ERRORS_BEFORE_DIALOG){
 			NSRunAlertPanel(AILocalizedString(@"Invalid Input",nil), 
 							errorMessage, 
-							AILocalizedString(@"Okay",nil), nil, nil);
+							AILocalizedString(@"OK",nil), nil, nil);
 			errorCount = 0;
 			
 		}else{
