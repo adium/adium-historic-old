@@ -10,10 +10,16 @@
 #define KEY_MESSAGE_OTHERACCOUNT	@"Allow Other"		//allow other account
 #define KEY_MESSAGE_ERROR		@"Display Error"
 
+#define PREF_GROUP_FORMATTING			@"Formatting"
+#define KEY_FORMATTING_FONT			@"Default Font"
+#define KEY_FORMATTING_TEXT_COLOR		@"Default Text Color"
+#define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
+#define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
+
 #define CONTACT_ALERT_IDENTIFIER            @"Message"
 
 @interface ESSendMessageContactAlertPlugin : AIPlugin <ESContactAlertProvider>{
-
+    NSDictionary *attributes;
 }
 
 @end
