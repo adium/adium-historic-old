@@ -57,8 +57,6 @@
 	YahooService		= [[ESYahooService alloc] init];
 	YahooJapanService	= [[ESYahooJapanService alloc] init];	
 	ZephyrService		= [[ESZephyrService alloc] init];
-
-	NapsterService		= nil;//[[ESNapsterService alloc] init];
 	
 #ifndef TREPIA_NOT_AVAILABLE
 	TrepiaService		= [[ESTrepiaService alloc] init];
@@ -82,8 +80,6 @@
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
 	[ZephyrService release]; ZephyrService = nil;
-
-	[NapsterService release]; NapsterService = nil;
 
 #ifndef TREPIA_NOT_AVAILABLE
 	[TrepiaService release]; TrepiaService = nil;
