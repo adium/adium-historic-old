@@ -18,62 +18,124 @@
 */
 
 #import "AIColorAdditions.h"
+#import "AIStringAdditions.h"
 #include <string.h>
 
-float ONE_THIRD = 1.0/3.0;
-float ONE_SIXTH = 1.0/6.0;
-float TWO_THIRD = 2.0/3.0;
+static const float ONE_THIRD = 1.0/3.0;
+static const float ONE_SIXTH = 1.0/6.0;
+static const float TWO_THIRD = 2.0/3.0;
 
-float min(float a, float b, float c);
-float max(float a, float b, float c);
-float _v(float m1, float m2, float hue);
+static float min(float a, float b, float c);
+static float max(float a, float b, float c);
+static float _v(float m1, float m2, float hue);
+
+static NSDictionary *RGBColorValues = nil;
+
+//two parts of a single path:
+//	defaultRGBTxtLocation1/VERSION/defaultRGBTxtLocation2
+static NSString *defaultRGBTxtLocation1 = @"/usr/share/emacs";
+static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
+
+@implementation NSDictionary (AIColorAdditions)
+
+//see /usr/share/emacs/(some version)/etc/rgb.txt for an example of such a file.
+//the pathname does not need to end in 'rgb.txt', but it must be a file in UTF-8 encoding.
+//the keys are colour names (all converted to lowercase); the values are RGB NSColors.
++ (id)dictionaryWithContentsOfRGBTxtFile:(NSString *)path
+{
+	NSMutableData *data = [NSMutableData dataWithContentsOfFile:path];
+	if(!data) return nil;
+	
+	char *ch = [data mutableBytes]; //we use mutable bytes because we want to tokenise the string by replacing separators with '\0'.
+	unsigned length = [data length];
+	struct {
+		const char *redStart, *greenStart, *blueStart, *nameStart;
+		const char *redEnd,   *greenEnd,   *blueEnd;
+		float red, green, blue;
+		unsigned reserved: 23;
+		unsigned inComment: 1;
+		char prevChar;
+	} state = {
+		.prevChar = '\n',
+		.redStart = NULL, .greenStart = NULL, .blueStart = NULL, .nameStart = NULL,
+		.inComment = NO,
+	};
+	
+	NSDictionary *result = nil;
+	
+	//the rgb.txt file that comes with Mac OS X 10.3.8 contains 752 entries.
+	//we create 3 autoreleased objects for each one.
+	//best to not pollute our caller's autorelease pool.
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+	
+	for(unsigned i = 0; i < length; ++i) {
+		if(state.inComment) {
+			if(ch[i] == '\n') state.inComment = NO;
+		} else if(ch[i] == '\n') {
+			if(state.prevChar != '\n') { //ignore blank lines
+				if(	! ((state.redStart   != NULL)
+					   && (state.greenStart != NULL)
+					   && (state.blueStart  != NULL)
+					   && (state.nameStart  != NULL)))
+				{
+					NSLog(@"Parse error reading rgb.txt file: a non-comment line was encountered that did not have all four of red (%p), green (%p), blue (%p), and name (%p) - index is %u",
+						  state.redStart,
+						  state.greenStart,
+						  state.blueStart,
+						  state.nameStart, i);
+					goto end;
+				}
+				
+				NSRange range = {
+					.location = state.nameStart - ch,
+					.length   = (&ch[i]) - state.nameStart,
+				};
+				NSString *name = [NSString stringWithData:[data subdataWithRange:range] encoding:NSUTF8StringEncoding];
+				NSColor *color = [NSColor colorWithCalibratedRed:state.red
+														   green:state.green
+															blue:state.blue
+														   alpha:1.0];
+				[mutableDict setObject:color forKey: name];
+				[mutableDict setObject:color forKey:[name lowercaseString]];
+				
+				state.redStart = state.greenStart = state.blueStart = state.nameStart = 
+					state.redEnd   = state.greenEnd   = state.blueEnd   = NULL;
+			} //if(prevChar != '\n')
+		} else if((ch[i] != ' ') && (ch[i] != '\t')) {
+			if(state.prevChar == '\n' && ch[i] == '#') {
+				state.inComment = YES;
+			} else {
+				if(!state.redStart) {
+					state.redStart = &ch[i];
+					state.red = strtof(state.redStart, (char **)&state.redEnd) / 255.0;
+				} else if((!state.greenStart) && state.redEnd && (&ch[i] >= state.redEnd)) {
+					state.greenStart = &ch[i];
+					state.green = strtof(state.greenStart, (char **)&state.greenEnd) / 255.0;
+				} else if((!state.blueStart) && state.greenEnd && (&ch[i] >= state.greenEnd)) {
+					state.blueStart = &ch[i];
+					state.blue = strtof(state.blueStart, (char **)&state.blueEnd) / 255.0;
+				} else if((!state.nameStart) && state.blueEnd && (&ch[i] >= state.blueEnd)) {
+					state.nameStart  = &ch[i];
+				}
+			}
+		}
+		state.prevChar = ch[i];
+	} //for(unsigned i = 0; i < length; ++i)
+	
+	//why not use -copy? because this is subclass-friendly.
+	//you can call this method on NSMutableDictionary and get a mutable dictionary back.
+	result = [[self alloc] initWithDictionary:mutableDict];
+end:
+		[pool release];
+	
+	return [result autorelease];
+}
+
+@end
 
 @implementation NSString (AIColorAdditions)
-
-- (NSColor *)hexColor
-{
-	const char	*hexString = [self UTF8String];
-	float 	red,green,blue;
-	float	alpha = 1.0;
-
-	//skip # if present.
-	if(*hexString == '#') ++hexString;
-	size_t hexStringLength = strlen(hexString);
-
-	NSAssert1((hexStringLength == 3) || (hexStringLength == 4) || (hexStringLength == 6) || (hexStringLength == 8), @"-hexColor called on a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08); string: %@", self);
-
-	//long specification:  #rrggbb[aa]
-	//short specification: #rgb[a]
-	//e.g. these all specify pure opaque blue: #0000ff #00f #0000ffff #00ff
-	BOOL isLong = hexStringLength > 4;
-
-	//for a long component c = 'xy':
-	//	c = (x * 0x10 + y) / 0xff
-	//for a short component c = 'x':
-	//	c = x / 0xf
-
-	red   = hexToInt(*(hexString++));
-	if(isLong)   red = (  red * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else   red /= 15.0;
-
-	green = hexToInt(*(hexString++));
-	if(isLong) green = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else green /= 15.0;
-
-	blue  = hexToInt(*(hexString++));
-	if(isLong)  blue = ( blue * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else  blue /= 15.0;
-
-	if(*hexString) {
-		//we still have one more component to go: this is alpha.
-		//without this component, alpha defaults to 1.0 (see initialiser above).
-		alpha = hexToInt(*(hexString++));
-		if(isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
-		else alpha /= 15.0;
-	}
-
-	return [NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
-}
 
 - (NSColor *)representedColor
 {
@@ -134,6 +196,45 @@ float _v(float m1, float m2, float hue);
 			return NSGraphiteControlTint;
 		}
     }
+}
+
++ (NSDictionary *)colorNamesDictionary
+{
+	if(!RGBColorValues) {
+		NSFileManager *mgr = [NSFileManager defaultManager];
+
+		NSEnumerator *middlePathEnum = [[mgr directoryContentsAtPath:defaultRGBTxtLocation1] objectEnumerator];
+		NSString *middlePath;
+		while((!RGBColorValues) && (middlePath = [middlePathEnum nextObject])) {
+			NSString *path = [defaultRGBTxtLocation1 stringByAppendingPathComponent:[middlePath stringByAppendingPathComponent:defaultRGBTxtLocation2]];
+			RGBColorValues = [[NSDictionary dictionaryWithContentsOfRGBTxtFile:path] retain];
+			if(RGBColorValues) {
+				NSLog(@"Got colour values from %@", path);
+			}
+		}
+		if(!RGBColorValues) {
+			RGBColorValues = [[NSDictionary alloc] initWithObjectsAndKeys:
+				[NSColor colorWithHTMLString:@"#000"],    @"black",
+				[NSColor colorWithHTMLString:@"#c0c0c0"], @"silver",
+				[NSColor colorWithHTMLString:@"#808080"], @"gray",
+				[NSColor colorWithHTMLString:@"#808080"], @"grey",
+				[NSColor colorWithHTMLString:@"#fff"],    @"white",
+				[NSColor colorWithHTMLString:@"#800000"], @"maroon",
+				[NSColor colorWithHTMLString:@"#f00"],    @"red",
+				[NSColor colorWithHTMLString:@"#800080"], @"purple",
+				[NSColor colorWithHTMLString:@"#f0f"],    @"fuchsia",
+				[NSColor colorWithHTMLString:@"#008000"], @"green",
+				[NSColor colorWithHTMLString:@"#0f0"],    @"lime",
+				[NSColor colorWithHTMLString:@"#808000"], @"olive",
+				[NSColor colorWithHTMLString:@"#ff0"],    @"yellow",
+				[NSColor colorWithHTMLString:@"#000080"], @"navy",
+				[NSColor colorWithHTMLString:@"#00f"],    @"blue",
+				[NSColor colorWithHTMLString:@"#008080"], @"teal",
+				[NSColor colorWithHTMLString:@"#0ff"],    @"aqua",
+				nil];
+		}
+	}
+	return RGBColorValues;
 }
 
 //Returns YES if the colors are equal
@@ -300,10 +401,10 @@ float _v(float m1, float m2, float hue){
     while(hue < 0.0) hue += 1.0;
     while(hue > 1.0) hue -= 1.0;
     
-    if(hue < ONE_SIXTH) 	return( m1 + (m2 - m1) * hue * 6.0);
-    else if(hue < 0.5) 		return( m2 );
-    else if(hue < TWO_THIRD) 	return( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
-    else         		return( m1 );
+    if     (hue < ONE_SIXTH) return( m1 + (m2 - m1) *              hue  * 6.0);
+    else if(hue < 0.5)       return( m2 );
+    else if(hue < TWO_THIRD) return( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
+    else                     return( m1 );
 }
 
 - (NSString *)hexString
@@ -329,7 +430,7 @@ float _v(float m1, float m2, float hue){
     hexString[5] = intToHex((blue * 255) - (tempNum * 16));
     hexString[6] = '\0';
     
-    return([NSString stringWithCString:hexString]);
+    return([NSString stringWithUTF8String:hexString]);
 }
 
 - (NSString *)stringRepresentation
@@ -345,17 +446,79 @@ float _v(float m1, float m2, float hue){
     );
 }
 
++ (id)colorWithHTMLString:(NSString *)str
+{
+	NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called: str is %@", str);
+	if(!str) return nil;
+
+	if((![str length]) || ([str characterAtIndex:0] != '#')) {
+		//look it up; it's a colour name
+		NSDictionary *colorValues = [self colorNamesDictionary];
+		NSString *str2 = [colorValues objectForKey:str];
+		if(!str2) {
+			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name: str is %@", str);
+			return nil;
+		}
+		str = str2;
+	}
+
+	const char	*hexString = [colorValue UTF8String];
+	float 	red,green,blue;
+	float	alpha = 1.0;
+
+	//skip # if present.
+	if(*hexString == '#') ++hexString;
+	size_t hexStringLength = strlen(hexString);
+
+	if((hexStringLength != 3) && (hexStringLength != 4) && (hexStringLength != 6) && (hexStringLength != 8)) {
+		NSLog(@"+[%@ colorWithHTMLString:] called with a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08); string: %@ input: %@", NSStringFromClass(self), colorValue, str);
+		return nil;
+	}
+
+	//long specification:  #rrggbb[aa]
+	//short specification: #rgb[a]
+	//e.g. these all specify pure opaque blue: #0000ff #00f #0000ffff #00ff
+	BOOL isLong = hexStringLength > 4;
+
+	//for a long component c = 'xy':
+	//	c = (x * 0x10 + y) / 0xff
+	//for a short component c = 'x':
+	//	c = x / 0xf
+
+	red   = hexToInt(*(hexString++));
+	if(isLong) red    = (red   * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	else       red   /= 15.0;
+
+	green = hexToInt(*(hexString++));
+	if(isLong) green  = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	else       green /= 15.0;
+
+	blue  = hexToInt(*(hexString++));
+	if(isLong) blue   = (blue  * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	else       blue  /= 15.0;
+
+	if(*hexString) {
+		//we still have one more component to go: this is alpha.
+		//without this component, alpha defaults to 1.0 (see initialiser above).
+		alpha = hexToInt(*(hexString++));
+		if(isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
+		else alpha /= 15.0;
+	}
+
+	return [self colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
+}
+
 @end
 
 //Returns the min of 3 values
-float min(float a, float b, float c){
+static float min(float a, float b, float c){
     if(a < b && a < c) return(a);
     if(b < a && b < c) return(b);
     return(c);
 }
 
 //Returns the max of 3 values
-float max(float a, float b, float c){
+static float max(float a, float b, float c){
     if(a > b && a > c) return(a);
     if(b > a && b > c) return(b);
     return(c);

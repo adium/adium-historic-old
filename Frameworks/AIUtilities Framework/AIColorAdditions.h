@@ -17,9 +17,17 @@ char intToHex(int digit);
 
 @interface NSString (AIColorAdditions)
 
-- (NSColor *)hexColor;
 - (NSColor *)representedColor;
 - (NSColor *)representedColorWithAlpha:(float)alpha;
+
+@end
+
+@interface NSDictionary (AIColorAdditions)
+
+//see /usr/share/emacs/(some version)/etc/rgb.txt for an example of such a file.
+//the pathname does not need to end in 'rgb.txt', but it must be a file in UTF-8 encoding.
+//the keys are colour names (all converted to lowercase); the values are RGB NSColors.
++ (id)dictionaryWithContentsOfRGBTxtFile:(NSString *)path;
 
 @end
 
@@ -36,5 +44,9 @@ char intToHex(int digit);
 + (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
 - (NSColor *)colorWithInvertedLuminance;
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
+
+//this accepts HTML/SVG colour names (e.g. 'blue', 'yellow') and
+//	hex colour specifications (e.g. '#00f', '#ffff00').
++ (id)colorWithHTMLString:(NSString *)str;
 
 @end
