@@ -14004,7 +14004,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd $SYMROOT\ncd \"Adium Crash Reporter.app/Contents/\"\nif [ -e Frameworks ] ; then\n    rm Frameworks\nfi\n\necho \"Symlinking AIUtilities framework...\"\npwd\necho \"ln -fhs \\\"../../../Frameworks\\\" \\\"Frameworks\\\"\"\nln -fhs \"../../../Frameworks\" \"Frameworks\"\necho \"Done\"";
+			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd $SYMROOT\ncd \"Adium Crash Reporter.app/Contents/\"\nif [ -e Frameworks ] ; then\n    rm Frameworks\nfi\n\necho \"Symlinking AIUtilities framework...\"\npwd\necho \"ln -nhs \\\"../../../Frameworks\\\" \\\"Frameworks\\\"\"\nln -fns \"../../../Frameworks\" \"Frameworks\"\necho \"Done\"";
 		};
 		4BC8AFD604FD3C1000A8010A = {
 			children = (
