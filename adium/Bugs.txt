@@ -69,9 +69,6 @@
 	The key equivelants for MSN's blush emoticon do not include :$.  Other emoticons
 	may be incorrect.
 
-- Push/pop indicator spacing
-	It could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar
-
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
 //------------------------------------------------------------------------------------
