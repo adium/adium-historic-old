@@ -13,44 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//#define KEY_STATUS_LABEL_OPACITY	@"Status Label Opacity"
-
-//#define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
-//
-//
-//#define KEY_AWAY_ENABLED		@"Away Enabled"
-//#define KEY_IDLE_ENABLED		@"Idle Enabled"
-//#define KEY_TYPING_ENABLED		@"Typing Enabled"
-//#define KEY_SIGNED_OFF_ENABLED		@"Signed Off Enabled"
-//#define KEY_SIGNED_ON_ENABLED		@"Signed On Enabled"
-//#define KEY_UNVIEWED_ENABLED		@"Unviewed Content Enabled"
-//#define KEY_ONLINE_ENABLED		@"Online Enabled"
-//#define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
-//#define KEY_OFFLINE_ENABLED		@"Offline Enabled"
-//
-//#define KEY_AWAY_COLOR			@"Away Color"
-//#define KEY_IDLE_COLOR			@"Idle Color"
-//#define KEY_TYPING_COLOR		@"Typing Color"
-//#define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
-//#define KEY_SIGNED_ON_COLOR		@"Signed On Color"
-//#define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
-//#define KEY_ONLINE_COLOR		@"Online Color"
-//#define KEY_IDLE_AWAY_COLOR		@"Idle And Away Color"
-//#define KEY_OFFLINE_COLOR		@"Offline Color"
-//
-//#define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
-//#define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
-//#define KEY_LABEL_TYPING_COLOR		@"Typing Label Color"
-//#define KEY_LABEL_SIGNED_OFF_COLOR	@"Signed Off Label Color"
-//#define KEY_LABEL_SIGNED_ON_COLOR	@"Signed On Label Color"
-//#define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
-//#define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
-//#define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
-//#define KEY_LABEL_OFFLINE_COLOR		@"Offline Label Color"
-//
-//#define	PREF_GROUP_CONTACT_LIST		@"Contact List Display"
-//#define KEY_SCL_OPACITY			@"Opacity"
-
 @class AIContactStatusColoringPreferences;
 
 @interface AIContactStatusColoringPlugin : AIPlugin <AIListObjectObserver, AIFlashObserver> {
