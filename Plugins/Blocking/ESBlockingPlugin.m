@@ -153,13 +153,15 @@
 		while(account = [enumerator nextObject]){
 			if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
 				AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-				if(unblock){
-					if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
-						[privacyAccount removeListObject:contact fromPrivacyList:PRIVACY_DENY];
-					}
-				}else{
-					if(![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
-						[privacyAccount addListObject:contact toPrivacyList:PRIVACY_DENY];
+				if([privacyAccount privacyOptions] == PRIVACY_DENY_USERS){
+					if(unblock){
+						if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+							[privacyAccount removeListObject:contact fromPrivacyList:PRIVACY_DENY];
+						}
+					}else{
+						if(![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+							[privacyAccount addListObject:contact toPrivacyList:PRIVACY_DENY];
+						}
 					}
 				}
 			}
@@ -203,8 +205,11 @@
 		
 		while(account = [enumerator nextObject]){
 			if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
-				if([[(AIAccount <AIAccount_Privacy> *)account listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult){
-					return YES;
+				AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
+				if([privacyAccount privacyOptions] == PRIVACY_DENY_USERS){
+					if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult){
+						return YES;
+					}
 				}
 			}
 		}
