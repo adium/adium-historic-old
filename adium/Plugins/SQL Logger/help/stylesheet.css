@@ -1,0 +1,25 @@
+<!-- $Id: stylesheet.css,v 1.1 2003/07/19 00:03:29 jmelloy Exp $ -->
+
+.tutorialcode {
+    margin-left:50px;
+    margin-right:50px;
+    margin-bottom:0;
+    margin-top:0;
+    padding:5px;
+}
+
+.tutorialcode pre {
+    font-size: 10pt;
+    background-color: #eeeeee;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: #000000;
+    border-bottom-color: #000000;
+    padding: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: Monaco, "Courier New", Courier, mono;
+}
+
