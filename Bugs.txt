@@ -51,9 +51,9 @@ Meta Contacts
 	sends a message
   - MetaContacts should remember the last messaged contact and use that rather than the
     "preferredContact" by default
+  - Unchecking the address book consolidate contacts option has no effect [Evan]
 
 [MEDIUM]
-
 
 [LOW]
   - Autoaway after Idle is broken
