@@ -133,14 +133,18 @@ NSString *AITag_ContentsKey = @"Contents";
 }
 - (BOOL)isEqualToTag:(AITag *)other
 {
+	return [name isEqualToString:other->name] \
+		&& [attributeNames isEqualToArray:other->attributeNames] \
+		&& [attributeValues isEqualToArray:other->attributeValues] \
+		&& [contents isEqualToArray:other->contents];
+}
+- (BOOL)isEqual:(id)other
+{
 	if(![other isKindOfClass:[AITag class]]) {
 		//not an AITag? can't be equal.
 		return NO;
 	} else {
-		return [name isEqualToString:other->name] \
-			&& [attributeNames isEqualToArray:other->attributeNames] \
-			&& [attributeValues isEqualToArray:other->attributeValues] \
-			&& [contents isEqualToArray:other->contents];
+		return [self isEqualToTag:other];
 	}
 }
 
