@@ -138,29 +138,36 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	
 	//Turn the nonsense of memory addresses into a human-readable backtrace complete with line numbers
 	if(dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) {
-		NSMutableString		*processedStackTrace = [[[NSMutableString alloc] init] autorelease];
+		NSString			*processedStackTrace;
 		NSString			*str;
 		
 		//We use two command line apps to decode our exception
 		str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | %s | cat -n",
-			[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] fileSystemRepresentation],
-			[[NSProcessInfo processInfo] processIdentifier],
-			stackTrace,
-			([[stackTrace componentsSeparatedByString:@"  "] count] - 4),
-			[[[NSBundle mainBundle] pathForResource:@"c++filt" ofType:nil] fileSystemRepresentation]];
+			[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] fileSystemRepresentation], //atos arg 0
+			[[NSProcessInfo processInfo] processIdentifier], //atos arg 2 (argument to -p)
+			stackTrace, //atos arg 3..inf
+			([[stackTrace componentsSeparatedByString:@"  "] count] - 4), //head arg 3
+			[[[NSBundle mainBundle] pathForResource:@"c++filt" ofType:nil] fileSystemRepresentation]]; //c++filt arg 0
 		
 		FILE *file = popen( [str UTF8String], "r" );
-		
-		if(file){
+		NSMutableData *data = [[NSMutableData alloc] init];
+
+		if(file) {
 			char	buffer[512];
 			size_t	length;
-			
-			while(length = fread(buffer, 1, sizeof(buffer), file)){
-				[processedStackTrace appendString:[NSString stringWithCString:buffer]];
+
+			while(length = fread(buffer, 1, sizeof(buffer), file)) {
+				[data appendBytes:buffer length:length];
 			}
-			
+
 			pclose(file);
 		}
+
+		//we use ISO 8859-1 because it preserves all bytes. UTF-8 doesn't (beacuse
+		//	certain sequences of bytes may get added together or cause the string to be rejected).
+		//and it shouldn't matter; we shouldn't be getting high-ASCII in the backtrace anyway. :)
+		processedStackTrace = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
+		[data release];
 		
 		return(processedStackTrace);
 	}
