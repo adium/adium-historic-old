@@ -60,7 +60,8 @@
         NSString		*fullPath;
 
         if([[file lastPathComponent] characterAtIndex:0] != '.' &&
-           [[file pathExtension] compare:SOUND_SET_PATH_EXTENSION] != 0){//Ignore certain files
+           [[file pathExtension] compare:SOUND_SET_PATH_EXTENSION] != 0 &&
+          ![[file pathComponents] containsObject:@"CVS"]){//Ignore certain files
 
             //Determine if this is a file or a directory
             fullPath = [soundFolderPath stringByAppendingPathComponent:file];
