@@ -159,15 +159,60 @@
     int			xLocation;
     BOOL		finished = YES;
 
-    //Precalc the total width
-    xLocation = ([self frame].size.width - [self totalTabWidth]) / 2.0;
+    int		reducedWidth = 0;
+    int		reduceThreshold = 1000000;
+    int		tabExtraWidth;
+    int		totalTabWidth;
+    
+    //Get the total tab width
+    totalTabWidth = [self totalTabWidth];
+
+    //If the tabs are too wide, we need to shrink the bigger ones down
+    tabExtraWidth = totalTabWidth - [self frame].size.width;
+    if(tabExtraWidth > 0){
+        NSArray	*sortedTabArray;
+        NSEnumerator	*enumerator;
+        AICustomTab	*tab;
+        int		tabCount = 0;
+        int		totalTabWidth = 0;
+
+        //Make a copy of the tabArray sorted by width
+        sortedTabArray = [tabArray sortedArrayUsingSelector:@selector(compareWidth:)];
+
+        //Process each tab to determine how many should be squished, and the size they should squish to
+        enumerator = [sortedTabArray reverseObjectEnumerator];
+        tab = [enumerator nextObject];
+        do{
+            tabCount++;            
+            totalTabWidth += [tab size].width;
+            reducedWidth = (totalTabWidth - tabExtraWidth) / tabCount;
+                
+        }while((tab = [enumerator nextObject]) && reducedWidth <= [tab size].width);
+
+        //Remember the treshold at which tabs are squished
+        reduceThreshold = (tab ? [tab size].width : 0);
+        tabXOrigin = 0;
+
+    }else{
+        tabXOrigin = (-tabExtraWidth) / 2.0;
+
+    }
+    
+    //Draw the tabs
+    xLocation = tabXOrigin;
     enumerator = [tabArray objectEnumerator];
     while((object = [enumerator nextObject])){
         NSSize	size;
         NSPoint	origin;
 
         //Get the object's size
-        size = [object frame].size;
+        size = [(AICustomTab *)object size];//[object frame].size;
+
+        //If this tab is > next biggest, use the 'reduced' width calculated above
+        if(size.width > reduceThreshold){
+            size.width = reducedWidth;
+        }
+        
         origin = NSMakePoint(xLocation, 0 );
 
         //Move the item closer to its desired location
@@ -188,7 +233,7 @@
             }
         }
 
-        [object setFrame:NSMakeRect(origin.x, origin.y, [object frame].size.width, [object frame].size.height)];
+        [object setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
         
         xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
     }
@@ -295,7 +340,7 @@
     int			dragIndex;
     
     //Figure out where the user is hovering the toolbar item
-    xLocation = ([self frame].size.width - [self totalTabWidth]) / 2.0;
+    xLocation = tabXOrigin;
     while((tab = [enumerator nextObject])){
         NSRect	 frame = [tab frame];
 
@@ -384,7 +429,7 @@
     totalWidth = CUSTOM_TABS_OVERLAP;
     enumerator = [tabArray objectEnumerator];
     while((object = [enumerator nextObject])){
-        totalWidth += [object frame].size.width - CUSTOM_TABS_OVERLAP;
+        totalWidth += [(AICustomTab *)object size].width - CUSTOM_TABS_OVERLAP;
     }
 
     return(totalWidth);

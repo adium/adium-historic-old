@@ -46,5 +46,6 @@
 - (void)setDepressed:(BOOL)inDepressed;
 - (NSTabViewItem *)tabViewItem;
 - (NSSize)size;
+- (NSComparisonResult)compareWidth:(AICustomTab *)tab;
 
 @end
