@@ -18,6 +18,8 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 
+#define KEY_MESSAGE_WINDOW_POSITION 			@"Message Window"
+
 #define AIMessageTabDragBeganNotification		@"AIMessageTabDragBeganNotification"
 #define AIMessageTabDragEndedNotification    	@"AIMessageTabDragEndedNotification"
 #define	MESSAGE_WINDOW_NIB                      @"MessageWindow"			//Filename of the message window nib
@@ -32,6 +34,7 @@
 - (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute;
 - (void)_suppressTabHiding:(BOOL)suppress;
 - (void)_updateWindowTitleAndIcon;
+- (NSString *)_frameSaveKey;
 @end
 
 //Used to squelch compiler warnings on this private call
@@ -80,9 +83,6 @@
 
 	//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-
-    //autosave
-    [self setWindowFrameAutosaveName:@"DualWindowInterfaceMessageWindowFrame"];
     
     return(self);
 }
@@ -115,8 +115,13 @@
 //Setup our window before it is displayed
 - (void)windowDidLoad
 {
+    //Restore window position
+    NSString *savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:[self _frameSaveKey]];
+    if(savedFrame) [[self window] setFrameFromString:savedFrame];
+	NSLog(@"load (%@) %@", [self _frameSaveKey], savedFrame);
     //Remember the initial tab height
     tabBarHeight = [tabView_customTabs frame].size.height;
+	[[self window] addDocumentIconButton];
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -127,9 +132,16 @@
     while([tabView_messages numberOfTabViewItems] > 0){
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
-	
-	//
-	[[self window] addDocumentIconButton];
+}
+
+//Frames
+- (NSString *)_frameSaveKey
+{
+	return([NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID]);
+}
+- (BOOL)shouldCascadeWindows
+{
+	return(NO);
 }
 
 //
@@ -164,6 +176,12 @@
     AIMessageTabViewItem	*tabViewItem;
 	
 	windowIsClosing = YES;
+
+    //Save window position
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:[self _frameSaveKey]
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
+	NSLog(@"save (%@) %@", [self _frameSaveKey], [[self window] stringWithSavedFrame]);
 
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
     enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];

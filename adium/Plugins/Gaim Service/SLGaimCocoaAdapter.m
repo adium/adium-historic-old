@@ -1927,7 +1927,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 						   withFlags:(NSNumber *)flags
 {
 	GaimConversation *conv = convLookupFromChat(chat,sourceAccount);
-	
+
 	switch (gaim_conversation_get_type(conv)) {				
 		case GAIM_CONV_IM: {
 			GaimConvIm			*im = gaim_conversation_get_im_data(conv);
