@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 530 $ $Date: 2004/01/19 19:59:41 $ -->
+<!--$Rev: 691 $ $Date: 2004/04/28 15:00:09 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -229,26 +229,26 @@ try {
     for(int i = 1; i <= lastDayOfMonth; i++) {
         out.print("<tr><td class=\"rowCount\">" + i + "</td>");
         for(int j = 0; j < 24; j++) {
-            String after = new String(date);
-            String before = new String(date);
+            String start = new String(date);
+            String finish = new String(date);
 
-            after = after.replaceFirst("01 ", i + " ");
-            after = after.replaceFirst("00:", j + ":");
+            start = start.replaceFirst("01 ", i + " ");
+            start = start.replaceFirst("00:", j + ":");
             if(j != 23) {
-                before = before.replaceFirst("01 ", i + " ");
-                before = before.replaceFirst("00:", j + 1  + ":");
+                finish = finish.replaceFirst("01 ", i + " ");
+                finish = finish.replaceFirst("00:", j + 1  + ":");
             } else if (j == 23 && i != lastDayOfMonth) {
-                before = before.replaceFirst("01 ", (i + 1) + " ");
+                finish = finish.replaceFirst("01 ", (i + 1) + " ");
             } else if (j == 23 && i == lastDayOfMonth) {
                 Pattern p = Pattern.compile("(\\d*-)(\\d*)(-01.*)");
-                Matcher m = p.matcher(before);
+                Matcher m = p.matcher(finish);
                 StringBuffer sb = new StringBuffer();
                 while(m.find()) {
                     sb.append(m.group(1) +
                         (Integer.parseInt(m.group(2)) + 1) +
                         m.group(3));
                 }
-                before = sb.toString();
+                finish = sb.toString();
             } 
 
             out.print("<td align=\"center\" class=\"shade\"");
@@ -265,8 +265,8 @@ try {
                  out.print(" bgcolor=\"#" + Integer.toHexString((int)shade) +
                  Integer.toHexString((int)shade) +
                  Integer.toHexString((int)shade) + "\" ");
-                out.print("><a href=\"index.jsp?after=" + after +
-                "&before=" + before + "\">" + dailyHourly[i][j] + 
+                out.print("><a href=\"index.jsp?start=" + start +
+                "&finish=" + finish + "\">" + dailyHourly[i][j] + 
                 "</a>");
             } else
                 out.print(">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
