@@ -6,8 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
 @class AIAdium, AIAlternatingRowTableView;
 
 @interface AIEventSoundCustom : NSWindowController {

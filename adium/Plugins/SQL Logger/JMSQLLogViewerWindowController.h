@@ -14,13 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
- * $Revision: 1.2 $
- * $Date: 2003/10/28 15:59:17 $
- * $Author: jmelloy $
+ * $Revision: 1.3 $
+ * $Date: 2003/11/09 02:32:09 $
+ * $Author: adamiser $
  */
 
-
-#import <Cocoa/Cocoa.h>
 #import "libpq-fe.h"
 
 @class AIAdium, AIAlternatingRowOutlineView, AIListContact;
