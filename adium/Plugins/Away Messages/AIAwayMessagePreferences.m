@@ -50,10 +50,10 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    awayMessageArray = nil;
+	awayMessageArray = nil;
     displayedMessage = nil;
     dragItem = nil;
-
+	
     //Configure our view
     [outlineView_aways setDrawsAlternatingRows:YES];
     [outlineView_aways registerForDraggedTypes:[NSArray arrayWithObject:@"AIAwayMessage"]];
@@ -62,9 +62,6 @@
     [scrollView_awayText setAutoHideScrollBar:YES];
     [scrollView_awayText setAutoScrollToBottom:NO];
 	
-//    [[NSNotificationCenter defaultCenter] addObserver:textView_message selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_message];
-//    [[NSNotificationCenter defaultCenter] addObserver:textView_autoresponse selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_autoresponse];
-//	
     //Load our aways
     [self loadAwayMessages];
 }
@@ -72,7 +69,7 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-    [awayMessageArray release];
+    [awayMessageArray release]; awayMessageArray = nil;
 }
 
 

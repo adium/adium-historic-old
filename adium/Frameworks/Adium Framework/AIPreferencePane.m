@@ -47,16 +47,6 @@
     return(self);
 }
 
-//Close our view
-- (void)closeView
-{
-	[super closeView];
-	if(view){
-		[self viewWillClose];
-		[view release]; view = nil;
-	}
-}
-
 
 //For subclasses -------------------------------------------------------------------------------
 //Preference category
