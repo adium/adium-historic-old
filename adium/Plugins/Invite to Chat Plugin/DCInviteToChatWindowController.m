@@ -75,8 +75,6 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	contact = inContact;
 	service = inService;
 	chat = inChat;
-	[textField_chatName setStringValue:[chat name]];
-
 }
 
 //Setup the window before it is displayed
@@ -86,12 +84,16 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
     [menu_contacts setMenu:[[adium contactController] menuOfContainedContacts:contact forService:service withTarget:self includeOffline:NO]];
 	
 	if( [contact isKindOfClass:[AIMetaContact class]] ) {
+#warning Dave: This fails to select anyone for some reason
 		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithServiceID:service]];
 	} else {
 		[menu_contacts selectItemAtIndex:0];
 	}
 	
 	contact = [[menu_contacts selectedItem] representedObject];
+	
+	// Set the chat's name in the window
+	[textField_chatName setStringValue:[chat name]];
 
     //Center the window
     [[self window] center];
