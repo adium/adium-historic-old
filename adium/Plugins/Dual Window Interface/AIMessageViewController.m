@@ -291,7 +291,7 @@
 		
 		detailsDict = [NSMutableDictionary dictionary];
 		[detailsDict setObject:[[chat account] uniqueObjectID] forKey:@"Account ID"];
-		[detailsDict setObject:[NSNumber numberWithInt:1] forKey:@"Allow Other"];
+		[detailsDict setObject:[NSNumber numberWithBool:BOOL] forKey:@"Allow Other"];
 		[detailsDict setObject:[listObject uniqueObjectID] forKey:@"Destination ID"];
 		[detailsDict setObject:[[textView_outgoing textStorage] dataRepresentation] forKey:@"Message"];
 		
@@ -299,7 +299,7 @@
 		[alertDict setObject:detailsDict forKey:@"ActionDetails"];
 		[alertDict setObject:CONTACT_STATUS_ONLINE_YES forKey:@"EventID"];
 		[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
-		[alertDict setObject:[NSNumber numberWithInt:1] forKey:@"OneTime"]; 
+		[alertDict setObject:[NSNumber numberWithBool:YES] forKey:@"OneTime"]; 
 		
 		[[adium contactAlertsController] addAlert:alertDict toListObject:listObject];
 		
