@@ -67,16 +67,17 @@
 
 - (IBAction)setAlias:(id)sender
 {
-    if(![[textField_alias stringValue] isEqual:@""])
-    {
-        NSString	*alias = [textField_alias stringValue];
-        
-        //Apply
-        [self _applyAlias:alias toObject:activeListObject delayed:NO];
+    NSString	*alias = [textField_alias stringValue];
     
-        //Save the alias
-        [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
-    }
+    //A 0 length alias is no alias at all.
+    if ([alias length] == 0)
+        alias = nil; 
+    
+    //Apply
+    [self _applyAlias:alias toObject:activeListObject delayed:NO];
+    
+    //Save the alias
+    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
