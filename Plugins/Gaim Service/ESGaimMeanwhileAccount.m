@@ -14,8 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStatusController.h"
 #import "ESGaimMeanwhileAccount.h"
+#import "AIAccountController.h"
+#import "AIStatusController.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 
