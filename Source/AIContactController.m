@@ -732,7 +732,7 @@ DeclareString(UID);
 	
 	metaContact = [metaContactDict objectForKey:metaContactDictKey];
 	if (!metaContact){
-		metaContact = [[AIMetaContact alloc] initWithObjectID:inObjectID];
+		metaContact = [[[AIMetaContact alloc] initWithObjectID:inObjectID] autorelease];
 		
 		//Keep track of it in our metaContactDict for retrieval by objectID
 		[metaContactDict setObject:metaContact forKey:metaContactDictKey];
@@ -742,9 +742,14 @@ DeclareString(UID);
 
 		if (shouldRestoreContacts){
 			[self _restoreContactsToMetaContact:metaContact updatingPreferences:NO];
+			
+			//If restoring the metacontact did not actually add any contacts, delete it as it is invalid
+			if(![metaContact containedObjectsCount]){
+				[self breakdownAndRemoveMetaContact:metaContact];
+				metaContact = nil;
+			}
+			
 		}
-
-		[metaContact release];
 	}
 	
 	return (metaContact);
