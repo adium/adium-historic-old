@@ -38,9 +38,14 @@
 }
 
 //Return a new account with the specified properties
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
 {
-    return([[[AIMTOC2Account alloc] initWithUID:inUID service:self] autorelease]);
+    return([[[AIMTOC2Account alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+//Return a view for the connection window
+- (AIAccountViewController *)accountView{
+    return([AIMTOC2AccountViewController accountView]);
 }
 
 //Returns a unique identifier for this plugin (Used by this plugin only)
@@ -48,6 +53,7 @@
 {
     return(@"AIM (TOC2)");
 }
+
 //Returns a description for this service (User readable)
 - (NSString *)description
 {

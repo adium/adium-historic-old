@@ -7,6 +7,7 @@
 
 #import "ESJabberService.h"
 #import "ESGaimJabberAccount.h"
+#import "ESGaimJabberAccountViewController.h"
 
 @implementation ESJabberService
 
@@ -37,11 +38,14 @@
     return([NSString stringWithFormat:@"Jabber %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[ESGaimJabberAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+- (AIAccountViewController *)accountView
 {
-    ESGaimJabberAccount *anAccount = [[[ESGaimJabberAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    return anAccount;
+    return([ESGaimJabberAccountViewController accountView]);
 }
 
 @end

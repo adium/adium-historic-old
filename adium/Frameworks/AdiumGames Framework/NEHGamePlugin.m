@@ -109,7 +109,7 @@ static NSMenu			* menu_Games;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-	contact = [[adium contactController] contactWithService:[serviceType identifier] accountUID:[account UID] UID:UID];
+	contact = [[adium contactController] contactWithService:[serviceType identifier] accountID:[account uniqueObjectID] UID:UID];
 	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
 	if(contacts == nil)
 	{

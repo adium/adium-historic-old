@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
-@protocol AIServiceController, AIAccountViewController;
+@protocol AIServiceController;
 
 #import "AIListObject.h"
 
@@ -44,7 +44,6 @@ typedef enum {
 	- (BOOL)openChat:(AIChat *)chat;
     //Close a chat instance
     - (BOOL)closeChat:(AIChat *)chat;
-
 @end
 
 //Support for standard UID based contacts
@@ -53,26 +52,7 @@ typedef enum {
 	- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
 	- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 	- (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
-
     - (BOOL)contactListEditable;
-
-//    // Returns a dictionary of AIHandles available on this account
-//    - (NSDictionary *)availableHandles; //return nil if no contacts/list available
-//
-//    // Returns YES if the list is editable
-//    - (BOOL)contactListEditable;
-//
-//    // Add a handle to this account
-//    - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary;
-//    // Remove a handle from this account
-//    - (BOOL)removeHandleWithUID:(NSString *)inUID;
-//
-//    // Add a group to this account
-//    - (BOOL)addServerGroup:(NSString *)inGroup;
-//    // Remove a group
-//    - (BOOL)removeServerGroup:(NSString *)inGroup;
-//    // Rename a group
-//    - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 @end
 
 //Support for file transfer
@@ -104,9 +84,10 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-    id <AIServiceController>	service;                            //The service controller that spawned us
-    NSString                    *password;                          //Password of this account
-    BOOL                        silentAndDelayed;                   //We are waiting for and processing our sign on updates
+	int							objectID;						//Unique number ID of this account
+    id <AIServiceController>	service;						//The service controller that spawned us
+    NSString                    *password;						//Password of this account
+    BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
     
 	//Auto-reconnect
 	NSTimer						*reconnectTimer;
@@ -124,9 +105,7 @@ typedef enum {
 	AIListContact				*delayedUpdateStatusTarget;
 }
 
-- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
-- (void)changedUIDto:(NSString *)inUID;
-- (void)accountUIDdidChange;
+- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID;
 
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
 - (void)autoReconnectAfterDelay:(int)delay;
@@ -149,7 +128,6 @@ typedef enum {
 
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
-- (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
 

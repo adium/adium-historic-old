@@ -10,6 +10,4 @@
     
 }
 
-- (id <AIAccountViewController>)accountView;
-
 @end

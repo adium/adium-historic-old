@@ -15,9 +15,4 @@
     return "prpl-trepia";
 }
 
-- (id <AIAccountViewController>)accountView
-{
-    return([ESGaimTrepiaAccountViewController accountViewForAccount:self]);
-}
-
 @end

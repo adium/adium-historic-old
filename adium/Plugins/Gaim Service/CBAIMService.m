@@ -6,6 +6,7 @@
 
 #import "CBGaimAIMAccount.h"
 #import "CBAIMService.h"
+#import "AIGaimAIMAccountViewController.h"
 
 @implementation CBAIMService
 
@@ -36,13 +37,15 @@
     return([NSString stringWithFormat:@"AIM / ICQ %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
-{
-    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    return anAccount;
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[CBGaimAIMAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
 }
 
+- (AIAccountViewController *)accountView
+{
+    return([AIGaimAIMAccountViewController accountView]);
+}
 
 
 @end

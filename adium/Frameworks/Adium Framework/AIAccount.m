@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.47 2004/03/05 04:38:47 adamiser Exp $
+// $Id: AIAccount.m,v 1.48 2004/03/05 23:50:29 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -34,11 +34,10 @@
 //  Public Methods
 //-----------------------
 //Init the connection
-- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService
+- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID
 {
     [super initWithUID:inUID serviceID:[[inService handleServiceType] identifier]];
-
-    //Get our service
+	objectID = inObjectID;
     service = [inService retain];
 
     //Handle the preference changed monitoring (for account status) for our subclass
@@ -61,11 +60,6 @@
 
 	delayedUpdateStatusTimer = nil;
 	delayedUpdateStatusTarget = nil;
-    
-	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-	[self setStatusObject:formattedAccountName
-				   forKey:@"Formatted UID"
-				   notify:NO];
 	
     //Init the account
     [self initAccount];
@@ -73,38 +67,11 @@
     return(self);
 }
 
-- (void)changedUIDto:(NSString *)inUID
+#warning ######REMOVE#######
+- (NSString *)formattedUID
 {
-	//Rename the account if necessary (If the UID changed)
-	#warning this is AIM specific. Flatten the name using the allowed character information
-    if([[inUID compactedString] compare:[self UID]] != 0){
-		//Get our preferences from the old UID
-		NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
-																						 path:[self pathToPreferences]];
-		
-		[UID release]; UID = [inUID retain];
-		
-		[[adium preferenceController] setCachedObjectPrefs:prefDict
-													forKey:[self uniqueObjectID]
-													  path:[self pathToPreferences]];
-		
-		NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-		[self setStatusObject:formattedAccountName
-					   forKey:@"Formatted UID"
-					   notify:YES];	
-		
-		[self accountUIDdidChange];
-	}
-	
-	//Update the name formatting
-	[self setPreference:inUID forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-	
-	//Save the new accounts list
-	[[adium accountController] saveAccounts];
+	return([NSString stringWithFormat:@"[%@]%@",[self uniqueObjectID],[super formattedUID]]);
 }
-//Subclasses may override this to make internal changes when the UID changes
-- (void)accountUIDdidChange {}
-
 
 //Dealloc
 - (void)dealloc
@@ -128,6 +95,12 @@
 - (id <AIServiceController>)service
 {
     return(service);
+}
+
+//Our unique object ID is the number associated with this account
+- (NSString *)uniqueObjectID
+{
+	return([NSString stringWithFormat:@"%i",objectID]);
 }
 
 
@@ -346,27 +319,12 @@
 }
 
 
-//Return the account-specific user icon, or the default user icon from the account controlelr if none exists (thee default user icon returns nil if none is set)
-//- (NSImage *)userIcon {
-//    if (userIcon)
-//        return userIcon;
-//    else
-//        return [[adium accountController] defaultUserIcon];
-//}
-//
-//- (void)setUserIcon:(NSImage *)inUserIcon {
-//    [userIcon release];
-//    userIcon = [inUserIcon retain];
-//}
-
-
 //Subclasses -----------------------------------------------------------------------------------------------------------
 #pragma mark Subclasses
 //Functions for subclasses to override
 - (void)initAccount{};
 - (void)connect{};
 - (void)disconnect{};
-- (NSView *)accountView{return(nil);};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
 - (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key{};
 - (void)setStatusString:(NSString *)inString forKey:(NSString *)key{};
@@ -375,13 +333,6 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
     return([inAttributedString string]);
-		   
-		   /*[AIHTMLDecoder encodeHTML:inAttributedString
-                              headers:YES
-                             fontTags:YES   closeFontTags:YES
-                            styleTags:YES   closeStyleTagsOnFontChange:YES
-                       encodeNonASCII:NO
-                           imagesPath:nil]*/
 }
 
 

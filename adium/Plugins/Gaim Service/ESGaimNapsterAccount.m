@@ -14,9 +14,4 @@
     return "prpl-napster";
 }
 
-- (id <AIAccountViewController>)accountView
-{
-    return([ESGaimNapsterAccountViewController accountViewForAccount:self]);
-}
-
 @end

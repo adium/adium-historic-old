@@ -25,10 +25,10 @@
 }
 
 //Configure our controls
-- (void)configureViewAfterLoad
+- (void)configureForAccount:(AIAccount *)inAccount
 {
 	//Configure the standard controls
-	[super configureViewAfterLoad];
+	[super configureForAccount:inAccount];
 	
     //Fill in our host & port
     [textField_host setStringValue:[account preferenceForKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS]];

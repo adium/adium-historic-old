@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.59 2004/03/05 04:39:05 adamiser Exp $
+// $Id: AIAccountController.m,v 1.60 2004/03/05 23:50:33 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -22,19 +22,22 @@
 
 //Paths and Filenames
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
+#define ACCOUNT_DEFAULT_PREFS			@"AccountPrefs"
 
 //Preference keys
-#define ACCOUNT_LIST					@"Accounts"		//Array of accounts
-#define ACCOUNT_TYPE					@"Type"			//Account type
-#define ACCOUNT_SERVICE					@"Service"		//Account service
-#define ACCOUNT_UID						@"UID"			//Account UID
+#define TOP_ACCOUNT_ID					@"TopAccountID"   	//Highest account object ID
+#define ACCOUNT_LIST					@"Accounts"   		//Array of accounts
+#define ACCOUNT_TYPE					@"Type"				//Account type
+#define ACCOUNT_SERVICE					@"Service"			//Account service
+#define ACCOUNT_UID						@"UID"				//Account UID
+#define ACCOUNT_OBJECT_ID				@"ObjectID"   		//Account object ID
 
 //Other
 #define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
 
 @interface AIAccountController (PRIVATE)
 - (void)loadAccounts;
-- (void)_saveAccountArray:(NSArray *)inAccounts;
+- (void)saveAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
 - (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred;
 @end
@@ -49,6 +52,10 @@
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
     
+	//Default account preferences
+	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_ACCOUNTS];
+	
     //Monitor system sleep so we can cleanly disconnect / reconnect our accounts
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(systemWillSleep:)
@@ -99,75 +106,82 @@
 //Loads the saved accounts
 - (void)loadAccounts
 {
-    NSArray		*savedAccountArray;
-    int			loop;
-    NSMutableArray	*tempArray = [NSMutableArray array];
+	NSEnumerator	*enumerator;
+	NSDictionary	*accountDict;
     
+	//Close down any existing accounts
+	[accountArray release]; accountArray = [[NSMutableArray alloc] init];
+		
     //Create an instance of every saved account
-    savedAccountArray = [[owner preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-    for(loop = 0;loop < [savedAccountArray count];loop++){
-        NSDictionary	*serviceDict;
-        NSString	*accountUID;
-        NSString	*serviceType;
-        AIAccount	*newAccount;
-        
-        //Fetch the service
-        serviceDict = [savedAccountArray objectAtIndex:loop];
-        
-        //Get the accounts information
-        serviceType = [serviceDict objectForKey:ACCOUNT_TYPE];		//Unique plugin ID
-        accountUID = [serviceDict objectForKey:ACCOUNT_UID];
-        
-        //Create the connection and add it to our array
+	enumerator = [[[owner preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS] objectEnumerator];
+	while(accountDict = [enumerator nextObject]){
+        AIAccount		*newAccount;
+        NSString		*serviceType;
+		NSString		*accountUID;
+		int				objectID;
+		
+		//Fetch the account service, UID, and ID
+		serviceType = [accountDict objectForKey:ACCOUNT_TYPE];
+		accountUID = [accountDict objectForKey:ACCOUNT_UID];
+		objectID = [[accountDict objectForKey:ACCOUNT_OBJECT_ID] intValue];
+		
+        //Create the account and add it to our array
         if(serviceType && [serviceType length] && accountUID && [accountUID length]){
-            newAccount = [self accountOfType:serviceType withUID:accountUID];
-            if(newAccount){
-                [tempArray addObject:newAccount];
+            if(newAccount = [self createAccountOfType:serviceType withUID:accountUID objectID:objectID]){
+                [accountArray addObject:newAccount];
             }
         }
     }
-    
-    if(accountArray) [accountArray release];
-    accountArray = [tempArray retain];
+	
+	//Broadcast an account list changed notification
+    [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
 //Save the accounts
 - (void)saveAccounts
 {
-    //Save the changes
-    [self _saveAccountArray:accountArray];
-    
-    //Broadcast an account list changed message
+	NSMutableArray	*flatAccounts = [NSMutableArray array];
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	
+	//Build a flattened array of the accounts
+	enumerator = [accountArray objectEnumerator];
+	while(account = [enumerator nextObject]){
+		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
+		
+		[flatAccount setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
+		[flatAccount setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
+		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    		//Account UID
+		[flatAccount setObject:[account uniqueObjectID] forKey:ACCOUNT_OBJECT_ID];  //Account Object ID
+		
+		[flatAccounts addObject:flatAccount];
+	}
+	
+	//Save
+	[[owner preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+
+	//Broadcast an account list changed notification
     [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
-//Saves our accounts
-- (void)_saveAccountArray:(NSArray *)inAccounts
+//Returns a new account of the specified type (Unique service plugin ID)
+- (AIAccount *)createAccountOfType:(NSString *)inType withUID:(NSString *)inUID objectID:(int)inObjectID
 {
-    if(inAccounts){
-        NSMutableArray	*accountDictArray = [[NSMutableArray alloc] init];
-        NSString	*userDirectory;
-        int		loop;
-        
-        //Get the user preference directory
-        userDirectory = [[owner loginController] userDirectory];
-        
-        //Create a dictionary for every open connection
-        for(loop = 0;loop < [inAccounts count];loop++){
-            NSMutableDictionary	*accountDict = [[NSMutableDictionary alloc] init];
-            AIAccount		*account = [inAccounts objectAtIndex:loop];
-            
-            [accountDict setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
-            [accountDict setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    //Shared service ID
-            [accountDict setObject:[account UID] forKey:ACCOUNT_UID];		    //Account UID
-            [accountDictArray addObject:accountDict];
-            
-            [accountDict release];
-        }
-        
-        //save
-        [[owner preferenceController] setPreference:accountDictArray forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-        [accountDictArray release];
+	id <AIServiceController>    serviceController;
+	
+	//If no object ID is provided, use the next largest
+	if(!inObjectID){
+		inObjectID = [[[owner preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
+		[[owner preferenceController] setPreference:[NSNumber numberWithInt:inObjectID + 1]
+											 forKey:TOP_ACCOUNT_ID
+											  group:PREF_GROUP_ACCOUNTS];
+	}
+	
+	//Create the account
+    if(serviceController = [self serviceControllerWithIdentifier:inType]){
+        return([serviceController accountWithUID:inUID objectID:inObjectID]);
+    }else{
+        return(nil);
     }
 }
 
@@ -233,20 +247,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Searches the account list for the specified account
-- (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID
-{
-    NSEnumerator	*enumerator = [accountArray objectEnumerator];
-    AIAccount		*account;
-	
-    while((account = [enumerator nextObject])){
-		if([UID compare:[account UID]] == 0 && [serviceID compare:[account serviceID]] == 0) return(account);
-    }
-    
-    return(nil);
-}
-
-//Searches the account list for the specified account
-- (AIAccount *)accountWithID:(NSString *)inID
+- (AIAccount *)accountWithObjectID:(NSString *)inID
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
@@ -279,26 +280,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (AIAccount *)defaultAccount
 {
 	if([NSApp isOnPantherOrBetter]){
-		return([self accountOfType:@"AIM-LIBGAIM" withUID:@""]);
+		return([self createAccountOfType:@"AIM-LIBGAIM" withUID:@"" objectID:0]);
 	}else{
-		return([self accountOfType:@"AIM (TOC2)" withUID:@""]);
+		return([self createAccountOfType:@"AIM (TOC2)" withUID:@"" objectID:0]);
 	}
-}
-
-//Returns a new account of the specified type (Unique service plugin ID)
-- (AIAccount *)accountOfType:(NSString *)inType withUID:(NSString *)inUID
-{
-    id <AIServiceController>    serviceController;
-    
-    NSParameterAssert(inType != nil); NSParameterAssert([inType length] != 0);
-    NSParameterAssert(inUID != nil);
-    
-    //Load the account
-    if(serviceController = [self serviceControllerWithIdentifier:inType]){
-        return([serviceController accountWithUID:inUID]);
-    }else{
-        return(nil);
-    }
 }
 
 
@@ -345,17 +330,30 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Switches the service of the specified account
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService
 {
-    AIAccount	*newAccount;
-    NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
-    int			index = [accountArray indexOfObject:inAccount];
-	
     //Add an account with the new service
-    newAccount = [self accountOfType:[inService identifier] withUID:accountUID];
-    [self insertAccount:newAccount atIndex:index];
+	AIAccount	*newAccount = [self createAccountOfType:[inService identifier]
+												withUID:[inAccount UID]
+											   objectID:[[inAccount uniqueObjectID] intValue]];
+    [self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount]];
     
     //Delete the old account
     [self deleteAccount:inAccount];
     
+    return(newAccount);
+}
+
+//Change the UID of an existing account
+- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
+{
+	//Add an account with the new UID
+	AIAccount	*newAccount = [self createAccountOfType:[[inAccount service] identifier]
+												withUID:inUID
+											   objectID:[[inAccount uniqueObjectID] intValue]];
+	[self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount]];
+	
+	//Delete the old account
+	[self deleteAccount:inAccount];
+	
     return(newAccount);
 }
 
@@ -393,7 +391,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     if(inObject){
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        if(accountID && (account = [self accountWithID:accountID])){
+        if(accountID && (account = [self accountWithObjectID:accountID])){
             if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
                 return(account);
             }
@@ -401,7 +399,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		//If this is not a meta contact, return the account the object is on
 		if(![inObject isKindOfClass:[AIMetaContact class]]){
-			if(account = [self accountWithServiceID:[inObject serviceID] UID:[(AIListContact *)inObject accountUID]]){
+			if(account = [self accountWithObjectID:[(AIListContact *)inObject accountID]]){
 				if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
 					return(account);
 				}
@@ -411,7 +409,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	//Return the last account used to message someone on this service
 	NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
-	if(lastAccountID && (account = [self accountWithServiceID:[inObject serviceID] UID:lastAccountID])){
+	if(lastAccountID && (account = [self accountWithObjectID:lastAccountID])){
 		if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
 			return(account);
 		}

@@ -68,7 +68,7 @@
     else //restore the old settings
     {
         //Restore the account
-        AIAccount * account = [[adium accountController] accountWithID:[currentDict objectForKey:KEY_EVENT_DETAILS]];
+        AIAccount * account = [[adium accountController] accountWithObjectID:[currentDict objectForKey:KEY_EVENT_DETAILS]];
         [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]];
         [button_anotherAccount_open_message setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
     }

@@ -13,28 +13,24 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define KEY_ACCOUNT_NAME		@"Handle"
-
 @protocol AIListObjectObserver;
 
-@interface AIAccountViewController : AIObject <AIAccountViewController, AIListObjectObserver> {
+@interface AIAccountViewController : AIObject <AIListObjectObserver> {
     id						account;
-    NSMutableArray			*auxiliaryTabs;
+	NSArray					*auxiliaryTabs;
     
     IBOutlet		NSView			*view_accountView;              //Inline account preferences
-	IBOutlet		NSView			*view_auxiliaryAccountDetails;
-    IBOutlet		NSTextField		*textField_password;			//Password
     IBOutlet		NSTabView		*view_auxiliaryTabView;			//Tab view containing auxiliary tabs
-    
+    IBOutlet		NSTextField		*textField_password;			//Password
 }
 
-+ (id)accountViewForAccount:(id)inAccount;
-- (id)initForAccount:(id)inAccount;
++ (id)accountView;
+- (id)init;
 - (NSView *)view;
-- (void)configureViewAfterLoad;
+- (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)changedPreference:(id)sender;
-- (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView;
+- (NSArray *)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView;
 - (NSString *)nibName;
-- (NSView *)auxiliaryAccountDetails;
+- (NSArray *)auxiliaryTabs;
 
 @end

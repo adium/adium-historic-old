@@ -4,12 +4,8 @@
 <dict>
 	<key>Host</key>
 	<string>toc.oscar.aol.com</string>
-	<key>Ping</key>
-	<true/>
 	<key>Port</key>
 	<string>9898</string>
-	<key>Handle</key>
-	<string></string>
 	<key>FullName</key>
 	<string></string>
 	<key>Online</key>

@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.11 $
- * $Date: 2004/03/05 03:07:00 $
- * $Author: evands $
+ * $Revision: 1.12 $
+ * $Date: 2004/03/05 23:50:33 $
+ * $Author: adamiser $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -28,14 +28,8 @@
 - (NSString *)identifier;
 - (NSString *)description;
 - (AIServiceType *)handleServiceType;
-- (id)accountWithUID:(NSString *)inUID;
-@end
-
-@protocol AIAccountViewController <NSObject>
-- (NSView *)view;
-- (NSArray *)auxiliaryTabs;
-- (NSView *)auxiliaryAccountDetails;
-- (void)configureViewAfterLoad;
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID;
+- (AIAccountViewController *)accountView;	//Return a view controller for the connection window
 @end
 
 @interface AIAccountController : NSObject{
@@ -57,17 +51,17 @@
 
 //Accounts
 - (NSArray *)accountArray;
-- (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID;
-- (AIAccount *)accountWithID:(NSString *)inID;
+- (AIAccount *)accountWithObjectID:(NSString *)inID;
 - (NSArray *)accountsWithServiceID:(NSString *)serviceID;
 - (AIAccount *)defaultAccount;
-- (AIAccount *)accountOfType:(NSString *)inType withUID:(NSString *)inUID;
+- (AIAccount *)createAccountOfType:(NSString *)inType withUID:(NSString *)inUID objectID:(int)inObjectID;
 
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index;
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
+- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 
 //Preferred Source Accounts 
@@ -90,6 +84,5 @@
 - (void)initController;
 - (void)closeController;
 - (void)finishIniting;
-- (void)saveAccounts;
 
 @end

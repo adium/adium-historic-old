@@ -118,14 +118,16 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"Formatted UID"])){
-        return([self _applyAlias:[inObject preferenceForKey:@"Alias"
-													  group:PREF_GROUP_ALIASES 
-									  ignoreInheritedValues:YES]
-						toObject:inObject
-						  notify:YES]);
-    }else{
-		return(nil);
-	}
+		if([inObject isKindOfClass:[AIListContact class]]){
+			return([self _applyAlias:[inObject preferenceForKey:@"Alias"
+														  group:PREF_GROUP_ALIASES 
+										  ignoreInheritedValues:YES]
+							toObject:inObject
+							  notify:YES]);
+		}
+    }
+	
+	return(nil);
 }
 
 - (void)preferencesChanged:(NSNotification *)notification

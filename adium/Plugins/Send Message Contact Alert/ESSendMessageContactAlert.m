@@ -88,13 +88,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         [button_displayAlert setState:[[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]];
 
         //Send from account:
-        account = [[adium accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
+        account = [[adium accountController] accountWithObjectID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
         [popUp_message_actionDetails_one selectItemAtIndex:[popUp_message_actionDetails_one indexOfItemWithRepresentedObject:account]];
 
         //Send message to:
         NSString *uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
         NSString *service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-        AIListContact *contact = [[adium contactController] contactWithService:service accountUID:[account UID] UID:uid];
+        AIListContact *contact = [[adium contactController] contactWithService:service accountID:[account uniqueObjectID] UID:uid];
         [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:contact]];
         
     }

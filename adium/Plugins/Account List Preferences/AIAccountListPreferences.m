@@ -15,28 +15,21 @@
 
 #import "AIAccountListPreferences.h"
 
-#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    //ID for an account drag
-#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    //Menu item title for the connect item
+#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
+#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
 #define	ACCOUNT_DISCONNECT_BUTTON_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
-#define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting…",nil)		//Menu item title
-#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting…",nil)	//Menu item title
+#define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting…",nil)						//Menu item title
+#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting…",nil)					//Menu item title
 
 @interface AIAccountListPreferences (PRIVATE)
-- (void)updateAccountList;
-- (void)refreshAccountList;
-- (void)accountListChanged:(NSNotification *)notification;
-- (int)numberOfRowsInTableView:(NSTableView *)tableView;
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
-- (void)tableViewSelectionDidChange:(NSNotification *)notification;
-- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard;
-- (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op;
-- (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (void)tableViewSelectionDidChange:(NSNotification *)notification;
-- (void)configureView;
-- (void)configureAccountOptionsView;
-- (void)accountPropertiesChanged:(NSNotification *)notification;
-- (void)configureServiceSelection;
+- (void)buildServicePopup;
+- (void)configureViewForAccount:(AIAccount *)inAccount;
+- (void)configureViewForService:(id <AIServiceController>)inService;
+- (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
+- (void)_removeCustomViewAndTabs;
+- (void)enableDisableControls;
 - (void)configureAccountList;
+- (void)accountListChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAccountListPreferences
@@ -58,11 +51,18 @@
     //init
     accountViewController = nil;
     view_accountPreferences = nil;
-    selectedAccount = nil;
+	configuredForService = nil;
+	configuredForAccount = nil;
     
-    //Configure
-	[self configureServiceSelection];
+	//Disable the unavailable controls
+	[self enableDisableControls];
+
+	//
+	[self buildServicePopup];
 	[self configureAccountList];
+
+	//Observe account list objects so we can enable/disable our controls for connected accounts
+    [[adium contactController] registerListObjectObserver:self];
 }
 
 //Preference view is closing
@@ -74,15 +74,12 @@
     [[adium notificationCenter] removeObserver:self];
 }
 
-
-//Service And Account Name ---------------------------------------------------------------------------------------------
-#pragma mark Service Selection
-- (void)configureServiceSelection
+//Build the popup of available services
+- (void)buildServicePopup
 {
     NSEnumerator				*enumerator;
     id <AIServiceController>	service;
-
-    //Configure the service list
+	
     [popupMenu_serviceList removeAllItems];
 	enumerator = [[[adium accountController] availableServices] objectEnumerator];
 	while((service = [enumerator nextObject])){
@@ -90,128 +87,76 @@
 														target:self 
 														action:@selector(selectServiceType:) 
 												 keyEquivalent:@""] autorelease];
-		
         [item setRepresentedObject:service];
         [[popupMenu_serviceList menu] addItem:item];
     }
-
-	//Observe account list objects so we can enable/disable our controls for connected accounts
-    [[adium contactController] registerListObjectObserver:self];
 }
 
-//Account status changed.  Disable the service menu and user name field for connected accounts
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+
+//Configuring ---------------------------------------------------------------------------------------------
+#pragma mark Configuring
+//Configure the account preferences for an account
+- (void)configureViewForAccount:(AIAccount *)inAccount
 {
-    if(inObject == selectedAccount){
-		if([inModifiedKeys containsObject:@"Online"]){
-			[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
-			[textField_accountName setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
-		}		
-    }
-    
-    return(nil);
+	//If necessary, configure for the account's service first
+	if([inAccount service] != configuredForService){
+		[self configureViewForService:[inAccount service]];
+	}
+
+	//Configure for the account
+	configuredForAccount = inAccount;
+	[accountViewController configureForAccount:inAccount];
+	[self enableDisableControls];
+
+	//Fill in the account's name and auto-connect status
+	[textField_accountName setStringValue:[inAccount UID]];
+    [button_autoConnect setState:[[inAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
-//We need to make sure all changes to the account have been saved before a service switch occurs.
-//This code is called when the service menu is opened, and takes focus away from the first responder,
-//causing it to save any outstanding changes.
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+//Configure the account preferences for a service.  This determines which controls are loaded and the allowed values
+- (void)configureViewForService:(id <AIServiceController>)inService
 {
-	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
-}
+	AIServiceType	*serviceType = [inService handleServiceType];
 
-//User changed the service of our account
-- (IBAction)selectServiceType:(id)sender
-{
-    id <AIServiceController>	service = [sender representedObject];
-    selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
-}
-
-//User changed the name of our account
-- (void)controlTextDidChange:(NSNotification *)obj
-{
-	[selectedAccount changedUIDto:[textField_accountName stringValue]];
-}
-
-//User changed the account name
-//- (IBAction)accountNameChanged:(id)sender
-//{
-//	[selectedAccount changedUIDto:[textField_accountName stringValue]];
-//}
-
-
-//Account Options ------------------------------------------------------------------------------------------------------
-#pragma mark Account Options
-//Configure the account specific options
-- (void)configureAccountOptionsView
-{
-    NSEnumerator	*enumerator;
-    NSTabViewItem	*tabViewItem;
-    NSView			*accountView;
-    BOOL			autoConnect;
-    int				selectedTabIndex = -1;
-    
-    //Remove any tabs
-    if([tabView_auxiliary selectedTabViewItem]){
-        selectedTabIndex = [tabView_auxiliary indexOfTabViewItem:[tabView_auxiliary selectedTabViewItem]];
-    }
-    while([tabView_auxiliary numberOfTabViewItems] > 1){
-        [tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemAtIndex:[tabView_auxiliary numberOfTabViewItems] - 1]];
-    }
-    
-    //Close any currently open controllers
-    [view_accountDetails removeAllSubviews];
-    if(accountViewController){
-        [accountViewController release]; accountViewController = nil;
-    }
-
-    //Select the correct service in the service menu
-    [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[selectedAccount service]]];
-	[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
-
-	//Fill in the account name
-    NSString *accountName = [selectedAccount preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-	[textField_accountName setStringValue:((accountName && [accountName length]) ? accountName : [selectedAccount UID])];
+	//Select the new service
+	configuredForService = inService;
+    [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:inService]];
+	
+	//Insert the custom controls for this service
+	[self _removeCustomViewAndTabs];
+	[self _addCustomViewAndTabsForController:[inService accountView]];
 	
 	//Restrict the account name field to valid characters and length
-	AIServiceType	*serviceType = [[selectedAccount service] handleServiceType];
     [textField_accountName setFormatter:
 		[AIStringFormatter stringFormatterAllowingCharacters:[serviceType allowedCharacters]
 													  length:[serviceType allowedLength]
 											   caseSensitive:[serviceType caseSensitive]
 												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
+}
+
+//Add the custom views for a controller
+- (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler
+{
+	NSView					*accountView;
+	NSEnumerator			*enumerator;
+	NSTabViewItem			*tabViewItem;
 	
-    //Configure the auto-connect button
-    autoConnect = [[selectedAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
-    [button_autoConnect setState:autoConnect];
-
-    //Correctly size the sheet for the account details view
-	[accountViewController release];
-    accountViewController = [[selectedAccount accountView] retain];
-    accountView = [accountViewController view];
-
+	//Get account view
+	accountViewController = [inControler retain];
+	accountView = [accountViewController view];
+	
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
 	float accountViewHeight = [accountView frame].size.height;
-	
     [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
-    if([accountViewController conformsToProtocol:@protocol(AIAccountViewController)]){
-        [accountViewController configureViewAfterLoad]; //allow the account subview to set itself up after the window has loaded
 	
-		NSView *auxiliaryAccountDetails = [accountViewController auxiliaryAccountDetails];
-		if (auxiliaryAccountDetails) {
-			[view_accountDetails addSubview:auxiliaryAccountDetails];
-			[auxiliaryAccountDetails setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height -accountViewHeight -[auxiliaryAccountDetails frame].size.height))];
-		}
-    }
-
-    //Hook up the key view chain
+    //Hook up the responder chain
     [popupMenu_serviceList setNextKeyView:[accountView nextKeyView]];
     NSView	*nextView = accountView;
     while([nextView nextKeyView]) nextView = [nextView nextKeyView];
     [nextView setNextKeyView:button_autoConnect];
-	
-    //Swap in the account auxiliary tabs
+
+	//Swap in the account auxiliary tabs
     enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
         [tabView_auxiliary addTabViewItem:tabViewItem];
@@ -225,24 +170,78 @@
     for(i = 1;i < [tabView_auxiliary numberOfTabViewItems];i++){
         [tabView_auxiliary selectPreviousTabViewItem:nil];
     }
+}
+
+//Remove any existing custom views
+- (void)_removeCustomViewAndTabs
+{
+	int selectedTabIndex;
 	
-    //Re-select same index (if possible)
-    if((selectedTabIndex > 0) && (selectedTabIndex < [tabView_auxiliary numberOfTabViewItems])){
-        [tabView_auxiliary selectTabViewItemAtIndex:selectedTabIndex];
-    }else{
-        [tabView_auxiliary selectFirstTabViewItem:nil];
+    //Remove any tabs
+    if([tabView_auxiliary selectedTabViewItem]){
+        selectedTabIndex = [tabView_auxiliary indexOfTabViewItem:[tabView_auxiliary selectedTabViewItem]];
     }
+    while([tabView_auxiliary numberOfTabViewItems] > 1){
+        [tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemAtIndex:[tabView_auxiliary numberOfTabViewItems] - 1]];
+    }
+    
+    //Close any currently open controllers
+    [view_accountDetails removeAllSubviews];
+    [accountViewController release]; accountViewController = nil;
+}
+
+
+//Controls -------------------------------------------------------------------------------------------------------------
+#pragma mark Controls
+//User changed the service of our account
+- (IBAction)selectServiceType:(id)sender
+{
+	id <AIServiceController>	service = [sender representedObject];
+	[[adium accountController] switchAccount:configuredForAccount toService:service];
+}
+
+//User changed the name of our account
+- (void)controlTextDidChange:(NSNotification *)obj
+{
+	[[adium accountController] changeUIDOfAccount:configuredForAccount to:[textField_accountName stringValue]];
 }
 
 //User toggled the autoconnect preference
 - (IBAction)toggleAutoConnect:(id)sender
 {
-    BOOL	autoConnect = [sender state];
+	BOOL	autoConnect = [sender state];
+	
+	[configuredForAccount setPreference:[NSNumber numberWithBool:autoConnect]
+								 forKey:@"AutoConnect"
+								  group:GROUP_ACCOUNT_STATUS];
+}
+
+//Disable controls for account that are connected
+- (void)enableDisableControls
+{
+	[popupMenu_serviceList setEnabled:(configuredForAccount && ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
+	[textField_accountName setEnabled:(configuredForAccount && ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
+	[button_autoConnect setEnabled:(configuredForAccount != nil)];
+	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount &&
+									  ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
+}
+
+//Account status changed.  Disable the service menu and user name field for connected accounts
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+    if(inObject == configuredForAccount && [inModifiedKeys containsObject:@"Online"]){
+		[self enableDisableControls];
+    }
     
-    //Apply the new value
-    [selectedAccount setPreference:[NSNumber numberWithBool:autoConnect]
-							forKey:@"AutoConnect"
-							 group:GROUP_ACCOUNT_STATUS];
+    return(nil);
+}
+
+//We need to make sure all changes to the account have been saved before a service switch occurs.
+//This code is called when the service menu is opened, and takes focus away from the first responder,
+//causing it to save any outstanding changes.
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 }
 
 
@@ -278,7 +277,7 @@
 {
     //Update our reference to the accounts
     [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
-    
+
     //Refresh the table (if the window is loaded)
     if(tableView_accountList != nil){
 		[tableView_accountList reloadData];
@@ -286,6 +285,8 @@
 		//Update selected account
 		[self tableViewSelectionDidChange:nil];
     }
+
+	[self enableDisableControls];
 }
 
 //Create a new account
@@ -401,29 +402,8 @@
 {
     int	selectedRow = [tableView_accountList selectedRow];
 	
-	if(selectedRow >= 0 && selectedRow < [accountArray count]){
-        AIAccount	*oldSelection;
-		
-		//Correctly enable/disable our delete button
-        if([accountArray count] > 1){
-            [button_deleteAccount setEnabled:YES];
-        }else{
-            [button_deleteAccount setEnabled:NO];
-        }
-		
-		//
-		oldSelection = selectedAccount;
-		selectedAccount = [accountArray objectAtIndex:selectedRow];
-        //Configure for the newly selected account (If it changed)
-		if(!oldSelection || oldSelection != selectedAccount){
-			[self configureAccountOptionsView];
-		}
-
-    }else{
-		selectedAccount = nil;
-        [button_deleteAccount setEnabled:NO];
-		[popupMenu_serviceList setEnabled:NO];
-		
+	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
+		[self configureViewForAccount:[accountArray objectAtIndex:selectedRow]];
     }
 }
 

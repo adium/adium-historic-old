@@ -19,11 +19,11 @@
 
 @implementation AIListContact
 
-- (id)initWithUID:(NSString *)inUID accountUID:(NSString *)inAccountUID serviceID:(NSString *)inServiceID
+- (id)initWithUID:(NSString *)inUID accountID:(NSString *)inAccountID serviceID:(NSString *)inServiceID
 {
     [super initWithUID:inUID serviceID:inServiceID];
     
-	accountUID = [inAccountUID retain];
+	accountID = [inAccountID retain];
 	remoteGroupName = nil;
     
     return(self);
@@ -31,16 +31,16 @@
 
 - (void)dealloc
 {
-	[accountUID release];
+	[accountID release];
     [remoteGroupName release];
     
     [super dealloc];
 }
 
 //
-- (NSString *)accountUID
+- (NSString *)accountID
 {
-	return(accountUID);
+	return(accountID);
 }
 
 //Remote Grouping ------------------------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@
 
 #import "ESTrepiaService.h"
 #import "ESGaimTrepiaAccount.h"
+#import "ESGaimTrepiaAccountViewController.h"
 
 @implementation ESTrepiaService
 
@@ -37,12 +38,14 @@
     return([NSString stringWithFormat:@"Trepia %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[ESGaimTrepiaAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+- (AIAccountViewController *)accountView
 {
-    ESGaimTrepiaAccount *anAccount = [[[ESGaimTrepiaAccount alloc] initWithUID:inUID 
-																	   service:self] autorelease];
-    
-    return anAccount;
+    return([ESGaimTrepiaAccountViewController accountView]);
 }
 
 @end
