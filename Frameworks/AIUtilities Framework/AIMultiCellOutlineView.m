@@ -45,19 +45,12 @@
 	totalHeight = 0;
 	drawHighlightOnlyWhenMain = NO;
 	drawsSelectedRowHighlight = YES;
-	
-	backgroundImage = nil;
-	backgroundFade = 1.0;
-	backgroundColor = nil;
 }
 
 - (void)dealloc
 {
 	[contentCell release];
 	[groupCell release];
-	
-	[backgroundImage release];
-	[backgroundColor release];
 
 	[super dealloc];
 }
@@ -324,45 +317,6 @@
 	}
 }
 
-
-//Background -----------------------------------------------------------------
-//
-- (void)setBackgroundImage:(NSImage *)inImage
-{
-	if(backgroundImage != inImage){
-		[backgroundImage release];
-		backgroundImage = [inImage retain];		
-		[backgroundImage setFlipped:YES];
-	}
-	
-	[(NSClipView *)[self superview] setCopiesOnScroll:(!backgroundImage)];
-	[self setNeedsDisplay:YES];
-}
-
-- (void)setBackgroundFade:(float)fade
-{
-	backgroundFade = fade;
-}
-
-- (void)setBackgroundColor:(NSColor *)inColor
-{
-	if(backgroundColor != inColor){
-		[backgroundColor release];
-		backgroundColor = [inColor retain];
-	}
-}
-
-- (NSColor *)backgroundColor
-{
-	return(backgroundColor);
-}
-
-- (void)viewWillMoveToSuperview:(NSView *)newSuperview
-{
-	[super viewWillMoveToSuperview:newSuperview];
-
-	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
-}
 
 //Custom highlight management
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag

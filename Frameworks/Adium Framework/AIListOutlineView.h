@@ -17,8 +17,22 @@
 
 @class AIMultiCellOutlineView;
 
+typedef enum {
+	AINormalBackground = 0,
+	AITileBackground,
+	AIFillProportionatelyBackground,
+	AIFillStretchBackground
+} AIBackgroundStyle;
+
 @interface AIListOutlineView : AIMultiCellOutlineView <ContactListOutlineView> {    
-	BOOL updateShadowsWhileDrawing;	
+	BOOL				updateShadowsWhileDrawing;	
+
+	NSImage				*backgroundImage;
+	float				backgroundFade;
+	BOOL				_drawBackground;
+	AIBackgroundStyle	backgroundStyle;
+	
+	NSColor				*backgroundColor;
 }
 
 - (void)setDelegate:(id)delegate;
@@ -30,11 +44,19 @@
 - (void)windowBecameMain:(NSNotification *)notification;
 - (void)windowResignedMain:(NSNotification *)notification;
 
-//Contact menu 
+//Contact menu
 - (AIListObject *)listObject;
 - (NSArray *)arrayOfListObjects;
 
+//Shadows
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
+
+//Backgrounds
+- (void)setBackgroundImage:(NSImage *)inImage;
+- (void)setBackgroundFade:(float)fade;
+- (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle;
+- (void)setBackgroundColor:(NSColor *)inColor;
+- (NSColor *)backgroundColor;
 
 @end
 

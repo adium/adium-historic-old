@@ -20,12 +20,6 @@
 	float   groupRowHeight;
 	float   contentRowHeight;
 	
-	NSImage		*backgroundImage;
-	float 		backgroundFade;
-	BOOL		_drawBackground;
-	
-	NSColor		*backgroundColor;
-	
 	BOOL		drawHighlightOnlyWhenMain;
 	BOOL		drawsSelectedRowHighlight;
 }
@@ -35,9 +29,6 @@
 - (int)totalHeight;
 - (id)contentCell;
 - (id)groupCell;
-	
-- (void)setBackgroundImage:(NSImage *)inImage;
-- (void)setBackgroundFade:(float)fade;
 
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag;
 - (BOOL)drawHighlightOnlyWhenMain;
