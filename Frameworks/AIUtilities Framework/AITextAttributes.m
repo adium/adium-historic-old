@@ -64,17 +64,19 @@
     if(fontFamilyName != inName){
         [fontFamilyName release];
         fontFamilyName = [inName retain];
-    }
 
-    [self updateFont];
+		[self updateFont];
+   }
 }
 
 //Set the font size
 - (void)setFontSize:(int)inSize
 {
-    fontSize = inSize;
-
-    [self updateFont];
+	if(fontSize != inSize){
+		fontSize = inSize;
+		
+		[self updateFont];
+	}
 }
 
 //Set the text foreground color
