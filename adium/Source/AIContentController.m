@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.35 2003/12/09 03:56:18 adamiser Exp $
+// $Id: AIContentController.m,v 1.36 2003/12/15 06:16:10 evands Exp $
 
 #import "AIContentController.h"
 
@@ -35,6 +35,9 @@
     //Chat tracking
     chatArray = [[NSMutableArray alloc] init];
 
+    //Emoticons array
+    emoticonsArray = nil;
+    
     //Register our event notifications for message sending and receiving
     [owner registerEventNotification:Content_DidReceiveContent displayName:@"Message Received"];
     [owner registerEventNotification:Content_FirstContentRecieved displayName:@"Message Received (New)"]; 
@@ -425,6 +428,16 @@
     }else{
 	return(NO);
     }
+}
+
+//emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, grouped in order by their first character
+- (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
+{
+    emoticonsArray = inEmoticonsArray;   
+}
+- (NSArray *)emoticonsArray
+{
+    return emoticonsArray;   
 }
 
 @end
