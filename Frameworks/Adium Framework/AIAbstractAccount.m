@@ -21,6 +21,7 @@
 #import "AIListContact.h"
 #import "AIPreferenceController.h"
 #import "AIService.h"
+#import "AIStatus.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
@@ -326,12 +327,19 @@
 	//Update us to the new state
 	[self updateStatusForKey:@"StatusState"];
 
-	/*
-	//Note the date/time this status state was set
-	[self setStatusObject:[NSDate date] 
-				   forKey:@"StatusStateDate"
-				   notify:NotifyNever];
-	 */
+	/* Set our IdleSince time if appropriate... this will just be set when the state is selected; the account
+		* is thereafter responsible for updating any serverside settings as needed.  All of our current services will handle
+		* updating idle time as it changes automatically. This is a per-account preference setting; it will override
+		* any global idle setting for this account but won't change it. */	
+	if([[self supportedPropertyKeys] containsObject:@"IdleSince"]){
+		NSDate	*idleSince;
+		
+		idleSince = ([statusState shouldForceInitialIdleTime] ?
+					 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
+					 nil);
+
+		[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 /*!
