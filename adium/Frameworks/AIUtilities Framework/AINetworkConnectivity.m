@@ -11,9 +11,7 @@
 #define	GENERIC_REACHABILITY_CHECK	"www.google.com"
 #define	AGGREGATE_INTERVAL			3.0
 
-#define	USE_10_3_METHODS_CHECK		[NSApp isOnPantherOrBetter]
-//#define	USE_10_3_METHODS_CHECK		FALSE
-
+#define	USE_10_3_METHODS_CHECK		[NSApplication isOnPantherOrBetter]
 
 @interface AINetworkConnectivity (PRIVATE)
 + (void)handleConnectivityUsingCheckGenericReachability;
@@ -40,7 +38,6 @@ static BOOL									networkIsReachable = NO;
 + (void)load
 {
 	myself = self;
-
 	if (USE_10_3_METHODS_CHECK){
 		//Schedule our generic reachability check which will be used for most accounts
 		//This is triggered as soon as it is added to the run loop, which is why we do it after doing [self autoConnectAccounts]
@@ -48,7 +45,6 @@ static BOOL									networkIsReachable = NO;
 
 	}else{
 		//10.2 method - the 10.3 method above is much more reliable.
-		
 		SCDynamicStoreRef	storeRef = nil;
 		CFRunLoopSourceRef	sourceRef = nil;
 		
@@ -111,7 +107,6 @@ static void gotNetworkChangedToReachable(BOOL reachable)
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info)
 {
 	BOOL reachable = (flags & kSCNetworkFlagsReachable);
-	NSLog(@"networkReachabilityChangedCallback: Changed to %i (%x %i %@)",reachable,target,flags,info);
 	
 	gotNetworkChangedToReachable(reachable);
 }
@@ -165,7 +160,6 @@ static BOOL checkReachabilityForHost(const char *host)
 			   status & kSCNetworkFlagsIsDirect);
 		 */
 	}
-	NSLog(@"%s is %i",host, reachable);
 	return reachable;
 }
 
@@ -177,7 +171,6 @@ static BOOL checkGenericReachability()
 //Using the 10.2 compatible checkGenericReachability(), update all accounts
 + (void)handleConnectivityUsingCheckGenericReachability
 {
-	NSLog(@"now handle connectivity");
 	BOOL			reachable = checkGenericReachability();
 	
 	gotNetworkChangedToReachable(reachable);
