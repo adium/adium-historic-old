@@ -68,7 +68,7 @@
     {
         [self privBounce]; // do one right away
 
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceForeverWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",nil] repeats:YES]; // delay+1 so we take into account the time it takes to bounce. num-1 to because we did one already.
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(startEternalTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay], @"delay", nil] repeats:NO];
     }
 }
 
@@ -93,6 +93,15 @@
     {
         [NSApp requestUserAttention:NSInformationalRequest];
     }
+}
+
+- (void)startEternalTimer:(NSTimer *)timer
+{
+    double delay = [[[timer userInfo] objectForKey:@"delay"] doubleValue];
+    currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceForeverWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",nil] repeats:YES]; // delay+1 so we take into account the time it takes to bounce.
+
+    if ([timer isValid])
+        [timer invalidate];
 }
 
 - (void)bounceWithTimer:(NSTimer *)timer
