@@ -16,19 +16,78 @@
 #import "AIContactStatusColoringPlugin.h"
 #import "AIContactStatusColoringPreferences.h"
 
-#define	CONTACT_STATUS_COLORING_PREF_NIB	@"ContactStatusColoringPrefs"
-#define CONTACT_STATUS_COLORING_PREF_TITLE	AILocalizedString(@"Status Coloring",nil)
-
-@interface AIContactStatusColoringPreferences (PRIVATE)
-- (void)configureView;
-- (void)configureControlDimming;
-@end
-
 @implementation AIContactStatusColoringPreferences
-//
-+ (AIContactStatusColoringPreferences *)contactStatusColoringPreferences
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Sound);
+}
+- (NSString *)label{
+    return(@"Status Coloring");
+}
+- (NSString *)nibName{
+    return(@"ContactStatusColoringPrefs");
+}
+
+//Configures our view for the current preferences
+- (void)viewDidLoad
 {
-    return([[[self alloc] init] autorelease]);
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+	
+    [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
+    [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
+    [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
+    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+    [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_offline setColor:[[preferenceDict objectForKey:KEY_OFFLINE_COLOR] representedColor]];
+	
+    [colorWell_awayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+    [colorWell_idleLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+    [colorWell_signedOffLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOnLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typingLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
+    [colorWell_unviewedContentLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+    [colorWell_onlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+    [colorWell_idleAndAwayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_offlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor]];
+	
+    [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
+    [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
+    [checkBox_away setState:[[preferenceDict objectForKey:KEY_AWAY_ENABLED] boolValue]];
+    [checkBox_idle setState:[[preferenceDict objectForKey:KEY_IDLE_ENABLED] boolValue]];
+    [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
+    [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
+    [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
+    [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
+    [checkBox_offline setState:[[preferenceDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
+	
+    [self configureControlDimming];
+}
+
+//Preference view is closing
+- (void)viewWillClose
+{
+	[colorWell_signedOff deactivate];
+	[colorWell_signedOffLabel deactivate];
+	[colorWell_signedOn deactivate];
+	[colorWell_signedOnLabel deactivate];
+	[colorWell_away deactivate];
+	[colorWell_awayLabel deactivate];
+	[colorWell_idle deactivate];
+	[colorWell_idleLabel deactivate];
+	[colorWell_typing deactivate];
+	[colorWell_typingLabel deactivate];
+	[colorWell_unviewedContent deactivate];
+	[colorWell_unviewedContentLabel deactivate];
+	[colorWell_online deactivate];
+	[colorWell_onlineLabel deactivate];
+	[colorWell_idleAndAway deactivate];
+	[colorWell_idleAndAwayLabel deactivate];	
+	[colorWell_offline deactivate];
+	[colorWell_offlineLabel deactivate];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -78,9 +137,7 @@
         [[adium preferenceController] setPreference:[[colorWell_offline color] stringRepresentation]
                                              forKey:KEY_OFFLINE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-		
-		
-        
+
     }else if(sender == colorWell_signedOffLabel){
         [[adium preferenceController] setPreference:[[colorWell_signedOffLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_SIGNED_OFF_COLOR
@@ -131,148 +188,48 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SIGNED_OFF_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_signedOn){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SIGNED_ON_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_away){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_idle){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_typing){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TYPING_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_unviewedContent){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_UNVIEWED_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_online){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_ONLINE_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
     }else if(sender == checkBox_idleAndAway){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
 
 	}else if(sender == checkBox_offline){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_OFFLINE_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
-        [self configureControlDimming];
     }
-}
-
-//Private ---------------------------------------------------------------------------
-//init
-- (id)init
-{
-    //Init
-    [super init];
-
-    //Register our preference pane
-    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:CONTACT_STATUS_COLORING_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:CONTACT_STATUS_COLORING_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-	[colorWell_signedOff deactivate];
-	[colorWell_signedOffLabel deactivate];
-	[colorWell_signedOn deactivate];
-	[colorWell_signedOnLabel deactivate];
-	[colorWell_away deactivate];
-	[colorWell_awayLabel deactivate];
-	[colorWell_idle deactivate];
-	[colorWell_idleLabel deactivate];
-	[colorWell_typing deactivate];
-	[colorWell_typingLabel deactivate];
-	[colorWell_unviewedContent deactivate];
-	[colorWell_unviewedContentLabel deactivate];
-	[colorWell_online deactivate];
-	[colorWell_onlineLabel deactivate];
-	[colorWell_idleAndAway deactivate];
-	[colorWell_idleAndAwayLabel deactivate];	
-	[colorWell_offline deactivate];
-	[colorWell_offlineLabel deactivate];
-	
-    [view_prefView release]; view_prefView = nil;
-}
-
-
-//Configures our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-
-    [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
-    [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
-    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
-    [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
-    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-    [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
-    [colorWell_offline setColor:[[preferenceDict objectForKey:KEY_OFFLINE_COLOR] representedColor]];
-
-    [colorWell_awayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
-    [colorWell_idleLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
-    [colorWell_signedOffLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOnLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_typingLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
-    [colorWell_unviewedContentLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
-    [colorWell_onlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
-    [colorWell_idleAndAwayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
-    [colorWell_offlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor]];
-
-    [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
-    [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
-    [checkBox_away setState:[[preferenceDict objectForKey:KEY_AWAY_ENABLED] boolValue]];
-    [checkBox_idle setState:[[preferenceDict objectForKey:KEY_IDLE_ENABLED] boolValue]];
-    [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
-    [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
-    [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
-    [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
-    [checkBox_offline setState:[[preferenceDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
-
-    
-    [self configureControlDimming];
+	[super changePreference:sender];
 }
 
 //Enable/disable controls that are available/unavailable
