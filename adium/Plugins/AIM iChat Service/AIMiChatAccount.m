@@ -76,11 +76,26 @@ extern void* objc_getClass(const char *name);
     return(nil);
 }
 
-// Return a unique ID for this account type and username
-- (NSString *)accountID
-{
+
+// Return a unique ID specific to THIS account plugin, and the user's account name
+- (NSString *)accountID{
     return([NSString stringWithFormat:@"iChat.%@",[[self accountDescription] compactedString]]);
 }
+//The user's account name
+- (NSString *)UID{
+    return([[self accountDescription] compactedString]);
+}
+//The service ID (shared by any account code accessing this service)
+- (NSString *)serviceID{
+    return(@"AIM");
+}
+//ServiceID.UID
+- (NSString *)UIDAndServiceID{
+    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]);
+}
+
+
+
 
 // Return a readable description of this account's username
 - (NSString *)accountDescription

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState;
 @protocol AIContentObject;
 
 @interface AIAdium : NSObject {
@@ -458,14 +458,24 @@ typedef enum {
 @interface AIDockController: NSObject {
     IBOutlet	AIAdium 	*owner;
     
-    AIIconFamily		*iconFamily;
+//    AIIconFamily		*iconFamily;
 
-    NSImage			*currentIcon;
+//    NSImage			*currentIcon;
 
-    NSTimer 			*currentTimer;
+    int				animationFrames;
+    int				currentFrame;
+
+    NSTimer 			*animationTimer;
+    NSMutableDictionary		*availableIconStateDict;
+    NSMutableArray		*activeIconStateArray;
+    NSMutableArray		*dockImageArray;
 }
 
-- (AIIconFamily *)currentIconFamily;
+- (AIIconState *)setIconStateNamed:(NSString *)inName;
+- (void)removeIconState:(AIIconState *)inState;
+
+
+/*- (AIIconFamily *)currentIconFamily;
 - (void)setIconFamily:(AIIconFamily *)iconFamily;
 - (void)setIconFamily:(AIIconFamily *)newIconFamily initializingClosed:(BOOL)closed;
 
@@ -474,7 +484,7 @@ typedef enum {
 - (void)bounce;
 - (void)bounceWithInterval:(double)delay times:(int)num;
 - (void)bounceForeverWithInterval:(double)delay;
-- (void)stopBouncing;
+- (void)stopBouncing;*/
 
 @end
 

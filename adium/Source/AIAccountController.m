@@ -200,7 +200,7 @@
     NSString	*password;
 
     //check the keychain for this password
-    password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount accountID]] account:[inAccount accountID]];
+    password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]] account:[inAccount UIDAndServiceID]];
     
     if(password && [password length] != 0){
         //Invoke the target right away
@@ -214,7 +214,7 @@
 //Forget a saved password
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount
 {
-    [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount accountID]] account:[inAccount accountID]];
+    [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]] account:[inAccount UIDAndServiceID]];
 }
 
 //Return the available services

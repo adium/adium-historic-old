@@ -118,11 +118,24 @@ static char *hash_password(const char * const password);
     return([AIMTOC2AccountViewController accountViewForOwner:owner account:self]);
 }
 
-// Return a unique ID for this account type and username
-- (NSString *)accountID
-{
-    return([NSString stringWithFormat:@"AIM.%@",[[propertiesDict objectForKey:@"Handle"] compactedString]]);
+
+// Return a unique ID specific to THIS account plugin, and the user's account name
+- (NSString *)accountID{
+    return([NSString stringWithFormat:@"TOC2.%@",[[propertiesDict objectForKey:@"Handle"] compactedString]]);
 }
+//The user's account name
+- (NSString *)UID{
+    return([[propertiesDict objectForKey:@"Handle"] compactedString]);
+}
+//The service ID (shared by any account code accessing this service)
+- (NSString *)serviceID{
+    return(@"AIM");
+}
+//ServiceID.UID
+- (NSString *)UIDAndServiceID{
+    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]);
+} 
+
 
 // Return a readable description of this account's username
 - (NSString *)accountDescription

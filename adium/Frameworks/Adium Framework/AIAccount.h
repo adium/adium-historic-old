@@ -103,8 +103,13 @@ typedef enum {
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
-- (NSString *)accountID; 			//Return a unique ID for this account type and username
-- (NSString *)accountDescription;		//Return a readable description of this account's username
+
+- (NSString *)accountID; 		//Specific to THIS account plugin, and the user's account name
+- (NSString *)UID;			//The user's account name
+- (NSString *)serviceID;		//The service ID (shared by any account code accessing this service)
+- (NSString *)UIDAndServiceID; 		//ServiceID.UID
+- (NSString *)accountDescription;	//Return a readable description of this account's username
+
 - (NSArray *)supportedStatusKeys;		//Return an array of supported status keys
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
 
