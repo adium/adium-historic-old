@@ -110,13 +110,19 @@
 		window.onresize = windowDidResize;
 	</script>
 	
+	<!-- This style is shared by all variants. !-->
+	<style id="baseStyle" type="text/css" media="screen,print">	
+		@import url( "main.css" );
+		*{ word-wrap:break-word; }
+	</style>
+	
+	<!-- Although we call this mainStyle for legacy reasons, it's actually the variant style !-->
 	<style id="mainStyle" type="text/css" media="screen,print">	
 		@import url( "%@" );
-		*{ word-wrap:break-word; }
 	</style>
 
 </head>
-==bodyBackgroundKind==
+<body onload="alignchat(true);" style="==bodyBackground==">
 %@
 <div id="Chat">
 </div>
