@@ -74,8 +74,7 @@
     NSAttributedString	*awayMessage = [awayDict objectForKey:@"Message"];
     NSAttributedString	*awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
     [[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-    if (awayAutoResponse)
-	    [[owner accountController] setProperty:awayAutoResponse forKey:@"AutoResponse" account:nil];
+    [[owner accountController] setProperty:awayAutoResponse forKey:@"AutoResponse" account:nil];
 }
 
 //Remove the active away message
