@@ -59,6 +59,7 @@ static NSImage *pushIndicatorImage = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
 	pushPop = YES;
+	clearOnEscape = YES;
     insertingText = NO;
 	defaultTypingAttributes = nil;
     returnArray = [[NSMutableArray alloc] init];
@@ -109,6 +110,11 @@ static NSImage *pushIndicatorImage = nil;
 - (void)setSendOnEnter:(BOOL)inBool
 {
     sendOnEnter = inBool;
+}
+
+- (void)setClearOnEscape:(BOOL)inBool
+{
+	clearOnEscape = inBool;
 }
 
 //Associate a scroll view with this text view for the scroll up/down keys
@@ -530,22 +536,20 @@ static NSImage *pushIndicatorImage = nil;
 
 - (void)keyDown: (NSEvent*) inEvent
 {
-	unichar inChar; // eevyl: fix to prevent crash when entering accented chars
-	if ([[inEvent charactersIgnoringModifiers] isEqualToString:@""]) {
-		[super keyDown:inEvent];
-	} else {
-		inChar = [[inEvent charactersIgnoringModifiers] characterAtIndex:0];
+	NSString *charactersIgnoringModifiers = [inEvent charactersIgnoringModifiers];
+	
+	if ([charactersIgnoringModifiers length]) {
+		unichar inChar = [charactersIgnoringModifiers characterAtIndex:0];
 	
 		unsigned int flags = [inEvent modifierFlags];
 		//We have to test ctrl before option, because otherwise we'd miss ctrl-option-* events
 		if(flags & NSControlKeyMask)
 		{
-			if(inChar == NSUpArrowFunctionKey)
+			if(inChar == NSUpArrowFunctionKey){
 				[self _popContent];
-			else if(inChar == NSDownArrowFunctionKey)
+			}else if(inChar == NSDownArrowFunctionKey){
 				[self _pushContent];
-			else if(inChar == 's')
-			{
+			}else if(inChar == 's'){
 				if( pushPop ) {
 					// Is there text?
 					NSAttributedString *tempMessage = nil;
@@ -555,65 +559,61 @@ static NSImage *pushIndicatorImage = nil;
 						tempMessage = [[self textStorage] copy];
 					}
 					
-					if( [pushArray count] )
+					if( [pushArray count] ){
 						[self _popContent];
-					else
+					}else{
 						[self setString:@""];
+					}
 					
-					if( tempMessage ) {
+					if( tempMessage ){
 						[pushArray addObject:tempMessage];
 						[self _setPushIndicatorVisible:YES];
 					}
 				}
+			}else{
+				[super keyDown:inEvent];
 			}
-			else
-				[super keyDown:inEvent];
-		}
-		else if(flags & NSAlternateKeyMask)
-		{
-			if(inChar == NSUpArrowFunctionKey)
+		}else if(flags & NSAlternateKeyMask){
+			if(inChar == NSUpArrowFunctionKey){
 				[self _historyUp];
-			else if(inChar == NSDownArrowFunctionKey)
+			}else if(inChar == NSDownArrowFunctionKey){
 				[self _historyDown];
-			else
+			}else{
 				[super keyDown:inEvent];
-		}
-		else if(flags & NSCommandKeyMask)
-		{
-			if(inChar == NSUpArrowFunctionKey)
-			{
+			}
+		}else if(flags & NSCommandKeyMask){
+			if(inChar == NSUpArrowFunctionKey){
 				NSRect visibleRect = [associatedScrollView documentVisibleRect];
 				visibleRect.origin.y -= [associatedScrollView verticalLineScroll]*2;
 				[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
-			}
-			else if(inChar == NSDownArrowFunctionKey)
-			{
+			}else if(inChar == NSDownArrowFunctionKey){
 				NSRect visibleRect = [associatedScrollView documentVisibleRect];
 				visibleRect.origin.y += [associatedScrollView verticalLineScroll]*2;
 				[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
-			}
-			else
+			}else{
 				[super keyDown:inEvent];
-		}
-		else if(inChar == NSHomeFunctionKey)
-		{
+			}
+			
+		}else if(inChar == NSHomeFunctionKey){
 			NSRect visibleRect = [associatedScrollView documentVisibleRect];
 			visibleRect.origin.y = 0;
 			[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
-		}
-		else if(inChar == NSEndFunctionKey)
-		{
+			
+		}else if(inChar == NSEndFunctionKey){
 			NSRect frame = [[associatedScrollView documentView] frame];
 			frame.origin.y = frame.size.height;
 			frame.size.height = 0;
 			[[associatedScrollView documentView] scrollRectToVisible:frame];
-		}
-		else if(inChar == '\E')
-		{
+			
+		}else if((inChar == '\E') && clearOnEscape){
 			[self setString:@""];
+			
+		}else{
+			[super keyDown:inEvent];
+			
 		}
-		else [super keyDown:inEvent];
-		
+	} else {
+		[super keyDown:inEvent];
 	}
 }
 
