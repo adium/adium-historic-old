@@ -101,7 +101,6 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 {
     if(contactListWindowController){
         [[contactListWindowController window] performClose:nil];
-		[self contactListDidClose];
     }
 }
 

@@ -67,7 +67,7 @@ typedef enum {
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 
 	[self contactListChanged:nil];
-	
+
 	return(self);
 }
 
@@ -83,7 +83,7 @@ typedef enum {
 											   object:[contactListView window]];
 }
 
-- (void)dealloc
+- (void)close
 {
 	//Remember how the contact list is currently docked for next time
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:dockToBottomOfScreen]
@@ -95,6 +95,11 @@ typedef enum {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium contactController] unregisterListObjectObserver:self];
 	
+	[self autorelease];
+}
+
+- (void)dealloc
+{
 	[super dealloc];
 }
 
@@ -230,6 +235,7 @@ float ToolbarHeightForWindow(NSWindow *window)
 	*/
 	BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
 						 ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
+
 	if((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
 	   (dockToBottomOfScreen == AIDockToBottom_TotalFrame)){
 		NSArray *screens;
