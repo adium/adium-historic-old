@@ -16712,7 +16712,7 @@
 				INFOPLIST_FILE = "plists/AdiumGames-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_LDFLAGS = "-seg1addr 0x10600000";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = AdiumGames;
 				SECTORDER_FLAGS = "";
