@@ -178,8 +178,9 @@
 - (IBAction)send:(id)sender
 {
     if([[textField_emailAddress stringValue] isEqualToString:@""]){
-        NSBeginCriticalAlertSheet(@"Email Address Required", @"Okay", nil, nil, window_MainWindow, nil, nil, nil, NULL,
-								  @"Please provide your email address so we may contact you with a possible fix or request additional information.");
+        NSBeginCriticalAlertSheet(AILocalizedString(@"Email Address Required",nil),
+				  AILocalizedString(@"Okay",nil), nil, nil, window_MainWindow, nil, nil, nil, NULL,
+				  AILocalizedString(@"Please provide your email address so we may request additional information or provide a fix.",nil));
     }else{
         NSString	*shortDescription = [textField_description stringValue];
         
