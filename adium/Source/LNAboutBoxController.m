@@ -6,7 +6,7 @@
 #define	ADIUM_SITE_LINK		@"http://adium.sourceforge.net/"
 #define ADIUM_LINK_TEXT		@"adium.sourceforge.net"
 
-
+#define DIRECTORY_INTERNAL_RESOURCES    @"/Contents/Resources/Avatars"
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (BOOL)windowShouldClose:(id)sender;
@@ -39,6 +39,8 @@ LNAboutBoxController *sharedInstance = nil;
 
     owner = [inOwner retain];
 
+    avatarArray = [[NSMutableArray alloc] init];
+    
     return(self);
 }
 
@@ -53,7 +55,22 @@ LNAboutBoxController *sharedInstance = nil;
 
 - (void)windowDidLoad
 {
+    //Get the directory listing of avatars and put in the avatarArray
+    NSString *avatarName;
+    NSString *avatarPath;
+    NSArray * avatarList;
+    avatarArray = [[NSMutableArray alloc] init];
+    avatarPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_RESOURCES] stringByExpandingTildeInPath];
 
+
+    avatarList = [[NSFileManager defaultManager] directoryContentsAtPath:avatarPath];
+    int loop;
+    for(loop = 0;loop < [avatarList count];loop++){
+        avatarName = [avatarList objectAtIndex:loop];
+        [avatarArray addObject:[avatarPath stringByAppendingPathComponent:avatarName]];
+    }
+
+    //Set up the link
     NSAttributedString		*siteLink;
     NSMutableParagraphStyle	*paragraphStyle;
     NSDictionary		*attributes;
@@ -65,10 +82,8 @@ LNAboutBoxController *sharedInstance = nil;
         [NSFont cachedFontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName,
         [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, nil];
-    
 
     siteLink = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:ADIUM_LINK_TEXT] attributes: attributes];
-
 
     [[linkTextView_siteLink enclosingScrollView] setDrawsBackground:NO];
     [linkTextView_siteLink setDrawsBackground:NO];
@@ -76,11 +91,9 @@ LNAboutBoxController *sharedInstance = nil;
     [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
     [linkTextView_siteLink resetCursorRects];
 
-
     [textField_buildDate setStringValue:[NSString stringWithFormat:@"Build Date: %s", __DATE__]];
     
     [[self window] center];
-
 }
 
 
@@ -101,19 +114,22 @@ LNAboutBoxController *sharedInstance = nil;
     return(YES);
 }
 
-
-
 - (IBAction)adiumDuckClicked:(id)sender
 {
 
     numberOfDuckClicks++;
-    if(numberOfDuckClicks == 10){
+    if(numberOfDuckClicks % ([avatarArray count] + 1)){
         [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
-        numberOfDuckClicks = 0;
     }else{
         [[owner soundController] playSoundNamed:@"/Adium/Quack.aif"];
     }
-    
+    if (numberOfDuckClicks == [avatarArray count]) {
+        numberOfDuckClicks = 0;
+        [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
+    } else {
+        [button_duckIcon setImage:[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]]];
+    }
+
 }
 
 @end
