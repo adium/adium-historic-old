@@ -4129,6 +4129,20 @@
 			settings = {
 			};
 		};
+		34943DEE07BAD918000F2A03 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AccountPrivacy.nib;
+			path = "Frameworks/Adium Framework/AccountPrivacy.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34943DEF07BAD918000F2A03 = {
+			fileRef = 34943DEE07BAD918000F2A03;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3499F45006309AC80035B468 = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
@@ -7277,6 +7291,7 @@
 				4BDD81EC07A0B6D30057DB2C,
 				4B588C9907AC23A9001832A9,
 				34E00F8707B92B89000DF265,
+				34943DEF07BAD918000F2A03,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7973,6 +7988,8 @@
 		};
 		34C2CFE6063340780018E5D2 = {
 			children = (
+				34E0110C07B9E30B000DF265,
+				34E0110D07B9E30B000DF265,
 				34BBE10907A2EE3700663CC9,
 				34BBE10A07A2EE3700663CC9,
 				34BBE0E907A2ECCF00663CC9,
@@ -9174,6 +9191,36 @@
 			settings = {
 			};
 		};
+		34E0110C07B9E30B000DF265 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimOTRUnknownFingerprintController.h;
+			path = "Plugins/Gaim Service/ESGaimOTRUnknownFingerprintController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E0110D07B9E30B000DF265 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimOTRUnknownFingerprintController.m;
+			path = "Plugins/Gaim Service/ESGaimOTRUnknownFingerprintController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E0110E07B9E30B000DF265 = {
+			fileRef = 34E0110C07B9E30B000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E0110F07B9E30C000DF265 = {
+			fileRef = 34E0110D07B9E30B000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E29FCE07AF091C006735BC = {
 			children = (
 				F5B53FBF0333ABA701A8010A,
@@ -10065,8 +10112,8 @@
 		};
 		34F59B760667A33900F01E8C = {
 			children = (
-				34E0103207B956F6000DF265,
 				34E0103307B956F6000DF265,
+				34E0103207B956F6000DF265,
 			);
 			isa = PBXGroup;
 			name = "Notify UI";
@@ -12653,6 +12700,7 @@
 				34C2D31006334A460018E5D2,
 				4B18A51F0459F89300A8010A,
 				4BB5CBB006EDF04D009B4517,
+				4B0473B7043E43F200A8010A,
 				34086A1005E5E17B00ABB759,
 			);
 			isa = PBXGroup;
@@ -12689,7 +12737,6 @@
 				34A65AF606A5A0C400898470,
 				34DFF46607A5EAC800B92233,
 				4BC8AFD604FD3C1000A8010A,
-				4B0473B7043E43F200A8010A,
 				4BBAEE9703DD7D8900A8010A,
 				4B5B15220493BF9A00A8010A,
 			);
@@ -12724,6 +12771,7 @@
 				4BDD81E907A0B6D30057DB2C,
 				4BDD81E807A0B6D30057DB2C,
 				4BDD81E707A0B6D30057DB2C,
+				34943DEE07BAD918000F2A03,
 			);
 			isa = PBXGroup;
 			name = "Accounts & Services";
@@ -13844,6 +13892,7 @@
 				34BBE1BA07A2F4C500663CC9,
 				34BBE55607A342AF00663CC9,
 				34E0103507B956F6000DF265,
+				34E0110E07B9E30B000DF265,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13967,6 +14016,7 @@
 				34BBE1BB07A2F4C500663CC9,
 				34BBE55707A342AF00663CC9,
 				34E0103407B956F6000DF265,
+				34E0110F07B9E30C000DF265,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
