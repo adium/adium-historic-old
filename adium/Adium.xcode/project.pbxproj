@@ -4626,6 +4626,7 @@
 				4B01180E0679172E00FCB992,
 				4B052CA0067E39B100A43B4A,
 				4B052CA6067E39BE00A43B4A,
+				9EE161B006819C6F00AB822A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5257,6 +5258,7 @@
 				4B01180F0679172E00FCB992,
 				4B052CA1067E39B100A43B4A,
 				4B052CA7067E39BE00A43B4A,
+				9EE161B106819C6F00AB822A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8916,7 +8918,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				5214C5140680D98800A2E71B,
+				9EE160D906819AA600AB822A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -17793,21 +17795,6 @@
 			settings = {
 			};
 		};
-		5214C5140680D98800A2E71B = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 5214C5660680D98D00A2E71B;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5214C5660680D98D00A2E71B = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
 		521C570D0604B594005EB21A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -17834,34 +17821,6 @@
 		};
 		521C57100604B594005EB21A = {
 			fileRef = 521C570E0604B594005EB21A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52297E350680D63600EB222F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = GrowlApplicationBridge.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52297E360680D63600EB222F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = GrowlApplicationBridge.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52297E370680D63600EB222F = {
-			fileRef = 52297E350680D63600EB222F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52297E380680D63600EB222F = {
-			fileRef = 52297E360680D63600EB222F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -18205,7 +18164,6 @@
 			files = (
 				52C623E406697B3B0006C387,
 				52C623E506697B3B0006C387,
-				52297E370680D63600EB222F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18222,7 +18180,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				52C623E606697B3B0006C387,
-				52297E380680D63600EB222F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18305,11 +18262,11 @@
 		};
 		52C623DE06697AFA0006C387 = {
 			children = (
+				9EE161AE06819C6F00AB822A,
+				9EE161AF06819C6F00AB822A,
 				52C623E106697B3B0006C387,
 				52C623E206697B3B0006C387,
 				52C623E306697B3B0006C387,
-				52297E350680D63600EB222F,
-				52297E360680D63600EB222F,
 				52C623DF06697B1D0006C387,
 			);
 			isa = PBXGroup;
@@ -20491,6 +20448,51 @@
 			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		9EE160D906819AA600AB822A = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 9EE161AB06819ACE00AB822A;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9EE161AB06819ACE00AB822A = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		9EE161AE06819C6F00AB822A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GrowlApplicationBridge.h;
+			path = Plugins/Growl/GrowlApplicationBridge.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE161AF06819C6F00AB822A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = GrowlApplicationBridge.m;
+			path = Plugins/Growl/GrowlApplicationBridge.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE161B006819C6F00AB822A = {
+			fileRef = 9EE161AE06819C6F00AB822A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EE161B106819C6F00AB822A = {
+			fileRef = 9EE161AF06819C6F00AB822A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9EEDAD9A05E7463D00CB537D = {
 			fileEncoding = 30;
