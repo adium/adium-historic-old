@@ -53,7 +53,7 @@
 //Portable Adium prefs key
 #define PORTABLE_ADIUM_KEY	@"Preference Folder Location"
 
-//#define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
+//#define KEY_USER_VIEWED_LICENSE			@"AdiumUserLicenseViewed"
 //#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
 
 @interface AIAdium (PRIVATE)
