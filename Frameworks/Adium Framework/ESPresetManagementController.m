@@ -132,18 +132,12 @@
 		id duplicatePreset, selectedPreset;
 		int duplicatePresetIndex;
 		
-		//Finish any editing before continuing
-		NSLog(@"validate %@ and rename to %@",
-			  [[presets objectAtIndex:selectedRow] objectForKey:@"name"],
-			  [[[[tableView_presets currentEditor] string] copy] autorelease]);
-		
+		//Finish any editing before continuing		
 		//[tableView_presets validateEditing] doesn't work?
 		[tableView_presets validateEditing];
 		[tableView_presets abortEditing];
 
 		selectedPreset = [presets objectAtIndex:selectedRow];
-		
-		NSLog(@"begin duplicate %@",[selectedPreset objectForKey:@"name"]);
 		
 		//Inform the delegate of the duplicate request
 		NSArray	*newPresets;
@@ -154,7 +148,6 @@
 		[presets autorelease]; presets = [newPresets retain];
 		
 		//The delegate returned a potentially changed presets array; reload table data
-		NSLog(@"now reload for duplicate %@",[duplicatePreset objectForKey:@"name"]);
 		[tableView_presets reloadData];
 
 		//Set up for a rename of the new duplicate if possible
@@ -283,16 +276,12 @@
 			NSArray	*newPresets;
 			id			renamedPreset;
 			
-			NSLog(@"Rename  to %@ : old was %@ %i",anObject,[preset objectForKey:@"name"],[presets indexOfObjectIdenticalTo:preset]);
-			
 			newPresets = [delegate renamePreset:preset toName:(NSString *)anObject inPresets:presets renamedPreset:&renamedPreset];
 			[presets autorelease]; presets = [newPresets retain];
 			
 			//The delegate returned a potentially changed presets array; reload table data
 			[tableView_presets reloadData];
-			
-			NSLog(@"Rename : new index %i",[presets indexOfObjectIdenticalTo:renamedPreset]);
-			
+						
 			//Select the new row
 			[tableView_presets selectRow:[presets indexOfObjectIdenticalTo:renamedPreset] byExtendingSelection:NO];
 		}
