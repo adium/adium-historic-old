@@ -183,7 +183,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [self updateSearch:nil];
 }
 
-//Delete selected logs
+//Delete selected log
 - (IBAction)deleteSelectedLogs:(id)sender
 {
     AILog   *theLog = nil;
@@ -197,10 +197,12 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [resultsLock unlock];
     
     [[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
-
+    
+    // visible updating
     [self updateProgressDisplay];
     [tableView_results reloadData];   
     [textView_content setString:@""];
+    // invisible fix0ring... rebuild the 'global' log index
     [availableLogArray removeAllObjects];
     [self initLogFiltering];
 }
@@ -824,16 +826,18 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		value = @"";
     }else{
 		AILog   *theLog = [selectedLogArray objectAtIndex:row];
-		
+                NSArray *broken = [[theLog from] componentsSeparatedByString:@"."];
+        
 		if([identifier isEqualToString:@"To"]){
                     value = [theLog to]; 
 		}else if([identifier isEqualToString:@"From"]){
-                    NSArray *broken = [[theLog from] componentsSeparatedByString:@"."];
-                    value = [NSString stringWithFormat:@"%@ (%@)",[broken objectAtIndex:1],[broken objectAtIndex:0]];
-
+                    value = [broken objectAtIndex:1];
 		}else if([identifier isEqualToString:@"Date"]){
 			value = [dateFormatter stringForObjectValue:[theLog date]];
 		}
+                else if([identifier isEqualToString:@"Service"]){
+                    value = [broken objectAtIndex:0];
+                }
     }
     [resultsLock unlock];
     
