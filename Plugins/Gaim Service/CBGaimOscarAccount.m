@@ -170,6 +170,8 @@
 {
 	if(strcmp(label, "Set User Info...") == 0){
 		return(nil);
+	}else if(strcmp(label, "Edit Buddy Comment") == 0){
+		return(nil);
 	}else if(strcmp(label, "Show Buddies Awaiting Authorization") == 0){
 		/* XXX Depends on adiumGaimRequestFields() */
 		return(nil);
