@@ -220,8 +220,6 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 - (void)setActiveTarget:(id<NDAppleScriptObjectActive>)aTarget
 {
-	static OSErr		AppleScriptActiveProc( long aRefCon );
-
 	if( aTarget != activeTarget )
 	{
 		NSParameterAssert( sizeof(long) == sizeof(id) );

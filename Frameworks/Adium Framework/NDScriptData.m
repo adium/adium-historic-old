@@ -15,8 +15,6 @@
 
 //static NSString		* kScriptResourceName = @"script";
 
-static const short	kScriptResourceID = 128;
-
 /*
  * class interface NDScriptData (Private)
  */

@@ -11,7 +11,7 @@
 
 @class	NDComponentInstance;
 
-extern const short		kScriptResourceID;
+static const short	kScriptResourceID = 128;
 
 /*!
 	@class NDScriptData
