@@ -127,7 +127,7 @@
                 "menu_File_Accounts" = NSMenuItem; 
                 "menu_File_Additions" = NSMenuItem; 
                 "menu_File_Close" = NSMenuItem; 
-                "menu_File_New" = NSMenuItem; 
+                "menu_File_New" = id; 
                 "menu_File_Save" = NSMenuItem; 
                 "menu_File_Status" = NSMenuItem; 
                 "menu_Format_Additions" = NSMenuItem; 

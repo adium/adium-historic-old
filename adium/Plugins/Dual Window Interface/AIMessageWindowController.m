@@ -175,8 +175,6 @@
 	[inTabViewItem setContainer:self];
 
 	[[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
-	
-    [self showWindow:nil];
 }
 
 //Remove a tab view item container

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.78 2004/07/13 16:37:09 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.79 2004/07/13 18:53:14 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -32,8 +32,6 @@
 
 #define CONTACT_LIST_WINDOW_MENU_TITLE  AILocalizedString(@"Contact List","Title for the contact list menu item")
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
-
-#import "AINewMessagePrompt.h"
 
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
@@ -1104,16 +1102,6 @@ arrangeChats = YES;
 
 
 
-
-
-
-
-//Initiate a chat
-#warning make separate plugin
-- (IBAction)initiateMessage:(id)sender
-{
-	[AINewMessagePrompt newMessagePrompt];
-}
 
 
 

@@ -39,7 +39,7 @@ typedef enum {
     IBOutlet	NSMenuItem	*nilMenuItem;
     IBOutlet	NSMenuItem	*menu_Adium_About;
     IBOutlet	NSMenuItem	*menu_Adium_Preferences;
-    IBOutlet	NSMenuItem	*menu_File_New;
+    IBOutlet	id			menu_File_New;
     IBOutlet	NSMenuItem	*menu_File_Close;
     IBOutlet	NSMenuItem	*menu_File_Save;
     IBOutlet	NSMenuItem	*menu_File_Accounts;
