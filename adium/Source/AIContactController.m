@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.108 2004/02/28 01:41:12 evands Exp $
+// $Id: AIContactController.m,v 1.109 2004/02/28 02:43:51 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -367,7 +367,7 @@
 				[existingObject release];
 
 				//Update the meta contact's attributes
-				[self _updateAllAttributesOfObject:existingObject];
+				[self _updateAllAttributesOfObject:metaContact];
 
 				//Add the new meta contact to our list
 				[localGroup addObject:metaContact];
@@ -604,6 +604,13 @@
 	while(listObject = [enumerator nextObject]){
 		NSArray	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
+
+		//If this contact is within a meta contact, update the meta contact too
+		AIMetaContact	*metaContact = (AIMetaContact *)[listObject containingGroup];
+		if(metaContact && [metaContact isKindOfClass:[AIMetaContact class]]){
+			NSArray	*attributes = [inObserver updateListObject:metaContact keys:nil silent:YES];
+			if(attributes) [self listObjectAttributesChanged:metaContact modifiedKeys:attributes];
+		}
 	}
 
     //Reset all groups
