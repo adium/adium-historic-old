@@ -255,8 +255,12 @@
         
         NSRect      currentFrame = [theWindow frame];
         NSSize      desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
-        NSRect      screenFrame = [[theWindow screen] visibleFrame];
-        NSRect      totalScreenFrame = [[theWindow screen] frame];
+        
+        NSScreen     *activeScreen = [theWindow screen];
+        if (!activeScreen)
+            activeScreen = [[NSScreen screens] objectAtIndex:0];
+        NSRect      screenFrame = [activeScreen visibleFrame];
+        NSRect      totalScreenFrame = [activeScreen frame];
         
 	//Keep track of padding around the contact view
 	contactViewPadding.height = currentFrame.size.height - [scrollView_contactList frame].size.height;
@@ -280,7 +284,11 @@
         //Adjust the X Origin
         if(autoResizeHorizontally){
             if((currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
+                //NSLog(@"going left because %f + %f + %f > %f+ %f",currentFrame.origin.x , currentFrame.size.width,EDGE_CATCH_X , screenFrame.origin.x , screenFrame.size.width);
                 newFrame.origin.x = currentFrame.origin.x + (currentFrame.size.width - newFrame.size.width); //Expand Left
+                if ((newFrame.origin.x + newFrame.size.width) < (screenFrame.origin.x + EDGE_CATCH_X)){
+                   newFrame.origin.x = screenFrame.origin.x - newFrame.size.width + EDGE_CATCH_X;
+                }
             }else{
                 newFrame.origin.x = currentFrame.origin.x; //Expand Right
             }
@@ -299,7 +307,7 @@
                 newFrame.origin.y = screenFrame.origin.y;   
         }
     }
-
+//    NSLog(@"%f %f %f %f",newFrame.origin.x,newFrame.origin.y,newFrame.size.width,newFrame.size.height);
     return(newFrame);
 }
 
