@@ -48,7 +48,7 @@ LNAboutBoxController *sharedInstance = nil;
     if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] cString])
     {
         FILE *f = fopen(path, "r");
-        fscanf(f, "%s | %s", &num, &date);
+        fscanf(f, "%s | %s", num, date);
         if(*num)
             buildNumber = [[NSString stringWithFormat:@"Build Number: %s", num] retain];
         if(*date)
