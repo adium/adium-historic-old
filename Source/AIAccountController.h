@@ -71,7 +71,10 @@
 - (AIAccount *)defaultAccount;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber;
 - (NSArray *)accountsWithServiceClassOfService:(AIService *)service;
-
+- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
+								   toListObject:(AIListObject *)inObject
+									 withTarget:(id)target
+								 includeOffline:(BOOL)includeOffline;
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
