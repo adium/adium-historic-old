@@ -12,6 +12,12 @@
         {
             CLASS = ESSendMessageAlertDetailPane; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_useAnotherAccount" = NSButton; 
+                "popUp_messageFrom" = NSPopUpButton; 
+                "popUp_messageTo" = NSPopUpButton; 
+                "textView_message" = NSTextView; 
+            }; 
             SUPERCLASS = AIActionDetailsPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

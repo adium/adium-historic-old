@@ -5,15 +5,12 @@
 //  Created by Evan Schoenberg on Fri Nov 28 2003.
 
 @interface ESSendMessageAlertDetailPane : AIActionDetailsPane {
-    //Message View
-//    IBOutlet	NSView			*view_details_message;
-//    IBOutlet	NSTextField		*textField_message_actionDetails;
-//    IBOutlet	NSPopUpButton		*popUp_message_actionDetails_one;
-//    IBOutlet	NSPopUpButton		*popUp_message_actionDetails_two;
-//    IBOutlet	NSButton		*button_anotherAccount;
-//    IBOutlet	NSButton		*button_displayAlert;
-}
+	IBOutlet	NSPopUpButton   	*popUp_messageFrom;
+	IBOutlet	NSPopUpButton   	*popUp_messageTo;
+    IBOutlet	NSButton			*button_useAnotherAccount;
+	IBOutlet	NSTextView			*textView_message;
 
-//- (IBAction)saveMessageDetails:(id)sender;
+	AIListObject					*toListObject;
+}
 
 @end
