@@ -30,7 +30,7 @@ typedef enum {  State_None,
 				State_GameOver,
 				} GameState;
 
-@interface NEHTicTacToeController : AIWindowController <AIContentFilter>
+@interface NEHTicTacToeController : AIWindowController
 {
 	IBOutlet NSWindow		* boardWindow;
     IBOutlet NSMatrix		* squares;
