@@ -66,6 +66,7 @@
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
     NSMutableArray			*textEntryViews;
+	NSDictionary			*defaultFormattingAttributes;
 	
     NSMutableArray			*chatArray;
     
