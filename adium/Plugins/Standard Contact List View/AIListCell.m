@@ -104,6 +104,11 @@
 	return(NSMakeSize(0, 30));
 }
 
+- (NSFont *)fontInView:(NSView *)controlView
+{
+	return([controlView font]);
+}
+
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView{
     [self drawInteriorWithFrame:cellFrame inView:controlView];
@@ -289,7 +294,7 @@
 //attributes, giving a bit of a speed boost
 - (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes inView:(AISCLOutlineView *)controlView
 {
-	NSFont				*font = (isGroup ? [NSFont boldSystemFontOfSize:12] : nil);//[controlView groupFont] : [controlView font]);
+	NSFont				*font = [self fontInView:controlView];//(isGroup ? [NSFont boldSystemFontOfSize:12] : nil);//[controlView groupFont] : [controlView font]);
 	NSString 			*displayString;
 	NSDictionary		*attributes;
 	
