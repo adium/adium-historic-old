@@ -1276,45 +1276,45 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 
 
-- (AIListGroup *)browser:(NSBrowser *)browser groupForColumn:(int)column
-{
-	AIListGroup *group = [[adium contactController] contactList];
-	int 		i;
-	
-	for(i = 0; i < column; i++)
-	{
-		int index = [browser selectedRowInColumn:i];
-		group = [group objectAtIndex:index];
-		
-		if(![group isKindOfClass:[AIListGroup class]]) return(nil);
-	}
-
-	return(group);
-}
-
-- (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column
-{
-	if ([[self browser:sender groupForColumn:column] respondsToSelector:@selector(count)])
-		return ([[self browser:sender groupForColumn:column] count]);
-	else return 0;
-}
-
-- (void)browser:(NSBrowser *)sender willDisplayCell:(id)cell atRow:(int)row column:(int)column
-{
-	AIListGroup		*group = [self browser:sender groupForColumn:column];
-	AIListObject	*object = [group objectAtIndex:row];
-	
-	[cell setStringValue:[object displayName]];
-	[cell setLeaf:![object isKindOfClass:[AIListGroup class]]];
-	
-	if([object isKindOfClass:[AIListGroup class]]){
-		[cell setLeaf:NO];
-		[cell setImage:groupImage];
-	}else{
-		[cell setLeaf:YES];
-		[cell setImage:[serviceImageDict objectForKey:[object serviceID]]];
-	}
-}
+//- (AIListGroup *)browser:(NSBrowser *)browser groupForColumn:(int)column
+//{
+//	AIListGroup *group = [[adium contactController] contactList];
+//	int 		i;
+//	
+//	for(i = 0; i < column; i++)
+//	{
+//		int index = [browser selectedRowInColumn:i];
+//		group = [group objectAtIndex:index];
+//		
+//		if(![group isKindOfClass:[AIListGroup class]]) return(nil);
+//	}
+//
+//	return(group);
+//}
+//
+//- (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column
+//{
+//	if ([[self browser:sender groupForColumn:column] respondsToSelector:@selector(count)])
+//		return ([[self browser:sender groupForColumn:column] count]);
+//	else return 0;
+//}
+//
+//- (void)browser:(NSBrowser *)sender willDisplayCell:(id)cell atRow:(int)row column:(int)column
+//{
+//	AIListGroup		*group = [self browser:sender groupForColumn:column];
+//	AIListObject	*object = [group objectAtIndex:row];
+//	
+//	[cell setStringValue:[object displayName]];
+//	[cell setLeaf:![object isKindOfClass:[AIListGroup class]]];
+//	
+//	if([object isKindOfClass:[AIListGroup class]]){
+//		[cell setLeaf:NO];
+//		[cell setImage:groupImage];
+//	}else{
+//		[cell setLeaf:YES];
+//		[cell setImage:[serviceImageDict objectForKey:[object serviceID]]];
+//	}
+//}
 	
 @end
 

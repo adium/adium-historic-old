@@ -157,8 +157,12 @@
 		
 	//Get this column's index and the selected item
 	columnIndex = [columnArray indexOfObject:[self columnForTableView:table]];
-	if(columnIndex == NSNotFound) columnIndex = 0;
-	
+	if(columnIndex == NSNotFound){
+		columnIndex = 0;
+	}else{
+		columnIndex++;
+	}
+
 	if([table numberOfSelectedRows] != 0){
 		selectedItem = [dataSource browserView:self
 										 child:[table selectedRow]
@@ -171,7 +175,7 @@
 	}
 	
 	//Add table view for the selected item
-	if(selectedItem){
+	if(selectedItem && [dataSource browserView:self isItemExpandable:selectedItem]){
 		[self addColumn:[self newColumnForObject:selectedItem]];
 	}
 }
