@@ -382,7 +382,7 @@ DeclareString(FormattedUID);
 	
 	//If the displayUserIcon changed, flush our cache and send out a notification
 	if (oldImage != [self displayUserIcon]){
-		[AIUserIcons flushCacheForContact:self];
+		[AIUserIcons flushCacheForContact:(AIListContact *)self];
 		//Notify
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];
