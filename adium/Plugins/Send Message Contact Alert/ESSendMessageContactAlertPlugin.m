@@ -36,7 +36,7 @@
 	return(SEND_MESSAGE_ALERT_SHORT);
 }
 
-- (NSString *)longDescriptionForActionID:(NSString *)actionID
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	return(SEND_MESSAGE_ALERT_LONG);
 }

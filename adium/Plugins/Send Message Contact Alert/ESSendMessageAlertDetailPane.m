@@ -29,8 +29,29 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 	return(@"");
 }
 - (NSString *)nibName{
-    return(@"EventSoundContactAlert");    
+    return(@"SendMessageContactAlert");    
 }
+
+//Configure the detail view
+- (void)viewDidLoad
+{
+
+}
+
+//Configure for the action
+- (void)configureForActionDetails:(NSDictionary *)inDetails
+{
+
+}
+
+//Return our current configuration
+- (NSDictionary *)actionDetails
+{
+	return(nil);
+}
+
+
+
 
 
 //setup display for the sending message details
