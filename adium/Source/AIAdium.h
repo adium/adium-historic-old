@@ -90,6 +90,9 @@ typedef enum {
 //Sound Controller
 #define	KEY_SOUND_SET			@"Set"
 #define	KEY_SOUND_SET_CONTENTS		@"Sounds"
+#define KEY_SOUND_MUTE			@"Mute Sounds"
+#define KEY_SOUND_USE_CUSTOM_VOLUME	@"Use Custom Volume"
+#define KEY_SOUND_CUSTOM_VOLUME_LEVEL	@"Custom Volume Level"
 
 //Notifications
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -444,7 +447,10 @@ typedef enum {
 @interface AISoundController : NSObject {
     IBOutlet	AIAdium		*owner;
 
-    NSMovie	*sharedMovie;
+    NSMutableDictionary	*soundCacheDict;
+    BOOL		useCustomVolume;
+    BOOL		muteSounds;
+    int			customVolume;
 }
 
 - (void)playSoundNamed:(NSString *)inName;
