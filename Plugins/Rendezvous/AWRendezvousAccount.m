@@ -44,7 +44,6 @@
 - (void)setAccountIdleTo:(NSDate *)idle;
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountUserImage:(NSImage *)image;
-- (void)updateAllStatusKeys;
 @end
 
 @implementation AWRendezvousAccount
@@ -102,15 +101,10 @@
 #pragma mark Libezv Callbacks
 // Libezv Callbacks
 - (void) reportLoggedIn {
-    //We are now online
-    [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-
-    //Apply any changes
-    [self notifyOfChangedStatusSilently:NO];
+	[self accountDidConnect];
     
-    [self updateAllStatusKeys];
+	//We need to set our user icon after connecting
+    [self updateStatusForKey:KEY_USER_ICON];
 }
 
 - (void) reportLoggedOut 
@@ -464,14 +458,6 @@
 	}
 
 	return supportedPropertyKeys;
-}
-
-//Update all our status keys
-- (void)updateAllStatusKeys
-{
-    [self updateStatusForKey:@"IdleSince"];
-	[self updateStatusForKey:@"StatusState"];
-    [self updateStatusForKey:KEY_USER_ICON];
 }
 
 - (NSString *)UIDForContact:(AWEzvContact *)contact
