@@ -28,3 +28,7 @@
 }
 
 @end
+
+@interface NSTextField (AILocalizationAssistance)
+- (void)setLocalizedString:(NSString *)inString;
+@end
