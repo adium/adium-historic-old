@@ -15,12 +15,15 @@
 	int 	cacheSize;
 	int		entriesInCache;
 	
+	id		contentCell;
+	id		groupCell;
+	
 	float   groupRowHeight;
 	float   contentRowHeight;
 }
 
-- (void)setContentRowHeight:(float)rowHeight;
-- (void)setGroupRowHeight:(float)rowHeight;
+- (void)setContentCell:(id)cell;
+- (void)setGroupCell:(id)cell;
 - (void)setRowHeight:(float)rowHeight;
 			
 @end

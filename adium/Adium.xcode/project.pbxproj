@@ -5185,6 +5185,9 @@
 				4BA0E3E006B6BBDF001750FC,
 				344C0D5106B6D63800DA7200,
 				6E4D961306B739AC005235E9,
+				4B1EE92306B7E22A00A919E9,
+				4B1EE92506B7E22A00A919E9,
+				4B1EE92706B7E22A00A919E9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5827,6 +5830,9 @@
 				4BA0E3E106B6BBDF001750FC,
 				344C0D5006B6D63800DA7200,
 				6E4D961406B739AC005235E9,
+				4B1EE92406B7E22A00A919E9,
+				4B1EE92606B7E22A00A919E9,
+				4B1EE92806B7E22A00A919E9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10965,6 +10971,96 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B1EE91D06B7E22900A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListContactCell.h;
+			path = "Plugins/Standard Contact List View/AIListContactCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EE91E06B7E22900A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListContactCell.m;
+			path = "Plugins/Standard Contact List View/AIListContactCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EE91F06B7E22900A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListGroupCell.h;
+			path = "Plugins/Standard Contact List View/AIListGroupCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EE92006B7E22900A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListGroupCell.m;
+			path = "Plugins/Standard Contact List View/AIListGroupCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EE92106B7E22900A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListGroupGradientCell.h;
+			path = "Plugins/Standard Contact List View/AIListGroupGradientCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EE92206B7E22900A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListGroupGradientCell.m;
+			path = "Plugins/Standard Contact List View/AIListGroupGradientCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EE92306B7E22A00A919E9 = {
+			fileRef = 4B1EE91D06B7E22900A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1EE92406B7E22A00A919E9 = {
+			fileRef = 4B1EE91E06B7E22900A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1EE92506B7E22A00A919E9 = {
+			fileRef = 4B1EE91F06B7E22900A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1EE92606B7E22A00A919E9 = {
+			fileRef = 4B1EE92006B7E22900A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1EE92706B7E22A00A919E9 = {
+			fileRef = 4B1EE92106B7E22900A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1EE92806B7E22A00A919E9 = {
+			fileRef = 4B1EE92206B7E22900A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B215D970598907100305B3C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -15795,6 +15891,12 @@
 				4BF000CD06B5513400C32219,
 				4BF002CC06B55FCF00C32219,
 				4BF002CD06B55FCF00C32219,
+				4B1EE91D06B7E22900A919E9,
+				4B1EE91E06B7E22900A919E9,
+				4B1EE91F06B7E22900A919E9,
+				4B1EE92006B7E22900A919E9,
+				4B1EE92106B7E22900A919E9,
+				4B1EE92206B7E22900A919E9,
 			);
 			isa = PBXGroup;
 			name = "BASE CLASSES";
