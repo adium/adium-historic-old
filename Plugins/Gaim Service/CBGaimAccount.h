@@ -93,6 +93,8 @@
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 
+- (BOOL)shouldSetAliasesServerside;
+
 - (SLGaimCocoaAdapter *)gaimThread;
 
 #pragma mark Gaim callback handling methods

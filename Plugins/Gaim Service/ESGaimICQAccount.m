@@ -13,9 +13,9 @@
 - (void)configureGaimAccount
 {
 	[super configureGaimAccount];
-	
+
 	NSString	*encoding;
-	
+
 	//Default encoding
 	if ((encoding = [self preferenceForKey:KEY_ICQ_ENCODING group:GROUP_ACCOUNT_STATUS])){
 		gaim_account_set_string(account, "encoding", [encoding UTF8String]);
@@ -37,7 +37,12 @@
 //For ICQ the Gaim userInfo is just what the doctor ordered.
 - (BOOL)useGaimUserInfo
 {
-	return YES;
+	return(YES);
 }
 
+//Setting aliases serverside would override the information Gaim is feeding us
+- (BOOL)shouldSetAliasesServerside
+{
+	return(NO);
+}
 @end

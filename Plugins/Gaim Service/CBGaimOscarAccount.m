@@ -46,6 +46,11 @@ static BOOL didInitOscar = NO;
 	[super dealloc];
 }
 
+- (BOOL)shouldSetAliasesServerside
+{
+	return(YES);
+}
+
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
