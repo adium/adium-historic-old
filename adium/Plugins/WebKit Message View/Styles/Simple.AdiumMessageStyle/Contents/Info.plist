@@ -14,6 +14,8 @@
 	<string>Simple</string>
 	<key>CFBundlePackageType</key>
 	<string>AdIM</string>
+	<key>MessageViewVersion</key>
+	<integer>1</integer>
 	<key>DefaultFontFamily</key>
 	<string>Helvetica</string>
 	<key>DefaultFontSize</key>
