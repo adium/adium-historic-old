@@ -4621,6 +4621,34 @@
 			settings = {
 			};
 		};
+		34E2A00A07AF0CE0006735BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = plus.png;
+			path = "Frameworks/AIUtilities Framework/Images/plus.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A00B07AF0CE0006735BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = minus.png;
+			path = "Frameworks/AIUtilities Framework/Images/minus.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A00C07AF0CE0006735BC = {
+			fileRef = 34E2A00A07AF0CE0006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A00D07AF0CE0006735BC = {
+			fileRef = 34E2A00B07AF0CE0006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E46928075681AE004C3A42 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4664,34 +4692,6 @@
 //4B2
 //4B3
 //4B4
-		4B4C82C606DA8E2A00B17E06 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = minus.png;
-			path = "Plugins/Account List Preferences/minus.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4C82C706DA8E2A00B17E06 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = plus.png;
-			path = "Plugins/Account List Preferences/plus.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4C82C806DA8E2A00B17E06 = {
-			fileRef = 4B4C82C606DA8E2A00B17E06;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B4C82C906DA8E2A00B17E06 = {
-			fileRef = 4B4C82C706DA8E2A00B17E06;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B6DDA4A075A883B002E0BF4 = {
 			children = (
 				4B6DDA4D075A8879002E0BF4,
@@ -5512,8 +5512,8 @@
 				34486C1406D1DF0400DA778C,
 				34486C1506D1DF0400DA778C,
 				34486C1606D1DF0400DA778C,
-				4B4C82C606DA8E2A00B17E06,
-				4B4C82C706DA8E2A00B17E06,
+				34E2A00A07AF0CE0006735BC,
+				34E2A00B07AF0CE0006735BC,
 			);
 			isa = PBXGroup;
 			name = Images;
@@ -5840,8 +5840,8 @@
 				34486D2006D1DF0400DA778C,
 				34486D2106D1DF0400DA778C,
 				4BD1F5A406D28BD600B3975E,
-				4B4C82C806DA8E2A00B17E06,
-				4B4C82C906DA8E2A00B17E06,
+				34E2A00C07AF0CE0006735BC,
+				34E2A00D07AF0CE0006735BC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
