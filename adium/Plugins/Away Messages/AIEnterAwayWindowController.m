@@ -332,7 +332,13 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     while (dict = [enumerator nextObject])
     {
         NSString * title = [dict objectForKey:@"Title"];
-        if (title) [comboBox_title addItemWithObjectValue:[dict objectForKey:@"Title"]];
+        if (title)
+	    [comboBox_title addItemWithObjectValue:title];
+	else
+	{
+	    NSString * message = [[dict objectForKey:@"Message"] string];
+	    if (message) [comboBox_title addItemWithObjectValue:message];
+	}
     }
 }
 
