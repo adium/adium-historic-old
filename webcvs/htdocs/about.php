@@ -56,7 +56,7 @@
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
     
-    <p>The Adium Team is proud to present to you AdiumX <?php echo DownloadVersion(); ?>, a multiple protocol instant messaging client. This is a culmination of a year long rewrite of adium, which now utilizes libgaim (the core part of <a href="http://gaim.sourceforge.net">gaim</a>) to connect to multiple protocols, and is also based on a new plugin architecture. Partial address book integration, cool looking tabs, multiple protocols for instant messaging, and a compact contact list are some of the many features of the new Adium X. Give it a try; we're sure you will like it.</p>
+    <p>The Adium Team is proud to present to you Adium X <?php echo DownloadVersion(); ?>, a multiple protocol instant messaging client. This is a culmination of a year long rewrite of adium, which now utilizes libgaim (the core part of <a href="http://gaim.sourceforge.net">gaim</a>) to connect to multiple protocols, and is also based on a new plugin architecture. Partial address book integration, cool looking tabs, multiple protocols for instant messaging, and a compact contact list are some of the many features of the new Adium X. Give it a try; we're sure you will like it.</p>
     
     <p>Adium X is under active development.  We have a lot planned, and we appreciate your support :)</p>
     
