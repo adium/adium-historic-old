@@ -3,16 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>AB Enable Import</key>
-	<integer>1</integer>
+	</true>
 	<key>AB Display Format</key>
-	<integer>1</integer>
+	</true>
 	<key>AB Image Sync</key>
-	<integer>0</integer>
-	<key>AB Enable Images</key>
-	<integer>1</integer>
+	</false>
 	<key>AB Use NickName</key>
-	<integer>0</integer>
+	</true>
 	<key>AB Prefer AB Images</key>
-	<integer>0</integer>
+	</false>
 </dict>
 </plist>
