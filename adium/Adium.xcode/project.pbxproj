@@ -4685,6 +4685,8 @@
 				7E5B1DCE066ACE8D00EE5E57,
 				7ED73236066B005D0069616E,
 				7EC35CAD066B0CBA002129B7,
+				4B2DC05A066F689A00AD5AAD,
+				4B2DC06D066F705800AD5AAD,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5001,6 +5003,7 @@
 				4BCC20AC066B9A00007C8449,
 				4BCC20AD066B9A00007C8449,
 				4BCC20AE066B9A00007C8449,
+				4B2DC069066F6B1200AD5AAD,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5311,6 +5314,8 @@
 				7E5B1DCF066ACE8D00EE5E57,
 				7ED73237066B005D0069616E,
 				7EC35CAE066B0CBA002129B7,
+				4B2DC05B066F689A00AD5AAD,
+				4B2DC06E066F705800AD5AAD,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10308,6 +10313,94 @@
 			settings = {
 			};
 		};
+		4B2DC055066F687100AD5AAD = {
+			children = (
+				4B2DC058066F689A00AD5AAD,
+				4B2DC059066F689A00AD5AAD,
+				4B2DC06B066F705800AD5AAD,
+				4B2DC06C066F705800AD5AAD,
+				4B2DC068066F6B1200AD5AAD,
+			);
+			isa = PBXGroup;
+			name = "Contact Settings";
+			path = "Plugins/Contact Profile";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2DC058066F689A00AD5AAD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactSettingsPlugin.h;
+			path = "Plugins/Contact Settings/AIContactSettingsPlugin.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B2DC059066F689A00AD5AAD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactSettingsPlugin.m;
+			path = "Plugins/Contact Settings/AIContactSettingsPlugin.m";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B2DC05A066F689A00AD5AAD = {
+			fileRef = 4B2DC058066F689A00AD5AAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2DC05B066F689A00AD5AAD = {
+			fileRef = 4B2DC059066F689A00AD5AAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2DC068066F6B1200AD5AAD = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ContactSettingsPane.nib;
+			path = "Plugins/Contact Settings/ContactSettingsPane.nib";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B2DC069066F6B1200AD5AAD = {
+			fileRef = 4B2DC068066F6B1200AD5AAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2DC06B066F705800AD5AAD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactSettingsPane.h;
+			path = "Plugins/Contact Settings/AIContactSettingsPane.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B2DC06C066F705800AD5AAD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactSettingsPane.m;
+			path = "Plugins/Contact Settings/AIContactSettingsPane.m";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B2DC06D066F705800AD5AAD = {
+			fileRef = 4B2DC06B066F705800AD5AAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2DC06E066F705800AD5AAD = {
+			fileRef = 4B2DC06C066F705800AD5AAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B30490B047FBD6A00A8010A = {
 			children = (
 				4B30491A047FBDCE00A8010A,
@@ -10792,6 +10885,7 @@
 				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CB04620D8800A8010A,
 				C4382545062E795000F5A31D,
+				4B2DC055066F687100AD5AAD,
 				4BBF41DC06611949001D31E1,
 				4B18A51F0459F89300A8010A,
 				4BAA1B3F0632EDDE00D8B92C,

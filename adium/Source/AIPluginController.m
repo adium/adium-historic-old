@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.70 2004/05/27 17:24:55 earthmkii Exp $
+//$Id: AIPluginController.m,v 1.71 2004/06/03 15:00:25 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -46,7 +46,7 @@ CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageCon
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin, AIContactProfilePlugin,
-JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
+JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin;
 
@@ -74,6 +74,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AIContactStatusColoringPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusDockOverlaysPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusTabColoringPlugin class]];
+	[self loadPluginWithClass:[AIContactSettingsPlugin class]];
 	[self loadPluginWithClass:[AIContactWarningLevelPlugin class]];
 	[self loadPluginWithClass:[AIDefaultFormattingPlugin class]];
 	[self loadPluginWithClass:[AIDockAccountStatusPlugin class]];
