@@ -69,7 +69,11 @@
     [checkBox_ignoreBackgroundColor setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue]];
     
     [checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
+    
     [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
+    if (![popUp_timeStamps selectedItem])
+         [popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
+    
     [popUp_prefixFormat selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING]];	
 }
     
@@ -119,10 +123,16 @@
     [popUp_timeStamps removeAllItems];
     
     //Add the available time stamp formats
-    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]];
-    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]];
+    NSString    *noSecondsNoAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
+    NSString    *noSecondsAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES];
+    BOOL        twentyFourHourTimeIsOff = ([noSecondsNoAMPM compare:noSecondsAMPM] != 0);
+
+    [self _buildTimeStampMenu_AddFormat:noSecondsNoAMPM];
+    if (twentyFourHourTimeIsOff)
+        [self _buildTimeStampMenu_AddFormat:noSecondsAMPM];
     [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO]];
-    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:YES]];
+    if (twentyFourHourTimeIsOff)
+        [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:YES]];
 }
 
 //Add time stamp format to the menu
