@@ -34,7 +34,6 @@
     NSColor                     *labelGroupColor;
     
     float                       spacing;
-    BOOL                        isBorderless;
     int				lastSelectedRow;
     
     float                       desiredWidth[3];
@@ -61,8 +60,6 @@
 
 - (void)setLabelGroupColor:(NSColor *)inLabelGroupColor;
 - (NSColor *)labelGroupColor;
-
-- (void)setIsBorderless:(BOOL)inIsBorderless;
 
 - (void)setShowLabels:(BOOL)inValue;
 - (BOOL)showLabels;
