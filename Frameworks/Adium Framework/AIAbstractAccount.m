@@ -358,7 +358,17 @@
 - (void)setStatusStateAndRemainOffline:(AIStatus *)statusState
 {
 	//Store the status state as a status object so it can be easily used elsewhere
-	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];	
+	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];
+
+	if([[self supportedPropertyKeys] containsObject:@"IdleSince"]){
+		NSDate	*idleSince;
+		
+		idleSince = ([statusState shouldForceInitialIdleTime] ?
+					 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
+					 nil);
+		
+		[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 /*
