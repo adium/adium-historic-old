@@ -14,7 +14,22 @@
 -(void)switchHandler:(NSNotification*) notification;
 @end
 
+/*
+ * @class ESFastUserSwitchingSupportPlugin
+ * @brief Handle Fast User Switching with a changed status and sound muting
+ *
+ * When another user logs in via Fast User Switching (OS X 10.3 and above), this plugin sets a status state if an away
+ * state is not already set.  It also mutes sounds as per the HIG.
+ *
+ * At present, this plugin uses a hardcoded away message.
+ */
 @implementation ESFastUserSwitchingSupportPlugin
+
+/*
+ * @brief Install plugin
+ *
+ * Has no effect on Jaguar
+ */
 - (void)installPlugin
 {
     if([NSApp isOnPantherOrBetter]) //only install on Panther
@@ -33,6 +48,11 @@
     }
 }
 
+/*
+ * @brief Uninstall plugin
+ *
+ * Has no effect on Jaguar
+ */
 -(void)uninstallPlugin
 {
 	if([NSApp isOnPantherOrBetter]) //only uninstall on Panther
@@ -44,6 +64,14 @@
 	}
 }
 
+/*
+ * @brief Handle a fast user switch event
+ *
+ * Calling this with (notification == nil) is the same as when the user switches back.
+ * Do not call this method in OS X 10.2.x.
+ *
+ * @param notification The notification has a name NSWorkspaceSessionDidResignActiveNotification when the user switches away and NSWorkspaceSessionDidBecomeActiveNotification when the user switches back.
+ */
 -(void)switchHandler:(NSNotification*) notification
 {
     if (notification && 
