@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.73 2004/05/19 12:20:19 adamiser Exp $
+// $Id: AIContentController.m,v 1.74 2004/05/19 12:53:38 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -419,14 +419,14 @@
 			//Create a new chat
 			chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
 			[chat addParticipatingListObject:inContact];
-			
+			[chatArray addObject:chat];
+
 			//Inform the account of its creation
 			if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
+				[chatArray removeObject:chat];
 				chat = nil;
 			}
 			
-			if (chat)
-				[chatArray addObject:chat];
 		}
 	}
 	
