@@ -27,7 +27,7 @@
 - (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/;
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
 - (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext invocation:(NSInvocation *)invocation;
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext;
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext usingLock:(NSRecursiveLock *)inLock;
 
 - (NSArray *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
 - (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSArray *)inModifiedKeys;
@@ -38,7 +38,8 @@
 
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 static NSLock				*filterCreationLock = nil;
-static NSLock				*threadedFilterLock = nil;
+static NSRecursiveLock		*mainFilterLock = nil;
+static ESExpandedRecursiveLock	*threadedFilterLock = nil;
 
 //The autorelease pool presently in use; it will be periodically released and recreated
 static NSAutoreleasePool *currentAutoreleasePool = nil;
@@ -248,7 +249,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	//Perform the filter (in the main thread)
 	attributedString = [self _filterAttributedString:attributedString
 									   contentFilter:contentFilter[type][direction]
-									   filterContext:filterContext];
+									   filterContext:filterContext
+										   usingLock:mainFilterLock];
 	
 	return (attributedString);
 }
@@ -256,18 +258,19 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 //Perform the filtering of an attributedString on the specified content filter. Pass filterContext while filtering.
 //Either thread may use this function, but no two threads should be using filters from the same content array at once.
-//The main thread should only call this method with main thread filters (from the contentFilter NSArray[][]).
-//The threaded-filtering thread should only call this method with threaded-filters (from the threadedContentFilter NSArray[][]).
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
 								  contentFilter:(NSArray *)inContentFilterArray
 								  filterContext:(id)filterContext
+									  usingLock:(NSRecursiveLock *)inLock;
 {
 	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
 	id<AIContentFilter>	filter;
 	
+	[inLock lock];
 	while((filter = [enumerator nextObject])){
 		attributedString = [filter filterAttributedString:attributedString context:filterContext];
 	}
+	[inLock unlock];
 	
 	return(attributedString);
 }
@@ -294,15 +297,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
 	[invocation retainArguments];
 
-	//Perform main thread filters
-	attributedString = [self thread_filterAttributedString:attributedString
-											 contentFilter:contentFilter[type][direction]
-											 filterContext:filterContext
-												invocation:nil];
 	//Now request the asynchronous filtering
 	[[self filterRunLoopMessenger] target:self 
-						  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
+						  performSelector:@selector(thread_filterAttributedString:contentFilter:threadedContentFilter:filterContext:invocation:) 
 							   withObject:attributedString
+							   withObject:contentFilter[type][direction]
 							   withObject:threadedContentFilter[type][direction]
 							   withObject:filterContext
 							   withObject:invocation];
@@ -325,21 +324,30 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 - (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString 
 										contentFilter:(NSArray *)inContentFilterArray
+										threadedContentFilter:(NSArray *)inThreadedContentFilterArray
 										filterContext:(id)filterContext
 										   invocation:(NSInvocation *)invocation
 {
+	
+	//Perform the main filters
+	attributedString = [self _filterAttributedString:attributedString
+									   contentFilter:inContentFilterArray
+									   filterContext:filterContext
+										   usingLock:mainFilterLock];
+	
 	/*
-	 Serves as a way to know if a filtering operation is currently in progress.
+	 Now perform the threaded-only filters.
+	 
+	 The threadedFilterLock also serves as a way to know if a filtering operation is currently in progress.
 	 Running a filter may take multiple run loops (e.g. applescript execution).
 	 It is not acceptable for our autorelease pool to be released between these loops
 	 as we have autoreleased objects upon which we are depending; we can check against the lock
-	 using tryLock (non-blocking) to know if it is safe.
-	 */
-	[threadedFilterLock lock];
+	 using isUnlocked (non-blocking) to know if it is safe.
+	 */	
 	attributedString = [self _filterAttributedString:attributedString
-									   contentFilter:inContentFilterArray
-									   filterContext:filterContext];
-	[threadedFilterLock unlock];
+									   contentFilter:inThreadedContentFilterArray
+									   filterContext:filterContext
+										   usingLock:threadedFilterLock];
 	
 	if (invocation){
 		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
@@ -369,7 +377,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 													   repeats:YES] retain];
 	
 	//Initialize the lock used to coordinate threading the main vs. the filter thread
-	threadedFilterLock = [[NSLock alloc] init];
+	threadedFilterLock = [[ESExpandedRecursiveLock alloc] init];
+	mainFilterLock = [[NSRecursiveLock alloc] init];
 	
 	//Create and configure our messenger to the filter thread (in which are at present)
 	filterRunLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
@@ -384,6 +393,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
 	[filterRunLoopMessenger release]; filterRunLoopMessenger = nil;
 	[threadedFilterLock release]; threadedFilterLock = nil;
+	[mainFilterLock release]; mainFilterLock = nil;
 	[currentAutoreleasePool release];
 }
 
@@ -392,12 +402,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 //Release the current pool, then create a new one.
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
-	if ([threadedFilterLock tryLock]){
+	if ([threadedFilterLock isUnlocked]){
 		[currentAutoreleasePool release];
 		currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
-		
-		//tryLock, if succesful, obtained the lock
-		[threadedFilterLock unlock];
 	}
 }
 
@@ -835,8 +842,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 
 	if(!chat){
+		AIAccount	*account;
+		
+		account = [targetContact account];
+		
 		//Create a new chat
-		chat = [AIChat chatForAccount:[targetContact account]];
+		chat = [AIChat chatForAccount:account];
 		[chat addParticipatingListObject:targetContact];
 		[chatArray addObject:chat];
 		
