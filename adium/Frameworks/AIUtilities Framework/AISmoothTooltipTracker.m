@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Jul 27 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AISmoothTooltipTracker.h"
@@ -15,6 +14,7 @@
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate;
 - (void)_startTrackingMouse;
 - (void)_stopTrackingMouse;
+- (void)_hideTooltip;
 @end
 
 @implementation AISmoothTooltipTracker
@@ -27,9 +27,8 @@
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate
 {
 	[super init];
-	NSLog(@"%@ _init",self);
 	
-	view = inView;
+	view = [inView retain];
 	delegate = inDelegate;
 	tooltipTrackingTag = -1;
 
@@ -49,6 +48,8 @@
 
 	[self removeCursorRect];
 	[self _stopTrackingMouse];
+
+	[view release]; view = nil;
 	
 	[super dealloc];
 }
@@ -125,9 +126,21 @@
 - (void)_stopTrackingMouse
 {
 	//Invalidate tracking
-	[tooltipMouseLocationTimer invalidate];
-	[tooltipMouseLocationTimer release];
-	tooltipMouseLocationTimer = nil;
+	if (tooltipMouseLocationTimer){
+		//Hide the tooltip before releasing the timer, as the timer may be the last object retaining self
+		//and we want to communicate with the delegate before a potential call to dealloc.
+		[self _hideTooltip];
+		
+		NSTimer	*theTimer = tooltipMouseLocationTimer;
+		tooltipMouseLocationTimer = nil;
+		
+		[theTimer invalidate];
+		[theTimer release]; theTimer = nil;
+	}
+}
+
+- (void)_hideTooltip
+{
 	tooltipCount = 0;
 	lastMouseLocation = NSMakePoint(0,0);
 	
