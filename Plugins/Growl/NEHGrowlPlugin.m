@@ -113,7 +113,7 @@
 	NSDictionary	*growlEvent;
 	
 	if(listObject){
-		if([listObject isKindOfClass:AIListContact]){
+		if([listObject isKindOfClass:[AIListContact class]]){
 			title = [listObject longDisplayName];
 		}else{
 			title = [listObject formattedUID];
