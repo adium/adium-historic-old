@@ -17,7 +17,7 @@
 	NSEnumerator    *enumerator;
 	NSMenuItem		*menuItem;
 	
-	//Grab NSTextView's default menu, copying so we don't mess effect menus elsewhere
+	//Grab NSTextView's default menu, copying so we don't affect menus elsewhere
 	contextualMenu = [[super defaultMenu] copy];
 	
 	//Retrieve the items which should be added to the bottom of the default menu
