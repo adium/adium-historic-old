@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.114 2004/05/09 16:48:28 eevyl Exp $
+$Id: ToDoList.txt,v 1.115 2004/05/09 17:58:07 evands Exp $
 
 
 Legend
@@ -29,7 +29,6 @@ Bugs
 * Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
 * Smooth operator and Elisha webkit styles incorrectly display multi-line status messages.
 * Emoticon packs flip upside down when you select them AAAHHHHAHHAHAHHHHHHHH!
-* Jabber UIDs do not include the server.
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -38,7 +37,6 @@ Contact List:
 * Adding a contact that's already online causes them to appear signed off on the list.
 * Adding buddies, sometimes they'll show up on the list twice until a restart
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
-* For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
 * When connected to an msn account with no groups or contacts, clicking the drawer button on the contact list makes the contact list window disappear.
 * Adding a contact with no groups defined crashes adium.
 * Adding a group makes the contact list window reappear.
@@ -72,6 +70,9 @@ Unconfirmed bugs
 * text to speech not working ?
 * Dragging buddies on MSN account not working
 * Contact screennames aren't appearing for all contacts when using ICQ
+
+* Jabber UIDs do not include the server.
+	- Evan: The formattedUID does.  The UID should not.
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -127,9 +128,6 @@ Other:
 -------------------------------------------------------------------------------------------------------
 Big Stuff
 -------------------------------------------------------------------------------------------------------
-
-Menu controller:
-	Improve validateMenuItem: efficiency programwide to fix hangs when dropping down menus.
 
 Contact alerts:
 	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
@@ -339,6 +337,8 @@ ced preference panes.
 = When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
 = Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
 = We are prompting for passwords on auto-reconnect like crazy.
+= Improve validateMenuItem: efficiency programwide to fix hangs when dropping down menus.
+= For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
