@@ -76,10 +76,13 @@
 										  forGroup:PREF_GROUP_SOUNDS];
     
     //Ensure the temporary mute is off
-    [[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
-                                         forKey:KEY_SOUND_TEMPORARY_MUTE
-                                          group:PREF_GROUP_SOUNDS];   
-    
+	if([[[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
+												 group:PREF_GROUP_SOUNDS] boolValue]){
+		[[adium preferenceController] setPreference:nil
+											 forKey:KEY_SOUND_TEMPORARY_MUTE
+											  group:PREF_GROUP_SOUNDS];
+	}
+
     //observe pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 }
