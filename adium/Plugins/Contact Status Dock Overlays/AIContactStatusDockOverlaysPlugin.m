@@ -15,6 +15,7 @@
 
 #import "AIContactStatusDockOverlaysPlugin.h"
 #import "AIStatusOverlayPreferences.h"
+#import "AIStatusOverlayAdvancedPreferences.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>

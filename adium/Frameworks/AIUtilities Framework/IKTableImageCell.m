@@ -16,7 +16,7 @@
     //Highlight
     if([self isHighlighted]){
         [[NSColor alternateSelectedControlColor] set];
-        [[NSBezierPath bezierPathWithRect:cellFrame roundedBy:4] fill];
+        [[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4] fill];
     }
 
     //Draw our interior

@@ -23,6 +23,7 @@
 #import "AIMessageTabViewItem.h"
 #import "AINewMessagePrompt.h"
 #import "AIDualWindowPreferences.h"
+#import "AIDualWindowAdvancedPrefs.h"
 #import "ESDualWindowMessageWindowPreferences.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 
