@@ -833,7 +833,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)setSearchString:(NSString *)inString
 {
     if(![[searchField_logs stringValue] isEqualToString:inString]){
-		[searchField_logs setStringValue:inString];
+		[searchField_logs setStringValue:(inString ? inString : @"")];
     }
     [activeSearchString release]; activeSearchString = [[searchField_logs stringValue] copy];
 }
