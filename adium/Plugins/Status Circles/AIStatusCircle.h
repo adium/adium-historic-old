@@ -33,7 +33,7 @@ typedef enum {
     NSString		*string;
     BOOL		bezeled;
     BOOL		flashColorUnique;
-
+    //NSImage 		*statusSquare;
     //Drawing Cache
     NSAttributedString	*_attributedString;
     NSSize		_attributedStringSize;

@@ -22,12 +22,12 @@
 {
     if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
     {
-        AIContentMessage *contentMessage = (AIContentMessage *)inObject;
-        NSRange meRange = [[[contentMessage message] string] rangeOfString:@"/me "];
+        AIContentMessage *inObj = (AIContentMessage *)inObject;
+        NSRange meRange = [[[inObj message] string] rangeOfString:@"/me "];
         
         if(meRange.location == 0 && meRange.length == 4)
         {
-            NSMutableAttributedString *ourMessage = [[contentMessage message] mutableCopy];
+            NSMutableAttributedString *ourMessage = [[inObj message] mutableCopy];
             
             [ourMessage replaceCharactersInRange:meRange withString:@"*"];
             
@@ -36,7 +36,7 @@
             [ourMessage appendAttributedString:splat];
             [splat release];
             
-            [contentMessage setMessage:ourMessage];
+            [inObj setMessage:ourMessage];
             [ourMessage release];
         }
     }
