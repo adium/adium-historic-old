@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.44 2004/02/28 22:38:16 evands Exp $
+// $Id: AIAccount.m,v 1.45 2004/03/05 03:04:54 evands Exp $
 
 #import "AIAccount.h"
 
@@ -92,8 +92,8 @@
 
 	[self accountUIDdidChange];
 	
-	//Broadcast an account list changed message
-    [[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+	//Save the new accounts list
+	[[adium accountController] saveAccounts];
 }
 //Subclasses may override this to make internal changes when the UID changes
 - (void)accountUIDdidChange {}
