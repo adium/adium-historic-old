@@ -4,6 +4,12 @@
 //Extensive debug logging
 #define GAIM_DEBUG  FALSE
 
+#if GAIM_DEBUG
+	#define GaimDebug NSLog
+#else
+	#define GaimDebug //
+#endif
+
 //Gaim includes
 #include <Libgaim/libgaim.h>
 
@@ -46,6 +52,6 @@ typedef enum
 	Gaim_Proxy_SOCKS4   = 3,
 	Gaim_Proxy_SOCKS5   = 4,
 	Gaim_Proxy_Default_HTTP = 5,
-	Gaim_Proxy_Default_SOCKS4 = 5,
+	Gaim_Proxy_Default_SOCKS4 = 6,
 } AdiumGaimProxyType;
 

@@ -60,7 +60,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 //	TrepiaService		= [[ESTrepiaService alloc] initWithService:self];
 	YahooService		= [[ESYahooService alloc] initWithService:self];
 	YahooJapanService	= [[ESYahooJapanService alloc] initWithService:self];
-//	MeanwhileService	= [[ESMeanwhileService alloc] initWithService:self];
+	MeanwhileService	= [[ESMeanwhileService alloc] initWithService:self];
 }
 
 - (void)uninstallPlugin
@@ -77,7 +77,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
-//	[MeanwhileService release]; MeanwhileService = nil;
+	[MeanwhileService release]; MeanwhileService = nil;
 }
 
 #pragma mark AccountDict Methods

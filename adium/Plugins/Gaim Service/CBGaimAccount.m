@@ -57,7 +57,7 @@ static id<GaimThread> gaimThread = nil;
 	//Create a gaim account if one does not already exist
 	if (!account) {
 		[self createNewGaimAccount];
-		if (GAIM_DEBUG) NSLog(@"%x: created GaimAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
+		GaimDebug (@"%x: created GaimAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
 	}
 	
     return account;
@@ -556,7 +556,7 @@ static id<GaimThread> gaimThread = nil;
 	//Clear the typing flag of the listContact
 	[self setTypingFlagOfContact:sourceContact to:NO];
 	
-	if (GAIM_DEBUG) NSLog(@"receivedIMChatMessage: Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
+	GaimDebug (@"receivedIMChatMessage: Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
 
 	[self _receivedMessage:[messageDict objectForKey:@"Message"]
 					inChat:chat 
@@ -580,7 +580,7 @@ static id<GaimThread> gaimThread = nil;
 		return;
 	}
 	
-	if (GAIM_DEBUG) NSLog(@"receivedMultiChatMessage: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
+	GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
 		
 	[self _receivedMessage:[messageDict objectForKey:@"Message"]
 					inChat:chat 
@@ -731,7 +731,7 @@ static id<GaimThread> gaimThread = nil;
 	return YES;
 }
 
-//AIM and ICQ support autoresponse messages
+// **XXX** Not used at present. Do we want to?
 - (BOOL)shouldSendAutoresponsesWhileAway
 {
 	if (account){
@@ -952,7 +952,7 @@ static id<GaimThread> gaimThread = nil;
 	if (!account) {
 		//create a gaim account if one does not already exist
 		[self createNewGaimAccount];
-		if (GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		GaimDebug (@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//We are connecting
@@ -967,11 +967,11 @@ static id<GaimThread> gaimThread = nil;
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 
-	if (GAIM_DEBUG) NSLog(@"Adium: Connect: %@ initiating connection.",[self UID]);
+	GaimDebug (@"Adium: Connect: %@ initiating connection.",[self UID]);
 
 	[gaimThread connectAccount:self];
 
-	if (GAIM_DEBUG) NSLog(@"Adium: Connect: %@ done initiating connection %x.",[self UID], account->gc);
+	GaimDebug (@"Adium: Connect: %@ done initiating connection %x.",[self UID], account->gc);
 }
 
 
@@ -1065,7 +1065,7 @@ static id<GaimThread> gaimThread = nil;
 		gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
 		gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
 		
-		if (GAIM_DEBUG) NSLog(@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+		GaimDebug (@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
 		[self continueConnectWithConfiguredProxy];
 		
@@ -1103,7 +1103,7 @@ static id<GaimThread> gaimThread = nil;
 													 selector:@selector(gotProxyServerPassword:)];
 		}else{
 			
-			if (GAIM_DEBUG) NSLog(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
+			GaimDebug (@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
 			[self continueConnectWithConfiguredProxy];
 		}
 	}
@@ -1117,7 +1117,7 @@ static id<GaimThread> gaimThread = nil;
 	if (inPassword){
 		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
 		
-		if (GAIM_DEBUG) NSLog(@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+		GaimDebug (@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
 		[self continueConnectWithConfiguredProxy];
 	}else{
@@ -1204,7 +1204,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	//We receive retained data
 	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
-	if (GAIM_DEBUG) NSLog(@"%@ disconnected: %@",[self UID],lastDisconnectionError);
+	GaimDebug (@"%@ disconnected: %@",[self UID],lastDisconnectionError);
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotifications];
@@ -1310,7 +1310,7 @@ static id<GaimThread> gaimThread = nil;
 	if(account){
 		NSData  *data;
 		
-		if(GAIM_DEBUG) NSLog(@"Updating status for key: %@",key);
+		GaimDebug (@"Updating status for key: %@",key);
 		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleSinceTo:idleSince];
@@ -1372,7 +1372,7 @@ static id<GaimThread> gaimThread = nil;
 		
 		[gaimThread setInfo:profileHTML onAccount:self];
 		
-		if(GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
+		GaimDebug (@"updating profile to %@",[profile string]);
 		
 		//We now have a profile
 		[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
@@ -1391,6 +1391,7 @@ static id<GaimThread> gaimThread = nil;
 		//image to one, and then pass libgaim the path.
 		if(image){          
 			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
+			GaimDebug (@"Original image of size %f %f",[image size].width,[image size].height);
 			if (prpl_info && (prpl_info->icon_spec.format)){
 				char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
 				int						i;
@@ -1399,8 +1400,6 @@ static id<GaimThread> gaimThread = nil;
 				NSData					*buddyIconData = nil;
 				NSSize					imageSize = [image size];
 				BOOL					acceptableSize, prplScales;
-				
-				if (GAIM_DEBUG) NSLog(@"Original image of size %f %f",imageSize.width,imageSize.height);
 				
 				/* 
 					We need to scale it down if:
@@ -1438,7 +1437,7 @@ static id<GaimThread> gaimThread = nil;
 					[newImage unlockFocus];
 					
 					image = newImage;
-					if (GAIM_DEBUG) NSLog(@"Scaled image of size %f %f",newImageSize.width,newImageSize.height);
+					GaimDebug (@"Scaled image of size %f %f",newImageSize.width,newImageSize.height);
 				}
 				
 				for (i = 0; prpl_formats[i]; i++) {
@@ -1633,7 +1632,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (NSString *)_userIconCachePath
 {    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"UserIcon_%@_%@", [self uniqueObjectID], [NSString randomStringOfLength:4]];
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self uniqueObjectID], [NSString randomStringOfLength:4]];
     return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 

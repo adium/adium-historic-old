@@ -143,7 +143,7 @@ static BOOL didInitMSN = NO;
 -(void)_setFriendlyNameTo:(NSString *)inAlias
 {
  	if (gaim_account_is_connected(account)){
-		if (GAIM_DEBUG) NSLog(@"Updating FullNameAttr to %@",inAlias);
+		GaimDebug (@"Updating FullNameAttr to %@",inAlias);
 
  		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
 		[currentFriendlyName release]; currentFriendlyName = [inAlias retain];

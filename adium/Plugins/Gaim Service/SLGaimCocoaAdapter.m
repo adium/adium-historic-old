@@ -312,7 +312,7 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 // Connection ------------------------------------------------------------------------------------------------------
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
-    if(GAIM_DEBUG) NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
+    GaimDebug (@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
 	
 	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionProgressStep:percentDone:)
@@ -322,14 +322,14 @@ static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, s
 
 static void adiumGaimConnConnected(GaimConnection *gc)
 {
-    if(GAIM_DEBUG) NSLog(@"Connected: gc=%x", gc);
+    GaimDebug (@"Connected: gc=%x", gc);
 
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionConnected)];
 }
 
 static void adiumGaimConnDisconnected(GaimConnection *gc)
 {
-    if(GAIM_DEBUG) NSLog(@"Disconnected: gc=%x", gc);
+    GaimDebug (@"Disconnected: gc=%x", gc);
 //    if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
 //        return;
     [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionDisconnected)];
@@ -337,7 +337,7 @@ static void adiumGaimConnDisconnected(GaimConnection *gc)
 
 static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
-    if(GAIM_DEBUG) NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
+    GaimDebug (@"Connection Notice: gc=%x (%s)", gc, text);
 	
 	NSString *connectionNotice = [NSString stringWithUTF8String:text];
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionNotice:)
@@ -346,7 +346,7 @@ static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 
 static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
-    if(GAIM_DEBUG) NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
+    GaimDebug (@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
 	NSString	*disconnectError = [NSString stringWithUTF8String:text];
     [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionReportDisconnect:)
@@ -690,7 +690,7 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
+	GaimDebug (@"adiumGaimConvWriteConv: %s: %s", who, message);
 }
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
@@ -710,7 +710,7 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 
 static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldName, const char *newName)
 {
-	if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatRenameUser");
+	GaimDebug (@"adiumGaimConvChatRenameUser");
 }
 
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
@@ -729,7 +729,7 @@ static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 
 static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvSetTitle");
+    GaimDebug (@"adiumGaimConvSetTitle");
 }
 
 static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
@@ -809,17 +809,17 @@ static void adiumGaimConvWindowDestroy(GaimConvWindow *win)
 
 static void adiumGaimConvWindowShow(GaimConvWindow *win)
 {
-        if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowShow");
+        GaimDebug (@"adiumGaimConvWindowShow");
 }
 
 static void adiumGaimConvWindowHide(GaimConvWindow *win)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowHide");
+    GaimDebug (@"adiumGaimConvWindowHide");
 }
 
 static void adiumGaimConvWindowRaise(GaimConvWindow *win)
 {
-	    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowRaise");
+	    GaimDebug (@"adiumGaimConvWindowRaise");
 }
 
 static void adiumGaimConvWindowFlash(GaimConvWindow *win)
@@ -828,7 +828,7 @@ static void adiumGaimConvWindowFlash(GaimConvWindow *win)
 
 static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int index)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowSwitchConv");
+    GaimDebug (@"adiumGaimConvWindowSwitchConv");
 }
 
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
@@ -849,12 +849,12 @@ static void adiumGaimConvWindowRemoveConv(GaimConvWindow *win, GaimConversation 
 
 static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *conv, unsigned int newIndex)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowMoveConv");
+    GaimDebug (@"adiumGaimConvWindowMoveConv");
 }
 
 static int adiumGaimConvWindowGetActiveIndex(const GaimConvWindow *win)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowGetActiveIndex");
+    GaimDebug (@"adiumGaimConvWindowGetActiveIndex");
     return(0);
 }
 
@@ -947,7 +947,7 @@ static void *adiumGaimNotifyUri(const char *uri)
 
 static void adiumGaimNotifyClose(GaimNotifyType type,void *uiHandle)
 {
-	if (GAIM_DEBUG) NSLog(@"adiumGaimNotifyClose");
+	GaimDebug (@"adiumGaimNotifyClose");
 }
 
 static GaimNotifyUiOps adiumGaimNotifyOps = {
@@ -1697,7 +1697,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	
 	sourceId++;
 
-	if (GAIM_DEBUG) NSLog(@"Adding for %i",sourceId);
+	GaimDebug (@"Adding for %i",sourceId);
 
 	info->rls = rls;
 	info->timer = NULL;
@@ -1723,7 +1723,7 @@ guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
-//	if (GAIM_DEBUG) NSLog(@"***SOURCE REMOVE : %i",tag);
+//	GaimDebug (@"***SOURCE REMOVE : %i",tag);
     if (sourceInfo){
 		if (sourceInfo->timer != NULL) { 
 			//Got a timer; invalidate and release
@@ -1761,7 +1761,7 @@ static void socketCallback(CFSocketRef s,
     if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
 //	if ((callbackType & kCFSocketConnectCallBack) != 0) c |= GAIM_INPUT_CONNECT;
 
-//	if (GAIM_DEBUG) NSLog(@"***SOCKETCALLBACK : %i (%i)",info->fd,c);
+//	GaimDebug (@"***SOCKETCALLBACK : %i (%i)",info->fd,c);
 	
 	if ((callbackType & kCFSocketConnectCallBack) != 0) {
 		//Got a file handle; invalidate and release the source and the socket
