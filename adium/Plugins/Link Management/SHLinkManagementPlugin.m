@@ -25,9 +25,11 @@
     [[adium menuController] addMenuItem:menu_AddLink toLocation:LOC_Edit_Bottom];
     
     //contextual menu
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
     contextMenu_AddLink = [[menu_AddLink copy] autorelease];
     [contextMenu_AddLink setKeyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:contextMenu_AddLink toLocation:Context_TextView_LinkAction];
+#endif
     
     //Edit Link... menu item (edit menu)
     menu_EditLink = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
@@ -37,9 +39,11 @@
     [[adium menuController] addMenuItem:menu_EditLink toLocation:LOC_Edit_Bottom];
     
     //context menu
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
     contextMenu_EditLink = [[menu_EditLink copy] autorelease];
     [contextMenu_EditLink setKeyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:contextMenu_EditLink toLocation:Context_TextView_LinkAction];
+#endif
     
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]]
                                           forGroup:PREF_GROUP_LINK_FAVORITES];
