@@ -855,33 +855,17 @@
 
 
 //Context menu
--(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView fromEvent:(NSEvent *)theEvent
+-(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView
 {
     AIListObject	*selectedContact = [chat listObject];
     
     if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
-        NSMenu          *menu;
-        NSArray         *menuItemArray;
-        NSEnumerator    *enumerator;
-        NSMenuItem      *menuItem;
-        menu = [[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+        return ([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
             [NSNumber numberWithInt:Context_Contact_Additions], nil]
-                                                        forContact:(AIListContact *)selectedContact];
-        
-        //get the menu items from the table view
-        menuItemArray = [tableView arrayOfMenuItemsFromEvent:theEvent];
-        if (menuItemArray && [menuItemArray count]) {
-            [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
-            enumerator = [menuItemArray reverseObjectEnumerator];
-            while (menuItem = [enumerator nextObject]) {
-                [menu insertItem:menuItem atIndex:0];
-            }
-        }
-        
-        return menu;
+                                                        forContact:(AIListContact *)selectedContact]);
     }
     return nil;
 }
