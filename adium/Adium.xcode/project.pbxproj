@@ -1302,6 +1302,123 @@
 			settings = {
 			};
 		};
+		343A7F2206935DAF00150CEC = {
+			children = (
+				343A7F2A06935DC500150CEC,
+				343A7F2B06935DC500150CEC,
+				343A7F2C06935DC500150CEC,
+				343A7F2D06935DC500150CEC,
+				343A7F2606935DB600150CEC,
+			);
+			isa = PBXGroup;
+			name = Meanwhile;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F2606935DB600150CEC = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimMeanwhileAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F2706935DB600150CEC = {
+			fileRef = 343A7F2606935DB600150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343A7F2A06935DC500150CEC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimMeanwhileAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F2B06935DC500150CEC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimMeanwhileAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F2C06935DC500150CEC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimMeanwhileAccount.m;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F2D06935DC500150CEC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimMeanwhileAccount.h;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F2E06935DC500150CEC = {
+			fileRef = 343A7F2A06935DC500150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343A7F2F06935DC500150CEC = {
+			fileRef = 343A7F2B06935DC500150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343A7F3006935DC500150CEC = {
+			fileRef = 343A7F2C06935DC500150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343A7F3106935DC500150CEC = {
+			fileRef = 343A7F2D06935DC500150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343A7F3706935DD700150CEC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESMeanwhileService.m;
+			path = "Plugins/Gaim Service/ESMeanwhileService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F3806935DD700150CEC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESMeanwhileService.h;
+			path = "Plugins/Gaim Service/ESMeanwhileService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343A7F3906935DD700150CEC = {
+			fileRef = 343A7F3706935DD700150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343A7F3A06935DD700150CEC = {
+			fileRef = 343A7F3806935DD700150CEC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		343C89B005704DEC005E0632 = {
 			children = (
 				3481DF4D05704F3300CD38D6,
@@ -1326,14 +1443,16 @@
 				3441615A059FC5340019246B,
 				34416171059FC55A0019246B,
 				34416172059FC55A0019246B,
+				343A7F3706935DD700150CEC,
+				343A7F3806935DD700150CEC,
 				344158A9059F90FA0019246B,
 				344158AA059F90FB0019246B,
-				34B919C9062DEF15004F1223,
-				34B919CA062DEF15004F1223,
 				34416165059FC5430019246B,
 				34416166059FC5430019246B,
 				34C2EA180634DB5E0018E5D2,
 				34C2EA190634DB5E0018E5D2,
+				34B919C9062DEF15004F1223,
+				34B919CA062DEF15004F1223,
 				34F142A705E95B4D00B32FD7,
 				34F142A605E95B4C00B32FD7,
 				34415B9B059FA8DF0019246B,
@@ -1356,6 +1475,7 @@
 				34415960059F94F80019246B,
 				34416060059FC2450019246B,
 				34416053059FC2270019246B,
+				343A7F2206935DAF00150CEC,
 				344159A2059F971C0019246B,
 				34416059059FC2310019246B,
 				34C2E6650634CF010018E5D2,
@@ -4429,6 +4549,7 @@
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Adium;
@@ -12565,6 +12686,9 @@
 				341E886B0648FF1B00E0C828,
 				4B090DD0065CD50D00FF0528,
 				34F59B8C0667A38D00F01E8C,
+				343A7F2F06935DC500150CEC,
+				343A7F3106935DC500150CEC,
+				343A7F3A06935DD700150CEC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12586,6 +12710,7 @@
 				3460EF8006458C3C0099922D,
 				341E886D0648FF1B00E0C828,
 				34F59BFE0667A99300F01E8C,
+				343A7F2706935DB600150CEC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12628,6 +12753,9 @@
 				341E886C0648FF1B00E0C828,
 				4B090DCF065CD50D00FF0528,
 				34F59B8D0667A38D00F01E8C,
+				343A7F2E06935DC500150CEC,
+				343A7F3006935DC500150CEC,
+				343A7F3906935DD700150CEC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
