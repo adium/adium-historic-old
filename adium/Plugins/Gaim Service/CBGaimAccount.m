@@ -1448,13 +1448,13 @@
 			gaimAccountProxyType = GAIM_PROXY_NONE;
 		}
 		
-		proxy_info->type = gaimAccountProxyType;
+		gaim_proxy_info_set_type(proxy_info, gaimAccountProxyType);
 		
-		proxy_info->host = (char *)[host UTF8String];
-		proxy_info->port = port;
+		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
+		gaim_proxy_info_set_port(proxy_info, port);
 		
-		proxy_info->username = (char *)[proxyUserName UTF8String];
-		proxy_info->password = (char *)[proxyPassword UTF8String];
+		gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
+		gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
 		
 		NSLog(@"Systemwide proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
 		
