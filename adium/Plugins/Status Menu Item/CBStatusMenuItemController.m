@@ -61,7 +61,7 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     [[adium accountController] unregisterAccountMenuPlugin:self];
     
     //Release our objects
-    //[statusItem release]; /*This crashes. I guess the system takes care of it.*/
+    [statusItem release];
     [theMenu release];
         
     //To the superclass, Robin!
