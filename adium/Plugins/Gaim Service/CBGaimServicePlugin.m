@@ -17,6 +17,7 @@
 
 @interface CBGaimServicePlugin (PRIVATE)
 - (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
+- (void)configureSignals;
 @end
 
 /*
@@ -157,7 +158,7 @@ static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *user
     NSLog(@"adiumGaimBlistRequestAddBuddy");
 }
 
-static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group)
+static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias)
 {
     NSLog(@"adiumGaimBlistRequestAddChat");
 }
@@ -179,6 +180,78 @@ static GaimBlistUiOps adiumGaimBlistOps = {
     adiumGaimBlistRequestAddChat,
     adiumGaimBlistRequestAddGroup
 };
+
+#pragma mark Signals
+// Signals ------------------------------------------------------------------------------------------------------
+static void *gaim_adium_get_handle(void)
+{
+	static int adium_gaim_handle;
+	
+	return &adium_gaim_handle;
+}
+
+static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
+{
+	if (buddy)
+		[accountLookup(buddy->account) accountUpdateBuddy:buddy forEvent:event];
+}
+
+- (void)configureSignals
+{
+	void *blist_handle = gaim_blist_get_handle();
+	void *handle       = gaim_adium_get_handle();
+
+	//Idle
+	gaim_signal_connect(blist_handle, "buddy-idle",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
+	gaim_signal_connect(blist_handle, "buddy-unidle",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_IDLE_RETURN));
+	
+	//Status
+	gaim_signal_connect(blist_handle, "buddy-away",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_AWAY));
+	gaim_signal_connect(blist_handle, "buddy-back",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_AWAY_RETURN));
+	gaim_signal_connect(blist_handle, "buddy-status-message",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_STATUS_MESSAGE));
+	
+	//Info updated
+	gaim_signal_connect(blist_handle, "buddy-info",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_INFO_UPDATED));
+	
+	//Icon
+	gaim_signal_connect(blist_handle, "buddy-icon",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_ICON));
+
+	//Evil
+	gaim_signal_connect(blist_handle, "buddy-evil",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_EVIL));
+	
+	
+	//Miscellaneous
+	gaim_signal_connect(blist_handle, "buddy-miscellaneous",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));
+	
+	
+	gaim_signal_connect(blist_handle, "buddy-signed-on",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
+	gaim_signal_connect(blist_handle, "buddy-signon",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));
+	gaim_signal_connect(blist_handle, "buddy-signed-off",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));
+}
 
 #pragma mark Conversation
 // Conversation ------------------------------------------------------------------------------------------------------
@@ -253,7 +326,6 @@ static GaimConversationUiOps adiumGaimConversationOps = {
     adiumGaimConvChatRenameUser,
     adiumGaimConvChatRemoveUser,
     adiumGaimConvChatRemoveUsers,
-    adiumGaimConvSetTitle,
     adiumGaimConvUpdateProgress,
     adiumGaimConvUpdated
 };
@@ -357,12 +429,6 @@ static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char *
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb, void *userData)
 {
-	//called on incoming profile
-	//Primary = "Buddy Information", text = HTML from info page.
-	//No association with an account.
-    //Values passed can be null
-    NSLog(@"adiumGaimNotifyFormatted");
-	if(text) NSLog(@"%s",text);
     return(nil);
 }
 
@@ -650,6 +716,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     //Typing preference!
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
         
+	[self configureSignals];
+		
     //Install the libgaim event loop timer
     [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL 
                                      target:self
@@ -668,6 +736,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)uninstallPlugin
 {
+	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
+	
     [_accountDict release];
     _accountDict = nil;
     
