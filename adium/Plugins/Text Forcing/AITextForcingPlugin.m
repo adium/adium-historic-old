@@ -51,47 +51,28 @@
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    NSMutableAttributedString   *message = nil;
-    if (inAttributedString) {
-        NSRange                         range=NSMakeRange(0, [message length]);
-        if (range.length) {
-            if(forceFont){
-                if (!message)
-                    message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
-                
-                [message addAttribute:NSFontAttributeName value:force_desiredFont range:range];
-            }
-            if(forceText){
-                if (!message)
-                    message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
-                
-                [message addAttribute:NSForegroundColorAttributeName value:force_desiredTextColor range:range];
-            }
-            if(forceBackground){
-                if (!message)
-                    message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
-                
-                //Add the forced body color
-                [message addAttribute:AIBodyColorAttributeName value:force_desiredBackgroundColor range:range];
-                //Remove any 'sub-background' colors
-                [message removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [message length])];
-                
-            } else {
-                NSRange backRange;
-                NSColor *bodyColor = [message attribute:NSBackgroundColorAttributeName atIndex:0 effectiveRange:&backRange];
-                if (bodyColor && (backRange.length == range.length)) {
-                    if (!message)
-                        message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
-                    
-                    //Add the body color
-                    [message addAttribute:AIBodyColorAttributeName value:bodyColor range:range];
-                    //Remove any 'sub-background' colors
-                    [message removeAttribute:NSBackgroundColorAttributeName range:range];
-                }
-            }
-        }
-    }
-    return (message ? message : inAttributedString);
+	if(forceFont || forceText || forceBackground){
+		if(inAttributedString && [inAttributedString length]){
+			NSMutableAttributedString	*message = [[inAttributedString mutableCopy] autorelease];
+			NSRange						range = NSMakeRange(0, [message length]);
+			
+			if(forceFont){
+				[message addAttribute:NSFontAttributeName value:force_desiredFont range:range];
+			}
+			if(forceText){
+				[message addAttribute:NSForegroundColorAttributeName value:force_desiredTextColor range:range];
+			}
+			if(forceBackground){
+				//Add the forced body color and remove any 'sub-background' colors
+				[message addAttribute:AIBodyColorAttributeName value:force_desiredBackgroundColor range:range];
+				[message removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [message length])];
+			}
+			
+			return(message);
+		}
+	}
+	
+	return(inAttributedString);
 }    
 
 - (void)preferencesChanged:(NSNotification *)notification
