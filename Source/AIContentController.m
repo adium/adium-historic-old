@@ -410,7 +410,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 #pragma mark Messaging
-//Add an incoming content object
+//Receiving step 1: Add an incoming content object - entry point
 - (void)receiveContentObject:(AIContentObject *)inObject
 {
     AIChat			*chat = [inObject chat];
@@ -440,6 +440,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     }
 }
 
+//Receiving step 2: filtering callback
 - (void)didFilterAttributedString:(NSAttributedString *)filteredMessage receivingContext:(AIContentObject *)inObject
 {
 	[inObject setMessage:filteredMessage];
@@ -447,6 +448,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[self finishReceiveContentObject:inObject];
 }
 
+//Receiving step 3: Display the content
 - (void)finishReceiveContentObject:(AIContentObject *)inObject
 {
 	//Display the content
@@ -458,7 +460,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 }
 
-//Send a content object
+//Sending step 1: Entry point for any method in Adium which sends content
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
     //Run the object through our outgoing content filters
@@ -479,6 +481,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return YES;
 }
 
+//Sending step 2: Sending filter callback
 -(void)didFilterAttributedString:(NSAttributedString *)filteredString contentSendingContext:(AIContentObject *)inObject
 {
 	[inObject setMessage:filteredString];
@@ -497,6 +500,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 }
 
+//Sending step 3, applicable only when sending an autreply: Filter callback
 -(void)didFilterAttributedString:(NSAttributedString *)filteredString autoreplySendingContext:(AIContentObject *)inObject
 {
 	[inObject setMessage:filteredString];
@@ -504,6 +508,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[self finishSendContentObject:inObject];
 }
 
+//Sending step 4: Post notifications and ask the account to actually send the content.
+//The account is responsible for invoking step 5 which will lead to the actual display.
 - (void)finishSendContentObject:(AIContentObject *)inObject
 {
     AIChat		*chat = [inObject chat];
@@ -518,11 +524,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     //Send the object
 	if ([inObject sendContent]){
 		if([[inObject source] sendContentObject:inObject]){
-			if([inObject displayContent]){
-				//Add the object
-				[self displayContentObject:inObject];
-			}
-			
 			if([inObject trackContent]){
 				//Did send content
 				[[owner notificationCenter] postNotificationName:Content_DidSendContent 
@@ -541,6 +542,15 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 	
 //    return(sent);
+}
+
+//Step 5: Invoked by the account when the object has been sent
+- (void)didSendContentObject:(AIContentObject *)inObject
+{
+	if([inObject displayContent]){
+		//Add the object
+		[self displayContentObject:inObject];
+	}
 }
 
 //Display a content object

@@ -35,7 +35,8 @@
 
 - (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
 
-- (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
+- (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
+- (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (NSString *)_processGaimImagesInString:(NSString *)inString;
 - (NSString *)_handleFileSendsWithinMessage:(NSString *)encodedMessage toContact:(AIListContact *)listContact;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
@@ -667,110 +668,108 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact;
+	NSAttributedString		*attributedMessage;
+	AIListContact			*listContact;
+	NSDate					*date;
+	
+	attributedMessage = [messageDict objectForKey:@"AttributedMessage"];
+	listContact = [chat listObject];
+	date = [messageDict objectForKey:@"Date"];
 	
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-        // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
-		// until we get this notification.
+        //Gaim is telling us that our message was sent successfully.		
+
+		[self _sentMessage:attributedMessage
+					inChat:chat
+  toDestinationListContact:listContact
+					 flags:flags
+					  date:date];
 		
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
-		AILog(@"Sent %@",[messageDict objectForKey:@"Message"]);
-        return;
-    }
-
-	sourceContact = (AIListContact*) [chat listObject];
-	
-	//Clear the typing flag of the chat since a message was just received
-	[self setTypingFlagOfChat:chat to:nil];
-	
-	GaimDebug (@"receivedIMChatMessage: Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
-
-	[self _receivedMessage:[messageDict objectForKey:@"Message"]
-					inChat:chat 
-		   fromListContact:sourceContact 
-					 flags:flags
-					  date:[messageDict objectForKey:@"Date"]];
+    }else{
+		
+		//Clear the typing flag of the chat since a message was just received
+		[self setTypingFlagOfChat:chat to:nil];
+		
+		[self _receivedMessage:attributedMessage
+						inChat:chat 
+			   fromListContact:listContact
+						 flags:flags
+						  date:date];
+	}
 }
 
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
-	GaimMessageFlags	flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	NSString			*source = [messageDict objectForKey:@"Source"];
-
+	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	NSAttributedString		*attributedMessage;
+	NSDate					*date;
+	
+	attributedMessage = [messageDict objectForKey:@"AttributedMessage"];
+	date = [messageDict objectForKey:@"Date"];
+	
 	if ((flags & GAIM_MESSAGE_SEND) != 0){
-		/*
-		 * TODO
-		 * gaim is telling us that our message was sent successfully. Some
-		 * day, we should avoid claiming it was until we get this
-		 * notification.
-		 */
+        //Gaim is telling us that our message was sent successfully.		
 		
+		[self _sentMessage:attributedMessage
+					inChat:chat
+  toDestinationListContact:nil
+					 flags:flags
+					  date:date];
+
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
 		
-		return;
-	}
-	
-	//We display the message locally when it is sent.  If the protocol sends the message back to us, we should
-	//simply ignore it (MSN does this when a display name is set, for example).
-	if (![source isEqualToString:[self UID]]){
-		AIListContact		*sourceContact = [self _contactWithUID:source];
-		
-		GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
-		
-		[self _receivedMessage:[messageDict objectForKey:@"Message"]
-						inChat:chat 
-			   fromListContact:sourceContact 
-						 flags:flags
-						  date:[messageDict objectForKey:@"Date"]];
+	}else{
+		NSString			*source = [messageDict objectForKey:@"Source"];
+
+		//We display the message locally when it is sent.  If the protocol sends the message back to us, we should
+		//simply ignore it (MSN does this when a display name is set, for example).
+		if (![source isEqualToString:[self UID]]){
+			AIListContact	*listContact;
+			
+			listContact = [self _contactWithUID:source];
+			GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[attributedMessage string],[listContact UID],[chat name]);
+			
+			[self _receivedMessage:attributedMessage
+							inChat:chat 
+				   fromListContact:listContact
+							 flags:flags
+							  date:date];
+		}
 	}
 }
 
-- (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
+- (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
 {		
 	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
 														   withSource:sourceContact
 														  destination:self
 																 date:date
-															  message:[AIHTMLDecoder decodeHTML:message]
+															  message:attributedMessage
 															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
 	
 	[[adium contentController] receiveContentObject:messageObject];
 }
 
-#pragma mark GaimConversation User Lists
-- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+- (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date
 {
-	if (chat){
-		AIListContact *contact = [self _contactWithUID:contactName];
-		
-		if (!namesAreCaseSensitive){
-			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
-		}
-		
-		[chat addParticipatingListObject:contact];
-		
-		GaimDebug (@"added user %@ in conversation %@",contactName,[chat name]);
-	}	
-}
-- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
-{
-	GaimDebug (@"added a whole list!");
-}
-- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
-{
-	if (chat){
-		AIListContact	*contact = [self _contactWithUID:contactName];
-		
-		[chat removeParticipatingListObject:contact];
-		
-		GaimDebug (@"removed user %@ in conversation %@",contactName,[chat name]);
-	}	
-}
-- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
-{
-	GaimDebug (@"removed a whole list!");
+	NSString			*attributedMessageString = [attributedMessage string];
+	AIContentMessage	*messageObject = [AIContentMessage messageInChat:chat
+															  withSource:self
+															 destination:destinationContact
+																	date:date
+																 message:attributedMessage
+															   autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
+	
+	//Set the shouldDisplay flag if needed
+	if ([shouldDisplayDict objectForKey:attributedMessageString]){
+		[messageObject setDisplayContent:[[shouldDisplayDict objectForKey:attributedMessageString] boolValue]];
+		[shouldDisplayDict removeObjectForKey:attributedMessageString];
+	}
+	
+	[[adium contentController] didSendContentObject:messageObject];
 }
 
 /*********************/
@@ -806,8 +805,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					
 					if (operativeRange.location > 0){
 						NSAttributedString  *thisPart;
+						NSString			*thisPartString;
 						
 						thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
+						thisPartString = [thisPart string];
+						
 						encodedMessage = [self encodedAttributedString:thisPart
 														 forListObject:listObject
 														contentMessage:contentMessage];
@@ -821,8 +823,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							}
 							
 							AILog(@"sendContentObject: %@",encodedMessage);
+							//If the object shouldn't display, track it so we know when we get confirmation of its sending
+							//that we shouldn't attempt to display it
+							if (![object displayContent]){
+								[shouldDisplayDict setObject:[NSNumber numberWithBool:NO]
+													  forKey:thisPartString];
+							}
+
 							[gaimThread sendEncodedMessage:encodedMessage
-										   originalMessage:[thisPart string]
+										   originalMessage:thisPartString
 											   fromAccount:self
 													inChat:chat
 												 withFlags:flags];
@@ -840,6 +849,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 												 forListObject:listObject
 												contentMessage:contentMessage];
 				if (encodedMessage){
+					NSString	*messageString;
+					
 					//Check for the AdiumFT tag indicating an embedded file transfer.
 					//Only deal with scanning deeper if it's found.
 					if ([encodedMessage rangeOfString:@"<AdiumFT "
@@ -849,8 +860,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					}
 					
 					AILog(@"sendContentObject: %@",encodedMessage);
+					messageString = [message string];
+					
+					//If the object shouldn't display, track it so we know when we get confirmation of its sending
+					//that we shouldn't attempt to display it
+					if (![object displayContent]){
+						[shouldDisplayDict setObject:[NSNumber numberWithBool:NO]
+											  forKey:messageString];
+					}
+					
 					[gaimThread sendEncodedMessage:encodedMessage
-								   originalMessage:[message string]
+								   originalMessage:messageString
 									   fromAccount:self
 											inChat:chat
 										 withFlags:flags];
@@ -967,6 +987,40 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	return NO;
+}
+
+#pragma mark GaimConversation User Lists
+- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+{
+	if (chat){
+		AIListContact *contact = [self _contactWithUID:contactName];
+		
+		if (!namesAreCaseSensitive){
+			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+		}
+		
+		[chat addParticipatingListObject:contact];
+		
+		GaimDebug (@"added user %@ in conversation %@",contactName,[chat name]);
+	}	
+}
+- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
+{
+	GaimDebug (@"added a whole list!");
+}
+- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
+{
+	if (chat){
+		AIListContact	*contact = [self _contactWithUID:contactName];
+		
+		[chat removeParticipatingListObject:contact];
+		
+		GaimDebug (@"removed user %@ in conversation %@",contactName,[chat name]);
+	}	
+}
+- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
+{
+	GaimDebug (@"removed a whole list!");
 }
 
 /*********************/
@@ -1830,6 +1884,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)initAccount
 {
     chatDict = [[NSMutableDictionary alloc] init];
+	shouldDisplayDict = [[NSMutableDictionary alloc] init];
+
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 	lastDisconnectionError = nil;
 	

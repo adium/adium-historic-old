@@ -37,6 +37,8 @@
 	NSMutableArray		*deniedContactsArray;
 	
 	BOOL				inDealloc;
+	
+	NSMutableDictionary	*shouldDisplayDict;
 }
 
 - (const char*)protocolPlugin;

@@ -826,7 +826,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 
 	messageString = [NSString stringWithUTF8String:message];
 	
-	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
+	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
 		[NSString stringWithUTF8String:who],@"Source",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
@@ -841,21 +841,25 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 	NSDictionary			*messageDict;
 	NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
 	NSString				*messageString;
+	AIChat					*chat;
 	
 	messageString = [NSString stringWithUTF8String:message];
+	chat = imChatLookupFromConv(conv);
 	
+	GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@",messageString,[[chat listObject] UID]);
+
 	//Process any gaim imgstore references into real HTML tags pointing to real images
 	if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
 		messageString = [myself _processGaimImagesInString:messageString forAdiumAccount:adiumAccount];
 	}
-	
-	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
+
+	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 	
 	[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
 						   withObject:messageDict
-						   withObject:imChatLookupFromConv(conv)];
+						   withObject:chat];
 }
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
@@ -2101,6 +2105,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		//cmd+1 will be the cmd without the leading character, which should be "/"
 		markup = gaim_escape_html(cmd+1);
 		status = gaim_cmd_do_command(conv, cmd+1, markup, &error);
+		AILog(@"Command status is %i",status);
 		g_free(markup);
 
 		switch (status) {
