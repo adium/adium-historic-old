@@ -50,8 +50,8 @@
 	//Configure Table view
 	[tableView_accounts setDrawsAlternatingRows:YES];
 	[tableView_accounts setAcceptsFirstMouse:YES];
-	[[[tableView_accounts tableColumnWithIdentifier:@"account"] headerCell] setLocalizedString:AILocalizedString(@"On Account",nil)];
-	[[[tableView_accounts tableColumnWithIdentifier:@"group"] headerCell] setLocalizedString:AILocalizedString(@"In Group",nil)];
+	[[[tableView_accounts tableColumnWithIdentifier:@"account"] headerCell] setTitle:AILocalizedString(@"On Account",nil)];
+	[[[tableView_accounts tableColumnWithIdentifier:@"group"] headerCell] setTitle:AILocalizedString(@"In Group",nil)];
 
 	//Observe contact list changes
 	[[adium notificationCenter] addObserver:self
