@@ -91,7 +91,7 @@
 				
 				//Apply the values 
 				NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
-				if (!oldValue || ![oldValue isEqualToString:displayName]) {
+				if (!oldValue || [oldValue isEqualToString:displayName]) {
 					[[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
 				}
@@ -268,6 +268,7 @@
 					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithServiceID:serviceID] objectEnumerator];
 					AIAccount		*account;
 					
+					#warning Jorge: This is not enumerating at all, hence the AB integration for the "me" card is not working. No idea why
 					//Look at each account on this service, searching for one a matching UID
 					while (account = [accountsArray nextObject]){
 						//An ABPerson may have multiple names on a given service; iterate through them
@@ -279,7 +280,8 @@
 							if ([[account UID] isEqualToString:[[names valueAtIndex:i] compactedString]]){
 								[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
 																			  withOwner:self
-																		  priorityLevel:Low_Priority];	
+																		  priorityLevel:Low_Priority];
+								
 							}
 						}
 					}
