@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# $Id: make_logfile.pl,v 1.2 2003/12/08 04:15:55 jmelloy Exp $
+
 use warnings;
 use strict;
 
