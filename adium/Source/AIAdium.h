@@ -598,6 +598,7 @@ typedef enum {
     NSTimer			*bounceTimer;
     
     NSMutableDictionary		*availableIconStateDict;
+    NSMutableDictionary		*availableDynamicIconStateDict;
     NSMutableArray		*activeIconStateArray;
     AIIconState			*currentIconState;
     
@@ -607,13 +608,13 @@ typedef enum {
 }
 
 //Icon animation & states
-- (AIIconState *)setIconStateNamed:(NSString *)inName;
-- (void)setIconState:(AIIconState *)iconState;
-- (void)removeIconState:(AIIconState *)inState;
+- (void)setIconStateNamed:(NSString *)inName;
+- (void)removeIconStateNamed:(NSString *)inName;
+- (void)setIconState:(AIIconState *)iconState named:(NSString *)inName;
 - (float)dockIconScale;
 
 //Special access to icon pack loading
-- (NSDictionary *)iconPackAtPath:(NSString *)folderPath;
+- (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath;
 
 //Bouncing & behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;

@@ -27,12 +27,6 @@
 
 - (void)installPlugin
 {
-    //Init
-    onlineState = nil;
-    awayState = nil;
-    idleState = nil;
-    connectingState = nil;
-
     //Observe account status changed notification
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
@@ -84,16 +78,17 @@
             }
         }
         //Online
-        if(onlineAccounts && (notification == nil || !onlineState)) {            onlineState = [[owner dockController] setIconStateNamed:@"Online"];
-        }else if(!onlineAccounts && onlineState){
-            [[owner dockController] removeIconState:onlineState]; onlineState = nil;
+        if(onlineAccounts || notification == nil){
+            [[owner dockController] setIconStateNamed:@"Online"];
+        }else{
+            [[owner dockController] removeIconStateNamed:@"Online"];
         }
 
         //Connecting
-        if(connectingAccounts && !connectingState){
-            connectingState = [[owner dockController] setIconStateNamed:@"Connecting"];
-        }else if(!connectingAccounts && connectingState){
-            [[owner dockController] removeIconState:connectingState]; connectingState = nil;
+        if(connectingAccounts){
+            [[owner dockController] setIconStateNamed:@"Connecting"];
+        }else{
+            [[owner dockController] removeIconStateNamed:@"Connecting"];
         }
 
     }
@@ -102,27 +97,24 @@
         if(changedAccount == nil){ //Global status change
             BOOL away = ([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil);
 
-            if(away && !awayState){
-                awayState = [[owner dockController] setIconStateNamed:@"Away"];
-            }else if(!away && awayState){
-                [[owner dockController] removeIconState:awayState]; awayState = nil;
+            if(away){
+                [[owner dockController] setIconStateNamed:@"Away"];
+            }else{
+                [[owner dockController] removeIconStateNamed:@"Away"];
             }
 
         }
 
     }
-
+    
     if(notification == nil || [key compare:@"IdleSince"] == 0){
         if(changedAccount == nil){ //Global status change
             BOOL idle = ([[owner accountController] propertyForKey:@"IdleSince" account:nil] != nil);
 
-            if(idle && !idleState){
-                idleState = [[owner dockController] setIconStateNamed:@"Idle"];
-
-            }else if(!idle && idleState){
-                [[owner dockController] removeIconState:idleState];
-                idleState = nil;
-
+            if(idle){
+                [[owner dockController] setIconStateNamed:@"Idle"];
+            }else{
+                [[owner dockController] removeIconStateNamed:@"Idle"];
             }
 
         }

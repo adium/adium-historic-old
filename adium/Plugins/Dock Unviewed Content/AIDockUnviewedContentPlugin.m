@@ -25,7 +25,7 @@
 {
     //init
     unviewedObjectsArray = [[NSMutableArray alloc] init];
-    unviewedState = nil;
+    unviewedState = NO;
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
     [[owner contactController] registerListObjectObserver:self];
@@ -43,8 +43,9 @@
     if([inModifiedKeys containsObject:@"UnviewedContent"]){
         if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
             //If this is the first contact with unviewed content, animate the dock
-            if(unviewedState == nil){
-                unviewedState = [[[owner dockController] setIconStateNamed:@"Alert"] retain];
+            if(!unviewedState){
+                [[owner dockController] setIconStateNamed:@"Alert"];
+                unviewedState = YES;
             }
 
             [unviewedObjectsArray addObject:inObject];
@@ -54,9 +55,9 @@
                 [unviewedObjectsArray removeObject:inObject];
 
                 //If there are no more contacts with unviewed content, stop animating the dock
-                if([unviewedObjectsArray count] == 0 && unviewedState != nil){
-                    [[owner dockController] removeIconState:unviewedState];
-                    [unviewedState release]; unviewedState = nil;
+                if([unviewedObjectsArray count] == 0 && unviewedState){
+                    [[owner dockController] removeIconStateNamed:@"Alert"];
+                    unviewedState = NO;
                 }
             }
         }

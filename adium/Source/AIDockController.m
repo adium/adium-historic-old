@@ -36,7 +36,8 @@
 - (void)initController
 {
     //init
-    activeIconStateArray = nil;
+    activeIconStateArray = [[NSMutableArray alloc] initWithObjects:@"Base",nil];
+    availableDynamicIconStateDict = [[NSMutableDictionary alloc] init];
     currentIconState = nil;
     currentAttentionRequest = -1;
     animationTimer = nil;
@@ -57,43 +58,40 @@
 {
     NSArray		*stateArrayCopy;
     NSEnumerator	*enumerator;
-    AIIconState		*iconState;
+    NSString		*iconState;
 
     //Reset our icon by removing all icon states (except for the base state)
     stateArrayCopy = [[activeIconStateArray copy] autorelease]; //Work with a copy, since this array will change as we remove states
     enumerator = [stateArrayCopy objectEnumerator];
     [enumerator nextObject]; //Skip the first icon
     while(iconState = [enumerator nextObject]){
-        [self removeIconState:iconState];
+        [self removeIconStateNamed:iconState];
     }
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
-        NSLog(@"prefs changed in Dock Controller");
+        NSDictionary 		*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+        NSMutableDictionary	*newAvailableIconStateDict;
+        NSString		*iconPath;
         
-        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-        NSString	*iconPath;
-
-        //Take down the current icon
-        [activeIconStateArray release]; activeIconStateArray = [[NSMutableArray alloc] init];
-        [availableIconStateDict release]; availableIconStateDict = nil;
-
-        //Configure the dock icon
+        //Load the new icon pack
         iconPath = [self _pathOfIconPackWithName:[preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
         if(iconPath){
-            availableIconStateDict = [[self iconPackAtPath:iconPath] retain];
+            if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
+                [availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
+            }
         }
-        //Composite the new icon
-        [self setIconStateNamed:@"Base"];
+
+        //Recomposite the icon
         [self _buildIcon];
     }
 }
 
 //Icons ------------------------------------------------------------------------------------
 //Load an icon pack
-- (NSDictionary *)iconPackAtPath:(NSString *)folderPath
+- (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath
 {
     NSMutableDictionary	*iconStateDict = [[[NSMutableDictionary alloc] init] autorelease];
     AIIconState		*iconState;
@@ -148,7 +146,6 @@
                 NSLog(@"Invalid animated icon state (%@)",stateNameKey);
             }
             
-            
         }else{ //Static State
             NSString	*imagePath;
             NSImage	*image;
@@ -169,41 +166,32 @@
         }
     }
 
-    return([NSDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
+    return([NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
 }
 
-//Sets an icon state from the current icon pack.  If the state is already set or doesn't exist, nothing happens.
-- (AIIconState *)setIconStateNamed:(NSString *)inName
+//Set an icon state from our currently loaded icon pack
+- (void)setIconStateNamed:(NSString *)inName
 {
-    AIIconState	*iconState = [[availableIconStateDict objectForKey:@"State"] objectForKey:inName];
-
-    [self setIconState:iconState];
-
-    return(iconState);
-}
-
-//Sets a dynamically created icon state
-- (void)setIconState:(AIIconState *)iconState
-{
-    if(iconState && ![activeIconStateArray containsObject:iconState]){ //Ignore duplicates and missing states
-                                                                       //Keep track of it
-        [activeIconStateArray addObject:iconState];
-
-        //Rebuild our icon to incorporate the new state
-        [self _buildIcon];
+    if(![activeIconStateArray containsObject:inName]){
+        [activeIconStateArray addObject:inName]; 	//Add the name to our array
+        [self _buildIcon];				//Rebuild our icon
     }
 }
 
-//Removes an active icon state
-- (void)removeIconState:(AIIconState *)inState
+//Remove an active icon state
+- (void)removeIconStateNamed:(NSString *)inName
 {
-    if([activeIconStateArray containsObject:inState]){
-        //Remove the state
-        [activeIconStateArray removeObject:inState];
-
-        //Rebuild our icon to remove any instances of the state
-        [self _buildIcon];
+    if([activeIconStateArray containsObject:inName]){
+        [activeIconStateArray removeObject:inName]; 	//Remove the name from our array
+        [self _buildIcon];				//Rebuild our icon
     }
+}
+
+//Set a custom icon state
+- (void)setIconState:(AIIconState *)iconState named:(NSString *)inName
+{
+    [availableDynamicIconStateDict setObject:iconState forKey:inName]; 	//Add the new state to our available dict
+    [self setIconStateNamed:inName];					//Set it
 }
 
 //Scan for an icon pack with the specified name
@@ -214,8 +202,7 @@
     NSString			*filePath;
     int					curPath;
 
-    for (curPath = 0; curPath < 2; curPath ++)
-    {
+    for (curPath = 0; curPath < 2; curPath ++){
         //
         if (curPath == 0)
             iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
@@ -239,16 +226,31 @@
 //Build/Pre-render the icon images, start/stop animation
 - (void)_buildIcon
 {
+    NSMutableArray	*iconStates = [NSMutableArray array];
+    NSDictionary	*availableIcons;
+    NSEnumerator	*enumerator;
+    AIIconState		*state;
+    NSString		*name;
+
     //Stop any existing animation
     [animationTimer invalidate]; [animationTimer release]; animationTimer = nil;
     if(observingFlash){
         [[owner interfaceController] unregisterFlashObserver:self];
         observingFlash = NO;
     }
-    
+
+    //Build an array of the valid active icon states
+    availableIcons = [availableIconStateDict objectForKey:@"State"];
+    enumerator = [activeIconStateArray objectEnumerator];
+    while(name = [enumerator nextObject]){
+        if((state = [availableIcons objectForKey:name]) || (state = [availableDynamicIconStateDict objectForKey:name])){
+            [iconStates addObject:state];
+        }
+    }
+
     //Generate the composited icon state
     [currentIconState release];
-    currentIconState = [[AIIconState alloc] initByCompositingStates:activeIconStateArray];
+    currentIconState = [[AIIconState alloc] initByCompositingStates:iconStates];
 
     //
     if(![currentIconState animated]){ //Static icon

@@ -122,7 +122,7 @@
 {
     //Remove & release the current overlay state
     if(overlayState){
-        [[owner dockController] removeIconState:overlayState];
+        [[owner dockController] removeIconStateNamed:@"ContactStatusOverlay"];
         [overlayState release]; overlayState = nil;
     }
 
@@ -133,7 +133,7 @@
 
         //Set the state
         overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:image1,image2,nil] delay:0.5 looping:YES overlay:YES];
-        [[owner dockController] setIconState:overlayState];
+        [[owner dockController] setIconState:overlayState named:@"ContactStatusOverlay"];
     }   
 }
 
