@@ -253,28 +253,18 @@ static BOOL didInitOscar = NO;
 
 - (NSString *)connectionStringForStep:(int)step
 {
-	switch (step)
-	{
-		case 0:
-			return AILocalizedString(@"Connecting",nil);
-			break;
-		case 1:
-			return AILocalizedString(@"Screen name sent",nil);
-			break;
-		case 2:
-			return AILocalizedString(@"Password sent",nil);
-			break;			
-		case 3:
-			return AILocalizedString(@"Received authorization",nil);
-			break;
-		case 4:
-			return AILocalizedString(@"Connection established",nil);
-			break;
-		case 5:
-			return AILocalizedString(@"Finalizing connection",nil);
-			break;
-	}
-	return nil;
+	static NSString *steps[] = {
+		@"Connecting",
+		@"Screen name sent",
+		@"Password sent",
+		@"Received authorization",
+		@"Connection established",
+		@"Finalizing connection",
+	};
+	if(step < 0 || step > 5)
+		return nil;
+	else
+		return AILocalizedString(steps[step], /*comment*/ nil);
 }
 
 - (NSString *)hostKey
