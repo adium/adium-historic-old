@@ -297,10 +297,7 @@
     switch (type) {
         case GAIM_CONV_UPDATE_TYPING:
             {
-                NSNumber *typing = [NSNumber numberWithBool:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
-                NSLog(@"Changing typing state to %@", typing);
-                [[handle statusDictionary] setObject:typing forKey:@"Typing"];
-                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
+                [self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
             }
             break;
         default:
@@ -312,6 +309,19 @@
             break;
     }
 }
+
+- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing
+{
+    BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
+    
+    if((typing && !currentValue) || (!typing && currentValue)){
+        NSLog(@"Changing typing state to %@", typing);
+
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
+    }
+}
+
 
 - (void)accountConvReceivedIM: (const char*)message inConversation:(GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
 {
@@ -340,6 +350,10 @@
     } else  {
         NSAssert(handle != nil, @"Existing chat yet no existing handle?");
     }
+    
+    //clear the typing flag
+    [self setTypingFlagOfHandle:handle to:NO];
+    
     NSAttributedString *body = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String: message]];
     AIContentMessage *messageObject =
         [AIContentMessage messageInChat:chat
