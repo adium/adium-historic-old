@@ -80,6 +80,11 @@
     return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
 }
 
+- (NSString *)formattedDisplayName
+{
+    return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
+}
+
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
 {
     AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];

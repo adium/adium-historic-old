@@ -117,4 +117,22 @@
     return(outName);
 }
 
+- (NSString *)formattedDisplayName
+{
+    AIMutableOwnerArray * formattedNameArray;
+    NSString *outName;
+
+    formattedNameArray = [self displayArrayForKey:@"Formatted Display Name"];
+    if (formattedNameArray && [formattedNameArray count])
+    {
+        outName = [formattedNameArray objectAtIndex:0];
+    }
+    else
+    {
+        outName = UID;
+    }
+ //   NSLog(@"formatted display name is %@",outName);
+    return (outName);
+}
+
 @end
