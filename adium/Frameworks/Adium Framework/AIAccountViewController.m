@@ -146,4 +146,9 @@
     }
 }
 
+- (void)saveFieldsImmediately
+{
+	[self changedPreference:textField_password];
+}
+
 @end
