@@ -131,7 +131,7 @@
     if(autoHideScrollBar){
         [self setCorrectScrollbarVisibility];
     }
-    if (updateShadowsWhileScrolling){
+    if(updateShadowsWhileScrolling){
         [[self window] compatibleInvalidateShadow];
     }
 }
