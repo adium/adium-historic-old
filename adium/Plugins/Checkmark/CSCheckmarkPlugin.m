@@ -24,6 +24,9 @@
     
     [self preferencesChanged:nil];
     
+	//Register our default preferences
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CHECKMARK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CHECKMARK];
+	
     //Our preference view
     checkmarkPreferences = [[CSCheckmarkPreferences checkmarkPreferences] retain];
     [[adium contactController] registerListObjectObserver:self];
