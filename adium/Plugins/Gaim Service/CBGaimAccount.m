@@ -383,7 +383,9 @@
         if (listContact == nil) {
 			NSAssert(account != nil, @"account was nil");
 			NSAssert(conv->name != nil, @"conv->name was nil");
-			NSAssert([(NSString *)[NSString stringWithUTF8String:(conv->name)] length] != 0, @"conv->name length was 0");
+			
+			NSString *assertString = [NSString stringWithFormat:@"conv->name was %s on message %s on account 0x%x",conv->name,message,account];
+			NSAssert([(NSString *)[NSString stringWithUTF8String:(conv->name)] length] != 0, assertString);
             GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
             if (buddy == NULL) {
                 buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
