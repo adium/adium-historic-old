@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.11 2004/04/26 03:22:09 adamiser Exp $
+//  $Id: ESFileTransferController.m,v 1.12 2004/06/17 17:32:15 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -37,11 +37,11 @@
 
 - (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	NSSavePanel *savePanel = [NSSavePanel savePanel];
-	[savePanel setTitle:@"Receive File"];
-	
-	NSString * defaultName = [fileTransfer remoteFilename];
-	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];	
+	NSString	*defaultName = [fileTransfer remoteFilename];
+
+	[savePanel setTitle:[NSString stringWithFormat:@"Receive File from %@",[[fileTransfer contact] displayName]]];
+
 	if ([savePanel runModalForDirectory:nil file:defaultName] == NSFileHandlingPanelOKButton) {
 		[fileTransfer setLocalFilename:[savePanel filename]];
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] acceptFileTransferRequest:fileTransfer];
@@ -55,7 +55,7 @@
 - (void)requestForSendingFileToListContact:(AIListContact *)listContact
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	[openPanel setTitle:@"Send File"];
+	[openPanel setTitle:[NSString stringWithFormat:@"Send File to %@",[listContact displayName]]];
 	
 	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
 		[self sendFile:[openPanel filename] toListContact:listContact];
