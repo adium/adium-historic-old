@@ -27,55 +27,43 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
+	NSDictionary	*defaults = [NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]];
+    [[adium preferenceController] registerDefaults:defaults forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
 
-    //Our preference view
+	//Install our preference view
     preferences = [[AIAwayStatusWindowPreferences preferencePane] retain];
 
-    //Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    //Observe pref changes
+	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
-	[[AIAwayStatusWindowController awayStatusWindowController] closeWindow];
+	[preferences release];
+	[[adium notificationCenter] removeObserver:self];
+	[AIAwayStatusWindowController closeAwayStatusWindow];
 }
 
-#warning the AIAwayStatusWindowController is loading into memory whether away or not, i believe
 //Update our away window when the away status changes
 - (void)preferencesChanged:(NSNotification *)notification
 {
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
 
-    if(notification == nil || ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){ //We ignore account-specific status changes
-        NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
+	if(notification == nil ||
+	   [group compare:PREF_GROUP_AWAY_STATUS_WINDOW] == 0 ||
+	   ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
 
-        if(notification == nil || [modifiedKey compare:@"AwayMessage"] == 0){
-            // Get an away status window
-            [AIAwayStatusWindowController awayStatusWindowController];
-            // Tell it to update
-            [AIAwayStatusWindowController updateAwayStatusWindow];
-        }
-    }
+		//Hide or show the away status window
+		if([[[adium preferenceController] preferenceForKey:KEY_SHOW_AWAY_STATUS_WINDOW group:PREF_GROUP_AWAY_STATUS_WINDOW] boolValue] && 
+		   [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
+			[AIAwayStatusWindowController openAwayStatusWindow];
+		}else{
+			[AIAwayStatusWindowController closeAwayStatusWindow];
+		}
+
+	}
 }
 
-//Update our window when the prefs change
-/*- (void)preferencesChanged:(NSNotification *)notification
-{
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_STATUS_WINDOW] == 0){
-        // Get an away status window
-        [AIAwayStatusWindowController awayStatusWindowController];
-        // Tell it to update in case we were already away
-        [AIAwayStatusWindowController updateAwayStatusWindow];
-
-    }
-}*/
-    
-
 @end
-
-
-
-
 

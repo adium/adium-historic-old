@@ -1,7 +1,6 @@
 {
     IBClasses = (
         {
-            ACTIONS = {toggleFloatAway = id; toggleHideInBackground = id; toggleShowAway = id; }; 
             CLASS = AIAwayStatusWindowPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

@@ -17,25 +17,20 @@
 
 @interface AIAwayStatusWindowController : AIWindowController
 {
-    IBOutlet NSButton 		*button_comeBack;
-    IBOutlet NSTextView 	*textView_awayMessage;
-    IBOutlet NSTextField	*textField_awayTime;
-    IBOutlet NSButton           *button_mute;
-    IBOutlet NSButton           *button_showBezel;
+    IBOutlet 	NSTextView 			*textView_awayMessage;
+    IBOutlet 	NSTextField			*textField_awayTime;
+    IBOutlet 	NSButton           	*button_mute;
+    IBOutlet 	NSButton           	*button_showBezel;
     
-    NSDate	*awayDate;
-    NSTimer	*awayTimer;
-    NSString 	*timeStampFormat;
+    NSDate			*awayDate;
+    NSTimer			*awayTimer;
 }
 
-+ (AIAwayStatusWindowController *)awayStatusWindowController;
-+ (void)updateAwayStatusWindow;
-+ (void)setWindowVisible:(bool)visible;
++ (void)openAwayStatusWindow;
++ (void)closeAwayStatusWindow;
 - (IBAction)comeBack:(id)sender;
-- (void)updateWindow;
-- (void)setVisible:(bool)visible;
 - (IBAction)toggleMute:(id)sender;
 - (IBAction)toggleShowBezel:(id)sender;
-- (void)closeWindow;
+- (void)closeWindow:(id)sender;
 
 @end

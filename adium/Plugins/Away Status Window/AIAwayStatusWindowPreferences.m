@@ -37,46 +37,6 @@
 	return(defaultsDict);
 }
 
-//
-- (IBAction)toggleShowAway:(id)sender
-{
-    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_SHOW_AWAY_STATUS_WINDOW
-                                          group:PREF_GROUP_AWAY_STATUS_WINDOW];
-
-    //Enable the "float away" and "hide on deactivate" checkboxes if this one is checked
-    [checkBox_floatAway setEnabled:[checkBox_showAway state]];
-    [checkBox_hideInBackground setEnabled:[checkBox_showAway state]];
-
-    // Force a live update of the window status
-    [AIAwayStatusWindowController updateAwayStatusWindow];
-
-}
-
-//
-- (IBAction)toggleFloatAway:(id)sender
-{
-    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_FLOAT_AWAY_STATUS_WINDOW
-                                          group:PREF_GROUP_AWAY_STATUS_WINDOW];
-
-    // Force a live update of the window status
-    [AIAwayStatusWindowController updateAwayStatusWindow];
-
-}
-
-//
-- (IBAction)toggleHideInBackground:(id)sender
-{
-    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW
-                                          group:PREF_GROUP_AWAY_STATUS_WINDOW];
-
-    // Force a live update of the window status
-    [AIAwayStatusWindowController updateAwayStatusWindow];
-}
-
-
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -86,8 +46,36 @@
     [checkBox_showAway setState:[[preferenceDict objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue]];
     [checkBox_floatAway setState:[[preferenceDict objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue]];
     [checkBox_hideInBackground setState:[[preferenceDict objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue]];
+	
+	[self configureControlDimming];
+}
 
-    // Enable or disable checkboxes based on the "show away" checkbox
+//Apply a changed controls
+- (IBAction)changePreference:(id)sender
+{
+	if(sender == checkBox_showAway){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_SHOW_AWAY_STATUS_WINDOW
+											  group:PREF_GROUP_AWAY_STATUS_WINDOW];
+		
+	}else if(sender == checkBox_floatAway){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_FLOAT_AWAY_STATUS_WINDOW
+											  group:PREF_GROUP_AWAY_STATUS_WINDOW];
+		
+	}else if(sender == checkBox_hideInBackground){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW
+											  group:PREF_GROUP_AWAY_STATUS_WINDOW];
+		
+	}
+	   
+	[super changePreference:sender];
+}
+
+//Configure control dimming
+- (void)configureControlDimming
+{
     [checkBox_floatAway setEnabled:[checkBox_showAway state]];
     [checkBox_hideInBackground setEnabled:[checkBox_showAway state]];
 }
