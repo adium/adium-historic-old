@@ -24,6 +24,7 @@
 #include <sys/errno.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <c.h>
 
 @implementation AIWiredData
 
@@ -98,7 +99,10 @@
 {
 	return [self initWithBytes:[data bytes] length:[data length]];
 }
-//XXX - needed: -subDataWithRange:
+
+- (id)subdataWithRange:(NSRange)range {
+	return [[[self alloc] initWithBytes:([data bytes] + range.location) length:range.length] autorelease];
+}
 
 #pragma mark Copying backing
 
@@ -134,6 +138,14 @@
 #pragma mark Working with files
 
 //XXX - needed: everything.
+//+ (id)dataWithContentsOfFile:(NSString *)path
+//+ (id)dataWithContentsOfMappedFile:(NSString *)path
+//+ (id)dataWithContentsOfURL:(NSURL *)url
+//- (id)initWithContentsOfFile:(NSString *)path
+//- (id)initWithContentsOfMappedFile:(NSString *)path
+//- (id)initWithContentsOfURL:(NSURL *)url
+//- (id)writeToFile:(NSString *)path atomically:(BOOL)flag
+//- (id)writeToURL:(NSURL *)url atomically:(BOOL)flag
 
 #pragma mark Accessors
 
@@ -144,6 +156,51 @@
 - (unsigned)length
 {
 	return length;
+}
+
+#pragma mark Container methods
+
+//this code is based on: http://www.mulle-kybernetik.com/artikel/Optimization/opti-7.html
+//modifications by boredzo:
+//-	rem is now unsigned
+//-	all local variables are registers
+#define MULLE_ELF_STEP( B)  \
+	do                       \
+	{                         \
+		H  = (H <<  4) + B;    \
+		H ^= (H >> 24) & 0xF0;  \
+	}                            \
+	while(0)
+- (unsigned)hash
+{
+	register unsigned int H = 0;
+	register unsigned rem = length;
+	register const char *bytes_ = bytes;
+	while(rem > 3) {
+		MULLE_ELF_STEP(bytes_[length - rem]);
+		MULLE_ELF_STEP(bytes_[length - rem + 1]);
+		MULLE_ELF_STEP(bytes_[length - rem + 2]);
+		MULLE_ELF_STEP(bytes_[length - rem + 3]);
+		rem -= 4;
+	}
+	switch (rem) {
+		case 3:  MULLE_ELF_STEP(bytes_[length - 3]);
+		case 2:  MULLE_ELF_STEP(bytes_[length - 2]);
+		case 1:  MULLE_ELF_STEP(bytes_[length - 1]);
+		case 0:  ;
+	}
+	return H;
+}
+#undef MULLE_ELF_STEP
+
+- (BOOL)isEqualToData:(NSData *)other {
+	unsigned length_ = [self length];
+	if(length_ != [other length])
+		return NO;
+	return (memcmp([self bytes], [other bytes], length_) != 0);
+}
+- (BOOL)isEqual:(id)other {
+	return [other isKindOfClass:[NSData class]] && [self isEqualToData:other];
 }
 
 #pragma mark Description
