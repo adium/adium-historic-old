@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.40 2004/04/02 10:07:27 overmind911 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.41 2004/04/07 13:23:12 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -137,7 +137,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  
     //Select the previously selected category
     selectedTab = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_SELECTED_CATEGORY] intValue];
-    if(selectedTab < 0 || selectedTab > [tabView_category numberOfTabViewItems]) selectedTab = 0;
+    if(selectedTab < 0 || selectedTab >= [tabView_category numberOfTabViewItems]) selectedTab = 0;
 
     tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
     [self tabView:tabView_category willSelectTabViewItem:tabViewItem];

@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.20 2004/04/06 22:52:15 hanji Exp $
+$Id: ToDoList.txt,v 1.21 2004/04/07 13:23:12 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -16,9 +16,8 @@ Bugs
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
-= Contact list flippy triangles have stripes behind them in 10.2 (fixed?) [Colin]
+* Contact list flippy triangles are white behind them in 10.2 [Colin]
 * If preferences are selected to advanced on close, the window will be vertically small on re-open.
-
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
