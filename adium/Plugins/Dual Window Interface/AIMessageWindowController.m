@@ -222,7 +222,8 @@
     windowIsClosing = NO;
     tabIsShowing = YES;
     supressHiding = NO;
-    
+    force_tabBar_visible = -1;
+	
     [[adium notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
     
     //Load our window
@@ -306,11 +307,13 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
-        autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
-	[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-	
-        [self updateTabBarVisibilityAndAnimate:(notification != nil)];
+		
+		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+		
+		if (force_tabBar_visible == -1) {
+			autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+			[self updateTabBarVisibilityAndAnimate:(notification != nil)];
+		}
     }
 }
 
@@ -411,12 +414,33 @@
 
 
 //Tab Bar Visibility --------------------------------------------------------------------------------------------------
+// Toggles whether we should hide or show the tab bar
+- (IBAction)toggleForceTabBarVisible:(id)sender
+{
+	if (force_tabBar_visible == -1) {
+		if (tabIsShowing)
+			force_tabBar_visible = 0;
+		else
+			force_tabBar_visible = 1;
+	} else if (force_tabBar_visible == 0)
+		force_tabBar_visible = 1;
+	else if (force_tabBar_visible == 1)
+		force_tabBar_visible = 0;
+	
+	[self updateTabBarVisibilityAndAnimate:YES];
+}
+
+
 //Update the visibility of our tab bar (Tab bar is visible if autohide is off, or if there are 2 or more tabs present)
 - (void)updateTabBarVisibilityAndAnimate:(BOOL)animate
 {
     if(tabView_messages != nil){    //Ignore if our tabs haven't loaded yet
         BOOL    shouldShowTabs = (supressHiding || !autohide_tabBar || ([tabView_customTabs numberOfTabViewItems] > 1) );
-
+		
+		if (force_tabBar_visible != -1) {
+			shouldShowTabs = (force_tabBar_visible);
+		}
+		
         if(shouldShowTabs != tabIsShowing){
             tabIsShowing = shouldShowTabs;
             

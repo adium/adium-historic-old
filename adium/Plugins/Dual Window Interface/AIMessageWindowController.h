@@ -30,11 +30,13 @@
     BOOL                        supressHiding;
     BOOL			tabIsShowing;
     BOOL			autohide_tabBar;
+	int				force_tabBar_visible;  //-1 = Doesn't matter, 0 = NO, 1 = YES;
     float			tabHeight;
 }
 
 + (AIMessageWindowController *)messageWindowControllerForInterface:(id <AIContainerInterface>)inInterface;
 - (IBAction)closeWindow:(id)sender;
+- (IBAction)toggleForceTabBarVisible:(id)sender;
 - (NSArray *)messageContainerArray;
 - (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer;
 - (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;

@@ -52,6 +52,7 @@
     NSMenuItem				*menuItem_openInNewWindow;
     NSMenuItem				*menuItem_openInPrimaryWindow;
     NSMenuItem				*menuItem_consolidate;
+	NSMenuItem				*menuItem_toggleTabBar;
     
     //Containers
     AIContactListWindowController 	*contactListWindowController;
