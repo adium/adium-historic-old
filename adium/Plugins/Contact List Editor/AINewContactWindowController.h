@@ -9,6 +9,7 @@
 
 @interface AINewContactWindowController : AIWindowController {
 	IBOutlet	NSPopUpButton		*popUp_contactType;
+	IBOutlet	NSPopUpButton		*popUp_targetGroup;
 	IBOutlet	NSTextField			*textField_contactName;
 }
 

@@ -11,6 +11,8 @@
 #define ADD_CONTACT_PROMPT_NIB	@"AddContact"
 @interface AINewContactWindowController (PRIVATE)
 - (void)buildContactTypeMenu;
+- (void)buildGroupMenu;
+- (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
 @end
 
 @implementation AINewContactWindowController
@@ -51,31 +53,37 @@
 }
 
 //Build the menu of available destination groups
-//- (void)buildGroupMenu
-//{
-//	[[adium contactController] contactList];
-//	
-//	
-//	
-//	NSEnumerator				*enumerator;
-//	id <AIServiceController>	service;
-//	
-//	//Empty the menu
-//	[popUp_contactType removeAllItems];
-//	
-//	//Add an item for each service
-//	enumerator = [[[adium accountController] availableServices] objectEnumerator];
-//	while(service = [enumerator nextObject]){
-//		AIServiceType 	*serviceType = [service handleServiceType];
-//		
-//		[[popUp_contactType menu] addItemWithTitle:[serviceType description]
-//											target:nil
-//											action:nil
-//									 keyEquivalent:@""
-//								 representedObject:service];
-//	}
-//}
-//
+- (void)buildGroupMenu
+{
+	//Empty the menu
+	[popUp_targetGroup removeAllItems];
+	
+	//Rebuild it
+	[self _buildGroupMenu:[popUp_targetGroup menu]
+				 forGroup:[[adium contactController] contactList]
+					level:0];
+}
+
+- (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level
+{
+	NSEnumerator	*enumerator = [group objectEnumerator];
+	AIListObject	*object;
+	
+	while(object = [enumerator nextObject]){
+		if([object isKindOfClass:[AIListGroup class]]){
+			NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[object displayName]
+																target:nil
+																action:nil
+														 keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:object];
+			[menuItem setIndentationLevel:level];
+			[menu addItem:menuItem];
+			
+			[self _buildGroupMenu:menu forGroup:object level:level+1];
+		}
+	}
+}
+
 
 //
 - (IBAction)cancel:(id)sender
@@ -98,10 +106,9 @@
 	
 	if(serviceID && UID){
 		AIListContact	*contact = [[adium contactController] contactWithService:serviceID UID:UID];
-		AIListGroup		*group = [[adium contactController] groupWithUID:@"New" createInGroup:nil];
 			
 		[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
-									   toGroup:group
+									   toGroup:[[popUp_targetGroup selectedItem] representedObject]
 									onAccounts:[[adium accountController] accountArray]];
 	}
 	
@@ -126,6 +133,7 @@
 - (void)windowDidLoad
 {
 	[self buildContactTypeMenu];
+	[self buildGroupMenu];
 	
     //Center the window
     [[self window] center];
