@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.20 $
- * $Date: 2004/05/24 06:04:01 $
+ * $Revision: 1.21 $
+ * $Date: 2004/06/04 06:58:20 $
  * $Author: evands $
  **/
 
@@ -41,6 +41,8 @@
     NSMutableDictionary		*accountStatusDict;			//Account status
 	
     NSMutableArray			*sleepingOnlineAccounts;	//Accounts that were connected before we slept
+	
+	BOOL					enableAccountSaving;
 }
 
 //Services
