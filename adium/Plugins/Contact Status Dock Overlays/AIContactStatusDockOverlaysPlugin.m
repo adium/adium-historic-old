@@ -130,11 +130,8 @@
 
     //Create & set the new overlay state
     if([unviewedObjectsArray count] != 0){
-        NSImage	*image1 = [self overlayImageFlash:NO];
-        NSImage	*image2 = [self overlayImageFlash:YES];
-
         //Set the state
-        overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:image1,image2,nil] delay:0.5 looping:YES overlay:YES];
+        overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil] delay:0.5 looping:YES overlay:YES];
         [[owner dockController] setIconState:overlayState named:@"ContactStatusOverlay"];
     }   
 }
