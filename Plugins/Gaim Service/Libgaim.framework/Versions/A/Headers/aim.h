@@ -40,7 +40,7 @@ extern "C" {
 #endif
 
 // ** ADIUM	
-#include <libgaim/ft.h>
+#include <Libgaim/ft.h>
 GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn);
 void oscar_direct_im_initiate_immediately(GaimConnection *gc, const char *who);
 void *oscar_find_direct_im(GaimConnection *gc, const char *who);

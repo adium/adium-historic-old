@@ -71,7 +71,7 @@ static SLGaimCocoaAdapter					*gaimThreadProxy = nil;
 
 //The autorelease pool presently in use; it will be periodically released and recreated
 static NSAutoreleasePool *currentAutoreleasePool = nil;
-#define	AUTORELEASE_POOL_REFRESH	1.0
+#define	AUTORELEASE_POOL_REFRESH	5.0
 
 @implementation SLGaimCocoaAdapter
 
