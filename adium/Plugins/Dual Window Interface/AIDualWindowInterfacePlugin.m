@@ -113,6 +113,10 @@
     }
 
     [contactListWindowController makeActive:nil];
+
+    //Give Adium focus
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+
 }
 
 
@@ -404,9 +408,15 @@
     [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
 
     //Contact list window
+    //Add toolbar Menu
     item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@"1"];
     [item setRepresentedObject:contactListWindowController];
     [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+    [windowMenuArray addObject:[item autorelease]];
+    //Add dock Menu
+    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@""];
+    [item setRepresentedObject:contactListWindowController];
+    [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
     [windowMenuArray addObject:[item autorelease]];
     
     //Messages window and any open messasge
