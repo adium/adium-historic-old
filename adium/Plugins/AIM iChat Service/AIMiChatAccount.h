@@ -17,7 +17,7 @@
 #import <Adium/Adium.h>
 #import "InstantMessageFramework.h"
 
-@interface AIMiChatAccount : AIAccount <AIAccount_Content, AIAccount_Contacts, FZServiceListener, FZDaemonListener> {
+@interface AIMiChatAccount : AIAccount <AIAccount_Content, AIAccount_Handles, FZServiceListener, FZDaemonListener> {
 
     NSConnection	*connection;
     id <FZDaemon>	FZDaemon;
@@ -25,6 +25,8 @@
 
     NSString		*screenName;
 
+    NSMutableDictionary	*handleDict;
+    
     BOOL		isOnline;
 
 

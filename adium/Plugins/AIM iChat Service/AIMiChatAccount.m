@@ -38,11 +38,12 @@ extern void* objc_getClass(const char *name);
 
     //init
     buddyPropertiesQue = [[NSMutableArray alloc] init];
-
+    handleDict = [[NSMutableDictionary alloc] init];
+    
     //Connect to the iChatAgent
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
     FZDaemon = [[connection rootProxy] retain];
-
+    
     //Get the AIM Service
     services   = [FZDaemon allServices];
     AIMService = [[[FZDaemon allServices] objectAtIndex:0] retain];
@@ -77,7 +78,7 @@ extern void* objc_getClass(const char *name);
 
 // AIAccount_Groups ----------------------------------------------------------------------------------
 // Create a group in the specified groups
-- (BOOL)addGroup:(AIContactGroup *)newGroup
+/*- (BOOL)addGroup:(AIContactGroup *)newGroup
 {
     return(YES);
 }
@@ -92,11 +93,11 @@ extern void* objc_getClass(const char *name);
 - (BOOL)renameGroup:(AIContactGroup *)group to:(NSString *)inName
 {
     return(YES);
-}
+}*/
 
 // AIAccount_Contacts --------------------------------------------------------------------------------
 // Add an object to the specified groups
-- (BOOL)addObject:(AIContactObject *)object
+/*- (BOOL)addObject:(AIContactObject *)object
 {
     return(YES);
 }
@@ -115,10 +116,33 @@ extern void* objc_getClass(const char *name);
 - (BOOL)contactListEditable
 {
     return(NO);
+}*/
+
+- (NSDictionary *)availableHandles
+{
+    return(handleDict);
 }
 
+- (BOOL)contactListEditable
+{
+    return(YES);
+}
+
+- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
+{
+    return(nil);
+}
+
+- (BOOL)removeHandleWithUID:(NSString *)inUID
+{
+    return(YES);
+}
+
+
+
+
 // AIAccount_Messaging --------------------------------------------------------------------------------
-- (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle
+- (BOOL)sendContentObject:(id <AIContentObject>)object
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         NSString	*message;
@@ -130,7 +154,7 @@ extern void* objc_getClass(const char *name);
 
         //Create a chat & send the message
         //(I guess I could cache these chats)
-	chat = [AIMService createChatForIMsWith:[inHandle UID] isDirect:NO];
+	chat = [AIMService createChatForIMsWith:[[object destination] UID] isDirect:NO];
         messageObject = [[FZMessage alloc] initWithSender:[self accountDescription] time:[NSDate date] format:2 body:message attributes:0 incomingFile:0 outgoingFile:0 inlineFiles:0 flags:5];
         [AIMService sendMessage:messageObject toChat:chat];
 
@@ -141,7 +165,7 @@ extern void* objc_getClass(const char *name);
     return(YES);
 }
 
-- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle
+- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle
 {
     BOOL available = NO;
 
@@ -193,10 +217,12 @@ extern void* objc_getClass(const char *name);
     switch(inStatus){
         case 0: //Offline
             //Flush all our handle status flags
-            enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:self] objectEnumerator];
+            [[owner contactController] setHoldContactListUpdates:YES];
+            enumerator = [[handleDict allValues] objectEnumerator];
             while((handle = [enumerator nextObject])){
                 [self removeAllStatusFlagsFromHandle:handle];
             }
+            [[owner contactController] setHoldContactListUpdates:NO];
 
             //Clean up and close down
             [screenName release]; screenName = nil;
@@ -210,14 +236,14 @@ extern void* objc_getClass(const char *name);
 
         case 2: //Disconnecting
             //Squelch sounds and updates while we sign off
-            [[owner contactController] delayContactListUpdatesFor:5];
+//            [[owner contactController] delayContactListUpdatesFor:5];
 
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
         break;
             
         case 3: //Connecting
             //Squelch sounds and updates while we sign on
-            [[owner contactController] delayContactListUpdatesFor:10];
+//            [[owner contactController] delayContactListUpdatesFor:10];
 
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
         break;
@@ -257,12 +283,12 @@ extern void* objc_getClass(const char *name);
     }else{
         if(!([inMessage flags] & kMessageOutgoingFlag)){//Ignore echoed messages (anything outgoing)
                                                         //Get the handle and message
-            handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[inMessage sender] forAccount:self];
+            handle = [handleDict objectForKey:[inMessage sender]];
             messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
 
             //Add the message
             messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
-            [[owner contentController] addIncomingContentObject:messageObject toHandle:handle];
+            [[owner contentController] addIncomingContentObject:messageObject];
         }
     }
 }
@@ -294,23 +320,29 @@ extern void* objc_getClass(const char *name);
 
     enumerator = [inProperties objectEnumerator];
     while((dict = [enumerator nextObject])){
-        AIContactHandle	*handle;
+        AIHandle	*handle;
         NSString	*compactedName;
         
         //Get the handle
         compactedName = [dict objectForKey:@"FZPersonID"];
+        handle = [handleDict objectForKey:compactedName];
 
-        //(we should check the 'ISBuddy' key, and if it's NO, use the 'handleWithService' method.)
-        if([[dict objectForKey:@"FZPersonIsBuddy"] boolValue]){ //Create them as a buddy
-            handle = [[owner contactController] createHandleWithService:[service handleServiceType] UID:compactedName inGroup:nil forAccount:self];
-        }else{ //Create them as a stranger
-            handle = [[owner contactController] handleWithService:[service handleServiceType] UID:compactedName forAccount:self];
+        //If the handle doesn't exist, we need to create it
+        if(!handle){ //create it
+            handle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
+                                               UID:compactedName
+                                       serverGroup:@"iChat"
+                                         temporary:[[dict objectForKey:@"FZPersonIsBuddy"] boolValue]
+                                        forAccount:self];
+            
+            [handleDict setObject:handle forKey:compactedName];
+            
+            [[owner contactController] handle:handle addedToAccount:self];
         }
         
         if(handle){
             NSNumber		*storedValue;
             NSMutableArray	*alteredStatusKeys;
-            AIMutableOwnerArray	*ownerArray;
         
             alteredStatusKeys = [[NSMutableArray alloc] init];
     
@@ -318,6 +350,7 @@ extern void* objc_getClass(const char *name);
             if((storedValue = [dict objectForKey:@"FZPersonStatus"])){
                 int		buddyStatus = [storedValue intValue];
                 NSString	*awayMessage = [dict objectForKey:@"FZPersonStatusMessage"];
+                NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
                 BOOL		online;
                 BOOL		away;
                 double		idleTime;
@@ -359,29 +392,23 @@ extern void* objc_getClass(const char *name);
                 }
                 
                 //Online/Offline
-                ownerArray = [handle statusArrayForKey:@"Online"];
-                storedValue = [ownerArray objectWithOwner:self];
+                storedValue = [handleStatusDict objectForKey:@"Online"];
                 if(storedValue == nil || online != [storedValue intValue]){
-                    [ownerArray removeObjectsWithOwner:self];
-                    [ownerArray addObject:[NSNumber numberWithInt:online] withOwner:self];
+                    [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
                     [alteredStatusKeys addObject:@"Online"];
                 }
     
                 //Idle time (seconds)
-                ownerArray = [handle statusArrayForKey:@"Idle"];
-                storedValue = [ownerArray objectWithOwner:self];   
+                storedValue = [handleStatusDict objectForKey:@"Idle"];
                 if(storedValue == nil || idleTime != [storedValue doubleValue]){
-                    [ownerArray removeObjectsWithOwner:self];
-                    [ownerArray addObject:[NSNumber numberWithDouble:idleTime] withOwner:self];
+                    [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
                     [alteredStatusKeys addObject:@"Idle"];
                 }
     
                 //Away
-                ownerArray = [handle statusArrayForKey:@"Away"];
-                storedValue = [ownerArray objectWithOwner:self];   
+                storedValue = [handleStatusDict objectForKey:@"Away"];
                 if(storedValue == nil || away != [storedValue intValue]){
-                    [ownerArray removeObjectsWithOwner:self];
-                    [ownerArray addObject:[NSNumber numberWithBool:away] withOwner:self];
+                    [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
                     [alteredStatusKeys addObject:@"Away"];
                 }
                 
@@ -438,14 +465,14 @@ extern void* objc_getClass(const char *name);
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",nil];
+ /*   NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",nil];
     int		loop;
 
     for(loop = 0;loop < [keyArray count];loop++){
         [[handle statusArrayForKey:[keyArray objectAtIndex:loop]] removeObjectsWithOwner:self];
     }
 
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];*/
 }
 
 @end

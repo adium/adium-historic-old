@@ -50,46 +50,57 @@
     if(![[owner contactController] holdContactListUpdates]){
         
         if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
-            BOOL	oldStatus = [[onlineDict objectForKey:[inContact UID]] boolValue]; //! UID is not unique enough !
-            BOOL	newStatus = [[inContact statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
+            NSNumber	*online = [[inHandle statusDictionary] objectForKey:@"Online"];
 
-            if(newStatus != oldStatus){
-                //
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
-                                                          object:inHandle
-                                                        userInfo:nil];
-                [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inContact UID]];
-                
-                //Set status flags and install timers for "Just signed on" and "Just signed off"
-                [[inHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:(newStatus ? @"Signed On" : @"Signed Off")];
-                [[owner contactController] handleStatusChanged:inHandle
-                                            modifiedStatusKeys:[NSArray arrayWithObject:(newStatus ? @"Signed On" : @"Signed Off")]];
+            if(online){ //We only send out events if the handle has a value (nil values mean the flag is being cleared)
+                BOOL	oldStatus = [[onlineDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
+                BOOL	newStatus = [online boolValue];
 
-                [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(clearOnlineFlags:) userInfo:inHandle repeats:NO];
+                if(newStatus != oldStatus){
+                    //Post an online/offline notification
+                    [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
+                                                              object:inHandle
+                                                            userInfo:nil];
+                    [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inContact UID]];
+
+                    //Set status flags and install timers for "Just signed on" and "Just signed off"
+                    [[inHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:(newStatus ? @"Signed On" : @"Signed Off")];
+                    [[owner contactController] handleStatusChanged:inHandle
+                                                modifiedStatusKeys:[NSArray arrayWithObject:(newStatus ? @"Signed On" : @"Signed Off")]];
+
+                    [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(clearOnlineFlags:) userInfo:inHandle repeats:NO];
+                }
             }
-
+            
         }else if([inModifiedKeys containsObject:@"Away"]){ //Away / Unaway
-            BOOL	oldStatus = [[awayDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
-            BOOL	newStatus = [[inContact statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1];
+            NSNumber	*away = [[inHandle statusDictionary] objectForKey:@"Away"];
 
-            if(newStatus != oldStatus){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
-                                                          object:inHandle
-                                                        userInfo:nil];
-                [awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
-            }            
+            if(away){ //We only send out events if the handle has a value (nil values mean the flag is being cleared)
+                BOOL	oldStatus = [[awayDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
+                BOOL	newStatus = [away boolValue];
+
+                if(newStatus != oldStatus){
+                    [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
+                                                              object:inHandle
+                                                            userInfo:nil];
+                    [awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
+                }
+            }
             
         }else if([inModifiedKeys containsObject:@"Idle"]){ //Idle / UnIdle
-            BOOL	oldStatus = [[idleDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
-            BOOL	newStatus = ([[inContact statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+            NSNumber	*idle = [[inHandle statusDictionary] objectForKey:@"Idle"];
 
-            if(newStatus != oldStatus){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
-                                                          object:inHandle
-                                                        userInfo:nil];
-                [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
+            if(idle){ //We only send out events if the handle has a value (nil values mean the flag is being cleared)
+                BOOL	oldStatus = [[idleDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
+                BOOL	newStatus = ([idle doubleValue] != 0);
+    
+                if(newStatus != oldStatus){
+                    [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
+                                                            object:inHandle
+                                                            userInfo:nil];
+                    [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
+                }
             }
-
         }            
 
     }
