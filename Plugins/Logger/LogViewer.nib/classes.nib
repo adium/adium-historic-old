@@ -5,6 +5,11 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSOutlineView; 
         }, 
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             ACTIONS = {
@@ -44,7 +49,7 @@
             OUTLETS = {
                 "controller_LogViewer" = AILogViewerWindowController; 
                 "popup_filterType" = NSPopUpButton; 
-                "table_filterList" = NSTableView; 
+                "table_filterList" = AIAlternatingRowTableView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 

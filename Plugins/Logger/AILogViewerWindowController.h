@@ -31,9 +31,9 @@ typedef enum {
 	
     IBOutlet	NSTableView				*tableView_results;
     IBOutlet	NSTextView				*textView_content;
-    IBOutlet    id						searchField_logs;       //May be an NSSearchField or an NSTextField
-    IBOutlet    NSPopUpButton			*popUp_jagSearchMode;   //Used in the jag log viewer to select search mode
-    IBOutlet    NSProgressIndicator		*progressIndicator;
+    IBOutlet    id					searchField_logs;       //May be an NSSearchField or an NSTextField
+    IBOutlet    NSPopUpButton                           *popUp_jagSearchMode;   //Used in the jag log viewer to select search mode
+    IBOutlet    NSProgressIndicator                     *progressIndicator;
     IBOutlet    NSTextField				*textField_progress;
     IBOutlet    NSButton				*button_deleteLogs;
     IBOutlet    NSView					*view_SearchField;
@@ -48,30 +48,33 @@ typedef enum {
     NSMutableArray		*toArray;				//Array of contacts
     NSMutableArray		*toServiceArray;		//Array of services for accounts
     NSTableColumn		*selectedColumn;		//Selected/active sort column
-    BOOL				sortDirection;			//Direction to sort
+    BOOL			sortDirection;			//Direction to sort
     LogSearchMode		searchMode;				//Currently selected search mode
     NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
-    BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
-    BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
-    BOOL				showEmoticons;			//Flag for whether or not to process emoticons
-	BOOL				windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
+    BOOL			automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
+    BOOL			ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
+    BOOL                        showEmoticons;			//Flag for whether or not to process emoticons
+    BOOL			windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
 	
     //Search information
-    int					activeSearchID;				//ID of the active search thread, all other threads should quit
-    NSLock				*searchingLock;				//Locked when a search is in progress
-    BOOL				searching;					//YES if a search is in progress
+    int				activeSearchID;				//ID of the active search thread, all other threads should quit
+    NSLock			*searchingLock;				//Locked when a search is in progress
+    BOOL			searching;					//YES if a search is in progress
     NSString			*activeSearchString;		//Current search string
-	NSString			*activeSearchStringEncoded; //Current search string encoded into HTML
+    NSString			*activeSearchStringEncoded; //Current search string encoded into HTML
 	
-	NSTimer				*aggregateLogIndexProgressTimer; //Used to update a content search as the index updates
+    NSTimer			*aggregateLogIndexProgressTimer; //Used to update a content search as the index updates
 	
     //Array of selected / displayed logs.  (Locked access)
     NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
-    NSLock				*resultsLock;			//Lock before touching the array
-    AILog				*displayedLog;			//Currently selected/displayed log
+    NSLock			*resultsLock;			//Lock before touching the array
+    AILog			*displayedLog;			//Currently selected/displayed log
 	
-	NSMutableDictionary	*toolbarItems;
-	NSImage				*blankImage;
+    NSMutableDictionary         *toolbarItems;
+    NSImage			*blankImage;
+    
+    int                         sameSelection;
+    BOOL                        useSame;
 }
 
 + (id)openForPlugin:(id)inPlugin;
@@ -92,5 +95,7 @@ typedef enum {
 
 - (void)filterForContactName:(NSString *)inContactName;
 - (void)filterForAccountName:(NSString *)inAccountName;
+
+- (void)rebuildIndices;
 
 @end
