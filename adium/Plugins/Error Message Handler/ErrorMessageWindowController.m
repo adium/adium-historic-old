@@ -15,8 +15,8 @@
 
 #import "ErrorMessageWindowController.h"
 
-#define MAX_ERRORS			80		//The max # of errors to display
-#define	ERROR_WINDOW_NIB		@"ErrorWindow"	//Filename of the error window nib
+#define MAX_ERRORS			80				//The max # of errors to display
+#define	ERROR_WINDOW_NIB	@"ErrorWindow"	//Filename of the error window nib
 
 @interface ErrorMessageWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -95,6 +95,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
 
 // Private --------------------------------------------------------------------------------
+#pragma mark Private
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     //init
