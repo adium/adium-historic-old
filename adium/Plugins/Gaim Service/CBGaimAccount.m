@@ -1124,7 +1124,6 @@ static id<GaimThread> gaimThread = nil;
 //Our account has connected
 - (oneway void)accountConnectionConnected
 {
-	NSLog(@"connection connected");
     //We are now online
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -1411,7 +1410,7 @@ static id<GaimThread> gaimThread = nil;
 								  prpl_info->icon_spec.min_height <= imageSize.height &&
 								  prpl_info->icon_spec.max_height >= imageSize.height);
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
-				NSLog(@"%i %i",prplScales,!acceptableSize);
+
 				if (prplScales && !acceptableSize){
 					//Determine the scaled size
 					NSSize  newImageSize = imageSize;

@@ -1,6 +1,62 @@
 				Adium X Version History
 				-----------------------
 
+Version 0.62 (7/06/2004)
+Contact list colors (labels and such) now update in real time.
+Fixed a crash when splitting conversations into windows by groups with a stranger or multiuser chat tab open.
+updates for Firefox .9's new app support location.
+Synchronised the placement of the icon picker view between Yahoo!, AIM, and MSN.
+Code reduction is good - We now use the common Mozilla bookmark parser for MSIE bookmarks.
+- The group chat participants list is now resizable. More details, like hiding it entirely if you wish, coming soon.
+- You can get info on any group chat participant you want.
+Contact settings pane of the Get Info window will now show the serverside notes in the Notes: field if no adium notes are set.
+
+sounds no longer collode with sound alerts
+dock bouncing no longer collides
+
+Fix a crash in group chats
+Fix a crash if Adium is quit while in the middle of speaking text. Sometimes. Strange.
+Chats now properly switch between AIListContact objects on differing accounts, which:
+
+fixed issue with tooltips not appearing
+
+This should fix the problems with MSN avatars not scaling to 96x96.  I've submitted it to the gaim patch tracker, too.
+
+SMV updates. Localized a few message history strings and fixed a bug wherein a message history date header would show the right date, but the wrong time.
+
+Revamped the Status Sort to offer more options, including the ability to dynamically order the active status groups.  Check it out :)
+
+Fixed a bug in the borderless window which prevented it from being position on screens below (that is, down of) the main one.
+I think this should fix problems with the contact list not redisplaying after a set up delayed changes such as the idle time update.  It was working before because we were overaggressive with resorting, forcing a redisplay.
+Cleanup and proper fix for caching of status messages, profiles, and such after contacts sign offline.
+
+image picker no longer metal
+
+fixes the crash when clicking on an emoticon which should be animated in the preferences.
+Added global events (Dock / Sound event options at present) for File Transfer Request, Began, Complete, and Canceled.
+Little fix so the emoticon name key is used instead of the filename in emoticons.
+
+Fixed the "Open Email" button on MSN email notifications.
+Fixing an encoding issue and increasing efficiency when handling arguments to applescripts
+
+fixed issues when running under 10.4 developer preview
+
+fix list deletion / connect issues
+
+improved support for entering text Hiragana (Japanese), use Enter/Return to confirm sets of textual changes without actually performing any new line (or, in our case, sending) activity.
+The "Add Contact" now only shows up for strangers instead of being present but greyed out for everyone else
+Gaim makes a distinction between SOCKS4 and SOCKS5, while OS X's system prefs do not.  We'll list both as 'systemwide defaults' options so the user has the chance to indicate which proxy type they have.  Continue to default to SOCKS5 (which was the assumed type of SOCKS before).
+
+Fixing a crash and a cosmetic glitch in the dock behavior plugin
+Improved Dock bouncing behavior.  If the dock is bouncing and a new request to bounce is received, the behavior with a higher frequency or greater duration is taken.
+added script menu to context menu
+
+performance improvements
+
+
+
+
+
 Version 0.61 (6/25/2004)
 - Added support for MSN Buddy Icons
 - Added support for Yahoo! Buddy Icons
