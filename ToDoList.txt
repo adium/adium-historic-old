@@ -16,7 +16,6 @@
 - Line breaks don't work properly with ICQ
 - Double-clicking a contact with more than one message window open opens a new tab in the first opened window (instead of the frontmost) (this is the desired behavior -ai)
 - Chats are sticking in the evil duck menu
-- Setting the default download directory changes Safari's
 - We need upgrade code for jabber accounts server field, they're all defaulting to jabber.org
 - Double check for memory leaks (esp w/ tab dragging & AIChats)
 
