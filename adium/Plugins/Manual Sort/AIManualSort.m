@@ -15,7 +15,7 @@
 
 #import "AIManualSort.h"
 
-int manualSort(id objectA, id objectB, void *context);
+int manualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
 
 @implementation AIManualSort
 
@@ -28,51 +28,24 @@ int manualSort(id objectA, id objectB, void *context);
 - (NSString *)displayName{
     return(@"Manually");
 }
-
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
-{
-    return(NO); //Ignore
+- (NSArray *)statusKeysRequiringResort{
+	return(nil);
+}
+- (NSArray *)attributeKeysRequiringResort{
+	return(nil);
+}
+- (sortfunc)sortFunction{
+	return(&manualSort);
 }
 
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys
+int manualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
 {
-    if([inModifiedKeys containsObject:@"Hidden"]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (void)sortListObjects:(NSMutableArray *)inObjects
-{
-    [inObjects sortUsingFunction:manualSort context:nil];
-}
-
-int manualSort(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-
-    if(invisibleA && !invisibleB){ //Invisible to the bottom
-        return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){ //Invisible to the bottom
-        return(NSOrderedAscending);
-    }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-
-        if(groupA && !groupB){ //Groups to the bottom
-            return(NSOrderedAscending);
-        }else if(!groupA && groupB){ //Groups to the bottom
-            return(NSOrderedDescending);
-        }else{ //Contacts and Groups in manual order
-            if([objectA orderIndex] > [objectB orderIndex]){
-                return(NSOrderedDescending);
-            }else{
-                return(NSOrderedAscending);
-            }
-        }
-    }
+	//Contacts and Groups in manual order
+	if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+		return(NSOrderedDescending);
+	}else{
+		return(NSOrderedAscending);
+	}
 }
 
 @end
