@@ -274,7 +274,7 @@
     }
 
     //Redisplay new cell
-    //[self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
+    [self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
 
     //Inform our delegate
     if([delegate respondsToSelector:@selector(customTabView:didSelectTabViewItem:)]){
