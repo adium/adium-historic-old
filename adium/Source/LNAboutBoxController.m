@@ -1,17 +1,10 @@
-//
-//  LNAboutBoxController.m
-//  Adium
-//
-//  Created by Laura Natcher on Fri Oct 03 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
-
 #import "LNAboutBoxController.h"
 #import <AIUtilities/AIUtilities.h>
 
 
 #define ABOUT_BOX_NIB		@"AboutBox"
 #define	ADIUM_SITE_LINK		@"http://adium.sourceforge.net/"
+#define ADIUM_LINK_TEXT		@"adium.sourceforge.net"
 
 
 @interface LNAboutBoxController (PRIVATE)
@@ -61,6 +54,29 @@ LNAboutBoxController *sharedInstance = nil;
 - (void)windowDidLoad
 {
 
+    NSAttributedString		*siteLink;
+    NSMutableParagraphStyle	*paragraphStyle;
+    NSDictionary		*attributes;
+
+    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    [paragraphStyle setAlignment:NSCenterTextAlignment]; 
+
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:ADIUM_SITE_LINK], NSLinkAttributeName,
+        [NSFont cachedFontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
+        paragraphStyle, NSParagraphStyleAttributeName,
+        [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, nil];
+    
+
+    siteLink = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:ADIUM_LINK_TEXT] attributes: attributes];
+
+
+    [[linkTextView_siteLink enclosingScrollView] setDrawsBackground:NO];
+    [linkTextView_siteLink setDrawsBackground:NO];
+    [linkTextView_siteLink setEditable:NO];
+    [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
+    [linkTextView_siteLink resetCursorRects];
+
+
     [textField_buildDate setStringValue:[NSString stringWithFormat:@"Build Date: %s", __DATE__]];
     
     [[self window] center];
@@ -85,18 +101,6 @@ LNAboutBoxController *sharedInstance = nil;
     return(YES);
 }
 
- 
-- (IBAction)adiumLinkClicked:(id)sender
-{
- 
-    NSURL	*adiumSiteLink;
- 
- 
-    adiumSiteLink = [NSURL URLWithString:[NSString stringWithFormat:ADIUM_SITE_LINK]];
-    
-    [[NSWorkspace sharedWorkspace] openURL:adiumSiteLink];
-
-}
 
 
 - (IBAction)adiumDuckClicked:(id)sender

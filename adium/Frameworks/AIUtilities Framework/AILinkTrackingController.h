@@ -24,6 +24,7 @@
     AIFlexibleLink		*hoveredLink;			//The link currently being hovered
     NSString			*hoveredString;	
     BOOL			mouseOverLink;			//Yes if the cursor is over one of our links
+    BOOL			showTooltip;			//Yes if we want to display the tooltip over a hovered link
 //    id				oldFirstResponder;
 
     //The text system of the view we're tracking links for

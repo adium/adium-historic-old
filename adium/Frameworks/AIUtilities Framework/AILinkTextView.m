@@ -20,11 +20,34 @@
     A text view that supports link tracking and clicking
  */
 
+@interface AILinkTextView (PRIVATE)
+- (void)_init;
+@end
+
+
 @implementation AILinkTextView
+
 
 - (id)initWithFrame:(NSRect)frame
 {
     [super initWithFrame:frame];
+    [self _init];
+
+    return(self);
+}
+
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    [super initWithCoder:aDecoder];
+    [self _init];
+    
+    return(self);
+}
+
+
+- (void)_init
+{
 
     linkTrackingController = [[AILinkTrackingController linkTrackingControllerForTextView:self] retain];
 
@@ -32,8 +55,8 @@
     
     [[self window] resetCursorRects];
 
-    return(self);
 }
+
 
 - (void)dealloc
 {
