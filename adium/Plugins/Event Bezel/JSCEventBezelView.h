@@ -12,11 +12,9 @@
     NSImage *buddyIconImage;
     NSImage *buddyIconBadge;
     BOOL    defaultBuddyImage;
-    NSShadow *textShadow;
     
     NSString *mainBuddyName;
     NSString *mainBuddyStatus;
-    NSString *mainAwayMessage;
     NSString *queueField;
     
     NSDictionary    *mainAttributes;
@@ -36,8 +34,6 @@
 - (void)setMainBuddyName:(NSString *)newString;
 - (NSString *)mainBuddyStatus;
 - (void)setMainBuddyStatus:(NSString *)newString;
-- (NSString *)mainAwayMessage;
-- (void)setMainAwayMessage:(NSString *)newString;
 - (NSString *)queueField;
 - (void)setQueueField:(NSString *)newString;
 @end

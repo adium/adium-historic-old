@@ -15,6 +15,9 @@ BOOL pantherOrLater;
 
 - (void)awakeFromNib
 {
+    NSMutableParagraphStyle     *parrafo = [[[NSMutableParagraphStyle alloc] init] autorelease];
+    NSShadow    *textShadow = nil;
+    
     backdropImage = [[NSImage alloc] initWithContentsOfFile:
         [[NSBundle bundleForClass:[self class]] pathForResource:@"backdrop" ofType:@"png"]];
     
@@ -27,30 +30,40 @@ BOOL pantherOrLater;
     pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
     
     if (pantherOrLater) {
-        NSSize  shadowSize;
-        shadowSize.width = 2.0;
+        NSSize      shadowSize;
+        textShadow = [[[NSShadow alloc] init] autorelease];
+        shadowSize.width = 0.0;
         shadowSize.height = -2.0;
-        textShadow = [[NSShadow alloc] init];
-        [textShadow retain];
         [textShadow setShadowOffset:shadowSize];
         [textShadow setShadowBlurRadius:3.0];
     }
     
     // Set the attributes for the main buddy name and the other strings
+    [parrafo setAlignment: NSCenterTextAlignment];
+    
     mainAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:18.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
+        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    textShadow, NSShadowAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
     mainAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:18.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName, nil] retain];
-    secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:[NSFont smallSystemFontSize]], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
-    secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:[NSFont smallSystemFontSize]], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName, nil] retain];
-    mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
-    mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName, nil] retain];
+        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+    secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    textShadow, NSShadowAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+    secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+    mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    textShadow, NSShadowAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+    mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
     
 }
 
@@ -59,10 +72,8 @@ BOOL pantherOrLater;
     [backdropImage release];
     [buddyIconImage release];
     [buddyIconBadge release];
-    [textShadow release];
     [mainBuddyName release];
     [mainBuddyStatus release];
-    [mainAwayMessage release];
     [queueField release];
     [mainAttributes release];
     [mainAttributesMask release];
@@ -78,54 +89,65 @@ BOOL pantherOrLater;
     NSPoint         tempPoint;
     NSRect          tempRect;
     NSString        *tempString;
+    NSShadow        *tempShadow;
     
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
     [backdropImage compositeToPoint: NSZeroPoint operation:NSCompositeSourceOver];
     
+    if (pantherOrLater) {
+        NSSize      shadowSize;
+        tempShadow = [[[NSShadow alloc] init] autorelease];
+        shadowSize.width = 0.0;
+        shadowSize.height = -3.0;
+        [tempShadow setShadowOffset:shadowSize];
+        [tempShadow setShadowBlurRadius:5.0];
+        [tempShadow set];
+    }
+        
     // Paint the buddy icon or placeholder
-    tempPoint.x = 12.0;
-    tempPoint.y = 114.0;
+    tempPoint.x = 82.0;
+    tempPoint.y = 150.0;
     [buddyIconImage compositeToPoint: tempPoint operation:NSCompositeSourceOver];
     if (buddyIconBadge) {
         [buddyIconBadge compositeToPoint: tempPoint operation:NSCompositeSourceOver];
     }
-    
-    // Set the shadow for better readability in Panther
-    if (pantherOrLater) {
-        [textShadow set];
-    }
-    
+            
     // Set the color of text to white and paint all the strings,
-    
-    tempPoint.y = 167.0;
-    tempString = [NSString stringWithString: mainBuddyName];
-    [tempString drawAtPoint: NSMakePoint(tempPoint.x + 1.0,tempPoint.y - 1.0) withAttributes: mainAttributesMask];
-    [mainBuddyName drawAtPoint: tempPoint withAttributes: mainAttributes];
-    tempPoint.x = 68.0;
-    tempPoint.y = 146.0;
-    tempString = [NSString stringWithString: mainBuddyStatus];
-    [tempString drawAtPoint: NSMakePoint(tempPoint.x + 1.0,tempPoint.y - 1.0) withAttributes: mainStatusAttributesMask];
-    [mainBuddyStatus drawAtPoint: tempPoint withAttributes: mainStatusAttributes];
-    
-    tempPoint.y = 112.0;
-    tempRect.size.width = 131.0;
-    tempRect.size.height = 33.0;
-    tempRect.origin = tempPoint;
-    //[self setMainAwayMessage: @"test status message string placeholder."];
-    tempString = [NSString stringWithString: mainAwayMessage];
-    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: secondaryAttributesMask];
-    [mainAwayMessage drawInRect: tempRect withAttributes: secondaryAttributes];
-    
     tempPoint.x = 12.0;
-    tempPoint.y = 12.0;
+    tempPoint.y = 116.0;
     tempRect.size.width = 187.0;
-    tempRect.size.height = 83.0;
+    tempRect.size.height = 30.0;
     tempRect.origin = tempPoint;
-    tempString = [NSString stringWithString: queueField];
-    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: secondaryAttributesMask];
-    [queueField drawInRect: tempRect withAttributes: secondaryAttributes];
+    tempString = [NSString stringWithString: mainBuddyName];
+    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: mainAttributesMask];
+    [mainBuddyName drawInRect: tempRect withAttributes: mainAttributes];
+    
+    tempPoint.y = 73.0;
+    tempRect.size.height = 44.0;
+    tempRect.origin = tempPoint;
+    tempString = [NSString stringWithString: mainBuddyStatus];
+    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: mainStatusAttributesMask];
+    [mainBuddyStatus drawInRect: tempRect withAttributes: mainStatusAttributes];
+    
+    if (queueField && (![queueField isEqualToString:@""])) {
+        // Paint the divider line
+        tempPoint.x = 12.0;
+        tempPoint.y = 66.0;
+        tempRect.size.width = 187.0;
+        tempRect.size.height = 1.0;
+        tempRect.origin = tempPoint;
+        [[NSColor whiteColor] set];
+        [NSBezierPath fillRect:tempRect];
+        
+        tempPoint.y = 8.0;
+        tempRect.size.height = 52.0;
+        tempRect.origin = tempPoint;
+        tempString = [NSString stringWithString: queueField];
+        [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: secondaryAttributesMask];
+        [queueField drawInRect: tempRect withAttributes: secondaryAttributes];
+    }
 }
 
 - (NSImage *)buddyIconImage
@@ -193,18 +215,6 @@ BOOL pantherOrLater;
     [newString retain];
     [mainBuddyStatus release];
     mainBuddyStatus = newString;
-}
-
-- (NSString *)mainAwayMessage
-{
-    return mainAwayMessage;
-}
-
-- (void)setMainAwayMessage:(NSString *)newString
-{
-    [newString retain];
-    [mainAwayMessage release];
-    mainAwayMessage = newString;
 }
 
 - (NSString *)queueField

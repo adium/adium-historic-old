@@ -76,8 +76,8 @@ withMessage:(NSString *)message
         [bezelView setBuddyIconImage:buddyIcon];
         
         if ([bezelWindow fadingOut]) {
-            [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@ %@\n%@",
-                [bezelView mainBuddyName], [bezelView mainBuddyStatus], [bezelView mainAwayMessage], [bezelView queueField]]];
+            [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@\n%@",
+                [bezelView mainBuddyName], [bezelView mainBuddyStatus], [bezelView queueField]]];
         } else {
             [bezelView setQueueField: @""];
         }
@@ -109,9 +109,7 @@ withMessage:(NSString *)message
         
         // This is not working yet, the Plugin class needs to pass the message
         if (message) {
-            [bezelView setMainAwayMessage: message];
-        } else {
-            [bezelView setMainAwayMessage: @""];
+            [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",[bezelView mainBuddyStatus], message]];
         }
         
         [bezelView setNeedsDisplay:YES];
