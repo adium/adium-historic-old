@@ -7164,10 +7164,8 @@
 				3448055107AC5151006A7F7B,
 				34AC36BB07B5C51500145239,
 				34E00F7607B92B2F000DF265,
-				34F2E80907C2CD53007EAAAB,
 				34F2E81207C2CD5E007EAAAB,
 				34F2E81A07C2CD6C007EAAAB,
-				34F2E82A07C2CD9B007EAAAB,
 				34F2E83B07C2CDBE007EAAAB,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -7361,10 +7359,8 @@
 				3448055007AC5151006A7F7B,
 				34AC36BC07B5C51500145239,
 				34E00F7707B92B2F000DF265,
-				34F2E80807C2CD53007EAAAB,
 				34F2E81107C2CD5E007EAAAB,
 				34F2E81B07C2CD6C007EAAAB,
-				34F2E82B07C2CD9B007EAAAB,
 				34F2E83A07C2CDBE007EAAAB,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -10028,36 +10024,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34F2E80607C2CD53007EAAAB = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIFlexibleLink.m;
-			path = "Frameworks/Adium Framework/AIFlexibleLink.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F2E80707C2CD53007EAAAB = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIFlexibleLink.h;
-			path = "Frameworks/Adium Framework/AIFlexibleLink.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F2E80807C2CD53007EAAAB = {
-			fileRef = 34F2E80607C2CD53007EAAAB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F2E80907C2CD53007EAAAB = {
-			fileRef = 34F2E80707C2CD53007EAAAB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34F2E80F07C2CD5E007EAAAB = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -10114,36 +10080,6 @@
 		};
 		34F2E81B07C2CD6C007EAAAB = {
 			fileRef = 34F2E81907C2CD6C007EAAAB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F2E82807C2CD9B007EAAAB = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITooltipUtilities.h;
-			path = "Frameworks/Adium Framework/AITooltipUtilities.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F2E82907C2CD9B007EAAAB = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITooltipUtilities.m;
-			path = "Frameworks/Adium Framework/AITooltipUtilities.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F2E82A07C2CD9B007EAAAB = {
-			fileRef = 34F2E82807C2CD9B007EAAAB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F2E82B07C2CD9B007EAAAB = {
-			fileRef = 34F2E82907C2CD9B007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -13162,8 +13098,6 @@
 				34C6A4CA077AB3AA00EB423C,
 				4B5827E80613CE9D0004BD25,
 				4B5827E90613CE9D0004BD25,
-				34F2E82807C2CD9B007EAAAB,
-				34F2E82907C2CD9B007EAAAB,
 				3426FD0A0699D3D100751059,
 				3426FD090699D3D100751059,
 				349DDD5206406A7D00542726,
@@ -13176,8 +13110,6 @@
 		};
 		4B4F5B2F042D647C00A8010A = {
 			children = (
-				34F2E80707C2CD53007EAAAB,
-				34F2E80607C2CD53007EAAAB,
 				34F2E81007C2CD5E007EAAAB,
 				34F2E80F07C2CD5E007EAAAB,
 				3483928505E68B05002BC6C0,

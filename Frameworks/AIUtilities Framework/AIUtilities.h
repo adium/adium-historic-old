@@ -75,6 +75,7 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AITextFieldAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AITree.h>
 #import <AIUtilities/AIVariableHeightOutlineView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
