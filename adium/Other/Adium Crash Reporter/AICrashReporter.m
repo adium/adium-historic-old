@@ -44,6 +44,7 @@
     [buildDate release];
     [buildNumber release];
     [crashLog release];
+	[slayerScript release];
     [super dealloc];
 }
 
