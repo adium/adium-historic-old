@@ -674,9 +674,14 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 			case GAIM_BUDDY_IDLE:
 			case GAIM_BUDDY_IDLE_RETURN: {
-				updateSelector = @selector(updateIdle:withData:);
-				if (buddy->idle){
-					data = [NSDate dateWithTimeIntervalSince1970:buddy->idle];
+				if (buddy->idle != 0){
+					updateSelector = @selector(updateWentIdle:withData:);
+
+					if (buddy->idle != -1){
+						data = [NSDate dateWithTimeIntervalSince1970:buddy->idle];
+					}
+				}else{
+					updateSelector = @selector(updateIdleReturn:withData:);	
 				}
 				break;
 			}
