@@ -69,7 +69,7 @@
 
 	//Delete selection context menu item
 	menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT_CONTEXT target:self action:@selector(deleteSelection:) keyEquivalent:@""] autorelease];
-	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Contact_Manage];
+	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Contact_NegativeAction];
     
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(addContactRequest:) 
