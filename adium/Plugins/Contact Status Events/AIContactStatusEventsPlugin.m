@@ -3,13 +3,12 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Apr 04 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIContactStatusEventsPlugin.h"
 
 @interface AIContactStatusEventsPlugin (PRIVATE)
-- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject;
+- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare;
 @end
 
 @implementation AIContactStatusEventsPlugin
@@ -135,7 +134,11 @@
 	   (![[inObject containingGroup] isKindOfClass:[AIMetaContact class]])){	//Ignore children of meta contacts
 		
 		if([modifiedKeys containsObject:@"Online"]){
-			if([self updateCache:onlineCache forKey:@"Online" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
+			if([self updateCache:onlineCache
+						  forKey:@"Online"
+						  ofType:@selector(numberStatusObjectForKey:) 
+					  listObject:inObject
+				  performCompare:YES] && !silent){
 				NSString	*event = ([[inObject numberStatusObjectForKey:@"Online"] boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
 				[[adium contactAlertsController] generateEvent:event
 												 forListObject:inObject
@@ -147,7 +150,11 @@
 		//e.g. an away contact signs off, we clear the away flag, but they didn't actually come back from away.
 		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
 			if([modifiedKeys containsObject:@"Away"]){
-				if([self updateCache:awayCache forKey:@"Away" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
+				if([self updateCache:awayCache
+							  forKey:@"Away"
+							  ofType:@selector(numberStatusObjectForKey:) 
+						  listObject:inObject
+					  performCompare:YES] && !silent){
 					NSString	*event = ([[inObject numberStatusObjectForKey:@"Away"] boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
@@ -155,7 +162,11 @@
 				}
 			}
 			if([modifiedKeys containsObject:@"IdleSince"]){
-				if([self updateCache:idleCache forKey:@"IdleSince" ofType:@selector(earliestDateStatusObjectForKey:) listObject:inObject] && !silent){
+				if([self updateCache:idleCache
+							  forKey:@"IdleSince"
+							  ofType:@selector(earliestDateStatusObjectForKey:) 
+						  listObject:inObject
+					  performCompare:NO] && !silent){
 					NSString	*event = (([inObject earliestDateStatusObjectForKey:@"IdleSince"] != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
@@ -163,7 +174,11 @@
 				}
 			}
 			if([modifiedKeys containsObject:@"StatusMessage"]){
-				if([self updateCache:statusMessageCache forKey:@"StatusMessage" ofType:@selector(stringFromAttributedStringStatusObjectForKey:) listObject:inObject] && !silent){
+				if([self updateCache:statusMessageCache 
+							  forKey:@"StatusMessage"
+							  ofType:@selector(stringFromAttributedStringStatusObjectForKey:)
+						  listObject:inObject
+					  performCompare:YES] && !silent){
 					if ([inObject statusObjectForKey:@"StatusMessage"] != nil){
 						//Evan: Not yet a contact alert, but we use the notification - how could/should we use this?
 						[[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
@@ -179,13 +194,15 @@
 }
 
 //Caches status changes, returning YES if it was a true change and NO if the change already happened for this listObject via another account
-- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject 
+//If performCompare is NO, we are only concerned about the existance of the statusObject.  
+//If it is YES, a change from one value to another is considered worthy of an update.
+- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
 {
 	id		newStatus = [inObject performSelector:selector withObject:key];
 	id		oldStatus = [cache objectForKey:[inObject uniqueObjectID]];
 	if((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
-	   (newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0)){
+	   ((performCompare && newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0))){
 		
 		if (newStatus){
 			[cache setObject:newStatus forKey:[inObject uniqueObjectID]];
