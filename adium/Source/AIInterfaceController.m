@@ -92,8 +92,6 @@
     [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
 }
 
-
-
 // Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController
 {

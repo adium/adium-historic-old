@@ -175,9 +175,17 @@
         forKey:@"Version"]];*/
 }
 
+
 - (IBAction)confirmQuit:(id)sender
 {
-    if(NSRunCriticalAlertPanel(@"Really Quit Adium?", @"Are you sure you want to quit Adium?", @"OK", @"Cancel", nil) == NSAlertDefaultReturn)
+    if([[contentController chatArray] count] > 0)
+    {
+        if(NSRunCriticalAlertPanel(@"Really Really Really Quit Adium?", @"You have open conversations, are you totally, completely, absolutely sure you really want to quit Adium? ", @"Quit", @"Cancel", nil) == NSAlertDefaultReturn)
+        {
+            [NSApp terminate:nil];
+        }
+    }
+    else
     {
         [NSApp terminate:nil];
     }
