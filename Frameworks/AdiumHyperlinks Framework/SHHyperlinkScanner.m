@@ -115,8 +115,7 @@ static NSMutableCharacterSet *endSet = nil;
     }
     
     if(!endSet){
-        endSet = [[NSMutableCharacterSet alloc] init];
-        [endSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"',;>)]}.?!"]];
+        endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',;>)]}.?!"] retain];
     }
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
@@ -129,42 +128,48 @@ static NSMutableCharacterSet *endSet = nil;
 
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
         unsigned int localStringLen = [scanString length];
-
+		unsigned int finalStringLen;
+		
         if(localStringLen > 2 && [startSet characterIsMember:[scanString characterAtIndex:0]]){
-            scanString = [NSString stringWithString:[scanString substringFromIndex:1]];
+            scanString = [scanString substringFromIndex:1];
             localStringLen = [scanString length];
         }
+		
         if(localStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:localStringLen - 1]]){
-            scanString = [NSString stringWithString:[scanString substringToIndex:localStringLen - 1]];
-        }
+            scanString = [scanString substringToIndex:localStringLen - 1];
+			finalStringLen = [scanString length];
+        }else{
+			finalStringLen = localStringLen;
+		}
 
-        SHStringOffset = [preScanner scanLocation] - [scanString length];
+        SHStringOffset = [preScanner scanLocation] - finalStringLen;
 
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
         // parent string, it's validation status (valid, file, degenerate, etc), and it's range in the parent string
-        if([self isStringValidURL:scanString]){
-            NSRange urlRange = NSMakeRange([preScanner scanLocation] - localStringLen,[scanString length]);
-            
-            NSMutableString    *newURL = [NSMutableString stringWithString:scanString];
-            
+        if((finalStringLen > 0) && [self isStringValidURL:scanString]){
+            SHMarkedHyperlink	*markedLink;
+			NSRange				urlRange;
+			
+			urlRange = NSMakeRange([preScanner scanLocation] - localStringLen, finalStringLen);
+
             //insert typical specifiers if the URL is degenerate
             switch(validStatus){
                 case SH_URL_DEGENERATE:
-                    [newURL insertString:@"http://" atIndex:0];
+                    scanString = [@"http://" stringByAppendingString:scanString];
                     break;
                 case SH_MAILTO_DEGENERATE:
-                    [newURL insertString:@"mailto:" atIndex:0];
+					scanString = [@"mailto:" stringByAppendingString:scanString];
                     break;
                 default:
                     break;
             }
             
             //make a marked link
-            SHMarkedHyperlink *markedLink = [[SHMarkedHyperlink alloc] initWithString:newURL
-                                                                 withValidationStatus:validStatus
-                                                                         parentString:inString
-                                                                             andRange:urlRange];
+            markedLink = [[SHMarkedHyperlink alloc] initWithString:scanString
+											  withValidationStatus:validStatus
+													  parentString:inString
+														  andRange:urlRange];
             return([markedLink autorelease]);
         }
 		
