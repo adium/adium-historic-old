@@ -12,10 +12,6 @@ If you are working on something big and it may take a while, please tag it with 
 Contacts:
 	= Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
             // core functionality is done, now I'm adding AB syncing, and possibly AIM Buddy Note sycing
-	+ Context menus
-		* Do we need to show the "Add Contact..." item, greyed out, on basically all contacts?
-			[Dave] Is there an easy way to hide it when not needed? I don't know of one with our system
-		* Do we sure "Delete" should be in the context menu? How often is this used?
 	+ Allow for users to communicate with smart philophers, such as Plato or Aristotle. A 
 		users friends may be boring, so we should enhance the current experience.
 Alerts:
@@ -194,8 +190,6 @@ Contact List import/export:
 	+ Export to plist
    Import/export code is not fun. 
 
-Sorting:  Allow a 'minor' sort option like iChat?  (iChat uses the last selected as the subsort).  Not sure if this would be useful.
-
 Too many tabs issue:
 	It seems that if you have too many tabs, then the tabs come to a point of not being usable. Tabs rock, but with 15 open windows intrinsic issues with this approach start to appear. We could:
 
@@ -221,10 +215,4 @@ Link Management:
 	- (Tick: Maybe we can use steganography, crysflame in irc brought it up, and eevyl and I have discussed it before:
 			19:45 < crysflame> http://www.mirrors.wiretapped.net/security/steganography/outguess/outguess-0.2.tar.gz and 
 http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0.5.tar.gz
-
-* Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
-
-* WebKit caching is meaning that buddy icons don't update until Adium restarts. 
-
-* If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
 
