@@ -46,7 +46,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Notes", "Short identifier for the 'notes' which can be entered for contacts. This will be shown in the contact list tooltips.");
+    return(AILocalizedString(@"Notes", "Short identifier for the 'notes' which can be entered for contacts. This will be shown in the contact list tooltips."));
 }
 
 /*!
