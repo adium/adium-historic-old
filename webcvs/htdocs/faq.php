@@ -99,7 +99,8 @@
                     Adium supports AIM, MSN, Yahoo!, Yahoo! Japan, Gadu-Gadu, Jabber, Napster, and Novell GroupWise.</p>
 
                     <p><span class="faqQuestion">Is Adium affiliated or endorsed by any of these companies?</span><br />
-                    No, absolutely not.  Adium is an independent, third-party instant messaging client. It neither associated with nor supported by AOL, MSN, Yahoo, or any other company.</p>
+                    No, absolutely not.  Adium is an independent, third-party
+                    instant messaging client. It is neither associated with nor supported by AOL, MSN, Yahoo, or any other company.</p>
 
                     <p><span class="faqQuestion">What does Adium X cost?</span><br />
                     Adium is free and is distributed under the <a href="http://www.fsf.org/copyleft/gpl.html">GNU General Public License</a>. Donations are accepted and appreciated but never expected. :)</p>
@@ -176,7 +177,7 @@
                     <p><span class="faqQuestion">How do I get developer access to the Adium CVS?</span><br />
                     The best way to get developer access is to send us several good patches.  It is also helpful to keep in contact with us via IM or in #adium on irc.freenode.net.</p>
 
-                    <p><span class="faqQuestion">How do I fix a libgaim/libgaim error when building Adium?</span><br />
+                    <p><span class="faqQuestion">How do I fix a libgaim error when building Adium?</span><br />
                     Delete the &quot;Libgaim.framework&quot; folder in Plugins/Gaim Service/, and then update your source with <b>cvs update -Pd</b>.</p>
 
                 </div>
