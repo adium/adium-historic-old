@@ -8,62 +8,17 @@
 #import "AIStressTestPlugin.h"
 #import "AIStressTestAccount.h"
 #import "DCStressTestJoinChatViewController.h"
+#import "AIStressTestService.h"
 
 @implementation AIStressTestPlugin
 
 - (void)installPlugin
 {
 #ifdef DEVELOPMENT_BUILD
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:[self identifier]
-                                                      description:[self description]
-                                                            image:nil
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:20] retain];
-
-    //Register this service
-    [[adium accountController] registerService:self];
+	[[AIStressTestService alloc] init];
 #endif
 }
 
-#ifdef DEVELOPMENT_BUILD
-
-//Return a new account with the specified properties
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{
-    return([[[AIStressTestAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-// Return a view for the connection window
-- (AIAccountViewController *)accountView{
-    return(nil);
-}
-
-// Return a Plugin-specific ID and description
-- (NSString *)identifier
-{
-    return(STRESS_TEST_SERVICE_IDENTIFIER);
-}
-- (NSString *)description
-{
-    return(@"Stress Test (Das ist verboten)");
-}
-
-// Return an ID, description, and image for handles owned by accounts of this type
-- (AIServiceType *)handleServiceType
-{
-    return(handleServiceType);
-}
-
-- (DCJoinChatViewController *)joinChatView
-{
-	return([DCStressTestJoinChatViewController joinChatView]);
-}
-
-#endif
 
 @end
 
