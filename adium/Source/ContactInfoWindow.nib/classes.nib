@@ -3,7 +3,7 @@
         {
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"scrollView_contents" = NSScrollView; }; 
+            OUTLETS = {"scrollView_contents" = NSScrollView; "view_noContact" = NSView; }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {

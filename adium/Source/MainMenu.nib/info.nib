@@ -9,7 +9,7 @@
 		<key>6598</key>
 		<string>343 357 386 44 0 0 1024 746 </string>
 		<key>6600</key>
-		<string>321 769 386 44 0 0 1280 832 </string>
+		<string>229 685 386 44 0 0 1024 746 </string>
 		<key>6946</key>
 		<string>469 204 17 42 0 0 1024 746 </string>
 	</dict>
@@ -28,7 +28,7 @@
 		<integer>6600</integer>
 	</array>
 	<key>IBSystem Version</key>
-	<string>6L60</string>
+	<string>6R73</string>
 	<key>IBUserGuides</key>
 	<dict>
 		<key>AboutPanel</key>
