@@ -467,15 +467,13 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-	/*
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy *buddy = (GaimBuddy*) node;
+		GaimBuddy *buddy = (GaimBuddy*)node;
 		
-		contactLookupFromBuddy(buddy);
-			
-		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
+		[accountLookup(buddy->account) mainPerformSelector:@selector(newContact:withName:)
+												withObject:contactLookupFromBuddy(buddy) 
+												withObject:[NSString stringWithUTF8String:(buddy->name)]];
     }
-	 */
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
@@ -485,36 +483,32 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
-	//    NSCAssert(node != nil, @"BlistUpdate on null node");
-	//		NSLog(@"Blist update %s",((GaimBuddy*) node)->name);
-    if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy *buddy;
+	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
+		GaimBuddy *buddy = (GaimBuddy*)node;
 		
-		if (buddy = (GaimBuddy*) node){
-			
-			AIListContact *theContact = contactLookupFromBuddy(buddy);
-			
-			//Group changes - gaim buddies start off in no group, so this is an important update for us
-			if(![theContact remoteGroupName]){
-				GaimGroup *g = gaim_find_buddys_group(buddy);
-				if(g && g->name){
-					NSString *groupName = [NSString stringWithUTF8String:g->name];
-					[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
-															withObject:theContact
-															withObject:groupName];
-				}
-			}
-			
-			const char *alias = gaim_buddy_get_alias(buddy);
-			if (alias){
-				NSString *aliasString = [NSString stringWithUTF8String:alias];
-				
-				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+		AIListContact *theContact = contactLookupFromBuddy(buddy);
+		
+		//Group changes - gaim buddies start off in no group, so this is an important update for us
+		if(![theContact remoteGroupName]){
+			GaimGroup *g = gaim_find_buddys_group(buddy);
+			if(g && g->name){
+				NSString *groupName = [NSString stringWithUTF8String:g->name];
+				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
 														withObject:theContact
-														withObject:aliasString];
+														withObject:groupName];
 			}
 		}
-    }
+		
+		const char *alias = gaim_buddy_get_alias(buddy);
+		
+		if (alias){
+			NSString *aliasString = [NSString stringWithUTF8String:alias];
+			
+			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+													withObject:theContact
+													withObject:aliasString];
+		}
+	}
 }
 
 //A buddy was removed from the list

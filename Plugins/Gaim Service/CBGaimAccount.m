@@ -84,14 +84,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 // Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Contacts
-/*- (void)accountNewBuddy:(NSValue *)buddyValue
+- (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName
 {
-
-}*/
-
-- (oneway void)newContact:(AIListContact *)theContact
-{
-	
+	//If the name we were passed differs from the UID of the contact, it's a formatted UID
+	if(![inName isEqualToString:[theContact UID]]){
+		[theContact setStatusObject:inName
+							 forKey:@"FormattedUID"
+							 notify:NO];
+		
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName
@@ -112,25 +114,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	BOOL changes = NO;
 	BOOL displayNameChanges = NO;
 
-	//Insert the new display name
-	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
-		//Remove any display name we'd previously placed
-		if([theContact statusObjectForKey:@"Server Display Name"]){
-			[theContact setStatusObject:nil
-								 forKey:@"Server Display Name"
-								 notify:NO];
-			
-			[[theContact displayArrayForKey:@"Display Name" create:NO] setObject:nil withOwner:self];
-			displayNameChanges = YES;
-		}
-		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
-			[theContact setStatusObject:gaimAlias
-								 forKey:@"FormattedUID"
-								 notify:NO];
-			changes = YES;
-		}
-		
-	}else{
+	//Store this alias so long as it isn't identical to the UID
+	if(![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
 
 		//This is the server display name.  Set it as such.
 		if(![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
@@ -155,27 +140,27 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}else{
 			[[theContact displayArrayForKey:@"Display Name"] setObject:gaimAlias
 															 withOwner:self
-														 priorityLevel:Lowest_Priority];
+														 priorityLevel:Low_Priority];
 			displayNameChanges = YES;
 		}
 	}
 
-	if(changes || displayNameChanges){
+	if(changes){
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-
-		if (displayNameChanges){
-			//Notify of display name changes
-			[[adium contactController] listObjectAttributesChanged:theContact
-													  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-			
+	}
+	
+	if (displayNameChanges){
+		//Notify of display name changes
+		[[adium contactController] listObjectAttributesChanged:theContact
+												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+		
 #warning There must be a cleaner way to do this alias stuff!  This works for now
-			//Request an alias change
-			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-													  object:theContact
-													userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																						 forKey:@"Notify"]];
-		}
+		//Request an alias change
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:theContact
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
 	}
 }
 
