@@ -440,7 +440,7 @@ static BOOL didInitSSL = NO;
 	[gaimThread makeAccount:self 
 			performSelector:@selector(performMoveListObjects:toGroup:)
 				 withObject:objects
-				 withObject:group]
+				 withObject:group];
 }
 
 - (void)performMoveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
