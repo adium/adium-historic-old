@@ -8,7 +8,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ESDebugController : NSObject {
-	IBOutlet	AIAdium		*owner;
+	IBOutlet	AIAdium		*adium;
 }
 
 - (void)initController;

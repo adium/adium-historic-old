@@ -60,7 +60,7 @@
         {
             CLASS = AICorePluginLoader; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -172,7 +172,7 @@
         {
             CLASS = ESApplescriptabilityController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -184,7 +184,7 @@
         {
             CLASS = ESDebugController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {

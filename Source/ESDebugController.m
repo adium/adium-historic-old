@@ -28,12 +28,12 @@ static NSMutableArray	*debugLogArray = nil;
 												   target:self
 												   action:@selector(showDebugWindow:)
 											keyEquivalent:@""] autorelease];
-	[[owner menuController] addMenuItem:item toLocation:LOC_Adium_About];
+	[[adium menuController] addMenuItem:item toLocation:LOC_Adium_About];
 	
 	debugLogArray = [[NSMutableArray alloc] init];
 	
 	//Restore the debug window if it was open when we quit last time
-	if ([[[owner preferenceController] preferenceForKey:KEY_DEBUG_WINDOW_OPEN
+	if ([[[adium preferenceController] preferenceForKey:KEY_DEBUG_WINDOW_OPEN
 												  group:GROUP_DEBUG] boolValue]){
 		[ESDebugWindowController showDebugWindow];
 	}
@@ -43,7 +43,7 @@ static NSMutableArray	*debugLogArray = nil;
 - (void)closeController
 {
 	//Save the open state of the debug window
-	[[owner preferenceController] setPreference:([ESDebugWindowController debugWindowIsOpen] ?
+	[[adium preferenceController] setPreference:([ESDebugWindowController debugWindowIsOpen] ?
 												 [NSNumber numberWithBool:YES] :
 												 nil)
 										 forKey:KEY_DEBUG_WINDOW_OPEN

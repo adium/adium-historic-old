@@ -44,12 +44,12 @@ Adium, Copyright 2001-2004, Adam Iser
 //init
 - (void)initController
 {
-	NSEnumerator	*enumerator = [[owner resourcePathsForName:EXTERNAL_PLUGIN_FOLDER] objectEnumerator];
+	NSEnumerator	*enumerator = [[adium resourcePathsForName:EXTERNAL_PLUGIN_FOLDER] objectEnumerator];
 	NSString		*path;
 
 	//Init
     pluginArray = [[NSMutableArray alloc] init];
-	[owner createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
+	[adium createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
 
 	//If the Adium version has changed since our last run, warn the user that their external plugins may no longer work
 	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS_VERSION];
