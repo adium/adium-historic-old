@@ -1641,8 +1641,6 @@
 				34416166059FC5430019246B,
 				34C2EA180634DB5E0018E5D2,
 				34C2EA190634DB5E0018E5D2,
-				34B919C9062DEF15004F1223,
-				34B919CA062DEF15004F1223,
 				34F142A705E95B4D00B32FD7,
 				34F142A605E95B4C00B32FD7,
 				34415B9B059FA8DF0019246B,
@@ -1651,6 +1649,14 @@
 				34E3C8880638D40500AA3EF7,
 				348D8D1A06CC079F00449EBB,
 				348D8D1B06CC079F00449EBB,
+				34B919C9062DEF15004F1223,
+				34B919CA062DEF15004F1223,
+				4BAFD5A106E00AD200FF7FBC,
+				4BAFD5A206E00AD200FF7FBC,
+				4BAFD5A506E00AD200FF7FBC,
+				4BAFD5A606E00AD200FF7FBC,
+				4BAFD5A306E00AD200FF7FBC,
+				4BAFD5A406E00AD200FF7FBC,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -11590,6 +11596,9 @@
 				348D8D2B06CC07BE00449EBB,
 				348D8D2E06CC07BE00449EBB,
 				348D8D2F06CC07BE00449EBB,
+				4BAFD5A706E00AD300FF7FBC,
+				4BAFD5A906E00AD300FF7FBC,
+				4BAFD5AB06E00AD300FF7FBC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11690,6 +11699,9 @@
 				348D8D2906CC07BE00449EBB,
 				348D8D2C06CC07BE00449EBB,
 				348D8D2D06CC07BE00449EBB,
+				4BAFD5A806E00AD300FF7FBC,
+				4BAFD5AA06E00AD300FF7FBC,
+				4BAFD5AC06E00AD300FF7FBC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13178,6 +13190,96 @@
 		};
 		4BAFD57A06E0091100FF7FBC = {
 			fileRef = 4BAFD57806E0091100FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5A106E00AD200FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAIMService.h;
+			path = "Plugins/Gaim Service/ESAIMService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5A206E00AD200FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAIMService.m;
+			path = "Plugins/Gaim Service/ESAIMService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5A306E00AD200FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESDotMacService.h;
+			path = "Plugins/Gaim Service/ESDotMacService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5A406E00AD200FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESDotMacService.m;
+			path = "Plugins/Gaim Service/ESDotMacService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5A506E00AD200FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESICQService.h;
+			path = "Plugins/Gaim Service/ESICQService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5A606E00AD200FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESICQService.m;
+			path = "Plugins/Gaim Service/ESICQService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5A706E00AD300FF7FBC = {
+			fileRef = 4BAFD5A106E00AD200FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5A806E00AD300FF7FBC = {
+			fileRef = 4BAFD5A206E00AD200FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5A906E00AD300FF7FBC = {
+			fileRef = 4BAFD5A306E00AD200FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5AA06E00AD300FF7FBC = {
+			fileRef = 4BAFD5A406E00AD200FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5AB06E00AD300FF7FBC = {
+			fileRef = 4BAFD5A506E00AD200FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5AC06E00AD300FF7FBC = {
+			fileRef = 4BAFD5A606E00AD200FF7FBC;
 			isa = PBXBuildFile;
 			settings = {
 			};
