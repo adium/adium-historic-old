@@ -30,38 +30,33 @@
         preferences = [[CBStatusMenuItemPreferences preferencePane] retain];
 
         //Observe
-        [[adium notificationCenter] addObserver:self
-                                       selector:@selector(preferencesChanged:)
-                                           name:Preference_GroupChanged
-                                         object:nil];
-        [self preferencesChanged:nil];
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STATUS_MENU_ITEM];
     }
 }
 
 - (void)uninstallPlugin
 {
     if([NSApp isOnPantherOrBetter]){
-        [[adium notificationCenter] removeObserver:self];
+		[[adium preferenceController] unregisterPreferenceObserver:self];
         [itemController release]; itemController = nil;
         [preferences release];
     }
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_STATUS_MENU_ITEM]){
-		if([[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED group:PREF_GROUP_STATUS_MENU_ITEM] boolValue]){
-			//If it hasn't been created yet, create it. Otherwise, tell it to show itself.
-			if(!itemController){
-				itemController = [CBStatusMenuItemController statusMenuItemController];
-			}else{
-				[itemController showStatusItem];
-			}
+	if([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]){
+		//If it hasn't been created yet, create it. Otherwise, tell it to show itself.
+		if(!itemController){
+			itemController = [CBStatusMenuItemController statusMenuItemController];
 		}else{
-			//if it exists, tell it to hide itself
-			if(itemController){
-				[itemController hideStatusItem];
-			}
+			[itemController showStatusItem];
+		}
+	}else{
+		//if it exists, tell it to hide itself
+		if(itemController){
+			[itemController hideStatusItem];
 		}
 	}
 }
