@@ -13,9 +13,6 @@
 
 }
 
-+ (void)showUnknownFingerprintPromptForUsername:(const char *)who
-									   protocol:(const char *)protocol
-										   hash:(const char *)hash
-								   responseInfo:(NSDictionary *)responseInfo;
++ (void)showUnknownFingerprintPromptWithResponseInfo:(NSDictionary *)responseInfo;
 
 @end

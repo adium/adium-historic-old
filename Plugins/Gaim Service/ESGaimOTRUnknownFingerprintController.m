@@ -12,7 +12,7 @@
 
 @implementation ESGaimOTRUnknownFingerprintController
 
-+ (void)showUnknownFingerprintPrompWithResponseInfo:(NSDictionary *)responseInfo
++ (void)showUnknownFingerprintPromptWithResponseInfo:(NSDictionary *)responseInfo
 {
 	NSString			*messageString;
 	NSString			*protocol = [responseInfo objectForKey:@"protocol"];
@@ -22,7 +22,7 @@
 	messageString = [NSString stringWithFormat:
 		AILocalizedString(@"%@ (%@) has sent you an unknown encryption fingerprint:\n\n%@\n\nDo you want to accept this fingerprint as valid?", nil),
 		who,
-		([protocol length] ? protocol : [AILocalizedString(@"Unknown", nil) UTF8String]), 
+		([protocol length] ? protocol : AILocalizedString(@"Unknown", nil)), 
 		hash];
 
 	
