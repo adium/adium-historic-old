@@ -327,8 +327,8 @@ static ESFileTransferPreferences *preferences;
 	menuItem_showFileTransferProgress = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Show File Transfer Progress",nil)
 																   target:self 
 																   action:@selector(showProgressWindow:)
-															keyEquivalent:@"L"];
-	[menuItem_showFileTransferProgress setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask | NSShiftKeyMask)];
+															keyEquivalent:@"l"];
+	[menuItem_showFileTransferProgress setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 	[[adium menuController] addMenuItem:menuItem_showFileTransferProgress toLocation:LOC_Window_Auxiliary];
 }
 
