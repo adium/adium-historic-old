@@ -174,7 +174,7 @@
 	
     //Remember the selected pack
     if([table_emoticonPacks numberOfSelectedRows] == 1 &&
-	   ((selectedRow != -1) && (seletedRow < [availableEmoticonPacks count]))){
+	   ((selectedRow != -1) && (selectedRow < [availableEmoticonPacks count]))){
 		[selectedEmoticonPack release];
         selectedEmoticonPack = [[availableEmoticonPacks objectAtIndex:selectedRow] retain];
     }else{
