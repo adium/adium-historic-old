@@ -41,6 +41,7 @@
 #import "AIDockingWindow.h"
 #import "AIEventAdditions.h"
 #import "AIFileManagerAdditions.h"
+#import "ESFileWrapperExtension.h"
 #import "AIFlexibleTableView.h"
 #import "ESFloater.h"
 #import "AIFontAdditions.h"
