@@ -873,7 +873,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.86 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.87 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1790,10 +1790,6 @@
             [message insertString:@"\\" atIndex:loop];
             loop += 2;
         
-        }else if(currentChar == '\r' || currentChar == '\n'){
-            [message replaceCharactersInRange:NSMakeRange(loop,1) withString:@"<BR>"];
-            loop += 3;
-            
         }else{
             loop += 1;
         }
