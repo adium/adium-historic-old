@@ -285,6 +285,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		if([inObject isKindOfClass:[AIListContact class]]){
 			NSString	*displayServiceID = [[inObject service] shortDescription];
 			[textField_service setStringValue:(displayServiceID ? displayServiceID : META_SERVICE_STRING)];
+		} else if([inObject isKindOfClass:[AIListGroup class]]) {
+			[textField_service setStringValue:AILocalizedString(@"Group",nil)];
+		} else {
+			[textField_service setStringValue:@""];
 		}
 		
 		//User Icon
