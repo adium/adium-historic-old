@@ -56,7 +56,6 @@
 
 - (void)_updateIconForKey:(NSString *)key
 {
-    NSLog(@"update for %@",key);
     if(key == nil || [key compare:@"Online"] == 0){
 	if([self _numberOfAccountsWithBoolKey:@"Online"] > 0){
 	    [[adium dockController] setIconStateNamed:@"Online"];
