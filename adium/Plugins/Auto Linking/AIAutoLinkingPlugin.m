@@ -25,6 +25,7 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 {
     //Register our content filter
     [[owner contentController] registerOutgoingContentFilter:self];
+    [[owner contentController] registerIncomingContentFilter:self];
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject
@@ -122,37 +123,39 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 
                         //If the URL was valid, turn it into a link
                         if(URLIsValid){
-                            NSRange	urlRange;
-                            
-                            //Make sure we've got a replacement message string made
-                            if(!replacementMessage){
-                                replacementMessage = [[[contentMessage message] mutableCopy] autorelease];
+                            NSRange	urlRange = NSMakeRange([messageScanner scanLocation] - [urlString length], [urlString length]);
+
+			    //Make sure this text doesn't already have a link attribute
+                            if(![[contentMessage message] attribute:NSLinkAttributeName atIndex:urlRange.location effectiveRange:nil]){
+				
+				//Make sure we've got a replacement message string made
+				if(!replacementMessage){
+				    replacementMessage = [[[contentMessage message] mutableCopy] autorelease];
+				}
+    
+				//Set this segment as a link, appending http:// if necessary
+				if([urlString rangeOfString:@"://"].location != NSNotFound){ //prefix already appended
+				    [replacementMessage addAttribute:NSLinkAttributeName
+							    value:urlString
+							    range:urlRange];
+    
+				}else if([urlString rangeOfString:@"@"].location != NSNotFound){ //mail
+				    [replacementMessage addAttribute:NSLinkAttributeName
+							    value:[NSString stringWithFormat:@"mailto:%@",urlString]
+							    range:urlRange];
+    
+				}else{ //http
+				    [replacementMessage addAttribute:NSLinkAttributeName
+							    value:[NSString stringWithFormat:@"http://%@",urlString]
+							    range:urlRange];
+				    
+				}
+    
+				//Color it blue and underline for good measure
+				[replacementMessage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:urlRange];
+				[replacementMessage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:1] range:urlRange];
                             }
-
-                            //Set this segment as a link, appending http:// if necessary
-                            urlRange = NSMakeRange([messageScanner scanLocation] - [urlString length], [urlString length]);
-
-                            if([urlString rangeOfString:@"://"].location != NSNotFound){ //prefix already appended
-                                [replacementMessage addAttribute:NSLinkAttributeName
-                                                           value:urlString
-                                                           range:urlRange];
-
-                            }else if([urlString rangeOfString:@"@"].location != NSNotFound){ //mail
-                                [replacementMessage addAttribute:NSLinkAttributeName
-                                                           value:[NSString stringWithFormat:@"mailto:%@",urlString]
-                                                           range:urlRange];
-
-                            }else{ //http
-                                [replacementMessage addAttribute:NSLinkAttributeName
-                                                           value:[NSString stringWithFormat:@"http://%@",urlString]
-                                                           range:urlRange];
-                                
-                            }
-
-                            //Color it blue and underline for good measure
-                            [replacementMessage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:urlRange];
-                            [replacementMessage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:1] range:urlRange];
-                            
+			    
                         }
                     }
                 }
