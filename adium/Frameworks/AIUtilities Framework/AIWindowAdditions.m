@@ -23,6 +23,11 @@
     return(([self styleMask] & NSTexturedBackgroundWindowMask) != 0);
 }
 
+- (BOOL)isBorderless
+{
+    return(([self styleMask] & NSBorderlessWindowMask) != 0);
+}
+
 - (void)compatibleInvalidateShadow
 {
     if ([NSApp isOnJaguarOrBetter])
