@@ -30,14 +30,18 @@
 														  dequeue:NO];
 		
 		//Pass along the event (either to ourself or our window, depending on what it is)
-		if([nextEvent type] == NSLeftMouseUp){
-			[super mouseDown:theEvent];   
-			[super mouseUp:nextEvent];   
-		}else if([nextEvent type] == (NSEventType)NSLeftMouseDraggedMask){
-			[[self window] mouseDown:theEvent];
-			[[self window] mouseDragged:theEvent];
-		}else{
-			[[self window] mouseDown:theEvent];
+		switch([nextEvent type]){
+			case NSLeftMouseUp:
+				[super mouseDown:theEvent];   
+				[super mouseUp:nextEvent];   
+				break;
+			case NSLeftMouseDragged:
+				[[self window] mouseDown:theEvent];
+				[[self window] mouseDragged:nextEvent];
+				break;
+			default:
+				[[self window] mouseDown:theEvent];
+				break;
 		}
 	}else{
         [super mouseDown:theEvent];   
