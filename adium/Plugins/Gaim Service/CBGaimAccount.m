@@ -26,21 +26,21 @@
 
 - (void)accountBlistNewNode:(GaimBlistNode *)node
 {
-    //NSLog(@"New node");
+//    NSLog(@"New node");
     if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
     {
         GaimBuddy *buddy = (GaimBuddy *)node;
         
         //create the handle, group-less for now
         AIHandle *theHandle = [AIHandle 
-            handleWithServiceID:[[service handleServiceType] identifier]
-            UID:[NSString stringWithUTF8String:buddy->name]
+            handleWithServiceID:@"AIM"/*[[service handleServiceType] identifier]*/
+            UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
             serverGroup:NO_GROUP
             temporary:NO
             forAccount:self];
-        
-        //stuff it in the dict
-        [handleDict setObject:theHandle forKey:[NSString stringWithFormat:@"%s", buddy->name]];
+//        NSLog(@"created handle %@",[[NSString stringWithUTF8String:buddy->name] compactedString]);
+        //stuff it in the dict - we store as a compactedString (that is, lowercase without spaces) for now because the TOC2 plugin does 
+        [handleDict setObject:theHandle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
         
         //set up our ui_data
         node->ui_data = [theHandle retain];
@@ -107,7 +107,7 @@
             [modifiedKeys addObject:@"IdleSince"];
         }
         
-        //did the group change/did we finally find out what group the buddy is in)
+        //did the group change/did we finally find out what group the buddy is in
         GaimGroup *g = gaim_find_buddys_group(buddy);
         if(g && strcmp([[theHandle serverGroup] cString], g->name))
         {
@@ -138,7 +138,8 @@
                 //BuddyImagePointer is just for us, shh, keep it secret ;)
                 [modifiedKeys addObject:@"BuddyImage"];
             }
-        }
+        }     
+        
         //if anything chnaged
         if([modifiedKeys count] > 0)
         {
@@ -158,7 +159,8 @@
 
 - (void)accountBlistRemove:(GaimBuddyList *)list withNode:(GaimBlistNode *)node
 {
-    [handleDict removeObjectForKey:[NSString stringWithFormat:@"%s", ((GaimBuddy *)node)->name]];
+    //stored the key as a compactedString originally
+    [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", ((GaimBuddy *)node)->name] compactedString]];
     [(AIHandle *)node->ui_data release];
     node->ui_data = NULL;
     
@@ -276,7 +278,7 @@
 }
 
 - (NSString *)accountID{
-    return([NSString stringWithUTF8String:SCREEN_NAME]);
+    return([NSString stringWithFormat:@"%s.%s", PROTOCOL, SCREEN_NAME]);
 }
 
 - (NSString *)UID{
