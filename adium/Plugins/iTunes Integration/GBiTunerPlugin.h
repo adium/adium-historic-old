@@ -3,15 +3,18 @@
 //  Adium XCode
 //
 //  Created by Gregory Barchard on Wed Dec 10 2003.
-//
 
-#define PREF_GROUP_ITUNER   @"iTuner"
+#define ITUNER_DEFAULT_PREFS           @"ITunesIntegrationPrefs"
+#define PREF_GROUP_ITUNER              @"iTunes Integration"
 
+@protocol AIContentFilter;
 @class GBiTunerPreferences;
 
-@interface GBiTunerPlugin : AIPlugin <AIContentFilter> {
-    //the hash table of the %'s 
-    NSDictionary                    *hash;
+@interface GBiTunerPlugin : AIPlugin <AIContentFilter> {    
+    //dictionary of scripts
+    NSDictionary            *scriptDict;
+    
+    GBiTunerPreferences     *preferences;
 }
 
 @end
