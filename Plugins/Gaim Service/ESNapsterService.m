@@ -12,52 +12,46 @@
 
 @implementation ESNapsterService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-	NSImage *image = [NSImage imageNamed:@"napster" forClass:[self class]];
-	
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Napster"
-                                                      description:@"Napster"
-                                                            image:image
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:24] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimNapsterAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"Napster-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Napster";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimNapsterAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimNapsterAccountViewController accountView]);
 }
 
-
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimNapsterJoinChatViewController joinChatView]);
 }
 
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-Napster");
+}
+- (NSString *)serviceID{
+	return(@"Napster");
+}
+- (NSString *)serviceClass{
+	return(@"Napster");
+}
+- (NSString *)shortDescription{
+	return(@"Napster");
+}
+- (NSString *)longDescription{
+	return(@"Napster");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(24);
+}
+- (BOOL)caseSensitive{
+	return(NO);
+}
 
 @end
