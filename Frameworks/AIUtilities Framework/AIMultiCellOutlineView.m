@@ -11,6 +11,7 @@
 - (void)resetRowHeightCache;
 - (void)updateRowHeightCache;
 - (void)_drawRowSelectionInRect:(NSRect)rect;
+- (void)_initMultiCellOutlineView;
 @end
 
 @implementation AIMultiCellOutlineView
@@ -18,20 +19,19 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initMultiCellOutlineView];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-    [self _init];
+    [self _initMultiCellOutlineView];
     return(self);
 }
 
-- (void)_init
+- (void)_initMultiCellOutlineView
 {
-	[super _init];
 	rowHeightCache = nil;
 	rowOriginCache = nil;
 	cacheSize = 2;
@@ -276,8 +276,10 @@
 
 - (void)setBackgroundColor:(NSColor *)inColor
 {
-	[backgroundColor release];
-	backgroundColor = [inColor retain];
+	if(backgroundColor != inColor){
+		[backgroundColor release];
+		backgroundColor = [inColor retain];
+	}
 }
 
 - (NSColor *)backgroundColor

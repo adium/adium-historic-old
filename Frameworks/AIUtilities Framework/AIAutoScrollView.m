@@ -18,7 +18,7 @@
 #define AUTOSCROLL_CATCH_SIZE 	20	//The distance (in pixels) that the scrollview must be within (from the bottom) for auto-scroll to kick in.
 
 @interface AIAutoScrollView (PRIVATE)
-- (void)_init;
+- (void)_initAutoScrollView;
 @end
 
 @implementation AIAutoScrollView
@@ -34,18 +34,18 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initAutoScrollView];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-    [self _init];
+    [self _initAutoScrollView];
     return(self);
 }
 
-- (void)_init
+- (void)_initAutoScrollView
 {
     autoScrollToBottom = NO;
     autoHideScrollBar = NO;

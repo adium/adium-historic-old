@@ -21,7 +21,7 @@
 #import "AILinkTrackingController.h"
 
 @interface AILinkTextView (PRIVATE)
-- (void)_init;
+- (void)_initLinkTextView;
 @end
 
 @implementation AILinkTextView
@@ -30,7 +30,7 @@
 - (id)initWithFrame:(NSRect)frame
 {
     [super initWithFrame:frame];
-    [self _init];
+    [self _initLinkTextView];
 
     return(self);
 }
@@ -39,13 +39,13 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initLinkTextView];
     
     return(self);
 }
 
 //Common init
-- (void)_init
+- (void)_initLinkTextView
 {
     linkTrackingController = [[AILinkTrackingController linkTrackingControllerForTextView:self] retain];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];

@@ -13,7 +13,6 @@
     BOOL		needsReload;
 }
 
-- (void)_init;
 - (void)itemDidExpand:(NSNotification *)notification;
 - (void)itemDidCollapse:(NSNotification *)notification;
 

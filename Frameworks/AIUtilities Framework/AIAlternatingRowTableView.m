@@ -24,7 +24,7 @@
 
 @interface AIAlternatingRowTableView (PRIVATE)
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
-- (void)_init;
+- (void)_initAlternatingRowTableView;
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView;
 @end
 
@@ -34,19 +34,22 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-
-    [self _init];
-
+    [self _initAlternatingRowTableView];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-
-    [self _init];
-
+    [self _initAlternatingRowTableView];
     return(self);
+}
+
+- (void)_initAlternatingRowTableView
+{
+    drawsAlternatingRows = NO;
+	acceptFirstMouse = NO;
+    alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
 }
 
 - (void)dealloc
@@ -54,13 +57,6 @@
     [alternatingRowColor release];
     
     [super dealloc];
-}
-
-- (void)_init
-{
-    drawsAlternatingRows = NO;
-	acceptFirstMouse = NO;
-    alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
 }
 
 
