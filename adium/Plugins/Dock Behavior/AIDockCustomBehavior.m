@@ -141,11 +141,15 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 //Delete the selected event
 - (IBAction)deleteEvent:(id)sender
 {
-    //Remove the event
-    [behaviorArray removeObjectAtIndex:[tableView_events selectedRow]];
-
-    //Save custom behavior
-    [self saveCustomBehavior];
+	int selectedRow = [tableView_events selectedRow];
+	
+	if (selectedRow != -1){
+		//Remove the event
+		[behaviorArray removeObjectAtIndex:[tableView_events selectedRow]];
+		
+		//Save custom behavior
+		[self saveCustomBehavior];
+	}
 }
 
 //Called by the event popUp menu (Inserts a new event)
