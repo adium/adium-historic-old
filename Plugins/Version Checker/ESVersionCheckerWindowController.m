@@ -8,11 +8,12 @@
 #import "CPFVersionChecker.h"
 
 #define ADIUM_UPDATE_URL			@"http://download.adiumx.com/"
+#define ADIUM_UPDATE_BETA_URL		@"http://beta.adiumx.com/"
 #define UPDATE_PROMPT				AILocalizedString(@"Adium was updated on %@. Your copy is %@old.  Would you like to update?", nil)
 
 #define VERSION_AVAILABLE_NIB		@"VersionAvailable"
 #define VERSION_UPTODATE_NIB		@"VersionUpToDate"
-#define CONNECT_ERROR_NIB               @"VersionCannotConnect"
+#define CONNECT_ERROR_NIB              @"VersionCannotConnect"
 
 @interface ESVersionCheckerWindowController (PRIVATE)
 - (void)showWindowFromBuild:(NSDate *)currentDate toBuild:(NSDate *)newestDate;
@@ -52,7 +53,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[super windowDidLoad];
 
 	//Disable the 'check automatically' button if we are in a beta build
-	if(BETA_RELEASE_EXPIRATION){
+	if(BETA_RELEASE){
 		[checkBox_checkAutomatically setState:YES];
 		[checkBox_checkAutomatically setEnabled:NO];
 	}	
@@ -104,7 +105,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 //Update
 - (IBAction)update:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_URL]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:(BETA_RELEASE ? ADIUM_UPDATE_BETA_URL : ADIUM_UPDATE_URL)]];
 	[self closeWindow:nil];
 }
 

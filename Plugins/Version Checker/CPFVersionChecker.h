@@ -6,11 +6,10 @@
 //
 
 //----------------------------------------------------------------------------------------------------------------------
-//When this flag is set to YES, we will version check from the beta key.  This allows beta releases to receive update
+//When the beta flag is set, we will version check from the beta key.  This allows beta releases to receive update
 //notifications separately from regular releases.  Version updates will also be more frequent and cannot be disabled.
 //This is to discourage the use of beta releases after a regular release is made without completely preventing the
 //program from launching.
-#define BETA_RELEASE_EXPIRATION		BETA_RELEASE
 //----------------------------------------------------------------------------------------------------------------------
 
 #define KEY_LAST_UPDATE_ASKED		@"LastUpdateAsked"
