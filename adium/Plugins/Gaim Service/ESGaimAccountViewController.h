@@ -7,17 +7,16 @@
 #import "GaimCommon.h"
 
 @interface ESGaimAccountViewController : AIAccountViewController {
-	IBOutlet	NSTextField		*textField_hostName;
-	IBOutlet	NSTextField		*textField_portNumber;
+	IBOutlet	NSTextField			*textField_hostName;
+	IBOutlet	NSTextField			*textField_portNumber;
 	
-	IBOutlet	NSPopUpButton   *menu_proxy;
-	IBOutlet	NSTextField		*textField_proxyHostName;
-	IBOutlet	NSTextField		*textField_proxyPortNumber;
-	IBOutlet	NSButton		*button_proxyRequireAuthentication;
-	IBOutlet	NSButton		*button_proxySetPassword;
-	
+	IBOutlet	NSPopUpButton		*menu_proxy;
+	IBOutlet	NSTextField			*textField_proxyHostName;
+	IBOutlet	NSTextField			*textField_proxyPortNumber;
+	IBOutlet	NSTextField			*textField_proxyUserName;
+	IBOutlet	NSSecureTextField   *textField_proxyPassword;
 }
 
-- (IBAction)changedConnectionPreference:(id)sender;
+- (IBAction)changeConnectionPreference:(id)sender;
 
 @end

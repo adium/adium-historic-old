@@ -26,10 +26,9 @@
     [super configureForAccount:inAccount];
     
 	CBGaimAccount   *theAccount = (CBGaimAccount *)inAccount;
-	NSString		*hostName, *proxyHostName;
+	NSString		*hostName, *proxyHostName, *proxyUserName, *proxyPassword;
 	int				port, proxyPort;
 	NSNumber		*proxyTypeNumber;
-	NSNumber		*proxyAuthenticateNumber;
 	
 	//Host name
 	hostName = [theAccount host];
@@ -60,10 +59,18 @@
 	if (proxyPort){
 		[textField_proxyPortNumber setIntValue:proxyPort];
 	}
+
+	proxyUserName = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+	if (proxyUserName){
+		[textField_proxyUserName setStringValue:proxyUserName];
+	}
 	
-	//Proxy must authenticate?
-	proxyAuthenticateNumber = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_AUTHENTICATE group:GROUP_ACCOUNT_STATUS];
-	[button_proxyRequireAuthentication setState:proxyAuthenticateNumber ? [proxyAuthenticateNumber boolValue] : NSOffState];
+	proxyPassword = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
+	if (proxyPassword){
+		[textField_proxyPassword setStringValue:proxyPassword];
+	}
+	
+	
 	
 	[self configureConnectionControlDimming];
 }
@@ -94,8 +101,9 @@
 	return [menuItem autorelease];
 }
 
-- (IBAction)changedConnectionPreference:(id)sender
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
+	NSTextField *sender = [aNotification object];
 	if (sender == textField_hostName){
 		NSString *stringValue = [sender stringValue];
 		if ([stringValue length]){
@@ -134,7 +142,8 @@
 		}
 		
 	}else if (sender == textField_proxyHostName){
-		[account setPreference:[sender stringValue]
+		NSString	*hostName = [textField_hostName stringValue];
+		[account setPreference:hostName
 						forKey:KEY_ACCOUNT_GAIM_PROXY_HOST
 						 group:GROUP_ACCOUNT_STATUS];
 		
@@ -143,13 +152,25 @@
 						forKey:KEY_ACCOUNT_GAIM_PROXY_PORT
 						 group:GROUP_ACCOUNT_STATUS];
 		
-	}else if (sender == button_proxyRequireAuthentication){
-		[account setPreference:[NSNumber numberWithInt:[sender intValue]]
-						forKey:KEY_ACCOUNT_GAIM_PROXY_AUTHENTICATE
+	}else if (sender == textField_proxyUserName){
+		NSString	*userName = [sender stringValue];
+		[account setPreference:userName
+						forKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME
 						 group:GROUP_ACCOUNT_STATUS];
+				
+		//Update the password field
+		[textField_proxyPassword setStringValue:@""];
+		[textField_proxyPassword setEnabled:(userName && [userName length])];
 		
-	}else if (sender == button_proxySetPassword){
-		//Display the set password sheet
+	}
+}
+
+- (IBAction)changeConnectionPreference:(id)sender
+{
+	if (sender == textField_proxyPassword){
+		[[adium accountController] setPassword:[textField_proxyPassword stringValue]
+								forProxyServer:[textField_hostName stringValue]
+									  userName:[textField_proxyUserName stringValue]];
 	}
 }
 
@@ -171,8 +192,8 @@
 
 	[textField_proxyHostName setEnabled:enableProxySettings];
 	[textField_proxyPortNumber setEnabled:enableProxySettings];
-	[button_proxyRequireAuthentication setEnabled:enableProxySettings];
-	[button_proxySetPassword setEnabled:enableProxySettings];
+	[textField_proxyUserName setEnabled:enableProxySettings];
+	[textField_proxyPassword  setEnabled:(enableProxySettings && [[textField_proxyUserName stringValue] length])];
 }
 
 @end

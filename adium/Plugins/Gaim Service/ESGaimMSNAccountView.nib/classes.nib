@@ -18,13 +18,13 @@
             CLASS = ESGaimAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_proxyRequireAuthentication" = NSButton; 
-                "button_proxySetPassword" = NSButton; 
                 "menu_proxy" = NSPopUpButton; 
                 "textField_hostName" = NSTextField; 
                 "textField_portNumber" = NSTextField; 
                 "textField_proxyHostName" = NSTextField; 
+                "textField_proxyPassword" = NSSecureTextField; 
                 "textField_proxyPortNumber" = NSTextField; 
+                "textField_proxyUserName" = NSTextField; 
             }; 
             SUPERCLASS = AIAccountViewController; 
         }, 
