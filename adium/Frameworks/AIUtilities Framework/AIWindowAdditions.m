@@ -60,11 +60,11 @@
 //								   int *tags, int thirtyTwo) __attribute__((weak_import));
 //extern OSStatus CGSSetWindowTags(const CGSConnection cid, const CGSWindow wid, 
 //								 int *tags, int thirtyTwo) __attribute__((weak_import));
--(void)setIgnoresExpose:(BOOL)flag
-{
-	// ### This code correctly sets the expose flag, but doesn't remove it ###
-	
-	//Check for the presence of all three symbols.  If they do not exist, we simply return
+//-(void)setIgnoresExpose:(BOOL)flag
+//{
+//	// ### This code correctly sets the expose flag, but doesn't remove it ###
+//	
+//	//Check for the presence of all three symbols.  If they do not exist, we simply return
 //	if(CGSGetWindowTags != NULL && CGSClearWindowTags != NULL && CGSSetWindowTags != NULL){
 //		CGSConnection cid;
 //		CGSWindow wid;
@@ -95,6 +95,6 @@
 //			}
 //		}
 //	}
-}
+//}
 
 @end
