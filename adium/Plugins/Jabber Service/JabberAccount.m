@@ -7,6 +7,8 @@
 #include <openssl/md5.h>
 #include <unistd.h>
 
+const int STARTUP_TIME = 20;
+
 @interface JabberAccount (PRIVATE)
 - (void)initAccount;
 - (void)connect;
@@ -187,7 +189,6 @@
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     session = [[JabberSession alloc] init];
-    delay = FALSE;
     [[session roster] setDelegate: self];
     [session addObserver:self selector:@selector(onSessionConnected:) name:JSESSION_CONNECTED];
     [session addObserver:self selector:@selector(onSessionAuthReady:) name:JSESSION_AUTHREADY];
@@ -245,12 +246,12 @@
 
 - (NSArray *)supportedPropertyKeys
 {
-    return([NSArray arrayWithObjects:@"Online", @"Offline", nil]);
+    return([NSArray arrayWithObjects:@"Online", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    NSLog(@"jabber: statusForKey: %@ willChangeTo: %d", key, inValue);
+    NSLog(@"jabber: statusForKey: %@ willChangeTo: %@", key, inValue);
     ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
         
     if([key compare:@"Online"] == 0)
@@ -283,7 +284,6 @@
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
                                         forKey:@"Status" account:self];
     NSLog(@"starting session");
-    delay = FALSE;
     [session startSession:myID onPort:5222];
 }
 
@@ -304,15 +304,25 @@
     NSLog(@"jabber: disconnect");
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
         forKey:@"Status" account:self];
-    [session removeObserver:self];
     [session stopSession];
     NSAssert(myID != nil, @"no id when disconnecting");
     [myID release];
     myID = nil;
 
+    //Remove all our handles
+    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+    [[owner contactController] handlesChangedForAccount:self];
+
     // Set status as offline
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
+}
+
+- (void)startupEnded
+{
+    silentAndDelayed = FALSE;
+    [initialTimer release];
+    initialTimer = nil;
 }
 
 #pragma mark JabberSession callbacks
@@ -326,10 +336,23 @@
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
                                     forKey:@"Status" account:self];
     [session sendString:@"<presence><priority>5</priority></presence>"];
+    silentAndDelayed = TRUE;
+    NSAssert(initialTimer == nil, @"have timer already");
+    initialTimer = [[NSTimer scheduledTimerWithTimeInterval:STARTUP_TIME
+                                                     target:self
+                                                   selector:@selector(startupEnded)
+                                                   userInfo:nil
+                                                    repeats:NO] retain];
 }
 
 - (void)onSessionEnded:(NSNotification*)n
 {
+    NSLog(@"Jabber: session ended");
+    if (initialTimer != nil) {
+        [initialTimer invalidate];
+        [initialTimer release];
+        initialTimer = nil;
+    }
     NSAssert(groupTracker != nil, @"group tracker should not be nil when session ended");
     [groupTracker release];
     groupTracker = nil;
@@ -434,8 +457,8 @@
         
         [[owner contactController] handleStatusChanged:handle
                                     modifiedStatusKeys:changed
-                                               delayed:delay
-                                                silent:delay];        
+                                               delayed:silentAndDelayed
+                                                silent:silentAndDelayed];
     }
 }
 
@@ -447,43 +470,30 @@
 
 -(void) onEndUpdate {
     NSLog(@"onEndUpdate");
-    delay = FALSE;
 }
 
 -(void) onItem:(id)item addedToGroup:(NSString*)group
 {
-    if ([item conformsToProtocol: @protocol(JabberRosterItem)]) {
-        // Item created and/or added to group
-        NSLog(@"item %@ added to group %@", [item displayName], group);
-        NSString *uid = [[item JID] userhost];
-        AIHandle *handle = [handleDict objectForKey: uid];
-        if (!handle) {
-            NSLog(@"creating");
-            handle = [self addHandleWithUID:uid serverGroup:nil temporary:NO];
-        } else
-            NSLog(@"already present");
-    } else {
-        // New group added
-        NSLog(@"group %@ added", group);
-    }
+    NSLog(@"item %@ added to group %@", [item displayName], group);
+    NSString *uid = [[item JID] userhost];
+    AIHandle *handle = [handleDict objectForKey: uid];
+    if (!handle) {
+        NSLog(@"creating");
+        handle = [self addHandleWithUID:uid serverGroup:nil temporary:NO];
+    } else
+        NSLog(@"already present");
 }
 
 - (void) onItem:(id)item removedFromGroup:(NSString*)group
 {
-    if ([item conformsToProtocol: @protocol(JabberRosterItem)]) {
-        // Item destroyed and/or removed from a group
-        NSString *uid = [[item JID] userhost];
-        NSLog(@"item %@ removed from from %@", [item displayName], group);
-        AIHandle *handle = [handleDict objectForKey: uid];
-        if (handle) {
-            NSLog(@"removing");
-            [self removeHandleWithUID:uid];
-        } else
-            NSLog(@"already removed");
-    } else {
-        // Group removed
-        NSLog(@"group %@ removed", group);
-    }
+    NSString *uid = [[item JID] userhost];
+    NSLog(@"item %@ removed from from %@", [item displayName], group);
+    AIHandle *handle = [handleDict objectForKey: uid];
+    if (handle) {
+        NSLog(@"removing");
+        [self removeHandleWithUID:uid];
+    } else
+        NSLog(@"already removed");
 }
 
 @end
