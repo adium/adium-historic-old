@@ -70,8 +70,8 @@
 
     //Update the tab text color
     if(	inModifiedKeys == nil || 
-        [inModifiedKeys containsObject:@"Typing"] ||
-        [inModifiedKeys containsObject:@"UnviewedContent"] ||
+        [inModifiedKeys containsObject:KEY_TYPING] ||
+        [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT] ||
         [inModifiedKeys containsObject:@"Away"] ||
         [inModifiedKeys containsObject:@"Idle"] ||
         [inModifiedKeys containsObject:@"Online"] ||
@@ -83,8 +83,8 @@
     }
 
     //Update our flash array
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
-        int unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+    if(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+        int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 
         if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
             [self _addToFlashArray:inObject];
@@ -104,7 +104,7 @@
     int		idle;
 
     //Prefetch the value for unviewed content, we need it multiple times below
-    unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+    unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 
     //Unviewed content
     if(!color && ((unviewedContentEnabled || contactListUnviewedContentEnabled) && unviewedContent)){
@@ -128,7 +128,7 @@
         }else if( [inObject integerStatusObjectForKey:@"Signed On"] && (signedOnEnabled || contactListSignedOnEnabled) ){
             color = signedOnColor;
 
-        }else if( ([inObject integerStatusObjectForKey:@"Typing"] == AITyping) && (typingEnabled || contactListTypingEnabled) ){
+        }else if( ([inObject integerStatusObjectForKey:KEY_TYPING] == AITyping) && (typingEnabled || contactListTypingEnabled) ){
             color = typingColor;
 
         }
