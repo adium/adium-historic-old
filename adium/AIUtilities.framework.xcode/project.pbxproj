@@ -4028,6 +4028,34 @@
 //4B2
 //4B3
 //4B4
+		4B4C82C606DA8E2A00B17E06 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = minus.png;
+			path = "Plugins/Account List Preferences/minus.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B4C82C706DA8E2A00B17E06 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = plus.png;
+			path = "Plugins/Account List Preferences/plus.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B4C82C806DA8E2A00B17E06 = {
+			fileRef = 4B4C82C606DA8E2A00B17E06;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4C82C906DA8E2A00B17E06 = {
+			fileRef = 4B4C82C706DA8E2A00B17E06;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BD1EED206D25EC900B3975E = {
 			children = (
 				34486B5406D1DF0300DA778C,
@@ -4756,6 +4784,8 @@
 				34486C1406D1DF0400DA778C,
 				34486C1506D1DF0400DA778C,
 				34486C1606D1DF0400DA778C,
+				4B4C82C606DA8E2A00B17E06,
+				4B4C82C706DA8E2A00B17E06,
 			);
 			isa = PBXGroup;
 			name = Images;
@@ -5059,6 +5089,8 @@
 				34486D2006D1DF0400DA778C,
 				34486D2106D1DF0400DA778C,
 				4BD1F5A406D28BD600B3975E,
+				4B4C82C806DA8E2A00B17E06,
+				4B4C82C906DA8E2A00B17E06,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
