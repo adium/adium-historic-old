@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
 <title>Adium SQL Logger Technical Details</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -129,16 +129,44 @@
       database-independant perl module.  You can download it with either CPAN
       or fink. (<a href="http://fink.sourceforge.net" class="offsite">http://fink.sourceforge.net</a>)</p>
 <p>To install them via CPAN:</p>
-<div class="tutorialcode"><pre>sudo perl -MCPAN -e 'install DBI'
-sudo perl -MCPAN -e 'install DBD::Pg'</pre></div>
+<div class="tutorialcode">
+<pre>sudo perl -MCPAN -e 'install DBI'</pre>
+    </div>
 <p>If this is your first time running CPAN, it will ask a few questions.
     The defaults are fine.</p>
-<p>If you see errors relating to <code>ranlib</code> or
-    <code>libpq.a</code>, don't worry.  Just run the following command:</p>
+<p>Now it's time to install DBD::Pg.  It's quite possible that if you have
+    trouble this will be the longest step of the process.  Thanks to evands
+    for being a guinea pig on this one.</p>
+<p>DBD::Pg has a process where it attempts to connect to a working
+    PostgreSQL installation.  Because of this, the default CPAN install
+    process will fail.  So it's best to not even try, right off the bat.</p>
+<p>There are a few environmental variables that need to be set to allow the
+    compile process to find the various libraries PostgreSQL installs.
+    Set the following:</p>
+<div class="tutorialcode">
+    <pre>setenv POSTGRES_INCLUDE=/usr/local/pgsql/include
+setenv POSTGRES_LIB=/usr/local/pgsql/lib -lssl
+setenv DBI_DSN=dbi:Pg:dbname=<i>database/username</i>
+setenv DBI_USER=<i>username</i>
+setenv DBI_PASS=<i>Password</i></pre>
+</div>
+<p>If you are running Bash as your shell (Panther):</p>
+<div class="tutorialcode">
+  <pre>export POSTGRES_INCLUDE=/usr/local/pgsql/include
+export POSTGRES_LIB=/usr/local/pgsql/lib -lssl
+export DBI_DSN=dbi:Pg:dbname=<i>database/username</i>
+export DBI_USER=<i>username</i>
+export DBI_PASS=<i>password</i></pre>
+</div>
+<p>If you run it now, you will probably see errors relating to <code>ranlib</code> or
+    <code>libpq.a</code>.  Just run the following command preemptively:</p>
 <div class="tutorialcode">
 <pre>sudo ranlib /usr/local/pgsql/lib/libpq.a</pre>
   </div>
-<p>After running that, attempt to install DBD::Pg again.</p>
+<p>After running that, install DBD::Pg:</p>
+<div class="tutorialcode">
+<pre>sudo perl -MCPAN -e 'install DBD::Pg'</pre>
+  </div>
 <p>If you want to install via fink, the packages are called &quot;dbi-pm&quot; and
     &quot;dbd-pg-pg&quot; [unstable]</p>
 <p>
@@ -157,6 +185,10 @@ sudo perl -MCPAN -e 'install DBD::Pg'</pre></div>
 <p>Both scripts will rename the log files they insert, so if there is a
     problem the script can be run multiple times.  Adium has no problem
     reading the renamed log files.</p>
+<p>It may not pass on the first time through.  If you have malformed logs,
+    or a few weird messages, it will die.  Simple correct the log, or move it
+    out of the way.  It particularly has trouble with copy and pasted
+    logs and IMs.</p>
 <p>
 <code>restore.pl</code> simply undoes the 
     renaming, so they go back to the standard Adium filenames.  Requires no
@@ -169,6 +201,54 @@ sudo perl -MCPAN -e 'install DBD::Pg'</pre></div>
       <li>If the database is Unicode-encoded, it will be very picky about
         inserting characters it doesn't know into it.  Since Adium doesn't log
         as unicode, this could cause some problems.</li>
+      <li>If you are getting undefined errors like this:
+        <pre>dyld: perl Undefined symbols:
+          _BIO_free
+          _BIO_new_mem_buf
+          _DH_check
+          _DH_generate_parameters
+          _DH_size
+          _ERR_get_error
+          _ERR_reason_error_string
+          _EVP_PKEY_free
+          _PEM_read_DHparams
+          _PEM_read_PrivateKey
+          _PEM_read_X509
+          _PEM_read_bio_DHparams
+          _SSL_CTX_ctrl
+          _SSL_CTX_free
+          _SSL_CTX_load_verify_locations
+          _SSL_CTX_new
+          _SSL_CTX_set_tmp_dh_callback
+          _SSL_CTX_set_verify
+          _SSL_CTX_set_verify_depth
+          _SSL_connect
+          _SSL_free
+          _SSL_get_error
+          _SSL_get_ex_data
+          _SSL_get_peer_certificate
+          _SSL_library_init
+          _SSL_load_error_strings
+          _SSL_new
+          _SSL_pending
+          _SSL_read
+          _SSL_set_ex_data
+          _SSL_set_fd
+          _SSL_shutdown
+          _SSL_write
+          _TLSv1_method
+          _X509_NAME_get_text_by_NID
+          _X509_NAME_oneline
+          _X509_check_private_key
+          _X509_free
+          _X509_get_subject_name</pre>
+        This is caused by not including -lssl in the library path as you
+        compiled DBD::Pg</li>
+      <li>If you get an error like this:
+        <pre>dyld: perl Undefined symbols:
+          _is_utf8_string
+          Trace/BPT trap</pre>You may need to upgrade Perl, unfortunately.
+        There are directions for installing Perl 5.8.0 at <a href="http://developer.apple.com/internet/macosx/perl.html" class="offsite">http://developer.apple.com/internet/macosx/perl.html</a>.</li>
     </ul>
 <hr>
 <div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>

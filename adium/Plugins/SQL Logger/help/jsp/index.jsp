@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 419 $ $Date: 2003/09/09 01:18:57 $ -->
+<!--$Rev: 435 $ $Date: 2003/09/22 16:42:13 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -225,7 +225,13 @@ try {
         pstmt.setString(i + 1, commandArray[i]);
     }
     rset = pstmt.executeQuery();
-    
+    /*
+    out.println("<pre>");
+    while(rset.next()) {
+        out.println(rset.getString(1));
+    }
+    out.println("</pre>");
+    */
     if (!rset.isBeforeFirst()) {
         out.print("<div align=\"center\"><i>No records found.</i></div>");
     } else {
@@ -286,7 +292,7 @@ try {
             cellColor = "#dddddd";
         }
         
-        out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" +
+        out.print("<td valign=\"top\" align=\"left\" bgcolor=\"" +
         cellColor + "\" id=\"" + rset.getInt("message_id") + "\">");
  
         out.print("<a href=\"index.jsp?from=" +
@@ -306,25 +312,27 @@ try {
         } else {
             out.print(rset.getString("sender_sn"));
         }
-        out.print("</font>:</a></font></td>\n");
-
-
-        out.print("<td bgcolor=\"" + cellColor + "\">" + message + "</td>\n");
-
-        out.print("<td valign=\"top\" bgcolor=\"" + cellColor + "\">");
-        out.print(rset.getTime("message_date"));
+        out.print("</font>:</a></font>\n");
+        
 
         if(to_sn == null || from_sn == null) {
             out.print("<font color=\"" +
-            received_color + "\">&nbsp;(");
+            received_color + "\">");
             if(showDisplay) {
                 out.print(rset.getString("recipient_display"));
             } else {
                 out.print(rset.getString("recipient_sn"));
             }
-            out.print(")</font>");
+            out.print("</font>");
         }
+        out.print("</td>");
+        out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" + cellColor + "\">");
+        out.print(rset.getTime("message_date"));
         out.print("</td>\n");
+
+        out.print("</tr><tr>");
+        out.print("<td colspan=\"2\" bgcolor=\"" + cellColor + "\">" + message + "</td>\n");
+
         out.print("</tr>\n");
     }
 %>
