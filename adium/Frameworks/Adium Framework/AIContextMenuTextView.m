@@ -9,39 +9,37 @@
 
 @implementation AIContextMenuTextView
 
-static NSMenu *contextualMenu = nil;
 
 + (NSMenu *)defaultMenu
 {
-        if (!contextualMenu){
-                NSArray                 *itemsArray = nil;
-                NSEnumerator    *enumerator;
-                NSMenuItem              *menuItem;
-                
-                //Grab NSTextView's default menu, copying so we don't mess effect menus elsewhere
-                contextualMenu = [[super defaultMenu] copy];
-                
-                //Retrieve the items which should be added to the bottom of the default menu
-                NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
-                        [NSNumber numberWithInt:Context_TextView_LinkAction],
-                        [NSNumber numberWithInt:Context_TextView_General],
-                        [NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
-                                                                                                                                                                                          forTextView:self];
-                itemsArray = [adiumMenu itemArray];
-                
-                if([itemsArray count] > 0) {
-                        [contextualMenu addItem:[NSMenuItem separatorItem]];
-                        int i = [(NSMenu *)contextualMenu numberOfItems];
-                        enumerator = [itemsArray objectEnumerator];
-                        while((menuItem = [enumerator nextObject])){
-                                //[contextualMenu addItem:[[menuItem copy] autorelease]];
-                                [adiumMenu removeItem:menuItem];
-                                [(NSMenu *)contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:i++];
-                        }
-                }
-        }
-        
-    return contextualMenu; //return the menu
+	NSMenu			*contextualMenu;
+	
+	NSArray			*itemsArray = nil;
+	NSEnumerator    *enumerator;
+	NSMenuItem		*menuItem;
+	
+	//Grab NSTextView's default menu, copying so we don't mess effect menus elsewhere
+	contextualMenu = [[super defaultMenu] copy];
+	
+	//Retrieve the items which should be added to the bottom of the default menu
+	NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+		[NSNumber numberWithInt:Context_TextView_LinkAction],
+		[NSNumber numberWithInt:Context_TextView_General],
+		[NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
+																						  forTextView:self];
+	itemsArray = [adiumMenu itemArray];
+	
+	if([itemsArray count] > 0) {
+		[contextualMenu addItem:[NSMenuItem separatorItem]];
+		int i = [(NSMenu *)contextualMenu numberOfItems];
+		enumerator = [itemsArray objectEnumerator];
+		while((menuItem = [enumerator nextObject])){
+//			[adiumMenu removeItem:menuItem];
+			[contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:i++];
+		}
+	}
+	
+	return [contextualMenu autorelease];
 }
 
 - (void)textDidChange:(NSNotification *)notification
