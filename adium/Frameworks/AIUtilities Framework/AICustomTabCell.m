@@ -18,6 +18,8 @@
 #import "AIImageUtilities.h"
 #import "AICursorAdditions.h"
 
+#define ALLOW_CLOSING_INACTIVE_TABS     NO      //Make this a pref eventually
+
 @interface AICustomTabCell (PRIVATE)
 - (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
 @end
@@ -32,6 +34,7 @@ static NSImage		*tabFrontRight = nil;
 static NSImage		*tabCloseFront = nil;
 static NSImage		*tabCloseBack = nil;
 static NSImage		*tabCloseFrontPressed = nil;
+static NSImage		*tabCloseFrontRollover = nil;
 
 #define TAB_CLOSE_LEFTPAD	2	//Padding left of close button
 #define TAB_CLOSE_RIGHTPAD	4	//Padding right of close button
@@ -125,16 +128,22 @@ static NSImage		*tabCloseFrontPressed = nil;
         tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
         tabCloseBack = [[AIImageUtilities imageNamed:@"TabClose_Back" forClass:[self class]] retain];
         tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
+        tabCloseFrontRollover = [[AIImageUtilities imageNamed:@"TabClose_Front_Rollover" forClass:[self class]] retain];
 
         haveLoadedImages = YES;
     }
 
+    
+    //init
     tabViewItem = inTabViewItem;
+    trackingClose = NO;
+    hoveringClose = NO;
     selected = NO;
     dragging = NO;
     trackingTag = 0;
+    closeTrackingTag = 0;
 
-    //
+    //Calculate the close button position ahead of time
     closeButtonRect = NSMakeRect([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
                                  TAB_CLOSE_Y_OFFSET,
                                  [tabCloseFront size].width,
@@ -197,7 +206,6 @@ static NSImage		*tabCloseFrontPressed = nil;
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.08] set];
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
     }
-    
 
     //
     rect.origin.x += leftCapWidth;
@@ -208,7 +216,7 @@ static NSImage		*tabCloseFrontPressed = nil;
         NSPoint	destPoint = NSMakePoint(rect.origin.x + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
 
         if(hoveringClose){
-            [tabCloseFrontPressed compositeToPoint:destPoint operation:NSCompositeSourceOver];
+            [(trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover) compositeToPoint:destPoint operation:NSCompositeSourceOver];
         }else{
             [(selected ? tabCloseFront : tabCloseBack) compositeToPoint:destPoint operation:NSCompositeSourceOver];
         }
@@ -226,21 +234,79 @@ static NSImage		*tabCloseFrontPressed = nil;
 
 }
 
-//Mouse tracking / Clicking -------------------------------------------
-- (void)setTrackingTag:(NSTrackingRectTag)inTag{
-    trackingTag = inTag;
-}
-- (NSTrackingRectTag)trackingTag{
-    return(trackingTag);
+//Hover tracking ----------------------------------------------------------------
+//Install tracking rects for our tab and its close button
+- (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation
+{
+    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
+
+    userData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", nil] retain]; //We have to retain and release the userData ourself
+    trackingTag = [view addTrackingRect:trackRect
+                                  owner:self
+                               userData:userData
+                           assumeInside:NSPointInRect(cursorLocation, trackRect)];
+    highlighted = NSPointInRect(cursorLocation, trackRect);
+
+    closeUserData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", [NSNumber numberWithBool:YES], @"close", nil] retain]; //We have to retain and release the userData ourself
+    closeTrackingTag = [view addTrackingRect:offsetCloseButtonRect
+                                       owner:self
+                                    userData:closeUserData
+                                assumeInside:NSPointInRect(cursorLocation, offsetCloseButtonRect)];
+    hoveringClose = NSPointInRect(cursorLocation, offsetCloseButtonRect);
 }
 
+//Remove our tracking rects
+- (void)removeTrackingRectsFromView:(NSView *)view
+{
+    [view removeTrackingRect:trackingTag]; trackingTag = 0;
+    [userData release]; userData = nil;
+    
+    [view removeTrackingRect:closeTrackingTag]; closeTrackingTag = 0;
+    [closeUserData release]; closeUserData = nil;
+}
 
+//Mouse entered our tabs (or close button)
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+    NSRect          offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
+    NSDictionary    *eventData = [theEvent userData];
+    NSView          *view = [eventData objectForKey:@"view"];
+
+    //Set ourself (or our close button) has hovered
+    if((ALLOW_CLOSING_INACTIVE_TABS || selected) && [[eventData objectForKey:@"close"] boolValue]){
+        hoveringClose = YES;
+        [view setNeedsDisplayInRect:offsetCloseButtonRect];
+    }else{
+        highlighted = YES;
+        [view setNeedsDisplayInRect:[self frame]];
+    }
+}
+
+//Mouse left one of our tabs
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    NSRect          offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
+    NSDictionary    *eventData = [theEvent userData];
+    NSView          *view = [eventData objectForKey:@"view"];
+
+    //Set ourself (or our close button) has not hovered
+    if((ALLOW_CLOSING_INACTIVE_TABS || selected) && [[eventData objectForKey:@"close"] boolValue]){
+        hoveringClose = NO;
+        [view setNeedsDisplayInRect:offsetCloseButtonRect];
+    }else{
+        highlighted = NO;
+        [view setNeedsDisplayInRect:[self frame]];
+    }
+}
+
+//Mouse tracking / Clicking -----------------------------------------------------
+//Mouse-down tracking
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
     
-    if(selected && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
+    if((ALLOW_CLOSING_INACTIVE_TABS || selected) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
         //Track the close button
         [self trackMouse:theEvent
                   inRect:offsetCloseButtonRect
@@ -259,6 +325,7 @@ static NSImage		*tabCloseFrontPressed = nil;
 {
     NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
 
+    trackingClose = YES;
     hoveringClose = YES;
     [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
 
@@ -288,6 +355,7 @@ static NSImage		*tabCloseFrontPressed = nil;
     }
     
     hoveringClose = NO;
+    trackingClose = NO;
     [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
 }
 
