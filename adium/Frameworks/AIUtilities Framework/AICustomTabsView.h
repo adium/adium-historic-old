@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "ESFloater.h"
 
 @class AIAdium, AICustomTabCell, AICustomTabsView;
 
@@ -33,30 +34,29 @@
 
     //Images
     NSImage		*tabDivider;
-
-    //Dragging
-    NSImage		*dragImage;
-    NSSize		dragInitialOffset;	//Offset of the cursor on the drag image
-
-    BOOL		draggingATabCell;
-    BOOL		tabHasBeenDragged;
+    
     BOOL		viewsRearranging;	//YES if our views are currently animating/rearranging
-
     int			tabXOrigin;
+    
     //Drag tracking and receiving
-    BOOL		focusedForDrag;		//YES if we are being dragged onto
     NSSize		hoverSize;		//The size of that object
     int			hoverIndex;		//The index it's hovering at
-
+    BOOL		draggingATabCell;
+    BOOL		focusedForDrag;		//YES if we are being dragged onto
+    BOOL                hovering;
+    
     //Dragging source
+    NSImage		*dragImage;
+    ESFloater           *dragFloater;
     NSSize		draggedSize;		//The item's size
-    NSSize		draggedOffset; //?
+    NSSize		draggedOffset;
     int			draggedIndex;       
     BOOL                draggingLastItem;
+    float               tabBarHeight;
     
     NSPoint		lastClickLocation;
-    
-    AIAdium			*owner;
+
+    AIAdium             *owner;
     
     //Delegate
     id <AICustomTabsViewDelegate>	delegate;
@@ -65,6 +65,9 @@
 - (void)removeTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)setOwner:(AIAdium *)inOwner;
 - (void)acceptDropInMessageView;
+- (void)updateHoverAtScreenPoint:(NSPoint)inPoint;
+- (void)removeHover;
+- (void)acceptDropAtScreenPoint:(NSPoint)inPoint;
 
 @end
 
