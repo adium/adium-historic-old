@@ -16,6 +16,7 @@
         }, 
         {CLASS = NEHTicTacToeBoard; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {move = id; }; 
             CLASS = NEHTicTacToeController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
