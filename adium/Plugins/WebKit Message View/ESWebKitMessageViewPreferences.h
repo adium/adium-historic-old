@@ -6,6 +6,7 @@
 
 #import <WebKit/WebKit.h>
 #import "ESWebView.h"
+#import "JVFontPreviewField.h"
 
 typedef enum {
 	DefaultBackground = 0,
@@ -19,8 +20,7 @@ typedef enum {
 		
 	IBOutlet	NSPopUpButton   *popUp_styles;
 	
-	IBOutlet	NSPopUpButton   *popUp_font;
-	IBOutlet	NSPopUpButton   *popUp_fontSize;
+	IBOutlet	JVFontPreviewField  *fontPreviewField_currentFont;
 	IBOutlet	NSPopUpButton   *popUp_minimumFontSize;
 	
     IBOutlet    NSPopUpButton   *popUp_timeStamps;

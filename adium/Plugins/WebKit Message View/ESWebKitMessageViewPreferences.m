@@ -11,8 +11,10 @@
 #define PREVIEW_FILE	@"Preview"
 
 #define NO_BACKGROUND_ITEM_TITLE		AILocalizedString(@"No Image",nil)
-#define DEFAULT_BACKGROUND_ITEM_TITLE   AILocalizedString(@"Default",nil)
+#define DEFAULT_BACKGROUND_ITEM_TITLE   AILocalizedString(@"Default Image",nil)
 #define CUSTOM_BACKGROUND_ITEM_TITLE	AILocalizedString(@"Custom...",nil)
+
+#define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"  //To watch when the contact name display format changes
 
 @interface ESWebKitMessageViewPreferences (PRIVATE)
 - (void)updatePreview;
@@ -60,7 +62,10 @@
 	[preview setMaintainsBackForwardList:NO];
 	
 	[self _buildTimeStampMenu];
-	[self _buildFontMenus];
+	[fontPreviewField_currentFont setShowFontFace:NO];
+	[fontPreviewField_currentFont setShowPointSize:YES];
+	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
+	
 	[popUp_customBackground setMenu:[self _customBackgroundMenu]];
 	[popUp_styles setMenu:[self _stylesMenu]];
 	
@@ -98,7 +103,10 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] == 0){
+	if(notification == nil ||
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] ||
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DISPLAYFORMAT]){
+
 		[self updatePreview];
 	}
 }
@@ -116,14 +124,6 @@
         [[adium preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
                                              forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}else if (sender == popUp_font){
-		[preview setFontFamily:[[popUp_font selectedItem] representedObject]];
-		[self updatePreview];
-		
-	}else if (sender == popUp_fontSize){
-		[[preview preferences] setDefaultFontSize:[[popUp_fontSize selectedItem] tag]];
-		[self updatePreview];
-		
 	}else if (sender == popUp_minimumFontSize){
 		[[preview preferences] setMinimumFontSize:[[popUp_minimumFontSize selectedItem] tag]];
 		[self updatePreview];	
@@ -141,6 +141,19 @@
                                              forKey:key
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
+}
+
+
+- (void) fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font {
+	[preview setFontFamily:[font familyName]];
+	[[preview preferences] setDefaultFontSize:[font pointSize]];
+	
+	//The family name is stored in the WebKit preferences but can't always get us back to a real font, as the fontName
+	//may differ, so we store the font name separately for UI purposes
+	[[adium preferenceController] setPreference:[font fontName]
+										forKey:[plugin fontNameKeyForStyle:[[popUp_styles selectedItem] title]]
+										 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	[self updatePreview];
 }
 
 - (IBAction)changeStyle:(id)sender
@@ -305,11 +318,6 @@
 {
 	NSMenu		*submenu;
 	
-	//Font menus
-	[popUp_font selectItemWithTitle:[preview fontFamily]];
-	[popUp_fontSize selectItemAtIndex:[[popUp_fontSize menu] indexOfItemWithTag:[[preview preferences] defaultFontSize]]];
-	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
-	
 	//Check the proper variant, unchecking any old selection
 	NSEnumerator	*enumerator = [[[popUp_styles menu] itemArray] objectEnumerator];
 	NSMenuItem		*item;
@@ -357,7 +365,7 @@
 	
 	//Setup the Background Color colorwell (enabled/disable as needed, default to the color specified by the styl/variant or to white
 	NSColor *backgroundColor;
-	backgroundColor = [[[adium preferenceController] preferenceForKey:[plugin backgroundColorKeyForStyle:[[popUp_styles selectedItem] title]]
+	backgroundColor = [[[adium preferenceController] preferenceForKey:[plugin backgroundColorKeyForStyle:[style name]]
 																group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
 	if (!backgroundColor){
 		backgroundColor = [[style objectForInfoDictionaryKey:[NSString stringWithFormat:@"DefaultBackgroundColor:%@",variant]] hexColor];
@@ -368,6 +376,22 @@
 	[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
 	[colorWell_customBackgroundColor setEnabled:!disableCustomBackground];
 	[button_restoreDefaultBackgroundColor setEnabled:!disableCustomBackground];
+	
+	//Font menus
+	NSString	*fontName = [[adium preferenceController] preferenceForKey:[plugin fontNameKeyForStyle:[style name]]
+																	 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	NSFont		*font;
+	float		fontSize = [[preview preferences] defaultFontSize];
+	if (fontName){
+		font = [NSFont cachedFontWithName:fontName
+									 size:fontSize];
+	}else{
+		font = [NSFont fontWithName:[preview fontFamily]
+							   size:fontSize];
+	}
+	
+	[fontPreviewField_currentFont setFont:font];
+	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
 }
 
 //Take the fake conversation contained in chatDict and send it to our webView
@@ -482,8 +506,13 @@
 											  serviceID:@"AIM"] autorelease];
 		
 		//Display name
-		[[listObject displayArrayForKey:@"Display Name"] setObject:[participant objectForKey:@"Display Name"] 
-														 withOwner:self];
+		NSString *alias = [participant objectForKey:@"Display Name"];
+		if (alias){
+			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+													  object:listObject
+													userInfo:[NSDictionary dictionaryWithObject:alias
+																						 forKey:@"Alias"]];
+		}
 		
 		//User icon
 		NSString	*userIconName = [participant objectForKey:@"UserIcon Name"];
@@ -498,34 +527,6 @@
 
 
 #pragma mark Menus
-- (void)_buildFontMenus
-{
-	[popUp_font setMenu:[self _fontMenu]];	
-	[popUp_fontSize setMenu:[self _fontSizeMenu]];
-	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
-}
-
--(NSMenu *)_fontMenu
-{
-	NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
-	NSMenuItem		*menuItem;
-	
-	NSArray			*availableFamilies = [[[NSFontManager sharedFontManager] availableFontFamilies] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-	NSEnumerator	*enumerator = [availableFamilies objectEnumerator];
-	NSString		*fontFamilyName;
-	
-	while (fontFamilyName = [enumerator nextObject]){
-		menuItem = [[[NSMenuItem alloc] initWithTitle:fontFamilyName 
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:fontFamilyName];
-		[menu addItem:menuItem];
-	}
-	
-	return menu;
-}
-
 -(NSMenu *)_fontSizeMenu
 {
 	NSMenu			*menu = [[[NSMenu alloc] init] autorelease];

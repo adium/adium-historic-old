@@ -87,6 +87,7 @@ DeclareString(AppendNextMessage);
 		timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
 		
 		showUserIcons = [[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue];
+		useCustomNameFormat = [[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue];
 		nameFormat = [[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue];
 		combineConsecutive = [[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue];
 	}
@@ -190,6 +191,10 @@ DeclareString(AppendNextMessage);
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle
 {
 	return [NSString stringWithFormat:@"%@:Background Color",desiredStyle];
+}
+- (NSString *)fontNameKeyForStyle:(NSString *)desiredStyle
+{
+	return [NSString stringWithFormat:@"%@:Font Name",desiredStyle];	
 }
 
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue
@@ -402,27 +407,31 @@ DeclareString(AppendNextMessage);
 			if(range.location != NSNotFound){
 				NSString		*senderDisplay = nil;
 				AIListObject	*source = [content source];
-				NSString		*displayName = [source displayName];
-				NSString		*formattedUID = [source formattedUID];
-				
-				if (![displayName isEqualToString:formattedUID]){
-					switch (nameFormat) {
-						case Display_Name_Screen_Name: {
-							senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
-							break;	
-						}
-						case Screen_Name_Display_Name: {
-							senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
-							break;	
-						}
-						case Screen_Name: {
-							senderDisplay = formattedUID;
-							break;	
+				if (useCustomNameFormat){
+					NSString		*displayName = [source displayName];
+					NSString		*formattedUID = [source formattedUID];
+					
+					if (![displayName isEqualToString:formattedUID]){
+						switch (nameFormat) {
+							case Display_Name_Screen_Name: {
+								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+								break;	
+							}
+							case Screen_Name_Display_Name: {
+								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+								break;	
+							}
+							case Screen_Name: {
+								senderDisplay = formattedUID;
+								break;	
+							}
 						}
 					}
-				}
-				if (!senderDisplay){
-					senderDisplay = displayName;
+					if (!senderDisplay){
+						senderDisplay = displayName;
+					}
+				}else{
+					senderDisplay = [source longDisplayName];
 				}
 				
 				if ([(AIContentMessage *)content autoreply]){

@@ -27,9 +27,8 @@
                 "button_restoreDefaultBackgroundColor" = NSButton; 
                 "checkBox_showUserIcons" = NSButton; 
                 "colorWell_customBackgroundColor" = NSColorWell; 
+                "fontPreviewField_currentFont" = JVFontPreviewField; 
                 "popUp_customBackground" = NSPopUpButton; 
-                "popUp_font" = NSPopUpButton; 
-                "popUp_fontSize" = NSPopUpButton; 
                 "popUp_minimumFontSize" = NSPopUpButton; 
                 "popUp_styles" = NSPopUpButton; 
                 "popUp_timeStamps" = NSPopUpButton; 
