@@ -169,7 +169,8 @@
         BOOL		showLabels = [[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
         BOOL            labelAroundContactOnly = [[prefDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue];
         BOOL            outlineLabels = [[prefDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue];
-        float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
+		BOOL			useGradient = [[prefDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue];
+		float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
         
         isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
         shadows = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
@@ -214,6 +215,7 @@
         [contactListView setShowLabels:showLabels];
         if (showLabels) {
             [contactListView setOutlineLabels:outlineLabels];
+			[contactListView setUseGradient:useGradient];
             [contactListView setLabelOpacity:labelOpacity];
         }
         

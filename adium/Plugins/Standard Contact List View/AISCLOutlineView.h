@@ -22,7 +22,8 @@
     BOOL                        labelAroundContactOnly;
     float                       labelOpacity;
     BOOL                        outlineLabels;
-    
+	BOOL						useGradient;
+	
     NSFont			*font;
     NSFont			*groupFont;
     NSColor			*color;
@@ -68,6 +69,9 @@
 
 - (void)setOutlineLabels:(BOOL)inValue;
 - (BOOL)outlineLabels;
+
+- (void)setUseGradient:(BOOL)inValue;
+- (BOOL)useGradient;
 
 - (void)setLabelAroundContactOnly:(BOOL)inLabelAroundContactOnly;
 - (BOOL)labelAroundContactOnly;

@@ -32,6 +32,8 @@
 - (NSSize)rightViewSizeForHeight:(float)height;
 //- (void)highlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView usingColor:(NSColor *)inColor;
 - (void)highlightUsingColor:(NSColor *)inColor;
+- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inRect:(NSRect)rect;
+- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inBezierPath:(NSBezierPath*)inPath;
 @end
 
 @implementation AISCLCell
@@ -288,8 +290,12 @@
 
         //Fill the label background now if it would overwrite left views if done later
         if (!labelAroundContactOnly) {
-            [backgroundColor set];
-            [pillPath fill];
+			if ([(AISCLOutlineView *)controlView useGradient])
+				[self drawGradientWithFirstColor:[backgroundColor darkenBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
+			else {
+				[backgroundColor set];
+				[pillPath fill];
+			}
             
             //Stroke the outline if needed
             if ([(AISCLOutlineView *)controlView outlineLabels]) {
@@ -358,9 +364,13 @@
     if (backgroundColor && labelAroundContactOnly) {
         if (leftViewCompensation)
             [pillPath transformUsingAffineTransform:leftViewCompensation];
-        
-        [backgroundColor set];
-        [pillPath fill];
+		
+        if ([(AISCLOutlineView *)controlView useGradient])
+			[self drawGradientWithFirstColor:[backgroundColor darkenBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
+		else {
+			[backgroundColor set];
+			[pillPath fill];
+		}
         
         //Stroke the outline if needed
         if ([(AISCLOutlineView *)controlView outlineLabels]) {
@@ -413,6 +423,37 @@
     //Draw the name
     [displayName drawInRect:NSOffsetRect(cellFrame, 0, labelAroundContactOnly ? 0 : -1)];//Adjust the strings up 1 pixel
     [displayName release];
+}
+
+- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inRect:(NSRect)rect
+{
+	NSColor *currentColor;
+	float fraction;
+	int x;
+	for (x=0;x<rect.size.height;x++)
+	{
+		NSRect newRect = NSMakeRect(rect.origin.x,rect.origin.y + x,rect.size.width,1);
+		fraction = (float)(x / rect.size.height);
+		currentColor = [color1 blendedColorWithFraction:fraction ofColor:color2];
+		[currentColor set];
+		NSRectFillUsingOperation(newRect, NSCompositeSourceAtop);
+	}
+}
+
+- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inBezierPath:(NSBezierPath*)inPath
+{
+	NSImage *image = [[[NSImage alloc] initWithSize:[inPath bounds].size] autorelease];
+	NSAffineTransform *trans = [NSAffineTransform transform];
+	NSPoint keepPoint = [inPath bounds].origin;
+	keepPoint.y += [inPath bounds].size.height;
+	[trans translateXBy:(-1.0f * [inPath bounds].origin.x) yBy:(-1.0f * [inPath bounds].origin.y)];
+	[inPath transformUsingAffineTransform:trans];
+	[image lockFocus];
+	[inPath fill];
+	[self drawGradientWithFirstColor:color1 secondColor:color2 inRect:[inPath bounds]];
+	[image unlockFocus];
+	
+	[image compositeToPoint:keepPoint operation:NSCompositeSourceAtop];
 }
 
 //Private NSCell method which needs to be overridden to do custom highlighting properly, regardless of the false claims of the documentation.
