@@ -23,6 +23,7 @@
 	stringRepresentation = nil;
     shouldSaveImageForLogging = NO;
 	hasAlternate = NO;
+	shouldAlwaysSendAsText = NO;
 	imagePath = nil;
 	imageSize = NSMakeSize(0,0);
 	
@@ -75,14 +76,10 @@
 	return(imageSize);
 }
 
-
-
-
 - (BOOL)shouldSaveImageForLogging
 {
     return shouldSaveImageForLogging;
 }
-
 - (void)setShouldSaveImageForLogging:(BOOL)flag
 {
     shouldSaveImageForLogging = flag;
@@ -92,10 +89,18 @@
 {
 	return hasAlternate;
 }
-
 - (void)setHasAlternate:(BOOL)flag
 {
 	hasAlternate = flag;
+}
+
+- (BOOL)shouldAlwaysSendAsText
+{
+	return shouldAlwaysSendAsText;
+}
+- (void)setShouldAlwaysSendAsText:(BOOL)flag
+{
+	shouldAlwaysSendAsText = flag;	
 }
 
 @end
