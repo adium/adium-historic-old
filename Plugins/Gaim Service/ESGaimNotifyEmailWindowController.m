@@ -46,6 +46,11 @@
 	//Ensure the window is loaded
 	[self window];
 	
+	if (!urlString){
+		[button_showEmail setFrame:NSMakeRect(0,0,0,0)];
+		[button_showEmail setNeedsDisplay:YES];
+	}
+	
 	//Set the message, then change the window size accordingly
 	{
 		[textView_msg setVerticallyResizable:YES];
@@ -65,10 +70,7 @@
 		//Resize the window to fit the message
 		[[self window] setFrame:frame display:YES animate:YES];
 	}
-	
-	if (!urlString){
-		[button_showEmail setFrame:NSMakeRect(0,0,0,0)];
-	}
+
 
 #warning Hook this to the account for listobject
 	[[adium contactAlertsController] generateEvent:ACCOUNT_RECEIVED_EMAIL
