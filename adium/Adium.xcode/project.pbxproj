@@ -1321,6 +1321,9 @@
 			children = (
 				343A7F2A06935DC500150CEC,
 				343A7F2B06935DC500150CEC,
+				6E4D962806B73C18005235E9,
+				6E4D962906B73C18005235E9,
+				6E4D962706B73C18005235E9,
 				343A7F2C06935DC500150CEC,
 				343A7F2D06935DC500150CEC,
 				343A7F2606935DB600150CEC,
@@ -1577,6 +1580,9 @@
 			children = (
 				9EA125EE055B633000ECF349,
 				9EA125E8055B630900ECF349,
+				6E4D961606B73A96005235E9,
+				6E4D961706B73A96005235E9,
+				6E4D961506B73A96005235E9,
 				34B9194B062DEC29004F1223,
 				34B9194A062DEC29004F1223,
 				34B9197F062DEC99004F1223,
@@ -1590,6 +1596,9 @@
 			children = (
 				3441593F059F94C10019246B,
 				34415940059F94C10019246B,
+				6E4D962E06B73C4D005235E9,
+				6E4D962F06B73C4D005235E9,
+				6E4D962D06B73C4D005235E9,
 				344159B3059F977F0019246B,
 				344159B4059F97800019246B,
 				34F1529405E9FDDB00B32FD7,
@@ -1695,6 +1704,9 @@
 				34415BCF059FA9CD0019246B,
 				34E3C8A50638D50F00AA3EF7,
 				34E3C8A60638D50F00AA3EF7,
+				6EA3688F06B73F67009CA81A,
+				6EA3689006B73F67009CA81A,
+				6EA3688E06B73F67009CA81A,
 				342928080628BB4200BB9217,
 				342928090628BB4200BB9217,
 				348A901A062A13AB00FC6E03,
@@ -1782,6 +1794,9 @@
 			children = (
 				344160C3059FC3080019246B,
 				344160C4059FC3080019246B,
+				6E4D962206B73BE0005235E9,
+				6E4D962306B73BE0005235E9,
+				6E4D962106B73BDF005235E9,
 				344160B4059FC2F50019246B,
 				344160B5059FC2F50019246B,
 				348A8A190629A68C00FC6E03,
@@ -1795,6 +1810,9 @@
 			children = (
 				34416092059FC2C00019246B,
 				34416093059FC2C00019246B,
+				6EA3687D06B73D75009CA81A,
+				6EA3687E06B73D75009CA81A,
+				6EA3687C06B73D75009CA81A,
 				344160A7059FC2DB0019246B,
 				344160A8059FC2DB0019246B,
 				3460EF7B06458C2C0099922D,
@@ -1809,6 +1827,9 @@
 			children = (
 				34416070059FC27D0019246B,
 				34416071059FC27D0019246B,
+				6E4D961C06B73B38005235E9,
+				6E4D961D06B73B38005235E9,
+				6E4D961B06B73B38005235E9,
 				34416085059FC2A30019246B,
 				34416086059FC2A30019246B,
 				3460EF7706458C1D0099922D,
@@ -5163,6 +5184,7 @@
 				4BA0E3DC06B6BBD3001750FC,
 				4BA0E3E006B6BBDF001750FC,
 				344C0D5106B6D63800DA7200,
+				6E4D961306B739AC005235E9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5804,6 +5826,7 @@
 				4BA0E3DD06B6BBD3001750FC,
 				4BA0E3E106B6BBDF001750FC,
 				344C0D5006B6D63800DA7200,
+				6E4D961406B739AC005235E9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6081,6 +6104,8 @@
 				7E1E8178063A3EEC00EB00F7,
 				4BAD188E066A83550002008E,
 				3426FD0C0699D3D100751059,
+				6E4D960B06B7397A005235E9,
+				6E4D960D06B7397A005235E9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6172,6 +6197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				349DDD5306406A7D00542726,
+				6E4D960F06B7397A005235E9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6208,6 +6234,8 @@
 				4BBF41F506611A23001D31E1,
 				4BAD188F066A83550002008E,
 				3426FD0B0699D3D100751059,
+				6E4D960C06B7397A005235E9,
+				6E4D960E06B7397A005235E9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7669,6 +7697,7 @@
 			files = (
 				34BD9EE40531476D000AB133,
 				34BD9EE50531476D000AB133,
+				6EA3689806B73FE5009CA81A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7688,6 +7717,7 @@
 		34BD9EE60531476D000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				6EA3689706B73FE5009CA81A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7697,6 +7727,7 @@
 			files = (
 				34BD9EE80531476D000AB133,
 				34BD9EE90531476D000AB133,
+				6EA3689906B73FE5009CA81A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8111,6 +8142,9 @@
 			children = (
 				34C2E66F0634CF5F0018E5D2,
 				34C2E6700634CF5F0018E5D2,
+				6EA3688306B73E7D009CA81A,
+				6EA3688406B73E7D009CA81A,
+				6EA3688206B73E7D009CA81A,
 				34C2E6870634CF940018E5D2,
 				34C2E6880634CF940018E5D2,
 				34C2E9E30634D56E0018E5D2,
@@ -8642,6 +8676,9 @@
 			children = (
 				34F1429F05E95B0E00B32FD7,
 				34F142A105E95B0E00B32FD7,
+				6EA3688906B73F28009CA81A,
+				6EA3688A06B73F28009CA81A,
+				6EA3688806B73F27009CA81A,
 				34F1429E05E95B0E00B32FD7,
 				34F142A005E95B0E00B32FD7,
 				3460EF7F06458C3C0099922D,
@@ -11793,6 +11830,7 @@
 		};
 		4B4F5B23042D636700A8010A = {
 			children = (
+				6E4D961006B73991005235E9,
 				4B60991906A447D400EC8D78,
 				4B2E560406A33D85008866CF,
 				4B9A683D06AEB41C0010BF69,
@@ -11924,6 +11962,11 @@
 				4B5827E90613CE9D0004BD25,
 				3426FD0A0699D3D100751059,
 				3426FD090699D3D100751059,
+				6E4D960606B73979005235E9,
+				6E4D960706B73979005235E9,
+				6E4D960806B7397A005235E9,
+				6E4D960906B7397A005235E9,
+				6E4D960A06B7397A005235E9,
 				349DDD5206406A7D00542726,
 			);
 			isa = PBXGroup;
@@ -13342,6 +13385,15 @@
 				343A7F2F06935DC500150CEC,
 				343A7F3106935DC500150CEC,
 				343A7F3A06935DD700150CEC,
+				6E4D961906B73A96005235E9,
+				6E4D961F06B73B38005235E9,
+				6E4D962506B73BE0005235E9,
+				6E4D962B06B73C18005235E9,
+				6E4D963106B73C4D005235E9,
+				6EA3688006B73D75009CA81A,
+				6EA3688606B73E7D009CA81A,
+				6EA3688C06B73F28009CA81A,
+				6EA3689206B73F67009CA81A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13374,6 +13426,15 @@
 				34564793069F469F00F728BC,
 				34564794069F469F00F728BC,
 				3483148D06A70A57002C097A,
+				6E4D961806B73A96005235E9,
+				6E4D961E06B73B38005235E9,
+				6E4D962406B73BE0005235E9,
+				6E4D962A06B73C18005235E9,
+				6E4D963006B73C4D005235E9,
+				6EA3687F06B73D75009CA81A,
+				6EA3688506B73E7D009CA81A,
+				6EA3688B06B73F28009CA81A,
+				6EA3689106B73F67009CA81A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13419,6 +13480,15 @@
 				343A7F2E06935DC500150CEC,
 				343A7F3006935DC500150CEC,
 				343A7F3906935DD700150CEC,
+				6E4D961A06B73A96005235E9,
+				6E4D962006B73B38005235E9,
+				6E4D962606B73BE0005235E9,
+				6E4D962C06B73C18005235E9,
+				6E4D963206B73C4D005235E9,
+				6EA3688106B73D75009CA81A,
+				6EA3688706B73E7D009CA81A,
+				6EA3688D06B73F28009CA81A,
+				6EA3689306B73F67009CA81A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14453,6 +14523,9 @@
 				4BC15BEC0524CE5E00A8010A,
 				4BC15BE90524CE5E00A8010A,
 				4BC15BEA0524CE5E00A8010A,
+				6EA3689406B73FE5009CA81A,
+				6EA3689506B73FE5009CA81A,
+				6EA3689606B73FE5009CA81A,
 			);
 			isa = PBXGroup;
 			name = "Stress Test";
@@ -20283,6 +20356,340 @@
 //6E2
 //6E3
 //6E4
+		6E4D960606B73979005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCJoinChatViewController.h;
+			path = "Frameworks/Adium Framework/DCJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D960706B73979005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCJoinChatViewController.m;
+			path = "Frameworks/Adium Framework/DCJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D960806B7397A005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCJoinChatWindowController.h;
+			path = "Frameworks/Adium Framework/DCJoinChatWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D960906B7397A005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCJoinChatWindowController.m;
+			path = "Frameworks/Adium Framework/DCJoinChatWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D960A06B7397A005235E9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = JoinChatWindow.nib;
+			path = "Frameworks/Adium Framework/JoinChatWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D960B06B7397A005235E9 = {
+			fileRef = 6E4D960606B73979005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D960C06B7397A005235E9 = {
+			fileRef = 6E4D960706B73979005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D960D06B7397A005235E9 = {
+			fileRef = 6E4D960806B7397A005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D960E06B7397A005235E9 = {
+			fileRef = 6E4D960906B7397A005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D960F06B7397A005235E9 = {
+			fileRef = 6E4D960A06B7397A005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961006B73991005235E9 = {
+			children = (
+				6E4D961106B739AC005235E9,
+				6E4D961206B739AC005235E9,
+			);
+			isa = PBXGroup;
+			name = "Join Chat Panel";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961106B739AC005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCJoinChatPanelPlugin.h;
+			path = "Plugins/Join Chat Panel/DCJoinChatPanelPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961206B739AC005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCJoinChatPanelPlugin.m;
+			path = "Plugins/Join Chat Panel/DCJoinChatPanelPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961306B739AC005235E9 = {
+			fileRef = 6E4D961106B739AC005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961406B739AC005235E9 = {
+			fileRef = 6E4D961206B739AC005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961506B73A96005235E9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimOscarJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimOscarJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961606B73A96005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimOscarJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimOscarJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961706B73A96005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimOscarJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimOscarJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961806B73A96005235E9 = {
+			fileRef = 6E4D961506B73A96005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961906B73A96005235E9 = {
+			fileRef = 6E4D961606B73A96005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961A06B73A96005235E9 = {
+			fileRef = 6E4D961706B73A96005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961B06B73B38005235E9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimGaduGaduJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimGaduGaduJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961C06B73B38005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimGaduGaduJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimGaduGaduJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961D06B73B38005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimGaduGaduJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimGaduGaduJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D961E06B73B38005235E9 = {
+			fileRef = 6E4D961B06B73B38005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D961F06B73B38005235E9 = {
+			fileRef = 6E4D961C06B73B38005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962006B73B38005235E9 = {
+			fileRef = 6E4D961D06B73B38005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962106B73BDF005235E9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimJabberJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimJabberJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962206B73BE0005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimJabberJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimJabberJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962306B73BE0005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimJabberJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimJabberJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962406B73BE0005235E9 = {
+			fileRef = 6E4D962106B73BDF005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962506B73BE0005235E9 = {
+			fileRef = 6E4D962206B73BE0005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962606B73BE0005235E9 = {
+			fileRef = 6E4D962306B73BE0005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962706B73C18005235E9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimMeanwhileJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962806B73C18005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimMeanwhileJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962906B73C18005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimMeanwhileJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962A06B73C18005235E9 = {
+			fileRef = 6E4D962706B73C18005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962B06B73C18005235E9 = {
+			fileRef = 6E4D962806B73C18005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962C06B73C18005235E9 = {
+			fileRef = 6E4D962906B73C18005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D962D06B73C4D005235E9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimMSNJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimMSNJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962E06B73C4D005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimMSNJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimMSNJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D962F06B73C4D005235E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimMSNJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimMSNJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4D963006B73C4D005235E9 = {
+			fileRef = 6E4D962D06B73C4D005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D963106B73C4D005235E9 = {
+			fileRef = 6E4D962E06B73C4D005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E4D963206B73C4D005235E9 = {
+			fileRef = 6E4D962F06B73C4D005235E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6E4F2B1605CA013000C11243 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -20462,6 +20869,226 @@
 			path = "Plugins/Idle Message/IdleMessagePreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		6EA3687C06B73D75009CA81A = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimNapsterJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimNapsterJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3687D06B73D75009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimNapsterJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimNapsterJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3687E06B73D75009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimNapsterJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimNapsterJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3687F06B73D75009CA81A = {
+			fileRef = 6EA3687C06B73D75009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688006B73D75009CA81A = {
+			fileRef = 6EA3687D06B73D75009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688106B73D75009CA81A = {
+			fileRef = 6EA3687E06B73D75009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688206B73E7D009CA81A = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimNovellJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimNovellJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688306B73E7D009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimNovellJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688406B73E7D009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimNovellJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688506B73E7D009CA81A = {
+			fileRef = 6EA3688206B73E7D009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688606B73E7D009CA81A = {
+			fileRef = 6EA3688306B73E7D009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688706B73E7D009CA81A = {
+			fileRef = 6EA3688406B73E7D009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688806B73F27009CA81A = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimTrepiaJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimTrepiaJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688906B73F28009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimTrepiaJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimTrepiaJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688A06B73F28009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimTrepiaJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimTrepiaJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688B06B73F28009CA81A = {
+			fileRef = 6EA3688806B73F27009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688C06B73F28009CA81A = {
+			fileRef = 6EA3688906B73F28009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688D06B73F28009CA81A = {
+			fileRef = 6EA3688A06B73F28009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3688E06B73F67009CA81A = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCGaimYahooJoinChatView.nib;
+			path = "Plugins/Gaim Service/DCGaimYahooJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3688F06B73F67009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimYahooJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3689006B73F67009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimYahooJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3689106B73F67009CA81A = {
+			fileRef = 6EA3688E06B73F67009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3689206B73F67009CA81A = {
+			fileRef = 6EA3688F06B73F67009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3689306B73F67009CA81A = {
+			fileRef = 6EA3689006B73F67009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3689406B73FE5009CA81A = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DCStressTestJoinChatView.nib;
+			path = "Plugins/Stress Test/DCStressTestJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3689506B73FE5009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCStressTestJoinChatViewController.h;
+			path = "Plugins/Stress Test/DCStressTestJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3689606B73FE5009CA81A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCStressTestJoinChatViewController.m;
+			path = "Plugins/Stress Test/DCStressTestJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EA3689706B73FE5009CA81A = {
+			fileRef = 6EA3689406B73FE5009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3689806B73FE5009CA81A = {
+			fileRef = 6EA3689506B73FE5009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EA3689906B73FE5009CA81A = {
+			fileRef = 6EA3689606B73FE5009CA81A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		6ECE6C2004749C9600CAEAD0 = {
 			isa = PBXFileReference;
