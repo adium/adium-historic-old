@@ -31,6 +31,7 @@
 
 [Other]
 - Something is seriously slowing down our connection process. Shark it and fix. [Evan]
+- The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
 
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
