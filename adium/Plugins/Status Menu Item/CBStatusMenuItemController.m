@@ -241,10 +241,12 @@ CBStatusMenuItemController *sharedInstance = nil;
     NSEnumerator *numer;
     NSMenuItem *item;
     
+    /* //If people really miss this, I'll put it back in. doesn't seem necessary. It's pretty obvious that they're your SNs...
     //add a descriptor
     item = [[[NSMenuItem alloc] initWithTitle:@"Accounts" action:nil keyEquivalent:@""] autorelease];
     [item setEnabled:NO];
     [theMenu addItem:item];
+    */
     
     //traverse the accounts array
     numer = [accountsMenuItems objectEnumerator];
