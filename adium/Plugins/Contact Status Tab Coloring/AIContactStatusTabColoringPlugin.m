@@ -107,7 +107,7 @@
     unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
 
     //Unviewed content
-    if(!color && (unviewedContentEnabled && unviewedContent)){
+    if(!color && ((unviewedContentEnabled || contactListUnviewedContentEnabled) && unviewedContent)){
         if(!unviewedFlashEnabled || !([[adium interfaceController] flashState] % 2)){
             color = unviewedContentColor;
         }
