@@ -347,7 +347,7 @@
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    AIAccount		*account = [accountArray objectAtIndex:row];
+    AIAccount   *account = [accountArray objectAtIndex:row];
     NSImage		*image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
 	
     [cell setImage:image];
@@ -378,24 +378,29 @@
 {
     int	selectedRow = [tableView_accountList selectedRow];
 	
-    if(selectedRow >=0 && selectedRow < [accountArray count]){
-        //Correctly enable/disable our delete button
+	if(selectedRow >= 0 && selectedRow < [accountArray count]){
+        AIAccount	*oldSelection;
+		
+		//Correctly enable/disable our delete button
         if([accountArray count] > 1){
             [button_deleteAccount setEnabled:YES];
         }else{
             [button_deleteAccount setEnabled:NO];
         }
 		
-        //Configure for the newly selected account
-		if(selectedAccount != [accountArray objectAtIndex:selectedRow]){
+		//
+		oldSelection = selectedAccount;
+		selectedAccount = [accountArray objectAtIndex:selectedRow];
+        //Configure for the newly selected account (If it changed)
+		if(!oldSelection || oldSelection != selectedAccount){
 			[self configureAccountOptionsView];
 		}
-		selectedAccount = [accountArray objectAtIndex:selectedRow];
-		
+
     }else{
 		selectedAccount = nil;
         [button_deleteAccount setEnabled:NO];
 		[popupMenu_serviceList setEnabled:NO];
+		
     }
 }
 
