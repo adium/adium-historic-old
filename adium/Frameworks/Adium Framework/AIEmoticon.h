@@ -15,6 +15,7 @@
 
 @interface AIEmoticon : NSObject {
     NSString                *path;
+    NSString                *name;
     NSArray                 *textEquivalents;
     BOOL                    enabled;
     
@@ -22,7 +23,7 @@
     NSImage                 *_cachedImage;
 }
 
-+ (id)emoticonFromPath:(NSString *)inPath;
++ (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName;
 - (NSArray *)textEquivalents;
 - (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent;
 - (NSImage *)image;
