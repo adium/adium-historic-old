@@ -1095,7 +1095,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[inChat removeAllContent];
 
     //Remove the chat
-    [chatArray removeObject:inChat];
+    [chatArray removeObjectIdenticalTo:inChat];
 
     return(YES);
 }
