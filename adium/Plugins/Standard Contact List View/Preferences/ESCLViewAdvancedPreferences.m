@@ -80,7 +80,7 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
-    [checkbox_labelAroundContact setEnabled:[[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
+    [checkbox_labelAroundContact setEnabled:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
     [colorWell_outlineGroupsColor setEnabled:[checkbox_outlineGroups state]];
 }
 
