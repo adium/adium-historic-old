@@ -29,7 +29,7 @@ body {
 	height: 14px;
 	margin-right: 4px;
 	overflow: hidden;
-	padding-right: 48px;
+	padding-right: 0px;
 }
 
 .buddyicon {
@@ -40,7 +40,7 @@ body {
 	text-align: center;
 }
 
-.time_initial {
+.protocol {
 	float: right;
 	position: relative;
 	height: 14px;
@@ -50,7 +50,7 @@ body {
 	margin-bottom: -14px;
 }
 
-.time_consecutive {
+.time_initial, .time_consecutive {
 	float: right;
 	padding-top: 2px;
 	padding-bottom: 2px;
