@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.106 2004/08/16 07:30:19 evands Exp $
+// $Id: AIContentController.m,v 1.107 2004/08/16 22:55:40 evands Exp $
 
 #import "AIContentController.h"
 
@@ -23,12 +23,10 @@
 - (void)finishSendContentObject:(AIContentObject *)inObject;
 - (void)finishDisplayContentObject:(AIContentObject *)inObject;
 
-
-
-
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray;
 - (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/;
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
+- (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext invocation:(NSInvocation *)invocation;
 
 - (NSArray *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
 - (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSArray *)inModifiedKeys;
@@ -217,12 +215,15 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	}
 }
 
+#define THREADED_FILTERING TRUE
+
 //Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction
 									   context:(id)filterContext
 {
+#if THREADED_FILTERING
 	//Perform the filter in our filter thread to avoid threading conflicts, waiting for a result and then returning it
 	attributedString = [[self filterRunLoopMessenger] target:self 
 											 performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
@@ -231,6 +232,12 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 												  withObject:filterContext
 												  withObject:nil
 												  withResult:YES];
+#else
+	attributedString = [self thread_filterAttributedString:attributedString
+											 contentFilter:contentFilter[type][direction]
+											 filterContext:filterContext
+												invocation:nil];
+#endif
 	return (attributedString);
 }
 
@@ -248,6 +255,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 	
+#if THREADED_FILTERING
 	NSInvocation *invocation;
 	invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
 	
@@ -256,12 +264,21 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
 	[invocation retainArguments];
 	
+	
 	[[self filterRunLoopMessenger] target:self 
 						  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
 							   withObject:attributedString
 							   withObject:contentFilter[type][direction]
 							   withObject:filterContext
 							   withObject:invocation];
+#else
+	attributedString = [self thread_filterAttributedString:attributedString
+											 contentFilter:contentFilter[type][direction]
+											 filterContext:filterContext
+												invocation:nil];
+	
+	[target performSelector:selector withObject:attributedString withObject:context];
+#endif
 }
 
 - (NDRunLoopMessenger *)filterRunLoopMessenger
@@ -294,7 +311,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 		[invocation setArgument:&attributedString atIndex:2];
 		[invocation retainArguments]; //redundant?
 		
-		[invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:YES];
+		[invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
 	}
 	
 	return(attributedString);
@@ -542,7 +559,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 		//For incoming messages, we don't open the chat until we're sure that new content is being received.
 		//This is only necessary for the first incoming message.  The quickest way to check this is checking whether
 		//the chat already has content or not.  If there is content, this is not the first message.
-		if(![chat hasContent]) [[owner interfaceController] openChat:chat]; 
+		if(![chat isOpen]) [[owner interfaceController] openChat:chat]; 
 		
 		//Add this content to the chat
 		[chat addContentObject:inObject];
