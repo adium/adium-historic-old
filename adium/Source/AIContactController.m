@@ -266,7 +266,6 @@
     if(!delayed && //Delay sorting
        ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
         [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
-
         [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
         [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inObject containingGroup]];
     }
@@ -291,9 +290,9 @@
     if(delayed) [self _addDelayedUpdate];
 
     //Resort the contact list (If necessary)
+    //EDS HAPPENS UNNECESSARILY
     if(!delayed && //Delay sorting
         [[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
-
         [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
         [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inObject containingGroup]];
     }

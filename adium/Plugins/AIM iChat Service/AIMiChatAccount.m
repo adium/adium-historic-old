@@ -457,7 +457,7 @@ extern void* objc_getClass(const char *name);
                                                 destination:self
                                                        date:nil
                                                     message:messageText
-                                                  autorelpy:NO];
+                                                  autoreply:NO];
             [[owner contentController] addIncomingContentObject:messageObject];
         }
     }

@@ -128,7 +128,7 @@
                                                       destination:contact
                                                              date:nil
                                                           message:awayMessage
-                                                        autorelpy:YES];
+                                                        autoreply:YES];
                 
                 [[owner contentController] sendContentObject:responseContent];
             }

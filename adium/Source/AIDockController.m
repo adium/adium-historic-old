@@ -71,6 +71,8 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+        NSLog(@"prefs changed in Dock Controller");
+        
         NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
         NSString	*iconPath;
 
@@ -83,7 +85,6 @@
         if(iconPath){
             availableIconStateDict = [[self iconPackAtPath:iconPath] retain];
         }
-
         //Composite the new icon
         [self setIconStateNamed:@"Base"];
         [self _buildIcon];

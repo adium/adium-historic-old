@@ -148,7 +148,7 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
     //Close the controllers in reverse order
-    [pluginController closeController]; //should always load last.  Plugins rely on all the controllers.
+    [pluginController closeController]; //should always unload first.  Plugins rely on all the controllers.
     [dockController closeController];
     [interfaceController closeController];
     [contentController closeController];

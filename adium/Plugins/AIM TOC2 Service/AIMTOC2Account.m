@@ -873,7 +873,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.89 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.90 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1077,7 +1077,7 @@
                                                 destination:self
                                                     date:nil
                                                     message:messageText
-                                                  autorelpy:NO];
+                                                  autoreply:NO];
     
             //Add the content object
             [[owner contentController] addIncomingContentObject:messageObject];
@@ -1145,7 +1145,7 @@
                                         destination:self
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:rawMessage]
-                                          autorelpy:NO];
+                                          autoreply:NO];
     [[owner contentController] addIncomingContentObject:messageObject];
 }
 

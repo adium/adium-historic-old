@@ -46,6 +46,8 @@
 #define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
 #define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
 
+#define	PREF_GROUP_CONTACT_LIST		@"Contact List Display"
+#define KEY_SCL_OPACITY			@"Opacity"
 
 @class AIContactStatusColoringPreferences;
 
@@ -89,7 +91,8 @@
     NSColor		*unviewedContentLabelColor;
     NSColor		*onlineLabelColor;
     NSColor		*idleAndAwayLabelColor;
-    
+
+    float		alpha;
 }
 
 @end

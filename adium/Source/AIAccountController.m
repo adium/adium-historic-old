@@ -453,6 +453,7 @@
 //automatically connect to accounts flagged with an auto connect property
 - (void)autoConnectAccounts
 {
+    NSLog(@"entering autoConnectAccounts");
     NSEnumerator	*enumerator;
     AIAccount		*account;
     

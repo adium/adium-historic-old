@@ -148,7 +148,7 @@
                                                             destination:ourAccount
                                                                    date:nil
                                                                 message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]
-                                                              autorelpy:NO];
+                                                              autoreply:NO];
                         [[owner contentController] addIncomingContentObject:messageObject];
                     }
                     else if([messageLoad objectForKey:@"TypingUser"] != nil)

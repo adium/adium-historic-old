@@ -90,7 +90,6 @@
 - (void)loginAsUser:(NSString *)userName
 {
     NSParameterAssert(userName != nil);
-    
     //Close the login panel
     if(loginWindowController){
         [loginWindowController closeWindow:nil];
