@@ -25,6 +25,10 @@
 
 @implementation AIVariableHeightOutlineView
 
+//Adium always toggles expandable items on click.
+//This could become a preference via a set method for other implementations.
+static BOOL expandOnClick = YES;
+
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
@@ -60,33 +64,42 @@
 	[super dealloc];
 }
 
-
-//
+//Handle mouseDown events to toggle expandable items when they are clicked
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	int		row = [self rowAtPoint:viewPoint];
 	id		item = [self itemAtRow:row];
 	
-	if((item) && 
+	if((expandOnClick) && 
+	   (item) && 
 	   ([self isExpandable:item]) && 
 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)){
-		
-		//Wait for the next event - don't dequeue it so it will be handled as normal
-		NSEvent *nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
-														untilDate:[NSDate distantFuture]
-														   inMode:NSEventTrackingRunLoopMode
-														  dequeue:NO];
 
+		NSEvent *nextEvent;
+		BOOL	itemIsExpanded;
+		
+		//Store the current expanded state
+		itemIsExpanded = [self isItemExpanded:item];
+
+		//Wait for the next event - don't dequeue it so it will be handled as normal
+		nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
+											   untilDate:[NSDate distantFuture]
+												  inMode:NSEventTrackingRunLoopMode
+												 dequeue:NO];
 		//Handle the original event
 		[super mouseDown:theEvent];
-
+		
 		if([nextEvent type] == NSLeftMouseUp){
-			//If they pressed and released, expand/collapse the item
-			if([self isItemExpanded:item]){
-				[self collapseItem:item];
-			}else{
-				[self expandItem:item];
+			//If they pressed and released, expand/collapse the item unless mouseDown: already did
+			BOOL itemIsNowExpanded = [self isItemExpanded:item];
+
+			if(itemIsNowExpanded == itemIsExpanded){
+				if(itemIsNowExpanded){
+					[self collapseItem:item];
+				}else{
+					[self expandItem:item];
+				}
 			}
 		}
 
@@ -200,14 +213,14 @@
 		rowHeightCache = malloc(cacheSize * sizeof(int));
 		rowOriginCache = malloc(cacheSize * sizeof(int));
 		entriesInCache = numberOfRows;
-		
+
 		//
 		int origin = 0;
 		int i;
 		
 		for(i = 0; i < entriesInCache; i++){
 			int height = [self heightForRow:i];
-			
+
 			rowHeightCache[i] = height;
 			rowOriginCache[i] = origin;
 			
