@@ -14,6 +14,7 @@
 #define	KEY_EVENT_NOTIFICATION		@"Notification"
 #define KEY_EVENT_ACTION		@"Action"
 #define KEY_EVENT_ACTIONSET		@"Contact Actions"
+#define KEY_EVENT_DETAILS		@"Details"
 
 #define PREF_GROUP_SOUNDS		@"Sounds"
 
@@ -35,11 +36,6 @@
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
 
-    NSMutableArray			*eventActionArray;
-    NSMutableDictionary			*actionDict;
-
-
-    NSMutableDictionary 	* eventActionsDict;
 }
 
 @end

@@ -19,7 +19,6 @@
 #define CONTACT_ALERT_WINDOW_NIB	@"ContactAlerts"
 #define TABLE_COLUMN_ACTION		@"action"
 #define TABLE_COLUMN_EVENT		@"event"
-#define TABLE_COLUMN_DETAILS		@"details"
 
 
 
@@ -27,15 +26,18 @@
 - (NSMenu *)eventMenu;
 - (NSMenu *)soundSetMenu;
 - (NSMenu *)soundListMenu;
+- (NSMenu *)actionListMenu;
 - (int)numberOfRowsInTableView:(NSTableView *)tableView;
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (BOOL)shouldSelectRow:(int)inRow;
 - (id)initWithOwner:(id)inOwner forPlugin:(id)inPlugin;
 - (void)configureView;
 //- (void)preferencesChanged:(NSNotification *)notification;
 - (void)saveEventActionArray;
+- (void) configureForTextDetails:(NSString *)instructions;
+- (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
 @end
 
 @implementation AIContactAlertsWindowController
@@ -101,6 +103,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     //Configure the 'Action' table column
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
     [dataCell setMenu:[self actionListMenu]];
+//    [dataCell setMenu:[self soundListMenu]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];
     [dataCell setBordered:NO];
@@ -111,47 +114,78 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
-
+    [tableView_actions setDataSource:self];
+    
     //  eventSoundArray = [[preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] mutableCopy]; //Load the user's custom set
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 
     if(!eventActionArray) eventActionArray = [[NSMutableArray alloc] init];
-}
 
-- (NSMenu *)actionListMenu //menu of possible actions
-{
-    return [self soundListMenu];  //temporary
+    //Update the outline view
+    [tableView_actions reloadData];
 }
 
 //Builds and returns an event menu
 - (NSMenu *)eventMenu
 {
-    NSEnumerator	*enumerator;
-    NSDictionary	*eventDict;
+//    NSDictionary	*eventDict;
     NSMenu		*eventMenu = [[NSMenu alloc] init];
 
     //Add the static/display menu item
     [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
-
+/*
+    online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+  */  
     //Add a menu item for each event
-    enumerator = [[owner eventNotifications] objectEnumerator];
-    while((eventDict = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
+    NSMenuItem	*menuItem;
 
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Signed On"
                                                target:self
-                                               action:@selector(newEventAction:)
+                                               action:@selector(newEvent:)
                                         keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:[eventDict objectForKey:KEY_EVENT_NOTIFICATION]];
+    [menuItem setRepresentedObject:@"Signed On"];
+    [eventMenu addItem:menuItem];
 
-        [eventMenu addItem:menuItem];
-    }
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Signed Off"
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Signed Off"];
+    [eventMenu addItem:menuItem];
 
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Went Away"
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Away"];
+    [eventMenu addItem:menuItem];
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Became Idle"
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Idle"];
+    [eventMenu addItem:menuItem];
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Typing"
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Typing"];
+    [eventMenu addItem:menuItem];
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Has Unviewed Content"
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"UnviewedContent"];
+    [eventMenu addItem:menuItem];
+    
     return(eventMenu);
 }
 
 //Called by the event popUp menu (Inserts a new event)
-- (IBAction)newEventAction:(id)sender
+- (IBAction)newEvent:(id)sender
 {
     NSMutableDictionary	*actionDict;
 
@@ -163,6 +197,10 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     //Save event preferences
     [self saveEventActionArray];
+
+    //Update the outline view
+    [tableView_actions reloadData];
+
 }
 
 
@@ -174,11 +212,15 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 //Delete the selected action
 - (IBAction)deleteEventAction:(id)sender
 {
+    
     //Remove the event
     [eventActionArray removeObjectAtIndex:[tableView_actions selectedRow]];
 
     //Save event sound preferences
     [self saveEventActionArray];
+    
+    //Update the outline view
+    [tableView_actions reloadData];
 }
 
 
@@ -241,16 +283,108 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     return(soundMenu);
 }
+//Select a sound from one of the sound popUp menus
+- (IBAction)selectSound:(id)sender
+{
+    NSString	*soundPath = [sender representedObject];
+    int row = [tableView_actions selectedRow];
+    
+    if(soundPath != nil && [soundPath length] != 0){
+        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+    }
+
+    NSMutableDictionary	*selectedActionDict;
+
+    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+    [selectedActionDict setObject:soundPath forKey:KEY_EVENT_DETAILS];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+
+    //Save event sound preferences
+    [self saveEventActionArray];
+        
+}
+
+//called by textfield_actionDetails when editing is over
+- (IBAction)endEditing:(id)sender
+{
+    int row = [tableView_actions selectedRow];
+    NSMutableDictionary	*selectedActionDict;
+    
+    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+    [selectedActionDict setObject:[textField_actionDetails stringValue] forKey:KEY_EVENT_DETAILS];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    NSLog(@"Ended editing the field.");
+    [self saveEventActionArray];
+}
+
+//Actions!
+- (NSMenu *)actionListMenu //menu of possible actions
+{
+    NSMenu		*actionListMenu = [[NSMenu alloc] init];
+    NSMenuItem	*menuItem;
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
+                                           target:self
+                                           action:@selector(actionSendMessage:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Message"];
+    [menuItem setEnabled:YES];
+    [actionListMenu addItem:menuItem];
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Play a sound"
+                                           target:self
+                                           action:@selector(actionPlaySound:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Sound"]; //Sound
+        [menuItem setEnabled:YES];
+    [actionListMenu addItem:menuItem];
+
+    return(actionListMenu);
+
+}
+
+//setup display for sending a message
+- (IBAction)actionSendMessage:(id)sender
+{
+    [self configureForTextDetails:@"Message to send:"];
+}
+
+//setup display for playing a sound
+- (IBAction)actionPlaySound:(id)sender
+{
+    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];
+ }
+
+- (void) configureForTextDetails:(NSString *)instructions
+{
+    int row = [tableView_actions selectedRow];
+    [textField_description_textField setStringValue:instructions];
+    [textField_description_popUp setStringValue:@""];
+    [popUp_actionDetails setEnabled:NO];
+    [textField_actionDetails setEnabled:YES];
+    [textField_actionDetails setDrawsBackground:YES];
+    [textField_actionDetails setStringValue:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
+}
+
+- (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
+{
+    int row = [tableView_actions selectedRow];
+    [textField_description_popUp setStringValue:instructions];
+    [textField_description_textField setStringValue:@""];
+    [popUp_actionDetails setEnabled:YES];
+    [textField_actionDetails setEnabled:NO];
+    [popUp_actionDetails setMenu:detailsMenu];
+    [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
+    
+}
 
 
 //TableView datasource --------------------------------------------------------
-//from AIEventSoundsPreferences.m
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return([eventActionArray count]); 
 }
 
-//returns the display name of a notification or the notification name itself (if no display name is available)
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
@@ -271,35 +405,19 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
         return(displayName ? displayName : notification);
 
-    }else{
+    }else if([identifier compare:TABLE_COLUMN_ACTION] == 0){
+        NSDictionary	*actionDict;
+        NSString	*action;
+        //Get the action string
+        actionDict = [eventActionArray objectAtIndex:row];
+        action = [actionDict objectForKey:KEY_EVENT_ACTION];
+
+        return(action);
+
+    }else {
+        
         return(nil);
 
-    }
-}
-
-//fix me!
-- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-    NSString	*identifier = [tableColumn identifier];
-
-    if([identifier compare:TABLE_COLUMN_ACTION] == 0){
-        NSMenuItem		*selectedMenuItem;
-        NSMutableDictionary	*selectedActionDict;
-        NSString		*newSoundPath;
-
-        //
-        selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
-        selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
-        newSoundPath = [selectedMenuItem representedObject];
-
-   /*     if([newSoundPath compare:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]] != 0){ //Ignore a duplicate selection
-            //Set the new sound path
-            [selectedSoundDict setObject:newSoundPath forKey:KEY_EVENT_SOUND_PATH];
-            [eventSoundArray replaceObjectAtIndex:row withObject:selectedSoundDict];
-*/
-            //Save event sound preferences
-            [self saveEventActionArray];
-  //      }
     }
 }
 
@@ -307,14 +425,32 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
-
-/*    if([identifier compare:TABLE_COLUMN_SOUND] == 0){
-        [cell selectItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_SOUND_PATH]];
-    }*/
     if([identifier compare:TABLE_COLUMN_ACTION] == 0){
         [cell selectItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
     }
 }
+
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    NSString	*identifier = [tableColumn identifier];
+   
+    if([identifier compare:TABLE_COLUMN_ACTION] == 0){
+        NSMenuItem		*selectedMenuItem;
+        NSMutableDictionary	*selectedActionDict;
+        NSString		*newAction;
+
+        selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
+        selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+        newAction = [selectedMenuItem representedObject];
+
+        [selectedActionDict setObject:newAction forKey:KEY_EVENT_ACTION];
+        [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+        //Save event sound preferences
+        [self saveEventActionArray]; 
+    }
+}
+
 
 //
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
@@ -322,9 +458,19 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [self deleteEventAction:nil]; //Delete it
 }
 
-//
+//selection changed; update the view
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
+{
+    int row = [tableView_actions selectedRow];
+    NSMenu * actionsMenu = [[self actionListMenu] autorelease];
+    NSString *action = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION];
+
+    [actionsMenu performActionForItemAtIndex:[actionsMenu indexOfItemWithRepresentedObject:action]];
+}
+
 - (BOOL)shouldSelectRow:(int)inRow
 {
+
     [button_delete setEnabled:(inRow != -1)]; //Enable/disable the delete button correctly
 
     return(YES);
@@ -350,8 +496,8 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
-{/*
-    NSString	*savedFrame;
+{
+ /*   NSString	*savedFrame;
 
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_TEXT_PROFILE_WINDOW_FRAME];

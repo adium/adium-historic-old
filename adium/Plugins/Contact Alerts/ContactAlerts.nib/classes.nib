@@ -6,14 +6,25 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
-            ACTIONS = {closeWindow = id; }; 
+            ACTIONS = {
+                actionPlaySound = id; 
+                actionSendMessage = id; 
+                closeWindow = id; 
+                deleteEventAction = id; 
+                endEditing = id; 
+                newEvent = id; 
+                selectSound = id; 
+            }; 
             CLASS = AIContactAlertsWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
+                "popUp_actionDetails" = NSPopUpButton; 
                 "popUp_addEvent" = NSPopUpButton; 
                 "tableView_actions" = AIAlternatingRowTableView; 
-                "textField_contactName" = NSTextField; 
+                "textField_actionDetails" = NSTextField; 
+                "textField_description_popUp" = NSTextField; 
+                "textField_description_textField" = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
