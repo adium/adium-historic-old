@@ -225,9 +225,6 @@
     //Reset our cursor rects
     [self stopTrackingCursor];
     [self startTrackingCursor];
-
-    //Redisplay
-#warning   [self setNeedsDisplay:YES];
 }
 
 - (void)stopTrackingCursor
