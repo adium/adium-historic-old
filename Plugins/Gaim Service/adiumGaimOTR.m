@@ -500,41 +500,48 @@ void initGaimOTRSupprt(void)
  */
 + (NSNumber *)policyForContact:(AIListContact *)contact
 {
-	NSNumber					*prefNumber;
-	AIEncryptedChatPreference	pref;
 	OtrlPolicy					policy;
 	
-	//Get the contact's preference (or its containing group, or so on)
-	prefNumber = [contact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
-								   group:GROUP_ENCRYPTION];
-	if(!prefNumber || ([prefNumber intValue] == EncryptedChat_Default)){
-		//If no contact preference or the contact is set to use the default, use the account preference
-		prefNumber = [[contact account] preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
-												   group:GROUP_ENCRYPTION];		
+	//Force OTRL_POLICY_MANUAL when interacting with mobile numbers
+	if([[contact UID] characterAtIndex:0] == '+'){
+		policy = OTRL_POLICY_MANUAL;
+
+	}else{
+		NSNumber					*prefNumber;
+		AIEncryptedChatPreference	pref;
+
+		//Get the contact's preference (or its containing group, or so on)
+		prefNumber = [contact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+										 group:GROUP_ENCRYPTION];
+		if(!prefNumber || ([prefNumber intValue] == EncryptedChat_Default)){
+			//If no contact preference or the contact is set to use the default, use the account preference
+			prefNumber = [[contact account] preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+													   group:GROUP_ENCRYPTION];		
+		}
+		
+		if(prefNumber){
+			pref = [prefNumber intValue];
+			
+			switch(pref){
+				case EncryptedChat_Never:
+					policy = OTRL_POLICY_NEVER;
+					break;
+				case EncryptedChat_Manually:
+				case EncryptedChat_Default:
+					policy = OTRL_POLICY_MANUAL;
+					break;
+				case EncryptedChat_Automatically:
+					policy = OTRL_POLICY_OPPORTUNISTIC;
+					break;
+				case EncryptedChat_RejectUnencryptedMessages:
+					policy = OTRL_POLICY_ALWAYS;
+					break;
+			}
+		}else{
+			policy = OTRL_POLICY_MANUAL;
+		}
 	}
 
-	if(prefNumber){
-		pref = [prefNumber intValue];
-		
-		switch(pref){
-			case EncryptedChat_Never:
-				policy = OTRL_POLICY_NEVER;
-				break;
-			case EncryptedChat_Manually:
-			case EncryptedChat_Default:
-				policy = OTRL_POLICY_MANUAL;
-				break;
-			case EncryptedChat_Automatically:
-				policy = OTRL_POLICY_OPPORTUNISTIC;
-				break;
-			case EncryptedChat_RejectUnencryptedMessages:
-				policy = OTRL_POLICY_ALWAYS;
-				break;
-		}
-	}else{
-		policy = OTRL_POLICY_MANUAL;
-	}
-	
 	return [NSNumber numberWithInt:policy];	
 }
 
