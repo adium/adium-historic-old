@@ -34,28 +34,19 @@
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSMutableAttributedString	*entry = nil;
-	NSArray						*listContacts = [inObject listContacts];
-	unsigned int				count = [listContacts count];
 	
-	if (count > 1){
+	if([inObject isKindOfClass:[AIMetaContact class]]){
 		NSMutableString	*entryString;
-		AIListContact	*listContact;
+		AIListContact	*contact;
 		
 		entry = [[NSMutableAttributedString alloc] init];
 		entryString = [entry mutableString];
-		
-		unsigned int i;
-		
-		for (i = 0; i < count; i++){
-			listContact = [listContacts objectAtIndex:i];
-
-			if (i > 0){
-				[entryString appendString:@"\r"];
-			}
+	
+		NSEnumerator	*enumerator = [(AIMetaContact *)inObject objectEnumerator];
+		while(contact = [enumerator nextObject]){
+			NSImage	*statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
 			
-			NSImage	*statusIcon = [[listContact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
-
-			if (statusIcon){
+			if(statusIcon){
 				NSTextAttachment		*attachment;
 				
 				NSTextAttachmentCell	*cell = [[[NSTextAttachmentCell alloc] init] autorelease];
@@ -67,9 +58,10 @@
 				[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
 			}
 			
-			[entryString appendString:[listContact formattedUID]];
+			[entryString appendString:[contact formattedUID]];
 			
-			NSImage	*serviceIcon = [[[listContact account] menuImage] imageByScalingToSize:NSMakeSize(9,9)];
+			NSImage	*serviceIcon = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal];
+			//[[[listContact account] menuImage] imageByScalingToSize:NSMakeSize(9,9)];
 			if (serviceIcon){
 				NSTextAttachment		*attachment;
 				
@@ -82,7 +74,7 @@
 				[entryString appendString:@" "];
 				[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
 			}
-
+			
 		}
 	}
     
