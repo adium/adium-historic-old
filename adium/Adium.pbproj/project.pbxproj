@@ -2615,6 +2615,36 @@
 			settings = {
 			};
 		};
+		4B4C779B0474861F00A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Disabled.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Disabled.tiff";
+			refType = 4;
+		};
+		4B4C779C0474861F00A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Mixed_Disabled.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Mixed_Disabled.tiff";
+			refType = 4;
+		};
+		4B4C779D0474861F00A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Selected_Disabled.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Selected_Disabled.tiff";
+			refType = 4;
+		};
+		4B4C779F0474861F00A8010A = {
+			fileRef = 4B4C779C0474861F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4C77A00474861F00A8010A = {
+			fileRef = 4B4C779D0474861F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B4F5B23042D636700A8010A = {
 			children = (
 				F569E38102CA876501A8010A,
@@ -8117,7 +8147,6 @@
 				F55B412403AB88D601A8010A,
 				F55B412903AB88D601A8010A,
 				F55B412F03AB88D601A8010A,
-				F55B413003AB88D601A8010A,
 				F55B413103AB88D601A8010A,
 				F55B413203AB88D601A8010A,
 				F55B413303AB88D601A8010A,
@@ -8130,6 +8159,8 @@
 				4B79E4F3046D67FC0018AE8B,
 				4B36705104702E0300FDA82E,
 				4B36705204702E0300FDA82E,
+				4B4C779F0474861F00A8010A,
+				4B4C77A00474861F00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8804,7 +8835,9 @@
 				F55B410F03AB88D601A8010A,
 				F55B411A03AB88D601A8010A,
 				F55B412203AB88D601A8010A,
-				F55B411B03AB88D601A8010A,
+				4B4C779B0474861F00A8010A,
+				4B4C779C0474861F00A8010A,
+				4B4C779D0474861F00A8010A,
 				F55B411C03AB88D601A8010A,
 				F55B411D03AB88D601A8010A,
 				F55B411E03AB88D601A8010A,
@@ -10146,12 +10179,6 @@
 			path = "Plugins/Contact List Editor/inspect.tiff";
 			refType = 4;
 		};
-		F55B411B03AB88D601A8010A = {
-			isa = PBXFileReference;
-			name = miniCheck_Disabled.tiff;
-			path = "Plugins/Contact List Editor/miniCheck_Disabled.tiff";
-			refType = 4;
-		};
 		F55B411C03AB88D601A8010A = {
 			isa = PBXFileReference;
 			name = miniCheck_Enabled_Press.tiff;
@@ -10214,12 +10241,6 @@
 		};
 		F55B412F03AB88D601A8010A = {
 			fileRef = F55B411A03AB88D601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F55B413003AB88D601A8010A = {
-			fileRef = F55B411B03AB88D601A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
