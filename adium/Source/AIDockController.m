@@ -130,26 +130,26 @@
     }
 }
 
-//Sets a dynamically created icon state
-/*- (void)setIconState:(AIIconState *)inIconState named:(NSString *)inName
-{
-    
-}*/
-
 //Sets an icon state from the current icon pack.  If the state is already set or doesn't exist, nothing happens.
 - (AIIconState *)setIconStateNamed:(NSString *)inName
 {
     AIIconState	*iconState = [availableIconStateDict objectForKey:inName];
 
+    [self setIconState:iconState];
+
+    return(iconState);
+}
+
+//Sets a dynamically created icon state
+- (void)setIconState:(AIIconState *)iconState
+{
     if(iconState && ![activeIconStateArray containsObject:iconState]){ //Ignore duplicates and missing states
-        //Keep track of it
+                                                                       //Keep track of it
         [activeIconStateArray addObject:iconState];
 
         //Rebuild our icon to incorporate the new state
         [self _buildIcon];
     }
-
-    return(iconState);
 }
 
 //Removes an active icon state
@@ -210,7 +210,11 @@
     
             //Use the starting state's image as our base
             if([startingState animated]){
-                workingImage = [[[[startingState imageArray] objectAtIndex:drawFrame] copy] autorelease];
+                if(startingState == animatingState){
+                    workingImage = [[[[startingState imageArray] objectAtIndex:drawFrame] copy] autorelease];
+                }else{
+                    workingImage = [[[[startingState imageArray] objectAtIndex:0] copy] autorelease];
+                }
             }else{
                 workingImage = [[[startingState image] copy] autorelease];
             }
@@ -261,6 +265,40 @@
     }
 }
 
+
+//returns the % of the dock icon's full size that it currently is (0.0 - 1.0)
+- (float)dockIconScale
+{
+    NSSize trueSize = [[NSScreen mainScreen] visibleFrame].size;
+    NSSize availableSize = [[NSScreen mainScreen] frame].size;
+
+    int	dHeight = availableSize.height - trueSize.height;
+    int dWidth = availableSize.width - trueSize.width;
+    float dockScale = 0;
+
+    if(dHeight != 22){ //dock is on the bottom
+        if(dHeight == 26){ //dock is hidden
+        }else{ //dock is not hidden
+            dockScale = (dHeight-22)/128.0;
+        }
+    }else if(dWidth != 0){ //dock is on the side
+        if(dWidth == 4){ //dock is hidden
+        }else{ //dock is not hidden
+            dockScale = (dWidth)/128.0;
+        }
+    }else{
+        //multiple monitors?
+        //Add support for multiple monitors
+    }
+
+    if(dockScale <= 0 || dockScale > 1.0){
+        dockScale = 0.3;
+    }
+    
+    NSLog(@"%0.2f",dockScale);
+    
+    return(dockScale);
+}
 
 
 

@@ -472,7 +472,9 @@ typedef enum {
 }
 
 - (AIIconState *)setIconStateNamed:(NSString *)inName;
+- (void)setIconState:(AIIconState *)iconState;
 - (void)removeIconState:(AIIconState *)inState;
+- (float)dockIconScale;
 
 
 /*- (AIIconFamily *)currentIconFamily;
