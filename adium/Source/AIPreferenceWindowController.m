@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.43 2004/05/23 19:16:44 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.44 2004/05/24 03:46:52 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -229,8 +229,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
                 [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts showContainers:YES];
             break;
             case 3:
-                [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display showContainers:YES];
-                [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Messages intoView:view_Messages showContainers:NO];
             break;
             case 4:
                 [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away showContainers:YES];
@@ -277,7 +276,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	switch([[tabViewItem identifier] intValue]){
 		case 1: return([self _heightForFlatView:view_Accounts]); break;
 		case 2: return([self _heightForTabView:tabView_contactList]); break;
-		case 3: return([self _heightForTabView:tabView_messages]); break;
+		case 3: return([self _heightForFlatView:view_Messages]); break;
 		case 4: return([self _heightForTabView:tabView_status]); break;
 		case 5: return([self _heightForFlatView:view_Dock]); break;
 		case 6: return([self _heightForFlatView:view_Sound]); break;

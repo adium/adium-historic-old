@@ -40,10 +40,10 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages_Display);
+    return(AIPref_Messages);
 }
 - (NSString *)label{
-    return(@"Message Display");
+    return(@"A");
 }
 - (NSString *)nibName{
     return(@"WebKitPreferencesView");

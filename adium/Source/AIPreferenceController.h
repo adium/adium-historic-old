@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.17 2004/05/24 00:06:33 adamiser Exp $ 
+// $Id: AIPreferenceController.h,v 1.18 2004/05/24 03:46:52 adamiser Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -34,8 +34,7 @@ typedef enum {
     AIPref_ContactList_General,
     AIPref_ContactList_Groups,
     AIPref_ContactList_Contacts,
-    AIPref_Messages_Display,
-    AIPref_Messages_Sending,
+    AIPref_Messages,
     AIPref_Status_Away,
     AIPref_Status_Idle,
     AIPref_Dock,

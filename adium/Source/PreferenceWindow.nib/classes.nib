@@ -6,37 +6,41 @@
             SUPERCLASS = NSOutlineView; 
         }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPreferenceCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
-            ACTIONS = {closeWindow = id; restoreDefaults = id; }; 
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIPreferenceWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_restoreDefaults" = id; 
+                "button_restoreDefaults" = NSButton; 
                 "coloredBox_advancedTitle" = AIColoredBoxView; 
                 "outlineView_advanced" = NSOutlineView; 
                 "tabView_category" = NSTabView; 
                 "tabView_contactList" = NSTabView; 
-                "tabView_messages" = NSTabView; 
                 "tabView_status" = NSTabView; 
                 "textField_advancedTitle" = NSTextField; 
-                "view_Accounts" = AIFlippedCategoryView; 
-                "view_Advanced" = AIFlippedCategoryView; 
-                "view_Alerts" = AIFlippedCategoryView; 
-                "view_ContactList_Contacts" = AIFlippedCategoryView; 
-                "view_ContactList_General" = AIFlippedCategoryView; 
-                "view_ContactList_Groups" = AIFlippedCategoryView; 
-                "view_Dock" = AIFlippedCategoryView; 
-                "view_Emoticons" = AIFlippedCategoryView; 
-                "view_Messages_Display" = AIFlippedCategoryView; 
-                "view_Messages_Sending" = AIFlippedCategoryView; 
-                "view_Sound" = AIFlippedCategoryView; 
-                "view_Status_Away" = AIFlippedCategoryView; 
-                "view_Status_Idle" = AIFlippedCategoryView; 
+                "view_Accounts" = AIPreferenceCategoryView; 
+                "view_Advanced" = AIPreferenceCategoryView; 
+                "view_Alerts" = AIPreferenceCategoryView; 
+                "view_ContactList_Contacts" = AIPreferenceCategoryView; 
+                "view_ContactList_General" = AIPreferenceCategoryView; 
+                "view_ContactList_Groups" = AIPreferenceCategoryView; 
+                "view_Dock" = AIPreferenceCategoryView; 
+                "view_Emoticons" = AIPreferenceCategoryView; 
+                "view_Messages" = AIPreferenceCategoryView; 
+                "view_Sound" = AIPreferenceCategoryView; 
+                "view_Status_Away" = AIPreferenceCategoryView; 
+                "view_Status_Idle" = AIPreferenceCategoryView; 
             }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AIToolbarTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
