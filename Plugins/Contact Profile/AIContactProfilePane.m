@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun May 23 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIContactProfilePane.h"
@@ -25,12 +24,14 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+	viewIsOpen = YES;
     [[adium contactController] registerListObjectObserver:self];
 }
 
 //Preference view is closing
 - (void)viewWillClose
 {
+	viewIsOpen = NO;
     [[adium contactController] unregisterListObjectObserver:self];
 	[listObject release]; listObject = nil;
 }
@@ -83,14 +84,15 @@
 
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
 {
-	[self setAttributedString:infoString intoTextView:textView_profile];
+	if(viewIsOpen)
+		[self setAttributedString:infoString intoTextView:textView_profile];
 }
 
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object
 {
-	[self setAttributedString:infoString intoTextView:textView_status];
+	if(viewIsOpen)
+		[self setAttributedString:infoString intoTextView:textView_status];
 }
-
 
 //
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView
