@@ -49,12 +49,6 @@
     return(STRESS_TEST_SERVICE_IDENTIFIER);
 }
 
-// Return a readable description of this account's username
-- (NSString *)accountDescription
-{
-    return(@"Stress Test");
-}
-
 - (NSString *)displayName
 {
     return(@"Stress Test");
@@ -91,7 +85,8 @@
             BOOL 		silent = NO;
             int 		i;
 			
-            if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
+            if([commands count] > 2) silent = ([[commands objectAtIndex:2] isEqualToString:@"silent"]);
+			
             for(i=0;i < count;i++){
 				AIListContact	*contact;
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
@@ -102,25 +97,40 @@
 				[handleArray addObject:contact];
             }
 			
-            [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_online:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",[NSNumber numberWithBool:silent],@"silent",nil] repeats:YES];
+			if (silent) [[adium contactController] delayListObjectNotifications];
+
+            [NSTimer scheduledTimerWithTimeInterval:0.00001
+											 target:self
+										   selector:@selector(timer_online:)
+										   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",
+																							[NSNumber numberWithBool:silent],@"silent",nil] 
+											repeats:YES];
             [self echo:[NSString stringWithFormat:@"%i handles signing on %@",count,(silent?@"(Silently)":@"")]];
 			
         }else if([type compare:@"offline"] == 0){
             int 	count = [[commands objectAtIndex:1] intValue];
             BOOL 	silent = NO;
+			BOOL	shouldNotify = !silent;
             int 	i;
+			
+			NSString	*identifier = [[service handleServiceType] identifier];
+			NSString	*myUniqueObjectID = [self uniqueObjectID];
+			NSString	*ONLINE = @"Online";
 			
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
 			
+			if (silent) [[adium contactController] delayListObjectNotifications];
+
             for(i=0;i < count;i++){
 				AIListContact	*contact;
-                NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				
-				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-															  accountID:[self uniqueObjectID]
-																	UID:buddyUID];
-				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+				contact = [[adium contactController] existingContactWithService:identifier
+																	  accountID:myUniqueObjectID
+																			UID:[NSString stringWithFormat:@"Buddy%i",i]];
+				[contact setStatusObject:nil forKey:ONLINE notify:shouldNotify];
             }
+
+			if (silent) [[adium contactController] endListObjectNotificationsDelay];
 			
             [self echo:[NSString stringWithFormat:@"%i handles signed off %@",count,(silent?@"(Silently)":@"")]];
 			
@@ -181,12 +191,19 @@
     NSMutableDictionary	*userInfo = [inTimer userInfo];
     NSMutableArray		*array = [userInfo objectForKey:@"handles"];
     AIListContact		*contact = [array lastObject];
-	//    BOOL				silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
+	BOOL				silent = [[userInfo objectForKey:@"silent"] boolValue];
     
-	[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
-	
+	[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+
+	//Apply any changes
+	[contact notifyOfChangedStatusSilently:silent];
+
     [array removeLastObject];
-    if([array count] == 0) [inTimer invalidate];
+    if([array count] == 0){
+		if (silent) [[adium contactController] endListObjectNotificationsDelay];
+
+		[inTimer invalidate];
+	}
 }
 
 - (void)timer_msgin:(NSTimer *)inTimer
