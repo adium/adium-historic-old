@@ -132,11 +132,9 @@
 
 //First run
   - We need a more intuitive interface for a first-time user to get started with Adium.
-    Possibilities are:
-		- Simply a revamped Accounts window
-		- A first-run Adium setup wizard [Evan: this is my inclination]
-			* Basic account setup
-			* Initial configuration of a few key preferences
+	- A first-run Adium setup wizard [Evan: this is my inclination]
+		* Basic account setup
+		* Initial configuration of a few key preferences
   - The Migration Assistant, with expanded program support and a revamped UI, should 
     automatically offer its services when Adium is first launched, ‡ la Mail.app's
 	importer.[Brandon: Working on it.]
