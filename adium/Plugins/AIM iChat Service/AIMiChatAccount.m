@@ -20,8 +20,7 @@
 #import "InstantMessageFramework.h"
 
 #define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
-#define SIGN_ON_UPKEEP_INTERVAL	2.0		//Max wait before sign up updates
-
+#define SIGN_ON_UPKEEP_INTERVAL	1.6		//Max wait before sign up updates
 
 //
 extern void* objc_getClass(const char *name);
@@ -303,7 +302,7 @@ extern void* objc_getClass(const char *name);
     NSEnumerator	*enumerator;
     AIHandle		*handle;
 
-    NSLog(@"(iChat)loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
+//    NSLog(@"(iChat)loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
     
     switch(inStatus){
         case 0: //Offline
@@ -352,7 +351,7 @@ extern void* objc_getClass(const char *name);
             //If no updates are receiced for X seconds, we assume 'no available contacts' and resume contact list updates.
             numberOfSignOnUpdates = 0;
             processingSignOnUpdates = YES;
-            waitingForFirstUpdate = YES;
+            waitingForFirstUpdate = 2;
             [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_MAX_WAIT) //5 Seconds max
                                              target:self
                                            selector:@selector(firstSignOnUpdateReceived)
@@ -369,9 +368,9 @@ extern void* objc_getClass(const char *name);
 
 - (void)firstSignOnUpdateReceived
 {
-    NSLog(@"firstSignOnUpdateReceived");
+//    NSLog(@"firstSignOnUpdateReceived");
     if(waitingForFirstUpdate){
-        waitingForFirstUpdate = NO;
+        waitingForFirstUpdate = 0;
     
         if(numberOfSignOnUpdates == 0){
             //No available contacts after 5 seconds, assume noone is online and resume contact list updates
@@ -390,14 +389,15 @@ extern void* objc_getClass(const char *name);
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
-        NSLog(@"waitForLastSignOnUpdate Done");
+//        NSLog(@"waitForLastSignOnUpdate Done");
         processingSignOnUpdates = NO;
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
+        [[owner contactController] handlesChangedForAccount:self]; //Let Adium know of our new handles
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
-        [[owner contactController] handlesChangedForAccount:self]; //
+        
     }else{
-        NSLog(@"waitForLastSignOnUpdate %i",numberOfSignOnUpdates);
+//        NSLog(@"waitForLastSignOnUpdate %i",numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }
@@ -465,8 +465,11 @@ extern void* objc_getClass(const char *name);
     NSEnumerator	*buddyEnumerator;
     NSDictionary	*buddyPropertiesDict;
 
-    NSLog(@"(iChat)buddyPropertiesChanged:(%i)",[inProperties count]);
-        
+    //Sign on update monitoring
+    if(processingSignOnUpdates) numberOfSignOnUpdates++;
+    if(waitingForFirstUpdate == 1) [self firstSignOnUpdateReceived];
+    if(waitingForFirstUpdate) waitingForFirstUpdate--;
+
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){
         NSString	*compactedName = [buddyPropertiesDict objectForKey:@"FZPersonID"];
@@ -474,10 +477,6 @@ extern void* objc_getClass(const char *name);
         NSArray		*modifiedStatusKeys;
 
         if([compactedName compare:screenName] != 0){ //Ignore our own name
-            //Sign on update monitoring
-            if(processingSignOnUpdates) numberOfSignOnUpdates++;
-            if(waitingForFirstUpdate) [self firstSignOnUpdateReceived];
-            
             //Get the handle
             handle = [handleDict objectForKey:compactedName];
             if(!handle){ //If the handle doesn't exist
@@ -501,7 +500,7 @@ extern void* objc_getClass(const char *name);
             if([modifiedStatusKeys count]){
                 [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:modifiedStatusKeys];
             }
-        }            
+        }
     }
 }
 
@@ -599,23 +598,23 @@ extern void* objc_getClass(const char *name);
 
 
 - (oneway void)service:(id)inService requestOutgoingFileXfer:(id)file{
-    NSLog(@"(iChat)requestOutgoingFileXfer (%@)",file);
+//    NSLog(@"(iChat)requestOutgoingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)inService requestIncomingFileXfer:(id)file{
-    NSLog(@"(iChat)requestIncomingFileXfer (%@)",file);
+//    NSLog(@"(iChat)requestIncomingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)inService chat:(id)chat member:(id)member statusChanged:(int)inStatus{
-    NSLog(@"(iChat)chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
+//    NSLog(@"(iChat)chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
 }
 - (oneway void)service:(id)inService chat:(id)chat showError:(id)error{
-    NSLog(@"(iChat)chat:showError (%@, %@)",chat,error);
+//    NSLog(@"(iChat)chat:showError (%@, %@)",chat,error);
     [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"iChat Error (%@)", screenName] withDescription:error];
 }
 - (oneway void)service:(id)inService chat:(id)chat statusChanged:(int)inStatus{
-    NSLog(@"(iChat)chat:statusChanged (%@, %i)",chat,inStatus);
+//    NSLog(@"(iChat)chat:statusChanged (%@, %i)",chat,inStatus);
 }
 - (oneway void)service:(id)inService directIMRequestFrom:(id)from invitation:(id)invitation{
-    NSLog(@"(iChat)directIMRequestFrom (%@, %@)",from,invitation);
+//    NSLog(@"(iChat)directIMRequestFrom (%@, %@)",from,invitation);
 }
 - (oneway void)service:(id)inService invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
     if(!isRoom){
@@ -627,29 +626,35 @@ extern void* objc_getClass(const char *name);
     }    
 }
 - (oneway void)service:(id)inService youAreDesignatedNotifier:(char)notifier{
-    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
+//    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
 
-- (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)image{
+- (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)data{
     NSString	*compactedName = [buddy compactedString];
     AIHandle	*handle;
 
-    NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
+//    NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
+
+    //Sign on update monitoring
+    if(processingSignOnUpdates) numberOfSignOnUpdates++;
 
     //Get the handle
     handle = [handleDict objectForKey:compactedName];
     if(handle){
-        [[handle statusDictionary] setObject:[[[NSImage alloc] initWithData:image] autorelease] forKey:@"BuddyImage"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"]];
+        NSImage	*image = [[[NSImage alloc] initWithData:data] autorelease];
+
+        if(image){
+            [[handle statusDictionary] setObject:image forKey:@"BuddyImage"];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"]];
+        }
     }
-    
 }
 
 - (oneway void)openNotesChanged:(id)unknown{
-    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
+//    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
 }
 - (oneway void)myStatusChanged:(id)unknown{
-    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
+//    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
 }
 
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle

@@ -327,7 +327,7 @@ typedef enum {
     AIListGroup			*contactList;
     AIListGroup			*strangerGroup;
     NSMutableArray		*contactObserverArray;
-    BOOL			holdUpdates;
+    int				holdUpdates;
 
     NSMutableArray		*sortControllerArray;
     id<AIListSortController> 	activeSortController;

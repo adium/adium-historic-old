@@ -89,7 +89,7 @@ enum {
 - (NSArray *)buddyPictures;						//Returns everyones buddy icons
 - (char)setValue:fp12 ofProperty:fp16 ofPerson:fp20;			//?
 - (char)requestProperty:fp12 ofPerson:fp16;				//?
-- (NSDictionary *)buddyProperties;					//Returns the properties of a buddy (FZPersonStatus (kCFNumberSInt32Type), FZPersonFirstName (CFString), FZPersonStatusMessage (CFString), FZPersonEmail (CFString), FZPersonLastName (CFString), FZPersonPictureData (CFImage))
+- (NSArray *)buddyProperties;					//Returns the properties of a buddy (FZPersonStatus (kCFNumberSInt32Type), FZPersonFirstName (CFString), FZPersonStatusMessage (CFString), FZPersonEmail (CFString), FZPersonLastName (CFString), FZPersonPictureData (CFImage))
 - (NSString *)serviceLoginStatusMessage;				//Returns the login status "connecting to..."
 - (int)serviceDisconnectReason;						//Returns the reason for disconnect
 - (int)serviceLoginStatus;						//Returns the login status (0 = offline, 1 = ERROR, 2 = disconnecting??, 3 = connecting, 4 = online)
