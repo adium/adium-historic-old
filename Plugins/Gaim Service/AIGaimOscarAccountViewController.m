@@ -21,6 +21,9 @@
 - (NSString *)nibName{
     return(@"ESGaimOscarAccountView");
 }
+- (NSString *)userNameLabel{
+    return(@"Screen Name"); //ScreenName
+}
 
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount

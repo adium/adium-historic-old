@@ -8,8 +8,12 @@
 #import "ESGaimJabberAccountViewController.h"
 
 @implementation ESGaimJabberAccountViewController
+
 - (NSString *)nibName{
     return(@"ESGaimJabberAccountView");
+}
+- (NSString *)userNameLabel{
+    return(@"Jabber ID"); //Jabber ID
 }
 
 //Configure our controls

@@ -12,6 +12,9 @@
 - (NSString *)nibName{
     return(@"ESGaimMSNAccountView");
 }
+- (NSString *)userNameLabel{
+    return(@"Passport");    //Sign-in name
+}
 
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount

@@ -12,6 +12,9 @@
 - (NSString *)nibName{
     return(@"ESGaimICQAccountView");
 }
+- (NSString *)userNameLabel{
+    return(@"ICQ Number");    //ICQ#
+}
 
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount
