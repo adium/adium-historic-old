@@ -310,7 +310,12 @@
 
         //Get the message in a sendable format (HTML or plain text)
         if(!connectedWithICQ){
-            message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]];
+            message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
+                                                                headers:YES
+                                                               fontTags:YES
+                                                          closeFontTags:NO
+                                                              styleTags:YES
+                                             closeStyleTagsOnFontChange:NO]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
@@ -511,7 +516,12 @@
         [self AIM_SetIdle:(-[newIdle timeIntervalSinceNow])];
 
         }else if([key compare:@"TextProfile"] == 0){
-            NSString	*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue] encodeFullString:YES];
+            NSString	*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]
+                                                  headers:YES
+                                                 fontTags:YES
+                                            closeFontTags:NO
+                                                styleTags:YES
+                               closeStyleTagsOnFontChange:NO];
             
             if([profile length] > 1024){
                 [[owner interfaceController] handleErrorMessage:@"Info Size Error"
@@ -522,7 +532,13 @@
 
         }else if([key compare:@"AwayMessage"] == 0){
             if(inValue){
-                [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue] encodeFullString:YES]];
+                [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]
+                                                    headers:YES
+                                                   fontTags:YES
+                                              closeFontTags:NO
+                                                  styleTags:YES
+                                 closeStyleTagsOnFontChange:NO]];
+
             }else{
                 [self AIM_SetAway:nil];
             }
@@ -873,7 +889,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.90 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.91 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

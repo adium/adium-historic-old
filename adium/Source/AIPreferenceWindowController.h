@@ -20,10 +20,7 @@
 @interface AIPreferenceWindowController : NSWindowController {
     IBOutlet	NSTabView			*tabView_category;
 
-    IBOutlet	NSTabView			*tabView_accounts;
-    IBOutlet	AIFlippedCategoryView		*view_Accounts_Connections;
-    IBOutlet	AIFlippedCategoryView		*view_Accounts_Profile;
-    IBOutlet	AIFlippedCategoryView		*view_Accounts_Hosts;
+    IBOutlet	AIFlippedCategoryView		*view_Accounts;
 
     IBOutlet	NSTabView			*tabView_contactList;
     IBOutlet	AIFlippedCategoryView		*view_ContactList_General;

@@ -56,7 +56,7 @@
     view_accountPreferences = nil;
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Connections withDelegate:self label:ACCOUNT_PREFERENCE_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Accounts withDelegate:self label:ACCOUNT_PREFERENCE_TITLE]];
 }
 
 - (void)dealloc

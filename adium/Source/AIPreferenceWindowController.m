@@ -111,7 +111,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-//    NSArray	*categoryArray;
     int		selectedTab;
     
     //Remember the amount of vertical padding to our window's frame
@@ -133,11 +132,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }else{
         [[self window] center];
     }
-
-    /*    categoryArray = [[owner preferenceController] categoryArray];
-    if([categoryArray count]){
-        [self showCategory:[categoryArray objectAtIndex:0]];
-    }*/
 
     //Let everyone know we will open
     [[owner notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
@@ -247,8 +241,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
-                [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections showContainers:NO];
-                [self _sizeWindowToFitFlatView:view_Accounts_Connections];
+                [self _insertPanesForCategory:AIPref_Accounts intoView:view_Accounts showContainers:NO];
+                [self _sizeWindowToFitFlatView:view_Accounts];
             break;
             case 2:
                 [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General showContainers:YES];

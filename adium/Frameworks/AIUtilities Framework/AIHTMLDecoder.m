@@ -33,41 +33,46 @@ int HTMLEquivalentForFontSize(int fontSize);
 
 @implementation AIHTMLDecoder
 
+//For compatability
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
 {
-    NSMutableString	*string;
+    if(encodeFullString){
+        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES]);
+    }else{
+        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]);
+    }
+}
+
+// inMessage: AttributedString to encode
+// headers: YES to include HTML and BODY tags
+// fontTags: YES to inclued FONT tags
+// closeFontTags: YES to close the font tags
+// styleTags: YES to include B/I/U tags
+// closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange
+{
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSString		*currentFamily;
-    NSFont		*currentFont;
-    int			currentSize;
-    NSString		*currentColor;
-    NSColor		*pageColor = nil;
-    
-    NSString		*inMessageString;
-    int			messageLength;
     NSRange		searchRange;
+    NSColor		*pageColor = nil;
     BOOL		openFontTag = NO;
-    
-    //Get the incoming message as a regular string, and it's length
-    inMessageString = [inMessage string];
-    messageLength = [inMessage length];
+
+    //Setup the destination HTML string
+    NSMutableString	*string = [NSMutableString stringWithString:(includeHeaders ? @"<HTML>" : @"")];
+
+    //Setup the incoming message as a regular string, and it's length
+    NSString		*inMessageString = [inMessage string];
+    int			messageLength = [inMessage length];
     
     //Setup the default attributes
-    currentFont = nil;//[NSFont systemFontOfSize:12];
-    currentFamily = [@"" retain];
-    currentColor = [@"#000000" retain];
-    currentSize = 0;
+    NSString		*currentFamily = [@"Helvetica" retain];
+    NSString		*currentColor = [@"#000000" retain];
+    int			currentSize = 12;
+    BOOL		currentItalic = NO;
+    BOOL		currentBold = NO;
+    BOOL		currentUnderline = NO;
     
-    //Append the lead HTML tag
-    if(encodeFullString) {
-        string = [NSMutableString stringWithString:@"<HTML>"];
-    }
-    else {
-        string = [NSMutableString stringWithString:@""];
-    }
-
     //Append the body tag (If there is a background color)
-    if(messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]) && encodeFullString){
+    if(includeHeaders && messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
         [string appendString:@"<BODY BGCOLOR=\"#"];
         [string appendString:[pageColor hexString]];
         [string appendString:@"\">"];
@@ -84,98 +89,92 @@ int HTMLEquivalentForFontSize(int fontSize);
         float		pointSize = [font pointSize];
         
         NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-        int		underline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+        BOOL		underline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
         BOOL		bold = (traits & NSBoldFontMask);
         BOOL		italic = (traits & NSItalicFontMask);
-
+        
         NSString	*link = [attributes objectForKey:NSLinkAttributeName];
 
         NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
-        
-        //font
-        if (encodeFullString 
-            && ([color compare:currentColor]
-            || pointSize != currentSize
-            || [familyName compare:currentFamily])
-        ) {
 
-            if(!openFontTag) {
-                [string appendString:@"<FONT"];
-                openFontTag = YES;
+        //
+        if(!color) color = @"000000";
+        
+        //Close style tags
+        if(includeStyleTags){
+            if(!italic && currentItalic) [string appendString:@"</I>"];
+            if(!bold && currentBold) [string appendString:@"</B>"];
+            if(!underline && currentUnderline) [string appendString:@"</U>"];
+        }
+
+        //Font (If the color, font, or size has changed)
+        if(includeFontTags && ([color compare:currentColor] || pointSize != currentSize || [familyName compare:currentFamily])){
+            //Close any existing font tags, and open a new one
+            if(closeFontTags && openFontTag){
+                [string appendString:@"</FONT>"];
             }
-            else {
-                [string appendString:@"</FONT><FONT"];
-            }
+            [string appendString:@"<FONT"];
 
             //Family
-            if (![familyName caseInsensitiveCompare:@"Helvetica"]) {
-                [string appendString:@" LANG=\"0\""];
-            }
-            else {
+            if([familyName caseInsensitiveCompare:currentFamily] != 0){
                 [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"0\"",familyName]];
+                [currentFamily release]; currentFamily = [familyName retain];
             }
-            [currentFamily release]; currentFamily = [familyName retain];
 
             //Size
-            if (pointSize != 12) {
-                [string appendString:[NSString 
-                    stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"",
-                    (int)pointSize,HTMLEquivalentForFontSize((int)pointSize)]];
+            if(pointSize != currentSize){
+                [string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
+                currentSize = pointSize;
             }
-                
-            currentSize = pointSize;
- 
-            [currentFont release]; currentFont = [font retain];
 
-            //color
-            if([color compare:currentColor]){
+            //Color
+            if([color compare:currentColor] != 0){
                 [string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
                 [currentColor release]; currentColor = [color retain];
             }
-            
+
+            //Close the font tag
             [string appendString:@">"];
         }
-        
-        //underline
-        if(underline){
-            [string appendString:@"<U>"];
-        }
-        //Bold
-        if(bold){
-            [string appendString:@"<B>"];
-        }
-        //Italic
-        if(italic){
-            [string appendString:@"<I>"];
-        }
 
+        //Style (Bold, italic, underline)
+        if(includeStyleTags){
+            //Open style tags
+            if(!currentUnderline && underline) [string appendString:@"<U>"];
+            if(!currentBold && bold) [string appendString:@"<B>"];
+            if(!currentItalic && italic) [string appendString:@"<I>"];
+
+            //Set our current styles
+            currentUnderline = underline;
+            currentBold = bold;
+            currentItalic = italic;
+        }
+        
         //Link
         if(link && [link length] != 0){
             [string appendString:@"<a href=\""];
             [string appendString:link];
             [string appendString:@"\">"];
         }
-        
+
         //Escape special HTML characters.
         [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
             options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-        
         [chunk replaceOccurrencesOfString:@"<" withString:@"&lt;"
             options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-        
         [chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
             options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-
+        
         //Append string character by character, replacing any non-ascii characters with the designated unicode
         //escape sequence.
         int i;
-        for(i = 0; i < [chunk length]; i++) {
+        for(i = 0; i < [chunk length]; i++){
             unichar currentChar = [chunk characterAtIndex:i];
-            if(currentChar > 127) {
+            if(currentChar > 127){
                 [string appendFormat:@"&#%d;", currentChar];
-            } else if(currentChar == '\r' || currentChar == '\n'){
+            }else if(currentChar == '\r' || currentChar == '\n'){
                 [string appendString:@"<BR>"];
-            } else {
+            }else{
                 [string appendFormat:@"%c", currentChar];
             }
         }
@@ -183,43 +182,32 @@ int HTMLEquivalentForFontSize(int fontSize);
         //Release the chunk
         [chunk release];
 
-        //Disable Link
+        //Close Link
         if(link && [link length] != 0){
             [string appendString:@"</a>"];
         }
 
-        //Disable bold/italic/underline
-        if(italic){
-            [string appendString:@"</I>"];
+        //Close all open style tags
+        if(includeStyleTags && closeStyleTagsOnFontChange){
+            if(currentItalic) [string appendString:@"</I>"];
+            if(currentBold) [string appendString:@"</B>"];
+            if(currentUnderline) [string appendString:@"</U>"];
+            currentItalic = NO;
+            currentBold = NO;
+            currentUnderline = NO;
         }
-        if(bold){
-            [string appendString:@"</B>"];
-        }
-        if(underline){
-            [string appendString:@"</U>"];
-        }
-        
+
+        //
         searchRange.location += searchRange.length;
     }
 
     [currentFamily release];
     [currentColor release];
-    [currentFont release];
 
-    //Close the open font tag (if there is one)
-    if(openFontTag){
-        [string appendString:@"</FONT>"];
-    }
-
-    //Close the body tag (if there is one)
-    if(pageColor && encodeFullString){
-        [string appendString:@"</BODY>"];
-    }
-
-    //Close the HTML
-    if (encodeFullString) {
-        [string appendString:@"</HTML>"];
-    }
+    //Finish off the HTML
+    if(includeFontTags && closeFontTags && openFontTag) [string appendString:@"</FONT>"];	//Close any open font tag
+    if(includeHeaders && pageColor) [string appendString:@"</BODY>"];				//Close the body tag
+    if(includeHeaders) [string appendString:@"</HTML>"];					//Close the HTML
 
     return(string);
 }
@@ -243,8 +231,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     }
 }
 
-
-
+//
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage
 {
     NSScanner			*scanner;

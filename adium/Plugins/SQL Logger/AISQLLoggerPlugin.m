@@ -127,8 +127,8 @@
 {
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
-    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message encodeFullString:NO]];
-    
+    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+        
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
     char	escapeRecip[[destName length] * 2 + 1];

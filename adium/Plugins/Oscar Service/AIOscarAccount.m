@@ -625,7 +625,7 @@
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         //Convert the message to HTML
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
-
+        
         //Get the destination handle
         listObject = (AIListContact *)[[object chat] listObject];
         handle = [listObject handleForAccount:self];
