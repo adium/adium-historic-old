@@ -84,14 +84,14 @@ float _v(float m1, float m2, float hue);
 	
 	//format: r,g,b[,a]
 	//all components are decimal numbers 0..255.
-	r = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	++selfUTF8;
-	g = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	++selfUTF8;
-	b = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	if(*selfUTF8 == ',') {
 		++selfUTF8;
-		a = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	}
 
     return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
@@ -107,11 +107,11 @@ float _v(float m1, float m2, float hue);
 	
 	//format: r,g,b
 	//all components are decimal numbers 0..255.
-	r = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	++selfUTF8;
-	g = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	++selfUTF8;
-	b = strtoul(selfUTF8, (char *)&selfUTF8, /*base*/ 10);
+	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 
     return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
 }
