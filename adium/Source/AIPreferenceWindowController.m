@@ -21,6 +21,7 @@
 #define TOOLBAR_PREFERENCE_WINDOW		@"PreferenceWindow"	//Identifier for the preference toolbar
 #define	KEY_PREFERENCE_WINDOW_FRAME		@"Preference Window Frame"
 #define KEY_PREFERENCE_SELECTED_CATEGORY	@"Preference Selected Category"
+#define KEY_ADVANCED_PREFERENCE_SELECTED_ROW    @"Preference Advanced Selected Row"
 #define FLAT_PADDING_OFFSET                     45
 #define PREFERENCE_WINDOW_TITLE			@"Preferences"
 #define PREFERENCE_PANE_ARRAY			@"PaneArray"
@@ -301,6 +302,14 @@ static AIPreferenceWindowController *sharedInstance = nil;
             case 9:
                 [self _sizeWindowForContentHeight:ADVANCED_PANE_HEIGHT];
                 [outlineView_advanced reloadData];
+                
+                //Get the previously selected row
+                int previousRow = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
+                //Select it in the table
+                [outlineView_advanced selectRow:previousRow byExtendingSelection:NO];
+                //Force the view to update
+                [self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:previousRow]];
+                
             break;
                 
         }
@@ -546,11 +555,16 @@ static AIPreferenceWindowController *sharedInstance = nil;
             [self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
             [textField_advancedTitle setStringValue:[item label]];
         }    
-        
         return(YES);
     }else{
         return(NO);
     }
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+    //Save the selected row number
+    [[owner preferenceController] setPreference:[NSNumber numberWithInt:[[notification object] selectedRow]] forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW group:PREF_GROUP_WINDOW_POSITIONS];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
