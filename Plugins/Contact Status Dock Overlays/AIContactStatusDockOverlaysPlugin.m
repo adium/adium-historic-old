@@ -51,18 +51,18 @@
 	
     //Install our preference view and register our default prefs
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
-    preferences = [[AIStatusOverlayPreferences preferencePane] retain];
-	
+//    preferences = [[AIStatusOverlayPreferences preferencePane] retain];
+
     //Register as a contact observer (For signed on / signed off)
     [[adium contactController] registerListObjectObserver:self];
-	
+
 	//Register as a chat observer (for unviewed content)
 	[[adium contentController] registerChatObserver:self];
-		
+
     //Prefs
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_OVERLAYS];
-	
+
     //
     image1 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
     image2 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];

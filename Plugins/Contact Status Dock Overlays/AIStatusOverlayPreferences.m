@@ -22,7 +22,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Dock);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(@"Contact Status Overlays");
