@@ -176,13 +176,9 @@
 	
 	[NSApp beginSheet:window_customStyle
 	   modalForWindow:[view window]
-		modalDelegate:nil
-	   didEndSelector:nil
+		modalDelegate:self
+	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 		  contextInfo:nil];
-		
-    [NSApp runModalForWindow:window_customStyle];
-	[NSApp endSheet:window_customStyle];
-	[window_customStyle orderOut:self];
 }
 
 - (IBAction)saveCustomColors:(id)sender
@@ -213,7 +209,7 @@
 										 forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR
 										  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 	
-	[NSApp stopModal];
+	[NSApp endSheet:window_customStyle];
 }
 
 - (IBAction)cancelCustomColors:(id)sender
@@ -221,7 +217,13 @@
 	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 	[popUp_messageColoring selectItemWithTitle:[preferenceDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME]];
 		
-	[NSApp stopModal];
+	[NSApp endSheet:window_customStyle];
+}
+
+//Called as the custom color closes, dismisses the sheet
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [window_customStyle orderOut:nil];
 }
 
 //Build the time stamp selection menu
