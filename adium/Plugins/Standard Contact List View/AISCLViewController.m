@@ -522,6 +522,27 @@
 	//No longer in a drag, so allow tooltips again
 	//No dropping into contacts
     if([avaliableType compare:@"AIListObject"] == 0){
+		id	primaryDragItem = [dragItems objectAtIndex:0];
+		
+		if([primaryDragItem isKindOfClass:[AIListGroup class]]){
+			//Disallow dragging groups into or onto other objects
+			if(item != nil){
+				if([item isKindOfClass:[AIListGroup class]]){
+					[outlineView setDropItem:nil dropChildIndex:[[item containingGroup] indexOfObject:item]];
+				}else{
+					[outlineView setDropItem:nil dropChildIndex:[[[item containingGroup] containingGroup] indexOfObject:[item containingGroup]]];
+				}
+			}
+			
+		}else{
+			//Disallow dragging contacts onto anything besides a group
+			if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
+				[outlineView setDropItem:[item containingGroup] dropChildIndex:[[item containingGroup] indexOfObject:item]];
+			}
+			
+		}
+		
+		
 		if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
 			return(NSDragOperationNone);
 		}

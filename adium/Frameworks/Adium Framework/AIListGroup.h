@@ -29,6 +29,7 @@
 - (BOOL)containsObject:(AIListObject *)inObject;
 - (NSEnumerator *)objectEnumerator;
 - (id)objectAtIndex:(unsigned)index;
+- (int)indexOfObject:(AIListObject *)inObject;
 - (unsigned)visibleCount;
 - (unsigned)count;
 - (NSArray *)containedObjects;

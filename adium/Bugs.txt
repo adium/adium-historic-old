@@ -38,6 +38,9 @@
     try and reconnect, displaying the error message over and over and trying its best to get that 
     name blocked for as long as possible.
 
+- Cannot re-arrange aways
+    Aways in the status panel cannot be re-arranged
+    
 
 //-------------------------------------------------------------------------------------------------------
 // Bugs - LibGaim
