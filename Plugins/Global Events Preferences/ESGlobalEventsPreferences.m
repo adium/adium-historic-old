@@ -167,9 +167,10 @@
 //The user selected a sound set
 - (IBAction)selectSoundSet:(id)sender
 {
+	//Can't set nil because if we do the default will be reapplied on next launch
 	[[adium preferenceController] setPreference:([sender representedObject] ?
 												 [[sender representedObject] stringByCollapsingBundlePath] :
-												 nil)
+												 @"")
 										 forKey:KEY_EVENT_SOUND_SET
 										  group:PREF_GROUP_SOUNDS];
 }
@@ -208,7 +209,10 @@
 #pragma mark Dock behavior sets
 - (IBAction)selectDockBehaviorSet:(id)sender
 {
-	[[adium preferenceController] setPreference:[sender representedObject]
+	//Can't set nil because if we do the default will be reapplied on next launch
+	[[adium preferenceController] setPreference:([sender representedObject] ?
+												 [sender representedObject] : 
+												 @"")
 										 forKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
 										  group:PREF_GROUP_DOCK_BEHAVIOR];
 }
