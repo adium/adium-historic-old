@@ -111,7 +111,7 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 	
 	//Retrieve the service icon from our cache
 	statusIcon = [statusIcons[iconType][iconDirection] objectForKey:statusName];
-	
+
 	//Load the status icon if necessary
 	if(!statusIcon && statusIconsReady){
 		NSString	*fileName;
@@ -153,7 +153,6 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
 					
 				}else{
-					
 					/* If we get here for a status name which is a default name, the pack doesn't have an image for us. */
 					NSAssert2(FALSE, @"Invalid status icon pack %@: Missing required item %@",
 							  [statusIconBasePath lastPathComponent], 
@@ -182,12 +181,10 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			
 			[statusIconNames[AIStatusIconList] release];
 			statusIconNames[AIStatusIconList] = [[statusIconDict objectForKey:@"List"] retain];
-			
+
 			//Clear out the status icon cache
-			int i, j;
-			
-			for(i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
-				for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+			for(unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
+				for(unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
 					[statusIcons[i][j] removeAllObjects];
 				}
 			}
@@ -206,7 +203,7 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 	}
 }
 
-//Returns the state icon for the passed chat (new content, tpying, ...)
+//Returns the state icon for the passed chat (new content, typing, ...)
 static NSString *statusNameForChat(AIChat *inChat)
 {
 	if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){

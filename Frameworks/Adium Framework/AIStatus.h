@@ -42,7 +42,7 @@ typedef enum {
 	AIInvisibleStatusType,
 	AIOfflineStatusType
 } AIStatusType;
-#define STATUS_TYPES_COUNT 3
+#define STATUS_TYPES_COUNT 4
 
 @interface AIStatus : AIObject<NSCoding> {
 	NSMutableDictionary	*statusDict;
