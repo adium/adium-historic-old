@@ -52,7 +52,7 @@
 										 keyEquivalent:@""] autorelease];
 	
 	//Add the menu item (which will have _sortSelectionMenu as its submenu)
-	[[adium menuController] addMenuItem:menuItem_sort toLocation:LOC_View_General];
+	[[adium menuController] addMenuItem:menuItem_sort toLocation:LOC_View_Unnamed_A];
 	
 	[self sortControllerListChanged:nil];
 }
