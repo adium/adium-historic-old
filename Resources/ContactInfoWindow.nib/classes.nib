@@ -47,6 +47,17 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIMultiCellOutlineView; 
         }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
         {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             CLASS = AIMultiCellOutlineView; 
@@ -71,7 +82,8 @@
             SUPERCLASS = NSImageView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
     IBVersion = 1; 
 }
