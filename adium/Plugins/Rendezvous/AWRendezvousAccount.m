@@ -83,6 +83,11 @@
     [libezv logout];
 }
 
+- (const char *)customServerToCheckForReachability
+{
+	return "localhost";
+}
+
 - (void)removeContacts:(NSArray *)objects
 {
 
