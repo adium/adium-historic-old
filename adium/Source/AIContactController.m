@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.170 2004/08/12 01:01:12 evands Exp $
+// $Id: AIContactController.m,v 1.171 2004/08/12 23:08:02 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -812,7 +812,7 @@ DeclareString(UID);
 //This will reuse an existing metacontact (for one of the contacts in the array) if possible.
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray
 {
-	NSLog(@"groupListcontacts: Grouping %@",contactsToGroupArray);
+//	NSLog(@"groupListcontacts: Grouping %@",contactsToGroupArray);
 	NSEnumerator	*enumerator;
 	AIListContact   *listContact;
 	AIMetaContact   *metaContact = nil;
