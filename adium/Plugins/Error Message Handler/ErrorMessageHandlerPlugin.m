@@ -56,7 +56,8 @@
 	
 	//Generate the event (for no list object, so only global triggers apply)
 	[[adium contactAlertsController] generateEvent:INTERFACE_ERROR_MESSAGE
-									 forListObject:nil];
+									 forListObject:nil
+										  userInfo:nil];
 }
 
 
@@ -88,7 +89,7 @@
 	return([ESPanelAlertDetailPane actionDetailsPane]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
     NSString    *dateString = [[NSCalendarDate calendarDate] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]];
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];

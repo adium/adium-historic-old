@@ -286,7 +286,7 @@
 	return([NSImage imageNamed:@"BezelAlert" forClass:[self class]]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
     [self processBezelForNotification:[NSNotification notificationWithName:eventID object:listObject]];
 }
