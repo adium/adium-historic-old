@@ -84,15 +84,7 @@
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
-	
-	#warning eevyl - crappy fix, but we need these preferences before metacontacts grouping and the preceferencesChanged call must be after it for the rest to work (help?)
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
-	displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
-	useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
 
-	//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
-	[self rebuildAddressBookDict];
-	
     [self preferencesChanged:nil];
 }
 
@@ -217,19 +209,23 @@
 		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
 		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 		
-
-		if (notification != nil){
-			//If we have a notification (so this isn't the first time through), update all contacts,
-			//which will update objects and then our "me" card information
-			[self updateAllContacts];
-		}else{			
+		if (notification == nil){
+			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
+			[self rebuildAddressBookDict];
+			
 			//Register ourself as a listObject observer, which will update all objects
 			[[adium contactController] registerListObjectObserver:self];
 			
 			//Now update from our "me" card information
 		    [self updateSelfIncludingIcon:YES];	
 		}
-		
+
+		if (notification != nil){
+			//If we have a notification (so this isn't the first time through), update all contacts,
+			//which will update objects and then our "me" card information
+			[self updateAllContacts];
+		}
+
     }else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS])){
 		AIListObject	*inObject = [notification object];
 		if (inObject){
