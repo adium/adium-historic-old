@@ -14,7 +14,7 @@ Version 0.52
 - Fixed a crash when going away automatically after a certain amount of time idle.
 - Fixed several crashes when running in OS X 10.2
 - Version checking improvements
-- No longer show a blank pofile when an AIM account attempts to get the profile of an AOL account (which can not be done)
+- No longer show a blank profile when an AIM account attempts to get the profile of an AOL account (which can not be done)
 - Miscellaneous cosmetic and speed improvements
 
 Version 0.51 (4/08/2004)
