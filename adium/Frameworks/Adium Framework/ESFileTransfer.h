@@ -3,8 +3,9 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Thu Nov 13 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
+
+#define FILE_TRANSFER_TYPE  @"File Transfer Type"
 
 typedef enum {
     Incoming_FileTransfer = 0,

@@ -82,7 +82,7 @@ typedef enum {
     - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
 
     //Instructs the account to initiate sending of a file
-    //- (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact;
+- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 //Support for privacy settings
