@@ -491,6 +491,8 @@
 				4BDB241F04AF52B000A8010A,
 				F5819CE9032124CE01A8010A,
 				D2547F1D050AD55B00A80164,
+				34E839050583207E00F2AADB,
+				34E83B0A05832B4300F2AADB,
 				6576A01305026B4F000EB664,
 				9C103FAE057127A500F3C158,
 			);
@@ -16551,6 +16553,34 @@
 			settings = {
 			};
 		};
+		34E839050583207E00F2AADB = {
+			expectedFileType = wrapper.framework;
+			isa = PBXFileReference;
+			name = SystemConfiguration.framework;
+			path = /System/Library/Frameworks/SystemConfiguration.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34E839060583207E00F2AADB = {
+			fileRef = 34E839050583207E00F2AADB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E83B0A05832B4300F2AADB = {
+			expectedFileType = wrapper.framework;
+			isa = PBXFileReference;
+			name = Security.framework;
+			path = /System/Library/Frameworks/Security.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34E83B0B05832B4300F2AADB = {
+			fileRef = 34E83B0A05832B4300F2AADB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E8FA33054D9CE7008BB262 = {
 			expectedFileType = image.tiff;
 			isa = PBXFileReference;
@@ -19252,6 +19282,8 @@
 				4B7F279905440CB900CDFC90,
 				4B7F279A05440CB900CDFC90,
 				343FA4530567DC460049DFFB,
+				34E839060583207E00F2AADB,
+				34E83B0B05832B4300F2AADB,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
