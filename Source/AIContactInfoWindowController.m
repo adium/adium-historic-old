@@ -365,9 +365,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
 		listObject = containingObject;
 	}	
-	NSLog(@"Info for %@ %i",listObject, [(AIMetaContact *)listObject containsOnlyOneUniqueContact]);
+
 	if ([listObject isKindOfClass:[AIMetaContact class]] &&
-		![(AIMetaContact *)listObject containsOnlyOneUniqueContact]){
+		([[(AIMetaContact *)listObject listContacts] count] > 1)){
 		[self setContactListRoot:listObject];
 		[drawer_metaContact open];
 	
