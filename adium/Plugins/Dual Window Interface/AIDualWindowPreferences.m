@@ -41,6 +41,21 @@
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     [checkBox_autoResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
+
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:PREF_GROUP_DUAL_WINDOW_INTERFACE object:nil];
+}
+
+//Keep the preferences current
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+
+        //If the Behavior set changed
+        if(notification == nil || [key compare:KEY_DUAL_RESIZE_VERTICAL] == 0){
+            [checkBox_autoResize setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE] objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
+        }
+    }
 }
 
 @end
