@@ -56,7 +56,7 @@
 	
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-	AILog(@"%@: Parsing %@",bookmarkString);
+	AILog(@"%@: Parsing %@",self,bookmarkString);
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
