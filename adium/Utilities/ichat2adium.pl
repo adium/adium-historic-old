@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: ichat2adium.pl,v 1.2 2003/11/29 17:50:02 jmelloy Exp $
+# $Id: ichat2adium.pl,v 1.3 2003/11/29 18:17:41 jmelloy Exp $
 #
 # This program imports iChat logs using the program Logorrhea.  Get it from
 # http://spiny.com/logorrhea/
@@ -21,10 +21,18 @@ use strict;
 system('mkdir', 'adiumLogs');
 
 my $file;
+my $users = 0;
+my @usernames;
+my @chatnames;
+
 if(@ARGV > 0) {
     $file = $ARGV[0];
 } else {
     $file = "iChat Export.txt";
+}
+
+if ($ARGV[1] eq "--usernames") {
+    $users = 1;
 }
 
 open(FILE, $file) or die qq{Unable to open "$file": $!};
@@ -50,9 +58,33 @@ for (my $i = 0; $i < @input; $i++) {
     if($date) {
         ($month, $day, $year) = /(\d\d)\/(\d\d)\/(\d\d\d\d)/;
     }
-    
+
+    if($users && $chatname && $sender) {
+        my $userfound = 0;
+        for(my $j = 0; $j < @chatnames; $j++) {
+            if ($chatnames[$j] eq $chatname) {
+                $userfound = 1;
+                $chatname = $usernames[$j];
+            }
+        }
+        if($userfound == 0) {
+            push(@chatnames, $chatname);
+            print "What username is associated with $chatname [$sender]:";
+            $/ = "\n";
+            my $input = <STDIN>;
+            chomp($input);
+            if(length($input) == 0) {
+                push(@usernames, $sender);
+                $chatname = $sender;
+            } else {
+                push(@usernames, $input);
+                $chatname = $input;
+            }
+        }
+    }
+
     $chatname =~ s/ //g;
-    
+
     if($chatname && $sender && $date && $month && $day && $year && $message) {
         $outfile = "adiumLogs/$chatname ($year|$month|$day).adiumLog";
 
