@@ -10247,6 +10247,7 @@
 				34F2BC69059CC2850005B238,
 				4B7BB54205B1906700598C55,
 				BF818D7B05C7AD460067008D,
+				4BA7F23905E2E8D200ABF4FC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10974,6 +10975,7 @@
 				34F2BC6A059CC2850005B238,
 				4B7BB54005B1905800598C55,
 				BF818D7C05C7AD460067008D,
+				4BA7F23A05E2E8D200ABF4FC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21562,6 +21564,36 @@
 			settings = {
 			};
 		};
+		4BA7F23705E2E8D100ABF4FC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAppleScriptAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIAppleScriptAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA7F23805E2E8D100ABF4FC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAppleScriptAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIAppleScriptAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA7F23905E2E8D200ABF4FC = {
+			fileRef = 4BA7F23705E2E8D100ABF4FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA7F23A05E2E8D200ABF4FC = {
+			fileRef = 4BA7F23805E2E8D100ABF4FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BA80057046C63DF00C50DA9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -31388,6 +31420,8 @@
 				9E9739D805784EF900CF3AEE,
 				4B7BB54105B1906700598C55,
 				4B7BB53F05B1905800598C55,
+				4BA7F23705E2E8D100ABF4FC,
+				4BA7F23805E2E8D100ABF4FC,
 				F5793938033E74E401A8010A,
 				F5793939033E74E401A8010A,
 				34E0F189053AE56F00031341,
