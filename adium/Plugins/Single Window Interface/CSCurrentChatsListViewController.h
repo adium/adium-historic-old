@@ -20,6 +20,7 @@
 - (void)openChat:(AIChat*)inChat;
 - (void)setChat:(AIChat*)inChat;
 - (void)closeChat:(AIChat*)inChat;
+- (AIChat*)activeChat;
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView;
 

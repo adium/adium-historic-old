@@ -12,6 +12,7 @@
 #import "AIMessageViewController.h"
 
 #define SINGLE_WINDOW_NIB @"Single Window Interface"
+#define	KEY_SINGLE_WINDOW_INTERFACE_FRAME	@"Single Window Interface Frame"
 
 @interface CSSingleWindowInterfaceWindowController (PRIVATE)
 
@@ -58,6 +59,14 @@
 
 - (void)windowDidLoad
 {
+	NSString	*savedFrame;
+    
+    //Restore the window position
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_SINGLE_WINDOW_INTERFACE_FRAME];
+    if(savedFrame){
+        [[self window] setFrame:NSRectFromString(savedFrame) display:YES];            
+    }
+	
     [[self window] setDelegate:self];
     
 	contactListViewController = [[[adium interfaceController] contactListViewController] retain];
@@ -133,6 +142,11 @@
 	[box_messageView setContentView:view_noActiveChat];
 }
 
+- (AIChat*)activeChat
+{
+	return [currentChatsController activeChat];
+}
+
 #pragma mark Delegate Methods
 
 - (BOOL)windowShouldClose:(id)sender
@@ -142,7 +156,12 @@
 		[currentChatsController tableViewDeleteSelectedRows:nil];
 		return NO;
 	}
-    return YES;
+    
+	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_SINGLE_WINDOW_INTERFACE_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
+	
+	return YES;
 }
 
 @end
