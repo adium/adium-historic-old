@@ -65,6 +65,7 @@
 }
 
 //Sorting function
+#warning This can not work as expected. Furthmore, why is it in two places?
 int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 {
     BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
@@ -73,15 +74,16 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
     
     
-    NSString  	*groupNameA = [[objectA containingGroup] displayName];
-    NSString  	*groupNameB = [[objectB containingGroup] displayName];
+ //   NSString  	*groupNameA = [[objectA containingGroup] displayName];
+ //   NSString  	*groupNameB = [[objectB containingGroup] displayName];
     if(groupA && !groupB){
         return(NSOrderedAscending);
     }else if(!groupA && groupB){
         return(NSOrderedDescending);
     }
-    else if ([groupNameA compare:groupNameB] == 0)
-    {
+ //   else if ([groupNameA compare:groupNameB] == 0)
+  //  {
+    else
         if(invisibleA && !invisibleB){
             return(NSOrderedDescending);
         }else if(!invisibleA && invisibleB){
@@ -89,9 +91,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
         }else{
             return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
         }
-    }
-    else
-        return([groupNameA caseInsensitiveCompare:groupNameB]);
+//    }
+ //   else
+  //      return([groupNameA caseInsensitiveCompare:groupNameB]);
 }
 
 @end

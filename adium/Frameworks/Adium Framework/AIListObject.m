@@ -16,6 +16,10 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
+@interface AIListObject (PRIVATE)
+- (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
+@end
+
 @implementation AIListObject
 
 //Init
@@ -345,13 +349,51 @@
     return(value);
 }
 
+- (NSArray *)allPreferencesForKey:(NSString *)inKey group:(NSString *)groupName
+{
+    NSMutableArray *returnArray = [self _recursivePreferencesForKey:inKey group:groupName];
+    id      rootValue = [[adium preferenceController] preferenceForKey:inKey group:groupName];
+    if (rootValue){
+        if (returnArray){
+            return [returnArray addObject:rootValue];
+        }else{
+            return [NSArray arrayWithObject:rootValue];
+        }
+    }
+    
+    return returnArray;
+}
+
+- (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName
+{
+    id		value = nil;
+    NSMutableArray     *returnArray = [NSMutableArray arrayWithCapacity:1];
+    
+    //Get our value for the preference
+    if(prefDict) {
+        if (value = [prefDict objectForKey:inKey]) {
+            returnArray = [returnArray addObject:value];
+        }
+    }
+    
+    //so long as we aren't the root group, add our containingGroups' preferences
+    if([containingGroups count]){
+        NSEnumerator    *enumerator = [containingGroups objectEnumerator];
+        AIListObject    *containingGroup;
+        while (containingGroup = [enumerator nextObject]) {
+            [returnArray addObjectsFromArray:[containingGroup _recursivePreferencesForKey:inKey group:groupName]];
+        }
+    }
+    
+    return returnArray;
+}
+
+
 //Path for storing our reference file
 - (NSString *)pathToPreferences
 {
     return([[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]);
 }
-
-
 
 // Display Name Convenience Methods -----------------------------------------------------------------------
 /*
