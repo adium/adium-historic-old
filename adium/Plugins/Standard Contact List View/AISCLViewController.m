@@ -205,7 +205,7 @@
 				[contactListView updateHorizontalSizeForObject:object];
 			}
 		}else{
-			[contactListView reloadData];
+#warning	[contactListView reloadData]; seems needed here but "sucks performancewise" to quote some buddhist monk guy
 			[contactListView _performFullRecalculation];	
 		}
     }
