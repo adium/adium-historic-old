@@ -260,8 +260,10 @@
             [[container messageViewController] setAccountSelectionMenuVisible:YES];            
         }
 
-        //Increase the handle's unviewed count
-        [self increaseUnviewedContentOfHandle:[notification object]];        
+        //Increase the handle's unviewed count (If it's not the active container)
+        if(container != activeContainer){
+            [self increaseUnviewedContentOfHandle:[notification object]];        
+        }
     }
 }
 
