@@ -26,13 +26,10 @@
 - The crash reporter shouldn't force people to reopen Adium after a crash.
 - Custom Status window appears multiple times on multiple menu item selections..
 	(Be careful in fixing this as you should be able to edit statuses at the same time you edit statuses.)	
-- Defaulting new accounts to online fails because the UID isn't set properly before attempting to connect.
-- AIM can't return from Invisible unless via a visible away state
 - Custom Status should remember the last status state used for that type of custom status rather than populating
 	with the current status
 - Message views are ignoring variant specific info.plist keys
 - %_statusmessage script is broken
-- Reinstate a cap on tooltip image size (setting them to 96x96 for MSN would be okay)
 - Contact list status selector isn't updating to reflect the correct status all the time
 	
 
