@@ -13,12 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.52 2004/02/22 09:18:42 evands Exp $
+// $Id: AIContentController.m,v 1.53 2004/02/24 15:00:53 evands Exp $
 
 #import "AIContentController.h"
 
 @interface AIContentController (PRIVATE)
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray;
+- (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/;
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
 @end
 
@@ -31,7 +32,8 @@
     outgoingContentFilterArray = [[NSMutableArray alloc] init];
     incomingContentFilterArray = [[NSMutableArray alloc] init];
     displayingContentFilterArray = [[NSMutableArray alloc] init];
-
+	stringFilterArray = [[NSMutableArray alloc] init];
+	
     //Text entry filtering and tracking
     textEntryFilterArray = [[NSMutableArray alloc] init];
     textEntryContentFilterArray = [[NSMutableArray alloc] init];
@@ -61,6 +63,8 @@
     [outgoingContentFilterArray release];
     [incomingContentFilterArray release];
     [displayingContentFilterArray release];
+	[stringFilterArray release];
+	
     [textEntryFilterArray release];
     [textEntryContentFilterArray release];
     [textEntryViews release];
@@ -197,11 +201,29 @@
     [displayingContentFilterArray removeObject:inFilter];
 }
 
+- (void)registerStringFilter:(id <AIStringFilter>)inFilter
+{
+	[stringFilterArray addObject:inFilter];
+}
+
+- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter
+{
+	[stringFilterArray removeObject:inFilter];
+}
+
 //Modify a contentObject by passing it through the appropriate filters
 - (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing
 {
-    [self _filterContentObject:inObject usingFilterArray:(isOutgoing ? 
-                                                          outgoingContentFilterArray : displayingContentFilterArray)];
+	//Status objects use the string filter array before displaying
+	if ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]) {
+		
+		//Only filter for isOutgoing - status messages need not be filtered twice, once for outgoing and once for display
+		if (!isOutgoing)
+			[self _filterContentObject:inObject usingFilterArray:stringFilterArray];
+	} else {
+		[self _filterContentObject:inObject usingFilterArray:(isOutgoing ?
+															  outgoingContentFilterArray : displayingContentFilterArray)];
+	}
 }
 
 //Return an attributed string which is the result of passing inString through both outgoing and display filters
@@ -218,6 +240,13 @@
 						 listObjectContext:inListObject
                          usingFilterArray:(isOutgoing ? 
                                            outgoingContentFilterArray : displayingContentFilterArray)]);
+}
+
+- (NSString *)filteredString:(NSString *)inString listObjectContext:(AIListObject *)inListObject
+{
+	return ([self _filterString:inString
+			   forContentObject:nil
+			  listObjectContext:inListObject]);
 }
 
 // Send the specified attributed string and possibly a contentObject through the specified filters, returning the modified
@@ -238,6 +267,21 @@
     
     return filteredString;
 }
+- (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/
+{
+    NSEnumerator                *enumerator;
+    id<AIStringFilter>			filter;
+    NSString					*filteredString = inString;
+    
+    if (inString){
+        enumerator = [stringFilterArray objectEnumerator];
+        while((filter = [enumerator nextObject])){
+            filteredString = [filter filterString:filteredString forContentObject:inObject listObjectContext:inListObject];
+        }
+    }
+    
+    return filteredString;
+}
 
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray
 {
@@ -246,15 +290,16 @@
         //AIContentMessages have an attributed string for a message
         [(AIContentMessage *)inObject setMessage:[self _filterAttributedString:[(AIContentMessage *)inObject message]
                                                               forContentObject:inObject
-															  listObjectContext:nil
+															 listObjectContext:nil
                                                               usingFilterArray:inArray]];
-    } else if  ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
+    } else if ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
 		//AIContentStatus have a string for a message
-        [(AIContentStatus *)inObject setMessage:[[self _filterAttributedString:[[[NSAttributedString alloc] initWithString:[(AIContentStatus *)inObject message]] autorelease]
-                                                              forContentObject:inObject
-															  listObjectContext:nil
-                                                              usingFilterArray:inArray] string]];
+        [(AIContentStatus *)inObject setMessage:[self _filterString:[(AIContentStatus *)inObject message]
+												   forContentObject:inObject
+												  listObjectContext:nil
+												   /*usingFilterArray:inArray*/]];
 	} else {
+		//Other content objects just get sent through filters without an attributed string hint
         [self _filterAttributedString:nil
                      forContentObject:inObject
 					listObjectContext:nil

@@ -17,6 +17,7 @@
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageDict:(NSMutableDictionary *)useDict;
 - (NSMenu *)loadScriptsAndBuildScriptMenu;
 - (NSString*)hashLookup:(NSString *)pattern;
+- (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
@@ -31,6 +32,9 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
 
+	//Perform simple string substitutions
+	[[adium contentController] registerStringFilter:self];
+	
 	//We have an array of scripts, which is used to build the menu.
 	//Each entry in the array is a dict with the script's title and keyword
 	scriptArray = [[NSMutableArray alloc] init];
@@ -208,19 +212,28 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 //Filter messages for keywords to replace
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
-    NSMutableAttributedString   *mesg = nil;
+ 	return [self _filterString:[inAttributedString string] originalObject:inAttributedString];
+}
 
-    if(inAttributedString){
-        NSString		*originalAttributedString = [inAttributedString string];
+- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
+{
+	return [self _filterString:inString originalObject:inString];
+}
+
+- (id)_filterString:(NSString *)inString originalObject:(id)originalObject
+{
+	id<DummyStringProtocol>   mesg = nil;
+	
+    if(inString){
 		NSEnumerator	*enumerator = [scriptDict keyEnumerator];
         NSString		*pattern;	
         
         //This loop gets run for every key in the dictionary
 		while(pattern = [enumerator nextObject]){
             //if the original string contained this pattern
-            if([originalAttributedString rangeOfString:pattern].location != NSNotFound){
-			
-				if(!mesg) mesg = [[inAttributedString mutableCopy] autorelease];   
+            if([inString rangeOfString:pattern].location != NSNotFound){
+				
+				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];   
                 [mesg replaceOccurrencesOfString:pattern 
                                       withString:[self hashLookup:pattern] 
                                          options:NSLiteralSearch 
@@ -229,9 +242,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
         }
     }
 	
-    return (mesg ? mesg : inAttributedString);
+    return (mesg ? mesg : originalObject);
 }
-
 - (NSString *)hashLookup:(NSString *)pattern
 {
     NSString        *returnString = nil;
@@ -242,13 +254,14 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
         returnString = [[script executeFunction:@"substitute" error:nil] stringValue];
     }
  
-	//Returning a zero length string will cause crashes, never let that happen.
+	//Returning a zero length string will cause crashes, so never let that happen.
     return((returnString && [returnString length]) ? returnString : @" ");	
 }
 
 - (void)uninstallPlugin
 {
 	[[adium contentController] unregisterOutgoingContentFilter:self];
+	[[adium contentController] unregisterStringFilter:self];
     [scriptDict release];
 	[scriptArray release];
 }
