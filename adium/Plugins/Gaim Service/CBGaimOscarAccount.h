@@ -76,6 +76,8 @@ struct buddyinfo {
 
 @interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files>
 {
+	BOOL			accountIsICQ;
+	
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 }
