@@ -164,12 +164,19 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 {
     [super initWithWindowNibName:windowNibName];
 
+	//Observe account status changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     return(self);
 }
 
 //dealloc
 - (void)dealloc
 {
+	[[adium notificationCenter] removeObserver:self];
+	
     [awayMessageArray release];
 
     [super dealloc];
@@ -356,40 +363,51 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     NSMenuItem		*menuItem;
     
     menuItem = [[[NSMenuItem alloc] initWithTitle:NO_PRESET_AWAY
-					   target:self
-					   action:@selector(loadSavedAway:)
-				    keyEquivalent:@"N"] autorelease];
+										   target:self
+										   action:@selector(loadSavedAway:)
+									keyEquivalent:@"N"] autorelease];
     [menuItem setRepresentedObject:nil];
     [savedAwaysMenu addItem:menuItem];
-
+	
     [self loadAwayMessages]; //load the away messages into awayMessageArray
-
+	
     NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
     NSDictionary *dict;
     while (dict = [enumerator nextObject])
     {
         NSString * title = [dict objectForKey:@"Title"];
         if (title) {
-	    menuItem = [[[NSMenuItem alloc] initWithTitle:title
-						target:self
-						action:@selector(loadSavedAway:)
-						keyEquivalent:@""] autorelease];
-	} else {
-	    NSString * message = [[dict objectForKey:@"Message"] string];
-
-	    //Cap the away menu title (so they're not incredibly long)
-		if([message length] > MENU_AWAY_DISPLAY_LENGTH){
-			message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
+			menuItem = [[[NSMenuItem alloc] initWithTitle:title
+												   target:self
+												   action:@selector(loadSavedAway:)
+											keyEquivalent:@""] autorelease];
+		} else {
+			NSString * message = [[dict objectForKey:@"Message"] string];
+			
+			//Cap the away menu title (so they're not incredibly long)
+			if([message length] > MENU_AWAY_DISPLAY_LENGTH){
+				message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
+			}
+			menuItem = [[[NSMenuItem alloc] initWithTitle:message
+												   target:self
+												   action:@selector(loadSavedAway:)
+											keyEquivalent:@""] autorelease];
 		}
-	    menuItem = [[[NSMenuItem alloc] initWithTitle:message
-					    target:self
-					    action:@selector(loadSavedAway:)
-					    keyEquivalent:@""] autorelease];
-	}
-	[menuItem setRepresentedObject:dict];
-	[savedAwaysMenu addItem:menuItem];
+		[menuItem setRepresentedObject:dict];
+		[savedAwaysMenu addItem:menuItem];
     }
     return savedAwaysMenu;
+}
+
+//Update our menu if the away list changes
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if([[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
+		//Rebuild the away menu
+		if([[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_SAVED_AWAYS]){
+			[popUp_title setMenu:[self savedAwaysMenu]];
+		}
+	}
 }
 
 @end
