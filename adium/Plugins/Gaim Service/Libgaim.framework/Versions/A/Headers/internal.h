@@ -1,4 +1,4 @@
-/**
+ /**
  * @file internal.h Internal definitions and includes
  * @ingroup core
  *
@@ -30,6 +30,7 @@
 #endif
 
 #ifdef ENABLE_NLS
+#  include <locale.h>
 #  include <libintl.h>
 #  define _(x) gettext(x)
 #  ifdef gettext_noop
@@ -38,6 +39,7 @@
 #    define N_(String) (String)
 #  endif
 #else
+#  include <locale.h>
 #  define N_(String) (String)
 #  define _(x) (x)
 #  define ngettext(Singular, Plural, Number) ((Number == 1) ? (Singular) : (Plural))
@@ -54,7 +56,7 @@
 
 #define MSG_LEN 2048
 /* The above should normally be the same as BUF_LEN,
- * but just so we're explictly asking for the max message
+ * but just so we're explicitly asking for the max message
  * length. */
 #define BUF_LEN MSG_LEN
 #define BUF_LONG BUF_LEN * 2

@@ -92,7 +92,7 @@ typedef fu16_t flap_seqnum_t;
  * Current Maximum Length for Screen Names (not including NULL) 
  *
  * Currently only names up to 16 characters can be registered
- * however it is aparently legal for them to be larger.
+ * however it is apparently legal for them to be larger.
  */
 #define MAXSNLEN 97
 
@@ -835,6 +835,7 @@ struct aim_incomingim_ch2_args {
 			struct aim_chat_roominfo roominfo;
 		} chat;
 		struct {
+			fu16_t msgtype;
 			fu32_t fgcolor;
 			fu32_t bgcolor;
 			const char *rtfmsg;

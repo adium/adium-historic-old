@@ -171,7 +171,7 @@ typedef struct
 {
 	void *(*request_input)(const char *title, const char *primary,
 						   const char *secondary, const char *default_value,
-						   gboolean multiline, gboolean masked,
+						   gboolean multiline, gboolean masked, gchar *hint,
 						   const char *ok_text, GCallback ok_cb,
 						   const char *cancel_text, GCallback cancel_cb,
 						   void *user_data);
@@ -512,7 +512,7 @@ const char *gaim_request_field_get_type_hint(const GaimRequestField *field);
  *
  * @param field The field.
  *
- * @return TRUE if the fiels is required, or FALSE.
+ * @return TRUE if the field is required, or FALSE.
  */
 gboolean gaim_request_field_is_required(const GaimRequestField *field);
 
@@ -1070,6 +1070,9 @@ GaimFilterAccountFunc gaim_request_field_account_get_filter(
  * @param default_value The default value.
  * @param multiline     TRUE if the inputted text can span multiple lines.
  * @param masked        TRUE if the inputted text should be masked in some way.
+ * @param hint          Optionally suggest how the input box should appear.
+ *                      Use "html," for example, to allow the user to enter
+ *                      HTML.
  * @param ok_text       The text for the OK button.
  * @param ok_cb         The callback for the OK button.
  * @param cancel_text   The text for the cancel button.
@@ -1081,7 +1084,7 @@ GaimFilterAccountFunc gaim_request_field_account_get_filter(
 void *gaim_request_input(void *handle, const char *title,
 						 const char *primary, const char *secondary,
 						 const char *default_value,
-						 gboolean multiline, gboolean masked,
+						 gboolean multiline, gboolean masked, gchar *hint,
 						 const char *ok_text, GCallback ok_cb,
 						 const char *cancel_text, GCallback cancel_cb,
 						 void *user_data);

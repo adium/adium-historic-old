@@ -97,6 +97,7 @@ typedef enum
 {
 	GAIM_CONV_IM_AUTO_RESP = 0x0001,    /**< Auto response.    */
 	GAIM_CONV_IM_IMAGES    = 0x0002     /**< Contains images.  */
+
 } GaimConvImFlags;
 
 #include "blist.h"
@@ -205,11 +206,12 @@ struct _GaimRoomlistRoom;
  */
 struct _GaimPluginProtocolInfo
 {
+	unsigned int api_version;     /**< API version number.             */
+
 	GaimProtocolOptions options;  /**< Protocol options.          */
 
 	GList *user_splits;      /* A GList of GaimAccountUserSplit */
 	GList *protocol_options; /* A GList of GaimAccountOption    */
-	GList *protocol_prefs;   /* protocol specific options */
 
 	/**
 	 * Returns the base icon name for the given buddy and account.
@@ -344,6 +346,7 @@ struct _GaimPluginProtocolInfo
 #define GAIM_PLUGIN_PROTOCOL_INFO(plugin) \
 	((GaimPluginProtocolInfo *)(plugin)->info->extra_info)
 
+#define GAIM_PRPL_API_VERSION 2
 
 #ifdef __cplusplus
 extern "C" {
