@@ -8688,8 +8688,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				6CED9083065B686A00A9C196,
-				4B090B3E065CD43400FF0528,
-				4B090B3F065CD43400FF0528,
+				5207012A065D437D00ABF39C,
+				5207012B065D437D00ABF39C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -9315,7 +9315,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat.AdiumSoundset/\n\necho \"Symlinking iChat sounds...\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
+			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat.AdiumSoundset/\n\necho \"Symlinking iChat sounds...\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
 		};
 		4B03711506595A70008F5981 = {
 			fileEncoding = 30;
@@ -9383,36 +9383,6 @@
 			path = "Plugins/Status Changed Messages/AIStatusChangedMessagesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B090B3E065CD43400FF0528 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4B090DCB065CD45600FF0528;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B090B3F065CD43400FF0528 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 4B090DCC065CD45600FF0528;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B090DCB065CD45600FF0528 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		4B090DCC065CD45600FF0528 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		4B090DCD065CD50D00FF0528 = {
 			fileEncoding = 30;
@@ -16792,6 +16762,36 @@
 //522
 //523
 //524
+		5207012A065D437D00ABF39C = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 52070131065D438200ABF39C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5207012B065D437D00ABF39C = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 52070132065D438200ABF39C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52070131065D438200ABF39C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		52070132065D438200ABF39C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
 		520FE39C05BE1FC5002D063D = {
 			buildActionMask = 2147483647;
 			files = (
