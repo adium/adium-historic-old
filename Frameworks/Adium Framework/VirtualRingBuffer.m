@@ -195,11 +195,11 @@ static void deallocateVirtualBuffer(void *buffer, UInt32 bufferLength);
 void *allocateVirtualBuffer(UInt32 bufferLength)
 {
     kern_return_t error = 0;
-    vm_address_t originalAddress = NULL;
-    vm_address_t realAddress = NULL;
+    vm_address_t originalAddress = 0;
+    vm_address_t realAddress = 0;
     mach_port_t memoryEntry;
     vm_size_t memoryEntryLength;
-    vm_address_t virtualAddress = NULL;
+    vm_address_t virtualAddress = 0;
 
     // We want to find where we can get 2 * bufferLength bytes of contiguous address space.
     // So let's just allocate that space, remember its address, and deallocate it.
@@ -267,7 +267,7 @@ void *allocateVirtualBuffer(UInt32 bufferLength)
 #endif
         // TODO Retry from the beginning, instead of failing completely. There is a tiny (but > 0) probability that someone
         // will allocate this space out from under us.
-        virtualAddress = NULL;
+        virtualAddress = 0;
         goto errorReturn;
     }
     if (virtualAddress != realAddress + bufferLength) {
