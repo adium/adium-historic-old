@@ -52,7 +52,6 @@
 {
 	return(NO);
 }
-<<<<<<< .mine
 
 /*
  * @brief Return the gaim status type to be used for a status
