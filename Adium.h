@@ -75,6 +75,6 @@
 #import "AIUserIcons.h"
 #import "AIServiceIcons.h"
 #import "AIStatusIcons.h"
-#import "AILocalizationTextField.h"
 
+#import "AILocalizationAssistance.h"
 
