@@ -664,7 +664,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 										  target:self
 										  action:@selector(selectCustomState:)
 								   keyEquivalent:@""];
-	//[customStateMenuItem setImage:[AIStatusIcons statusIconForStatusID:@"unknown" type:AIStatusIconList direction:AIIconNormal]];
+	[menuItem setImage:[AIStatusIcons statusIconForStatusID:@"unknown"
+													   type:AIStatusIconList
+												  direction:AIIconNormal]];
 	[menuItemArray addObject:menuItem];
 	
 	//Update the selected menu item
@@ -731,9 +733,15 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSEnumerator	*enumerator = [[stateMenuItemArraysDict objectForKey:identifier] objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-	//Update menu item selection
+	// Our "Custom..." menu choice has a nil represented object.  Here we check if the active state is in our
+	// state array.  If it is not, that means the active state is a custom state, so we'll set searchState
+	// to nil so our enumeration sets the "Custom..." menu choice as active.  Otherwise, set searchState to
+	// our active state so we set the active state's menu item as active.
+	AIStatus	*searchState = ([stateArray containsObject:activeStatusState] ? activeStatusState : nil);
+
+	//Scan each menu item and correctly set it as active or non-active
 	while(menuItem = [enumerator nextObject]){
-		if([menuItem representedObject] == activeStatusState){
+		if([menuItem representedObject] == searchState){
 			if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 		}else{
 			if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
