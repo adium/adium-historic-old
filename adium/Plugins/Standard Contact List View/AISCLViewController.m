@@ -111,6 +111,7 @@
 //Reload the contact list
 - (void)contactListChanged:(NSNotification *)notification
 {
+#warning not using/sending this
     //Fetch the new contact list
     [contactList release]; contactList = [[[adium contactController] contactList] retain];
 

@@ -624,8 +624,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 //Periodic timer to run libgaim's event loop
 - (void)gaimEventLoopTimer:(NSTimer *)inTimer
 {
-    //If there are event pending, iterate through one event
-    if(gaim_core_mainloop_events_pending()){
+    //While there are event pending, iterate
+    while(gaim_core_mainloop_events_pending()){
 		gaim_core_mainloop_iteration();
 
         //We also have this method, which will iterate through all events.

@@ -133,6 +133,11 @@
 		[inObject setOrderIndex:largestIndex++ forGroup:self];
 		[objectArray addObject:inObject];
 		
+		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
+		//sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
+		//since it will add to the bottom/non-visible section of our array.
+		if([inObject isVisible]) [self sortListObject:inObject sortController:[[adium contactController] activeSortController]];
+		
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
 	}
@@ -149,7 +154,7 @@
 		[inObject removeContainingGroup:self];
 		[inObject setOrderIndex:0 forGroup:self];
 		[objectArray removeObject:inObject];
-		
+
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
 	}
