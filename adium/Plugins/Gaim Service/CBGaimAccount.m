@@ -11,13 +11,13 @@
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 
-#define NO_GROUP                @"__NoGroup__"
-#define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
-#define USER_ICON_CACHE_NAME    @"UserIcon_%@"
+#define NO_GROUP					@"__NoGroup__"
+#define USER_ICON_CACHE_PATH		@"~/Library/Caches/Adium"
+#define USER_ICON_CACHE_NAME		@"UserIcon_%@"
 #define MESSAGE_IMAGE_CACHE_NAME	@"Image_%@_%i"
 
-#define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
-#define RECONNECTION_ATTEMPTS   4
+#define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
+#define RECONNECTION_ATTEMPTS		4
 
 @interface CBGaimAccount (PRIVATE)
 - (void)displayError:(NSString *)errorDesc;
@@ -383,7 +383,7 @@
         if (listContact == nil) {
 			NSAssert(account != nil, @"account was nil");
 			NSAssert(conv->name != nil, @"conv->name was nil");
-			NSAssert([[NSString stringWithUTF8String:(conv->name)] length] == 0, @"conv->name length was 0");
+			NSAssert([(NSString *)[NSString stringWithUTF8String:(conv->name)] length] == 0, @"conv->name length was 0");
             GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
             if (buddy == NULL) {
                 buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
@@ -411,7 +411,8 @@
 #warning If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
 #warning ... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
 		
-#warning is this how were supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
+#warning is this how we are supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
+		//Evan: It's the best we have to work with if conv->ui_data is nil.
 		
 		/*
 		 (serviceID && [serviceID length] && UID && [UID length])
