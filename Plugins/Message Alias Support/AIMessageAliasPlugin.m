@@ -79,7 +79,7 @@
 			replacement = [[context destination] displayName];
 		}else if([context isKindOfClass:[AIListObject class]]){
 			replacement = [[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																			   toListObject:context] displayName];
+																				  toContact:context] displayName];
 		}
 		
 		if(replacement){
