@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.48 2004/05/24 13:05:49 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.49 2004/05/25 03:54:26 dchoby98 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -81,9 +81,19 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Select the category
 	switch(inCategory){
 		case AIPref_Accounts: tabIdentifier = 1; break;
+		case AIPref_ContactList_General:
+		case AIPref_ContactList_Groups:
+		case AIPref_ContactList_Contacts: tabIdentifier = 2; break;
+		case AIPref_Messages: tabIdentifier = 3; break;
+		case AIPref_Status_Away:
+		case AIPref_Status_Idle: tabIdentifier = 4; break;
 		case AIPref_Dock: tabIdentifier = 5; break;
 		case AIPref_Sound: tabIdentifier = 6; break;
 		case AIPref_Emoticons: tabIdentifier = 7; break;
+		case AIPref_Advanced_ContactList:
+		case AIPref_Advanced_Messages:
+		case AIPref_Advanced_Status:
+		case AIPref_Advanced_Other: tabIdentifier = 8; break;
 		default: tabIdentifier = 1; break;
 	}
 	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
