@@ -1,6 +1,28 @@
 				Adium X Version History
 				-----------------------
 
+Version 0.60 (6/14/2004)
+- Added script for inserting an iTunes link for the playing song
+- Bookmark menu now only shows bookmarks for the default web browser
+- New format for emoticon packs (old packs will be upgraded automatically)
+- Improvements to contact alerts
+- Improvements to goim://, ymsgr:// link support
+- Fixed issue with display of consecutive messages
+- Fixed issue with the emoticon menu inserting the incorrect emoticon text
+- Fixed issue with overlays on downloaded dock icons
+- Fixed issue with the info window image picker
+- Fixed issue with alphabetical sort
+- Fixed issue with the safari script
+- Fixed issue with links in 10.2
+- Fixed crash when receiving messages, opening message windows
+- Fixed crash caused by invalid dock icon packs
+- Fixed crash in the edit link window
+- Fixed crash in gadu-gadu connection preferences
+- Fixed crash in the alerts pane of the info window
+- Fixed jabber crash when connecting
+- Fixed additional crashes on launch
+- Several other crash fixes and improvements
+
 Version 0.59 (6/11/2004)
 - Added support for changing user icons via the Get Info window
 - Added preferences for tab switching hotkeys
