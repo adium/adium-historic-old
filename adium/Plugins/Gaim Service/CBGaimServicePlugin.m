@@ -679,10 +679,16 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Beef
 // Beef ------------------------------------------------------------------------------------------------------
 
+#define GAIM_DEFAULTS   @"GaimServiceDefaults"
+
 - (void)installPlugin
 {
     _accountDict = [[NSMutableDictionary alloc] init];
 
+	//Register our defaults
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
+										  forGroup:GROUP_ACCOUNT_STATUS];
+	
     char *plugin_search_paths[2];
 
     //Register ourself as libgaim's UI handler
@@ -788,8 +794,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
  "SOCKS 5", "socks5",
  "HTTP", "http",
  */
-- (BOOL)configureGaimProxySettings
+- (NSDictionary *)systemSOCKSSettingsDictionary
 {
+	NSMutableDictionary *systemSOCKSSettingsDictionary = nil;
+	
     Boolean             result;
     CFDictionaryRef     proxyDict = nil;
     CFNumberRef         enableNum = nil;
@@ -855,18 +863,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if (result) {
         //set what we've got so far
         NSLog(@"configureGaimProxySettings: setting socks5 settings: %s:%i",host,portInt);
-        gaim_prefs_set_string("/core/proxy/type", "socks5");
-        gaim_prefs_set_string("/core/proxy/host",host);
-        gaim_prefs_set_int("/core/proxy/port",portInt);
+		
+		NSString *hostString = [NSString stringWithCString:host];
+				
+		systemSOCKSSettingsDictionary = [[NSMutableDictionary alloc] init];
+		
+		[systemSOCKSSettingsDictionary setObject:hostString forKey:@"Host"];
+		[systemSOCKSSettingsDictionary setObject:[NSNumber numberWithInt:portInt] forKey:@"Port"];
         
-        NSString *key = [NSString stringWithCString:host];
-        NSDictionary* auth = [self getDictionaryFromKeychainForKey:key];
+        NSDictionary* auth = [self getDictionaryFromKeychainForKey:hostString];
         
         if(auth) {
             NSLog(@"configureGaimProxySettings: proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
             
-            gaim_prefs_set_string("/core/proxy/username",  [[auth objectForKey:@"username"] UTF8String]);
-            gaim_prefs_set_string("/core/proxy/password", [[auth objectForKey:@"password"] UTF8String]);
+			[systemSOCKSSettingsDictionary setObject:[auth objectForKey:@"username"] forKey:@"Username"];
+			[systemSOCKSSettingsDictionary setObject:[auth objectForKey:@"password"] forKey:@"Password"];
             
         } else {
             //No username/password.  I think this doesn't need to be an error or anythign since it should have been set in the system prefs
@@ -879,8 +890,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         CFRelease(proxyDict);
     }
 	
-	NSLog(@"configureGaimProxySettings: %i",result);
-    return result;
+    return [systemSOCKSSettingsDictionary autorelease];
 }    
 
 //Next two functions are from the http-mail project.  We'll write our own if their license doesn't allow this... but it'll be okay for now.

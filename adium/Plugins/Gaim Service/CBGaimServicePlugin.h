@@ -21,5 +21,5 @@
 
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;
 - (void)removeAccount:(GaimAccount *)gaimAcct;
-- (BOOL)configureGaimProxySettings;
+- (NSDictionary *)systemSOCKSSettingsDictionary;
 @end
