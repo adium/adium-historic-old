@@ -278,7 +278,6 @@
 				3419F31805314B8100C68BA3,
 				3419F32E05314B8D00C68BA3,
 				3419F34005314B9700C68BA3,
-				34BD9ECA0531475B000AB133,
 				34F8A7E705A8920F00577775,
 				B72537BC058C4577004BA969,
 				3419F35505314BA200C68BA3,
@@ -289,9 +288,7 @@
 				B799BB0005793A6400338E54,
 				342DC47505783AF0000E1D83,
 				3419F39305314BCA00C68BA3,
-				BF0F5BCB05A2B0070034AD18,
 				3419F3A505314BD400C68BA3,
-				3419F3B305314BE000C68BA3,
 				3419F3C105314BEB00C68BA3,
 				3419F3D605314BF700C68BA3,
 				3419F3E905314C0600C68BA3,
@@ -308,6 +305,7 @@
 				3419F47005314C6900C68BA3,
 				3479A8A105DCA0F900998B3D,
 				4B539C4705EFD35400E5921A,
+				34ADC00D05F3A77900ABFCAA,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -371,6 +369,7 @@
 				34BDA058053147C6000AB133,
 				6C05C9FE05492DE50088ECBF,
 				34BDA06C053147CC000AB133,
+				34ADC00C05F3A77900ABFCAA,
 				34BDA07C053147D6000AB133,
 				34BDA090053147E1000AB133,
 				34BDA0A4053147E8000AB133,
@@ -2463,9 +2462,10 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "SQL Logger.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			name = "SQL Logger.AdiumPlugin";
+			path = "/Users/evands/adium/build/SQL Logger.AdiumPlugin";
+			refType = 0;
+			sourceTree = "<absolute>";
 		};
 		3419F3B405314BEA00C68BA3 = {
 			buildPhases = (
@@ -6890,6 +6890,7 @@
 		};
 		3479A83B05DC9F2400998B3D = {
 			children = (
+				34ADC00205F3A75700ABFCAA,
 				3479A8AF05DCA15400998B3D,
 				6C05CA1505492EE70088ECBF,
 				4B6688F804A60CC300A8010A,
@@ -7541,6 +7542,200 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34ADC00205F3A75700ABFCAA = {
+			children = (
+				34ADC03505F3A86600ABFCAA,
+				34ADC03605F3A86600ABFCAA,
+			);
+			isa = PBXGroup;
+			name = "Contact Serverside Display Name";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34ADC00805F3A77900ABFCAA = {
+			buildActionMask = 2147483647;
+			files = (
+				34ADC03705F3A86600ABFCAA,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34ADC00905F3A77900ABFCAA = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34ADC00A05F3A77900ABFCAA = {
+			buildActionMask = 2147483647;
+			files = (
+				34ADC03805F3A86600ABFCAA,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34ADC00B05F3A77900ABFCAA = {
+			buildActionMask = 2147483647;
+			files = (
+				34ADC02F05F3A84400ABFCAA,
+				34ADC03005F3A84400ABFCAA,
+				34ADC03105F3A84400ABFCAA,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34ADC00C05F3A77900ABFCAA = {
+			buildPhases = (
+				34ADC00805F3A77900ABFCAA,
+				34ADC00905F3A77900ABFCAA,
+				34ADC00A05F3A77900ABFCAA,
+				34ADC00B05F3A77900ABFCAA,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/Contact_Serverside_Display_Name.plist;
+				PRODUCT_NAME = "Contact Serverside Display Name";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				34ADC01405F3A78900ABFCAA,
+				34ADC01605F3A78C00ABFCAA,
+			);
+			isa = PBXNativeTarget;
+			name = "Contact Serverside Display Name";
+			productName = "Contact Serverside Display Name";
+			productReference = 34ADC00D05F3A77900ABFCAA;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Contact Serverside Display Name</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Contact_Serverside_Display_Name</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		34ADC00D05F3A77900ABFCAA = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Contact Serverside Display Name.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34ADC01305F3A78900ABFCAA = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		34ADC01405F3A78900ABFCAA = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 34ADC01305F3A78900ABFCAA;
+		};
+		34ADC01505F3A78C00ABFCAA = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		34ADC01605F3A78C00ABFCAA = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 34ADC01505F3A78C00ABFCAA;
+		};
+		34ADC02F05F3A84400ABFCAA = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34ADC03005F3A84400ABFCAA = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34ADC03105F3A84400ABFCAA = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34ADC03505F3A86600ABFCAA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactServersideDisplayName.h;
+			path = "Plugins/Contact Serverside Display Name/ESContactServersideDisplayName.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34ADC03605F3A86600ABFCAA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactServersideDisplayName.m;
+			path = "Plugins/Contact Serverside Display Name/ESContactServersideDisplayName.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34ADC03705F3A86600ABFCAA = {
+			fileRef = 34ADC03505F3A86600ABFCAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34ADC03805F3A86600ABFCAA = {
+			fileRef = 34ADC03605F3A86600ABFCAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34ADC0A705F3A92500ABFCAA = {
+			fileRef = 34ADC00D05F3A77900ABFCAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34ADC0A905F3A92F00ABFCAA = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34ADC00C05F3A77900ABFCAA;
+			remoteInfo = "Contact Serverside Display Name";
+		};
+		34ADC0AA05F3A92F00ABFCAA = {
+			isa = PBXTargetDependency;
+			target = 34ADC00C05F3A77900ABFCAA;
+			targetProxy = 34ADC0A905F3A92F00ABFCAA;
 		};
 		34ADDFFF05158D4B003B2F21 = {
 			isa = PBXFileReference;
@@ -8884,6 +9079,7 @@
 				34BD9CE4053146CC000AB133,
 				6C05CA1C05492FB70088ECBF,
 				34BD9CE5053146CC000AB133,
+				34ADC0AA05F3A92F00ABFCAA,
 				34BD9CE6053146CC000AB133,
 				34BD9CE7053146CC000AB133,
 				34BD9CE8053146CC000AB133,
@@ -8911,6 +9107,7 @@
 				34BD9CF9053146CC000AB133,
 				34BD9CFA053146CC000AB133,
 				3400240105A96D910047226F,
+				B774EFC4058C48F6009C7C67,
 				34BD9CFB053146CC000AB133,
 				34BD9CFC053146CC000AB133,
 				34BD9D0B053146CC000AB133,
@@ -8934,10 +9131,9 @@
 				34BD9D07053146CC000AB133,
 				34086A0C05E5E10800ABB759,
 				34BD9D08053146CC000AB133,
-				B774EFC4058C48F6009C7C67,
+				4B539C5605EFD9D500E5921A,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
-				4B539C5605EFD9D500E5921A,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9826,6 +10022,7 @@
 				3419FDF40531585600C68BA3,
 				6C05CA1D054930AF0088ECBF,
 				3419FDF50531585600C68BA3,
+				34ADC0A705F3A92500ABFCAA,
 				3419FDF60531585600C68BA3,
 				3419FDF70531585600C68BA3,
 				3419FDF80531585600C68BA3,
@@ -11890,9 +12087,10 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = Jabber.AdiumPlugin;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			name = Jabber.AdiumPlugin;
+			path = /Users/evands/adium/build/Jabber.AdiumPlugin;
+			refType = 0;
+			sourceTree = "<absolute>";
 		};
 		34BD9ECB0531475E000AB133 = {
 			buildPhases = (
@@ -27958,9 +28156,10 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "Single Window Interface.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			name = "Single Window Interface.AdiumPlugin";
+			path = "/Users/evands/adium/build/Single Window Interface.AdiumPlugin";
+			refType = 0;
+			sourceTree = "<absolute>";
 		};
 		BF0F5BD405A2B12D0034AD18 = {
 			fileRef = 34BD9DE105314751000AB133;
