@@ -22,6 +22,7 @@
 #import "ESArrayAdditions.h"
 #import "AIAttributedStringAdditions.h"
 #import "AIAutoScrollView.h"
+#import "BZBezierPathAdditions.h"
 #import "CSBezierPathAdditions.h"
 #import "ESBorderlessWindow.h"
 #import "ESBundleAdditions.h"
