@@ -1080,7 +1080,7 @@
 	//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
 	//image to one, and then pass libgaim the path.
 	if(image){          
-		NSData 		*data = [[image JPEGRepresentation] retain];
+		NSData 		*data = [image JPEGRepresentation];
 		NSString    *buddyImageFilename = [self _userIconCachePath];
 		
 		if([data writeToFile:buddyImageFilename atomically:YES]){
