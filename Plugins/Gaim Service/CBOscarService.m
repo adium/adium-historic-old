@@ -56,6 +56,9 @@
 - (int)allowedLength{
 	return(24);
 }
+- (int)allowedLengthForUIDs{
+	return(24);
+}
 - (BOOL)caseSensitive{
 	return(NO);
 }
