@@ -212,7 +212,7 @@
 
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
 {
-	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[inObject uniqueObjectID]]);
+	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[inObject internalObjectID]]);
 }
 
 @end
