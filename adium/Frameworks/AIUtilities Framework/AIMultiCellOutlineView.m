@@ -134,7 +134,7 @@
 	
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
-		if([self drawsAlternatingRows]){
+		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
 			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
 						 colored:(!(row % 2) && ![self isRowSelected:row])
 						selected:(row == [self selectedRow])];			

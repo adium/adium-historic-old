@@ -11,6 +11,12 @@
 
 @implementation AIListContactBrickCell
 
+//No need to the grid if we have a status color to draw
+- (BOOL)drawGridBehindCell
+{
+	return([self labelColor] == nil);
+}
+
 //Default to more edge padding
 - (int)topPadding{
 	return([super topPadding] + 2);
@@ -22,8 +28,11 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	[[self labelColor] set];
-	[NSBezierPath fillRect:rect];
+	NSColor	*labelColor = [self labelColor];
+	if(labelColor){
+		[labelColor set];
+		[NSBezierPath fillRect:rect];
+	}
 }
 
 @end

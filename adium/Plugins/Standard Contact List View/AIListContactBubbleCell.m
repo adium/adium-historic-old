@@ -42,7 +42,7 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	NSColor			*labelColor = [self backgroundColor];
+	NSColor			*labelColor = [self labelColor];
 	
 	//Draw our label
 	if(labelColor){
