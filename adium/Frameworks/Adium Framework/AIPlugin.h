@@ -24,5 +24,6 @@
 
 //PRIVATE
 + (id)newInstanceOfPluginWithOwner:(id)inOwner;
+- (void)uninstallPlugin;
 
 @end
