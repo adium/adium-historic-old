@@ -51,7 +51,7 @@
 }
 
 //We can't do these in initing, since the toolbar controller hasn't loaded yet
-- (void)finishIniting
+- (void)willFinishIniting
 {
     NSToolbarItem	*toolbarItem;
 

@@ -91,7 +91,7 @@ typedef enum {
 
 //Private
 - (void)initController;
-- (void)finishIniting;
+- (void)willFinishIniting;
 - (void)beginClosing;
 - (void)closeController;
 - (NSArray *)paneArray;
