@@ -120,42 +120,40 @@
 
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    //If the user is specifying a custom volume, we must use quicktime to play our sounds.
-    if(useCustomVolume && customVolume != 0){
-        NSMovie	*movie; //We could get a nice performance boost by caching these NSMovies!
-        
-        //Search for this sound in our cache
-        movie = [soundCacheDict objectForKey:inPath];
-        if(!movie){ //If the sound is not cached, load it
-            //If the cache is full, empty it
-            if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
-                [soundCacheDict removeAllObjects];
-            }
+    if(!muteSounds){
+        //If the user is specifying a custom volume, we must use quicktime to play our sounds.
+        if(useCustomVolume && customVolume != 0){
+            NSMovie	*movie;
             
-            movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
-            [soundCacheDict setObject:movie forKey:inPath];
-        }else{
-            StopMovie([movie QTMovie]);
-            GoToBeginningOfMovie([movie QTMovie]); //Reset to the begining of the sound
+            //Search for this sound in our cache
+            movie = [soundCacheDict objectForKey:inPath];
+            if(!movie){ //If the sound is not cached, load it
+                //If the cache is full, empty it
+                if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
+                    [soundCacheDict removeAllObjects];
+                }
+                
+                movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
+                [soundCacheDict setObject:movie forKey:inPath];
+            }else{
+                StopMovie([movie QTMovie]);
+                GoToBeginningOfMovie([movie QTMovie]); //Reset to the begining of the sound
+            }
+    
+            //Set the volume & play sound
+            SetMovieVolume([movie QTMovie], customVolume);
+            StartMovie([movie QTMovie]);
+            
+        }else if(!useCustomVolume){ //Otherwise, we can use NSSound
+    //     if(activeSoundThreads < MAX_THREAD_SOUNDS){
+                //Detach a thead to play the sound
+                [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
+                activeSoundThreads++;
+    //     }else{
+    //         NSLog(@"Too many sounds playing, skipping %@",[inPath lastPathComponent]);
+    //     }
         }
-
-        //Set the volume & play sound
-        //NSLog (@"Setting sound volume to %d", customVolume);
-        SetMovieVolume([movie QTMovie], customVolume);
-        //NSLog (@"Sound volume is %d", GetMovieVolume([movie QTMovie]));
-        StartMovie([movie QTMovie]);
-
-        
-    }else if(!useCustomVolume){ //Otherwise, we can use NSSound
-   //     if(activeSoundThreads < MAX_THREAD_SOUNDS){
-            //Detach a thead to play the sound
-            [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
-            activeSoundThreads++;
-   //     }else{
-   //         NSLog(@"Too many sounds playing, skipping %@",[inPath lastPathComponent]);
-   //     }
-    }
-
+    }    
 }
 
 //Play a sound using NSSound.  Meant to be detached as a new thread.
@@ -192,11 +190,9 @@
     [pool release];
 }
 
-
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    //NSLog (@"Prefs changed (sound controller response)");
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){    
         NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
@@ -204,10 +200,7 @@
         useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
         customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue] * 512.0);
         muteSounds = [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue];
-        //NSLog (@"Custom volume changed to %d", customVolume);
-        //if(customVolume <= 5) customVolume = 5; //Too quiet to hear is silly (silly yes, but this turns off muting -chb)
-        //NSLog (@"Custom volume now %d", customVolume);
-        
+
         //Display the custom volume performance warning
         if(useCustomVolume && ![[preferenceDict objectForKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME] intValue]){
             int result;
