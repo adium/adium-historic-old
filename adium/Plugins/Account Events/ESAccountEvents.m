@@ -96,14 +96,16 @@
 - (void)accountConnection:(NSTimer *)timer
 {
 	[[adium contactAlertsController] generateEvent:ACCOUNT_CONNECTED
-									 forListObject:[timer userInfo]];
+									 forListObject:[timer userInfo]
+										  userInfo:nil];
 	[accountConnectionStatusGroupingOnlineTimer release]; accountConnectionStatusGroupingOnlineTimer = nil;
 }
 
 - (void)accountDisconnection:(NSTimer *)timer
 {
 	[[adium contactAlertsController] generateEvent:ACCOUNT_DISCONNECTED
-									 forListObject:[timer userInfo]];
+									 forListObject:[timer userInfo]
+										  userInfo:nil];
 	[accountConnectionStatusGroupingOfflineTimer release]; accountConnectionStatusGroupingOfflineTimer = nil;
 }
 
