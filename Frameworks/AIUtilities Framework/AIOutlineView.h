@@ -17,9 +17,6 @@
 	BOOL		ignoreExpandCollapse;
 }
 
-- (void)itemDidExpand:(NSNotification *)notification;
-- (void)itemDidCollapse:(NSNotification *)notification;
-
 @end
 
 @interface NSObject (AIOutlineViewDelegate)
