@@ -34,3 +34,7 @@
 - (int)cellHeightForGroup;
 - (int)cellHeightForContent;
 @end
+
+@interface NSObject (AIMultiCellGridSupport)
+- (BOOL)drawGridBehindCell;
+@end
