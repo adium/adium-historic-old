@@ -31,6 +31,7 @@
     NSString		*friendlyName;		// Current Friendly name
     
     NSMutableDictionary	*handleDict;		// Dict of all our handles.
+    NSMutableDictionary *chatSocketDict;
 }
 /*
 //AIAccount_Content
