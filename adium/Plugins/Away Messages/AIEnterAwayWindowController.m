@@ -178,7 +178,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     //Restore the last used custom away
     lastAway = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_QUICK_AWAY_MESSAGE];
     if(lastAway){
-        [textView_awayMessage setAttributedString:[NSAttributedString stringWithData:lastAway]];
+        [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:lastAway]];
     }else{
         [textView_awayMessage setString:DEFAULT_AWAY_MESSAGE];
     }
@@ -193,8 +193,6 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
     [textView_awayMessage setSendOnReturn:NO];
     [textView_awayMessage setSendOnEnter:YES];
-	[textView_awayMessage setPushPop:NO];
-	[textView_awayMessage setClearOnEscape:NO];
     [textView_awayMessage setDelegate:self];
     loaded_message = NO;
 
@@ -235,7 +233,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 	loaded_message = NO;
     } else {
 	NSAttributedString * theString = [[sender representedObject] objectForKey:@"Message"];
-        [textView_awayMessage setAttributedString:theString];
+        [[textView_awayMessage textStorage] setAttributedString:theString];
 	[textView_awayMessage setSelectedRange:(NSMakeRange(0, [[theString string] length]))];
         loaded_message = YES;
     }

@@ -17,20 +17,20 @@
 @protocol AIAccountSelectionViewDelegate, AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {
-    IBOutlet	NSView				*view_contents;
-    IBOutlet	NSScrollView		*scrollView_outgoingView;
-    IBOutlet	AISendingTextView	*textView_outgoing;
-				NSView				*controllerView_messages;
-    IBOutlet	NSView				*scrollView_messages;
-    IBOutlet	AIMiniToolbar		*toolbar_bottom;
+    IBOutlet	NSView					*view_contents;
+    IBOutlet	NSScrollView			*scrollView_outgoingView;
+    IBOutlet	AIMessageEntryTextView	*textView_outgoing;
+				NSView					*controllerView_messages;
+    IBOutlet	NSView					*scrollView_messages;
+    IBOutlet	AIMiniToolbar			*toolbar_bottom;
 
-    IBOutlet	NSTableView			*tableView_userList;
-    IBOutlet	AIAutoScrollView	*scrollView_userList;
+    IBOutlet	NSTableView				*tableView_userList;
+    IBOutlet	AIAutoScrollView		*scrollView_userList;
 
-    IBOutlet	AIPlasticButton		*button_send;
+    IBOutlet	AIPlasticButton			*button_send;
 
-    id <AIMessageViewController>	messageViewController;
-    AIAccountSelectionView			*view_accountSelection;
+    id <AIMessageViewController>		messageViewController;
+    AIAccountSelectionView				*view_accountSelection;
 
     //Variables
     id				delegate;
