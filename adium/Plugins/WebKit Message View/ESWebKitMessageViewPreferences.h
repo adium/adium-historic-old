@@ -42,8 +42,11 @@ typedef enum {
 	
 	id<AIMessageViewController> previewController;
     IBOutlet	NSView			*view_previewLocation;
+	
+	BOOL						viewIsOpen;
 }
 
 - (IBAction)changePreference:(id)sender;
+- (void)messageStyleXtrasDidChange;
 
 @end
