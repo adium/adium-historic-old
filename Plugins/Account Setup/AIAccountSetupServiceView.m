@@ -6,7 +6,7 @@
 //  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIServiceView.h"
+#import "AIAccountSetupServiceView.h"
 
 #define SERVICE_ICON_NAME_PADDING	8
 
@@ -17,11 +17,11 @@
 #define ACCOUNT_NAME_SPACING		2
 #define ACCOUNT_NAME_OFFSET			0
 
-@interface AIServiceView (PRIVATE)
+@interface AIAccountSetupServiceView (PRIVATE)
 - (NSAttributedString *)attributedServiceName;
 @end
 
-@implementation AIServiceView
+@implementation AIAccountSetupServiceView
 
 //
 - (id)initWithService:(AIService *)inService

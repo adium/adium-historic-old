@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface AIServiceView : NSView {
+@interface AIAccountSetupServiceView : NSView {
 	AIService			*service;
 	NSImage				*serviceIcon;
 	NSAttributedString	*serviceName;
