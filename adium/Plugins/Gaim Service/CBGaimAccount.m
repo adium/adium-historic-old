@@ -1306,13 +1306,13 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotifications];
 	
+	//Remove all gaim buddies (which will call accountRemoveBuddy for each one)
 	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while (contact = [enumerator nextObject]){
 		GaimBuddy *buddy;
 		
-		//Clear the buddy's ui_data pointer to avoid accidentally referencing the released AIListObject
 		buddy = [[contact statusObjectForKey:@"GaimBuddy"] pointerValue];
 		if (buddy){
 			gaim_blist_remove_buddy(buddy);
@@ -1335,7 +1335,8 @@
 - (void)accountConnectionDisconnected
 {
     NSEnumerator    *enumerator;
-    
+    BOOL			connectionIsSuicidal = gc->wants_to_die;
+	
 	//Reset the gaim account (We don't want it tracking anything between sessions)
     [self resetLibGaimAccount];
 	
@@ -1354,9 +1355,12 @@
     //Remove our chat dictionary
     [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
     
-    //If we were disconnected unexpectedly, attempt a reconnect
+    //If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
+	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-		if (reconnectAttemptsRemaining && [self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError]) {
+		if (reconnectAttemptsRemaining && 
+			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
+
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
 		}else{
