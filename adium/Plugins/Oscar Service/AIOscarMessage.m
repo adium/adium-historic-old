@@ -458,10 +458,9 @@
             offset += length;
         }
 
-        NSLog(@"OscarMessage past while; the message is %@ and the name is %@",messageString,name);
         //
         [account receivedMessage:messageString fromContact:name];
-        NSLog(@"this is after receivedMessage");
+
         //Typing
         if([messageBlock containsValueForType:0x000b]){
             [account noteContact:name typing:NO];

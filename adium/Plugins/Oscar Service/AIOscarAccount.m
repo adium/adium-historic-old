@@ -90,6 +90,10 @@
     [self _registerModuleForClass:[AIOscarSSI class]];
     [self _registerModuleForClass:[AIOscarICQ class]];
     [self _registerModuleForClass:[AIOscarIcon class]];
+
+    //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];    
 }
 
 // Return a view for the connection window
@@ -796,12 +800,11 @@
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
     ACCOUNT_STATUS	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
-    
     //Online/Offline
     if([key compare:@"Online"] == 0){
-        if([inValue boolValue]){ 
+        if([inValue boolValue]){
             if(status == STATUS_OFFLINE) [self connect]; //Connect
-        }else{ 
+        }else{
             if(status == STATUS_ONLINE) [self disconnect]; //Disconnect
         }
     }
