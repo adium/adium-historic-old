@@ -45,6 +45,8 @@ static char *hash_password(const char * const password);
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (NSString *)validCopyOfString:(NSString *)inString;
+- (void)connect;
+- (void)disconnect;
 @end
 
 @implementation AIMTOC2Account
@@ -62,7 +64,8 @@ static char *hash_password(const char * const password);
     deleteDict = [[NSMutableDictionary alloc] init];
     addDict = [[NSMutableDictionary alloc] init];
     messageDelayTimer = nil;
-
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
 }
@@ -91,15 +94,10 @@ static char *hash_password(const char * const password);
     }
 }
 
-
 // AIAccount_GroupedContacts ---------------------------------------------------------------------------
 - (BOOL)contactListEditable
 {
-    if([self status] == STATUS_ONLINE){
-        return(YES);
-    }else{
-        return(NO);
-    }
+    return([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]);
 }
 
 // Add an object to the specified groups
@@ -221,97 +219,58 @@ static char *hash_password(const char * const password);
     return(YES);
 }
 
+- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle
+{
+    BOOL available = NO;
+
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        //If we're online, ("and the contant is online" - implement later), return YES
+        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+            available = YES;
+        }
+    }
+
+    return(available);
+}
+
 
 // AIAccount_Status --------------------------------------------------------------------------------
-// Return the current connection status
-- (ACCOUNT_STATUS)status
+- (NSArray *)supportedStatusKeys
 {
-    return(status);
+    return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", nil]);
 }
 
-//Connects
-- (void)connect
+- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    //get password
-    [[owner accountController] passwordForAccount:self notifyingTarget:self selector:@selector(finishConnect:)];
+    NSLog(@"(%@) \"%@\" changing to [%@]", [self accountDescription], key, inValue);    
+
+    if([key compare:@"Online"] == 0){
+        ACCOUNT_STATUS		status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+
+        if([inValue boolValue]){ //Connect
+            if(status == STATUS_OFFLINE){
+                [self connect];
+            }            
+        }else{ //Disconnect
+            if(status == STATUS_ONLINE){
+                [self disconnect];
+            }
+        }
+
+    }else if([key compare:@"IdleTime"] == 0){
+        double		oldIdle = [[[owner accountController] statusObjectForKey:@"IdleTime" account:self] doubleValue];
+        double		newIdle = [inValue doubleValue];
+
+        if(oldIdle != 0 && newIdle != 0){
+            [self AIM_SetIdle:0]; //Most AIM cliens will ignore 2 consecutive idles, so we unidle, then re-idle to the new value
+        }
+
+        [self AIM_SetIdle:newIdle];
+    }    
+
 }
 
-- (void)finishConnect:(NSString *)inPassword
-{
-    if(inPassword && [inPassword length] != 0){
-        NSString	*host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
-        int		port = [[preferencesDict objectForKey:AIM_TOC2_KEY_PORT] intValue];
-    
-        //Connect
-        [self setStatus:STATUS_CONNECTING];
-    
-        //Setup and init
-        socket = [[AISocket socketWithHost:host port:port] retain];
-        screenName = [[propertiesDict objectForKey:@"Handle"] copy];
-        password = [inPassword copy];//[[AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[self accountID]] account:[self accountID]] copy];
-    
-        //Start connecting
-        connectionPhase = 1;
-        updateTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0 / 10.0) //(1.0 / x) x times per second
-                                                        target:self
-                                                        selector:@selector(update:)
-                                                        userInfo:nil
-                                                        repeats:YES] retain];
-    }
-}
 
-//Disconnects or cancels
-- (void)disconnect
-{
-    NSEnumerator	*enumerator;
-    AIContactHandle	*handle;
-
-    //Disconnect, or abort connecting/disconnecting
-    [self setStatus:STATUS_DISCONNECTING];
-    
-    //Flush all our handle status flags
-    enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:self] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        [self removeAllStatusFlagsFromHandle:handle];
-    }
-
-    //Clean up and close down
-    [screenName release]; screenName = nil;
-    [password release]; password = nil;
-
-    [socket release]; socket = nil;
-    [self setStatus:STATUS_OFFLINE];
-
-    [updateTimer invalidate];
-    [updateTimer release]; updateTimer = nil;
-
-    //We are now offline
-    [self setStatus:STATUS_OFFLINE];
-}
-
-- (void)setIdleTime:(double)inSeconds manually:(BOOL)setManually
-{
-    idleWasSetManually = setManually;
-    [self AIM_SetIdle:0];
-    [self AIM_SetIdle:inSeconds];
-
-    if(inSeconds>0) idle = TRUE;
-    else idle = FALSE;
-    
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_IdleStatusChanged
-                                                                         object:self
-                                                                       userInfo:nil];
-}
-
-- (BOOL)idleWasSetManually
-{
-    return(idleWasSetManually);
-}
-
-- (BOOL)isIdle
-{
-    return(idle);
-}
 
 // Internal --------------------------------------------------------------------------------
 //Dealloc
@@ -330,6 +289,63 @@ static char *hash_password(const char * const password);
     [super dealloc];
 }
 
+//Connects
+- (void)connect
+{
+    //get password
+    [[owner accountController] passwordForAccount:self notifyingTarget:self selector:@selector(finishConnect:)];
+}
+
+- (void)finishConnect:(NSString *)inPassword
+{
+    if(inPassword && [inPassword length] != 0){
+        NSString	*host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
+        int		port = [[preferencesDict objectForKey:AIM_TOC2_KEY_PORT] intValue];
+
+        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+
+        //Setup and init
+        socket = [[AISocket socketWithHost:host port:port] retain];
+        screenName = [[propertiesDict objectForKey:@"Handle"] copy];
+        password = [inPassword copy];
+
+        //Start connecting
+        connectionPhase = 1;
+        updateTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0 / 10.0) //(1.0 / x) x times per second
+                                                        target:self
+                                                        selector:@selector(update:)
+                                                        userInfo:nil
+                                                        repeats:YES] retain];
+    }
+}
+
+//Disconnects or cancels
+- (void)disconnect
+{
+    NSEnumerator	*enumerator;
+    AIContactHandle	*handle;
+
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
+
+    //Flush all our handle status flags
+    enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:self] objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        [self removeAllStatusFlagsFromHandle:handle];
+    }
+
+    //Clean up and close down
+    [screenName release]; screenName = nil;
+    [password release]; password = nil;
+
+    [socket release]; socket = nil;
+
+    [updateTimer invalidate];
+    [updateTimer release]; updateTimer = nil;
+
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+}
+
 //Removes all the possible status flags (that are valid on AIM/TOC) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle
 {
@@ -341,22 +357,6 @@ static char *hash_password(const char * const password);
     }
     
     [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
-}
-
-// Sets the status of this account
-- (void)setStatus:(ACCOUNT_STATUS)inStatus
-{
-    status = inStatus;
-    
-    //Configure the account view
-    if(accountViewController != nil){
-        [accountViewController configureViewForStatus:inStatus];
-    }
-
-    //Broadcast a status changed message
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_StatusChanged
-                                                      object:self
-                                                    userInfo:nil];
 }
 
 // Sends packets, receives packets, and dispatches commands 
@@ -392,7 +392,8 @@ static char *hash_password(const char * const password);
                 //Send AIM the init done message (at this point we become visible to other buddies)
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
 
-                [self setStatus:STATUS_ONLINE];
+                [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+                [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
             }else if([command compare:@"PAUSE"] == 0){
             }else if([command compare:@"NEW_BUDDY_REPLY2"] == 0){

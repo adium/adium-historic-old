@@ -18,6 +18,13 @@
 #import "AIMTOC2AccountViewController.h"
 #import "AIMTOC2Account.h"
 
+@interface AIMTOC2AccountViewController (PRIVATE)
+- (id)initForOwner:(id)inOwner account:(id)inAccount;
+- (void)dealloc;
+- (void)accountStatusChanged:(NSNotification *)notification;
+- (void)initAccountView;
+@end
+
 @implementation AIMTOC2AccountViewController
 
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount
@@ -25,6 +32,31 @@
     return([[[self alloc] initForOwner:inOwner account:inAccount] autorelease]);
 }
 
+- (NSView *)view
+{
+    return(view_accountView);
+}
+
+//Save the changed properties
+- (void)saveChanges
+{
+    [[account properties] setObject:[textField_handle stringValue] forKey:@"Handle"];
+
+    //Broadcast a properties changed message
+    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
+                                                                         object:self
+                                                                       userInfo:nil];
+}
+
+- (void)configureViewAfterLoad
+{
+    //highlight the accountname field
+    [[[view_accountView superview] window] setInitialFirstResponder:textField_handle];
+}
+
+
+
+// Private ------------------------------------------------------------------------------
 - (id)initForOwner:(id)inOwner account:(id)inAccount
 {
     [super init];
@@ -40,41 +72,27 @@
         NSLog(@"couldn't load account view bundle");
     }
 
+    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
+
     return(self);
 }
 
 - (void)dealloc
 {
+    [[[owner accountController] accountNotificationCenter] removeObserver:self name:Account_StatusChanged object:account];
+
     [owner release];
     [account release];
 
     [super dealloc];
 }
 
-- (NSView *)view
+- (void)accountStatusChanged:(NSNotification *)notification
 {
-    return(view_accountView);
-}
+    BOOL	isOnline = [[[owner accountController] statusObjectForKey:@"Online" account:account] boolValue];
 
-- (void)configureViewForStatus:(ACCOUNT_STATUS)inStatus
-{
     //Dim unavailable controls
-    if(inStatus == STATUS_OFFLINE){
-        [textField_handle setEnabled:YES];
-    }else{
-        [textField_handle setEnabled:NO];
-    }
-}
-
-//Save the changed properties
-- (void)saveChanges
-{
-    [[account properties] setObject:[textField_handle stringValue] forKey:@"Handle"];
-
-    //Broadcast a properties changed message
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
-                                                                         object:self
-                                                                       userInfo:nil];
+    [textField_handle setEnabled:isOnline];
 }
 
 // Set up the connect view using the saved properties
@@ -89,15 +107,6 @@
     }else{
         [textField_handle setStringValue:@""];
     }
-    
-    //Configure the control dimming for the current status
-    [self configureViewForStatus:[account status]];
-}
-
-- (void)configureViewAfterLoad
-{
-    //highlight the accountname field
-    [[[view_accountView superview] window] setInitialFirstResponder:textField_handle];
 }
 
 @end

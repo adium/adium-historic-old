@@ -75,21 +75,16 @@ typedef enum {
 #define PREF_GROUP_WINDOW_POSITIONS 	@"Window Positions"
 
 
-
 //Notifications
 #define	Adium_LaunchComplete					@"Adium_LaunchComplete"
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_StatusChanged					@"Account_StatusChanged"
-#define Account_IdleStatusChanged				@"Account_IdleStatusChanged"
 #define Contact_AttributesChanged				@"Contact_AttributesChanged"
 #define Contact_StatusChanged					@"Contact_StatusChanged"
 #define Contact_ObjectChanged					@"Contact_ObjectChanged"
 #define Contact_ListChanged					@"Contact_ListChanged"
-
-
 #define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
-// Interface_ContactDefaultAction ... make double click generic?
 #define Interface_InitiateMessage				@"Interface_InitiateMessage"
 #define Interface_CloseMessage					@"Interface_CloseMessage"
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
@@ -198,6 +193,8 @@ typedef enum {
 
     NSMutableArray		*availableServiceArray;
     NSString			*lastAccountIDToSendContent;
+
+    NSMutableDictionary		*accountStatusDict;
 }
 
 - (NSNotificationCenter *)accountNotificationCenter;
@@ -211,7 +208,9 @@ typedef enum {
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 - (NSArray *)availableServiceArray;
 - (void)registerService:(id <AIServiceController>)inService;
-- (AIAccount *)accountForSendingContentToHandle:(AIContactHandle *)inHandle;
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle;
+- (void)setStatusObject:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
+- (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount;
 
 @end
 

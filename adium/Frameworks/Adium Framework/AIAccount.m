@@ -38,13 +38,11 @@
 
     //Retain the properties dictionary
     propertiesDict = [inProperties mutableCopy];
-    
-    //Set the account status to offline (or NA if status does not apply)
-    if([self conformsToProtocol:@protocol(AIAccount_Status)]){
-        status = STATUS_OFFLINE;
-    }else{
-        status = STATUS_NA;
-    }
+
+    //Load the account's status properties
+    statusDict = [[propertiesDict objectForKey:@"Status"] mutableCopy];
+    if(!statusDict) statusDict = [[NSMutableDictionary alloc] init];
+    [propertiesDict setObject:statusDict forKey:@"Status"];
 
     //Init the account
     [self initAccount];
@@ -64,6 +62,19 @@
     return(propertiesDict);
 }
 
+//Set a status value
+- (void)setStatusObject:(id)inValue forKey:(NSString *)key
+{
+    [statusDict setObject:inValue forKey:key];
+}
+
+//Retrieve a status value
+- (id)statusObjectForKey:(NSString *)key
+{
+    return([statusDict objectForKey:key]);
+}
+
+
 //Dealloc
 - (void)dealloc
 {
@@ -79,5 +90,7 @@
 - (NSView *)accountView{return(nil);};
 - (NSString *)accountID{return(nil);};
 - (NSString *)accountDescription{return(nil);};
+- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue{};
+- (NSArray *)supportedStatusKeys{return([NSArray array]);}
 
 @end

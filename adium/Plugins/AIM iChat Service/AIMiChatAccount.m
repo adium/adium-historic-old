@@ -135,41 +135,49 @@ extern void* objc_getClass(const char *name);
     return(YES);
 }
 
+- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle
+{
+    BOOL available = NO;
+
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        //If we're online, ("and the contant is online" - implement later), return YES
+        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+            available = YES;
+        }
+    }
+
+    return(available);
+}
 
 // AIAccount_Status --------------------------------------------------------------------------------
-// Return the current connection status
-- (ACCOUNT_STATUS)status
+- (NSArray *)supportedStatusKeys
 {
-    return(status);
+    return([NSArray arrayWithObjects:@"Online", nil]);
 }
 
-//Connects
-- (void)connect
+- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    if(status != STATUS_ONLINE){
-        [AIMService login];
+    NSLog(@"(%@) \"%@\" changing to [%@]", [self accountDescription], key, inValue);
+
+    if([key compare:@"Online"] == 0){
+        ACCOUNT_STATUS		status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+
+        if([inValue boolValue]){ //Connect
+            if(status == STATUS_OFFLINE){
+                [AIMService login];
+            }
+        }else{ //Disconnect
+            if(status == STATUS_ONLINE){
+                [AIMService logout];
+            }
+        }
     }
 }
 
-//Disconnects or cancels
-- (void)disconnect
-{
-    if(status != STATUS_OFFLINE){
-        [AIMService logout];
-    }
-}
 
-// Sets the status of this account
-- (void)setStatus:(ACCOUNT_STATUS)inStatus
-{
-    status = inStatus;
-    
-    //Broadcast a status changed message
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_StatusChanged
-                                                      object:self
-                                                    userInfo:nil];
-}
 
+
+// Private --------------------------------------------------------------------------------------------
 //Received when our login status changes
 - (oneway void)service:(id)inService loginStatusChanged:(int)inStatus message:(id)inMessage reason:(int)inReason
 {
@@ -186,26 +194,31 @@ extern void* objc_getClass(const char *name);
 
             //Clean up and close down
             [screenName release]; screenName = nil;
-            [self setStatus:STATUS_OFFLINE];
+            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
         break;
-            
+
         case 1: //Error
             NSLog(@"Error (status?): %@",inMessage);
         break;
-            
+
         case 2: //Disconnecting
-            [self setStatus:STATUS_DISCONNECTING];
+            //Squelch sounds and updates while we sign off
+            [[owner contactController] delayContactListUpdatesFor:5];
+
+            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
         break;
             
         case 3: //Connecting
-            [self setStatus:STATUS_CONNECTING];
-
             //Squelch sounds and updates while we sign on
             [[owner contactController] delayContactListUpdatesFor:10];
+
+            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
         break;
 
         case 4: //Online
-            [self setStatus:STATUS_ONLINE];
+            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
             //
             if(screenName) [screenName release];

@@ -158,17 +158,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Set the idle time of all accounts
 - (void)setAllAccountsIdleTo:(double)inSeconds
 {
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if ([account conformsToProtocol:@protocol(AIAccount_IdleTime)] &&
-            (![(AIAccount <AIAccount_IdleTime> *)account idleWasSetManually])) {
-            
-            [(AIAccount<AIAccount_IdleTime> *)account setIdleTime:inSeconds manually:FALSE];
-        }
-    }
+    [[owner accountController] setStatusObject:[NSNumber numberWithDouble:inSeconds] forKey:@"IdleTime" account:nil];
+    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:nil];
 }
 
 //Returns the current # of seconds the user has been idle

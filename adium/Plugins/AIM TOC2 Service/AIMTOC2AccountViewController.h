@@ -28,10 +28,8 @@
 }
 
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
-- (id)initForOwner:(id)inOwner account:(id)inAccount;
-- (void)configureViewForStatus:(ACCOUNT_STATUS)inStatus;
-- (void)initAccountView;
 - (NSView *)view;
+- (void)saveChanges;
 - (void)configureViewAfterLoad;
 
 @end

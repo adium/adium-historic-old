@@ -77,17 +77,15 @@ static IdleTimeWindowController *sharedInstance = nil;
 
 - (void)buildAccountsPopup
 {
-    int		loop;
-    NSArray	*accountArray;
-    AIAccount	*theAccount;
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
 
     [popUp_Accounts removeAllItems];
-    accountArray = [[owner accountController] accountArray];
 
-    for(loop = 0;loop < [accountArray count];loop++){
-        theAccount = [accountArray objectAtIndex:loop];
-        if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)] && ([(AIAccount <AIAccount_Status> *)theAccount status]==STATUS_ONLINE)) {
-            [popUp_Accounts addItemWithTitle:[theAccount accountDescription]];
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([[account supportedStatusKeys] containsObject:@"IdleTime"]){
+            [popUp_Accounts addItemWithTitle:[account accountDescription]];
         }
     }
 
@@ -125,15 +123,12 @@ static IdleTimeWindowController *sharedInstance = nil;
         h = [textField_IdleHours intValue];
         m = [textField_IdleMinutes intValue];
         t = (d * 86400) + (h * 3600) + (m * 60);
-        if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)])
-        {
-            [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:t manually:TRUE];
-        }
+
+        [[owner accountController] setStatusObject:[NSNumber numberWithDouble:t] forKey:@"IdleTime" account:theAccount];
+        [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"IdleSetManually" account:theAccount];
     }else{
-        if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)])
-        {
-            [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:0 manually:FALSE];
-        }
+        [[owner accountController] setStatusObject:[NSNumber numberWithDouble:0] forKey:@"IdleTime" account:theAccount];
+        [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:theAccount];
     }
 }
 

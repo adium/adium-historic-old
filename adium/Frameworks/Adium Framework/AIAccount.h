@@ -28,22 +28,12 @@ typedef enum {
 } ACCOUNT_STATUS;
 
 
-//Account code must implement the required protocol
-@protocol AIAccount_Required
-    // Init anything relating to the account
-    - (void)initAccount;
-    // Return a view controller for the connection window
-    - (id <AIAccountViewController>)accountView;
-    // Return a unique ID for this account type and username
-    - (NSString *)accountID;
-    // Return a readable description of this account's username
-    - (NSString *)accountDescription;
-@end
-
 //Support for sending content to contacts
 @protocol AIAccount_Content
     // Send a message object to its destination
     - (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle;
+    //Returns YES if the contact is available for receiving content of the specified type
+    - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle;
 @end
 
 //Support for standard UID based contacts (ungrouped)
@@ -76,36 +66,26 @@ typedef enum {
 //If the service doesn't support groups within groups, group arrays can be compressed, or 'super'groups can be ignored
 @end
 
-//Support for the basic status of offline, online, connecting, and disconnecting
-@protocol AIAccount_Status
-    // Return the current connection status
-    - (ACCOUNT_STATUS)status;
-    
-    - (void)connect;
-    
-    - (void)disconnect;
-    
-    //Services that are always connected (or not connection based) need not implement this protocol
-@end
-
-@protocol AIAccount_IdleTime
-
-- (void)setIdleTime:(double)inSeconds manually:(BOOL)setManually;
-- (BOOL)idleWasSetManually;
-- (BOOL)isIdle;
-
-@end
-
-@interface AIAccount : NSObject <AIAccount_Required> {
+@interface AIAccount : NSObject {
     AIAdium			*owner;
     id <AIServiceController>	service;
 
     NSMutableDictionary		*propertiesDict;
-    ACCOUNT_STATUS		status;
+    NSMutableDictionary		*statusDict;
 }
 
 - (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService owner:(id)inOwner;
 - (NSMutableDictionary *)properties;
 - (id <AIServiceController>)service;
+- (id)statusObjectForKey:(NSString *)key;
+- (void)setStatusObject:(id)inValue forKey:(NSString *)key;
+
+//Methods that should be subclassed
+- (void)initAccount; 				//Init anything relating to the account
+- (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
+- (NSString *)accountID; 			//Return a unique ID for this account type and username
+- (NSString *)accountDescription;		//Return a readable description of this account's username
+- (NSArray *)supportedStatusKeys;		//Return an array of supported status keys
+- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
 
 @end

@@ -55,6 +55,8 @@
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
     lastAccountIDToSendContent = nil;
+
+    accountStatusDict = [[NSMutableDictionary alloc] init]; //This _should_ be saved & restored...
 }
 
 // close
@@ -233,7 +235,7 @@
 //- The last account used to message this contact
 //- The last account used to message anyone
 //- The first available account on the account list
-- (AIAccount *)accountForSendingContentToHandle:(AIContactHandle *)inHandle
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle;
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
@@ -245,15 +247,15 @@
                                                             object:inHandle];
 
         if(accountID && (account = [self accountWithID:accountID])){
-            if([(AIAccount <AIAccount_Status> *)account status] == STATUS_ONLINE){ //"available for sending content"
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle]){
                 return(account);
             }
         }
     }
     
     // Last account used to message anyone --
-    if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){        
-        if([(AIAccount <AIAccount_Status> *)account status] == STATUS_ONLINE){ //"available for sending content"
+    if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle]){
             return(account);
         }
     }
@@ -261,7 +263,7 @@
     // First available account --
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([(AIAccount <AIAccount_Status> *)account status] == STATUS_ONLINE){ //An 'available for sending content' would be more appropriate here
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle]){
             return(account);
         }
     }
@@ -269,6 +271,60 @@
     //Nothing found (no accounts are available to send)
     return([accountArray objectAtIndex:0]);
 }
+
+
+- (void)setStatusObject:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount
+{
+    if(inAccount == nil){ //Set the value globally
+        NSEnumerator	*enumerator;
+        AIAccount	*account;
+
+        //Notify all accounts that support this key
+        enumerator = [accountArray objectEnumerator];
+        while((account = [enumerator nextObject])){
+            if([[account supportedStatusKeys] containsObject:key]){
+                [account statusForKey:key willChangeTo:inValue];
+            }
+        }
+
+        //Set the value
+        if(inValue){
+            [accountStatusDict setObject:inValue forKey:key];
+        }else{
+            [accountStatusDict removeObjectForKey:key];            
+        }
+
+    }else{ //Set the value for a specific account
+        //Notify the account
+        if([[inAccount supportedStatusKeys] containsObject:key]){
+            [inAccount statusForKey:key willChangeTo:inValue];
+        }
+        
+        //Set the value
+        [inAccount setStatusObject:inValue forKey:key];
+    }
+
+    [[self accountNotificationCenter] postNotificationName:Account_StatusChanged object:inAccount userInfo:[NSDictionary dictionaryWithObject:key forKey:@"Key"]];
+}
+
+- (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount
+{
+    id	value = nil;
+    
+    //Attempt to find an account specific value
+    if(inAccount){
+        value = [inAccount statusObjectForKey:key];
+    }
+
+    //Find a global value
+    if(!value){
+        value = [accountStatusDict objectForKey:key];        
+    }
+
+    return(value);
+}
+
+
 
 
 // Internal ----------------------------------------------------------------
@@ -297,9 +353,9 @@
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
         NSDictionary	*properties = [account properties];
-        
-        if([account conformsToProtocol:@protocol(AIAccount_Status)] && [[properties objectForKey:@"AutoConnect"] boolValue]){
-            [(AIAccount<AIAccount_Status> *)account connect];
+
+        if([[account supportedStatusKeys] containsObject:@"Online"] && [[properties objectForKey:@"AutoConnect"] boolValue]){
+            [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
         }
     }
 }
@@ -308,12 +364,12 @@
 - (void)disconnectAllAccounts
 {
     NSEnumerator		*enumerator;
-    AIAccount<AIAccount_Status>	*account;
+    AIAccount			*account;
 
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([account conformsToProtocol:@protocol(AIAccount_Status)] && [account status] != STATUS_OFFLINE){
-            [account disconnect];
+        if([[account supportedStatusKeys] containsObject:@"Online"]){
+            [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
         }
     }
 }
