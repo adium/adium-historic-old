@@ -17,6 +17,11 @@
 #import "AIListOutlineView.h"
 #import "ESContactInfoListController.h"
 
+#import "AIContactAccountsPane.h"
+#import "AIContactSettingsPane.h"
+#import "AIContactProfilePane.h"
+#import "ESContactAlertsPane.h"
+
 #define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
 #define KEY_INFO_SELECTED_CATEGORY		@"Selected Info Category"		//
@@ -42,6 +47,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Return the shared contact info window
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
 {
+	static loadedPanes = NO;
+	if(!loadedPanes){		
+		//Install our panes
+		[AIContactAccountsPane contactInfoPane];
+		[AIContactProfilePane contactInfoPane];
+		[AIContactSettingsPane contactInfoPane];
+		[ESContactAlertsPane contactInfoPane];
+		
+		loadedPanes = YES;
+	}
+
     //Create the window
     if(!sharedContactInfoInstance){
         sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];

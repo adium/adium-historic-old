@@ -21,9 +21,6 @@
 #import "AIAccountController.h"
 #import "AIContactInfoWindowController.h"
 
-#import "AIContactAccountsPane.h"
-#import "AIContactSettingsPane.h"
-#import "AIContactProfilePane.h"
 
 #ifdef CONTACTS_INFO_WITH_PROMPT
 #import "ESShowContactInfoPromptController.h"
@@ -1369,11 +1366,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 																		  action:@selector(showContactInfo:)
 																			menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
-	
-	//Install our panes
-	[AIContactAccountsPane contactInfoPane];
-	[AIContactProfilePane contactInfoPane];
-	[AIContactSettingsPane contactInfoPane];
 }
 
 //Always be able to show the inspector
