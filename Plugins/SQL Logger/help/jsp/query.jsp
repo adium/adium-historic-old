@@ -4,23 +4,19 @@
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'java.net.URLEncoder' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-String query = request.getParameter("query");
-String safeQuery = query;
+String query = Util.checkNull(request.getParameter("query"));
 int query_id;
-
-if(query != null && query.equals("")) {
-    query = null;
-}
-
-if(query == null || safeQuery == null) {
-    safeQuery = "";
-}
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
@@ -29,33 +25,32 @@ ResultSetMetaData rsmd = null;
 String formURL = new String("action=saveQuery.jsp&query=" +
     query);
 
-try {
-    query_id = Integer.parseInt(request.getParameter("query_id"));
-} catch (NumberFormatException e) {
-    query_id = 0;
-}
+query_id = Util.checkInt(request.getParameter("query_id"));
 
 String notes = new String();
-String title = new String();;
+String title = new String();
+
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
 
 try {
 
     if(query_id != 0) {
-        pstmt = conn.prepareStatement("select title, notes, query_text from im.saved_queries where query_id = ?");
-        pstmt.setInt(1, query_id);
 
-        rset = pstmt.executeQuery();
+        params.put("query_id", new Integer(query_id));
+        rset = lc.executeQuery("saved_query", params);
 
         while(rset.next()) {
             title = rset.getString("title");
             notes = rset.getString("notes");
             query = rset.getString("query_text");
-            safeQuery = query;
         }
     }
 %>
 <html>
-    <head><title>Query</title>
+    <head><title>SQL Logger: Query</title>
     <link rel="stylesheet" type="text/css" href="styles/layout.css" />
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
     </head>
@@ -65,7 +60,7 @@ try {
             </div>
             <div id="banner">
                 <div id="bannerTitle">
-                    <img class="adiumIcon" src="images/adiumy/green.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                    <img class="adiumIcon" src="images/headlines/query.png" width="128" height="128" border="0" alt="Query Icon" />
                     <div class="text">
                         <h1>Query</h1>
                     </div>
@@ -89,9 +84,8 @@ try {
                     <div class="boxThinTop"></div>
                     <div class="boxThinContent">
 <%
-    pstmt = conn.prepareStatement("select query_id, title, notes from im.saved_queries order by title");
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("saved_queries_list", params);
 
     while(rset.next()) {
         out.println("<p><a href=\"query.jsp?query_id=" +
@@ -101,8 +95,6 @@ try {
     }
     out.println("<p></p>");
 
-    out.println("<p><a href=\"#\" onClick=\"window.open('saveForm.jsp?action=saveQuery.jsp&query=" + URLEncoder.encode(safeQuery, "UTF-8") +
-        "', 'Save Query', 'width=275,height=225')\">Save Query</a></p>");
 %>
                     </div>
                     <div class="boxThinBottom"></div>
@@ -118,8 +110,15 @@ try {
                         <h3><%= title %></h3>
                         <p><%= notes %></p>
                         <textarea name="query"
-                            cols="68" rows="20"><%= safeQuery %></textarea>
+                            cols="68" rows="20"><%= Util.safeString(query) %></textarea>
                         <br />
+                        <span style="float: right">
+<%
+if(query != null)
+    out.println("<p><a href=\"#\" onClick=\"window.open('saveForm.jsp?action=saveQuery.jsp&query=" + URLEncoder.encode(Util.safeString(query), "UTF-8") +
+        "', 'Save Query', 'width=275,height=225')\">Save Query</a></p>");
+%>
+                        </span>
                         <input type="reset">
                         <input type="submit" />
                     </form>

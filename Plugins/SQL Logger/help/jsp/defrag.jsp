@@ -1,10 +1,11 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
+<%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
-<!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 487 $ $Date$ -->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/defrag.jsp $-->
+<!--$Rev: 920 $ $Date$ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -14,11 +15,8 @@ String sender_sn;
 int total_messages = 0;
 boolean loginUsers = false;
 
-try {
-    sender = Integer.parseInt(request.getParameter("sender"));
-} catch (NumberFormatException e) {
-    sender = 0;
-}
+sender = Util.checkInt(request.getParameter("sender"));
+
 loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 %>
 <html>

@@ -1,6 +1,10 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -9,40 +13,34 @@ Connection conn = source.getConnection();
 
 String returnVar  = request.getParameter("return");
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 
-PreparedStatement updateStmt = null;
+File queryFile = new File(session.getServletContext().getRealPath("queries/update.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
 
 try {
 
-    pstmt = conn.prepareStatement("select key_id from information_keys where delete = false");
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("info_keys", params);
 
     while(rset.next()) {
         String requestText = request.getParameter(rset.getString("key_id"));
-        int returnVal;
 
         if(requestText != null && requestText.equals("on")) {
-
-            updateStmt = conn.prepareStatement("update im.information_keys set delete = true where key_id = ? ");
-
-            updateStmt.setInt(1, rset.getInt("key_id"));
-
-            updateStmt.executeUpdate();
+            params.put("key_id", new Integer(rset.getString("key_id")));
+            lc.executeUpdate("delete_key", params);
         }
     }
 
-    pstmt = conn.prepareStatement("insert into im.information_keys (key_name) values (?)");
 
     for(int i = 1; i <= 3; i++) {
         String req = request.getParameter("new" + i);
 
         if(req != null && !req.equals("")) {
-            pstmt.setString(1, req);
+            params.put("name", req);
 
-            pstmt.executeUpdate();
+            lc.executeUpdate("insert_key", params);
         }
     }
     response.sendRedirect(returnVar);
@@ -50,6 +48,7 @@ try {
 } catch (SQLException e) {
     out.println("<br />" + e.getMessage());
 } finally {
+    lc.close();
     conn.close();
 }
 %>

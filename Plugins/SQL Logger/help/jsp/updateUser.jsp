@@ -1,72 +1,62 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/update.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
 String name = request.getParameter("name");
 String deleteMe = request.getParameter("delete");
 
-int user_id = 0;
+int user_id = Util.checkInt(request.getParameter("user_id"));
 
-try {
-    user_id = Integer.parseInt(request.getParameter("user_id"));
-} catch (NumberFormatException e) {
-    user_id = 0;
-}
+params.put("user_id", new Integer(user_id));
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
-
-PreparedStatement updateStmt = null;
 
 try {
 
     if(user_id != 0) {
 
-        pstmt = conn.prepareStatement("select key_id from information_keys");
-
-        rset = pstmt.executeQuery();
+        rset = lc.executeQuery("info_keys", params);
 
         while(rset.next()) {
             String requestText = request.getParameter(rset.getString("key_id"));
             int returnVal;
 
+            params.put("value", requestText);
+            params.put("key_id", new Integer(rset.getInt("key_id")));
+
             if(requestText != null && !requestText.equals("")) {
-                updateStmt = conn.prepareStatement("update im.contact_information set value = ? where key_id = ? and user_id = ?");
 
-                updateStmt.setString(1, requestText);
-                updateStmt.setInt(2, rset.getInt("key_id"));
-                updateStmt.setInt(3, user_id);
-
-                returnVal = updateStmt.executeUpdate();
+                returnVal = lc.executeUpdate("update_user_info", params);
 
                 if(returnVal == 0) {
-                    updateStmt = conn.prepareStatement("insert into im.contact_information (user_id, key_id, value) values (?, ?, ?)");
-
-                    updateStmt.setInt(1, user_id);
-                    updateStmt.setInt(2, rset.getInt("key_id"));
-                    updateStmt.setString(3, requestText);
-
-                    updateStmt.executeUpdate();
+                    lc.executeUpdate("insert_user_info", params);
                 }
             } else if (requestText == null || requestText.equals("")) {
 
-                updateStmt = conn.prepareStatement("delete from im.contact_information where user_id = ? and key_id = ?");
+                lc.executeUpdate("delete_user_info", params);
 
-                updateStmt.setInt(1, user_id);
-                updateStmt.setInt(2, rset.getInt("key_id"));
-
-                updateStmt.executeUpdate();
             }
         }
     }
 } catch (SQLException e) {
     out.println("<br />" + e.getMessage());
 } finally {
+    lc.close();
     conn.close();
 }
 %>

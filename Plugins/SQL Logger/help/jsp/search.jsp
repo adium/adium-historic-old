@@ -1,80 +1,50 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
+<%@ page import = 'java.util.List' %>
 <%@ page import = 'java.util.ArrayList' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'sqllogger.*' %>
+
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
 String searchFormURL = new String("saveForm.jsp?action=saveSearch.jsp");
-int search_id = 0;
+int search_id = Util.checkInt(request.getParameter("search_id"));
+
 String date_start, date_finish;
 
-try {
-    search_id = Integer.parseInt(request.getParameter("search_id"));
-} catch (NumberFormatException e) {
-    search_id = 0;
-}
+String sender = Util.checkNull(request.getParameter("sender"), false);
+searchFormURL += "&amp;sender=" + Util.safeString(sender);
 
-String sender = request.getParameter("sender");
-if (sender != null && sender.equals("")) {
-    sender = null;
-} else if (sender != null) {
-    searchFormURL += "&amp;sender=" + sender;
-}
+String recipient = Util.checkNull(request.getParameter("recipient"), false);
+searchFormURL += "&amp;recipient=" + Util.safeString(recipient);
 
-String recipient = request.getParameter("recipient");
-if (recipient != null && recipient.equals("")) {
-    recipient = null;
-} else if (recipient != null) {
-    searchFormURL += "&amp;recipient=" + recipient;
-}
+String searchString = Util.checkNull(request.getParameter("search"), false);
+searchFormURL += "&amp;searchString=" + Util.safeString(searchString);
 
-String searchString = request.getParameter("search");
-if (searchString == null || searchString.equals("")) {
-    searchString = null;
-} else {
-    searchFormURL += "&amp;searchString=" + searchString;
-}
+String service = Util.checkNull(request.getParameter("service"));
+searchFormURL += "&amp;service=" + Util.safeString(service);
 
-String service = request.getParameter("service");
-if (service == null || service.equals("0")) {
-    service = null;
-} else {
-    searchFormURL += "&amp;service=" + service;
-}
+String orderBy = Util.checkNull(request.getParameter("order_by"));
 
-String orderBy = request.getParameter("order_by");
+String ascDesc = Util.checkNull(request.getParameter("asc_desc"));
+searchFormURL += "&amp;orderBy=" + Util.safeString(orderBy);
 
-if (orderBy != null && orderBy.equals("")) {
-    orderBy = null;
-}
+date_finish = Util.checkNull(request.getParameter("finish"));
+searchFormURL += "&amp;date_finish=" + Util.safeString(date_finish);
 
-String ascDesc = request.getParameter("asc_desc");
-if(orderBy != null){
-    orderBy += ascDesc;
-    searchFormURL += "&amp;orderBy=" + orderBy;
-}
-
-date_finish = request.getParameter("finish");
-if(date_finish != null && date_finish.equals("")) {
-    date_finish = null;
-} else {
-    searchFormURL += "&amp;date_finish=" + date_finish;
-}
-
-date_start = request.getParameter("start");
-if(date_start != null && date_start.equals("")) {
-    date_start = null;
-} else {
-    searchFormURL += "&amp;date_start=" + date_start;
-}
+date_start = Util.checkNull(request.getParameter("start"));
+searchFormURL += "&amp;date_start=" + Util.safeString(date_start);
 
 String title = new String();
 String notes = new String();
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 SQLWarning warning = null;
 
@@ -85,13 +55,15 @@ String searchKey = new String();
 
 searchKey = searchString;
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
 try {
-    if(search_id != 0) {
-        pstmt = conn.prepareStatement("select title, notes, sender, recipient, searchstring, date_start, date_finish, orderby from im.saved_searches where search_id = ?");
+if(search_id != 0) {
+        params.put("search_id", new Integer(search_id));
 
-        pstmt.setInt(1, search_id);
-
-        rset = pstmt.executeQuery();
+        rset = lc.executeQuery("saved_search", params);
 
         if(rset != null && rset.next()) {
             title = rset.getString("title");
@@ -109,26 +81,17 @@ try {
 
     String searchType = new String();
 
-    // First, check which kind of search we're doing
-    // Do this by querying the system catalog to see if tsearch
-    // types exist
-    pstmt = conn.prepareStatement("select typname " +
-        " from pg_catalog.pg_type t "+
-        " where typname ~ '^txtidx$' " +
-        " or typname ~ '^tsquery$' and " +
-        " pg_catalog.pg_type_is_visible(t.oid) " +
-        " order by typname");
-
-    rset = pstmt.executeQuery();
+    // Check if tsearch types exist
+    rset = lc.executeQuery("check_for_tsearch", params);
 
     if (rset != null && !rset.isBeforeFirst()) {
-        searchType = "none";
+        searchType = "search_none";
     } else {
         rset.next();
         if(rset.getString(1).equals("txtidx")) {
-            searchType = "tsearch1";
+            searchType = "search_tsearch1";
         } else if (rset.getString(1).equals("tsquery")) {
-            searchType = "tsearch2";
+            searchType = "search_tsearch2";
         }
     }
 
@@ -158,7 +121,7 @@ try {
 	   </div>
 	   <div id="banner">
             <div id="bannerTitle">
-                <img class="adiumIcon" src="images/adiumy/purple.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                <img class="adiumIcon" src="images/headlines/search.png" width="128" height="128" border="0" alt="Search" />
                 <div class="text">
                     <h1><%= title %></h1>
                     <p><%= notes %></p>
@@ -182,9 +145,8 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    pstmt = conn.prepareStatement("select search_id, title from im.saved_searches");
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("saved_searches_list", params);
 
     while(rset.next()) {
         out.println("<p><a href=\"search.jsp?search_id=" +
@@ -239,7 +201,7 @@ try {
                                 && !orderBy.startsWith("message_date"))
                                 %> selected="selected" <% ; %> >Message</option>
 
-<% if(searchType.equals("tsearch2")) { %>
+<% if(searchType.equals("search_tsearch2")) { %>
                                 <option value="rank(idxfti, q)"
                                 <% if ((searchKey != null &&
                                             orderBy == null) ||
@@ -264,8 +226,8 @@ try {
                                 <label for="sender">Sender: </label>
                             </td>
                             <td><input type="text" name="sender"
-                        <% if (sender != null)
-                            out.print("value=\"" + sender + "\""); %> id="sender" />
+                                value="<%= Util.safeString(sender) %>"
+                                id="sender" />
                             </td>
                         </tr>
                         <tr>
@@ -274,8 +236,8 @@ try {
                             </td>
                             <td>
                                 <input type="text" name="recipient"
-                        <% if (recipient != null)
-                            out.print("value=\"" + recipient + "\""); %> id="recipient" />
+                                    value="<%= Util.safeString(recipient) %>"
+                                    id="recipient" />
                             </td>
                         </tr>
                         <tr>
@@ -286,9 +248,8 @@ try {
                                 <select name="service" id="service">
                                     <option value="0">Choose One</option>
 <%
-    pstmt = conn.prepareStatement("select distinct service from im.users");
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("distinct_services", params);
     while(rset.next()) {
         out.print("<option value=\"" + rset.getString("service") + "\"" );
         if(rset.getString("service").equals(service)) {
@@ -305,11 +266,9 @@ try {
                                 <label for="start_date">Date Range: </label>
                             </td>
                             <td colspan="2">
-                                <input type="text" name="start" <%
-                                    if (date_start != null)
-                                        out.print("value=\"" + date_start +
-                                        "\"");
-                                %> id="start_date" />
+                                <input type="text" name="start"
+                                    value="<%= Util.safeString(date_start) %>"
+                                    id="start_date" />
                                 <a
                         href="javascript:show_calendar('control.start');"
                         onmouseover="window.status='Date Picker';return true;"
@@ -350,73 +309,20 @@ try {
                 <div class="boxWideContent">
 <%
         searchKey = searchString;
-        ArrayList exactMatch = new ArrayList();
+        List exactMatch = new ArrayList();
         int quoteMatch = 1;
 
         //If the user hasn't installed tsearch, be slow & simple
-        if(searchType.equals("none")) {
-            String cmdArray[] = new String[10];
-            int cmdCntr = 0;
+        if(searchType.equals("search_none")) {
 
             out.print("<div align=\"center\">");
             out.print("<i>This query is case sensitive for speed.<br>");
             out.print("For a non-case-sensitive, faster query, "+
-            "install the tsearch module.</i></div>");
+            "install the tsearch2 module.</i></div>");
 
-            String shortQuery = new String("select sender_sn "+
-            "as sender_sn, recipient_sn as recipient_sn, " +
-            "message, message_date, message_id from message_v where " +
-            "message ~ ? ");
+            params.put("search", searchString);
 
-            if (sender != null) {
-                if(!sender.startsWith("!")) {
-                    shortQuery += " and sender_sn like ? ";
-                    cmdArray[cmdCntr++] = sender;
-                } else {
-                    shortQuery += " and sender_sn not like ? ";
-                    cmdArray[cmdCntr++] = sender.substring(1);
-                }
-            }
-
-            if (recipient != null) {
-                if(!sender.startsWith("!")) {
-                    shortQuery += "and recipient_sn like ? ";
-                    cmdArray[cmdCntr++] = recipient;
-                } else {
-                    shortQuery += " and recipient_sn like ? ";
-                    cmdArray[cmdCntr++] = recipient.substring(1);
-                }
-            }
-
-            if(date_start != null) {
-                shortQuery += " and message_date >= ? ";
-                cmdArray[cmdCntr++] = date_start;
-            }
-
-            if(date_finish != null) {
-                shortQuery += " and message_date <= ? ";
-                cmdArray[cmdCntr++] = date_finish;
-            }
-
-            if(service != null) {
-                shortQuery += " and (sender_service = ? or recipient_service = ?) ";
-                cmdArray[cmdCntr++] = service;
-                cmdArray[cmdCntr++] = service;
-            }
-
-            if (orderBy != null) {
-                shortQuery += " order by " + orderBy;
-                cmdArray[cmdCntr++] = orderBy;
-            }
-
-            pstmt = conn.prepareStatement(shortQuery);
-
-            pstmt.setString(1, searchString);
-
-            for(int i = 0; i < cmdArray.length; i++) {
-                pstmt.setString(i + 2, cmdArray[i]);
-            }
-        // If the user has installed a tsearch, transform the search string
+            // If the user has installed a tsearch, transform the search string
         } else {
 
             searchKey = searchKey.trim();
@@ -451,96 +357,19 @@ try {
                 searchKey = searchKey.replaceAll(" ", "&");
             }
 
-            String cmdAry[] = new String[15];
-            int cmdCntr = 0;
-            String queryString = new String();
-
-            if(searchType.equals("tsearch1")) {
-
-                queryString = "select s.username as sender_sn, "+
-                    " s.service as sender_service, " +
-                    " r.service as recipient_service, " +
-                    " r.username as recipient_sn," +
-                    " message, message_date, message_id " +
-                    " from im.messages, im.users s, im.users r " +
-                    " where " +
-                    " messages.sender_id = s.user_id " +
-                    " and messages.recipient_id = r.user_id " +
-                    " and message_idx ## ? ";
-            } else if (searchType.equals("tsearch2")) {
-                queryString = "select s.username as sender_sn, "+
-                    " r.username as recipient_sn, " +
-                    " s.service as sender_service, " +
-                    " r.service as recipient_service, " +
-                    " headline(message, q) as message, message_date, " +
-                    " message_id " +
-                    " from im.messages, im.users s, im.users r, "+
-                    " to_tsquery(?) as q " +
-                    " where messages.sender_id = s.user_id " +
-                    " and messages.recipient_id = r.user_id " +
-                    " and idxfti @@ q ";
-
-                if (orderBy == null) {
-                    orderBy = "rank(idxFTI, q) desc";
-                }
-            }
-
-            cmdAry[cmdCntr++] = new String(searchKey);
-
-            if (sender != null) {
-                if(sender.startsWith("!")) {
-                    queryString += "and s.username not like ? ";
-                    cmdAry[cmdCntr++] = new String(sender.substring(1));
-                } else {
-                    queryString += "and s.username like ? ";
-                    cmdAry[cmdCntr++] = new String(sender);
-                }
-            }
-
-            if (recipient != null) {
-                if (recipient.startsWith("!")) {
-                    queryString += "and r.username not like ? ";
-                    cmdAry[cmdCntr++] = new String(sender.substring(1));
-                } else {
-                    queryString += " and r.username like ? ";
-                    cmdAry[cmdCntr++] = new String(recipient);
-                }
-            }
-
-            for (int i=0; i < exactMatch.size(); i++) {
-                queryString += " and message ~* ? ";
-                cmdAry[cmdCntr++] = new String((String) exactMatch.get(i));
-            }
-
-            if (date_start != null) {
-                queryString += " and message_date >= ? ";
-                cmdAry[cmdCntr++] = new String(date_start);
-            }
-
-            if(date_finish != null) {
-                queryString += " and message_date <= ? ";
-                cmdAry[cmdCntr++] = new String(date_finish);
-            }
-
-            if(service != null) {
-                queryString += " and (s.service = ? or r.service = ?) ";
-                cmdAry[cmdCntr++] = new String(service);
-                cmdAry[cmdCntr++] = new String(service);
-            }
-
-            if (orderBy != null) {
-                queryString += " order by " + orderBy;
-            }
-
-            pstmt = conn.prepareStatement(queryString);
-            for(int i=0; i< cmdCntr;i++) {
-                pstmt.setString(i+1,cmdAry[i]);
-            }
-
+            params.put("matchRegexp", exactMatch);
+            params.put("search", searchKey);
         }
+
+        params.put("sender", sender);
+        params.put("recipient", recipient);
+        params.put("dateStart", date_start);
+        params.put("dateFinish", date_finish);
+        params.put("service", service);
+
         beginTime = System.currentTimeMillis();
         try {
-            rset = pstmt.executeQuery();
+            rset = lc.executeQuery(searchType, params);
         } catch (SQLException e) {
             out.println("<span style=\"color:red\">" + e.getMessage() +
                 "</span>");
@@ -622,13 +451,6 @@ try {
                 }
             }
 
-            warning = pstmt.getWarnings();
-            if(warning != null) {
-                out.print("<br />" + warning.getMessage());
-                while(warning.getNextWarning() != null) {
-                    out.print("<br />" + warning.getMessage());
-                }
-            }
             out.print("</div>");
         }
 %>
@@ -640,9 +462,7 @@ try {
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage() + "<br>");
 } finally {
-    if (pstmt != null) {
-        pstmt.close();
-    }
+    lc.close();
     conn.close();
 }
 %>

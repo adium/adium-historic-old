@@ -97,6 +97,8 @@ create or replace view im.simple_message_v as
 select  m.message_date,
         s.username as sender_sn,
         r.username as recipient_sn,
+        s.service as sender_service,
+        r.service as recipient_service,
         m.sender_id,
         m.recipient_id,
         message,

@@ -1,6 +1,11 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -8,23 +13,21 @@ DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
 int meta_id;
+meta_id = Util.checkInt(request.getParameter("meta_id"));
 
-try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
-} catch (NumberFormatException e) {
-    meta_id = 0;
-}
-
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 String name = new String();
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
 try {
-    pstmt = conn.prepareStatement("select name, key_id, key_name, coalesce(value, '') as value from im.meta_container natural join im.information_keys natural left join im.contact_information where meta_id = ? and delete = false order by key_name");
 
-    pstmt.setInt(1, meta_id);
+    params.put("meta_id", new Integer(meta_id));
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("meta_info_all_keys", params);
     if(rset.isBeforeFirst()) {
         rset.next();
         name = rset.getString("name");
