@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.26 2004/06/28 03:27:31 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.27 2004/06/28 07:08:38 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -17,9 +17,20 @@
 
 int eventMenuItemSort(id menuItemA, id menuItemB, void *context);
 
+DeclareString(KeyActionID);
+DeclareString(KeyEventID);
+DeclareString(KeyActionDetails);
+DeclareString(KeyOneTimeAlert);
+
+
 //init and close
 - (void)initController
 {
+	InitString(KeyActionID,KEY_ACTION_ID);
+	InitString(KeyEventID,KEY_EVENT_ID);
+	InitString(KeyActionDetails,KEY_ACTION_DETAILS);
+	InitString(KeyOneTimeAlert,KEY_ONE_TIME_ALERT);
+
 	globalOnlyEventHandlers = [[NSMutableDictionary alloc] init];
 	eventHandlers = [[NSMutableDictionary alloc] init];
 	actionHandlers = [[NSMutableDictionary alloc] init];
@@ -118,8 +129,8 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context);
 
 		//Process each alert (There may be more than one for an event)
 		while(alert = [enumerator nextObject]){
-			NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
-			NSDictionary			*actionDetails = [alert objectForKey:KEY_ACTION_DETAILS];
+			NSString				*actionID = [alert objectForKey:KeyActionID];
+			NSDictionary			*actionDetails = [alert objectForKey:KeyActionDetails];
 			id <AIActionHandler>	actionHandler = [actionHandlers objectForKey:actionID];		
 			[actionHandler performActionID:actionID
 							 forListObject:listObject
@@ -127,7 +138,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context);
 						 triggeringEventID:eventID];
 			
 			//If this alert was a single-fire alert, we can delete it now
-			if([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]){
+			if([[alert objectForKey:KeyOneTimeAlert] intValue]){
 				[self removeAlert:alert fromListObject:listObject];
 			}
 		}
@@ -298,7 +309,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 //Add an alert (passed as a dictionary) to a list object
 - (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject
 {
-	NSString			*newAlertEventID = [newAlert objectForKey:KEY_EVENT_ID];
+	NSString			*newAlertEventID = [newAlert objectForKey:KeyEventID];
 	NSMutableDictionary	*contactAlerts;
 	NSMutableArray		*eventArray;
 	
@@ -329,7 +340,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 		[[owner preferenceController] setPreference:newAlertEventID
 											 forKey:KEY_DEFAULT_EVENT_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];
-		[[owner preferenceController] setPreference:[newAlert objectForKey:KEY_ACTION_ID]
+		[[owner preferenceController] setPreference:[newAlert objectForKey:KeyActionID]
 											 forKey:KEY_DEFAULT_ACTION_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];	
 	}
@@ -348,7 +359,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	
 	NSMutableDictionary	*contactAlerts = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS 
 																	   group:PREF_GROUP_CONTACT_ALERTS] mutableCopy];
-	NSString			*victimEventID = [victimAlert objectForKey:KEY_EVENT_ID];
+	NSString			*victimEventID = [victimAlert objectForKey:KeyEventID];
 	NSMutableArray		*eventArray;
 	
 	//Get the event array containing the victim alert, making a copy so we can modify it
@@ -396,7 +407,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 		while (alertDict = [alertArrayEnumerator nextObject]){
 			
 			//We found an alertDict which needs to be removed
-			if ([[alertDict objectForKey:KEY_ACTION_ID] isEqualToString:actionID]){
+			if ([[alertDict objectForKey:KeyActionID] isEqualToString:actionID]){
 				//If this is the first modification to the current eventArray, make a mutableCopy with which to work
 				if (!newEventArray) newEventArray = [[eventArray mutableCopy] autorelease];
 				[newEventArray removeObject:alertDict];
