@@ -76,6 +76,8 @@ static 	BOOL	sortGroups;
                                              forKey:KEY_SORT_GROUPS
                                               group:PREF_GROUP_CONTACT_SORTING];		
 	}
+	
+	[[adium contactController] sortContactList];
 }
 
 #pragma mark Sorting
