@@ -24,10 +24,10 @@
 #define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
 #define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
 
-#define EDGE_CATCH_X 		10
-#define EDGE_CATCH_Y 		40
-#define SCROLL_VIEW_PADDING_X	2
-#define SCROLL_VIEW_PADDING_Y	2
+#define EDGE_CATCH_X 			10
+#define EDGE_CATCH_Y 			40
+#define SCROLL_VIEW_PADDING_X		2
+#define SCROLL_VIEW_PADDING_Y		2
 
 #define PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define KEY_CLWH_ALWAYS_ON_TOP			@"Always on Top"
@@ -178,11 +178,13 @@
     }
 }
 
+//
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
     return([self _desiredWindowFrame]);
 }
 
+//
 - (NSRect)_desiredWindowFrame
 {
     NSRect	newFrame;
@@ -264,7 +266,7 @@
     //Remember how much padding we have around the contact list view, and observe desired size changes
     contactViewPadding = NSMakeSize([[self window] frame].size.width - [scrollView_contactList frame].size.width,
                                     [[self window] frame].size.height - [scrollView_contactList frame].size.height);
-    [[owner notificationCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:Interface_ViewDesiredSizeDidChange object:contactListView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:AIViewDesiredSizeDidChangeNotification object:contactListView];
     
     //Register for the selection notification
     [[owner notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
@@ -277,6 +279,9 @@
 
     //apply initial preference-based settings
     [self preferencesChanged:nil];
+
+    //Tell the interface to open our window
+    [interface containerDidOpen:self];
 }
 
 //Close the contact list window
@@ -284,7 +289,8 @@
 {
     //Stop observing
     [[owner notificationCenter] removeObserver:self];
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     //Close the contact list view
     [contactListViewController release];
     [contactListView release];
@@ -300,16 +306,19 @@
     return(YES);
 }
 
+//
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
 }
 
+//
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:self];
 }
 
+//
 - (void)windowDidResignMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:nil];

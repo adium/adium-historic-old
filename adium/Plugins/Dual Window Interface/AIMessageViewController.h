@@ -36,10 +36,8 @@
     //Variables
     id				delegate;
     AIAdium			*owner;
-    id <AIContainerInterface> 	interface;
     AIAccount			*account;
     AIChat			*chat;
-    float			currentTextEntryHeight;
     BOOL			showUserList;
     BOOL			availableForSending;
 }
@@ -50,8 +48,6 @@
 - (void)setAccountSelectionMenuVisible:(BOOL)visible;
 - (void)makeTextEntryViewFirstResponder;
 - (void)setAccount:(AIAccount *)inAccount;
-- (void)closeMessageView;
-- (void)closeMessageViewClosingChat:(BOOL)closeChat;
 - (AIChat *)chat;
 - (AIListObject *)listObject;
 - (AIAccount *)account;

@@ -40,17 +40,21 @@
 - (void)addMenuItems;
 - (void)removeMenuItems;
 - (void)buildWindowMenu;
-- (void)updateActiveWindowMenuItem;
+- (void)_updateActiveWindowMenuItem;
+- (void)_updateCloseMenuKeys;
 - (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject;
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat;
+- (void)_clearUnviewedContentOfChat:(AIChat *)inChat;
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat;
 - (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat;
 - (AIMessageTabViewItem *)_messageTabForListObject:(AIListObject *)inListObject;
-- (AIMessageWindowController *) messageWindowControllerForContainer:(AIMessageTabViewItem *)container;
+- (AIMessageWindowController *)_messageWindowForContainer:(AIMessageTabViewItem *)container;
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController;
 - (void)closeTabViewItem:(AIMessageTabViewItem *)inTab;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (void)openChatWithObject:(AIListObject *)inObject inWindow:(AIMessageWindowController *)inWindow;
+- (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)messageWindowController;
+- (AIMessageWindowController *)_primaryMessageWindow;
+- (AIMessageWindowController *)_createMessageWindow;
+- (void)_destroyMessageWindow:(AIMessageWindowController *)inWindow;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -72,7 +76,9 @@
 {
     //init
     messageWindowControllerArray = [[NSMutableArray alloc] init];
-    activeWindowControllerIndex = -1;
+    forceIntoNewWindow = NO;
+    forceIntoTab = NO;
+    lastUsedMessageWindow = nil;
 
     windowMenuArray = [[NSMutableArray alloc] init];
 
@@ -119,15 +125,18 @@
     [windowMenuArray release];
 }
 
+//
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
 	NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
+        //Cache the window spawning preferences
 	alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
 	useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
     }
 }
+
 
 //Contact List ---------------------------------------------------------------------
 //Show the contact list window
@@ -141,252 +150,170 @@
 
     //Give Adium focus
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-
 }
 
-- (AIContactListWindowController *)contactListWindowController
-{
-    return contactListWindowController;
-}
 
 //Messages -------------------------------------------------------------------------
 //Close the active window
 - (IBAction)close:(id)sender
 {
-    //Close the main window
     [[[NSApplication sharedApplication] keyWindow] performClose:nil];
 }
 
 //Close the active tab
 - (IBAction)closeTab:(id)sender
 {
-    AIMessageWindowController	*messageWindowController = [messageWindowControllerArray objectAtIndex:activeWindowControllerIndex];
-    [self closeTabViewItem:(AIMessageTabViewItem *)[messageWindowController selectedTabViewItemContainer]];
+    if([activeContainer isKindOfClass:[AIMessageTabViewItem class]]){ //Just to make sure the active container is really a tab
+        [[owner interfaceController] closeChat:[[(AIMessageTabViewItem *)activeContainer messageViewController] chat]];    
+    }
 }
 
-- (void)closeTabViewItem:(AIMessageTabViewItem *)inTab
-{
-    [[owner interfaceController] closeChat:[[inTab messageViewController] chat]];
-}
-
+//Open chat in new window (Must ONLY be called by a context menu)
 - (IBAction)openChatInNewWindow:(id)sender
 {
-    AIListObject * inObject = [[owner menuController] contactualMenuContact];
-    if (inObject) [self openChatWithObject:inObject inWindow:nil];
+    AIListObject 	*listObject = [[owner menuController] contactualMenuContact];
+    AIChat		*chat;
+
+    if(listObject){
+        forceIntoNewWindow = YES; //Temporarily override our preference
+        chat = [[owner contentController] openChatOnAccount:nil withListObject:listObject];
+        [[owner interfaceController] setActiveChat:chat];
+    }
 }
 
+//Open chat as tab in primary window (Must ONLY be called by a context menu)
 - (IBAction)openChatInPrimaryWindow:(id)sender
 {
-    AIListObject * inObject = [[owner menuController] contactualMenuContact];
-    if (inObject) [self openChatWithObject:inObject inWindow:[messageWindowControllerArray count] ? [messageWindowControllerArray objectAtIndex:0] : nil];
+    AIListObject 	*listObject = [[owner menuController] contactualMenuContact];
+    AIChat		*chat;
+
+    if(listObject){
+        forceIntoTab = YES; //Temporarily override our preference
+        chat = [[owner contentController] openChatOnAccount:nil withListObject:listObject];
+        [[owner interfaceController] setActiveChat:chat];
+    }
 }
 
+//Consilidate all open chats into a single tabbed window
 - (IBAction)consolidateAllChats:(id)sender
 {
-    AIMessageWindowController * messageWindowController;
-    AIMessageTabViewItem * tabViewItem;
-    NSEnumerator * windowEnumerator;
-    NSEnumerator * tabViewEnumerator;
+    AIMessageWindowController	*messageWindowController;
+    NSEnumerator		*windowEnumerator;
+    AIMessageWindowController 	*targetMessageWindow = [self _primaryMessageWindow];
 
-    AIMessageWindowController * firstMessageWindowController = [messageWindowControllerArray objectAtIndex:0];
-    //enumerate all windows
+    //Enumerate all windows
     windowEnumerator = [messageWindowControllerArray objectEnumerator];
-    while (messageWindowController = [windowEnumerator nextObject])
-    {
-	if ([[messageWindowController messageContainerArray] count] != 0){
+    while(messageWindowController = [windowEnumerator nextObject]){
+        NSEnumerator		*tabViewEnumerator;
+        AIMessageTabViewItem	*tabViewItem;
 
-	    //Add a menu item for each open message container in this window
-	    tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
-	    while((tabViewItem = [tabViewEnumerator nextObject])){
-		[self openChatWithObject:[[tabViewItem messageViewController] listObject] inWindow:firstMessageWindowController];
-	    }
-	}
-    }
-}
-
-- (void)openChatWithObject:(AIListObject *)inObject inWindow:(AIMessageWindowController *)messageWindowController
-{
-    AIChat * theChat;
-    AIMessageWindowController * oldMesssageWindowController = nil;
-    AIMessageViewController * messageViewController;
-    
-    AIMessageTabViewItem * tabViewItem = [self _messageTabForListObject:inObject];
-
-    if (!tabViewItem){
-	theChat = [[owner contentController] openChatOnAccount:nil withListObject:inObject];
-	tabViewItem = [self _messageTabForListObject:inObject];
-	oldMesssageWindowController = [self messageWindowControllerForContainer:tabViewItem];
-	[oldMesssageWindowController removeTabViewItemContainer:tabViewItem removingChat:NO];
-	[self _createMessageTabForChat:theChat inMessageWindowController:messageWindowController];
-	[self openChat:theChat]; //switch to it and configure as necessary
-	[self buildWindowMenu]; //Rebuild our window menu
-	
-    }else{
-	oldMesssageWindowController = [self messageWindowControllerForContainer:tabViewItem];
-	
-	theChat = [[tabViewItem messageViewController] chat];
-
-    if ((!messageWindowController) || ([[messageWindowController messageContainerArray] indexOfObjectIdenticalTo:tabViewItem] == NSNotFound)){ //tab view isn't in this window already (or we want a new window)
-
-	//same as other routine - consolidate
-
-	//Make sure our message window is loaded
-	if(!messageWindowController || ![messageWindowControllerArray count]){
-	    messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
-
-	    //Register to be notified when the message window closes
-	    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
-
-	    //Add the messageWindowController to our array
-	    [messageWindowControllerArray addObject:messageWindowController];
-	    activeWindowControllerIndex = [messageWindowControllerArray count] - 1;
-	} else {
-	    activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
-	}
-	
-	//Create the message view & tab
-	messageViewController = [[tabViewItem messageViewController] retain];
-	[oldMesssageWindowController removeTabViewItemContainer:tabViewItem removingChat:NO];
-
-	tabViewItem = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
-	[messageWindowController addTabViewItemContainer:tabViewItem];
-	
-    }
-    [self buildWindowMenu]; //Rebuild our window menu   
-
-    }
- 
-}
-//Show the message window
-- (IBAction)showMessageWindow:(id)sender
-{
-    if([messageWindowControllerArray count]){ //Show the message window only if it already exists (otherwise it would be empty)
-        if([sender isKindOfClass:[NSMenuItem class]]){ //Select the tab if called in response to a menu selection
-            id	container = [(NSMenuItem *)sender representedObject];
-	    AIMessageWindowController * messageWindowController = [self messageWindowControllerForContainer:(AIMessageTabViewItem *)container];
-
-            [messageWindowController selectTabViewItemContainer:(AIMessageTabViewItem *)container];
-
-	    activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController]; //update the index to the new window
-        }else{ //Otherwise just bring the window forward
-
-	    AIMessageWindowController * messageWindowController = [messageWindowControllerArray lastObject];
-	    [messageWindowController showWindow:nil];
-
+        tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
+        while((tabViewItem = [tabViewEnumerator nextObject])){
+            [self _transferMessageTabContainer:tabViewItem toWindow:targetMessageWindow];
         }
     }
 }
 
-- (AIMessageWindowController *) messageWindowControllerForContainer:(AIMessageTabViewItem *)container
+//Show the message window (Must ONLY be called by a window menu item)
+- (IBAction)showMessageWindow:(id)sender
 {
-    NSEnumerator *windowEnumerator = [messageWindowControllerArray objectEnumerator];
-    AIMessageWindowController *messageWindowController;
-    while (messageWindowController = [windowEnumerator nextObject])
-    {
-	NSArray	*containerArray = [messageWindowController messageContainerArray];
-	if ([containerArray indexOfObjectIdenticalTo:container] != NSNotFound)
-	    return messageWindowController;
-    }
+    AIMessageTabViewItem	*container;
 
-    return nil;
+    if([messageWindowControllerArray count] && [sender isKindOfClass:[NSMenuItem class]]){
+        container = (AIMessageTabViewItem *)[(NSMenuItem *)sender representedObject];
+        [container makeActive:nil];
+    }
 }
+
+//Called as a message window closes, destroy the window
+- (void)messageWindowWillClose:(NSNotification *)notification
+{
+    NSWindow			*theWindow = [notification object];
+    NSEnumerator 		*windowEnumerator;
+    AIMessageWindowController 	*messageWindowController;
+
+    //Search for this window in the windowcontroller array
+    windowEnumerator = [messageWindowControllerArray objectEnumerator];
+    while(messageWindowController = [windowEnumerator nextObject]){
+        if(theWindow == [messageWindowController window]){
+            [self _destroyMessageWindow:messageWindowController];
+        }
+    }
+}
+
 
 //Cycling -------------------------------------------------------------------------
 //Select the next message
 - (IBAction)nextMessage:(id)sender
 {
-    AIMessageWindowController *messageWindowController;
-    int loop, numWindows;
-    int	newIndex;
-    BOOL success = NO;
+    AIMessageWindowController 	*messageWindow;
 
-    if ((!activeContainer) || (activeContainer == contactListWindowController)) //contact list is active or nothing is
-    {
-	if ([messageWindowControllerArray count])
-	{	//warning may need check here
-	    messageWindowController = [messageWindowControllerArray objectAtIndex:0];
-	    [[[messageWindowController messageContainerArray] objectAtIndex:0] makeActive:nil];
-	    [messageWindowController showWindow:nil];
+    //contact list is active or nothing is
+    if ((!activeContainer) || (activeContainer == contactListWindowController)) {
+	if([messageWindowControllerArray count]){
+	    [[messageWindowControllerArray objectAtIndex:0] selectFirstTabViewItemContainer];
 	}
+
+    }else if([activeContainer isKindOfClass:[AIMessageTabViewItem class]]){ //dealing w/ a tab
+        //Get the selected message window
+        messageWindow = [self _messageWindowForContainer:activeContainer];
+
+        //Select the next tab
+        if(![messageWindow selectNextTabViewItemContainer]){
+            //If there are no more tabs in this window, move to the next window
+            int nextIndex = [messageWindowControllerArray indexOfObject:messageWindow] + 1;
+
+            if(nextIndex < [messageWindowControllerArray count]){
+                messageWindow = [messageWindowControllerArray objectAtIndex:nextIndex];
+            }else{ //Wrap around, select first tab of first window
+                messageWindow = [messageWindowControllerArray objectAtIndex:0];
+            }
+
+            [messageWindow selectFirstTabViewItemContainer];
+        }
     }
-    else
-    {
-	loop = activeWindowControllerIndex;
-	numWindows = [messageWindowControllerArray count];
-	while (loop < numWindows && !success)
-	{
-	    messageWindowController = [messageWindowControllerArray objectAtIndex:loop];
-	    NSArray	*containerArray = [messageWindowController messageContainerArray];
-
-	    if (loop == activeWindowControllerIndex) //we're looking at the current window
-		newIndex = [containerArray indexOfObject:activeContainer] + 1;
-	    else
-		newIndex = 0;
-	    
-	    if(newIndex < [containerArray count]){
-		[[containerArray objectAtIndex:newIndex] makeActive:nil];
-		activeWindowControllerIndex = loop;
-		[messageWindowController showWindow:nil];
-		success = YES;
-	    }
-
-
-	    loop++;
-	}
-	if (!success) { //the new index was greater than the last window's index
-	    [contactListWindowController makeActive:nil];
-	}
-    }
-
 }
 
 //Select the previous message
 - (IBAction)previousMessage:(id)sender
 {
-    AIMessageWindowController *messageWindowController;
-    int loop;
-    int	newIndex;
-    BOOL success = NO;
+    AIMessageWindowController *messageWindow;
 
-    if ((!activeContainer) || (activeContainer == contactListWindowController) ) //nothing or contact list is active
-    {
-	if ([messageWindowControllerArray count])
-	{	//warning may need check here
-	    messageWindowController = [messageWindowControllerArray lastObject];
-	    [[[messageWindowController messageContainerArray] lastObject] makeActive:nil];
-	    [messageWindowController showWindow:nil];
+    //contact list is active or nothing is
+    if ((!activeContainer) || (activeContainer == contactListWindowController)) {
+	if([messageWindowControllerArray count]){
+            [[messageWindowControllerArray lastObject] selectLastTabViewItemContainer];
 	}
-    }
-    else
-    {	loop = activeWindowControllerIndex;
-	while (loop >= 0 && !success)
-	{	    
-	    messageWindowController = [messageWindowControllerArray objectAtIndex:loop];
-	    NSArray	*containerArray = [messageWindowController messageContainerArray];
 
-	    if (loop == activeWindowControllerIndex) //we're looking at the current window
-		newIndex = [containerArray indexOfObject:activeContainer] - 1;
-	    else
-		newIndex = [containerArray count] - 1;
-	    
-	    if(newIndex >= 0){
-		[[containerArray objectAtIndex:newIndex] makeActive:nil];
-		activeWindowControllerIndex = loop;
-		[messageWindowController showWindow:nil];
-		success = YES;
-	    }
+    }else if([activeContainer isKindOfClass:[AIMessageTabViewItem class]]){ //dealing w/ a tab
+        //Get the selected message window
+        messageWindow = [self _messageWindowForContainer:activeContainer];
 
+        //Select the next tab
+        if(![messageWindow selectPreviousTabViewItemContainer]){
+            //If there are no more tabs in this window, move to the next window
+            int nextIndex = [messageWindowControllerArray indexOfObject:messageWindow] - 1;
 
-	    loop--;
-	}
-	if (!success) { //the new index was greater than the last window's index
-	    [contactListWindowController makeActive:nil];
-	}
+            if(nextIndex >= 0){
+                messageWindow = [messageWindowControllerArray objectAtIndex:nextIndex];
+            }else{ //Wrap around, select first tab of first window
+                messageWindow = [messageWindowControllerArray lastObject];
+            }
+
+            [messageWindow selectLastTabViewItemContainer];
+        }
     }
 
 }
 
+
 //Container Interface --------------------------------------------------------------
+//A container was opened
+- (void)containerDidOpen:(id <AIInterfaceContainer>)inContainer
+{
+    [self buildWindowMenu]; //Rebuild our window menu
+}
+
 //A container was closed
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer
 {
@@ -405,44 +332,15 @@
     //the incoming container is a tabViewItem
     if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
 	//Set the container's handle's content as viewed
-        [self clearUnviewedContentOfChat:[[(AIMessageTabViewItem *)inContainer messageViewController] chat]];
+        [self _clearUnviewedContentOfChat:[[(AIMessageTabViewItem *)inContainer messageViewController] chat]];
 
-	//Make sure the container's window is in the front
-	AIMessageWindowController * messageWindowController = [self messageWindowControllerForContainer:(AIMessageTabViewItem *)inContainer];
-	activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
-	lastUsedMessageWindowControllerIndex = activeWindowControllerIndex;
+	//Remember that we were on this container last (used for tab spawning)
+	lastUsedMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)inContainer];
     }
-    else
-	activeWindowControllerIndex = -1; //no active window controller -> contact list
-
+    
     //Update the close window/close tab menu item keys
-    if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
-        [menuItem_close setKeyEquivalent:@"W"];
-        [menuItem_closeTab setKeyEquivalent:@"w"];
-    }else{
-        [menuItem_close setKeyEquivalent:@"w"];
-
-        //Removing the key equivalant from our "Close Tab" menu item
-        //-----
-        //Because of a bug with NSMenuItem (Yay), we can't just do this:
-        // [menuItem_closeTab setKeyEquivalent:@""];
-        //
-        //Instead, we have to remove the menu item, remove its key
-        //equivalant, and then re-add it to the menu
-        [menuItem_closeTab retain];
-        {
-            NSMenu*	menu = [menuItem_closeTab menu];
-            int		index = [menu indexOfItem:menuItem_closeTab];
-
-            [menu removeItemAtIndex:index];
-            [menuItem_closeTab setKeyEquivalent:@""];
-            [menu insertItem:menuItem_closeTab atIndex:index];
-        }
-        [menuItem_closeTab release];
-
-    }
-
-    [self updateActiveWindowMenuItem];
+    [self _updateCloseMenuKeys];
+    [self _updateActiveWindowMenuItem];
 }
 
 //The containers were re-ordered
@@ -474,7 +372,7 @@
 
     //Increase the handle's unviewed count (If it's not the active container)
     if(messageTabContainer && messageTabContainer != activeContainer){
-        [self increaseUnviewedContentOfListObject:[object source]];
+        [self _increaseUnviewedContentOfListObject:[object source]];
     }
 }
 
@@ -485,7 +383,7 @@
     [AINewMessagePrompt newMessagePromptWithOwner:owner];
 }
 
-//
+//Open a container for the chat
 - (void)openChat:(AIChat *)inChat
 {
     AIMessageTabViewItem	*messageTabContainer = nil;
@@ -498,19 +396,33 @@
         //If one already exists, we want to use it for this new chat
         if(messageTabContainer){
             [[messageTabContainer messageViewController] setChat:inChat];
-	    [[self messageWindowControllerForContainer:messageTabContainer] showWindow:nil];
+
+            //Honor any temporary preference override for window spawning
+            if(forceIntoNewWindow || forceIntoTab){
+                [self _transferMessageTabContainer:messageTabContainer toWindow:(forceIntoNewWindow ? nil : [self _primaryMessageWindow])];
+            }
+
+            [messageTabContainer makeActive:nil];
         }
     }
-
+    
     //Create a tab for this chat
     if(!messageTabContainer){
-        messageTabContainer = [self _createMessageTabForChat:inChat];
+        if(forceIntoNewWindow || forceIntoTab){
+            messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:(forceIntoNewWindow ? nil : [self _primaryMessageWindow])];
+        }else{
+            messageTabContainer = [self _createMessageTabForChat:inChat];
+        }
     }
 
     //Display the account selector
     if(![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]){
         [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
     }
+
+    //Clear any temporary preference overriding
+    forceIntoNewWindow = NO;
+    forceIntoTab = NO;
 }
 
 //
@@ -528,11 +440,11 @@
 
     container = [self _messageTabForChat:inChat];
     if (container)
-	messageWindowController = [self messageWindowControllerForContainer:container];
+	messageWindowController = [self _messageWindowForContainer:container];
 
     if(messageWindowController){
         //Remove unviewed content for this contact
-        [self clearUnviewedContentOfChat:inChat];
+        [self _clearUnviewedContentOfChat:inChat];
 
         //Close it
         [messageWindowController removeTabViewItemContainer:container];
@@ -592,7 +504,6 @@
     NSEnumerator		*windowEnumerator;
     AIMessageWindowController 	*messageWindowController;
     int 			windowKey = 2;
-
 
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
@@ -655,7 +566,8 @@
 	}
     }
 
-    [self updateActiveWindowMenuItem];
+    [self _updateActiveWindowMenuItem];
+    [self _updateCloseMenuKeys];
 }
 
 //remove our menu items
@@ -667,7 +579,7 @@
 }
 
 //Updates the 'check' icon so it's next to the active window
-- (void)updateActiveWindowMenuItem
+- (void)_updateActiveWindowMenuItem
 {
     NSMenuItem		*item;
     NSEnumerator	*enumerator;
@@ -687,144 +599,67 @@
     }
 }
 
+//Update the close window/close tab menu item keys
+- (void)_updateCloseMenuKeys
+{
+    if([activeContainer isKindOfClass:[AIMessageTabViewItem class]] && [[[self _messageWindowForContainer:(AIMessageTabViewItem *)activeContainer] messageContainerArray] count] > 1){
+        [menuItem_close setKeyEquivalent:@"W"];
+        [menuItem_closeTab setKeyEquivalent:@"w"];
+    }else{
+        [menuItem_close setKeyEquivalent:@"w"];
+
+        //Removing the key equivalant from our "Close Tab" menu item
+        //-----
+        //Because of a bug with NSMenuItem (Yay), we can't just do this:
+        // [menuItem_closeTab setKeyEquivalent:@""];
+        //
+        //Instead, we have to remove the menu item, remove its key
+        //equivalant, and then re-add it to the menu
+        [menuItem_closeTab retain];
+        {
+            NSMenu*	menu = [menuItem_closeTab menu];
+            int		index = [menu indexOfItem:menuItem_closeTab];
+
+            [menu removeItemAtIndex:index];
+            [menuItem_closeTab setKeyEquivalent:@""];
+            [menu insertItem:menuItem_closeTab atIndex:index];
+        }
+        [menuItem_closeTab release];
+
+    }
+}
+
 //Validate a menu item
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL enabled = YES;
 
     if(menuItem == menuItem_closeTab){
-        if((activeWindowControllerIndex==-1) || (![[[messageWindowControllerArray objectAtIndex:activeWindowControllerIndex] window] isKeyWindow]) ) enabled = NO;
+        AIMessageWindowController *messageWindow = [self _messageWindowForContainer:activeContainer];
+
+        enabled = (messageWindow && [[messageWindow messageContainerArray] count] > 1);
+
     }else if(menuItem == menuItem_nextMessage){
         if(![messageWindowControllerArray count]) enabled = NO;
+
     }else if(menuItem == menuItem_previousMessage){
         if(![messageWindowControllerArray count]) enabled = NO;
+
     }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
 	enabled = ([[owner menuController] contactualMenuContact] != nil);
-    }else if (menuItem == menuItem_consolidate)
-    {
-	if ([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
+
+    }else if (menuItem == menuItem_consolidate){
+	if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
+
     }
 
     return(enabled);
 }
 
 
-//Messages ---------------------------------------------------------------------------
-//Returns the existing messsage tab for the specified chat
-- (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat
-{
-    NSEnumerator		*windowEnumerator;
-    NSEnumerator		*tabViewEnumerator;
-    AIMessageTabViewItem	*tabViewItem;
-    AIMessageWindowController 	*messageWindowController;
-
-    windowEnumerator = [messageWindowControllerArray objectEnumerator];
-
-    while (messageWindowController = [windowEnumerator nextObject])
-    {
-	//Check each message tab for a matching chat
-	tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
-	while((tabViewItem = [tabViewEnumerator nextObject])){
-	    if([[tabViewItem messageViewController] chat] == inChat){
-		return(tabViewItem); //We've found a match
-	    }
-	}
-    }
-    return(nil);
-}
-
-//Returns the existing messsage tab for the specified list object
-- (AIMessageTabViewItem *)_messageTabForListObject:(AIListObject *)inListObject
-{
-    NSEnumerator		*windowEnumerator;
-    NSEnumerator		*tabViewEnumerator;
-    AIMessageTabViewItem	*tabViewItem;
-    AIMessageWindowController 	*messageWindowController;
-
-    windowEnumerator = [messageWindowControllerArray objectEnumerator];
-
-    while (messageWindowController = [windowEnumerator nextObject])
-    {
-	//Check each message tab for a matching chat
-	tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
-	while((tabViewItem = [tabViewEnumerator nextObject])){
-	    if([[[tabViewItem messageViewController] chat] listObject] == inListObject){
-		return(tabViewItem); //We've found a match
-	    }
-	}
-    }
-    return(nil);
-}
-
-//create a tab for the chat.  add it to the first message window, creating one if necessary
-- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat
-{
-    AIMessageTabViewItem	*messageTabContainer;
-    AIMessageWindowController	*messageWindowController;
-    
-    if (![messageWindowControllerArray count] || alwaysCreateNewWindows)
-	messageWindowController = nil;
-    else if (useLastWindow)
-	messageWindowController = [messageWindowControllerArray objectAtIndex:lastUsedMessageWindowControllerIndex];
-    else
-	messageWindowController = [messageWindowControllerArray objectAtIndex:0];
-    
-    messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:messageWindowController];
-
-    return messageTabContainer;
-}
-
-//pass nil to create a new window for this tab; otherwise, put a tab containing inChat into the window controller by messageWindowController
-- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController
-{
-    AIMessageTabViewItem	*messageTabContainer;
-    AIMessageViewController	*messageViewController;
-
-    //Make sure our message window is loaded
-    if(!messageWindowController || ![messageWindowControllerArray count]){
-	messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
-
-	//Register to be notified when the message window closes
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
-
-	//Add the messageWindowController to our array
-	[messageWindowControllerArray addObject:messageWindowController];
-	activeWindowControllerIndex = [messageWindowControllerArray count] - 1;
-    } else {
-    activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
-    }
-    
-    //Create the message view & tab
-    messageViewController = [AIMessageViewController messageViewControllerForChat:inChat owner:owner];
-    messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
-
-    //Add it to the message window & Rebuild the window menu
-    [messageWindowController addTabViewItemContainer:messageTabContainer];
-    [self buildWindowMenu];
-
-    return(messageTabContainer);
-}
-//Called as the message window closes
-- (void)messageWindowWillClose:(NSNotification *)notification
-{
-    NSWindow * theWindow = [notification object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:[notification object]];
-
-    //search for this window out the windowcontroller array
-    NSEnumerator *windowEnumerator = [messageWindowControllerArray objectEnumerator];
-    AIMessageWindowController *messageWindowController;
-    while (messageWindowController = [windowEnumerator nextObject])
-    {
-	if (theWindow == [messageWindowController window]) {
-	    //Remove the window from our array, releasing the window in the process
-	    [messageWindowControllerArray removeObjectIdenticalTo:messageWindowController];
-	}
-    }
-    activeWindowControllerIndex = -1; //nothing's active; if another window takes over in a brief moment this will change
-}
-
-//
-- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject
+//Private ---------------------------------------------------------------------------
+//Increase unviewed content
+- (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject
 {
     AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
     int			currentUnviewed;
@@ -837,8 +672,8 @@
     [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
 }
 
-//
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat
+//Clear unviewed content
+- (void)_clearUnviewedContentOfChat:(AIChat *)inChat
 {
     NSEnumerator	*enumerator;
     AIListObject	*listObject;
@@ -849,16 +684,139 @@
         AIMutableOwnerArray	*ownerArray = [listObject statusArrayForKey:@"UnviewedContent"];
 
         if([[ownerArray objectWithOwner:listObject] intValue]){
-            //Set 'UnviewedContent' to 0
             [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:listObject];
-
-            //
             [[owner contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
         }
-
     }
 }
 
+//Returns the existing messsage tab for the specified chat
+- (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat
+{
+    NSEnumerator		*windowEnumerator;
+    AIMessageWindowController 	*messageWindow;
+    AIMessageTabViewItem	*tabViewItem;
+
+    windowEnumerator = [messageWindowControllerArray objectEnumerator];
+    while(messageWindow = [windowEnumerator nextObject]){
+        if(tabViewItem = (AIMessageTabViewItem *)[messageWindow containerForChat:inChat]) break;
+    }
+
+    return(tabViewItem);
+}
+
+//Returns the existing messsage tab for the specified list object
+- (AIMessageTabViewItem *)_messageTabForListObject:(AIListObject *)inListObject
+{
+    NSEnumerator		*windowEnumerator;
+    AIMessageWindowController 	*messageWindow;
+    AIMessageTabViewItem	*tabViewItem;
+
+    windowEnumerator = [messageWindowControllerArray objectEnumerator];
+    while(messageWindow = [windowEnumerator nextObject]){
+        if(tabViewItem = (AIMessageTabViewItem *)[messageWindow containerForListObject:inListObject]) break;
+    }
+
+    return(tabViewItem);
+}
+
+//Create a tab for the chat, adding it to the correct window according to our preferences
+- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat
+{
+    AIMessageWindowController	*messageWindowController;
+
+    if(![messageWindowControllerArray count] || alwaysCreateNewWindows){
+        messageWindowController = nil;
+    }else if(useLastWindow && lastUsedMessageWindow){
+        messageWindowController = lastUsedMessageWindow;
+    }else{
+        messageWindowController = [messageWindowControllerArray objectAtIndex:0];
+    }
+
+    return([self _createMessageTabForChat:inChat inMessageWindowController:messageWindowController]);
+}
+
+//pass nil to create a new window for this tab; otherwise, put a tab containing inChat into the window controller by messageWindowController
+- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController
+{
+    AIMessageTabViewItem	*messageTabContainer;
+    AIMessageViewController	*messageViewController;
+
+    //Create the message window, view, and tab
+    if(!messageWindowController) messageWindowController = [self _createMessageWindow];
+    messageViewController = [AIMessageViewController messageViewControllerForChat:inChat owner:owner];
+    messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
+
+    //Add it to the message window & rebuild the window menu
+    [messageWindowController addTabViewItemContainer:messageTabContainer];
+
+    return(messageTabContainer);
+}
+
+//Transfers an existing chat to the specified message window
+- (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)newMessageWindow
+{
+    AIMessageWindowController 	*oldMesssageWindow;
+
+    //Create a new window if nil was passed
+    if(!newMessageWindow) newMessageWindow = [self _createMessageWindow];
+
+    //Transfer container from one one window to another
+    oldMesssageWindow = [self _messageWindowForContainer:tabViewItem];
+    if(oldMesssageWindow != newMessageWindow){
+        [tabViewItem retain];
+        [oldMesssageWindow removeTabViewItemContainer:tabViewItem];
+        [newMessageWindow addTabViewItemContainer:tabViewItem];
+        [tabViewItem release];
+    }
+}
+
+//Returns the message window housing the specified container
+- (AIMessageWindowController *)_messageWindowForContainer:(AIMessageTabViewItem *)container
+{
+    NSEnumerator 		*windowEnumerator = [messageWindowControllerArray objectEnumerator];
+    AIMessageWindowController 	*messageWindowController;
+
+    while(messageWindowController = [windowEnumerator nextObject]){
+        if([messageWindowController containsMessageContainer:container]) break;
+    }
+
+    return(messageWindowController);
+}
+
+//Returns the 'primary' message window.  Returns nil if no message windows are present
+- (AIMessageWindowController *)_primaryMessageWindow
+{
+    if([messageWindowControllerArray count] != 0){ //Use our first message window as the primary
+        return([messageWindowControllerArray objectAtIndex:0]);
+    }else{
+        return(nil);
+    }
+}
+
+//Create a new message window
+- (AIMessageWindowController *)_createMessageWindow
+{
+    AIMessageWindowController	*messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
+
+    //Register to be notified when this message window closes
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
+
+    //Add the messageWindowController to our array
+    [messageWindowControllerArray addObject:messageWindowController];
+
+    return(messageWindowController);
+}
+
+//Destroy a message window
+- (void)_destroyMessageWindow:(AIMessageWindowController *)inWindow
+{
+    //Stop observing the message window
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:inWindow];
+
+    //Remove window from our array
+    [messageWindowControllerArray removeObject:inWindow];
+}
 
 @end
 

@@ -11,6 +11,7 @@
 
 @interface AITypingNotificationPlugin (PRIVATE)
 - (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat;
+- (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView;
 @end
 
 #define CAN_RECEIVE_TYPING	@"CanReceiveTyping"
@@ -45,24 +46,28 @@
 
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    //Ignored
+    [self _processTypingInView:inTextEntryView];
 }
 
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    [self _processTypingInView:inTextEntryView];
+}
+
+- (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
     AIChat		*chat = [inTextEntryView chat];
 
     if(chat){
         if([[inTextEntryView attributedString] length] == 0 && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
             [self _sendTyping:NO toChat:chat]; //Not typing
-            
+
         }else{
             if(![[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue] && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
                 [self _sendTyping:YES toChat:chat]; //Typing
             }
-            
         }
-    }
+    }    
 }
 
 - (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat

@@ -347,8 +347,7 @@
 
 - (void)_desiredSizeChanged
 {
-    [[owner notificationCenter] postNotificationName:Interface_ViewDesiredSizeDidChange
-                                              object:contactListView];
+    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
 }
 
 

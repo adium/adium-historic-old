@@ -44,7 +44,7 @@
     if(!chat){
         AIListContact	*containingContact = [inHandle containingContact];
 
-        chat = [[AIChat chatWithOwner:owner forAccount:self] retain];
+        chat = [AIChat chatWithOwner:owner forAccount:self];
         [chat addParticipatingListObject:containingContact];
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
         [[owner contentController] noteChat:chat forAccount:self];
@@ -245,7 +245,6 @@
 - (BOOL)closeChat:(AIChat *)inChat
 {
     [chatDict removeObjectForKey:[[inChat listObject] UID]];
-    
     return(YES); //Success
 }
 

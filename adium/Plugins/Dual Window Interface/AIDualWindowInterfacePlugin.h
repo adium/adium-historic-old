@@ -34,6 +34,7 @@
 @end
 
 @protocol AIContainerInterface <NSObject>
+- (void)containerDidOpen:(id <AIInterfaceContainer>)inContainer;
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer;
 - (void)containerDidBecomeActive:(id <AIInterfaceContainer>)inContainer;
 - (void)containerOrderDidChange;
@@ -57,14 +58,16 @@
 
     //messageWindow stuff
     NSMutableArray			*messageWindowControllerArray;
-    int					activeWindowControllerIndex;
-    int					lastUsedMessageWindowControllerIndex;
-
+    AIMessageWindowController		*lastUsedMessageWindow;
+    
     //Preferences
     AIDualWindowPreferences		*preferenceController;
     ESDualWindowMessageWindowPreferences *preferenceMessageController;
     BOOL				alwaysCreateNewWindows;
     BOOL				useLastWindow;
+    
+    BOOL				forceIntoNewWindow; //Override preference for next opened chat
+    BOOL				forceIntoTab; //Override preference for next opened chat
 }
 
 - (IBAction)showContactList:(id)sender;

@@ -171,19 +171,6 @@
     [messageView makeTextEntryViewFirstResponder];
 }
 
-//Close our tab
-- (BOOL)tabShouldClose:(id)sender
-{
-    //Close down our message view
-    return ([self tabShouldClose:sender closingChat:YES]);
-}
- 
-- (BOOL)tabShouldClose:(id)sender closingChat:(BOOL)allowedToCloseChat
-{
-    [messageView closeMessageViewClosingChat:allowedToCloseChat];
-    return YES;
-}
-
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {

@@ -29,7 +29,7 @@
 - (NSString *)labelString;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
-- (BOOL)tabShouldClose:(id)sender;
-- (BOOL)tabShouldClose:(id)sender closingChat:(BOOL)allowedToCloseChat;
+//- (BOOL)tabShouldClose:(id)sender;
+//- (BOOL)tabShouldClose:(id)sender closingChat:(BOOL)allowedToCloseChat;
 
 @end
