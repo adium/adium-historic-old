@@ -26,7 +26,7 @@
 
 	NSMutableArray					*listObjectArray;
 	
-    BOOL			windowIsClosing;
+    BOOL							windowIsClosing;
     AIDualWindowInterfacePlugin<AIContainerInterface> 	*interface;
 
 	BOOL			keepTabsArranged;
