@@ -1,10 +1,12 @@
 				Adium X Version History
 				-----------------------
 Version 0.54
+- Added support for displaying strikethrough, subscript, and superscript text
 - Consecutive messages are no longer combined after a 5 minutes of inactivity in the chat
 - Enabled user-sent colors in the Message View
 - Fixed group dragging
 - Fixed the remaining problems with tooltips
+- Fixed Webkit Message View for Japanese and Chinese users (the fix in 0.53 was incomplete)
 - Fixed issues related to custom links
 - Fixed a cosmetic issue as the contact list loaded
 - Fixed a bug which caused colors in messages to be sent improperly
