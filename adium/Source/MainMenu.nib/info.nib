@@ -9,9 +9,9 @@
 		<key>6598</key>
 		<string>343 357 386 44 0 0 1024 746 </string>
 		<key>6600</key>
-		<string>49 647 432 44 0 0 1280 832 </string>
+		<string>34 576 432 44 0 0 1024 746 </string>
 		<key>6946</key>
-		<string>99 390 65 32 0 0 1280 832 </string>
+		<string>78 348 65 32 0 0 1024 746 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>349.0</string>
@@ -21,8 +21,8 @@
 	</array>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>6946</integer>
 		<integer>6600</integer>
+		<integer>6946</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>7D24</string>
