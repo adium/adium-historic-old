@@ -1185,6 +1185,32 @@
 			settings = {
 			};
 		};
+		4BACB70103C8CB5E00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIMessageTabViewItem.h;
+			path = "Plugins/Dual Window Interface/AIMessageTabViewItem.h";
+			refType = 4;
+		};
+		4BACB70203C8CB5E00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIMessageTabViewItem.m;
+			path = "Plugins/Dual Window Interface/AIMessageTabViewItem.m";
+			refType = 4;
+		};
+		4BACB70303C8CB5E00A8010A = {
+			fileRef = 4BACB70103C8CB5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BACB70403C8CB5E00A8010A = {
+			fileRef = 4BACB70203C8CB5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BBC89A803B964B800A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3622,6 +3648,7 @@
 			children = (
 				F5793982033E756E01A8010A,
 				F570A5CE03704D3D01A8010A,
+				4BACB70203C8CB5E00A8010A,
 				F570A60503704E7201A8010A,
 				F5793984033E756E01A8010A,
 			);
@@ -4529,6 +4556,7 @@
 				F5793987033E756E01A8010A,
 				F5793989033E756E01A8010A,
 				F570A5D103704D3D01A8010A,
+				4BACB70303C8CB5E00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4550,6 +4578,7 @@
 				F5793988033E756E01A8010A,
 				F579398A033E756E01A8010A,
 				F570A5D203704D3D01A8010A,
+				4BACB70403C8CB5E00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6510,10 +6539,11 @@
 		};
 		F579398D033E757801A8010A = {
 			children = (
-				F570A5CD03704D3D01A8010A,
-				F579397D033E756E01A8010A,
 				F579397F033E756E01A8010A,
+				F579397D033E756E01A8010A,
 				F5793981033E756E01A8010A,
+				F570A5CD03704D3D01A8010A,
+				4BACB70103C8CB5E00A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;

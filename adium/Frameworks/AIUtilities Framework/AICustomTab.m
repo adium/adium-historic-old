@@ -36,6 +36,12 @@
     return([[[self alloc] initWithFrame:frameRect forTabViewItem:inTabViewItem] autorelease]);
 }
 
+//Return the tab view item this tab is representing
+- (NSTabViewItem *)tabViewItem
+{
+    return(tabViewItem);
+}
+
 //Set the selected state of this tab
 - (void)setSelected:(BOOL)inSelected
 {
@@ -50,39 +56,10 @@
     [self setNeedsDisplay:YES];
 }
 
-//Return the tab view item this tab is representing
-- (NSTabViewItem *)tabViewItem
-{
-    return(tabViewItem);
-}
-
-//Set the title of this tab
-- (void)setTitle:(NSAttributedString *)inTitle
-{
-    if(inTitle != title){
-        [title release];
-        title = [inTitle retain];
-    }
-}
-
 //Return the desired size of this tab
 - (NSSize)size
 {
-    NSImage	*left, *right;
-
-    //Pick the correct images depending on our state
-    if(depressed){
-        left = tabPushLeft;
-        right = tabPushRight;
-    }else if(selected){
-        left = tabFrontLeft;
-        right = tabFrontRight;
-    }else{
-        left = tabBackLeft;
-        right = tabBackRight;
-    }
-
-    return( NSMakeSize([left size].width + [title size].width + [right size].width, [left size].height) );
+    return( NSMakeSize([tabFrontLeft size].width + [tabViewItem sizeOfLabel:NO].width + [tabFrontRight size].width, [tabFrontLeft size].height) );
 }
 
 
@@ -101,8 +78,7 @@
     tabPushLeft = [[AIImageUtilities imageNamed:@"tab_push_left" forClass:[self class]] retain];
     tabPushMiddle = [[AIImageUtilities imageNamed:@"tab_push_middle" forClass:[self class]] retain];
     tabPushRight = [[AIImageUtilities imageNamed:@"tab_push_right" forClass:[self class]] retain];
-    
-    title = [[NSString stringWithString:@"Custom Tab"] retain];
+
     tabViewItem = [inTabViewItem retain];
     selected = NO;
     dragging = NO;
@@ -113,7 +89,6 @@
 
 - (void)dealloc
 {
-    [title release];
     [tabViewItem release];
 
     [tabBackLeft release];
@@ -129,70 +104,32 @@
     [super dealloc];
 }
 
-//Install cursor rects for our 'grippy' spot
-- (void)resetCursorRects
-{
-    NSCursor	*cursor;
-
-    //Discard any existing rects
-    [self discardCursorRects];
-    
-    if(selected){
-        if(!dragging){
-            cursor = [AICursorUtilities openGrabHandCursor];
-
-            //Add a cursor rect for our grippy spot
-            [self addCursorRect:[self grippyRect] cursor:cursor];
-            [cursor setOnMouseEntered:YES];
-
-        }else{
-/*            NSRect	visibleRect = [self visibleRect];
-            visibleRect.origin.x -= 5;
-            visibleRect.size.width += 5;*/
-        
-            cursor = [AICursorUtilities closedGrabHandCursor];
-            //The closed grab cursor needs to stay on throughout the drag
-            //For some reason I was having trouble making it stick with a set
-            //command...This gets the job done good enough to excuse the nastiness
-            //of it :)
-            [self addCursorRect:[self visibleRect] cursor:cursor];
-            [cursor setOnMouseEntered:YES];
-            [cursor setOnMouseExited:YES];
-        }
-    }
-}
-
 //Draw
 - (void)drawRect:(NSRect)rect
 {
     NSImage	*left, *middle, *right;
-    int		titleWidth, leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge;
+    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge;
     NSRect	sourceRect, destRect;
+    NSSize	labelSize;
     
     //Pick the correct images depending on our state
     if(depressed){
-        left = tabPushLeft;
-        middle = tabPushMiddle;
-        right = tabPushRight;
+        left = tabPushLeft; middle = tabPushMiddle; right = tabPushRight;
     }else if(selected){
-        left = tabFrontLeft;
-        middle = tabFrontMiddle;
-        right = tabFrontRight;
+        left = tabFrontLeft; middle = tabFrontMiddle; right = tabFrontRight;
     }else{
-        left = tabBackLeft;
-        middle = tabBackMiddle;
-        right = tabBackRight;
+        left = tabBackLeft; middle = tabBackMiddle; right = tabBackRight;
     }
     
     //Pre-calc some dimensions
-    titleWidth = [title size].width;
+    labelSize = [tabViewItem sizeOfLabel:NO];
     leftCapWidth = [left size].width;
     rightCapWidth = [right size].width;
     middleSourceWidth = [middle size].width;
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
 
     //Draw the left cap
-    [left compositeToPoint:NSMakePoint(rect.origin.x,rect.origin.y) operation:NSCompositeSourceOver];
+    [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
 
     //Draw the middle
     sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
@@ -209,19 +146,55 @@
     }
         
     //Draw the title
-    [title drawAtPoint:NSMakePoint(rect.origin.x + leftCapWidth, rect.origin.y + 4)];
-    
+    destRect = NSMakeRect(rect.origin.x + leftCapWidth,
+                          rect.origin.y + ((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          labelSize.width,
+                          labelSize.height);
+    [tabViewItem drawLabel:NO inRect:destRect];
+
     //Draw the right cap
     [right compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
+}
+
+
+//Grippy Spot --------------------------------------------------------------------
+//Install cursor rects for our 'grippy' spot
+- (void)resetCursorRects
+{
+    NSCursor	*cursor;
+
+    //Discard any existing rects
+    [self discardCursorRects];
+
+    if(selected){
+        if(!dragging){
+            cursor = [AICursorUtilities openGrabHandCursor];
+
+            //Add a cursor rect for our grippy spot
+            [self addCursorRect:[self grippyRect] cursor:cursor];
+            [cursor setOnMouseEntered:YES];
+
+        }else{
+            cursor = [AICursorUtilities closedGrabHandCursor];
+            //The closed grab cursor needs to stay on throughout the drag
+            //For some reason I was having trouble making it stick with a set
+            //command...This gets the job done good enough to excuse the nastiness
+            //of it :)
+            [self addCursorRect:[self visibleRect] cursor:cursor];
+            [cursor setOnMouseEntered:YES];
+            [cursor setOnMouseExited:YES];
+        }
+    }
 }
 
 //Returns the rect of our grippy spot
 - (NSRect)grippyRect
 {
-    return(NSMakeRect(1, 2, [tabFrontLeft size].width - 2, [tabFrontLeft size].height - 8));
+    return(NSMakeRect(2, 3, [tabFrontLeft size].width - 2, [tabFrontLeft size].height - 12));
 }
 
-//Mouse tracking / Clicking ------
+
+//Mouse tracking / Clicking -------------------------------------------
 - (void)mouseDown:(NSEvent *)theEvent
 {
     NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];

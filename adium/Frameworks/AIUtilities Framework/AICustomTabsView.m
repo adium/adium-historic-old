@@ -95,14 +95,14 @@
     for(loop = 0;loop < [tabView numberOfTabViewItems];loop++){
         NSTabViewItem		*tabViewItem = [tabView tabViewItemAtIndex:loop];
         AICustomTab		*tab;
-        NSAttributedString	*titleString;
+//        NSAttributedString	*titleString;
         
         //Create a new tab
         tab = [AICustomTab customTabWithFrame:NSMakeRect(0, 0, 100, [self frame].size.height) forTabViewItem:tabViewItem]; //100 is arbitrary
         [tab setSelected:(tabViewItem == [tabView selectedTabViewItem])];
 
-        titleString = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:[NSDictionary dictionary]];
-        [tab setTitle:[titleString autorelease]];
+//        titleString = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:[NSDictionary dictionary]];
+//        [tab setTitle:[titleString autorelease]];
         [tab setFrameSize:[tab size]];
 
         //Add the tab to our view, and to our tab array
