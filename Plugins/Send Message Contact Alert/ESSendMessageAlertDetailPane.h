@@ -10,7 +10,7 @@
     IBOutlet	NSButton			*button_useAnotherAccount;
 	IBOutlet	NSTextView			*textView_message;
 
-	AIListObject					*toListObject;
+	AIListObject					*toContact;
 }
 
 @end
