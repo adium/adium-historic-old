@@ -118,6 +118,7 @@
 - (void)closeController;
 - (void)finishIniting;
 - (NSArray *)stateArray;
+- (NSArray *)stateArrayForMenuItems;
 
 - (void)registerStatus:(NSString *)statusName
 	   withDescription:(NSString *)description
