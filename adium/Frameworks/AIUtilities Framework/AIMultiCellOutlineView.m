@@ -48,19 +48,23 @@
 	[super dealloc];
 }
 
+//Cell used for content rows
 - (void)setContentCell:(id)cell{
 	[contentCell release]; contentCell = [cell retain];
 	contentRowHeight = [contentCell cellSize].height;
 	[self setRowHeight:contentRowHeight];
 	[self resetRowHeightCache];
 }
+- (id)contentCell{
+	return(contentCell);
+}
 
+//Cell used for group rows
 - (void)setGroupCell:(id)cell{
 	[groupCell release]; groupCell = [cell retain];
 	groupRowHeight = [groupCell cellSize].height;
 	[self resetRowHeightCache];
 }
-#warning hmm
 - (id)groupCell{
 	return(groupCell);
 }

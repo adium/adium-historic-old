@@ -83,7 +83,8 @@
 	[self _setVisibleCount:(inVisible ? visibleCount + 1 : visibleCount - 1)];
 	
 	//Sort the contained object to or from the bottom (invisible section) of the group
-#warning send a notification for the object, the tabs will use this to auto-arrange.  Then, we send a notification for the group, which the contact list needs to correctly update
+	//Dend a notification for the object, the tabs will use this to auto-arrange.  Then, we send
+	//a notification for the group, which the contact list needs to correctly update
 	[[adium contactController] sortListObject:inObject];
 	[[adium contactController] sortListObject:self];
 }

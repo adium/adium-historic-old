@@ -17,7 +17,6 @@
 }
 
 + (void)joinChatWindow;
-+ (void)closeSharedInstance;
 
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)joinChat:(id)sender;
