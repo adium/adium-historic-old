@@ -574,6 +574,7 @@
 			dependencies = (
 				4BF1F04F03D84D1E00A8010A,
 				4BF1F05203D84D1E00A8010A,
+				9E6C448F048D6CC700415B22,
 				4B64792403DB613700A8010A,
 				4B64792503DB613700A8010A,
 				4B64792603DB613700A8010A,
@@ -723,6 +724,7 @@
 				4BDF17250450CBDE00A8010A,
 				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
+				9E6C4490048D6DAA00415B22,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2795,6 +2797,7 @@
 				4B9E73E003F7085300A8010A,
 				4BDDCA0A041104ED00A8010A,
 				4B7BD8660412584500A8010A,
+				9E6C4494048D6DEB00415B22,
 				4B4FA11704125F3F00A8010A,
 				4B0473C2043E443A00A8010A,
 				4B55411E044DF01600A8010A,
@@ -8185,9 +8188,23 @@
 //9E2
 //9E3
 //9E4
+		9E1D5C54048EB63C00415B22 = {
+			isa = PBXFileReference;
+			name = libcrypto.dylib;
+			path = /usr/lib/libcrypto.dylib;
+			refType = 0;
+		};
+		9E1D5C55048EB63C00415B22 = {
+			fileRef = 9E1D5C54048EB63C00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E2E3068046CA9BF00415B22 = {
 			buildActionMask = 2147483647;
 			files = (
+				9E6C448B048D681F00415B22,
+				9E6C448D048D682100415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8202,6 +8219,8 @@
 		9E2E306A046CA9BF00415B22 = {
 			buildActionMask = 2147483647;
 			files = (
+				9E6C448C048D682100415B22,
+				9E6C448E048D682200415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8212,6 +8231,7 @@
 				9E2E3079046CAB2F00415B22,
 				9E2E307A046CAB3000415B22,
 				9E2E307B046CAB3000415B22,
+				9E1D5C55048EB63C00415B22,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8300,6 +8320,7 @@
 				9E2E3076046CAB0000415B22,
 				9E2E307D046CB05F00415B22,
 				9E2E307E046CB05F00415B22,
+				9E1D5C54048EB63C00415B22,
 			);
 			isa = PBXGroup;
 			name = MSN;
@@ -8351,6 +8372,46 @@
 			name = MSNAccount.m;
 			path = "Plugins/MSN Service/MSNAccount.m";
 			refType = 4;
+		};
+		9E6C448B048D681F00415B22 = {
+			fileRef = 9E2E3075046CAB0000415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6C448C048D682100415B22 = {
+			fileRef = 9E2E3076046CAB0000415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6C448D048D682100415B22 = {
+			fileRef = 9E2E307D046CB05F00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6C448E048D682200415B22 = {
+			fileRef = 9E2E307E046CB05F00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6C448F048D6CC700415B22 = {
+			isa = PBXTargetDependency;
+			target = 9E2E306D046CA9BF00415B22;
+		};
+		9E6C4490048D6DAA00415B22 = {
+			fileRef = 9E2E306E046CA9BF00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6C4494048D6DEB00415B22 = {
+			fileRef = 9E2E306E046CA9BF00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9E95316303C8E08800415B22 = {
 			fileEncoding = 30;

@@ -6,18 +6,16 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 #import "MSNServicePlugin.h"
 #import "MSNAccount.h"
 
-@implementation AIMSNServicePlugin
+@implementation MSNServicePlugin
 
 - (void)installPlugin
 {
-	NSLog(@"Hello");
-        
         handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"MSN"
                           description:@"MSN Messenger Service"
                           image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]

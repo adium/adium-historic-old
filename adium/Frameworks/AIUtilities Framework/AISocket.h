@@ -29,6 +29,7 @@
 - (BOOL)readyForReceiving;
 - (void)sendData:(NSData *)inData;
 - (BOOL)getData:(NSData **)outData ofLength:(int)inLength;
+- (void)getDataToNewline:(NSData **)outData;
 - (void)removeDataBytes:(int)inLength;
 - (BOOL)isValid;
 - (NSString *)hostIP;
