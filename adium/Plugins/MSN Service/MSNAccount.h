@@ -23,11 +23,16 @@
 @interface MSNAccount : AIAccount <AIAccount_Content, AIAccount_Handles>
 {
     AISocket 		*socket;		// The connection socket
-    int			connectionPhase;	// Offline/Connecting/Online/Disconnecting
+    int				connectionPhase;	// Steps involved in signing on
+									// Offline/Connecting/Online/Disconnecting
+	NSTimer			*stepTimer;
 
     NSString		*screenName;		// Current signed on actualSN
     NSString		*password;		// Current signed on password
     NSString		*friendlyName;		// Current Friendly name
+	
+	NSString		*temp;				// Used while connecting to store a string
+										// across steps
     
     NSMutableDictionary	*handleDict;		// Dict of all our handles.
 }
