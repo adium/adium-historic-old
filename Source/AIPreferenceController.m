@@ -229,7 +229,7 @@
 	}
 
 	//Add our new observer
-	[groupObservers addObject:observer];
+	[groupObservers addObject:[NSValue valueWithNonretainedObject:observer]];
 	
 	//Blanket change notification for initialization
 	[observer preferencesChangedForGroup:group
@@ -246,9 +246,10 @@
 {
 	NSEnumerator	*enumerator = [observers objectEnumerator];
 	NSMutableArray	*observerArray;
-	
+	NSValue			*observerValue = [NSValue valueWithNonretainedObject:observer];
+
 	while(observerArray = [enumerator nextObject]){
-		[observerArray removeObject:observer];
+		[observerArray removeObject:observerValue];
 	}
 }
 
@@ -272,9 +273,11 @@
     }else{
 		NSDictionary	*preferenceDict = [self cachedPreferencesWithDefaultsForGroup:group object:object];
 		NSEnumerator	*enumerator = [[observers objectForKey:group] objectEnumerator];
-		id				observer;
+		NSValue			*observerValue;
 
-		while(observer = [enumerator nextObject]){
+		while(observerValue = [enumerator nextObject]){
+			id observer = [observerValue nonretainedObjectValue];
+
 			[observer preferencesChangedForGroup:group
 											 key:key
 										  object:object
