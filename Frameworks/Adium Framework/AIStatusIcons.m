@@ -54,7 +54,7 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 
 //Retrieve the correct status icon for the internal status ID
 //We will probably want to remove this method and have everyone pass us list objects instead
-+ (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
++ (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection
 {
 	NSImage				*statusIcon;
 	
