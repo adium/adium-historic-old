@@ -270,7 +270,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //
 + (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName
 {
-	NSDictionary	*setDict;
 	BOOL			success;
 	
 	//Duplicate the set
