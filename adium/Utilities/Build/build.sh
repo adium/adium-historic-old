@@ -20,6 +20,10 @@ cvs update -Pd
 
 #Delete the Project Builder Project
 rm -r "Adium.pbproj"
+
+#Delete the prefix header from before, just in case
+rm -r "build/PrefixHeaders"
+
 #Log everything
 ../cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
 ../cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file ChangeLog
