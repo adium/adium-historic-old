@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; closeWindow = id; update = id; }; 
+            CLASS = ESVersionCheckerWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_checkAutomatically" = NSButton; 
+                "textField_updateAvailable" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
