@@ -7,7 +7,7 @@
 
 
 //File transfers
-@interface ESFileTransferController : NSObject {
+@interface ESFileTransferController : NSObject <AIEventHandler> {
 	
 	IBOutlet	AIAdium		*owner;
 	
@@ -18,6 +18,7 @@
 - (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)beganFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)transferCanceled:(ESFileTransfer *)fileTransfer;
+- (void)transferComplete:(ESFileTransfer *)fileTransfer;
 
 - (void)sendFile:(NSString *)inFile toListContact:(AIListContact *)listContact;
 - (void)requestForSendingFileToListContact:(AIListContact *)listContact;
