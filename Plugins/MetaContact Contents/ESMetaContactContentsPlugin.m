@@ -50,12 +50,7 @@
 			
 			enumerator = [listContacts objectEnumerator];
 			while(contact = [enumerator nextObject]){
-				NSImage	*statusIcon,	*serviceIcon;
-				NSTextAttachmentCell	*cell;
-				NSTextAttachment		*attachment;
-				
-				cell = [[NSTextAttachmentCell alloc] init];
-				attachment = [[NSTextAttachment alloc] init];
+				NSImage	*statusIcon, *serviceIcon;
 				
 				if (shouldAppendString){
 					[entryString appendString:@"\r"];
@@ -66,7 +61,13 @@
 				statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
 				
 				if(statusIcon){
+					NSTextAttachment		*attachment;
+					NSTextAttachmentCell	*cell;
+						
+					cell = [[[NSTextAttachmentCell alloc] init] autorelease];
 					[cell setImage:statusIcon];
+					
+					attachment = [[[NSTextAttachment alloc] init] autorelease];
 					[attachment setAttachmentCell:cell];
 					
 					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
@@ -77,16 +78,18 @@
 				serviceIcon = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal];
 				//[[[listContact account] menuImage] imageByScalingToSize:NSMakeSize(9,9)];
 				if (serviceIcon){
-
+					NSTextAttachment		*attachment;
+					NSTextAttachmentCell	*cell;
+					
+					cell = [[[NSTextAttachmentCell alloc] init] autorelease];
 					[cell setImage:serviceIcon];
+					
+					attachment = [[[NSTextAttachment alloc] init] autorelease];
 					[attachment setAttachmentCell:cell];
 					
 					[entryString appendString:@" "];
 					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
 				}
-				
-				[cell release];
-				[attachment release];				
 			}
 		}
 	}
