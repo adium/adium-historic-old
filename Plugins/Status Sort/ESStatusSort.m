@@ -489,16 +489,16 @@ int statusSort(id objectA, id objectB, BOOL groups)
 							break;
 
 						case Idle:
-							status = idle[objectCounter];
+							status = (idle[objectCounter] != 0);
 							break;
 
 						case Away_And_Idle:
-							status =  away[objectCounter] && idle[objectCounter];
+							status =  away[objectCounter] && (idle[objectCounter] != 0);
 							definitelyFinishedIfSuccessful = YES;
 							break;
 							
 						case Unavailable:
-							status =  away[objectCounter] || idle[objectCounter];
+							status =  away[objectCounter] || (idle[objectCounter] != 0);
 							onlyIfWeAintGotNothinBetter = YES;
 							break;
 							
@@ -531,8 +531,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			
 			//If one idle time is greater than the other and we want to sort on that basis, we have an ordering
 			if (sortIdleTime){
-				//Ordering is determined if either has a positive idle time and their idle times are not identical
-				if ((idle[0] || idle[1]) && (idle[0] != idle[1])){
+				//Ordering is determined if either has a idle time and their idle times are not identical
+				if (((idle[0] != 0) || (idle[1] != 0)) && (idle[0] != idle[1])){
 					if(idle[0] > idle[1]){
 						return(NSOrderedDescending);
 					}else{
