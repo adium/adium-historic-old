@@ -75,7 +75,7 @@
                                              forKey:KEY_USE_LAST_WINDOW
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }else if (sender == autohide_tabBar){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[autohide_tabBar state]]
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:([autohide_tabBar state]==NSOnState)]
 				      forKey:KEY_AUTOHIDE_TABBAR
 				       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }

@@ -267,7 +267,6 @@
 	    AIMessageWindowController * messageWindowController = [self messageWindowControllerForContainer:(AIMessageTabViewItem *)container];
 
             [messageWindowController selectTabViewItemContainer:(AIMessageTabViewItem *)container];
-            [messageWindowController showWindow:nil];
 
 	    activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController]; //update the index to the new window
         }else{ //Otherwise just bring the window forward
@@ -411,7 +410,6 @@
 
 	//Make sure the container's window is in the front
 	AIMessageWindowController * messageWindowController = [self messageWindowControllerForContainer:(AIMessageTabViewItem *)inContainer];
-	[messageWindowController showWindow:nil];
 	activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
 	lastUsedMessageWindowControllerIndex = activeWindowControllerIndex;
     }
