@@ -287,12 +287,22 @@ Message Sending:
 		( Cons )
 		
 		( Comments )
-		Evan: This should be done via "/all" or something instead of option-send... that's too close to "insert a line break" for my tastes.
+			Evan: This should be done via "/all" or something instead of option-send... that's too close to "insert a line break" for my tastes.
+		
+	# Mass messaging
+		( Pros )
+		
+		( Cons )
+		
+		( Comments )
+			Tick: This does give the ability for people to be spammed, but I think the good would outweigh the evil in this feature.
 
 Contact List Display:
 	#Nested groups are causing issues.  We need to think about keeping them around or not
 		( Pros )
-		
+			Nested groups open up the potential of expanding meta contacts
+			Nested groups are good for organization
+			They're fun
 		( Cons )
 			They make re-ordering groups difficult
 			They have a very hard to fix bug with collapse/expand memory
@@ -347,6 +357,7 @@ Multi User Chat
 		( Pros )
 		
 		( Cons )
+		
 Account / Connect panel
 	# A check box or something to easily connect an account
 		( Pros )
@@ -375,6 +386,7 @@ Stuff we have to wait on
 ----------------------------------------
 
 # Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
+
 libgaim 0.76
 
 
