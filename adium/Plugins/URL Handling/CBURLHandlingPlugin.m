@@ -43,9 +43,10 @@
         
         if([[url scheme] isEqualToString:@"aim"]){
             if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                                
+				NSLog(@"%@\n\n%@",[url queryArgumentForKey:@"message"],[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]);
                 [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] 
 									   onService:@"AIM" 
-									 withMessage:[url queryArgumentForKey:@"message"]];
+									 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
             }
             
         }else if([[url scheme] isEqualToString:@"ymsgr"]){
