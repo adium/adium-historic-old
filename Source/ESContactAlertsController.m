@@ -39,9 +39,9 @@ DeclareString(KeyOneTimeAlert);
 
 - (void)closeController
 {
-	[globalOnlyEventHandlers release];
-	[eventHandlers release];
-	[actionHandlers release];
+	[globalOnlyEventHandlers release]; globalOnlyEventHandlers = nil;
+	[eventHandlers release]; eventHandlers = ni;
+	[actionHandlers release]; actionHandlers = nil;
 }
 
 
