@@ -25,6 +25,7 @@ extern void* objc_getClass(const char *name);
 
 @interface AIMiChatAccount (PRIVATE)
 - (void)processProperties:(NSArray *)inProperties;
+- (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle;
 @end
 
 @implementation AIMiChatAccount
@@ -174,23 +175,44 @@ extern void* objc_getClass(const char *name);
                                                     userInfo:nil];
 }
 
-//Received when out login status changes
+//Received when our login status changes
 - (oneway void)service:(id)inService loginStatusChanged:(int)inStatus message:(id)inMessage reason:(int)inReason
 {
+    NSEnumerator	*enumerator;
+    AIContactHandle	*handle;
+    
     switch(inStatus){
+        case 0: //Offline
+            //Flush all our handle status flags
+            enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:self] objectEnumerator];
+            while((handle = [enumerator nextObject])){
+                [self removeAllStatusFlagsFromHandle:handle];
+            }
+
+            //Clean up and close down
+            [screenName release]; screenName = nil;
+            [self setStatus:STATUS_OFFLINE];
+        break;
+            
+        case 1: //Error
+            NSLog(@"Error (status?): %@",inMessage);
+        break;
+            
+        case 2: //Disconnecting
+            [self setStatus:STATUS_DISCONNECTING];
+        break;
+            
         case 3: //Connecting
             [self setStatus:STATUS_CONNECTING];
-            NSLog(@"Connecting: %@",inMessage);
         break;
 
         case 4: //Online
             [self setStatus:STATUS_ONLINE];
-            NSLog(@"Connected: %@",inMessage);
 
             //
             screenName = [[AIMService loginID] copy];
 
-            //Squelch soudns and updates while we sign on
+            //Squelch sounds and updates while we sign on
             [[owner contactController] delayContactListUpdatesFor:10];
             
             //Give iChatAgent 2 seconds to flood us with update events
@@ -381,11 +403,23 @@ extern void* objc_getClass(const char *name);
 //    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);
 }
 - (oneway void)openNotesChanged:(id)unknown{
-    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
+//    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
 }
 - (oneway void)myStatusChanged:(id)unknown{
-    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
+//    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
 }
 
+//Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle
+- (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle
+{
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",nil];
+    int		loop;
+
+    for(loop = 0;loop < [keyArray count];loop++){
+        [[handle statusArrayForKey:[keyArray objectAtIndex:loop]] removeObjectsWithOwner:self];
+    }
+
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
+}
 
 @end
