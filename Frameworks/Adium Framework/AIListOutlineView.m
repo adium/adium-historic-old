@@ -135,59 +135,6 @@
 	return([self arrayOfSelectedItems]);
 }
 
-#warning still need this?
-//Our default drag image will be cropped incorrectly, so we need a custom one here
-//- (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
-//{
-//	NSRect			rowRect, cellRect;
-//	int				count = [dragRows count];
-//	
-//	int				firstRow = [[dragRows objectAtIndex:0] intValue];
-//	NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-//	NSCell			*cell;
-//	NSImage			*image;
-//	
-//	//Since our cells draw outside their bounds, this drag image code will create a drag image as big as the table row
-//	//and then draw the cell into it at the regular size.  This way the cell can overflow its bounds as normal and not
-//	//spill outside the drag image.
-//	rowRect = [self rectOfRow:firstRow];
-//	image = [[NSImage alloc] initWithSize:NSMakeSize(rowRect.size.width,
-//													 rowRect.size.height*count + [self intercellSpacing].height*(count-1))];
-//
-//	
-//NSEnumerator	*enumerator = [dragRows objectEnumerator];
-//NSNumber		*rowNumber;
-//int				row;
-//float			yOffset = 0;
-//
-//	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
-//	[image setFlipped:YES];
-//	[image lockFocus];
-//
-//	while (rowNumber = [enumerator nextObject]){
-//		row = [rowNumber intValue];
-//		cell = [column dataCellForRow:row];
-//		cellRect = [self frameOfCellAtColumn:0 row:row];
-//		
-//		//Render the cell
-//		[[self dataSource] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:row]];
-////		NSLog(@"%i is %f %f %f = %f",row,cellRect.origin.y,rowRect.origin.y,yOffset,cellRect.origin.y - rowRect.origin.y + yOffset);
-//		[cell drawWithFrame:NSMakeRect(cellRect.origin.x - rowRect.origin.x, /*cellRect.origin.y - rowRect.origin.y +*/ yOffset,cellRect.size.width,cellRect.size.height)
-//					 inView:self];
-//		yOffset += (rowRect.size.height + [self intercellSpacing].height);
-//	}
-//	
-//	[image unlockFocus];
-//	[image setFlipped:NO];
-//	
-//	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
-//	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
-//	dragImageOffset->x = (rowRect.size.width / 2.0) - clickLocation.x;
-//	
-//	return([image autorelease]);
-//}
-
-
 //Parent window transparency -----------------------------------------------------------------
 //This is a hack and a complete performance disaster, but required because of bugs with transparency in 10.3 :(
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update
