@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
 <title>Performance / Maintenance</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -33,9 +33,9 @@
       knowing if any other process is looking at the same record its modified.
       Therefore, any process/transaction that started looking at the table
       before the record was modified see the old version, even if the record
-      hsa already been changed.</p>
+      has already been changed.</p>
 <p>This problem is very simple to solve.  All that needs to be run is
-      PostgreSQL's <code>VACCUM</code> command.  This flags all old tuples to
+      PostgreSQL's <code>VACUUM</code> command.  This flags all old tuples to
       be overwritten the next time they need to be.  It's meant to be run in
       an update/delete heavy application, and the adium stuff isn't very
       update/delete heavy under normal use, but it's still a good idea to run
@@ -81,7 +81,7 @@ vacuumdb -z</pre></div>
    has a nasty query plan, and it's very difficult to learn anything
    constructive from it.</p>
 <p>The important parts of the example above are boldfaced.
-   I've boldfaced the term &quot;Index Scan&quot;, because that indicates it is using
+   I've boldfaced the term "Index Scan", because that indicates it is using
    the index (named adium_msg_date_sender_recipient) to determine where the
    proper dates are.  This is good.  Index Scans are much faster than
    Sequential Scans for large tables.</p>
