@@ -373,4 +373,9 @@
     return(foundChats);
 }
 
+- (NSArray *)chatArray
+{
+    return chatArray;
+}
+
 @end

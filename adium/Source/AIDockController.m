@@ -407,9 +407,6 @@
 }
 - (void)bounceWithTimer:(NSTimer *)timer
 {
-    //Stop any current behavior
-    [self _stopBouncing];
-
     //Bounce
     [self _singleBounce];
 }

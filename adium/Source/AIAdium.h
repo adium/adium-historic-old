@@ -338,6 +338,7 @@ typedef enum {
 - (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject;
 - (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
 - (BOOL)closeChat:(AIChat *)inChat;
+- (NSArray *)chatArray;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
