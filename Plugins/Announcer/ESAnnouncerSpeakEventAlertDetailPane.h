@@ -9,7 +9,8 @@
 @class AIActionDetailsPane;
 
 @interface ESAnnouncerSpeakEventAlertDetailPane : AIActionDetailsPane {
-
+	IBOutlet	AILocalizationButton	*checkBox_speakEventTime;
+	IBOutlet	AILocalizationButton	*checkBox_speakContactName;
 }
 
 @end

@@ -16,10 +16,6 @@
 #define	ANNOUNCER_EVENT_ALERT_SHORT	AILocalizedString(@"Speak Event","short phrase for the contact alert which speaks the event")
 #define	ANNOUNCER_EVENT_ALERT_LONG	AILocalizedString(@"Speak the event aloud","short phrase for the contact alert which speaks the event")
 
-@interface ESAnnouncerPlugin (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
-@end
-
 @implementation ESAnnouncerPlugin
 
 - (void)installPlugin
@@ -30,6 +26,10 @@
 	[[adium contactAlertsController] registerActionID:CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER
 										  withHandler:self];
     
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS 
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_ANNOUNCER];
+	
     //Install the contact info view
 /*
 	[NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
@@ -47,6 +47,7 @@
     
 }
 
+#pragma mark Contact specific preferences
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
     NSString	*voice = nil;
@@ -93,7 +94,6 @@
     }
 }
 
-
 //Speak Text Alert -----------------------------------------------------------------------------------------------------
 #pragma mark Speak Text Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
@@ -113,7 +113,7 @@
 		if(textToSpeak && [textToSpeak length]){
 			return([NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak]);
 		}else{
-			return(ANNOUNCER_ALERT_LONG);
+			return(ANNOUNCER_ALERT_SHORT);
 		}
 	}else{ /*Speak Event*/
 		return(ANNOUNCER_EVENT_ALERT_LONG);
@@ -155,7 +155,7 @@
 			timeString = [NSString stringWithFormat:@"%@... ",[[NSDate date] descriptionWithCalendarFormat:timeFormat
 																								  timeZone:nil
 																									locale:nil]];
-			textToSpeak = [timeString stringByAppendingString:userText];
+			textToSpeak = (userText ? [timeString stringByAppendingString:userText] : textToSpeak);
 		}else{
 			textToSpeak = userText;
 		}
@@ -171,9 +171,7 @@
 		   [actionID isEqualToString:CONTENT_MESSAGE_SENT]){
 
 			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
-			AIChat				*chat = [content chat];
 			NSString			*message = [[[content message] safeString] string];
-			AIAccount			*account = [chat account];
 			AIListObject		*source = [content source];
 			BOOL				isOutgoing = [content isOutgoing];
 			BOOL				newParagraph = NO;

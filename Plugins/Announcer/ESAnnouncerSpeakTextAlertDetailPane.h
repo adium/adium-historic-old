@@ -7,7 +7,10 @@
 @class AIActionDetailsPane;
 
 @interface ESAnnouncerSpeakTextAlertDetailPane : AIActionDetailsPane {    
-	IBOutlet	NSTextView			*view_textToSpeak;
+	IBOutlet	NSTextView				*textView_textToSpeak;
+	
+	IBOutlet	AILocalizationTextField	*textView_textToSpeakLabel;
+	IBOutlet	AILocalizationButton	*checkBox_speakEventTime;
 }
 
 @end

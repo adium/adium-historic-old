@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on Sun Sep 14 2003.
 //
 
-#import "ESAnnouncerPreferences.h"
-
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults"
 #define PREF_GROUP_ANNOUNCER		@"Announcer"
 #define KEY_ANNOUNCER_TIME			@"Speak Time"
@@ -22,8 +20,6 @@
 #define CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER	@"SpeakEvent"
 
 @interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
-    ESAnnouncerPreferences		*preferences;
-
     NSString					*lastSenderString;
     
     //Contact Editor view
