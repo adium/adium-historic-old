@@ -32,13 +32,20 @@
 /*!
  * @brief Create a new <tt>AITextAttributes</tt> instance
  *
- * Create a new <tt>AITextAttributes</tt> instance.
  * @param inFamilyName The family name for font attributes
  * @param inTraits	<tt>NSFontTraitMask</tt> of initial traits.  Pass 0 for no traits.
  * @param inSize Font point size
  * @return The newly created (autoreleased) <tt>AITextAttributes</tt> object
 */
 + (id)textAttributesWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize;
+
+/*!
+ * @brief Create a new <tt>AITextAttributes</tt> instance from a dictionary of attributes
+ *
+ * @param inAttributes A dictionary of attributes such as is returned by <tt>NSAttributedString</tt>'s attributesAtIndex:effectiveRange:
+ * @return The newly created (autoreleased) <tt>AITextAttributes</tt> object
+ */
++ (id)textAttributesWithDictionary:(NSDictionary *)inAttributes;
 
 /*!
  * @brief Return the dictionary of attributes
