@@ -90,6 +90,7 @@
 #import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AIVariableHeightOutlineView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
+#import <AIUtilities/AIVideoCapture.h>
 #import <AIUtilities/AIViewAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/BZArrayAdditions.h>
