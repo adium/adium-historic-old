@@ -552,8 +552,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		//Load the script
 		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]
 													   componentInstance:componentInstance];
-		[infoDict setObject:script
-					 forKey:@"NDAppleScriptObject"];
+		if(script){
+			[infoDict setObject:script
+						 forKey:@"NDAppleScriptObject"];
+		}
 	}
 	
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
@@ -582,6 +584,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		We want to send certain eventClasses (those which necessitate user interaction) to the main thread
 		since the UI is not threadsafe.
 	 */
+//	NSLog(@"appleEventDescriptor: %@",appleEventDescriptor);
+
 	if(eventClass == 'syso'){
 		AEEventID eventID = [appleEventDescriptor eventID];
 		
@@ -631,7 +635,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 - (BOOL)appleScriptActive
 {
-	NSLog(@"Applescript active.");
 	return(YES);
 }
 
