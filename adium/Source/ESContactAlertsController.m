@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.11 2003/12/22 17:54:38 adamiser Exp $
+//  $Id: ESContactAlertsController.m,v 1.12 2003/12/26 09:29:08 evands Exp $
 
 
 /*
@@ -218,14 +218,14 @@ Alert Execution
         [completedActionTypes removeAllObjects];
         
         //load inObject events
-        eventActionArray =  [inObject preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
+        eventActionArray =  [inObject preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS ignoreInheritedValues:YES];
         //process inObject events
         [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
 
         //load [inObject containingGroup] events
-        //eventActionArray =  [[inObject containingGroup] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
+        eventActionArray =  [[inObject containingGroup] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS ignoreInheritedValues:YES];
         //process the group events
-        //[self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
+        [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
     }
     return nil; //we don't change any attributes
 }
