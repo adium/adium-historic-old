@@ -30,22 +30,26 @@
 	IBOutlet	AIAutoScrollView			*scrollView_advanced;
 
     IBOutlet	AIModularPaneCategoryView   *view_Advanced;
-    IBOutlet	NSTextField					*textField_advancedTitle;
-    IBOutlet	AIColoredBoxView			*coloredBox_advancedTitle;
 	IBOutlet	NSButton					*button_restoreDefaults;
     
-    NSMutableArray		*loadedPanes;
-    NSMutableArray		*loadedAdvancedPanes;
-    NSMutableArray		*_advancedCategoryArray;
+	NSArray				    *viewArray;
+    NSMutableArray		    *loadedPanes;
+    NSMutableArray		    *loadedAdvancedPanes;
+    NSMutableArray		    *_advancedCategoryArray;
 }
 
-+ (AIPreferenceWindowController *)preferenceWindowController;
-+ (void)closeSharedInstance;
-- (IBAction)closeWindow:(id)sender;
-- (void)showCategory:(PREFERENCE_CATEGORY)inCategory;
-- (void)showAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)inCategory;
++ (void)openPreferenceWindow;
++ (void)openPreferenceWindowToCategory:(PREFERENCE_CATEGORY)category;
++ (void)openPreferenceWindowToAdvancedPane:(NSString *)advancedPane;
++ (void)closePreferenceWindow;
 
-- (NSArray *)advancedCategoryArray;
+//Panes
+- (void)selectCategory:(PREFERENCE_CATEGORY)category;
+- (void)selectAdvancedPane:(NSString *)advancedPane;
+
+//Advanced Preferences
 - (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane;
+- (NSArray *)advancedCategoryArray;
+- (IBAction)restoreDefaults:(id)sender;
 
 @end
