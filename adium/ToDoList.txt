@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.71 2004/04/27 05:26:44 evands Exp $
+$Id: ToDoList.txt,v 1.72 2004/04/27 23:08:32 evands Exp $
 
 Legend
 + Change or Addition
@@ -37,9 +37,6 @@ Contact List:
 
 Tooltips:
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
-* Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
-* Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
-* Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -80,8 +77,6 @@ Contact List:
 	
 Accounts:
 	+ Auto-complete aliases in log viewer
-	+ Add account specific proxy fields (Type, host, port) for all libgaim connections [Evan]
-
 
 Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
@@ -97,16 +92,9 @@ Contact List Display:
 
 Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
-	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
-	    Colin: Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P
-		Evan: Auburn University? I'm with you though if we change it... but I really think it's okay as-is.
-        Jeff: Remember that we lose CVS history if we change filenames.
-	Chris (tick): We could just commit the cvs history to cvs :P
-	Adam: The AI stands for AdIum ;)
-
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 		Colin: Didn't Mac-arena do this already?
-    	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
+	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 	+ Add export option to log viewer
@@ -303,6 +291,9 @@ ced preference panes.
 = Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well)
 = We have issues with not notifying the user when a message fails to send
 = Users are still reporting issues with the contact list display format pref not being correct on launch.
+= Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
+= Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
+= Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
@@ -344,3 +335,4 @@ Features & Changes:
 = WebKit Message View: Add preference to switch variants for the active style
 = AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
 = Add to buddy list menu item, contextual menu item (for strangers)
+= Add account specific proxy fields (Type, host, port) for all libgaim connections
