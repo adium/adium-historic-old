@@ -18,7 +18,7 @@
 #import "AIContactInfoWindowController.h"
 
 #define	CONTACT_ALIAS_NIB			@"ContactAlias"		//Filename of the alias info view
-#define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
+#define	PREF_GROUP_ALIASES			@"Aliases"			//Preference group to store aliases in
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
@@ -31,14 +31,21 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ALIASES];
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DISPLAYFORMAT];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_ALIASES];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DISPLAYFORMAT_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_DISPLAYFORMAT];
    
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
 
     //Observe preferences changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged 
+									 object:nil];
 
     prefs = [[AIAliasSupportPreferences displayFormatPreferences] retain];
 
@@ -47,12 +54,18 @@
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
-    contactView = [[AIPreferenceViewController controllerWithName:@"Alias" categoryName:@"None" view:view_contactAliasInfoView delegate:self] retain];
+    contactView = [[AIPreferenceViewController controllerWithName:@"Alias" 
+													 categoryName:@"None" 
+															 view:view_contactAliasInfoView 
+														 delegate:self] retain];
     [[adium contactController] addContactInfoView:contactView];
     [textField_alias setDelegate:self];
     
     //Wait for the contact list editor to init so we can add our column
-    [[adium notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(registerColumn:)
+									   name:CONTACT_EDITOR_REGISTER_COLUMNS
+									 object:nil];
 
     activeListObject = nil;
     delayedChangesTimer = nil;
@@ -111,7 +124,9 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"Display Name"])){
-        return([self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
+        return([self _applyAlias:[inObject preferenceForKey:@"Alias"
+													  group:PREF_GROUP_ALIASES 
+									  ignoreInheritedValues:YES]
 						toObject:inObject
 						  notify:NO]);
     }else{
