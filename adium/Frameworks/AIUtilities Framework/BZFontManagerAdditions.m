@@ -19,23 +19,19 @@
 
 - (NSFont *)fontWithFamilyInsensitively:(NSString *)name traits:(NSFontTraitMask)fontTraitMask weight:(int)weight size:(float)size
 {
-	[name retain];
+	NSFont *theFont = nil;
 
-	NSFontManager *manager = [[NSFontManager sharedFontManager] retain];
+	NSFontManager *manager = [NSFontManager sharedFontManager];
 	NSArray *fontList = [manager availableFontFamilies];
 	NSEnumerator *fontEnum = [fontList objectEnumerator];
 
 	NSString *thisName = [fontEnum nextObject];
-	NSFont *theFont = nil;
 	for(; thisName; thisName = [fontEnum nextObject]) {
 		if([thisName caseInsensitiveCompare:name] == NSOrderedSame) {
 			theFont = [manager fontWithFamily:thisName traits:fontTraitMask weight:weight size:size];
 			break;
 		}
 	}
-
-	[manager release];
-	[name release];
 
 	return theFont;
 }
