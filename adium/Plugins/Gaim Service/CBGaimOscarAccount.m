@@ -65,11 +65,11 @@ static BOOL didInitOscar = NO;
 }
 */
 //Override _mainThreadContactWithUID to mark mobile and ICQ users as such via the displayServiceID
-- (AIListContact *)_mainThreadContactWithUID:(NSString *)sourceUID
+- (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
 	AIListContact   *contact;
 	
-	contact = [super _mainThreadContactWithUID:sourceUID];
+	contact = [super _contactWithUID:sourceUID];
 	
 	if (![contact statusObjectForKey:@"DisplayServiceID"]){
 		BOOL			isICQ, isMobile;
@@ -83,6 +83,7 @@ static BOOL didInitOscar = NO;
 				if (!MobileServiceID) MobileServiceID = @"Mobile";
 				[contact setStatusObject:MobileServiceID forKey:@"DisplayServiceID" notify:NO];
 			}
+			
 			//Apply any changes
 			[contact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
 										 withObject:[NSNumber numberWithBool:silentAndDelayed]
@@ -98,9 +99,9 @@ static BOOL didInitOscar = NO;
 	BOOL shouldAttemptReconnect = YES;
 	
 	if (disconnectionError) {
-		if (([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
+		if ([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if (([disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound)) {
+		}else if ([disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
 	}
