@@ -31,6 +31,8 @@
 	theName = [self name];
 	
     //Ignore various harmless or unavoidable exceptions the system uses
+	
+	//First, check our reason against known offenders, then check our name against known offenders
     if ((!theReason) || //Harmless
 		([theReason isEqualToString:@"_sharedInstance is invalid."]) || //Address book framework is weird sometimes
 		([theReason isEqualToString:@"No text was found"]) || //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
@@ -90,19 +92,26 @@
                 pclose(file);
             }
             
-            [[NSString stringWithFormat:@"Exception:\t%@\nReason:\t%@\nStack trace:\n%@",
-                theName,theReason,processedStackTrace] writeToFile:EXCEPTIONS_PATH 
-														atomically:YES];
+			//Check the stack trace for a third set of known offenders
+			if ([processedStackTrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound){
+				[super raise];
 
-            NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@",
-                  theName,theReason);
-            AILog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@",
-                  theName,theReason);
-
-            [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
-			
-            //Move along, citizen, nothing more to see here.
-            exit(-1);
+			}else{
+				
+				[[NSString stringWithFormat:@"Exception:\t%@\nReason:\t%@\nStack trace:\n%@",
+					theName,theReason,processedStackTrace] writeToFile:EXCEPTIONS_PATH 
+															atomically:YES];
+				
+				NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@",
+					  theName,theReason);
+				AILog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@",
+					  theName,theReason);
+				
+				[[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
+				
+				//Move along, citizen, nothing more to see here.
+				exit(-1);
+			}
 			
         }else{
             [super raise];
