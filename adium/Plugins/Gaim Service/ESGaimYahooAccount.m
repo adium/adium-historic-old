@@ -58,6 +58,7 @@
 	return ([AIHTMLDecoder encodeHTML:inAttributedString
 							  headers:NO
 							 fontTags:NO
+				   includingColorTags:NO
 						closeFontTags:NO
 							styleTags:NO
 		   closeStyleTagsOnFontChange:NO
