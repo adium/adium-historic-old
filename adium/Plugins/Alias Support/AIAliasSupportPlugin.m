@@ -43,9 +43,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DISPLAYFORMAT_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_DISPLAYFORMAT];
-   
-    //Register ourself as a handle observer
-    [[adium contactController] registerListObjectObserver:self];
 
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self
@@ -113,8 +110,14 @@
 		// Set new checkmark
 		[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
 					
-        //Update all existing contacts
-		[[adium contactController] updateAllListObjectsForObserver:self];
+		if (notification){
+			//Update all existing contacts
+			[[adium contactController] updateAllListObjectsForObserver:self];
+		}else{
+			//Register ourself as a handle observer
+			[[adium contactController] registerListObjectObserver:self];
+		}
+			
     }
 }
 
