@@ -389,10 +389,12 @@
 	//Update webview font settings
 	NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]];
 	[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];
+	
 	NSNumber	*fontSize = [prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:activeStyle]];
 	[[webView preferences] setDefaultFontSize:[(fontSize ? fontSize : [messageStyle defaultFontSize]) intValue]];
+	
 	NSNumber	*minSize = [prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE];
-	[[webView preferences] setMinimumFontSize:[minSize intValue]];
+	[[webView preferences] setMinimumFontSize:(minSize ? [minSize intValue] : 1)];
 	
 	//Prime the webview with the new style/variant and settings, and re-insert all our content back into the view
 	[self _primeWebViewAndReprocessContent:YES];	
