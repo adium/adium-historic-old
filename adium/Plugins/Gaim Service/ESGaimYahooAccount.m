@@ -84,7 +84,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {	
-	if (listObject){
+	if (inListObject){
 		return([AIHTMLDecoder encodeHTML:inAttributedString
 								 headers:NO
 								fontTags:YES
@@ -160,11 +160,18 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
 		
 		if (userInfo != NULL){
-			if (userInfo->msg != NULL) {
-				//<muse>if it is, why is status custom??</muse>
-				statusMsgString = [NSString stringWithUTF8String:userInfo->msg];
-			} else if (userInfo->status != YAHOO_STATUS_AVAILABLE) {
-				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:userInfo->status]];
+			if (userInfo->status == YAHOO_STATUS_IDLE){
+				//Now idle - Yahoo doesn't tell us when they became idle, so we'll fake it and pretend it was just now
+				[theContact setStatusObject:[NSDate date]
+									 forKey:@"IdleSince"
+									 notify:NO];
+				
+			}else{
+				if (userInfo->msg != NULL) {
+					statusMsgString = [NSString stringWithUTF8String:userInfo->msg];
+				} else if (userInfo->status != YAHOO_STATUS_AVAILABLE) {
+					statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:userInfo->status]];
+				}
 			}
 			
 			if (statusMsgString && [statusMsgString length]) {
@@ -173,19 +180,16 @@ static NSDictionary		*presetStatusesDictionary = nil;
 					
 					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
 					[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
-					
-					//apply changes
-					[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 				}
 				
 			} else if (oldStatusMsgString && [oldStatusMsgString length]) {
 				//If we had a message before, remove it
 				[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
 				[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
-				
-				//apply changes
-				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 			}
+			
+			//apply changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}
 }
