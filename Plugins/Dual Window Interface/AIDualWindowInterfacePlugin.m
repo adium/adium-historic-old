@@ -142,6 +142,12 @@
 	}else{
 		[messageTab retain];
 		[[messageTab container] removeTabViewItem:messageTab silent:YES];
+
+		//Create the container if necessary
+		if(!container){
+			container = [self openContainerWithID:containerID name:containerID];
+		}
+
 		[container addTabViewItem:messageTab atIndex:index silent:YES];
 		[messageTab release];
 	}
