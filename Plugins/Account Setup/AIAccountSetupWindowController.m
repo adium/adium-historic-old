@@ -14,6 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountSetupWindowController.h"
+#import "AIAccountSetupOverviewView.h"
+#import "AIAccountSetupEditAccountView.h"
+#import "AIAccountSetupNewAccountView.h"
+#import "AIAccountSetupConnectionView.h"
 #import "AIAccountSetupView.h"
 
 #define ACCOUNT_SETUP_WINDOW_NIB			@"AccountSetupWindow"
