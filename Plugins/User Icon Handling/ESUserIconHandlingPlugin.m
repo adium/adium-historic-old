@@ -27,6 +27,7 @@
 #import <AIUtilities/ESImageButton.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
 
