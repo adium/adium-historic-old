@@ -25,7 +25,7 @@
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
                 BOOL                         editLink;
-                BOOL                         favoriteWindow;
+              //  BOOL                         favoriteWindow;
 
                 NSRange                      selectionRange;
                 NSResponder                 *editableView;
@@ -33,11 +33,8 @@
                 NSMutableArray                *favoritesDict;
 }
 
-- (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder;
-- (void)initEditLinkWindowControllerWithResponder:(NSResponder *)responder;
-- (void)initAddLinkFavoritesWindowControllerWithView:(NSView *)view;
++ (void)showLinkEditorForResponder:(NSResponder *)responder onWindow:(NSWindow *)parentWindow existingLink:(BOOL)existingLink;
 
-- (void)windowWillBeginSheet:(NSNotification *)aNotification;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 
