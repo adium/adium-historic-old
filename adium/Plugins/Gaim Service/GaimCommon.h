@@ -50,10 +50,10 @@ typedef enum
 //Proxy types
 typedef enum
 {
-	Gaim_Proxy_None = 0,
-	Gaim_Proxy_Default,
-	Gaim_Proxy_HTTP,
-	Gaim_Proxy_SOCKS4,
-	Gaim_Proxy_SOCKS5
+	Gaim_Proxy_None		= 0,
+	Gaim_Proxy_Default  = 1,
+	Gaim_Proxy_HTTP		= 2,
+	Gaim_Proxy_SOCKS4   = 3,
+	Gaim_Proxy_SOCKS5   = 4
 } AdiumGaimProxyType;
 	

@@ -1459,7 +1459,6 @@
 
 - (NSString *)host{
 	NSString *hostKey = [self hostKey];
-	NSLog(@"HostKey %@ gives %@",hostKey,[self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS]);
 	return (hostKey ? [self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS] : nil); 
 }
 - (int)port{ 

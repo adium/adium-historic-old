@@ -11,6 +11,7 @@
 @interface ESGaimAccountViewController (PRIVATE)
 - (void)configureConnectionControlDimming;
 - (NSMenu *)_proxyMenu;
+- (NSMenuItem *)_proxyMenuItemWithTitle:(NSString *)title tag:(int)tag;
 @end
 
 @implementation ESGaimAccountViewController
@@ -46,11 +47,8 @@
 	//Proxy type
 	[menu_proxy setMenu:[self _proxyMenu]];
 	proxyTypeNumber = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
-	if (proxyTypeNumber){
-		[menu_proxy selectItemAtIndex:[menu_proxy indexOfItemWithTag:[proxyTypeNumber intValue]]];
-	}else{
-		[menu_proxy selectItemAtIndex:[menu_proxy indexOfItemWithTag:Gaim_Proxy_Default]];		
-	}
+	NSLog(@"%@",proxyTypeNumber);
+	[menu_proxy selectItemAtIndex:[menu_proxy indexOfItemWithTag:[proxyTypeNumber intValue]]];
 	
 	//Proxy name
 	proxyHostName = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
@@ -74,44 +72,27 @@
 - (NSMenu *)_proxyMenu
 {
     NSMenu			*proxyMenu = [[NSMenu alloc] init];
-    NSMenuItem		*menuItem;
-    
-    menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"None",nil)
-                                           target:self
-                                           action:@selector(changedConnectionPreference:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setTag:Gaim_Proxy_None];
-    [proxyMenu addItem:menuItem];
-    
-    menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Systemwide SOCKS Settings",nil)
-                                           target:self
-                                           action:@selector(changedConnectionPreference:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setTag:Gaim_Proxy_Default];
-    [proxyMenu addItem:menuItem];
+	
+    [proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"None",nil) tag:Gaim_Proxy_None]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS Settings",nil) tag:Gaim_Proxy_Default]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"HTTP",nil) tag:Gaim_Proxy_HTTP]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"SOCKS4",nil) tag:Gaim_Proxy_SOCKS4]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"SOCKS5",nil) tag:Gaim_Proxy_SOCKS5]];
+				
+	return [proxyMenu autorelease];
+}
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"HTTP",nil)
+- (NSMenuItem *)_proxyMenuItemWithTitle:(NSString *)title tag:(int)tag
+{
+	NSMenuItem		*menuItem;
+    
+    menuItem = [[NSMenuItem alloc] initWithTitle:title
                                            target:self
-                                           action:@selector(changedConnectionPreference:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setTag:Gaim_Proxy_HTTP];
-    [proxyMenu addItem:menuItem];
+                                           action:@selector(changeProxyType:)
+                                    keyEquivalent:@""];
+    [menuItem setTag:tag];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"SOCKS4",nil)
-                                           target:self
-                                           action:@selector(changedConnectionPreference:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setTag:Gaim_Proxy_SOCKS4];
-    [proxyMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"SOCKS5",nil)
-                                           target:self
-                                           action:@selector(changedConnectionPreference:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setTag:Gaim_Proxy_SOCKS5];
-    [proxyMenu addItem:menuItem];
-	
-    return [proxyMenu autorelease];
+	return [menuItem autorelease];
 }
 
 - (IBAction)changedConnectionPreference:(id)sender
@@ -153,13 +134,6 @@
 			}
 		}
 		
-	}else if (sender == menu_proxy){
-		[account setPreference:[NSNumber numberWithInt:[sender tag]]
-						forKey:KEY_ACCOUNT_GAIM_PROXY_TYPE
-						 group:GROUP_ACCOUNT_STATUS];
-		
-		[self configureConnectionControlDimming];
-		
 	}else if (sender == textField_proxyHostName){
 		[account setPreference:[sender stringValue]
 						forKey:KEY_ACCOUNT_GAIM_PROXY_HOST
@@ -178,6 +152,15 @@
 	}else if (sender == button_proxySetPassword){
 		//Display the set password sheet
 	}
+}
+
+- (void)changeProxyType:(id)sender
+{
+	[account setPreference:[NSNumber numberWithInt:[sender tag]]
+					forKey:KEY_ACCOUNT_GAIM_PROXY_TYPE
+					 group:GROUP_ACCOUNT_STATUS];
+	
+	[self configureConnectionControlDimming];
 }
 
 - (void)configureConnectionControlDimming
