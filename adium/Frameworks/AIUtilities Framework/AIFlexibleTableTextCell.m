@@ -70,6 +70,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     textContainer = nil;
     layoutManager = nil;
     linkArray = nil;
+    trackingMouseMovedEvents = NO;
 
     cellSize = [inString size];
     string = [inString retain];
@@ -373,6 +374,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Called when the mouse enters the link
 - (void)mouseEntered:(NSEvent *)theEvent
 {
+    trackingMouseMovedEvents = YES;
+
     hoveredLink = [(AIFlexibleLink *)[theEvent userData] retain];
     hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
 
@@ -394,14 +397,18 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Stop tracking mouse events
 - (void)_endTrackingMouse
 {
-    [[NSCursor arrowCursor] set]; //Restore the regular cursor
-    [tableView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
-    [self _showTooltipForEvent:nil]; //Hide the tooltip
+    if(trackingMouseMovedEvents){
+        trackingMouseMovedEvents = NO;
+        
+        [[NSCursor arrowCursor] set]; //Restore the regular cursor
+        [tableView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
+        [self _showTooltipForEvent:nil]; //Hide the tooltip
 
-    [[tableView window] makeFirstResponder:oldFirstResponder];
+        [[tableView window] makeFirstResponder:oldFirstResponder];
 
-    [hoveredLink release]; hoveredLink = nil;
-    [hoveredString release]; hoveredString = nil;
+        [hoveredLink release]; hoveredLink = nil;
+        [hoveredString release]; hoveredString = nil;
+    }
 }
 
 //Called when the mouse moves within the link
@@ -451,7 +458,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
         //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
         linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
-        if(linkString != nil && [linkString length] == 0){
+        if(linkString != nil && [linkString length] != 0){
             //add http:// to the link string if a protocol wasn't specified
             if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
                 linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
