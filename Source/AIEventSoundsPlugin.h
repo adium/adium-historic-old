@@ -18,8 +18,8 @@
 
 #define KEY_ALERT_SOUND_PATH		@"SoundPath"
 
-#define OTHER_ELLIPSIS				AILocalizedString(@"Other...",nil)
 #define OTHER						AILocalizedString(@"Other",nil)
+#define OTHER_ELLIPSIS				[OTHER stringByAppendingEllipsis]
 
 @class AIEventSoundPreferences;
 

@@ -29,7 +29,7 @@
 
 //State menu
 #define STATE_TITLE_MENU_LENGTH		30
-#define STATUS_TITLE_CUSTOM			[AILocalizedString(@"Custom",nil) stringByAppendingString:[NSString ellipsis]]
+#define STATUS_TITLE_CUSTOM			[AILocalizedString(@"Custom",nil) stringByAppendingEllipsis]
 #define STATUS_TITLE_OFFLINE		AILocalizedString(@"Offline",nil)
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
