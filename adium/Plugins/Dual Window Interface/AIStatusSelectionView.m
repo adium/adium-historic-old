@@ -143,11 +143,11 @@
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
         [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-//        NSLog(@"available");
+        NSLog(@"available");
         
     }else if([title compare:STATUS_NAME_OFFLINE] == 0){ //Offline
-//        NSLog(@"offline");
-        
+	[[owner accountController] disconnectAllAccounts];
+	NSLog(@"offline");
     }
 }
 
@@ -196,10 +196,10 @@
         int status = [[account propertyForKey:@"Status"] intValue];
 
         if(status == STATUS_ONLINE){
-//	    NSLog(@"%@ is online",[account UID]);
+	    NSLog(@"%@ is online",[account UID]);
             onlineAccounts++;
         }else if(status == STATUS_CONNECTING){
-//	    NSLog(@"%@ is connecting",[account UID]);
+	    NSLog(@"%@ is connecting",[account UID]);
             connectingAccounts++;
         }
     }
