@@ -44,10 +44,12 @@
     
     //Our preference view
     preferences = [[AIIdleTimeDisplayPreferences preferencePane] retain];
-    [[adium contactController] registerListObjectObserver:self];
 
     //Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged 
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -135,8 +137,12 @@
 		displayIdleOnLeft = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue];
         idleTextColor = [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
         
-        //Update all our idle views
-		[[adium contactController] updateAllListObjectsForObserver:self];
+		if (notification){
+			//Update all our idle views
+			[[adium contactController] updateAllListObjectsForObserver:self];
+		}else{
+			[[adium contactController] registerListObjectObserver:self];
+		}
     }
 }
 
