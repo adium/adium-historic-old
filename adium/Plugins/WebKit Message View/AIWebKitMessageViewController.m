@@ -7,12 +7,11 @@
 
 #import "AIWebKitMessageViewController.h"
 //#import "ESWebFrameViewAdditions.h"
-#import "ESWebView.h"
 
-#define NEW_CONTENT_RETRY_DELAY 0.01
+
 
 @interface AIWebKitMessageViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat;
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
@@ -25,20 +24,19 @@
 @implementation AIWebKitMessageViewController
 
 //Create a new message view
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
-    return([[[self alloc] initForChat:inChat] autorelease]);
+    return([[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease]);
 }
 
 //Init
-- (id)initForChat:(AIChat *)inChat
+- (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
     [super init];
+	plugin = [inPlugin retain];
     previousContent = nil;
 	newContentTimer = nil;
-	timeStampFormat = nil;
-	timeStampFormatter = nil;
 	webViewIsReady = NO;
 	newContent = [[NSMutableArray alloc] init];
 	
@@ -64,22 +62,6 @@
 	//Observe preference changes and set our initial preferences
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	[self preferencesChanged:nil];
-		
-	//We'd load this information from a file or plist or something
-	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" 
-																			   ofType:@"html"] stringByDeletingLastPathComponent];
-	NSString	*basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];
-	NSString	*mainCSS = @"test.css";
-	NSString	*variantCSS = @"testlayout.css";
-	NSString	*headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
-	NSString	*footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-	
-	//Load the template, and fill it up
-	NSString	*templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
-	templateHTML = [NSString stringWithFormat:templateHTML, basePath, mainCSS, variantCSS, headerHTML, footerHTML];
-    
-	//Feed it to the webview
-	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 	
     return(self);
 }
@@ -89,6 +71,7 @@
 	[[adium notificationCenter] removeObserver:self];
 	[newContent release];
 	[newContentTimer invalidate]; [newContentTimer release];
+	[plugin release]; plugin = nil;
 	
 	[super dealloc];
 }
@@ -105,85 +88,93 @@
 	return([[webView mainFrame] frameView]);
 }
 
+#pragma mark WebView preferences
+//The controller observes for preferences which are applied to the WebView
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] == 0){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
+		//Retain the style path for comparison with the new preference
+		NSString		*oldStylePath = [stylePath retain];
+		
 		//Release the old preference cache
 		[self _flushPreferenceCache];
-
-		timeStampFormat = [[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT] retain];
-		timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];	
+		
+		[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_USER_ICONS
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue];
+		
+		
+		//Style and Variant preferences
+		{
+			NSString	*desiredStyle, *desiredVariant, *CSS;
+			NSBundle	*style;
+			
+			desiredStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+																	group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			style = [plugin messageStyleBundleWithName:desiredStyle];
+			
+			//If the preferred style is unavailable, load Smooth Operator
+			if (!style){
+				desiredStyle = @"Smooth Operator";
+				style = [plugin messageStyleBundleWithName:desiredStyle];
+			}
+			
+			stylePath = [[style resourcePath] retain];
+				
+			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:desiredStyle]
+																	  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
+			CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
+			
+			//If we got here via a notification and the style did not change, update the webView to the current stylesheet.
+			//If we got here from [self preferencesChanged:nil], prep the webView by loading our template.
+			if (notification && [stylePath isEqualToString:oldStylePath]){
+				[webView stringByEvaluatingJavaScriptFromString:
+					[NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");", CSS]];
+				
+			}else{
+				NSString	*basePath, *headerHTML, *footerHTML, *templateHTML;
+				
+				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
+				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
+				footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
+				
+				//Load the template, and fill it up
+				templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+				templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
+				
+				//Feed it to the webview
+				[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
+			}
+		}
+		
+		//Release the old style path
+		[oldStylePath release];
 	}
 }
 
 - (void)_flushPreferenceCache
-{
-	[timeStampFormat release];	
-	[timeStampFormatter release];
+{	
+	[stylePath release];
 }
 
+#pragma mark Content
 - (void)contentObjectAdded:(NSNotification *)notification
 {
 	AIContentObject		*content = [[notification userInfo] objectForKey:@"Object"];
 
 	//Add
 	[newContent addObject:content];
-	[self processNewContent];
+	[self processNewContent];	
 }
 
 - (void)processNewContent
 {
 	while(webViewIsReady && [newContent count]){
-		NSString		*dateMessage = nil;
-		AIContentStatus *dateSeparator = nil;
 		AIContentObject *content = [newContent objectAtIndex:0];
-		BOOL			contentIsSimilar = NO;
-		BOOL			shouldShowDateHeader = NO;
 		
-		// Should we merge consecutive messages?
-		if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
-			contentIsSimilar = YES;
-		}
-		
-		// Are the messages history lines from different days?
-		if( previousContent && [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
-			
-			NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil timeZone:nil];
-			NSCalendarDate *currentDate = [[(AIContentContext *)content date] dateWithCalendarFormat:nil timeZone:nil];
-			
-			if( [previousDate dayOfCommonEra] != [currentDate dayOfCommonEra] ) {
-				contentIsSimilar = NO;
-				shouldShowDateHeader = YES;
-			}
-		}
-		
-		// If no previous content and we have history messages, show a date header
-		if(!previousContent && ([[content type] compare:CONTENT_CONTEXT_TYPE] == 0)) {
-			shouldShowDateHeader = YES;			
-		}
+		[plugin processContent:content withPreviousContent:previousContent forWebView:webView fromStylePath:stylePath];
 
-		// Add the date header (should be farmed out to a separate function)
-		if( shouldShowDateHeader ) {
-			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];
-			dateSeparator = [AIContentStatus statusInChat:[content chat]
-											   withSource:[[content chat] listObject]
-											  destination:[[content chat] account]
-													 date:[NSDate date]
-												  message:dateMessage
-												 withType:@"date_separator"];
-			//Add the date header
-			[self _addContentStatus:dateSeparator similar:NO];
-		}
-		
-		//
-		if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
-			[self _addContentMessage:(AIContentMessage *)content similar:contentIsSimilar];
-		}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
-			[self _addContentStatus:(AIContentStatus *)content similar:contentIsSimilar];
-		}
-		
 		//
 		[previousContent release];
 		previousContent = [content retain];
@@ -197,7 +188,7 @@
 		[newContentTimer invalidate]; [newContentTimer release];
 		newContentTimer = nil;
 	}
-
+	
 	//if not added, Try to add this content again in a little bit
 	if([newContent count]){
 		newContentTimer = [[NSTimer scheduledTimerWithTimeInterval:NEW_CONTENT_RETRY_DELAY
@@ -207,189 +198,6 @@
 														   repeats:NO] retain]; 
 	}
 }
-
-- (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar
-{
-	NSString		*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
-	NSMutableString	*newHTML;
-	NSString	*contentTemplate = nil;
-	NSString	*nextContentTemplate = nil;
-	
-	//
-	if([content isOutgoing]){
-		stylePath = [stylePath stringByAppendingPathComponent:@"Outgoing"];
-	}else{
-		stylePath = [stylePath stringByAppendingPathComponent:@"Incoming"];
-	}
-	
-	//Load context templates if appropriate
-	if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
-		contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Context.html"]];
-		nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContext.html"]];
-	}
-
-	//Fall back on the content templates for normal content, or if there's no context template
-	if(contentTemplate == nil)	
-		contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Content.html"]];
-	if(nextContentTemplate == nil)
-		nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContent.html"]];
-	
-	//
-	if(!contentIsSimilar){
-		newHTML = [[contentTemplate mutableCopy] autorelease];
-		newHTML = [self fillKeywords:newHTML forContent:content];
-		newHTML = [self escapeString:newHTML];
-        
-		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
-		
-	}else{
-		newHTML = [[nextContentTemplate mutableCopy] autorelease];
-		newHTML = [self fillKeywords:newHTML forContent:content];
-		newHTML = [self escapeString:newHTML];
-		
-		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
-		
-	}
-}
-
-- (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar
-{
-    NSString        *stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
-	NSMutableString *newHTML;
-    NSString	    *statusTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]];
-	
-	newHTML = [[statusTemplate mutableCopy] autorelease];
-	newHTML = [self fillKeywords:newHTML forContent:content];
-	newHTML = [self escapeString:newHTML];
-	
-	[webView stringByEvaluatingJavaScriptFromString:
-	   [NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
-}
-
-//
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
-{
-	NSRange	range;
-	
-	if ([content isKindOfClass:[AIContentMessage class]]) {
-		
-		range = [inString rangeOfString:@"%userIconPath%"];
-		if(range.location != NSNotFound){
-            NSString    *userIconPath = [[content source] statusObjectForKey:@"UserIconPath"];
-            if (userIconPath){
-                [inString replaceCharactersInRange:range withString:[NSString stringWithFormat:@"file://%@", userIconPath]];
-            }else{
-                if ([content isOutgoing]){
-                    [inString replaceCharactersInRange:range withString:@"Outgoing/buddy_icon.png"];
-                }else{
-                    [inString replaceCharactersInRange:range withString:@"Incoming/buddy_icon.png"];
-                }
-            }
-		}
-		
-        range = [inString rangeOfString:@"%senderScreenName%"];
-        if(range.location != NSNotFound){
-           [inString replaceCharactersInRange:range withString:[[content source] formattedUID]];
-        }
-        
-        range = [inString rangeOfString:@"%sender%"];
-        if(range.location != NSNotFound){
-            [inString replaceCharactersInRange:range withString:[[content source] displayName]];
-        }
-        
-        range = [inString rangeOfString:@"%service%"];
-        if(range.location != NSNotFound){
-			[inString replaceCharactersInRange:range withString:[[content source] serviceID]];
-        }
-#warning This disables any fonts in the webkit view other than what is specified by the template.
-        range = [inString rangeOfString:@"%message%"];
-        if(range.location != NSNotFound){
-            [inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
-																				  headers:NO 
-																				 fontTags:NO
-																			closeFontTags:NO
-																				styleTags:YES   
-															   closeStyleTagsOnFontChange:NO
-																		   encodeNonASCII:YES 
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO]];
-        }
-		
-		range = [inString rangeOfString:@"%time%"];
-		if(range.location != NSNotFound){
-			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
-		}
-		
-		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
-		range = [inString rangeOfString:@"%time{"];
-		if(range.location != NSNotFound) {
-			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
-			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-
-				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-				
-				[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
-				
-			}
-        }
-		
-	} else {
-        range = [inString rangeOfString:@"%message%"];
-        if(range.location != NSNotFound){
-            [inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
-        }
-        
-        range = [inString rangeOfString:@"%time%"];
-        if(range.location != NSNotFound){
-			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentStatus *)content date]]];
-        }
-		
-		range = [inString rangeOfString:@"%status%"];
-		if(range.location != NSNotFound) {
-			[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
-		}
-		
-		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
-		range = [inString rangeOfString:@"%time{"];
-        if(range.location != NSNotFound) {
-			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
-			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-				
-				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-				
-				[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-										withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																		   allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
-				
-			}
-        }
-	}
-	
-	return(inString);
-}
-
-//
-- (NSMutableString *)escapeString:(NSMutableString *)inString
-{
-	//We need to escape a few things to get our string to the javascript without trouble
-	[inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
-								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-	
-	[inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
-						  options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-
-	[inString replaceOccurrencesOfString:@"\n" withString:@"" 
-								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-
-	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
-								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-	return(inString);
-}
-
 
 #pragma mark WebFrameLoadDelegate
 //----WebFrameLoadDelegate
@@ -412,7 +220,9 @@
     if (actionKey == WebNavigationTypeOther) {
         [listener use];
     } else {
-        [[NSWorkspace sharedWorkspace] openURL: [request URL]];
+		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+		[[NSWorkspace sharedWorkspace] openURL:url];	
+		[listener ignore];
     }
 }
 
