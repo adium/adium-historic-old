@@ -86,9 +86,9 @@ static NSMenu   *msieTopMenu;
             [linkScanner scanUpToString:@"</H" intoString:&titleString];
                 
             msieBookmarksSupermenu = msieBookmarksMenu;
-            msieBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString] autorelease];
+            msieBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
         
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString
+            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
                                                                          target:owner
                                                                          action:nil
                                                                   keyEquivalent:@""] autorelease];
@@ -106,10 +106,10 @@ static NSMenu   *msieTopMenu;
                 
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
                                                                   withValidationStatus:SH_URL_VALID
-                                                                          parentString:titleString
-                                                                              andRange:NSMakeRange(0,[titleString length])] autorelease];
+                                                                          parentString:titleString? titleString : urlString
+                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
                                                                           
-            [msieBookmarksMenu addItemWithTitle:titleString
+            [msieBookmarksMenu addItemWithTitle:titleString? titleString : urlString
                                             target:owner
                                             action:@selector(injectBookmarkFrom:)
                                      keyEquivalent:@""

@@ -25,6 +25,7 @@ static NSMenu   *caminoBookmarksMenu;
 static NSMenu   *caminoBookmarksSupermenu;
 static NSMenu   *caminoTopMenu;
 
+static NSArray *emptyArray;
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
@@ -33,6 +34,7 @@ static NSMenu   *caminoTopMenu;
 - (id)init
 {
     [super init];
+    emptyArray = [[NSArray alloc] init];
     
     return self;
 }
@@ -83,7 +85,8 @@ static NSMenu   *caminoTopMenu;
 {
     if([inObject isKindOfClass:[NSDictionary class]]){
         // for the list type, recurrsively call the "Children" NSArray
-        [self drillPropertyList:[(NSDictionary *)inObject objectForKey:CAMINO_DICT_CHILD_KEY]];
+        NSArray *childrenArray = [(NSDictionary *)inObject objectForKey:CAMINO_DICT_CHILD_KEY];
+        [self drillPropertyList:childrenArray? childrenArray : emptyArray];
     }else if([inObject isKindOfClass:[NSArray class]]){
         // if we're passed a NSArray object, it can contain both list and leaf dict types,
         // so, we grab an enumerator from the array, and handle each case
