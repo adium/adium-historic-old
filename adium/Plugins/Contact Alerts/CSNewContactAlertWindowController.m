@@ -12,18 +12,19 @@
 #define NEW_ALERT_NIB @"NewAlert"
 
 @interface CSNewContactAlertWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
+- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
 - (void)configureForEvent;
 - (void)saveDetailsPaneChanges;
 - (void)configureDetailsPane;
+- (void)cleanUpDetailsPane;
 @end
 
 @implementation CSNewContactAlertWindowController
 
 //Prompt for a new alert.  Pass nil for a panel prompt.
-+ (void)editAlert:(NSDictionary *)inAlert onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
 {
-	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB alert:inAlert notifyingTarget:inTarget userInfo:inUserInfo];
+	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB alert:inAlert forListObject:inListObject notifyingTarget:inTarget userInfo:inUserInfo];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[newAlertwindow window]
@@ -37,12 +38,13 @@
 }
 	
 //Init
-- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
+- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
 {
 	[super initWithWindowNibName:windowNibName];
 	
 	//
 	userInfo = [inUserInfo retain];
+	listObject = [inListObject retain];
 	target = inTarget;
 	detailsPane = nil;
 	
@@ -64,6 +66,7 @@
 	[alert release];
 	[userInfo release];
 	[detailsPane release];
+	[listObject release];
 	
 	[super dealloc];
 }
@@ -83,6 +86,8 @@
 //Window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
+	[self cleanUpDetailsPane];
+	
     return(YES);
 }
 
@@ -169,6 +174,16 @@
 	}
 }
 
+//Remove details view/pane
+- (void)cleanUpDetailsPane
+{
+	[detailsView removeFromSuperview];
+	detailsView = nil;
+	[detailsPane closeView];
+	[detailsPane release];
+	detailsPane = nil;
+}
+
 //Configure the details pane for our current alert
 - (void)configureDetailsPane
 {
@@ -177,17 +192,13 @@
 
 	//Save changes and close down the old pane
 	if(detailsPane) [self saveDetailsPaneChanges];
-	[detailsView removeFromSuperview];
-	detailsView = nil;
-	[detailsPane closeView];
-	[detailsPane release];
-	detailsPane = nil;
+	[self cleanUpDetailsPane];
 	
 	//Get a new pane for the current action type, and configure it for our alert
 	detailsPane = [[actionHandler detailsPaneForActionID:actionID] retain];
 	if(detailsPane){
 		detailsView = [detailsPane view];
-		[detailsPane configureForActionDetails:[alert objectForKey:KEY_ACTION_DETAILS]];
+		[detailsPane configureForActionDetails:[alert objectForKey:KEY_ACTION_DETAILS] listObject:listObject];
 	}
 
 	//Resize our window for best fit
