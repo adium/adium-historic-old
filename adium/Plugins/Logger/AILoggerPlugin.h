@@ -13,21 +13,21 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PATH_LOGS		@"/Logs"
+#define PATH_LOGS                   @"/Logs"
 #define LOGGING_DEFAULT_PREFS       @"LoggingDefaults"
-#define PREF_GROUP_LOGGING	@"Logging"
-#define KEY_LOGGER_ENABLE	@"Enable Logging"
-#define	KEY_LOGGER_HTML		@"Enable HTML Logging"
+#define PREF_GROUP_LOGGING          @"Logging"
+#define KEY_LOGGER_ENABLE           @"Enable Logging"
+#define	KEY_LOGGER_HTML             @"Enable HTML Logging"
 
 @class AILoggerPreferences, AILoggerAdvancedPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
-    AILoggerPreferences		*preferences;
+    AILoggerPreferences     *preferences;
     
     //Current logging settings
     BOOL		    observingContent;
     BOOL		    logIndexingEnabled; //Does this system support log indexing?
-    BOOL			logHTML;
+    BOOL                    logHTML;
 	
     //Log viewer menu items
     NSMenuItem		    *logViewerMenuItem;

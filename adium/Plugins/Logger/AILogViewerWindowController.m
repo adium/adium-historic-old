@@ -37,6 +37,12 @@
 #define DATE			AILocalizedString(@"Date",nil)
 #define CONTENT			AILocalizedString(@"Content",nil)
 
+static NSString* windowToolbarIdentifier = @"Log Viewer Toolbar Identifier";
+static NSString* contactDrawerIdentifier = @"Contact Drawer Identifier";
+static NSString* deleteLogsIdentifier = @"Delete Logs Identifier";
+static NSString* searchFieldIdentifier = @"Search Field Indentifier";
+
+
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
@@ -112,9 +118,12 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] allowNaturalLanguage:YES];
     availableLogArray = [[NSMutableArray alloc] init];
     selectedLogArray = [[NSMutableArray alloc] init];
+    fromArray = [[NSMutableArray alloc] init];
+    toArray = [[NSMutableArray alloc] init];
+    serviceArray = [[NSMutableArray alloc] init];
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
-	
+    	
     [super initWithWindowNibName:windowNibName];
 	
     return(self);
@@ -125,6 +134,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 {
     [resultsLock release];
     [searchingLock release];
+    [fromArray release];
+    [toArray release];
+    [serviceArray release];
     [availableLogArray release];
     [selectedLogArray release];
     [selectedColumn release];
@@ -146,8 +158,38 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator];
     while((folderName = [enumerator nextObject])){
 		AILogFromGroup  *logFromGroup = [[AILogFromGroup alloc] initWithPath:folderName from:folderName];
-		
-		[availableLogArray addObject:logFromGroup];
+                
+		[availableLogArray addObject:logFromGroup]; 
+                if(![[logFromGroup from] isEqual:@".DS_Store"]) // avoid the directory info
+                {
+                    NSEnumerator    *toEnum = [[logFromGroup toGroupArray] objectEnumerator];
+                    NSArray         *broken = [[logFromGroup from] componentsSeparatedByString:@"."];
+                    NSString        *service;
+                    NSString        *from;
+                    AILogToGroup    *currentToGroup;
+                    
+                    // error checking in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+                    if([broken count] >= 2){
+                        service = [broken objectAtIndex:0];
+                        from = [[logFromGroup from] substringFromIndex:([service length] + 1)]; //one off for the seperator
+                    }
+                    else{
+                        service = @"";
+                        from = [logFromGroup from];
+                    }
+                    
+                    [fromArray addObject:from];
+                    [serviceArray addObject:service];
+                    
+                    // to processing
+                    while(currentToGroup = [toEnum nextObject]){
+                        if(![[currentToGroup to] isEqual:@".DS_Store"]){
+                            if(![toArray containsObject:[currentToGroup to]]){
+                                [toArray addObject:[currentToGroup to]]; 
+                            }                            
+                        }
+                    }
+                }
 		[logFromGroup release];
     }
 }
@@ -164,6 +206,14 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     }else{
         [[self window] center];
     }
+    
+    //Prepare the toolbar
+    toolbar = [[[NSToolbar alloc] initWithIdentifier: windowToolbarIdentifier] autorelease];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration: YES];
+    [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
+    [toolbar setDelegate: self];
+    [[self window] setToolbar:toolbar];         
     	
     //Prepare the search controls
     [self buildSearchMenu];
@@ -202,8 +252,11 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [self updateProgressDisplay];
     [tableView_results reloadData];   
     [textView_content setString:@""];
-    // invisible fix0ring... rebuild the 'global' log index
+    // invisible fix0ring... rebuild the 'global' log indexes
     [availableLogArray removeAllObjects];
+    [toArray removeAllObjects]; //note: even if there are no logs, the name will remain [bug or feature?]
+    [fromArray removeAllObjects];
+    [serviceArray removeAllObjects];
     [self initLogFiltering];
 }
 
@@ -242,6 +295,21 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
+}
+
+//Return our handy dandy accounts list
+- (NSMutableArray *)fromArray{
+    return fromArray;
+}
+
+//Return our handy dandy services list to match above
+- (NSMutableArray *)serviceArray{
+    return serviceArray;
+}
+
+//Return our handy dandy services list to match above
+- (NSMutableArray *)toArray{
+    return toArray;
 }
 
 
@@ -593,6 +661,12 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     [activeSearchString release]; activeSearchString = [[searchField_logs stringValue] copy];
 }
 
+-(void)resetSearch
+{
+    // damn it, this needs to also reset the list to 'all'
+    [self setSearchString:@""];
+}
+
 //Build the search mode menu
 - (void)buildSearchMenu
 {
@@ -881,6 +955,60 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 {    
     [self sortSelectedLogArrayForTableColumn:tableColumn
                                    direction:(selectedColumn == tableColumn ? !sortDirection : sortDirection)];
+}
+
+-(IBAction)toggleDrawer:(id)sender
+{
+    [drawer_contacts toggle:sender];
+}
+
+// ---- toolbar schtuff --------
+- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+    NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+    
+    if([itemIdent isEqual: contactDrawerIdentifier]){
+        [toolbarItem setLabel: @"Contacts"];
+        [toolbarItem setPaletteLabel:@"Contacts Drawer"];
+        [toolbarItem setToolTip:@"Show/Hide the Contacts Drawer"];
+        [toolbarItem setImage:[NSImage imageNamed:@"showdrawer"]];
+        [toolbarItem setTarget: self];
+        [toolbarItem setAction: @selector(toggleDrawer:)];
+    }  
+    else if([itemIdent isEqual: deleteLogsIdentifier]){
+        [toolbarItem setLabel: @"Delete"];
+        [toolbarItem setPaletteLabel:@"Delete"];
+        [toolbarItem setToolTip:@"Delete selected log"];
+        [toolbarItem setImage:[NSImage imageNamed:@"remove"]];
+        [toolbarItem setTarget: self];
+        [toolbarItem setAction: @selector(deleteSelectedLogs:)];
+    }      
+    else if([itemIdent isEqual: searchFieldIdentifier]){
+        [toolbarItem setLabel: @"Search"];
+        [toolbarItem setPaletteLabel:@"Search"];
+        [toolbarItem setToolTip:@"Search or filter logs"];
+        [toolbarItem setView:view_SearchField];
+        [toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
+        [toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
+        [toolbarItem setTarget: self];
+        [toolbarItem setAction: @selector(updateSearch:)]; 
+    }  
+    else {
+        toolbarItem = nil;
+    }
+    return toolbarItem;
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar {
+    return [NSArray arrayWithObjects: deleteLogsIdentifier,NSToolbarFlexibleSpaceItemIdentifier,searchFieldIdentifier,NSToolbarSeparatorItemIdentifier,contactDrawerIdentifier,nil];
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
+    return [NSArray arrayWithObjects: deleteLogsIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, searchFieldIdentifier,contactDrawerIdentifier,nil];
+}
+
+- (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
+    BOOL enable = YES;
+    return enable;
 }
 
 @end

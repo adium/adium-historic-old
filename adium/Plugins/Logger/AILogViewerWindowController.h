@@ -32,13 +32,19 @@ typedef enum {
     IBOutlet    NSProgressIndicator		*progressIndicator;
     IBOutlet    NSTextField			*textField_progress;
     IBOutlet    NSButton                        *button_deleteLogs;
+    IBOutlet    NSView                          *view_SearchField;
+    IBOutlet    NSDrawer                        *drawer_contacts;
 
     //Misc
     NSMutableArray      *availableLogArray;     //Array/tree of all available logs
+    NSMutableArray      *fromArray;             //Array of account names
+    NSMutableArray      *serviceArray;          //Array of services for accounts
+    NSMutableArray      *toArray;               //Array of contacts
     NSTableColumn       *selectedColumn;	//Selected/active sort column
     BOOL		sortDirection;		//Direction to sort
     LogSearchMode       searchMode;		//Currently selected search mode
     NSDateFormatter     *dateFormatter;		//Format for dates displayed in the table
+    NSToolbar           *toolbar;               //Shiny new toolbar of fun
     BOOL		automaticSearch;	//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL		ignoreSelectionChange;  //Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
 
@@ -62,5 +68,7 @@ typedef enum {
 - (IBAction)updateSearch:(id)sender;
 - (IBAction)selectSearchType:(id)sender;
 - (IBAction)deleteSelectedLogs:(id)sender;
-
+- (NSMutableArray *)fromArray;
+- (NSMutableArray *)serviceArray;
+- (NSMutableArray *)toArray;
 @end
