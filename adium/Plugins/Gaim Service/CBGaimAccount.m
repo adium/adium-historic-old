@@ -353,8 +353,7 @@
 						gaim_conv_im_update_typing(im);
 						break;
 					default:
-						NSLog(@"got a conv update %i",type);
-						break;
+					break;
 				}
 			}
 			break;
