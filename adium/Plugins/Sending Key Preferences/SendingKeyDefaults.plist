@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>message_send_onEnter</key>
+	<key>Send On Enter</key>
 	<true/>
-	<key>message_send_onReturn</key>
+	<key>Send On Return</key>
 	<true/>
 </dict>
 </plist>

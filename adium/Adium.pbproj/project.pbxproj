@@ -109,6 +109,7 @@
 				4BBAEE9E03DD7DAB00A8010A,
 				4B52A57D03EDB96E00A8010A,
 				4B9E73DE03F7085300A8010A,
+				4BDDCA08041104ED00A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -162,12 +163,12 @@
 				4BBAEE9D03DD7DAB00A8010A,
 				4B52A57C03EDB96E00A8010A,
 				4B9E73DD03F7085300A8010A,
+				4BDDCA07041104ED00A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
 				F5385CF601BEB9F901A80165,
-				F5CDD1170350B92801A8010A,
 				F59DB3D6033EA9CD01A8010A,
 				F59DB3D7033EA9CD01A8010A,
 				F5741745033E731F01A8010A,
@@ -199,6 +200,7 @@
 				4BBAEE9703DD7D8900A8010A,
 				4B52A58603EDB9D200A8010A,
 				4B254C4803F7073900A8010A,
+				4BDDCA01041104BB00A8010A,
 				F5B53FBE0333AB9201A8010A,
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
@@ -279,6 +281,7 @@
 				4BBAEE9F03DD7DAB00A8010A,
 				4B52A57E03EDB96E00A8010A,
 				4B9E73DF03F7085300A8010A,
+				4BDDCA09041104ED00A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -378,7 +381,6 @@
 				F57938C5033E73AC01A8010A,
 				F552078C033F727F01A8010A,
 				F5CDCE4C0350760A01A8010A,
-				F5CDD1180350B92801A8010A,
 				F5174D7C0376B6B101A8010A,
 				F55B416103AB8BE301A8010A,
 				F55B416903AB8C0501A8010A,
@@ -723,6 +725,19 @@
 		};
 		4B01CC0403FCA33300A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B04137C041111F200A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = SendingKeyDefaults.plist;
+			path = "Plugins/Sending Key Preferences/SendingKeyDefaults.plist";
+			refType = 4;
+		};
+		4B04137D041111F200A8010A = {
+			fileRef = 4B04137C041111F200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1178,6 +1193,7 @@
 				4BBAEEA003DD7DAB00A8010A,
 				4B52A57F03EDB96E00A8010A,
 				4B9E73E003F7085300A8010A,
+				4BDDCA0A041104ED00A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3206,6 +3222,235 @@
 		};
 		4BCFEF4D03F59F2800A8010A = {
 			fileRef = 4BCFEF4C03F59F2800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA01041104BB00A8010A = {
+			children = (
+				4BDDCA19041108EC00A8010A,
+				4BDDCA0E0411053300A8010A,
+				4BDDCA120411054900A8010A,
+				4BDDCA150411057300A8010A,
+				4B04137C041111F200A8010A,
+			);
+			isa = PBXGroup;
+			name = "Sending Key Preferences";
+			path = "";
+			refType = 4;
+		};
+		4BDDCA02041104ED00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BDDCA0F0411053300A8010A,
+				4BDDCA130411054900A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BDDCA03041104ED00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BDDCA160411057400A8010A,
+				4B04137D041111F200A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BDDCA04041104ED00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BDDCA100411053300A8010A,
+				4BDDCA140411054900A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BDDCA05041104ED00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BDDCA1A04110A7000A8010A,
+				4BDDCA1B04110A7000A8010A,
+				4BDDCA1C04110A7100A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BDDCA06041104ED00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BDDCA07041104ED00A8010A = {
+			buildPhases = (
+				4BDDCA02041104ED00A8010A,
+				4BDDCA03041104ED00A8010A,
+				4BDDCA04041104ED00A8010A,
+				4BDDCA05041104ED00A8010A,
+				4BDDCA06041104ED00A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Sending Key Preferences";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BDDCA0B0411051100A8010A,
+				4BDDCA0C0411051200A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Sending Key Preferences";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Sending Key Preferences";
+			productReference = 4BDDCA08041104ED00A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AISendingKeyPreferencesPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BDDCA08041104ED00A8010A = {
+			isa = PBXBundleReference;
+			path = "Sending Key Preferences.AdiumPlugin";
+			refType = 3;
+		};
+		4BDDCA09041104ED00A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BDDCA07041104ED00A8010A;
+		};
+		4BDDCA0A041104ED00A8010A = {
+			fileRef = 4BDDCA08041104ED00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA0B0411051100A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BDDCA0C0411051200A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BDDCA0D0411053300A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISendingKeyPreferencesPlugin.h;
+			path = "Plugins/Sending Key Preferences/AISendingKeyPreferencesPlugin.h";
+			refType = 4;
+		};
+		4BDDCA0E0411053300A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISendingKeyPreferencesPlugin.m;
+			path = "Plugins/Sending Key Preferences/AISendingKeyPreferencesPlugin.m";
+			refType = 4;
+		};
+		4BDDCA0F0411053300A8010A = {
+			fileRef = 4BDDCA0D0411053300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA100411053300A8010A = {
+			fileRef = 4BDDCA0E0411053300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA110411054900A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISendingKeyPreferences.h;
+			path = "Plugins/Sending Key Preferences/AISendingKeyPreferences.h";
+			refType = 4;
+		};
+		4BDDCA120411054900A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISendingKeyPreferences.m;
+			path = "Plugins/Sending Key Preferences/AISendingKeyPreferences.m";
+			refType = 4;
+		};
+		4BDDCA130411054900A8010A = {
+			fileRef = 4BDDCA110411054900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA140411054900A8010A = {
+			fileRef = 4BDDCA120411054900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA150411057300A8010A = {
+			isa = PBXFileReference;
+			name = SendingKeyPrefs.nib;
+			path = "Plugins/Sending Key Preferences/SendingKeyPrefs.nib";
+			refType = 4;
+		};
+		4BDDCA160411057400A8010A = {
+			fileRef = 4BDDCA150411057300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA19041108EC00A8010A = {
+			children = (
+				4BDDCA0D0411053300A8010A,
+				4BDDCA110411054900A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		4BDDCA1A04110A7000A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA1B04110A7000A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDDCA1C04110A7100A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10456,19 +10701,6 @@
 		};
 		F5CDCE4C0350760A01A8010A = {
 			fileRef = F5CDCE4B0350760A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5CDD1170350B92801A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = "Default Preferences.plist";
-			path = "Source/Default Preferences.plist";
-			refType = 4;
-		};
-		F5CDD1180350B92801A8010A = {
-			fileRef = F5CDD1170350B92801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
