@@ -105,26 +105,28 @@
 			
 			
 			if(account && source) { //valid message
-				theMessage = [[NSMutableString alloc] init];
 				//Determine some basic info about the content
 				BOOL isOutgoing = [content isOutgoing];
 				BOOL newParagraph = NO;
 				if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
 					
+					theMessage = [NSMutableString string];
+					
 					if (speakSender && !isOutgoing) {
-						NSString * senderString;
+						NSString	*senderString;
+
 						//Get the sender string
-						/*  if(isOutgoing){ //speak outgoing message sender names
-						senderString = [[adium accountController] propertyForKey:@"FullNameAttr" account:(AIAccount *)source];
-						if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
-						}else{ */ //incoming message sender name
-						senderString = [(AIListContact *)source displayName];
-						//		    }
+						senderString = [source displayName];
 						
 						if (!lastSenderString || ![senderString isEqualToString:lastSenderString]) {
-							[theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
-							[theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
 							[lastSenderString release]; lastSenderString = [senderString retain];
+							
+							NSMutableString		*senderStringToSpeak = [[senderString mutableCopy] autorelease];
+							[senderStringToSpeak replaceOccurrencesOfString:@" " 
+																 withString:@" [[emph -]] " 
+																	options:NSCaseInsensitiveSearch
+																	  range:NSMakeRange(0, [senderStringToSpeak length])]; //deemphasize all words after first in sender's name
+							[theMessage appendFormat:@"[[emph +]] %@...",senderStringToSpeak]; //emphasize first word in sender's name
 							newParagraph = YES;
 						}
 					}
@@ -143,18 +145,19 @@
 					}
 				}
 			}
-		}
-		else if(speakStatus && ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) ){
-			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
-			chat	= [notification object];
-			object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
-			if(!object) object = [[chat listObject] UID];
+		} else if(speakStatus && ([[content type] isEqualToString:CONTENT_STATUS_TYPE])){
 			account	= [chat account];
 			source	= [content source];
-			message = [[[content message] safeString] string];
-			
+
+
 			if(account && source){
-				theMessage = [[NSMutableString alloc] init];
+
+				theMessage = [NSMutableString string];
+
+				message = [[[content message] safeString] string];
+				date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
+				chat = [notification object];
+				
 				if (speakTime) {
 					dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
 					[theMessage appendFormat:@" %@...",dateString];
@@ -165,7 +168,7 @@
 		
 		//Speak the message
 		if(theMessage != nil){
-			AIListObject * otherPerson = [chat listObject];
+			AIListObject	*otherPerson = [chat listObject];
 			if (otherPerson) { //one-on-one chat; check for and use custom settings
 				NSString	*voice = nil;
 				NSNumber	*pitchNumber = nil;	float pitch = 0;
