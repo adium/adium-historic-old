@@ -11,13 +11,16 @@
 //Recognized URL types
 static int 	linkSubStringCount = 8;
 static NSString *linkSubString[] = { //If any of these are found, the string is scanned in detail using the keys below
+				     // You can find a current list of gTLD's at http://www.icann.org/tlds/
+    // You can find a full listing of TLD's at http://www.norid.no/domenenavnbaser/domreg.html
+    // This list only includes the gTLD's and some of the more popular TLD's
     @"://", @"www.", @"@", 
-    @".com", @".edu", @".gov", @".net", @".org"};
+    @".com", @".edu", @".gov", @".net", @".org", @".us", @".co.uk", @".org.uk", @".museum", @".aero", @".biz", @".coop", @".info", @".mil", @".com.ar", @".pro", @".com.jp"};
 static int 	linkDetailStringCount = 13;
 static NSString *linkDetailString[] = { //Anything matching these keys is linked
     @"*://*", @"www.*.*", @"*@*.*",
-     @"*.com", @"*.edu", @"*.gov", @"*.net", @"*.org",
-     @"*.com/*", @"*.edu/*", @"*.gov/*", @"*.net/*", @"*.org/*"};
+     @"*.com", @"*.edu", @"*.gov", @"*.net", @"*.org", @"*.us", @"*.co.uk", @"*.org.uk", @"*.museum", @"*.aero", @"*.biz", @"*.coop", @"*.info", @"*.int", @"*.mil", @"*.pro", @"*.com.jp", @"*.com.ar",
+     @"*.com/*", @"*.edu/*", @"*.gov/*", @"*.net/*", @"*.org/*", @"*.us/*", @"*.co.uk/*", @"*.org.uk/*", @"*.museum/*", @"*.aero/*", @"*.biz/*", @"*.coop/*", @"*.info/*", @"*.int/*", @"*.mil/*", @"*.pro/*", @"*.com.jp/*", @"*.com.ar/*"};
  
 @implementation AIAutoLinkingPlugin
 
