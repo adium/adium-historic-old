@@ -21,10 +21,22 @@
 	[[adium menuController] addMenuItem:joinChatMenuItem toLocation:LOC_File_New];
 }	
 
+- (void)dealloc
+{
+	[joinChatMenuItem release];
+}
+
 //Initiate a chat
 - (IBAction)joinChat:(id)sender
 {	
 	[DCJoinChatWindowController joinChatWindow];
 }
 
+//Disable the menu item if no online accounts could make use of it
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	if(menuItem == joinChatMenuItem){
+		return([[adium accountController] anOnlineAccountCanCreateGroupChats]);
+	}
+}
 @end
