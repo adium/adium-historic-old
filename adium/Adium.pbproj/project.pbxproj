@@ -701,7 +701,6 @@
 			);
 			buildSettings = {
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

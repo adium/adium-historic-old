@@ -326,14 +326,14 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
     int		returnVal = NSOrderedSame;
 
     if(emoticonA && emoticonB){
-	int lengthA = [[objectA representedText] length];
-	int lengthB = [[objectB representedText] length];
+        int lengthA = [[objectA representedText] length];
+        int lengthB = [[objectB representedText] length];
 
-	if (lengthA < lengthB){
-	    returnVal = NSOrderedDescending;
-	}else if (lengthA > lengthB){
-	    returnVal = NSOrderedAscending;
-	}
+        if (lengthA < lengthB){
+            returnVal = NSOrderedDescending;
+        }else if (lengthA > lengthB){
+            returnVal = NSOrderedAscending;
+        }
     }
 
     return returnVal;

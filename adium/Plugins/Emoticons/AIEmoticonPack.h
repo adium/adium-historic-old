@@ -38,11 +38,14 @@
 - (NSString *)emoticonName:(NSString *)emoticonID;
 - (NSString *)emoticonPath:(NSString *)emoticonID;
 - (NSString *)emoticonImagePath:(NSString *)emoticonID;
+- (NSImage *)emoticonImage:(NSString *)emoticonID;
 
+- (NSString *)emoticonBuiltinTextRepresentationsReturnDelimited:(NSString *)emoticonID;
 - (NSString *)emoticonEnabledTextRepresentationsReturnDelimited:(NSString *)emoticonID;
 - (NSArray *)emoticonAllTextRepresentationsAsArray:(NSString *)emoticonID;
 - (void)setEmoticon:(NSString *)emoticonID text:(NSString *)text enabled:(BOOL)enabled;
     // This function will also add the specified text if it is not there, whether enabling or disabling
+- (BOOL)isEmoticon:(NSString *)emoticonID textEnabled:(NSString *)text;
 - (BOOL)removeEmoticon:(NSString *)emoticonID text:(NSString *)text;
     // Returns success/failure.  Cannot remove strings that come w/ the pack, only user-added ones.
 
