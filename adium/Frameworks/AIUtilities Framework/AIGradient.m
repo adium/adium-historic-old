@@ -34,6 +34,13 @@
 	return ([[[self alloc] initWithFirstColor:inColor1 secondColor:inColor2 direction:inDirection] autorelease]);
 }
 
++ (AIGradient*)selectedControlGradientWithDirection:(AIDirection)inDirection
+{
+	NSColor *selectedColor = [NSColor alternateSelectedControlColor];
+	
+	return ([self gradientWithFirstColor:[selectedColor darkenAndAdjustSaturationBy:-0.1] secondColor:[selectedColor darkenAndAdjustSaturationBy:0.1] direction:inDirection]);
+}
+
 - (void)dealloc {
 	[color1 release];
 	[color2 release];

@@ -62,10 +62,8 @@
 {
     NSString	*title = [self objectValue];
     NSImage	*image = [self image];
-    NSColor 	*highlightColor;
     BOOL 	highlighted;
 
-    highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
     highlighted = [self isHighlighted];
     if(highlighted) {
         [self _drawHighlightWithFrame:cellFrame inView:controlView];
@@ -97,7 +95,7 @@
         int			stringHeight;
 
         //Determine the correct text color
-        if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+        if(highlighted){
             textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
         }else{
             if([self isEnabled]){
@@ -129,7 +127,7 @@
         //Draw the substring
         if(subString){
             //Determine the correct text color
-            if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+            if(highlighted){
                 textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text inverted
             }else{
                 if([self isEnabled]){
