@@ -38,5 +38,8 @@
 	if(menuItem == joinChatMenuItem){
 		return([[adium accountController] anOnlineAccountCanCreateGroupChats]);
 	}
+	
+	return(YES);
 }
+
 @end
