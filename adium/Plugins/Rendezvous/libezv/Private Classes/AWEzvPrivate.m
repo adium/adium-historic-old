@@ -3,7 +3,7 @@
  * File:        AWEzvPrivate.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvPrivate.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvPrivate.m,v 1.2 2004/05/16 16:07:01 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -44,6 +44,10 @@
 
 - (AWEzvStatus) status {
     return status;
+}
+
+- (NSDate *) idleTime {
+    return idleTime;
 }
 
 @end

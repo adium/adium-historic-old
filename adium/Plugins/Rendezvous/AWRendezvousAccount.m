@@ -160,6 +160,8 @@
     
     if ([contact idleSinceDate])
 	[user setStatusObject:[contact idleSinceDate] forKey:@"IdleSince" notify:NO];
+    else
+	[user setStatusObject:nil forKey:@"IdleSince" notify:NO];
 
     
     [[adium contactController] listObjectAttributesChanged:user 
@@ -288,6 +290,41 @@
 }
 
 #pragma mark Account Status
+//Respond to account status changes
+- (void)updateStatusForKey:(NSString *)key
+{
+    [super updateStatusForKey:key];
+    
+    BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
+    
+    //Now look at keys which only make sense while online
+    if(areOnline){
+        NSData  *data;
+        if([key compare:@"IdleSince"] == NSOrderedSame){
+            NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+            [self setAccountIdleTo:idleSince];
+	    
+        } else if ( ([key compare:@"AwayMessage"] == NSOrderedSame)){
+            NSAttributedString	*attributedString = nil;
+            
+            if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
+                attributedString = [NSAttributedString stringWithData:data];
+            }
+            
+            /* not done yet, coming soon to an adium near you */
+            
+        }
+    }
+}
+
+- (void)setAccountIdleTo:(NSDate *)idle
+{
+	[libezv setIdleTime:idle];
+
+	//We are now idle
+	[self setStatusObject:idle forKey:@"IdleSince" notify:YES];
+}
+
 //Status keys this account supports
 - (NSArray *)supportedPropertyKeys
 {
@@ -298,8 +335,8 @@
         @"Display Name",
         @"Online",
         @"Offline",
-//      @"IdleSince",
-//      @"IdleManuallySet",
+	@"IdleSince",
+	@"IdleManuallySet",
 //      @"UserIcon",
         @"Away",
         @"AwayMessage",

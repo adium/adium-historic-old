@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.2 2004/05/16 15:06:53 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.3 2004/05/16 16:07:01 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -241,6 +241,13 @@ void resolve_reply (struct sockaddr	*interface,
     } else {
         [userAnnounceData deleteField:@"msg"];
     }
+    
+    /* check for idle */
+    if ([client idleTime])
+	[userAnnounceData setField:@"away" content:[NSString stringWithFormat:@"%f",
+				[[client idleTime] timeIntervalSinceReferenceDate]]];
+    else
+	[userAnnounceData deleteField:@"away"];
     
     /* announce to network */
     if (isConnected == YES)
