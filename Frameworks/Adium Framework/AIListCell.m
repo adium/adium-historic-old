@@ -268,6 +268,10 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
+ /*
+	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[[self labelString] stringByAppendingString:[NSString stringWithFormat:@" %f",[listObject orderIndex]]]
+																	   attributes:[self labelAttributes]];
+*/
 	NSSize				nameSize = [displayName size];
 	NSRect				rect = inRect;
 	
