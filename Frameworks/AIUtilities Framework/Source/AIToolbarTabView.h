@@ -38,7 +38,7 @@
  * If this method is implemented by the delegate, the delegate will be queried for an image for each <tt>NSTabViewItem</tt>.  These images will be used to automatically populate the window's toolbar with toolbar items.
  * @param tabView The <tt>NSTabView</tt> sending the message
  * @param tabViewItem The <tt>NSTabViewItem</tt> for which an image is requested
- * @return An <tt>NSImage</tt> to use for a toolbar item associated with <b>tabViewItem</b>.
+ * @result An <tt>NSImage</tt> to use for a toolbar item associated with <b>tabViewItem</b>.
  */
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem;
 
@@ -48,10 +48,17 @@
  * If this method is implemented by the delegate, the delegate will be queried for a desired height when the user clicks the toolbar button associated with an <tt>NSTabViewItem</tt> (the toolbar item is created by implementation of tabView:imageForTabViewItem: by the delegate -- see its description.).	
  * @param tabView The <tt>NSTabView</tt> sending the message	
  * @param tabViewItem The <tt>NSTabViewItem</tt> for a height is requested	
- * @return The height needed to display <b>tabViewItem</b>.  The window will be smoothly resized to this height.
+ * @result The height needed to display <b>tabViewItem</b>.  The window will be smoothly resized to this height.
  */
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem;
 
+/*!
+ * @brief Label for the passed tab view item
+ *
+ * If this method is implemented, the delegate is queried for the label to show for each tab view item.
+ * @result The label to use.  If nil or unimplemented, [tabViewItem label] will be used.
+ */
+- (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem;
 /*
  * @brief Should the loading indicator be shown immediately until a tab view item is selected?
  *
