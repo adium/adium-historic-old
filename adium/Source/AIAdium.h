@@ -102,8 +102,7 @@ typedef enum {
     AIPref_Messages_Receiving,
     AIPref_Status_Away,
     AIPref_Status_Idle,
-    AIPref_Dock_General,
-    AIPref_Dock_Icon,
+    AIPref_Dock,
     AIPref_Sound,
     AIPref_Emoticons,
     AIPref_Alerts,
@@ -111,8 +110,6 @@ typedef enum {
 /*    AIPref_Accounts = 0,
     AIPref_ContactList,
     AIPref_Messages,
-    AIPref_Dock_General,
-    AIPref_Dock_Icon,
     AIPref_Sound,
     AIPref_Alerts,*/
     AIPref_Advanced_ContactList,
