@@ -53,6 +53,10 @@
 								   selector:@selector(activeStateChanged:)
 									   name:AIActiveStatusStateChangedNotification
 									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(activeStateChanged:)
+									   name:AIStatusStateArrayChangedNotification
+									 object:nil];
 	[self activeStateChanged:nil];
 }
 
@@ -97,7 +101,7 @@
  */
 - (void)activeStateChanged:(NSNotification *)notification
 {
-	int	index = [popUp_state indexOfItemWithRepresentedObject:[notification object]];
+	int	index = [popUp_state indexOfItemWithRepresentedObject:[[adium statusController] activeStatusState]];
 	
 	if(index >= 0 && index < [popUp_state numberOfItems]){
 		[popUp_state selectItemAtIndex:index];
