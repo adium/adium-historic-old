@@ -21,7 +21,8 @@
 #define GROWL_CONTACT_IDLE					@"Contact Went Idle"
 #define GROWL_CONTACT_UNIDLE				@"Contact Is No Longer Idle"
 #define GROWL_FIRST_MESSAGE					@"New Message Received"
-#define GROWL_HIDDEN_MESSAGE				@"Message Received while hidden"
+#define GROWL_HIDDEN_MESSAGE				@"Message received while hidden"
+#define GROWL_BACKGROUND_MESSAGE			@"Message received while in background"
 #define GROWL_FT_REQUEST					@"File Transfer Requested"
 #define GROWL_FT_BEGAN						@"File Transfer Began"
 #define GROWL_FT_CANCELED					@"File Transfer Canceled"
@@ -99,6 +100,7 @@
 									GROWL_CONTACT_UNIDLE,
 									GROWL_FIRST_MESSAGE,
 									GROWL_HIDDEN_MESSAGE,
+									GROWL_BACKGROUND_MESSAGE,
 									GROWL_FT_REQUEST,
 									GROWL_FT_BEGAN,
 									GROWL_FT_CANCELED,
@@ -114,6 +116,7 @@
 									GROWL_CONTACT_IDLE,
 									GROWL_CONTACT_UNIDLE,
 									GROWL_FIRST_MESSAGE,
+									GROWL_BACKGROUND_MESSAGE,
 									//GROWL_HIDDEN_MESSAGE,
 									GROWL_FT_REQUEST,
 									GROWL_FT_BEGAN,
@@ -190,10 +193,16 @@
 			description = [NSString stringWithFormat: AILocalizedString(@"%@","New content notification"), message];
 			note = GROWL_FIRST_MESSAGE;
 		}else if([notificationName isEqualToString: Content_DidReceiveContent]) {
-			if(![NSApp isHidden])
-				return;
+			
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
-			description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
+			if(![NSApp isActive]) {
+				if([NSApp isHidden])
+					description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
+				else
+					description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while in background"), message];
+			} else {
+				return;
+			}
 			note = GROWL_HIDDEN_MESSAGE;
 		}else if([notificationName isEqualToString: FILE_TRANSFER_REQUEST]) {
 			description = AILocalizedString(@"wants to send you a file","");
