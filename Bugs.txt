@@ -17,7 +17,7 @@ Dock
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
 Log Viewer
-    - All logs appear twice in the Log Viewer. 
+    - Logs appear twice in the Log Viewer if you choose 'View Logs' for a contact. 
 [LOW]
 
 Contacts
