@@ -147,8 +147,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
 		
 		//Keep the origin and height the same - we just want to size for width
-		NSLog(@"before changes, new %@ ; old %@",NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
-//		newFrame.origin = oldFrame.origin;
+		newFrame.origin = oldFrame.origin;
 		newFrame.size.height = oldFrame.size.height;
 		[button_clear setFrame:newFrame];
 		[button_clear setNeedsDisplay:YES];
