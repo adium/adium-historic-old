@@ -29,6 +29,7 @@
 AIAccountListPreferencesPlugin,
 AIAccountMenuAccessPlugin,
 AIAliasSupportPlugin,
+AIAppearancePreferencesPlugin,
 AIAutoIdlePlugin,
 AIAutoLinkingPlugin,
 AIAutoReplyPlugin,
@@ -121,6 +122,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIAccountListPreferencesPlugin class]];
 	[self _loadComponentClass:[AIAccountMenuAccessPlugin class]];
 	[self _loadComponentClass:[AIAliasSupportPlugin class]];
+	[self _loadComponentClass:[AIAppearancePreferencesPlugin class]];
 	[self _loadComponentClass:[AIAutoIdlePlugin class]];
 	[self _loadComponentClass:[AIAutoLinkingPlugin class]];
 	[self _loadComponentClass:[AIAutoReplyPlugin class]];
