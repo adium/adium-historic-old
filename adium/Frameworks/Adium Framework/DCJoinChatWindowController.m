@@ -127,7 +127,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 {
 	
     //Configure the handle type menu
-    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
+    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self includeOffline:NO]];
 	
     //Select the last used account / Available online account
 	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE

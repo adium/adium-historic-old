@@ -34,4 +34,7 @@
 
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact;
 
+- (BOOL)containsOnlyOneUniqueContact;
+- (BOOL)containsOnlyOneService;
+
 @end
