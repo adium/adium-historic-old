@@ -47,7 +47,7 @@
 		
 		[[inObject displayArrayForKey:@"Tab Status Icon"] setObject:[self _statusIconForListObject:inObject]
 														  withOwner:self];
-		
+
 		modifiedAttributes = [NSArray arrayWithObject:@"Tab Status Icon"];
 	}
 	

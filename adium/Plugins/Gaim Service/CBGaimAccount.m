@@ -555,7 +555,7 @@ static id<GaimThread> gaimThread = nil;
 		
 	//Now return the existing chat
 	chat = [[adium contentController] existingChatWithContact:contact];
-	
+
 	return chat;
 }
 
