@@ -13,12 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.68 2004/03/20 17:12:07 adamiser Exp $
+// $Id: AIAccountController.m,v 1.69 2004/03/24 14:44:19 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
 #import "AIPreferenceController.h"
-#import "AIPasswordPromptController.h"
+#import "ESAccountPasswordPromptController.h"
+#import "ESProxyPasswordPromptController.h"
 
 //Paths and Filenames
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
@@ -716,6 +717,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
 	return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
 }
+- (NSString *)_accountNameForProxyServer:(NSString *)proxyServer userName:(NSString *)userName{
+	return([NSString stringWithFormat:@"%@.%@",proxyServer,userName]);
+}
+- (NSString *)_passKeyForProxyServer:(NSString *)proxyServer{
+	return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
+}
+
 
 //Save an account password
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount
@@ -749,7 +757,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         [inTarget performSelector:inSelector withObject:password afterDelay:0.0001];    
     }else{
         //Prompt the user for their password
-        [AIPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector];
+        [ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector];
     }
 }
 
@@ -760,5 +768,38 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 											 account:[self _accountNameForAccount:inAccount]];
 }
 
-@end
 
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector
+{
+	NSString	*password;
+    
+    //check the keychain for this password
+    password = [AIKeychain getPasswordFromKeychainForService:[self _passKeyForProxyServer:server]
+                                                     account:[self _accountNameForProxyServer:server userName:userName]];
+    
+    if(password && [password length] != 0){
+        //Invoke the target right away
+        [inTarget performSelector:inSelector withObject:password afterDelay:0.0001];    
+    }else{
+        //Prompt the user for their password
+        [ESProxyPasswordPromptController showPasswordPromptForProxyServer:server
+																 userName:userName
+														  notifyingTarget:inTarget
+																 selector:inSelector];
+    }
+}
+//Save a proxy server password
+- (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName
+{
+    if(inPassword){
+        [AIKeychain putPasswordInKeychainForService:[self _passKeyForProxyServer:server]
+                                            account:[self _accountNameForProxyServer:server 
+																			userName:userName] password:inPassword];
+    }else{
+		[AIKeychain removePasswordFromKeychainForService:[self _passKeyForProxyServer:server]
+												 account:[self _accountNameForProxyServer:server userName:userName]];
+	}
+}
+
+
+@end
