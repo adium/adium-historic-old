@@ -14,13 +14,16 @@
 #define GROWL_NOTIFICATIONS_USER_SET	@"AllowedUserNotifications"
 
 // User Info Keys For Notifications
+#define GROWL_NOTIFICATION_NAME			@"NotificationName"
 #define GROWL_NOTIFICATION_TITLE		@"NotificationTitle"
 #define GROWL_NOTIFICATION_DESCRIPTION  @"NotificationDescription"
 #define GROWL_NOTIFICATION_ICON			@"NotificationIcon"
+#define GROWL_NOTIFICATION_STICKY		@"NotificationSticky"
 
 // Notifications
 #define GROWL_APP_REGISTRATION			@"GrowlApplicationRegistrationNotification"
 #define GROWL_APP_REGISTRATION_CONF		@"GrowlApplicationRegistrationConfirmationNotification"
+#define GROWL_NOTIFICATION				@"GrowlNotification"
 #define GROWL_PING						@"Honey, Mind Taking Out The Trash"
 #define GROWL_PONG						@"What Do You Want From Me, Woman"
 

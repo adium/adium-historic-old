@@ -120,6 +120,7 @@
 		iconData = [contact userIconData];
 		
 		NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
+										[events objectForKey: notificationName], GROWL_NOTIFICATION_NAME,
 										title, GROWL_NOTIFICATION_TITLE,
 										description, GROWL_NOTIFICATION_DESCRIPTION,
 										@"Adium", GROWL_APP_NAME,
@@ -127,7 +128,7 @@
 										nil];
 	
 		[[NSDistributedNotificationCenter defaultCenter]
-										postNotificationName: [events objectForKey: notificationName]
+										postNotificationName: GROWL_NOTIFICATION
 													  object: nil
 													userInfo: growlEvent
 										  deliverImmediately: NO];
