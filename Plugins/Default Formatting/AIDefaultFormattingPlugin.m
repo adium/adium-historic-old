@@ -100,9 +100,10 @@
     [inTextEntryView setTypingAttributes:attributes];
 
     //Apply the attributes to the existing content
-    contents = [[[inTextEntryView attributedString] mutableCopy] autorelease];
+    contents = [[inTextEntryView attributedString] mutableCopy];
     [contents setAttributes:attributes range:NSMakeRange(0,[contents length])];
     [inTextEntryView setAttributedString:contents];
+	[contents release];
 }
 
 
