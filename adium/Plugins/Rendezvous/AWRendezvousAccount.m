@@ -37,7 +37,11 @@
     libezvContacts = [[NSMutableDictionary dictionary] retain];
     
     libezv = [[AWEzv alloc] initWithClient:self];
-    
+}
+
+- (BOOL)disconnectOnFastUserSwitch
+{
+	return YES;
 }
 
 //Return the default properties for this account
