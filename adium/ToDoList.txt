@@ -10,11 +10,8 @@ If you are working on something big and it may take a while, please tag it with 
 // Minor Changes
 //-------------------------------------------------------------------------------------------------------
 Contacts:
-	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	= Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
             // core functionality is done, now I'm adding AB syncing, and possibly AIM Buddy Note sycing
-	+ Add keyboard shortcut for the 'add contact' menu item
-	+ Pass our aliases to libgaim so they get uploaded to the server
 	+ Context menus
 		* Do we need to show the "Add Contact..." item, greyed out, on basically all contacts?
 		* Do we sure "Delete" should be in the context menu? How often is this used?
@@ -60,8 +57,7 @@ Other:
 	+ Add export option to log viewer
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
-    	+ Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
-	+ Display new mail notices for the accounts that support it.  This is bloat - but some people expect it.
+	+ Don't spawn new windows when we're hidden, instead queue them and open the windows next time we're unhidden
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
 
 Contact alerts:
@@ -114,16 +110,6 @@ Contact Blocking:
 	+ Add block and unblock menu items which prompt for the service and name
 	+ Add block / unblock contextual menu items
 	+ Add "Block contacts not on my list" to AIM account preferences
-
-
-Contact Inspector:
-    	Provide a contact inspector with a lot of room to grow, that is easy to use, organized, and lets the user
-    	manage all their contact specific settigns in one place
-
-    	Steps:
-    	+ Convert inspector to preference-like window with a toolbar of categories
-    	+ Update existing inspector views to use big controls, and place them in the inspector categories
-    	+ Move contact info into a category in the inspector
 
 Documentation
 	Documentation is considered one of the most important parts of a project. It is also the most tedious part. We need good documentation in order to assist users and developers. These should include screen shots if possible (visual aid). Documentation should not be moved to the done portion of this list until every other part is done, as things may change.
