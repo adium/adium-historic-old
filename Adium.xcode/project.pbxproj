@@ -4544,15 +4544,6 @@
 			settings = {
 			};
 		};
-		34A489FA06F6436D002C7C5F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIBorderlessListWindowController.m;
-			path = "Plugins/Contact List/AIBorderlessListWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34A489FB06F6436D002C7C5F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4588,12 +4579,6 @@
 			path = "Plugins/Contact List/AIListWindowController.h";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34A48A0006F6436D002C7C5F = {
-			fileRef = 34A489FA06F6436D002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34A48A0106F6436D002C7C5F = {
 			fileRef = 34A489FB06F6436D002C7C5F;
@@ -4981,6 +4966,36 @@
 		};
 		34A48AD406F647FD002C7C5F = {
 			fileRef = 34A48AD206F647FD002C7C5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A48B3706F64B27002C7C5F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBorderlessListOutlineView.h;
+			path = "Plugins/Contact List/AIBorderlessListOutlineView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A48B3806F64B27002C7C5F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIBorderlessListOutlineView.m;
+			path = "Plugins/Contact List/AIBorderlessListOutlineView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A48B3906F64B27002C7C5F = {
+			fileRef = 34A48B3706F64B27002C7C5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A48B3A06F64B27002C7C5F = {
+			fileRef = 34A48B3806F64B27002C7C5F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5581,6 +5596,7 @@
 				34A48A4006F64665002C7C5F,
 				34A48A4E06F6468D002C7C5F,
 				34A48A5A06F646BD002C7C5F,
+				34A48B3906F64B27002C7C5F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6167,7 +6183,6 @@
 				343EAB9306EF8604001CDAFF,
 				34CEBE6306F117DF00A89DDE,
 				34A489F306F64359002C7C5F,
-				34A48A0006F6436D002C7C5F,
 				34A48A0106F6436D002C7C5F,
 				34A48A0406F6436D002C7C5F,
 				34A48A1806F6438F002C7C5F,
@@ -6177,6 +6192,7 @@
 				34A48A4106F64665002C7C5F,
 				34A48A5006F64692002C7C5F,
 				34A48A5B06F646BD002C7C5F,
+				34A48B3A06F64B27002C7C5F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16615,13 +16631,12 @@
 		};
 		4BF98D2906D147BB00E8781D = {
 			children = (
-				34A489FA06F6436D002C7C5F,
-				34A489FB06F6436D002C7C5F,
-				34A489FC06F6436D002C7C5F,
-				34A489FE06F6436D002C7C5F,
 				34A489FF06F6436D002C7C5F,
-				34A48A1406F6438F002C7C5F,
+				34A489FE06F6436D002C7C5F,
 				34A48A1606F6438F002C7C5F,
+				34A48A1406F6438F002C7C5F,
+				34A489FC06F6436D002C7C5F,
+				34A489FB06F6436D002C7C5F,
 				34A48A0B06F64376002C7C5F,
 				34A48A0F06F64381002C7C5F,
 			);
@@ -16634,6 +16649,8 @@
 			children = (
 				34A48A1306F6438F002C7C5F,
 				34A48A1506F6438F002C7C5F,
+				34A48B3706F64B27002C7C5F,
+				34A48B3806F64B27002C7C5F,
 			);
 			isa = PBXGroup;
 			name = "List / Outline View";
