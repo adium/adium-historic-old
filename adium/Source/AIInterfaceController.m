@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.45 2003/12/22 17:54:38 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.46 2003/12/26 16:20:44 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -296,7 +296,7 @@
     BOOL                                isFirst = YES;
     
     NSString                            *displayName = [object displayName];
-    NSString                            *uid = [object UID];
+    NSString                            *serverDisplayName = [object serverDisplayName];
     
     //Configure fonts and attributes
     NSFontManager                       *fontManager = [NSFontManager sharedFontManager];
@@ -310,12 +310,11 @@
         toolTipsFont, NSFontAttributeName, nil];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
-    if([[displayName compactedString] compare:[uid compactedString]] == 0){
-        [titleString appendString:[NSString stringWithFormat:@"%@",displayName] withAttributes:titleDict];
+    if([displayName compare:serverDisplayName] == 0){
+        [titleString appendString:[NSString stringWithFormat:@"%@", displayName] withAttributes:titleDict];
     }else{
-        [titleString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,uid] withAttributes:titleDict];
+        [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, serverDisplayName] withAttributes:titleDict];
     }
-    
     
     //Add the serviceID, three spaces away
     if ([object isKindOfClass:[AIListContact class]]){

@@ -135,12 +135,15 @@ static AIInfoWindowController *sharedInstance = nil;
     [infoString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attatchment]];
     
     //Display Name
-    //    ownerArray = [inContact statusArrayForKey:@"Display Name"];
-    //    if(ownerArray && [ownerArray count]){
+	//"<DisplayName>" (or) "<DisplayName> (<UID>)"
+	NSString	*displayName = [inContact displayName];
+	NSString	*serverDisplayName = [inContact serverDisplayName];
     [infoString appendString:@"\t" withAttributes:labelAttributes];
-    [infoString appendString:/*[ownerArray objectAtIndex:0]*/[inContact displayName] withAttributes:bigValueAttributes];
-    [infoString appendString:[NSString stringWithFormat:@" (%@)", [inContact UID]] withAttributes:bigValueAttributes];
-    //    }
+    if([displayName compare:serverDisplayName] == 0){
+        [infoString appendString:[NSString stringWithFormat:@"%@",displayName] withAttributes:bigValueAttributes];
+    }else{
+        [infoString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,serverDisplayName] withAttributes:bigValueAttributes];
+    }
     
     //Client
     ownerArray = [inContact statusArrayForKey:@"Client"];
