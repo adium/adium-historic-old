@@ -176,9 +176,9 @@ static NSConnection* accountLookup(GaimAccount *acct)
 	NSLog(@"looked up %@ %@",acct->ui_data,ret);
     return ret;
 }*/
-static NSDistantObject<AdiumGaimDO>* accountLookup(GaimAccount *acct)
+static id<AdiumGaimDO>* accountLookup(GaimAccount *acct)
 {
-	NSDistantObject<AdiumGaimDO> *adiumGaimAccount = acct->ui_data;
+	id<AdiumGaimDO> *adiumGaimAccount = acct->ui_data;
 
     return adiumGaimAccount;
 }
@@ -384,7 +384,7 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*) node;
 		
-		contactLookupFromBuddy(buddy);
+//		contactLookupFromBuddy(buddy);
 			
 //		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
     }

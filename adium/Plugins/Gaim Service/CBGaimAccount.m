@@ -120,22 +120,21 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
-	NSLog(@"\"%@\" \"%@\"",[gaimAlias compactedString],[theContact UID]);
-	if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-		if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
-			[theContact setStatusObject:[[gaimAlias copy] autorelease]
+	if ((![theContact statusObjectForKey:@"FormattedUID"]) &&
+		(![theContact statusObjectForKey:@"Server Display Name"])){
+		
+		if ([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
+			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
-		}
-	} else {
-		if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
+		} else {
 			//Set the server display name status object as the full display name
-			[theContact setStatusObject:[[gaimAlias copy] autorelease]
+			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
 								 notify:NO];
 			
-			//Set a 20-characters-or-less version as the lowest priority display name
-			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
+			//Set a 25-characters-or-less version as the lowest priority display name
+			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
 															 withOwner:self
 														 priorityLevel:Lowest_Priority];
 			//notify
@@ -1313,9 +1312,9 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 {
     NSEnumerator    *enumerator;
     BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
-	
-	//Reset the gaim account (We don't want it tracking anything between sessions)
-//    [self resetLibGaimAccount];
+
+	//We now longer have a connection
+	gc = NULL;
 	
     //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
