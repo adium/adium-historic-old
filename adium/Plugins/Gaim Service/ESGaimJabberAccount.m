@@ -84,6 +84,21 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	gaim_account_set_username(account, [completeUserName UTF8String]);
 }
 
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
+{
+	return([AIHTMLDecoder encodeHTML:inAttributedString
+							 headers:YES
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES
+	  attachmentImagesOnlyForSending:YES
+					  simpleTagsOnly:NO]);
+}
 
 //Make sure the server is appended if something attempts to access the formattedUID
 - (NSString *)formattedUID

@@ -481,11 +481,6 @@ static void *gaim_adium_get_handle(void)
 	return &adium_gaim_handle;
 }
 
-static void server_finish_login_cb(GaimAccount *account, void *data)
-{
-	[accountLookup(account) mainPerformSelector:@selector(accountFinishLogin)];
-}
-
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
 	if (buddy){
@@ -635,10 +630,6 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 	gaim_signal_connect(blist_handle, "buddy-direct-im-disconnected",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_DISCONNECTED));
-
-	//Account finish login
-	gaim_signal_connect(accounts_handle, "account-finish-login",
-						handle, GAIM_CALLBACK(server_finish_login_cb), NULL);	
 }
 
 #pragma mark Conversation
