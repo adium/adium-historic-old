@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 719 $ $Date: 2004/05/05 16:26:41 $ -->
+<!--$Rev: 721 $ $Date: 2004/05/06 02:50:11 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -493,7 +493,7 @@ try {
             } else {
                 out.print(rset.getString("sender_sn"));
             }
-            out.print("</span></a> :\n");
+            out.print("</span></a> &rarr;\n");
 
             if(to_sn == null || from_sn == null) {
                 out.print("<span style=\"color: " +
