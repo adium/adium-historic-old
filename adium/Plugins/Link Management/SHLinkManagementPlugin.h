@@ -9,7 +9,7 @@
 
 
 @interface SHLinkManagementPlugin : AIPlugin {
-
+    NSToolbarItem   *toolbarItem;
 }
 
 @end
