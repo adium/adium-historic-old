@@ -8,6 +8,8 @@
 
 #import "ESStatusPreferencesPlugin.h"
 #import "ESStatusPreferences.h"
+#import "AIMenuController.h"
+#import <AIUtilities/AIMenuAdditions.h>
 
 /*
  * @class ESStatusPreferencesPlugin
@@ -17,12 +19,30 @@
 
 /*
  * @brief Install
+ *
+ * Install our preference pane, and add a menu item to the Status menu which opens it.
  */
 - (void)installPlugin
 {
+	NSMenuItem *menuItem;
+	
 	//Install our preference view
     preferences = [[ESStatusPreferences preferencePaneForPlugin:self] retain];	
 	
+	//Add our menu item
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Status Menu...",nil)
+																	target:self
+																	action:@selector(showStatusPreferences:)
+															 keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Additions];
+}
+
+/*!
+ * Open the preferences to the status pane
+ */
+- (void)showStatusPreferences:(id)sender
+{
+	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"status"];
 }
 
 @end
