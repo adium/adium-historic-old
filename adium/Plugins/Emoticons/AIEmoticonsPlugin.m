@@ -20,11 +20,19 @@
 
 #define EMOTICON_DEFAULT_PREFS	@"EmoticonDefaults"
 #define PATH_EMOTICONS		@"/Emoticons"
+#define PATH_INTERNAL_EMOTICONS		@"/Contents/Resources/Emoticons/"
+#define EMOTICON_PACK_PATH_EXTENSION	@"emoticonPack"
+#define EMOTICON_PATH_EXTENSION		@"emoticon"
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
+// The above is originally from AIAdium.m, but due to code structure, could not be accessed properly
 
 @interface AIEmoticonsPlugin (PRIVATE)
 - (void)filterContentObject:(AIContentObject *)inObject;
 - (NSMutableAttributedString *)convertSmiliesInMessage:(NSAttributedString *)inMessage;
+- (BOOL)loadEmoticonsFromPacks;
 - (void)setupForTesting;
+- (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray;
+- (void)_scanEmoticonsFromPath:(NSString *)emoticonPackPath intoArray:(NSMutableArray *)emoticonPackArray;
 - (void)updateQuickScanList;
 @end
 
@@ -36,8 +44,14 @@
     quickScanList = [[NSMutableArray alloc] init];
     emoticons = [[NSMutableArray alloc] init];
 
+    //Create a custom emoticons directory ~/Library/Application Support/Adium 2.0/Emoticons
+		// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
+		// "directly" FIX
+    [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS]];
+	
     replaceEmoticons = YES;
-    [self setupForTesting];
+	if (![self loadEmoticonsFromPacks])
+		[self setupForTesting];	// use the bundled graphics if not emoticon pack could be found
 
     [self updateQuickScanList];
 
@@ -159,6 +173,132 @@
 		}
 	    }
 	}
+    }
+}
+
+- (BOOL)loadEmoticonsFromPacks
+{
+	BOOL				foundGoodPack = FALSE;
+	NSString			*path;
+	NSMutableArray		*emoticonPackArray;
+	
+	//Setup
+	emoticonPackArray = [[NSMutableArray alloc] init];
+	
+    //Scan internal packs
+    path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
+    foundGoodPack = [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray];
+
+    //Scan user packs
+		// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
+		// "directly" FIX
+    path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS];
+    foundGoodPack |= [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray];
+	
+	//Load the appropriate emoticons from the appropriate paths
+	//(Right now, just load everything from the first pack)
+	if ([emoticonPackArray count] < 1)
+		foundGoodPack = FALSE;
+	
+	if (foundGoodPack) {
+		NSDictionary*	smileyPack = [emoticonPackArray objectAtIndex:0];
+		NSArray*		smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
+		int				i;
+		AIEmoticon		*emo = nil;
+		
+		for (i = 0;	i < [smileyList count]; i++)
+		{
+			path = [smileyList objectAtIndex:i];
+			
+			emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:[NSString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]]];
+			[emoticons addObject:emo];
+		}
+	}
+	
+	return foundGoodPack;
+}
+
+- (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray
+{
+    NSDirectoryEnumerator	*enumerator;			//Sound folder directory enumerator
+    NSString			*file;				//Current Path (relative to sound folder)
+    NSString			*emoticonSetPath;			//Name of the set
+    //NSMutableArray		*soundSetContents;		//Array of sounds in the set
+	BOOL				foundGoodPack = FALSE;
+
+    //Start things off with a valid set path and contents, incase any sounds aren't in subfolders
+    emoticonSetPath = emoticonFolderPath;
+    //soundSetContents = [[[NSMutableArray alloc] init] autorelease];
+
+    //Scan the directory
+    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:emoticonFolderPath];
+    while((file = [enumerator nextObject])){
+        BOOL			isDirectory;
+        NSString		*fullPath;
+
+        if([[file lastPathComponent] characterAtIndex:0] != '.' &&
+           [[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0 /*&&
+           ![[file pathComponents] containsObject:@"CVS"]*/){ //Ignore certain files
+
+            //Determine if this is a file or a directory
+            fullPath = [emoticonFolderPath stringByAppendingPathComponent:file];
+            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
+
+            if(isDirectory){
+                /*if([soundSetContents count] != 0){
+                    //Close the current soundset, adding it to our sound set array
+                    [self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
+                }
+
+                //Open a new soundset for this directory
+                soundSetPath = fullPath;
+                soundSetContents = [[[NSMutableArray alloc] init] autorelease];*/
+				NSMutableArray	*heldEmoticons = [[[NSMutableArray alloc] init] autorelease];
+			
+				[self _scanEmoticonsFromPath:fullPath intoArray:heldEmoticons];
+
+				[emoticonPackArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, nil]];
+				
+				if ([heldEmoticons count] > 0)	foundGoodPack = TRUE;
+				
+            }else{
+                NSLog (@"File \"EmoticonPack\" found.  Valid EmoticonPacks are directories.");
+            }
+        }
+    }
+
+    //Close the last soundset, adding it to our sound set array
+    //[self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];   
+	
+	 return foundGoodPack;	// Should return success in finding at least one pack 
+}
+
+- (void)_scanEmoticonsFromPath:(NSString *)emoticonPackPath intoArray:(NSMutableArray *)emoticonPackArray
+{
+    NSDirectoryEnumerator	*enumerator;			//Sound folder directory enumerator
+    NSString			*file;				//Current Path (relative to sound folder)
+
+    //Scan the directory
+    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:emoticonPackPath];
+    while((file = [enumerator nextObject])){
+        BOOL			isDirectory;
+        NSString		*fullPath;
+
+        if([[file lastPathComponent] characterAtIndex:0] != '.' &&
+           [[file pathExtension] caseInsensitiveCompare:EMOTICON_PATH_EXTENSION] == 0 /*&&
+           ![[file pathComponents] containsObject:@"CVS"]*/){ //Ignore certain files, only take emoticons
+
+            //Determine if this is a file or a directory
+            fullPath = [emoticonPackPath stringByAppendingPathComponent:file];
+            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
+
+            if(isDirectory){
+                [emoticonPackArray addObject:fullPath];
+
+            }else{
+                NSLog (@"File \"Emoticon\" found.  Valid Emoticons are directories.");
+            }
+        }
     }
 }
 
