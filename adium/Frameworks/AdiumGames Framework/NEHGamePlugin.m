@@ -54,10 +54,11 @@ static NSMenu			*menu_Games;
 
 - (void)uninstallPlugin
 {
+	[[adium contentController] unregisterContentFilter:self];
+	
 	[prefixString release]; prefixString = nil;
 	[gamesForAccounts release]; gamesForAccounts = nil;
 	[windowController release]; windowController = nil;
-//	[[adium contentController] unregisterIncomingContentFilter:self];
 }
 
 - (void)endGameWith:(AIListContact*)contact fromAccount:(AIAccount*)account;
@@ -197,14 +198,14 @@ static NSMenu			*menu_Games;
 			
 			contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
 			if(!contacts){
-				contacts = [[[NSMutableDictionary alloc] init] autorelease];
+				contacts = [NSMutableDictionary dictionary];
 				[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
 			}
 			
 			control = [contacts objectForKey:[contact uniqueObjectID]];
 			
 			if([type isEqualToString:MSG_TYPE_INVITE]) {
-				if(control != nil) {
+				if(control) {
 					//We just got an invitation from someone we think we have a game open with
 					//This means, probably, one of two things.
 					//1) We got unsynced with them, and we shouldn't actually have a game open
@@ -214,15 +215,21 @@ static NSMenu			*menu_Games;
 					//It might make sense to drop our game and start a new one here,
 					//but for now we'll just ignore this
 					return inAttributedString;
+					
+				}else{
+					[self mainPerformSelector:@selector(handleInvitation:account:contact:)
+								   withObject:msg
+								   withObject:account
+								   withObject:contact
+								waitUntilDone:YES];
 				}
-				
-				control = [self newController];
-				[control handleInvitation:msg account:account contact:contact];
-				[contacts setObject:control forKey:[contact uniqueObjectID]];
-				
-			} else if(control != nil) { 
-				//We ignore non-invite messages from people with whom we don't have an open game
-				[control handleMessage:msg ofType:type];
+			} else if(control) { 
+				//We ignore non-invite messages from people with whom we don't have an open game;
+				//we have a control, so we have an open game
+				[control mainPerformSelector:@selector(handleMessage:ofType:)
+								  withObject:msg
+								  withObject:type
+							   waitUntilDone:YES];
 			}
 		}
 	}	
@@ -230,6 +237,13 @@ static NSMenu			*menu_Games;
 	//We don't change the attributed string
 	//though we may have set the content object not to display or track anymore
 	return inAttributedString;	
+}
+
+- (void)handleInvitation:(NSString *)msg account:(AIAccount *)account contact:(AIListContact *)contact
+{
+	control = [self newController];
+	[control handleInvitation:msg account:account contact:contact];
+	[contacts setObject:control forKey:[contact uniqueObjectID]];
 }
 
 - (IBAction)cancelInvite:(id)sender
