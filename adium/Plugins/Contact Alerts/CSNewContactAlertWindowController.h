@@ -9,6 +9,7 @@
 	IBOutlet NSView					*view_auxiliary;
 	IBOutlet NSPopUpButton			*popUp_event;
 	IBOutlet NSPopUpButton			*popUp_action;
+	IBOutlet NSButton				*checkbox_oneTime;
 	
 	AIActionDetailsPane				*detailsPane;
 	NSView							*detailsView;

@@ -10,6 +10,7 @@
             CLASS = CSNewContactAlertWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkbox_oneTime" = NSButton; 
                 "popUp_action" = NSPopUpButton; 
                 "popUp_event" = NSPopUpButton; 
                 target = id; 

@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.21 2004/04/18 17:24:50 adamiser Exp $
+//  $Id: ESContactAlertsController.m,v 1.22 2004/04/23 03:40:56 adamiser Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -81,12 +81,18 @@
 		NSEnumerator	*enumerator = [alerts objectEnumerator];
 		NSDictionary	*alert;
 		
+		//Process each alert (There may be more than one for an event)
 		while(alert = [enumerator nextObject]){
 			NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
 			NSDictionary			*actionDetails = [alert objectForKey:KEY_ACTION_DETAILS];
 			id <AIActionHandler>	actionHandler = [actionHandlers objectForKey:actionID];		
 
 			[actionHandler performActionID:actionID forListObject:listObject withDetails:actionDetails];
+			
+			//If this alert was a single-fire alert, we can delete it now
+			if([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]){
+				[self removeAlert:alert fromListObject:listObject];
+			}
 		}
 	}
 }

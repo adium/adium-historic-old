@@ -78,6 +78,8 @@
 	[webView setPreferencesIdentifier:prefIdentifier];
 	[[webView preferences] setAutosaves:YES];
 
+	NSLog(@"Default: %@",[[webView preferences] defaultTextEncodingName]);
+	
 	if (![[[adium preferenceController] preferenceForKey:prefIdentifier
 												   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]){
 		//Load defaults from the bundle or our defaults, as appropriate

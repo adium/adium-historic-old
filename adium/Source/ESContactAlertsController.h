@@ -25,6 +25,7 @@
 #define	KEY_EVENT_ID				@"EventID"
 #define	KEY_ACTION_ID				@"ActionID"
 #define	KEY_ACTION_DETAILS			@"ActionDetails"
+#define KEY_ONE_TIME_ALERT			@"OneTime"
 
 @interface ESContactAlertsController : NSObject {
     IBOutlet	AIAdium			*owner;

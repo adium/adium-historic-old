@@ -161,6 +161,9 @@
 		}
 	}
 	
+	//Setup our single-fire option
+	[checkbox_oneTime setState:[[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]];
+	
 	//Configure the action details pane
 	[self configureDetailsPane];
 }
@@ -168,10 +171,14 @@
 //Save changes made in the details pane
 - (void)saveDetailsPaneChanges
 {
+	//Save details
 	NSDictionary	*actionDetails = [detailsPane actionDetails];
 	if(actionDetails){
 		[alert setObject:actionDetails forKey:KEY_ACTION_DETAILS];
 	}
+
+	//Save our single-fire option
+	[alert setObject:[NSNumber numberWithInt:[checkbox_oneTime state]] forKey:KEY_ONE_TIME_ALERT];
 }
 
 //Remove details view/pane
