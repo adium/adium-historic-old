@@ -26,5 +26,7 @@
 	<false/>
 	<key>DefaultBackgroundColor</key>
 	<string>FFFFFF</string>
+	<key>DefaultVariant</key>
+	<string>Normal</string>
 </dict>
 </plist>

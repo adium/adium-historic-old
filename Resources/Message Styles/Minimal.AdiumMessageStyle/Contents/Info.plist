@@ -22,7 +22,7 @@
 	<integer>11</integer>
 	<key>ShowsUserIcons</key>
 	<true/>
-	<key>DisplayNameForNoVariant</key>
+	<key>DefaultVariant</key>
 	<string>Red vs Blue</string>
 </dict>
 </plist>
