@@ -278,7 +278,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 [self _sizeWindowToFitFlatView:view_Sound];
             break;
             case 7:
-                [self _insertPanesForCategory:AIPref_Alerts intoView:view_Alerts showContainers:NO];
+                [self _insertPanesForCategory:AIPref_Alerts intoView:view_Alerts showContainers:YES];
                 [self _sizeWindowToFitFlatView:view_Alerts];
             break;
         }
