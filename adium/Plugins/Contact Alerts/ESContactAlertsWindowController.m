@@ -104,18 +104,27 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [[adium notificationCenter] removeObserver:self]; //remove any previous observers
 
     //Observe account changes
-    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(accountListChanged:) 
+									   name:Account_ListChanged 
+									 object:nil];
 
-    [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Pref_Changed_Alerts object:activeContactObject];
-    [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:activeContactObject];
-
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(externalChangedAlerts:) 
+									   name:Pref_Changed_Alerts 
+									 object:activeContactObject];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(externalChangedAlerts:) 
+									   name:One_Time_Event_Fired 
+									 object:activeContactObject];
 
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s %@",[activeContactObject displayName],AILocalizedString(@"Alerts",nil)]];
 
     //Build the contact list
-
-    [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
+	int index = [popUp_contactList indexOfItemWithRepresentedObject:activeContactObject];
+	if (index != NSNotFound)
+		[popUp_contactList selectItemAtIndex:index];
 
     [instance configForObject:activeContactObject];
 
