@@ -36,7 +36,7 @@
 
 - (NSString *)entryForObject:(AIListObject *)inObject
 {
-    if([inObject isKindOfClass:[AIListContact class]]){
+    if([inObject isKindOfClass:[AIListContact class]] && [[(AIListContact *)inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
         NSDate	*signonDate, *currentDate;
 
         currentDate = [NSDate date];
