@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.124 2004/04/18 18:15:18 adamiser Exp $
+// $Id: AIContactController.m,v 1.125 2004/04/22 02:28:26 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -42,6 +42,8 @@
 - (void)saveContactList;
 - (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
+
+- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol;
@@ -775,7 +777,10 @@
 //Returns a menu containing all the objects in a group on an account
 //- Selector called on contact selection is selectContact:
 //- The menu item's represented object is the contact it represents
-- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target
+- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target{
+	return([self menuOfAllContactsInGroup:inGroup withTarget:target firstLevel:YES]);
+}
+- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel
 {
     NSEnumerator				*enumerator;
     AIListObject				*object;
@@ -784,19 +789,24 @@
 	NSMenu *menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
 
-	if(inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
+	//Passing nil scans the entire contact list
+	if(inGroup == nil) inGroup = contactList;
 
+	//The pull down menu needs an extra item at the top of it's root menu to handle the selection.
+	if(firstLevel) [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
+
+	//All menu items for all contained objects
 	enumerator = [inGroup objectEnumerator];
     while((object = [enumerator nextObject])){
-        if([object isMemberOfClass:[AIListGroup class]]){
+        if([object isKindOfClass:[AIListGroup class]]){
 			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[object displayName]
 															target:nil 
 															action:nil
 													 keyEquivalent:@""] autorelease];
-			[item setSubmenu:[self menuOfAllContactsInGroup:(AIListGroup *)object withTarget:target]];
+			[item setSubmenu:[self menuOfAllContactsInGroup:(AIListGroup *)object withTarget:target firstLevel:NO]];
 			[menu addItem:item];
 
-		}else if([object isMemberOfClass:[AIListContact class]]){
+		}else if([object isKindOfClass:[AIListContact class]]){
 			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[object displayName]
 															target:target 
 															action:@selector(selectContact:) 
