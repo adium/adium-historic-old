@@ -28,12 +28,13 @@
 - (void)installPlugin
 {
 	observingListUpdates = NO;
+	timerActive = NO;
 	
 	//Register our defaults
 	//Setup Preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:VERSION_CHECKER_DEFAULTS 
 																		forClass:[self class]]
-										  forGroup:PREF_GROUP_UPDATING];
+																		forGroup:PREF_GROUP_UPDATING];
 	
 	//Menu item for checking manually
     versionCheckerMenuItem = [[[NSMenuItem alloc] initWithTitle:VERSION_CHECKER_TITLE 
@@ -53,15 +54,21 @@
 - (void)uninstallPlugin
 {
 	if(observingListUpdates) [[adium contactController] unregisterListObjectObserver:self];
+	[self endTimerChecking];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-	if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_UPDATING]){
+	if( notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_UPDATING] ){
 		BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																			 group:PREF_GROUP_UPDATING] boolValue];
         if(updateAutomatically){
+						
 			if(!observingListUpdates){
+				// If we're already online, set up automatic checking		
+				if( [[adium accountController] oneOrMoreConnectedAccounts] )
+					[self startTimerChecking];
+				
 				//Listen to accounts for automatic update checking
 				[[adium contactController] registerListObjectObserver:self];
 				observingListUpdates = YES;
@@ -71,6 +78,8 @@
 				[[adium contactController] unregisterListObjectObserver:self];				
 				observingListUpdates = NO;
 			}
+			[self endTimerChecking];
+			
 		}
 	}
 }
@@ -83,6 +92,9 @@
 			//Check for updates
 			[self performSelector:@selector(checkForNewVersion:) withObject:nil afterDelay:10.0];
 
+			// Start checking every 24 hours (if we weren't already)
+			[self startTimerChecking];
+			
 			//Don't check again during this session
 			if(observingListUpdates){
 				[[adium contactController] unregisterListObjectObserver:self];
@@ -104,6 +116,48 @@
 	checkingManually = (sender != nil);
 	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
 }
+
+//Called by the every-24-hours timer
+- (void)timerCheckForNewVersion:(NSTimer *)timer{
+	checkingManually = NO;
+	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
+}
+
+//Add a timer to check every 24 hours that Adium is open
+- (void)startTimerChecking
+{
+	BOOL theNetLives = [[adium accountController] oneOrMoreConnectedAccounts];
+	
+	if( theNetLives ) {
+		
+		// We have a net connection, so start checking
+		if( !timerActive ) {
+			
+			// Note: there are 86400 seconds in a day
+			// Note: NSTimer takes seconds as an argument
+			// Note: It's late and I'm writing a lot of notes
+			timer = [NSTimer scheduledTimerWithTimeInterval:86400
+													 target:self
+												   selector:@selector(timerCheckForNewVersion:)
+												   userInfo:nil
+													repeats:YES];
+			timerActive = YES;		
+		}
+
+	} else {
+		// We aren't sure of a net connection, so don't check
+		[self endTimerChecking];
+	}
+}
+
+- (void)endTimerChecking
+{
+	if( timer )
+		[timer invalidate];
+	
+	timerActive = NO;
+}
+
 - (void)_requestVersionThread
 {
 	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
@@ -112,6 +166,7 @@
 						waitUntilDone:YES];
 	[pool release];
 }
+
 - (void)_versionReceived:(NSDate *)newestDate
 {
 	//Load relevant dates which we weren't passed
