@@ -25,6 +25,8 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
 
+#warning crosslink
+#import "AIAppearancePreferencesPlugin.h"
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -175,9 +177,10 @@
 		
 		//Layout only
 		if(groupLayout){
-			int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-			BOOL			autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
-			BOOL			autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+#warning can we cut back on the number of places accessing the window style? -ai
+			int				windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
+			BOOL			autoResizeVertically = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue];
+			BOOL			autoResizeHorizontally = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue];
 			int				forcedWindowWidth, maxWindowWidth;
 			
 			//User icon cache size

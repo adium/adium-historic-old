@@ -123,17 +123,17 @@
 	}else if(sender == popUp_windowStyle){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-											  group:PREF_GROUP_LIST_LAYOUT];
+											  group:PREF_GROUP_APPEARANCE];
 		
     }else if(sender == checkBox_verticalAutosizing){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
-                                              group:PREF_GROUP_LIST_LAYOUT];
+                                              group:PREF_GROUP_APPEARANCE];
 		
     }else if(sender == checkBox_horizontalAutosizing){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
-                                              group:PREF_GROUP_LIST_LAYOUT];
+                                              group:PREF_GROUP_APPEARANCE];
 	}
 }
 

@@ -24,6 +24,9 @@
 #import <Adium/AIAbstractListController.h>
 #import <Adium/JVFontPreviewField.h>
 
+#warning crosslink
+#import "AIAppearancePreferencesPlugin.h"
+
 #define	MAX_ALIGNMENT_CHOICES	10
 
 @interface AIListLayoutWindowController (PRIVATE)
@@ -175,9 +178,6 @@
 	[popUp_extendedStatusPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue]];
 	
 	//Window style
-	[popUp_windowStyle setMenu:[self windowStyleMenu]];
-	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];
-	
 	[popUp_extendedStatusStyle setMenu:[self extendedStatusStyleMenu]];
 	[popUp_extendedStatusStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue]];
 	
@@ -191,8 +191,6 @@
 	[self updateSliderValues];
 	
 	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
-	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
-	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
 	
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
 	[fontField_status setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
@@ -220,21 +218,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT
 											  group:PREF_GROUP_LIST_LAYOUT];
-		
-	}else if(sender == popUp_windowStyle){
-		NSDictionary	*prefDict;
-		
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
-											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-											  group:PREF_GROUP_LIST_LAYOUT];
-		
-		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-		
-		[self updateDisplayedTabsFromPrefDict:prefDict];
-		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
-		[self updateUserIconMenuFromPrefDict:prefDict];
-		
-		[self configureControlDimming];
 		
 	}else if(sender == popUp_extendedStatusPosition){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
@@ -313,17 +296,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
 											  group:PREF_GROUP_LIST_LAYOUT];
-		
-    }else if(sender == checkBox_verticalAutosizing){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
-                                              group:PREF_GROUP_LIST_LAYOUT];
-		
-    }else if(sender == checkBox_horizontalAutosizing){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
-                                              group:PREF_GROUP_LIST_LAYOUT];
-		[self configureControlDimming];
 		
     }else if (sender == checkBox_outlineBubbles){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -429,8 +401,8 @@
 - (void)configureControlDimming
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-	int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-	BOOL			horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+	int				windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
+	BOOL			horizontalAutosize = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue];
 	
 	//Bubble to fit limitations
 	BOOL nonFitted = (windowStyle != WINDOW_STYLE_PILLOWS_FITTED);
@@ -524,7 +496,7 @@
 	BOOL			showUserIcon = [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue];
 	int				indexForFinishingChoices = 0;
 	
-	if ([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue] != WINDOW_STYLE_PILLOWS_FITTED){
+	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue] != WINDOW_STYLE_PILLOWS_FITTED){
 		statusAndServicePositionChoices[0] = LIST_POSITION_FAR_LEFT;
 		statusAndServicePositionChoices[1] = LIST_POSITION_LEFT;
 		statusAndServicePositionChoices[2] = LIST_POSITION_RIGHT;
@@ -575,7 +547,7 @@
 {
 	int				userIconPositionChoices[3];
 	
-	if ([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue] != WINDOW_STYLE_PILLOWS_FITTED){
+	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue] != WINDOW_STYLE_PILLOWS_FITTED){
 		userIconPositionChoices[0] = LIST_POSITION_LEFT;
 		userIconPositionChoices[1] = LIST_POSITION_RIGHT;
 		userIconPositionChoices[2] = -1;
@@ -727,48 +699,6 @@
 	return(extendedStatusStyleMenu);
 }
 
-- (NSMenu *)windowStyleMenu
-{
-	NSMenu		*windowStyleMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-    NSMenuItem	*menuItem;
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Regular Window",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:WINDOW_STYLE_STANDARD];
-	[windowStyleMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Borderless Window",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:WINDOW_STYLE_BORDERLESS];
-	[windowStyleMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Group Bubbles",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:WINDOW_STYLE_MOCKIE];
-	[windowStyleMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact Bubbles",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:WINDOW_STYLE_PILLOWS];
-	[windowStyleMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact Bubbles (To Fit)",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:WINDOW_STYLE_PILLOWS_FITTED];
-	[windowStyleMenu addItem:menuItem];
-	
-	return(windowStyleMenu);
-}
 
 #pragma mark Displayed Tabs
 //Displayed Tabs
@@ -777,7 +707,7 @@
 	LIST_WINDOW_STYLE	windowStyle;
 	BOOL				tabViewCurrentHasAdvancedContactBubbles;
 	
-	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
 	tabViewCurrentHasAdvancedContactBubbles = ([[tabView_preferences tabViewItems] containsObjectIdenticalTo:tabViewItem_advancedContactBubbles]);
 	
 	if ((windowStyle == WINDOW_STYLE_PILLOWS_FITTED) ||

@@ -16,6 +16,7 @@
 
 #import "AIAbstractListController.h"
 #import "AIInterfaceController.h"
+#import "AIPreferenceController.h"
 #import "AIListCell.h"
 #import "AIListContactBubbleCell.h"
 #import "AIListContactBubbleToFitCell.h"
@@ -35,6 +36,9 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESOutlineViewAdditions.h>
+
+#warning crosslink
+#import "AIAppearancePreferencesPlugin.h"
 
 //#import <limits.h>
 
@@ -157,7 +161,7 @@
 #pragma mark Preferences
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
-	LIST_WINDOW_STYLE	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	LIST_WINDOW_STYLE	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
 	float				backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 	NSTextAlignment		contentCellAlignment;
 	BOOL				pillowsOrPillowsFittedWindowStyle;
@@ -338,7 +342,7 @@
 - (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict
 {
 	float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
-	int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	int				windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
 	
 	[contactListView setBackgroundFade:([[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
 	[contactListView setBackgroundColor:[[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
