@@ -147,9 +147,7 @@
     if(!contactListWindowController){ //Load the window
         contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];
     }
-
     [contactListWindowController makeActive:nil];
-
     //Give Adium focus
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }

@@ -3,7 +3,10 @@
         {
             CLASS = AIDualWindowAdvancedPrefs; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_autoResize" = NSButton; "checkBox_horizontalResize" = NSButton; }; 
+            OUTLETS = {
+                "checkBox_horizontalResize" = NSButton; 
+                "checkBox_verticalResize" = NSButton; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {

@@ -10,7 +10,7 @@
 #import <Adium/Adium.h>
 
 @interface AIDualWindowAdvancedPrefs : AIPreferencePane {
-    IBOutlet	NSButton	*checkBox_autoResize;
+    IBOutlet	NSButton	*checkBox_verticalResize;
     IBOutlet	NSButton	*checkBox_horizontalResize;
 }
 
