@@ -137,6 +137,12 @@
 	
 	//Place the preview chat in our view
 	preview = [[previewController messageView] retain];
+	
+	//Disable drag and drop onto the preview chat - Jeff doesn't need your porn :)
+	if ([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]){
+		[(ESWebView *)preview setAllowsDragAndDrop:NO];
+	}
+		
 	[preview setFrame:[view_previewLocation frame]];
 	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
 }

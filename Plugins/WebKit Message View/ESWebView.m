@@ -18,6 +18,7 @@
 	[super initWithFrame:frameRect frameName:frameName groupName:groupName];
 
 	draggingDelegate = nil;
+	allowsDragAndDrop = YES;
 	
 	return self;
 }
@@ -65,14 +66,19 @@
 
 //Accepting Drags ------------------------------------------------------------------------------------------------------
 #pragma mark Accepting Drags
+- (void)setAllowsDragAndDrop:(BOOL)flag
+{
+	allowsDragAndDrop = flag;
+}
+
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	return NSDragOperationCopy;
+	return (allowsDragAndDrop ? NSDragOperationCopy : NSDragOperationNone);
 }
 
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
-	return NSDragOperationCopy;
+	return (allowsDragAndDrop ? NSDragOperationCopy : NSDragOperationNone);
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
