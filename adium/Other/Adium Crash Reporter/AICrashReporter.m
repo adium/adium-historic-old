@@ -9,15 +9,16 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AICrashReporter.h"
 
-//#define BUG_REPORT_URL		@"http://www.penguinmilitia.com/bugs.php"
 #define BUG_REPORT_URL		@"http://www.visualdistortion.org/crash/post.jsp"
 #define EXCEPTIONS_PATH		[@"~/Desktop/crashLog.txt" stringByExpandingTildeInPath]
 #define CRASHES_PATH		[@"~/NOEMPTYPATHS" stringByExpandingTildeInPath]
 
 #define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
+#define KEY_CRASH_AIM_ACCOUNT		@"AdiumCrashReporterAIMAccount"
 
 @implementation AICrashReporter
 
+//
 - (id)init
 {
 	[super init];
@@ -27,12 +28,14 @@
 	return(self);
 }
 
+//
 - (void)dealloc
 {
 	[crashLog release];
 	[super dealloc];
 }
 
+//
 - (void)awakeFromNib
 {
     NSFileManager 	*fileManager = [NSFileManager defaultManager];
@@ -51,7 +54,7 @@
 //Display the report crash window for the passed log
 - (IBAction)reportCrashForLogAtPath:(NSString *)inPath
 {
-	NSString	*emailAddress;
+	NSString	*emailAddress, *aimAccount;
 	NSRange		binaryRange;
 	
 	//Fetch and delete the log
@@ -65,9 +68,12 @@
 		[crashLog release]; crashLog = [shortLog retain];
 	}
 	
-	//Restore the user's email address if they've entered it previously
+	//Restore the user's email address and account if they've entered it previously
 	if(emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS]){
 		[textField_emailAddress setStringValue:emailAddress];
+	}
+	if(aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT]){
+		[textField_accountIM setStringValue:aimAccount];
 	}
 	
 	//Open our window
@@ -78,9 +84,13 @@
 //
 - (BOOL)windowShouldClose:(id)sender
 {
-	//Remember the user's email address
+	//Remember the user's email address, account name
 	[[NSUserDefaults standardUserDefaults] setObject:[textField_emailAddress stringValue]
 											  forKey:KEY_CRASH_EMAIL_ADDRESS];	
+	[[NSUserDefaults standardUserDefaults] setObject:[textField_accountIM stringValue]
+											  forKey:KEY_CRASH_AIM_ACCOUNT];	
+	
+	
 	
 	return(YES);
 }
@@ -97,20 +107,19 @@
 	//Display the sheet
     [NSApp beginSheet:panel_privacySheet
 	   modalForWindow:window_MainWindow
-		modalDelegate:nil//self
-	   didEndSelector:nil//@selector(sheetDidEnd:returnCode:contextInfo:)
+		modalDelegate:nil
+	   didEndSelector:nil
 		  contextInfo:nil];
 }
 
-//
+//Close the privacy details sheet
 - (IBAction)closePrivacyDetails:(id)sender
 {
 	[panel_privacySheet orderOut:nil];
     [NSApp endSheet:panel_privacySheet returnCode:0];
 }
 
-
-
+//User wants to send the report
 - (IBAction)send:(id)sender
 {
 	NSString	*shortDescription = [textField_description stringValue];
@@ -134,22 +143,8 @@
 	//Send
 	[self sendReport:crashReport];
 	
-	
- //   NSString *bugReport, *time, *buildDate, *email, *shortDesc, *longDesc, *log;
-    
-    /*
-        we need to do the following here:
-        0) get the correct string for each field
-        1) change & to the correct URL escape
-        2) change space to +
-        3) url encode the rest
-        for each of the fields.
-    */
-    
-//    bugReport = [NSString stringWithFormat:@"time=%@&build=%@&email=%@&short_desc=%@&desc=%@&log=%@",
-//        time, buildDate, email, shortDesc, longDesc, log];
-//    
-//    [self sendReport:[bugReport retain]];
+	//Close our window to terminate
+	[window_MainWindow performClose:nil];
 }
 
 - (void)sendReport:(NSDictionary *)crashReport
@@ -157,8 +152,6 @@
 	NSMutableString *reportString = [[[NSMutableString alloc] init] autorelease];
 	NSEnumerator	*enumerator;
 	NSString		*key;
-	NSString		*value;
-	BOOL			sent = NO;
 	NSData 			*data = nil;
 	
 	//Compact the fields of the report into a long URL string
@@ -169,7 +162,7 @@
 	}
 	
 	//
-	while(!data){
+	while(!data || [data length] == 0){
 		NSError 			*error;
 		NSURLResponse 		*reply;
 		NSMutableURLRequest *request;
@@ -182,79 +175,28 @@
 		[request setHTTPMethod:@"POST"];
 		[request setHTTPBody:[reportString dataUsingEncoding:NSUTF8StringEncoding]];
 		
-		//start the barbershop pole (using multi-threading)
+		//start the progress spinner (using multi-threading)
 		[progress_sending setUsesThreadedAnimation:YES];
 		[progress_sending startAnimation:nil];
 
 		//Attempt to send report
 		data = [NSURLConnection sendSynchronousRequest:request returningResponse:&reply error:&error];
 		
-		//stop the barbershop pole (using multi-threading)
+		//stop the progress spinner
 		[progress_sending stopAnimation:nil];
 		
-		if(!data){
+		//Alert on failure, and offer the option to quit or retry
+		if(!data || [data length] == 0){
 			if(NSRunAlertPanel(@"Unable to send crash report",
 							   [error localizedDescription],
 							   @"Try Again", 
-							   @"Cancel",
+							   @"Quit",
 							   nil) == NSAlertAlternateReturn){
 				break;
 			}
 		}
 	}
-	
-	
-	
-	
-//	
-//	
-//	NSLog(@"%@",reportString);
-//
-//	/*    while(1)
-//    {
-//        if([self tryToSendReport:bugReport])
-//        {
-//            [bugReport release];
-//            [NSApp terminate:nil];
-//            break;
-//        }
-//    }*/
 }
-
-//- (BOOL)tryToSendReport:(NSString *)bugReport
-//{
-//    NSError 		*error;
-//    NSURLResponse 	*reply;
-//    NSMutableURLRequest *request;
-//    
-//    request = [NSMutableURLRequest 
-//        requestWithURL:[NSURL URLWithString:BUG_REPORT_URL]
-//	   cachePolicy:NSURLRequestReloadIgnoringCacheData
-//       timeoutInterval:120];
-//    [request addValue:@"Adium 2.0a" forHTTPHeaderField:@"X-Adium-Bug-Report"];
-//    [request setHTTPMethod:@"POST"];
-//    [request setHTTPBody:[bugReport dataUsingEncoding:NSUTF8StringEncoding]];
-//    
-//    //start the barbershop pole (using multi-threading)
-//    
-//    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&reply error:&error];
-//
-//    //stop the pole
-//    if(data)      
-//        return YES;
-//    
-//    if(NSRunAlertPanel(
-//		       @"Unable to send crash report",
-//		       [error localizedDescription],
-//		       @"Try Again", 
-//		       @"Cancel",
-//		       nil) == NSAlertAlternateReturn)
-//    {
-//        return YES;
-//    }
-//    
-//    return NO;
-//}
 
 //Terminate if our window is closed
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
