@@ -72,6 +72,7 @@
 #import "AISmartStepper.h"
 #import "AISocket.h"
 #import "AIStringAdditions.h"
+#import "NSString+CarbonFSSpecCreation.h"
 #import "AIStringFormatter.h"
 #import "IKTableImageCell.h"
 #import "AITableViewAdditions.h"
@@ -89,5 +90,4 @@
 #import "AIWindowAdditions.h"
 
 #import "IconFamily.h"
-#import "NSString+CarbonFSSpecCreation.h"
 #import "SUSpeaker.h"
