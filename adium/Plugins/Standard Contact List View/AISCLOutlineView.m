@@ -36,11 +36,11 @@
 
 @implementation AISCLOutlineView
 
-- (id)init
+- (id)initWithFrame:(NSRect)frameRect
 {
     NSTableColumn	*tableColumn;
 
-    [super init];
+    [super initWithFrame:frameRect];
 
     showLabels = YES;
     font = nil;
