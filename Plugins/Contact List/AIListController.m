@@ -273,6 +273,8 @@
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
+	BOOL		allowContactDrop = ([info draggingSourceOperationMask] == NSDragOperationCopy);
+	
 	//No dropping into contacts
     if([avaliableType isEqualToString:@"AIListObject"]){
 		id	primaryDragItem = [dragItems objectAtIndex:0];
@@ -289,14 +291,18 @@
 			
 		}else{
 			//Disallow dragging contacts onto anything besides a group
-			if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
-				[outlineView setDropItem:[item containingObject] dropChildIndex:[[item containingObject] indexOfObject:item]];
+			if(index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]){
+				if (allowContactDrop){
+					[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
+				}else{
+					[outlineView setDropItem:[item containingObject] dropChildIndex:[[item containingObject] indexOfObject:item]];
+				}
 			}
 			
 		}
 		
-		if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
-			return(NSDragOperationNone);
+		if(index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]){
+			return(allowContactDrop ? NSDragOperationCopy : NSDragOperationNone);
 		}
 	}
 	
@@ -307,8 +313,7 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
     NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
-    
-	//No longer in a drag, so allow tooltips again
+	
     if([availableType isEqualToString:@"AIListObject"]){
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if(item == nil) item = contactList;
@@ -316,6 +321,23 @@
 		//Move the list object to its new location
 		if([item isKindOfClass:[AIListGroup class]]){
 			[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
+			
+		}else if ([item isKindOfClass:[AIListContact class]]){
+			AIMetaContact						*metaContact;
+			AIListObject<AIContainingObject> 	*oldContainingObject;
+			float								oldIndex;
+
+			//Keep track of where it was before
+			oldContainingObject = [[item containingObject] retain];;
+			oldIndex = [item orderIndex];
+			
+			//Group the dragged items plus the destination into a metaContact
+			metaContact = [[adium contactController] groupListContacts:[dragItems arrayByAddingObject:item]];
+			
+			//Position the metaContact in the group & index the drop point was before
+			[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact] toGroup:oldContainingObject index:oldIndex];
+			
+			[oldContainingObject release];
 		}
 	}
 	
