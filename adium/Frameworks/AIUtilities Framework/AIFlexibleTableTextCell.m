@@ -116,15 +116,19 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Resize the content of this cell to the desired width, returns new height
 - (int)sizeContentForWidth:(float)inWidth
 {
-    //We add padding to offset any fractional character widths
-    inWidth -= FRACTIONAL_PADDING;
+    if(![[tableRow tableView] inLiveResize]){
+        //We add padding to offset any fractional character widths
+        inWidth -= FRACTIONAL_PADDING;
+        
+        //Reformat the text
+        [textContainer setContainerSize:NSMakeSize(inWidth, 1e7)];
+        glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
     
-    //Reformat the text
-    [textContainer setContainerSize:NSMakeSize(inWidth, 1e7)];
-    glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+        //Return the new cell height
+        contentHeight = [layoutManager usedRectForTextContainer:textContainer].size.height;
+    }
 
-    //Return the new cell height
-    return([layoutManager usedRectForTextContainer:textContainer].size.height);
+    return(contentHeight);
 }
 
 //Draw our custom content
