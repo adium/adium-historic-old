@@ -137,6 +137,10 @@
 		[emoticonAttachment setImageSize:[[self image] size]];
         [emoticonAttachment setFileWrapper:emoticonFileWrapper];
 		[emoticonAttachment setHasAlternate:YES];
+		
+		//Emoticons should not ever be sent out as images
+		[emoticonAttachment setShouldAlwaysSendAsText:YES];
+		
         _cachedAttributedString = [[NSAttributedString attributedStringWithAttachment:emoticonAttachment] retain];
     }
     
