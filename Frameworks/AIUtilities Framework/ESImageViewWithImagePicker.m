@@ -158,7 +158,11 @@
 - (void)paste:(id)sender
 {
 	NSPasteboard	*pb = [NSPasteboard generalPasteboard];
-    NSData			*imageData = [pb dataForType:NSTIFFPboardType];
+	NSString		*type = [pb availableTypeFromArray:
+		[NSArray arrayWithObjects:NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType,nil]];
+	BOOL			success = NO;
+
+    NSData			*imageData = (type ? [pb dataForType:type] : nil);
 	if (imageData){
 		NSImage *image = [[[NSImage alloc] initWithData:imageData] autorelease];
 		if (image){
@@ -174,8 +178,12 @@
 							   withObject:self
 							   withObject:image];
 			}
+			
+			success = YES;
 		}
 	}
+	
+	if(!success) NSBeep();
 }
 
 //Cut = copy + delete
