@@ -195,9 +195,10 @@
 /*!
  * @brief Plot a Carbon icon into the image with finer granularity of control
  *
- * The alignment type, transform type, and plot flags are those you would use in Icon Services' PlotIconRefInContext function.
- *
- * The colour is a pointer to a Carbon RGBColor structure. RGBColors have three unsigned 16-bit components (no alpha), which range from 0 to 65535.
+ * @param align An alignment type from Icon Services. See <tt>HIServices/Icons.h></tt>.
+ * @param transform A transform type from Icon Services. See <tt>HIServices/Icons.h></tt>.
+ * @param color A pointer to a Carbon RGBColor structure. RGBColors have three unsigned 16-bit components (no alpha), which range from 0 to 65535.
+ * @param flags Plot flags from Icon Services. See <tt>HIServices/Icons.h></tt>. Usually you will pass kPlotIconRefNormalFlags here.
  */
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags;
 
