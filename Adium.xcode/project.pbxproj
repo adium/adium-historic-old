@@ -6621,6 +6621,7 @@
 				4B93589506DBC71B007977AA,
 				4BAFD57906E0091100FF7FBC,
 				34A48AD406F647FD002C7C5F,
+				34E6D3900727354600A2643A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6794,6 +6795,7 @@
 				4B93589406DBC71B007977AA,
 				4BAFD57A06E0091100FF7FBC,
 				34A48AD306F647FD002C7C5F,
+				34E6D3910727354600A2643A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7886,6 +7888,36 @@
 		};
 		34E3C8A80638D50F00AA3EF7 = {
 			fileRef = 34E3C8A60638D50F00AA3EF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E6D38E0727354600A2643A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIToolbar.h;
+			path = "Frameworks/Adium Framework/AIToolbar.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E6D38F0727354600A2643A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIToolbar.m;
+			path = "Frameworks/Adium Framework/AIToolbar.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E6D3900727354600A2643A = {
+			fileRef = 34E6D38E0727354600A2643A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E6D3910727354600A2643A = {
+			fileRef = 34E6D38F0727354600A2643A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -11256,6 +11288,8 @@
 				4BFC33DE058D4430008F7FA2,
 				F5793924033E74C301A8010A,
 				F5793912033E748F01A8010A,
+				34E6D38E0727354600A2643A,
+				34E6D38F0727354600A2643A,
 				4BFC3412058D48A8008F7FA2,
 				4BFC3413058D48A8008F7FA2,
 				340F30E506D6FD700072E2FA,
