@@ -90,7 +90,7 @@ static NSMenu			*menu_Games;
     }
 
     //Configure the handle type menu
-    [popUp_account setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
+    [popUp_account setMenu:[[adium accountController] menuOfAccountsWithTarget:self includeOffline:NO]];
 
     //Select the last used account / Available online account
     int index = [popUp_account indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:selectedContact]];
