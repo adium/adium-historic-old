@@ -211,7 +211,7 @@
             
             menuItem = [[[NSMenuItem alloc] initWithTitle:message
                                                    target:self
-                                                   action:@selector(loadSavedAway:)
+                                                   action:@selector(changeAwayPreference:)
                                             keyEquivalent:@""] autorelease];
         }
         [menuItem setRepresentedObject:dict];
