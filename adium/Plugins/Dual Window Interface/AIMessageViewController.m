@@ -241,16 +241,7 @@
 {
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
         AIContentMessage			*message;
-		NSMutableAttributedString	*outgoingAttributedString;
-		
-		//Reset to the default typing attributes if an NSURL was converted to a string, to remove the blue underline
-		if ([[textView_outgoing textStorage] convertNSURLtoString]) {
-			[textView_outgoing resetToDefaultTypingAttributes];
-			[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
-													 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
-		}
-		
-		outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
+		NSMutableAttributedString	*outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
 
 		if (!sendMessagesToOfflineContact && [[chat participatingListObjects] count] == 1 && ![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Online"] boolValue]) {
 			//Contact is offline.  Ask how the user wants to handle the situation.
@@ -301,13 +292,6 @@
 		[alertDict setObject:[NSNumber numberWithBool:YES] forKey:@"OneTime"]; 
 		
 		[[adium contactAlertsController] addAlert:alertDict toListObject:listObject];
-		
-		//Reset to the default typing attributes if an NSURL was converted to a string, to remove the blue underline
-		if ([[textView_outgoing textStorage] convertNSURLtoString]) {
-			[textView_outgoing resetToDefaultTypingAttributes];
-			[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
-													 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
-		}
 		
 		[self didSendMessage:nil];
 	}

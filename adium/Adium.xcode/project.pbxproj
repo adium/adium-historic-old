@@ -8673,9 +8673,9 @@
 		};
 		4947F5EA0655E90C00B791E5 = {
 			children = (
-				4B8EDC280657E868006C7E22,
-				4B8EDC290657E868006C7E22,
-				4B8EDC2A0657E868006C7E22,
+				4BF6092D0658586800F27C8C,
+				4BF6092E0658586800F27C8C,
+				4BF6092F0658586800F27C8C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -12316,51 +12316,6 @@
 			path = "Frameworks/Adium Framework/AIContentObject.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B8EDC280657E868006C7E22 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4B8EDC5B0657E881006C7E22;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B8EDC290657E868006C7E22 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 4B8EDC5C0657E881006C7E22;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B8EDC2A0657E868006C7E22 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 4B8EDC5D0657E881006C7E22;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B8EDC5B0657E881006C7E22 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		4B8EDC5C0657E881006C7E22 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		4B8EDC5D0657E881006C7E22 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
@@ -16598,6 +16553,51 @@
 			path = "Frameworks/AIUtilities Framework/AITableViewAdditions.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BF6092D0658586800F27C8C = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4BF60BA80658588700F27C8C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BF6092E0658586800F27C8C = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 4BF60BA90658588700F27C8C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BF6092F0658586800F27C8C = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4BF60BAA0658588700F27C8C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BF60BA80658588700F27C8C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4BF60BA90658588700F27C8C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		4BF60BAA0658588700F27C8C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 		4BFC33DD058D4430008F7FA2 = {
 			fileEncoding = 30;

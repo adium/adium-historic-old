@@ -44,9 +44,6 @@
 - (void)setClearOnEscape:(BOOL)inBool;
 - (void)setAssociatedView:(NSView *)inView;
 - (NSView *)associatedView;
-- (void)setDefaultTypingAttributes:(NSDictionary *)dict;
-- (NSDictionary *)defaultTypingAttributes;
-- (void)resetToDefaultTypingAttributes;
 
 //Adium Text Entry
 - (NSAttributedString *)attributedString;
