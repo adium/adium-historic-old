@@ -7,7 +7,6 @@
 //
 
 #import "AISpellCheckingPlugin.h"
-#import "AISpellCheckingPreferences.h"
 
 @interface AISpellCheckingPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
