@@ -345,7 +345,7 @@ static  NSImage			*tabDivider = nil;
 		AICustomTabCell		*tabCell;
 		
 		//Create a new tab cell
-		tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem];
+		tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem customTabsView:self];
 		[tabCell setSelected:(tabViewItem == [tabView selectedTabViewItem])];
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
 		
@@ -883,7 +883,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         enumerator = [tabCellArray objectEnumerator];
         while((tabCell = [enumerator nextObject])){            
             NSRect trackRect = [tabCell frame];
-            [tabCell addTrackingRectsInView:self withFrame:trackRect cursorLocation:localPoint];
+            [tabCell addTrackingRectsWithFrame:trackRect cursorLocation:localPoint];
         }
 		
 		trackingCursor = YES;
@@ -899,7 +899,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		
 		enumerator = [tabCellArray objectEnumerator];
 		while((tabCell = [enumerator nextObject])){
-			[tabCell removeTrackingRectsFromView:self];
+			[tabCell removeTrackingRects];
 		}
 		
 		trackingCursor = NO;
