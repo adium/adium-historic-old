@@ -7,6 +7,7 @@
 //
 
 #import "AIAccountSetupNewAccountView.h"
+#import "AIAccountSetupWindowController.h"
 
 
 @implementation AIAccountSetupNewAccountView
@@ -46,9 +47,9 @@
 												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
 
 	//Account details view
-	accountViewController = [[service accountView] retain];
+	accountViewController = [[service accountViewController] retain];
 
-	NSView	*accountView = [accountViewController accountView];
+	NSView	*accountView = [accountViewController connectionView];
 	float 	accountViewHeight = [accountView frame].size.height;
 	
     [view_accountDetails removeAllSubviews];
