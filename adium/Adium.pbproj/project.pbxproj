@@ -169,6 +169,7 @@
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
 				F5B53FBD0333AB8801A8010A,
+				F551A4F903AC4C2301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
 			);
@@ -559,24 +560,6 @@
 			name = Images;
 			refType = 4;
 		};
-		F501BB2103882CB001A8010A = {
-			fileRef = F501BB1403882A2901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50C5C50032BE9B301A8010A = {
-			fileRef = F59F9A8A032BE6B101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50CA5F502D0893801A8010A = {
-			fileRef = F5BD46CF02D0789901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F50CD61C03603BE201A8010A = {
 			children = (
 				F50CD62203603C3101A8010A,
@@ -739,12 +722,6 @@
 		F50CD62C03603C7D01A8010A = {
 			isa = PBXTargetDependency;
 			target = F50CD62803603C7201A8010A;
-		};
-		F50CD62D03603CBF01A8010A = {
-			fileRef = F50CD62903603C7201A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F50CD64303603E0D01A8010A = {
 			fileRef = F53B9A3602CCEF4801A8010A;
@@ -961,7 +938,6 @@
 		};
 		F5186B6903ABD62101A8010A = {
 			children = (
-				F5186B6A03ABD62101A8010A,
 				F5186B6B03ABD62101A8010A,
 				F5186B6C03ABD62101A8010A,
 				F5186B6D03ABD62101A8010A,
@@ -976,11 +952,6 @@
 			);
 			isa = PBXGroup;
 			path = adium;
-			refType = 4;
-		};
-		F5186B6A03ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = .DS_Store;
 			refType = 4;
 		};
 		F5186B6B03ABD62101A8010A = {
@@ -1050,7 +1021,6 @@
 		};
 		F5186B7803ABD62101A8010A = {
 			children = (
-				F5186B7903ABD62101A8010A,
 				F5186B7A03ABD62101A8010A,
 				F5186B7B03ABD62101A8010A,
 				F5186B7C03ABD62101A8010A,
@@ -1064,11 +1034,6 @@
 			);
 			isa = PBXGroup;
 			path = core;
-			refType = 4;
-		};
-		F5186B7903ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = .DS_Store;
 			refType = 4;
 		};
 		F5186B7A03ABD62101A8010A = {
@@ -1553,12 +1518,6 @@
 			isa = PBXTargetDependency;
 			target = F5370C9802D76F3B01A8010A;
 		};
-		F5370CA002D76F7D01A8010A = {
-			fileRef = F5370C9902D76F3B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5385CF601BEB9F901A80165 = {
 			children = (
 				F552078B033F727F01A8010A,
@@ -1885,18 +1844,6 @@
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
 		};
-		F53B9A1102CCEDAA01A8010A = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F53B9A1202CCEDAB01A8010A = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F53B9A1302CCEDCA01A8010A = {
 			children = (
 				F5793921033E74AE01A8010A,
@@ -1924,8 +1871,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F53B9A1102CCEDAA01A8010A,
-				F53B9A1202CCEDAB01A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2117,12 +2062,6 @@
 			settings = {
 			};
 		};
-		F53B9AD502CD150201A8010A = {
-			fileRef = F53B9ACC02CD12CB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F53D72EF02C8FBE101A8010A = {
 			fileRef = F531836F019E40BB01A80165;
 			isa = PBXBuildFile;
@@ -2150,7 +2089,6 @@
 				F59DB3BB033EA90801A8010A,
 				F59DB3BD033EA90801A8010A,
 				F59DB3BF033EA90801A8010A,
-				F59DB3DB033EABB301A8010A,
 				F5C8B7740358632101A8010A,
 				F59DB3D4033EA90B01A8010A,
 			);
@@ -2282,30 +2220,23 @@
 			settings = {
 			};
 		};
-		F53EA2DB02C807DC01A8010A = {
-			fileRef = F53EA2CE02C803C101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F53EA2DC02C807EE01A8010A = {
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				F5AAD091039BA20A01A8010A,
-				F501BB2103882CB001A8010A,
-				F5A01D98037982AE01A8010A,
-				F50C5C50032BE9B301A8010A,
-				F56781210326380E01A8010A,
-				F569E39402CA88D801A8010A,
-				F53EA2DB02C807DC01A8010A,
-				F5370CA002D76F7D01A8010A,
-				F50CA5F502D0893801A8010A,
-				F53B9AD502CD150201A8010A,
-				F5B53FBA0333A82F01A8010A,
-				F5B53FD20333B11701A8010A,
-				F50CD62D03603CBF01A8010A,
+				F551A50603AC4C5001A8010A,
+				F551A50703AC4C5001A8010A,
+				F551A50803AC4C5001A8010A,
+				F551A50903AC4C5001A8010A,
+				F551A50A03AC4C5001A8010A,
+				F551A50B03AC4C5001A8010A,
+				F551A50C03AC4C5001A8010A,
+				F551A50D03AC4C5001A8010A,
+				F551A50E03AC4C5001A8010A,
+				F551A50F03AC4C5001A8010A,
+				F551A51003AC4C5001A8010A,
+				F551A51103AC4C5001A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2461,6 +2392,206 @@
 			name = Messages;
 			path = "";
 			refType = 4;
+		};
+		F5519B2903AC3EB501A8010A = {
+			fileRef = F55B414903AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5519B2A03AC3EB601A8010A = {
+			fileRef = F55B414803AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5519B2B03AC3EB701A8010A = {
+			fileRef = F55B414703AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5519B2C03AC3EB701A8010A = {
+			fileRef = F55B414603AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5519B2D03AC3EB801A8010A = {
+			fileRef = F55B414503AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5519B2E03AC3EB801A8010A = {
+			fileRef = F55B414403AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A4F903AC4C2301A8010A = {
+			children = (
+				F551A4FA03AC4C4E01A8010A,
+				F551A4FB03AC4C4E01A8010A,
+				F551A4FC03AC4C4F01A8010A,
+				F551A4FD03AC4C4F01A8010A,
+				F551A4FE03AC4C4F01A8010A,
+				F551A4FF03AC4C4F01A8010A,
+				F551A50003AC4C4F01A8010A,
+				F551A50103AC4C4F01A8010A,
+				F551A50203AC4C4F01A8010A,
+				F551A50303AC4C4F01A8010A,
+				F551A50403AC4C4F01A8010A,
+				F551A50503AC4C4F01A8010A,
+			);
+			isa = PBXGroup;
+			name = Plugins;
+			path = "";
+			refType = 4;
+		};
+		F551A4FA03AC4C4E01A8010A = {
+			isa = PBXBundleReference;
+			name = "Account List Preferences.AdiumPlugin";
+			path = "build/Account List Preferences.AdiumPlugin";
+			refType = 4;
+		};
+		F551A4FB03AC4C4E01A8010A = {
+			isa = PBXBundleReference;
+			name = "Account Menu Access.AdiumPlugin";
+			path = "build/Account Menu Access.AdiumPlugin";
+			refType = 4;
+		};
+		F551A4FC03AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "AIM (TOC2).AdiumPlugin";
+			path = "build/AIM (TOC2).AdiumPlugin";
+			refType = 4;
+		};
+		F551A4FD03AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Contact List Editor.AdiumPlugin";
+			path = "build/Contact List Editor.AdiumPlugin";
+			refType = 4;
+		};
+		F551A4FE03AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Contact Status Coloring.AdiumPlugin";
+			path = "build/Contact Status Coloring.AdiumPlugin";
+			refType = 4;
+		};
+		F551A4FF03AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Dual Window.AdiumInterface";
+			path = "build/Dual Window.AdiumInterface";
+			refType = 4;
+		};
+		F551A50003AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Event Sounds.AdiumPlugin";
+			path = "build/Event Sounds.AdiumPlugin";
+			refType = 4;
+		};
+		F551A50103AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Offline Contact Hiding.AdiumPlugin";
+			path = "build/Offline Contact Hiding.AdiumPlugin";
+			refType = 4;
+		};
+		F551A50203AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Standard Contact List View.AdiumPlugin";
+			path = "build/Standard Contact List View.AdiumPlugin";
+			refType = 4;
+		};
+		F551A50303AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Standard Message View.AdiumPlugin";
+			path = "build/Standard Message View.AdiumPlugin";
+			refType = 4;
+		};
+		F551A50403AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Standard Toolbar Items.AdiumPlugin";
+			path = "build/Standard Toolbar Items.AdiumPlugin";
+			refType = 4;
+		};
+		F551A50503AC4C4F01A8010A = {
+			isa = PBXBundleReference;
+			name = "Status Circles.AdiumPlugin";
+			path = "build/Status Circles.AdiumPlugin";
+			refType = 4;
+		};
+		F551A50603AC4C5001A8010A = {
+			fileRef = F551A4FA03AC4C4E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50703AC4C5001A8010A = {
+			fileRef = F551A4FB03AC4C4E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50803AC4C5001A8010A = {
+			fileRef = F551A4FC03AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50903AC4C5001A8010A = {
+			fileRef = F551A4FD03AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50A03AC4C5001A8010A = {
+			fileRef = F551A4FE03AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50B03AC4C5001A8010A = {
+			fileRef = F551A4FF03AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50C03AC4C5001A8010A = {
+			fileRef = F551A50003AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50D03AC4C5001A8010A = {
+			fileRef = F551A50103AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50E03AC4C5001A8010A = {
+			fileRef = F551A50203AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A50F03AC4C5001A8010A = {
+			fileRef = F551A50303AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A51003AC4C5001A8010A = {
+			fileRef = F551A50403AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F551A51103AC4C5001A8010A = {
+			fileRef = F551A50503AC4C4F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F552078B033F727F01A8010A = {
 			isa = PBXFileReference;
@@ -3210,12 +3341,6 @@
 			settings = {
 			};
 		};
-		F56781210326380E01A8010A = {
-			fileRef = F51DEFAF032633E301A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F567DD510306A43A01A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
@@ -3359,12 +3484,6 @@
 		F569E39302CA88C901A8010A = {
 			isa = PBXTargetDependency;
 			target = F569E39102CA88C701A8010A;
-		};
-		F569E39402CA88D801A8010A = {
-			fileRef = F569E39202CA88C701A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F569E39502CA88DF01A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -5676,7 +5795,6 @@
 		F59DB3D5033EA90D01A8010A = {
 			children = (
 				F570A5C903704D1A01A8010A,
-				F59DB3DA033EABB301A8010A,
 				F59DB3B8033EA90801A8010A,
 				F59DB3BA033EA90801A8010A,
 				F59DB3BC033EA90801A8010A,
@@ -5710,18 +5828,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		F59DB3DA033EABB301A8010A = {
-			isa = PBXFileReference;
-			name = AISyncWindowController.h;
-			path = "/Users/adamiser/Code/zOld Adium/AISyncWindowController.h";
-			refType = 0;
-		};
-		F59DB3DB033EABB301A8010A = {
-			isa = PBXFileReference;
-			name = AISyncWindowController.m;
-			path = "/Users/adamiser/Code/zOld Adium/AISyncWindowController.m";
-			refType = 0;
 		};
 		F59DB3DE033EB08D01A8010A = {
 			fileRef = F531836F019E40BB01A80165;
@@ -6016,12 +6122,6 @@
 			path = AIMiChatAccount.m;
 			refType = 4;
 		};
-		F5A01D98037982AE01A8010A = {
-			fileRef = F5A01D8C0379813301A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5A025050363395F01A8010A = {
 			fileRef = F57938AD033E737001A8010A;
 			isa = PBXBuildFile;
@@ -6145,7 +6245,7 @@
 				F5AAD08E039BA10901A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = /build;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -6160,7 +6260,6 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Event Sounds";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
 			productName = "Event Sounds";
 			productReference = F5AAD090039BA10901A8010A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -6201,12 +6300,6 @@
 			path = "Event Sounds.AdiumPlugin";
 			refType = 3;
 		};
-		F5AAD091039BA20A01A8010A = {
-			fileRef = F5AAD090039BA10901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5AAD094039BA22201A8010A = {
 			fileRef = F53B9A3702CCEF4801A8010A;
 			isa = PBXBuildFile;
@@ -6241,12 +6334,6 @@
 			isa = PBXGroup;
 			name = Headers;
 			refType = 4;
-		};
-		F5B53FBA0333A82F01A8010A = {
-			fileRef = F510B77403339F1C01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5B53FBB0333AB5C01A8010A = {
 			children = (
@@ -6304,6 +6391,12 @@
 			files = (
 				F55B413D03AB895501A8010A,
 				F55B414303AB897201A8010A,
+				F5519B2903AC3EB501A8010A,
+				F5519B2A03AC3EB601A8010A,
+				F5519B2B03AC3EB701A8010A,
+				F5519B2C03AC3EB701A8010A,
+				F5519B2D03AC3EB801A8010A,
+				F5519B2E03AC3EB801A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6415,12 +6508,6 @@
 		};
 		F5B53FCE0333B04101A8010A = {
 			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5B53FD20333B11701A8010A = {
-			fileRef = F5B53FC70333AFB501A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
