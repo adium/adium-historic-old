@@ -137,8 +137,8 @@
 
     //Exclude this window from the window menu (since we add it manually)
     [theWindow setExcludedFromWindowsMenu:YES];
-
 	[theWindow useOptimizedDrawing:YES];
+
 	[self _configureToolbar];
 
     //Remove any tabs from our tab view, it needs to start out empty

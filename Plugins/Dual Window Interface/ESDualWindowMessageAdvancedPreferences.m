@@ -1,5 +1,5 @@
 //
-//  ESDualWindowMessageWindowPreferences.m
+//  ESDualWindowMessageWindowAdvancedPreferences.m
 //  Adium
 //
 //  Created by Evan Schoenberg on Thu Sep 18 2003.
