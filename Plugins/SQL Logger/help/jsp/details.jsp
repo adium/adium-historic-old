@@ -3,41 +3,46 @@
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.regex.*' %>
 <%@ page import = 'java.util.Vector' %>
-<%@ page import = 'java.util.Enumeration' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
 <%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
-<!--$Rev: 901 $ $Date$ -->
+<!--$Rev: 922 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+File statQueries = new File(session.getServletContext().getRealPath("queries/stats.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection stats = new LibraryConnection(statQueries, conn);
+
+Map params = new HashMap();
+
 int sender, meta_id;
-try {
-    sender = Integer.parseInt(request.getParameter("sender_id"));
-} catch (NumberFormatException e) {
-    sender = 0;
-}
 
-try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
-} catch (NumberFormatException e) {
-    meta_id = 0;
-}
+sender = Util.checkInt(request.getParameter("sender_id"));
+meta_id = Util.checkInt(request.getParameter("meta_id"));
+String date = Util.checkNull(request.getParameter("date"));
 
-String date = request.getParameter("date");
-if (date != null && date.equals("")) {
-    date = null;
-}
+params.put("user_id", new Integer(sender));
+params.put("meta_id", new Integer(meta_id));
+params.put("startDate", date);
 
 String endMonth = new String();
 
 boolean loginUsers =
     Boolean.valueOf(request.getParameter("login")).booleanValue();
+
+params.put("login", Boolean.toString(loginUsers));
 
 String sender_sn = new String();
 String title = new String();
@@ -45,68 +50,40 @@ String title = new String();
 int lastDayOfMonth = 0;
 String month = new String();
 
-PreparedStatement pstmt = null;
-Statement stmt = null;
 ResultSet rset = null;
 ResultSetMetaData rsmd = null;
 
 try {
 
-    stmt = conn.createStatement();
+    if(sender != 0)
+        rset = lc.executeQuery("user_display_name", params);
+    else if(meta_id != 0)
+        rset = lc.executeQuery("meta_contained_users", params);
 
-    pstmt = conn.prepareStatement("select username as username, "+
-    " display_name as display_name, " +
-    " lower(service) as service, " +
-    " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+
-    " \'1 day\'::interval) as last_day, "+
-    " ?::timestamp + \'1 month\'::interval as end_month, " +
-    " to_char(?::timestamp, \'Mon, YYYY\') as month " +
-    " from " +
-    " im.users natural join im.user_display_name udn " +
-    " where user_id = ?"+
-    " and not exists " +
-    " (select 'x' from im.user_display_name " +
-    " where effdate > udn.effdate and user_id = users.user_id)");
-
-    pstmt.setString(1, date);
-    pstmt.setString(2, date);
-    pstmt.setString(3, date);
-    pstmt.setInt(4, sender);
-
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select name as username, "+
-        " name as display_name, " +
-        " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+
-        " \'1 day\'::interval) as last_day, "+
-        " ?::timestamp + \'1 month\'::interval as end_month, " +
-        " to_char(?::timestamp, \'Mon, YYYY\') as month " +
-        " from " +
-        " im.meta_container " +
-        " where meta_id = ? ");
-
-        pstmt.setString(1, date);
-        pstmt.setString(2, date);
-        pstmt.setString(3, date);
-        pstmt.setInt(4, meta_id);
-    }
-
-    rset = pstmt.executeQuery();
     rset.next();
 
     if(meta_id != 0) {
-        title = rset.getString("display_name");
+        title = rset.getString("name");
+        sender_sn = rset.getString("name");
     } else {
         title = "<img src=\"images/services/" + rset.getString("service") +
             ".png\" width=\"28\" height=\"28\" /> " +
             rset.getString("display_name");
+        sender_sn = rset.getString("username");
     }
+
+    rset = stats.executeQuery("date_info", params);
+
+    rset.next();
+
     month = rset.getString("month");
 
     lastDayOfMonth = rset.getInt("last_day");
 
     endMonth = rset.getString("end_month");
 
-    sender_sn = rset.getString("username");
+    params.put("endDate", endMonth);
+
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -128,7 +105,7 @@ try {
 	   </div>
 	   <div id="banner">
             <div id="bannerTitle">
-                <img class="adiumIcon" src="images/adiumy/blue.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                <img class="adiumIcon" src="images/headlines/stats.png" width="128" height="128" border="0" alt="Details Icon" />
                 <div class="text">
                     <h1><%= title %></h1>
                     <p><%= month %></p>
@@ -151,31 +128,17 @@ try {
 <%
     if(sender != 0 || meta_id != 0) {
 %>
-                <h1>Detailed Statistics for <%= sender_sn %></h1>
+                <h1>Detailed Statistics</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
         if(sender != 0) {
-            pstmt = conn.prepareStatement("select distinct " +
-            " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-            " as date, date_trunc('month', message_date) as full_date " +
-            " from messages where sender_id = ? order by full_date");
-
-            pstmt.setInt(1, sender);
+            rset = stats.executeQuery("distinct_months_user", params);
         }
 
         if(meta_id != 0) {
-            pstmt = conn.prepareStatement("select distinct " +
-            " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-            " as date, date_trunc('month', message_date) as full_date " +
-            " from messages, meta_contact "+
-            " where sender_id = user_id and meta_id = ? order by full_date");
-
-            pstmt.setInt(1, meta_id);
+            rset = stats.executeQuery("distinct_months_meta", params);
         }
-
-
-        rset = pstmt.executeQuery();
 
         while(rset.next()) {
             out.print("<p><a href=\"details.jsp?sender=" +
@@ -198,9 +161,7 @@ try {
                 <div class="boxThinContent">
 
 <%
-    pstmt = conn.prepareStatement("select name, meta_id from im.meta_container order by name");
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("meta_contacts", params);
 
     while(rset.next()) {
         out.println("<p><a href=\"statistics.jsp?meta_id=" +
@@ -215,7 +176,6 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    Vector userVec = User.getUsersWithDisplayNames(conn, loginUsers);
 
     if(!loginUsers) {
         out.print("<p><i><a href=\"statistics.jsp?sender=" +
@@ -228,23 +188,22 @@ try {
 
     out.println("<p></p>");
 
-	Enumeration e = userVec.elements();
+    rset = lc.executeQuery("all_users", params);
 
-    while (e.hasMoreElements())  {
-		User u = (User) e.nextElement();
-        if (Integer.parseInt(u.getValue("user_id")) != sender) {
+    while (rset.next())  {
+        if (rset.getInt("user_id") != sender) {
             out.println("<p>");
             out.println("<img src=\"images/services/" +
-                u.getValue("service") + ".png\" width=\"12\" height=\"12\" />");
+                rset.getString("service") + ".png\" width=\"12\" height=\"12\" />");
             out.println("<a href=\"statistics.jsp?sender=" +
-            u.getValue("user_id") + "&login=" +
+            rset.getString("user_id") + "&login=" +
             Boolean.toString(loginUsers) +
-            "\" title=\"" + u.getValue("username") + "\">" +
-            u.getValue("display_name") +
+            "\" title=\"" + rset.getString("username") + "\">" +
+            rset.getString("display_name") +
             "</a></p>");
         }
         else {
-            out.println("<p>" + u.getValue("username") + "</p>");
+            out.println("<p>" + rset.getString("username") + "</p>");
         }
     }
 
@@ -257,104 +216,26 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select " +
-    " coalesce(count(*),0) as total_sent," +
-    " coalesce(min(length(message)),0) as min_length, " +
-    " coalesce(max(length(message)),0) as max_length, " +
-    " coalesce(trunc(avg(length(message)),2),0) as avg_length, " +
-    " \'S\' as identifier " +
-    " from im.messages " +
-    " where sender_id = ? and message_date >= ?::timestamp " +
-    " and message_date < ?::timestamp group by sender_id " +
-    " union all " +
-    " select " +
-    " coalesce(count(*),0) as total_sent, " +
-    " coalesce(min(length(message)),0) as min_length, " +
-    " coalesce(max(length(message)),0) as max_length, " +
-    " coalesce(trunc(avg(length(message)), 2),0) as avg_length, " +
-    " \'R\' as identifier " +
-    " from im.messages " +
-    " where recipient_id = ? " +
-    " and message_date >= ?::timestamp " +
-    " and message_date < ?::timestamp " +
-    " group by recipient_id ");
 
-    pstmt.setInt(1, sender);
-    pstmt.setString(2, date);
-    pstmt.setString(3, endMonth);
-    pstmt.setInt(4, sender);
-    pstmt.setString(5, date);
-    pstmt.setString(6, endMonth);
+    if(meta_id != 0)
+        rset = stats.executeQuery("total_messages_month_meta", params);
 
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select " +
-        " coalesce(count(*),0) as total_sent," +
-        " coalesce(min(length(message)),0) as min_length, " +
-        " coalesce(max(length(message)),0) as max_length, " +
-        " coalesce(trunc(avg(length(message)),2),0) as avg_length, " +
-        " \'S\' as identifier " +
-        " from im.messages, im.meta_contact " +
-        " where sender_id = user_id and " +
-        " meta_id = ? " +
-        " and message_date >= ?::timestamp " +
-        " and message_date < ?::timestamp " +
-        " union all " +
-        " select " +
-        " coalesce(count(*),0) as total_sent, " +
-        " coalesce(min(length(message)),0) as min_length, " +
-        " coalesce(max(length(message)),0) as max_length, " +
-        " coalesce(trunc(avg(length(message)), 2),0) as avg_length, " +
-        " \'R\' as identifier " +
-        " from im.messages, im.meta_contact " +
-        " where recipient_id = user_id " +
-        " and meta_id = ? " +
-        " and message_date >= ?::timestamp " +
-        " and message_date < ?::timestamp");
+    if(sender != 0)
+        rset = stats.executeQuery("total_messages_month_user", params);
 
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, date);
-        pstmt.setString(3, endMonth);
-        pstmt.setInt(4, meta_id);
-        pstmt.setString(5, date);
-        pstmt.setString(6, endMonth);
-    }
-
-    rset = pstmt.executeQuery();
-
-    if(rset != null && rset.next()) {
-        int total = 0;
-        if(rset.getString("identifier").equals("S")) { %>
-            Total Sent: <%= rset.getString("total_sent") %><br />
-            <% total += rset.getInt("total_sent"); %>
-            Minimum Sent Length: <%= rset.getString("min_length") %><br />
-            Maximum Sent Length: <%= rset.getString("max_length") %><br />
-            Average Sent Length: <%= rset.getString("avg_length") %><br />
-    <%  } else { %>
-            Total Sent: 0<br />
-            Minimum Sent Length: 0<br />
-            Maximum Sent Length: 0<br />
-            Average Sent Length: 0<br />
-    <%  } %>
+    int total = 0;
+    while(rset.next()) {
+        String ident = rset.getString("identifier");
+        total += rset.getInt("total_sent"); %>
+            Total <%= ident %>: <%= rset.getString("total_sent") %><br />
+            Minimum <%= ident %> Length: <%= rset.getString("min_length") %><br />
+            Maximum <%= ident %> Length: <%= rset.getString("max_length") %><br />
+            Average <%= ident %>  Length: <%= rset.getString("avg_length") %><br />
         <br />
-    <%  if(rset.next() && rset.getString("identifier").equals("R")) {
-    %>
-            Total Received: <%= rset.getString("total_sent") %><br />
-            <% total += rset.getInt("total_sent"); %>
-            Minimum Received Length: <%= rset.getString("min_length") %><br />
-            Maximum Received Length: <%= rset.getString("max_length") %><br />
-            Average Received Length: <%= rset.getString("avg_length") %><br />
-            <br />
-    <%  } else { %>
-        Total Received: 0 <br />
-        Minimum Received Length: 0<br />
-        Maximum Received Length: 0<br />
-        Average Received Length: 0<br />
-        <br />
-        <% } %>
+    <% } %>
 
         Total Sent/Received: <%= total %><br />
         <br />
-    <%  } %>
 
                 </div>
                 <div class="boxWideBottom"></div>
@@ -364,38 +245,13 @@ try {
                 <div class="boxWideContent">
 
 <%
-    pstmt = conn.prepareStatement("select " +
-    " date_part(\'day\', message_date) as day," +
-    " count(*) as count " +
-    " from messages " +
-    " where message_date >= ?::date " +
-    " and message_date < ?::date " +
-    " and (sender_id = ? or recipient_id = ?) " +
-    " group by date_part(\'day\', message_date)");
-
-    pstmt.setString(1, date);
-    pstmt.setString(2, endMonth);
-    pstmt.setInt(3, sender);
-    pstmt.setInt(4, sender);
-
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select " +
-            " date_part(\'day\', message_date) as day," +
-            " count(*) as count " +
-            " from messages, meta_contact " +
-            " where message_date >= ?::date " +
-            " and message_date < ?::date " +
-            " and (sender_id = user_id or recipient_id = user_id) " +
-            " and meta_id = ? " +
-            " group by date_part(\'day\', message_date)");
-
-        pstmt.setString(1, date);
-        pstmt.setString(2, endMonth);
-        pstmt.setInt(3, meta_id);
+        rset = stats.executeQuery("daily_totals_meta", params);
     }
 
-
-    rset = pstmt.executeQuery();
+    if(sender != 0) {
+        rset = stats.executeQuery("daily_totals_user", params);
+    }
 
     int[] dailyAry = new int[lastDayOfMonth + 1];
     int maxCount = 0;
@@ -452,34 +308,14 @@ try {
                 <div class="boxWideContent">
 
 <%
-    pstmt = conn.prepareStatement("select message, count(*) " +
-        " from messages where sender_id = ? " +
-        " and message_date >= ?::timestamp " +
-        " and message_date < ?::timestamp " +
-        " group by message " +
-        " having count(*) > 1 " +
-        " order by count(*) desc limit 20 ");
 
-    pstmt.setInt(1, sender);
-    pstmt.setString(2, date);
-    pstmt.setString(3, endMonth);
-
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select message, count(*) " +
-            " from messages, meta_contact " +
-            " where sender_id = user_id and meta_id = ? " +
-            " and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp " +
-            " group by message " +
-            " having count(*) > 1 " +
-            " order by count(*) desc limit 20 ");
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, date);
-        pstmt.setString(3, endMonth);
+    if(sender != 0) {
+        rset = stats.executeQuery("popular_messages_user_range", params);
     }
 
-    rset = pstmt.executeQuery();
+    if(meta_id != 0) {
+        rset = stats.executeQuery("popular_messages_meta_range", params);
+    }
 
     out.println("<table>");
 
@@ -504,51 +340,14 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select sender_sn as sender_sn"+
-        ", recipient_sn as recipient_sn, "+
-        " message, count(*) "+
-        " from simple_message_v smv "+
-        " where not exists "+
-            " (select 'x' from messages "+
-            " where sender_id in (smv.sender_id, smv.recipient_id) "+
-            " and recipient_id in (smv.sender_id, smv.recipient_id) "+
-            " and message_date < smv.message_date "+
-            " and message_date > smv.message_date - '10 minutes'::interval) "+
-        " and (sender_id = ? or recipient_id = ?) "+
-        " and message_date >= ?::timestamp " +
-        " and message_date < ?::timestamp " +
-        " group by sender_sn, recipient_sn, message "+
-        " order by count(*) desc limit 20");
-
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
-    pstmt.setString(3, date);
-    pstmt.setString(4, endMonth);
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select sender_sn as sender_sn"+
-            ", recipient_sn as recipient_sn, "+
-            " message, count(*) "+
-            " from simple_message_v smv, meta_contact "+
-            " where not exists "+
-                " (select 'x' from messages "+
-                " where sender_id in (smv.sender_id, smv.recipient_id) "+
-                " and recipient_id in (smv.sender_id, smv.recipient_id) "+
-                " and message_date < smv.message_date "+
-                " and message_date > smv.message_date - '10 minutes'::interval) "+
-            " and (sender_id = user_id or recipient_id = user_id) "+
-            " and meta_id = ? " +
-            " and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp " +
-            " group by sender_sn, recipient_sn, message "+
-            " order by count(*) desc limit 20");
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, date);
-        pstmt.setString(3, endMonth);
+        rset = stats.executeQuery("popular_convo_starters_meta_range", params);
     }
 
-    rset = pstmt.executeQuery();
+    if(sender != 0) {
+        rset = stats.executeQuery("popular_convo_starters_user_range", params);
+    }
 %>
                 <table>
                     <tr>
@@ -580,41 +379,12 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select " +
-        " date_part(\'day\', message_date) as day, " +
-        " date_part(\'hour\', message_date) as hour, " +
-        " count(*) as count" +
-        " from messages " +
-        " where (sender_id = ? or recipient_id = ?) " +
-        " and message_date >= ?::timestamp " +
-        " and message_date < ?::timestamp " +
-        " group by date_part(\'day\', message_date), " +
-        " date_part(\'hour\', message_date)");
 
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
-    pstmt.setString(3, date);
-    pstmt.setString(4, endMonth);
+    if(meta_id != 0)
+        rset = stats.executeQuery("daily_hourly_totals_meta_range", params);
 
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select " +
-            " date_part(\'day\', message_date) as day, " +
-            " date_part(\'hour\', message_date) as hour, " +
-            " count(*) as count" +
-            " from messages, meta_contact " +
-            " where (sender_id = user_id or recipient_id = user_id) " +
-            " and meta_id = ? " +
-            " and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp " +
-            " group by date_part(\'day\', message_date), " +
-            " date_part(\'hour\', message_date)");
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, date);
-        pstmt.setString(3, endMonth);
-    }
-
-    rset = pstmt.executeQuery();
+    if(sender != 0)
+        rset = stats.executeQuery("daily_hourly_totals_user_range", params);
 
     int[][] dailyHourly= new int[lastDayOfMonth + 1][24];
     int maxHourly = 0;
@@ -694,70 +464,12 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    /*
-     * use the select * from (select blah silliness to work around a
-     * postgresql bug
-     */
 
-    pstmt = conn.prepareStatement("select * from ( "+
-    " select username as username, "+
-    " recipient_id as \"Recipient\", "+
-    " count(*) as \"Sent\", (select count(*)"+
-    " from messages where"+
-    " recipient_id = a.sender_id and sender_id = a.recipient_id " +
-    " and message_date >= ?::timestamp and message_date < ?::timestamp) as " +
-    " \"Received\", " +
-    " (select message from messages where sender_id = a.recipient_id " +
-    " and message_date >= ?::timestamp and message_date < ?::timestamp " +
-    " order by random() limit 1) as \"Random\" " +
-    " from messages a, users "+
-    " where sender_id = ? and message_date >= ?::timestamp " +
-    " and message_date < ?::timestamp " +
-    " and users.user_id = a.recipient_id " +
-    " group by sender_id, recipient_id, username) as stats "+
-    " order by \"Sent\" + \"Received\" desc ");
+    if(sender != 0)
+        rset = stats.executeQuery("stats_range_user", params);
 
-    pstmt.setString(1, date);
-    pstmt.setString(2, endMonth);
-    pstmt.setString(3, date);
-    pstmt.setString(4, endMonth);
-    pstmt.setInt(5, sender);
-    pstmt.setString(6, date);
-    pstmt.setString(7, endMonth);
-
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select * from ( " +
-            " select username as username, "+
-            " recipient_id as \"Recipient\", "+
-            " count(*) as \"Sent\", (select count(*)"+
-            " from messages where"+
-            " recipient_id = a.sender_id and sender_id = a.recipient_id " +
-            " and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp) as " +
-            " \"Received\", " +
-            " (select message from messages where sender_id = a.recipient_id " +
-            " and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp " +
-            " order by random() limit 1) as \"Random\" " +
-            " from messages a, users, meta_contact " +
-            " where sender_id = meta_contact.user_id " +
-            " and meta_id = ? " +
-            " and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp " +
-            " and users.user_id = a.recipient_id " +
-            " group by sender_id, recipient_id, username ) " +
-            " as foo order by \"Sent\" + \"Received\" desc ");
-
-        pstmt.setString(1, date);
-        pstmt.setString(2, endMonth);
-        pstmt.setString(3, date);
-        pstmt.setString(4, endMonth);
-        pstmt.setInt(5, meta_id);
-        pstmt.setString(6, date);
-        pstmt.setString(7, endMonth);
-    }
-
-    rset = pstmt.executeQuery();
+    if(meta_id != 0)
+        rset = stats.executeQuery("stats_range_meta", params);
 
     rsmd = rset.getMetaData();
 
@@ -816,9 +528,8 @@ try {
         out.println("<br />" + e.getMessage());
     }
 } finally {
-    if (stmt != null) {
-        stmt.close();
-    }
+    lc.close();
+    stats.close();
     conn.close();
 }
 %>

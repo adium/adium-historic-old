@@ -2,18 +2,20 @@
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.ArrayList' %>
-<%@ page import = 'java.util.Vector' %>
 <%@ page import = 'java.util.StringTokenizer' %>
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
 <%@ page import = 'java.net.URLEncoder' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'sqllogger.*' %>
-<%@ page import = 'java.util.Enumeration' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 909 $ $Date$ -->
+<!--$Rev: 922 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -33,72 +35,39 @@ int aTime = 45;
 
 String formURL = new String("saveForm.jsp?action=saveChat.jsp");
 
-dateFinish = request.getParameter("finish");
-dateStart = request.getParameter("start");
-from_sn = request.getParameter("from");
-to_sn = request.getParameter("to");
-contains_sn = request.getParameter("contains");
-String screenDisplayMeta = request.getParameter("screen_or_display");
-hl = request.getParameter("hl");
-service = request.getParameter("service");
+dateFinish = Util.checkNull(request.getParameter("finish"));
+dateStart = Util.checkNull(request.getParameter("start"));
+from_sn = Util.checkNull(request.getParameter("from"), false);
+to_sn = Util.checkNull(request.getParameter("to"), false);
+contains_sn = Util.checkNull(request.getParameter("contains"), false);
+String screenDisplayMeta = Util.checkNull(request.getParameter("screen_or_display"));
+hl = Util.checkNull(request.getParameter("hl"));
+service = Util.checkNull(request.getParameter("service"));
+meta_id = Util.checkInt(request.getParameter("meta_id"));
+bTime = Util.checkInt(request.getParameter("time"), 10);
+aTime = Util.checkInt(request.getParameter("time"), 45);
+
 ArrayList hlWords = new ArrayList();
 
 String title = new String("");
 String notes = new String("");
 
-try {
-    chat_id = Integer.parseInt(request.getParameter("chat_id"));
-} catch (NumberFormatException e) {
-    chat_id = 0;
-}
+chat_id = Util.checkInt(request.getParameter("chat_id"));
 
-if (dateFinish != null && (dateFinish.equals("") || dateFinish.equals("null"))) {
-    dateFinish = null;
-} else if (dateFinish != null) {
-    formURL += "&amp;dateFinish=" + dateFinish;
-}
+formURL += "&amp;dateFinish=" + Util.safeString(dateFinish);
+formURL += "&amp;dateStart=" + Util.safeString(dateStart, today.toString());
+formURL += "&amp;sender=" + Util.safeString(from_sn);
+formURL += "&amp;recipient=" + Util.safeString(to_sn);
+formURL += "&amp;single_sn=" + Util.safeString(contains_sn);
+formURL += "&amp;service=" + service;
+formURL += "&amp;meta_id=" + meta_id;
 
-
-if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null"))) {
-    dateStart = null;
-} else if (dateStart != null) {
-    formURL += "&amp;dateStart=" + dateStart;
-} else if (dateStart == null ) {
-    formURL += "&amp;dateStart=" + today.toString();
-}
-
-if (from_sn != null && from_sn.equals("")) {
-    from_sn = null;
-} else if(from_sn != null) {
-    formURL += "&amp;sender=" + from_sn;
-}
-
-if (to_sn != null && to_sn.equals("")) {
-    to_sn = null;
-} else if(to_sn != null ) {
-    formURL += "&amp;recipient=" + to_sn;
-}
-
-if (contains_sn != null && contains_sn.equals("")) {
-    contains_sn = null;
-} else if(contains_sn != null) {
-    formURL += "&amp;single_sn=" + contains_sn;
-}
-
-if (hl != null && hl.equals("")) {
-    hl = null;
-} else if (hl != null) {
+if (hl != null) {
     hl = hl.trim();
     StringTokenizer st = new StringTokenizer(hl, " ");
     while (st.hasMoreTokens()) {
         hlWords.add(st.nextToken());
     }
-}
-
-if(service != null && service.equals("0")) {
-    service = null;
-} else if (service != null) {
-    formURL += "&amp;service=" + service;
 }
 
 if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
@@ -108,47 +77,28 @@ if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
     showDisplay = false;
 }
 
-try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
-    if(meta_id != 0) {
-        showMeta = true;
-        showDisplay = false;
-        formURL += "&amp;meta_id=" + meta_id;
-    }
-} catch (NumberFormatException e) {
-    meta_id = 0;
-}
-
-try {
-    message_id = Integer.parseInt(request.getParameter("message_id"));
-} catch (NumberFormatException e) {
-    message_id = 0;
-}
-
-try {
-    bTime = Integer.parseInt(request.getParameter("time"));
-    aTime = Integer.parseInt(request.getParameter("time"));
-} catch (NumberFormatException e) {
-    bTime = 10;
-    aTime = 45;
+if(meta_id != 0) {
+    showMeta = true;
+    showDisplay = false;
 }
 
 String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 ResultSet noteSet = null;
 
-String queryText = new String();
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map paramMap = new HashMap();
 
 try {
 
-    if(chat_id != 0) {
-        pstmt = conn.prepareStatement("select title, notes, sent_sn, received_sn, single_sn, date_start, date_finish, meta_id from im.saved_chats where chat_id = ?");
+   if(chat_id != 0) {
 
-        pstmt.setInt(1, chat_id);
+        paramMap.put("chat_id", new Integer(chat_id));
 
-        rset = pstmt.executeQuery();
+        rset = lc.executeQuery("saved_chat", paramMap);
 
         if(rset != null && rset.next()) {
             from_sn = rset.getString("sent_sn");
@@ -169,11 +119,11 @@ try {
     }
 
     if(message_id != 0) {
-        pstmt = conn.prepareStatement("select message_date + '" + aTime + " minutes'::interval as finish, message_date - '" + bTime + " minutes'::interval as start from messages where message_id = ?");
+        paramMap.put("afterTime", new Integer(aTime));
+        paramMap.put("beforeTime", new Integer(bTime));
+        paramMap.put("message_id", new Integer(message_id));
 
-        pstmt.setInt(1, message_id);
-
-        rset = pstmt.executeQuery();
+        rset = lc.executeQuery("message_times", paramMap);
 
         if(rset.next()) {
             dateStart = rset.getString("start");
@@ -200,7 +150,7 @@ try {
         </div>
         <div id="banner">
             <div id="bannerTitle">
-                <img class="adiumIcon" src="images/adiumy/green.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                <img class="adiumIcon" src="images/headlines/index.png" width="128" height="128" border="0" alt="SQL Logger: Viewer" />
                 <div class="text">
                     <h1><%= title %></h1>
                     <p><%= notes %></p>
@@ -233,35 +183,42 @@ try {
         out.println("</div>\n");
         out.println("<div class=\"boxThinBottom\"></div>\n");
     }
+    boolean unconstrained = false;
 
+    if(dateStart != null && dateFinish == null) unconstrained = true;
+
+    if(unconstrained) {
+        out.print("<div align=\"center\"><i>Limited to 250 " +
+        "messages.</i><br><br></div>\n");
+    }
 
     out.println("<h1>Users</h1>");
     out.println("<div class=\"boxThinTop\"></div>\n");
     out.println("<div class=\"boxThinContent\">");
 
     try {
+        paramMap.put("startDate", dateStart);
+        paramMap.put("endDate", dateFinish);
 
-        Vector userVec = User.getUsersForInterval(conn, dateStart, dateFinish);
-        Enumeration e = userVec.elements();
+        rset = lc.executeQuery("date_range_users", paramMap);
 
-        while(e.hasMoreElements()) {
-            User u = (User) e.nextElement();
+        while(rset.next()) {
             out.print("<p>" +
-                "<a href=\"index.jsp?start=" + dateStart +
-                "&finish=" + dateFinish + "&service=" +
-                u.getValue("service") + "\">" +
+                "<a href=\"index.jsp?start=" + Util.safeString(dateStart) +
+                "&finish=" + Util.safeString(dateFinish) + "&service=" +
+                rset.getString("service") + "\">" +
                 "<img src=\"images/services/" +
-                u.getValue("service").toLowerCase() +
+                rset.getString("service").toLowerCase() +
                 ".png\" width=\"12\" height=\"12\" /></a> " +
-                "<a href=\"index.jsp?start=" + dateStart +
-                "&finish=" + dateFinish + "&contains=" +
-                u.getValue("username") + "\">"+
-                u.getValue("username") + "</a></p>\n");
+                "<a href=\"index.jsp?start=" + Util.safeString(dateStart) +
+                "&finish=" + Util.safeString(dateFinish) + "&contains=" +
+                rset.getString("username") + "\">"+
+                rset.getString("username") + "</a></p>\n");
         }
 
-        out.print("<a href=\"index.jsp?start=" + dateStart +
-            "&finish=" + dateFinish + "\"><i>All</i></a>");
-    } catch (UserException e) {
+        out.print("<a href=\"index.jsp?start=" + Util.safeString(dateStart) +
+            "&finish=" + Util.safeString(dateFinish) + "\"><i>All</i></a>");
+    } catch (SQLException e) {
         out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
     }
 
@@ -272,9 +229,7 @@ try {
     out.println("<div class=\"boxThinTop\"></div>\n");
     out.println("<div class=\"boxThinContent\">");
 
-    pstmt = conn.prepareStatement("select chat_id, title from im.saved_chats");
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("saved_chats_list", paramMap);
 
     while(rset.next()) {
         out.println("<p><a href=\"index.jsp?chat_id=" + rset.getInt("chat_id") +
@@ -299,32 +254,16 @@ try {
 %>
 
                 <p><a href="#"
-                onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent Links</a></p>
-<%
-    String safeTo = to_sn;
-    if(safeTo == null) {
-        safeTo = "";
-    }
+                onClick="window.open('urls.jsp?start=<%=Util.safeString(dateStart, today.toString()) %>&finish=<%= Util.safeString(dateFinish) %>', 'Save Chat', 'width=640,height=480')">Recent Links</a></p>
 
-    String safeFrom = from_sn;
-    if(safeFrom == null) {
-        safeFrom = "";
-    }
-
-    String safeCont = contains_sn;
-    if(safeCont == null) {
-        safeCont = "";
-    }
-%>
                 <p><a href="#"
-                onClick="window.open('simpleViewer.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>&from=<%= URLEncoder.encode(safeFrom, "UTF-8")  %>&to=<%= URLEncoder.encode(safeTo, "UTF-8")  %>&contains=<%= URLEncoder.encode(safeCont, "UTF-8") %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
+                onClick="window.open('simpleViewer.jsp?start=<%= Util.safeString(dateStart, today.toString()) %>&finish=<%= Util.safeString(dateFinish) %>&from=<%= URLEncoder.encode(Util.safeString(from_sn), "UTF-8")  %>&to=<%= URLEncoder.encode(Util.safeString(to_sn), "UTF-8")  %>&contains=<%= URLEncoder.encode(Util.safeString(contains_sn), "UTF-8") %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
 <%
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
 %>
             </div>
             <div id="content">
-
             <h1>View Messages by Date</h1>
 
             <div class="boxWideTop"></div>
@@ -335,15 +274,14 @@ try {
                     <td align="right">
                         <label for="from">Sent SN: </label></td>
                     <td>
-                        <input type="text" name="from" <% if(from_sn != null)
-                        out.print("value=\"" + from_sn + "\""); %> id="from" />
+                        <input type="text" name="from"
+                            value="<%= Util.safeString(from_sn) %>" id="from" />
                     </td>
                 </tr>
                 <tr>
                 <tr>
-                    <td align="right"><label for="to"">Received SN: </label></td>
-                    <td><input type="text" name="to" <% if (to_sn != null)
-                        out.print("value=\"" + to_sn + "\""); %> id="to" />
+                    <td align="right"><label for="to">Received SN: </label></td>
+                    <td><input type="text" name="to" value="<%= Util.safeString(to_sn) %>" id="to" />
                     </td>
                 </tr>
                 <tr>
@@ -351,9 +289,9 @@ try {
                         <label for="contains">Single SN:</label>
                     </td>
                     <td>
-                        <input type="text" name="contains" <% if (contains_sn != null)
-                        out.print("value=\"" + contains_sn + "\""); %>
-                        id = "contains" />
+                        <input type="text" name="contains"
+                            value="<%= Util.safeString(contains_sn)  %>"
+                            id = "contains" />
                     </td>
                 </tr>
                 <tr>
@@ -362,15 +300,15 @@ try {
                     </td>
                     <td>
                         <select name="service" id="service">
-                            <option value="0">Choose One</option>
+                            <option value="null">Choose One</option>
 <%
-    pstmt = conn.prepareStatement("select distinct service from users");
-    rset = pstmt.executeQuery();
+
+    rset = lc.executeQuery("distinct_services", paramMap);
+
     while(rset.next()) {
         out.print("<option value=\"" + rset.getString("service") + "\"" );
-        if(rset.getString("service").equals(service)) {
-            out.print(" selected=\"selected\"");
-        }
+        out.print(Util.compare(rset.getString("service"),
+                    service, " selected=\"selected\""));
         out.print(">" + rset.getString("service") + "</option>\n");
     }
 %>
@@ -385,9 +323,8 @@ try {
                         <select name="meta_id">
                             <option value=\"0\">Choose One</option>
 <%
-    pstmt = conn.prepareStatement("select meta_id, name from im.meta_container order by name");
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("meta_contacts", paramMap);
 
     while(rset.next()) {
         out.print("<option value=\"" + rset.getInt("meta_id") + "\"");
@@ -402,18 +339,18 @@ try {
                 </tr>
                 <tr>
                     <td align="right"><label for="start_date">Date Range: </label></td>
-                <td><input type="text" name="start" <% if (dateStart != null)
-                out.print("value=\"" + dateStart + "\""); else
-                out.print("value=\"" + today.toString() + " 00:00:00\"");%>
-                id="start_date" />
+                <td><input type="text" name="start" value="<%=
+                Util.safeString(dateStart, today.toString() + " 00:00:00\"")
+                %>" id="start_date" />
                 <a href="javascript:show_calendar('control.start');"
                     onmouseover="window.status='Date Picker';return true;"
                     onmouseout="window.status='';return true;">
                 <img src="images/calicon.jpg" border=0></a>
 
                 <label for="finish_date">&nbsp;--&nbsp;</label>
-                <input type="text" name="finish" <% if (dateFinish != null)
-                out.print("value=\"" + dateFinish + "\""); %> id="finish_date" />
+                <input type="text" name="finish"
+                        value="<%= Util.safeString(dateFinish) %>"
+                        id="finish_date" />
                 <a href="javascript:show_calendar('control.finish');"
                     onmouseover="window.status='Date Picker';return true;"
                     onmouseout="window.status='';return true;">
@@ -452,17 +389,23 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    Vector messageVec = new Vector();
-    try {
-        messageVec = Message.getMessagesForInterval(conn,
-                dateStart, dateFinish,
-                from_sn, to_sn, contains_sn, service,
-                meta_id, showDisplay, showMeta);
-    } catch (MessageException e) {
-        out.println(e.getMessage());
-    }
+    paramMap.put("startDate", dateStart);
+    paramMap.put("endDate", dateFinish);
+    paramMap.put("sendSN", from_sn);
+    paramMap.put("recSN", to_sn);
+    paramMap.put("containsSN", contains_sn);
+    paramMap.put("service", service);
+    paramMap.put("meta_id", new Integer(meta_id));
 
-    if (messageVec.size() == 0) {
+    if(unconstrained) paramMap.put("limit", new Integer(250));
+    else paramMap.put("limit", new Integer(1000000000));
+
+    if(showDisplay)
+        rset = lc.executeQuery("message_span_display", paramMap);
+    else
+        rset = lc.executeQuery("message_span_meta", paramMap);
+
+    if (!rset.isBeforeFirst()) {
         out.print("<div align=\"center\"><i>No records found.</i></div>\n");
     }
 
@@ -476,41 +419,37 @@ try {
     prevSender = new String();
     prevRecipient = new String();
 
-    String currentDate = new String();
+    Date currentDate = null;
     Timestamp currentTime = new Timestamp(0);
 
     int greyCount = 1;
 
-    Enumeration e = messageVec.elements();
-
-    while (e.hasMoreElements()) {
-        Message m = (Message) e.nextElement();
-
-        if(!m.getValue("message_date").equals(currentDate)) {
-            currentDate = m.getValue("message_date");
+    while (rset.next()) {
+        if(!rset.getDate("message_date").equals(currentDate)) {
+            currentDate = rset.getDate("message_date");
             prevSender = "";
             prevRecipient = "";
 
             out.println("<div class=\"weblogDateHeader\">");
-            out.println(m.getValue("fancy_date"));
+            out.println(rset.getString("fancy_date"));
             out.println("</div>\n");
-        } else if (Timestamp.valueOf(m.getValue("message_timestamp")).getTime() -
+        } else if (rset.getTimestamp("message_date").getTime() -
             currentTime.getTime() > 60*10*1000) {
             out.println("<hr width=\"75%\">");
         }
 
-        currentTime = Timestamp.valueOf(m.getValue("message_timestamp"));
+        currentTime = rset.getTimestamp("message_date");
 
         sent_color = null;
         received_color = null;
-        String message = m.getValue("message");
+        String message = rset.getString("message");
 
         for(int i = 0; i < userArray.size(); i++) {
             if (!showMeta &&
-                    userArray.get(i).equals(m.getValue("sender_sn"))) {
+                    userArray.get(i).equals(rset.getString("sender_sn"))) {
                 sent_color = colorArray[i % colorArray.length];
             } else if (showMeta &&
-                    userArray.get(i).equals(m.getValue("sender_meta"))) {
+                    userArray.get(i).equals(rset.getString("sender_meta"))) {
                 sent_color = colorArray[i % colorArray.length];
             }
         }
@@ -518,18 +457,18 @@ try {
         if (sent_color == null) {
             sent_color = colorArray[userArray.size() % colorArray.length];
             if(!showMeta) {
-                userArray.add(m.getValue("sender_sn"));
+                userArray.add(rset.getString("sender_sn"));
             } else {
-                userArray.add(m.getValue("sender_meta"));
+                userArray.add(rset.getString("sender_meta"));
             }
         }
 
         for(int i = 0; i < userArray.size(); i++) {
             if (!showMeta &&
-                    userArray.get(i).equals(m.getValue("recipient_sn"))) {
+                    userArray.get(i).equals(rset.getString("recipient_sn"))) {
                 received_color = colorArray[i % colorArray.length];
             } else if (showMeta &&
-                    userArray.get(i).equals(m.getValue("recipient_meta"))) {
+                    userArray.get(i).equals(rset.getString("recipient_meta"))) {
                 received_color = colorArray[i % colorArray.length];
             }
         }
@@ -537,9 +476,9 @@ try {
         if (received_color == null) {
             received_color = colorArray[userArray.size() % colorArray.length];
             if(!showMeta) {
-                userArray.add(m.getValue("recipient_sn"));
+                userArray.add(rset.getString("recipient_sn"));
             } else {
-                userArray.add(m.getValue("recipient_meta"));
+                userArray.add(rset.getString("recipient_meta"));
             }
         }
 
@@ -550,52 +489,51 @@ try {
 
             Pattern p = Pattern.compile("(?i)(.*?)(" +
             hlWords.get(i).toString() + ")(.*?)");
-            Matcher match = p.matcher(message);
+            Matcher m = p.matcher(message);
             StringBuffer sb = new StringBuffer();
             int oldIndex = 0;
-            while(match.find()) {
-                sb.append(message.substring(oldIndex,match.start()));
+            while(m.find()) {
+                sb.append(message.substring(oldIndex,m.start()));
                 if(sb.toString().lastIndexOf('<') <=
                   sb.toString().lastIndexOf('>')) {
-                    sb.append(match.group(1) +
-                    "<b style=\"color:black;background-color:" +
+                    sb.append(m.group(1) + "<b style=\"color:black;background-color:" +
                     hlColor[i % hlColor.length] + "\">");
-                    sb.append(match.group(2) + "</b>" + match.group(3));
+                    sb.append(m.group(2) + "</b>" + m.group(3));
                 } else {
-                    sb.append(match.group(1) + match.group(2) +
-                            match.group(3));
+                    sb.append(m.group(1) + m.group(2) + m.group(3));
                 }
-                oldIndex = match.end();
+                oldIndex = m.end();
             }
             sb.append(message.substring(oldIndex, message.length()));
 
             message = sb.toString();
         }
 
-        if(!m.getValue("sender_sn").equals(prevSender) ||
-            !m.getValue("recipient_sn").equals(prevRecipient)) {
+        if(!rset.getString("sender_sn").equals(prevSender) ||
+            !rset.getString("recipient_sn").equals(prevRecipient)) {
 
             greyCount = 1;
 
             out.print("<div class=\"message_container\" id=\""
-                + m.getValue("message_id") + "\">");
+                + rset.getString("message_id") + "\">");
 
             out.println("<div class=\"sender\">");
             out.print("<a href=\"index.jsp?from=" +
-            m.getValue("sender_sn") +
-            "&to=" + m.getValue("recipient_sn") +
-            "&start=" + dateStart +
-            "&finish=" + dateFinish + "#" + m.getValue("message_id") + "\" ");
+            rset.getString("sender_sn") +
+            "&to=" + rset.getString("recipient_sn") +
+            "&start=" + Util.safeString(dateStart) +
+            "&finish=" + Util.safeString(dateFinish) + "#" +
+            rset.getInt("message_id") + "\" ");
 
-            out.print("title=\"" + m.getValue("sender_sn") + "\">");
+            out.print("title=\"" + rset.getString("sender_sn") + "\">");
 
             out.print("<span style=\"color: " + sent_color + "\">");
             if(showDisplay) {
-                out.print(m.getValue("sender_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                out.print(rset.getString("sender_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             } else if (showMeta) {
-                out.print(m.getValue("sender_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                out.print(rset.getString("sender_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             } else {
-                out.print(m.getValue("sender_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                out.print(rset.getString("sender_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             }
             out.print("</span></a>\n");
 
@@ -603,21 +541,21 @@ try {
                 out.println("&rarr;");
 
                 out.println("<a href=\"index.jsp?from=" +
-                m.getValue("sender_sn") +
-                    "&to=" + m.getValue("recipient_sn") +
-                    "&start=" + dateStart +
-                    "&finish=" + dateFinish +
-                    "#" + m.getValue("message_id") +
-                    "\" title=\"" + m.getValue("recipient_sn") + "\">");
+                rset.getString("sender_sn") +
+                    "&to=" + rset.getString("recipient_sn") +
+                    "&start=" + Util.safeString(dateStart) +
+                    "&finish=" + Util.safeString(dateFinish) +
+                    "#" + rset.getInt("message_id") +
+                    "\" title=\"" + rset.getString("recipient_sn") + "\">");
 
                 out.print("<span style=\"color: " +
                 received_color + "\">");
                 if(showDisplay) {
-                    out.print(m.getValue("recipient_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                    out.print(rset.getString("recipient_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 } else if (showMeta) {
-                    out.print(m.getValue("recipient_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                    out.print(rset.getString("recipient_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 } else {
-                    out.print(m.getValue("recipient_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                    out.print(rset.getString("recipient_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 }
                 out.print("</span></a>");
             }
@@ -626,17 +564,15 @@ try {
             out.println("<div class=\"msg_container_next\">\n");
         }
 
-        prevSender = m.getValue("sender_sn");
-        prevRecipient = m.getValue("recipient_sn");
+        prevSender = rset.getString("sender_sn");
+        prevRecipient = rset.getString("recipient_sn");
 
         out.println("<div class=\"time_initial\">");
-        if(m.getValue("notes").equals("t")) {
-            pstmt = conn.prepareStatement("select title, notes " +
-            " from im.message_notes where message_id = ? " +
-            " order by date_added ");
+        if(rset.getBoolean("notes")) {
 
-            pstmt.setInt(1, Integer.parseInt(m.getValue("message_id")));
-            noteSet = pstmt.executeQuery();
+            paramMap.put("message_id",
+                new Integer(rset.getInt("message_id")));
+            noteSet = lc.executeQuery("message_notes", paramMap);
 
             out.print("<a class=\"info\" href=\"#\">");
             out.print("<img src=\"images/note.png\"><span>");
@@ -650,12 +586,12 @@ try {
         }
         out.println("<a href=\"#\" title=\"Add Note ...\" " +
             "onClick=\"window.open('saveForm.jsp?action=saveNote.jsp&message_id=" +
-            m.getValue("message_id") + "', 'Add Note', "+
+            rset.getString("message_id") + "', 'Add Note', "+
             "'width=275,height=225')\">");
 
         out.print("<img src=\"images/note_add.png\" alt=\"Add Note\"></a>");
 
-        out.print(m.getValue("message_time"));
+        out.print(rset.getTime("message_date"));
         out.println("</div>\n");
 
         out.println("<div class=\"message\"><p " +
@@ -666,12 +602,10 @@ try {
 
         out.println("</div>\n");
     }
-
-}catch(SQLException e) {
+} catch (SQLException e) {
     out.print("<br /><span style=\"color: red\">" + e.getMessage() + "</span>");
-    out.print("<br /><br />" + queryText);
 } finally {
-    pstmt.close();
+    lc.close();
     conn.close();
 }
 %>

@@ -3,34 +3,34 @@
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 778 $ $Date$ -->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/urls.jsp $-->
+<!--$Rev: 922 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
 
 String dateStart, dateFinish;
 
-dateFinish = request.getParameter("finish");
-dateStart = request.getParameter("start");
-String niceStart = dateStart;
-String niceFinish = dateFinish;
+dateFinish = Util.checkNull(request.getParameter("finish"));
+dateStart = Util.checkNull(request.getParameter("start"));
 
-if (dateFinish != null && (dateFinish.equals("") || dateFinish.equals("null"))) {
-    dateFinish = null;
-    niceFinish = "";
-}
-
-if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null"))) {
-    dateStart = null;
-    niceStart = "";
-}
+params.put("startDate", dateStart);
+params.put("endDate", dateFinish);
 
 %>
 
@@ -41,42 +41,18 @@ if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null")))
 
     <div align="right">
         <form action="urls.jsp" method="get">
-            <input type="text" name="start" value="<%= niceStart %>" > -- <input type="text" name="finish" value="<%= niceFinish %>">
+            <input type="text" name="start" value="<%= Util.safeString(dateStart) %>" > -- <input type="text" name="finish" value="<%= Util.safeString(dateFinish) %>">
             <br/><input type="submit">
         </form>
     </div>
     <br />
 <%
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 
 try {
 
-    String cmdArray[] = new String[2];
-    int cmdCntr = 0;
-
-    String queryString = new String("select sender_sn, recipient_sn, message, message_date from simple_message_v where message ~* '(.*http:\\/\\/.*)|(.*<a href.*?</a>.*)'");
-
-    if(dateStart != null) {
-        queryString += " and message_date >= ? ";
-        cmdArray[cmdCntr++] = dateStart;
-    }
-
-    if(dateFinish != null) {
-        queryString += " and message_date <= ? ";
-        cmdArray[cmdCntr++] = dateFinish;
-    }
-
-    queryString += " order by message_date desc ";
-
-    pstmt = conn.prepareStatement(queryString);
-
-    for(int i = 0; i < cmdCntr; i++) {
-        pstmt.setString(i + 1, cmdArray[i]);
-    }
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("message_urls", params);
 
     while(rset.next()) {
         StringBuffer sb = new StringBuffer();
@@ -110,10 +86,10 @@ try {
         out.println("<p style=\"padding-left: 30px; margin-top:5px\">" +
             sb.toString() + "</p>");
     }
-} catch (SQLException e) {
-    out.println(e.getMessage());
+//} catch (SQLException e) {
+//    out.println(e.getMessage());
 } finally {
-    pstmt.close();
+    lc.close();
     conn.close();
 }
 %>

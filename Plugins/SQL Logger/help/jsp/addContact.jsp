@@ -1,13 +1,17 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 
 String title = new String();
@@ -15,28 +19,22 @@ String service = new String();
 String username = new String();
 int meta_id;
 
-try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
-} catch (NumberFormatException e) {
-    meta_id = 0;
-}
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
 
-service = request.getParameter("service");
-if(service != null && service.equals("")) {
-    service = null;
-}
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
 
-username = request.getParameter("username");
-if(username != null && username.equals("")) {
-    username = null;
-}
+meta_id = Util.checkInt(request.getParameter("meta_id"));
+
+service = Util.checkNull(request.getParameter("service"));
+
+username = Util.checkNull(request.getParameter("username"));
 
 try {
-    pstmt = conn.prepareStatement("select name from im.meta_container where meta_id = ?");
 
-    pstmt.setInt(1, meta_id);
+    params.put("meta_id", new Integer(meta_id));
+    rset = lc.executeQuery("meta_contained_users", params);
 
-    rset = pstmt.executeQuery();
 
     if(rset.next()) {
         title = rset.getString("name");
@@ -50,9 +48,8 @@ try {
 <form action="insertMeta.jsp" method="get">
 
 <%
-    pstmt = conn.prepareStatement("select distinct service from im.users order by service");
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("distinct_services", params);
 %>
     <select name="service">
         <option value="" selected="selected">Choose One</option>
@@ -68,39 +65,15 @@ try {
 %>
     </select>
 
-    <input type="text" name="username" <% if (username != null) out.print("value=\"" + username + "\""); %> /><br />
+    <input type="text" name="username" value="<%= Util.safeString(username) %>" /><br />
 
     <select name="user_id">
         <option value="0" selected="selected">Choose One</option>
 <%
-    out.println(username);
-    out.println(service);
 
-    if(username == null && service == null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) order by display_name, username");
-
-        pstmt.setInt(1, meta_id);
-
-    } else if (username != null && service != null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) and service = ? and username ilike ? order by display_name, username");
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, service);
-        pstmt.setString(3, username);
-
-    } else if (username != null && service == null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) and username ilike ? order by display_name, username");
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, username);
-    } else if (service != null && username == null) {
-        pstmt = conn.prepareStatement("select user_id, display_name || ' (' || service || '.' || username || ')' as full_display from im.users natural join im.user_display_name udn where not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate) and not exists (select 'x' from im.meta_contact where meta_id = ? and user_id = users.user_id) and service = ? order by display_name, username");
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setString(2, service);
-    }
-
-    rset = pstmt.executeQuery();
+    params.put("username", username);
+    params.put("service", service);
+    rset = lc.executeQuery("all_users_except_meta", params);
 
     while(rset.next()) {
         out.println("<option value=\"" + rset.getString("user_id") +

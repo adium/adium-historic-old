@@ -1,66 +1,68 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-String name = request.getParameter("name");
+String name = Util.checkNull(request.getParameter("name"));
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 
-PreparedStatement updateStmt = null;
-
 int meta_id;
+
+File queryFile = new File(session.getServletContext().getRealPath("queries/update.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
 
 try {
 
     if(name != null && !name.equals("")) {
 
-        conn.setAutoCommit(false);
+        params.put("name", name);
 
-        pstmt = conn.prepareStatement("insert into im.meta_container (name) values (?)");
+        lc.executeUpdate("add_meta", params);
 
-        pstmt.setString(1, name);
+        params.put("sequence", "meta_container_meta_id_seq");
 
-        pstmt.executeUpdate();
-
-        pstmt = conn.prepareStatement("select currval('meta_container_meta_id_seq')");
-        rset = pstmt.executeQuery();
+        rset = lc.executeQuery("currval", params);
 
         rset.next();
 
         meta_id = rset.getInt("currval");
 
-        pstmt = conn.prepareStatement("select key_id from information_keys");
+        params.put("meta_id", new Integer(meta_id));
 
-        rset = pstmt.executeQuery();
+        rset = lc.executeQuery("info_keys", params);
 
         while(rset.next()) {
             String requestText = request.getParameter(rset.getString("key_id"));
 
             if(requestText != null && !requestText.equals("")) {
-                updateStmt = conn.prepareStatement("insert into im.contact_information (meta_id, key_id, value) values (?, ?, ?)");
 
-                updateStmt.setInt(1, meta_id);
-                updateStmt.setInt(2, rset.getInt("key_id"));
-                updateStmt.setString(3, requestText);
+                params.put("key_id", new Integer(rset.getInt("key_id")));
+                params.put("value", requestText);
 
-                updateStmt.executeUpdate();
+                lc.executeUpdate("insert_meta_key_info", params);
             }
         }
     }
-} catch (SQLException e) {
-    out.println("<br />" + e.getMessage());
-    conn.rollback();
-} finally {
-    conn.commit();
-    conn.close();
-}
 %>
 <html>
 <body onLoad="window.opener.parent.location.reload(); window.close()"></body>
 </html>
+<%
+} catch (SQLException e) {
+    out.println("<br />" + e.getMessage());
+} finally {
+    conn.close();
+}
+%>

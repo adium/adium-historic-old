@@ -1,32 +1,34 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
-<%@ page import = 'java.util.Vector' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'java.io.File' %>
 <%@ page import = 'sqllogger.*' %>
-<%@ page import = 'java.util.Enumeration' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date$ -->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/users.jsp $-->
+<!--$Rev: 922 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-String startChar = request.getParameter("start");
+String startChar = Util.safeString(request.getParameter("start"), "a");
 
-PreparedStatement pstmt = null;
-Statement stmt = null;
-PreparedStatement metaStmt = null;
 ResultSet rset = null;
-ResultSet metaSet = null;
-PreparedStatement infoStmt = null;
 ResultSet infoSet = null;
 
+Map params = new HashMap();
+
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+
 try {
-    stmt = conn.createStatement();
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -49,7 +51,7 @@ try {
         </div>
         <div id="banner">
             <div id="bannerTitle">
-                <img class="adiumIcon" src="images/adiumy/yellow.png" width="128" height="128" border="0" alt="Adium X Icon" />
+            <img class="adiumIcon" src="images/headlines/users.png" width="128" height="128" border="0" alt="Users" />
                 <div class="text">
                     <h1>Edit Users</h1>
                 </div>
@@ -73,11 +75,7 @@ try {
                 <div class="boxThinContent">
                     <form action="updateLogin.jsp" method="get">
 <%
-    rset = stmt.executeQuery("select sender_id as user_id, "+
-        " username as username, login "+
-        "from user_statistics, users where sender_id = user_id "+
-        " group by sender_id, username, login "+
-        " having count(*) > 1 order by username");
+    rset = lc.executeQuery("possible_login_users", params);
 
     while (rset.next())  {
         out.println("<p>");
@@ -121,39 +119,37 @@ try {
 
     out.println("</div><br />");
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 80 as height from im.information_keys where delete = false");
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("information_keys_count", params);
 
     rset.next();
 
-    int height = rset.getInt("height");
+    int height = rset.getInt("count") * 31 + 80;
 
-    Vector userVec = User.getUsersStartingWith(conn, startChar);
-    Enumeration e = userVec.elements();
+    if(startChar.equals("0")) {
+        rset = lc.executeQuery("users_starting_non_letter", params);
+    } else {
+        params.put("letter", startChar);
+        rset = lc.executeQuery("users_starting_with_letter", params);
+    }
 
-    while(e.hasMoreElements()) {
-        User user = (User) e.nextElement();
+    while(rset.next()) {
 
-        String editURL = "editUser.jsp?user_id=" + user.getValue("user_id");
+        String editURL = "editUser.jsp?user_id=" + rset.getString("user_id");
 %>
 <span class="edit"<a href="#"
     onClick="window.open('<%= editURL %>', 'Edit User', 'width=275,height=<%= height %>')">Edit Info ...</a></span>
 <%
 
         out.print("<h2><img src=\"images/services/" +
-            user.getValue("service") + ".png\" width=\"14\" height=\"14\" /> " +
-            user.getValue("display_name") + " (" +
+            rset.getString("service") + ".png\" width=\"14\" height=\"14\" /> " +
+            rset.getString("display_name") + " (" +
             "<a href=\"chats.jsp?sender=" +
-            user.getValue("user_id") + "\">" +
-            user.getValue("username") + "</a>)</h2>");
+            rset.getString("user_id") + "\">" +
+            rset.getString("username") + "</a>)</h2>");
         out.println("<div class=\"meta\">");
 
-        infoStmt = conn.prepareStatement("select key_name, value from im.user_contact_info where user_id = ? order by key_name");
-
-        infoStmt.setInt(1, Integer.parseInt(user.getValue("user_id")));
-
-        infoSet = infoStmt.executeQuery();
+        params.put("user_id", new Integer(rset.getInt("user_id")));
+        infoSet = lc.executeQuery("user_info", params);
 
         out.println("<table>");
 
@@ -185,11 +181,8 @@ try {
 <%
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage());
-    out.println("<br />You may need to run <code>psql < update.sql</code>");
 } finally {
-    if (stmt != null) {
-        stmt.close();
-    }
+    lc.close();
     conn.close();
 }
 %>

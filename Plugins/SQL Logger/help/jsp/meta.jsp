@@ -1,27 +1,31 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date$ -->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/meta.jsp $-->
+<!--$Rev: 922 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-PreparedStatement pstmt = null;
-Statement stmt = null;
-PreparedStatement metaStmt = null;
 ResultSet rset = null;
 ResultSet metaSet = null;
-PreparedStatement infoStmt = null;
 ResultSet infoSet = null;
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
 try {
-    stmt = conn.createStatement();
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -44,7 +48,7 @@ try {
 	   </div>
 	   <div id="banner">
             <div id="bannerTitle">
-                <img class="adiumIcon" src="images/adiumy/yellow.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                <img class="adiumIcon" src="images/headlines/meta.png" width="128" height="128" border="0" alt="Meta Contacts" />
                 <div class="text">
                     <h1>Edit Meta-Contacts</h1>
                 </div>
@@ -68,27 +72,15 @@ try {
                 <div class="boxExtraWideContent">
 <%
 
-    pstmt = conn.prepareStatement("select count(*) * 31 + 105 as height from im.information_keys where delete = false");
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("information_keys_count", params);
 
     rset.next();
 
-    int height = rset.getInt("height");
+    int height = rset.getInt("count") * 31 + 105;
 
-    pstmt = conn.prepareStatement("select (max(length(username || display_name)) + 5) * 5 as width from im.users natural join im.user_display_name where not exists (select 'x' from im.user_display_name where user_id = users.user_id and effdate < user_display_name.effdate)");
+    int longDispWidth = 640;
 
-    rset = pstmt.executeQuery();
-
-    rset.next();
-
-    int longDispWidth = rset.getInt(1);
-
-    pstmt = conn.prepareStatement("select meta_id, name, count(meta_contact.meta_id) " +
-        " from im.meta_container natural left join im.meta_contact " +
-        " group by meta_id, name order by name");
-
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("meta_contacts", params);
 
     while(rset.next()) {
 
@@ -102,7 +94,6 @@ try {
     'Edit Meta Contact', 'width=275,height=<%= height %>')">Edit ...</a>
     </span>
 <%
-
         out.print("<h2><a href=\"chats.jsp?meta_id=" +
             rset.getString("meta_id") + "\">" +
             rset.getString("name") + "</a> (" +
@@ -110,11 +101,9 @@ try {
         out.println("<div class=\"meta\">");
         out.print("<div class=\"personal_info\">");
 
-        infoStmt = conn.prepareStatement("select key_name, value from im.meta_contact_info where meta_id = ? order by key_name");
+        params.put("meta_id", new Integer(rset.getInt("meta_id")));
 
-        infoStmt.setInt(1, rset.getInt("meta_id"));
-
-        infoSet = infoStmt.executeQuery();
+        infoSet = lc.executeQuery("meta_info", params);
 
         out.println("<table>");
 
@@ -127,15 +116,14 @@ try {
         out.println("</table>");
         out.println("</div>");
 
-        metaStmt = conn.prepareStatement("select user_id, service, username as username, display_name, lower(service) as lower_service, preferred from im.users natural join im.meta_contact natural join im.user_display_name udn where meta_id = ? and not exists (select 'x' from im.user_display_name where effdate > udn.effdate and user_id = users.user_id) order by display_name, username");
 
-        metaStmt.setInt(1, rset.getInt("meta_id"));
+        params.put("meta_id", new Integer(rset.getInt("meta_id")));
 
-        metaSet = metaStmt.executeQuery();
+        metaSet = lc.executeQuery("meta_contained_users", params);
 
         while(metaSet.next()) {
             out.println("<p><img src=\"images/services/" +
-                metaSet.getString("lower_service") + ".png\" width=\"12\" height=\"12\" /> " +
+                metaSet.getString("service") + ".png\" width=\"12\" height=\"12\" /> " +
                 metaSet.getString("display_name")  + " (" +
                 "<a href=\"chats.jsp?sender=" +
                 metaSet.getString("user_id") + "\">" +
@@ -157,7 +145,7 @@ try {
             rset.getString("meta_id"));
 %>
 <p><a href="#"
-    onClick="window.open('<%= formURL %>', 'Add Contact', 'width=<%= longDispWidth %>,height=100')">
+    onClick="window.open('<%= formURL %>', 'Add Contact', 'width=<%= longDispWidth %>,height=110')">
                 Add Contact ...
             </a></p>
 
@@ -185,9 +173,7 @@ try {
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage());
 } finally {
-    if (stmt != null) {
-        stmt.close();
-    }
+    lc.close();
     conn.close();
 }
 %>

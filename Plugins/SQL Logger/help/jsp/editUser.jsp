@@ -1,30 +1,33 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-int user_id;
+int user_id = Util.checkInt(request.getParameter("user_id"));
 
-try {
-    user_id = Integer.parseInt(request.getParameter("user_id"));
-} catch (NumberFormatException e) {
-    user_id = 0;
-}
-
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 String username = new String();
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
 try {
-    pstmt = conn.prepareStatement("select username, key_id, key_name, coalesce(value, '') as value from im.users natural left join im.information_keys natural left join im.contact_information where user_id = ? and delete = false order by key_name");
 
-    pstmt.setInt(1, user_id);
+    params.put("user_id", new Integer(user_id));
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("user_info_all_keys", params);
+
     if(rset.isBeforeFirst()) {
         rset.next();
         username = rset.getString("username");

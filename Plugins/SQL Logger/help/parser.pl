@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/sqllogger/adium/parser.pl $
-# $Rev: 840 $ $Date$
+# $Rev: 917 $ $Date$
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "im.sql"
@@ -27,15 +27,15 @@ for (my $i = 0; $i < @ARGV; $i++) {
     if ($ARGV[$i] eq "--verbose") {
         $verbose = 1;
     }
-    
+
     if ($ARGV[$i] eq "--no-vacuum") {
         $vacuum = 0;
     }
-    
+
     if ($ARGV[$i] eq "--quiet") {
         $quiet = 1;
     }
-    
+
     if ($ARGV[$i] eq "--disable-status") {
         $status = 0;
     }
@@ -56,6 +56,11 @@ foreach my $outer_user (glob '*') {
         print($service_user . "\n");
         $_ = $service_user;
         ($service, $user) = /(\w*).([\w\.\_\@\+\-]*)/;
+        print OUT "insert into im.users (username, service, login) select
+        \'$user\', \'$service\', true where not exists (select 'x' from
+        im.users where username = \'$user\' and service = \'$service\');"
+            or warn qq{$!};
+
         foreach my $folder (glob '*') {
             !$quiet && print "\t" . $folder;
             chdir $folder;
@@ -79,10 +84,19 @@ foreach my $outer_user (glob '*') {
                 ($recdName, $date) = /([\w\@\.\_\+\-]*)\s.*(\d\d\d\d\|\d\d\|\d\d)/
                     or die "Unable to parse date in $file: $!";
                 if(/adiumLog$/) {
+
                     undef $/;
                     open (FILE, $file) or die qq{Unable to open file "$file": $!};
                     my $content = <FILE>;
                     close(FILE);
+
+                    unlink($file);
+
+                    open(FFILE, ">>$file.bak") or die qq{Unable to open file "$file.bak": $!};
+
+                    print FFILE $content;
+
+                    close(FFILE);
 
                     $content = escapeHTML($content);
                     $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)[\w\_\.\@\+\-]*\:|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
@@ -99,7 +113,7 @@ foreach my $outer_user (glob '*') {
 
                         if (/^\&lt\;.*\&gt\;/) {
                             $sender = $recdName;
-                        } 
+                        }
 
                         if ($sender eq $sentName) {
                             $receiver = $recdName;
@@ -119,15 +133,15 @@ foreach my $outer_user (glob '*') {
 
                         my $timestamp = $date . " " . $time;
 
-                        my $query = "insert into im.message_v 
-                            (sender_sn, recipient_sn, message, message_date, 
-                            sender_service, recipient_service) 
-                            values 
-                            (\'$sender\', 
-                            \'$receiver\', 
-                            \'$message\', 
-                            \'$timestamp\', 
-                            \'$service\', 
+                        my $query = "insert into im.message_v
+                            (sender_sn, recipient_sn, message, message_date,
+                            sender_service, recipient_service)
+                            values
+                            (\'$sender\',
+                            \'$receiver\',
+                            \'$message\',
+                            \'$timestamp\',
+                            \'$service\',
                             \'$service\');\n";
 
                         if($debug) {
@@ -142,7 +156,16 @@ foreach my $outer_user (glob '*') {
                     $/ = "</div>\n";
 
                     open (FILE, $file) or die qq{Unable to open file "$file": $!};
-                    my @contents = <FILE>; 
+                    my @contents = <FILE>;
+                    close(FILE);
+
+                    unlink($file);
+
+                    open(FFILE, ">>$file.bak") or die qq{Unable to open file "$file.bak": $!};
+                    foreach(@contents){
+                        	print FFILE $_;
+                    }
+                    close(FFILE);
 
                     for(my $i = 0; $i < @contents; $i++) {
                         my $message_type;
@@ -174,14 +197,14 @@ foreach my $outer_user (glob '*') {
 
                         my $timestamp = $date . " " . $time;
 
-                        my $query = "insert into im.message_v 
-                            (sender_sn, recipient_sn, message, message_date, 
-                            sender_service, recipient_service) 
-                            values (\'$sender\', 
-                            \'$receiver\', 
-                            \'$message\', 
-                            \'$timestamp\', 
-                            \'$service\', 
+                        my $query = "insert into im.message_v
+                            (sender_sn, recipient_sn, message, message_date,
+                            sender_service, recipient_service)
+                            values (\'$sender\',
+                            \'$receiver\',
+                            \'$message\',
+                            \'$timestamp\',
+                            \'$service\',
                             \'$service\');\n";
 
                         if($debug) {
@@ -195,8 +218,6 @@ foreach my $outer_user (glob '*') {
                 }
                 print OUT $outtext or warn qq{$outtext};
                 $outtext = "";
-                my $backup = $file . ".bak";
-                system('mv',$file,$backup);
             }
             chdir "$path/$outer_user/Logs/$service_user" or die;
         }
@@ -204,13 +225,16 @@ foreach my $outer_user (glob '*') {
     }
     chdir $path;
 }
+print "Done with logs\n";
 
 print OUT "insert into im.user_display_name (user_id, display_name,
 effdate) select user_id, username, '-infinity' from im.users where not exists
 (select 'x' from im.user_display_name where user_display_name.user_id =
 users.user_id and user_display_name.effdate = '-infinity');\n";
 
+print "Done inserting\n";
 if ($vacuum) {
+	print"Starting vacuum analyze\n";
     print OUT "vacuum analyze;\n";
 }
 

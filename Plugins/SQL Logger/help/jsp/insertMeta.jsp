@@ -1,151 +1,80 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'sqllogger.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
+File queryFile = new File(session.getServletContext().getRealPath("queries/update.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
 int meta_id, user_id;
 String service, username, addAll;
 boolean all = false;
 boolean error = false;
 
-service = request.getParameter("service");
-username = request.getParameter("username");
+service = Util.checkNull(request.getParameter("service"));
+username = Util.checkNull(request.getParameter("username"));
 addAll = request.getParameter("all");
 
-try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
-} catch (NumberFormatException e) {
-    meta_id = 0;
-}
+meta_id = Util.checkInt(request.getParameter("meta_id"));
+user_id = Util.checkInt(request.getParameter("user_id"));
 
-try {
-    user_id = Integer.parseInt(request.getParameter("user_id"));
-} catch (NumberFormatException e) {
-    user_id = 0;
-}
-
-if(service != null && service.equals("")) {
-    service = null;
-}
-
-if(username != null && username.equals("")) {
-    username = null;
-}
+params.put("meta_id", new Integer(meta_id));
+params.put("user_id", new Integer(user_id));
+params.put("service", service);
+params.put("username", username);
 
 if(addAll != null && addAll.equals("on")) {
     all = true;
 }
 
-PreparedStatement pstmt = null;
 ResultSet rs = null;
 
 try {
     if((service != null || username != null) && !all) {
-        if(service != null && username != null) {
-            pstmt = conn.prepareStatement("select count(*) from users where service = ? and username ilike ?");
-
-            pstmt.setString(1, service);
-            pstmt.setString(2, username);
-        } else if (service != null && username == null) {
-            pstmt = conn.prepareStatement("select count(*) from users where service = ?");
-
-            pstmt.setString(1, service);
-        } else if (username != null && service == null) {
-            pstmt = conn.prepareStatement("select count(*) from users where username ilike ?");
-            pstmt.setString(1, username);
-        }
-
-        rs = pstmt.executeQuery();
+        rs = lc.executeQuery("count_service_user", params);
 
         rs.next();
 
         if(rs.getInt(1) > 1) {
-            if(username == null) username = "";
-            if(service == null) service = "";
-            username = username.replaceAll("%", "%25");
-
             response.sendRedirect("addContact.jsp?meta_id=" +
-                meta_id + "&service=" + service + "&username=" +
-                username);
+                meta_id + "&service=" + Util.safeString(service) +
+                "&username=" + Util.safeString(username));
         } else if (rs.getInt(1) == 1) {
             if(user_id != 0) {
                 error = true;
                 out.println("<span style=\"color: red\">Error.  Please de-select a user from the pulldown or remove the typed field.</span>");
             }
-
-            if(service != null && username != null) {
-                pstmt = conn.prepareStatement("select user_id from users where service = ? and username ilike ?");
-
-                pstmt.setString(1, service);
-                pstmt.setString(2, username);
-            } else if (service != null && username == null) {
-                pstmt = conn.prepareStatement("select user_id from users where service = ?");
-
-                pstmt.setString(1, service);
-            } else if (username != null && service == null) {
-                pstmt = conn.prepareStatement("select user_id from users where username ilike ?");
-                pstmt.setString(1, username);
-            }
-
-            rs = pstmt.executeQuery();
+            rs = lc.executeQuery("get_user_id", params);
 
             rs.next();
 
             user_id = rs.getInt("user_id");
+            params.put("user_id", new Integer(user_id));
         }
     } else if ((service != null || username != null) && meta_id != 0 && all) {
 
-        if(service != null && username != null) {
-            pstmt = conn.prepareStatement("insert into meta_contact (meta_id, user_id) (select ?, user_id from users where service = ? and username ilike ?)");
-
-            pstmt.setInt(1, meta_id);
-            pstmt.setString(2, service);
-            pstmt.setString(3, username);
-        } else if (service != null && username == null) {
-            pstmt = conn.prepareStatement("insert into meta_contact (meta_id, user_id) (select ?, user_id from users where service = ?)");
-
-            pstmt.setInt(1, meta_id);
-            pstmt.setString(2, service);
-
-        } else if (username != null && service == null) {
-            pstmt = conn.prepareStatement("insert into meta_contact (meta_id, user_id) (select ?, user_id from users where username ilike ?)");
-
-            pstmt.setInt(1, meta_id);
-            pstmt.setString(2, username);
-        }
-
-        pstmt.executeUpdate();
+        lc.executeUpdate("add_all_users_to_meta", params);
     }
 
     if(meta_id != 0 && user_id != 0) {
-
-        pstmt = conn.prepareStatement("select count(*) from im.meta_contact where user_id = ?");
-
-        pstmt.setInt(1, user_id);
-
-        rs = pstmt.executeQuery();
-
-        rs.next();
-
-        if(rs.getInt(1) != 0) {
-            pstmt = conn.prepareStatement("insert into im.meta_contact (meta_id, user_id) values (?, ?)");
-        } else {
-            pstmt = conn.prepareStatement("insert into im.meta_contact (meta_id, user_id, preferred) values (?, ?, true)");
-        }
-
-        pstmt.setInt(1, meta_id);
-        pstmt.setInt(2, user_id);
-
-        pstmt.executeUpdate();
+        lc.executeUpdate("add_user_to_meta", params);
     }
     if(!error) {
 %>
 <html>
-<body onLoad="window.opener.parent.location.reload(); window.close()"></body>
+    <body onLoad="window.opener.parent.location.reload(); window.close()">
+    </body>
 </html>
 <%
     }

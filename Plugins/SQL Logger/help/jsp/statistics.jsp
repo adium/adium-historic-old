@@ -1,14 +1,17 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
-<%@ page import = 'java.util.Enumeration' %>
 <%@ page import = 'java.util.Vector' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
 <%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 907 $ $Date$ -->
+<!--$Rev: 922 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -22,17 +25,9 @@ String notes = new String();
 
 int total_messages = 0;
 boolean loginUsers = false;
-try {
-    sender = Integer.parseInt(request.getParameter("sender"));
-} catch (NumberFormatException e) {
-    sender = 0;
-}
 
-try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
-} catch (NumberFormatException e) {
-    meta_id = 0;
-}
+sender = Util.checkInt(request.getParameter("sender"));
+meta_id = Util.checkInt(request.getParameter("meta_id"));
 
 loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 
@@ -45,25 +40,23 @@ int years = 0;
 
 int monthArray[][][] = new int[10][14][2];
 
-PreparedStatement pstmt = null;
-Statement stmt = null;
 ResultSet rset = null;
 ResultSet totals = null;
 ResultSetMetaData rsmd = null;
+
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
+File statQueries = new File(session.getServletContext().getRealPath("queries/stats.xml"));
+
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection stats = new LibraryConnection(statQueries, conn);
+
+Map params = new HashMap();
+
 try {
 
-    stmt = conn.createStatement();
-
     if(sender != 0) {
-        pstmt = conn.prepareStatement("select username as username, "+
-            " display_name as display_name, lower(service) as service  from " +
-            " im.users natural join im.user_display_name udn " +
-            " where user_id = ?"+
-            " and not exists " +
-            " (select 'x' from im.user_display_name " +
-            " where effdate > udn.effdate and user_id = users.user_id)");
-        pstmt.setInt(1, sender);
-        rset = pstmt.executeQuery();
+        params.put("user_id", new Integer(sender));
+        rset = lc.executeQuery("user_display_name", params);
         rset.next();
 
         title = "<img src=\"images/services/" + rset.getString("service") +
@@ -76,12 +69,9 @@ try {
     }
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select name, lower(service) as service, username,display_name from im.meta_container natural join im.meta_contact natural join im.users natural join im.user_display_name udn where meta_id = ? and not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate)");
 
-        pstmt.setInt(1, meta_id);
-
-        rset = pstmt.executeQuery();
-
+        params.put("meta_id", new Integer(meta_id));
+        rset = lc.executeQuery("meta_contained_users", params);
 
         while(rset.next()) {
             title = rset.getString("name");
@@ -114,7 +104,7 @@ try {
 	   </div>
 	   <div id="banner">
             <div id="bannerTitle">
-                <img class="adiumIcon" src="images/adiumy/blue.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                <img class="adiumIcon" src="images/headlines/stats.png" width="128" height="128" border="0" alt="Statistics Icon" />
                 <div class="text">
                     <h1><%= title %></h1>
                     <p><%= notes %></p>
@@ -136,52 +126,18 @@ try {
             <div id="sidebar-a">
 <%
     if(sender != 0 || meta_id != 0) {
+        params.put("sender", new Integer(sender));
+        params.put("meta_id", new Integer(meta_id));
 %>
-                <h1>Detailed Statistics for <%= sender_sn %></h1>
+                <h1>Detailed Statistics</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-        pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-                " as month, date_part('year', message_date) as year, " +
-                " count(*) as count, " +
-                " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-                " as date, date_trunc('month', message_date) as full_date, " +
-                " case when sender_id = ? then 1 else 0 end as is_sender " +
-                " from messages where sender_id = ? or " +
-                " recipient_id = ? group by date_part('month', message_date), " +
-                " to_char(date_trunc('month', message_date), 'Mon, YYYY'), " +
-                " date_trunc('month', message_date), " +
-                " date_part('year', message_date), sender_id = ?  order by full_date");
-
-        pstmt.setInt(1, sender);
-        pstmt.setInt(2, sender);
-        pstmt.setInt(3, sender);
-        pstmt.setInt(4, sender);
-
-        if(meta_id != 0) {
-            pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-                    " as month, date_part('year', message_date) as year, " +
-                    " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-                    " as date, date_trunc('month', message_date) as full_date, " +
-                    " count(*) as count, " +
-                    " case when sender_id = user_id then 1 else 0 end as " +
-                    " is_sender " +
-                    " from im.messages, im.meta_contact " +
-                    " where (sender_id = user_id or " +
-                    " recipient_id = user_id) and meta_id = ? " +
-                    " group by date_part('month', message_date), " +
-                    " to_char(date_trunc('month', message_date), 'Mon, YYYY'), " +
-                    " date_trunc('month', message_date), " +
-                    " date_part('year', message_date), sender_id = user_id " +
-                    " order by full_date");
-
-            pstmt.setInt(1, meta_id);
-
+        if(sender != 0) {
+            totals = stats.executeQuery("yearly_monthly_totals_sender", params);
+        } else if (meta_id != 0) {
+            totals = stats.executeQuery("yearly_monthly_totals_meta", params);
         }
-
-        totals = pstmt.executeQuery();
-
-        String prev = new String();
 
         for(int i = 0; i < 2; i++) {
             for( int j = 0; j < 3; j++) {
@@ -196,6 +152,7 @@ try {
             }
         }
 
+        String prev = new String();
 
         while(totals.next()) {
             if(!prev.equals(totals.getString("date"))) {
@@ -261,9 +218,8 @@ try {
                 <div class="boxThinContent">
 
 <%
-    pstmt = conn.prepareStatement("select meta_id, name from im.meta_container order by name");
 
-    rset = pstmt.executeQuery();
+    rset = lc.executeQuery("meta_contacts", params);
 
     while(rset.next()) {
         out.println("<p><a href=\"statistics.jsp?meta_id=" + rset.getInt("meta_id") + "\">" + rset.getString("name") + "</a></p>");
@@ -276,7 +232,9 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    Vector userVec = User.getUsersWithDisplayNames(conn, loginUsers);
+
+    params.put("login", Boolean.toString(loginUsers));
+    rset = lc.executeQuery("all_users", params);
 
     if(!loginUsers) {
         out.print("<p><i><a href=\"statistics.jsp?sender=" +
@@ -289,23 +247,20 @@ try {
 
     out.println("<p></p>");
 
-	Enumeration e = userVec.elements();
-
-    while (e.hasMoreElements())  {
-		User u = (User) e.nextElement();
-        if (Integer.parseInt(u.getValue("user_id")) != sender) {
+    while (rset.next())  {
+        if (Integer.parseInt(rset.getString("user_id")) != sender) {
             out.println("<p>");
             out.println("<img src=\"images/services/" +
-                u.getValue("service") + ".png\" width=\"12\" height=\"12\" />");
+                rset.getString("service") + ".png\" width=\"12\" height=\"12\" />");
             out.println("<a href=\"statistics.jsp?sender=" +
-            u.getValue("user_id") + "&login=" +
+            rset.getString("user_id") + "&login=" +
             Boolean.toString(loginUsers) +
-            "\" title=\"" + u.getValue("username") + "\">" +
-            u.getValue("display_name") +
+            "\" title=\"" + rset.getString("username") + "\">" +
+            rset.getString("display_name") +
             "</a></p>");
         }
         else {
-            out.println("<p>" + u.getValue("username") + "</p>");
+            out.println("<p>" + rset.getString("username") + "</p>");
         }
     }
 
@@ -395,23 +350,14 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select message, count(*) " +
-        " from im.messages where sender_id = ? group by message " +
-        " order by count(*) desc limit 20 ");
 
-    pstmt.setInt(1, sender);
-
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select message, count(*) " +
-            " from im.messages, im.meta_contact " +
-            " where sender_id = user_id and meta_id = ? " +
-            " group by message " +
-            " order by count(*) desc limit 20 ");
-
-        pstmt.setInt(1, meta_id);
+    if(sender != 0) {
+        rset = stats.executeQuery("popular_messages_sender", params);
     }
 
-    rset = pstmt.executeQuery();
+    if(meta_id != 0) {
+        rset = stats.executeQuery("popular_messages_meta", params);
+    }
 
     out.println("<table>");
 
@@ -437,43 +383,14 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
                 <div class="boxWideContent">
 
 <%
-    pstmt = conn.prepareStatement("select sender_sn as sender_sn"+
-        ", recipient_sn as recipient_sn, "+
-        " message, count(*) "+
-        " from simple_message_v smv "+
-        " where not exists "+
-            " (select 'x' from messages "+
-            " where sender_id in (smv.sender_id, smv.recipient_id) "+
-            " and recipient_id in (smv.sender_id, smv.recipient_id) "+
-            " and message_date < smv.message_date "+
-            " and message_date > smv.message_date - '10 minutes'::interval) "+
-        " and (sender_id = ? or recipient_id = ?) "+
-        " group by sender_sn, recipient_sn, message "+
-        " order by count(*) desc limit 20");
 
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
-
-    if(meta_id != 0) {
-         pstmt = conn.prepareStatement("select sender_sn as sender_sn "+
-            ", recipient_sn as recipient_sn, " +
-            " message, count(*) " +
-            " from simple_message_v smv, im.meta_contact "+
-            " where not exists "+
-                " (select 'x' from messages "+
-                " where sender_id in (smv.sender_id, smv.recipient_id) "+
-                " and recipient_id in (smv.sender_id, smv.recipient_id) "+
-                " and message_date < smv.message_date " +
-                " and message_date > smv.message_date - '10 minutes'::interval) "+
-            " and (sender_id = user_id or recipient_id = user_id) " +
-            " and meta_id = ? " +
-            " group by sender_sn, recipient_sn, message " +
-            " order by count(*) desc limit 20");
-
-        pstmt.setInt(1, meta_id);
+    if(sender != 0) {
+        rset = stats.executeQuery("popular_convo_starters_user", params);
     }
 
-    rset = pstmt.executeQuery();
+    if(meta_id != 0) {
+        rset = stats.executeQuery("popular_convo_starters_meta", params);
+    }
 
 %>
                 <table>
@@ -481,18 +398,19 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
                         <td>#</td>
                         <td>Sender</td>
                         <td>Recipient</td>
-                        <td>Message</td>
                         <td>Count</td>
                     </tr>
 <%
     while(rset.next()) {
         out.println("<tr>");
-        out.println("<td>" +
+        out.println("<td rowspan=\"2\" valign=\"top\">" +
             rset.getRow() + "</td>");
         out.println("<td>" + rset.getString("sender_sn") + "</td>");
         out.println("<td>" + rset.getString("recipient_sn") + "</td>");
-        out.println("<td>" + rset.getString("message") + "</td>");
         out.println("<td>" + rset.getString("count") + "</td>");
+        out.println("</tr>");
+        out.println("<tr>");
+        out.println("<td colspan=\"3\" style=\"margin-left: 20px\">" + rset.getString("message") + "</td>");
         out.println("</tr>");
     }
     out.print("</table>");
@@ -505,19 +423,14 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select username, sum(num_messages), (select message from messages where sender_id = user_id order by random() limit 1) as message from users, user_statistics where user_id = sender_id and (sender_id = ? or recipient_id = ?) group by username, user_id order by sum desc, username limit 20");
 
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
-
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select (select username from users where user_id = user_statistics.sender_id) as username, sum(num_messages), (select message from messages where sender_id = user_statistics.sender_id order by random() limit 1) as message from users natural join meta_contact, user_statistics where (user_id = sender_id or user_id = recipient_id) and meta_id = ? group by username, user_id, sender_id order by sum desc, username limit 20");
-
-        pstmt.setInt(1, meta_id);
+    if(sender != 0) {
+        rset = stats.executeQuery("popular_users_sender", params);
     }
 
-
-    rset = pstmt.executeQuery();
+    if(meta_id != 0) {
+        rset = stats.executeQuery("popular_users_meta", params);
+    }
 
     out.println("<table>");
     out.println("<tr><td>#</td><td>Username</td><td>Total</td><td>Random Quote</td></tr>");
@@ -546,9 +459,8 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage());
 } finally {
-    if (stmt != null) {
-        stmt.close();
-    }
+    lc.close();
+    stats.close();
     conn.close();
 }
 %>

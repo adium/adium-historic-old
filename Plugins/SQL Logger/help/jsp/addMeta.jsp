@@ -1,19 +1,26 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'javax.sql.*' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-PreparedStatement pstmt = null;
 ResultSet rset = null;
 
-try {
-    pstmt = conn.prepareStatement("select key_id, key_name from im.information_keys where delete = false order by key_name");
+File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
 
-    rset = pstmt.executeQuery();
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
+
+try {
+
+    rset = lc.executeQuery("information_keys", params);
 %>
 <html>
     <head><title>Add Meta-Contact</title></head>

@@ -2,59 +2,51 @@
 <%@ page import='javax.sql.*' %>
 <%@ page import='javax.naming.*' %>
 <%@ page import='java.util.Properties' %>
+<%@ page import='java.util.Enumeration' %>
+<%@ page import='java.util.List' %>
+<%@ page import='java.util.ArrayList' %>
+<%@ page import = 'org.slamb.axamol.library.*' %>
+<%@ page import = 'java.io.File' %>
+<%@ page import = 'java.util.Map' %>
+<%@ page import = 'java.util.HashMap' %>
 
-<!--$URL: http://svn.visualdistortion.org/repos/projects/crash/post-comments.jsp $-->
-<!--$Rev: 504 $ $Date$-->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/updateLogin.jsp $-->
+<!--$Rev: 922 $ $Date$-->
 <%
+
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-String queryString = request.getQueryString();
+File queryFile = new File(session.getServletContext().getRealPath("queries/update.xml"));
 
-queryString = queryString.replaceAll("=on", "");
-queryString = queryString.replaceAll("&", ",");
+LibraryConnection lc = new LibraryConnection(queryFile, conn);
+Map params = new HashMap();
 
-out.println(queryString);
+Enumeration e = request.getParameterNames();
 
-PreparedStatement pstmt = null;
-PreparedStatement stmt = null;
-ResultSet rset = null;
+List l = new ArrayList();
+
+while(e.hasMoreElements()) {
+    l.add(new Integer((String) e.nextElement()));
+}
 
 int rowsAffected = 0;
 
 try {
-    pstmt = conn.prepareStatement("select user_id from im.users where login=true and user_id not in (" + queryString + ")");
+    params.put("user_list", l);
+    rowsAffected = lc.executeUpdate("remove_login_user", params);
 
-    rset = pstmt.executeQuery();
+    out.println(rowsAffected + "<br />");
 
-    while(rset.next()) {
-        stmt = conn.prepareStatement("update users set login = false where user_id = ?");
-        stmt.setInt(1, rset.getInt("user_id"));
+    rowsAffected = lc.executeUpdate("add_login_user", params);
 
-        stmt.executeUpdate();
-
-        rowsAffected++;
-    }
-
-    pstmt = conn.prepareStatement("select user_id from im.users where (login=false or login is null) and user_id in (" + queryString + ")");
-
-    rset = pstmt.executeQuery();
-
-    while(rset.next()) {
-        stmt = conn.prepareStatement("update users set login = true where user_id = ?");
-        stmt.setInt(1, rset.getInt("user_id"));
-
-        stmt.executeUpdate();
-
-        rowsAffected++;
-    }
-    out.println("<br /> " + rowsAffected);
+    out.println(rowsAffected + "<br />");
 
     response.sendRedirect("users.jsp");
-} catch(SQLException e) {
+} catch(SQLException err) {
     out.println("<br />Error!\n");
-    out.print(e.getMessage());
+    out.print(err.getMessage());
 }
 
 finally {
