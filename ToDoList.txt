@@ -14,7 +14,6 @@
 - Implement emoticon menu in appearance
 - Implement emoticons customize sheet in appearance
 - Add a warning sheet about window moving/performance for non-standard styles
-- Not fetching buddy icons as well as we could be [God]
 - Contact menu is inconsistent with menu item naming, item grouping
 - Update included layouts, themes, and message views
 - OTR Private key generation should be cleaner [Evan]
