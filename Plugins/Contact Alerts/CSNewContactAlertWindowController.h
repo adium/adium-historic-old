@@ -20,7 +20,7 @@
 	AIListObject					*listObject;
 }
 
-+ (void)editAlert:(NSDictionary *)inAlert forContact:(AIListContact *)inContact onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListContact *)inContact onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
 - (IBAction)cancel:(id)sender;
 - (IBAction)save:(id)sender;
 
