@@ -26,14 +26,9 @@
 
 @interface AILoggerPlugin : AIPlugin {
     AILoggerPreferences		*preferences;
-    AILoggerAdvancedPreferences *advancedPreferences;
     
     //Current logging settings
     BOOL		    observingContent;
-    BOOL		    logStyle;
-    BOOL		    logFont;
-    BOOL		    logStatus;
-    BOOL		    logHTML;
     BOOL		    logIndexingEnabled; //Does this system support log indexing?
     
     //Log viewer menu items

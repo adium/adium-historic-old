@@ -1642,7 +1642,6 @@
 				3419F34505314BA100C68BA3,
 				3419F34605314BA100C68BA3,
 				3419F34705314BA100C68BA3,
-				4B037C070558B5C700FF5530,
 				6C644D3805776BC700D79723,
 				6C644D3A05776BC700D79723,
 				6C644D3E05776BF000D79723,
@@ -1674,7 +1673,6 @@
 				3419F34905314BA100C68BA3,
 				3419F34A05314BA100C68BA3,
 				3419F34B05314BA100C68BA3,
-				4B037C110558B6CD00FF5530,
 				6CF426660577622300F27FAA,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -1704,7 +1702,6 @@
 				3419F34D05314BA100C68BA3,
 				3419F34E05314BA100C68BA3,
 				3419F34F05314BA100C68BA3,
-				4B037C080558B5C700FF5530,
 				6C644D3905776BC700D79723,
 				6C644D3B05776BC700D79723,
 				6C644D3F05776BF000D79723,
@@ -17452,50 +17449,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat/\n\necho \"Symlinking iChat sounds...\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
 		};
-		4B037C050558B5C700FF5530 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AILoggerAdvancedPreferences.h;
-			path = Plugins/Logger/AILoggerAdvancedPreferences.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B037C060558B5C700FF5530 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AILoggerAdvancedPreferences.m;
-			path = Plugins/Logger/AILoggerAdvancedPreferences.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B037C070558B5C700FF5530 = {
-			fileRef = 4B037C050558B5C700FF5530;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B037C080558B5C700FF5530 = {
-			fileRef = 4B037C060558B5C700FF5530;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B037C100558B6CD00FF5530 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = LoggerAdvancedPrefs.nib;
-			path = Plugins/Logger/LoggerAdvancedPrefs.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B037C110558B6CD00FF5530 = {
-			fileRef = 4B037C100558B6CD00FF5530;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B03DDF30533AC59002B2CA3 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -25430,9 +25383,6 @@
 				4B54D1020502865F00A8010A,
 				4B54D1030502865F00A8010A,
 				4B54D10805028DAE00A8010A,
-				4B037C050558B5C700FF5530,
-				4B037C060558B5C700FF5530,
-				4B037C100558B6CD00FF5530,
 				4B54D10605028BC400A8010A,
 			);
 			isa = PBXGroup;
