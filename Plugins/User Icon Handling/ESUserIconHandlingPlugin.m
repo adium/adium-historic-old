@@ -54,7 +54,9 @@
 			//It will only be loaded into memory if needed
 			NSString			*cachedImagePath = [self _cachedImagePathForObject:inObject];
 			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
-				NSImage				*cachedImage = [[[NSImage alloc] initByReferencingFile:cachedImagePath] autorelease];
+				NSImage				*cachedImage;
+				
+				cachedImage = [[NSImage alloc] initByReferencingFile:cachedImagePath];
 				
 				if (cachedImage) {
 					
@@ -66,6 +68,8 @@
 									   forKey:@"UserIconPath"
 									   notify:NotifyNever];
 				}
+				
+				[cachedImage release];
 			}
 		}
 		
@@ -136,9 +140,14 @@
 	
 	//A preference is used at highest priority
 	if (imageData){
-		[inObject setDisplayUserIcon:[[[NSImage alloc] initWithData:imageData] autorelease]
+		NSImage	*image;
+		
+		image = [[NSImage alloc] initWithData:imageData];
+		[inObject setDisplayUserIcon:image
 						   withOwner:self
 					   priorityLevel:Highest_Priority];
+		[image release];
+		
 		return YES;
 	}else{
 		//If we had a preference set before (that is, there's an object set at Highest_Priority), clear it
