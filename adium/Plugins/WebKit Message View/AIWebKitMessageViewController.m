@@ -233,14 +233,11 @@
         if(range.location != NSNotFound) {
 			NSRange endRange;
 			endRange = [inString rangeOfString:@"}%"];
-			if(endRange.location != NSNotFound && endRange.location > range.location + range.length) {
+			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 
-				NSRange textRange = NSMakeRange(range.location + range.length, (endRange.location - range.location - range.length));
-				NSRange finalRange = NSMakeRange(range.location, (endRange.location - range.location) + endRange.length);
+				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 				
-				NSString *timeFormat = [inString substringWithRange:textRange];
-				
-				[inString replaceCharactersInRange:finalRange withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
+				[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
 				
 			}
         }
