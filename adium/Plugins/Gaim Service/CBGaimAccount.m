@@ -444,6 +444,7 @@
     AIChat *chat;
     if (!(chat = [chatDict objectForKey:[handle UID]])) {
         AIListContact *contact = [handle containingContact];
+        NSAssert(contact != nil, @"Handle has no containing contact");
         BOOL handleIsOnline;
         chat = [AIChat chatWithOwner:owner forAccount:self];
         [chat addParticipatingListObject:contact];
