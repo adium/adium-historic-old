@@ -139,9 +139,13 @@ static NSMenuItem   *bookmarkRootContextualMenuItem;
         }
         
         if(responder && [responder isKindOfClass:[NSTextView class]]){
-		return(YES);
+            if([(NSTextView *)responder isEditable]){
+		return YES;
+            }else{
+                return NO;
+            }
 	}else{
-		return(NO); //Disable the menu item if a text field is not key
+		return NO; //Disable the menu item if a text field is not key
 	}
 }
 
