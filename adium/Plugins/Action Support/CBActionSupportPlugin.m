@@ -13,7 +13,7 @@
 - (void)installPlugin
 {
     //Register us as a filter
-    [[adium contentController] registerOutgoingContentFilter:self];
+    [[adium contentController] registerDisplayingContentFilter:self];
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
