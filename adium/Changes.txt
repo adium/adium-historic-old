@@ -1,12 +1,11 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.51 ()
+Version 0.51 (4/08/2004)
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
-- Fixed preference window advanced pane resizing issues
 - Fixed crash when opening preference window
-
-
+- Fixed resizing issues with the advanced preferences
+- Cleaned up the 'auto-away' preferences
 
 Version 0.50 (4/06/2004)
 - Initial Release
