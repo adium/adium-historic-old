@@ -26,6 +26,8 @@
     IBOutlet NSButton       *checkBox_fadeOut;
     IBOutlet NSButton       *checkBox_showHidden;
     IBOutlet NSButton       *checkBox_showAway;
+    
+    BOOL                    viewIsLoaded;
 }
 
 - (IBAction)toggleShowBezel:(id)sender;
