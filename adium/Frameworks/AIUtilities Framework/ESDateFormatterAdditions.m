@@ -68,7 +68,7 @@ typedef enum
 
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate;
 {
-    NSMutableString *theString = [[NSMutableString alloc] init];
+    NSMutableString *theString = [[[NSMutableString alloc] init] autorelease];
     
     double seconds = [[NSDate date] timeIntervalSinceDate:inDate];
     int days = 0, hours = 0, minutes = 0; 
