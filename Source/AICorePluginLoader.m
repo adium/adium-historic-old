@@ -31,6 +31,7 @@ Adium, Copyright 2001-2004, Adam Iser
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
 #define SMV_PLUGIN						@"Standard Message View.AdiumPlugin"
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
+#define CONFIRMED_PLUGINS_VERSION		@"Confirmed Plugin Version"
 
 @interface AICorePluginLoader (PRIVATE)
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading;
@@ -50,10 +51,12 @@ Adium, Copyright 2001-2004, Adam Iser
     pluginArray = [[NSMutableArray alloc] init];
 	[owner createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
 
-	[[owner notificationCenter] addObserver:self 
-								   selector:@selector(adiumVersionWillBeUpgraded:) 
-									   name:Adium_VersionWillBeUpgraded
-									 object:nil];
+	//If the Adium version has changed since our last run, warn the user that their external plugins may no longer work
+	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS_VERSION];
+	if(![[NSApp applicationVersion] isEqualToString:lastVersion]){
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
+		[[NSUserDefaults standardUserDefaults] setObject:[NSApp applicationVersion] forKey:CONFIRMED_PLUGINS_VERSION];
+	}
 	
 	//Load the plugins in our bundle
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]
@@ -180,12 +183,6 @@ Adium, Copyright 2001-2004, Adam Iser
 	[[NSFileManager defaultManager] movePath:[basePath stringByAppendingPathComponent:pluginName]
 									  toPath:[disabledPath stringByAppendingPathComponent:pluginName]
 									 handler:nil];
-}
-
-//When the user upgrades to a new version, re-request confirmation of external plugins.
-- (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
-{
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
 }
 
 @end
