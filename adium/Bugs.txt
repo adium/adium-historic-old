@@ -42,6 +42,8 @@
 	is bad.  Perhaps this could be fixed at the same time as the implementation of style-based image
 	masking as Brad described.
 	
+	
+	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
@@ -62,6 +64,8 @@
 
 - [Yahoo] Fil transfer limitations
 	Files over 1 MB in size fail to send
+	
+- [GaduGadu] Contacts not saving to the server-list
 
 
 //------------------------------------------------------------------------------------
