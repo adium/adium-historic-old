@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.121 2004/04/03 00:35:17 evands Exp $
+// $Id: AIContactController.m,v 1.122 2004/04/14 23:01:27 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -805,7 +805,7 @@
 		if(!contact){
 			//Create
 			contact = [[[AIListContact alloc] initWithUID:UID accountID:accountID serviceID:serviceID] autorelease];
-
+			
 			//Place new contacts at the bottom of our list (by giving them the largest ordering index)
 			largestOrder += 1.0;
 			[contact setOrderIndex:largestOrder];
@@ -819,7 +819,7 @@
 	return(contact);
 }
 
-- (AIListContact *)existingContactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID
+- (AIListContact *)existingContactWithService:(NSString *)serviceID accountID:(NSString *)accountUID UID:(NSString *)UID
 {	
 	if(serviceID && [serviceID length] && UID && [UID length]){
 		return([contactDict objectForKey:[NSString stringWithFormat:@"%@.%@.%@", serviceID, accountUID, UID]]);

@@ -6,77 +6,14 @@
 //
 
 #import "CBGaimOscarAccount.h"
-#import <Libgaim/aim.h>
 
 #define OSCAR_DELAYED_UPDATE_INTERVAL   3
 
 #define KEY_OSCAR_HOST  @"Oscar:Host"
 #define KEY_OSCAR_PORT  @"Oscar:Port"
 
-//From oscar.c
-typedef struct _OscarData OscarData;
-struct _OscarData {
-	aim_session_t *sess;
-	aim_conn_t *conn;
-	
-	guint cnpa;
-	guint paspa;
-	guint emlpa;
-	guint icopa;
-	
-	gboolean iconconnecting;
-	gboolean set_icon;
-	
-	GSList *create_rooms;
-	
-	gboolean conf;
-	gboolean reqemail;
-	gboolean setemail;
-	char *email;
-	gboolean setnick;
-	char *newsn;
-	gboolean chpass;
-	char *oldp;
-	char *newp;
-	
-	GSList *oscar_chats;
-	GSList *direct_ims;
-	GSList *file_transfers;
-	GHashTable *buddyinfo;
-	GSList *requesticon;
-	
-	gboolean killme;
-	gboolean icq;
-	guint icontimer;
-	guint getblisttimer;
-	
-	struct {
-		guint maxwatchers; /* max users who can watch you */
-		guint maxbuddies; /* max users you can watch */
-		guint maxgroups; /* max groups in server list */
-		guint maxpermits; /* max users on permit list */
-		guint maxdenies; /* max users on deny list */
-		guint maxsiglen; /* max size (bytes) of profile */
-		guint maxawaymsglen; /* max size (bytes) of posted away message */
-	} rights;
-};
-
-struct buddyinfo {
-	gboolean typingnot;
-	gchar *availmsg;
-	fu32_t ipaddr;
-	
-	unsigned long ico_me_len;
-	unsigned long ico_me_csum;
-	time_t ico_me_time;
-	gboolean ico_informed;
-	
-	unsigned long ico_len;
-	unsigned long ico_csum;
-	time_t ico_time;
-	gboolean ico_need;
-	gboolean ico_sent;
-};
+static NSString *ICQServiceID = nil;
+static NSString *MobileServiceID = nil;
 
 @interface CBGaimOscarAccount (PRIVATE)
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
@@ -87,6 +24,75 @@ struct buddyinfo {
 - (const char*)protocolPlugin
 {
     return "prpl-oscar";
+}
+
+- (void)initAccount
+{
+	[super initAccount];
+	
+	if ([UID length]){
+		char firstCharacter = [UID characterAtIndex:0];
+		if (firstCharacter >= '0' && firstCharacter <= '9') {
+			if (!ICQServiceID) ICQServiceID = @"ICQ";
+			[self setStatusObject:ICQServiceID forKey:KEY_DISPLAY_SERVICE_ID notify:YES];
+		}
+	}
+}
+
+//AIM doesn't require we close our tags, so don't waste the characters
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
+{
+	BOOL	noHTML = NO;
+	
+	//We don't want to send HTML to ICQ users, or mobile phone users
+	if(inListObject){
+		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
+	    noHTML = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
+	}
+	
+	return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
+																	 headers:YES
+																	fontTags:YES
+															   closeFontTags:NO
+																   styleTags:YES
+												  closeStyleTagsOnFontChange:NO
+															  encodeNonASCII:NO
+																  imagesPath:nil
+														   attachmentsAsText:YES]));
+}
+
+//Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
+- (AIListContact *)_contactWithUID:(NSString *)sourceUID
+{
+	AIListContact   *contact;
+	
+	contact = [super _contactWithUID:sourceUID];
+	
+	if (![contact statusObjectForKey:KEY_DISPLAY_SERVICE_ID]){
+		BOOL			isICQ, isMobile;
+		char			firstCharacter;
+		firstCharacter = [sourceUID characterAtIndex:0];
+		if ( (isICQ = (firstCharacter >= '0' && firstCharacter <= '9')) || (isMobile = (firstCharacter == '+')) ) {
+			if (isICQ){
+				if (!ICQServiceID) ICQServiceID = @"ICQ";
+				[contact setStatusObject:ICQServiceID forKey:KEY_DISPLAY_SERVICE_ID notify:YES];
+			}else{
+				if (!MobileServiceID) MobileServiceID = @"Mobile";
+				[contact setStatusObject:MobileServiceID forKey:KEY_DISPLAY_SERVICE_ID notify:YES];
+			}
+		}
+	}
+	
+	return contact;
+}
+
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	if (([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
+		[[adium accountController] forgetPasswordForAccount:self];
+	}
+	
+	return YES;
 }
 
 #pragma mark Account Connection

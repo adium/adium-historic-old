@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.79 2004/04/13 20:27:43 evands Exp $
+// $Id: AIAccountController.m,v 1.80 2004/04/14 23:01:27 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -585,7 +585,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				BOOL			knowsObject = NO;
 				BOOL			canFindObject = NO;
 				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
-																								accountUID:[account UID]
+																								 accountID:[account UID]
 																									   UID:[inObject UID]];
 				
 				//Does the account know this object?

@@ -12,7 +12,7 @@
 @interface CBGaimServicePlugin : AIPlugin{
 	id  eventLoopAdapter;
 	
-    id  AIMService;
+    id  OscarService;
     id  GaduGaduService;
     id  JabberService;
 	id  NapsterService;

@@ -13,13 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIGaimAIMAccountViewController.h"
+#import "AIGaimOscarAccountViewController.h"
 #import "CBGaimAccount.h"
 
-@implementation AIGaimAIMAccountViewController
+@implementation AIGaimOscarAccountViewController
 
 - (NSString *)nibName{
-    return(@"ESGaimAIMAuxiliaryAccountView");
+    return(@"ESGaimOscarAccountView");
 }
 
 //Configure our controls

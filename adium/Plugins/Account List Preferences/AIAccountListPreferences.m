@@ -486,7 +486,7 @@
 	}
 	
 	[cell setImage:image];
-	[cell setSubString:(status ? [NSString stringWithFormat:@"%@ - %@", [account serviceID], status] : [account serviceID])];
+	[cell setSubString:(status ? [NSString stringWithFormat:@"%@ - %@", [account displayServiceID], status] : [account displayServiceID])];
 	[cell setDrawsGradientHighlight:YES];
 }
 

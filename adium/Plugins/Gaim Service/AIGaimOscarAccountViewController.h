@@ -15,7 +15,7 @@
 
 #include "ESGaimAccountViewController.h"
 
-@interface AIGaimAIMAccountViewController : ESGaimAccountViewController {
+@interface AIGaimOscarAccountViewController : ESGaimAccountViewController {
     IBOutlet		NSTextField		*textField_fullName;
     IBOutlet		NSTextView		*textView_textProfile;
 }

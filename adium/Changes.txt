@@ -12,6 +12,7 @@ Version 0.52
 - Fixed autocompletion in the New Message window
 - Fixed issues related to the applescript-based substitutions
 - Fixed problems related to idle messages
+- Fixed problems related to status-based tab coloration
 - Fixed a crash when editing saved away messages
 - Fixed a crash when deleting a new account
 - Fixed a crash when dragging text across the message window tabs

@@ -33,6 +33,7 @@
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy;
 - (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy;
 - (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID;
+- (NSString *)displayServiceIDForUID:(NSString *)aUID;
 
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
@@ -320,10 +321,8 @@
 	//If a name was available for the GaimBuddy, create a contact
 	if (contactUID){
 		//Get our contact
-		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													  accountID:[self uniqueObjectID]
-															UID:[contactUID compactedString]];
-		
+		contact = [self _contactWithUID:[contactUID compactedString]];
+			
 		//Evan: temporary asserts
 		NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
 		NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
@@ -697,10 +696,8 @@
 	NSString		*sourceUID = [NSString stringWithUTF8String:source];
 	
 	//Get our contact
-	sourceContact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-														accountID:[self uniqueObjectID]
-															  UID:[sourceUID compactedString]];
-	
+	sourceContact = [self _contactWithUID:[sourceUID compactedString]];
+
 	[self _receivedMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
 }
 
@@ -739,9 +736,8 @@
 	chat = (AIChat *)conv->ui_data;
 	if (chat){
 		NSString	*contactName = [NSString stringWithUTF8String:user];
-		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													  accountID:[self uniqueObjectID]
-															UID:[contactName compactedString]];
+		contact = [self _contactWithUID:[contactName compactedString]];
+
 		[contact setStatusObject:contactName forKey:KEY_FORMATTED_UID notify:YES];
 		[chat addParticipatingListObject:contact];
 	}
@@ -759,7 +755,7 @@
 	chat = (AIChat *)conv->ui_data;
 	if (chat){
 		NSString	*contactName = [NSString stringWithUTF8String:user];
-		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+		contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
 													  accountID:[self uniqueObjectID]
 															UID:[contactName compactedString]];
 		[chat removeParticipatingListObject:contact];
@@ -999,20 +995,22 @@
 -(void)accountPrivacyList:(PRIVACY_TYPE)type added:(const char *)name
 {
 	//Get our contact
-	AIListContact *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																 accountID:[self uniqueObjectID]
-																	   UID:[NSString stringWithUTF8String:name]];
-
+	NSString		*sourceUID = [NSString stringWithUTF8String:name];
+	AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
+	
 	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
 }
 -(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(const char *)name
 {
-	//Get our contact
-	AIListContact *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																 accountID:[self uniqueObjectID]
-																	   UID:[NSString stringWithUTF8String:name]];
+	//Get our contact, which must already exist for us to care about its removal
+	NSString		*sourceUID = [NSString stringWithUTF8String:name];	
+	AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
+																		   accountID:[self uniqueObjectID]
+																				 UID:[sourceUID compactedString]];
 	
-	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
+	if (contact){
+		[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
+	}
 }
 
 
@@ -1067,9 +1065,9 @@
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
 {
     //****
-	AIListContact   *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																   accountID:[self uniqueObjectID]
-																		 UID:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
+	NSString		*sourceUID = [NSString stringWithUTF8String:(xfer->who)];
+	AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
+	
 	
     ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
 

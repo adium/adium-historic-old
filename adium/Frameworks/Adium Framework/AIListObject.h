@@ -15,6 +15,7 @@
 
 #define PREF_GROUP_OBJECT_STATUS_CACHE  @"Object Status Cache"
 #define KEY_FORMATTED_UID				@"FormattedUID"
+#define KEY_DISPLAY_SERVICE_ID			@"DisplayServiceID"
 
 @class AIMutableOwnerArray, AIListGroup;
 
@@ -59,6 +60,7 @@
 - (NSString *)formattedUID;
 - (NSString *)displayName;
 - (NSString *)longDisplayName;
+- (NSString *)displayServiceID;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
 
 //Prefs

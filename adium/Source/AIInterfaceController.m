@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.59 2004/03/21 20:55:29 evands Exp $
+// $Id: AIInterfaceController.m,v 1.60 2004/04/14 23:01:29 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -357,7 +357,7 @@
     
     //Add the serviceID, three spaces away
     if ([object isKindOfClass:[AIListContact class]]){
-        [titleString appendString:[NSString stringWithFormat:@"   %@",[object serviceID]]
+        [titleString appendString:[NSString stringWithFormat:@"   %@",[object displayServiceID]]
                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                        [fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
                                     toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];

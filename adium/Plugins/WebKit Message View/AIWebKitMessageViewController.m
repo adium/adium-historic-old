@@ -291,7 +291,7 @@
 		
         range = [inString rangeOfString:@"%senderScreenName%"];
         if(range.location != NSNotFound){
-           [inString replaceCharactersInRange:range withString:[[content source] UID]];
+           [inString replaceCharactersInRange:range withString:[[content source] formattedUID]];
         }
         
         range = [inString rangeOfString:@"%sender%"];

@@ -89,7 +89,7 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-	int							objectID;						//Unique number ID of this account
+	NSString					*uniqueObjectID;				//Unique number ID of this account
     id <AIServiceController>	service;						//The service controller that spawned us
     NSString                    *password;						//Password of this account
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
@@ -150,6 +150,7 @@ typedef enum {
 //Methods that might be subclassed
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 
+- (AIListContact *)_contactWithUID:(NSString *)sourceUID;
 - (void)updateContactStatus:(AIListContact *)inContact;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;

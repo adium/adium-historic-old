@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.66 2004/04/13 20:27:43 evands Exp $
+// $Id: AIContentController.m,v 1.67 2004/04/14 23:01:28 evands Exp $
 
 #import "AIContentController.h"
 
@@ -708,7 +708,7 @@
 			BOOL			knowsObject = NO;
 			BOOL			couldSendContent = NO;
 			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
-																							accountUID:[account UID]
+																							 accountID:[account UID]
 																								   UID:[inObject UID]];
 			//Does the account know this object?
 			if(contactForAccount){
