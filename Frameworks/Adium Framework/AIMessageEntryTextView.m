@@ -120,9 +120,6 @@ static NSImage *pushIndicatorImage = nil;
 				[super keyDown:inEvent];
 			}
 			
-		}else if((inChar == '\E') && clearOnEscape){
-			[self setString:@""];
-			
 		}else if(inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey){
 			[associatedView keyDown:inEvent];
 			
@@ -172,6 +169,14 @@ static NSImage *pushIndicatorImage = nil;
     
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
+}
+
+//10.3 only, called when the user presses escape - we'll clear our text view in response
+- (void)cancelOperation:(id)sender
+{
+	if(clearOnEscape){
+		[self setString:@""];
+	}
 }
 
 
