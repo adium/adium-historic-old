@@ -16,7 +16,7 @@
     
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Jabber"
-                                                      description:@"Jabber c/o Libgaim"
+                                                      description:@"Jabber"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@ "]

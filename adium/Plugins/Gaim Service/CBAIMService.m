@@ -15,7 +15,7 @@
 
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
-                                                      description:@"AIM/OSCAR c/o Libgaim"
+                                                      description:@"AIM, AOL, and .Mac"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@. "]

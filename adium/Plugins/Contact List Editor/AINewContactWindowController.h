@@ -11,6 +11,7 @@
 	IBOutlet	NSPopUpButton		*popUp_contactType;
 	IBOutlet	NSPopUpButton		*popUp_targetGroup;
 	IBOutlet	NSTextField			*textField_contactName;
+	IBOutlet	NSButton			*button_add;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow;

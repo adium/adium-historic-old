@@ -16,7 +16,7 @@
     
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Napster"
-                                                      description:@"Napster c/o Libgaim"
+                                                      description:@"Napster"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
