@@ -4242,6 +4242,77 @@
 			settings = {
 			};
 		};
+		34A8DF3706C1682600669887 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 34A8E04706C1689A00669887;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34A8DF3806C1682A00669887 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 34A8E04806C1689A00669887;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34A8E04706C1689A00669887 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		34A8E04806C1689A00669887 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		34A8E07206C169A000669887 = {
+			children = (
+				34A8E0AE06C16C7700669887,
+				34A8E0AF06C16C7700669887,
+			);
+			isa = PBXGroup;
+			name = Threading;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A8E0AE06C16C7700669887 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDRunLoopMessenger.h;
+			path = "Frameworks/AIUtilities Framework/NDRunLoopMessenger.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A8E0AF06C16C7700669887 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDRunLoopMessenger.m;
+			path = "Frameworks/AIUtilities Framework/NDRunLoopMessenger.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A8E0B006C16C7700669887 = {
+			fileRef = 34A8E0AE06C16C7700669887;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A8E0B106C16C7700669887 = {
+			fileRef = 34A8E0AF06C16C7700669887;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34ADC00205F3A75700ABFCAA = {
 			children = (
 				34ADC03505F3A86600ABFCAA,
@@ -6529,6 +6600,7 @@
 				4BF000B806B5492A00C32219,
 				4BA0E3E806B6BD86001750FC,
 				344C0D5506B6D76000DA7200,
+				34A8E0B006C16C7700669887,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6994,6 +7066,7 @@
 				4BF000B906B5492A00C32219,
 				4BA0E3E906B6BD86001750FC,
 				344C0D5406B6D76000DA7200,
+				34A8E0B106C16C7700669887,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7999,8 +8072,6 @@
 			children = (
 				34048AC50617CB4C004D0B7E,
 				34048AC60617CB4C004D0B7E,
-				4B090DCD065CD50D00FF0528,
-				4B090DCE065CD50D00FF0528,
 				4BDF2C91061E376C00EA75C5,
 			);
 			isa = PBXGroup;
@@ -9761,8 +9832,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				4B57CCA106848F05003FF229,
-				4B25352706BECC14003498D4,
-				4BF9D7E806C05CF200122E4A,
+				34A8DF3706C1682600669887,
+				34A8DF3806C1682A00669887,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10536,36 +10607,6 @@
 			settings = {
 			};
 		};
-		4B090DCD065CD50D00FF0528 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NDRunLoopMessenger.m;
-			path = "Plugins/Gaim Service/NDRunLoopMessenger.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B090DCE065CD50D00FF0528 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NDRunLoopMessenger.h;
-			path = "Plugins/Gaim Service/NDRunLoopMessenger.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B090DCF065CD50D00FF0528 = {
-			fileRef = 4B090DCD065CD50D00FF0528;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B090DD0065CD50D00FF0528 = {
-			fileRef = 4B090DCE065CD50D00FF0528;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B091035065CE9D600FF0528 = {
 			fileRef = C4382548062E798500F5A31D;
 			isa = PBXBuildFile;
@@ -11204,21 +11245,6 @@
 			path = "Source/Dock Icons";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B25352706BECC14003498D4 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 4B25352906BECC15003498D4;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B25352906BECC15003498D4 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		4B25362506BECC3E003498D4 = {
 			fileEncoding = 30;
@@ -13684,7 +13710,6 @@
 				34E3C8890638D40500AA3EF7,
 				34E3C8A70638D50F00AA3EF7,
 				341E886B0648FF1B00E0C828,
-				4B090DD0065CD50D00FF0528,
 				34F59B8C0667A38D00F01E8C,
 				343A7F2F06935DC500150CEC,
 				343A7F3106935DC500150CEC,
@@ -13779,7 +13804,6 @@
 				34E3C88A0638D40500AA3EF7,
 				34E3C8A80638D50F00AA3EF7,
 				341E886C0648FF1B00E0C828,
-				4B090DCF065CD50D00FF0528,
 				34F59B8D0667A38D00F01E8C,
 				343A7F2E06935DC500150CEC,
 				343A7F3006935DC500150CEC,
@@ -18300,8 +18324,8 @@
 				4B33F8DF0511F45000A8010A,
 				4B37AEEE058A8D4A00E266A7,
 				4B37AEEF058A8D4A00E266A7,
-				344C0D5206B6D76000DA7200,
 				344C0D5306B6D76000DA7200,
+				344C0D5206B6D76000DA7200,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -19260,21 +19284,6 @@
 			path = "Frameworks/AIUtilities Framework/AITableViewAdditions.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BF9D7E806C05CF200122E4A = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 4BF9D8E406C05CFF00122E4A;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BF9D8E406C05CFF00122E4A = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
 		};
 		4BFC33DD058D4430008F7FA2 = {
 			fileEncoding = 30;
@@ -26530,6 +26539,7 @@
 				34040FD8052A1BB30012A3D2,
 				F549EF0D036B0F7F01A8010A,
 				F549EF0B036B0F7201A8010A,
+				34A8E07206C169A000669887,
 				4BDB240B04AF501400A8010A,
 			);
 			isa = PBXGroup;
