@@ -258,12 +258,12 @@ DeclareString(TagCharStartString);
         
         //Link
         if(link && [link length] != 0){
+			NSString	*linkString = ([link isKindOfClass:[NSURL class]] ? [(NSURL *)link absoluteString] : link);
+			
             [string appendString:@"<a href=\""];
-			if ([link isKindOfClass:[NSURL class]]) {
-				[string appendString:[(NSURL *)link absoluteString]];
-			} else {
-				[string appendString:link];	
-			}
+			[string appendString:linkString];
+            [string appendString:@"\" title=\""];
+			[string appendString:linkString];
             [string appendString:@"\">"];
         }
 
