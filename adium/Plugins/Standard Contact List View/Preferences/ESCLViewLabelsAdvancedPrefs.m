@@ -91,6 +91,11 @@
     [self configureControlDimming];
 }
 
+- (void)viewWillClose
+{
+	[colorWell_labelGroupsColor deactivate];
+}
+
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
 {
