@@ -216,6 +216,9 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 			}
 			
 			[item release];
+			
+			//The deletion changed our selection
+			[self outlineViewSelectionDidChange:nil];
 		}
 	}else{
 		NSBeep();
@@ -656,7 +659,10 @@ int actionSort(id objectA, id objectB, void *context)
 	if(delegate){
 		[delegate contactAlertsViewController:self
 								 deletedAlert:nil];
-	}	
+	}
+
+	//The deletion may have changed our selection
+	[self outlineViewSelectionDidChange:nil];
 }
 
 - (void)outlineViewDeleteSelectedRows:(NSOutlineView *)inOutlineView
