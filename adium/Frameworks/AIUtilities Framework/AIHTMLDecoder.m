@@ -550,22 +550,24 @@ int HTMLEquivalentForFontSize(int fontSize)
                         [textAttributes setUnderline:YES];
                     }else if([chunkString caseInsensitiveCompare:CloseU] == 0){
                         [textAttributes setUnderline:NO];
-
-						/*
-						//Underline
-                    }else if([chunkString caseInsensitiveCompare:@"U"] == 0){
-						[textAttributes disableTrait:NSNoUnderlineStyle];
-						[textAttributes enableTrait:NSSingleUnderlineStyle];
-                    }else if([chunkString caseInsensitiveCompare:@"/U"] == 0){
-						[textAttributes disableTrait:NSNoUnderlineStyle];
-						[textAttributes enableTrait:NSSingleUnderlineStyle];
-						
-					}else  if([chunkString caseInsensitiveCompare:@"S"] == 0){
-                        [textAttributes setUnderline:YES];
-                    }else if([chunkString caseInsensitiveCompare:@"/S"] == 0){
-                        [textAttributes setUnderline:NO];
-						NSUnderlineStrikethroughMask
-							*/
+                        
+                    //Strikethrough: <s> is deprecated, but people use it
+                    } else if([chunkString caseInsensitiveCompare:@"S"] == 0)  {
+                      [textAttributes setStrikethrough:YES];
+                    } else if([chunkString caseInsensitiveCompare:@"/S"] == 0)  {
+                      [textAttributes setStrikethrough:NO];
+                      
+                    // Subscript
+                    } else if([chunkString caseInsensitiveCompare:@"SUB"] == 0)  {
+                      [textAttributes setSubscript:YES];
+                    } else if([chunkString caseInsensitiveCompare:@"/SUB"] == 0)  {
+                      [textAttributes setSubscript:NO];
+                      
+                    // Superscript
+                    } else if([chunkString caseInsensitiveCompare:@"SUP"] == 0)  {
+                      [textAttributes setSuperscript:YES];
+                    } else if([chunkString caseInsensitiveCompare:@"/SUP"] == 0)  {
+                      [textAttributes setSuperscript:NO];
 						
                     //Image
                     }else if([chunkString caseInsensitiveCompare:IMG] == 0){
@@ -573,6 +575,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                             NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
                             [attrString appendAttributedString:attachString];
                         }
+						
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == 0 ||
 							   [chunkString caseInsensitiveCompare:CloseP] == 0) {

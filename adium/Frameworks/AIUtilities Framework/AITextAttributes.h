@@ -33,6 +33,9 @@
 - (void)disableTrait:(NSFontTraitMask)inTrait;
 - (NSDictionary *)dictionary;
 - (void)setUnderline:(BOOL)inUnderline;
+- (void)setStrikethrough:(BOOL)inStrikethrough;
+- (void)setSubscript:(BOOL)inSubscript;
+- (void)setSuperscript:(BOOL)inSuperscript;
 - (void)setTextColor:(NSColor *)inColor;
 - (void)setTextBackgroundColor:(NSColor *)inColor;
 - (void)setBackgroundColor:(NSColor *)inColor;
