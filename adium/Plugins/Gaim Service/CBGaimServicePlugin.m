@@ -6,10 +6,17 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
+#import <Security/Security.h>
+#import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
 #import "CBGaimAIMAccount.h"
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
+
+@interface CBGaimServicePlugin (PRIVATE)
+- (void)configureGaimProxySettings;
+- (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
+@end
 
 /*
  * Maps GaimAccount*s to CBGaimAccount*s.
@@ -18,9 +25,6 @@
  * ask them for one so we can take this out.
  */
 NSMutableDictionary *_accountDict;
-
-
-
 
 @implementation CBGaimServicePlugin
 
@@ -543,7 +547,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
     gaim_plugins_probe(NULL);
 
-    //Tell libgaim to load it's other pieces
+    //Tell libgaim to load its other pieces
     gaim_prefs_load();
     //gaim_accounts_load();
     gaim_pounces_load();
@@ -551,7 +555,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
     //gaim_blist_load();
-
+    
+    /* Proxy */
+    gaim_proxy_init();
+    [self configureGaimProxySettings];
+        
     //Setup libgaim core preferences
     
     //Disable gaim away handling - we do it ourselves
@@ -624,5 +632,196 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (AIServiceType *)handleServiceType
 {
     return(handleServiceType);
+}
+
+
+/*
+ "/core/proxy/type",
+ _("No proxy"), "none",
+ "SOCKS 4", "socks4",
+ "SOCKS 5", "socks5",
+ "HTTP", "http",
+ */
+- (void)configureGaimProxySettings
+{
+    Boolean             result;
+    CFDictionaryRef     proxyDict;
+    CFNumberRef         enableNum;
+    int                 enable;
+    CFStringRef         hostStr;
+    CFNumberRef         portNum;
+    int                 portInt;
+    
+    char    host[300];
+    size_t  hostSize;
+    
+    proxyDict = SCDynamicStoreCopyProxies(NULL);
+    result = (proxyDict != NULL);
+     
+    // Get the enable flag.  This isn't a CFBoolean, but a CFNumber.
+    //check if SOCKS is enabled
+    if (result) {
+        enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict,
+                                                       kSCPropNetProxiesSOCKSEnable);
+        
+        result = (enableNum != NULL)
+            && (CFGetTypeID(enableNum) == CFNumberGetTypeID());
+    }
+    if (result) {
+        result = CFNumberGetValue(enableNum, kCFNumberIntType,
+                                  &enable) && (enable != 0);
+    }
+    
+    // Get the proxy host.  DNS names must be in ASCII.  If you 
+    // put a non-ASCII character  in the "Secure Web Proxy"
+    // field in the Network preferences panel, the CFStringGetCString
+    // function will fail and this function will return false.
+    if (result) {
+        hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict,
+                                                     kSCPropNetProxiesSOCKSProxy);
+        
+        result = (hostStr != NULL)
+            && (CFGetTypeID(hostStr) == CFStringGetTypeID());
+    }
+    if (result) {
+        result = CFStringGetCString(hostStr, host,
+                                    (CFIndex) hostSize, [NSString defaultCStringEncoding]);
+    }
+    
+    //Get the proxy port
+    if (result) {
+        portNum = (CFNumberRef) CFDictionaryGetValue(proxyDict,
+                                                     kSCPropNetProxiesSOCKSPort);
+        
+        result = (portNum != NULL)
+            && (CFGetTypeID(portNum) == CFNumberGetTypeID());
+    }
+    if (result) {
+        result = CFNumberGetValue(portNum, kCFNumberIntType, &portInt);
+    }
+    if (result) {
+        //set what we've got so far
+        NSLog(@"setting socks5 settings: %s:%i",host,portInt);
+        gaim_prefs_set_string("/core/proxy/type", "socks5");
+        gaim_prefs_set_string("/core/proxy/host",host);
+        gaim_prefs_set_int("/core/proxy/port",portInt);
+        
+        NSString *key = [NSString stringWithCString:host];
+        NSDictionary* auth = [self getDictionaryFromKeychainForKey:key];
+        
+        if(auth) {
+            NSLog(@"proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
+            
+            gaim_prefs_set_string("/core/proxy/username",  [[auth objectForKey:@"username"] UTF8String]);
+            gaim_prefs_set_string("/core/proxy/password", [[auth objectForKey:@"password"] UTF8String]);
+            
+        } else {
+            //No username/password.  I think this doesn't need to be an error or anythign since it should have been set in the system prefs
+            NSLog(@"No username/password found");
+        }
+    }    
+    
+    // Clean up.
+    if (proxyDict != NULL) {
+        CFRelease(proxyDict);
+    }
+}    
+
+//Next two functions are from the http-mail project.  We'll write our own if their license doesn't allow this... but it'll be okay for now.
+static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
+{
+    SecKeychainAttribute    attr;
+    OSStatus                keychainStatus;
+    UInt32                  actualLength;
+    void                    *freeMe = NULL;
+    
+    attr.tag = attrTag;
+    actualLength = 256;
+    attr.length = actualLength; 
+    attr.data = alloca(actualLength);
+    
+    keychainStatus = KCGetAttribute(item, &attr, &actualLength);
+    if (keychainStatus == errKCBufferTooSmall) {
+        /* the attribute length will have been placed into actualLength */
+        freeMe = NSZoneMalloc(NULL, actualLength);
+        attr.length = actualLength;
+        attr.data = freeMe;
+        keychainStatus = KCGetAttribute(item, &attr, &actualLength);
+    }
+    if (keychainStatus == noErr) {
+        NSData *retval = [NSData dataWithBytes:attr.data length:actualLength];
+        if (freeMe != NULL)
+            NSZoneFree(NULL, freeMe);
+        return retval;
+    }
+    
+    if (freeMe != NULL)
+        NSZoneFree(NULL, freeMe);
+    
+    if (keychainStatus == errKCNoSuchAttr) {
+        /* An expected error. Return nil for nonexistent attributes. */
+        return nil;
+    }
+    
+    /* We shouldn't make it here */
+    [NSException raise:@"Error Reading Keychain" format:@"Error number %d.", keychainStatus];
+    
+    return nil;  // appease the dread compiler warning gods
+}
+
+- (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key
+{
+    NSData              *data;
+    KCSearchRef         grepstate; 
+    KCItemRef           item;
+    UInt32              length;
+    void                *itemData;
+    NSMutableDictionary *result = nil;
+    
+    SecKeychainRef      keychain;
+    SecKeychainCopyDefault(&keychain);
+    
+        if(KCFindFirstItem(keychain, NULL, &grepstate, &item)==noErr) {  
+            do {
+                NSString    *server = nil;
+                
+                data = OWKCGetItemAttribute(item, kSecLabelItemAttr);
+                if(data) {
+                    server = [NSString stringWithCString: [data bytes] length: [data length]];
+                }
+                
+                if([key isEqualToString:server]) {
+                    NSString    *username;
+                    NSString    *password;
+                    
+                    data = OWKCGetItemAttribute(item, kSecAccountItemAttr);
+                    if(data) {
+                        username = [NSString stringWithCString: [data bytes] length: [data length]];
+                    } else {
+                        username = @"";
+                    }
+                    
+                    if(SecKeychainItemCopyContent(item, NULL, NULL, &length, &itemData) == noErr) {
+                        password = [NSString stringWithCString:itemData length:length];
+                        SecKeychainItemFreeContent(NULL, itemData);
+                    } else {
+                        password = @"";
+                    } 
+                    
+                    result = [NSDictionary dictionaryWithObjectsAndKeys:username,@"username",password,@"password",nil];
+                    
+                    KCReleaseItem(&item);
+                    
+                    break;
+                }
+                
+                KCReleaseItem(&item);
+            } while( KCFindNextItem(grepstate, &item)==noErr);
+            
+            KCReleaseSearch(&grepstate);
+        }
+    
+        CFRelease(keychain);
+    return result;   
 }
 @end
