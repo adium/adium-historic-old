@@ -64,8 +64,6 @@
 	[fontField_group setShowFontFace:YES];
 	
 	[textField_layoutName setStringValue:(layoutName ? layoutName : @"")];
-	
-	[popUp_contactCellStyle setAutoenablesItems:NO];
 }
 
 //Window is closing
@@ -140,9 +138,6 @@
 	[popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 	[popUp_serviceIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
 
-	[popUp_contactCellStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue]];
-	[popUp_groupCellStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE] intValue]];
-	
 	[slider_userIconSize setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 	[slider_contactSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
@@ -204,17 +199,6 @@
 	}else if(sender == popUp_serviceIconPosition){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION
-											  group:PREF_GROUP_LIST_LAYOUT];
-		
-	}else if(sender == popUp_contactCellStyle){
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
-											 forKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE
-											  group:PREF_GROUP_LIST_LAYOUT];
-		[self configureControlDimming];
-		
-	}else if(sender == popUp_groupCellStyle){
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
-											 forKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
 	}else if(sender == slider_userIconSize){
@@ -360,9 +344,6 @@
 	[textField_userIconSize setEnabled:[checkBox_userIconVisible state]];
 	[popUp_userIconPosition setEnabled:[checkBox_userIconVisible state]];
 	
-	//Disable the style selectors when in mockie mode
-	[popUp_groupCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
-
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
