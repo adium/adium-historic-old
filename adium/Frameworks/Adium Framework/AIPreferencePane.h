@@ -20,7 +20,6 @@
 @interface NSObject(AIPreferencePaneDelegate)   //Will be removed, transition only
 - (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane;
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane;
-- (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane;
 @end
 
 @interface AIPreferencePane : AIObject {
@@ -36,11 +35,14 @@
     NSView				*preferenceView;    //Will be removed, transition only
     BOOL				isUpdated;          //Will be removed, transition only
     
+	NSMutableDictionary *restoreDict;		// Dictionary of restorable defaults and their groups
+	
     IBOutlet    NSView  *view;
 }
 
 + (AIPreferencePane *)preferencePane;
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
++ (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane;
 - (NSComparisonResult)compare:(AIPreferencePane *)inPane;
 - (NSView *)view;
 - (void)closeView;

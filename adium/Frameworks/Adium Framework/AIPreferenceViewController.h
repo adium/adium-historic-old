@@ -24,7 +24,8 @@
     IBOutlet	NSView			*view_containerSubView;
     IBOutlet	NSTextField		*textField_title;
     IBOutlet	AIColoredBoxView	*view_coloredBox;
-
+	IBOutlet	NSButton		*button_restoreDefaults;
+		
     NSString	*name;
     NSString	*categoryName;
     NSView	*contentView;
