@@ -66,6 +66,11 @@
     [self preferencesChanged:nil];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterOutgoingContentFilter:self];
+}
+
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
