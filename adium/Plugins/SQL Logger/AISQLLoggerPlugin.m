@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.37 $
- * $Date: 2004/01/20 05:06:32 $
+ * $Revision: 1.38 $
+ * $Date: 2004/02/10 00:25:18 $
  * $Author: jmelloy $
  *
  */
@@ -133,7 +133,7 @@
                 destDisplay = destUID;
             }
             destSrv = [[chat account] serviceID];
-            srcDisplay = [source UID];
+            srcDisplay = [source displayName];
             srcUID = [source UID];
             srcSrv = [source serviceID];
         } else {
@@ -142,7 +142,7 @@
                 srcDisplay = [[chat listObject] displayName];
                 srcUID = [[chat listObject] UID];
                 destUID = [destination UID];
-                destDisplay = [destination UID];
+                destDisplay = [destination displayName];
             }
             else {
                 srcUID = [source UID];
