@@ -17,6 +17,7 @@
 @implementation ESContactAlertsController
 
 int eventMenuItemSort(id menuItemA, id menuItemB, void *context);
+int actionMenuItemSort(id menuItemA, id menuItemB, void *context);
 
 DeclareString(KeyActionID);
 DeclareString(KeyEventID);
@@ -276,23 +277,38 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 {
     NSEnumerator	*enumerator;
     NSString		*actionID;
+	NSMenuItem		*item;
+	NSMenu			*menu;
+	NSMutableArray	*menuItemArray;
 	
 	//Prepare our menu
-	NSMenu *menu = [[NSMenu alloc] init];
+	menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
+	
+	menuItemArray = [NSMutableArray array];
 	
     //Insert a menu item for each available action
 	enumerator = [actionHandlers keyEnumerator];
 	while((actionID = [enumerator nextObject])){
 		id <AIActionHandler> actionHandler = [actionHandlers objectForKey:actionID];		
 		
-        NSMenuItem	*item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
-																				  target:target 
-																				  action:@selector(selectAction:) 
-																		   keyEquivalent:@""] autorelease];
+        item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
+																	 target:target 
+																	 action:@selector(selectAction:) 
+															  keyEquivalent:@""] autorelease];
         [item setRepresentedObject:actionID];
-        [menu addItem:item];
+		[item setImage:[[actionHandler imageForActionID:actionID] imageByScalingToSize:NSMakeSize(16,16)]];
+
+        [menuItemArray addObject:item];
     }
+
+	//Sort the array of menuItems alphabetically by title
+	[menuItemArray sortUsingFunction:actionMenuItemSort context:nil];
+	
+	enumerator = [menuItemArray objectEnumerator];
+	while(item = [enumerator nextObject]){
+		[menu addItem:item];
+	}
 	
 	return([menu autorelease]);
 }	
@@ -306,6 +322,10 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	}
 	
 	return defaultActionID;
+}
+
+int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
+	return ([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
 }
 
 //Alerts ---------------------------------------------------------------------------------------------------------------
