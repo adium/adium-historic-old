@@ -62,13 +62,19 @@
     return(item);
 }
 
-//Retrieve a toolbar item
+//Retrieve a toolbar item - we use this rather than [toolbarItem copy] so we can do custom copying behaviors
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier
 {
-    //We create and autorelease a new NSToolbarItem, and then go through the process of setting up its
-    //attributes from the master toolbar item matching that identifier in our dictionary of items.
-    NSToolbarItem *newItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier] autorelease];
-    NSToolbarItem *item = [theDict objectForKey:itemIdentifier];
+    /*
+	 We create and autorelease a new NSToolbarItem (or a subclass of one, hence [item class])
+	 and then go through the process of setting up its attributes from the master toolbar item matching that identifier
+	 in our dictionary of items.
+	 */
+    NSToolbarItem *item;
+	NSToolbarItem *newItem;
+	
+	item = [theDict objectForKey:itemIdentifier];
+	newItem = [[[[item class] alloc] initWithItemIdentifier:itemIdentifier] autorelease];
 
     [newItem setLabel:[item label]];
     [newItem setPaletteLabel:[item paletteLabel]];
