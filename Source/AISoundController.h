@@ -38,6 +38,7 @@ typedef enum{
 	
     NSMutableDictionary	*soundCacheDict;
     NSMutableArray		*soundCacheArray;
+	NSTimer				*soundCacheCleanupTimer;
     BOOL				useCustomVolume;
     BOOL				muteSounds;
 	BOOL				muteWhileAway;
@@ -49,7 +50,7 @@ typedef enum{
 	
     NSLock				*soundLock;
     
-    NSMutableDictionary                 *systemSoundIDDict;
+    NSMutableDictionary	*systemSoundIDDict;
 	
     NSMutableArray 		*speechArray;
     NSArray				*voiceArray;
