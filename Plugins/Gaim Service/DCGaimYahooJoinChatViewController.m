@@ -23,9 +23,11 @@
 	
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",nil];
 	
-	[[adium contentController] chatWithName:room
-								  onAccount:inAccount
-						   chatCreationInfo:chatCreationInfo];
+	[self doJoinChatWithName:room
+				   onAccount:inAccount
+			chatCreationInfo:chatCreationInfo
+			invitingContacts:nil
+	  withInivitationMessage:nil];
 }
 
 - (NSString *)nibName

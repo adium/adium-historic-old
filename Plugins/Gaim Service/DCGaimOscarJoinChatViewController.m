@@ -14,15 +14,13 @@
 - (id)init
 {
 	[super init];
-	
-	account = nil;
-	
+
 	return self;
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	account = inAccount;
+	[super configureForAccount:inAccount];
 }
 
 /*
@@ -46,92 +44,44 @@
 	//Obtain room and exchange from the view
 	//room = [NSString stringWithFormat:@"Chat %@",[NSString randomStringOfLength:5]];
 	room = [textField_roomName stringValue];
-	exchange = 4;
-
-	NSLog(@"#### OSCAR joinChatWithAccount: %@ joining %@ on exchange %i",inAccount,room,exchange);
-
-	//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
-	
-	/*
-	 Development notes:
-	 
-	 We could have a special key to allow custom handling such as will be needed for MSN,
-	 and use the default hash-table built handling for prpls which properly implement the full Gaim
-	 chat API, such as OSCAR.
-	 
-	 We don't read that proto_info here because it'd just obfuscate the code... we need to manually
-	 hook up the nib and code for each option.  Error logging in SLGaimCocoaAdapter should quickly
-	 indicate if any keys were missed in this method.
-	 */
-	
-	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",[NSNumber numberWithInt:exchange],@"exchange",nil];
-	
-	//Open a chat, using the room as the name, and passing the chatCreationInfo we just built
-	//Note: Gaim expects that the name of the chat be the same as the first entry in the proto_info for that prpl
-	//For OSCAR, that's the value identified by the identifier "room"; it's an equally intuitive choice for
-	//other prpls.
-	chat = [[adium contentController] chatWithName:room
-								  onAccount:inAccount
-						   chatCreationInfo:chatCreationInfo];
-	
-	NSArray *contacts = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
-	NSLog(@"#### 1 contacts = %@",contacts);
-	[chat setStatusObject:contacts forKey:@"ContactsToInvite" notify:NotifyNever];
-	[[adium notificationCenter] addObserver:self selector:@selector(chatDidOpen:) name:Chat_DidOpen object:chat];
-
+	if (room && [room length]){
+		exchange = 4;
+		
+		NSLog(@"#### OSCAR joinChatWithAccount: %@ joining %@ on exchange %i",inAccount,room,exchange);
+		
+		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
+		
+		/*
+		 Development notes:
+		 
+		 We could have a special key to allow custom handling such as will be needed for MSN,
+		 and use the default hash-table built handling for prpls which properly implement the full Gaim
+		 chat API, such as OSCAR.
+		 
+		 We don't read that proto_info here because it'd just obfuscate the code... we need to manually
+		 hook up the nib and code for each option.  Error logging in SLGaimCocoaAdapter should quickly
+		 indicate if any keys were missed in this method.
+		 */
+		
+		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",[NSNumber numberWithInt:exchange],@"exchange",nil];
+		
+		//Open a chat, using the room as the name, and passing the chatCreationInfo we just built
+		//Note: Gaim expects that the name of the chat be the same as the first entry in the proto_info for that prpl
+		//For OSCAR, that's the value identified by the identifier "room"; it's an equally intuitive choice for
+		//other prpls.
+		[self doJoinChatWithName:room
+					   onAccount:inAccount
+				chatCreationInfo:chatCreationInfo
+				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
+		  withInivitationMessage:[textField_inviteMessage stringValue]];
+	}else{
+		NSLog(@"Error: No room specified.");
+	}
 }
 
 - (NSString *)nibName
 {
 	return @"DCGaimOscarJoinChatView";
-}
-
-- (void)chatDidOpen:(NSNotification *)notification
-{
-	NSLog(@"#### chatDidOpen");
-
-	chat = [notification object];
-	NSArray *contacts = [chat statusObjectForKey:@"ContactsToInvite"];
-	[contacts retain];
-	[chat setStatusObject:nil forKey:@"ContactsToInvite" notify:NotifyNever];
-	NSLog(@"#### 2 contacts = %@",contacts);
-	[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:chat];
-	
-	if( contacts ) {
-		[NSTimer scheduledTimerWithTimeInterval:0.01
-										 target:self
-									   selector:@selector(inviteUsers:)
-									   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",contacts,@"contacts",nil]
-										repeats:YES];
-	}
-}
-
-- (void)inviteUsers:(NSTimer *)inTimer
-{
-	NSMutableDictionary *userInfo = [inTimer userInfo];
-	NSLog(@"#### userInfo: %@",userInfo);
-	
-	NSArray				*contactArray = [userInfo objectForKey:@"contacts"];
-	int					i = [(NSNumber *)[userInfo objectForKey:@"i"] intValue];
-	int					count = [contactArray count];
-	
-	NSLog(@"#### 3 contacts = %@",contactArray);
-	AIListContact *newContact = [[adium contactController] contactWithService:[account service] 
-																	  account:account 
-																		  UID:[[contactArray objectAtIndex:i] compactedString]];
-	NSLog(@"#### inviteUsers: (%d/%d) inviting %@",i,0,[contactArray objectAtIndex:i]);
-	[chat inviteListContact:newContact withMessage:[textField_inviteMessage stringValue]];
-	
-	i++;
-	[userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-	if(i >= count) {
-		[inTimer invalidate];
-		[contactArray release];
-	}
-	 
-	
-	//[inTimer invalidate];
-	
 }
 
 
