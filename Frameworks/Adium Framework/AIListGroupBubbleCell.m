@@ -31,7 +31,7 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	if(drawsBackground){
-		[super drawBackgroundWithFrame:rect];
+		[super drawBackgroundWithFrame:[self bubbleRectForFrame:rect]];
 	}else{
 		if(![self cellIsSelected]){
 			[[self backgroundColor] set];
