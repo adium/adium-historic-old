@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.30 $
- * $Date: 2004/08/11 23:22:47 $
+ * $Revision: 1.31 $
+ * $Date: 2004/08/16 07:30:45 $
  * $Author: evands $
  **/
 
@@ -91,7 +91,7 @@
 
 //Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
-- (NSMenu *)menuOfAccountsWithTarget:(id)target;
+- (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline;
 - (NSArray *)menuItemsForAccountsWithTarget:(id)target;
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target includeOffline:(BOOL)includeOffline;
 
