@@ -122,6 +122,11 @@
 }
 
 //Cursor Tracking ----------------------------------------------------------------------
+- (BOOL)usesCursorRects
+{
+    return(NO);
+}
+
 - (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
 {
     return(NO);
@@ -133,11 +138,6 @@
     return(NO);
 }
 
-//Handle a mouse moved
-- (void)mouseMoved:(NSEvent *)theEvent
-{
-    
-}
 
 
 //Selecting ----------------------------------------------------------------------------

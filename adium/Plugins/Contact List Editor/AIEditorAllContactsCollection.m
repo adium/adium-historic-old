@@ -278,8 +278,6 @@
     AIEditorListGroup		*editorGroup;
     NSEnumerator		*enumerator;
     id <AIEditorCollection>	collection;
-
-    NSLog(@"Rebuilding list");
     
     //Create the editor group
     editorGroup = [[[AIEditorListGroup alloc] initWithUID:@"" temporary:NO] autorelease];
@@ -375,8 +373,6 @@
 
     if([collection includeInOwnershipColumn] && collection != self){        
         //Rebuild our content list
-        NSLog(@"collectionContentChanged (All contacts collection)");
-
         [list release];
         list = [[self generateEditorListGroup] retain];
 
@@ -401,8 +397,6 @@
     AIEditorListHandle		*object = [[notification userInfo] objectForKey:@"Object"];
     BOOL			isGroup = [object isKindOfClass:[AIEditorListGroup class]];
 
-    NSLog(@"collectionAddedObject: %@",[object UID]);
-
     if([collection includeInOwnershipColumn] && collection != self){
         
         //If object isn't already on our list
@@ -419,7 +413,6 @@
     id <AIEditorCollection>	collection = [notification object];
     AIEditorListHandle		*handle = [[notification userInfo] objectForKey:@"Object"];
     
-    NSLog(@"collectionRemovedObject: %@",[[[notification userInfo] objectForKey:@"Object"] UID]);
     if([collection includeInOwnershipColumn] && collection != self){
         NSString	*serviceID = [collection serviceID];
         NSString	*handleUID = [handle UID];
@@ -432,7 +425,6 @@
         //If the object is no longer owned by any of the collections, remove it from our list
         if(!collection){
             AIEditorListHandle	*ourHandle;
-            NSLog(@"no more %@",handleUID);
 
             //Remove the handle from our list
             ourHandle = [self _handleNamed:handleUID inGroup:list];
@@ -440,8 +432,6 @@
 
             //Let the contact list editor know our handles changed
             [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
-        }else{
-            NSLog(@"%@ still in %@",handleUID,[collection name]);
         }
     }
 }
@@ -451,20 +441,12 @@
     //Rebuild our list (for now)
     [list release];
     list = [[self generateEditorListGroup] retain];
-
-    /*    id <AIEditorCollection>	collection = [notification object];
-    NSLog(@"collectionRenamedObject: %@",[[[notification userInfo] objectForKey:@"Object"] UID]);
-    if([collection includeInOwnershipColumn] && collection != self){
-        //treat newly named object as a new one... shouldn't I do this anyway?
-    }*/
 }
 
 
 //A collection's status has changed
 - (void)collectionStatusChanged:(NSNotification *)notification
 {
-    //Redisplay our content view
-    NSLog(@"collectionStatusChanged (All contacts collection)");
 }
 
 

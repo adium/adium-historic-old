@@ -31,7 +31,7 @@
 
 - (void)mouseDown:(NSEvent*)theEvent
 {
-    if(![linkTrackingController handleMouseDown:theEvent]){
+    if(![linkTrackingController handleMouseDown:theEvent withOffset:NSMakeSize(0,0)]){
         [super mouseDown:theEvent];
     }    
 }
@@ -43,7 +43,13 @@
 
 - (void)resetCursorRects
 {
-    [linkTrackingController trackLinksInRect:[[self enclosingScrollView] documentVisibleRect]];
+    NSPoint	containerOrigin;
+    NSRect	visibleRect;
+    
+    containerOrigin = [self textContainerOrigin];
+    visibleRect = NSOffsetRect ([self visibleRect], -containerOrigin.x, -containerOrigin.y);
+
+    [linkTrackingController trackLinksInRect:visibleRect withOffset:NSMakeSize(0,0)];
 }
 
 @end

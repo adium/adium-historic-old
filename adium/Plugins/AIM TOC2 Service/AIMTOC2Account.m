@@ -160,7 +160,6 @@ static char *hash_password(const char * const password);
 
     //Check to see if the handle already exists, and remove the duplicate if it does
     if(handle = [handleDict objectForKey:inUID]){
-        NSLog(@"Removing existing %@",inUID);
         [self removeHandleWithUID:inUID]; //Remove the handle
     }
 

@@ -151,7 +151,6 @@
             //If the cache is full, empty it
             if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
                 [soundCacheDict removeAllObjects];
-                NSLog(@"Flushing QT Sound Cache");
             }
             
             movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];

@@ -228,6 +228,12 @@
     [self arrangeViewsAbsolute:YES];
 }
 
+//Stop dragging when things are switched to metal mode
+- (BOOL)mouseDownCanMoveWindow
+{
+    return(NO);
+}
+
 
 //Drag tracking ------------------------------------------------------------------------
 - (void)beginDragOfTab:(AICustomTab *)inTab fromOffset:(NSSize)inOffset

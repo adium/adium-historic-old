@@ -38,6 +38,8 @@
 - (void)_resizeColumns;
 - (void)_resizeRows;
 - (void)_resizeCellsRowHeightsChanged:(BOOL)rowHeightsChanged;
+
+- (void)_resetCursorRects;
 @end
 
 @implementation AIFlexibleTableView
@@ -177,20 +179,6 @@
         }
     }
 }
-
-//pass mouse moved events to the hovered cell
-/*- (void)mouseMoved:(NSEvent *)theEvent
-{
-    AIFlexibleTableCell		*cell;
-    int				row, column;
-    NSPoint			hoverLocation;
-
-    //Determine the clicked cell/row/column
-    hoverLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    cell = [self cellAtPoint:hoverLocation row:&row column:&column];
-
-    [cell mouseMoved:theEvent];
-}*/
 
 
 
@@ -502,16 +490,16 @@
 
 //Cursor Tracking -----------------------------------------------------------------------------------
 //This method is automatically called when our size or position changes, allowing for our cells to re-configure any cursor tracking rects they've set up.
-- (void)resetCursorRects
+- (void)_resetCursorRects
 {
     NSRect			documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
     NSEnumerator		*enumerator;
     AIFlexibleTableCell		*cell;
-
+    
     //Loop through all cursor-tracking cells, informing them of the cursor rect reset
     enumerator = [cursorTrackingCellArray objectEnumerator];
     while((cell = [enumerator nextObject])){
-        [cell resetCursorRectsInView:self visibleRect:documentVisibleRect];
+        [cell resetCursorRectsInView:self visibleRect:NSIntersectionRect(documentVisibleRect , [cell frame])];
     }
 }
 
@@ -730,7 +718,6 @@
 //Add a row of cells.  Returns YES if the other cells should be resized in response.
 - (BOOL)_addCellsForRow:(int)inRow
 {
-    NSRect			documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
     BOOL			columnWidthDidChange = NO;
     NSEnumerator		*columnEnumerator;
     AIFlexibleTableColumn	*column;
@@ -753,7 +740,7 @@
             }
 
             //If this cell tracks the cursor, reset its cursor rects and add it to our tracking array
-            if([cell resetCursorRectsInView:self visibleRect:documentVisibleRect]){
+            if([cell usesCursorRects]){
                 [cursorTrackingCellArray addObject:cell];
             }
         }
@@ -806,7 +793,9 @@
         }
 
         //Reset our tracking rects
-        [self resetCursorRects];
+        if(![self inLiveResize]){
+            [self _resetCursorRects];
+        }
     }
     
     //Resize our view
