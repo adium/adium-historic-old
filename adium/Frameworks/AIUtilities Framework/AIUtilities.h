@@ -81,3 +81,4 @@
 #import "ESQuicklyResizingPanel.h"
 #import "AIParagraphStyleAdditions.h"
 #import "CBApplicationAdditions.h"
+#import "ESImageAdditions.h"
