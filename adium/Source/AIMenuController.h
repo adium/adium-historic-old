@@ -20,7 +20,7 @@ typedef enum {
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions, LOC_File_Status,
     LOC_Edit_Bottom, LOC_Edit_Additions,
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
-    LOC_Window_Top, LOC_Window_Commands, LOC_Window_Auxilary, LOC_Window_Fixed,
+    LOC_Window_Top, LOC_Window_Commands, LOC_Window_Auxiliary, LOC_Window_Fixed,
     LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
     LOC_Contact_Editing, LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
 	LOC_View_General,
@@ -50,7 +50,7 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Format_Additions;
     IBOutlet	NSMenuItem	*menu_Window_Top;
     IBOutlet	NSMenuItem	*menu_Window_Commands;
-    IBOutlet	NSMenuItem	*menu_Window_Auxilary;
+    IBOutlet	NSMenuItem	*menu_Window_Auxiliary;
     IBOutlet	NSMenuItem	*menu_Window_Fixed;
     IBOutlet	NSMenuItem	*menu_Help_Local;
     IBOutlet	NSMenuItem	*menu_Help_Web;

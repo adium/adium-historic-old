@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.38 $
- * $Date: 2004/02/10 00:25:18 $
- * $Author: jmelloy $
+ * $Revision: 1.39 $
+ * $Date: 2004/02/10 23:45:56 $
+ * $Author: evands $
  *
  */
 
@@ -48,7 +48,7 @@
     
     //Install Menu item
     //logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
-    //[[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+    //[[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
 	//Watch for pref changes
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];

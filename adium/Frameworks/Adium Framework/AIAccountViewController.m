@@ -104,7 +104,7 @@
     return(view_accountView);
 }
 
-//Return the auxilary tabs for this account
+//Return the auxiliary tabs for this account
 - (NSArray *)auxiliaryTabs
 {    
     return(auxiliaryTabs);
@@ -112,7 +112,7 @@
 
 - (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView
 {
-    //Extract our auxilary tabs from the nib, where they are stored in an NSTabView inside an NSWindow
+    //Extract our auxiliary tabs from the nib, where they are stored in an NSTabView inside an NSWindow
     if(inTabView){
         //Get the array of tabs
         NSArray *tabViewItems = [inTabView tabViewItems];
