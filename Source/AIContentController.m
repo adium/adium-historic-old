@@ -915,6 +915,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		}
 	}
 	
+	//If we can't get a contact, we're not going to be able to get a chat... return nil
+	if(!targetContact) return nil;
+	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
