@@ -82,6 +82,16 @@ static char *hash_password(const char * const password);
     
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
+
+    //We have a choice here between:
+    //Option 1: Automatically remembering the online state, and restoring it on launch
+    //Auto-Connect (via state-restore)
+    //if([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]){
+    //    [self connect];
+    //}
+    //Option 2:Clearing the online state, and using the classic 'auto-Connect' option system
+    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    //Option 1 is very neat, but is more annoying than helpful - so we'll stick with 2 for now :)
 }
 
 // Return a view for the connection window
