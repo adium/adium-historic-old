@@ -4,7 +4,9 @@
  *
  * gaim
  *
- * Copyright (C) 2003, Sean Egan <sean.egan@binghamton.edu>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,6 +87,7 @@ struct _GaimBlistNode {
 	GaimBlistNode *next;                /**< The sibling after this buddy.  */
 	GaimBlistNode *parent;              /**< The parent of this node        */
 	GaimBlistNode *child;               /**< The child of this node         */
+	GHashTable *settings;               /**< per-node settings              */
 	void          *ui_data;             /**< The UI can put data here.      */
 };
 
@@ -105,7 +108,6 @@ struct _GaimBuddy {
 	void *proto_data;                       /**< This allows the prpl to associate whatever data it wants with a buddy */
 	GaimBuddyIcon *icon;                    /**< The buddy icon. */
 	GaimAccount *account;           /**< the account this buddy belongs to */
-	GHashTable *settings;                   /**< per-buddy settings from the XML buddy list, set by plugins and the likes. */
 	guint timer;							/**< The timer handle. */
 };
 
@@ -119,7 +121,6 @@ struct _GaimContact {
 	int currentsize;	    /**< The number of buddies in this contact corresponding to online accounts */
 	int online;			    /**< The number of buddies in this contact who are currently online */
 	GaimBuddy *priority;    /**< The "top" buddy for this contact */
-	int score;                             /**< The priority score. */
 };
 
 
@@ -132,7 +133,6 @@ struct _GaimGroup {
 	int totalsize;			       /**< The number of chats and contacts in this group */
 	int currentsize;		       /**< The number of chats and contacts in this group corresponding to online accounts */
 	int online;			       /**< The number of chats and contacts in this group who are currently online */
-	GHashTable *settings;                  /**< per-group settings from the XML buddy list, set by plugins and the likes. */
 };
 
 /**
@@ -144,7 +144,6 @@ struct _GaimChat {
 	char *alias;             /**< The display name of this chat. */
 	GHashTable *components;  /**< the stuff the protocol needs to know to join the chat */
 	GaimAccount *account; /**< The account this chat is attached to */
-	GHashTable *settings;    /**< per-chat settings from the XML buddy list, set by plugins and the likes. */
 };
 
 
@@ -162,7 +161,7 @@ struct _GaimBuddyList {
 /**
  * Buddy list UI operations.
  *
- * Any UI representing a buddy list must assign a filled-out gaim_conv_window_ops
+ * Any UI representing a buddy list must assign a filled-out gaim_blist_window_ops
  * structure to the buddy list core.
  */
 struct _GaimBlistUiOps
@@ -179,7 +178,8 @@ struct _GaimBlistUiOps
 			    gboolean show);             /**< Hides or unhides the buddy list */
 	void (*request_add_buddy)(GaimAccount *account, const char *username,
 							  const char *group, const char *alias);
-	void (*request_add_chat)(GaimAccount *account, GaimGroup *group);
+	void (*request_add_chat)(GaimAccount *account, GaimGroup *group, 
+							 const char *alias);
 	void (*request_add_group)(void);
 };
 
@@ -249,6 +249,13 @@ void gaim_blist_update_buddy_status(GaimBuddy *buddy, int status);
  */
 void gaim_blist_update_buddy_presence(GaimBuddy *buddy, int presence);
 
+/**
+ * Updates a buddy's signon time.
+ *
+ * @param buddy  The buddy whose idle time has changed.
+ * @param signon The buddy's signon time since the dawn of the UNIX epoch.
+ */
+void gaim_blist_update_buddy_signon(GaimBuddy *buddy, time_t signon);
 
 /**
  * Updates a buddy's idle time.
@@ -571,15 +578,6 @@ GSList *gaim_find_buddies(GaimAccount *account, const char *name);
 GaimGroup *gaim_find_group(const char *name);
 
 /**
- * Finds a contact
- *
- * @param group   The group to look in
- * @param name    The name to look for
- * @return        The contact or NULL if the contact does not exist
- */
-GaimContact *gaim_find_contact(GaimGroup *group, const char *name);
-
-/**
  * Finds a chat by name.
  *
  * @param account The chat's account.
@@ -706,7 +704,8 @@ void gaim_blist_request_add_buddy(GaimAccount *account, const char *username,
  * @param account The account the buddy is added to.
  * @param group   The optional group to add the chat to.
  */
-void gaim_blist_request_add_chat(GaimAccount *account, GaimGroup *group);
+void gaim_blist_request_add_chat(GaimAccount *account, GaimGroup *group,
+								 const char *alias);
 
 /**
  * Requests from the user information needed to add a group to the
@@ -715,11 +714,80 @@ void gaim_blist_request_add_chat(GaimAccount *account, GaimGroup *group);
 void gaim_blist_request_add_group(void);
 
 /**
+ * Associates a boolean with a node in the buddy list
+ *
+ * @param node  The node to associate the data with
+ * @param key   The identifier for the data
+ * @param value The value to set
+ */
+void gaim_blist_node_set_bool(GaimBlistNode *node, const char *key, gboolean value);
+
+/**
+ * Retreives a named boolean setting from a node in the buddy list
+ *
+ * @param node  The node to retreive the data from
+ * @param key   The identifier of the data
+ *
+ * @return The value, or FALSE if there is no setting
+ */
+gboolean gaim_blist_node_get_bool(GaimBlistNode *node, const char *key);
+
+/**
+ * Associates an integer with a node in the buddy list
+ *
+ * @param node  The node to associate the data with
+ * @param key   The identifier for the data
+ * @param value The value to set
+ */
+void gaim_blist_node_set_int(GaimBlistNode *node, const char *key, int value);
+
+/**
+ * Retreives a named integer setting from a node in the buddy list
+ *
+ * @param node  The node to retreive the data from
+ * @param key   The identifier of the data
+ *
+ * @return The value, or 0 if there is no setting
+ */
+int gaim_blist_node_get_int(GaimBlistNode *node, const char *key);
+
+/**
+ * Associates a string with a node in the buddy list
+ *
+ * @param node  The node to associate the data with
+ * @param key   The identifier for the data
+ * @param value The value to set
+ */
+void gaim_blist_node_set_string(GaimBlistNode *node, const char *key,
+		const char *value);
+
+/**
+ * Retreives a named string setting from a node in the buddy list
+ *
+ * @param node  The node to retreive the data from
+ * @param key   The identifier of the data
+ *
+ * @return The value, or NULL if there is no setting
+ */
+const char *gaim_blist_node_get_string(GaimBlistNode *node, const char *key);
+
+/**
+ * Removes a named setting from a blist node
+ *
+ * @param node  The node from which to remove the setting
+ * @param key   The name of the setting
+ */
+void gaim_blist_node_remove_setting(GaimBlistNode *node, const char *key);
+
+/**
  * Associates some data with the group in the xml buddy list
  *
  * @param g      The group the data is associated with
  * @param key    The key used to retrieve the data
  * @param value  The data to set
+ * @deprecated   Replaced by gaim_blist_node_set_bool(), gaim_blist_node_set_int()
+ * 		 and gaim_blist_node_set_string() to enable types and consolidate functionality.
+ * 		 This function is scheduled to be removed in the near future.
  */
 void gaim_group_set_setting(GaimGroup *g, const char *key, const char *value);
 
@@ -729,6 +797,9 @@ void gaim_group_set_setting(GaimGroup *g, const char *key, const char *value);
  * @param g      The group to retrieve data from
  * @param key    The key to retrieve the data with
  * @return       The associated data or NULL if no data is associated
+ * @deprecated   Replaced by gaim_blist_node_get_bool(), gaim_blist_node_get_int()
+ * 		 and gaim_blist_node_get_string() to enable types and consolidate functionality.
+ * 		 This function is scheduled to be removed in the near future.
  */
 const char *gaim_group_get_setting(GaimGroup *g, const char *key);
 
@@ -738,6 +809,9 @@ const char *gaim_group_get_setting(GaimGroup *g, const char *key);
  * @param c      The chat the data is associated with
  * @param key    The key used to retrieve the data
  * @param value  The data to set
+ * @deprecated   Replaced by gaim_blist_node_set_bool(), gaim_blist_node_set_int()
+ * 		 and gaim_blist_node_set_string() to enable types and consolidate functionality.
+ * 		 This function is scheduled to be removed in the near future.
  */
 void gaim_chat_set_setting(GaimChat *c, const char *key, const char *value);
 
@@ -748,6 +822,9 @@ void gaim_chat_set_setting(GaimChat *c, const char *key, const char *value);
  * @param key    The key to retrieve the data with
  *
  * @return       The associated data or NULL if no data is associated
+ * @deprecated   Replaced by gaim_blist_node_get_bool(), gaim_blist_node_get_int()
+ * 		 and gaim_blist_node_get_string() to enable types and consolidate functionality.
+ * 		 This function is scheduled to be removed in the near future.
  */
 const char *gaim_chat_get_setting(GaimChat *c, const char *key);
 
@@ -757,6 +834,9 @@ const char *gaim_chat_get_setting(GaimChat *c, const char *key);
  * @param b      The buddy the data is associated with
  * @param key    The key used to retrieve the data
  * @param value  The data to set
+ * @deprecated   Replaced by gaim_blist_node_set_bool(), gaim_blist_node_set_int()
+ * 		 and gaim_blist_node_set_string() to enable types and consolidate functionality.
+ * 		 This function is scheduled to be removed in the near future.
  */
 void gaim_buddy_set_setting(GaimBuddy *b, const char *key, const char *value);
 
@@ -766,6 +846,9 @@ void gaim_buddy_set_setting(GaimBuddy *b, const char *key, const char *value);
  * @param b      The buddy to retrieve data from
  * @param key    The key to retrieve the data with
  * @return       The associated data or NULL if no data is associated
+ * @deprecated   Replaced by gaim_blist_node_get_bool(), gaim_blist_node_get_int()
+ * 		 and gaim_blist_node_get_string() to enable types and consolidate functionality.
+ * 		 This function is scheduled to be removed in the near future.
  */
 const char *gaim_buddy_get_setting(GaimBuddy *b, const char *key);
 

@@ -4,7 +4,9 @@
  *
  * gaim
  *
- * Copyright (C) 2002-2003, Christian Hammond <chipx86@gnupdate.org>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,6 +98,46 @@ void gaim_base64_decode(const char *str, char **ret_str, int *ret_len);
 
 /*@}*/
 
+/**************************************************************************/
+/** @name Quoted Printable Functions                                      */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Converts a quoted printable string back to its readable equivalent.
+ *
+ * @param str     The string to convert back.
+ * @param ret_str The returned, readable string.
+ * @param ret_len The returned string length.
+ */
+void gaim_quotedp_decode (const char *str, char **ret_str, int *ret_len);
+
+/*@}*/
+
+/**************************************************************************/
+/** @name MIME Functions                                                  */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Converts a MIME header field string back to its readable equivalent
+ * according to RFC 2047.  Basically, a header is plain ASCII and can 
+ * contain any number of sections called "encoded-words."  The format 
+ * of an encoded word is =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=
+ * =? designates the beginning of the encoded-word
+ * ?= designates the end of the encoded-word
+ * ? segments the encoded word into three pieces.  The first piece is 
+ *   the character set, the second peice is the encoding, and the 
+ *   third piece is the encoded text.
+ *
+ * @param str The string to convert back.
+ *
+ * @return The readble string.
+ */
+char *gaim_mime_decode_field (const char *str);
+
+/*@}*/
+
 
 /**************************************************************************/
 /** @name Date/Time Functions                                             */
@@ -174,7 +216,8 @@ gboolean gaim_markup_find_tag(const char *needle, const char *haystack,
  * protocols/yahoo/yahoo.c for example usage.
  *
  * @param str            The string to parse.
- * @param dest_buffer    The destination buffer to append the new
+ * @param len            The size of str.
+ * @param dest           The destination GString to append the new
  *                       field info to.
  * @param start_token    The beginning token.
  * @param skip           The number of characters to skip after the
@@ -188,14 +231,12 @@ gboolean gaim_markup_find_tag(const char *needle, const char *haystack,
  *
  * @return TRUE if successful, or FALSE otherwise.
  */
-gboolean gaim_markup_extract_info_field(const char *str, char *dest_buffer,
-										const char *start_token, int skip,
-										const char *end_token,
-										char check_value,
-										const char *no_value_token,
-										const char *display_name,
-										gboolean is_link,
-										const char *link_prefix);
+gboolean gaim_markup_extract_info_field(const char *str, int len, GString *dest,
+                                        const char *start_token, int skip,
+                                        const char *end_token, char check_value,
+                                        const char *no_value_token,
+                                        const char *display_name, gboolean is_link,
+                                        const char *link_prefix);
 
 /**
  * Converts HTML markup to XHTML.
@@ -250,6 +291,18 @@ const gchar *gaim_home_dir(void);
  * @see gaim_home_dir()
  */
 char *gaim_user_dir(void);
+
+/**
+ * Builds a complete path from the root, making any directories along
+ * the path which do not already exist.
+ *
+ * @param path The path you wish to create.  Note that it must start
+ *        from the root or this function will fail.
+ * @param mode Unix-style permissions for this directory.
+ *
+ * @return 0 for success, nonzero on any error.
+ */
+int gaim_build_dir(const char *path, int mode);
 
 /**
  * Creates a temporary file and returns a file pointer to it.
@@ -308,6 +361,28 @@ char *gaim_fd_get_ip(int fd);
  * @return A pointer to the normalized version stored in a static buffer.
  */
 const char *gaim_normalize(const GaimAccount *account, const char *str);
+
+/**
+ * Compares two strings to see if the first contains the second as
+ * a proper prefix.
+ * 
+ * @param s  The string to check.
+ * @param p  The prefix in question.
+ * 
+ * @return   TRUE if p is a prefix of s, otherwise FALSE.
+ */
+gboolean gaim_str_has_prefix(const char *s, const char *p);
+
+/**
+ * Compares two strings to see if the second is a proper suffix
+ * of the first.
+ * 
+ * @param s  The string to check.
+ * @param x  The suffix in question.
+ * 
+ * @return   TRUE if x is a a suffix of s, otherwise FALSE.
+ */
+gboolean gaim_str_has_suffix(const char *s, const char *x);
 
 /**
  * Looks for %n, %d, or %t in a string, and replaces them with the
@@ -516,6 +591,16 @@ int gaim_utf8_strcasecmp(const char *a, const char *b);
  * @return TRUE if it starts with /me, and it has been removed, otherwise FALSE
  */
 gboolean gaim_message_meify(char *message, size_t len);
+
+/**
+ * Removes the underscore characters from a string used identify the mnemonic
+ * character.
+ *
+ * @param in  The string to strip
+ *
+ * @return The stripped string
+ */
+char * gaim_text_strip_mnemonic(const char *in);
 
 /*@}*/
 

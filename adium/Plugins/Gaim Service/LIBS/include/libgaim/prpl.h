@@ -4,7 +4,9 @@
  *
  * gaim
  *
- * Copyright (C) 1998-1999, Mark Spencer <markster@marko.net>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +85,7 @@ typedef enum
 		"in the \"Tools\" menu in the buddy list window."
 
 /** Default protocol */
-#define GAIM_PROTO_DEFAULT GAIM_PROTO_OSCAR
+#define GAIM_PROTO_DEFAULT "prpl-oscar"
 
 /*@}*/
 
@@ -194,7 +196,6 @@ typedef enum
  */
 struct _GaimPluginProtocolInfo
 {
-	GaimProtocol protocol;        /**< The protocol type.         */
 	GaimProtocolOptions options;  /**< Protocol options.          */
 
 	GList *user_splits;      /* A GList of GaimAccountUserSplit */
@@ -313,6 +314,10 @@ struct _GaimPluginProtocolInfo
 	void (*remove_group)(GaimConnection *gc, const char *group);
 
 	char *(*get_cb_real_name)(GaimConnection *gc, int id, const char *who);
+
+	void (*set_chat_topic)(GaimConnection *gc, int id, const char *topic);
+
+	GaimChat *(*find_blist_chat)(GaimAccount *account, const char *name);
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \
@@ -349,7 +354,7 @@ GaimProtocol gaim_prpl_id_to_num(const char *id);
  *
  * @param type The protocol plugin;
  */
-GaimPlugin *gaim_find_prpl(GaimProtocol type);
+GaimPlugin *gaim_find_prpl(const char *id);
 
 #ifdef __cplusplus
 }
