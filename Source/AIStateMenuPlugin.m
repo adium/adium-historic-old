@@ -67,9 +67,44 @@
 {
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
+
+	AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
+	AIStatusType	targetStatusType;
+	AIStatus		*targetStatusState;
+	BOOL			assignKeyEquivalents = NO;
+	BOOL			assignOptionCmdY;
 	
-    while((menuItem = [enumerator nextObject])){    
+	if(activeStatusType == AIAvailableStatusType){
+		targetStatusType = AIAwayStatusType;
+		targetStatusState = nil;
+		assignOptionCmdY = NO;
+		assignKeyEquivalents = YES;
+		
+	}else if((activeStatusType == AIAwayStatusType) || (activeStatusType == AIInvisibleStatusType)){
+		targetStatusType = AIAvailableStatusType;		
+		targetStatusState = [[adium statusController] defaultInitialStatusState];
+		assignOptionCmdY = YES;
+		assignKeyEquivalents = YES;
+		
+	}
+	   
+    while((menuItem = [enumerator nextObject])){
+		AIStatus	*representedStatus = [[menuItem representedObject] objectForKey:@"AIStatus"];
+		int			tag = [menuItem tag];
+
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
+		
+		if(assignKeyEquivalents){
+			if((tag == targetStatusType) && 
+			   (representedStatus == targetStatusState)){
+				[menuItem setKeyEquivalent:@"y"];
+				
+			}else if(assignOptionCmdY && ((tag == AIAwayStatusType) && (representedStatus == nil))){
+				[menuItem setKeyEquivalent:@"y"];
+				[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+				
+			}
+		}
     }
 }
 
