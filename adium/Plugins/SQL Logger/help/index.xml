@@ -45,7 +45,8 @@
     <p>After a database is created, you should be able to connect to it by
     simply typing <code>psql</code>.
     To log information, Adium will expect to have a certain setup in the
-    database.  Get the following package: <a
+    database.  Get the following package (this is also included in the
+    Adium source): <a
       href="adium-sql.tar.gz">adium.tar.gz</a>.  After using Stuffit Expander or
     the command line to unpack it, there should these files inside:
     <ul>
@@ -149,22 +150,25 @@ jmelloy=#</pre></div>
       USER</code>. That changes only new instances of your user, so either
     quit psql (<code>\q</code>) and start again, or type <code>set search_path=adium,public;</code>.  After doing either of those, type "\d" and you should see something like this:</p>
   <div class="tutorialcode"><pre>jmelloy=# \d
-                            List of relations
-      Schema      |             Name             |   Type   |  Owner  
-------------------+------------------------------+----------+---------
- adium            | messages                     | table    | jmelloy
- adium            | messages_message_id_seq      | sequence | jmelloy
- adium            | users                        | table    | jmelloy
- adium            | users_user_id_seq            | sequence | jmelloy
- adium            | message_v                    | view     | jmelloy
- adium            | user_display_name            | table    | jmelloy
-(6 rows)</pre></div>
+                   List of relations
+ Schema |           Name           |   Type   |  Owner  
+--------+--------------------------+----------+---------
+ adium  | message_simple_v         | view     | jmelloy
+ adium  | message_v                | view     | jmelloy
+ adium  | messages                 | table    | jmelloy
+ adium  | messages_message_id_seq  | sequence | jmelloy
+ adium  | user_display_name        | table    | jmelloy
+ adium  | user_statistics          | table    | jmelloy
+ adium  | users                    | table    | jmelloy
+ adium  | users_user_id_seq        | sequence | jmelloy
+      (8 rows)</pre></div>
   <p>The users table is very simple, a column for screenname, and an id.  The
   messages table stores all the messages themselves, and a reference to the
   users table.  User_display_name stores aliases and display names with
   history.  Message_v contains a combination of everything: the message, the
   screenname who sent it, and their display name at the time the message was
-  sent.</p>
+  sent.  Message_v is complicated and slightly slow.  simple_message_v is very
+bare-bones: the sending and receiving screenames, the message, and a date.</p>
 <p>At this point, you're ready to use the plugin.
   You can run <code>parser.pl</code> to insert all of your old logs into the
   database.  
@@ -173,7 +177,7 @@ jmelloy=#</pre></div>
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
   The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
   information on installation and use can be found in <a href="technical.html">Technical Details</a>.
-  Run it by typing <code>./parser.pl</code>.  
+  Run it by typing <code>./parser.pl</code>.
   It should automatically find all of your logs, but you may need to edit the
   paths.
   As it stands, it will run over every screenname who logged into your computer.

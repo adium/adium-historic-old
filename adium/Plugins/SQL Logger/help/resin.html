@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
 <title>Resin/JSP Installation Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -64,9 +64,9 @@ tar -xvf resin-2.1.x.tar</pre>
   &lt;res-ref-name&gt;<b>jdbc/postgresql</b>&lt;/res-ref-name&gt;
   &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
   &lt;init-param driver-name=&quot;<b>org.postgresql.Driver</b>&quot;/&gt;
-  &lt;init-param url=&quot;<b>jdbc:postgresql:USERNAME</b>&quot;/&gt;
-  &lt;init-param user=&quot;<b>USERNAME</b>&quot;/&gt;
-  &lt;init-param password=&quot;<b>PASSWORD</b>&quot;/&gt;
+  &lt;init-param url=&quot;<b>jdbc:postgresql:<i>USERNAME</i></b>&quot;/&gt;
+  &lt;init-param user=&quot;<b><i>USERNAME</i></b>&quot;/&gt;
+  &lt;init-param password=&quot;&quot;/&gt;
   &lt;init-param max-connections=&quot;20&quot;/&gt;
   &lt;init-param max-idle-time=&quot;30&quot;/&gt;
 &lt;/resource-ref&gt;</pre>
@@ -84,17 +84,32 @@ tar -xvf resin-2.1.x.tar</pre>
  &lt;doc-dir&gt;doc&lt;/doc-dir&gt;</pre>
  </div>
 <p>Simply change the part in between the &lt;doc-dir&gt; tags to where you
- want to put the JSP pages.  (/Users/USERNAME/Sites/).</p>
+   want to put the JSP pages.  (/Users/<i>USERNAME</i>/Sites/).</p>
 <p>That's all it takes to set Resin up.</p>
 <p>If you have the Mark Liyanage PostgreSQL package installed, the JDBC
  driver is in <code>/usr/local/pgsql/share/java/</code> Resin needs to be told where this driver is.  If you do not have the Mark Liyanage package installed, replace the path with your existing JDBC path.  To start Resin type the command</p>
 <div class="tutorialcode">
-    <pre>bin/httpd.sh -classpath /usr/local/pgsql/share/java/ start</pre>
+    <pre>bin/httpd.sh -classpath /usr/local/pgsql/share/java/postgresql.jar start</pre>
   </div>
-<p>To test it out, fire up a web browser and go to <a href="http://localhost:8080">http://localhost:8080/</a>.  You should see a
+<p>To test it out, fire up a web browser and go to <a href="http://localhost:8080/">http://localhost:8080/</a>.  You should see a
   directory listing of your files, or if you've already moved the adium jsps
-  into the directory, the front page.</p>
-<p>This works, but you need to remember to start Resin every time you
+  into the directory, the front page.  If you have an index.html file in
+  there, that may be served.</p>
+<p>Note, to work, this require PostgreSQL to be accepting TCP/IP connections.
+  Either do this by passing the &quot;-i&quot; flag to pg_ctl as it is started up, or by
+  editing /usr/local/pgsql/data/postgresql.conf and settting the lines that
+  looks like this:</p>
+<div class="tutorialcode">
+  <pre>#tcpip_socket = false</pre>
+</div>
+<p>to this:</p>
+<div class="tutorialcode">
+  <pre>tcpip_socket = true</pre>
+</div>
+<p>After doing this, you need to either send PostgreSQL a SIGHUP, or use
+      <code>pg_ctl reload</code>
+</p>
+<p>Starting Resin by hand works, but you need to remember to start Resin every time you
   restart your computer.  It would be better if it started at startup.  The
   package I have starting it can be downloaded from <a href="http://www.visualdistortion.org/adium/resin.tar.gz" class="offsite">
     http://www.visualdistortion.org/adium/resin.tar.gz</a>.  Simply change the
