@@ -6,7 +6,11 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+
+#define LIST_LAYOUT_FOLDER						@"Contact List"
+#define LIST_LAYOUT_EXTENSION					@"ListLayout"
 #define PREF_GROUP_LIST_LAYOUT					@"List Layout"
+
 #define KEY_LIST_LAYOUT_ALIGNMENT				@"Contact Text Alignment"
 #define KEY_LIST_LAYOUT_GROUP_ALIGNMENT			@"Group Text Alignment"
 #define KEY_LIST_LAYOUT_SHOW_ICON				@"Show User Icon"
@@ -38,6 +42,7 @@
 #define KEY_LIST_LAYOUT_GROUP_FONT				@"Group Font"
 
 #define KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT		@"Contact Left Indent"
+
 
 typedef enum {
 	WINDOW_STYLE_STANDARD = 0,
@@ -96,11 +101,19 @@ typedef enum {
 	IBOutlet		JVFontPreviewField	*fontField_contact;	
 	IBOutlet		JVFontPreviewField	*fontField_status;	
 	IBOutlet		JVFontPreviewField	*fontField_group;	
+	
+	IBOutlet		NSTextField			*textField_layoutName;
+	
+	NSString				*layoutName;
 }
 
-+ (id)listLayoutOnWindow:(NSWindow *)parentWindow;
++ (id)listLayoutOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (void)preferenceChanged:(id)sender;
+
+- (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
+- (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup;
+- (void)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 
 @end

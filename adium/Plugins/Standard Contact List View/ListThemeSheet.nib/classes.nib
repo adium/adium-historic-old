@@ -41,6 +41,7 @@
                 "slider_backgroundFade" = NSSlider; 
                 "textField_backgroundFade" = NSTextField; 
                 "textField_backgroundImagePath" = NSTextField; 
+                "textField_themeName" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

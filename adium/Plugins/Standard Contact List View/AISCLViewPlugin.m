@@ -39,6 +39,9 @@
 {
     [[adium interfaceController] registerContactListController:self];
 
+	[adium createResourcePathForName:LIST_LAYOUT_FOLDER];
+//	[adium createResourcePathForName:LIST_THEME_FOLDER];
+
     //Register our default preferences and install our preference views
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     
@@ -70,16 +73,20 @@
 //Preferences have changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if((notification == nil) ||
-	   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT] &&
-		[(NSString *)[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE])){
-		
-		windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+	NSString	*group = [[notification userInfo] objectForKey:@"Group"];
+
+    if(notification == nil || [group isEqualToString:PREF_GROUP_LIST_LAYOUT]){
+		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
+
+			windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 																	group:PREF_GROUP_LIST_LAYOUT] intValue];
-		NSLog(@"style %i",windowStyle);
-		if(contactListWindowController){
-			[self closeContactList];
-			[self showContactListAndBringToFront:NO];
+			NSLog(@"style %i",windowStyle);
+			if(contactListWindowController){
+				[self closeContactList];
+				[self showContactListAndBringToFront:NO];
+			}
+
 		}
 	}
 }

@@ -66,6 +66,8 @@
 #import "ESOutlineViewAdditions.h"
 #import "AIParagraphStyleAdditions.h"
 #import "AIPlasticButton.h"
+#import "AIPlasticPlusButton.h"
+#import "AIPlasticMinusButton.h"
 #import "AIPopUpButtonAdditions.h"
 #import "ESQuicklyResizingPanel.h"
 #import "NDRunLoopMessenger.h"

@@ -7,14 +7,19 @@
 //
 
 #import "AIListLayoutWindowController.h"
+#import "AICLPreferences.h"
 
+@interface AIListLayoutWindowController (PRIVATE)
+- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
+@end
 
 @implementation AIListLayoutWindowController
 
-+ (id)listLayoutOnWindow:(NSWindow *)parentWindow
++ (id)listLayoutOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName
 {
-	AIListLayoutWindowController	*listLayoutWindow = [[self alloc] initWithWindowNibName:@"ListLayoutSheet"];
-
+	AIListLayoutWindowController	*listLayoutWindow = [[self alloc] initWithWindowNibName:@"ListLayoutSheet"
+																				   withName:inName];
+#warning load here!?  or in the main pref file?
 	if(parentWindow){
 		[NSApp beginSheet:[listLayoutWindow window]
 		   modalForWindow:parentWindow
@@ -28,15 +33,16 @@
 	return(listLayoutWindow);
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName
+- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName
 {
-    [super initWithWindowNibName:windowNibName];	
-
+    [super initWithWindowNibName:windowNibName];
+	layoutName = [inName retain];
 	return(self);
 }
 
 - (void)dealloc
 {
+	[layoutName release];
     [super dealloc];
 }
 
@@ -53,6 +59,8 @@
 	[fontField_status setShowFontFace:YES];
 	[fontField_group setShowPointSize:YES];
 	[fontField_group setShowFontFace:YES];
+	
+	[textField_layoutName setStringValue:layoutName];
 }
 
 //Window is closing
@@ -83,11 +91,16 @@
     [self closeWindow:sender];
 }
 
-
 //
 - (IBAction)okay:(id)sender
 {
-    [self closeWindow:sender];
+#warning save here!?  or in the main prefs file?
+	if([AICLPreferences createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
+											withName:[textField_layoutName stringValue]
+										   extension:LIST_LAYOUT_EXTENSION
+											inFolder:LIST_LAYOUT_FOLDER]){
+		[self closeWindow:sender];
+	}
 }
 
 
@@ -310,5 +323,6 @@
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 }
+
 
 @end

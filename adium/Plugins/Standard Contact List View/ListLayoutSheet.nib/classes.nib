@@ -33,6 +33,7 @@
                 "textField_contactSpacing" = NSTextField; 
                 "textField_groupBottomSpacing" = NSTextField; 
                 "textField_groupTopSpacing" = NSTextField; 
+                "textField_layoutName" = NSTextField; 
                 "textField_userIconSize" = NSTextField; 
                 "textField_windowTransparency" = NSTextField; 
             }; 
