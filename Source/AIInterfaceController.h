@@ -105,7 +105,7 @@ typedef enum {
 
 @interface AIInterfaceController : NSObject {
 	IBOutlet	AIMenuController	*menuController;
-    IBOutlet	AIAdium			*owner;
+    IBOutlet	AIAdium			*adium;
 	
     IBOutlet	NSMenuItem		*menuItem_close;
     IBOutlet	NSMenuItem		*menuItem_closeChat;
