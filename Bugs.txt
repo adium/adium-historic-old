@@ -11,8 +11,6 @@
 - [ICQ] Encoding problems
 - 10.2 users are losing color in their profiles & away messages (colors not
     saving)
-- 10.2 users are losing color in their profiles & away messages (colors not
-    saving)
 - First Message Received triggered multiple times
 - [GaduGadu] Contacts not saving to the server-list
 
@@ -25,7 +23,6 @@
 - Extended status doesn't update on the list when it changes
 - Extended status sometimes draws outside the cell (and is therefore cropped)
     instead of increasing cell height
-- Add slider for max width and allow sizing based on status.
 - Metacontacts display no service icon
 - Double clicking two names in succession causes the first name to highlight
     the second time. (wordsaboutmehere)
