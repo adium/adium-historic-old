@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.11 $
- * $Date: 2003/12/22 06:28:01 $
+ * $Revision: 1.12 $
+ * $Date: 2004/01/20 05:06:32 $
  * $Author: jmelloy $
  */
 
@@ -232,18 +232,23 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
             accountUID = [NSString stringWithCString:PQgetvalue(accountRes, i, 1)];
             serviceID = [NSString stringWithCString:PQgetvalue(accountRes, i, 2)];
             userID = [NSString stringWithCString:PQgetvalue(accountRes, i, 0)];
-            
+            serverGroup = @"Strangers";
+			
+			
             //Find the group this contact is in on our contact list
             AIListContact	*contact = [[adium contactController] contactInGroup:nil withService:serviceID UID:accountUID];
-            if(contact){
+            /*
+			if(contact){
                 serverGroup = [[contact containingGroup] UID];
             }
             if(!serverGroup) serverGroup = @"Strangers"; //Default group
-                    
+			 */
+
             //Make sure this groups is in our available group dict
             if(![groupDict objectForKey:serverGroup]){
                 [groupDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:serverGroup, @"UID", [NSMutableArray array], @"Contents", nil] forKey:serverGroup];
             }
+			 
 
             //Make sure the handle is in our available handle array
             contactKey = [NSString stringWithFormat:@"%@.%@", serviceID, accountUID];
