@@ -14,8 +14,8 @@
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
-- (AIChat *)chatWithName:(NSString *)name;
-- (AIChat *)chatWithContact:(AIListContact *)contact;
+- (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
+- (AIChat *)mainThreadChatWithName:(NSString *)name;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (NSString *)uniqueObjectID;
@@ -131,8 +131,8 @@
 
 - (AIListContact *)_contactWithUID:(NSString *)inUID;
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
-- (AIChat *)chatWithName:(NSString *)name;
-- (AIChat *)chatWithContact:(AIListContact *)contact;
+- (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
+- (AIChat *)mainThreadChatWithName:(NSString *)name;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (void)gotGroupForContact:(AIListContact *)contact;

@@ -491,15 +491,30 @@ static id<GaimThread> gaimThread = nil;
     return YES;
 }
 
-- (AIChat *)chatWithContact:(AIListContact *)contact
-{
-	return [[adium contentController] chatWithContact:contact
-										initialStatus:nil];
-}
-
-- (AIChat *)chatWithName:(NSString *)name
+- (AIChat *)mainThreadChatWithContact:(AIListContact *)contact
 {
 	AIChat *chat;
+	
+	[[adium contentController] mainPerformSelector:@selector(chatWithContact:initialStatus:)
+										withObject:contact
+										withObject:nil
+									 waitUntilDone:YES];
+		
+	chat = [[adium contentController] chatWithContact:contact
+										initialStatus:nil];
+	
+	return chat;
+}
+
+- (AIChat *)mainThreadChatWithName:(NSString *)name
+{
+	AIChat *chat;
+	
+	[[adium contentController] mainPerformSelector:@selector(chatWithName:onAccount:initialStatus:)
+										withObject:name
+										withObject:self
+										withObject:nil
+									 waitUntilDone:YES];
 	
 	chat = [[adium contentController] chatWithName:name
 										 onAccount:self
@@ -1163,7 +1178,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	//We receive retained data
 	[lastDisconnectionError release]; lastDisconnectionError = text;
-
+	NSLog(@"%@ disconnected: %@",[self UID],lastDisconnectionError);
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotifications];
