@@ -85,15 +85,17 @@
 	int					cnt, prevcnt;
 	AIContentObject		*content;
 	AIChat				*chat;
-	NSMutableDictionary *dict;
+	NSMutableDictionary *dict = nil;
 	NSDictionary		*contentDict;
 	NSDictionary		*previousDict;
 	NSEnumerator        *enumerator;
 	
 	chat = (AIChat *)[notification object];
-	dict = [NSMutableDictionary dictionary];
 	
-	if(chat) {
+	//Ensure we only save context for one-on-one chats; there must be a [chat listObject] and no name.
+	if(chat && [chat listObject] && ![chat name]) {		
+		dict = [NSMutableDictionary dictionary];
+
 		enumerator = [[chat contentObjectArray] objectEnumerator];
 		
 		//Is there already stored context for this person?
@@ -116,11 +118,12 @@
 		// If there's room left, append the old messages too
 		if( cnt <= linesToDisplay && previousDict ) {
 			
+			unsigned previousDictCount = [previousDict count];
 			prevcnt = 1;
 			
-			while( cnt <= linesToDisplay+1 && prevcnt <= [previousDict count] ) {
-				NSDictionary *tempDict = [NSDictionary dictionaryWithDictionary:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]];
-				[dict setObject:tempDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
+			while( (cnt <= linesToDisplay+1) && (prevcnt <= previousDictCount) ) {
+				[dict setObject:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]
+						 forKey:[[NSNumber numberWithInt:cnt] stringValue]];
 				prevcnt++;
 				cnt++;
 			}
@@ -129,7 +132,7 @@
 	}
 	
 	// Did we find anything useful to save? If not, leave it untouched
-	if( [dict count] > 0 ) {
+	if(dict && ([dict count] > 0)) {
 		[[chat listObject] setPreference:dict forKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 	}
 	
@@ -139,18 +142,18 @@
 //ONLY handles AIContentMessage objects right now
 - (NSDictionary *)savableContentObject:(AIContentObject *)content
 {
-	NSMutableDictionary	*contentDict;
+	NSMutableDictionary	*contentDict = nil;
 	AIChat				*chat = [content chat];
-	AIAccount			*account = [chat account];
 	AIListContact		*listContact = [chat listObject];
+	
 	NSString			*objectID;
 	NSNumber			*accountNumber;
-
+	
 	contentDict = [NSMutableDictionary dictionary];
 	[contentDict setObject:[content type] forKey:@"Type"];
 	
 	objectID = [listContact internalUniqueObjectID];
-	accountNumber = [NSNumber numberWithInt:[account accountNumber]];
+	accountNumber = [NSNumber numberWithInt:[[chat account] accountNumber]];
 	
 	// Outgoing or incoming?
 	if ([content isOutgoing]){
@@ -167,7 +170,7 @@
 	[contentDict setObject:[NSNumber numberWithBool:[(AIContentMessage *)content isAutoreply]] forKey:@"Autoreply"];
 	[contentDict setObject:[[(AIContentMessage *)content date] description] forKey:@"Date"];
 	[contentDict setObject:[[[(AIContentMessage *)content message] safeString] dataRepresentation] forKey:@"Message"];
-	
+
 	return(contentDict);
 }
 
