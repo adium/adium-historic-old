@@ -6,27 +6,27 @@
              ###################################################
 
 	# Credits:
-	
+
 	     # Jeremy Knickerbocker: original script
 
 	     # Evan Schoenberg: modifications, general adium-ness
-	
+
 	     # Asher Haig: re-organizated as dynamic script with
 	     #		   multiple options in crontabbed environments
 	     #		   Added options to replace current Adium binary
-	     #		   and execute new application. 
+	     #		   and execute new application.
 
-#-----------------------------------------------------------------------------#		
+#-----------------------------------------------------------------------------#
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    # WARNING:							     	    #	
+    # WARNING:							     	    #
     # If this screws your system up it's because you've changed something   #
     # that you didn't understand. Didn't your mother ever tell you not 	    #
     # to play around with other people's shell scripts? They're fragile     #
     # and they break off easily.					    #
     #								            #
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-  
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     #								     	    #
     # If you really think you need to change something and you can't make   #
@@ -36,14 +36,14 @@
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 	#--------#  In a file (I use ~/.crontab):
-	# Usage: #  MM HH * * * /full/path/to/script >& /path/to/log.file	
-	#--------#  crontab ~/.crontab 
-	
+	# Usage: #  MM HH * * * /full/path/to/script >& /path/to/log.file
+	#--------#  crontab ~/.crontab
+
 		 #  MM and HH should be two digits, 24hr time.
 
 	   	 #  Example:  /Users/ahaig/AdiumDaily/buildDaily.sh >& \
 		 #	      /Users/ahaig/AdiumDaily/log/AdiumDaily.log
-		 
+
 		 #  That's all on ONE line or two with the \ separating them..
 
 # If you want to use the script to build without updating via SVN, set this to
@@ -133,14 +133,14 @@ if [ "$install_type" == "none" ] || [ "$package" == "yes" ] && \
 					[ -z "$install_dir" ] ; then
 	install_dir=$build_output_dir
 fi
-# If $install_dir isn't set 
+# If $install_dir isn't set
 if [ -z "$install_dir" ] ; then
 	if [ "$install_type" == "systemwide" ] ; then
-		if [ -x /Applications/Internet ]  ; then		
+		if [ -x /Applications/Internet ]  ; then
 			install_dir="/Applications/Internet"
 							# This seems reasonable. If it's not
 							# I'm still going to act like it is.
-		elif [ -x /Applications ] ; then		
+		elif [ -x /Applications ] ; then
 							# I would hope it exists
 			install_dir="/Applications"	# Don't you people subsort your Apps?
 		fi
@@ -149,8 +149,8 @@ if [ -z "$install_dir" ] ; then
 			mkdir $HOME/Applications
 			install_dir="$HOME/Applications"
 		fi
-	fi	
-fi		
+	fi
+fi
 
 # Get the date for version tracking
 today=$(date +"%Y-%m-%d")
@@ -176,7 +176,7 @@ if [ "$should_update" == "yes" ] ; then
 		svn co svn://svn.adiumx.com/adium/trunk adium
 	else							# Update from SVN
 		echo "Begin SVN Update in $adium_co_dir"
-	
+
 		# Update happens from inside adium
 		cd $adium_co_dir
 
@@ -185,11 +185,11 @@ if [ "$should_update" == "yes" ] ; then
 		elif [ "$log" == "verbose" ] ; then
 			svn update
 		fi
-	
+
 		echo "SVN Update Complete"
 	fi
 fi
-	
+
 
 # Time to start
 cd $adium_co_dir				# Really just ./adium
@@ -202,7 +202,6 @@ fi
 
 # Produce Changelog
 # Probably don't care about this unless we're building a .dmg for distribution
-### XXX Does not work with SVN
 if [ "$changelog" == "yes" ] ; then
 	echo "Creating ChangeLog_$prettydate relative to $lastbuild..."
 	if [ -e $adium_co_dir/ChangeLog ]; then
@@ -210,13 +209,13 @@ if [ "$changelog" == "yes" ] ; then
 	fi
 
 	if [ "$log" == "normal" ] ; then	# Don't Log
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file $adium_co_dir/CompleteChanges --ignore theList.txt >& /dev/null
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file $adium_co_dir/ChangeLog_$prettydate --ignore theList.txt >& /dev/null
+                svn log > CompleteChanges
+		svn log -r{$lastbuild}:HEAD > ChangeLog_$prettydate
 		ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog >& /dev/null
 	elif [ "$log" == "verbose" ] ; then
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file $adium_co_dir/CompleteChanges --ignore theList.txt
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file $adium_co_dir/ChangeLog_$prettydate --ignore theList.txt
-		ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog
+	    svn log -v > CompleteChanges
+            svn log -vr{$lastbuild}:HEAD > ChangeLog_$prettydate
+            ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog
 	fi
 	if !([ -e $adium_co_dir/ChangeLog_$prettydate ]); then
 		echo "No changes from $lastbuild to $prettydate" >> $adium_co_dir/ChangeLog_$prettydate
@@ -236,16 +235,16 @@ echo Copying files...
 # Package it
 if [ "$package" == "yes" ] ; then			# We're building a .dmg
 	if [ -x "$build_output_dir/Adium_$prettydate.dmg" ] ; then
-		rm "$build_output_dir/Adium_$prettydate.dmg"	
+		rm "$build_output_dir/Adium_$prettydate.dmg"
 	fi
 	$adium_co_dir/Utilities/Build/buildDMG.pl \
 	-buildDir . -compressionLevel 9 -dmgName "Adium_$prettydate" \
 	-volName "Adium_$prettydate" "$adium_co_dir/build/Adium.app" \
 	"$adium_co_dir/ChangeLog_$prettydate"
-	
+
 	cp Adium_$prettydate.dmg $build_output_dir/Adium_$prettydate.dmg
 fi
-if [ "$replace_running_adium" == "yes" ] && [ -x "$adium_co_dir/build/Adium.app" ]; then	 	
+if [ "$replace_running_adium" == "yes" ] && [ -x "$adium_co_dir/build/Adium.app" ]; then
 		osascript -e "tell application \"$adium_app_name\" to quit"
 		rm -r "$install_dir/$adium_app_name.old.app"
 		mv "$install_dir/$adium_app_name.app" "$install_dir/$adium_app_name.old.app"
@@ -259,13 +258,13 @@ if [ "$copy_to_sourceforge" == "yes" ] ; then
        #Copy the files, setting them to be group writeable after copying
        scp Adium_$prettydate.dmg $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/
        ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg
- 
+
        scp CompleteChanges $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/
        ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/CompleteChanges
-     
+
        scp ChangeLog_$prettydate $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/ChangeLogs
        ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/ChangeLogs/ChangeLog_$prettydate
- 
+
        ssh shell.sf.net ln -fs \
        /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg \
        /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
