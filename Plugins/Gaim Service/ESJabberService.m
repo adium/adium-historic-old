@@ -25,6 +25,10 @@
 	return([DCGaimJabberJoinChatViewController joinChatView]);
 }
 
+- (BOOL)canCreateGroupChats{
+	return YES;
+}
+
 //Service Description
 - (NSString *)serviceCodeUniqueID{
 	return(@"libgaim-Jabber");
