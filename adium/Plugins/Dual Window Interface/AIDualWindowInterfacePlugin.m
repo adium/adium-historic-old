@@ -786,7 +786,7 @@
         if(![messageWindowControllerArray count]) enabled = NO;
 
     }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
-	enabled = ([[adium menuController] contactualMenuContact] != nil);
+	enabled = ([[adium menuController] contactualMenuContact] != nil && [[[adium menuController] contactualMenuContact] isKindOfClass:[AIListContact class]]);
 
     }else if (menuItem == menuItem_consolidate){
 	if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
