@@ -53,18 +53,6 @@
 }
 
 
-//Returns the owner of the specified object
-//- (id)ownerWithObject:(id)inObject
-//{
-//    if(ownerArray && contentArray){
-//        int	index = [contentArray indexOfObject:inObject];
-//        if(index != NSNotFound) return([ownerArray objectAtIndex:index]);
-//    }
-//    
-//    return(nil);
-//}
-
-
 //Value Storage --------------------------------------------------------------------------------------------------------
 #pragma mark Value Storage
 //Adds an object with a specified owner at medium priority (Pass nil to remove the object)
@@ -264,41 +252,34 @@
     return(nil);
 }
 
-//
+//Returns the owner of the specified object
+- (id)ownerWithObject:(id)inObject
+{
+    if(ownerArray && contentArray){
+        int	index = [contentArray indexOfObject:inObject];
+        if(index != NSNotFound) return([ownerArray objectAtIndex:index]);
+    }
+    
+    return(nil);
+}
+
+//Return a value enumerator
 - (NSEnumerator *)objectEnumerator
 {
 	return([contentArray objectEnumerator]);
 }
 
-//
+//Return all values
 - (NSArray *)allValues
 {
 	return(contentArray);
 }
-
-//
-//- (NSEnumerator *)ownerEnumerator
-//{
-//	return([ownerArray objectEnumerator]);
-//}
 
 //Return the number of objects
 - (unsigned)count
 {
     return([contentArray count]);
 }
-
-//Return the specified object
-//- (id)objectAtIndex:(unsigned)index
-//{
-//    return([contentArray objectAtIndex:index]);
-//}
-//
-////Return the specific owner
-//- (id)ownerAtIndex:(unsigned)index
-//{
-//    return ([ownerArray objectAtIndex:index]);   
-//}
 
 
 //Array creation / Destruction -----------------------------------------------------------------------------------------

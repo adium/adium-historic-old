@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.17 2004/02/22 09:18:43 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.18 2004/02/24 03:28:27 adamiser Exp $
 
 
 /*
@@ -294,10 +294,10 @@ Internal
     NSArray 		*alertsArray = nil;
     
 	while(alertsArray = [enumerator nextObject]){
-        if([alertsArray containsObject:contactAlert]) break;
+        if([alertsArray containsObject:contactAlert]) return([arrayOfAlertsArrays ownerWithObject:alertsArray]);
 	}
 
-    return(alertsArray);
+    return(nil);
 }
 
 @end

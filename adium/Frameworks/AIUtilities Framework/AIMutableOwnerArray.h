@@ -37,6 +37,7 @@
 - (double)doubleValue;
 - (NSDate *)date;
 - (id)objectWithOwner:(id)inOwner;
+- (id)ownerWithObject:(id)inObject;
 - (NSEnumerator *)objectEnumerator;
 - (NSArray *)allValues;
 - (unsigned)count;
