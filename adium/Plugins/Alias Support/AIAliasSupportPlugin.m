@@ -22,8 +22,15 @@
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
+#define CONTACT_NAME_MENU_TITLE		AILocalizedString(@"Contact Name Format",nil)
+#define ALIAS						AILocalizedString(@"Alias",nil)
+#define ALIAS_SCREENNAME			AILocalizedString(@"Alias (Screen Name)",nil)
+#define SCREENNAME_ALIAS			AILocalizedString(@"Screen Name (Alias)",nil)
+#define SCREENNAME					AILocalizedString(@"Screen Name",nil)
+
 @interface AIAliasSupportPlugin (PRIVATE)
 - (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;
+- (NSMenu *)_contactNameMenu;
 @end
 
 @implementation AIAliasSupportPlugin
@@ -47,10 +54,10 @@
 									   name:Preference_GroupChanged 
 									 object:nil];
 
-    prefs = [[AIAliasSupportPreferences displayFormatPreferences] retain];
+    //prefs = [[AIAliasSupportPreferences displayFormatPreferences] retain];
 
     //load the formatting pref
-    displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue];
+    //displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue];
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
@@ -60,12 +67,26 @@
 														 delegate:self] retain];
     [[adium contactController] addContactInfoView:contactView];
     
+	//Create the menu item
+	menuItem_contactName = [[[NSMenuItem alloc] initWithTitle:CONTACT_NAME_MENU_TITLE
+												target:nil
+												action:nil
+										 keyEquivalent:@""] autorelease];
+	
+	//Add the menu item (which will have _contactNameMenu as its submenu)
+	[[adium menuController] addMenuItem:menuItem_contactName toLocation:LOC_View_Unnamed_A];
+	
+	menu_contactSubmenu = [[self _contactNameMenu] retain];
+	[menuItem_contactName setSubmenu:menu_contactSubmenu];
+
     activeListObject = nil;
 }
 
 - (void)uninstallPlugin
 {
     [[adium contactController] unregisterListObjectObserver:self];
+	
+	[menu_contactSubmenu release];
 }
 
 - (IBAction)setAlias:(id)sender
@@ -83,6 +104,11 @@
         //Save the alias
         [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
     }
+}
+
+-(IBAction)changeFormat:(id)sender
+{
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
 }
 
 #warning Evan: We are not configuring the alias field properly when the contact switches.  I am not sure why not.
@@ -196,6 +222,45 @@
 	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
 	
 	return(modifiedAttributes);
+}
+
+- (NSMenu *)_contactNameMenu
+{
+	
+	NSMenu		*choicesMenu;
+	NSMenuItem  *menuItem;
+	
+	choicesMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ALIAS
+                                           target:self
+                                           action:@selector(changeFormat:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setTag:DISPLAY_NAME];
+    [choicesMenu addItem:menuItem];
+	
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ALIAS_SCREENNAME
+                                           target:self
+                                           action:@selector(changeFormat:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setTag:DISPLAY_NAME_SCREEN_NAME];
+    [choicesMenu addItem:menuItem];
+	
+    menuItem = [[[NSMenuItem alloc] initWithTitle:SCREENNAME_ALIAS
+                                           target:self
+                                           action:@selector(changeFormat:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setTag:SCREEN_NAME_DISPLAY_NAME];
+    [choicesMenu addItem:menuItem];
+	
+    menuItem = [[[NSMenuItem alloc] initWithTitle:SCREENNAME
+                                           target:self
+                                           action:@selector(changeFormat:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setTag:SCREEN_NAME];
+    [choicesMenu addItem:menuItem];
+	
+	return choicesMenu;
 }
 
 @end
