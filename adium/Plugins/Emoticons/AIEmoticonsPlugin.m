@@ -637,4 +637,9 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
     [self addEmoticonsWithPath:[defaultPath stringByAppendingString:@"/Smiley15.png"] andReturnDelimitedString:@"8-)\r8)"];
 }
 
+- (NSArray *)getEmoticons
+{
+    return [NSMutableArray arrayWithArray:emoticons];
+}
+
 @end

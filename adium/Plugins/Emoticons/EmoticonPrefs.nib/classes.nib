@@ -7,6 +7,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_enable" = NSButton; 
+                "table_curEmoticons" = NSTableView; 
                 "table_packList" = NSTableView; 
                 "text_packInfo" = NSTextView; 
                 "view_prefView" = NSView; 
