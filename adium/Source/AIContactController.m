@@ -47,7 +47,6 @@
 {
     //Load the contact list
     contactList = [[self loadContactList] retain];
-    [self updateListForObject:contactList saveChanges:NO];
 
     //Create a dynamic strangers group
     strangerGroup = [self createGroupNamed:STRANGER_GROUP_NAME inGroup:contactList];
@@ -413,7 +412,19 @@
 //Registers code to observe handle status changes
 - (void)registerHandleObserver:(id <AIHandleObserver>)inObserver
 {
+    NSEnumerator	*enumerator;
+    AIContactHandle	*contact;
+    
     [handleObserverArray addObject:inObserver];
+
+    //Let the handle observer process all existing contacts
+    enumerator = [[self allContactsInGroup:nil subgroups:YES ownedBy:nil] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+        if([inObserver updateHandle:contact keys:nil]){
+            [self updateListForObject:contact saveChanges:NO];
+        }
+    }
+
 }
 
 //Called when a handle's status changes
@@ -595,13 +606,21 @@
 //Load the contact list from disk
 - (AIContactGroup *)loadContactList
 {
-    NSDictionary	*saveDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST];
-    
+    NSDictionary	*saveDict;
+    AIContactGroup	*contactListGroup;
+
+    //Load & build the list
+    saveDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST];    
     if(!saveDict){
-        return([AIContactGroup contactGroupWithName:CONTACT_LIST_GROUP_NAME]);
+        contactListGroup = [AIContactGroup contactGroupWithName:CONTACT_LIST_GROUP_NAME];
     }else{
-        return([self createGroupFromDict:saveDict]);
+        contactListGroup = [self createGroupFromDict:saveDict];
     }
+
+    //Sort the list
+    [contactListGroup sortGroupAndSubGroups:YES];
+
+    return(contactListGroup);
 }
 
 //Create a group from the passed dictionary
