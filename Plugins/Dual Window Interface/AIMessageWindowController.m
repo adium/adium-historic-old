@@ -641,16 +641,27 @@
 {
 	//If our selectedTab has changed since the last validation call, update the listObject
 	if(toolbar_selectedTabChanged){
+		AIChat			*chat;
 		AIListObject	*listObject;
 		NSImage			*image;
 		
-		listObject = [[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] listObject];
-		image = [listObject userIcon];
+		chat = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat];
 		
-		//Use the serviceIcon if no image can be found
-		if(!image) image = [AIServiceIcons serviceIconForObject:listObject
-														   type:AIServiceIconLarge
-													  direction:AIIconNormal];
+		if((listObject = [chat listObject]) && ![chat name]){
+			image = [listObject userIcon];
+			
+			//Use the serviceIcon if no image can be found
+			if(!image) image = [AIServiceIcons serviceIconForObject:listObject
+															   type:AIServiceIconLarge
+														  direction:AIIconNormal];
+		}else{
+			//If we have no listObject or we have a name, we are a group chat and
+			//should use the account's service icon
+			image = [AIServiceIcons serviceIconForObject:[chat account]
+													type:AIServiceIconLarge
+											   direction:AIIconNormal];
+		}
+		
 		[(ESFlexibleToolbarItem *)[inToolbarItem view] setImage:image];
 	
 		toolbar_selectedTabChanged = NO;
