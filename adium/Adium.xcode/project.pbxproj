@@ -8835,7 +8835,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				7EF8E7DE066311D70044E80C,
+				C4FB7DA5066322E000C493F8,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -18992,21 +18992,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		7EF8E7DE066311D70044E80C = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 7EF8EA68066311F70044E80C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7EF8EA68066311F70044E80C = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 //7E0
 //7E1
 //7E2
@@ -20418,6 +20403,21 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		C4FB7DA5066322E000C493F8 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = C4FB7FF9066322F300C493F8;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4FB7FF9066322F300C493F8 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 //C40
 //C41

@@ -17,7 +17,6 @@
 #import "AIDefaultFormattingPlugin.h"
 
 @interface AIDefaultFormattingPreferences (PRIVATE)
-- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 - (void)changeFont:(id)sender;
 @end
 
@@ -40,7 +39,7 @@
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
     
     //Font
-    [self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
+    [textField_desiredFont setFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont]];
     
     //Text and background
     [colorPopUp_textColor setColor:[[preferenceDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor]];
@@ -83,23 +82,9 @@
     NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
 
     //Update the displayed font string & preferences
-    [self showFont:contactListFont inField:textField_desiredFont];
+    [textField_desiredFont setFont:contactListFont];
     [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING];
 }
 
-//Display the font name in our text field
-- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
-{
-    if(inFont){
-        [inTextField setStringValue:[NSString stringWithFormat:@"%@ %g", [inFont fontName], [inFont pointSize]]];
-    }else{
-        [inTextField setStringValue:@""];
-    }
-}
-
-
-
 @end
-
-
 

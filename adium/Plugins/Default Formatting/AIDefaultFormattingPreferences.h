@@ -14,9 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @class AIColorSelectionPopUpButton;
+@class JVFontPreviewField;
 
 @interface AIDefaultFormattingPreferences : AIPreferencePane {
-    IBOutlet	NSTextField                     *textField_desiredFont;
+    IBOutlet	JVFontPreviewField              *textField_desiredFont;
     IBOutlet	NSButton                        *button_setFont;
     IBOutlet	AIColorSelectionPopUpButton	*colorPopUp_textColor;
     IBOutlet	AIColorSelectionPopUpButton	*colorPopUp_backgroundColor;
