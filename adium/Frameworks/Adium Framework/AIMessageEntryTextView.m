@@ -147,7 +147,7 @@ static NSImage *pushIndicatorImage = nil;
     }
     
     //reset any link attribs if they exist
-    if((0 == [self selectedRange].location) && (0 == [self selectedRange].length)){
+    if((0 == [self selectedRange].location) && (0 == [self selectedRange].length) && [self defaultTypingAttributes]){
         [self resetToDefaultTypingAttributes];
     }
         
