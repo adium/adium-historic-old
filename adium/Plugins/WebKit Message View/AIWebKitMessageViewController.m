@@ -7,6 +7,7 @@
 
 #import "AIWebKitMessageViewController.h"
 
+#define NEW_CONTENT_RETRY_DELAY 0.01
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
@@ -14,6 +15,7 @@
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
+- (void)processNewContent;
 @end
 
 @implementation AIWebKitMessageViewController
@@ -30,6 +32,9 @@
     //init
     [super init];
     previousContent = nil;
+	newContentTimer = nil;
+	webViewIsReady = NO;
+	newContent = [[NSMutableArray alloc] init];
 	
 	//Observe content
 	[[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:inChat];
@@ -39,6 +44,7 @@
 								   frameName:nil
 								   groupName:nil];
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+	[webView setFrameLoadDelegate:self];
 	
 	//We'd load this information from a file or plist or something
 	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
@@ -72,6 +78,8 @@
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
+	[newContent release];
+	[newContentTimer invalidate]; [newContentTimer release];
 	
 	[super dealloc];
 }
@@ -84,23 +92,59 @@
 - (void)contentObjectAdded:(NSNotification *)notification
 {
 	AIContentObject		*content = [[notification userInfo] objectForKey:@"Object"];
-	BOOL				contentIsSimilar = NO;
-	
-	if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
-		contentIsSimilar = YES;
+
+	//Add
+	[newContent addObject:content];
+	[self processNewContent];
+}
+
+- (void)processNewContent
+{
+	while(webViewIsReady && [newContent count]){
+		AIContentObject *content = [newContent objectAtIndex:0];
+		BOOL			contentIsSimilar = NO;
+		
+		//
+		if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
+			contentIsSimilar = YES;
+		}
+
+		//
+		if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+			[self _addContentMessage:(AIContentMessage *)content similar:contentIsSimilar];
+		}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+			[self _addContentStatus:(AIContentStatus *)content similar:contentIsSimilar];
+		}
+		
+		//
+		[previousContent release];
+		previousContent = [content retain];
+
+		//de-queue
+		[newContent removeObjectAtIndex:0];
 	}
 	
-	//
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        [self _addContentMessage:(AIContentMessage *)content similar:contentIsSimilar];
-    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
-        [self _addContentStatus:(AIContentStatus *)content similar:contentIsSimilar];
-    }
-	
-	//
-	[previousContent release];
-	previousContent = [content retain];
+	//cleanup previous 
+	if(newContentTimer){
+		[newContentTimer invalidate]; [newContentTimer release];
+		newContentTimer = nil;
+	}
+
+	//if not added, Try to add this content again in a little bit
+	if([newContent count]){
+		newContentTimer = [[NSTimer scheduledTimerWithTimeInterval:NEW_CONTENT_RETRY_DELAY
+															target:self
+														  selector:@selector(processNewContent)
+														  userInfo:nil
+														   repeats:NO] retain]; 
+	}
 }
+
+
+
+
+
+
 
 
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar
@@ -178,5 +222,15 @@
 
 	return(inString);
 }
+
+
+//----WebFrameLoadDelegate
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
+{
+	webViewIsReady = YES;
+	NSLog(@"Ready");
+}
+
+
 
 @end
