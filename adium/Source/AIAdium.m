@@ -400,7 +400,7 @@ void Adium_HandleSignal(int i){
 {
 	NSFileManager *manager = [NSFileManager defaultManager];
 	NSString *path = NULL;
-	NSMutableArray *pathArray = [NSMutableArray arrayWithCapacity:3];
+	NSMutableArray *pathArray = [NSMutableArray arrayWithCapacity:4];
 
 	NSString *adiumFolderName = ADIUM_SUBFOLDER_OF_APP_SUPPORT;
 	if(name) {
