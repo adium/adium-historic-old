@@ -141,28 +141,27 @@ DeclareString(Idle);
  */
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
-    NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
+	NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
+	BOOL shouldNotify = NO;
 
-    if(idleSince){ //Set the handle's 'idle' value
-        int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
+	if(idleSince){ //Set the handle's 'idle' value
+		int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
 		
 		/* They are idle; a non-zero idle time is needed.  We'll treat them as generically idle until this updates */
 		if (idle == 0){
 			idle = -1;
 		}
 
-		NSNumber	*oldIdle = [inObject statusObjectForKey:@"Idle"];
-		
 		[inObject setStatusObject:[NSNumber numberWithInt:idle]
 						   forKey:@"Idle"
 						   notify:NotifyLater];
-        
-    }else{ //Remove its idle value
+
+	}else{ //Remove its idle value
 		[inObject setStatusObject:nil
 						   forKey:@"Idle"
 						   notify:NotifyLater];
 		shouldNotify = YES;
-    }
+	}
 
 	//Apply the change
 	if(shouldNotify){
@@ -181,16 +180,16 @@ DeclareString(Idle);
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    int 		idle = [inObject integerStatusObjectForKey:@"Idle"];
-    NSString	*entry = nil;
+	int 		idle = [inObject integerStatusObjectForKey:@"Idle"];
+	NSString	*entry = nil;
 
-    if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
+	if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
 		entry = AILocalizedString(@"Idle",nil);
-    }else if(idle != 0){
+	}else if(idle != 0){
 		entry = AILocalizedString(@"Idle Time",nil);
-    }
+	}
 
-    return(entry);
+	return(entry);
 }
 
 /*!
