@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {
+            ACTIONS = {deleteState = id; editState = id; newState = id; }; 
+            CLASS = AIPresetStatusWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_deleteState" = NSButton; 
+                "button_editState" = NSButton; 
+                "scrollView_stateList" = NSScrollView; 
+                "tableView_stateList" = NSTableView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
