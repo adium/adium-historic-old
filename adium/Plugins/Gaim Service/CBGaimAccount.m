@@ -1455,7 +1455,7 @@
 	
 	if (proxyType == Gaim_Proxy_None){
 		//No proxy
-		gaim_proxy_info_set_type(GAIM_PROXY_NONE, gaimAccountProxyType);
+		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
 		
 		[self continueConnectWithConfiguredProxy];
 		
