@@ -1,0 +1,16 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = MSNAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "textField_email" = NSTextField; 
+                "textField_friendlyName" = NSTextField; 
+                "view_accountView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

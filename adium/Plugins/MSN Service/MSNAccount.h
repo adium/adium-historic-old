@@ -24,7 +24,7 @@
     int			connectionPhase;	// Steps involved in signing on
     NSTimer		*stepTimer;		// Keep track of a Timer
 
-    NSString		*screenName;		// Current signed on actualSN
+    NSString		*email;		// Current signed on actualSN
     NSString		*password;		// Current signed on password
     NSString		*friendlyName;		// Current Friendly name
     

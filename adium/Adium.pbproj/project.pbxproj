@@ -11244,11 +11244,37 @@
 		9E1D5C54048EB63C00415B22 = {
 			isa = PBXFileReference;
 			name = libcrypto.dylib;
-			path = /usr/lib/libcrypto.dylib;
+			path = /usr/lib/libcrypto.0.9.dylib;
 			refType = 0;
 		};
 		9E1D5C55048EB63C00415B22 = {
 			fileRef = 9E1D5C54048EB63C00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E23C02604D996D9008A581D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MSNAccountViewController.h;
+			path = "Plugins/MSN Service/MSNAccountViewController.h";
+			refType = 4;
+		};
+		9E23C02704D996D9008A581D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MSNAccountViewController.m;
+			path = "Plugins/MSN Service/MSNAccountViewController.m";
+			refType = 4;
+		};
+		9E23C02804D996D9008A581D = {
+			fileRef = 9E23C02604D996D9008A581D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E23C02904D996D9008A581D = {
+			fileRef = 9E23C02704D996D9008A581D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -11260,6 +11286,7 @@
 				9E6C448D048D682100415B22,
 				9EC861AA0494968E00415B22,
 				9EF608C604CDFF9000415B25,
+				9E23C02804D996D9008A581D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11267,6 +11294,7 @@
 		9E2E3069046CA9BF00415B22 = {
 			buildActionMask = 2147483647;
 			files = (
+				9ECA6F2704D846410083F70D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11278,6 +11306,7 @@
 				9E6C448E048D682200415B22,
 				9EC861AB0494968E00415B22,
 				9EF608C704CDFF9000415B25,
+				9E23C02904D996D9008A581D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11377,11 +11406,14 @@
 				9E2E3076046CAB0000415B22,
 				9E2E307D046CB05F00415B22,
 				9E2E307E046CB05F00415B22,
+				9E23C02604D996D9008A581D,
+				9E23C02704D996D9008A581D,
 				9EF608C404CDFF9000415B25,
 				9EF608C504CDFF9000415B25,
 				9EC861A80494968E00415B22,
 				9EC861A90494968E00415B22,
-				9E1D5C54048EB63C00415B22,
+				9ECA6F2904D846890083F70D,
+				9ECA6F2804D846680083F70D,
 			);
 			isa = PBXGroup;
 			name = MSN;
@@ -11806,6 +11838,34 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		9ECA6F2604D846410083F70D = {
+			isa = PBXFileReference;
+			name = MSNAccountView.nib;
+			path = "Plugins/MSN Service/MSNAccountView.nib";
+			refType = 4;
+		};
+		9ECA6F2704D846410083F70D = {
+			fileRef = 9ECA6F2604D846410083F70D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9ECA6F2804D846680083F70D = {
+			children = (
+				9E1D5C54048EB63C00415B22,
+			);
+			isa = PBXGroup;
+			name = Libraries;
+			refType = 4;
+		};
+		9ECA6F2904D846890083F70D = {
+			children = (
+				9ECA6F2604D846410083F70D,
+			);
+			isa = PBXGroup;
+			name = Interfaces;
+			refType = 4;
 		};
 		9EDAC4E703D5160100415B22 = {
 			buildActionMask = 2147483647;
