@@ -259,5 +259,10 @@
 	[[adium soundController] playSoundAtPath:soundPath];
 }
 
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return(NO);
+}
+
 @end
 
