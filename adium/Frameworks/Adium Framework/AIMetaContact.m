@@ -87,7 +87,7 @@
     while(contact = [enumerator nextObject]){
 		[array setObject:[contact statusObjectForKey:inKey] withOwner:contact];
     }
-	
+		
     return([array autorelease]);
 }
 

@@ -16,6 +16,8 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
+#define DISPLAY_ORDERING	FALSE
+
 @interface AIListObject (PRIVATE)
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 @end
@@ -381,7 +383,7 @@
         outName = [self serverDisplayName];
     }
 	
-    return(outName);
+    return (outName);
 }
 
 //Long display name, influenced by plugins
@@ -396,7 +398,7 @@
     } else{
         outName = [self displayName];
     }
-    return (outName);
+    return (DISPLAY_ORDERING ? [outName stringByAppendingFormat:@" (%0.2f)",orderIndex] : outName);
 }
 
 @end

@@ -24,7 +24,8 @@
     contact = [inContact retain];
     account = [inAccount retain];
     type = Unknown_FileTransfer;
-    
+    delegate = nil;
+	
     return(self);
 }
 
@@ -63,6 +64,9 @@
 {
     [localFilename release]; localFilename = nil;
     localFilename = [inLocalFilename retain];
+	
+	if (delegate)
+		[delegate fileTransfer:self didSetLocalFilename:localFilename];
 }
 - (NSString *)localFilename
 {
@@ -72,6 +76,9 @@
 - (void)setSize:(unsigned int)inSize
 {
     size = inSize;
+	
+	if (delegate)
+		[delegate fileTransfer:self didSetSize:size];
 }
 - (unsigned int)size
 {
@@ -81,6 +88,9 @@
 - (void)setType:(FileTransferType)inType
 {
     type = inType;
+	
+	if (delegate)
+		[delegate fileTransfer:self didSetType:type];
 }
 - (FileTransferType)type
 {
@@ -100,6 +110,9 @@
             bytesSent = inPercent * size;
     } else
         bytesSent = inBytesSent;
+	
+	if (delegate)
+		[delegate gotUpdateForFileTransfer:self];
 }
 - (float)percentDone
 {
@@ -120,4 +133,12 @@
     return accountData;   
 }
 
+- (void)setDelegate:(id <FileTransferDelegate>)inDelegate
+{
+	delegate = inDelegate;
+}
+- (id <FileTransferDelegate>)delegate;
+{
+	return delegate;
+}
 @end
