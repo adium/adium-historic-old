@@ -20,9 +20,9 @@
 #define IDLE_ACTIVE_INTERVAL		30.0	//Checking delay when the user is active
 #define IDLE_INACTIVE_INTERVAL		1.0	//Checking delay when the user is idle
 
-#define IDLE_REMOVE_IDLE_TITLE		NSLocalizedString(@"Remove Idle","Remove the manual idle")
-#define IDLE_SET_CUSTOM_IDLE_TITLE	NSLocalizedString(@"Set Custom Idle...","Set a custom idle")
-#define IDLE_SET_IDLE_TITLE			NSLocalizedString(@"Set Idle",nil)
+#define IDLE_REMOVE_IDLE_TITLE		AILocalizedString(@"Remove Idle","Remove the manual idle")
+#define IDLE_SET_CUSTOM_IDLE_TITLE	AILocalizedString(@"Set Custom Idle...","Set a custom idle")
+#define IDLE_SET_IDLE_TITLE			AILocalizedString(@"Set Idle",nil)
 
 #define DEFAULT_AWAY_MESSAGE		@""
 

@@ -17,13 +17,13 @@
 #import "AINewContactWindowController.h"
 #import "AINewGroupWindowController.h"
 
-#define ADD_CONTACT   				NSLocalizedString(@"Add Contact...",nil)
-#define ADD_CONTACT_TO_GROUP		NSLocalizedString(@"Add Contact To Group...",nil)
-#define ADD_GROUP   				NSLocalizedString(@"Add Group...",nil)
-#define DELETE_CONTACT   			NSLocalizedString(@"Delete Selection",nil)
-#define DELETE_CONTACT_CONTEXT		NSLocalizedString(@"Delete",nil)
-#define RENAME_GROUP				NSLocalizedString(@"Rename Group...",nil)
-#define INVITE_CONTACT				NSLocalizedString(@"Invite to This Chat...",nil)
+#define ADD_CONTACT   				AILocalizedString(@"Add Contact...",nil)
+#define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group...",nil)
+#define ADD_GROUP   				AILocalizedString(@"Add Group...",nil)
+#define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
+#define DELETE_CONTACT_CONTEXT		AILocalizedString(@"Delete",nil)
+#define RENAME_GROUP				AILocalizedString(@"Rename Group...",nil)
+#define INVITE_CONTACT				AILocalizedString(@"Invite to This Chat...",nil)
 
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)deleteFromArray:(NSArray *)array;

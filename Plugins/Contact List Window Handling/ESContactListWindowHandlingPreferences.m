@@ -8,7 +8,7 @@
 #import "ESContactListWindowHandlingPreferences.h"
 #import "ESContactListWindowHandlingPlugin.h"
 
-#define CLWH_PREF_TITLE	NSLocalizedString(@"Window Handling","Contact List Window Handling")
+#define CLWH_PREF_TITLE	AILocalizedString(@"Window Handling","Contact List Window Handling")
 #define CLWH_PREF_NIB	@"ContactListWindowHandlingPrefs"
 
 @interface ESContactListWindowHandlingPreferences (PRIVATE)

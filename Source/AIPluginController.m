@@ -279,7 +279,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 						NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
 					}
 				} else {
-					NSLog(NSLocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
+					NSLog(AILocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
 				}
 			NS_HANDLER	// Handle a raised exception
 				NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
@@ -295,10 +295,10 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 					[[owner notificationCenter] removeObserver:plugin];
 					[[NSNotificationCenter defaultCenter] removeObserver:plugin];
 				}
-				NSString	*errorPartOne = NSLocalizedString(@"The","definite article");
-				NSString	*errorPartTwo = NSLocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory","part of the plugin error message");
-				NSString	*errorPartThree = NSLocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
-				[[owner interfaceController] handleErrorMessage:(NSLocalizedString(@"Plugin load error",nil))
+				NSString	*errorPartOne = AILocalizedString(@"The","definite article");
+				NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory","part of the plugin error message");
+				NSString	*errorPartThree = AILocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
+				[[owner interfaceController] handleErrorMessage:(AILocalizedString(@"Plugin load error",nil))
 												withDescription:[NSString stringWithFormat:@"%@ \"%@\" %@ (\"%@\")%@.", errorPartOne,
 																														[pluginName stringByDeletingPathExtension],
 																														errorPartTwo,

@@ -40,7 +40,7 @@
     return(AIPref_Advanced_Other);
 }
 - (NSString *)label{
-    return(NSLocalizedString(@"Themes",nil));
+    return(AILocalizedString(@"Themes",nil));
 }
 - (NSString *)nibName{
     return(@"ThemesPrefs2");
@@ -111,9 +111,9 @@
 			
 			[NSApp stopModal];
 		}else{
-            NSRunAlertPanel(NSLocalizedString(@"No theme name entered",nil),
-							NSLocalizedString(@"A valid name is required to save a theme.",nil),
-							NSLocalizedString(@"Okay",nil)
+            NSRunAlertPanel(AILocalizedString(@"No theme name entered",nil),
+							AILocalizedString(@"A valid name is required to save a theme.",nil),
+							AILocalizedString(@"Okay",nil)
 							,nil,nil);
         }
     }
@@ -215,11 +215,11 @@ int themeSort(id themeDictA, id themeDictB, void *context)
 
 -(IBAction)deleteTheme:(id)sender
 {
-    NSString *warningText = [NSString stringWithFormat:NSLocalizedString(@"Do you really want to permanently delete %@?",nil), [[self selectedThemePath] lastPathComponent]];
-    int returnCode = NSRunAlertPanel(NSLocalizedString(@"Delete Theme",nil), 
+    NSString *warningText = [NSString stringWithFormat:AILocalizedString(@"Do you really want to permanently delete %@?",nil), [[self selectedThemePath] lastPathComponent]];
+    int returnCode = NSRunAlertPanel(AILocalizedString(@"Delete Theme",nil), 
 									 warningText, 
-									 NSLocalizedString(@"Delete",nil), 
-									 NSLocalizedString(@"Cancel",nil),
+									 AILocalizedString(@"Delete",nil), 
+									 AILocalizedString(@"Cancel",nil),
 									 nil);
 	if(returnCode == 1)
 	{
@@ -235,15 +235,15 @@ int themeSort(id themeDictA, id themeDictB, void *context)
 - (IBAction)applyTheme:(id)sender
 {
     if([themes count] == 0) {
-        NSRunAlertPanel(NSLocalizedString(@"No themes present",nil),
-						NSLocalizedString(@"To apply a theme please install one and select it first.",nil),
-						NSLocalizedString(@"Okay",nil),nil,nil);
+        NSRunAlertPanel(AILocalizedString(@"No themes present",nil),
+						AILocalizedString(@"To apply a theme please install one and select it first.",nil),
+						AILocalizedString(@"Okay",nil),nil,nil);
     } else {  
 		NSString *selectedThemePath = [self selectedThemePath];
 		
 		//First, create the last theme used theme if we aren't restoring to it
-		if (![[[selectedThemePath lastPathComponent] stringByDeletingPathExtension] isEqualToString:NSLocalizedString(@"Last Theme Used",nil)] != NSOrderedSame){
-			[self createThemeNamed:NSLocalizedString(@"Last Theme Used",nil) by:@"Adium" version:@""];			
+		if (![[[selectedThemePath lastPathComponent] stringByDeletingPathExtension] isEqualToString:AILocalizedString(@"Last Theme Used",nil)] != NSOrderedSame){
+			[self createThemeNamed:AILocalizedString(@"Last Theme Used",nil) by:@"Adium" version:@""];			
 		}
 		
 		//Now apply the selected theme

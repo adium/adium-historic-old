@@ -23,9 +23,9 @@
     //SafariLink
 	NSToolbarItem	*toolbarItem;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SAFARI_LINK_IDENTIFER
-														  label:NSLocalizedString(@"Safari Link",nil)
-												   paletteLabel:NSLocalizedString(@"Insert Safari Link",nil)
-														toolTip:NSLocalizedString(@"Insert link to active page in Safari",nil)
+														  label:AILocalizedString(@"Safari Link",nil)
+												   paletteLabel:AILocalizedString(@"Insert Safari Link",nil)
+														toolTip:AILocalizedString(@"Insert link to active page in Safari",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
 													itemContent:[NSImage imageNamed:@"Safari" forClass:[self class]]

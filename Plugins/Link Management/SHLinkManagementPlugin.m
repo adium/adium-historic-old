@@ -8,8 +8,8 @@
 #import "SHLinkEditorWindowController.h"
 #import "SHAutoValidatingTextView.h"
 
-#define ADD_LINK_TITLE			NSLocalizedString(@"Add Link...",nil)
-#define EDIT_LINK_TITLE			NSLocalizedString(@"Edit Link...",nil)
+#define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
+#define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
 
 @interface SHLinkManagementPlugin (PRIVATE)
 - (BOOL)textViewSelectionIsLink:(NSTextView *)textView;
@@ -100,9 +100,9 @@
     }
     
     toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"LinkEditor"
-                                                           label:NSLocalizedString(@"Link",nil)
-                                                    paletteLabel:NSLocalizedString(@"Insert Link",nil)
-                                                         toolTip:NSLocalizedString(@"Add/Edit Hyperlink",nil)
+                                                           label:AILocalizedString(@"Link",nil)
+                                                    paletteLabel:AILocalizedString(@"Insert Link",nil)
+                                                         toolTip:AILocalizedString(@"Add/Edit Hyperlink",nil)
                                                           target:self
                                                  settingSelector:@selector(setImage:)
                                                      itemContent:[NSImage imageNamed:@"linkToolbar" forClass:[self class]]

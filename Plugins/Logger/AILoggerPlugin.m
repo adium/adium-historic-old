@@ -28,9 +28,9 @@
 #define LOG_INDEX_STATUS_INTERVAL   20      //Interval before updating the log indexing status
 #define LOG_CLEAN_SAVE_INTERVAL     500     //Number of logs to index continuiously before saving the dirty array and index
 
-#define LOG_VIEWER	    			NSLocalizedString(@"Log Viewer",nil)
-#define VIEW_CONTACTS_LOGS  		NSLocalizedString(@"View Contact's Logs",nil)
-#define VIEW_LOGS	    			NSLocalizedString(@"View Logs",nil)
+#define LOG_VIEWER	    			AILocalizedString(@"Log Viewer",nil)
+#define VIEW_CONTACTS_LOGS  		AILocalizedString(@"View Contact's Logs",nil)
+#define VIEW_LOGS	    			AILocalizedString(@"View Logs",nil)
 
 #define	CURRENT_LOG_VERSION			2 		//Version of the log index.  Increase this number to reset everyones index.
 

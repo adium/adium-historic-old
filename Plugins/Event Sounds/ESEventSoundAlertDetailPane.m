@@ -8,7 +8,7 @@
 #import "ESEventSoundAlertDetailPane.h"
 #import "AIEventSoundsPlugin.h"
 
-#define PLAY_A_SOUND    			NSLocalizedString(@"Play a sound",nil)
+#define PLAY_A_SOUND    			AILocalizedString(@"Play a sound",nil)
 
 @interface ESEventSoundAlertDetailPane (PRIVATE)
 - (NSMenu *)soundListMenu;

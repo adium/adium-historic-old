@@ -19,7 +19,7 @@
 #import "AISCLViewController.h"
 
 
-//#define	CONTACT_LIST_EMPTY_MESSAGE      NSLocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
+//#define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
 #define DESIRED_MIN_WIDTH			40
 #define DESIRED_MIN_HEIGHT			20
 #define EMPTY_HEIGHT				-2

@@ -31,9 +31,9 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:ACCOUNT_CONNECTED]){
-		description = NSLocalizedString(@"Connected",nil);
+		description = AILocalizedString(@"Connected",nil);
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
-		description = NSLocalizedString(@"Disconnected",nil);
+		description = AILocalizedString(@"Disconnected",nil);
 	}else{
 		description = @"";	
 	}

@@ -23,7 +23,7 @@
 #define DEFAULT_AWAY_MESSAGE		@""
 #define KEY_QUICK_AWAY_MESSAGE		@"Quick Away Message"
 
-#define NO_PRESET_AWAY				NSLocalizedString(@"None",nil)
+#define NO_PRESET_AWAY				AILocalizedString(@"None",nil)
 
 @interface AIEnterAwayWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
