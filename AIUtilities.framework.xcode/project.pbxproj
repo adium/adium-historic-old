@@ -226,6 +226,14 @@
 				0750FF43073A0682000D8A1F,
 				0750FF44073A0682000D8A1F,
 				0750FF45073A0682000D8A1F,
+				0750FF58073A0715000D8A1F,
+				0750FF59073A0715000D8A1F,
+				34A2EBE0073B3BCC0042C391,
+				34A2EBE1073B3BCC0042C391,
+				34A2EBE2073B3BCD0042C391,
+				34A2EBE3073B3BCD0042C391,
+				34A2EBE6073B3BCD0042C391,
+				34A2EBE7073B3BCD0042C391,
 			);
 			isa = PBXGroup;
 			name = "AppleScript-wrapper object, better than NSAppleScript";
@@ -261,16 +269,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		0750FF62073A0738000D8A1F = {
-			children = (
-				0750FF58073A0715000D8A1F,
-				0750FF59073A0715000D8A1F,
-			);
-			isa = PBXGroup;
-			name = "Component-instance wrapper";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		0750FFD0073A0B89000D8A1F = {
 			fileEncoding = 4;
@@ -4285,6 +4283,96 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34A2EBE0073B3BCC0042C391 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSURL+NDCarbonUtilities.m";
+			path = "Frameworks/AIUtilities Framework/NSURL+NDCarbonUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A2EBE1073B3BCC0042C391 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSURL+NDCarbonUtilities.h";
+			path = "Frameworks/AIUtilities Framework/NSURL+NDCarbonUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A2EBE2073B3BCD0042C391 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSString+NDCarbonUtilities.m";
+			path = "Frameworks/AIUtilities Framework/NSString+NDCarbonUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A2EBE3073B3BCD0042C391 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSString+NDCarbonUtilities.h";
+			path = "Frameworks/AIUtilities Framework/NSString+NDCarbonUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A2EBE6073B3BCD0042C391 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSAppleEventDescriptor+NDAppleScriptObject.m";
+			path = "Frameworks/AIUtilities Framework/NSAppleEventDescriptor+NDAppleScriptObject.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A2EBE7073B3BCD0042C391 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSAppleEventDescriptor+NDAppleScriptObject.h";
+			path = "Frameworks/AIUtilities Framework/NSAppleEventDescriptor+NDAppleScriptObject.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A2EBE8073B3BCD0042C391 = {
+			fileRef = 34A2EBE0073B3BCC0042C391;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A2EBE9073B3BCD0042C391 = {
+			fileRef = 34A2EBE1073B3BCC0042C391;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A2EBEA073B3BCD0042C391 = {
+			fileRef = 34A2EBE2073B3BCD0042C391;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A2EBEB073B3BCD0042C391 = {
+			fileRef = 34A2EBE3073B3BCD0042C391;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A2EBEE073B3BCD0042C391 = {
+			fileRef = 34A2EBE6073B3BCD0042C391;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A2EBEF073B3BCD0042C391 = {
+			fileRef = 34A2EBE7073B3BCD0042C391;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //340
 //341
 //342
@@ -4679,7 +4767,6 @@
 			children = (
 				0750FF4B073A0686000D8A1F,
 				4BD1EFBF06D2662600B3975E,
-				0750FF62073A0738000D8A1F,
 				4BD1F2DB06D26A2E00B3975E,
 				4BD1F2AE06D2686200B3975E,
 				4BD1F36506D26FF800B3975E,
@@ -5335,6 +5422,9 @@
 				0750FF47073A0682000D8A1F,
 				0750FF5A073A0715000D8A1F,
 				0750FFD2073A0B89000D8A1F,
+				34A2EBE9073B3BCD0042C391,
+				34A2EBEB073B3BCD0042C391,
+				34A2EBEF073B3BCD0042C391,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5486,6 +5576,9 @@
 				0750FF48073A0682000D8A1F,
 				0750FF5B073A0715000D8A1F,
 				0750FFD3073A0B89000D8A1F,
+				34A2EBE8073B3BCD0042C391,
+				34A2EBEA073B3BCD0042C391,
+				34A2EBEE073B3BCD0042C391,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
