@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountListPreferencesPlugin.h"
-#import "AIAccountListPreferences.h"
+#import "AIAccountListWindowController.h"
 
 @implementation AIAccountListPreferencesPlugin
 
@@ -33,6 +33,11 @@
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 	
     preferences = [[AIAccountListPreferences preferencePaneForPlugin:self] retain];
+}
+
+- (IBAction)showAccountWindow:(id)sender
+{
+	[[AIAccountListWindowController accountListWindowController] showWindow:nil];
 }
 
 @end

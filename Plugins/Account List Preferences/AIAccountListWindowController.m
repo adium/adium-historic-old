@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIAccountListPreferences.h"
+#import "AIAccountListWindowController.h"
 
 #define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
 #define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
@@ -21,7 +21,9 @@
 #define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting...",nil)						//Menu item title
 #define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting...",nil)					//Menu item title
 
-@interface AIAccountListPreferences (PRIVATE)
+#define ACCOUNT_LIST_WINDOW_NIB				@"AccountListWindow"
+
+@interface AIAccountListWindowController (PRIVATE)
 - (void)configureViewForAccount:(AIAccount *)inAccount;
 - (void)configureViewForService:(AIService *)inService;
 - (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
@@ -34,21 +36,35 @@
 - (void)passwordReturnedForRegister:(NSString *)inPassword context:(id)inContext;
 @end
 
-@implementation AIAccountListPreferences
+@implementation AIAccountListWindowController
 
-//Preference pane properties
-- (PREFERENCE_CATEGORY)category{
-    return(AIPref_Accounts);
+AIAccountListWindowController *sharedAccountWindowInstance = nil;
++ (AIAccountListWindowController *)accountListWindowController
+{
+    if(!sharedAccountWindowInstance){
+        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:ACCOUNT_LIST_WINDOW_NIB];
+    }
+    return(sharedAccountWindowInstance);
 }
-- (NSString *)label{
-    return(AILocalizedString(@"Accounts",nil));
+
+//Init
+- (id)initWithWindowNibName:(NSString *)windowNibName
+{
+    [super initWithWindowNibName:windowNibName];
+
+    return(self);
 }
-- (NSString *)nibName{
-    return(@"AccountPrefView");
+
+//Dealloc
+- (void)dealloc
+{    
+    [super dealloc];
 }
+
+
 
 //Configure the preference view
-- (void)viewDidLoad
+- (void)windowDidLoad
 {
     //init
     accountViewController = nil;
@@ -75,8 +91,16 @@
 
 }
 
-//Preference view is closing
-- (void)viewWillClose
+//Close
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
+}
+
+//closing
+- (BOOL)windowShouldClose:(id)sender
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
@@ -91,7 +115,14 @@
 	
 	[configuredForAccount release]; configuredForAccount = nil;
     [accountViewController release]; accountViewController = nil;
+	
+	return(YES);
 }
+
+
+
+
+
 
 
 //Configuring ---------------------------------------------------------------------------------------------
@@ -126,6 +157,10 @@
 	//Insert the custom controls for this service
 	[self _removeCustomViewAndTabs];
 	[self _addCustomViewAndTabsForController:[inService accountView]];
+	
+	//Custom username string
+	NSString *userNameLabel = [accountViewController userNameLabel];
+	[textField_userNameLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
 	
 	//Restrict the account name field to valid characters and length
     [textField_accountName setFormatter:
@@ -187,7 +222,7 @@
 	[responderChainTimer release];
 	responderChainTimer = nil;
 	
-	if([view canDraw]){
+#warning hack	if([view canDraw]){
 		NSView	*accountView = [accountViewController view];
 		
 		//Name field goes to first control in account view
@@ -200,13 +235,13 @@
 		
 		//Account list goes to service menu
 		[tableView_accountList setNextKeyView:popupMenu_serviceList];
-	}else{
+/*	}else{
 		responderChainTimer = [[NSTimer scheduledTimerWithTimeInterval:0.001
 															   target:self
 															 selector:@selector(_configureResponderChain:)
 															 userInfo:nil
 															  repeats:NO] retain]; 
-	}
+	}*/
 }
 
 //Remove any existing custom views
@@ -408,7 +443,7 @@
 	
     //Configure our tableView
     cell = [[AIImageTextCell alloc] init];
-    [cell setFont:[NSFont systemFontOfSize:12]];
+    [cell setFont:[NSFont systemFontOfSize:13]];
     [[tableView_accountList tableColumnWithIdentifier:@"description"] setDataCell:cell];
 	[cell release];
 	
@@ -473,7 +508,7 @@
     targetAccount = [accountArray objectAtIndex:index];
     accountFormattedUID = [targetAccount formattedUID];
 
-    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[[self view] window], self, 
+    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[self window], self, 
 					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
 					  @"Delete the account %@?", [accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT);
 }
