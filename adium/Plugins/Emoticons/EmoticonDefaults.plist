@@ -4,5 +4,10 @@
 <dict>
 	<key>Enable</key>
 	<true/>
+	<key>bundle_pack_Default</key>
+	<dict>
+                <key>inUse</key>
+		<integer>1</integer>
+	</dict>
 </dict>
 </plist>
