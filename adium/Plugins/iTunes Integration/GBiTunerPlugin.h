@@ -8,7 +8,6 @@
 #define PREF_GROUP_ITUNER              @"iTunes Integration"
 
 @protocol AIContentFilter;
-@class GBiTunerPreferences;
 
 @interface GBiTunerPlugin : AIPlugin <AIContentFilter, AIStringFilter> {    
     NSMutableDictionary		*scriptDict;		//Lookup dict for script usage
