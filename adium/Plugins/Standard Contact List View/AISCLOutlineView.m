@@ -18,7 +18,8 @@
 #import "AISCLViewPlugin.h"
 #import "AISCLViewController.h"
 
-#define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
+
+//#define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
 #define DESIRED_MIN_WIDTH			40
 #define DESIRED_MIN_HEIGHT			20
 #define EMPTY_HEIGHT				-2
@@ -360,7 +361,35 @@
         return(nil);
     }
 }
-
+- (NSArray *)arrayOfListObjects
+{
+	NSMutableArray *listObjectArray = [NSMutableArray array];
+	
+	if ([NSApp isOnPantherOrBetter]){
+		NSIndexSet *indices = [self selectedRowIndexes];
+		unsigned int bufSize = [indices count];
+		unsigned int *buf = malloc(bufSize + 1);
+		unsigned int i;
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		
+		for(i = 0; i != bufSize; i++) {
+			unsigned int index = buf[i];
+			[listObjectArray addObject:[self itemAtRow:index]];
+		}
+		
+		free(buf);
+		
+	}else{
+		NSNumber *row;
+		NSEnumerator *enumerator = [self selectedRowEnumerator]; 
+		while (row = [enumerator nextObject]){
+			[listObjectArray addObject:[self itemAtRow:[row intValue]]]; 
+		} 
+	}
+	
+	return (listObjectArray);
+}
 
 //Custom font settings ------------------------------------------------------------------
 //We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.
@@ -546,7 +575,7 @@
 		if([nextEvent type] == NSLeftMouseUp){
 			[super mouseDown:theEvent];   
 			[super mouseUp:nextEvent];   
-		}else if([nextEvent type] == NSLeftMouseDraggedMask){
+		}else if([nextEvent type] == (NSEventType)NSLeftMouseDraggedMask){
 			[[self window] mouseDown:theEvent];
 			[[self window] mouseDragged:theEvent];
 		}else{
