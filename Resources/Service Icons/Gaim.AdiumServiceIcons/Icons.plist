@@ -33,9 +33,7 @@
 		<key>Trepia</key>
 		<string>trepia.png</string>
 		<key>Rendezvous</key>
-		<string>yahoo.png</string>
-		<key>Rendezvous</key>
-		<string>yahoo.png</string>
+		<string>rendezvous.png</string>
 		<key>Stress Test</key>
 		<string>yahoo.png</string>
 	</dict>
@@ -68,7 +66,7 @@
 		<key>Trepia</key>
 		<string>trepia-small.png</string>
 		<key>Rendezvous</key>
-		<string>yahoo-small.png</string>
+		<string>rendezvous-small.png</string>
 		<key>Stress Test</key>
 		<string>yahoo-small.png</string>
 	</dict>
@@ -101,7 +99,7 @@
 		<key>Trepia</key>
 		<string>trepia-small.png</string>
 		<key>Rendezvous</key>
-		<string>yahoo-small.png</string>
+		<string>rendezvous-small.png</string>
 		<key>Stress Test</key>
 		<string>yahoo-small.png</string>
 	</dict>
