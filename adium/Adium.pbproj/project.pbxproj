@@ -709,6 +709,57 @@
 			settings = {
 			};
 		};
+		4B037B79045B8E5600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILogImporter.h;
+			path = Plugins/Logger/AILogImporter.h;
+			refType = 4;
+		};
+		4B037B7A045B8E5600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILogImporter.m;
+			path = Plugins/Logger/AILogImporter.m;
+			refType = 4;
+		};
+		4B037B7B045B8E5600A8010A = {
+			fileRef = 4B037B79045B8E5600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B037B7C045B8E5600A8010A = {
+			fileRef = 4B037B7A045B8E5600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B037B7D045B904F00A8010A = {
+			isa = PBXFileReference;
+			name = LogImport.nib;
+			path = Plugins/Logger/LogImport.nib;
+			refType = 4;
+		};
+		4B037B7E045B904F00A8010A = {
+			fileRef = 4B037B7D045B904F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B037B7F045C05A600A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LoggerDefaults.plist;
+			path = Plugins/Logger/LoggerDefaults.plist;
+			refType = 4;
+		};
+		4B037B80045C05A600A8010A = {
+			fileRef = 4B037B7F045C05A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B04137C041111F200A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4967,6 +5018,32 @@
 			settings = {
 			};
 		};
+		4BD68227045B010D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILogViewerWindowController.h;
+			path = Plugins/Logger/AILogViewerWindowController.h;
+			refType = 4;
+		};
+		4BD68228045B010D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILogViewerWindowController.m;
+			path = Plugins/Logger/AILogViewerWindowController.m;
+			refType = 4;
+		};
+		4BD68229045B010D00A8010A = {
+			fileRef = 4BD68227045B010D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BD6822A045B010D00A8010A = {
+			fileRef = 4BD68228045B010D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BDDCA01041104BB00A8010A = {
 			children = (
 				4BDDCA0D0411053300A8010A,
@@ -6264,6 +6341,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C8C7FA603CBA21B00267226,
+				4BD68229045B010D00A8010A,
+				4B037B7B045B8E5600A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6272,6 +6351,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B3DB8FE04547A8D00A8010A,
+				4B037B7E045B904F00A8010A,
+				4B037B80045C05A600A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6280,6 +6361,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C8C7FA703CBA21B00267226,
+				4BD6822A045B010D00A8010A,
+				4B037B7C045B8E5600A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6378,7 +6461,13 @@
 			children = (
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
+				4B037B79045B8E5600A8010A,
+				4B037B7A045B8E5600A8010A,
+				4BD68227045B010D00A8010A,
+				4BD68228045B010D00A8010A,
 				4B3DB8FD04547A8D00A8010A,
+				4B037B7D045B904F00A8010A,
+				4B037B7F045C05A600A8010A,
 			);
 			isa = PBXGroup;
 			name = Logger;

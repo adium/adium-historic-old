@@ -18,6 +18,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+#define PATH_LOGS	@"/Logs"
+
 @interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
     NSString	*logBasePath; //The base directory of all logs
 }

@@ -2,12 +2,12 @@
     IBClasses = (
         {
             ACTIONS = {closeWindow = id; }; 
-            CLASS = AILogViewerWindowController; 
+            CLASS = AILogImporter; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "outlineView_contacts" = NSOutlineView; 
-                "tableView_results" = NSTableView; 
-                "textView_content" = NSTextView; 
+                "progress_working" = NSProgressIndicator; 
+                "textField_Goal" = NSTextField; 
+                "textField_Progress" = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

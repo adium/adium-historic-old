@@ -18,11 +18,15 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 #import "AILoggerPlugin.h"
+#import "AILogViewerWindowController.h"
+#import "AILogImporter.h"
 
-#define PATH_LOGS	@"/Logs"
+#define LOGGER_DEFAULT_PREFS		@"LoggerDefaults"
+#define PREF_GROUP_LOGGING		@"Logging"
+#define KEY_HAS_IMPORTED_16_LOGS	@"Has Imported Adium 1.6 Logs"
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message toLog:(NSString *)logName source:(NSString *)sourceName date:(NSDate *)date;
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andHandle:(AIHandle *)handle onDate:(NSDate *)date;
 @end
 
 @implementation AILoggerPlugin
@@ -30,6 +34,9 @@
 - (void)installPlugin
 {
     NSMenuItem	*logViewerMenuItem;
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
 
     //Observe content sending and receiving
     [[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:Content_DidSendContent object:nil];
@@ -42,6 +49,15 @@
     //Create a logs directory
     logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
     [AIFileUtilities createDirectory:logBasePath];
+
+    //Import Adium 1.6 logs
+    if(![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_HAS_IMPORTED_16_LOGS] boolValue]){
+        [[AILogImporter logImporterWithOwner:owner] importAdium1xLogs];
+
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+                                             forKey:KEY_HAS_IMPORTED_16_LOGS
+                                              group:PREF_GROUP_LOGGING];
+    }
 }
 
 //Content was sent
@@ -51,17 +67,17 @@
 
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIAccount	*source = [content source];
-        AIHandle	*destination = [content destination];
+        NSDate		*date = [content date];
+        NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+        NSString	*message = [[content message] string];
+        AIAccount	*account = [content source];
+        AIHandle	*handle = [content destination];
 
-        //Source and destination are valid (account & handle)
-        if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIHandle class]]){
-            //Log the message
-            [self _addMessage:[[content message] string]
-                        toLog:[destination UIDAndServiceID]
-                       source:[source UIDAndServiceID]
-                         date:[content date]];
-        }
+        //Log the message
+        [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [account UID], message]
+            betweenAccount:account
+                andHandle:handle
+                    onDate:date];
     }
 }
 
@@ -72,46 +88,43 @@
 
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIHandle	*source = [content source];
-
-        //Destination are valid (handle)
-        if([source isKindOfClass:[AIHandle class]]){
-            //Log the message
-            [self _addMessage:[[content message] string]
-                        toLog:[source UIDAndServiceID]
-                       source:[source UIDAndServiceID]
-                         date:[content date]];
-        }
+        NSDate		*date = [content date];
+        NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+        NSString	*message = [[content message] string];
+        AIAccount	*account = [content destination];
+        AIHandle	*handle = [content source];
+        
+        //Log the message
+        [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [handle UID], message]
+           betweenAccount:account
+                andHandle:handle
+                   onDate:date];
     }
 }
 
 //Show the log viewer window
 - (void)showLogViewer:(id)sender
 {
-    
+    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
 }
 
 //Add a message to the specified log file
-- (void)_addMessage:(NSString *)message toLog:(NSString *)logName source:(NSString *)sourceName date:(NSDate *)date
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andHandle:(AIHandle *)handle onDate:(NSDate *)date
 {
     NSString	*logPath;
     NSString	*logFileName;
-    NSString	*logString;
     FILE	*file;
 
-    //Create path to log file
-    logPath = [logBasePath stringByAppendingPathComponent:logName];
-    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", logName, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
+    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:[handle UID]];
+    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", [handle UID], [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
 
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];
 
-    //Format the log string
-    logString = [NSString stringWithFormat:@"(%@)%@:%@\n",[[NSDate date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil], sourceName, message];
-
     //Append the new content (We use fopen/fputs/fclose for max speed)
     file = fopen([[logPath stringByAppendingPathComponent:logFileName] cString], "a");
-    fputs([logString cString], file);
+    fputs([message cString], file);
     fclose(file);
 }
 
