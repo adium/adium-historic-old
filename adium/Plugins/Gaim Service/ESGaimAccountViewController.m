@@ -69,7 +69,7 @@
 	[textField_alias setStringValue:(alias ? alias : @"")];
 	
 	//Check mail
-	NSLog(@"%@ %i",[inAccount UID],[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
+//	NSLog(@"%@ %i",[inAccount UID],[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
 	[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
 		
 	[self configureConnectionControlDimming];
@@ -175,7 +175,7 @@
 		[account setPreference:[NSNumber numberWithBool:[sender state]]
 						forKey:KEY_ACCOUNT_GAIM_CHECK_MAIL
 						 group:GROUP_ACCOUNT_STATUS];
-		NSLog(@"%@ %i",[account UID],[[account preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
+//		NSLog(@"%@ %i",[account UID],[[account preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
 	}
 }
 	

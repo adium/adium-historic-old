@@ -222,7 +222,7 @@
     [dockController initController];
     [fileTransferController initController];
     [contactAlertsController initController];
-	[NSBundle loadNibNamed:@"ActivityWindow" owner:self];
+//	[NSBundle loadNibNamed:@"ActivityWindow" owner:self];
 //    [activityWindowController initController];
 	
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
