@@ -25,6 +25,8 @@
     NSColor	*alternatingColumnColor;
     NSColor	*secondaryAlternatingColumnColor;
     BOOL	firstColumnColored;
+
+    BOOL	_dataSourceDeleteRow;
 }
 
 - (void)setDrawsAlternatingRows:(BOOL)flag;

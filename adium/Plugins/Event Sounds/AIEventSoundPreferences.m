@@ -418,6 +418,12 @@
 }
 
 //
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+    [self deleteEventSound:nil]; //Delete it
+}
+
+//
 - (BOOL)shouldSelectRow:(int)inRow
 {
     [button_delete setEnabled:(inRow != -1)]; //Enable/disable the delete button correctly

@@ -378,6 +378,12 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 
 // Contact Outline View Delegate ---------------------------------------------------------
+//
+- (void)outlineViewDeleteSelectedRows:(NSOutlineView *)outlineView
+{
+    [self delete:nil]; //Delete them
+}
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
@@ -680,23 +686,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
         //Show its info
         [[owner contactController] showInfoForContact:contact];
-    }
-}
-
-//Filter keydowns looking for the delete key (to delete the current selection)
-- (void)keyDown:(NSEvent *)theEvent
-{
-    NSString	*charString = [theEvent charactersIgnoringModifiers];
-    unichar	pressedChar = 0;
-
-    //Get the pressed character
-    if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
-    
-    //Check if 'delete' was pressed
-    if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
-        [self delete:nil]; //Delete the selection
-    }else{
-        [super keyDown:theEvent]; //Pass the key event on
     }
 }
 
