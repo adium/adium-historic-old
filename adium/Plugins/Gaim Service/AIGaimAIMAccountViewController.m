@@ -33,7 +33,7 @@
     }
     
     //Profile
-    NSData              *profileData = [account preferenceForKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS];
+    NSData              *profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
     if (profileData) {
         NSAttributedString	*profile = [NSAttributedString stringWithData:profileData];
         if (profile && [profile length]){
@@ -58,7 +58,7 @@
 //Profile text was changed
 - (void)textDidEndEditing:(NSNotification *)notification
 {
-    [account setPreference:[[textView_textProfile textStorage] dataRepresentation] forKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS];
+    [account setPreference:[[textView_textProfile textStorage] dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
 }
 
 -(NSString *)validScreenNameCharacters

@@ -24,8 +24,6 @@
 #include "sound.h"
 #include "util.h"
 
-#define KEY_PROFILE     @"TextProfile"
-
 @interface CBGaimAccount : AIAccount <AIAccount_Handles,AIAccount_Content>
 {     
     NSMutableDictionary	*handleDict;
@@ -109,10 +107,9 @@
 - (NSArray *)supportedPropertyKeys;
 - (void)updateAllStatusKeys;
 - (void)updateStatusForKey:(NSString *)key;
+- (void)setAccountUserImage:(NSImage *)image;
 - (void)setAccountIdleTo:(NSTimeInterval)idle;
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
-- (void)setAccountUserImage:(NSImage *)image;
-
 
 @end
