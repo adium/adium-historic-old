@@ -141,102 +141,83 @@
 	}
 }
 
-// Originally from Apple's "CocoaVideoFrameToNSImage" Sample code
-//
-//	File:		MyQuickDrawView.m
-//	Contains:	Implementation file for the MyQuickDrawView class.
-//	Written by:	Apple Developer Technical Support
-//	Copyright:	2002 by Apple Computer, Inc., all rights reserved.
-//
-// Convert contents of a gworld to an NSImage 
-+ (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr
++ (NSImage *)imageFromGWorld:(GWorldPtr)gworld
 {
-    PixMapHandle 		pixMapHandle = NULL;
-    Ptr 				pixBaseAddr = nil;
-    NSBitmapImageRep 	*imageRep = nil;
-    NSImage 			*image = nil;
-    
-    NSAssert(gWorldPtr != nil, @"nil gWorldPtr");
-    
-    // Lock the pixels
-    pixMapHandle = GetGWorldPixMap(gWorldPtr);
-    if (pixMapHandle)
-    {
-        Rect 		portRect;
-        unsigned 	portWidth, portHeight;
-        int 		bitsPerSample, samplesPerPixel;
-        BOOL 		hasAlpha, isPlanar;
-        int 		destRowBytes;
+    NSParameterAssert(gworld != NULL);
 	
-        NSAssert(LockPixels(pixMapHandle) != false, @"LockPixels returns false");
-	
-        GetPortBounds(gWorldPtr, &portRect);
-        portWidth = (portRect.right - portRect.left);
-        portHeight = (portRect.bottom - portRect.top);
-	
-        bitsPerSample 	= 8;
-        samplesPerPixel = 4;
-		hasAlpha		= YES;
-        isPlanar		= NO;
-        destRowBytes 	= portWidth * samplesPerPixel;
-        imageRep		= [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
-																  pixelsWide:portWidth 
-																  pixelsHigh:portHeight 
-															   bitsPerSample:bitsPerSample 
-															 samplesPerPixel:samplesPerPixel 
-																	hasAlpha:hasAlpha 
-																	isPlanar:NO
-															  colorSpaceName:NSDeviceRGBColorSpace
-																 bytesPerRow:destRowBytes 
-																bitsPerPixel:0];
-        if(imageRep) {
-            char 	*theData;
-            int 	pixmapRowBytes;
-            int 	rowByte,rowIndex;
-	    
-            theData = [imageRep bitmapData];
-	    
-            pixBaseAddr = GetPixBaseAddr(pixMapHandle);
-            if (pixBaseAddr) {
-                pixmapRowBytes = GetPixRowBytes(pixMapHandle);
-				
-                for (rowIndex=0; rowIndex< portHeight; rowIndex++) {
-                    unsigned char *dst = theData + rowIndex * destRowBytes;
-                    unsigned char *src = pixBaseAddr + rowIndex * pixmapRowBytes;
-                    unsigned char a,r,g,b;
-                    
-                    for (rowByte = 0; rowByte < portWidth; rowByte++) {
-						a = *src++;		// get source Alpha component
-                        r = *src++;		// get source Red component
-                        g = *src++;		// get source Green component
-                        b = *src++;		// get source Blue component  
-						
-                        *dst++ = a;		// set dest. Alpha component
-                        *dst++ = r;		// set dest. Red component
-                        *dst++ = g;		// set dest. Green component
-                        *dst++ = b;		// set dest. Blue component  
-                    }
-                }
-				
-                image = [[NSImage alloc] initWithSize:NSMakeSize(portWidth, portHeight)];
-                if (image) {
-                    [image addRepresentation:imageRep];
-                    [imageRep release];
-                }
-            }
-        }
-    }
-    
-    NSAssert(pixMapHandle != NULL, @"null pixMapHandle");
-    NSAssert(imageRep != nil, @"nil imageRep");
-    NSAssert(pixBaseAddr != nil, @"nil pixBaseAddr");
-    NSAssert(image != nil, @"nil image");
-    
-    if (pixMapHandle) {
+    PixMapHandle pixMapHandle = GetGWorldPixMap( gworld );
+    if(LockPixels(pixMapHandle)){
+        Rect 	portRect;
+        
+		GetPortBounds( gworld, &portRect );
+		
+        int 	pixels_wide = (portRect.right - portRect.left);
+        int 	pixels_high = (portRect.bottom - portRect.top);
+        int 	bps = 8;
+        int 	spp = 4;
+        BOOL 	has_alpha = YES;
+		
+        NSBitmapImageRep *bitmap_rep = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+																				pixelsWide:pixels_wide
+																				pixelsHigh:pixels_high
+																			 bitsPerSample:bps
+																		   samplesPerPixel:spp
+																				  hasAlpha:has_alpha
+																				  isPlanar:NO
+																			colorSpaceName:NSDeviceRGBColorSpace
+																			   bytesPerRow:NULL
+																			  bitsPerPixel:NULL] autorelease];
+        CGColorSpaceRef 	dst_colorspaceref = CGColorSpaceCreateDeviceRGB();
+        CGImageAlphaInfo 	dst_alphainfo = has_alpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone;
+        CGContextRef 		dst_contextref = CGBitmapContextCreate([bitmap_rep bitmapData],
+																   pixels_wide,
+																   pixels_high,
+																   bps,
+																   [bitmap_rep bytesPerRow],
+																   dst_colorspaceref,
+																   dst_alphainfo);
+        void *pixBaseAddr = GetPixBaseAddr(pixMapHandle);
+        long pixmapRowBytes = GetPixRowBytes(pixMapHandle);
+		
+        CGDataProviderRef dataproviderref = CGDataProviderCreateWithData(NULL, pixBaseAddr, pixmapRowBytes * pixels_high, NULL);
+		
+        int src_bps = 8;
+        int src_spp = 4;
+        BOOL src_has_alpha = YES;
+		
+        CGColorSpaceRef src_colorspaceref = CGColorSpaceCreateDeviceRGB();
+		
+        CGImageAlphaInfo src_alphainfo = src_has_alpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNone;
+		
+        CGImageRef src_imageref = CGImageCreate(pixels_wide,
+												pixels_high,
+												src_bps,
+												src_bps * src_spp,
+												pixmapRowBytes,
+												src_colorspaceref,
+												src_alphainfo,
+												dataproviderref,
+												NULL,
+												NO, // shouldInterpolate
+												kCGRenderingIntentDefault);
+		
+        CGRect rect = CGRectMake(0, 0, pixels_wide, pixels_high);
+		
+        CGContextDrawImage(dst_contextref, rect, src_imageref);
+		
+        CGImageRelease(src_imageref);
+        CGColorSpaceRelease(src_colorspaceref);
+        CGDataProviderRelease(dataproviderref);
+        CGContextRelease(dst_contextref);
+        CGColorSpaceRelease(dst_colorspaceref);
+		
         UnlockPixels(pixMapHandle);
+		
+        NSImage *image = [[[NSImage alloc] initWithSize:NSMakeSize(pixels_wide, pixels_high)] autorelease];
+        [image addRepresentation:bitmap_rep];
+        return image;
     }
-    
-    return image;
+    return NULL;
 }
 
 //Returns the current theme's miniature panel close button
