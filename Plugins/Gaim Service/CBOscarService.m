@@ -47,6 +47,9 @@
 - (NSCharacterSet *)allowedCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);
 }
+- (NSCharacterSet *)allowedCharactersForUIDs{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);	
+}
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
 }
