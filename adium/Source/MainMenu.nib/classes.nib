@@ -160,7 +160,12 @@
             OUTLETS = {owner = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = ESFileTransferController; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESFileTransferController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; }; 
+            SUPERCLASS = NSObject; 
+        }, 
         {
             ACTIONS = {runToolbarConfigurationPalette = id; }; 
             CLASS = FirstResponder; 
