@@ -87,9 +87,11 @@ static	NSImage						*adiumRedHighlightImage = nil;
         [statusItem setMenu:theMenu];
         [theMenu setDelegate:self];
 
-        //Register ourself
-        [[adium accountController] registerAccountMenuPlugin:self];
-        
+		if([statusItem respondsToSelector:@selector(setDoubleAction:)]){
+			[statusItem setTarget:self];
+			[statusItem setDoubleAction:@selector(activateAdium:)];
+		}
+
         //Setup for unviewed content catching
         accountMenuItemsArray = [[NSMutableArray alloc] init];
         unviewedObjectsArray = [[NSMutableArray alloc] init];
@@ -107,7 +109,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 									   selector:@selector(accountStateChanged:)
 										   name:ACCOUNT_DISCONNECTED
 								         object:nil];
-
+		
+        //Register ourself for the account menu items
+        [[adium accountController] registerAccountMenuPlugin:self];
     }
     
     return self;
