@@ -339,7 +339,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		NSString	*chatNameWithServer = [chat name];
 		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
 
-		AIListContact *contact = [self _contactWithUID:chatParticipantName];
+		AIListContact *contact = [self contactWithUID:chatParticipantName];
 
 		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
 		
@@ -355,7 +355,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		NSString	*chatNameWithServer = [chat name];
 		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
 		
-		AIListContact *contact = [self _contactWithUID:chatParticipantName];
+		AIListContact *contact = [self contactWithUID:chatParticipantName];
 		
 		[chat removeParticipatingListObject:contact];
 		

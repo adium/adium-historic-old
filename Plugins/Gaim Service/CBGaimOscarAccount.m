@@ -189,8 +189,8 @@ static BOOL didInitOscar = NO;
 }
 
 #pragma mark AIListContact and AIService special cases for OSCAR
-//Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
-- (AIListContact *)_contactWithUID:(NSString *)sourceUID
+//Override contactWithUID to mark mobile and ICQ users as such via the displayServiceID
+- (AIListContact *)contactWithUID:(NSString *)sourceUID
 {
 	AIListContact	*contact;
 	

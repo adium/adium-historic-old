@@ -737,7 +737,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			AIListContact	*listContact;
 			
 #warning source can be (null) for system messages like topic changes
-			listContact = (source ? [self _contactWithUID:source] : nil);
+			listContact = (source ? [self contactWithUID:source] : nil);
 			GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[attributedMessage string],[listContact UID],[chat name]);
 
 			[self _receivedMessage:attributedMessage
@@ -964,7 +964,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
 	if (chat){
-		AIListContact *contact = [self _contactWithUID:contactName];
+		AIListContact *contact = [self contactWithUID:contactName];
 
 		if (!namesAreCaseSensitive){
 			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
@@ -982,7 +982,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
 	if (chat){
-		AIListContact	*contact = [self _contactWithUID:contactName];
+		AIListContact	*contact = [self contactWithUID:contactName];
 
 		[chat removeParticipatingListObject:contact];
 
@@ -1048,7 +1048,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]){
 		//Get our contact
-		AIListContact   *contact = [self _contactWithUID:sourceUID];
+		AIListContact   *contact = [self contactWithUID:sourceUID];
 		
 		[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
 	}
@@ -1146,7 +1146,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 													size:(NSNumber *)inSize
 										  remoteFilename:remoteFilename
 {
-	AIListContact   *contact = [self _contactWithUID:destinationUID];
+	AIListContact   *contact = [self contactWithUID:destinationUID];
     ESFileTransfer	*fileTransfer;
 	
 	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
