@@ -21,14 +21,15 @@
     //Configure the standard controls
     [super configureViewAfterLoad];
     
-    //Load and add our auxiliary tabs if present
+	//Load and add our auxiliary view and tabs if present
     NSString *auxiliaryNib = [self auxiliaryGaimAccountViewTabsNib];
     if (auxiliaryNib) {
         [NSBundle loadNibNamed:auxiliaryNib owner:self];
         
+		//Add all auxiliary tabs
         [self loadAuxiliaryTabsFromTabView:view_auxiliaryGaimAccountTabView];
     }
-    
+	
     //Put focus on the account name
     [[[view_accountView superview] window] setInitialFirstResponder:textField_accountName];	
 }
@@ -38,5 +39,4 @@
 {
     return nil;
 }
-
 @end
