@@ -44,6 +44,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleMessageIn:(NSString *)inCommand;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
+- (void)AIM_SetProfile:(NSString *)profile;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
 - (void)disconnect;
@@ -237,13 +238,11 @@ static char *hash_password(const char * const password);
 // AIAccount_Status --------------------------------------------------------------------------------
 - (NSArray *)supportedStatusKeys
 {
-    return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", nil]);
+    return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", @"TextProfile", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    NSLog(@"(%@) \"%@\" changing to [%@]", [self accountDescription], key, inValue);    
-
     if([key compare:@"Online"] == 0){
         ACCOUNT_STATUS		status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
 
@@ -266,7 +265,12 @@ static char *hash_password(const char * const password);
         }
 
         [self AIM_SetIdle:newIdle];
-    }    
+
+    }else if([key compare:@"TextProfile"] == 0){
+        NSString		*profile = [AIHTMLDecoder encodeHTML:inValue];
+
+        [self AIM_SetProfile:profile];
+    }
 
 }
 
@@ -375,7 +379,7 @@ static char *hash_password(const char * const password);
             NSString		*message = [packet string];
             NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-    //        NSLog(@"<- %@",[packet string]);
+            //NSLog(@"<- %@",[packet string]);
 
             if([command compare:@"SIGN_ON"] == 0){
                 [self AIM_HandleSignOn:message];
@@ -427,7 +431,7 @@ static char *hash_password(const char * const password);
     //Send any packets in the outQue
     while([outQue count] && [socket readyForSending]){
         [[outQue objectAtIndex:0] sendToSocket:socket];
-  //      NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
+        //NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
 }
@@ -923,6 +927,16 @@ static char *hash_password(const char * const password);
 
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:idleMessage sequence:&localSequence]];
+}
+
+- (void)AIM_SetProfile:(NSString *)profile
+{
+    NSString	*message;
+
+    message = [NSString stringWithFormat:@"toc_set_info \"%@\"",[self validCopyOfString:profile]];
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 }
 
 

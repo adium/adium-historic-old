@@ -7,17 +7,24 @@
 //
 
 #import "AITextProfilesPlugin.h"
-
+#import "AITextProfilePreferences.h"
 
 @implementation AITextProfilesPlugin
 
 - (void)installPlugin
 {
-    //Install our preference view
+    //Register our defaults and install the preference view
+//    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:GROUP_IDLE_TIME]; //Register our default preferences
+    preferences = [[AITextProfilePreferences textProfilePreferencesWithOwner:owner] retain];
 
+    //Observe preference changed notifications, and setup our initial values
+//    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+//    [self preferencesChanged:nil];
+}
 
-    
-    NSLog(@"Profiles install");
+- (void)uninstallPlugin
+{
+    //unregister, remove, ...
 }
 
 @end

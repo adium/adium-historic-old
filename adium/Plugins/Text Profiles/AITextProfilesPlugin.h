@@ -9,9 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+@class AITextProfilePreferences;
 
 @interface AITextProfilesPlugin : AIPlugin {
-
+    AITextProfilePreferences		*preferences;
 }
 
 @end
