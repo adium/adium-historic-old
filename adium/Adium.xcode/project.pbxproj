@@ -8,7 +8,6 @@
 		07CE05580661D7AD00C50929 = {
 			children = (
 				07CE05590661D7E600C50929,
-				07CE0D400661E11600C50929,
 				07CE058F0661D7FE00C50929,
 				07CE058E0661D7FE00C50929,
 				07CE05920661D87E00C50929,
@@ -85,15 +84,6 @@
 			lastKnownFileType = image.png;
 			name = delete.png;
 			path = "Source/Activity Window toolbar images/delete.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE0D400661E11600C50929 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BZProgressTracker.h;
-			path = "Frameworks/AIUtilities Framework/BZProgressTracker.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -269,7 +259,6 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				3448717006D1E57700DA778C,
 				4B191D8C0611C11000E8A4E7,
 				34B5EBA106589A88007B9A56,
 				4B191D8E0611C11400E8A4E7,
@@ -306,7 +295,6 @@
 				F5819CE9032124CE01A8010A,
 				34E839050583207E00F2AADB,
 				9C103FAE057127A500F3C158,
-				4B4493BE06D50AD50083E9D7,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -472,6 +460,72 @@
 		};
 		340B9BD4069C735900FE1E57 = {
 			fileRef = 3499F45006309AC80035B468;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340F2E4806D6AFE10072E2FA = {
+			fileRef = 3448717206D1E57700DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340F30E206D6FD700072E2FA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BZProgressView.m;
+			path = "Frameworks/Adium Framework/BZProgressView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340F30E306D6FD700072E2FA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BZProgressView.h;
+			path = "Frameworks/Adium Framework/BZProgressView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340F30E406D6FD700072E2FA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BZProgressTracker.m;
+			path = "Frameworks/Adium Framework/BZProgressTracker.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340F30E506D6FD700072E2FA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BZProgressTracker.h;
+			path = "Frameworks/Adium Framework/BZProgressTracker.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340F30E606D6FD700072E2FA = {
+			fileRef = 340F30E206D6FD700072E2FA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340F30E706D6FD700072E2FA = {
+			fileRef = 340F30E306D6FD700072E2FA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340F30E806D6FD700072E2FA = {
+			fileRef = 340F30E406D6FD700072E2FA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340F30E906D6FD700072E2FA = {
+			fileRef = 340F30E506D6FD700072E2FA;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1984,6 +2038,12 @@
 		};
 		3448761706D1EC6300DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3448761806D1ECE100DA778C = {
+			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4425,7 +4485,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"Plugins/Gaim Service\" Frameworks build /Users/adamiser/Code/adium/build";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"Plugins/Gaim Service\" Frameworks";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5005,8 +5065,6 @@
 				9E23E9E306CC506A00D3C897,
 				4BF98D5206D1484500E8781D,
 				4BF98DCD06D149EE00E8781D,
-				C4D3A0FC06D2D009006AFE25,
-				C4D3A0FD06D2D009006AFE25,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5459,7 +5517,7 @@
 				34B588A1058D833A00E7EF0D,
 				34C18B0D06CAC95400FF5FF9,
 				348E5ACB06D2A74C004C051C,
-				4B4493BF06D50AD50083E9D7,
+				340F2E4806D6AFE10072E2FA,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5484,8 +5542,8 @@
 			files = (
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
+				3448761806D1ECE100DA778C,
 				520FE46305BE20EB002D063D,
-				4B4492AE06D504280083E9D7,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5595,6 +5653,8 @@
 				6E4D960B06B7397A005235E9,
 				6E4D960D06B7397A005235E9,
 				34111A5F06BE1B370005AF5C,
+				340F30E706D6FD700072E2FA,
+				340F30E906D6FD700072E2FA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5726,6 +5786,8 @@
 				6E4D960C06B7397A005235E9,
 				6E4D960E06B7397A005235E9,
 				34111A6006BE1B370005AF5C,
+				340F30E606D6FD700072E2FA,
+				340F30E806D6FD700072E2FA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6267,7 +6329,6 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				CACEFF8E06D4032500BD9C13,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium 1.6 Pref Importer";
@@ -6329,7 +6390,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3448769806D1EF5900DA778C,
-				CACEFF8C06D4031A00BD9C13,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8474,9 +8534,11 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_SHADOW = NO;
-				GCC_WARN_UNUSED_VARIABLE = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD -DADIUM_COMPONENTS";
+				PRECOMP_DESTINATION_DIR = "";
 				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
@@ -8485,11 +8547,16 @@
 		4A9504CDFFE6A4B311CA0CBA = {
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				GCC_DEBUGGING_SYMBOLS = default;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS";
 				ZERO_LINK = NO;
@@ -9952,26 +10019,6 @@
 			settings = {
 			};
 		};
-		4B4492AE06D504280083E9D7 = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B4493BE06D50AD50083E9D7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = AIUtilities.framework;
-			path = build/AIUtilities.framework;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4493BF06D50AD50083E9D7 = {
-			fileRef = 4B4493BE06D50AD50083E9D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B494B44063AB63000E2EF06 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -10094,6 +10141,7 @@
 				7E6642FD065337090050E8C8,
 				F53B9A1302CCEDCA01A8010A,
 				520FE3B305BE206D002D063D,
+				3448717006D1E57700DA778C,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
@@ -10152,6 +10200,10 @@
 				F5793912033E748F01A8010A,
 				4BFC3412058D48A8008F7FA2,
 				4BFC3413058D48A8008F7FA2,
+				340F30E506D6FD700072E2FA,
+				340F30E406D6FD700072E2FA,
+				340F30E306D6FD700072E2FA,
+				340F30E206D6FD700072E2FA,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -15496,8 +15548,6 @@
 		};
 		4BE666CC0577AFA0007E115C = {
 			children = (
-				C4D3A0FA06D2D008006AFE25,
-				C4D3A0FB06D2D008006AFE25,
 				C45F7F6206C75E200056B1F2,
 				C45F7F6306C75E210056B1F2,
 				C45F7F6406C75E210056B1F2,
@@ -21171,67 +21221,11 @@
 			settings = {
 			};
 		};
-		C4D3A0FA06D2D008006AFE25 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = noEmoticons.tif;
-			path = Plugins/Logger/noEmoticons.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4D3A0FB06D2D008006AFE25 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = showEmoticons.tif;
-			path = Plugins/Logger/showEmoticons.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4D3A0FC06D2D009006AFE25 = {
-			fileRef = C4D3A0FA06D2D008006AFE25;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C4D3A0FD06D2D009006AFE25 = {
-			fileRef = C4D3A0FB06D2D008006AFE25;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //C40
 //C41
 //C42
 //C43
 //C44
-//CA0
-//CA1
-//CA2
-//CA3
-//CA4
-		CACEFF8C06D4031A00BD9C13 = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CACEFF8D06D4032500BD9C13 = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		CACEFF8E06D4032500BD9C13 = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = CACEFF8D06D4032500BD9C13;
-		};
-//CA0
-//CA1
-//CA2
-//CA3
-//CA4
 //D30
 //D31
 //D32
