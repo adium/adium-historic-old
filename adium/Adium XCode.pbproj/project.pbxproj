@@ -9126,9 +9126,6 @@
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
 				C4FD6E3505BA79FF00E72643,
-				4BED6CEE05D5F1DF00ACFD49,
-				4BED6CEF05D5F1E000ACFD49,
-				4BED6D1A05D5F1F500ACFD49,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22872,24 +22869,6 @@
 			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BED6CEE05D5F1DF00ACFD49 = {
-			fileRef = 9E87CDF105748FFA001CB886;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BED6CEF05D5F1E000ACFD49 = {
-			fileRef = 3481DDE405704EEC00CD38D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BED6D1A05D5F1F500ACFD49 = {
-			fileRef = B799BB0005793A6400338E54;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BED6DB305D5F49200ACFD49 = {
 			isa = PBXFileReference;
