@@ -193,6 +193,8 @@ typedef enum {
 #define Dock_IconWillChange					@"Dock_IconWillChange"
 #define Dock_IconDidChange					@"Dock_IconDidChange"
 
+#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
+
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIListObjectObserver //notified of changes
     - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
