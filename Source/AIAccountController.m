@@ -229,11 +229,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		//Build an array of all currently used services
 		while(account = [enumerator nextObject]){
-			AIService	*accountService = [account service];
+			NSEnumerator	*serviceEnumerator;
+			AIService		*accountService;
 			
-			//Prevent any service from going in twice
-			if(![serviceArray containsObject:accountService]){
-				[serviceArray addObject:accountService];
+			//Add all services that are of the same class as the user's account (So, all compatible services)
+			serviceEnumerator = [[self servicesWithServiceClass:[[account service] serviceClass]] objectEnumerator];
+			while(accountService = [serviceEnumerator nextObject]){
+				//Prevent any service from going in twice
+				if(![serviceArray containsObject:accountService]){
+					[serviceArray addObject:accountService];
+				}
+
 			}
 		}
 		
