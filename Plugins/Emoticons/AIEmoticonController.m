@@ -156,8 +156,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSString                    *messageString = [inMessage string];
     NSMutableAttributedString   *newMessage = nil; //We avoid creating a new string unless necessary
 	NSString					*serviceClassContext = nil;
-    int                         currentLocation = 0;
-
+    unsigned					currentLocation = 0, messageStringLength;
+	
+	//Determine our service class context
 	if([context isKindOfClass:[AIContentObject class]]){
 		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
 		
@@ -171,12 +172,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     //Number of characters we've replaced so far (used to calcluate placement in the destination string)
 	int                         replacementCount = 0; 
 
-    while(currentLocation != NSNotFound && currentLocation < [messageString length]){
+	messageStringLength = [messageString length];
+    while(currentLocation != NSNotFound && currentLocation < messageStringLength){
         //Find the next occurence of a suspected emoticon
         currentLocation = [messageString rangeOfCharacterFromSet:emoticonStartCharacterSet
                                                          options:0 
-                                                           range:NSMakeRange(currentLocation, [messageString length] - currentLocation)].location;
-
+                                                           range:NSMakeRange(currentLocation, 
+																			 messageStringLength - currentLocation)].location;
+		
 		//Use paired arrays so multiple emoticons can qualify for the same text equivalent
         NSMutableArray  *candidateEmoticons = nil;
 		NSMutableArray  *candidateEmoticonTextEquivalents = nil;
@@ -199,7 +202,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
                     if(textLength != 0){ //Invalid emoticon files may let empty text equivalents sneak in
                         //If there is not enough room in the string for this text, we can skip it
-                        if(currentLocation + [text length] <= [messageString length]){
+                        if(currentLocation + textLength <= messageStringLength){
                             if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == 0){
                                 //Ignore emoticons within links
                                 if([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:nil] == nil){
@@ -218,10 +221,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
             }
 			
             if([candidateEmoticons count]){
-                NSString    *replacementString;
-                int			textLength;
-                AIEmoticon  *emoticon;
+                NSString					*replacementString;
+                AIEmoticon					*emoticon;
                 NSMutableAttributedString   *replacement;
+                int							textLength;
 				
 				//Use the most appropriate, longest string of those which could be used for the emoticon text we found here
 				emoticon = [self _bestReplacementFromEmoticons:candidateEmoticons
@@ -251,10 +254,11 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			//Move to the next possible location of an emoticon
 			currentLocation++;
         }
+
 		[candidateEmoticons release];
 		[candidateEmoticonTextEquivalents release];
     }
-    
+
     return(newMessage ? newMessage : inMessage);
 }
 
@@ -295,7 +299,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 	/* Did we get a service appropriate replacement? If so, use that rather than the current replacementString if it
 	 * differs. */
-	if(serviceAppropriateReplacementString != *replacementString){
+	if(serviceAppropriateReplacementString && (serviceAppropriateReplacementString != *replacementString)){
 		bestLength = bestServiceAppropriateLength;
 		bestIndex = bestServiceAppropriateIndex;
 		*replacementString = serviceAppropriateReplacementString;
