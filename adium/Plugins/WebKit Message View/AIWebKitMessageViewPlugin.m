@@ -6,11 +6,13 @@
 
 @interface AIWebKitMessageViewPlugin (PRIVATE)
 - (void)_loadAvailableWebkitStyles;
-- (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
+- (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content allowingColors:(BOOL)allowColors;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style forChat:(AIChat *)chat;
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)_loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
 - (void)_flushPreferenceCache;
 @end
 
@@ -80,7 +82,7 @@ DeclareString(AppendNextMessage);
 	[timeStampFormatter release];
 }
 
-- (void)loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName
+- (void)_loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName
 {
 	NSString	*prefIdentifier = [NSString stringWithFormat:@"Adium Style %@ Preferences",styleName];
 	[webView setPreferencesIdentifier:prefIdentifier];
@@ -170,10 +172,40 @@ DeclareString(AppendNextMessage);
 	return [NSString stringWithFormat:@"%@:Background Color",desiredStyle];
 }
 
+- (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue
+{
+	NSNumber	*value = [style objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@:%@",key,variant]];
+	if (!value){
+		value = [style objectForInfoDictionaryKey:key];
+	}
+	return (value ? [value boolValue] : defaultValue);
+}
+
+
+- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(WebView *)webView
+{
+	NSString		*basePath, *headerHTML, *footerHTML, *stylePath;
+	NSMutableString *templateHTML;
+	
+	stylePath = [style resourcePath];
+	
+	[self _loadPreferencesForWebView:webView withStyleNamed:styleName];
+	
+	basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
+	headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
+	footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
+	templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+	
+	templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
+	templateHTML = [self fillKeywords:templateHTML forStyle:style forChat:chat];
+	
+	//Feed it to the webview
+	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
+}
 
 #pragma mark Content adding
 
-- (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
+- (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors
 {
 	NSString		*dateMessage = nil;
 	AIContentStatus *dateSeparator = nil;
@@ -248,7 +280,8 @@ DeclareString(AppendNextMessage);
 		[self _addContentMessage:(AIContentMessage *)content 
 						   similar:contentIsSimilar
 						 toWebView:webView
-					 fromStylePath:stylePath];
+					 fromStylePath:stylePath
+				  allowingColors:allowColors];
 		
 	}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
 		[self _addContentStatus:(AIContentStatus *)content
@@ -258,16 +291,13 @@ DeclareString(AppendNextMessage);
 	}
 }
 
-- (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
+- (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors
 {	
 	NSString		*currentStylePath;
 	NSMutableString	*newHTML = nil;
 	NSString		*templateFile;
 	BOOL			isContext = [[content type] isEqualToString:CONTENT_CONTEXT_TYPE];
-//	BOOL			allowColors = (isContext ? NO : YES);
-#warning Disabling colors for now
-	BOOL			allowColors = NO;
-	
+
 	//
 	currentStylePath = [stylePath stringByAppendingPathComponent:([content isOutgoing] ? @"Outgoing" : @"Incoming")];
 	

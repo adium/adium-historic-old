@@ -9,7 +9,8 @@
 	AIChat						*chat;
 	
 	BOOL						webViewIsReady;
-
+	BOOL						allowColors;
+	
 	AIContentObject				*previousContent;
 	NSMutableArray				*newContent;
 	NSTimer						*newContentTimer;

@@ -112,8 +112,6 @@
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
 		
-		newStylePath = [style resourcePath];
-		
 		//If preferences changed but the style did not change, update the webView to the current stylesheet.
 		//If we got here from [self preferencesChanged:nil], prep the webView by loading our template.
 		//Note that we do not support open windows changing styles; new styles only affect new windows.
@@ -125,31 +123,16 @@
 																	  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
 			CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
 			
-			
 			if (notification){
 				[webView stringByEvaluatingJavaScriptFromString:
 					[NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");", CSS]];
 				
 			}else{
-				NSString	*basePath, *headerHTML, *footerHTML;
-				NSMutableString *templateHTML;
-				
+
 				[stylePath release];
-				stylePath = [newStylePath retain];
-				
-				[plugin loadPreferencesForWebView:webView withStyleNamed:styleName];
-				
-				
-				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
-				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
-				footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-				templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
-				
-				templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
-				templateHTML = [plugin fillKeywords:templateHTML forStyle:style forChat:chat];
-				
-				//Feed it to the webview
-				[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
+				stylePath = [[style resourcePath] retain];
+
+				[plugin loadStyle:style withName:styleName withCSS:CSS forChat:chat intoWebView:webView];
 			}
 		}
 	}
@@ -175,7 +158,11 @@
 	while(webViewIsReady && [newContent count]){
 		AIContentObject *content = [newContent objectAtIndex:0];
 		
-		[plugin processContent:content withPreviousContent:previousContent forWebView:webView fromStylePath:stylePath];
+		[plugin processContent:content
+		   withPreviousContent:previousContent 
+					forWebView:webView
+				 fromStylePath:stylePath
+				allowingColors:allowColors];
 
 		//
 		[previousContent release];

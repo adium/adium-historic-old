@@ -36,6 +36,7 @@ typedef enum {
 	NSTimer						*newContentTimer;
 	
 	NSString					*stylePath;
+	BOOL						allowColors;
 }
 
 - (IBAction)changePreference:(id)sender;
