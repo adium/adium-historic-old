@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.81 2004/06/10 22:05:45 adamiser Exp $
+// $Id: AIContentController.m,v 1.82 2004/06/10 22:19:24 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -342,9 +342,9 @@
 {
     //Filter the content object
     if([inObject filterContent]){
-		BOOL autoreply = ([inObject isKindOfClass:[AIContentMessage class]] && [(AIContentMessage *)inObject isAutoreply]);
+		BOOL message = ([inObject isKindOfClass:[AIContentMessage class]] && ![(AIContentMessage *)inObject isAutoreply]);
 		[inObject setMessage:[self filterAttributedString:[inObject message]
-										  usingFilterType:(autoreply ? AIFilterDisplay : AIFilterMessageDisplay)
+										  usingFilterType:(message ? AIFilterMessageDisplay : AIFilterDisplay)
 												direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
 												  context:inObject]];
     }

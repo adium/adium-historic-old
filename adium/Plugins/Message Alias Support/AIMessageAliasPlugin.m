@@ -31,7 +31,7 @@
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	NSMutableAttributedString	*filteredMessage = nil;
-	
+
 	//Filter keywords in the message
 	filteredMessage = [self replaceKeywordsInString:inAttributedString context:context];
 
