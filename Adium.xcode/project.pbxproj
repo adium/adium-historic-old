@@ -1325,6 +1325,7 @@
 				3428328707D2643F004F01C9,
 				3428328607D2643F004F01C9,
 				3428328507D2643F004F01C9,
+				34A250B507E0F822009854E1,
 				3428328C07D2644F004F01C9,
 			);
 			isa = PBXGroup;
@@ -5521,6 +5522,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34A250B507E0F822009854E1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = StatusDefaults.plist;
+			path = Resources/StatusDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A250B607E0F822009854E1 = {
+			fileRef = 34A250B507E0F822009854E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34A29D9406ED68BF00E1366C = {
 			includeInIndex = 0;
 			isa = PBXFileReference;
@@ -7600,6 +7616,7 @@
 				34A6FB2D07D6F98600972830,
 				34A6FB2E07D6F98600972830,
 				34A6FB8107D6FDCC00972830,
+				34A250B607E0F822009854E1,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
