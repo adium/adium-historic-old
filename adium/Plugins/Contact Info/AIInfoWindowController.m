@@ -119,7 +119,10 @@ static AIInfoWindowController *sharedInstance = nil;
     //Buddy Icon
     ownerArray = [inContact statusArrayForKey:@"UserIcon"];
     if(ownerArray && [ownerArray count]){
-        buddyImage = [ownerArray objectAtIndex:0];
+        buddyImage = [[[ownerArray objectAtIndex:0] copy] autorelease]; 
+        // resize to default buddy icon size for consistency
+        [buddyImage setScalesWhenResized:YES];
+        [buddyImage setSize:NSMakeSize(48,48)];
     }else{
         buddyImage = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
     }
@@ -195,20 +198,23 @@ static AIInfoWindowController *sharedInstance = nil;
         }
         
         if (status) {
-            NSMutableAttributedString * statusString = [[[adium contentController] filteredAttributedString:status] mutableCopy];
+            NSMutableAttributedString   *statusString = [[[adium contentController] filteredAttributedString:status] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
             
+            //Strip some attributes from info (?)
+            //[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
+            
             //Set correct indent & tabbing on the first line of the profile
             [statusString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            
             //Indent the remaining lines of profile
             indentStyle = [paragraphStyle mutableCopy];
             [indentStyle setFirstLineHeadIndent:InfoIndentB];
             [statusString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [statusString length] - firstLineRange.length)];
             [indentStyle release];
             
-            [statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])];
             [infoString appendAttributedString:statusString];
             [statusString release];
         } else {
@@ -256,8 +262,6 @@ static AIInfoWindowController *sharedInstance = nil;
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
-
-//            NSLog(@"%i %i %i",firstLineRange.location,firstLineRange.length,[textProfileString length]);
             
             //Strip some attributes from info (?)
             //[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
