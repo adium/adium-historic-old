@@ -1100,6 +1100,7 @@
 			};
 			dependencies = (
 				B7F09289058C3F16000F9CBE,
+				B73E464507DB5FA300D9129E,
 			);
 			isa = PBXNativeTarget;
 			name = "SQL Logger";
@@ -1153,6 +1154,7 @@
 			files = (
 				3448769A06D1EF7300DA778C,
 				3419F75C05314FED00C68BA3,
+				B73E464307DB5F9200D9129E,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21561,6 +21563,24 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		B73E464307DB5F9200D9129E = {
+			fileRef = 34D834D207CBE7B2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B73E464407DB5FA300D9129E = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		B73E464507DB5FA300D9129E = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = B73E464407DB5FA300D9129E;
 		};
 		B747E984058D144C00A9F037 = {
 			fileEncoding = 30;
