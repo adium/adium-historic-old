@@ -883,7 +883,7 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent
 {
 	float percentDone = [percent floatValue];
-    [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedValue]];
+    [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedLongValue]];
 	if (percentDone == 1.0){
 		[[adium fileTransferController] transferComplete:fileTransfer];
 	}
