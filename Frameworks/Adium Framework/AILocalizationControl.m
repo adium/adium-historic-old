@@ -150,9 +150,9 @@
 				newFrame.origin.x -= overshoot;
 				if(newFrame.origin.x < 0){
 					newFrame.origin.x = 0;
-					NSLog(@"*** Localization warning: %@ could not fit properly.",inStringValue);
+					NSLog(@"*** Localization warning: \"%@\"",inStringValue);
 				}
-				
+
 				[TARGET_CONTROL setFrame:newFrame];
 				[TARGET_CONTROL setNeedsDisplay:YES];
 			}

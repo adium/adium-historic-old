@@ -51,3 +51,12 @@
 #include "AILocalizationControl.m"
 
 @end
+
+@implementation NSTextField (AILocalizationAssistance)
+- (void)setLocalizedString:(NSString *)inString
+{
+	if([self isKindOfClass:[AILocalizationTextField class]]){
+		[self setStringValue:inString];
+	}
+}
+@end

@@ -45,3 +45,12 @@
 #include "AILocalizationControl.m"
 
 @end
+
+@implementation NSButtonCell (AILocalizationAssistance)
+- (void)setLocalizedString:(NSString *)inString
+{
+	if([self isKindOfClass:[AILocalizationButtonCell class]]){
+		[self setTitle:inString];
+	}
+}
+@end

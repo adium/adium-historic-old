@@ -28,3 +28,7 @@
 }
 
 @end
+
+@interface NSButtonCell (AILocalizationAssistance)
+- (void)setLocalizedString:(NSString *)inString;
+@end
