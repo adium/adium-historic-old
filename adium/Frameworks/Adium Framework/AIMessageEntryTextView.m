@@ -554,10 +554,12 @@ static NSMenu *contextualMenu = nil;
 		
 		if([itemsArray count] > 0) {
 			[contextualMenu addItem:[NSMenuItem separatorItem]];
-			
+			int i = [(NSMenu *)contextualMenu numberOfItems];
 			enumerator = [itemsArray objectEnumerator];
 			while((menuItem = [enumerator nextObject])){
-				[contextualMenu addItem:[[menuItem copy] autorelease]];
+				//[contextualMenu addItem:[[menuItem copy] autorelease]];
+                                [adiumMenu removeItem:menuItem];
+                                [(NSMenu *)contextualMenu insertItem:menuItem atIndex:i++];
 			}
 		}
 	}
