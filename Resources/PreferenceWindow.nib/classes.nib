@@ -18,11 +18,9 @@
                 "scrollView_advanced" = AIAutoScrollView; 
                 "tabView_category" = NSTabView; 
                 "tableView_advanced" = NSTableView; 
+                "view_Accounts" = AIModularPaneCategoryView; 
                 "view_Advanced" = AIModularPaneCategoryView; 
                 "view_Appearance" = AIModularPaneCategoryView; 
-                "view_ContactList" = AIModularPaneCategoryView; 
-                "view_Dock" = AIModularPaneCategoryView; 
-                "view_Emoticons" = AIModularPaneCategoryView; 
                 "view_Events" = AIModularPaneCategoryView; 
                 "view_FileTransfer" = AIModularPaneCategoryView; 
                 "view_General" = AIModularPaneCategoryView; 
