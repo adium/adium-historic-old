@@ -122,9 +122,10 @@
     BOOL		success = NO;
 
     //Open the soundset.rtf file
-    path = [NSString stringWithFormat:@"%@/%@.txt", inPath, [inPath lastPathComponent]];
+    path = [NSString stringWithFormat:@"%@/%@.txt", inPath, [[inPath stringByDeletingPathExtension] lastPathComponent]];
+	
     soundSet = [NSString stringWithContentsOfFile:path];
-
+	
     if(soundSet && [soundSet length] != 0){
         //Setup the scanner
         scanner = [NSScanner scannerWithString:soundSet];

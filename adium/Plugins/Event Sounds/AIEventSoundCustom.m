@@ -248,7 +248,6 @@ AIEventSoundCustom	*sharedInstance = nil;
                 while((soundPath = [soundEnumerator nextObject])){
                     NSImage	*soundImage;
                     NSString	*soundTitle;
-                    
                     //Keep track of our first sound (used when creating a new event)
                     if(!firstSound) firstSound = [soundPath retain];
                     
@@ -285,12 +284,12 @@ AIEventSoundCustom	*sharedInstance = nil;
     enumerator = [eventSoundArray objectEnumerator];
     while (soundRowDict = [enumerator nextObject]) {
         //add it if it's not already in the menu
-        NSString *soundPath = [soundRowDict objectForKey:KEY_EVENT_SOUND_PATH];
+        NSString *soundPath = [[soundRowDict objectForKey:KEY_EVENT_SOUND_PATH] stringByExpandingBundlePath];
         if(soundPath && ([soundPath length] != 0) && [soundMenu_cached indexOfItemWithRepresentedObject:soundPath] == -1) {
             NSImage	*soundImage;
             NSString	*soundTitle;
             NSMenuItem	*menuItem;
-	    
+			
             //Add an "Other" header if necessary
             if([soundMenu_cached indexOfItemWithTitle:OTHER] == -1) {
                 [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
