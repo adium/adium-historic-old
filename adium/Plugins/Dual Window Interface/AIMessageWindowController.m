@@ -481,11 +481,12 @@
     if(type){
         //The tab bar will take over and result in a draggingExited: coming to us here if the mouse is over the tab bar
         //so we need to be sure the drag is not inside the tab bar before hiding it
-        NSRect          tabBarFrame;
-        tabBarFrame = [tabView_customTabs frame];
-        tabBarFrame.size.height=tabHeight; //use its expanded height, not a potentially smaller one
-       
-        BOOL mouseInside = NSPointInRect([sender draggingLocation], tabBarFrame);
+
+        float x = [sender draggingLocation].x;
+        float y = [sender draggingLocation].y;
+        NSSize size = [[self window] frame].size;
+        BOOL mouseInside = (y > 0) && (y < size.height) && (x > 0) && (x < size.width);
+        
         if (!mouseInside && shouldHideOnDragExit) {
             shouldHideOnDragExit = NO;
             [self _updateTabBarVisibility]; //will take our tab bar visibility back to how it was before the drag
