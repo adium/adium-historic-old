@@ -206,7 +206,10 @@
 //Called once the webview has loaded and is ready to accept content
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
-	//Flag the view as ready so we know it's now safe to add content
+	//Flag the view as ready (as soon as the current methods exit) so we know it's now safe to add content
+	[self performSelector:@selector(webViewIsReady) withObject:nil afterDelay:0.0001];
+}
+- (void)webViewIsReady{
 	webViewIsReady = YES;
 }
 
