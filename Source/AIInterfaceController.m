@@ -246,7 +246,7 @@
 	
 	//Determine the correct container for this chat
 	if(groupChatsByContactGroup){
-		AIListObject	*group = [[inChat listObject] containingObject];
+		AIListObject	*group = [[[owner contactController] parentContactForListObject:[inChat listObject]] containingObject];
 		containerID = (group ? [group displayName] : @"Chat"); 
 	}else{
 		//Open new chats into the first container (if not available, create a new one)
