@@ -18,6 +18,13 @@
 	return(newCell);
 }
 
+- (void)dealloc
+{
+	[_gradient release];
+	
+	[super dealloc];
+}
+
 - (void)setShadowColor:(NSColor *)inColor
 {
 	if(inColor != shadowColor){
@@ -45,10 +52,29 @@
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	[[self backgroundGradient] drawInRect:rect];
+	[[self cachedGradient:rect.size] drawInRect:rect
+									   fromRect:NSMakeRect(0,0,rect.size.width,rect.size.height)
+									  operation:NSCompositeCopy
+									   fraction:1.0];
 }
 
-//Gradient (caaache me)
+- (NSImage *)cachedGradient:(NSSize)inSize
+{
+	if(!_gradient || !NSEqualSizes(inSize,_gradientSize)){
+		[_gradient release];
+		NSLog(@"rendering gradient");
+		_gradient = [[NSImage alloc] initWithSize:inSize];
+		_gradientSize = inSize;
+		
+		[_gradient lockFocus];
+		[[self backgroundGradient] drawInRect:NSMakeRect(0,0,inSize.width,inSize.height)];
+		[_gradient unlockFocus];
+	}
+	
+	return(_gradient);
+}
+
+//Gradient
 - (AIGradient *)backgroundGradient
 {
 	return([AIGradient gradientWithFirstColor:backgroundColor
