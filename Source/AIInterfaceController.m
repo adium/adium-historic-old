@@ -1249,7 +1249,7 @@
 		return(NO);
 		
 	}else if(menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted){
-		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType,nil]] != nil);
+		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil);
 	
 	}else if(menuItem == menuItem_showToolbar){
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
