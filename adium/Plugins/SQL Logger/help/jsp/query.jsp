@@ -157,6 +157,16 @@ try {
 
         String prevFirst = new String();
 
+        int numTotal[] = new int[rsmd.getColumnCount()];
+        boolean isNumber[] = new boolean[rsmd.getColumnCount()];
+
+        for (int i = 0; i < numTotal.length; i++) {
+            numTotal[i] = 0;
+            isNumber[i] = true;
+        }
+
+
+
         while(rset.next()) {
             if((rset.getRow() - 1) % 25 == 0) {
                 out.println("<tr>");
@@ -180,6 +190,7 @@ try {
                         out.println("<td><a href=\"index.jsp?message_id=" +
                             rset.getString(i) + "\">" + rset.getString(i) +
                             "</a></td>");
+                        isNumber[i - 1] = false;
                     } else {
                         out.println("<td>" + rset.getString(i) + "</td>");
                     }
@@ -187,9 +198,28 @@ try {
                 if(i == 1) {
                     prevFirst = rset.getString(1);
                 }
+
+                if(isNumber[i - 1]) {
+                    try {
+                        numTotal[i - 1] += Integer.parseInt(rset.getString(i));
+                    } catch (NumberFormatException e) {
+                        isNumber[i - 1] = false;
+                    }
+                }
             }
             out.println("</tr>");
         }
+        out.println("<tr><td><b>Tot:</b></td>");
+
+        for(int i = 1; i <= rsmd.getColumnCount(); i++) {
+            if(isNumber[i - 1]) {
+                out.println("<td><b>" + numTotal[i - 1] + "</b></td>");
+            } else {
+                out.println("<td></td>");
+            }
+        }
+
+        out.println("</tr>");
 
         out.println("</table>");
     }
