@@ -24,7 +24,7 @@
     IBOutlet		NSPopUpButton                                   *popupMenu_serviceList;
     IBOutlet		NSView						*view_accountDetails;
     IBOutlet		NSButton					*button_autoConnect;
-    IBOutlet		NSTabView					*tabView_auxilary;
+    IBOutlet		NSTabView					*tabView_auxiliary;
     NSMutableDictionary							*toolbarItems;
     
     AIAccount                                                   *selectedAccount;
