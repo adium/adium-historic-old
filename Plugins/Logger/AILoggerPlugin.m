@@ -71,16 +71,16 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     indexingThreadLock = [[NSLock alloc] init];
     dirtyLogLock = [[NSLock alloc] init];
 	logAccessLock = [[NSLock alloc] init];
-	
+
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
-                                                                        forClass:[self class]] 
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS
+                                                                        forClass:[self class]]
                                                                         forGroup:PREF_GROUP_LOGGING];
     preferences = [[AILoggerPreferences preferencePane] retain];
 
     //Install the log viewer menu items
     [self configureMenuItems];
-	
+
     //Create a logs directory
     logBasePath = [[[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
     [[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
@@ -107,24 +107,24 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 //Update for the new preferences
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-                            object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+                            object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict
 {
 	BOOL            newLogValue;
-	
+
 	logHTML = [[prefDict objectForKey:KEY_LOGGER_HTML] boolValue];
-	
+
 	//Start/Stop logging
 	newLogValue = [[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
 	if(newLogValue != observingContent){
 		observingContent = newLogValue;
-		
+
 		if(!observingContent){ //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-			
+
 		}else{ //Start Logging
-			[[adium notificationCenter] addObserver:self 
-                                                       selector:@selector(contentObjectAdded:) 
-                                                           name:Content_ContentObjectAdded 
+			[[adium notificationCenter] addObserver:self
+                                                       selector:@selector(contentObjectAdded:)
+                                                           name:Content_ContentObjectAdded
                                                          object:nil];
                 }
 	}
@@ -139,7 +139,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 //Returns the RELATIVE path to the folder where the log should be written
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account
-{	
+{
     return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [account formattedUID], object]);
 }
 
@@ -148,7 +148,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 {
 	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil];
 	NSString	*extension = (plainText ? @"adiumLog" : @"html");
-	
+
 	return([NSString stringWithFormat:@"%@ (%@).%@", [object safeFilenameString], dateString, extension]);
 }
 
@@ -178,10 +178,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL valid = YES;
-	
+
     if(menuItem == viewContactLogsMenuItem){
         AIListObject	*selectedObject = [[adium contactController] selectedListObject];
-		
+
 		//Update the menu titles to reflect the selected contact
         if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
             [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedObject displayName]]];
@@ -189,15 +189,15 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
             [viewContactLogsMenuItem setTitle:@"View Contact's Logs"];
             valid = NO;
         }
-		
+
     }else if(menuItem == viewContactLogsContextMenuItem){
         AIListContact	*selectedContact = [[adium menuController] contactualMenuContact];
-		
+
         if(!(selectedContact && [selectedContact isKindOfClass:[AIListContact class]])){
 			valid = NO;
 		}
     }
-	
+
     return(valid);
 }
 
@@ -235,14 +235,13 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		}
 
 		//Log the string, and flag the log as dirty
-		if(logString){
+		if(logString) {
 			NSString	*relativePath;
-                        NSString	*objectUID; // = [chat name];
-                        objectUID = [[chat listObject] formattedUID];
-                        if(!objectUID) objectUID = [chat name];
+                        NSString	*objectUID = [chat name];
+                        if(!objectUID) objectUID = [[chat listObject] UID];
 
-			relativePath = [self _writeMessage:logString
-                                            betweenAccount:[chat account] 
+                        relativePath = [self _writeMessage:logString
+                                            betweenAccount:[chat account]
                                                  andObject:objectUID
                                                     onDate:[content date]];
 
@@ -259,25 +258,25 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	AIListObject		*source = [content source];
 	NSString		*logString = nil;
 
-	if(date && message && source){
-		if(logHTML){
+	if(date && message && source) {
+		if(logHTML) {
 			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
 				([content isOutgoing] ? @"send" : @"receive"), date, [source formattedUID],
 				[AIHTMLDecoder encodeHTML:message
-                                                  headers:NO 
-                                                 fontTags:NO 
+                                                  headers:NO
+                                                 fontTags:NO
                                        includingColorTags:YES
-                                            closeFontTags:NO 
+                                            closeFontTags:NO
                                                 styleTags:YES
                                closeStyleTagsOnFontChange:YES
                                            encodeNonASCII:YES
                                              encodeSpaces:NO
                                                imagesPath:nil
-                                        attachmentsAsText:YES 
-                           attachmentImagesOnlyForSending:NO 
+                                        attachmentsAsText:YES
+                           attachmentImagesOnlyForSending:NO
                                            simpleTagsOnly:NO]];
-		}else{
-			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source formattedUID], [message string]];
+		} else {
+			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source UID], [message string]];
 		}
 	}
 
@@ -376,7 +375,7 @@ this problem is along the lines of:
     if(!dirtyLogArray){
 		[self resetLogIndex];
     }
-    
+
     //Load the index and start indexing to make it current
     if(logIndexingEnabled){
 		[self loadLogIndex];
@@ -416,21 +415,21 @@ this problem is along the lines of:
 {
     if(logIndexingEnabled){
 		NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
-		
+
 		if(dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]){
 			//Add to dirty array (Lock to ensure that no one changes its content while we are)
 			[dirtyLogLock lock];
 			[dirtyLogArray addObject:path];
 			[dirtyLogLock unlock];
-			
+
 			//Save the dirty array immedientally
 			[self _saveDirtyLogArray];
-			
+
 			//Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
 			[chat setStatusObject:[NSNumber numberWithBool:YES]
 						   forKey:dirtyKey
 						   notify:NotifyNever];
-		}	
+		}
     }
 }
 
@@ -455,7 +454,7 @@ this problem is along the lines of:
 {
     NSString    *logIndexPath = [self _logIndexPath];
     NSURL       *logIndexPathURL = [NSURL fileURLWithPath:logIndexPath];
-	
+
     if([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]){
 		[logAccessLock lock];
 		index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
@@ -464,7 +463,7 @@ this problem is along the lines of:
     if(!index_Content){
 		//Create the index if one doesn't exist
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
-		
+
 		[logAccessLock lock];
 		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexVector, NULL);
 		[logAccessLock unlock];
@@ -483,7 +482,7 @@ this problem is along the lines of:
 {
 	if([[NSFileManager defaultManager] fileExistsAtPath:[self _logIndexPath]]){
 		[[NSFileManager defaultManager] trashFileAtPath:[self _logIndexPath]];
-	}	
+	}
 }
 
 //Path of log index file
@@ -560,16 +559,16 @@ this problem is along the lines of:
     NSString		*fromName;
     AILogFromGroup      *fromGroup = nil;
     AILogToGroup	*toGroup;
-    AILog               *theLog;    
+    AILog               *theLog;
 
     [indexingThreadLock lock];      //Prevent anything from closing until this thread is complete.
     suspendDirtyArraySave = YES;    //Prevent saving of the dirty array until we're finished building it
-    
+
     //Create a fresh dirty log array
     [dirtyLogLock lock];
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
     [dirtyLogLock unlock];
-	
+
     //Process each from folder
     fromEnumerator = [[[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator] retain];
     while((fromName = [[fromEnumerator nextObject] retain])){
@@ -587,30 +586,30 @@ this problem is along the lines of:
 				[dirtyLogArray addObject:[theLog path]];
 				[dirtyLogLock unlock];
 			}
-			
+
 			//Flush our pool
 			[pool release]; pool = [[NSAutoreleasePool alloc] init];
-			
+
 			[toGroup release];
 		}
 		[toEnumerator release];
-		
+
 		[fromGroup release];
 		[fromName release];
     }
     [fromEnumerator release];
-	
+
     //Save the dirty array we just built
     if(!stopIndexingThreads){
 		[self _saveDirtyLogArray];
 		suspendDirtyArraySave = NO; //Re-allow saving of the dirty array
     }
-    
+
     //Begin cleaning the logs (If the log viewer is open)
     if([AILogViewerWindowController existingWindowController]){
 		[self cleanDirtyLogs];
     }
-    
+
     [indexingThreadLock unlock];
     [pool release];
 }
@@ -623,24 +622,24 @@ this problem is along the lines of:
     logsToIndex = [dirtyLogArray count];
     [dirtyLogLock unlock];
     logsIndexed = 0;
-	
+
 	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread) toTarget:self withObject:nil];
 }
 - (void)_cleanDirtyLogsThread
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-	
+
     [indexingThreadLock lock];     //Prevent anything from closing until this thread is complete.
-	
+
     //Start cleaning (If we're still supposed to go)
     if(!stopIndexingThreads){
 		UInt32		lastUpdate = TickCount();
 		int		unsavedChanges = 0;
-		
+
 		//Scan until we're done or told to stop
 		while(!stopIndexingThreads){
 			NSString	*logPath = nil;
-			
+
 			//Get the next dirty log
 			[dirtyLogLock lock];
 			if([dirtyLogArray count]){
@@ -648,11 +647,11 @@ this problem is along the lines of:
 				[dirtyLogArray removeLastObject];
 			}
 			[dirtyLogLock unlock];
-			
+
 			if(logPath){
 				NSString	    *fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:logPath];
 				SKDocumentRef   document;
-				
+
 				//Re-index the log
 				//What we should do here is the following:
 				//document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:logPath]);
@@ -665,50 +664,50 @@ this problem is along the lines of:
 				SKIndexAddDocumentWithText(index_Content, document, (CFStringRef)[NSString stringWithContentsOfFile:fullPath], YES);
 				CFRelease(document);
 				[logAccessLock unlock];
-				
+
 				//Update our progress
 				logsIndexed++;
 				if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_INDEX_STATUS_INTERVAL){
 					[[AILogViewerWindowController existingWindowController]
-                                            performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+                                            performSelectorOnMainThread:@selector(logIndexingProgressUpdate)
                                                              withObject:nil
                                                           waitUntilDone:NO];
 					lastUpdate = TickCount();
 				}
-				
+
 				//Save the dirty array
 				if(unsavedChanges++ > LOG_CLEAN_SAVE_INTERVAL){
 					[self _saveDirtyLogArray];
-					
+
 					[logAccessLock lock];
 					SKIndexFlush(index_Content);
 					[logAccessLock unlock];
-							
+
 					unsavedChanges = 0;
-					
+
 					//Flush ram
 					[pool release]; pool = [[NSAutoreleasePool alloc] init];
 				}
-				
+
 			}else{
 				break; //Exit when we run out of logs
 			}
 		}
-		
+
 		//Save the slimmed down dirty log array
 		[self _saveDirtyLogArray];
-		
+
 		[logAccessLock lock];
 		SKIndexFlush(index_Content);
 		[logAccessLock unlock];
-		
+
 		//Update our progress
 		logsToIndex = 0;
-		[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+		[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate)
                                                                                          withObject:nil
                                                                                       waitUntilDone:NO];
     }
-    
+
     [indexingThreadLock unlock];
     [pool release];
 }
