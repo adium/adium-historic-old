@@ -313,10 +313,15 @@
     [contentThreadQueue addObject:content];
 }
 
-//Return our message view
+//Return our message view to be inserted into a message window
 - (NSView *)messageView
 {
     return(scrollView_messages);
+}
+//Return our scroll view, which is the same as our message view
+- (NSScrollView *)messageScrollView
+{
+    return(scrollView_messages);	
 }
 
 //Return our chat
