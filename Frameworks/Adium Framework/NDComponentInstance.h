@@ -13,8 +13,6 @@
 extern const NSString	* NDAppleScriptOffendingObject,
 								* NDAppleScriptPartialResult;
 
-@protocol NDScriptDataAppleEventResumeHandler;
-
 /*!
 	@class NDComponentInstance
 	@abstract A class to represent a component instance.
