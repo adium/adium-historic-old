@@ -1,10 +1,7 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.80 (13/-3/2525)
-- Achieved world domination
-- Obtained tasty sandwiches
-
+Version 0.80 (??/??/????)
 - Fullsize tooltip images
 - Toolbar buttons: send file, scripts, offline contacts, add contact, add group, view logs, user icon
 - Speech no longer interrupts speech from other applications
@@ -15,7 +12,7 @@ Version 0.80 (13/-3/2525)
 - Background image options for message windows (tiled, scaled, centered)
 - Added support for custom Service Icon AdiumXtra packs
 - Added support for custom Status Icon AdiumXtra packs, and added a second built-in pack, "Chat Bubbles"
-- Removed games (see imgames)
+- Removed games (see http://imgames.sourceforge.net/)
 - %_uptime returns actual uptime
 - %_adiumVersion returns Adium version as a link to www.adiumx.com
 - Added support for completely hiding groups in the contact list
@@ -36,7 +33,7 @@ Version 0.80 (13/-3/2525)
 
 - Improved searching logs in the Log Viewer in non-ASCII languages
 - Improved Log Viewer log deletion support
-- Miscallenous other Log Viewer improvements
+- Miscellaneous other Log Viewer improvements
 
 - Fixed issues with horizontal autosizing in certain circumstances
 - Added contact list contact fading when contacts sign on and off
@@ -51,7 +48,6 @@ Version 0.80 (13/-3/2525)
 
 - Added support for background colors for participating message window styles (XXX - we should update the other default ones)
 - (MSN) Display name is now shown locally the same way it is shown to other contacts, including with processing of iTunes and other scripts.
-
 
 - Complete File Transfer interface implementation
 	- Preferences for file transfer sending and receiving
@@ -81,7 +77,7 @@ Version 0.80 (13/-3/2525)
 	- Active accounts automatically connect when Adium is loaded; accounts may be connected manually/temporarily in the new Status menu and via the Menu Item.
 	- Cleaned up, streamlined, and improved per-account preferences
 
-- Encrypted instant messaging with authentication, deniability, and perfect foward secrecy over all protocols except Rendezvous:
+- Encrypted instant messaging with authentication, deniability, and perfect forward secrecy over all protocols except Rendezvous:
 	- Automatic private key generation and encrypted messaging negotiation
 	- Per-account, per-group, and per-contact encryption settings
 	- Added locked/unlocked message window toolbar item to indicate encryption status and provide encryption options
