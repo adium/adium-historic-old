@@ -19,6 +19,7 @@
 #import "ESContactAlertsController.h"
 #import "ESGlobalEventsPreferences.h"
 #import "ESGlobalEventsPreferencesPlugin.h"
+#import <Adium/ESPresetManagementController.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -52,21 +53,34 @@
 - (NSString *)_localizedTitle:(NSString *)englishTitle;
 
 - (void)saveCurrentEventPreset;
+
+- (void)setAndConfigureEventPresetsMenu;
+- (void)updateSoundSetSelection;
 @end
 
 @implementation ESGlobalEventsPreferences
-//Preference pane properties
+/*
+ * @brief Category
+ */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Events);
 }
+/*
+ * @brief Label
+ */
 - (NSString *)label{
     return(EVENTS_TITLE);
 }
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"GlobalEventsPreferences");
 }
 
-//Configure the preference view
+/*
+ * @brief Configure the preference view
+ */
 - (void)viewDidLoad
 {
 	//Configure our global contact alerts view controller
@@ -85,11 +99,9 @@
 
 	//Show menu
 	[popUp_show setMenu:[self showMenu]];
-	
+
 	//Presets menu
-	[popUp_eventPreset setMenu:[self eventPresetsMenu]];
-	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
-																					group:PREF_GROUP_EVENT_PRESETS]];
+	[self setAndConfigureEventPresetsMenu];
 
 	[label_soundSet setLocalizedString:AILocalizedString(@"Sound set:",nil)];
 
@@ -121,22 +133,26 @@
 	[outlineView_summary setTarget:self];
 	[outlineView_summary setDoubleAction:@selector(configureSelectedEvent:)];
 
-	
-	//Observe sound preference changes to update the soundset popup
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
-		
 	//Observe contact alerts preferences to update our summary
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
 
+	//And event presets to update our presets menu
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_PRESETS];
+
 	//Enable/disable our configure button as appropriate
 	[button_configure setEnabled:([outlineView_summary selectedRow] != -1)];
-	
+
+	//Ensure the correct sound set is selected
+	[self updateSoundSetSelection];
+
 	//Ensure we start off on the summary tab
 	[self selectShowSummary:nil];
 	
 }
 
-//Preference view is closing
+/*
+ * @brief Preference view is closing
+ */
 - (void)viewWillClose
 {
 	[contactAlertsViewController viewWillClose];
@@ -149,6 +165,9 @@
 	[contactAlertsActions release]; contactAlertsActions = nil;
 }
 
+/*
+ * @brief Reload the information for our summary table, then update it
+ */
 - (void)reloadSummaryData
 {
 	//Get two parallel arrays for event IDs and the array of actions for that event ID
@@ -167,30 +186,25 @@
 	[outlineView_summary reloadData];	
 }
 
-//Called when the preferences change, update our preference display
+/*
+ * @brief PREF_GROUP_CONTACT_ALERTS changed; update our summary data
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([group isEqualToString:PREF_GROUP_SOUNDS]){
-		//If the soundset changed
-		if(!key || ([key isEqualToString:KEY_EVENT_SOUND_SET])){
-			NSString		*soundSetPath = [prefDict objectForKey:KEY_EVENT_SOUND_SET];
-			
-			//Update the soundset popUp
-			if(soundSetPath && [soundSetPath length] != 0){
-				[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];
-				[self popUp:popUp_soundSet shouldShowCustom:NO];
-	
-			}else{
-				[self popUp:popUp_soundSet shouldShowCustom:YES];
-			}
-		}
-
-	}else if([group isEqualToString:PREF_GROUP_CONTACT_ALERTS]){
+	if([group isEqualToString:PREF_GROUP_CONTACT_ALERTS]){
 		[self reloadSummaryData];
+	}else if([group isEqualToString:PREF_GROUP_EVENT_PRESETS]){
+		if(!key || [key isEqualToString:@"Event Presets"]){
+			//Update when the available event presets change
+			[self setAndConfigureEventPresetsMenu];
+		}
 	}
 }
 
+/*
+ * @brief Set if a popup should have a "Custom" menu item
+ */
 - (void)popUp:(NSPopUpButton *)inPopUp shouldShowCustom:(BOOL)showCustom
 {
 	NSMenuItem	*lastItem = [inPopUp lastItem];
@@ -212,6 +226,9 @@
 	}
 }
 
+/*
+ * @brief Update our soundset menu if a new sound set is instaled
+ */
 - (void)xtrasChanged:(NSNotification *)notification
 {
 	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){		
@@ -221,35 +238,40 @@
 }
 
 #pragma mark Event presets
+
+/*
+ * @brief Buld and return the event presets menu
+ *
+ * The menu will have built in presets, a divider, user-set presets, a divider, and then the preset management item(s)
+ */
 - (NSMenu *)eventPresetsMenu
 {
 	NSMenu			*eventPresetsMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
 	NSEnumerator	*enumerator;
-	NSDictionary	*builtInEventPresets = [plugin builtInEventPresets];
 	NSDictionary	*eventPreset;
+	NSMenuItem		*menuItem;
 	
-	enumerator = [builtInEventPresets objectEnumerator];
+	//Built in event presets
+	enumerator = [[plugin builtInEventPresetsArray] objectEnumerator];
 	while(eventPreset = [enumerator nextObject]){
-		NSMenuItem		*menuItem;
 		NSString		*name = [eventPreset objectForKey:@"Name"];
-
+		
 		//Add a menu item for the set
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name/*[self _localizedTitle:name]*/
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																		 target:self
 																		 action:@selector(selectEventPreset:)
 																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:eventPreset];
 		[eventPresetsMenu addItem:menuItem];
 	}
-
-	NSDictionary	*storedEventPresets = [plugin storedEventPresets];
 	
-	if([storedEventPresets count]){
+	NSArray	*storedEventPresetsArray = [plugin storedEventPresetsArray];
+	
+	if([storedEventPresetsArray count]){
 		[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
 		
-		enumerator = [storedEventPresets objectEnumerator];
+		enumerator = [storedEventPresetsArray objectEnumerator];
 		while(eventPreset = [enumerator nextObject]){
-			NSMenuItem		*menuItem;
 			NSString		*name = [eventPreset objectForKey:@"Name"];
 			
 			//Add a menu item for the set
@@ -261,8 +283,24 @@
 			[eventPresetsMenu addItem:menuItem];
 		}
 	}
+	
+	//Edit Presets
+	[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
 
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Presets...",nil)
+																	 target:self
+																	 action:@selector(editPresets:)
+															  keyEquivalent:@""] autorelease];
+	[eventPresetsMenu addItem:menuItem];
+		
 	return([eventPresetsMenu autorelease]);
+}
+
+- (void)setAndConfigureEventPresetsMenu
+{
+	[popUp_eventPreset setMenu:[self eventPresetsMenu]];
+	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
+																					group:PREF_GROUP_EVENT_PRESETS]];
 }
 
 /*
@@ -274,9 +312,107 @@
 {
 	NSDictionary	*eventPreset = [sender representedObject];
 	[plugin setEventPreset:eventPreset];
+
+	[self updateSoundSetSelection];
+}
+
+/*
+ * @brief Manage presets
+ *
+ * Called by the "Edit Presets..." menu item
+ */
+- (void)editPresets:(id)sender
+{
+	[ESPresetManagementController managePresets:[plugin storedEventPresetsArray]
+									 namedByKey:@"Name"
+									   onWindow:[[self view] window]
+								   withDelegate:self];
+
+	//Get our event presets menu back to its proper selection
+	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
+																					group:PREF_GROUP_EVENT_PRESETS]];
+}
+
+- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)name inPresets:(NSArray *)presets
+{
+	NSMutableDictionary	*newPreset = [preset mutableCopy];
+	[newPreset setObject:name
+				  forKey:@"Name"];
+	
+	//Remove the original one from the array, and add the newly-renamed one
+	[plugin deleteEventPreset:preset];
+	[plugin saveEventPreset:newPreset];
+
+	//Return an updated presets array
+	return [plugin storedEventPresetsArray];
+}
+
+- (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset
+{
+	NSMutableDictionary	*newEventPreset = [preset mutableCopy];
+	NSString			*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"Name"], AILocalizedString(@"Copy",nil)];
+	[newEventPreset setObject:newName
+				  forKey:@"Name"];
+	
+	//Remove the original preset's order index
+	[newEventPreset removeObjectForKey:@"OrderIndex"];
+	
+	//Now save the new preset
+	[plugin saveEventPreset:newEventPreset];
+
+	//Return the created duplicate by reference
+	if(duplicatePreset != NULL) *duplicatePreset = [[newEventPreset retain] autorelease];
+	
+	//Cleanup
+	[newEventPreset release];
+
+	//Return an updated presets array
+	return [plugin storedEventPresetsArray];
+}
+
+- (NSArray *)deletePreset:(NSDictionary *)preset inPresets:(NSArray *)presets
+{
+	//Remove the preset
+	[plugin deleteEventPreset:preset];
+	
+	//Return an updated presets array
+	return [plugin storedEventPresetsArray];
+}
+
+- (NSArray *)movePreset:(NSDictionary *)preset toIndex:(int)index inPresets:(NSArray *)presets presetAfterMove:(id *)presetAfterMove
+{
+	NSMutableDictionary	*newEventPreset = [preset mutableCopy];
+	float newOrderIndex;
+	if(index == 0){		
+		newOrderIndex = [[[presets objectAtIndex:0] objectForKey:@"OrderIndex"] floatValue] / 2.0;
+
+	}else if(index < [presets count]){
+		float above = [[[presets objectAtIndex:index-1] objectForKey:@"OrderIndex"] floatValue];
+		float below = [[[presets objectAtIndex:index] objectForKey:@"OrderIndex"] floatValue];
+		newOrderIndex = ((above + below) / 2.0);
+
+	}else{
+		newOrderIndex = [plugin nextOrderIndex];
+	}
+	
+	[newEventPreset setObject:[NSNumber numberWithFloat:newOrderIndex]
+				  forKey:@"OrderIndex"];
+			 
+	//Now save the new preset
+	[plugin saveEventPreset:newEventPreset];
+	if(presetAfterMove != NULL) *presetAfterMove = [[newEventPreset retain] autorelease];
+	[newEventPreset release];
+
+	//Return an updated presets array
+	return [plugin storedEventPresetsArray];
 }
 
 #pragma mark Summary and specific events
+/*
+ * @brief Menu of Show: options
+ *
+ * First has the Event Action Summary item, then has an item for each event
+ */
 - (NSMenu *)showMenu
 {
 	NSMenu			*showMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
@@ -465,7 +601,6 @@
 	return ((necessaryHeight > MINIMUM_ROW_HEIGHT) ? necessaryHeight : MINIMUM_ROW_HEIGHT);
 }
 
-//Before a cell is display, set its embedded view
 - (void)outlineView:(NSOutlineView *)inOutlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 
@@ -501,12 +636,28 @@
 				actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 				
 				if(actionHandler && [actionHandler respondsToSelector:@selector(performPreviewForAlert:)]){
-					[actionHandler performPreviewForAlert:eventDict];
+					[(id)actionHandler performPreviewForAlert:eventDict];
 					[perfomedPreviewsSet addObject:actionID];
 				}				
 			}
 		}
 	}
+}
+
+- (void)deleteContactEvents:(NSArray *)contactEvents
+{
+	NSDictionary	*eventDict;
+	NSEnumerator	*enumerator;
+
+	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+	enumerator = [contactEvents objectEnumerator];
+	while(eventDict = [enumerator nextObject]){			
+		[[adium contactAlertsController] removeAlert:eventDict fromListObject:nil];
+	}
+	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+
+	//Save the current preset
+	[self saveCurrentEventPreset];	
 }
 
 - (void)outlineViewDeleteSelectedRows:(NSOutlineView *)inOutlineView
@@ -515,38 +666,48 @@
 
 	//Remove
 	if(row != -1){
-		NSBeginAlertSheet(AILocalizedString(@"Delete Event?",nil),
-						  AILocalizedString(@"OK",nil),
-						  AILocalizedString(@"Cancel",nil),
-						  nil, /*otherButton*/
-						  [[self view] window],
-						  self,
-						  @selector(sheetDidEnd:returnCode:contextInfo:),
-						  NULL, /* didDismissSelector */
-						  [outlineView_summary itemAtRow:row],
-						  AILocalizedString(@"Remove all actions associated with this event?",nil));
+		NSArray		*contactEvents = [outlineView_summary itemAtRow:row];
+		unsigned	contactEventsCount = [contactEvents count];
+		
+		if(contactEventsCount > 1){
+			//Warn before deleting more than one event simultaneously
+			NSBeginAlertSheet(AILocalizedString(@"Delete Event?",nil),
+							  AILocalizedString(@"OK",nil),
+							  AILocalizedString(@"Cancel",nil),
+							  nil, /*otherButton*/
+							  [[self view] window],
+							  self,
+							  @selector(sheetDidEnd:returnCode:contextInfo:),
+							  NULL, /* didDismissSelector */
+							  contactEvents,
+							  AILocalizedString(@"Remove all %i actions associated with this event?",nil), contactEventsCount);
+		}else{
+			//Delete a single event immediately
+			[self deleteContactEvents:contactEvents];
+		}
 	}else{
 		NSBeep();
 	}
 }
 
+/*
+ * @brief Warning sheet for deleting multiple events ended
+ *
+ * If the user pressed OK, go ahead with deleting the events.
+ */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	if(returnCode == NSAlertDefaultReturn){
-		NSDictionary	*eventDict;
-		NSEnumerator	*enumerator;
-		NSArray			*contactEvents = (NSArray *)contextInfo;
-		
-		[[adium preferenceController] delayPreferenceChangedNotifications:YES];
-		enumerator = [contactEvents objectEnumerator];
-		while(eventDict = [enumerator nextObject]){			
-			[[adium contactAlertsController] removeAlert:eventDict fromListObject:nil];
-		}
-		[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+		[self deleteContactEvents:(NSArray *)contextInfo];
 	}
 }
 
 #pragma mark Specific events
+/*
+ * @brief User selected an event from the Show: menu
+ *
+ * Edit the actions for the selected event.
+ */
 - (IBAction)selectEvent:(id)sender
 {
 	NSString	*eventID;
@@ -569,6 +730,13 @@
 	[popUp_show selectItemWithRepresentedObject:eventID];
 }
 
+/*
+ * @brief Called by the contact alerts controller to determine the event ID to use for a new contact alert
+ *
+ * We have disabled the Event popup in the contact alerts controller's NewAlert sheet (in viewDidLoad) so
+ * we need to inform it with each NewAlert for what event to configure.  We configure for the event currently
+ * showin the Show: popUp.
+ */
 - (NSString *)initialEventIDForNewContactAlert
 {
 	id initialEventID;
@@ -594,6 +762,9 @@
 	[self contactAlertsDidChangeForActionID:[deletedAlert objectForKey:KEY_ACTION_ID]];	
 }
 
+/*
+ * @brief Contact alerts were changed by the user
+ */
 - (void)contactAlertsDidChangeForActionID:(NSString *)actionID
 {
 	if([actionID isEqualToString:SOUND_ALERT_IDENTIFIER]){
@@ -608,9 +779,13 @@
 			soundMenuItem = (NSMenuItem *)[popUp_soundSet itemWithTitle:@"None"];
 		}
 
-		//Sounds changed.  Could check all sounds to determine if we are on a soundset or are now 'custom',
-		//but that would probably be very expensive.
-		//For now, if sounds change, we are 'custom' even if it gets us back to a sound set
+		/* Sounds changed.  Could check all sounds to determine if we are on a soundset or are now 'custom',
+		 * but that would probably be very expensive.
+		 *
+		 * For now, if sounds change, we no longer show as being in a set, even if we really are.
+		 * 
+		 * Simulate the user having selected the appropriate menu item.
+		 */
 		[self selectSoundSet:soundMenuItem];
 
 	}else{
@@ -619,27 +794,42 @@
 }
 
 #pragma mark Sound sets
-//The user selected a sound set
+/*
+ * @brief Called when an item in the sound set popUp is selected.
+ *
+ * Also called after the user changes sounds manually, by -[ESGlobalEventsPreferences contactAlertsDidChangeForActionID].
+ */
 - (IBAction)selectSoundSet:(id)sender
 {
 	NSString			*soundSetPath = ([sender representedObject] ?
 										 [[sender representedObject] stringByCollapsingBundlePath] :
 										 @"");
 	
-	//Apply the sound set so its events are in the current alerts. This will also set the KEY_EVENT_SOUND_SET key for PREF_GROUP_SOUNDS
+	//Apply the sound set so its events are in the current alerts.
 	[plugin applySoundSetWithPath:soundSetPath];
 	
+	/* Save the preset which is now updated to have the appropriate sounds; 
+	 * in saving, the name of the soundset, or @"", will also be saved.
+	 */
 	[self saveCurrentEventPreset];
+	
+	[self updateSoundSetSelection];
 }
 
+/*
+ * @brief Build and return the event set as it should be saved
+ */
 - (NSMutableDictionary *)currentEventSetForSaving
 {
 	NSDictionary		*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
 	NSMutableDictionary	*currentEventSetForSaving = [[eventPreset mutableCopy] autorelease];
 	
 	//Set the sound set, which is just stored here for ease of preference pane display
-	[currentEventSetForSaving setObject:[[adium preferenceController] preferenceForKey:KEY_EVENT_SOUND_SET
-																				 group:PREF_GROUP_SOUNDS]
+	NSString	*soundSet = [[popUp_soundSet selectedItem] representedObject];
+	
+	[currentEventSetForSaving setObject:(soundSet ?
+										 [soundSet stringByCollapsingBundlePath] :
+										 @"")
 								 forKey:KEY_EVENT_SOUND_SET];
 	
 	//Get and store the alerts array
@@ -654,6 +844,12 @@
 	return(currentEventSetForSaving);
 }
 
+/*
+ * @brief Save the current event preset
+ *
+ * Called after each event change to immediately update the current preset.
+ * If a built-in preset is currently selected, this method will prompt for a new name before saving.
+ */
 - (void)saveCurrentEventPreset
 {
 	NSDictionary		*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
@@ -670,6 +866,11 @@
 	}		
 }
 
+/*
+ * @brief Show the sheet for naming the preset created by an attempt to modify a built-in set
+ *
+ * @param originalPresetName The name of the original set, used as a base for the new name.
+ */
 - (void)showPresetCopySheet:(NSString *)originalPresetName
 {
 	[textField_name setStringValue:[NSString stringWithFormat:@"%@ (%@)",
@@ -693,6 +894,7 @@
  */
 - (IBAction)selectedNameForPresetCopy:(id)sender
 {
+	//XXX error if overwriting existing set?
 	NSMutableDictionary	*newEventPreset = [self currentEventSetForSaving];
 	NSString			*name = [textField_name stringValue];
 	[newEventPreset setObject:name
@@ -713,7 +915,26 @@
 	
 }
 
-//Builds and returns a sound set menu
+- (void)updateSoundSetSelection
+{
+	NSDictionary	*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
+	
+	//Update the soundset popUp
+	NSString		*soundSetPath = [eventPreset objectForKey:KEY_EVENT_SOUND_SET];
+	if(soundSetPath && [soundSetPath length] != 0){
+		[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];
+		[self popUp:popUp_soundSet shouldShowCustom:NO];
+		
+	}else{
+		[self popUp:popUp_soundSet shouldShowCustom:YES];
+	}
+}
+
+/*
+ * @brief Build and return a menu of sound set choices
+ *
+ * The menu items have an action of -[self selectSoundSet:].
+ */
 - (NSMenu *)_soundSetMenu
 {
     NSEnumerator	*enumerator;
@@ -790,7 +1011,7 @@
 }
 @end
 
-#if 0
+/*
 //Builds and returns a sound list menu - with full Other... support, from the old sound custom panel
 - (NSMenu *)soundListMenu
 {
@@ -898,4 +1119,4 @@
     
     return(soundMenu_cached);
 }
-#endif
+*/
