@@ -182,6 +182,7 @@
  * @brief Compare two emoticons
  *
  * @result The result of comparing the display names of the emoticons, case insensitively
+ */
 - (NSComparisonResult)compare:(AIEmoticon *)otherEmoticon
 {
 	return([name caseInsensitiveCompare:[otherEmoticon name]]);
