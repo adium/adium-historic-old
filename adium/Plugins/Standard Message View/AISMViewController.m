@@ -454,8 +454,7 @@
 //Build and return an attributed string for the content using the current prefix preference
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content
 {
-    BOOL        outgoing = ([[content source] isKindOfClass:[AIAccount class]]);
-    NSString    *prefixFormat = (outgoing ? prefixOutgoing : prefixIncoming);
+    NSString    *prefixFormat = ([content isOutgoing] ? prefixOutgoing : prefixIncoming);
     NSRange     messageRange;
     
     //Does the prefix contain the message ?
@@ -480,12 +479,11 @@
 //Expand the prefix format for a content object, returning an attributed string formatted according to the current preferences
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content
 {
-    BOOL	outgoing = ([[content source] isKindOfClass:[AIAccount class]]);
     NSString    *string = [self _prefixStringByExpandingFormat:format forContent:content];
 
     //Create an attributed string from it with the prefix font and colors
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-        (outgoing ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
+        ([content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
         prefixFont, NSFontAttributeName,
         nil];
     

@@ -97,7 +97,7 @@
         if(account && source) { //valid message
             theMessage = [[NSMutableString alloc] init];
 	    //Determine some basic info about the content
-	    BOOL isOutgoing = ([source isKindOfClass:[AIAccount class]]);
+	    BOOL isOutgoing = [content isOutgoing];
 	    BOOL newParagraph = NO;
 	    if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
 		
