@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.41 2004/02/08 08:39:28 ramoth4 Exp $
+// $Id: AIPreferenceController.m,v 1.42 2004/02/26 23:22:51 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -67,11 +67,16 @@
     [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 }
 
+//We must close the preference window before plugins and the other controllers are unloaded.
+- (void)beginClosing
+{
+    [AIPreferenceWindowController closeSharedInstance];
+}
+
 //close
 - (void)closeController
 {
     //Preferences are (always) saved as they're modified, so there's no need to save them here.
-    [AIPreferenceWindowController closeSharedInstance]; //Close the preference window
 } 
 
 //dealloc
