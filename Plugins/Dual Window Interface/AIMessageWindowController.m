@@ -196,14 +196,16 @@
 	[[self window] performClose:nil];
 }
 
-//called as the window closes
-- (BOOL)windowShouldClose:(id)sender
+/*
+ * @brief Called as the window closes
+ */
+- (void)windowWillClose:(id)sender
 {
     NSEnumerator			*enumerator;
     AIMessageTabViewItem	*tabViewItem;
 	
 	windowIsClosing = YES;
-	[super windowShouldClose:sender];
+	[super windowWillClose:sender];
 
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
