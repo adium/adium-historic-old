@@ -14,6 +14,12 @@
 
 #define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
 
+typedef enum {
+	AIDockToBottom_No = 0,
+    AIDockToBottom_VisibleFrame,
+	AIDockToBottom_TotalFrame
+} DOCK_BOTTOM_TYPE;
+
 @interface AIListController (PRIVATE)
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
 - (void)contactListChanged:(NSNotification *)notification;
@@ -42,8 +48,7 @@
     [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 
 									   name:ListObject_AttributesChanged
 									 object:nil];
-    [self contactListChanged:nil];
-	
+
 	//Observe group expansion for resizing
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(outlineViewUserDidExpandItem:)
@@ -59,8 +64,10 @@
 
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
-																	group:PREF_GROUP_WINDOW_POSITIONS] boolValue];
+																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 
+	[self contactListChanged:nil];
+	
 	return(self);
 }
 
@@ -79,7 +86,7 @@
 - (void)dealloc
 {
 	//Remember how the contact list is currently docked for next time
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:dockToBottomOfScreen]
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:dockToBottomOfScreen]
 										 forKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 										  group:PREF_GROUP_WINDOW_POSITIONS];
 	
@@ -110,6 +117,7 @@
 											 (autoResizeVertically ? desiredFrame.size.height : minWindowSize.height))];
 			[theWindow setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
 											 (autoResizeVertically ? desiredFrame.size.height : 10000))];
+
 			[theWindow setFrame:desiredFrame display:YES animate:NO];
 		}
     }
@@ -124,14 +132,25 @@
 //Window moved, remember which side the user has docked it to
 - (void)windowDidMove:(NSNotification *)notification
 {
-	NSRect		windowFrame = [[contactListView window] frame];
-	NSRect		boundingFrame = [[[contactListView window] screen] visibleFrame];
+	NSWindow	*theWindow = [contactListView window];
+	NSRect		windowFrame = [theWindow frame];
+	NSScreen	*theWindowScreen = [theWindow screen];
+
+	NSRect		boundingFrame = [theWindowScreen frame];
+	NSRect		visibleBoundingFrame = [theWindowScreen visibleFrame];
 	
-	if((windowFrame.origin.y + windowFrame.size.height < boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y) &&
-	   (windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y)){
-		dockToBottomOfScreen = YES;
+	//First, see if they are now within EDGE_CATCH_Y of the total boundingFrame
+	if((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
+	   (windowFrame.origin.y + windowFrame.size.height < boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y)){
+		dockToBottomOfScreen = AIDockToBottom_TotalFrame;
 	}else{
-		dockToBottomOfScreen = NO;
+		//Then, check for the (possibly smaller) visibleBoundingFrame
+		if((windowFrame.origin.y < visibleBoundingFrame.origin.y + EDGE_CATCH_Y) &&
+		   (windowFrame.origin.y + windowFrame.size.height < visibleBoundingFrame.origin.y + visibleBoundingFrame.size.height - EDGE_CATCH_Y)){
+			dockToBottomOfScreen = AIDockToBottom_VisibleFrame;
+		}else{
+			dockToBottomOfScreen = AIDockToBottom_No;
+		}
 	}
 }
 
@@ -142,13 +161,13 @@
 	NSRect      windowFrame, viewFrame, newWindowFrame, screenFrame, visibleScreenFrame, boundingFrame;
 	NSWindow	*theWindow = [contactListView window];
 	NSScreen	*currentScreen = [theWindow screen];
-	
+
 	windowFrame = [theWindow frame];
 	newWindowFrame = windowFrame;
 	viewFrame = [scrollView_contactList frame];
 	screenFrame = [currentScreen frame];
 	visibleScreenFrame = [currentScreen visibleFrame];
-	
+
 	//Width
 	if(useDesiredWidth){
 		if(forcedWindowWidth != -1){
@@ -160,10 +179,12 @@
 			
 			//Now, figure out how big the view wants to be and add that to our frame
 			newWindowFrame.size.width += [contactListView desiredWidth];
-			
+
 			//Don't get bigger than our maxWindowWidth
 			if(newWindowFrame.size.width > maxWindowWidth){
 				newWindowFrame.size.width = maxWindowWidth;
+			}else if(newWindowFrame.size.width < 0){
+				newWindowFrame.size.width = 0;	
 			}
 
 			//Anchor to the appropriate screen edge
@@ -171,56 +192,76 @@
 				newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
 			}else{
 				newWindowFrame.origin.x = windowFrame.origin.x;
+
 			}
+		}		
+	}
+	
+	/*
+	 If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
+		we use the full screenFrame as our bound.
+	 The edge check is used since most users' docks will not extend to the edges of the screen.
+	 Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
+		on the edge.
+	*/
+	BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
+						 ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
+	if((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
+	   (dockToBottomOfScreen == AIDockToBottom_TotalFrame)){
+		NSArray *screens;
+		
+		boundingFrame = screenFrame;
+		
+		//We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
+		if ((screens = [NSScreen screens]) &&
+			([screens count]) &&
+			(currentScreen == [screens objectAtIndex:0])){
+			boundingFrame.size.height -= MENU_BAR_HEIGHT;
 		}
+		
+	}else{
+		boundingFrame = visibleScreenFrame;
 	}
 	
 	//Height
 	if(useDesiredHeight){
 		//Subtract the current size of the view from our frame
 		newWindowFrame.size.height -= viewFrame.size.height;
-
+		
 		//Now, figure out how big the view wants to be and add that to our frame
 		newWindowFrame.size.height += [contactListView desiredHeight];
-
-		//If the window is against the left or right edges of the screen, we use the full screenFrame as our
-		//bound, since most users docks will not extend to the edges of the screen.
-		if((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
-		   ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X))){
-			NSArray *screens;
-
-			boundingFrame = screenFrame;
-
-			//We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
-			if ((screens = [NSScreen screens]) &&
-				([screens count]) &&
-				(currentScreen == [screens objectAtIndex:0])){
-				boundingFrame.size.height -= MENU_BAR_HEIGHT;
-			}
-
-		}else{
-			boundingFrame = visibleScreenFrame;
-		}
-
-		//Vertical positioning and size
+		
+		//Vertical positioning and size if we are placed on a screen
 		if(newWindowFrame.size.height >= boundingFrame.size.height){
 			//If the window is bigger than the screen, keep it on the screen
 			newWindowFrame.size.height = boundingFrame.size.height;
 			newWindowFrame.origin.y = boundingFrame.origin.y;
 		}else{
 			//A Non-full height window is anchrored to the appropriate screen edge
-			if(dockToBottomOfScreen){
-				newWindowFrame.origin.y = windowFrame.origin.y;
-			}else{
+			if(dockToBottomOfScreen == AIDockToBottom_No){
+				//If the user did not dock to the bottom in any way last, the origin should move up
 				newWindowFrame.origin.y = (windowFrame.origin.y + windowFrame.size.height) - newWindowFrame.size.height;
+			}else{
+				//If the user did dock (either to the full screen or the visible screen), the origin should remain in place.
+				newWindowFrame.origin.y = windowFrame.origin.y;				
 			}
 		}
+		
+		//We must never request a height of 0 or OS X will completely move us off the screen
+		if(newWindowFrame.size.height == 0) newWindowFrame.size.height = 1;
 
-		//Keep the window from hanging off any screen edge (This is optional and could be removed if this annoys people)
-		if(NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
-		if(NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);
-		if(NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
+		//Keep the window from hanging off any Y screen edge (This is optional and could be removed if this annoys people)
 		if(NSMaxY(newWindowFrame) > NSMaxY(boundingFrame)) newWindowFrame.origin.y = NSMaxY(boundingFrame) - newWindowFrame.size.height;
+		if(NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);			
+	}
+
+	if(useDesiredWidth){
+		//We must never request a width of 0 or OS X will completely move us off the screen
+		if(newWindowFrame.size.width == 0) newWindowFrame.size.width = 1;
+
+		//Keep the window from hanging off any X screen edge (This is optional and could be removed if this annoys people)
+		if(NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
+		if(NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 	}
 
 	return(newWindowFrame);

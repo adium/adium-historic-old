@@ -125,8 +125,8 @@
 - (int)desiredWidth
 {
 	unsigned	row;
-	unsigned	widestCell = 0;
 	unsigned	numberOfRows = [self numberOfRows];
+	int			widestCell = 0;
 	id			theDelegate = [self delegate];
 	
 	//Enumerate all rows, find the widest one
@@ -138,7 +138,7 @@
 		int	width = [cell cellWidth];
 		if(width > widestCell) widestCell = width;
 	}
-
+	
 	return(((widestCell > MINIMUM_WIDTH) || ignoreMinimumWidth) ? widestCell : MINIMUM_WIDTH);
 }
 
