@@ -27,6 +27,7 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
+#import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
