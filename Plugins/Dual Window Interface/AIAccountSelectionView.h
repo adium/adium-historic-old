@@ -36,9 +36,9 @@
     id <AIAccountSelectionViewDelegate>	delegate;
 }
 
-+ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
-+ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
-+ (BOOL)multipleContactsForListObject:(AIListObject *)inObject;
++ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject;
++ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject;
++ (BOOL)multipleContactsForContact:(AIListContact *)inContact;
 
 - (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
 - (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
