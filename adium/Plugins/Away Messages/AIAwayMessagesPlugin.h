@@ -24,14 +24,14 @@
     AIAwayMessagePreferences	*preferences;
 
     NSMenuItem			*menuItem_away;
-    NSMenuItem                  *menuItem_away_alternate;
+    NSMenuItem			*menuItem_away_alternate;
     NSMenuItem			*menuItem_removeAway;
-    NSMenuItem                  *menuItem_removeAway_alternate;
+    NSMenuItem			*menuItem_removeAway_alternate;
     
     NSMenuItem			*menuItem_dockAway;
     NSMenuItem			*menuItem_dockRemoveAway;
     
-    BOOL			menuConfiguredForAway;
+    BOOL				menuConfiguredForAway;
 
     NSMutableArray		*receivedAwayMessage;
 }
