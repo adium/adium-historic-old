@@ -187,7 +187,7 @@
             [NSApp unhideWithoutActivation];
         }
         
-        ownerArray = [contact statusArrayForKey:@"UserIcon"];
+        ownerArray = [contact displayArrayForKey:@"UserIcon"];
         if(ownerArray && [ownerArray count]) {
             tempBuddyIcon = [ownerArray objectAtIndex:0];
         }

@@ -572,7 +572,7 @@
     NSImage			*userImage;
     
     //Get the user icon
-    userImage = [[[content source] statusArrayForKey:@"UserIcon"] firstImage];
+    userImage = [[[content source] displayArrayForKey:@"UserIcon"] firstImage];
     if(!userImage) userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
     
     //Create the spanning image cell

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.53 2004/02/14 19:12:59 evands Exp $
+// $Id: AIInterfaceController.m,v 1.54 2004/02/20 06:53:40 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -238,7 +238,7 @@
             
             //Buddy Icon
             [tooltipImage release]; tooltipImage = nil;
-            AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"UserIcon"];
+            AIMutableOwnerArray *ownerArray = [tooltipListObject displayArrayForKey:@"UserIcon"];
             if(ownerArray && [ownerArray count]){
                 tooltipImage = [[ownerArray objectAtIndex:0] retain];
             }else{
@@ -313,6 +313,10 @@
                                              atPoint:point
                                          orientation:TooltipBelow];
             [tooltipListObject release]; tooltipListObject = nil;
+			
+			[tooltipTitle release]; tooltipTitle = nil;
+			[tooltipBody release]; tooltipBody = nil;
+			[tooltipImage release]; tooltipImage = nil;
         }
     }
 }
@@ -321,8 +325,8 @@
 {
     NSMutableAttributedString           *titleString = [[NSMutableAttributedString alloc] init];
     
-    id <AIContactListTooltipEntry>	tooltipEntry;
-    NSEnumerator			*enumerator;
+    id <AIContactListTooltipEntry>		tooltipEntry;
+    NSEnumerator						*enumerator;
     NSEnumerator                        *labelEnumerator;
     NSMutableArray                      *labelArray = [NSMutableArray array];
     NSMutableArray                      *entryArray = [NSMutableArray array];

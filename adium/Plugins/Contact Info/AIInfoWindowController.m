@@ -74,7 +74,7 @@ static AIListObject				*activeListObject = nil;
         nil];
     
     //Buddy Icon
-    ownerArray = [activeListObject statusArrayForKey:@"UserIcon"];
+    ownerArray = [activeListObject displayArrayForKey:@"UserIcon"];
     if(ownerArray && [ownerArray count]){
         buddyImage = [[[ownerArray objectAtIndex:0] copy] autorelease]; 
         // resize to default buddy icon size for consistency

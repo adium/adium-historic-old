@@ -304,6 +304,7 @@
 				C42C16FF05BA682C00135D3C,
 				52AEBD6105ABA95700B19C56,
 				3419F45B05314C5A00C68BA3,
+				340869E905E5E01E00ABB759,
 				3419F47005314C6900C68BA3,
 				3479A8A105DCA0F900998B3D,
 			);
@@ -421,6 +422,7 @@
 				C42C16F205BA682C00135D3C,
 				52AEBD6005ABA95700B19C56,
 				3419F44E05314C5900C68BA3,
+				340869E805E5E01E00ABB759,
 				3419F46005314C6800C68BA3,
 			);
 		};
@@ -575,6 +577,181 @@
 			name = "Text-To-Speech";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		340869E405E5E01E00ABB759 = {
+			buildActionMask = 2147483647;
+			files = (
+				34086A7905E5E42600ABB759,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340869E505E5E01E00ABB759 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340869E605E5E01E00ABB759 = {
+			buildActionMask = 2147483647;
+			files = (
+				34086A7A05E5E42600ABB759,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340869E705E5E01E00ABB759 = {
+			buildActionMask = 2147483647;
+			files = (
+				340869FE05E5E0F500ABB759,
+				340869FF05E5E0F500ABB759,
+				34086A0005E5E0F500ABB759,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340869E805E5E01E00ABB759 = {
+			buildPhases = (
+				340869E405E5E01E00ABB759,
+				340869E505E5E01E00ABB759,
+				340869E605E5E01E00ABB759,
+				340869E705E5E01E00ABB759,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/User Icon Handling.plist";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "User Icon Handling";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "User Icon Handling";
+			productName = "User Icon Handling";
+			productReference = 340869E905E5E01E00ABB759;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>User Icon Handling</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.User_Icon_Handling</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		340869E905E5E01E00ABB759 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "User Icon Handling.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		340869FE05E5E0F500ABB759 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340869FF05E5E0F500ABB759 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34086A0005E5E0F500ABB759 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34086A0B05E5E10800ABB759 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 340869E805E5E01E00ABB759;
+			remoteInfo = "User Icon Handling";
+		};
+		34086A0C05E5E10800ABB759 = {
+			isa = PBXTargetDependency;
+			target = 340869E805E5E01E00ABB759;
+			targetProxy = 34086A0B05E5E10800ABB759;
+		};
+		34086A1005E5E17B00ABB759 = {
+			children = (
+				34086A7705E5E42500ABB759,
+				34086A7805E5E42600ABB759,
+			);
+			isa = PBXGroup;
+			name = "User Icon Handling";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34086A7705E5E42500ABB759 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESUserIconHandlingPlugin.h;
+			path = "Plugins/User Icon Handling/ESUserIconHandlingPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34086A7805E5E42600ABB759 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESUserIconHandlingPlugin.m;
+			path = "Plugins/User Icon Handling/ESUserIconHandlingPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34086A7905E5E42600ABB759 = {
+			fileRef = 34086A7705E5E42500ABB759;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34086A7A05E5E42600ABB759 = {
+			fileRef = 34086A7805E5E42600ABB759;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34086AAD05E5E5E100ABB759 = {
+			fileRef = 340869E905E5E01E00ABB759;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		340915F105C0A5DF00CDE3DD = {
 			fileEncoding = 30;
@@ -8601,12 +8778,13 @@
 				34BD9D0D053146CC000AB133,
 				34BD9D06053146CC000AB133,
 				349E243405C6DCFF00231A84,
+				520FE46A05BE2118002D063D,
 				34BD9D07053146CC000AB133,
+				34086A0C05E5E10800ABB759,
 				34BD9D08053146CC000AB133,
 				B774EFC4058C48F6009C7C67,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
-				520FE46A05BE2118002D063D,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9572,6 +9750,7 @@
 				349E247A05C6DE2D00231A84,
 				520FE47505BE2984002D063D,
 				3419FE1D0531585600C68BA3,
+				34086AAD05E5E5E100ABB759,
 				3419FE1E0531585600C68BA3,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -17592,6 +17771,7 @@
 				F5370C9202D76F1F01A8010A,
 				D3376B2C052BBC2900A8010B,
 				3479A83B05DC9F2400998B3D,
+				34086A1005E5E17B00ABB759,
 			);
 			isa = PBXGroup;
 			name = Attributes;

@@ -129,7 +129,7 @@
             ABPerson * person;
             
             if (person = [results objectAtIndex:0]){
-				AIMutableOwnerArray	*statusArray = [inObject statusArrayForKey:@"UserIcon"];
+				AIMutableOwnerArray	*statusArray = [inObject displayArrayForKey:@"UserIcon"];
 				
 				if([statusArray count]){
                     [person setImageData: [[statusArray firstImage] TIFFRepresentation]];
@@ -181,21 +181,18 @@
             
             //Get the object from our tracking dictionary
             AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
-            AIMutableOwnerArray     *statusArray = [listObject statusArrayForKey:@"UserIcon"];
 			
-            //apply the image
-            if([statusArray count] == 0) {
-#warning Anything we apply to the status array here is just ignored.  We need to apply our icons as a primary object of the display array.
-                [statusArray setObject:image withOwner:self];
-                [[adium contactController] listObjectStatusChanged:listObject
-                                                modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
-                                                            silent:NO];
-            }
-            
-            //No further need for the dictionary entry
-            [trackingDict removeObjectForKey:tagNumber];
-        }
-    }
+			//Apply the image at lowest priority
+			[[listObject displayArrayForKey:@"UserIcon"] setObject:image 
+														 withOwner:self
+													 priorityLevel:Lowest_Priority];
+			//Notify
+			[[adium contactController] listObjectAttributesChanged:listObject
+													  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];		
+			//No further need for the dictionary entry
+			[trackingDict removeObjectForKey:tagNumber];
+		}
+	}
 }
 
 - (void)updateSelf
