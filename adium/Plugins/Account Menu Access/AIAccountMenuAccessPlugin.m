@@ -49,6 +49,12 @@
     [[adium contactController] registerListObjectObserver:self];
     
     accountMenuArray = [[NSMutableArray alloc] init];
+	
+	image_Online = [[NSImage imageNamed:@"Account_Online" forClass:[self class]] retain];
+	image_Connecting = [[NSImage imageNamed:@"Account_Connecting" forClass:[self class]] retain];
+	image_Offline = [[NSImage imageNamed:@"Account_Offline" forClass:[self class]] retain];
+	
+	
     [self buildAccountMenus];
 }
 
@@ -63,6 +69,10 @@
     
     [accountMenuArray release];
     
+	[image_Online release]; image_Online = nil;
+	[image_Connecting release]; image_Connecting = nil;
+	[image_Offline release]; image_Offline = nil;
+	
     //Stop observing/receiving notifications
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
@@ -111,22 +121,22 @@
             //Update the 'connect / disconnect' menu item
 			
 			if([[account statusObjectForKey:@"Online"] boolValue]){
-				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Online" forClass:[self class]]];
+				[targetMenuItem setImage:image_Online];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
                                 [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
-				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Connecting" forClass:[self class]]];
+				[targetMenuItem setImage:image_Connecting];
 				[targetMenuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
                                 [targetMenuItem setKeyEquivalent:@"."];
 				[targetMenuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Connecting" forClass:[self class]]];
+				[targetMenuItem setImage:image_Connecting];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
                                 [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:NO];
 			}else{
-				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Offline" forClass:[self class]]];
+				[targetMenuItem setImage:image_Offline];
 				[targetMenuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
                                 [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:YES];
