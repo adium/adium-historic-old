@@ -12,8 +12,14 @@
 
 //Recognized URL types
 static int 	linkSubStringCount = 8;
-static NSString *linkSubString[] = {@"http://", @"ftp://", @"www.", @".com", @".edu", @".gov", @".net", @".org"};
-static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.com", @"*.edu", @"*.gov", @"*.net", @"*.org"};
+static NSString *linkSubString[] = { //If any of these are found, the string is scanned in detail using the keys below
+    @"://", @"www.", @"@", 
+    @".com", @".edu", @".gov", @".net", @".org"};
+static int 	linkDetailStringCount = 13;
+static NSString *linkDetailString[] = { //Anything matching these keys is linked
+    @"*://*", @"www.*.*", @"*@*.*",
+     @"*.com", @"*.edu", @"*.gov", @"*.net", @"*.org",
+     @"*.com/*", @"*.edu/*", @"*.gov/*", @"*.net/*", @"*.org/*"};
  
 @implementation AIAutoLinkingPlugin
 
@@ -60,7 +66,7 @@ static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.
                 if([messageScanner scanUpToCharactersFromSet:whitespaceSet intoString:&urlString]){
 
                     //Check for each link variation within this url string
-                    for(loop = 0;loop < linkSubStringCount; loop++){
+                    for(loop = 0;loop < linkDetailStringCount; loop++){
                         BOOL		URLIsValid = YES;
                         NSString 	*template;
                         NSString	*templateSegment;
@@ -112,8 +118,8 @@ static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.
                             }
                         }
 
-                        //One final check.  Our URL must be complete at the right location
-                        if([urlScanner scanLocation] != [urlString length]){
+                        //One final check.  Our URL must be complete at the right location (If the template doesn't end with a *)
+                        if([template characterAtIndex:[template length]-1] != '*' && [urlScanner scanLocation] != [urlString length]){
                             URLIsValid = NO; //Didn't end
                         }
 
@@ -129,14 +135,21 @@ static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.
                             //Set this segment as a link, appending http:// if necessary
                             urlRange = NSMakeRange([messageScanner scanLocation] - [urlString length], [urlString length]);
 
-                            if([urlString rangeOfString:@"://"].location != NSNotFound){
+                            if([urlString rangeOfString:@"://"].location != NSNotFound){ //prefix already appended
                                 [replacementMessage addAttribute:NSLinkAttributeName
                                                            value:urlString
                                                            range:urlRange];
-                            }else{
+
+                            }else if([urlString rangeOfString:@"@"].location != NSNotFound){ //mail
+                                [replacementMessage addAttribute:NSLinkAttributeName
+                                                           value:[NSString stringWithFormat:@"mailto:%@",urlString]
+                                                           range:urlRange];
+
+                            }else{ //http
                                 [replacementMessage addAttribute:NSLinkAttributeName
                                                            value:[NSString stringWithFormat:@"http://%@",urlString]
                                                            range:urlRange];
+                                
                             }
 
                             //Color it blue and underline for good measure
@@ -146,6 +159,7 @@ static NSString *linkDetailString[] = {@"http://*", @"ftp://*", @"www.*.*", @"*.
                         }
                     }
                 }
+                [messageScanner scanCharactersFromSet:whitespaceSet intoString:nil];
             }
         }
 
