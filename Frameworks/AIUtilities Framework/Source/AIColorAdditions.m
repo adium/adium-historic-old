@@ -112,6 +112,7 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 			if(state.prevChar == '\n' && ch[i] == '#') {
 				state.inComment = YES;
 			} else {
+#warning strtof is not present in 10.2
 				if(!state.redStart) {
 					state.redStart = &ch[i];
 					state.red = strtof(state.redStart, (char **)&state.redEnd) / 255.0;
