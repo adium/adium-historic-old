@@ -121,6 +121,10 @@
 
     [self disconnectAllAccounts]; //Disconnect all accounts
     
+    //Remove observers (otherwise, every account added will be a duplicate next time around)
+    [[owner notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     // Release storage
     [accountArray release];
     [availableServiceArray release];
