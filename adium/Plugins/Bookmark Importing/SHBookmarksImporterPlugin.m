@@ -81,7 +81,7 @@ static NSMenu       *bookmarkSets;
 - (void)uninstallPlugin
 {
     [[adium notificationCenter] removeObserver:self
-                                          name:NSApplicationDidFinishLaunchingNotification
+                                          name:Adium_PluginsDidFinishLoading
                                         object:nil];
 }
 
