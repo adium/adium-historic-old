@@ -113,8 +113,9 @@ static NSMenu       *bookmarkSets;
                         [[object submenu] removeAllItems];
                         newMenu = [self buildBookmarkMenuFor:object];
                         [object setSubmenu:newMenu];
-                        [[[(NSMenuItem *)bookmarkRootContextualMenuItem submenu] itemAtIndex:[[(NSMenuItem *)bookmarkRootMenuItem submenu] indexOfItem:object]]
-                                                                                setSubmenu:[[newMenu copy] autorelease]];
+                        //[[[(NSMenuItem *)bookmarkRootContextualMenuItem submenu] itemAtIndex:[[(NSMenuItem *)bookmarkRootMenuItem submenu] indexOfItem:object]]
+                        //                                                        setSubmenu:[[newMenu copy] autorelease]];
+                        [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
                         NSLog(@"built new menu");
                     }
                 }
