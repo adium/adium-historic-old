@@ -228,10 +228,10 @@ void Adium_HandleSignal(int i){
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	
-//#ifdef CRASH_REPORTER
+#ifdef CRASH_REPORTER
 #warning Crash reporter active!
     [self configureCrashReporter];
-//#endif
+#endif
 	
     //Load and init the components
     [loginController initController];
