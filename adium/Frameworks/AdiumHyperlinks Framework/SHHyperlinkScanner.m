@@ -181,7 +181,7 @@
     while(markedLink = [enumerator nextObject]){
         NSRange linkRange = [markedLink range];
         if([markedLink URL]){
-            [newString addAttribute:NSLinkAttributeName value:[[markedLink URL] retain] range:linkRange];
+            [newString addAttribute:NSLinkAttributeName value:[markedLink URL] range:linkRange];
         }
     }
     

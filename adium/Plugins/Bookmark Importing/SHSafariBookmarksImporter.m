@@ -110,8 +110,8 @@ static NSArray *emptyArray;
                                                                             target:owner
                                                                             action:nil
                                                                      keyEquivalent:@""] autorelease];
-                [safariBookmarksSupermenu addItem:[safariSubMenuItem retain]];
-                [safariBookmarksSupermenu setSubmenu:[safariBookmarksMenu retain] forItem:safariSubMenuItem];
+                [safariBookmarksSupermenu addItem:safariSubMenuItem];
+                [safariBookmarksSupermenu setSubmenu:safariBookmarksMenu forItem:safariSubMenuItem];
                 [self drillPropertyList:outObject];
             }
         }
@@ -138,7 +138,7 @@ static NSArray *emptyArray;
                                   target:owner
                                   action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""
-                       representedObject:[markedLink retain]];
+                       representedObject:markedLink];
 }
 
 @end
