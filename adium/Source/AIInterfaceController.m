@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.96 2004/07/30 17:26:52 evands Exp $
+// $Id: AIInterfaceController.m,v 1.97 2004/08/02 07:08:19 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -384,25 +384,16 @@
 //Clear the unviewed content count of the chat.  This is done when chats are made active or closed.
 - (void)clearUnviewedContentOfChat:(AIChat *)inChat
 {
-	NSEnumerator	*enumerator;
-    AIListObject	*listObject;
-	
-    enumerator = [[inChat participatingListObjects] objectEnumerator];
-    while(listObject = [enumerator nextObject]){
-		if([listObject integerStatusObjectForKey:@"UnviewedContent"]){
-			[[owner contentController] clearUnviewedContentOfListObject:listObject];
-		}
-    }
+	[[owner contentController] clearUnviewedContentOfChat:inChat];
 }
 
 //Content was received, increase the unviewed content count of the chat (if it's not currently active)
 - (void)didReceiveContent:(NSNotification *)notification
 {
-	NSDictionary		*userInfo = [notification userInfo];
-	AIContentObject		*object = [userInfo objectForKey:@"Object"];
+	AIChat		*chat = [notification object];
 	
-	if([object chat] != activeChat){
-		[[owner contentController] increaseUnviewedContentOfListObject:[object source]];
+	if(chat != activeChat){
+		[[owner contentController] increaseUnviewedContentOfChat:chat];
 	}
 }
 #warning possible to simplify interface protocol any?
