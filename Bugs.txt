@@ -17,7 +17,6 @@
 - Preferences are changing when contact list prefs are opened
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
-- Group gradients are not re-caching when colors are changed
 - Log viewer is crashing when you play in its drawer
 - Log viewer is missing an icon for toggle emoticons
 - Log viewer toggle emoticons does not update immediately
