@@ -21,22 +21,19 @@
 @end
 
 @interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
-    IBOutlet	AIAutoScrollView	*scrollView_contactList;
+    IBOutlet	AIAutoScrollView		*scrollView_contactList;
 
+    id <AIContainerInterface>			interface;
     id <AIContactListViewController>	contactListViewController;
-    NSView				*contactListView;
+    NSView								*contactListView;
 
-    NSView				*view_statusSelection;
+    NSDictionary						*toolbarItems;
+	BOOL                                borderless;
 
-    NSDictionary			*toolbarItems;
-    
-    id <AIContainerInterface>		interface;
-
-    NSSize				minWindowSize;
-    BOOL				autoResizeVertically;
-    BOOL				autoResizeHorizontally;
-    
-    BOOL                                borderless;
+    NSSize								minWindowSize;
+    BOOL								autoResizeVertically;
+    BOOL								autoResizeHorizontally;
+	NSPoint             				topLeftAnchorPoint;
 }
 
 + (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface;
