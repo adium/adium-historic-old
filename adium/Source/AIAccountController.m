@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.47 2004/01/13 19:06:17 evands Exp $
+// $Id: AIAccountController.m,v 1.48 2004/01/14 00:56:24 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -95,14 +95,15 @@
             NSLog(@"  Importing %@ account '%@' ", serviceType, accountUID);
             
             if(serviceType && accountUID && [serviceType length] && [accountUID length]){
-                tempAccount = [self accountOfType:serviceType withUID:accountUID];
-                propertyEnumerator = [[propertyDict allKeys] objectEnumerator];
-                while(key = [propertyEnumerator nextObject]){
-                    NSLog(@"    - %@",key);
-                    [tempAccount setPreference:[propertyDict objectForKey:key] forKey:key group:GROUP_ACCOUNT_STATUS];
-                }
-                
-                [importedAccounts addObject:tempAccount];
+				if(tempAccount = [self accountOfType:serviceType withUID:accountUID]){
+					propertyEnumerator = [[propertyDict allKeys] objectEnumerator];
+					while(key = [propertyEnumerator nextObject]){
+						NSLog(@"    - %@",key);
+						[tempAccount setPreference:[propertyDict objectForKey:key] forKey:key group:GROUP_ACCOUNT_STATUS];
+					}
+					
+					[importedAccounts addObject:tempAccount];
+				}
             }
         }
         
