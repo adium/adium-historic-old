@@ -44,15 +44,11 @@ typedef enum {
 	ESWebKitMessageViewPreferences  *preferences;
 	ESWKMVAdvancedPreferences		*advancedPreferences;
 	
-	NSDateFormatter					*timeStampFormatter;
-	BOOL							showUserIcons;
-	NameFormat						nameFormat;
-	BOOL							useCustomNameFormat;
-	BOOL							combineConsecutive;
-	int								styleVersion;
 	
 	NSMutableDictionary				*styleDictionary;
 }
+
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
 
 - (NSDictionary *)availableStyleDictionary;
 - (NSBundle *)messageStyleBundleWithName:(NSString *)name;
@@ -61,7 +57,5 @@ typedef enum {
 - (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
 
-- (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
-- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName variant:(NSString *)variant withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView;
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;
 @end

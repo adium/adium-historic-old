@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
@@ -33,6 +34,8 @@
                 "popUp_styles" = NSPopUpButton; 
                 "popUp_timeStamps" = NSPopUpButton; 
                 preview = ESWebView; 
+                previewController = id; 
+                "view_previewLocation" = NSView; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
