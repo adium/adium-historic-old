@@ -29,6 +29,8 @@
 */
 @interface AISMPreferences (PRIVATE)
 - (void)configureView;
+- (void)_buildTimeStampMenu;
+- (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
 @end
 
 @implementation AISMPreferences
@@ -55,9 +57,36 @@
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
+    [self _buildTimeStampMenu];
     
     [checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+    [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
     
+}
+
+//Build the time stamp selection menu
+- (void)_buildTimeStampMenu
+{
+    //Empty the menu
+    [popUp_timeStamps removeAllItems];
+    
+    //Add the available time stamp formats
+    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]];
+    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]];
+    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO]];
+    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:YES]];
+}
+
+//Add time stamp format to the menu
+- (void)_buildTimeStampMenu_AddFormat:(NSString *)format
+{
+    //Create the menu item
+    NSDateFormatter *stampFormatter = [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease];
+    NSString        *dateString = [stampFormatter stringForObjectValue:[NSDate date]];
+    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:dateString target:nil action:nil keyEquivalent:@""] autorelease];
+
+    [menuItem setRepresentedObject:[[format copy] autorelease]];
+    [[popUp_timeStamps menu] addItem:menuItem];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -67,9 +96,14 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_SHOW_USER_ICONS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
+    }else if(sender == popUp_timeStamps){
+        [[owner preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
+                                             forKey:KEY_SMV_TIME_STAMP_FORMAT
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
     }
-    
-    
+
 }
 
 

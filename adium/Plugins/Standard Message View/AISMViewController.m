@@ -124,8 +124,7 @@
         prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];
         
         
-        timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:[[prefDict objectForKey:KEY_SMV_SHOW_TIME_SECONDS] boolValue]
-                                                                      showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
+        timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 
         

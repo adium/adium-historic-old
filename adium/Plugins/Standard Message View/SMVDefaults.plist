@@ -42,9 +42,5 @@
         <string>%@:</string>
         <key>Prefix Outgoing</key>
         <string>%@:</string>
-        <key>Time Stamp</key>
-        <string>%1I:%M</string>
-        <key>Time Stamp Seconds</key>
-        <string>%1I:%M:%S</string>
  </dict>
 </plist>
