@@ -59,6 +59,8 @@
 - (void)setLocalFilename:(NSString *)inLocalFilename;
 - (NSString *)localFilename;
 
+- (NSString *)displayFilename;
+
 - (void)setSize:(unsigned long long)inSize;
 - (unsigned long long)size;
 

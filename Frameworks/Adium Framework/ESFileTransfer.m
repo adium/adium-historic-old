@@ -87,6 +87,16 @@
     return localFilename;
 }
 
+- (NSString *)displayFilename
+{
+	NSString	*displayFilename = [localFilename lastPathComponent];
+	
+	//If we don't have a local file name, try to use the remote file name.
+	if(!displayFilename) displayFilename = [remoteFilename lastPathComponent];
+	
+	return displayFilename;
+}
+
 - (void)setSize:(unsigned long long)inSize
 {
     size = inSize;
