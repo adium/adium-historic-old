@@ -1,13 +1,9 @@
-This list is for what needs to happen for 2.0
-
-Don't delete things from this list. Just use `=' to indicate it's done. We'll cull things all at once :)
-
 Legend
 + Change or Addition
 - Removal
 * Bug Fix
 # Debatable (ASK and debate before doing!)
-= Done
+= Done (Move to the bottom)
 
 ----
 Bugs
@@ -37,14 +33,10 @@ Preferences:
 	- Remove the advanced option for vertical resizing, this is already covered in the main preferences.
 	
 Accounts:
-	= Move user name field out of account code and into account list preferences code
-	= Display 'New Account' in account list for accounts without a UID
 	+ Allow user to cancel connecting of accounts
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
 Menu Bar:
-	= Add dividers to view menu - The current solution is imperfect; it would be better to define new menu locations in the menu controller.
-	= Change window cycling menu items to 'Previous Chat' 'Next Chat'
 	
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
@@ -64,12 +56,8 @@ Contact List Display:
 	+ Change main auto-resizing preference to only toggle vertical resizing - this goes with the big contact list changes and should wait to see how they pan out.
 	
 Sounds:
-	= Add a 'None' soundset 
 
 iTunes Integration:
-	= iTunes script runner should load scripts from the Application Support directory
-	= iTunes %_status script should display "Not Playing" when iTunes isn't open
-	= Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
 
 Other:
 	# Add customizable hotkey to bring Adium to the foreground
@@ -128,13 +116,9 @@ Contact List
 
 
 Address Book Integration:
-	= We probably need a default priority preference.
 	+ We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
 
 Emoticon Preferences:
-	= Remove +/- buttons
-	= Make source list display all available emoticon packs
-	= Add checkboxes in source list to enable/disable packs
 
 
 Event Info (Implement as a new plugin, to replace bezel):
@@ -434,9 +418,21 @@ Bug Fixes:
 = Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
 = Contact list display format preference not applying correctly on launch
 
-Features:
+Features & Changes:
 = Add Offline status coloring
 = Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
+= Move user name field out of account code and into account list preferences code
+= Display 'New Account' in account list for accounts without a UID
+= Add dividers to view menu
+= Change window cycling menu items to 'Previous Chat' 'Next Chat'
+= Add a 'None' soundset 
+= iTunes script runner should load scripts from the Application Support directory
+= iTunes %_status script should display "Not Playing" when iTunes isn't open
+= Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
+= We probably need a default priority preference.
+= Remove +/- buttons
+= Make source list display all available emoticon packs
+= Add checkboxes in source list to enable/disable packs
 
 
 
