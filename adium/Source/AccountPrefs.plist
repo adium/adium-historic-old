@@ -4,7 +4,5 @@
 <dict>
 	<key>TopAccountID</key>
 	<integer>1</integer>
-	<key>Autoconnect</key>
-	</false>
 </dict>
 </plist>

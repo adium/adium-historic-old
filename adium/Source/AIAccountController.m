@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.66 2004/03/18 15:41:58 dchoby98 Exp $
+// $Id: AIAccountController.m,v 1.67 2004/03/20 13:23:53 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -81,16 +81,14 @@
                                      object:nil];
     
     //Autoconnect
-    [self autoConnectAccounts];
+	if(![NSEvent shiftKey]){
+		[self autoConnectAccounts];
+	}
 }
 
 //close
 - (void)closeController
 {
-	
-	//Save account online status for autoconnect
-	[self saveAutoConnectStatus];
-	
     //Disconnect all accounts
     [self disconnectAllAccounts];
     
@@ -622,17 +620,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
-    
-	if([[[owner preferenceController] preferenceForKey:@"Autoconnect" group:PREF_GROUP_ACCOUNTS] boolValue]) {
-		
-		enumerator = [accountArray objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([[account supportedPropertyKeys] containsObject:@"Online"] &&
-			   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
-				[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-			}
+	
+	enumerator = [accountArray objectEnumerator];
+	while((account = [enumerator nextObject])){
+		if([[account supportedPropertyKeys] containsObject:@"Online"] &&
+		   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
+			[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 		}
-		
 	}
 }
 
@@ -664,21 +658,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     }
 }
 
-- (void)saveAutoConnectStatus
-{
-	NSEnumerator		*enumerator;
-    AIAccount			*account;
-    
-    enumerator = [accountArray objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([[account supportedPropertyKeys] containsObject:@"Online"]){
-            [account setPreference:[NSNumber numberWithBool:[[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]] 
-							forKey:@"AutoConnect" 
-							 group:GROUP_ACCOUNT_STATUS];
-        }
-    }
-	
-}
 
 //Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
 #pragma mark Disconnect/Reconnect On Sleep
