@@ -44,16 +44,16 @@
     IBOutlet	AIMenuController				*menuController;
     IBOutlet	AILoginController				*loginController;
     IBOutlet	AIAccountController				*accountController;
-    IBOutlet	AIInterfaceController                           *interfaceController;
+    IBOutlet	AIInterfaceController			*interfaceController;
     IBOutlet	AIContactController				*contactController;
     IBOutlet	AIContentController				*contentController;
-    IBOutlet	AIPreferenceController                          *preferenceController;
+    IBOutlet	AIPreferenceController			*preferenceController;
     IBOutlet	AIToolbarController				*toolbarController;
     IBOutlet	AISoundController				*soundController;
     IBOutlet	AIDockController				*dockController;
-    IBOutlet    ESFileTransferController                        *fileTransferController;
-    IBOutlet    ESContactAlertsController                       *contactAlertsController;
-    IBOutlet	ESApplescriptabilityController                  *applescriptabilityController;
+    IBOutlet    ESFileTransferController		*fileTransferController;
+    IBOutlet    ESContactAlertsController		*contactAlertsController;
+    IBOutlet	ESApplescriptabilityController	*applescriptabilityController;
 	IBOutlet	ESDebugController				*debugController;
 
 	IBOutlet	AICoreComponentLoader			*componentLoader;
@@ -162,6 +162,8 @@
 #define CONTACT_STATUS_IDLE_YES			@"Contact_StatusIdleYes"
 #define CONTACT_STATUS_IDLE_NO			@"Contact_StatusIdleNo"
 #define CONTACT_STATUS_MESSAGE			@"Contact_StatusMessage"
+#define CONTACT_SEEN_ONLINE_YES			@"Contact_SeenOnlineYes"
+#define CONTACT_SEEN_ONLINE_NO			@"Contact_SeenOnlineNo"
 #define CONTENT_MESSAGE_SENT			@"Content_MessageSent"
 #define CONTENT_MESSAGE_RECEIVED		@"Content_MessageReceived"
 #define CONTENT_MESSAGE_RECEIVED_FIRST	@"Content_MessageReceivedFirst"
