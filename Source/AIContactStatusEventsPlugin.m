@@ -223,7 +223,7 @@
 			format = AILocalizedString(@"%@ became active",nil);
 		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
 			format = AILocalizedString(@"%@ is seen",nil);
-		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]){
 			format = AILocalizedString(@"%@ is no longer seen",nil);
 		}
 		
@@ -245,7 +245,7 @@
 			description = AILocalizedString(@"became active",nil);
 		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
 			description = AILocalizedString(@"is seen",nil);
-		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+		}else if([eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]){
 			description = AILocalizedString(@"is no longer seen",nil);
 		}
 	}
