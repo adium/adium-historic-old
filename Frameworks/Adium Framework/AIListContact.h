@@ -33,4 +33,6 @@
 + (NSString *)internalUniqueObjectIDForService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
 - (void)restoreGrouping;
 
+- (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
+
 @end
