@@ -164,20 +164,17 @@
         localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
         clicked_index = [cell characterIndexAtPoint:localPoint];
 
-        BOOL inside = ([cell indexIsSelected:clicked_index]);
-        /*
-         (selection_startRow !(selection_startRow < row && selection_endRow > row) || (selection_startRow > row && selection_endRow < row)) &&
-         ((selection_startColumn < column && selection_endColumn > column ) || (selection_startColumn >= column && selection_endColumn <= column)));
-         */
+        NSMutableAttributedString * copyString = [self selectedString];
+        BOOL inside = ( [cell indexIsSelected:clicked_index] && [[copyString string] length] );
+
         if (inside) //only update if not inside the current selection
         {
             NSEvent *newEvent;
-            [NSEvent startPeriodicEventsAfterDelay:0.3 withPeriod:0];
+            [NSEvent startPeriodicEventsAfterDelay:0.5 withPeriod:0];
             newEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask];
             switch ([newEvent type]) {
                 case NSLeftMouseUp:
                 {
-                    NSLog(@"mouseup");
                     [self deselectAll];	  //Deselect all text
                     selection_startRow = row;
                     selection_startColumn = column;
@@ -196,8 +193,7 @@
                 {
                     NSSize dragOffset = NSMakeSize(0.0, 0.0);
                     NSPasteboard *pboard;
-                    NSMutableAttributedString * copyString = [self selectedString];
-
+                    
                     pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
                     [pboard declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:self];
                     [pboard setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
@@ -217,7 +213,6 @@
         }
         else // not inside
         {
-            NSLog(@"not inside");
             [self deselectAll];	  //Deselect all text
             selection_startRow = row;
             selection_startColumn = column;
