@@ -23,6 +23,7 @@
 #import <AIUtilities/BZArrayAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIChat.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
 
 @interface CBStatusMenuItemController (PRIVATE)
