@@ -34,7 +34,7 @@ static NSString *MobileServiceID = nil;
 		char firstCharacter = [UID characterAtIndex:0];
 		if (firstCharacter >= '0' && firstCharacter <= '9') {
 			if (!ICQServiceID) ICQServiceID = @"ICQ";
-			[self setStatusObject:ICQServiceID forKey:KEY_DISPLAY_SERVICE_ID notify:YES];
+			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
 		}
 	}
 }
@@ -68,17 +68,17 @@ static NSString *MobileServiceID = nil;
 	
 	contact = [super _contactWithUID:sourceUID];
 	
-	if (![contact statusObjectForKey:KEY_DISPLAY_SERVICE_ID]){
+	if (![contact statusObjectForKey:@"DisplayServiceID"]){
 		BOOL			isICQ, isMobile;
 		char			firstCharacter;
 		firstCharacter = [sourceUID characterAtIndex:0];
 		if ( (isICQ = (firstCharacter >= '0' && firstCharacter <= '9')) || (isMobile = (firstCharacter == '+')) ) {
 			if (isICQ){
 				if (!ICQServiceID) ICQServiceID = @"ICQ";
-				[contact setStatusObject:ICQServiceID forKey:KEY_DISPLAY_SERVICE_ID notify:YES];
+				[contact setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
 			}else{
 				if (!MobileServiceID) MobileServiceID = @"Mobile";
-				[contact setStatusObject:MobileServiceID forKey:KEY_DISPLAY_SERVICE_ID notify:YES];
+				[contact setStatusObject:MobileServiceID forKey:@"DisplayServiceID" notify:YES];
 			}
 		}
 	}
