@@ -3,7 +3,7 @@
 Version 0.56
 - Fixed a crash when selecting a custom color for messages
 - Fixed a crash introduced in 0.54 with deleting contacts from the contact list
-- Fixed a bug with LaTeX operations with :\ in them
+- Fixed a bug with LaTeX operations with \; in them
 - Fixed a bug with pasting text into the link editor
 - Fixed a beachballing issue
 - Fixed an issue with initial contact list display of contacts with names pulled from the address book
