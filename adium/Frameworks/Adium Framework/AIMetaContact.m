@@ -345,7 +345,9 @@
 	
 	//Then, look at our preferredContact (no recursion)
 	if (!returnValue && [containedObjects count]){
-		returnValue = [[self preferredContact] preferenceForKey:inKey group:groupName ignoreInheritedValues:YES];
+		returnValue = [[self preferredContact] preferenceForKey:inKey
+														  group:groupName 
+										  ignoreInheritedValues:YES];
 	}
 	
 	//Finally, do the recursive lookup starting with our containing group
