@@ -24,7 +24,9 @@
 @protocol AIContentFilter;
 @class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
 
-@interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
+@interface AIEmoticonController : NSObject <AIContentFilter> {
+    IBOutlet	AIAdium		*adium;	
+
     AIEmoticonPreferences		*prefs;
     BOOL                        observingContent;
 
@@ -36,6 +38,8 @@
     NSMutableDictionary         *_emoticonIndexDict;
 }
 
+- (void)initController;
+- (void)closeController;
 - (NSArray *)availableEmoticonPacks;
 - (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName;
 - (NSArray *)activeEmoticons;

@@ -87,8 +87,6 @@
 			children = (
 				3C73F83E04D62A2900A80106,
 				3C73F83F04D62A2900A80106,
-				11C157D804A88E04008E0C76,
-				11C157D904A88E04008E0C76,
 				4B737B4B065D4FDC0062AB94,
 			);
 			isa = PBXGroup;
@@ -101,8 +99,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = AIEmoticonsPlugin.h;
-			path = Plugins/Emoticons/AIEmoticonsPlugin.h;
+			name = AIEmoticonController.h;
+			path = Plugins/Emoticons/AIEmoticonController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -110,8 +108,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = AIEmoticonsPlugin.m;
-			path = Plugins/Emoticons/AIEmoticonsPlugin.m;
+			name = AIEmoticonController.m;
+			path = Plugins/Emoticons/AIEmoticonController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15017,9 +15015,6 @@
 				34C14CD107A8B1AB003CC138,
 				349E2E8B07A8AF0C00EAB76A,
 				349E2E8C07A8AF0C00EAB76A,
-				F5F0FE9C04B12CAC01A80106,
-				F5F0FE9D04B12CAC01A80106,
-				F5F0FEA004B1336C01A80106,
 				F5F0FEA204B133AB01A80106,
 				34C14D5007A8BA00003CC138,
 			);
@@ -16860,6 +16855,9 @@
 				34A48A3C06F64664002C7C5F,
 				34A48A3B06F64664002C7C5F,
 				34A48A4906F64685002C7C5F,
+				F5F0FE9C04B12CAC01A80106,
+				F5F0FE9D04B12CAC01A80106,
+				F5F0FEA004B1336C01A80106,
 				34C6A3BB077A8CB500EB423C,
 			);
 			isa = PBXGroup;
@@ -23301,6 +23299,8 @@
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,
 				9E95316903C8E0C700415B22,
+				11C157D804A88E04008E0C76,
+				11C157D904A88E04008E0C76,
 				349FE287074D019700E36B3B,
 				F57938F3033E745F01A8010A,
 				F57938AC033E737001A8010A,

@@ -38,5 +38,6 @@
 - (IBAction)showAllDockIcons:(id)sender;
 - (IBAction)customizeListLayout:(id)sender;
 - (IBAction)customizeListTheme:(id)sender;
+- (IBAction)customizeEmoticons:(id)sender;
 
 @end

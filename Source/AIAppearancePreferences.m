@@ -18,6 +18,7 @@
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
+#import "AIEmoticonPreferences.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
@@ -183,6 +184,14 @@
 {
 	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
 										  withName:[NSString stringWithFormat:@"%@ Copy",[popUp_colorTheme titleOfSelectedItem]]];
+}
+
+/*!
+ *
+ */
+- (IBAction)customizeEmoticons:(id)sender
+{
+	[AIEmoticonPreferences showEmoticionCustomizationOnWindow:[[self view] window]];
 }
 
 

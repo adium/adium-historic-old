@@ -21,11 +21,11 @@
             CLASS = AIEmoticonPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "table_emoticonPacks" = BGEmoticonPackTableView; 
+                "table_emoticonPacks" = AIAlternatingRowTableView; 
                 "table_emoticons" = AIAlternatingRowTableView; 
                 "textField_packTitle" = NSTextField; 
             }; 
-            SUPERCLASS = AIPreferencePane; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
@@ -46,6 +46,12 @@
             CLASS = AIVariableRowHeightOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

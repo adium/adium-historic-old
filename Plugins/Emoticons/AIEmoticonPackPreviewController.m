@@ -17,7 +17,7 @@
 #import "AIEmoticonPackPreviewController.h"
 #import "AIEmoticonPackPreviewView.h"
 #import "AIEmoticonPack.h"
-#import "AIEmoticonsPlugin.h"
+#import "AIEmoticonController.h"
 #import "AIEmoticonPreferences.h"
 
 @interface AIEmoticonPackPreviewController (PRIVATE)
