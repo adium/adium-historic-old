@@ -159,7 +159,7 @@
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setContact:inContact];
+    [textView_outgoing setContact:inContact];            
     
     //Config the toolbar
     [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
@@ -280,9 +280,12 @@
 
     //When the view is empty, usedRectForTextContainer will return an incorrect height, so we calculate it manually using the typing attributes    
     if([[textView_outgoing textStorage] length] == 0){
-        //Manually calculate the height
-        textHeight = [@" " sizeWithAttributes:[textView_outgoing typingAttributes]].height + ENTRY_TEXTVIEW_PADDING - 1;
-                
+        NSAttributedString	*attrString;
+
+        //Manually determine the font's height
+        attrString = [[[NSAttributedString alloc] initWithString:@" AbcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[textView_outgoing typingAttributes]] autorelease];
+        textHeight = [attrString heightWithWidth:[textView_outgoing frame].size.width] + ENTRY_TEXTVIEW_PADDING;
+        
     }else{
         //Let the container tell us its height
         textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;

@@ -39,7 +39,7 @@
     groupDict = [[NSMutableDictionary alloc] init];
     
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONNECTIONS image:[AIImageUtilities imageNamed:@"connectionsprefs" forClass:[self class]]]];
-    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_INTERFACE image:[AIImageUtilities imageNamed:@"interfaceprefs" forClass:[self class]]]];
+    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_MESSAGES image:[AIImageUtilities imageNamed:@"interfaceprefs" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_STATUS image:[AIImageUtilities imageNamed:@"statusprefs" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONTACTLIST image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_OTHER image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
