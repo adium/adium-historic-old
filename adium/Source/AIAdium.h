@@ -620,6 +620,8 @@ typedef enum {
     NSMutableDictionary		*contextualMenuItemDict;
 
     AIListContact		*contactualMenuContact;
+    
+    BOOL                        isTracking;
 }
 
 //Custom menu items
@@ -748,6 +750,7 @@ typedef enum {
 - (NSMutableArray *)eventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
 - (NSDictionary *)currentDictForContactAlert:(ESContactAlert *)contactAlert;
 - (AIListObject *)currentObjectForContactAlert:(ESContactAlert *)contactAlert;
+- (NSWindow *)currentWindowForContactAlert:(ESContactAlert *)contactAlert;
 - (int)rowForContactAlert:(ESContactAlert *)contactAlert;
 - (void)saveEventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
 //

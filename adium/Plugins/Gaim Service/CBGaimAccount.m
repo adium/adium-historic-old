@@ -9,11 +9,13 @@
 #import "CBGaimAccount.h"
 
 #define NO_GROUP @"__NoGroup__"
+#define OWN_BUDDY_IMAGE @"/Users/evands/evands.gif"
 
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
 - (void)displayError:(NSString *)errorDesc;
 - (void)setAwayMessage:(id)msg;
+- (void)setBuddyImage:(char *)imageFilename;
 - (void)signonTimerExpired:(NSTimer*)timer;
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 - (void)connect;
@@ -45,11 +47,7 @@
     [[owner accountController]
         setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
         forKey:@"Status" account:self];
-    id awayMessage = [propertiesDict objectForKey:@"AwayMessage"];
-    if (awayMessage != nil) {
-        NSLog(@"Initial away message");
-        [self setAwayMessage:awayMessage];
-    }
+
     NSLog(@"Setting handle updates to silent and delayed (connected)");
     silentAndDelayed = YES;
     NSAssert(signonTimer == nil, @"Already have a signon timer");
@@ -58,7 +56,31 @@
                                                  selector:@selector(signonTimerExpired:)
                                                  userInfo:nil
                                                   repeats:NO] retain];
+    [self performSelector:@selector(delayedInitialSettings:) withObject:nil afterDelay:2];
 }
+
+- (void)delayedInitialSettings:(id)object
+{
+    //Set our correct status
+    {
+        NSDate 		*idle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
+        NSData	 	*profile = [[owner accountController] propertyForKey:@"TextProfile" account:self];
+        NSData	 	*away = [[owner accountController] propertyForKey:@"AwayMessage" account:self];
+        
+        
+        if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
+        if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
+        if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
+    }
+    
+    //set the image file name, which is saved in the account preferences and generally easy to access
+    [[owner accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
+    //create and set the image itself, which is accessible only to the account (but publically available via [account userIcon]
+    NSImage *buddyImage = [[[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE] autorelease];
+    if (buddyImage && [buddyImage isValid])
+        [self setProperty:buddyImage forKey:@"BuddyImage"];
+}
+
 
 - (void)signonTimerExpired:(NSTimer*)timer
 {
@@ -137,7 +159,7 @@
     
     //snag the correct alias, and the current display name
     char *alias = (char *)gaim_get_buddy_alias(buddy);
-    char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] cString];
+    char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
     if(!disp_name) disp_name = "";
     
     //check 'em and update
@@ -167,7 +189,7 @@
     
     //did the group change/did we finally find out what group the buddy is in
     GaimGroup *g = gaim_find_buddys_group(buddy);
-    if(g && strcmp([[theHandle serverGroup] cString], g->name))
+    if(g && strcmp([[theHandle serverGroup] UTF8String], g->name))
     {
         [[owner contactController] handle:theHandle removedFromAccount:self];
 //            NSLog(@"Changed to group %s", g->name);
@@ -482,6 +504,11 @@
         else if ([key compare:@"AwayMessage"] == 0) {
             [self setAwayMessage:inValue];
         }
+        else if ( ([key compare:@"BuddyImage"] == 0) || ([key compare:@"BuddyImageFileName"]) ) {
+            NSString *buddyImageFilename = [[owner accountController] propertyForKey:@"BuddyImageFileName" account:self];
+            if (buddyImageFilename && [buddyImageFilename length])
+                [self setBuddyImage:(char *)[buddyImageFilename UTF8String]];
+        }
     }
 }
 
@@ -491,14 +518,6 @@
     char *newValue = NULL;
     
     if (message) {
-     /*   newValue = g_strdup([[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
-                                               headers:YES
-                                              fontTags:YES
-                                         closeFontTags:YES
-                                             styleTags:YES
-                            closeStyleTagsOnFontChange:NO
-                                        encodeNonASCII:NO] UTF8String]);
-*/
         newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
                                                headers:YES
                                               fontTags:YES
@@ -512,6 +531,11 @@
     serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
 }
 
+- (void)setBuddyImage:(char *)imageFilename
+{
+    gaim_account_set_buddy_icon(account,imageFilename);
+}
+
 - (void)finishConnect:(NSString *)inPassword
 {
     if(inPassword && [inPassword length] != 0)
@@ -523,7 +547,7 @@
 
         //setup the account, get things ready
         GaimAccount *testAccount = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
-        gaim_account_set_password(testAccount, [inPassword cString]);
+        gaim_account_set_password(testAccount, [inPassword UTF8String]);
         
         gc = gaim_account_connect(testAccount);
     }

@@ -48,6 +48,7 @@
 - (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict;
 - (AIListObject *)activeObject;
 - (void)reload:(AIListObject *)object usingCache:(BOOL)useCache;
+- (NSWindow *)activeWindow;
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;

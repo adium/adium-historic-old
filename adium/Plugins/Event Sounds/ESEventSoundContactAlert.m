@@ -182,16 +182,16 @@
         [self saveEventActionArray];
     } else { //selected "Other..."
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-        //EDS - need view_main
-   /*     [openPanel 
+        
+        [openPanel 
             beginSheetForDirectory:nil
                               file:nil
                              types:[NSSound soundUnfilteredFileTypes] //allow all the sounds NSSound understands
-                    modalForWindow:[view_main window]
+                    modalForWindow:[[owner contactAlertsController] currentWindowForContactAlert:self]
                      modalDelegate:self
                     didEndSelector:@selector(concludeOtherPanel:returnCode:contextInfo:)
                        contextInfo:nil];  
-*/
+
     }
 }
 //Finish up the Other... panel

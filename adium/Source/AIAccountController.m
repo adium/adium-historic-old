@@ -175,10 +175,14 @@
     NSParameterAssert(accountArray != nil);
     NSParameterAssert([accountArray indexOfObject:inAccount] != NSNotFound);
 
+    [inAccount retain];
+    
     //Delete the account
     [accountArray removeObject:inAccount];
 
     [self accountListChanged];
+    
+    [inAccount release];
 }
 
 // Returns the account array

@@ -25,7 +25,7 @@
 -(NSMenu *)switchContactMenu;
 @end
 
-int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
+extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context);
 int alphabeticalSort(id objectA, id objectB, void *context);
 
 @implementation ESContactAlertsPreferences
@@ -164,7 +164,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     int arrayCounter;
     int thisInstanceCount;
     NSMutableArray *contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
-    [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil];
+    [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil];
     
     NSEnumerator    *enumerator = [contactArray objectEnumerator];
     NSString        *groupName = nil;
@@ -423,7 +423,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
     if ([contactArray count])
     {
-        [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically
+        [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil]; //online buddies will end up at the top, alphabetically
 
         NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
         AIListObject	*contact;
