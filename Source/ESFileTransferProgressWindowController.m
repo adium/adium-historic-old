@@ -17,9 +17,10 @@
 #import "ESFileTransferProgressRow.h"
 #import "ESFileTransferProgressView.h"
 #import "ESFileTransferProgressWindowController.h"
-#import <AIUtilities/AIVariableHeightOutlineView.h>
-#import <AIUtilities/BZGenericViewCell.h>
 #import <Adium/ESFileTransfer.h>
+#import <AIUtilities/AIVariableHeightOutlineView.h>
+#import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/BZGenericViewCell.h>
 
 #define FILE_TRANSFER_PROGRESS_NIB			@"FileTransferProgressWindow"
 #define KEY_TRANSFER_PROGRESS_WINDOW_FRAME	@"Transfer Progress Window Frame"
@@ -138,6 +139,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 									 object:nil];
 
 	//Create progress rows for all existing file transfers
+	shouldScrollToNewFileTransfer = NO;
 	enumerator = [[[adium fileTransferController] fileTransferArray] objectEnumerator];
 	while(fileTransfer = [enumerator nextObject]){
 		[self addFileTransfer:fileTransfer];
@@ -148,6 +150,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 	//Go time
 	[self reloadAllData];
+	
+	shouldScrollToNewFileTransfer = YES;
+	[outlineView scrollRectToVisible:[outlineView rectOfRow:([progressRows count]-1)]];
 }
 
 //called as the window closes
@@ -164,13 +169,15 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 #pragma mark Progress row addition to the window
 - (void)progressRowDidAwakeFromNib:(ESFileTransferProgressRow *)progressRow
 {
-	if(![progressRows containsObject:progressRow]){
+	if(![progressRows containsObjectIdenticalTo:progressRow]){
 		[progressRows addObject:progressRow];
 	}
 
-	[self reloadAllData];
-
-	[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
+	if(shouldScrollToNewFileTransfer){
+		[self reloadAllData];
+		
+		[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
+	}
 }
 
 #pragma mark Progress row details twiddle
@@ -179,9 +186,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 			  heightChangedFrom:(float)oldHeight
 							 to:(float)newHeight
 {
-	[self reloadAllData];
-
-	[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
+	if(shouldScrollToNewFileTransfer){
+		
+		[self reloadAllData];
+		
+		[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
+	}
 }
 
 #pragma mark Adding file transfers
@@ -199,16 +209,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //This will call back on progressRowDidAwakeFromNib: if it adds a new row.
 - (void)addFileTransfer:(ESFileTransfer *)inFileTransfer
 {
-	ESFileTransferProgressRow *progressRow;
-
-	if(!(progressRow = [self existingRowForFileTransfer:inFileTransfer])){
-		progressRow = [ESFileTransferProgressRow rowForFileTransfer:inFileTransfer withOwner:self];
-
-		//Depending on how the nib is loaded, we may or may not already have called progressRowDidAwakeFromNib:
-		//and added the row there.
-		if(![progressRows containsObject:progressRow]){
-			[progressRows addObject:progressRow];
-		}
+	if(![self existingRowForFileTransfer:inFileTransfer]){
+		[ESFileTransferProgressRow rowForFileTransfer:inFileTransfer withOwner:self];
 	}
 }
 
@@ -270,6 +272,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //Called when a progress row changes its type, typically from Unknown to either Incoming or Outgoing
 - (void)progressRowDidChangeType:(ESFileTransferProgressRow *)progressRow
 {
+	/* We get here as a progress row intializes itself, before it claims to be ready for display and therefore before
+	 * we have it in the progressRows array.  Add it now if necessary */
+	if(![progressRows containsObjectIdenticalTo:progressRow]){
+		[progressRows addObject:progressRow];
+	}
+	
 	[self updateStatusBar];
 }
 
@@ -304,7 +312,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		if(uploads == 1)
 			uploadsString = AILocalizedString(@"1 upload",nil);
 		else
-			uploadsString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), downloads];
+			uploadsString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), uploads];
 	}
 
 	if(downloadsString && uploadsString){
