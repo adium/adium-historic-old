@@ -48,7 +48,9 @@
 - (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString;
-- (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString;
+- (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString;
+- (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString;
+- (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor;
 @end
 
 @implementation AISMViewController
@@ -615,8 +617,8 @@
 	    [messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
 	}else{
 	    [messageCell setFrameBackgroundColor:bodyColor
-							  borderColor:[bodyColor adjustHue:0.0 saturation:+0.3 brightness:-0.3]
-							 dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
+                              borderColor:[bodyColor adjustHue:0.0 saturation:+0.3 brightness:-0.3]
+                             dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
 	}
     }
     
@@ -627,15 +629,22 @@
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
-    if([content isOutgoing] || (!ignoreTextColor/* && !ignoreBackgroundColor*/)){
+    if([content isOutgoing]) {
         return([content message]);
-    /*} else if (!ignoreTextColor && ignoreBackgroundColor){ //incoming message, ignoring the background color but not the text color
-        NSLog(@"fixing");
-        return([self _stringByFixingTextColor:[content message]]);
-*/
-    }else{
-  //      NSLog(@"removing text color");
-	return([self _stringByRemovingTextColor:[content message]]);
+        
+    } else if (!ignoreTextColor && !ignoreBackgroundColor){ //just fix the colors
+        return([self _stringByFixingTextColor:[content message] forColor:nil]);
+        
+    }else if (!ignoreTextColor && ignoreBackgroundColor){ //should fix the text color for the colorIncoming, taking into account its background colors as sent, then remove the background colors
+        NSAttributedString *messageString = [self _stringByFixingTextColor:[content message] forColor:colorIncoming];
+        return([self _stringByRemovingBackgroundColor:messageString]);
+        
+    } else if (!ignoreBackgroundColor && ignoreTextColor) { //remove the text color, then fix the resulting string to match its background
+        NSAttributedString *messageString = [self _stringByRemovingTextColor:[content message]];
+        return([self _stringByFixingTextColor:messageString forColor:nil]);
+        
+    } else { //strip it of all coloration
+        return([self _stringByRemovingAllColors:[content message]]);
     }    
 }
 
@@ -653,15 +662,8 @@
         //If the prefix contains a message, we build it in pieces
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringToIndex:messageRange.location] forContent:content]];
         
-        //set the headIndent, the amount subsequent lines will need to indent
-        //headIndent = [prefixString size].width;
-        //headIndent = 25.0;
-        
-	if([content isOutgoing] || !ignoreTextColor){
-	    [prefixString appendAttributedString:[content message]];
-	}else{
-	    [prefixString appendAttributedString:[self _stringByRemovingTextColor:[content message]]];
-	}
+        [prefixString appendAttributedString:[self _messageStringForContent:content]];
+
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
         if(performHeadIndent) {
@@ -824,19 +826,35 @@
 - (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
-    [mutableTemp addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:NSMakeRange(0,[mutableTemp length])];
+    [mutableTemp removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0,[mutableTemp length])];
+    return(mutableTemp);
+}
+//Forces an attributed string to the default text color
+- (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString
+{
+    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
+    [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0,[mutableTemp length])];
+    return(mutableTemp);
+}
+//Forces an attributed string to the default text color
+- (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString
+{
+    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
+    NSRange range = NSMakeRange(0,[mutableTemp length]);
+    [mutableTemp removeAttribute:NSForegroundColorAttributeName range:range];
+    [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:range];
     return(mutableTemp);
 }
 
 //Modifies an attributed string to be visible on the background color
-- (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString
+- (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
     
     //adjust foreground colors for the incoming message background
-    [mutableTemp adjustColorsToShowOnBackground:colorIncoming];
+    [mutableTemp adjustColorsToShowOnBackgroundRelativeToOriginalBackground:inColor];
     
-    return(mutableTemp);    
+    return(mutableTemp);
 }
 @end
 
