@@ -1,10 +1,15 @@
 {
     IBClasses = (
+        {CLASS = AICheckboxList; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             ACTIONS = {preferenceChanged = id; }; 
             CLASS = AIEmoticonPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_enable" = NSButton; "view_prefView" = NSView; }; 
+            OUTLETS = {
+                "checkBox_enable" = NSButton; 
+                "checkList_packList" = AICheckboxList; 
+                "view_prefView" = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
