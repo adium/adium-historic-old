@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.48 2004/04/16 09:04:54 eevyl Exp $
+$Id: ToDoList.txt,v 1.49 2004/04/16 09:54:07 ramoth4 Exp $
 
 Legend
 + Change or Addition
@@ -275,10 +275,10 @@ Bug Fixes:
 = When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
 = Window content is drawing 2 pixels to the left when dragging tabs
 ced preference panes.
+= Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
 = We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 	- (Tick: I thought jabber sent xml...???)
 = Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
-
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
