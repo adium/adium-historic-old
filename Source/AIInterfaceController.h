@@ -31,11 +31,13 @@
 #define KEY_SORT_CHATS					@"Sort Chats"
 #define KEY_GROUP_CHATS_BY_GROUP		@"Group Chats By Group"
 
-//Identifiers for the various message views
-typedef enum {
-	DCStandardMessageView = 1,	//10.2 only, unless webkit is not available
-	DCWebkitMessageView			//Preferred message view
-} DCMessageViewType;
+#define PREF_GROUP_CONTACT_LIST				@"Contact List"
+#define KEY_CL_WINDOW_LEVEL					@"Window Level"
+#define KEY_CL_HIDE							@"Hide While in Background"
+#define KEY_CL_FLASH_UNVIEWED_CONTENT		@"Flash Unviewed Content"
+#define KEY_CL_SHOW_TRANSITIONS				@"Show Transitions"
+#define KEY_CL_SHOW_TOOLTIPS				@"Show Tooltips"
+#define KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND	@"Show Tooltips in Background"
 
 @class AIMenuController , AIChat, AIListObject;
 
@@ -103,9 +105,17 @@ typedef enum {
 - (void)closeContactList;
 @end
 
-@interface NSObject (AdiumPrinting)
-- (void)adiumPrint:(id)sender;
-@end
+typedef enum {
+	AINormalWindowLevel = 0,
+	AIFloatingWindowLevel = 1,
+	AIDesktopWindowLevel = 2
+} AIWindowLevel;
+
+//Identifiers for the various message views
+typedef enum {
+	DCStandardMessageView = 1,	//10.2 only, unless webkit is not available
+	DCWebkitMessageView			//Preferred message view
+} DCMessageViewType;
 
 @interface AIInterfaceController : NSObject {
 	IBOutlet	AIMenuController	*menuController;
@@ -243,3 +253,7 @@ typedef enum {
 
 @end
 
+//Custom printing informal protocol
+@interface NSObject (AdiumPrinting)
+- (void)adiumPrint:(id)sender;
+@end

@@ -89,7 +89,6 @@ ESAnnouncerPlugin,
 ESApplescriptContactAlertPlugin,
 ESBlockingPlugin,
 ESContactClientPlugin,
-ESContactListWindowHandlingPlugin,
 ESContactServersideDisplayName,
 ESFastUserSwitchingSupportPlugin,
 ESFileTransferMessagesPlugin,
@@ -185,7 +184,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESApplescriptContactAlertPlugin class]];
 	[self _loadComponentClass:[ESBlockingPlugin class]];
 	[self _loadComponentClass:[ESContactClientPlugin class]];
-	[self _loadComponentClass:[ESContactListWindowHandlingPlugin class]];
 	[self _loadComponentClass:[ESContactServersideDisplayName class]];
 	[self _loadComponentClass:[ESFastUserSwitchingSupportPlugin class]];
 	[self _loadComponentClass:[ESFileTransferMessagesPlugin class]];
