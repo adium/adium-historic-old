@@ -1002,7 +1002,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame){
-			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultcolor:[NSColor whiteColor]]];
+			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
 		}
 	}
 }
