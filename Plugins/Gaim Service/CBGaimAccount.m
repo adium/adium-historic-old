@@ -1688,8 +1688,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	static NSSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys)
-		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
+	if (!supportedPropertyKeys){
+		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"Online",
 			@"Offline",
 			@"IdleSince",
@@ -1698,8 +1698,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			@"AwayMessage",
 			@"TextProfile",
 			@"DefaultUserIconFilename",
-			nil] unionSet:[super supportedPropertyKeys]];
-	
+			nil];
+		[supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
+		
+	}
+
 	return supportedPropertyKeys;
 }
 
@@ -1719,8 +1722,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}else if([key isEqualToString:@"AwayMessage"]){
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];
 			
-		}else if([key isEqualToString:@"Available"]){
-				[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAvailableTo:)];
+		}else if([key isEqualToString:@"AvailableMessage"]){
+			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAvailableMessageTo:)];
 				
 		}else if([key isEqualToString:@"TextProfile"]){
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];

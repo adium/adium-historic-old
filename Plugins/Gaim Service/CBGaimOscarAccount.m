@@ -95,11 +95,13 @@ static BOOL didInitOscar = NO;
 {
 	static NSSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys)
-		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
-			@"Available",
+	if (!supportedPropertyKeys){
+		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
+			@"AvailableMessage",
 			@"Invisible",
-			nil] unionSet:[super supportedPropertyKeys]];
+			nil];
+		[supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
+	}
 	
 	return supportedPropertyKeys;
 }

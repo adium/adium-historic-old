@@ -55,6 +55,7 @@
 - (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount;
+- (oneway void)setAvailableMessage:(NSString *)availableHTML onAccount:(id)adiumAccount;
 - (oneway void)setInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount;
 - (oneway void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount;
 - (oneway void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount;

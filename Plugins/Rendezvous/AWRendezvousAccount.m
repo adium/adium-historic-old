@@ -392,15 +392,18 @@
 {
 	static NSSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys)
-		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
+	if (!supportedPropertyKeys){
+		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"Online",
 			@"Offline",
 			@"IdleSince",
 			@"IdleManuallySet",
 			@"Away",
 			@"AwayMessage",
-			nil] unionSet:[super supportedPropertyKeys]];
+			nil];
+
+		[supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
+	}
 
 	return supportedPropertyKeys;
 }
