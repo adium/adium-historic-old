@@ -8,6 +8,8 @@
 @interface DCJoinChatViewController : AIObject {
 	IBOutlet		NSView			*view;			// Custom view
 	AIChat							*chat;			// The newly created chat
+	
+	id								delegate;		// Our delegate
 }
 
 + (DCJoinChatViewController *)joinChatView;
@@ -25,5 +27,8 @@
 		  invitingContacts:(NSArray *)contactsToInvite
 	 withInvitationMessage:(NSString *)invitationMessage;
 - (NSArray *)contactsFromNamesSeparatedByCommas:(NSString *)namesSeparatedByCommas onAccount:(AIAccount *)inAccount;
+
+- (void)setDelegate:(id)inDelegate;
+- (id)delegate;
 
 @end
