@@ -363,4 +363,10 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 				withAttributes:attributes];
 }
 
+#pragma mark Menu
+- (NSMenu *)menuForEvent:(NSEvent *)inEvent
+{
+	return [owner menuForEvent:inEvent];
+}
+
 @end
