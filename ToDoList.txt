@@ -194,8 +194,8 @@
 //Contact List
 	- Easy identification of mobile users
 	- Round label caps for events
-	- Improve status heirachy 
-	- We need to either support contacts at the root level or not suport them; we currently do a mixture
+	- Improve status hierarchy 
+	- We need to either support contacts at the root level or not support them; we currently do a mixture
 		which is very confusing to new users.  For example, a new Jabber account has no groups, but adding
 		a contact with no groups has no visible effect.
 

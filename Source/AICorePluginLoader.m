@@ -17,7 +17,7 @@ Adium, Copyright 2001-2004, Adam Iser
  Core - Plugin Loader
  
  Loads external plugins (Including plugins stored within our application bundle).  Also responsible for warning the
- user of old or incompatable plugins.
+ user of old or incompatible plugins.
 
  */
 
