@@ -125,13 +125,13 @@
 	
     //Configure the contact list view
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
-    [contactListView setTarget:self];
-	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
+	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
+
 	[contactListView setContentCell:(CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init])];
 	[contactListView setGroupCell:(GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init])];	
 	
-	
-	
+    [contactListView setTarget:self];
+	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 	
 	[contactListView setDrawsAlternatingRows:DRAW_ALTERNATING_GRID];
 	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
@@ -139,7 +139,6 @@
 	[contactListView setBackgroundColor:BACKGROUND_COLOR];
 	
 #warning grr
-	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
 
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
