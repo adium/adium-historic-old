@@ -1282,6 +1282,36 @@
 				);
 			};
 		};
+		342910CA07AE228600C815F6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIEmoticonPackPreviewTableView.h;
+			path = Plugins/Emoticons/AIEmoticonPackPreviewTableView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342910CB07AE228600C815F6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIEmoticonPackPreviewTableView.m;
+			path = Plugins/Emoticons/AIEmoticonPackPreviewTableView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342910CC07AE228600C815F6 = {
+			fileRef = 342910CA07AE228600C815F6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342910CD07AE228600C815F6 = {
+			fileRef = 342910CB07AE228600C815F6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3429200806288D9B00BB9217 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -6471,6 +6501,7 @@
 				4BE6175907AC67EE0049C87D,
 				4BE6175B07AC67EE0049C87D,
 				4BE6175D07AC67EE0049C87D,
+				342910CC07AE228600C815F6,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7053,6 +7084,7 @@
 				4BE6175A07AC67EE0049C87D,
 				4BE6175C07AC67EE0049C87D,
 				4BE6175E07AC67EE0049C87D,
+				342910CD07AE228600C815F6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13537,6 +13569,8 @@
 		};
 		4B737B4B065D4FDC0062AB94 = {
 			children = (
+				342910CA07AE228600C815F6,
+				342910CB07AE228600C815F6,
 				34C14CD007A8B1AB003CC138,
 				34C14CD107A8B1AB003CC138,
 				349E2E8B07A8AF0C00EAB76A,

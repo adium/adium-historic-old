@@ -13,6 +13,11 @@
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AICheckboxList; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
+            CLASS = AIEmoticonPackPreviewTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowTableView; 
+        }, 
+        {
             CLASS = AIEmoticonPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -41,11 +46,6 @@
             CLASS = AIVariableRowHeightOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAlternatingRowOutlineView; 
-        }, 
-        {
-            CLASS = BGEmoticonPackTableView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIAlternatingRowTableView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
