@@ -17,7 +17,7 @@
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
-#import "AIAccountsController.h"
+#import "AIAccountController.h"
 #import <Adium/AIModularPaneCategoryView.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>

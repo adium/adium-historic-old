@@ -21,7 +21,7 @@
 #import "AIInterfaceController.h"
 #import "AIListOutlineView.h"
 #import "AIPreferenceController.h"
-#import "AIAccountsController.h"
+#import "AIAccountController.h"
 #import "ESContactAlertsPane.h"
 #import "ESContactInfoListController.h"
 #import "ESContactAlertsController.h"
