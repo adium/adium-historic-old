@@ -107,7 +107,8 @@ SHBookmarksImporterPlugin,
 SHLinkManagementPlugin,
 ESGlobalEventsPreferencesPlugin,
 ESGeneralPreferencesPlugin,
-NEHGrowlPlugin;
+NEHGrowlPlugin,
+ESSecureMessagingPlugin;
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -204,6 +205,7 @@ NEHGrowlPlugin;
 	[self _loadComponentClass:[ESGlobalEventsPreferencesPlugin class]];
 	[self _loadComponentClass:[ESGeneralPreferencesPlugin class]];
 	[self _loadComponentClass:[NEHGrowlPlugin class]];
+	[self _loadComponentClass:[ESSecureMessagingPlugin class]];
 }
 
 //Give all components a chance to close
