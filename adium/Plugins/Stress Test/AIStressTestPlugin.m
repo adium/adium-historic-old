@@ -7,6 +7,7 @@
 
 #import "AIStressTestPlugin.h"
 #import "AIStressTestAccount.h"
+#import "DCStressTestJoinChatViewController.h"
 
 @implementation AIStressTestPlugin
 
@@ -55,6 +56,11 @@
 - (AIServiceType *)handleServiceType
 {
     return(handleServiceType);
+}
+
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCStressTestJoinChatViewController joinChatView]);
 }
 
 #endif
