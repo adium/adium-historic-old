@@ -2,22 +2,22 @@
 
 function DownloadAddress()
 {
-    return("http://prdownloads.sourceforge.net/adium/AdiumX_0.53.dmg?download");
+    return("http://prdownloads.sourceforge.net/adium/AdiumX_0.54.dmg?download");
 }
 
 function DownloadSourceAddress()
 {
-    return("http://prdownloads.sourceforge.net/adium/AdiumX_Source_0.53.tar.gz?download");
+    return("http://prdownloads.sourceforge.net/adium/AdiumX_Source_0.54.tar.gz?download");
 }
 
 function DownloadTitle()
 {
-    return("Download v0.53");
+    return("Download v0.54");
 }
 
 function DownloadVersion()
 {
-    return("0.53");
+    return("0.54");
 }
 
 
