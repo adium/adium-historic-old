@@ -54,6 +54,11 @@
     return urlStatus;
 }
 
+-(BOOL)parentStringMatchesString:(NSString *)inString
+{
+    return [pString isEqualToString:inString];
+}
+
 #pragma mark transformers
 -(void)setRange:(NSRange)inRange
 {

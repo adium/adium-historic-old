@@ -20,6 +20,7 @@
 -(NSRange)range;
 -(NSURL *)URL;
 -(URI_VERIFICATION_STATUS)validationStatus;
+-(BOOL)parentStringMatchesString:(NSString *)inString;
 
 -(void)setRange:(NSRange)inRange;
 -(void)setURL:(NSURL *)inURL;
