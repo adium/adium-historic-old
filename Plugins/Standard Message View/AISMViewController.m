@@ -1080,11 +1080,11 @@
 //Context menu
 -(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView
 {
-    AIListObject	*selectedObject = [chat listObject];
+    AIListContact	*selectedObject = [chat listObject];
     
     if(selectedObject){
 		NSArray *locations;
-		if ([selectedObject integerStatusObjectForKey:@"Stranger"]){
+		if ([selectedObject isStranger]){
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
