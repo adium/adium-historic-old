@@ -7,6 +7,7 @@
             OUTLETS = {"textView_profile" = NSTextView; "textView_status" = NSTextView; }; 
             SUPERCLASS = AIContactInfoPane; 
         }, 
+        {CLASS = AILinkTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
