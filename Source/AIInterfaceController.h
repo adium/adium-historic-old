@@ -39,6 +39,8 @@
 #define KEY_CL_SHOW_TOOLTIPS				@"Show Tooltips"
 #define KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND	@"Show Tooltips in Background"
 
+#define CONTACT_LIST_TITLE					AILocalizedString(@"Contact List","Name of the window which lists contacts")
+
 @class AIMenuController , AIChat, AIListObject;
 
 //Sends Interface_ViewDesiredSizeDidChange notifications
