@@ -21,11 +21,8 @@
 #define VIEW_PADDING				3		//Padding between the list object name and it's side views
 #define VIEW_INNER_PADDING			3		//Padding between individual side views
 #define LEFT_PADDING				-7		//Padding on the far left of our cell
-#define LEFT_PADDING_GROUP			0		//Padding on the far left of our cell when displaying a group
 #define RIGHT_PADDING				6		//Padding on the far right of our cell
-#define NAME_OFFSET_X				-4		//Offset to apply to our name text (To counter any margins in text layout)
 #define	LABEL_PADDING_REDUCTION		4.0 	//25% of the requested label endcap padding
-#define GROUP_LABEL_OFFSET			-8		//Offset of the label when drawing behind a group name
 #define STATUS_CIRCLE_MARGIN_HACK 	-12		//I hate status circles
 
 //This are temporary to work around issues with the horizontal auto-resizing
@@ -60,7 +57,7 @@
 	textContainer = [[NSTextContainer alloc] init];
 	[layoutManager addTextContainer:textContainer];
 	[textStorage addLayoutManager:layoutManager];
-	
+
     return self;
 }
 
@@ -201,134 +198,154 @@
 
 //Draw our contents
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{	
-	AISCLOutlineView	*outlineView = (AISCLOutlineView *)controlView;
+{
+	AISCLOutlineView *outlineView = (AISCLOutlineView *)controlView;
+	BOOL labelAroundContactOnly = [outlineView labelAroundContactOnly];
+
+	NSRect labelFrame;
+	if(!labelAroundContactOnly)
+		labelFrame = cellFrame;
+
+	NSArray *sideViews;
+	float width;
+
+	//draw the left views, and inset the frame
+	sideViews = [[listObject displayArrayForKey:@"Left View"] allValues];
+	width = [self displayViews:sideViews inRect:cellFrame onLeft:YES];
+	cellFrame.origin.x   += width;
+	cellFrame.size.width -= width;
+
+	//draw the right views, and inset the frame
+	sideViews = [[listObject displayArrayForKey:@"Right View"] allValues];
+	width = [self displayViews:sideViews inRect:cellFrame onLeft:NO];
+	cellFrame.size.width -= width;
+
+	if(labelAroundContactOnly)
+		labelFrame = cellFrame;
+
 	NSAttributedString  *displayName = [self displayNameStringWithAttributes:YES inView:outlineView];
-	BOOL 				labelAroundContactOnly = [outlineView labelAroundContactOnly];
-    NSBezierPath		*pillPath = nil;
-	
-	//Move our entire cell into the margin
-    if(isGroup){
-        cellFrame.origin.x += LEFT_PADDING_GROUP;
-        cellFrame.size.width -= LEFT_PADDING_GROUP;
-    }else{
-        cellFrame.origin.x += LEFT_PADDING;
-        cellFrame.size.width -= LEFT_PADDING;
-    }
-	cellFrame.size.width -= RIGHT_PADDING;
-	
-	//Draw all left Views before the background if drawing a label around the contact only
-	if(labelAroundContactOnly && ([[listObject displayArrayForKey:@"Left View"] count]) ){
-		int sideViewWidth = [self displayViews:[[listObject displayArrayForKey:@"Left View"] allValues]
-										inRect:NSOffsetRect(cellFrame, STATUS_CIRCLE_MARGIN_HACK, 0.0f)
-										onLeft:YES];
-		cellFrame.origin.x += (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
-		cellFrame.size.width -= (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
+	cellFrame.size.width = [displayName size].width;
+
+	float indent = labelFrame.size.height / 2.0f;
+
+	if(labelAroundContactOnly)
+	{
+		//if we're a contact, then we want to pad the label on both sides.
+		//if we're a group, then only pad the label on the right side, because
+		//  the label will be padded to the full leftward extent later.
+		labelFrame.size.width  = indent * (isGroup == NO);
+
+		labelFrame.size.width += cellFrame.size.width + indent;
 	}
-	
-	//List Object Label
-    if([outlineView showLabels]){
-		NSColor			*labelColor = nil;
+
+	if(isGroup)
+	{
+		//grow the label to accomodate the disclosure triangle.
+		labelFrame.size.width += labelFrame.origin.x;
+		labelFrame.origin.x    = 0.0f;
+	}
+
+	//this SHOULD NOT be necessary, but text is drawing shifted rightwards
+	//  a bit.
+	//these statements correct for that.
+	indent /= 2.0f;
+	if(isGroup)
+		indent = -indent;
+	cellFrame.origin.x += indent;
+
+	NSColor *labelColor = nil;
+
+    if([outlineView showLabels])
+    {
+		NSWindow *listWindow = [outlineView window];
 
 		//Determine our label color
-        if([self isHighlighted] && ([[outlineView window] isKeyWindow] && [[outlineView window] firstResponder] == outlineView)){
-            if(labelAroundContactOnly) {
-                labelColor = [[NSColor alternateSelectedControlColor] colorWithAlphaComponent:[outlineView labelOpacity]];
-            }
-        }else{
-            if(isGroup){
-                labelColor = [[outlineView labelGroupColor] colorWithAlphaComponent:[outlineView labelOpacity]];
-            }else{
-                labelColor = [[[listObject displayArrayForKey:@"Label Color"] objectValue] colorWithAlphaComponent:[outlineView labelOpacity]];
-            }
-        }
-		
-		//Draw our label
-		if(labelColor){
-			int 		innerLeft, innerRight, innerTop, innerBottom;
-			NSRect		labelRect = cellFrame;
-			
-			//Restict our label to the object name if desired
-			if(labelAroundContactOnly) {				
-				labelRect.size.width = [displayName size].width/* + (cellFrame.size.height / 2.0f)*/;
-			}
-			
-			//Indent our label into the available margins
-			float	indent = [self labelEdgePaddingRequiredForLabelOfSize:labelRect.size];
-			labelRect.origin.x -= indent;
-			
-			//EDS - This should technically be * 2.0f but that doesn't look right at present.
-			labelRect.size.width += indent * 3.0f;
-			
-			//Adjust labels slightly when displaying for a group (to avoid overlapping the flippy triangle)
-			if(isGroup){
-				labelRect.origin.x += GROUP_LABEL_OFFSET;
-				labelRect.size.width -= GROUP_LABEL_OFFSET;
-			}
-			labelRect.size.width -= GROUP_LABEL_OFFSET;
-                        
-			//Retrieve the label and shift it into position
-			pillPath = [self bezierPathLabelWithRect:labelRect];
-			
-			//Fill the label
-			if(![outlineView useGradient]){
-				[labelColor set];
-				[pillPath fill];
-			}else{
-				[[AIGradient gradientWithFirstColor:labelColor secondColor:[labelColor darkenAndAdjustSaturationBy:0.4f] direction:AIVertical] drawInBezierPath:pillPath];
-			}
-			
-			//Outline the label
-			if([outlineView outlineLabels]){
-				[pillPath setLineWidth:1.0f];
-				[[self textColorInView:outlineView] set];
-				[pillPath stroke];
-			}
+		if([self isHighlighted] && ([listWindow isKeyWindow] && [listWindow firstResponder] == outlineView))
+		{
+			if(labelAroundContactOnly)
+				labelColor = [NSColor alternateSelectedControlColor];
 		}
-    }
-    
-    //Draw all left Views after the background if drawing a label around the entire width
-	if(!labelAroundContactOnly && ([[listObject displayArrayForKey:@"Left View"] count]) ){
-		int sideViewWidth = [self displayViews:[[listObject displayArrayForKey:@"Left View"] allValues]
-										inRect:NSOffsetRect(cellFrame, STATUS_CIRCLE_MARGIN_HACK, 0)
-										onLeft:YES];
-		cellFrame.origin.x += (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
-		cellFrame.size.width -= (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
-	}
+		else
+		{
+			if(isGroup)
+				labelColor = [outlineView labelGroupColor];
+			else
+				labelColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
+		}
+	} //if([outlineView showLabels])
+
+	[outlineView lockFocus];
+
+	if(labelColor)
+	{
+		//draw a label, which will appear behind the text (because the label is
+		//  drawn first).
+
+		labelColor = [labelColor colorWithAlphaComponent:[outlineView labelOpacity]];
+
+		NSBezierPath *pillPath = [self bezierPathLabelWithRect:labelFrame];
+
+		if(![outlineView useGradient])
+		{
+			//fill with a solid colour.
+			[labelColor set];
+			[pillPath fill];
+		}
+		else
+		{
+			//fill with a gradient.
+
+			float contrast;
+			[labelColor getHue:NULL luminance:&contrast saturation:NULL];
+
+			contrast = contrast / 0.598f;
+			//I chose that constant so I could get a contrast of 0.4f using my
+			//  selected label colour. --boredzo
+
+			[[AIGradient gradientWithFirstColor:labelColor secondColor:[labelColor darkenAndAdjustSaturationBy:contrast] direction:AIVertical] drawInBezierPath:pillPath];
+		}
+
+		if([outlineView outlineLabels])
+		{
+			//outline with the text colour.
+			[pillPath setLineWidth:1.0f];
+			[[self textColorInView:outlineView] set];
+			[pillPath stroke];
+		}
+	} //if(labelColor)
 
 	//Outline the group name as per preferences if not highlighted by the system or we are doing custom highlighting
-	if(isGroup && (![self isHighlighted] || labelAroundContactOnly) && [outlineView outlineGroupColor]){
-		NSMutableAttributedString	*highlightString;
-		highlightString = [[displayName mutableCopy] autorelease];
+	if(isGroup && (![self isHighlighted] || labelAroundContactOnly) && [outlineView outlineGroupColor])
+	{
+		NSMutableAttributedString *highlightString = [displayName mutableCopy];
+		NSRange range = NSMakeRange(0, [displayName length]);
+
 		[highlightString addAttribute:NSStrokeColorAttributeName
 								value:[outlineView outlineGroupColor]
-								range:NSMakeRange(0, [displayName length])];
+								range:range];
 		[highlightString addAttribute:NSStrokeWidthAttributeName
-								value:[NSNumber numberWithFloat:15.0]
-								range:NSMakeRange(0, [displayName length])];
-		
+								value:[NSNumber numberWithFloat:15.0f]
+								range:range];
+
 		[textStorage setAttributedString:highlightString];
-		NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-		[layoutManager drawGlyphsForGlyphRange:glyphRange
-									   atPoint:NSMakePoint(cellFrame.origin.x + NAME_OFFSET_X, cellFrame.origin.y)];
+		range = [layoutManager glyphRangeForTextContainer:textContainer];
+		[layoutManager drawGlyphsForGlyphRange:range atPoint:cellFrame.origin];
+
+		[highlightString release];
 	}
-    
+
 	//Draw the list object name
 	[textStorage setAttributedString:displayName];
 	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-	[layoutManager drawGlyphsForGlyphRange:glyphRange
-								   atPoint:NSMakePoint(cellFrame.origin.x + NAME_OFFSET_X, cellFrame.origin.y)];
-	
-    //Draw all Right Views
-	[self displayViews:[[listObject displayArrayForKey:@"Right View"] allValues]
-				inRect:cellFrame
-				onLeft:NO];
+	[layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+
+	[outlineView unlockFocus];
 }
 
 //Calculates sizing and displays the views.  Pass a 0 width rect to skip drawing.
 - (float)displayViews:(NSArray *)viewArray inRect:(NSRect)drawRect onLeft:(BOOL)onLeft
 {
-	float					width = 0;
+	float					width = 0.0f;
 	NSEnumerator			*enumerator;
 	id <AIListObjectView>	sideView;
 	
@@ -343,7 +360,7 @@
             NSRect		viewRect;
 			
 			//If a zero width rect is passed, skip any drawing
-			if(drawRect.size.width != 0){
+			if(drawRect.size.width != 0.0f){
 				//Create a destination rect for the icon
 				viewRect = drawRect;
 				viewRect.size.width = viewWidth;
@@ -426,7 +443,7 @@
 
 	//Compensate for our rounded caps
 	innerLeft  =  bounds.origin.x + circleRadius;
-	innerRight = (bounds.origin.x + bounds.size.width) - (circleRadius * 2.0f);
+	innerRight = (bounds.origin.x + bounds.size.width) - circleRadius;
 
 	//Create the path and its subpath
 	pillPath = [NSBezierPath bezierPath];
