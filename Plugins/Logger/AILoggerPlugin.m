@@ -70,7 +70,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     dirtyLogLock = [[NSLock alloc] init];
 
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_LOGGING];
     preferences = [[AILoggerPreferences preferencePane] retain];
 
     //Install the log viewer menu items
@@ -81,7 +83,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     [[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 
     //Init index searching
@@ -106,7 +111,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
                 [[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 				
             }else{ //Start Logging
-                [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+                [[adium notificationCenter] addObserver:self 
+											   selector:@selector(contentObjectAdded:) 
+												   name:Content_ContentObjectAdded 
+												 object:nil];
                 
             }
         }
