@@ -20,6 +20,10 @@
 	<true/>
 	<key>Hide Duplicate Prefixes</key>
 	<true/>
+	<key>Ignore Text Color</key>
+	<true/>
+	<key>Ignore Background Color</key>
+	<true/>
 	<key>Show GridLines</key>
 	<true/>
 	<key>Show Sender Gradient</key>
