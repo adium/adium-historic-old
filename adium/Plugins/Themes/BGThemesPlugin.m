@@ -40,7 +40,7 @@
     [newTheme setObject:newAuthor forKey:@"themeAuthor"];
     [newTheme setObject:newVersion forKey:@"themeVersion"];
 	
-    // build theme from all theme-able preferences
+    // build theme from all themable preferences
     while (group = [enumerator nextObject]){
         themableKeys = [[[adium preferenceController] themablePreferences] objectForKey:group]; 
         keyEnumerator = [themableKeys objectEnumerator];
@@ -92,5 +92,4 @@
     }
     [[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
-
 @end
