@@ -22,6 +22,7 @@
 @interface AIInterfaceController (PRIVATE)
 - (void)loadDualInterface;
 - (void)flashTimer:(NSTimer *)inTimer;
+- (NSString *)_tooltipStringForObject:(AIListObject *)object;
 @end
 
 @implementation AIInterfaceController
@@ -182,7 +183,7 @@
 
             //Build a tooltip string for the new object
             [tooltipString release]; tooltipString = nil;
-            tooltipString = [[NSString stringWithFormat:@"%@ (%@)",[object displayName],[object UID]] retain];
+            tooltipString = [[self _tooltipStringForObject:object] retain];
             
             //Display the new tooltip
             [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point];
@@ -197,6 +198,42 @@
     }
 }
 
+- (NSString *)_tooltipStringForObject:(AIListObject *)object
+{
+    NSMutableString	*tipString = [[NSMutableString alloc] init];
+    NSString		*displayName = [object displayName];
+    NSString		*uid = [object UID];
+    BOOL		firstItem = YES;
+
+    //"<DisplayName>" (or) "<DisplayName> (<UID>)"
+    if([displayName compare:uid] == 0){
+        [tipString appendString:displayName];
+    }else{
+        [tipString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,uid]];
+    }
+
+    if([contactListTooltipEntryArray count] != 0){
+        id <AIContactListTooltipEntry>	tooltipEntry;
+        NSEnumerator			*enumerator;
+        
+        //Additional entries
+        enumerator = [contactListTooltipEntryArray objectEnumerator];
+        while((tooltipEntry = [enumerator nextObject])){
+            NSString	*labelString = [tooltipEntry label];
+            NSString	*entryString = [tooltipEntry entryForObject:object];
+
+            if(entryString){
+                if(firstItem){ //Add a divider above the first entry
+                    [tipString appendString:@"\r"];
+                    firstItem = NO;
+                }
+                [tipString appendString:[NSString stringWithFormat:@"\r%@: %@",labelString,entryString]];
+            }
+        }
+    }
+
+    return([tipString autorelease]);
+}
 
 
 

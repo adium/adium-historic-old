@@ -80,7 +80,31 @@
 
 - (NSString *)entryForObject:(AIListObject *)inObject
 {
-    return(@"Maybe ;)");
+    NSString	*entry = nil;
+
+    if([inObject isKindOfClass:[AIListContact class]]){
+        BOOL 			away;
+        NSAttributedString 	*statusMessage = nil;
+        AIMutableOwnerArray	*ownerArray;
+        
+        //Get the away state
+        away = [[(AIListContact *)inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+
+        //Get the status message
+        ownerArray = [(AIListContact *)inObject statusArrayForKey:@"StatusMessage"];
+        if([ownerArray count] != 0){
+            statusMessage = [ownerArray objectAtIndex:0];
+        }
+
+        //Return the correct string
+        if(statusMessage != nil && [statusMessage length] != 0){
+            entry = [statusMessage string];
+        }else if(away){
+            entry = @"Yes";
+        }
+    }
+
+    return(entry);
 }
 
 

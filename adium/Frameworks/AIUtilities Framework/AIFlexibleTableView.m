@@ -513,12 +513,14 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
     id	responder = [self nextResponder];
-
+    NSLog(@"keyDown");
     //Make the next responder key (When walking the responder chain, we want to skip ScrollViews and ClipViews).
     while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
+        NSLog(@"  %@",responder);
         responder = [responder nextResponder];
     }
 
+    NSLog(@" *%@",responder);
     if(responder){
         [[self window] makeFirstResponder:responder]; //Make it first responder
         [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent]; //Pass it this key event
