@@ -83,7 +83,19 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 + (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin
 {
     [self openForPlugin:inPlugin];
-    if(inContact) [sharedLogViewerInstance setSearchString:[inContact UID] mode:LOG_SEARCH_TO];
+    
+	if(inContact){
+		NSString	*searchString;
+		
+		if ([inContact isKindOfClass:[AIMetaContact class]]){
+			searchString = [[(AIMetaContact *)inContact preferredContact] UID];
+		}else{
+			searchString = [inContact UID];
+		}
+		
+		[sharedLogViewerInstance setSearchString:searchString mode:LOG_SEARCH_TO];
+	}
+	
     return(sharedLogViewerInstance);
 }
 
