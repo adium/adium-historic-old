@@ -156,7 +156,8 @@
         AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
         NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
-        enabled = (object && [object isKindOfClass:[AIListContact class]] && text);
+        enabled = (text && [text availableForSending] && object && [object isKindOfClass:[AIListContact class]]);
+
     }
 
     [inToolbarItem setEnabled:enabled];

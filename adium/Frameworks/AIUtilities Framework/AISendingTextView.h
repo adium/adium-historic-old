@@ -28,7 +28,7 @@
 
     id			target;
     SEL			selector;
-
+    BOOL		availableForSending;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
@@ -41,5 +41,7 @@
 - (void)interpretKeyEvents:(NSArray *)eventArray;
 - (void)setContact:(AIListContact *)inContact;
 - (AIListContact *)contact;
+- (void)setAvailableForSending:(BOOL)inBool;
+- (BOOL)availableForSending;
 
 @end

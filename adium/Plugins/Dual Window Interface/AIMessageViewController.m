@@ -58,7 +58,7 @@
         //Send the message
         [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:contact userInfo:nil];
         message = [AIContentMessage messageWithSource:account
-                                          destination:[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES]
+                                          destination:handle
                                                  date:nil
                                               message:[[[textView_outgoing attributedString] copy] autorelease]];
 
@@ -87,8 +87,12 @@
 //The sounce account of this message
 - (void)setAccount:(AIAccount *)inAccount
 {
-    [account release];
+    [account release]; account = nil;
+    [handle release]; handle = nil;
+
+    //Set the account
     account = [inAccount retain];
+    handle = [[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES] retain];
 }
 - (AIAccount *)account{
     return(account);
@@ -131,13 +135,21 @@
     interface = [inInterface retain];
     contact = [inContact retain];
     currentTextEntryHeight = 0;
-    
-    account = [inAccount retain];
-    if(!account) account = [[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact] retain];
-        
+    account = nil;
+    handle = nil;
+
+    if(inAccount){
+        [self setAccount:inAccount];
+    }else{
+        [self setAccount:[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact]];
+    }
+            
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
+    //Observe our contact for status changes
+    [[owner notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:Contact_StatusChanged object:contact];
+    
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
@@ -187,6 +199,16 @@
     [contact release]; contact = nil;
 
     [super dealloc];
+}
+
+//Our contact's status did change
+- (void)contactStatusChanged:(NSNotification *)notification
+{    
+    //Enable/Disable our text view sending
+    [textView_outgoing setAvailableForSending:[(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]];
+
+    //Update our toolbar
+    [toolbar_bottom configureForObjects:nil];
 }
 
 //A preference did change

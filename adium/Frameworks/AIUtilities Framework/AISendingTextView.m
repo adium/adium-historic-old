@@ -45,7 +45,8 @@
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
-
+    availableForSending = YES;
+    
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:nil];
     
@@ -59,6 +60,15 @@
         owner = [inOwner retain];
     }
 }
+
+- (void)setAvailableForSending:(BOOL)inBool
+{
+    availableForSending = inBool;
+}
+- (BOOL)availableForSending{
+    return(availableForSending);
+}
+
 
 - (void)setSendOnReturn:(BOOL)inBool
 {
@@ -83,7 +93,7 @@
 
     //check for command-return to send the message
     if([[theEvent charactersIgnoringModifiers] characterAtIndex:0] == '\r'){
-        [target performSelector:selector]; //Notify the target
+        if(availableForSending) [target performSelector:selector]; //Notify the target
     
         result = YES;
     }
@@ -104,7 +114,7 @@
         NSParameterAssert([returnArray count] != 0);
 
         if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
-            [target performSelector:selector]; //Notify the target
+            if(availableForSending) [target performSelector:selector]; //Notify the target
             
             insertText = NO;
         }

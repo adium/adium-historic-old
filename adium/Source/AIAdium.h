@@ -152,6 +152,7 @@ typedef enum {
 @protocol AITextEntryView //Handles any attributed text entry
 - (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
+- (BOOL)availableForSending;
 @end
 
 @protocol AIContentHandler //Handles the display of a content type
