@@ -254,8 +254,10 @@
         
         [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem 
 																	   atIndex:index];
+		[tabViewItem makeActive:nil];
         [tabViewItem release];
     }
+	
 }
 
 

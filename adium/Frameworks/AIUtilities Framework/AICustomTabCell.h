@@ -14,39 +14,43 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AICustomTabCell : NSCell {
-    //Properties
-    BOOL		selected;
-    BOOL		highlighted;
-    BOOL		dragging;
-    BOOL		allowsInactiveTabClosing;
+    BOOL				selected;
+    BOOL				highlighted;
+    BOOL				allowsInactiveTabClosing;
     
-    NSRect		closeButtonRect;
-    BOOL		trackingClose;
-    BOOL		hoveringClose;
+    BOOL				trackingClose;
+    BOOL				hoveringClose;
     
     NSTrackingRectTag	trackingTag;
     NSDictionary        *userData;
     NSTrackingRectTag   closeTrackingTag;
     NSDictionary        *closeUserData;
     
-    NSTabViewItem	*tabViewItem;
-    NSSize		oldSize;
-
-    NSRect		frame;
+    NSTabViewItem		*tabViewItem;
+    NSRect				frame;
 }
 
 + (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue;
+- (BOOL)allowsInactiveTabClosing;
 - (void)setSelected:(BOOL)inSelected;
 - (BOOL)isSelected;
-- (NSTabViewItem *)tabViewItem;
-- (NSSize)size;
-- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;
+- (void)setHighlighted:(BOOL)inHighlighted;
+- (BOOL)isHighlighted;
 - (void)setFrame:(NSRect)inFrame;
 - (NSRect)frame;
-- (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
-- (void)setHighlighted:(BOOL)inHighlighted;
+- (NSSize)size;
+- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;
+- (NSTabViewItem *)tabViewItem;
+- (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView;
+- (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection;
 - (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation;
 - (void)removeTrackingRectsFromView:(NSView *)view;
+- (void)mouseEntered:(NSEvent *)theEvent;
+- (void)mouseExited:(NSEvent *)theEvent;
+- (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
+- (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView;
+- (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView;
+- (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag;
 
 @end

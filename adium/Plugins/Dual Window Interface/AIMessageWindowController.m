@@ -378,10 +378,9 @@
                          withTabBarAtPoint:point];
 }
 
-//
-- (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
+//Close the message tab
+- (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    //Close the message tab
     [[adium interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
 }
 
@@ -428,7 +427,7 @@
 - (void)updateTabBarVisibilityAndAnimate:(BOOL)animate
 {
     if(tabView_messages != nil){    //Ignore if our tabs haven't loaded yet
-        BOOL    shouldShowTabs = (supressHiding || !autohide_tabBar || ([tabView_customTabs numberOfTabViewItems] > 1) );
+        BOOL    shouldShowTabs = (supressHiding || !autohide_tabBar || ([tabView_messages numberOfTabViewItems] > 1) );
 		
 		if (force_tabBar_visible != -1) {
 			shouldShowTabs = (force_tabBar_visible || supressHiding);

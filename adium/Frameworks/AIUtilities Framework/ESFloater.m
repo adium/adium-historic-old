@@ -7,8 +7,8 @@
 #import "ESFloater.h"
 #import "AIEventAdditions.h"
 
-#define WINDOW_FADE_FPS                         30.0
-#define WINDOW_FADE_STEP                        0.4
+#define WINDOW_FADE_FPS                         24.0
+#define WINDOW_FADE_STEP                        0.3
 #define WINDOW_FADE_SLOW_STEP                   0.1
 #define WINDOW_FADE_MAX                         1.0
 #define WINDOW_FADE_MIN                         0.0

@@ -14,12 +14,13 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "ESFloater.h"
+#define TAB_CELL_IDENTIFIER     @"Tab Cell Identifier"
 
 @class AICustomTabCell, AICustomTabsView;
 
-@protocol AICustomTabsViewDelegate <NSObject>
+@interface NSObject (AICustomTabsViewDelegate)
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView;
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)tabView;
 - (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point;
@@ -29,33 +30,46 @@
 @end
 
 @interface AICustomTabsView : NSView {
-    IBOutlet	NSTabView	*tabView;
+    IBOutlet	NSTabView			*tabView;
 
-    NSMutableArray	*tabCellArray;
-    AICustomTabCell	*selectedCustomTabCell;
-    BOOL                removingLastTabHidesWindow;
-    BOOL		allowsInactiveTabClosing;
-    
-    NSTimer             *arrangeCellTimer;
-    
-    //Drag tracking and receiving
-    int			hoverIndex;		//The index it's hovering at
-    NSPoint		lastClickLocation;
-    
-    //Delegate
-    id <AICustomTabsViewDelegate>	delegate;
+    id					delegate;
+    BOOL				allowsInactiveTabClosing;	//Allow closing of inactive tabs
+	BOOL				trackingCursor;				//Tracking rects are installed
+
+	//Tab Dragging
+    BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
+	int 				tabGapWidth;				//Gap in our tabs
+	int 				tabGapIndex;				//Location of the gap
+    NSPoint				lastClickLocation;			//Last click location			
+    NSTimer             *arrangeCellTimer;			//Timer for tab animations
+	
+	//Guarded.  Access these using the internal accessors
+    NSMutableArray		*tabCellArray;
+    AICustomTabCell		*selectedCustomTabCell;
 }
 
-+ (void)dragTabCell:(AICustomTabCell *)inTabCell fromCustomTabsView:(AICustomTabsView *)sourceView withEvent:(NSEvent *)inEvent;
-- (id <AICustomTabsViewDelegate>)delegate;
-- (void)removeTabViewItem:(NSTabViewItem *)tabViewItem;
-- (int)numberOfTabViewItems;
-- (void)setDelegate:(id <AICustomTabsViewDelegate>)inDelegate;
-- (id <AICustomTabsViewDelegate>)delegate;
+//Delegate
+- (void)setDelegate:(id)inDelegate;
+- (id)delegate;
+
+//Toggle closing of this window when the last tab is removed
 - (void)setRemovingLastTabHidesWindow:(BOOL)inValue;
 - (BOOL)removingLastTabHidesWindow;
+
+//Allow closing of inactive tabs
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue;
 - (BOOL)allowsInactiveTabClosing;
+
+//
+- (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
+- (void)resizeTabs;
+- (void)moveTab:(AICustomTabCell *)tabCell toIndex:(int)index selectTab:(BOOL)shouldSelect;
+- (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
+- (int)totalWidthOfTabs;
+- (int)numberOfTabViewItems;
+- (void)closeTab:(AICustomTabCell *)tabCell;
+- (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
+- (void)resetCursorTracking;
 
 @end
 
