@@ -18,7 +18,7 @@
 
 #import "AIContentController.h"
 #import "AILaTeXPlugin.h"
-#import <AIUtilities/AITextAttachmentExtension.h>
+#import <Adium/AITextAttachmentExtension.h>
 
 @implementation AILaTeXPlugin
 
