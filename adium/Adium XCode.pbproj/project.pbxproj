@@ -1410,6 +1410,7 @@
 			files = (
 				3419F33505314B9600C68BA3,
 				3419F33605314B9600C68BA3,
+				34C1CA8E05B15B3D0055C2E3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2928,6 +2929,7 @@
 				3419F3F505314C1200C68BA3,
 				3484645405910E7E00241F68,
 				3453667D059BA7E300A83D9E,
+				34C1CA8805B15B170055C2E3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17283,6 +17285,36 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		34C1CA8705B15B170055C2E3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Labels Themable Prefs.plist";
+			path = "Plugins/Standard Contact List View/Labels Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1CA8805B15B170055C2E3 = {
+			fileRef = 34C1CA8705B15B170055C2E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1CA8D05B15B3D0055C2E3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Idle Time Themable Prefs.plist";
+			path = "Plugins/Idle Time Display/Idle Time Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1CA8E05B15B3D0055C2E3 = {
+			fileRef = 34C1CA8D05B15B3D0055C2E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34CDB7A60571D66800D50469 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -18258,10 +18290,10 @@
 				4B0E342E04C4677700A8010A,
 				4B5D67D3050CF56700A8010A,
 				11B96D81049AF85900C6304D,
+				4B31E8E104C4712F00A8010A,
 				F53B9AC502CD12AB01A8010A,
 				F5370C9202D76F1F01A8010A,
 				D3376B2C052BBC2900A8010B,
-				4B31E8E104C4712F00A8010A,
 			);
 			isa = PBXGroup;
 			name = Attributes;
@@ -18905,6 +18937,7 @@
 				4B31E8E704C471A500A8010A,
 				4B31E8E904C471A500A8010A,
 				4B31E8E804C471A500A8010A,
+				34C1CA8D05B15B3D0055C2E3,
 			);
 			isa = PBXGroup;
 			name = "Idle Time Display";
@@ -28581,6 +28614,7 @@
 				F579399D033E75CB01A8010A,
 				F579399E033E75CB01A8010A,
 				3484644C05910DFF00241F68,
+				34C1CA8705B15B170055C2E3,
 				4BBC89A803B964B800A8010A,
 			);
 			isa = PBXGroup;
