@@ -171,11 +171,6 @@
 
 - (void)configureControlDimming
 {
-	IBOutlet	NSButton		*button_layoutDelete;
-	IBOutlet	NSButton		*button_themeDelete;
-	IBOutlet	NSButton		*button_layoutEdit;
-	IBOutlet	NSButton		*button_themeEdit;
-	
 	BOOL haveLayouts = ([layoutArray count] > 0);
 	BOOL haveThemes = ([themeArray count] > 0);
 	
