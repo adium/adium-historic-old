@@ -23,7 +23,7 @@
 
 - (NSString *)label
 {
-    return(PREF_GROUP_EVENT_BEZEL);
+    return(EVENT_BEZEL_PREFERENCE_LABEL);
 }
 
 - (NSString *)nibName

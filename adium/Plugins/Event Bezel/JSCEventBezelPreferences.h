@@ -6,6 +6,8 @@
 //  Copyright (c) 2003 All rights reserved.
 //
 
+#define EVENT_BEZEL_PREFERENCE_LABEL	@"Event Notifications"
+
 @interface JSCEventBezelPreferences : AIPreferencePane {
     IBOutlet NSButton       *checkBox_showBezel;
     IBOutlet NSButton       *checkBox_online;
