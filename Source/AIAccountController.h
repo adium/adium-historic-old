@@ -29,6 +29,7 @@
 #define OFFLINE_MENU_IMAGE_FRACTION		0.30
 
 //Proxy
+#define KEY_ACCOUNT_GAIM_PROXY_ENABLED		@"Proxy Enabled"
 #define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
 #define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"
 #define KEY_ACCOUNT_GAIM_PROXY_PORT			@"Proxy Port"
