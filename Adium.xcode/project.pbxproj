@@ -5366,6 +5366,8 @@
 				340F47EC06DA41DB0072E2FA,
 				340F47ED06DA41DD0072E2FA,
 				4BAFD68406E00D1700FF7FBC,
+				4B1AB2A806E101FF00FB5EAD,
+				4B1AB2A906E101FF00FB5EAD,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9634,6 +9636,34 @@
 			path = ToDoList.txt;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B1AB2A606E101FF00FB5EAD = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = emoticonsOff.png;
+			path = Plugins/Logger/emoticonsOff.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1AB2A706E101FF00FB5EAD = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = emoticonsOn.png;
+			path = Plugins/Logger/emoticonsOn.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1AB2A806E101FF00FB5EAD = {
+			fileRef = 4B1AB2A606E101FF00FB5EAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1AB2A906E101FF00FB5EAD = {
+			fileRef = 4B1AB2A706E101FF00FB5EAD;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B215DAF059896B000305B3C = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -16073,6 +16103,8 @@
 				C45F7F6206C75E200056B1F2,
 				C45F7F6306C75E210056B1F2,
 				C45F7F6406C75E210056B1F2,
+				4B1AB2A606E101FF00FB5EAD,
+				4B1AB2A706E101FF00FB5EAD,
 				6C644D3405776BC500D79723,
 				6C644D3505776BC600D79723,
 				6C644D3605776BC600D79723,
