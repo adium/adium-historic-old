@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AISendingTextView.h"
+#import "AIMessageEntryTextView.h"
 #import "AIDictionaryAdditions.h"
 
 #define MAX_HISTORY					25		//Number of messages to remember in history
