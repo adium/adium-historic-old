@@ -20,16 +20,24 @@
 // Adium X 0.70 remaining issues
 //------------------------------------------------------------------------------------
 [Contact List]
-- Bubble-to-fit cells don't work with any new list additions (This includes
-	alignment, status icons, service icons, user icons).  Will disable all
-	those options when using bubble-to-fit for now (pending a real solution,
-	if somebody can think of one)
 - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
 - Need to check whether ~/L/AS/Adium 2.0/Contact List/ exists before trying to save
 	contact list themes there.
 	
+[MetaContacts]
+- Unchecking the address book consolidate contacts option has no effect
+- MetaContact ordering does not always restore properly
+- Source account is not always accurate when a contact within a metaContact is messaged
+- MetaContacts should remember the last messaged contact and use that rather than the "preferredContact" by default
+
+[Other]
+- Small contact list icons lead to blurry Get Info metacontact drawer icons
+- Intermittent crash when closing a group chat, particularly via MSN
+- Initial messages from invisible contacts sometimes don't open new message windows
+- Autoaway after Idle is broken
+
 [Will not do]
 - Create default layouts & styles for the contact list preferences
 - What to do with contact list bottom bar?
@@ -47,9 +55,17 @@
 
 - Tooltips are not appearing for links in profile text.
 
+- Tooltip alignment fails in long away messages and other large blocks of text.
+
 - Double clicking two names in succession causes the first name to highlight
-    the second time. (wordsaboutmehere)
+    the second time.
+
+- Messages sent precisely at midnight local time can be eaten.  This does not happen
+	every time.
 	
+- The setFrame:display:animate: call in AIDockingWindow can cause a rare beachball.
+	This frame change should be made into a manual series of frame changes to avoid this.
+
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
@@ -58,6 +74,12 @@
 
 - [Yahoo] File transfer limitations
     Files over 1 MB in size fail to send
+
+- [Jaber] Authorization problems
+
+- [AIM] Contacts can get incorrectly tagged as being on an AOL Mobile Device
+
+- [All] Gaim's proxy support is unreliable at best
 
 //------------------------------------------------------------------------------------
 // Bugs - Resources
