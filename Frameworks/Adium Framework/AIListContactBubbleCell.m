@@ -35,7 +35,7 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(!drewSelection){
+	if(![self isSelectionInverted]){
 		NSColor	*labelColor = [self labelColor];
 
 		if(labelColor){
@@ -46,9 +46,6 @@
 			[labelColor set];
 			[pillPath fill];
 		}
-		
-	}else{
-		drewSelection = NO;
 	}
 }
 
@@ -62,18 +59,12 @@
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	[self drawBackgroundWithFrame:cellFrame];
-	
-	NSRect rect = [self bubbleRectForFrame:cellFrame];
-	
-	rect = NSInsetRect(rect,1,1);
-	
-	NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:rect];
-	[pillPath setLineWidth:2.0];
-	[[NSColor alternateSelectedControlColor] set];
-	[pillPath stroke];
-	
-	drewSelection = YES;
+	if([self isSelectionInverted]){
+		AIGradient 	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+		NSRect 		rect = [self bubbleRectForFrame:cellFrame];
+		
+		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect]];
+	}
 }
 	
 //
