@@ -771,6 +771,50 @@
 			settings = {
 			};
 		};
+		341E88680648FF1B00E0C828 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimRequestActionWindowController.h;
+			path = "Plugins/Gaim Service/ESGaimRequestActionWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		341E88690648FF1B00E0C828 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimRequestActionWindowController.m;
+			path = "Plugins/Gaim Service/ESGaimRequestActionWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		341E886A0648FF1B00E0C828 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimActionRequestWindow.nib;
+			path = "Plugins/Gaim Service/GaimActionRequestWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		341E886B0648FF1B00E0C828 = {
+			fileRef = 341E88680648FF1B00E0C828;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		341E886C0648FF1B00E0C828 = {
+			fileRef = 341E88690648FF1B00E0C828;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		341E886D0648FF1B00E0C828 = {
+			fileRef = 341E886A0648FF1B00E0C828;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		341F08E5058A97AB00A5A7AB = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7080,6 +7124,9 @@
 			children = (
 				3499F4A706309AF60035B468,
 				3499F4A606309AF60035B468,
+				341E88680648FF1B00E0C828,
+				341E88690648FF1B00E0C828,
+				341E886A0648FF1B00E0C828,
 				34C2CF85063340540018E5D2,
 				34C2CF86063340540018E5D2,
 			);
@@ -10692,6 +10739,7 @@
 				34C2EA1A0634DB5E0018E5D2,
 				34E3C8890638D40500AA3EF7,
 				34E3C8A70638D50F00AA3EF7,
+				341E886B0648FF1B00E0C828,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10711,6 +10759,7 @@
 				3460EF7806458C1D0099922D,
 				3460EF7C06458C2C0099922D,
 				3460EF8006458C3C0099922D,
+				341E886D0648FF1B00E0C828,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10750,6 +10799,7 @@
 				34C2EA1B0634DB5E0018E5D2,
 				34E3C88A0638D40500AA3EF7,
 				34E3C8A80638D50F00AA3EF7,
+				341E886C0648FF1B00E0C828,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
