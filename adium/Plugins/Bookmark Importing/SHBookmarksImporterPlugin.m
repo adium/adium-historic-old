@@ -10,7 +10,7 @@
 
 @interface SHBookmarksImporterPlugin(PRIVATE)
 - (void)installImporterClass:(Class)inClass;
-- (void)configureMenus;
+- (void)configureMenus:(id)sender;
 - (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem;
 @end
 
@@ -37,8 +37,12 @@ static NSMenu       *bookmarkSets;
     [self installImporterClass:[SHMSIEBookmarksImporter class]];
     [self installImporterClass:[SHOmniWebBookmarksImporter class]];
     
+    bookmarksLock = [[NSLock alloc] init];
     // initial menu configuration
-    [self configureMenus];
+   // [self configureMenus];
+    [NSThread detachNewThreadSelector:@selector(configureMenus:)
+                             toTarget:self
+                           withObject:nil];
     
     [[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
     [[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
@@ -67,8 +71,11 @@ static NSMenu       *bookmarkSets;
     }
 }
 
-- (void)configureMenus
+- (void)configureMenus:(id)sender
 {
+    NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
+    [bookmarksLock lock];
+    
     NSEnumerator *enumerator = [importerArray objectEnumerator];
     id <SHBookmarkImporter> importer;
     
@@ -107,6 +114,8 @@ static NSMenu       *bookmarkSets;
         [bookmarkRootMenuItem setSubmenu:bookmarkSets];
         [bookmarkRootContextualMenuItem setSubmenu:[[bookmarkSets copy] autorelease]];
     }
+    [bookmarksLock unlock];
+    [pool release];
 }
 
 - (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem
