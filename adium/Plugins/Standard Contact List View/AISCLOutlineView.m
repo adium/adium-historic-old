@@ -166,6 +166,10 @@
 {
     lastSelectedRow = [self selectedRow];
     [self deselectAll:nil];
+    
+    //Updates shadows from the change in selection
+    [[self window] compatibleInvalidateShadow];
+    [[self window] display];
 }
 
 
@@ -502,14 +506,15 @@
     if (isBorderless && ([theEvent type] == NSLeftMouseDown)) {
         //Grab the next event
         NSEvent *newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO];
-        //
+        //If the user releases the mouse without moving it, then don't attempt to begin the window drag
         if ([newEvent type]==NSLeftMouseUp){
             //The borderless window does not automatically becaome key and main, so force it to be
             if (![[self window] isMainWindow]) {
                 [[self window] makeKeyWindow];
                 [[self window] makeMainWindow];
+                [[self window] makeFirstResponder:self];
             }
-            
+            //Pass both events to the outlineView
             [super mouseDown:theEvent];
             [super mouseUp:newEvent];
         } else {

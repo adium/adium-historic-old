@@ -197,7 +197,6 @@
             }
         } else {
             backgroundColor = [[[listObject displayArrayForKey:@"Label Color"] averageColor] colorWithAlphaComponent:[(AISCLOutlineView *)controlView labelOpacity]];
-//            backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
         }
     }
     
@@ -213,18 +212,20 @@
     }
     
     //Text Color (If this cell is selected, use the inverted color, or white)
-    if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView || backgroundColor){
+    if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView){
         textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
         if(!textColor){
             if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
             else textColor = [(AISCLOutlineView *)controlView color];
         }
     }else{ //use the regular color, or black
-        textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
+        textColor = [NSColor alternateSelectedControlTextColor];
+/*        textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
         if(!textColor){
             if(isGroup) textColor = [(AISCLOutlineView *)controlView invertedGroupColor];
             else textColor = [(AISCLOutlineView *)controlView invertedColor];
         }
+*/
     }    
     
     //Get the name string and build our displayString with all its attributes
