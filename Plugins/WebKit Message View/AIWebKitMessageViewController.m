@@ -746,8 +746,8 @@ DeclareString(AppendNextMessage);
 										   withSource:[[content chat] listObject]
 										  destination:[[content chat] account]
 												 date:[content date]
-											  message:[NSAttributedString stringWithString:dateMessage
-																				attributes:[[adium contentController] defaultFormattingAttributes]]
+											  message:[[[NSAttributedString alloc] initWithString:dateMessage
+																					   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
 											 withType:@"date_separator"];
 		//Add the date header
 		[self _addContentStatus:dateSeparator similar:NO];
