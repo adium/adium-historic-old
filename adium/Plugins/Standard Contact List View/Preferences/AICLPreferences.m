@@ -95,7 +95,7 @@
 
 - (void) colorAndOpacity: (id) sender
 {
-    if (sender == backgroundColorWell)
+    if (sender == backgroundColorWell)	// iacas - 12/22/2002 - kinda lame to be pulling these into the same action, isn't it???
     {
         float red, green, blue, alpha;
         [[[sender color] colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"] getRed:&red green:&green blue:&blue alpha:&alpha];

@@ -97,7 +97,8 @@
     AISCLOutlineView	*SCLView;
 
     NSDictionary *dict = [[owner preferenceController] preferencesForGroup: CL_PREFERENCE_GROUP];
-    while((SCLView = [enumerator nextObject])) {
+    while((SCLView = [enumerator nextObject]))
+	{
         NSFont *font = [NSFont fontWithName:[NSString stringWithFormat:@"%@-%@",
             [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FONT"],
             [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FACE"]]
@@ -118,6 +119,10 @@
                                                                    green:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"GREEN"] floatValue]
                                                                     blue:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"BLUE"] floatValue]
                                                                    alpha:[[dict objectForKey: CL_OPACITY] floatValue]]];
+		// iacas - 12/22/2002
+		if([[dict objectForKey: CL_OPACITY] floatValue] < 100.0)
+			[[SCLView window] setOpaque:NO];
+		
         [SCLView setNeedsDisplay:YES];
     }    
 }
