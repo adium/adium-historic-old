@@ -63,7 +63,15 @@
 			
     }else if([[tableColumn identifier] isEqual:@"name"]){
 		if(showingContacts){
-			return([[controller_LogViewer toArray] objectAtIndex:row]);
+                    NSString *alias = [NSString stringWithString:@""];
+                    // grab a contact, then its display name... is this quick?!
+                    alias = [[[adium contactController] existingListObjectWithUniqueID:[NSString stringWithFormat:@"%@.%@",[[controller_LogViewer toServiceArray] objectAtIndex:row],[[controller_LogViewer toArray] objectAtIndex:row]]] displayName];
+                    if([alias isEqual:@""] == NO && alias != nil)
+                    {
+                        return([NSString stringWithFormat:@"%@ (%@)", alias, [[controller_LogViewer toArray] objectAtIndex:row]]);
+                    }
+                    else
+                        return([[controller_LogViewer toArray] objectAtIndex:row]);
 		}else{
 			return([[controller_LogViewer fromArray] objectAtIndex:row]);
 		}
@@ -105,7 +113,6 @@
     NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
                       @selector(trashContactConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
                       @"Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.",name,name);
-    
 }
 
 - (void)trashContactConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
