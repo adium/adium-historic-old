@@ -57,33 +57,28 @@
 	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST] ||
 	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
 
-		BOOL newAllCount;
-		BOOL newVisibleCount;
-		BOOL newShowOffline;
+		BOOL oldAllCount = allCount;
+		BOOL oldVisibleCount = visibleCount;
+		BOOL oldShowOffline = showOffline;
 		
-		newAllCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
+		allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
                                                                      group:PREF_GROUP_CONTACT_LIST] boolValue];
-        newVisibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
+        visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
                                                                      group:PREF_GROUP_CONTACT_LIST] boolValue];
-        newShowOffline =  [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+        showOffline =  [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
                                                                      group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-		if ((newAllCount && !allCount) || (newVisibleCount && !visibleCount)){
-			if (!allCount && !visibleCount){
+		if ((allCount && !oldAllCount) || (visibleCount && !oldVisibleCount)){
+			
+			if (!oldAllCount && !oldVisibleCount){
 				//Install our observer if we are now counting contacts in some form but weren't before
-				[[adium contactController] registerListObjectObserver:self];
+				//This will update all list objects.
+				[[adium contactController] registerListObjectObserver:self];				
+			}else{
+				//Refresh all
+				[[adium contactController] updateAllListObjectsForObserver:self];
 			}
 			
-			allCount = newAllCount;
-			visibleCount = newVisibleCount;
-			showOffline = newShowOffline;
-			
-			//Refresh all
-			[[adium contactController] updateAllListObjectsForObserver:self];
-			
-		}else if ((!newAllCount && allCount) || (!newVisibleCount && visibleCount)){
-			allCount = newAllCount;
-			visibleCount = newVisibleCount;
-			showOffline = newShowOffline;
+		}else if ((!allCount && oldAllCount) || (!visibleCount && oldVisibleCount)){
 			
 			//Refresh all
 			[[adium contactController] updateAllListObjectsForObserver:self];
@@ -93,10 +88,7 @@
 				[[adium contactController] unregisterListObjectObserver:self];
 			}
 			
-		}else if (newShowOffline != showOffline){
-			//The state of showing offline contacts changed; this is a special case, so update our list objects
-			showOffline = newShowOffline;
-			
+		}else if (showOffline != oldShowOffline){
 			//Refresh all
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
