@@ -34,6 +34,7 @@
 	
     NSSize               lastPostedSize;
     NSSize               _desiredSizeCached;
+	BOOL				resizing;
     
     NSView              *associatedView;
 }
