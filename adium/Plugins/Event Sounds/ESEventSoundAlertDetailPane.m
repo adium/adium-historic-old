@@ -109,57 +109,7 @@
 									keyEquivalent:@""] autorelease];            
 	[soundMenu addItem:menuItem];
 	[soundMenu setAutoenablesItems:NO];
-    
-	
-	
-	
-	
-	
-	
-    //Add custom sounds to the menu as needed
 
-    
-	
-	//Get the current dictionary
-#warning copy paste alert
-	
-	
-	
-//        //add it if it's not already in the menu
-//        NSString *soundPath = [currentDict objectForKey:KEY_EVENT_DETAILS];
-//        if(soundPath && ([soundPath length] != 0) && [popUp_actionDetails indexOfItemWithRepresentedObject:soundPath] == -1){
-//            NSImage	*soundImage;
-//            NSString	*soundTitle;
-//            NSMenuItem	*menuItem;
-//            
-//            //Add an "Other" header if necessary
-//            if([popUp_actionDetails indexOfItemWithTitle:OTHER] == -1){
-//                [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
-//                menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER
-//                                                       target:nil
-//                                                       action:nil
-//                                                keyEquivalent:@""] autorelease];
-//                [menuItem setEnabled:NO];
-//                [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
-//            }
-//            
-//            //Get the sound title and image
-//            soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
-//            soundImage = [[NSWorkspace sharedWorkspace] iconForFile:soundPath];
-//            [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
-//            
-//            //Build the menu item
-//            menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
-//                                                   target:self
-//                                                   action:@selector(selectSound:)
-//                                            keyEquivalent:@""] autorelease];
-//            [menuItem setRepresentedObject:soundPath];
-//            [menuItem setImage:soundImage];
-//            
-//            [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
-//        }
-//    }
-    
     return([soundMenu autorelease]);
 }
 
@@ -176,17 +126,6 @@
 	[menuItem setImage:soundFileIcon];
 	[soundMenu addItem:menuItem];
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //Select a sound from one of the sound popUp menus
 - (IBAction)selectSound:(id)sender
