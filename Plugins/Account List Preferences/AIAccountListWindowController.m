@@ -223,7 +223,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 }
 
 //Hook up the responder chain
-//Must wait until our view is visible to do this, otherwise our requests to setup the chain will be ignored.
+//Must wait until our view is visible to do this, otherwise our requests to set the chain up will be ignored.
 //So, this method waits until our view becomes visible, and then sets up the chain :)
 - (void)_configureResponderChain:(NSTimer *)inTimer
 {
