@@ -65,7 +65,11 @@
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
 									 object:nil];
-	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
+		
 	//Images
 	layoutStandard = [[NSImage imageNamed:@"style-standard" forClass:[self class]] retain];
 	layoutBorderless = [[NSImage imageNamed:@"style-borderless" forClass:[self class]] retain];
@@ -110,6 +114,8 @@
 	[layoutMockie release]; layoutMockie = nil;
 	[layoutPillows release]; layoutPillows = nil;
 	
+	[[adium notificationCenter] removeObserver:self];
+	
 	[AISCLViewPlugin resetXtrasCache];
 }
 
@@ -123,6 +129,14 @@
 	}else if(notification == nil || [[notification object] caseInsensitiveCompare:LIST_THEME_EXTENSION] == 0){
 		[AISCLViewPlugin resetXtrasCache];
 		[self updateThemes];
+	}
+}
+
+//Selected theme/layout changed
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST])){
+		[self updateSelectedLayoutAndTheme];
 	}
 }
 
