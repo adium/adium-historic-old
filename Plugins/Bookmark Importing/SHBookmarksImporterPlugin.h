@@ -17,8 +17,9 @@
 	NSMenuItem              *bookmarkRootMenuItem;
 	NSMenuItem              *bookmarkRootContextualMenuItem;
         
-        NSToolbarItem 		*toolbarItem;
-
+	NSToolbarItem			*toolbarItem;
+	NSMutableArray			*toolbarItemArray;
+	
 	id <SHBookmarkImporter>  importer;
 	BOOL                     updatingMenu;
 }

@@ -17,6 +17,8 @@
 - (void)insertBookmarks:(NSDictionary *)bookmarks intoMenu:(NSMenu *)inMenu;
 - (void)insertMenuItemForBookmark:(SHMarkedHyperlink *)object intoMenu:(NSMenu *)inMenu;
 - (void)registerToolbarItem;
+- (void)updateAllToolbarItemMenus;
+- (void)updateMenuForToolbarItem:(NSToolbarItem *)item;
 @end
 
 @class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter,
@@ -29,8 +31,10 @@
 {
 	//Prepare the importer for our default browser
 	importer = [[[self importerClassForDefaultBrowser] newInstanceOfImporter] retain];
+
 	updatingMenu = NO;
-    
+    toolbarItemArray = nil;
+	
 	//If we can't find an importer for the user's browser, we don't need to install the menu item or do anything else
 	if(importer){
 		//Main bookmark menu item
@@ -59,6 +63,11 @@
 												 selector:@selector(toolbarWillAddItem:)
 													 name:NSToolbarWillAddItemNotification
 												   object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(toolbarDidRemoveItem:)
+													 name:NSToolbarDidRemoveItemNotification
+												   object:nil];
+					
 		[self registerToolbarItem];
 	}
 }
@@ -80,76 +89,52 @@
 	}
 }
 
-- (void)toolbarWillAddItem:(NSNotification *)notification
-{
-	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	
-	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
-		NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
-		
-		//Add menu to view
-		[[item view] setMenu:menu];
-		
-		//Add menu to toolbar item (for text mode)
-		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
-		[mItem setSubmenu:menu];
-		[mItem setTitle:[menu title]];
-		[item setMenuFormRepresentation:mItem];
-	}
-}
-
-- (void)registerToolbarItem
-{
-	MVMenuButton *button;
-	
-	//Unregister the existing toolbar item first
-	if(toolbarItem){
-		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
-		[toolbarItem release]; toolbarItem = nil;
-	}
-	
-	//Register our toolbar item
-	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
-	[button setImage:[NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]]];
-	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertBookmark"
-														   label:AILocalizedString(@"Bookmarks",nil)
-													paletteLabel:AILocalizedString(@"Insert Bookmark",nil)
-														 toolTip:AILocalizedString(@"Insert Bookmark",nil)
-														  target:self
-												 settingSelector:@selector(setView:)
-													 itemContent:button
-														  action:@selector(injectBookmarkFrom:)
-															menu:nil] retain];
-	[toolbarItem setMinSize:NSMakeSize(32,32)];
-	[toolbarItem setMaxSize:NSMakeSize(32,32)];
-	[button setToolbarItem:toolbarItem];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
-}
-
 //Returns the importer we'll need to use for the user's default web browser
 - (Class)importerClassForDefaultBrowser
 {
-	Class	importerClass = nil;
-	NSURL   *appURL = nil;
-    
-    //Launch services can tell us the default handler for html (which will be the default browser)
-    if(noErr == LSGetApplicationForInfo(kLSUnknownType,kLSUnknownCreator,(CFStringRef)@"html",kLSRolesAll,NULL,(CFURLRef *)&appURL)){
-        if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
-            importerClass = [SHSafariBookmarksImporter class];
-        }else if(NSNotFound != [[appURL path] rangeOfString:@"Camino"].location){
-            importerClass = [SHCaminoBookmarksImporter class];
-        }else if(NSNotFound != [[appURL path] rangeOfString:@"Firefox"].location){
-            importerClass = [SHFireFoxBookmarksImporter class];
-        }else if(NSNotFound != [[appURL path] rangeOfString:@"Mozilla"].location){
-            importerClass = [SHMozillaBookmarksImporter class];
-        }else if(NSNotFound != [[appURL path] rangeOfString:@"Internet Explorer"].location){
-            importerClass = [SHMSIEBookmarksImporter class];
-        }else if(NSNotFound != [[appURL path] rangeOfString:@"OmniWeb"].location){
-            importerClass = [SHOmniWebBookmarksImporter class];
-        }
-        CFRelease(appURL);
-    }
+	Class		importerClass = nil;
+	ICInstance	ICInst;
+	ICAppSpec	Spec;
+	ICAttr		Junk;
+	OSErr		Err;
+	long		TheSize;
+
+	//Start Internet Config, passing it Adium's creator code
+	Err = ICStart(&ICInst, 'AdiM');
 	
+	TheSize = sizeof(Spec);
+	
+	// Get the current http helper app, to fill the Spec and TheSize variables and determine the default browser
+	Err = ICGetPref(ICInst, "\pHelper¥http", &Junk, &Spec, &TheSize);
+	
+	
+	switch(Spec.fCreator){
+		case 'sfri': /* Safari */
+			importerClass = [SHSafariBookmarksImporter class];
+			break;
+		case 'CHIM': /* Camino */
+			importerClass = [SHCaminoBookmarksImporter class];
+			break;
+		case 'MOZB': /* FireFox */
+			importerClass = [SHFireFoxBookmarksImporter class];
+			break;
+		case 'MOZZ': /* Mozilla */
+			importerClass = [SHMozillaBookmarksImporter class];
+			break;
+		case 'OWEB': /* OmniWeb (4.x and 5.x) */
+			importerClass = [SHOmniWebBookmarksImporter class];
+			break;
+		case 'MSIE': /* Internet Explorer */
+			importerClass = [SHMSIEBookmarksImporter class];
+			break;			
+		default:
+			importerClass = nil;
+			break;
+	}
+
+	//We're done with Internet Config, so stop it
+	Err = ICStop(ICInst);
+
 	return(importerClass);
 }
 
@@ -255,6 +240,9 @@
 	[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
 	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
 
+	//Update the menus of existing toolbar items
+	[self updateAllToolbarItemMenus];
+
 	updatingMenu = NO;
 }
 
@@ -327,5 +315,88 @@
 //Dummy menu item target so we can enable/disable our main menu item
 - (IBAction)dummyTarget:(id)sender{
 }
+
+#pragma mark Toolbar Item
+
+- (void)registerToolbarItem
+{
+	MVMenuButton *button;
+	
+	//Unregister the existing toolbar item first
+	if(toolbarItem){
+		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+		[toolbarItem release]; toolbarItem = nil;
+	}
+	
+	//Register our toolbar item
+	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
+	[button setImage:[NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]]];
+	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertBookmark"
+														   label:AILocalizedString(@"Bookmarks",nil)
+													paletteLabel:AILocalizedString(@"Insert Bookmark",nil)
+														 toolTip:AILocalizedString(@"Insert Bookmark",nil)
+														  target:self
+												 settingSelector:@selector(setView:)
+													 itemContent:button
+														  action:@selector(injectBookmarkFrom:)
+															menu:nil] retain];
+	[toolbarItem setMinSize:NSMakeSize(32,32)];
+	[toolbarItem setMaxSize:NSMakeSize(32,32)];
+	[button setToolbarItem:toolbarItem];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+}
+
+//When a toolbar item is added (it will be effectively a copy of the one we originally registered)
+//we want to set its menu initially, then track it for later menu changes
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
+		[self updateMenuForToolbarItem:item];
+		
+		if (!toolbarItemArray) toolbarItemArray = [[NSMutableArray alloc] init];
+		[toolbarItemArray addObject:item];
+	}
+}
+
+//The toolbar item was removed; we should now stop tracking (and retaining) it
+- (void)toolbarDidRemoveItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
+		[toolbarItemArray removeObject:item];
+	}
+}
+
+//Update the menus on every toolbar item we are tracking
+- (void)updateAllToolbarItemMenus
+{
+	NSEnumerator	*enumerator;
+	NSToolbarItem	*aToolbarItem;
+
+	enumerator = [toolbarItemArray objectEnumerator];
+	while (aToolbarItem = [enumerator nextObject]){
+		[self updateMenuForToolbarItem:aToolbarItem];
+	}
+	
+}
+
+- (void)updateMenuForToolbarItem:(NSToolbarItem *)item
+{
+	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
+	NSString	*menuTitle = [menu title];
+	
+	//Add menu to view
+	[[item view] setMenu:menu];
+	
+	//Add menu to toolbar item (for text mode)
+	NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+	[mItem setSubmenu:menu];
+	[mItem setTitle:(menuTitle ? menuTitle : @"")];
+	[item setMenuFormRepresentation:mItem];	
+}
+
 
 @end
