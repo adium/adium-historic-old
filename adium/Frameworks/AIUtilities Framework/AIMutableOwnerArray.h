@@ -25,6 +25,8 @@
     NSMutableArray	*priorityArray;
 	
 	BOOL			valueIsSortedToFront;
+	
+	id				delegate;
 }
 
 //Value Storage
@@ -42,5 +44,9 @@
 - (NSEnumerator *)objectEnumerator;
 - (NSArray *)allValues;
 - (unsigned)count;
+
+//Delegation
+- (void)setDelegate:(id)inDelegate;
+- (id)delegate;
 
 @end
