@@ -49,7 +49,6 @@ Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs)
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
-	+ Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right [Colin]
 	+ Remember last X lines of previous conversation, restore to new message windows
 	
 Contact List Display:
@@ -241,3 +240,4 @@ Features & Changes:
 = Auto-complete aliases in New Message prompt
 = Create new account, tab from username->pass->account list.  Next tab should go back to username
 = Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
+= Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
