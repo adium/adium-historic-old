@@ -1206,9 +1206,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	[account setPreference:[NSNumber numberWithBool:!(online || connecting)] 
 					forKey:@"Online"
 					 group:GROUP_ACCOUNT_STATUS];
-	[account setPreference:[NSNumber numberWithBool:!(online || connecting)] 
-					forKey:@"AutoConnect"
-					 group:GROUP_ACCOUNT_STATUS];
 }
 
 //Create a new menu item for each account, updating it immediately to the proper current state.

@@ -296,10 +296,28 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 		return([AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal]);
 		
 	}else if([identifier isEqualToString:@"enabled"]){
-		return([account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS]);
+		return(nil);
 	}
 	
 	return(nil);
+}
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	NSString 	*identifier = [tableColumn identifier];
+	AIAccount	*account = [accountArray objectAtIndex:row];
+	
+	if([identifier isEqualToString:@"enabled"]){
+		BOOL online = [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue];
+		BOOL autoConnect = [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
+		
+		if(![cell allowsMixedState]) [cell setAllowsMixedState:YES];
+		
+		if(online && autoConnect) [cell setState:NSOnState];
+		else if(!online && !autoConnect) [cell setState:NSOffState];
+		else [cell setState:NSMixedState];
+	}
+	
 }
 
 //Clicked checkbox
