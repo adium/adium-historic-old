@@ -13,6 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#define PREF_GROUP_ADD_CONTACT  @"Add Contact"
+#define KEY_ADD_CONTACT_TO		@"Add Contacts to account"
+
 @interface AINewContactWindowController : AIWindowController {
 	IBOutlet	NSPopUpButton		*popUp_contactType;
 	IBOutlet	NSPopUpButton		*popUp_targetGroup;
@@ -21,7 +24,6 @@
 	IBOutlet	NSButton			*button_add;
 	
 	NSArray							*accounts;
-	NSMutableArray					*addToAccounts;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow;
