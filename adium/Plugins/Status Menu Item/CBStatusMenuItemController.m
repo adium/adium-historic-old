@@ -216,7 +216,7 @@ CBStatusMenuItemController *sharedInstance = nil;
     }
 }
 
-//Togle the connection of the selected account (called by the connect/disconnnect menu item)
+//Toggle the connection of the selected account (called by the connect/disconnnect menu item)
 //MUST be called by a menu item with an account as its represented object!
 - (IBAction)toggleConnection:(id)sender
 {
@@ -227,9 +227,16 @@ CBStatusMenuItemController *sharedInstance = nil;
     [targetAccount setPreference:[NSNumber numberWithBool:newOnlineProperty] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 }
 
+//Send a message to a contact.
+//MUST be called by a menu item with an AIListObject as its represented object!
 - (IBAction)messageContact:(id)sender
 {
-
+    AIListObject    *contact = [sender representedObject];
+    AIChat          *ourChat = [AIChat chatForAccount:[[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact]];
+    
+    [ourChat addParticipatingListObject:contact];
+    [[adium interfaceController] openChat:ourChat];
+    [[adium interfaceController] setActiveChat:ourChat];
 }
 
 - (void)buildMenu
