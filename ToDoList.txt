@@ -13,6 +13,7 @@
 [Accounts]
 - Window should save its size/position
 - Jabber account registration
+- Jabber does not save "server" field
 
 [Growl]
 - Growl sticky support [Colin]
