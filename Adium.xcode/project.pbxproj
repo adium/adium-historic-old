@@ -180,7 +180,6 @@
 				4B7F278305440C0800CDFC90,
 				B72537BC058C4577004BA969,
 				34BD9EF10531476E000AB133,
-				52AEBD6105ABA95700B19C56,
 				346C9DA406004754000F5A8A,
 				6C5C3C2505F6532600490341,
 				6C5C3C2605F6532600490341,
@@ -249,7 +248,6 @@
 				B72537BB058C4577004BA969,
 				3419F3A605314BE000C68BA3,
 				34BD9EE00531476D000AB133,
-				52AEBD6005ABA95700B19C56,
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
 				4947F5BC0655E85200B791E5,
@@ -2660,12 +2658,6 @@
 			settings = {
 			};
 		};
-		3448769C06D1EF8300DA778C = {
-			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448769D06D1EF9100DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
 			isa = PBXBuildFile;
@@ -3722,7 +3714,6 @@
 				34878F710518289B003B2F21,
 				F53B9AC502CD12AB01A8010A,
 				4B4F5B24042D636A00A8010A,
-				D3376B2C052BBC2900A8010B,
 				3479A83B05DC9F2400998B3D,
 			);
 			isa = PBXGroup;
@@ -4589,22 +4580,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		349DDD26064067AB00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = IdleIcon.png;
-			path = "Plugins/Status Icons/IdleIcon.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD27064067AB00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = AwayIcon.png;
-			path = "Plugins/Status Icons/AwayIcon.png";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		349DDD310640680600542726 = {
 			isa = PBXFileReference;
@@ -6598,7 +6573,6 @@
 				B774EFC9058C4948009C7C67,
 				344C0F0D06B709AC00DA7200,
 				3419FDE40531585600C68BA3,
-				520FE47505BE2984002D063D,
 				4B90B54C064220AB00D23731,
 				340B9BD4069C735900FE1E57,
 			);
@@ -8669,12 +8643,6 @@
 			};
 		};
 		34FF934B06DE3F4700C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934C06DE3F4B00C1D683 = {
 			fileRef = 34FF8DA906DE3D1F00C1D683;
 			isa = PBXBuildFile;
 			settings = {
@@ -11393,7 +11361,6 @@
 			children = (
 				7E6642FD065337090050E8C8,
 				F53B9A1302CCEDCA01A8010A,
-				520FE3B305BE206D002D063D,
 				3448717006D1E57700DA778C,
 			);
 			isa = PBXGroup;
@@ -14665,7 +14632,6 @@
 				4B935E680733E4EC00C23FC6,
 				346C9BCD060044F3000F5A8A,
 				4BD672C406001B530049CAF7,
-				4BD672CA06001B580049CAF7,
 				4BD672C706001B560049CAF7,
 			);
 			isa = PBXGroup;
@@ -14694,16 +14660,6 @@
 			);
 			isa = PBXGroup;
 			name = Other;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD672CA06001B580049CAF7 = {
-			children = (
-				52AEBD8205ABA9F000B19C56,
-			);
-			isa = PBXGroup;
-			name = Games;
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -16750,18 +16706,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BED6DE705D5F5FA00ACFD49 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
-		4BED6DE805D5F5FA00ACFD49 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 4BED6DE705D5F5FA00ACFD49;
-		};
 		4BF2E194067CAE9200743318 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -17204,8 +17148,6 @@
 		520FE39C05BE1FC5002D063D = {
 			buildActionMask = 2147483647;
 			files = (
-				520FE3AD05BE2065002D063D,
-				520FE3AF05BE2065002D063D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17220,8 +17162,6 @@
 		520FE39E05BE1FC5002D063D = {
 			buildActionMask = 2147483647;
 			files = (
-				520FE3AE05BE2065002D063D,
-				520FE3B005BE2065002D063D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17306,104 +17246,7 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		520FE3A905BE2065002D063D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NEHGameController.h;
-			path = "Frameworks/AdiumGames Framework/NEHGameController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		520FE3AA05BE2065002D063D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NEHGameController.m;
-			path = "Frameworks/AdiumGames Framework/NEHGameController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		520FE3AB05BE2065002D063D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NEHGamePlugin.h;
-			path = "Frameworks/AdiumGames Framework/NEHGamePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		520FE3AC05BE2065002D063D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NEHGamePlugin.m;
-			path = "Frameworks/AdiumGames Framework/NEHGamePlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		520FE3AD05BE2065002D063D = {
-			fileRef = 520FE3A905BE2065002D063D;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		520FE3AE05BE2065002D063D = {
-			fileRef = 520FE3AA05BE2065002D063D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		520FE3AF05BE2065002D063D = {
-			fileRef = 520FE3AB05BE2065002D063D;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		520FE3B005BE2065002D063D = {
-			fileRef = 520FE3AC05BE2065002D063D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		520FE3B305BE206D002D063D = {
-			children = (
-				520FE3A905BE2065002D063D,
-				520FE3AA05BE2065002D063D,
-				520FE3AB05BE2065002D063D,
-				520FE3AC05BE2065002D063D,
-			);
-			isa = PBXGroup;
-			name = AdiumGames.Framework;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		520FE3B705BE209D002D063D = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 520FE3A005BE1FC5002D063D;
-			remoteInfo = AdiumGames.framework;
-		};
-		520FE3B805BE209D002D063D = {
-			isa = PBXTargetDependency;
-			target = 520FE3A005BE1FC5002D063D;
-			targetProxy = 520FE3B705BE209D002D063D;
-		};
 		520FE46305BE20EB002D063D = {
-			fileRef = 520FE3A105BE1FC5002D063D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		520FE46605BE20F8002D063D = {
 			fileRef = 520FE3A105BE1FC5002D063D;
 			isa = PBXBuildFile;
 			settings = {
@@ -17418,7 +17261,6 @@
 		};
 		520FE46A05BE2118002D063D = {
 			isa = PBXTargetDependency;
-			target = 52AEBD6005ABA95700B19C56;
 			targetProxy = 520FE46905BE2118002D063D;
 		};
 		520FE46C05BE22B8002D063D = {
@@ -17438,333 +17280,6 @@
 			isa = PBXTargetDependency;
 			target = 520FE3A005BE1FC5002D063D;
 			targetProxy = 520FE46F05BE2494002D063D;
-		};
-		520FE47505BE2984002D063D = {
-			fileRef = 52AEBD6105ABA95700B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		5233D6A705B606FA00E9A4EC = {
-			children = (
-				5233D6A805B606FA00E9A4EC,
-			);
-			isa = PBXVariantGroup;
-			name = NewTicTacToeGame.nib;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		5233D6A805B606FA00E9A4EC = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Plugins/TicTacToe/English.lproj/NewTicTacToeGame.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		5233D6A905B606FA00E9A4EC = {
-			fileRef = 5233D6A705B606FA00E9A4EC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD5C05ABA95700B19C56 = {
-			buildActionMask = 2147483647;
-			files = (
-				52AEBD7605ABA9AA00B19C56,
-				52AEBD7805ABA9AA00B19C56,
-				52AEBD7A05ABA9AA00B19C56,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52AEBD5D05ABA95700B19C56 = {
-			buildActionMask = 2147483647;
-			files = (
-				52AEBD7405ABA9AA00B19C56,
-				52AEBD7C05ABA9AA00B19C56,
-				52AEBD7D05ABA9AA00B19C56,
-				52AEBD7E05ABA9AA00B19C56,
-				5233D6A905B606FA00E9A4EC,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52AEBD5E05ABA95700B19C56 = {
-			buildActionMask = 2147483647;
-			files = (
-				52AEBD7705ABA9AA00B19C56,
-				52AEBD7905ABA9AA00B19C56,
-				52AEBD7B05ABA9AA00B19C56,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52AEBD5F05ABA95700B19C56 = {
-			buildActionMask = 2147483647;
-			files = (
-				34FF934C06DE3F4B00C1D683,
-				520FE46605BE20F8002D063D,
-				3448769C06D1EF8300DA778C,
-				52AEBDD005ABAD0F00B19C56,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52AEBD6005ABA95700B19C56 = {
-			buildPhases = (
-				52AEBD5C05ABA95700B19C56,
-				52AEBD5D05ABA95700B19C56,
-				52AEBD5E05ABA95700B19C56,
-				52AEBD5F05ABA95700B19C56,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plists/TicTacToe-Info.plist";
-				PRODUCT_NAME = TicTacToe;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				520FE3B805BE209D002D063D,
-				4BED6DE805D5F5FA00ACFD49,
-			);
-			isa = PBXNativeTarget;
-			name = TicTacToe;
-			productName = TicTacToe;
-			productReference = 52AEBD6105ABA95700B19C56;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>TicTacToe</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.TicTacToe</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		52AEBD6105ABA95700B19C56 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = TicTacToe.AdiumPlugin;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		52AEBD6205ABA95800B19C56 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "TicTacToe-Info.plist";
-			path = "Plists/TicTacToe-Info.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6605ABA9A800B19C56 = {
-			children = (
-				52AEBD6705ABA9A800B19C56,
-			);
-			isa = PBXVariantGroup;
-			name = TicTacToeBoard.nib;
-			path = Plugins/TicTacToe/English.lproj;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6705ABA9A800B19C56 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = TicTacToeBoard.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6A05ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NEHTicTacToeBoard.h;
-			path = Plugins/TicTacToe/NEHTicTacToeBoard.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6B05ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NEHTicTacToeBoard.m;
-			path = Plugins/TicTacToe/NEHTicTacToeBoard.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6C05ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NEHTicTacToeController.h;
-			path = Plugins/TicTacToe/NEHTicTacToeController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6D05ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NEHTicTacToeController.m;
-			path = Plugins/TicTacToe/NEHTicTacToeController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6E05ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NEHTicTacToePlugin.h;
-			path = Plugins/TicTacToe/NEHTicTacToePlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6F05ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NEHTicTacToePlugin.m;
-			path = Plugins/TicTacToe/NEHTicTacToePlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD7005ABA9A900B19C56 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = O.png;
-			path = Plugins/TicTacToe/O.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD7105ABA9A900B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text;
-			name = README;
-			path = Plugins/TicTacToe/README;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD7205ABA9AA00B19C56 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = X.png;
-			path = Plugins/TicTacToe/X.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD7405ABA9AA00B19C56 = {
-			fileRef = 52AEBD6605ABA9A800B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7605ABA9AA00B19C56 = {
-			fileRef = 52AEBD6A05ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7705ABA9AA00B19C56 = {
-			fileRef = 52AEBD6B05ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7805ABA9AA00B19C56 = {
-			fileRef = 52AEBD6C05ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7905ABA9AA00B19C56 = {
-			fileRef = 52AEBD6D05ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7A05ABA9AA00B19C56 = {
-			fileRef = 52AEBD6E05ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7B05ABA9AA00B19C56 = {
-			fileRef = 52AEBD6F05ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7C05ABA9AA00B19C56 = {
-			fileRef = 52AEBD7005ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7D05ABA9AA00B19C56 = {
-			fileRef = 52AEBD7105ABA9A900B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD7E05ABA9AA00B19C56 = {
-			fileRef = 52AEBD7205ABA9AA00B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52AEBD8205ABA9F000B19C56 = {
-			children = (
-				52AEBD6605ABA9A800B19C56,
-				5233D6A705B606FA00E9A4EC,
-				52AEBD6A05ABA9A900B19C56,
-				52AEBD6B05ABA9A900B19C56,
-				52AEBD6C05ABA9A900B19C56,
-				52AEBD6D05ABA9A900B19C56,
-				52AEBD6E05ABA9A900B19C56,
-				52AEBD6F05ABA9A900B19C56,
-				52AEBD7005ABA9A900B19C56,
-				52AEBD7205ABA9AA00B19C56,
-				52AEBD7105ABA9A900B19C56,
-				52AEBD6205ABA95800B19C56,
-			);
-			isa = PBXGroup;
-			name = TicTacToe;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBDD005ABAD0F00B19C56 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		52C623D506697AC00006C387 = {
 			buildActionMask = 2147483647;
@@ -22101,86 +21616,6 @@
 //D32
 //D33
 //D34
-		D3376B2C052BBC2900A8010B = {
-			children = (
-				349DDD26064067AB00542726,
-				349DDD27064067AB00542726,
-				D3376B2F052BBC4800A8010B,
-				D3376B30052BBC4800A8010B,
-				D3376B31052BBC4800A8010B,
-				D3376B32052BBC4800A8010B,
-				D3376B33052BBC4800A8010B,
-				D3376B34052BBC4800A8010B,
-				D3376B35052BBC4800A8010B,
-			);
-			isa = PBXGroup;
-			name = "Status Icons";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B2F052BBC4800A8010B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = LNStatusIcon.h;
-			path = "Plugins/Status Icons/LNStatusIcon.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B30052BBC4800A8010B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = LNStatusIcon.m;
-			path = "Plugins/Status Icons/LNStatusIcon.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B31052BBC4800A8010B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = LNStatusIconsPlugin.h;
-			path = "Plugins/Status Icons/LNStatusIconsPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B32052BBC4800A8010B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = LNStatusIconsPlugin.m;
-			path = "Plugins/Status Icons/LNStatusIconsPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B33052BBC4800A8010B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = LNStatusIconsPreferences.h;
-			path = "Plugins/Status Icons/LNStatusIconsPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B34052BBC4800A8010B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = LNStatusIconsPreferences.m;
-			path = "Plugins/Status Icons/LNStatusIconsPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3376B35052BBC4800A8010B = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = StatusIconsPrefs.nib;
-			path = "Plugins/Status Icons/StatusIconsPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		D3B4A91E052DD87700A8010B = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
