@@ -165,9 +165,9 @@
 				[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 				needToRebuildMenus = YES;
 			}
+			
+			[account setStatusStateAndRemainOffline:lastStatus];
 		}
-		
-		[account setStatusStateAndRemainOffline:lastStatus];
 	}
 	
 	if(needToRebuildMenus){
