@@ -387,13 +387,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)configureDrawer
 {
-	AIListObject	*listObject = displayedObject;
-	
-	//Find the highest-up metaContact
-	AIListObject	*containingObject;
-	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
-		listObject = containingObject;
-	}	
+	AIListObject	*listObject = [[adium contactController] parentContactForListObject:displayedObject];								  
 
 	if ([listObject isKindOfClass:[AIMetaContact class]] &&
 		([[(AIMetaContact *)listObject listContacts] count] > 1)){
