@@ -30,6 +30,7 @@
 #define AIM_CB_FAM_ATH 0x0017
 #define AIM_CB_FAM_EML 0x0018
 #define AIM_CB_FAM_OFT 0xfffe /* OFT/Rvous */
+#define AIM_CB_FAM_PROXY 0xfffd /* OFT/Rvous Proxy */
 #define AIM_CB_FAM_SPECIAL 0xffff /* Internal libfaim use */
 
 /*
@@ -284,6 +285,15 @@
 #define AIM_CB_OFT_GETFILE_REQUESTFILE 0x120c	/* "Please send me this file" */
 
 #define AIM_CB_OFT_ESTABLISHED 0xFFFF		/* connection to buddy initiated */
+
+/*
+ * The type of responses sent in a proxy connection
+ */
+
+#define AIM_CB_PROXY_STARTPROXY 0x002 /* The first user wants to start a proxy connection */
+#define AIM_CB_PROXY_OTHERSIDEINFO 0x003 /* This has the info that the other user uses to connect */
+#define AIM_CB_PROXY_CONNECT 0x004 /* The second user connects to first user's proxy */
+#define AIM_CB_PROXY_CONNECTED 0x005 /*The proxy connection is active and ready to use */
 
 /*
  * SNAC Family: Internal Messages

@@ -43,7 +43,8 @@ typedef enum
 	GAIM_CONNECTION_AUTO_RESP  = 0x0004,  /**< Send auto responses when away.       */
 	GAIM_CONNECTION_FORMATTING_WBFO = 0x0008, /**< The text buffer must be formatted as a whole */
 	GAIM_CONNECTION_NO_NEWLINES = 0x0010, /**< No new lines are allowed in outgoing messages */
-	GAIM_CONNECTION_NO_FONTSIZE = 0x0020 /**< Connection does not send/receive font sizes */
+	GAIM_CONNECTION_NO_FONTSIZE = 0x0020, /**< Connection does not send/receive font sizes */
+	GAIM_CONNECTION_NO_URLDESC = 0x0040  /**< Connection does not support descriptions with links */
 } GaimConnectionFlags;
 
 typedef enum
@@ -188,6 +189,14 @@ void gaim_connection_set_display_name(GaimConnection *gc, const char *name);
  * @return The connection state.
  */
 GaimConnectionState gaim_connection_get_state(const GaimConnection *gc);
+
+/**
+ * Returns TRUE if the account is connected, otherwise returns FALSE.
+ *
+ * @return TRUE if the account is connected, otherwise returns FALSE.
+ */
+#define GAIM_CONNECTION_IS_CONNECTED(gc) \
+	(gc->state == GAIM_CONNECTED)
 
 /**
  * Returns the connection's account.

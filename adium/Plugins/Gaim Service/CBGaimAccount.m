@@ -78,7 +78,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)initSSL
 {
-	if (!didInitSSL) didInitSSL = gaim_init_ssl_gnutls_plugin();	
+	if (!didInitSSL) didInitSSL = gaim_init_ssl_gnutls_plugin();
 }
 
 // Subclasses must override this
@@ -271,12 +271,19 @@ static id<GaimThread> gaimThread = nil;
 //Buddy Icon
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
+	//Observers get a single shot at utilizing the user icon data in its raw form
+	[theContact setStatusObject:userIconData forKey:@"UserIconData" notify:NO];
+
+	//Set the User Icon as an NSImage
 	NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
 	[theContact setStatusObject:userIcon forKey:@"UserIcon" notify:NO];
 	[userIcon release];
 	
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	
+	//Clear the UserIconData
+	[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];	
 }
 
 - (oneway void)removeContact:(AIListContact *)theContact
@@ -1535,8 +1542,8 @@ static id<GaimThread> gaimThread = nil;
 			
 			//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 			//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-			NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaimImage->data 
-																					  length:gaimImage->size]];
+			NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage) 
+																					  length:gaim_imgstore_get_size(gaimImage)]];
 			NSData				*imageTIFFData = [image TIFFRepresentation];
 			NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
             

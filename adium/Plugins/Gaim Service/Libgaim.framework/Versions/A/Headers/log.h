@@ -55,6 +55,7 @@ typedef enum {
  * This struct gets filled out and is included in the GaimLog.  It contains everything
  * needed to write and read from logs.
  */
+/*@{*/
 struct _GaimLogLogger {
 	char *name;               /**< The logger's name */
 	char *id;                 /**< an identifier to refer to this logger */
@@ -74,7 +75,7 @@ struct _GaimLogLogger {
 	void (*finalize)(GaimLog *log);
 
 	/** This function returns a sorted GList of available GaimLogs */
-	GList *(*list)(const char *name, GaimAccount *account);
+	GList *(*list)(GaimLogType type, const char *name, GaimAccount *account);
 
 	/** Given one of the logs returned by the logger's list function,
 	 * this returns the contents of the log in GtkIMHtml markup */
@@ -86,7 +87,7 @@ struct _GaimLogLogger {
 
 	/** Returns the total size of all the logs. If this is undefined a default
 	 * implementation is used */
-	int (*total_size)(const char *name, GaimAccount *account);
+	int (*total_size)(GaimLogType type, const char *name, GaimAccount *account);
 
 	/** This function returns a sorted GList of available system GaimLogs */
 	GList *(*list_syslog)(GaimAccount *account);
@@ -165,11 +166,12 @@ extern "C" {
 	/**
 	 * Returns a list of all available logs
 	 *
+	 * @param type                The type of the log
 	 * @param name                The name of the log
 	 * @param account             The account
 	 * @return                    A sorted list of GaimLogs
 	 */
-	GList *gaim_log_get_logs(const char *name, GaimAccount *account);
+	GList *gaim_log_get_logs(GaimLogType type, const char *name, GaimAccount *account);
 
 	/**
 	 * Returns a list of all available system logs
@@ -190,11 +192,12 @@ extern "C" {
 	/**
 	 * Returns the size, in bytes, of all available logs in this conversation
 	 *
+	 * @param type                The type of the log
 	 * @param name                The name of the log
 	 * @param account             The account
 	 * @return                    The size in bytes
 	 */
-	 int gaim_log_get_total_size(const char *name, GaimAccount *account);
+	 int gaim_log_get_total_size(GaimLogType type, const char *name, GaimAccount *account);
 
 	/**
 	 * Implements GCompareFunc
@@ -221,13 +224,13 @@ extern "C" {
 	 *
 	 * @return The new logger
 	 */
-	GaimLogLogger *gaim_log_logger_new(void(*create)(GaimLog *),
-					   void(*write)(GaimLog *, GaimMessageFlags,
-							const char *, time_t, const char *),
-					   void(*finalize)(GaimLog *),
-					   GList*(*list)(const char*, GaimAccount*),
-					   char*(*read)(GaimLog*, GaimLogReadFlags*),
-					   int(*size)(GaimLog*));
+	GaimLogLogger *gaim_log_logger_new(
+					void(*create)(GaimLog *),
+					void(*write)(GaimLog *, GaimMessageFlags, const char *, time_t, const char *),
+					void(*finalize)(GaimLog *),
+					GList*(*list)(GaimLogType type, const char*, GaimAccount*),
+					char*(*read)(GaimLog*, GaimLogReadFlags*),
+					int(*size)(GaimLog*));
 	/**
 	 * Frees a logger
 	 *
@@ -283,4 +286,3 @@ extern "C" {
 #endif
 
 #endif /* _GAIM_LOG_H_ */
-

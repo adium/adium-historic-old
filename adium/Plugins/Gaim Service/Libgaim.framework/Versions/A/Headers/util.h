@@ -579,6 +579,15 @@ const char *gaim_url_decode(const char *str);
  */
 const char *gaim_url_encode(const char *str);
 
+/**
+ * Checks if the given email address is syntactically valid.
+ *
+ * @param address The email address to validate.
+ *
+ * @return True if the email address is syntactically correct.
+ */
+gboolean gaim_email_is_valid(const char *address);
+
 /*@}*/
 
 /**************************************************************************
@@ -636,9 +645,9 @@ char *gaim_text_strip_mnemonic(const char *in);
  *
  * Blame SimGuy.
  *
- * @param i The number to add 8 to.
+ * @param x The number to add 8 to.
  *
- * @return i + 8
+ * @return x + 8
  */
 #define gaim_add_eight(x) ((x)+8)
 

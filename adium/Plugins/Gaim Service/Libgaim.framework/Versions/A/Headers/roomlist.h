@@ -26,6 +26,11 @@
 #ifndef _GAIM_ROOMLIST_H_
 #define _GAIM_ROOMLIST_H_
 
+
+#include <glib/glist.h>
+#include "account.h"
+
+
 /**************************************************************************/
 /** Data Structures                                                       */
 /**************************************************************************/
@@ -179,7 +184,7 @@ void gaim_roomlist_set_in_progress(GaimRoomlist *list, gboolean in_progress);
  * whether or not we're busy downloading a room list or not.
  *
  * @param list The room list.
- * @returns True if we're downloading it, or false if we're not.
+ * @return True if we're downloading it, or false if we're not.
  */
 gboolean gaim_roomlist_get_in_progress(GaimRoomlist *list);
 
@@ -191,14 +196,6 @@ gboolean gaim_roomlist_get_in_progress(GaimRoomlist *list);
                order as was given in gaim_roomlist_set_fields().
 */
 void gaim_roomlist_room_add(GaimRoomlist *list, GaimRoomlistRoom *room);
-
-/**
- * Do we support room listing?
- *
- * @param gc The GaimConnection we're asking.
- * @return @c TRUE if it's possible to get a room list.
- */
-gboolean gaim_roomlist_is_possible(GaimConnection *gc);
 
 /**
  * Returns a GaimRoomlist structure from the prpl, and
@@ -227,10 +224,10 @@ void gaim_roomlist_cancel_get_list(GaimRoomlist *list);
  * On some protocols, the rooms in the category
  * won't be fetched until this is called.
  *
- * @param list The room list.
- * @param room The category that was expanded. The expression
- *             (category->type & GAIM_ROOMLIST_ROOMTYPE_CATEGORY)
- *             must be true.
+ * @param list     The room list.
+ * @param category The category that was expanded. The expression
+ *                 (category->type & GAIM_ROOMLIST_ROOMTYPE_CATEGORY)
+ *                 must be true.
  */
 void gaim_roomlist_expand_category(GaimRoomlist *list, GaimRoomlistRoom *category);
 
@@ -280,9 +277,10 @@ void gaim_roomlist_room_join(GaimRoomlist *list, GaimRoomlistRoom *room);
 /**
  * Creates a new field.
  *
- * @param type The type of the field.
- * @param label The i18n'ed, user displayable name.
- * @param name The internal name of the field.
+ * @param type   The type of the field.
+ * @param label  The i18n'ed, user displayable name.
+ * @param name   The internal name of the field.
+ * @param hidden Hide the field.
  *
  * @return A new GaimRoomlistField, ready to be added to a GList and passed to
  *         gaim_roomlist_set_fields().

@@ -24,27 +24,6 @@
 #ifndef _MULTI_H_
 #define _MULTI_H_
 
-#include "account.h"
-#include "plugin.h"
-
-struct proto_actions_menu {
-	char *label;
-	void (*callback)(GaimConnection *);
-	GaimConnection *gc;
-};
-
-struct proto_buddy_menu {
-	char *label;
-	void (*callback)(GaimConnection *, const char *);
-	GaimConnection *gc;
-};
-
-struct proto_chat_menu {
-	char *label;
-	void (*callback)(GaimConnection *, GHashTable *);
-	GaimConnection *gc;
-};
-
 struct proto_chat_entry {
 	char *label;
 	char *identifier;
