@@ -492,6 +492,10 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     
     //Make default_action the last one
     if (default_action != -1){
+		NSCAssert(defaultAction < actionCount, @"defaultAction is too big");
+		int actualCount = [buttonNamesArray count];
+		NSCAssert((actionCount == actualCount), @"actionCount != actualCount");
+			
 		GCallback tempCallBack = callBacks[actionCount-1];
 		callBacks[actionCount-1] = callBacks[default_action];
 		callBacks[default_action] = tempCallBack;
