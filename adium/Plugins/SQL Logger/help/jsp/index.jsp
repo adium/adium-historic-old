@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 787 $ $Date: 2004/05/30 23:57:52 $ -->
+<!--$Rev: 794 $ $Date: 2004/05/31 02:03:26 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -96,9 +96,11 @@ if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
 
 try {
     meta_id = Integer.parseInt(request.getParameter("meta_id"));
-    showMeta = true;
-    showDisplay = false;
-    formURL += "&amp;meta_id=" + meta_id;
+    if(meta_id != 0) {
+        showMeta = true;
+        showDisplay = false;
+        formURL += "&amp;meta_id=" + meta_id;
+    }
 } catch (NumberFormatException e) {
     meta_id = 0;
 }
@@ -348,16 +350,31 @@ try {
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
 
-%>
-
-<%
-    out.println("<h1>Special Searches</h1>");
+    out.println("<h1>Links</h1>");
     out.println("<div class=\"boxThinTop\"></div>\n");
     out.println("<div class=\"boxThinContent\">");
 %>
 
-                <a href="#"
-                onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent Links</a>
+                <p><a href="#"
+                onClick="window.open('urls.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>', 'Save Chat', 'width=640,height=480')">Recent Links</a></p>
+
+<%
+    String safeSend = new String();
+    String safeRec = new String();
+    String safeCont = new String();
+
+    if(to_sn != null)
+        safeSend = to_sn.replaceAll("%", "%25");
+
+    if(from_sn != null)
+        safeRec = from_sn.replaceAll("%", "%25");
+
+    if(contains_sn != null)
+        safeCont = contains_sn.replaceAll("%", "%25");
+%>
+                <p><a href="#"
+                onClick="window.open('simpleViewer.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>&from=<%=safeSend%>&to=<%= safeRec %>&contains=<%= safeCont %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
+
     <%
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
