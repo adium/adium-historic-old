@@ -123,9 +123,8 @@
 - (IBAction)selectServiceType:(id)sender
 {
     id <AIServiceController>	service = [sender representedObject];
-    
     //Switch it
-    [selectedAccount autorelease];
+//    [selectedAccount autorelease];
     selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
 }
 
@@ -135,6 +134,7 @@
 //Configure the account specific options
 - (void)configureAccountOptionsView
 {
+	NSLog(@"Configure!");
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
     NSView			*accountView;
@@ -164,6 +164,7 @@
     [button_autoConnect setState:autoConnect];
 
     //Correctly size the sheet for the account details view
+	[accountViewController release];
     accountViewController = [[selectedAccount accountView] retain];
     accountView = [accountViewController view];
 
@@ -209,7 +210,7 @@
     }else{
         [tabView_auxiliary selectFirstTabViewItem:nil];
     }
-
+	NSLog(@"Done configuring...");
 }
 
 //User toggled the autoconnect preference
