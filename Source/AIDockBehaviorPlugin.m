@@ -83,6 +83,8 @@
 /*!
  * @brief Perform an action
  *
+ * Bounce the dock icon
+ *
  * @param actionID The ID of the action to perform
  * @param listObject The listObject associated with the event triggering the action. It may be nil
  * @param details If set by the details pane when the action was created, the details dictionary for this particular action
@@ -95,7 +97,7 @@
 }
 
 /*!
-* @brief Allow multiple actions?
+ * @brief Allow multiple actions?
  *
  * If this method returns YES, every one of this action associated with the triggering event will be executed.
  * If this method returns NO, only the first will be.
