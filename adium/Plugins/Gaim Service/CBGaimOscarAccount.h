@@ -91,6 +91,8 @@ struct oscar_direct_im {
 	
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
+	
+	NSImage			*serviceImage;
 }
 
 @end

@@ -14,6 +14,7 @@
 
 static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
+static NSImage  *ICQServiceImage = nil;
 
 @interface CBGaimOscarAccount (PRIVATE)
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact;
@@ -36,18 +37,32 @@ static BOOL didInitOscar = NO;
 	[super initAccount];
 	
 	accountIsICQ = NO;
-	
+	serviceImage = nil;
+		
 	if ([UID length]){
 		char firstCharacter = [UID characterAtIndex:0];
 		if (firstCharacter >= '0' && firstCharacter <= '9') {
 			if (!ICQServiceID) ICQServiceID = @"ICQ";
+			if (!ICQServiceImage) ICQServiceImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
+
 			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
+			serviceImage = ICQServiceImage;
+
 			accountIsICQ = YES;
 		}
 	}
 	
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
+}
+
+- (NSImage *)serviceImage
+{
+	if (serviceImage){
+		return (serviceImage);
+	}else{
+		return ([super serviceImage]);
+	}
 }
 
 - (void)dealloc
