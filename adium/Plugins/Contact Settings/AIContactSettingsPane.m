@@ -53,8 +53,7 @@
 	}
 	
 	//Current note
-    if((notes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]) ||
-	   (notes = [inObject statusObjectForKey:@"Notes"])){
+    if(notes = [inObject notes]){
         [textField_notes setStringValue:notes];
     }else{
         [textField_notes setStringValue:@""];
@@ -66,20 +65,7 @@
 {
     if(listObject){
         NSString	*alias = [textField_alias stringValue];
-        if([alias length] == 0) alias = nil; 
-        
-		NSString	*oldAlias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES];
-		if ((!alias && oldAlias) ||
-			(alias && !([alias isEqualToString:oldAlias]))){
-			//Save the alias
-			[listObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
-			
-#warning There must be a cleaner way to do this alias stuff!  This works for now :)
-			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-													  object:listObject
-													userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																						 forKey:@"Notify"]];
-		}
+		[listObject setDisplayName:alias];
     }
 }
 
@@ -88,14 +74,7 @@
 {
     if(listObject){
         NSString 	*notes = [textField_notes stringValue];
-        if([notes length] == 0) notes = nil; 
-
-		NSString	*oldNotes = [listObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
-		if ((!notes && oldNotes) ||
-			(notes && (![notes isEqualToString:oldNotes]))){
-			//Save the note
-			[listObject setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
-		}
+		[listObject setNotes:notes];
     }
 }
 
