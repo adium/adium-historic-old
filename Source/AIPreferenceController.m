@@ -184,10 +184,12 @@
 
 - (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName
 {
-    NSMutableSet *keySet = [themablePreferences objectForKey:groupName];
-    if (!keySet)
-	keySet = [[[NSMutableSet alloc] init] autorelease];
+    NSMutableSet *keySet;
     
+	if (!(keySet = [themablePreferences objectForKey:groupName])){
+		keySet = [NSMutableSet set];
+    }
+	
     [keySet addObjectsFromArray:keysArray];
     
     [themablePreferences setObject:keySet forKey:groupName];

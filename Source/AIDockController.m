@@ -92,7 +92,7 @@
     NSString		*iconState;
 
     //Reset our icon by removing all icon states (except for the base state)
-    stateArrayCopy = [[activeIconStateArray copy] autorelease]; //Work with a copy, since this array will change as we remove states
+    stateArrayCopy = [activeIconStateArray copy]; //Work with a copy, since this array will change as we remove states
     enumerator = [stateArrayCopy objectEnumerator];
     [enumerator nextObject]; //Skip the first icon
     while(iconState = [enumerator nextObject]){
@@ -101,6 +101,8 @@
 
     //Force the icon to update
     [self _buildIcon];
+	
+	[stateArrayCopy release];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -294,7 +296,7 @@
 		}
 		
 		//Get the state information
-		image = [[[NSImage alloc] initByReferencingFile:imagePath] autorelease];
+		image = [[NSImage alloc] initByReferencingFile:imagePath];
 		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
 		
 		//Create the state
@@ -303,6 +305,8 @@
 		}else{
 			NSLog(@"Invalid static icon state (%@)",imagePath);
 		}
+		
+		[image release];
 	}
 
 	return ([iconState autorelease]);
