@@ -4891,7 +4891,6 @@
 				4B191D8B0611C10800E8A4E7,
 				3420E6640611D80100AE67E3,
 				4B0DB3B506123423004F47D9,
-				4B5829D20613D0A90004BD25,
 				4B5829E60613D0BD0004BD25,
 				34F58F35061A76C500B4B5D6,
 				BF99B520061D74C300BF2252,
@@ -4951,6 +4950,7 @@
 				4B0CB2170670E07E005821CC,
 				4B0118090679168700FCB992,
 				4B0118110679175400FCB992,
+				4BF2E201067CAE9200743318,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11269,20 +11269,6 @@
 			settings = {
 			};
 		};
-		4B5827F80613D0A90004BD25 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = Emoticons;
-			path = Source/Emoticons;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5829D20613D0A90004BD25 = {
-			fileRef = 4B5827F80613D0A90004BD25;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B5829D30613D0BD0004BD25 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -17163,6 +17149,20 @@
 			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
 			remoteInfo = expat;
 		};
+		4BF2E194067CAE9200743318 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Emoticons;
+			path = Resources/Emoticons;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF2E201067CAE9200743318 = {
+			fileRef = 4BF2E194067CAE9200743318;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BF45A970483C6CD00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -21725,7 +21725,7 @@
 				4B191D880611C10800E8A4E7,
 				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,
-				4B5827F80613D0A90004BD25,
+				4BF2E194067CAE9200743318,
 				4B24A2330482B34B00A8010A,
 				4B5829D30613D0BD0004BD25,
 				F552078B033F727F01A8010A,
