@@ -8,6 +8,7 @@
 
 #import "AIAccountSetupConnectionView.h"
 #import "AIAccountProxySettings.h"
+#import "AIAccountSetupWindowController.h"
 
 @implementation AIAccountSetupConnectionView
 
