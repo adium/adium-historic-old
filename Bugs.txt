@@ -5,6 +5,9 @@
 Insert Link sheet
   - Multiple sheets can be invoked at the same time (needs to be modal sheet)
 
+Dock
+  - Dock icon does not appear to be saved for some users while Adium is closed
+
 //------------------------------------------------------------------------------------
 // Adium X Known Issues
 //------------------------------------------------------------------------------------
@@ -33,7 +36,6 @@ Insert Link sheet
   - Override NSTextView tab input to send cursor to next responder.
 
 Other
-  - Dock icon does not appear to be saved for some users while Adium is closed
   - Links without protocol specifiers do not open when clicked.
 
 //------------------------------------------------------------------------------------
@@ -63,7 +65,8 @@ Other
     "Well, I hit grant to his auth request, and he still won't be able to see
     me." -- xtapo
     previously authorized contacts work as expected.
-
+- (Yahoo) yahoo_html_to_codes() produces output which Fire and perhaps other clients
+	do not process. Is this a libgaim bug or a Fire/other clients bug?
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
