@@ -8,12 +8,26 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef enum {
+	AIServiceIconSmall = 0,		//Interface large
+	AIServiceIconLarge,			//Interface small
+	AIServiceIconList			//Contact List
+} AIServiceIconType;
+#define NUMBER_OF_SERVICE_ICON_TYPES 	3
+
+typedef enum {
+	AIIconNormal = 0,
+	AIIconFlipped
+} AIIconDirection;
+#define NUMBER_OF_ICON_DIRECTIONS		2
+
 
 @interface AIServiceIcons : NSObject {
 
 }
 
-+ (NSImage *)serviceIconForContact:(AIListContact *)inContact flipped:(BOOL)isFlipped;
++ (NSImage *)serviceIconForObject:(AIListObject *)inObject type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
++ (NSImage *)serviceIconForService:(AIService *)service type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveServiceIconsFromPath:(NSString *)inPath;
 
 @end
