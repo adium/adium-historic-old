@@ -1,7 +1,6 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
-
 - MSN Emoticon key equivalents
 - Push/Pop indicator spacing
 - Sorting issues
@@ -19,102 +18,63 @@
 //------------------------------------------------------------------------------------
 // Adium X 0.70 remaining issues
 //------------------------------------------------------------------------------------
-[Contact List]
-- In Mockie style, with offline contacts hidden and a contact from an empty group (the
+[HIGH]
+Vertical resizing errors
+  - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
-- Vertical resizing doesn't lock the bottom of the contact list in place in all the
+  - Vertical resizing doesn't lock the bottom of the contact list in place in all the
 	right situations.
-- Vertical resizing is initially too small by the height of the toolbar in Standard
+  - Vertical resizing is initially too small by the height of the toolbar in Standard
 	with the toolbar showing
-- Vertical resizing really screws up once the scrollbar becomes visible.  The list will
+  - Vertical resizing really screws up once the scrollbar becomes visible.  The list will
     not correctly resize when opening/closing groups, and will jump randomly up and down
     on the screen.
 
-[MetaContacts]
-- MetaContact ordering does not always restore properly
-- Source account is not always accurate when a contact within a metaContact is messaged
-- MetaContacts should remember the last messaged contact and use that rather than the "preferredContact" by default
-- To/From bar in messages can get into a weird infinite loop when multiple possible source
+Messages & Chat
+  - Initial messages from invisible contacts sometimes don't open new message windows
+  - Chat windows can re-open when contact status changed (If using cmd-n to change source
+    account)
+  - Issues with time crossing midnight and messages not appearing in the window afterwards
+
+
+Meta Contacts
+  - To/From bar in messages can get into a weird infinite loop when multiple possible source
 	and target accounts/contacts exist on the same serviceClass
-- Away message is output multiple times when an open chat's contact goes away
+  - Source account is not always accurate when a contact within a metaContact is messaged
+  - MetaContact ordering does not always restore properly
+  - Small contact list icons lead to blurry Get Info metacontact drawer icons
+  - Intermittent crash when closing a group chat, particularly via MSN
+  - Away message is output multiple times when an open chat's contact goes away
 	and that contact is within a metaContact
-- Own autoresponse is sometimes sent on the wrong chat when a contact within a metaContact
+  - Own autoresponse is sometimes sent on the wrong chat when a contact within a metaContact
 	sends a message
+  - MetaContacts should remember the last messaged contact and use that rather than the
+    "preferredContact" by default
 
-[Other]
-- Small contact list icons lead to blurry Get Info metacontact drawer icons
-- Intermittent crash when closing a group chat, particularly via MSN
-- Initial messages from invisible contacts sometimes don't open new message windows
-- Autoaway after Idle is broken
+[MEDIUM]
 
 
-//------------------------------------------------------------------------------------
-// Bugs - Adium
-//------------------------------------------------------------------------------------
-- Adding contact that already exists
+[LOW]
+  - Autoaway after Idle is broken
+  - Adding contact that already exists
     Adding an existing contact causes issues.  It may result in duplicate contacts on
     the user's list, and will make the contact appear offline.  Sometimes they will
     appear on the list twice until Adium is restarted.
-
-- Tooltips are not appearing for links in profile text.
-
-- Tooltip alignment fails in long away messages and other large blocks of text.
-
-- Double clicking two names in succession causes the first name to highlight
+  - Tooltips are not appearing for links in profile text.
+  - Tooltip alignment fails in long away messages and other large blocks of text.
+  - Double clicking two names in succession causes the first name to highlight
     the second time.
 
-- Messages sent precisely at midnight local time can be eaten.  This does not happen
-	every time.
-	
-- The setFrame:display:animate: call in AIDockingWindow can cause a rare beachball.
-	This frame change should be made into a manual series of frame changes to avoid this.
-
-- Our 'strangers' state is broken.  When'd that happen?
 
 //------------------------------------------------------------------------------------
-// Bugs - LibGaim
+// Bugs - Libgaim
 //------------------------------------------------------------------------------------
-- [AIM / Jabber] File transfer limitations
-    File transfers often fail to navigate firewalls and routers
-
-- [Yahoo] File transfer limitations
-    Files over 1 MB in size fail to send
-
-- [Jaber] Authorization problems
-
-- [AIM] Contacts can get incorrectly tagged as being on an AOL Mobile Device
-
-- [All] Gaim's proxy support is unreliable at best
-
-//------------------------------------------------------------------------------------
-// Bugs - Resources
-//------------------------------------------------------------------------------------
-- Webkit styles rendering incorrectly in very wide windows
-    The included style with problems is Smooth Operator
-
-- Webkit styles must support multi-line status messages
-    The included style with problems is Smooth Operator
-
-- Webkit header/footer information animates buddy icons
-    This is considered a bug but could be a worthwhile option for webkit authors
-
-- Bottom alignment issues
-    The simple message style has a bottom alignment issue.  Send a few messages, but
-    not enough to make the scrollbar visible, then type a two line message into the
-    entry field.  The message view will incorrectly render extra bottom margin.
-
-- MSN Emoticons
-    Not all MSN emoticons are supported by our default pack [see its plist]
-
-//------------------------------------------------------------------------------------
-// Bugs - Deferred (Awaiting a rewrite / other change)
-//------------------------------------------------------------------------------------
-- Event Notification window moves out of place between resolution changes.
-    Will be replaced by growl
-
-- [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
-    Tiger is coming
+- (AIM / Jabber) File transfers often fail to navigate firewalls and routers
+- (Yahoo) Files over 1 MB in size fail to send
+- (Jaber) Authorization problems
+- (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
+- (All) Gaim's proxy support is unreliable at best
 
 
 //------------------------------------------------------------------------------------
