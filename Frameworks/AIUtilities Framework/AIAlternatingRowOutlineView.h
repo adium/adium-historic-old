@@ -30,6 +30,8 @@
 - (void)setDrawsAlternatingRows:(BOOL)flag;
 - (BOOL)drawsAlternatingRows;
 - (void)setAlternatingRowColor:(NSColor *)color;
+- (NSColor *)alternatingRowColor;
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
+- (NSColor *)backgroundColorForRow:(int)row;
 
 @end

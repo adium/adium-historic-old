@@ -92,6 +92,15 @@
         [self setNeedsDisplay:YES];
     }
 }
+- (NSColor *)alternatingRowColor{
+	return(alternatingRowColor);
+}
+
+//Returns the color which will be drawn behind the specified row
+- (NSColor *)backgroundColorForRow:(int)row
+{
+	return((row % 2) ? [self backgroundColor] : [self alternatingRowColor]);
+}
 
 
 // Drawing ----------------------------------------------------------------------
@@ -190,7 +199,5 @@
                                   toPoint:NSMakePoint(xPos, rect.origin.y + rect.size.height)];
     }
 }
-
-
 
 @end
