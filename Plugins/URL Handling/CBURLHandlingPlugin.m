@@ -36,6 +36,10 @@
 	[self setHelperAppForKey:"\pHelper¥icq" withInstance:ICInst];
 	[self setHelperAppForKey:"\pHelper¥msn" withInstance:ICInst];
 */	
+
+	//We're done with Internet Config, so stop it
+	Err = ICStop(ICInst);
+
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
                                                        andSelector:@selector(handleURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
@@ -44,10 +48,10 @@
 
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst
 {
-	OSErr Err;
-	ICAppSpec Spec;
-	ICAttr Junk;
-	long TheSize;
+	OSErr		Err;
+	ICAppSpec	Spec;
+	ICAttr		Junk;
+	long		TheSize;
 
 	TheSize = sizeof(Spec);
 	// Get the current aim helper app, to fill the Spec and TheSize variables
