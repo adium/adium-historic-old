@@ -31,12 +31,23 @@ static NSMenu       *bookmarkSets;
     importerArray = [[[NSMutableArray alloc] init] autorelease];
     
     // install new importer classes here - very similar to AIPluginController
-    [self installImporterClass:[SHSafariBookmarksImporter class]];
-    [self installImporterClass:[SHCaminoBookmarksImporter class]];
-    [self installImporterClass:[SHMozillaBookmarksImporter class]];
-    [self installImporterClass:[SHFireFoxBookmarksImporter class]];
-    [self installImporterClass:[SHMSIEBookmarksImporter class]];
-    [self installImporterClass:[SHOmniWebBookmarksImporter class]];
+    NSURL *appURL;
+    //only load importer for default browser
+    if(noErr == LSCopyApplicationForMIMEType((CFStringRef)@"text/html",kLSRolesViewer,(CFURLRef *)&appURL)){
+        if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
+            [self installImporterClass:[SHSafariBookmarksImporter class]];
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"Camino"].location){
+            [self installImporterClass:[SHCaminoBookmarksImporter class]];
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"Mozilla"].location){
+            [self installImporterClass:[SHMozillaBookmarksImporter class]];
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"Firefox"].location){
+            [self installImporterClass:[SHFireFoxBookmarksImporter class]];
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"Internet Explorer"].location){
+            [self installImporterClass:[SHMSIEBookmarksImporter class]];
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"OmniWeb"].location){
+            [self installImporterClass:[SHOmniWebBookmarksImporter class]];
+        }
+    }
 
     bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                        target:self
