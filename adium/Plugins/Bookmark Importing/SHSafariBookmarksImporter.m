@@ -30,6 +30,7 @@ static NSMenu   *safariBookmarksMenu;
 static NSMenu   *safariBookmarksSupermenu;
 static NSMenu   *safariTopMenu;
 
+static NSArray *emptyArray;
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
@@ -38,6 +39,7 @@ static NSMenu   *safariTopMenu;
 - (id)init
 {
     [super init];
+    emptyArray = [[NSArray alloc] init];
     
     return self;
 }
@@ -82,11 +84,13 @@ static NSMenu   *safariTopMenu;
     return ![modDate isEqualToDate:lastModDate];
 }
 
+
 -(void)drillPropertyList:(id)inObject
 {
     if([inObject isKindOfClass:[NSDictionary class]]){
         // for the list type, recurrsively call the "Children" NSArray
-        [self drillPropertyList:[(NSDictionary *)inObject objectForKey:SAFARI_DICT_CHILD]];
+        NSArray *childrenArray = [(NSDictionary *)inObject objectForKey:SAFARI_DICT_CHILD];
+        [self drillPropertyList:childrenArray? childrenArray : emptyArray];
     }else if([inObject isKindOfClass:[NSArray class]]){
         // if we're passed a NSArray object, it can contain both list and leaf dict types,
         // so, we grab an enumerator from the array, and handle each case
