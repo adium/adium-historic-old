@@ -350,7 +350,12 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%sender%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[[content source] displayName]];
+				NSString	*senderDisplay = [[content source] displayName];
+				if ([(AIContentMessage *)content autoreply]){
+					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
+				}
+				[inString replaceCharactersInRange:range
+											withString:senderDisplay];
 			}
 		} while(range.location != NSNotFound);
         

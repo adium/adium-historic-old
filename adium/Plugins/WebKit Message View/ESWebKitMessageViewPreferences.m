@@ -428,6 +428,7 @@
 			NSString	*from = [messageDict objectForKey:@"From"];
 			source = (from ? [previewListObjectsDict objectForKey:from] : nil);
 			
+			NSLog(@"%@ %@ %@ %@ %@",message,statusMessageType,from,source,[messageDict objectForKey:@"Date"]);
 			//Create our content object
 			responseContent = [AIContentStatus statusInChat:nil
 												 withSource:source
