@@ -350,7 +350,8 @@
         NSNumber		*newBehavior;
 
         //
-        selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
+
+        selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
         selectedEventDict = [[behaviorArray objectAtIndex:row] mutableCopy];
         newBehavior = [selectedMenuItem representedObject];
 

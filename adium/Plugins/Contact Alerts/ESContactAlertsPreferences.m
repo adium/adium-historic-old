@@ -364,7 +364,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         [instance configForObject:listObject];
 
-        selectedMenuItem = [[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
+        selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
 
         row -= [[offsetDictionary objectForKey:[listObject UID]] intValue]; //change row to account for offset
         selectedActionDict = [[instance dictAtIndex:row] mutableCopy];

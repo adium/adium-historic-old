@@ -251,7 +251,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         NSMutableDictionary	*selectedActionDict;
         NSString		*newAction;
 
-        selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
+        selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
         selectedActionDict = [[instance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 

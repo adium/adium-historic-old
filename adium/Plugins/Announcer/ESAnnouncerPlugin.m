@@ -33,7 +33,7 @@
     [popUp_voice addItemsWithTitles:[[owner soundController] voices]];
     
     observingContent = NO;
-    lastSenderString = [[NSString alloc] init];
+    lastSenderString = nil;
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
@@ -114,11 +114,11 @@
 			senderString = [(AIListContact *)source displayName];
 //		    }
 
-		    if ([senderString compare:lastSenderString] != 0) {
-		    [theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
-		[theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
-		[lastSenderString release]; lastSenderString = [senderString retain];
-		newParagraph = YES;
+		    if (!senderString || [senderString compare:lastSenderString] != 0) {
+                        [theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
+                        [theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
+                        [lastSenderString release]; lastSenderString = [senderString retain];
+                        newParagraph = YES;
 		    }
 		}
 

@@ -51,7 +51,6 @@
 - (void)installPlugin
 {
     //init
-    accountArray = [[[owner accountController] accountArray] retain];
     accountViewController = nil;
     view_accountPreferences = nil;
 
@@ -71,6 +70,8 @@
 {
     //Load our preference view nib
     if(!view_accountPreferences){
+        accountArray = [[[owner accountController] accountArray] retain];
+
         [NSBundle loadNibNamed:ACCOUNT_PREFERENCE_VIEW_NIB owner:self];
 
         //Configure our view

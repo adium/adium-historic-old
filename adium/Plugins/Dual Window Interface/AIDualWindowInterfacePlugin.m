@@ -256,7 +256,7 @@
 
     }else if([activeContainer isKindOfClass:[AIMessageTabViewItem class]]){ //dealing w/ a tab
         //Get the selected message window
-        messageWindow = [self _messageWindowForContainer:activeContainer];
+        messageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)activeContainer];
 
         //Select the next tab
         if(![messageWindow selectNextTabViewItemContainer]){
@@ -287,7 +287,7 @@
 
     }else if([activeContainer isKindOfClass:[AIMessageTabViewItem class]]){ //dealing w/ a tab
         //Get the selected message window
-        messageWindow = [self _messageWindowForContainer:activeContainer];
+        messageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)activeContainer];
 
         //Select the next tab
         if(![messageWindow selectPreviousTabViewItemContainer]){
@@ -635,7 +635,7 @@
     BOOL enabled = YES;
 
     if(menuItem == menuItem_closeTab){
-        AIMessageWindowController *messageWindow = [self _messageWindowForContainer:activeContainer];
+        AIMessageWindowController *messageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)activeContainer];
 
         enabled = (messageWindow && [[messageWindow messageContainerArray] count] > 1);
 

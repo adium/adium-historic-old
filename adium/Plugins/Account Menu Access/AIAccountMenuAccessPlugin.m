@@ -102,7 +102,9 @@
     if(targetMenuItem){
         if([[account supportedPropertyKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
-            connectToggleItem = [[targetMenuItem submenu] itemAtIndex:0];
+            //NSLog(@"targetMenuItem is %@ ; submenu is %@ ; itemAtIndex is %@",targetMenuItem,[targetMenuItem submenu], [[targetMenuItem submenu] itemAtIndex:0]);
+            connectToggleItem = (NSMenuItem *)[[targetMenuItem submenu] itemAtIndex:0];
+            //NSLog(@"connectToggleItem is %@",connectToggleItem);
             switch([[[owner accountController] propertyForKey:@"Status" account:account] intValue]){
                 case STATUS_OFFLINE:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
@@ -131,7 +133,7 @@
             }
             
             //Auto-connect
-            autoConnectItem = [[targetMenuItem submenu] itemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE];
+            autoConnectItem = (NSMenuItem *)[[targetMenuItem submenu] itemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE];
             if([[[owner accountController] propertyForKey:@"AutoConnect" account:account] boolValue]){
                 [autoConnectItem setState:NSOnState];
             }else{

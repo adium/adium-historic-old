@@ -426,7 +426,7 @@
         NSString		*newSoundPath;
     
         //
-        selectedMenuItem = [[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
+        selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
         selectedSoundDict = [[eventSoundArray objectAtIndex:row] mutableCopy];
         newSoundPath = [selectedMenuItem representedObject];
 

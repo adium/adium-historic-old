@@ -171,12 +171,12 @@
      */
 
     //Setup the menubar away selector
-    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
-    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
+    menuItem_away = [[[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""] autorelease];
+    menuItem_removeAway = [[[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY] autorelease];
 
     //Setup the dock menu away selector
-    menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
-    menuItem_dockRemoveAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:@""];
+    menuItem_dockAway = [[[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""] autorelease];
+    menuItem_dockRemoveAway = [[[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:@""] autorelease];
 
     //Add it to the menubar
     if([self shouldConfigureForAway]){

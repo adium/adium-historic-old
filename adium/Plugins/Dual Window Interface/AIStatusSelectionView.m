@@ -225,7 +225,7 @@
 
     }else if(onlineAccounts && awayMessageData){ //Away
         if(awayMessageIndex > 0 && awayMessageIndex < [[popUp_status menu] numberOfItems]){
-            selectedMenuItem = [[popUp_status menu] itemAtIndex:awayMessageIndex];
+            selectedMenuItem = (NSMenuItem *)[[popUp_status menu] itemAtIndex:awayMessageIndex];
         } else { //not a saved away message but away nonetheless
 	    NSString * away = [[NSAttributedString stringWithData:awayMessageData] string];
 
@@ -244,10 +244,10 @@
 	
         
     }else if(onlineAccounts){ //Online
-        selectedMenuItem = [[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE];
+        selectedMenuItem = (NSMenuItem *)[[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE];
         
     }else{ //Offline
-        selectedMenuItem = [[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE];
+        selectedMenuItem = (NSMenuItem *)[[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE];
         
     }
     

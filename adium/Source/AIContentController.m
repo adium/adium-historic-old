@@ -161,17 +161,30 @@
 {
     [outgoingContentFilterArray addObject:inFilter];
 }
+- (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter 
+{
+    [outgoingContentFilterArray removeObject:inFilter];
+}
 
 //
 - (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter
 {
     [incomingContentFilterArray addObject:inFilter];
 }
+- (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter
+{
+    [incomingContentFilterArray removeObject:inFilter];
+}
 
 //
 - (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter
 {
     [displayingContentFilterArray addObject:inFilter];
+}
+
+- (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter
+{
+    [displayingContentFilterArray removeObject:inFilter];
 }
 
 
