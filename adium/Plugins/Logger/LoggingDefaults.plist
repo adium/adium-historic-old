@@ -4,5 +4,7 @@
 <dict>
 	<key>Enable Logging</key>
 	<true/>
+	<key>Enable HTML Logger</key>
+	<true/>
 </dict>
 </plist>

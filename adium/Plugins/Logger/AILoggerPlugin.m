@@ -99,7 +99,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LOGGING] == 0){
         NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
         BOOL            newLogValue;
-                
+		
+		logHTML = [[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue];
+		
         //Start/Stop logging
         newLogValue = [[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
         if(newLogValue != observingContent){
@@ -173,30 +175,36 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     NSAttributedString	*message = nil;
     NSString		*object = nil;
     AIListObject	*source = nil;
-    NSDate		*date = nil;
+    NSDate			*date = nil;
     NSString		*dateString = nil;
     NSString		*logMessage = nil;
 
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-	date        = [content date];
-        dateString  = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
-        object      = [[chat statusDictionary] objectForKey:@"DisplayName"];
-           if(!object) object = [[chat listObject] UID];
-	source      = [content source];
-	message     = [[content message] safeString];
+		date        = [content date];
+		dateString  = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+	
+		object      = [[chat statusDictionary] objectForKey:@"DisplayName"];
+		if(!object) object = [[chat listObject] UID];
+	
+		source      = [content source];
+		message     = [[content message] safeString];
 
         if(source){
-			NSString *imagesDirectory = [NSString stringWithFormat:@"%@ (%@) images", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
-			NSString *imagesPath = [[AILoggerPlugin logPathWithAccount:account andObject:object] stringByAppendingPathComponent:imagesDirectory];
+			if(logHTML) {
+				NSString *imagesDirectory = [NSString stringWithFormat:@"%@ (%@) images", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+				NSString *imagesPath = [[AILoggerPlugin logPathWithAccount:account andObject:object] stringByAppendingPathComponent:imagesDirectory];
 			
-			logMessage = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
-				([content isOutgoing] ? @"send" : @"receive"),
-				dateString,
-				[source UID],
-				[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO 
-				    styleTags:YES closeStyleTagsOnFontChange:YES
-			       encodeNonASCII:YES imagesPath:imagesPath]];
+				logMessage = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
+					([content isOutgoing] ? @"send" : @"receive"),
+					dateString,
+					[source UID],
+					[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO 
+									styleTags:YES closeStyleTagsOnFontChange:YES
+									encodeNonASCII:YES imagesPath:imagesPath]];
+			} else {
+				logMessage = [NSString stringWithFormat:@"(%@) %@: %@\n", dateString, [source UID], [message string]];
+			}
 		}
 
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
@@ -211,7 +219,11 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
         message     = [content message];
 
         if(source){
-			logMessage = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, dateString];
+			if(logHTML) {
+				logMessage = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, dateString];
+			} else {
+				logMessage = [NSString stringWithFormat:@"<%@ (%@)>\n", message, dateString];
+			}
 		}
     }
 
@@ -229,13 +241,17 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     NSString	*logPath;
     NSString	*logFileName;
     NSString    *logFullPath;
-    FILE	*file;
+    FILE		*file;
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
     logPath = [AILoggerPlugin logPathWithAccount:account andObject:object];
     
-    logFileName = [NSString stringWithFormat:@"%@ (%@).html", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
-    
+	if(logHTML) {
+		logFileName = [NSString stringWithFormat:@"%@ (%@).html", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    } else {
+		logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+	}
+	
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];
 
