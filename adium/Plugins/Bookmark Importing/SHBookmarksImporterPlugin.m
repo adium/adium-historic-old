@@ -80,7 +80,7 @@
 	Class	importerClass = nil;
 	NSURL   *appURL = nil;
     
-    //Launch services can tell us the default handler for text/html (which will be the default browser)
+    //Launch services can tell us the default handler for html (which will be the default browser)
     if(noErr == LSGetApplicationForInfo(kLSUnknownType,kLSUnknownCreator,(CFStringRef)@"html",kLSRolesAll,NULL,(CFURLRef *)&appURL)){
         if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
             importerClass = [SHSafariBookmarksImporter class];
@@ -96,7 +96,7 @@
             importerClass = [SHOmniWebBookmarksImporter class];
         }
         CFRelease(appURL);
-	}
+    }
 	
 	return(importerClass);
 }
@@ -199,7 +199,8 @@
 	while(object = [enumerator nextObject]){		
 		if([object isKindOfClass:[SHMarkedHyperlink class]]){
 			//Add a menu item for this link
-			[self insertMenuItemForBookmark:object intoMenu:menu];
+                        if(nil != (SHMarkedHyperlink *)[object URL])
+                            [self insertMenuItemForBookmark:object intoMenu:menu];
 			
 		}else if([object isKindOfClass:[NSDictionary class]]){
 			//Add another submenu
