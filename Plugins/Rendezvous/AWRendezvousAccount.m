@@ -335,7 +335,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
 {
-	[self mainPerformSelector:@selector(mainThreadUserWithUID:sentMessage:typingNotificationNumber:)
+	[self mainPerformSelector:@selector(mainThreadUserWithUID:typingNotificationNumber:)
 				   withObject:[contact uniqueID]
 				   withObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)];;
 }
