@@ -61,7 +61,8 @@
         AIMutableOwnerArray	*iconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
-        int			away, idle, warning, online, unviewedContent, unrespondedContent, signedOn;
+        int			away, warning, online, unviewedContent, unrespondedContent, signedOn;
+        double			idle;
         
         //Get the status circle
         iconArray = [inContact displayArrayForKey:@"Left View"];
@@ -74,7 +75,7 @@
 
         //Get all the values
         away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
-        idle = [[inContact statusArrayForKey:@"Idle"] greatestIntegerValue];
+        idle = [[inContact statusArrayForKey:@"Idle"] greatestDoubleValue];
         warning = [[inContact statusArrayForKey:@"Warning"] greatestIntegerValue];
         online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
         unviewedContent = [[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
@@ -98,7 +99,7 @@
         [statusCircle setColor:circleColor];
 
         //Embedded idle time
-        if(idle > 0){
+        if(idle != 0){
             [statusCircle setStringContent:[self idleStringForSeconds:idle]];
         }else{
             [statusCircle setStringContent:nil];

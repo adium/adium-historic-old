@@ -30,5 +30,6 @@
 - (id)objectWithOwner:(id)inOwner;
 - (int)greatestIntegerValue;
 - (double)greatestDoubleValue;
+- (NSDate *)earliestDate;
 
 @end

@@ -73,6 +73,17 @@
     [self configureTransparencyForWindow:[newSuperview window]];
 }
 
+- (void)viewDidMoveToSuperview
+{
+    [super viewDidMoveToSuperview];
+    [self frameChanged:nil]; //Force a frame changed event for our new superview
+
+    //Inform our delegate that we moved to another superview
+    if([[self delegate] respondsToSelector:@selector(view:didMoveToSuperview:)]){
+        [[self delegate] view:self didMoveToSuperview:[self superview]];
+    }
+}
+
 //Called when our frame changes
 - (void)frameChanged:(NSNotification *)notification
 {

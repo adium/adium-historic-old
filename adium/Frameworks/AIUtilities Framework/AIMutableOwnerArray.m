@@ -99,6 +99,26 @@
     return(average);
 }
 
+- (NSDate *)earliestDate
+{
+    if([ownerArray count] != 0){
+        NSDate	*earlyDate = [contentArray objectAtIndex:0];
+        int		loop;
+
+        for(loop = 1;loop < [ownerArray count];loop++){
+            NSDate	*date = [contentArray objectAtIndex:loop];
+
+            if([earlyDate timeIntervalSinceDate:date] > 0){
+                earlyDate = date;
+            }
+        }
+
+        return(earlyDate);
+    }else{
+        return(nil);
+    }
+}
+
 //Returns YES if the array contains the specified integer value
 - (BOOL)containsAnyIntegerValueOf:(int)inValue
 {

@@ -75,12 +75,13 @@
 {
     AIMutableOwnerArray		*colorArray = [inContact displayArrayForKey:@"Text Color"];
     AIMutableOwnerArray		*invertedColorArray = [inContact displayArrayForKey:@"Inverted Text Color"];
-    int				away, idle, warning, online, unviewedContent, signedOn, signedOff;
+    int				away, warning, online, unviewedContent, signedOn, signedOff;
+    double			idle;
     NSColor			*color = nil, *invertedColor = nil;
 
     //Get all the values
     away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
-    idle = [[inContact statusArrayForKey:@"Idle"] greatestIntegerValue];
+    idle = [[inContact statusArrayForKey:@"Idle"] greatestDoubleValue];
     warning = [[inContact statusArrayForKey:@"Warning"] greatestIntegerValue];
     online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
     unviewedContent = [[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
