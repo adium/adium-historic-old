@@ -10,7 +10,7 @@
 
 - (id)initWithFrame:(NSRect)inFrame
 {
-	[super initWithFrame:inFrame];
+	[(id)super initWithFrame:inFrame];
 	
 	originalFrame = inFrame;
 	[self _initLocalizationControl];
@@ -24,7 +24,7 @@
         [super awakeFromNib];
     }
 
-	originalFrame = [[self viewForSizing] frame];
+	originalFrame = [TARGET_CONTROL frame];
 }
 
 - (void)setRightAnchorMovementType:(AILocalizationAnchorMovementType)inType
@@ -36,7 +36,7 @@
 {
 	originalFrame = inFrame;
 	
-	[super setFrame:inFrame];
+	[(id)super setFrame:inFrame];
 }
 
 - (void)_handleSizingWithOldFrame:(NSRect)oldFrame stringValue:(NSString *)inStringValue
@@ -44,12 +44,11 @@
 	//Textfield uses 17, button uses 14.
 	
 	NSRect		newFrame;
-	NSControl	*viewForSizing = [self viewForSizing];
+
+	[TARGET_CONTROL sizeToFit];
 	
-	[viewForSizing sizeToFit];
-	
-	newFrame = [viewForSizing frame];
-	NSLog(@"%@: original %@ old %@ new %@",inStringValue,NSStringFromRect(originalFrame),NSStringFromRect(oldFrame),NSStringFromRect(newFrame));
+	newFrame = [TARGET_CONTROL frame];
+	//NSLog(@"%@: original %@ old %@ new %@",inStringValue,NSStringFromRect(originalFrame),NSStringFromRect(oldFrame),NSStringFromRect(newFrame));
 	//Enforce a minimum width of the original frame width
 	if(newFrame.size.width < originalFrame.size.width){
 		newFrame.size.width = originalFrame.size.width;
@@ -63,14 +62,14 @@
 		case NSRightTextAlignment:
 			//Keep the right edge in the same place at all times if we are right aligned
 			newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
-			NSLog(@"%@: shift left to %f",inStringValue,newFrame.origin.x);
+			//NSLog(@"%@: shift left to %f",inStringValue,newFrame.origin.x);
 			break;
 		case NSCenterTextAlignment:
 		{
 			//Keep the center in the same place
-			float windowMaxX = NSMaxX([[viewForSizing window] frame]);
+			float windowMaxX = NSMaxX([[TARGET_CONTROL window] frame]);
 			
-			NSLog(@"%@: CENTER: newFrame was %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
+			//NSLog(@"%@: CENTER: newFrame was %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
 			newFrame.origin.x = oldFrame.origin.x + (oldFrame.size.width - newFrame.size.width)/2;
 			
 			if(NSMaxX(newFrame) + 17 > windowMaxX){
@@ -81,66 +80,48 @@
 			//round up as an extra pixel of whitespace never hurt anybody
 			newFrame.origin.x = round(newFrame.origin.x + 0.5);
 			
-			NSLog(@"%@: CENTER: newFrame is now %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
+			//NSLog(@"%@: CENTER: newFrame is now %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
 			break;
 		}
 		default:
 			break;
 	}
 	
-	NSLog(@"%@: initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
-	//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
-	if(viewForSizing == self){
-		[super setFrame:newFrame];
-	}else{
-		[viewForSizing setFrame:newFrame];
-	}
-	
-	[self setNeedsDisplay:YES];
+	//NSLog(@"%@: initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
+	[TARGET_CONTROL setFrame:newFrame];
+	[TARGET_CONTROL setNeedsDisplay:YES];
 	
 	//Resize the window to fit the contactNameLabel if the current size is not correct
-	NSLog(@"%@: %f != %f ?",inStringValue,newFrame.size.width,oldFrame.size.width);
+	//NSLog(@"%@: %f != %f ?",inStringValue,newFrame.size.width,oldFrame.size.width);
 	if(newFrame.size.width != oldFrame.size.width){
 		
 		//Too close on left; need to expand window left
 		if(window_anchorOnLeftSide && newFrame.origin.x < 17){
 			float		difference = 17 - newFrame.origin.x;
 			
-			NSLog(@"%@: Move %@ left by %f",inStringValue,window_anchorOnLeftSide,difference);
+			//NSLog(@"%@: Move %@ left by %f",inStringValue,window_anchorOnLeftSide,difference);
 			[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
 			
 			//Fix the origin - autosizing will end up moving this into the proper location
 			newFrame.origin.x = 17;
-			NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
+			//NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 
-			//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
-			if(viewForSizing == self){
-				[super setFrame:newFrame];
-			}else{
-				[viewForSizing setFrame:newFrame];
-			}
-
-			[self setNeedsDisplay:YES];
+			[TARGET_CONTROL setFrame:newFrame];
+			[TARGET_CONTROL setNeedsDisplay:YES];
 		}
 		
 		//Too close on right; need to expand window right
 		if(window_anchorOnRightSide && (NSMaxX(newFrame) > (NSMaxX([window_anchorOnRightSide frame]) - 17))){
 			float		difference =  NSMaxX(newFrame) - (NSMaxX([window_anchorOnRightSide frame]) - 17);
 			
-			NSLog(@"%@: Move %@ right by %f",inStringValue,window_anchorOnRightSide,difference);
+			//NSLog(@"%@: Move %@ right by %f",inStringValue,window_anchorOnRightSide,difference);
 			[self _resizeWindow:window_anchorOnRightSide rightBy:difference];
 				
 			newFrame.origin.x = NSMaxX([window_anchorOnRightSide frame]) - newFrame.size.width - 17;
 
-			NSLog(@"%@: 2 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
-			//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
-			if(viewForSizing == self){
-				[super setFrame:newFrame];
-			}else{
-				[viewForSizing setFrame:newFrame];
-			}			
-			
-			[self setNeedsDisplay:YES];			
+			//NSLog(@"%@: 2 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
+			[TARGET_CONTROL setFrame:newFrame];
+			[TARGET_CONTROL setNeedsDisplay:YES];			
 		}
 		
 		if(newFrame.origin.x < oldFrame.origin.x){
@@ -155,13 +136,13 @@
 					float	overshoot = -leftAnchorFrame.origin.x;
 					leftAnchorFrame.origin.x = 0;
 					
-					NSLog(@"%@: 3 origin is to the left, and less than zero: %@",NSStringFromRect(leftAnchorFrame));
+					//NSLog(@"%@: 3 origin is to the left, and less than zero: %@",NSStringFromRect(leftAnchorFrame));
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 					
-					[self _resizeWindow:[self window] leftBy:overshoot];
+					[self _resizeWindow:[TARGET_CONTROL window] leftBy:overshoot];
 				}else{
-					NSLog(@"%@: 4 origin is to the left, not less than zero, moving to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
+					//NSLog(@"%@: 4 origin is to the left, not less than zero, moving to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 				}
@@ -185,7 +166,7 @@
 					}
 					*/
 					
-					NSLog(@"%@: 5 origin.x is >=, moving view_anchorToRightSide to %@",inStringValue,NSStringFromRect(rightAnchorFrame));
+					//NSLog(@"%@: 5 origin.x is >=, moving view_anchorToRightSide to %@",inStringValue,NSStringFromRect(rightAnchorFrame));
 					[view_anchorToRightSide setFrame:rightAnchorFrame];
 					[view_anchorToRightSide setNeedsDisplay:YES];
 					
@@ -194,14 +175,8 @@
 					//Move us left to keep our distance from our anchor view to the right
 					newFrame.origin.x = rightAnchorFrame.origin.x - newFrame.size.width - 10;
 					
-					//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
-					if(viewForSizing == self){
-						[super setFrame:newFrame];
-					}else{
-						[viewForSizing setFrame:newFrame];
-					}
-
-					[self setNeedsDisplay:YES];
+					[TARGET_CONTROL setFrame:newFrame];
+					[TARGET_CONTROL setNeedsDisplay:YES];
 				}
 				
 				//Adjust window somehow if needed?
@@ -225,15 +200,15 @@
 					float	overshoot = -leftAnchorFrame.origin.x;
 					leftAnchorFrame.origin.x = 0;
 
-					NSLog(@"%@: 6 origin.x is >=, leftAnchorFrame.origin.x < 0, moving view_anchorToLeftSide to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
+					//NSLog(@"%@: 6 origin.x is >=, leftAnchorFrame.origin.x < 0, moving view_anchorToLeftSide to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
 
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 					
-					[self _resizeWindow:[self window] leftBy:overshoot];
+					[self _resizeWindow:[TARGET_CONTROL window] leftBy:overshoot];
 				}else{
 					
-					NSLog(@"%@: 7 origin.x is >=, moving view_anchorToLeftSide to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
+					//NSLog(@"%@: 7 origin.x is >=, moving view_anchorToLeftSide to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
 
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
@@ -251,34 +226,22 @@
 					//+8 perhaps for textviews; 0 for buttons, which have weird frames.
 					newFrame.origin.x -= ((NSMaxX(newFrame) - NSMinX(rightAnchorFrame))/* + 8 */);
 					
-					//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
-					if(viewForSizing == self){
-						[super setFrame:newFrame];
-					}else{
-						[viewForSizing setFrame:newFrame];
-					}
-
-					[self setNeedsDisplay:YES];
+					[TARGET_CONTROL setFrame:newFrame];
+					[TARGET_CONTROL setNeedsDisplay:YES];
 					
 					//As we did initially, check to see if we now need to expand the window to the left
 					if(window_anchorOnLeftSide && newFrame.origin.x < 17){
 						float		difference = 17 - newFrame.origin.x;
 						
-						NSLog(@"%@: Move %@ left by %f",inStringValue,window_anchorOnLeftSide,difference);
+						//NSLog(@"%@: Move %@ left by %f",inStringValue,window_anchorOnLeftSide,difference);
 						[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
 						
 						//Fix the origin - autosizing will end up moving this into the proper location
 						newFrame.origin.x = 17;
-						NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
+						//NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 						
-						//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
-						if(viewForSizing == self){
-							[super setFrame:newFrame];
-						}else{
-							[viewForSizing setFrame:newFrame];
-						}
-
-						[self setNeedsDisplay:YES];
+						[TARGET_CONTROL setFrame:newFrame];
+						[TARGET_CONTROL setNeedsDisplay:YES];
 					}
 				}
 			}

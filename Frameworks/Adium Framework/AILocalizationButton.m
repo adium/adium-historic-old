@@ -8,6 +8,8 @@
 
 #import "AILocalizationButton.h"
 
+#define	TARGET_CONTROL	super
+
 @implementation AILocalizationButton
 
 //Set up our defaults
@@ -31,11 +33,6 @@
 	[super setTitle:inTitle];
 	
 	[self _handleSizingWithOldFrame:oldFrame stringValue:inTitle];
-}
-
-- (NSControl *)viewForSizing
-{
-	return(self);
 }
 
 #include "AILocalizationControl.m"
