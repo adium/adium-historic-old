@@ -15,14 +15,27 @@
 
 @implementation BZGenericViewCell
 
-- (id)init
+- (void)dealloc
 {
-	return([super initImageCell:nil]);
+	[embeddedView release];
+	[super dealloc];
 }
 
 - (void)setEmbeddedView:(NSView *)inView
 {
-	embeddedView = inView;
+	if(embeddedView != inView){
+		[embeddedView release];
+		embeddedView = [inView retain];
+	}
+}
+
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	BZGenericViewCell *newCell = [super copyWithZone:zone];
+	newCell->embeddedView = [embeddedView retain];
+
+	return(newCell);
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
