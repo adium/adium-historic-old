@@ -139,8 +139,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     if (!eventActionArray)
         eventActionArray = [[NSMutableArray alloc] init];
     else
-        if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
-
+        if ([eventActionArray count])
+        {
+            [tableView_actions selectRow:0 byExtendingSelection:NO];
+            [self tableViewSelectionDidChange:nil];
+        }
     //Update the outline view
     [tableView_actions reloadData];
 }
@@ -335,8 +338,8 @@ static AIContactAlertsWindowController *sharedInstance = nil;
         minimumSize.height += heightChange;
         [theSubview removeFromSuperviewWithoutNeedingDisplay];
     }
-    //[[self window] setFrame:containerFrame display:NO animate:NO];
-   // [[self window] setMinSize:minimumSize];
+    [[self window] setFrame:containerFrame display:YES animate:YES];
+    [[self window] setMinSize:minimumSize];
 }
 
 //used for each item of the eventMenu
