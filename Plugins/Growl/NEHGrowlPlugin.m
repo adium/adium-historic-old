@@ -74,13 +74,7 @@
 	
     //Install our contact alert
 	[[adium contactAlertsController] registerActionID:@"Growl" withHandler:self];
-
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged
-									 object:nil];
-	
-	[self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];
 }
 
 - (void)dealloc
@@ -252,11 +246,10 @@
 	}
 }
 
-- (void)preferencesChanged:(NSNotification*)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if (notification == nil ||  [(NSString*)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EVENT_BEZEL]) {
-		showWhileAway = [[[adium preferenceController] preferenceForKey:KEY_EVENT_BEZEL_SHOW_AWAY group:PREF_GROUP_EVENT_BEZEL] boolValue];
-	}
+	showWhileAway = [[prefDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue];
 }
 
 #pragma mark AIActionHandler
