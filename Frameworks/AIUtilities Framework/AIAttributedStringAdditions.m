@@ -355,32 +355,35 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 + (NSAttributedString *)stringWithData:(NSData *)inData
 {
-	NSAttributedString	*returnValue;
-	NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
-
-	if (unarchiver){
-		//NSUnarchiver's decodeObject returns an object which is retained by the unarchiver and released
-		//when the unarchiver is deallocated.  We could rely upon autoreleasing the unarchiver, but it
-		//is cleaner to make the NSAttributedString autorelease itself.
-		returnValue = (NSAttributedString *)[[[unarchiver decodeObject] retain] autorelease];
-		
-	}else{
-		//For reading previously stored NSData objects - we used to store them as RTF data, but that
-		//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
-		//here isn't a speed problem.
-		if([NSApp isOnPantherOrBetter]){
-			
-			returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
-												 documentAttributes:nil] autorelease]);
-		}else{
-			//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
-			NSAttributedString *superSpecialJagString = [[[NSAttributedString alloc] initWithRTF:inData
-																			  documentAttributes:nil] autorelease];
-			returnValue = [AIHTMLDecoder decodeHTML:[superSpecialJagString string]];
-		}
-	}
+	NSAttributedString	*returnValue = nil;
 	
-	[unarchiver release];
+	if (inData){
+		NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
+		
+		if (unarchiver){
+			//NSUnarchiver's decodeObject returns an object which is retained by the unarchiver and released
+			//when the unarchiver is deallocated.  We could rely upon autoreleasing the unarchiver, but it
+			//is cleaner to make the NSAttributedString autorelease itself.
+			returnValue = (NSAttributedString *)[[[unarchiver decodeObject] retain] autorelease];
+			
+		}else{
+			//For reading previously stored NSData objects - we used to store them as RTF data, but that
+			//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
+			//here isn't a speed problem.
+			if([NSApp isOnPantherOrBetter]){
+				
+				returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
+													 documentAttributes:nil] autorelease]);
+			}else{
+				//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
+				NSAttributedString *superSpecialJagString = [[[NSAttributedString alloc] initWithRTF:inData
+																				  documentAttributes:nil] autorelease];
+				returnValue = [AIHTMLDecoder decodeHTML:[superSpecialJagString string]];
+			}
+		}
+		
+		[unarchiver release];
+	}
 	
 	return(returnValue);
 }
