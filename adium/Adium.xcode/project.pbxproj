@@ -3386,7 +3386,6 @@
 				4BD6738606001C2B0049CAF7,
 				4BD6738806001C2C0049CAF7,
 				4BD6738C06001C2D0049CAF7,
-				4BD6738E06001C2E0049CAF7,
 				4BD6739906001C3F0049CAF7,
 				4BD6739C06001C440049CAF7,
 				4BD673A206001C4D0049CAF7,
@@ -3700,7 +3699,6 @@
 				4BD6739006001C2F0049CAF7,
 				4BD6739106001C2F0049CAF7,
 				4BD6739206001C2F0049CAF7,
-				4BD6739306001C300049CAF7,
 				4BD6739A06001C400049CAF7,
 				4BD673A606001C4E0049CAF7,
 				4BD673AB06001C510049CAF7,
@@ -4021,7 +4019,6 @@
 				4BD6738706001C2B0049CAF7,
 				4BD6738906001C2C0049CAF7,
 				4BD6738D06001C2E0049CAF7,
-				4BD6738F06001C2F0049CAF7,
 				4BD6739B06001C410049CAF7,
 				4BD6739D06001C450049CAF7,
 				4BD673A306001C4E0049CAF7,
@@ -8179,12 +8176,9 @@
 			children = (
 				4B28909D03C1D37700A8010A,
 				4B28909E03C1D37700A8010A,
-				F555906604F0C18D01925A3C,
-				F555906504F0C18D01925A3C,
 				4B7764BB03C3E78200A8010A,
 				F555906704F0C18D01925A3C,
 				4B2890A103C1D57A00A8010A,
-				F555906404F0C18D01925A3C,
 			);
 			isa = PBXGroup;
 			name = "Alias Support";
@@ -12656,18 +12650,6 @@
 			settings = {
 			};
 		};
-		4BD6738E06001C2E0049CAF7 = {
-			fileRef = F555906604F0C18D01925A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738F06001C2F0049CAF7 = {
-			fileRef = F555906504F0C18D01925A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6739006001C2F0049CAF7 = {
 			fileRef = 4B7764BB03C3E78200A8010A;
 			isa = PBXBuildFile;
@@ -12682,12 +12664,6 @@
 		};
 		4BD6739206001C2F0049CAF7 = {
 			fileRef = 4B2890A103C1D57A00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739306001C300049CAF7 = {
-			fileRef = F555906404F0C18D01925A3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19566,32 +19542,6 @@
 			lastKnownFileType = image.icns;
 			name = Adium.icns;
 			path = Source/Adium.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F555906404F0C18D01925A3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DisplayFormatPreferences.nib;
-			path = "Plugins/Alias Support/DisplayFormatPreferences.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F555906504F0C18D01925A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAliasSupportPreferences.m;
-			path = "Plugins/Alias Support/AIAliasSupportPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F555906604F0C18D01925A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAliasSupportPreferences.h;
-			path = "Plugins/Alias Support/AIAliasSupportPreferences.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
