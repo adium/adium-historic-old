@@ -19,7 +19,6 @@
 
 - (void)installPlugin
 {
-    NSDictionary    *preferenceDict;
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_EVENT_BEZEL];
 
