@@ -159,4 +159,6 @@
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object;
 
+- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway;
+
 @end

@@ -256,15 +256,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Away and away return
 - (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
 {
-	[self _updateAway:theContact toAway:YES];
+	[self _updateAwayOfContact:theContact toAway:YES];
 }
 
 - (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
 {
-	[self _updateAway:theContact toAway:NO];
+	[self _updateAwayOfContact:theContact toAway:NO];
 }
 
-- (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway
+- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
 	NSNumber *storedValue = [theContact statusObjectForKey:@"Away"];
 	if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
