@@ -73,12 +73,12 @@ int		textHeight = [attrString heightWithWidth:1e7];
 {
 	NSRect	iconRect;
 
-	//Indent
-	rect.origin.x += ICON_LEFT_PADDING;
-	rect.size.width -= ICON_LEFT_PADDING;
-	
 	//Draw the user image
 	if(SHOW_USER_ICON){
+		//Indent
+		rect.origin.x += ICON_LEFT_PADDING;
+		rect.size.width -= ICON_LEFT_PADDING;
+		
 		if(USER_ICON_ON_LEFT){
 			iconRect = NSMakeRect(rect.origin.x,
 								  rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
