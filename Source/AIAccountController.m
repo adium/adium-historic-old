@@ -139,10 +139,6 @@
 		}
 	}
 
-	//First launch, open the account prefs
-//	if([accountArray count] == 0){
-//		[[AIAccountListWindowController accountListWindowController] showWindow:nil];
-//	}
 	[self _prepareAccountMenus];
 }
 

@@ -249,6 +249,11 @@ static NSString	*prefsCategory;
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
 	
+	//If no accounts are setup, open the account prefs
+	if([[accountController accountArray] count] == 0){
+		[preferenceController openPreferencesToCategoryWithIdentifier:@"accounts"];
+	}
+	
     completedApplicationLoad = YES;
 
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];

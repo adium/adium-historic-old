@@ -322,18 +322,19 @@
  */
 - (void)updateAccountOverview
 {
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-	AIAccount		*account;
-	int				online = 0;
-	
-	//Count online accounts
-	while(account = [enumerator nextObject]){
-		if([[account statusObjectForKey:@"Online"] boolValue]) online++;
-	}
-	
-	if([accountArray count] == 0 && online == 0){
-		[textField_overview setLocalizedString:AILocalizedString(@"Click the + to add a new account","Instructions on how to add an account when none are present")];
+	if([accountArray count] == 0){
+		[textField_overview setStringValue:AILocalizedString(@"Click the + to add a new account","Instructions on how to add an account when none are present")];
+
 	}else{
+		NSEnumerator	*enumerator = [accountArray objectEnumerator];
+		AIAccount		*account;
+		int				online = 0;
+		
+		//Count online accounts
+		while(account = [enumerator nextObject]){
+			if([[account statusObjectForKey:@"Online"] boolValue]) online++;
+		}
+		
 		[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online","Overview of total and online accounts"), [accountArray count], online]];
 	}
 }
