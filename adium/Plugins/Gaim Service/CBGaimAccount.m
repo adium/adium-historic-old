@@ -1520,19 +1520,13 @@
 		//Clear the buddy's ui_data pointer to avoid accidentally referencing the released AIListObject
 		buddy = [[contact statusObjectForKey:@"GaimBuddy"] pointerValue];
 		if (buddy){
-			buddy->node.ui_data = NULL;
-			[contact setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
+			gaim_blist_remove_buddy(buddy);
 		}
-		
-		[contact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:contact];
-		
-		[contact release];
 	}
 	
 	[[adium contactController] endListObjectNotificationDelay];
 	
-    [self displayError:[NSString stringWithUTF8String:text]];
+	[lastDisconnectionError release]; lastDisconnectionError = [[NSString stringWithUTF8String:text] retain];
 }
 - (void)accountConnectionNotice:(const char*)text
 {
@@ -1568,6 +1562,12 @@
 		if (reconnectAttemptsRemaining) {
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
+		}else{
+			if (lastDisconnectionError){
+				//Display then clear the last disconnection error
+				[self displayError:lastDisconnectionError];
+				[lastDisconnectionError release]; lastDisconnectionError = nil;
+			}
 		}
     }
 }
@@ -1592,6 +1592,9 @@
 	
     //Reset reconnection attempts
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+	
+	//Clear any previous disconnection error
+	[lastDisconnectionError release]; lastDisconnectionError = nil;
 }
 
 - (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
