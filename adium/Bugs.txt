@@ -42,6 +42,10 @@
 	Adding an existing contact causes issues.  It may result in duplicate contacts on the user's
 	list, and will make the contact appear offline.  Sometimes they will appear on the list 
 	twice until Adium is restarted.
+	
+- Fights for Yahoo connection
+    If Adium is knocked off yahoo by another client, it will auto-reconnect.
+
 
 
 //-------------------------------------------------------------------------------------------------------
