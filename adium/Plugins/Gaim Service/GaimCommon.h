@@ -25,8 +25,8 @@
 #define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
 #define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"
 #define KEY_ACCOUNT_GAIM_PROXY_PORT			@"Proxy Port"
-#define KEY_ACCOUNT_GAIM_PROXY_AUTHENTICATE @"Proxy Needs Authentication"
 #define KEY_ACCOUNT_GAIM_PROXY_USERNAME		@"Proxy Username"
+#define KEY_ACCOUNT_GAIM_PROXY_PASSWORD		@"Proxy Password"
 
 //Events we care about explicitly via signals
 typedef enum

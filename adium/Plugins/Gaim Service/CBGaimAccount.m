@@ -85,7 +85,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {	
-	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
+//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
     /*int                     online;*/
 	
@@ -1395,11 +1395,14 @@
 	//We are connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
-	//Configure libgaim's proxy settings
+	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxy];
-	
+}
+- (void)continueConnectWithConfiguredProxy
+{
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
+
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
 	gc = gaim_account_connect(account);
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection.");
@@ -1408,22 +1411,27 @@
 //Configure libgaim's proxy settings using the current system values
 - (void)configureAccountProxy
 {
-	GaimProxyInfo		*proxy_info = gaim_proxy_info_new();
+	GaimProxyInfo		*proxy_info;
 	GaimProxyType		gaimAccountProxyType;
 	
 	NSNumber			*proxyPref = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 	NSString			*host = nil;
-	NSString			*proxyUsername = nil;
+	NSString			*proxyUserName = nil;
 	NSString			*proxyPassword = nil;
 	AdiumGaimProxyType  proxyType;
 	int					port = 0;
 	
+	proxy_info = gaim_proxy_info_new();
 	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default);
 	
 	if (proxyType == Gaim_Proxy_None){
-		gaimAccountProxyType = GAIM_PROXY_NONE;
-	}else if (proxyType == Gaim_Proxy_Default) {
+		//No proxy
+		proxy_info->type  = GAIM_PROXY_NONE;
+		gaim_account_set_proxy_info(account,proxy_info);
+		[self continueConnectWithConfiguredProxy];
 		
+	}else if (proxyType == Gaim_Proxy_Default) {
+		//Load and use systemwide proxy settings
 		NSDictionary *systemSOCKSSettingsDictionary;
 		
 		if((systemSOCKSSettingsDictionary = [(CBGaimServicePlugin *)service systemSOCKSSettingsDictionary])) {
@@ -1432,14 +1440,31 @@
 			host = [systemSOCKSSettingsDictionary objectForKey:@"Host"];
 			port = [[systemSOCKSSettingsDictionary objectForKey:@"Port"] intValue];
 			
-			proxyUsername = [systemSOCKSSettingsDictionary objectForKey:@"Username"];
+			proxyUserName = [systemSOCKSSettingsDictionary objectForKey:@"Username"];
 			proxyPassword = [systemSOCKSSettingsDictionary objectForKey:@"Password"];
 			
 		}else{
 			//Using system wide defaults, and no SOCKS proxy is set in the system preferences
 			gaimAccountProxyType = GAIM_PROXY_NONE;
 		}
+		
+		proxy_info->type = gaimAccountProxyType;
+		
+		proxy_info->host = (char *)[host UTF8String];
+		proxy_info->port = port;
+		
+		proxy_info->username = (char *)[proxyUserName UTF8String];
+		proxy_info->password = (char *)[proxyPassword UTF8String];
+		
+		NSLog(@"Systemwide proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
+		
+		gaim_account_set_proxy_info(account,proxy_info);
+		[self continueConnectWithConfiguredProxy];
+		
 	}else{
+		host = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+		port = [[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+		
 		switch (proxyType){
 			case Gaim_Proxy_HTTP:
 				gaimAccountProxyType = GAIM_PROXY_HTTP;
@@ -1455,27 +1480,43 @@
 				break;
 		}
 		
-		host = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
-		port = [[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+		gaim_proxy_info_set_type(proxy_info, gaimAccountProxyType);
+		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
+		gaim_proxy_info_set_port(proxy_info, port);
 		
-		if ([[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_AUTHENTICATE group:GROUP_ACCOUNT_STATUS] boolValue]){
-			proxyUsername = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
-#warning Need to load proxyPassword from the keychain
+		//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:
+		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+		if (proxyUserName && [proxyUserName length]){
+			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
+			gaim_account_set_proxy_info(account, proxy_info);
+			
+			[[adium accountController] passwordForProxyServer:host 
+													 userName:proxyUserName 
+											  notifyingTarget:self 
+													 selector:@selector(gotProxyServerPassword:)];
+		}else{
+			
+			NSLog(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
+			gaim_account_set_proxy_info(account,proxy_info);
+			[self continueConnectWithConfiguredProxy];
 		}
 	}
+}
+
+//Retried the proxy password from the keychain
+- (void)gotProxyServerPassword:(NSString *)inPassword
+{
+	if (inPassword){
+		GaimProxyInfo		*proxy_info = gaim_account_get_proxy_info(account);
+
+		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
+		
+		NSLog(@"GotPassword: Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
+		
+		gaim_account_set_proxy_info(account,proxy_info);
+	}
 	
-	proxy_info->type = gaimAccountProxyType;
-	
-	proxy_info->host = (char *)[host UTF8String];
-	proxy_info->port = port;
-	
-	proxy_info->username = (char *)[proxyUsername UTF8String];
-	proxy_info->password = (char *)[proxyPassword UTF8String];
-	
-	NSLog(@"Our proxy variables were %i %@:%i (%s:%i) %s %s",gaimAccountProxyType,host,port,[host UTF8String],port,[proxyUsername UTF8String],[proxyPassword UTF8String]);
-	NSLog(@"Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
-				
-	gaim_account_set_proxy_info(account,proxy_info);
+	[self continueConnectWithConfiguredProxy];
 }
 
 //Disconnect this account
