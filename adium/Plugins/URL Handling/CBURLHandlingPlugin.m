@@ -30,7 +30,9 @@
 	//to be recognized properly.
 	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst];
 	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst];
+        [self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst];
 	
+        Err = ICEnd(ICInst);
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
                                                        andSelector:@selector(handleURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
@@ -52,7 +54,7 @@
 	if (Spec.fCreator != 'AdIM'){
 		Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
 		Spec.fCreator = 'AdIM';
-		
+
 		//Set the helper app to Adium
 		Err = ICSetPref(ICInst, key, Junk, &Spec, TheSize);
 	}
@@ -94,6 +96,12 @@
 									   onService:@"Yahoo!"
 									 withMessage:nil];
             }
+        }else if([[url scheme] isEqualToString:@"xmpp"]){
+            NSString *name = [NSString stringWithFormat:@"%@@%@",[[url user] compactedString],[[url host] compactedString]];
+
+            [self _openChatToContactWithName:name
+                                                onService:@"Jabber"
+                                                withMessage:nil];
         }
     }else{
         NSLog(@"invalid URL");
