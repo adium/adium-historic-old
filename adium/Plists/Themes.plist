@@ -23,6 +23,6 @@
 	<key>NSMainNibFile</key>
 	<string>ThemesPrefs2</string>
 	<key>NSPrincipalClass</key>
-	<string>BGThemesPreferences</string>
+	<string>BGThemesPlugin</string>
 </dict>
 </plist>
