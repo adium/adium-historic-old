@@ -127,7 +127,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     if(eventActionArray) //saved array
         if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
     else
-        eventActionArray = [[NSMutableArray alloc] init]; }
+        eventActionArray = [[NSMutableArray alloc] init]; 
    
     //Update the outline view
     [tableView_actions reloadData];
