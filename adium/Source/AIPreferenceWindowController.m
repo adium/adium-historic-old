@@ -275,7 +275,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display showContainers:YES];
                 [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending showContainers:YES];
                 [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving showContainers:YES];
-                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Messages_Emoticons showContainers:YES];
                 [self _sizeWindowToFitTabView:tabView_messages];
             break;
             case 4:
@@ -292,13 +291,18 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 [self _sizeWindowToFitFlatView:view_Sound];
             break;
             case 7:
+                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Emoticons showContainers:YES];
+                [self _sizeWindowToFitFlatView:view_Emoticons];
+                break;
+            case 8:
                 [self _insertPanesForCategory:AIPref_Alerts intoView:view_Alerts showContainers:YES];
                 [self _sizeWindowToFitFlatView:view_Alerts];
             break;
-            case 8:
+            case 9:
                 [self _sizeWindowForContentHeight:ADVANCED_PANE_HEIGHT];
                 [outlineView_advanced reloadData];
             break;
+                
         }
     }
 

@@ -23,6 +23,7 @@
 
 @interface AIPreferencePane : NSObject {
     AIAdium                             *owner;
+    id                                  plugin;
     
     IBOutlet	NSView			*view_containerView;    //Will be removed, transition only
     IBOutlet	NSView			*view_containerSubView; //Will be removed, transition only
@@ -38,6 +39,7 @@
 }
 
 + (AIPreferencePane *)preferencePaneWithOwner:(id)inOwner;
++ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner;
 - (NSComparisonResult)compare:(AIPreferencePane *)inPane;
 - (NSView *)view;
 - (void)closeView;
@@ -46,6 +48,7 @@
 - (IBAction)changePreference:(id)sender;
 - (void)configureControlDimming;
 - (id)initWithOwner:(id)inOwner;
+- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner;
 
 
 //Will be removed, transition only

@@ -109,7 +109,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     //Configure the table view
     [tableView_actions setDrawsAlternatingRows:YES];
-    [tableView_actions setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_actions setTarget:self];
     //    [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];

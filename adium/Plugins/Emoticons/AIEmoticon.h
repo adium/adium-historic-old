@@ -14,20 +14,21 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIEmoticon : NSObject {
-    NSString			*path;
-    NSString			*representedText;
-    NSAttributedString		*attributedEmoticon;
+    NSString                *path;
+    NSArray                 *textEquivalents;
+    BOOL                    enabled;
+    
+    NSAttributedString      *_cachedAttributedString;
+    NSImage                 *_cachedImage;
 }
 
-+ (id)emoticon;
-- (id)initWithPath:(NSString *)inPath andText:(NSString *)inText;
-
-- (NSString *)path;
-- (NSString *)representedText;
-- (NSString *)string;
-- (NSAttributedString *)attributedEmoticon;
-
-- (void)setRepresentedText:(NSString *)inString;
-- (void)setPath:(NSString *)inPath;
++ (id)emoticonFromPath:(NSString *)inPath;
+- (NSArray *)textEquivalents;
+- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent;
+- (NSImage *)image;
+- (NSString *)name;
+- (void)setEnabled:(BOOL)inEnabled;
+- (BOOL)isEnabled;
+- (void)flushEmoticonImageCache;
 
 @end

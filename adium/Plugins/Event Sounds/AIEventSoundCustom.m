@@ -79,7 +79,6 @@ AIEventSoundCustom	*sharedInstance = nil;
 
     //Configure the table view
     [tableView_sounds setDrawsAlternatingRows:YES];
-    [tableView_sounds setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_sounds setTarget:self];
     [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];
 

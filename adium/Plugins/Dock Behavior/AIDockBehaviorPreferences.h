@@ -18,15 +18,12 @@
 
 @class AIAdium, AIAlternatingRowTableView, AIDockCustomBehavior, AIDockBehaviorPlugin;
 
-@interface AIDockBehaviorPreferences : AIPreferencePane {
-    AIDockBehaviorPlugin		*plugin;
-    
+@interface AIDockBehaviorPreferences : AIPreferencePane {    
     IBOutlet	NSPopUpButton		*popUp_behaviorSet;
     
     AIDockCustomBehavior		*dockBehaviorCustomPanel;
 }
 
-+ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner;
 - (IBAction)selectBehaviorSet:(id)sender;
 
 @end

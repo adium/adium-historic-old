@@ -18,26 +18,11 @@
 #import "AIEventSoundCustom.h"
 
 @interface AIEventSoundPreferences (PRIVATE)
-- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner;
 - (NSMenu *)_soundSetMenu;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIEventSoundPreferences
-
-//Return a new preference pane
-+ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner
-{
-    return([[[self alloc] initWithPlugin:inPlugin owner:inOwner] autorelease]);
-}
-
-//Init
-- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner
-{
-    [super initWithOwner:inOwner];
-    plugin = inPlugin;
-    return(self);
-}
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{

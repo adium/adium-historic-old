@@ -13,41 +13,23 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
+@class AIEmoticonPack;
 
-@class AIAdium;
-@class AIEmoticonsPlugin;
-
-@interface AIEmoticonPreferences : NSObject
+@interface AIEmoticonPreferences : AIPreferencePane
 {
-    // Parents
-    AIAdium					*owner;
-    AIEmoticonsPlugin		*plugin;
+    IBOutlet    NSTableView                 *table_emoticonPacks;
+    IBOutlet    AIAlternatingRowTableView   *table_emoticons;
     
-    // Data
-    NSMutableArray			*packs;
-    NSMutableArray			*curEmoticons;
-    //NSArray				*previewEmoticons;
+    IBOutlet    NSTextField                 *textField_packTitle;
     
-    bool					emoticonIsSelected;
-    long					selectedEmoticon;
+    IBOutlet    NSPopUpButton               *button_addEmoticons;
+    IBOutlet	NSButton                    *button_removeEmoticons;
     
-    // IB
-    IBOutlet NSView			*view_prefView;
-    IBOutlet NSButton		*checkBox_enable;
-    IBOutlet NSTableView	*table_packList;
-    IBOutlet NSTextView		*text_packInfo;
-    IBOutlet NSTableView	*table_curEmoticons;
-    // Individual Emoticons:
-    IBOutlet NSImageView	*image_emoticonImage;
-    IBOutlet NSTextField	*text_emoticonName;
-    IBOutlet NSTextField	*text_emoticonPack;
-    IBOutlet NSButton		*checkBox_enableEmoticon;
-    IBOutlet NSTableView	*table_curEmoticonTexts;
+    AIEmoticonPack                          *selectedEmoticonPack;
+
+    NSArray                                 *dragRows;
 }
 
-+ (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;
-- (IBAction)preferenceChanged:(id)sender;
-- (IBAction)tableClicked:(id)sender;
+- (IBAction)removeEmoticons:(id)sender;
 
 @end
