@@ -469,14 +469,12 @@
 	[textField_contactNameLabel setNeedsDisplay:YES];
 
 	//Resize the window to fit the contactNameLabel if the current origin is not correct; the resut
-	NSLog(@"%@ vs. %@",NSStringFromRect(newFrame),NSStringFromRect(originalContactNameLabelFrame));
 	if(newFrame.origin.x < 17){
 		NSRect	windowFrame = [[self window] frame];
 		float	difference = 17 - newFrame.origin.x;
 
 		windowFrame.origin.x -= difference;
 		windowFrame.size.width += difference;
-		NSLog(@"new  Adjusting window to %@",NSStringFromRect(windowFrame));
 		[[self window] setFrame:windowFrame display:YES animate:YES];
 
 	}else if(oldFrame.origin.x <= 17){
@@ -489,7 +487,6 @@
 		
 		windowFrame.origin.x -= difference;
 		windowFrame.size.width += difference;
-		NSLog(@"old Adjusting window to %@",NSStringFromRect(windowFrame));
 		[[self window] setFrame:windowFrame display:YES animate:YES];
 
 	}else{
