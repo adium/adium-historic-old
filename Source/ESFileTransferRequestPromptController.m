@@ -49,10 +49,9 @@
 		target       = [inTarget retain];
 		selector     =  inSelector;
 		
-		NSString			*messageHeader;
 		NSAttributedString	*message;
-		NSString	*filenameDisplay;
-		NSString	*remoteFilename = [fileTransfer remoteFilename];
+		NSString			*filenameDisplay;
+		NSString			*remoteFilename = [fileTransfer remoteFilename];
 
 		//Display the name of the file, with the file's size if available
 		unsigned long long fileSize = [fileTransfer size];
@@ -66,9 +65,6 @@
 			filenameDisplay = remoteFilename;
 		}
 		
-		messageHeader = [NSString stringWithFormat:AILocalizedString(@"File transfer request from %@",nil),
-			[[fileTransfer contact] displayName]];
-
 		message = [NSAttributedString stringWithString:
 			[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@",nil),
 				[[fileTransfer contact] formattedUID],
@@ -76,10 +72,10 @@
 			
 		windowController = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"File Transfer Request",nil)
 																				 defaultButton:AILocalizedString(@"Save",nil)
-																			   alternateButton:AILocalizedString(@"Save As...",nil)
-																				   otherButton:AILocalizedString(@"Cancel",nil)
+																			   alternateButton:AILocalizedString(@"Cancel",nil)
+																				   otherButton:AILocalizedString(@"Save As...",nil)
 																					  onWindow:nil
-																			 withMessageHeader:messageHeader
+																			 withMessageHeader:nil
 																					andMessage:message
 																						target:self
 																					  userInfo:nil] retain];
@@ -113,7 +109,7 @@
 			finished = YES;
 			break;
 		}
-		case AITextAndButtonsAlternateReturn: /* Save As... */
+		case AITextAndButtonsOtherReturn: /* Save As... */
 		{
 			//Prompt for a location to save
 			[[NSSavePanel savePanel] beginSheetForDirectory:[[adium preferenceController] userPreferredDownloadFolder]
@@ -124,7 +120,7 @@
 												contextInfo:nil];
 			break;
 		}
-		case AITextAndButtonsOtherReturn: /* Cancel */			
+		case AITextAndButtonsAlternateReturn: /* Cancel */			
 		case AITextAndButtonsClosedWithoutResponse: /* Closed = Cancel */
 		{
 			/* File name remains nil and the transfer will therefore be canceled */
