@@ -4,10 +4,14 @@
             ACTIONS = {setAlias = id; }; 
             CLASS = AIAliasSupportPlugin; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_alias" = NSTextField; "view_contactAliasInfoView" = NSView; }; 
+            OUTLETS = {
+                "textField_alias" = ESDelayedTextField; 
+                "view_contactAliasInfoView" = NSView; 
+            }; 
             SUPERCLASS = AIPlugin; 
         }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
