@@ -11,6 +11,7 @@
 #define ADDRESS_BOOK_FIRST_LAST_OPTION  @"First Last"
 #define ADDRESS_BOOK_FIRST_OPTION       @"First"
 #define ADDRESS_BOOK_LAST_FIRST_OPTION  @"Last, First"
+#define ADDRESS_BOOK_NONE_OPTION        @"<Disabled>"
 
 #define ADDESS_BOOK_NAME_FORMAT_INSTRUCTIONS @"Address Book Name Format: "
 
@@ -39,7 +40,6 @@
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self configureFormatMenu];
     [self preferencesChanged:nil];
-
 }
 
 - (void)configureFormatMenu
@@ -51,21 +51,28 @@
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
-    [menuItem setTag:ADDRESS_BOOK_FIRST_LAST];
+    [menuItem setTag:FirstLast];
     [choicesMenu addItem:menuItem];
     
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_FIRST_OPTION
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
-    [menuItem setTag:ADDRESS_BOOK_FIRST];
+    [menuItem setTag:First];
     [choicesMenu addItem:menuItem];
     
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_LAST_FIRST_OPTION
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
-    [menuItem setTag:ADDRESS_BOOK_LAST_FIRST];
+    [menuItem setTag:LastFirst];
+    [choicesMenu addItem:menuItem];
+    
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_NONE_OPTION
+                                           target:self
+                                           action:@selector(changeFormat:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setTag:None];
     [choicesMenu addItem:menuItem];
     
     [format_menu setMenu:choicesMenu];
@@ -83,18 +90,11 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [PREF_GROUP_ADDRESSBOOK compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
-        [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[owner preferenceController] preferenceForKey:KEY_AB_DISPLAYFORMAT group:PREF_GROUP_ADDRESSBOOK object:nil] intValue]]];
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+        
+        [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
     
-        switch ([[[owner preferenceController] preferenceForKey:KEY_AB_IMAGE_SYNC group:PREF_GROUP_ADDRESSBOOK object:nil] intValue]) {
-            case ADDRESS_BOOK_SYNC_NO:
-                [radioButton_syncNothing setState: NSOnState];
-                [radioButton_syncAutomatic setState: NSOffState];
-            break;
-            case ADDRESS_BOOK_SYNC_AUTO:
-                [radioButton_syncNothing setState: NSOffState];
-                [radioButton_syncAutomatic setState: NSOnState];
-            break;
-        }
+        [checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
     }
 }
 
@@ -106,18 +106,12 @@
                                               group:PREF_GROUP_ADDRESSBOOK];
 }
 
-- (IBAction)changeSyncMethod:(id)sender
+- (IBAction)changePreference:(id)sender
 {
-    if (sender == radioButton_syncNothing) {
-        [[owner preferenceController] setPreference: [NSNumber numberWithInt: ADDRESS_BOOK_SYNC_NO]
-                                             forKey: KEY_AB_IMAGE_SYNC
-                                              group: PREF_GROUP_ADDRESSBOOK];
-        [radioButton_syncAutomatic setState: NSOffState];
-    } else if (sender == radioButton_syncAutomatic) {
-        [[owner preferenceController] setPreference: [NSNumber numberWithInt: ADDRESS_BOOK_SYNC_AUTO]
-                                             forKey: KEY_AB_IMAGE_SYNC
-                                              group: PREF_GROUP_ADDRESSBOOK];
-        [radioButton_syncNothing setState: NSOffState];
+    if (sender == checkBox_syncAutomatic) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([checkBox_syncAutomatic state]==NSOnState)]
+                                             forKey:KEY_AB_IMAGE_SYNC
+                                              group:PREF_GROUP_ADDRESSBOOK];
     }
 }
 

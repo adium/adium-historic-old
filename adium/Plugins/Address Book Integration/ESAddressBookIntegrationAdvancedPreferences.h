@@ -11,10 +11,9 @@
 @interface ESAddressBookIntegrationAdvancedPreferences : AIPreferencePane {
     IBOutlet    NSTextField             *format_textField;
     IBOutlet	NSPopUpButton		*format_menu;
-    IBOutlet    NSButton                *radioButton_syncAutomatic;
-    IBOutlet    NSButton                *radioButton_syncNothing;
+    IBOutlet    NSButton                *checkBox_syncAutomatic;
 }
 
-- (IBAction)changeSyncMethod:(id)sender;
+- (IBAction)changePreference:(id)sender;
 
 @end

@@ -14,14 +14,13 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {changeSyncMethod = id; }; 
+            ACTIONS = {changePreference = id; }; 
             CLASS = ESAddressBookIntegrationAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_syncAutomatic" = NSButton; 
                 "format_menu" = NSPopUpButton; 
                 "format_textField" = NSTextField; 
-                "radioButton_syncAutomatic" = NSButton; 
-                "radioButton_syncNothing" = NSButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
