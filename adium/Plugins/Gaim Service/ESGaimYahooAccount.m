@@ -15,7 +15,17 @@
     return "prpl-yahoo";
 }
 
-//Yahoo uses 
+- (NSString *)connectionStringForStep:(int)step
+{
+	switch (step)
+	{
+		case 0:
+			return AILocalizedString(@"Connecting",nil);
+			break;
+	}
+	return nil;
+}
+
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
     //gaim's yahoo_html_to_codes seems to be messed up...
