@@ -51,9 +51,9 @@
                 <div class="boxThinContent">
 					<p>A list of settings you can use if you already know how to use an irc client:</p>
                     <p>Server</p>
-                    <p><a href="irc://irc.freenode.net/adium">irc.freenode.net</a></p>
+                    <p><a href="irc://irc.freenode.net/#adium">irc.freenode.net</a></p>
                     <p>Channel</p>
-                    <p><a href="irc://irc.freenode.net/adium">#adium</a></p>
+                    <p><a href="irc://irc.freenode.net/#adium">#adium</a></p>
                     <p>Join us in #adium on irc.freenode.net for live chat.</p>
                 </div>
                 <div class="boxThinBottom"></div>
