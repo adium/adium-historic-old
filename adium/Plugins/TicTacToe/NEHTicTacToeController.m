@@ -219,8 +219,6 @@ static NEHTicTacToeController * sharedInstance = nil;
 - (IBAction) cancelInvite:(id)sender
 {
 	[timeout invalidate];
-	[sheet_newGame orderOut:nil];
-    [NSApp endSheet:sheet_newGame];
 	[self reset];
 }
 
@@ -279,18 +277,14 @@ static NEHTicTacToeController * sharedInstance = nil;
 
 - (IBAction)rejectInvite:(id)sender
 {
-	[sheet_acceptInvite orderOut:nil];
-	[NSApp endSheet:sheet_acceptInvite];
-	[self sendMessage:@"" ofType:MSG_TYPE_REJECT];
 	[self reset];
+	[self sendMessage:@"" ofType:MSG_TYPE_REJECT];
 }
 
 - (IBAction)retractInvite:(id)sender
 {
-	[sheet_inviteSent orderOut:nil];
-	[NSApp endSheet:sheet_inviteSent];
-	[self sendMessage:@"" ofType:MSG_TYPE_CANCEL];
 	[self reset];
+	[self sendMessage:@"" ofType:MSG_TYPE_CANCEL];
 }
 
 - (IBAction)selectAccount: (id) sender
@@ -299,15 +293,13 @@ static NEHTicTacToeController * sharedInstance = nil;
 
 - (void)inviteTimedOut: (NSTimer*) timer
 {
+	[self reset];
 	//Send a cancel message here, in case there *is* a
 	//plugin on the other end, and we're just on a really bad connection
 	[self sendMessage:MSG_TIMEOUT ofType:MSG_TYPE_CANCEL];
 	[timer invalidate];
 	timeout = nil;
-	[sheet_inviteSent orderOut:nil];
-	[NSApp endSheet:sheet_inviteSent];
 	NSRunAlertPanel(TIMEOUT,TIMEOUT_MESSAGE,BUTTON_OK,nil,nil);	
-	[self reset];
 }
 
 #pragma mark Board Management Stuff
@@ -417,9 +409,6 @@ static NEHTicTacToeController * sharedInstance = nil;
 
 - (void)sendMessage:(NSString*)msg ofType:(NSString*)type toContact:(AIListContact*)to fromAccount:(AIAccount*)from inChat:(AIChat*)chat
 {
-	[[adium interfaceController] setActiveChat:chat];
-		
-		
 	NSAttributedString * message = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"[TTT/%@]:%@",type,msg]]autorelease];
 	
 	AIContentMessage	*content;
@@ -519,7 +508,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 			[NSApp endSheet:sheet_inviteSent];
 			[self beginGame];
 		}
-		else NSLog(@"TTT:Move message received with state %d.",state);
+		else NSLog(@"TTT:Accept message received with state %d.",state);
 	}
 	else if([type isEqualToString:MSG_TYPE_REJECT])
 	{
@@ -530,19 +519,15 @@ static NEHTicTacToeController * sharedInstance = nil;
 				[timeout invalidate];
 				timeout = nil;
 			}
-			[sheet_inviteSent orderOut:nil];
-			[NSApp endSheet:sheet_inviteSent];
 			[self reset];
 			NSRunAlertPanel(INVITE_REJECTED,INVITE_REJECTED_MESSAGE,BUTTON_OK,nil,nil);
 		}
-		else NSLog(@"TTT:Move message received with state %d.",state);
+		else NSLog(@"TTT:Reject message received with state %d.",state);
 	}
 	else if([type isEqualToString:MSG_TYPE_CANCEL])
 	{
 		if(state == State_InviteReceived)
 		{
-			[sheet_acceptInvite orderOut:nil];
-			[NSApp endSheet:sheet_acceptInvite];
 			[self reset];
 			NSRunAlertPanel(INVITE_CANCELLED,INVITE_CANCELLED_MESSAGE,BUTTON_OK,nil,nil);
 		}
@@ -563,8 +548,8 @@ static NEHTicTacToeController * sharedInstance = nil;
 	{
 		if(state == State_Playing)
 		{
-			NSRunAlertPanel(GAME_ENDED,GAME_ENDED_MESSAGE,BUTTON_OK,nil,nil);
 			[self reset];
+			NSRunAlertPanel(GAME_ENDED,GAME_ENDED_MESSAGE,BUTTON_OK,nil,nil);
 		}
 		else NSLog(@"TTT:End game message received with state %d.",state);
 	}
