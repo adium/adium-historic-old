@@ -8,13 +8,13 @@
 	<integer>0</integer>
 	<key>AB Image Sync</key>
 	<false/>
-        <key>AB Note Sync</key>
+	<key>AB Note Sync</key>
 	<false/>
 	<key>AB Use NickName</key>
 	<true/>
 	<key>AB Prefer AB Images</key>
 	<false/>
 	<key>AB Use AB Images</key>
-	<true>
+	<true/>
 </dict>
 </plist>
