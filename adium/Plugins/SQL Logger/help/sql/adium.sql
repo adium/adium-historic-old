@@ -222,7 +222,8 @@ notes           text
 
 create table adium.meta_contact (
 meta_id         int references adium.meta_container (meta_id) not null,
-user_id         int references adium.users (user_id) not null
+user_id         int references adium.users (user_id) not null,
+preferred       boolean default false
 );
 
 create table adium.message_notes (

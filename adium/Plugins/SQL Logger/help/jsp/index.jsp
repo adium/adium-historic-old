@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 756 $ $Date: 2004/05/14 16:53:43 $ -->
+<!--$Rev: 760 $ $Date: 2004/05/15 17:56:46 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -18,6 +18,7 @@ Connection conn = source.getConnection();
 
 String dateStart, dateFinish, from_sn, to_sn, contains_sn, hl;
 boolean showDisplay = true;
+boolean showMeta = false;
 
 Date today = new Date(System.currentTimeMillis());
 int chat_id = 0;
@@ -29,7 +30,7 @@ dateStart = request.getParameter("start");
 from_sn = request.getParameter("from");
 to_sn = request.getParameter("to");
 contains_sn = request.getParameter("contains");
-String screennameDisplay = request.getParameter("screen_or_display");
+String screenDisplayMeta = request.getParameter("screen_or_display");
 hl = request.getParameter("hl");
 ArrayList hlWords = new ArrayList();
 
@@ -85,11 +86,20 @@ if (hl != null && hl.equals("")) {
     }
 }
 
+if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
+    showDisplay = false;
+} else if (screenDisplayMeta != null && screenDisplayMeta.equals("meta")) {
+    showMeta = true;
+    showDisplay = false;
+}
+
 String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
 ResultSet noteSet = null;
+
+String queryText = new String();
 
 try {
 
@@ -122,10 +132,10 @@ try {
 <link rel="stylesheet" type="text/css" href="styles/message.css" />
 </head>
 <body>
-	<div id="container">
-	   <div id="header">
-	   </div>
-	   <div id="banner">
+    <div id="container">
+        <div id="header">
+        </div>
+        <div id="banner">
             <div id="bannerTitle">
                 <img class="adiumIcon" src="images/adiumy/green.png" width="128" height="128" border="0" alt="Adium X Icon" />
                 <div class="text">
@@ -141,6 +151,7 @@ try {
                     <li><a href="search.jsp">Search</a></li>
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
+                    <li><a href="meta.jsp">Meta-Contacts</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -161,7 +172,7 @@ try {
     int aryCount = 0;
     boolean unconstrained = false;
 
-    String queryText = "select scramble(sender_sn) as sender_sn, "+
+    queryText = "select scramble(sender_sn) as sender_sn, "+
     " scramble(recipient_sn) as recipient_sn, " + 
     " message, message_date, message_id, " +
     " to_char(message_date, 'fmDay, fmMonth DD, YYYY') as fancy_date, " +
@@ -171,6 +182,16 @@ try {
        queryText += ", scramble(sender_display) as sender_display, "+
            " scramble(recipient_display) as recipient_display " + 
            " from adium.message_v as view ";
+    } else if (showMeta) {
+        queryText += ", coalesce(send.name, scramble(sender_sn)) as sender_meta, " +
+            " coalesce(rec.name, scramble(recipient_sn)) as recipient_meta " +
+            " from adium.simple_message_v as view left join " +
+            " adium.meta_contact as r " +
+            " on (recipient_id = r.user_id and r.preferred = true) " +
+            " left join adium.meta_container rec on (r.meta_id = rec.meta_id)" +
+            " left join adium.meta_contact as s " +
+            " on (sender_id = s.user_id and s.preferred = true) " +
+            " left join adium.meta_container send on (s.meta_id = send.meta_id)";
     } else {
         queryText += " from adium.simple_message_v as view ";
     }
@@ -181,7 +202,7 @@ try {
         queryText += "where message_date > 'now'::date ";
         concurrentWhereClause += " message_date > 'now'::date ";
     } else {
-        queryText += "where message_date > ?::timestamp ";
+        queryText += "where  message_date > ?::timestamp ";
         concurrentWhereClause += " message_date > ?::timestamp ";
         commandArray[aryCount++] = new String(dateStart);
         if(dateFinish == null) {
@@ -260,7 +281,6 @@ try {
         pstmt.setString(1, dateStart);
         pstmt.setString(2, dateStart);
     }
-
 
     out.println("<h1>Users</h1>");
     out.println("<div class=\"boxThinTop\"></div>");
@@ -358,13 +378,16 @@ try {
                 <p style="text-indent: 80px"><i>(YYYY-MM-DD hh:mm:ss)</i></p><br />
                 
                 <input type="radio" name="screen_or_display" value
-                = "screenname" id = "sn" <% if (!showDisplay)
+                = "screen" id = "sn" <% if (!showDisplay && !showMeta)
                 out.print("checked=\"true\""); %> />
                     <label for="sn">Show Screename</label><br />
                 <input type="radio" name="screen_or_display"
                 value="display" id="disp" <% if (showDisplay)
                 out.print("checked=\"true\""); %> />
                 <label for="disp">Show Alias/Display Name</label>
+               <br /> 
+                <input type="radio" name="screen_or_display" value="meta" id="meta" <% if (showMeta) out.print("checked=\"true\""); %> />
+                    <label for="meta">Show Meta Contact</label>
                 
                 <div align="right">
                     <input type="reset" /><input type="submit" />
@@ -498,6 +521,8 @@ try {
             out.print("<span style=\"color: " + sent_color + "\">");
             if(showDisplay) {
                 out.print(rset.getString("sender_display"));
+            } else if (showMeta) {
+                out.print(rset.getString("sender_meta"));
             } else {
                 out.print(rset.getString("sender_sn"));
             }
@@ -508,6 +533,8 @@ try {
                 received_color + "\">");
                 if(showDisplay) {
                     out.print(rset.getString("recipient_display"));
+                } else if (showMeta) {
+                    out.print(rset.getString("recipient_meta"));
                 } else {
                     out.print(rset.getString("recipient_sn"));
                 }
@@ -558,7 +585,8 @@ try {
     }
 
 }catch(SQLException e) {
-    out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
+    out.print("<br /><span style=\"color: red\">" + e.getMessage() + "</span>");
+    out.print("<br /><br />" + queryText);
 } finally {
     pstmt.close();
     conn.close();

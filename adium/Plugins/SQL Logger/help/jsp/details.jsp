@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 751 $ $Date: 2004/05/12 05:25:53 $ -->
+<!--$Rev: 758 $ $Date: 2004/05/15 17:56:46 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -133,6 +133,7 @@ try {
                     <li><a href="search.jsp">Search</a></li>
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
+                    <li><a href="meta.jsp">Meta-Contacts</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -832,9 +833,9 @@ try {
 
 <%
 } catch (SQLException e) {
-    out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
+    out.print("<br /><span style=\"color: red\">" + e.getMessage() + "</span>");
     while(e.getNextException() != null) {
-        out.println(e.getMessage());
+        out.println("<br />" + e.getMessage());
     }
 } finally {
     if (stmt != null) {

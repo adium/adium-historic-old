@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 751 $ $Date: 2004/05/12 05:25:53 $ -->
+<!--$Rev: 758 $ $Date: 2004/05/15 17:56:46 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -83,7 +83,7 @@ try {
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger Statistics</title>
+<title>Adium SQL Logger: Statistics</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -114,6 +114,7 @@ try {
                     <li><a href="search.jsp">Search</a></li>
                     <li><span id="current">Statistics</span></li>
                     <li><a href="users.jsp">Users</a></li>
+                    <li><a href="meta.jsp">Meta-Contacts</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -622,7 +623,7 @@ try {
     </div>
 <%
 } catch (SQLException e) {
-    out.print(e.getMessage());
+    out.print("<br />" + e.getMessage());
 } finally {
     if (stmt != null) {
         stmt.close();

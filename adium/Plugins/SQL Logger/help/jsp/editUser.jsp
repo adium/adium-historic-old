@@ -7,41 +7,32 @@ Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-int meta_id;
+int user_id;
 
 try {
-    meta_id = Integer.parseInt(request.getParameter("meta_id"));
+    user_id = Integer.parseInt(request.getParameter("user_id"));
 } catch (NumberFormatException e) {
-    meta_id = 0;
+    user_id = 0;
 }
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
 
 try {
-    pstmt = conn.prepareStatement("select name, key_id, key_name, coalesce(value, '') as value from adium.meta_container natural join adium.information_keys natural left join adium.contact_information where meta_id = ? and delete = false order by key_name");
+    pstmt = conn.prepareStatement("select username, key_id, key_name, coalesce(value, '') as value from adium.users natural left join adium.information_keys natural left join adium.contact_information where user_id = ? and delete = false order by key_name");
     
-    pstmt.setInt(1, meta_id);
+    pstmt.setInt(1, user_id);
     
     rset = pstmt.executeQuery();
     rset.next();
 %>
 <html>
-    <head><title>Edit Meta-Contact <%= rset.getString("name") %></title></head>
+    <head><title>Edit User <%= rset.getString("username") %></title></head>
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
     <link rel="stylesheet" type="text/css" href="styles/users.css" />
     <body style="background :#fff">
-        <form action="updateMeta.jsp" method="get">
+        <form action="updateUser.jsp" method="get">
             <table border="0" cellpadding="0" cellspacing="5">
-            <tr>
-            <td align="right" class="header">
-            <label for="name">Name</label>
-            </td>
-            <td>
-            <input type="text" name="name" size="20" 
-                value="<%= rset.getString("name")%>"/>
-            </td>
-            </tr>
 <%
     rset.beforeFirst();
 
@@ -61,14 +52,12 @@ try {
 
 %>
             </table>
-            <input type="checkbox" name="delete" id="delete" />
-            <label for="delete">Delete</label><br />
-            <input type="hidden" name="meta_id" value="<%= meta_id %>">
+            <input type="hidden" name="user_id" value="<%= user_id %>">
             <div align="right">
                 <input type="reset" /><input type="submit" />
             </div>
         </form>
-        <p><a href="manageFields.jsp?return=editMeta.jsp?meta_id=<%= meta_id%>">Manage ...</a></p>
+        <p><a href="manageFields.jsp?return=editMeta.jsp?user_id=<%= user_id%>">Manage ...</a></p>
     </body>
 </html>
 <%

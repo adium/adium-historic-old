@@ -54,7 +54,7 @@ try {
         }
     }
 } catch (SQLException e) {
-    out.println(e.getMessage());
+    out.println("<br />" + e.getMessage());
     conn.rollback();
 } finally {
     conn.commit();

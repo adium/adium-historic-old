@@ -61,7 +61,7 @@ try {
 
 <%
 } catch (SQLException e) {
-    out.println(e.getMessage());
+    out.println("<br />" + e.getMessage());
 } finally {
     conn.close();
 }

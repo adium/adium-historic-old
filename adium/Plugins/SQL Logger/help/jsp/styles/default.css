@@ -136,6 +136,25 @@ form {
     background: url(../images/boxWideBottomBorder.png) no-repeat;
 }
 
+.boxExtraWideTop {
+	background: url(../images/boxExtraWideTopBorder.png) no-repeat;
+}
+
+.boxExtraWideContent {
+	border-left: 1px solid #C0C0C0;
+	border-right: 1px solid #C0C0C0;
+	background: #FAFAFA;
+	color: #444;
+	font-size: 11px;
+	width: 697px;
+}
+
+.boxExtraWideBottom {
+	background: url(../images/boxExtraWideBottomBorder.png) no-repeat;
+}
+
+
+
 /*<group=Weblog>*/
 
 .weblogDateHeader {

@@ -10,14 +10,22 @@ Connection conn = source.getConnection();
 PreparedStatement pstmt = null;
 
 try {
-    pstmt = conn.prepareStatement("delete from adium.meta_contact where user_id = ? and meta_id = ?");
+    pstmt = conn.prepareStatement("update adium.meta_contact set preferred = true where user_id = ? and meta_id = ?");
 
     pstmt.setInt(1, Integer.parseInt(request.getParameter("user_id")));
     pstmt.setInt(2, Integer.parseInt(request.getParameter("meta_id")));
 
     pstmt.executeUpdate();
 
-    response.sendRedirect("meta.jsp");
+    pstmt = conn.prepareStatement("update adium.meta_contact set preferred = false where user_id = ? and meta_id <> ?");
+
+
+    pstmt.setInt(1, Integer.parseInt(request.getParameter("user_id")));
+    pstmt.setInt(2, Integer.parseInt(request.getParameter("meta_id")));
+
+    pstmt.executeUpdate();
+
+    response.sendRedirect("users.jsp");
 } catch (SQLException e) {
     out.println("<br/>" + e.getMessage());
 } catch (NumberFormatException e) {
