@@ -340,6 +340,37 @@
 						  selector:@selector(selectGrowlPreset:)];
 }
 
+#pragma mark Common menu methods
+/*!
+ * @brief Localized a menu item title for global events preferences
+ *
+ * @result The equivalent localized title if available; otherwise, the passed English title
+ */
+- (NSString *)_localizedTitle:(NSString *)englishTitle
+{
+	NSString	*localizedTitle = nil;
+	
+	if([englishTitle isEqualToString:@"None"])
+		localizedTitle = AILocalizedString(@"None",nil);
+	else if([englishTitle isEqualToString:@"Never"])
+		localizedTitle = AILocalizedString(@"Never",nil);
+	else if([englishTitle isEqualToString:@"On New Messages"])
+		localizedTitle = AILocalizedString(@"On New Messages","Events preset for the event to occur whenever a message is received");
+	else if([englishTitle isEqualToString:@"On New Background Messages"])
+		localizedTitle = AILocalizedString(@"On New Background Messages","Events preset for the event to occur when messages are received in a chat which is not currently active (is in the background)");
+	else if([englishTitle isEqualToString:@"On Errors"])
+		localizedTitle = AILocalizedString(@"On Errors","Events preset for the event to occur when an error occurs");
+	else if([englishTitle isEqualToString:@"On Contact Availability"])
+		localizedTitle = AILocalizedString(@"On Contact Availability","Events preset for the event to occur when a contact becomes available");
+	else if([englishTitle isEqualToString:@"On Contact Connections"])
+		localizedTitle = AILocalizedString(@"On Contact Connections","Events preset for the event to occur when a contact connects");
+	else if([englishTitle isEqualToString:@"All Messages"])
+		localizedTitle = AILocalizedString(@"All Messages","Events preset for the event to occur for any message");
+	else if([englishTitle isEqualToString:@"Incoming Messages"])
+		localizedTitle = AILocalizedString(@"Incoming Messages","Events preset for the event to occur when there is an incoming message");
+
+	return (localizedTitle ? localizedTitle : englishTitle);
+}
 
 - (NSMenu *)_setMenuFromArray:(NSArray *)array selector:(SEL)selector
 {
@@ -356,7 +387,7 @@
         NSMenuItem	*menuItem;
 		
         //Create the menu item
-        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:setName
+        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[self _localizedTitle:setName]
 																		 target:self
 																		 action:selector
 																  keyEquivalent:@""] autorelease];
