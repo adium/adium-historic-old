@@ -18,6 +18,9 @@
 
     NSTrackingRectTag	tooltipTrackingTag;
     BOOL		trackingMouseMovedEvents;
+
+    NSTimer 		*tooltipTimer;
+    int 		toolTipCount;
 }
 
 + (AISCLViewController *)contactListViewControllerWithOwner:(id)inOwner;

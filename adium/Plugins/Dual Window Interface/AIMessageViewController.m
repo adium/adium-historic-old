@@ -99,14 +99,13 @@
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
 {
-    if(visible && !view_accountSelection){ //Hide the account selection view
+    if(visible && !view_accountSelection){ //Show the account selection view
         view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self owner:owner];
         [view_contents addSubview:view_accountSelection];
 
-    }else if(!visible && view_accountSelection){ //Show the account selection view
-        [view_accountSelection removeFromSuperview];
+    }else if(!visible && view_accountSelection){ //Hide the account selection view
         [view_accountSelection release]; view_accountSelection = nil;
-
+        [view_accountSelection removeFromSuperview];
     }
 
     //
