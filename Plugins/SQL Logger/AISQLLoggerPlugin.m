@@ -184,7 +184,8 @@
 																	 encodeNonASCII:YES encodeSpaces:YES
 																		 imagesPath:nil
 																  attachmentsAsText:YES attachmentImagesOnlyForSending:NO
-																	 simpleTagsOnly:NO]];
+																	 simpleTagsOnly:NO
+																	 bodyBackground:NO]];
 	
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
