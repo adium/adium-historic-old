@@ -24,7 +24,7 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
 
-#define ROOT_MENU_TITLE     		AILocalizedString(@"Bookmarks",nil)
+#define ROOT_MENU_TITLE     		AILocalizedString(@"Insert Bookmark",nil)
 #define BOOKMARK_MENU_TITLE     	AILocalizedString(@"Bookmark",nil)
 
 @class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter,

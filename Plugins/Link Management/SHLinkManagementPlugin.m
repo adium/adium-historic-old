@@ -25,7 +25,7 @@
 
 #define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
 #define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
-#define RM_LINK_TITLE                   AILocalizedString(@"Remove Link",nil)
+#define RM_LINK_TITLE           AILocalizedString(@"Remove Link",nil)
 
 @interface SHLinkManagementPlugin (PRIVATE)
 - (BOOL)textViewSelectionIsLink:(NSTextView *)textView;
@@ -52,14 +52,7 @@
 															  keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
     [self registerToolbarItem];
-    
-    //remove link menu item
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RM_LINK_TITLE
-																	 target:self
-																	 action:@selector(removeFormattedLink:)
-															  keyEquivalent:@""] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Edit_Additions];
-    
+	
     //rm link context
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RM_LINK_TITLE
 																	 target:self
