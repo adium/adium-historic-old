@@ -93,7 +93,7 @@
 				AIListContact	*contact;
 				
 				contact = [[adium contactController] contactWithService:@"TEMP" UID:buddyUID];
-				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group%i", i/20.0] forAccount:self];
+				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)] forAccount:self];
             }
 
             [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
@@ -165,7 +165,7 @@
     AIListContact		*contact = [array lastObject];
 //    BOOL				silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
     
-	[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:[NSArray arrayWithObject:@"Online"] notify:YES];
+	[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Online" notify:YES];
  
     [array removeLastObject];
     if([array count] == 0) [inTimer invalidate];
