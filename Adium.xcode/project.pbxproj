@@ -6770,8 +6770,6 @@
 				4BD6742B06001D1B0049CAF7,
 				4BD6742D06001D1C0049CAF7,
 				4BD6743206001D1F0049CAF7,
-				4BD6743806001D2F0049CAF7,
-				4BD6743A06001D2F0049CAF7,
 				4BD6744206001D390049CAF7,
 				4BD6744406001D430049CAF7,
 				4BD6744606001D440049CAF7,
@@ -7111,7 +7109,6 @@
 				4BD6739A06001C400049CAF7,
 				4BD6742506001CF40049CAF7,
 				4BD6742F06001D1D0049CAF7,
-				4BD6743C06001D300049CAF7,
 				4BD6744806001D460049CAF7,
 				4BD6745206001D4D0049CAF7,
 				4BD6746606001D770049CAF7,
@@ -7145,7 +7142,6 @@
 				4BD6742606001CF40049CAF7,
 				4BD6743106001D1E0049CAF7,
 				4BD6743606001D210049CAF7,
-				4BD6743D06001D310049CAF7,
 				4BD6744906001D460049CAF7,
 				4BD6745506001D4E0049CAF7,
 				4BD6745606001D4E0049CAF7,
@@ -7263,8 +7259,6 @@
 				4BD6742C06001D1C0049CAF7,
 				4BD6742E06001D1D0049CAF7,
 				4BD6743306001D200049CAF7,
-				4BD6743906001D2F0049CAF7,
-				4BD6743B06001D300049CAF7,
 				4BD6744306001D390049CAF7,
 				4BD6744506001D430049CAF7,
 				4BD6744706001D450049CAF7,
@@ -14239,7 +14233,6 @@
 				34A65AF606A5A0C400898470,
 				34DFF46607A5EAC800B92233,
 				4BC8AFD604FD3C1000A8010A,
-				4BBAEE9703DD7D8900A8010A,
 				4B5B15220493BF9A00A8010A,
 			);
 			isa = PBXGroup;
@@ -14811,59 +14804,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEnterAwayWindowController.m;
 			path = "Plugins/Away Messages/AIEnterAwayWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B720F9003DD819700A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = TextForcingPrefs.nib;
-			path = "Plugins/Text Forcing/TextForcingPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B720F9503DD857400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITextForcingPlugin.h;
-			path = "Plugins/Text Forcing/AITextForcingPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B720F9603DD857400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITextForcingPlugin.m;
-			path = "Plugins/Text Forcing/AITextForcingPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B720F9903DD859700A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITextForcingPreferences.h;
-			path = "Plugins/Text Forcing/AITextForcingPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B720F9A03DD859700A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITextForcingPreferences.m;
-			path = "Plugins/Text Forcing/AITextForcingPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B72128C03DD898100A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = TextForcingDefaults.plist;
-			path = "Plugins/Text Forcing/TextForcingDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16825,21 +16765,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BBAEE9703DD7D8900A8010A = {
-			children = (
-				4B720F9503DD857400A8010A,
-				4B720F9603DD857400A8010A,
-				4B720F9903DD859700A8010A,
-				4B720F9A03DD859700A8010A,
-				4B720F9003DD819700A8010A,
-				4B72128C03DD898100A8010A,
-			);
-			isa = PBXGroup;
-			name = "Text Forcing";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BBF41DD0661194A001D31E1 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -17752,42 +17677,6 @@
 		};
 		4BD6743606001D210049CAF7 = {
 			fileRef = 4BC8AFEC04FD413900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743806001D2F0049CAF7 = {
-			fileRef = 4B720F9503DD857400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743906001D2F0049CAF7 = {
-			fileRef = 4B720F9603DD857400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743A06001D2F0049CAF7 = {
-			fileRef = 4B720F9903DD859700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743B06001D300049CAF7 = {
-			fileRef = 4B720F9A03DD859700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743C06001D300049CAF7 = {
-			fileRef = 4B720F9003DD819700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743D06001D310049CAF7 = {
-			fileRef = 4B72128C03DD898100A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
