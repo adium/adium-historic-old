@@ -36,6 +36,7 @@
 - (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray tagKey:(NSString *)source;
 - (void)_scanEmoticonsFromPath:(NSString *)emoticonPackPath intoArray:(NSMutableArray *)emoticonPackArray;
 - (void)addEmoticonsWithPath:(NSString *)inPath andReturnDelimitedString:(NSString *)returnDelimitedString;
+- (NSArray *)emoticonsStartingWithCharacter:(unichar)firstCharacter;
 - (void)updateQuickScanList;
 - (void)orderEmoticonArray;
 
@@ -50,6 +51,7 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     //init
     quickScanList = [[NSMutableArray alloc] init];
     quickScanString = [[NSMutableString alloc] init];
+    quickScanSet = [[NSCharacterSet alloc] init];
     
     emoticons = [[NSMutableArray alloc] init];
     
@@ -109,7 +111,7 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 	if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
 	    BOOL			mayContainEmoticons = NO;
 	    AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
-	    NSString			*messageString = [[contentMessage message] string];
+	    NSString			*messageString = [[[contentMessage message] safeString] string];
 	    NSMutableAttributedString	*replacementMessage = nil;
 
 	    NSEnumerator		*enumerator = [quickScanList objectEnumerator];
@@ -117,11 +119,16 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 
 	    //First, we do a quick scan of the message for any substrings that might end up being emoticons
 	    //This avoids having to do the slower, more complicated scan for the majority of messages.
+/*
 	    while(currentChar = [enumerator nextObject]){
 		if([messageString rangeOfString:currentChar].location != NSNotFound){
 		    mayContainEmoticons = YES;
 		    break;
 		}
+	    }
+*/
+	    if ([messageString rangeOfCharacterFromSet:quickScanSet].location != NSNotFound){
+		mayContainEmoticons = YES;
 	    }
 
 	    if (mayContainEmoticons){
@@ -153,11 +160,12 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     NSMutableAttributedString	*tempMessage = [inMessage mutableCopy];
     BOOL			messageChanged = NO;
 
-    currentLocation = [self firstOccurenceInString:[[inMessage safeString] string]];
+//    currentLocation = [self firstOccurenceInString:[[inMessage safeString] string]];
+    currentLocation = [[[inMessage safeString] string] rangeOfCharacterFromSet:quickScanSet].location;
 
     while(currentLocation < [inMessage length]){
 	
-	emoEnumerator = [emoticons objectEnumerator];
+	emoEnumerator = [[self emoticonsStartingWithCharacter:[[[inMessage safeString] string] characterAtIndex:currentLocation]] objectEnumerator];
 	while(currentEmo = [emoEnumerator nextObject]){
 	    
 	    currentEmoText = [currentEmo representedText];
@@ -204,7 +212,8 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 
 	//only continue parsing if we aren't at the end the message, or if no other emoticons may exist
 	if(currentLocation < [inMessage length]){
-	    nextOccurence = [self firstOccurenceInString:[[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)]];
+	    //nextOccurence = [self firstOccurenceInString:[[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)]];
+	    nextOccurence = [[[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)] rangeOfCharacterFromSet:quickScanSet].location;
 	}else{
 	    nextOccurence = NSNotFound;
 	}
@@ -238,10 +247,11 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 
 - (void)updateQuickScanList
 {
-    NSEnumerator	*emoEnumerator = [emoticons objectEnumerator];
-    AIEmoticon		*currentEmo = nil;
-    NSString		*currentEmoText = nil;
-    NSString		*currentChar = nil;
+    NSEnumerator		*emoEnumerator = [emoticons objectEnumerator];
+    AIEmoticon			*currentEmo = nil;
+    NSString			*currentEmoText = nil;
+    NSString			*currentChar = nil;
+    NSMutableCharacterSet	*tempSet = [[NSMutableCharacterSet alloc] init];
 
     [quickScanList removeAllObjects];
 
@@ -249,14 +259,78 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 	currentEmoText = [currentEmo representedText];
 
 	//we only need to add the first character of each emoticon to the quickscan list
-	//a somewhat obvious timesaver...that I never thought of...D'oh
+	//a somewhat obvious timesaver...that I never thought of
 	currentChar = [NSString stringWithFormat:@"%C",[currentEmoText characterAtIndex:0]];
 
 	if(![quickScanList containsObject:currentChar]){
 	    [quickScanList addObject:currentChar];
-	    [quickScanString appendString:currentChar];
+	    [quickScanString appendString:currentChar];    
+	    [tempSet addCharactersInString:currentChar];
 	}
     }
+    
+    quickScanSet = [tempSet copy];
+
+    [tempSet release];
+
+    [self convertSmiliesInMessage:[[NSAttributedString alloc] initWithString:@"this:)shouldO:-)work;)swell >:o-)"]];
+}
+
+- (void)addEmoticonsWithPath:(NSString *)inPath andReturnDelimitedString:(NSString *)returnDelimitedString
+{
+    NSArray		*textStrings = [returnDelimitedString componentsSeparatedByString:@"\r"];
+    NSEnumerator	*enumerator = [textStrings objectEnumerator];
+    NSString		*currentString = nil;
+    AIEmoticon		*emo = nil;
+
+    while(currentString = [enumerator nextObject]){
+	[currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	//don't add anything with path or string with length = 0
+	if([inPath length] && [currentString length]){
+	    emo = [[AIEmoticon alloc] initWithPath:inPath andText:currentString];
+	    [emoticons addObject:emo];
+	}
+    }
+}
+
+- (NSArray *)emoticonsStartingWithCharacter:(unichar)firstCharacter
+{
+    NSMutableArray	*limitedEmoticons = [[NSMutableArray alloc] init];
+    NSEnumerator	*enumerator = [emoticons objectEnumerator];
+    AIEmoticon		*emo = nil;
+
+    while(emo = [enumerator nextObject]){
+	if([[emo representedText] characterAtIndex:0] == firstCharacter){
+	    [limitedEmoticons addObject:emo];
+	}
+    }
+
+    return [limitedEmoticons copy];
+}
+
+- (void)orderEmoticonArray
+{
+    [emoticons sortUsingFunction:sortByTextRepresentationLength context:nil];
+}
+
+int sortByTextRepresentationLength(id objectA, id objectB, void *context)
+{
+    BOOL	emoticonA = [objectA isKindOfClass:[AIEmoticon class]];
+    BOOL	emoticonB = [objectB isKindOfClass:[AIEmoticon class]];
+    int		returnVal = NSOrderedSame;
+
+    if(emoticonA && emoticonB){
+	int lengthA = [[objectA representedText] length];
+	int lengthB = [[objectB representedText] length];
+
+	if (lengthA < lengthB){
+	    returnVal = NSOrderedDescending;
+	}else if (lengthA > lengthB){
+	    returnVal = NSOrderedAscending;
+	}
+    }
+
+    return returnVal;
 }
 
 - (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray
@@ -516,23 +590,6 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     }
 }
 
-- (void)addEmoticonsWithPath:(NSString *)inPath andReturnDelimitedString:(NSString *)returnDelimitedString
-{
-    NSArray		*textStrings = [returnDelimitedString componentsSeparatedByString:@"\r"];
-    NSEnumerator	*enumerator = [textStrings objectEnumerator];
-    NSString		*currentString = nil;
-    AIEmoticon		*emo = nil;
-
-    while(currentString = [enumerator nextObject]){
-	[currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	//don't add anything with path or string with length = 0
-	if([inPath length] && [currentString length]){
-	    emo = [[AIEmoticon alloc] initWithPath:inPath andText:currentString];
-	    [emoticons addObject:emo];
-	}
-    }
-}
-
 - (void)installDefaultEmoticons
 {
     NSString	*defaultPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingFormat:@"/Contents/Resources%@",PATH_EMOTICONS];
@@ -570,31 +627,6 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
     [self addEmoticonsWithPath:[defaultPath stringByAppendingString:@"/Smiley14.png"] andReturnDelimitedString:@":-x\r:x\r=x\r:-X\r:X\r=X"];
 
     [self addEmoticonsWithPath:[defaultPath stringByAppendingString:@"/Smiley15.png"] andReturnDelimitedString:@"8-)\r8)"];
-}
-
-- (void)orderEmoticonArray
-{
-    [emoticons sortUsingFunction:sortByTextRepresentationLength context:nil];
-}
-
-int sortByTextRepresentationLength(id objectA, id objectB, void *context)
-{
-    BOOL	emoticonA = [objectA isKindOfClass:[AIEmoticon class]];
-    BOOL	emoticonB = [objectB isKindOfClass:[AIEmoticon class]];
-    int		returnVal = NSOrderedSame;
-
-    if(emoticonA && emoticonB){
-	int lengthA = [[objectA representedText] length];
-	int lengthB = [[objectB representedText] length];
-
-	if (lengthA < lengthB){
-	    returnVal = NSOrderedDescending;
-	}else if (lengthA > lengthB){
-	    returnVal = NSOrderedAscending;
-	}
-    }
-
-    return returnVal;
 }
 
 @end
