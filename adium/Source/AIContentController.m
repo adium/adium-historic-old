@@ -235,7 +235,7 @@
     BOOL		sent = NO;
     BOOL		trackContent = [inObject trackContent];	//Adium should track this content
     BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
-    BOOL		displayContent = [inObject displayContent]; //Adium should filter this content
+    BOOL		displayContent = [inObject displayContent]; //Adium should display this content
     
     //Will send content
     if(trackContent){
@@ -280,13 +280,7 @@
 
     //Filter the content object
     if(filterContent){
-        NSEnumerator	*enumerator;
-        id<AIContentFilter>	filter;
-
-        enumerator = [displayingContentFilterArray objectEnumerator];
-        while((filter = [enumerator nextObject])){
-            [filter filterContentObject:inObject];
-        }
+        [self filterObject:inObject];
     }
     
     //Add the object
@@ -294,6 +288,17 @@
 
     //Content object added
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+}
+
+- (void)filterObject:(AIContentObject *)inObject
+{
+    NSEnumerator	*enumerator;
+    id<AIContentFilter>	filter;
+
+    enumerator = [displayingContentFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter filterContentObject:inObject];
+    }
 }
 
 //Returns YES if the account/chat is available for sending content

@@ -222,7 +222,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteIm");
+    NSLog(@"adiumGaimConvWriteIm: %s: %s",who,message);
 }
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)

@@ -375,6 +375,7 @@ typedef enum {
 - (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)filterObject:(AIContentObject *)inObject;
 
 @end
 
