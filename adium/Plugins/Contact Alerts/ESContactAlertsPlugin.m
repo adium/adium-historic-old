@@ -96,7 +96,7 @@
 
                 AIAccount * account;
                 AIContentMessage * responseContent;
-                NSString * errorReason;
+                NSString * errorReason = nil;
                 NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
 
                 NSAttributedString  *message = [[NSAttributedString alloc] initWithString:details];
