@@ -15,14 +15,14 @@
 
 @interface NSPopUpButton (AIPopUpButtonAdditions)
 
-- (void)selectItemWithRepresentedObject:(id)object;
-- (void)compatibleSelectItemWithTag:(int)tag;
+- (BOOL)selectItemWithRepresentedObject:(id)object;
+- (BOOL)compatibleSelectItemWithTag:(int)tag;
 - (void)autosizeAndCenterHorizontally;
 
 @end
 
 @interface NSPopUpButtonCell (AIPopUpButtonAdditions)
 
-- (void)selectItemWithRepresentedObject:(id)object;
+- (BOOL)selectItemWithRepresentedObject:(id)object;
 
 @end

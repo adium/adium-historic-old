@@ -18,19 +18,25 @@
 @implementation NSPopUpButton (AIPopUpButtonAdditions)
 
 //Note: selectItemAtIndex will throw an exception if the menu has no items, even if index is -1
-- (void)selectItemWithRepresentedObject:(id)object
+- (BOOL)selectItemWithRepresentedObject:(id)object
 {
     int	index = [self indexOfItemWithRepresentedObject:object];
 	if ((index != -1) && ([self numberOfItems] > 0)){
 		[self selectItemAtIndex:index];
+		return YES;
 	}
+	
+	return NO;
 }
-- (void)compatibleSelectItemWithTag:(int)tag
+- (BOOL)compatibleSelectItemWithTag:(int)tag
 {
     int	index = [self indexOfItemWithTag:tag];
 	if ((index != -1) && ([self numberOfItems] > 0)){
 		[self selectItemAtIndex:index];
+		return YES;
 	}
+	
+	return NO;
 }
 - (void)autosizeAndCenterHorizontally
 {
@@ -48,10 +54,15 @@
 
 @implementation NSPopUpButtonCell (AIPopUpButtonAdditions)
 
-- (void)selectItemWithRepresentedObject:(id)object
+- (BOOL)selectItemWithRepresentedObject:(id)object
 {
     int	index = [self indexOfItemWithRepresentedObject:object];
-    [self selectItemAtIndex:index];
+	if(index != NSNotFound){
+		[self selectItemAtIndex:index];
+		return YES;
+	}
+	
+	return NO;
 }
 
 @end
