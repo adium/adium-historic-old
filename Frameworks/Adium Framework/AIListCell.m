@@ -59,6 +59,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 - (id)copyWithZone:(NSZone *)zone
 {
 	AIListCell *newCell = [super copyWithZone:zone];
+
+	newCell->listObject = nil;
 	[newCell setListObject:listObject];
 	return(newCell);
 }
@@ -70,16 +72,21 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	[invertedTextColor release];
 	
 	[font release];
-	[genericUserIcon release];
 	
+	[listObject release];
+
 	[super dealloc];
 }
 
 //Set the list object being drawn
 - (void)setListObject:(AIListObject *)inObject
 {
-    listObject = inObject;
-    isGroup = [listObject isKindOfClass:[AIListGroup class]];
+	if(inObject != listObject){
+		[listObject release];
+		listObject = [inObject retain];
+
+		isGroup = [listObject isKindOfClass:[AIListGroup class]];
+	}
 }
 - (BOOL)isGroup{
 	return(isGroup);
@@ -97,7 +104,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Font used to display label
 - (void)setFont:(NSFont *)inFont
 {
-	if(inFont && inFont != font){
+	if(inFont != font){
 		[font release];
 		font = [inFont retain];
 	}
