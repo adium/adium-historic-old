@@ -192,7 +192,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
-		[theContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
+		[theContact setStatusObject:nil forKey:@"Online" notify:NO];
 		[self _setInstantMessagesWithContact:theContact enabled:NO];
 		
 		if(!silentAndDelayed){
@@ -1090,7 +1090,7 @@ static id<GaimThread> gaimThread = nil;
 		gaim_proxy_info_set_username(proxy_info, NULL);
 		
 		//We are no longer connecting
-		[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
+		[self setStatusObject:nil forKey:@"Connecting" notify:YES];
 	}
 }
 
@@ -1101,7 +1101,7 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)accountConnectionConnected
 {
     //We are now online
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
 	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
@@ -1206,9 +1206,9 @@ static id<GaimThread> gaimThread = nil;
 	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
 
     //We are now offline
-	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
-	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
-	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
+	[self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
+	[self setStatusObject:nil forKey:@"Connecting" notify:NO];
+	[self setStatusObject:nil forKey:@"Online" notify:NO];
 	
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"StatusMessage" notify:NO];
