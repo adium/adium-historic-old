@@ -99,7 +99,7 @@
 	
 	//Remove any existing objects from this owner
 	ownerIndex = [ownerArray indexOfObject:inOwner];
-	if(ownerIndex != NSNotFound){
+	if(ownerArray && (ownerIndex != NSNotFound)){
 		[ownerArray removeObjectAtIndex:ownerIndex];
 		[contentArray removeObjectAtIndex:ownerIndex];
 		[priorityArray removeObjectAtIndex:ownerIndex];
