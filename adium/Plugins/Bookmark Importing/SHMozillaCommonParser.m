@@ -148,7 +148,7 @@ DeclareString(untitledString)
 
 +(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
-    NSString    *title = inString? inString : [[untitledString copy] autorelease];
+    NSString    *title = inString? inString : untitledString;
     return [[[SHMarkedHyperlink alloc] initWithString:inURLString
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
@@ -157,7 +157,7 @@ DeclareString(untitledString)
 
 +(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = inTitle? inTitle : [[untitledString copy] autorelease];
+    NSString    *titleString = inTitle? inTitle : untitledString;
     return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
 }
 

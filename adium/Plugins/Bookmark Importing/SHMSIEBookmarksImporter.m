@@ -15,14 +15,12 @@
 @class SHMozillaCommonParser;
 
 @interface SHMSIEBookmarksImporter(PRIVATE)
-- (void)parseBookmarksFile:(NSString *)inString;
+- (NSArray *)parseBookmarksFile:(NSString *)inString;
+-(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
+-(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 @end
 
 @implementation SHMSIEBookmarksImporter
-
-static NSMenu   *msieBookmarksMenu = nil;
-static NSMenu   *msieBookmarksSupermenu = nil;
-static NSMenu   *msieTopMenu = nil;
 
 DeclareString(gtSign)
 DeclareString(Hclose)
@@ -35,49 +33,28 @@ DeclareString(Aclose)
 DeclareString(DLclose)
 DeclareString(ltSign)
 
+DeclareString(untitledString)
+
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
 }
 
-+(NSString *)importerTitle
+- (NSArray *)availableBookmarks
 {
-    return MSIE_ROOT_MENU_TITLE;
-}
-
--(NSMenu *)parseBookmarksForOwner:(id)inObject
-{
-    owner = inObject;
-    NSString        *bookmarkString = [NSString stringWithContentsOfFile:[MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+    NSString    *bookmarkPath = [MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath];
+    NSString    *bookmarkString = [NSString stringWithContentsOfFile:bookmarkPath];
     
-    // remove our root menu, if it exists
-    if(msieBookmarksMenu){
-        [msieBookmarksMenu removeAllItems];
-        [msieBookmarksMenu release];
-    }
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    // store the modification date for future reference
-    if (lastModDate) [lastModDate release];
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
-    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    msieBookmarksMenu = [[[NSMenu alloc] initWithTitle:MSIE_ROOT_MENU_TITLE] autorelease];
-    msieBookmarksSupermenu = msieBookmarksMenu;
-    msieTopMenu = msieBookmarksMenu;
-    [self parseBookmarksFile:bookmarkString];
-    
-    return msieBookmarksMenu;
+    return [self parseBookmarksFile:bookmarkString];
 }
 
 -(BOOL)bookmarksExist
 {
     return [[NSFileManager defaultManager] fileExistsAtPath:[MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-}
-
--(NSString *)menuTitle
-{
-    return MSIE_ROOT_MENU_TITLE;
 }
 
 -(BOOL)bookmarksUpdated
@@ -90,11 +67,12 @@ DeclareString(ltSign)
 
 #pragma mark private methods
 
-- (void)parseBookmarksFile:(NSString *)inString
+- (NSArray *)parseBookmarksFile:(NSString *)inString
 {
+    NSMutableArray      *bookmarksArray = [NSMutableArray array];
+    NSMutableArray      *arrayStack = [NSMutableArray array];
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *titleString, *urlString;
-    NSString    *untitledString = @"untitled";
     
     unsigned int        stringLength = [inString length];
     
@@ -108,6 +86,7 @@ DeclareString(ltSign)
     InitString(Aclose,@"</A")
     InitString(DLclose,@"/DL>")
     InitString(ltSign,@"<")
+    InitString(untitledString,@"untitled")
     
     NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
     
@@ -126,15 +105,11 @@ DeclareString(ltSign)
                 titleString = nil;
             }
             
-            msieBookmarksSupermenu = msieBookmarksMenu;
-            msieBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : untitledString] autorelease];
-        
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : untitledString
-                                                                         target:owner
-                                                                         action:nil
-                                                                  keyEquivalent:@""] autorelease];
-            [msieBookmarksSupermenu addItem:mozillaSubmenuItem];
-            [msieBookmarksSupermenu setSubmenu:msieBookmarksMenu forItem:mozillaSubmenuItem];
+            [arrayStack addObject:bookmarksArray];
+            bookmarksArray = [NSMutableArray array];
+            [[arrayStack lastObject] addObject:[self menuDictWithTitle:titleString
+                                                             menuItems:bookmarksArray]];
+
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
@@ -151,22 +126,13 @@ DeclareString(ltSign)
                     titleString = nil;
                 }
             
-                SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
-                                                                      withValidationStatus:SH_URL_VALID
-                                                                              parentString:titleString? titleString : urlString
-                                                                                  andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
-                                                                          
-                [msieBookmarksMenu addItemWithTitle:titleString? titleString : urlString
-                                             target:owner
-                                             action:@selector(injectBookmarkFrom:)
-                                      keyEquivalent:@""
-                                  representedObject:markedLink];
+                [bookmarksArray addObject:[self hyperlinkForTitle:titleString URL:urlString]];
             }
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-            if([msieBookmarksMenu isNotEqualTo:msieTopMenu]){
-                msieBookmarksMenu = msieBookmarksSupermenu;
-                msieBookmarksSupermenu = [msieBookmarksSupermenu supermenu];
+            if([arrayStack count]){
+                bookmarksArray = [arrayStack lastObject];
+                [arrayStack removeLastObject];
             }
         }else{
             [linkScanner scanUpToString:ltSign intoString:nil];
@@ -174,6 +140,21 @@ DeclareString(ltSign)
                 [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
     }
+    return bookmarksArray;
 }
 
+-(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
+{
+    NSString    *title = inString? inString : untitledString;
+    return [[[SHMarkedHyperlink alloc] initWithString:inURLString
+                                 withValidationStatus:SH_URL_VALID
+                                         parentString:title
+                                             andRange:NSMakeRange(0,[title length])] autorelease];
+}
+
+-(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
+{
+    NSString    *titleString = inTitle? inTitle : untitledString;
+    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
+}
 @end

@@ -82,6 +82,7 @@
     
     //Launch services can tell us the default handler for text/html (which will be the default browser)
     if(noErr == LSGetApplicationForInfo(kLSUnknownType,kLSUnknownCreator,(CFStringRef)@"html",kLSRolesAll,NULL,(CFURLRef *)&appURL)){
+    NSLog([appURL path]);
         if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
             importerClass = [SHSafariBookmarksImporter class];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Camino"].location){
@@ -90,11 +91,11 @@
             importerClass = [SHFireFoxBookmarksImporter class];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Mozilla"].location){
             importerClass = [SHMozillaBookmarksImporter class];
-        }/*else if(NSNotFound != [[appURL path] rangeOfString:@"Internet Explorer"].location){
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"Internet Explorer"].location){
             importerClass = [SHMSIEBookmarksImporter class];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"OmniWeb"].location){
             importerClass = [SHOmniWebBookmarksImporter class];
-        }*/
+        }
         CFRelease(appURL);
 	}
 	
