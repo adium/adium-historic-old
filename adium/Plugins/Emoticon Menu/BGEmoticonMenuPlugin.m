@@ -17,33 +17,49 @@
 
 @implementation BGEmoticonMenuPlugin
 
+#define PREF_GROUP_EMOTICONS			@"Emoticons"
+
 - (void)installPlugin
+{
+    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+    //Observe prefs    
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self configureEmoticonSupport];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [PREF_GROUP_EMOTICONS compare:[[notification userInfo] objectForKey:@"Group"]] == 0)
+    {        
+        [[adium menuController] removeMenuItem:quickMenuItem];
+        [self configureEmoticonSupport];
+    }
+}
+
+-(void)configureEmoticonSupport
 {
     // load active emoticons and create menu
     emoticonPacks = [[adium contentController] emoticonPacks];
     if(emoticonPacks != nil && [emoticonPacks count] > 1)
     {
         id object;
+        int locTrack = 0;
         NSEnumerator *packEnum = [emoticonPacks objectEnumerator];
         eMenu = [[NSMenu alloc] initWithTitle:@""];
         while(object = [packEnum nextObject])
         {
             // read out each pack, iterate it and add its contents to its menu, then add it to its menu item
             NSMenuItem *packItem = [[NSMenuItem alloc] initWithTitle:[object name] action:nil keyEquivalent:@""];
+            [packItem setTag:locTrack];
             [packItem setSubmenu:[self buildMenu:object]]; 
             [eMenu addItem:packItem];
+            locTrack++;
         }
         // create a menu item for the menu to attach to
-        quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
         [quickMenuItem setSubmenu:eMenu];
-        // basically useless menu button stuff :P
-        menuButton = [[NSPopUpButton alloc] init];
-        [menuButton setImage:[NSImage imageNamed:@"EmoticonMenu"]];
-        //[self buildToolbarItem];
-        // add popup button to window's toolbar
         // register for menus
         [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
-        //[[adium menuController] addMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
+        [[adium menuController] addContextualMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
     }
     else if([emoticonPacks count] == 1)
     {
@@ -51,14 +67,15 @@
         eMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
         [quickMenuItem setSubmenu:eMenu];
         [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];        
-        NSLog(@"i should just throw 'em straight in the menu");
+        [[adium menuController] addContextualMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
     }
     else
     {
         quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
         [quickMenuItem setEnabled:NO];
         [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
-    }
+        [[adium menuController] addContextualMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
+    }    
 }
 
 -(void)buildToolbarItem
@@ -102,11 +119,24 @@
 
 -(void)insertEmoticon:(id)sender
 {
-    // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticons array, then get
-    // the emoticon itself and ask IT for the textEquivalents, instead of asking an id sender :P
-    //AIEmoticon *selectedEmoticon = [emoticons objectAtIndex:[[sender menu] indexOfItem:sender]];
-    //NSString *emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
-    //     [[[[adium interfaceController] currentChat] textEntryView] insertText:emoString];
+    NSString *emoString;
+    // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticon pack's emoticons array,
+    // then get the emoticon itself and ask IT for the textEquivalents, instead of asking an id sender :P
+    if([emoticonPacks count] == 1)
+    {    
+        AIEmoticon *selectedEmoticon = [[[emoticonPacks objectAtIndex:0] emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
+        emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
+    }
+    else if([emoticonPacks count] > 1)
+    {
+        AIEmoticonPack *selectedPack; // = [eMenu indexOfItem:[sender menu]]; // der, figure out which pack it is bitch :P
+        AIEmoticon *selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
+        emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
+    }
+    NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+    if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+        [responder insertText:emoString];
+    }
 }
 
 -(NSMenu *)eMenu
