@@ -113,12 +113,12 @@
     {
 	id contact = [content source]; 	
 	
-	if( [[contact className] isKindOfClass:[AIListContact class]] ) {
+	if( [contact isKindOfClass:[AIListContact class]] ) {
 	    return [(AIListContact *)contact displayName];
-	} else if ([[contact className] isKindOfClass:[AIAccount class]] ){
+	} else if ([contact isKindOfClass:[AIAccount class]] ){
 	    return [(AIAccount *)contact UID];
 	} else {
-	    return @"";
+	    return pattern;
 	}
     }
     else if([pattern isEqualToString:@"%t"])
@@ -159,10 +159,14 @@
     return pattern;
 }
 
+- (void) uninstallPlugin
+{
+     [hash release];
+}
+
 - (void) dealloc
 {
     NSLog(@"Deallocating AIMessageAliasPlugin");
-    [hash release];
     [super dealloc];
 }
 @end
