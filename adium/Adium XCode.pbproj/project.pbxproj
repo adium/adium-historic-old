@@ -195,8 +195,6 @@
 		};
 		11C157D504A88DE0008E0C76 = {
 			children = (
-				11C157D604A88E04008E0C76,
-				11C157D704A88E04008E0C76,
 				3C73F83E04D62A2900A80106,
 				3C73F83F04D62A2900A80106,
 				4B584E06055DD6A000E89D48,
@@ -210,24 +208,6 @@
 			);
 			isa = PBXGroup;
 			name = Emoticons;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11C157D604A88E04008E0C76 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIEmoticon.h;
-			path = Plugins/Emoticons/AIEmoticon.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11C157D704A88E04008E0C76 = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIEmoticon.m;
-			path = Plugins/Emoticons/AIEmoticon.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5905,6 +5885,50 @@
 			settings = {
 			};
 		};
+		34503BFE058F8CFD00FB7AD1 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = ContactListWindowTransparent.nib;
+			path = "Plugins/Dual Window Interface/ContactListWindowTransparent.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34503BFF058F8CFD00FB7AD1 = {
+			fileRef = 34503BFE058F8CFD00FB7AD1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34503C7E058F96C400FB7AD1 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEmoticon.m;
+			path = "Frameworks/Adium Framework/AIEmoticon.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34503C7F058F96C400FB7AD1 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEmoticon.h;
+			path = "Frameworks/Adium Framework/AIEmoticon.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34503C80058F96C400FB7AD1 = {
+			fileRef = 34503C7E058F96C400FB7AD1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34503C81058F96C400FB7AD1 = {
+			fileRef = 34503C7F058F96C400FB7AD1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		345DFF4A05564DB200CEE7B3 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -8852,6 +8876,7 @@
 				4BFC33DF058D4430008F7FA2,
 				4BFC3414058D48A8008F7FA2,
 				34B5875D058D801D00E7EF0D,
+				34503C81058F96C400FB7AD1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9022,6 +9047,7 @@
 				4BFC33E0058D4430008F7FA2,
 				4BFC3415058D48A8008F7FA2,
 				34B5875C058D801D00E7EF0D,
+				34503C80058F96C400FB7AD1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15610,6 +15636,7 @@
 				34BDA1740531483F000AB133,
 				4B970BE50535B6BE002F28F9,
 				4B970BFD0535B879002F28F9,
+				34503BFF058F8CFD00FB7AD1,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15840,7 +15867,6 @@
 		34BDA18B05314848000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BDA18C05314848000AB133,
 				34BDA18D05314848000AB133,
 				34BDA18E05314848000AB133,
 				34BDA18F05314848000AB133,
@@ -15848,12 +15874,6 @@
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA18C05314848000AB133 = {
-			fileRef = 11C157D604A88E04008E0C76;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BDA18D05314848000AB133 = {
 			fileRef = 11C157D804A88E04008E0C76;
@@ -15898,7 +15918,6 @@
 		34BDA19305314848000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BDA19405314848000AB133,
 				34BDA19505314848000AB133,
 				34BDA19605314848000AB133,
 				34BDA19705314848000AB133,
@@ -15906,12 +15925,6 @@
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA19405314848000AB133 = {
-			fileRef = 11C157D704A88E04008E0C76;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BDA19505314848000AB133 = {
 			fileRef = 11C157D904A88E04008E0C76;
@@ -18329,6 +18342,8 @@
 			children = (
 				6CF426810577648600F27FAA,
 				6CF426820577648700F27FAA,
+				34503C7E058F96C400FB7AD1,
+				34503C7F058F96C400FB7AD1,
 				348862CD05645E94003C9627,
 				348862CE05645E95003C9627,
 				34B5875B058D801D00E7EF0D,
@@ -27422,6 +27437,7 @@
 				F579397D033E756E01A8010A,
 				F579397E033E756E01A8010A,
 				F5793983033E756E01A8010A,
+				34503BFE058F8CFD00FB7AD1,
 			);
 			isa = PBXGroup;
 			name = "Contact List";
