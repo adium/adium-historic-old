@@ -200,7 +200,7 @@
 {
 	if(!_statusAttributesInverted){
 		_statusAttributesInverted = [[self statusAttributes] mutableCopy];
-		[_statusAttributesInverted setObject:CONTACT_INVERTED_TEXT_COLOR forKey:NSForegroundColorAttributeName];
+		[_statusAttributesInverted setObject:CONTACT_INVERTED_STATUS_COLOR forKey:NSForegroundColorAttributeName];
 	}
 	
 	return(_statusAttributesInverted);
