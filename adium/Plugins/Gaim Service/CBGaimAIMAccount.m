@@ -27,10 +27,6 @@
     return @"AIM";
 }
 
-- (NSString *)UIDAndServiceID{
-    return [NSString stringWithFormat:@"%@.%@", [self serviceID], [self UID]]; 
-}
-
 - (NSString *)accountDescription
 {
     return @"AIM/OSCAR";

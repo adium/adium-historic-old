@@ -68,16 +68,6 @@ struct oscar_data {
     return "prpl-oscar";
 }
 
-//overriden by subclasses
-- (NSString *)UID{ return nil; }
-- (NSString *)serviceID{ return nil; }
-- (NSString *)UIDAndServiceID{ return nil; }
-
-- (NSString *)accountDescription
-{
-    return [self UIDAndServiceID];
-}
-
 - (NSArray *)supportedPropertyKeys
 {
     return ([[super supportedPropertyKeys] arrayByAddingObjectsFromArray:
@@ -99,14 +89,12 @@ struct oscar_data {
  */
  
 
-- (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node
+- (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
     //General updates
-    [super accountBlistUpdate:list withNode:node];
+    [super accountUpdateBuddy:buddy];
     
-    if (node) {
-        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:node] repeats:NO];
-    }
+        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
 }
 
 - (void)_delayedBlistUpdate:(NSTimer *)inTimer
@@ -191,8 +179,8 @@ struct oscar_data {
             //tell the contact controller
             [[owner contactController] handleStatusChanged:theHandle
                                         modifiedStatusKeys:modifiedKeys
-                                                   delayed:NO
-                                                    silent:NO];
+                                                   delayed:silentAndDelayed
+                                                    silent:silentAndDelayed];
         }
     }
 }

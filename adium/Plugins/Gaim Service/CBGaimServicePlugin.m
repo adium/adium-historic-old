@@ -99,16 +99,10 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-    //We're allowed to place whatever we want in node's ui_data.    
-    //NSLog(@"adiumGaimBlistNewNode");
-    
-    //NSLog(@"%d", node ? node->type : -1);
-    
-    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
-    { 
-        //NSLog(@"Aloha");
-        GaimBuddy *buddy = (GaimBuddy*)node;
-        [accountLookup(buddy->account) accountBlistNewNode:node];
+    NSCAssert(node != nil, @"BlistNewNode on null node");
+    if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
+        GaimBuddy *buddy = (GaimBuddy*) node;
+        [accountLookup(buddy->account) accountNewBuddy:buddy];
     }
 }
 
@@ -119,61 +113,22 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
-    //NSLog(@"adiumGaimBlistUpdate");
-    
-    if(node && node->ui_data)
-    {
-        id theAccount;
-        if(GAIM_BLIST_NODE_IS_BUDDY(node))
-        {
-            theAccount = [(AIHandle *)node->ui_data account];
-        }
-        else if(GAIM_BLIST_NODE_IS_CONTACT(node))
-        {
-            GaimBlistNode *n = (GaimBlistNode *)((GaimContact *)node)->priority;
-            theAccount = [(AIHandle *)n->ui_data account];
-        }
-        else
-            return;
-        
-        if([theAccount respondsToSelector:@selector(accountBlistUpdate:withNode:)])
-            [theAccount accountBlistUpdate:list withNode:node];
+    NSCAssert(node != nil, @"BlistUpdate on null node");
+
+    if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
+        // ui_data will be NULL if we've connected and disconnected;
+        // this purges our handles but not gaim's. So look up the account.
+        GaimBuddy *buddy = (GaimBuddy*) node;
+        [accountLookup(buddy->account) accountUpdateBuddy:buddy];
     }
 }
 
 static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 {
-    //Here we're responsible for destroying what we placed in the node's ui_data earlier
-    //NSLog(@"adiumGaimBlistRemove");
-
-    if(node && node->ui_data)
-    {
-        id theAccount;
-        if(GAIM_BLIST_NODE_IS_BUDDY(node))
-        {
-            theAccount = [(AIHandle *)node->ui_data account];
-        }
-        else if(GAIM_BLIST_NODE_IS_CONTACT(node))
-        {
-            GaimBlistNode *n = (GaimBlistNode *)((GaimContact *)node)->priority;
-            theAccount = [(AIHandle *)n->ui_data account];
-        }
-        else
-        {
-            //[node->ui_data release];
-            node->ui_data = NULL;
-            return;
-        }
-        
-        if([theAccount respondsToSelector:@selector(accountBlistRemove:withNode:)])
-        {
-            [theAccount accountBlistRemove:list withNode:node];
-        }
-        else
-        {
-            //[node->ui_data release];
-            node->ui_data = NULL;
-        }
+    NSCAssert(node != nil, @"BlistRemove on null node");
+    if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
+        GaimBuddy *buddy = (GaimBuddy*) node;
+        [accountLookup(buddy->account) accountUpdateBuddy:buddy];
     }
 }
 

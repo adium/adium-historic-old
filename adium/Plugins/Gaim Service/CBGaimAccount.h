@@ -32,6 +32,8 @@
     GaimAccount *account;
     GaimConnection *gc;
     NSMutableDictionary *chatDict;
+    NSTimer *signonTimer;
+    BOOL silentAndDelayed;
 }
 
 - (const char*)protocolPlugin;
@@ -43,9 +45,9 @@
 - (void)accountConnectionDisconnected;
 
 //accountBlist methods
-- (void)accountBlistNewNode:(GaimBlistNode *)node;
-- (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
-- (void)accountBlistRemove:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
+- (void)accountNewBuddy:(GaimBuddy*)buddy;
+- (void)accountUpdateBuddy:(GaimBuddy*)buddy;
+- (void)accountRemoveBuddy:(GaimBuddy*)buddy;
 
 //accountConv methods
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;

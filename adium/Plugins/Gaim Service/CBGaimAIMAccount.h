@@ -15,7 +15,6 @@
 //Overriden from CBGAimOscarAccount
 - (void)initAccount;
 - (NSString *)serviceID;
-- (NSString *)UIDAndServiceID;
 - (NSString *)accountDescription;
 - (id <AIAccountViewController>)accountView;
 @end
