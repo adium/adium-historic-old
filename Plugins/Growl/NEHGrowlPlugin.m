@@ -123,6 +123,12 @@
 
 		iconData = [contact userIconData];
 		
+		if (!iconData) {
+			iconData = [[AIServiceIcons serviceIconForObject:contact
+					type:AIServiceIconLarge
+					direction:AIIconNormal] TIFFRepresentation];
+		}
+		
 		NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
 										[events objectForKey: notificationName], GROWL_NOTIFICATION_NAME,
 										title, GROWL_NOTIFICATION_TITLE,
