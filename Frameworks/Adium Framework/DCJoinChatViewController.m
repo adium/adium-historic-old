@@ -48,6 +48,7 @@
 		  invitingContacts:(NSArray *)contactsToInvite
 	 withInvitationMessage:(NSString *)invitationMessage
 {
+	AILog(@"Creating chatWithName:%@ onAccount:%@ chatCreationInfo:%@",inName,inAccount,inInfo);
 	chat = [[adium contentController] chatWithName:inName
 										 onAccount:inAccount
 								  chatCreationInfo:inInfo];
