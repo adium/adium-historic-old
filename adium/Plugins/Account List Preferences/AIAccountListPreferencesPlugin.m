@@ -118,21 +118,13 @@
 
     //Select and edit the new account
     [tableView_accountList selectRow:index byExtendingSelection:NO];
-    [self editAccount:nil];
+    [self editAccountCreatingNew:YES];
 }
 
 // edit an account
 - (IBAction)editAccount:(id)sender
 {
-    AIAccount		*selectedAccount;
-    int			selectedRow;
-
-    selectedRow = [tableView_accountList selectedRow];
-    if(selectedRow >= 0 && selectedRow < [accountArray count]){
-        selectedAccount = [accountArray objectAtIndex:selectedRow];
-
-        [AIAccountListEditSheetController showAccountListEditSheetForAccount:selectedAccount onWindow:[view_accountPreferences window] owner:owner];
-    }
+    [self editAccountCreatingNew:NO];
 }
 
 //Togle the connection of the selected account
@@ -154,6 +146,20 @@
         [(AIAccount<AIAccount_Status> *)targetAccount connect];
     }else{
         [(AIAccount<AIAccount_Status> *)targetAccount disconnect];
+    }
+}
+
+// Selects the account, and starts editing it. Makes sure that we don't delete it when we hit cancel if its not a new account!
+-(void)editAccountCreatingNew:(BOOL)newo
+{
+    AIAccount		*selectedAccount;
+    int			selectedRow;
+
+    selectedRow = [tableView_accountList selectedRow];
+    if(selectedRow >= 0 && selectedRow < [accountArray count]){
+        selectedAccount = [accountArray objectAtIndex:selectedRow];
+        
+        [AIAccountListEditSheetController showAccountListEditSheetForAccount:selectedAccount onWindow:[view_accountPreferences window] owner:owner deleteOnCancel:newo];
     }
 }
 

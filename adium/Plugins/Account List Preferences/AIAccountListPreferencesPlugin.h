@@ -42,6 +42,6 @@
 - (IBAction)newAccount:(id)sender;
 - (IBAction)toggleConnection:(id)sender;
 - (IBAction)editAccount:(id)sender;
-
+- (void)editAccountCreatingNew:(BOOL)newo;
 
 @end

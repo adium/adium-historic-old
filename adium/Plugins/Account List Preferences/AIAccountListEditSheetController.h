@@ -26,11 +26,12 @@
 
     AIAccount			*account;
     AIAdium			*owner;
+    BOOL			del;
 
     id <AIAccountViewController>	accountViewController;
 }
 
-+ (void)showAccountListEditSheetForAccount:(AIAccount *)inAccount onWindow:(NSWindow *)inWindow owner:(id)inOwner;
++ (void)showAccountListEditSheetForAccount:(AIAccount *)inAccount onWindow:(NSWindow *)inWindow owner:(id)inOwner deleteOnCancel:(BOOL)delo;
 - (IBAction)selectServiceType:(id)sender;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)okay:(id)sender;
