@@ -54,18 +54,34 @@
 */
 - (NSString *)compactedString
 {
-    NSMutableString 	*outName;
-    short		pos;
-
-    outName = [[NSMutableString alloc] initWithString:[self lowercaseString]];
-    for(pos = 0;pos < [outName length];pos++){
-        if([outName characterAtIndex:pos] == ' '){
-            [outName deleteCharactersInRange:NSMakeRange(pos,1)];
-            pos--;
-        }
-    }
-
-    return([outName autorelease]);
+	NSMutableString 	*outName;
+	unsigned			pos = 0, len;
+	NSRange				range;
+	range.length = 0;
+	
+	outName = [self mutableCopy];
+	CFStringLowercase(outName, /*locale*/ NULL);
+	len = [outName length];
+	
+	while(pos < len) {
+		if([outName characterAtIndex:pos] == ' ') {
+			if(range.length++ == 0) {
+				range.location = pos;
+			}
+			++pos;
+		} else {
+			if(range.length) {
+				[outName deleteCharactersInRange:range];
+				pos  = range.location;
+				len -= range.length;
+				range.length = 0;
+			} else {
+				++pos;
+			}
+		}
+	}
+	
+	return([outName autorelease]);
 }
 
 - (int)intValueFromHex
