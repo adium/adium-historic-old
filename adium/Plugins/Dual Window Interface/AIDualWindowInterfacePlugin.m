@@ -276,7 +276,7 @@
 
 //Messages -------------------------------------------------------------------------
 //Close the active window
-- (IBAction)close:(id)sender-0
+- (IBAction)close:(id)sender
 {
     [[[NSApplication sharedApplication] keyWindow] performClose:nil];
 }
