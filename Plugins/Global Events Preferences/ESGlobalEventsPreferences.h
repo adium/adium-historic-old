@@ -20,20 +20,33 @@
 #define OTHER_ELLIPSIS				[OTHER stringByAppendingString:[NSString ellipsis]]
 #define SOUND_MENU_ICON_SIZE		16
 
-@class ESContactAlertsViewController;
+@class ESContactAlertsViewController, AIVariableHeightOutlineView;
 
 @interface ESGlobalEventsPreferences : AIPreferencePane {
 	IBOutlet	ESContactAlertsViewController	*contactAlertsViewController;
 	
-	IBOutlet	NSPopUpButton	*popUp_dockBehaviorSet;
-	IBOutlet	NSPopUpButton	*popUp_soundSet;
-	IBOutlet	NSPopUpButton	*popUp_speechPreset;
-	IBOutlet	NSPopUpButton	*popUp_growlPreset;
+	IBOutlet	NSPanel			*panel_editingAdiumPreset;
+	IBOutlet	NSTextField		*textField_name;
 	
-	IBOutlet	NSTextField		*label_bounceTheDockIcon;
-	IBOutlet	NSTextField		*label_displayGrowlNotifications;
+	IBOutlet	NSTabView		*tabView_summaryAndConfig;
+	
+	IBOutlet	NSPopUpButton	*popUp_eventPreset;
+	IBOutlet	NSPopUpButton	*popUp_soundSet;
+	IBOutlet	NSPopUpButton	*popUp_show;
+		
+	IBOutlet	NSTextField		*label_eventPreset;
+	IBOutlet	NSTextField		*label_show;
 	IBOutlet	NSTextField		*label_soundSet;
-	IBOutlet	NSTextField		*label_speech;
+	
+	IBOutlet	AIVariableHeightOutlineView	*outlineView_summary;
+	IBOutlet	NSButton		*button_configure;
+
+	NSMutableArray				*contactAlertsEvents;
+	NSMutableArray				*contactAlertsActions;
 }
+
+- (IBAction)selectShowSummary:(id)sender;
+- (IBAction)configureSelectedEvent:(id)sender;
+- (IBAction)selectedNameForPresetCopy:(id)sender;
 
 @end

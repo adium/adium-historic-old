@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
+        {
             CLASS = AIAlternatingRowTableView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
@@ -25,10 +30,16 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {
+            CLASS = AIVariableHeightOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
         {
             ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
             CLASS = ESContactAlertsViewController; 
@@ -37,24 +48,34 @@
                 "button_add" = NSButton; 
                 "button_delete" = NSButton; 
                 "button_edit" = NSButton; 
+                delegate = id; 
+                "scrollView_actions" = AIAutoScrollView; 
                 "tableView_actions" = AIAlternatingRowTableView; 
                 view = NSView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 
         {
+            ACTIONS = {
+                configureSelectedEvent = id; 
+                selectShowSummary = id; 
+                selectedNameForPresetCopy = id; 
+            }; 
             CLASS = ESGlobalEventsPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_configure" = NSButton; 
                 contactAlertsViewController = ESContactAlertsViewController; 
-                "label_bounceTheDockIcon" = NSTextField; 
-                "label_displayGrowlNotifications" = NSTextField; 
+                "label_eventPreset" = NSTextField; 
+                "label_show" = NSTextField; 
                 "label_soundSet" = NSTextField; 
-                "label_speech" = NSTextField; 
-                "popUp_dockBehaviorSet" = NSPopUpButton; 
-                "popUp_growlPreset" = NSPopUpButton; 
+                "outlineView_summary" = AIVariableHeightOutlineView; 
+                "panel_editingAdiumPreset" = NSPanel; 
+                "popUp_eventPreset" = NSPopUpButton; 
+                "popUp_show" = NSPopUpButton; 
                 "popUp_soundSet" = NSPopUpButton; 
-                "popUp_speechPreset" = NSPopUpButton; 
+                "tabView_summaryAndConfig" = NSTabView; 
+                "textField_name" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

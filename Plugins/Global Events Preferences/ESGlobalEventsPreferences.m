@@ -23,28 +23,35 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIVariableHeightOutlineView.h>
+#import <AIUtilities/AIVerticallyCenteredTextCell.h>
+#import <AIUtilities/AIGradientImageCell.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
-#define CUSTOM_TITLE AILocalizedString(@"Custom",nil)
+#define PREF_GROUP_EVENT_PRESETS			@"Event Presets"
+#define CUSTOM_TITLE						AILocalizedString(@"Custom",nil)
+
+#define VERTICAL_ROW_PADDING	4
+#define MINIMUM_ROW_HEIGHT		30
 
 @interface ESGlobalEventsPreferences (PRIVATE)
 - (void)popUp:(NSPopUpButton *)inPopUp shouldShowCustom:(BOOL)showCustom;
 - (void)xtrasChanged:(NSNotification *)notification;
 - (void)contactAlertsDidChangeForActionID:(NSString *)actionID;
 
+- (NSMenu *)showMenu;
+- (NSMenu *)eventPresetsMenu;
+
 - (IBAction)selectSoundSet:(id)sender;
 - (NSMenu *)_soundSetMenu;
 
-- (IBAction)selectDockBehaviorSet:(id)sender;
-- (NSMenu *)_dockBehaviorSetMenu;
-
-- (IBAction)selectSpeechPreset:(id)sender;
-- (NSMenu *)_speechPresetMenu;
-
-- (IBAction)selectGrowlPreset:(id)sender;
-- (NSMenu *)_growlPresetMenu;
+- (void)editEventsWithEventID:(NSString *)eventID;
 
 - (NSMenu *)_setMenuFromArray:(NSArray *)array selector:(SEL)selector;
 
+- (NSString *)_localizedTitle:(NSString *)englishTitle;
+
+- (void)saveCurrentEventPreset;
 @end
 
 @implementation ESGlobalEventsPreferences
@@ -65,38 +72,68 @@
 	//Configure our global contact alerts view controller
 	[contactAlertsViewController setConfigureForGlobal:YES];
 	[contactAlertsViewController setDelegate:self];
-	[contactAlertsViewController configureForListObject:nil];
+	[contactAlertsViewController setShowEventsInEditSheet:NO];
 	
 	//Observe for installation of new sound sets and set up the sound set menu
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
 									 object:nil];
+
+	//This will build the sound set menu
 	[self xtrasChanged:nil];	
-	
-	//Build and set the dock behavior set menu
-    [popUp_dockBehaviorSet setMenu:[self _dockBehaviorSetMenu]];
-	
-	//Build and set the speech preset menu
-	[popUp_speechPreset setMenu:[self _speechPresetMenu]];
 
-	//Build and set the growl preset menu
-	if([NSApp isOnPantherOrBetter]){
-		[popUp_growlPreset setMenu:[self _growlPresetMenu]];
-	}else{
-		[popUp_growlPreset setEnabled:NO];
-	}
-
-	//Observer preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GROWL];
+	//Show menu
+	[popUp_show setMenu:[self showMenu]];
 	
-	[label_bounceTheDockIcon setLocalizedString:AILocalizedString(@"Bounce the dock icon:",nil)];
-	[label_displayGrowlNotifications setLocalizedString:AILocalizedString(@"Display Growl notifications:",nil)];
+	//Presets menu
+	[popUp_eventPreset setMenu:[self eventPresetsMenu]];
+	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
+																					group:PREF_GROUP_EVENT_PRESETS]];
+
 	[label_soundSet setLocalizedString:AILocalizedString(@"Sound set:",nil)];
-	[label_speech setLocalizedString:AILocalizedString(@"Speech:",nil)];
+
+	AIGradientImageCell				*imageCell;
+	AIVerticallyCenteredTextCell	*textCell;
+
+	imageCell = [[AIGradientImageCell alloc] init];
+	[imageCell setDrawsGradientHighlight:YES];
+	[imageCell setAlignment:NSCenterTextAlignment];
+	[imageCell setMaxSize:NSMakeSize(32, 32)];
+	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
+	[imageCell release];
+	
+	textCell = [[AIVerticallyCenteredTextCell alloc] init];
+	[textCell setFont:[NSFont boldSystemFontOfSize:12]];
+	[textCell setDrawsGradientHighlight:YES];
+	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:textCell];
+	[textCell release];
+	
+	textCell = [[AIVerticallyCenteredTextCell alloc] init];
+	[textCell setFont:[NSFont systemFontOfSize:10]];
+	[textCell setDrawsGradientHighlight:YES];
+	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:textCell];
+	[textCell release];
+	
+	
+	[outlineView_summary setDrawsAlternatingRows:YES];
+	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,4.0)];
+	[outlineView_summary setTarget:self];
+	[outlineView_summary setDoubleAction:@selector(configureSelectedEvent:)];
+
+	
+	//Observe sound preference changes to update the soundset popup
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
+		
+	//Observe contact alerts preferences to update our summary
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
+
+	//Enable/disable our configure button as appropriate
+	[button_configure setEnabled:([outlineView_summary selectedRow] != -1)];
+	
+	//Ensure we start off on the summary tab
+	[self selectShowSummary:nil];
+	
 }
 
 //Preference view is closing
@@ -107,6 +144,27 @@
 
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[adium notificationCenter] removeObserver:self];
+	
+	[contactAlertsEvents release]; contactAlertsEvents = nil;
+	[contactAlertsActions release]; contactAlertsActions = nil;
+}
+
+- (void)reloadSummaryData
+{
+	//Get two parallel arrays for event IDs and the array of actions for that event ID
+	NSDictionary	*contactAlertsDict = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
+																				  group:PREF_GROUP_CONTACT_ALERTS
+															  objectIgnoringInheritance:nil];
+	NSEnumerator	*enumerator = [contactAlertsDict keyEnumerator];
+	NSString		*eventID;
+	contactAlertsEvents = [[NSMutableArray alloc] init];
+	contactAlertsActions = [[NSMutableArray alloc] init];
+	while(eventID = [enumerator nextObject]){
+		[contactAlertsEvents addObject:eventID];
+		[contactAlertsActions addObject:[contactAlertsDict objectForKey:eventID]];
+	}
+	
+	[outlineView_summary reloadData];	
 }
 
 //Called when the preferences change, update our preference display
@@ -127,44 +185,9 @@
 				[self popUp:popUp_soundSet shouldShowCustom:YES];
 			}
 		}
-	}else if([group isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
-		
-		//If the Behavior set changed
-		if(!key || [key isEqualToString:KEY_DOCK_ACTIVE_BEHAVIOR_SET]){
-			NSString	*activePreset = [prefDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
-			
-			if(activePreset && ([activePreset length] != 0)){
-				[popUp_dockBehaviorSet selectItemWithRepresentedObject:activePreset];
-				[self popUp:popUp_dockBehaviorSet shouldShowCustom:NO];
-				
-			}else{
-				[self popUp:popUp_dockBehaviorSet shouldShowCustom:YES];
-			}
-		}
-	}else if([group isEqualToString:PREF_GROUP_ANNOUNCER]){
-		if(!key || [key isEqualToString:KEY_SPEECH_ACTIVE_PRESET]){
-			NSString	*activePreset = [prefDict objectForKey:KEY_SPEECH_ACTIVE_PRESET];
-			
-			if(activePreset && ([activePreset length] != 0)){
-				[popUp_speechPreset selectItemWithRepresentedObject:activePreset];
-				[self popUp:popUp_speechPreset shouldShowCustom:NO];
-				
-			}else{
-				[self popUp:popUp_speechPreset shouldShowCustom:YES];
-			}
-		}
-	}else if([group isEqualToString:PREF_GROUP_GROWL]){
-		if(!key || [key isEqualToString:KEY_GROWL_ACTIVE_PRESET]){
-			NSString	*activePreset = [prefDict objectForKey:KEY_GROWL_ACTIVE_PRESET];
-			
-			if(activePreset && ([activePreset length] != 0)){
-				[popUp_growlPreset selectItemWithRepresentedObject:activePreset];
-				[self popUp:popUp_growlPreset shouldShowCustom:NO];
-				
-			}else{
-				[self popUp:popUp_growlPreset shouldShowCustom:YES];
-			}
-		}
+
+	}else if([group isEqualToString:PREF_GROUP_CONTACT_ALERTS]){
+		[self reloadSummaryData];
 	}
 }
 
@@ -197,6 +220,366 @@
 	}
 }
 
+#pragma mark Event presets
+- (NSMenu *)eventPresetsMenu
+{
+	NSMenu			*eventPresetsMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSEnumerator	*enumerator;
+	NSDictionary	*builtInEventPresets = [plugin builtInEventPresets];
+	NSDictionary	*eventPreset;
+	
+	enumerator = [builtInEventPresets objectEnumerator];
+	while(eventPreset = [enumerator nextObject]){
+		NSMenuItem		*menuItem;
+		NSString		*name = [eventPreset objectForKey:@"Name"];
+
+		//Add a menu item for the set
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name/*[self _localizedTitle:name]*/
+																		 target:self
+																		 action:@selector(selectEventPreset:)
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:eventPreset];
+		[eventPresetsMenu addItem:menuItem];
+	}
+
+	NSDictionary	*storedEventPresets = [plugin storedEventPresets];
+	
+	if([storedEventPresets count]){
+		[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
+		
+		enumerator = [storedEventPresets objectEnumerator];
+		while(eventPreset = [enumerator nextObject]){
+			NSMenuItem		*menuItem;
+			NSString		*name = [eventPreset objectForKey:@"Name"];
+			
+			//Add a menu item for the set
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																			 target:self
+																			 action:@selector(selectEventPreset:)
+																	  keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:eventPreset];
+			[eventPresetsMenu addItem:menuItem];
+		}
+	}
+
+	return([eventPresetsMenu autorelease]);
+}
+
+/*
+ * @brief Selected an event preset
+ *
+ * Pass it to the plugin, which will perform necessary changes to our contact alerts
+ */
+- (void)selectEventPreset:(id)sender
+{
+	NSDictionary	*eventPreset = [sender representedObject];
+	[plugin setEventPreset:eventPreset];
+}
+
+#pragma mark Summary and specific events
+- (NSMenu *)showMenu
+{
+	NSMenu			*showMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMenuItem		*menuItem;
+	NSEnumerator	*enumerator;
+	
+	//Add a menu item for the set
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Event Action Summary",nil)
+																	 target:self
+																	 action:@selector(selectShowSummary:)
+															  keyEquivalent:@""] autorelease];
+	[showMenu addItem:menuItem];
+	
+	[showMenu addItem:[NSMenuItem separatorItem]];
+	
+	enumerator = [[[adium contactAlertsController] arrayOfMenuItemsForEventsWithTarget:self
+																		  forGlobalMenu:YES] objectEnumerator];
+	while(menuItem = [enumerator nextObject]){
+		[showMenu addItem:menuItem];
+	}
+
+	return([showMenu autorelease]);	
+}
+
+#pragma mark Summary
+/*!
+ * @brief Show the summary tab
+ *
+ * Called by the Show popUp menu item for the summary or by the button in the Event tab
+ */
+- (IBAction)selectShowSummary:(id)sender
+{
+	[tabView_summaryAndConfig selectTabViewItemWithIdentifier:@"summary"];
+
+	//Ensure the Summary menu item is selected, as we can get here by means other than the user selecting it
+	[popUp_show selectItemAtIndex:0];
+}
+
+/*
+ * @brief Configure the currently selected event type
+ *
+ * This is triggerred by a double click on a row in the outline view or by clicking the Configure... button
+ */
+- (IBAction)configureSelectedEvent:(id)sender
+{
+	int		row = [outlineView_summary selectedRow];
+
+	if(row != -1){
+		NSArray	*contactEvents = [outlineView_summary itemAtRow:row];
+		
+		if(contactEvents){
+			[self editEventsWithEventID:[[contactEvents objectAtIndex:0] objectForKey:KEY_EVENT_ID]];
+		}
+	}
+}
+
+- (id)outlineView:(NSOutlineView *)inOutlineView child:(int)index ofItem:(id)item
+{
+	if(index < [contactAlertsActions count]) {
+		return([contactAlertsActions objectAtIndex:index]);
+	} else {
+		return nil;
+	}
+}
+
+- (int)outlineView:(NSOutlineView *)inOutlineView numberOfChildrenOfItem:(id)item
+{
+	return([contactAlertsActions count]);
+}
+
+//No items are expandable for the outline view
+- (BOOL)outlineView:(NSOutlineView *)inOutlineView isItemExpandable:(id)item
+{
+	return(NO);
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+	NSArray	*contactEvents = (NSArray *)item;
+	
+	if([[tableColumn identifier] isEqualToString:@"event"]){
+		return([[adium contactAlertsController] globalShortDescriptionForEventID:[[contactEvents objectAtIndex:0] objectForKey:KEY_EVENT_ID]]);
+		
+	}else if([[tableColumn identifier] isEqualToString:@"action"]){
+		NSMutableString	*actionDescription = [NSMutableString string];
+		NSDictionary	*eventDict;
+		BOOL			appended = NO;
+		unsigned		i, count;
+		
+		count = [contactEvents count];
+		for(i = 0; i < count; i++){
+			NSString				*actionID;
+			id <AIActionHandler>	actionHandler;
+			
+			eventDict = [contactEvents objectAtIndex:i];
+			actionID = [eventDict objectForKey:KEY_ACTION_ID];
+			actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
+			
+			if(actionHandler){
+				NSString	*thisDescription;
+				
+				thisDescription = [actionHandler longDescriptionForActionID:actionID
+																withDetails:[eventDict objectForKey:KEY_ACTION_DETAILS]];
+				if(thisDescription && [thisDescription length]){
+					if(appended){
+						/* We are on the second or later action. */
+						NSString	*conjunctionIfNeeded;
+						NSString	*commaAndSpaceIfNeeded;
+							
+						//If we have more than 2 actions, we'll be combining them with commas
+						if(count > 2){
+							commaAndSpaceIfNeeded = @",";
+						}else{
+							commaAndSpaceIfNeeded = @"";
+						}
+						
+						//If we are on the last action, we'll want to add a conjunction to finish the compound sentence
+						if(i == (count - 1)){
+							conjunctionIfNeeded = AILocalizedString(@" and","conjunction to end a compound sentence");
+						}else{
+							conjunctionIfNeeded = @"";
+						}
+
+						//Construct the string to append, then append it
+						[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@%@",
+							commaAndSpaceIfNeeded,
+							conjunctionIfNeeded,
+							[[thisDescription substringToIndex:1] lowercaseString],
+							[thisDescription substringFromIndex:1]]];
+						
+					}else{
+						/* We are on the first action.
+						 *
+						 * This is easy; just append the description.
+						 */
+						[actionDescription appendString:thisDescription];
+						appended = YES;
+					}
+				}
+			}
+		}
+
+		return actionDescription;
+
+	}else if ([[tableColumn identifier] isEqualToString:@"image"]){
+		return([[adium contactAlertsController] imageForEventID:[[contactEvents objectAtIndex:0] objectForKey:KEY_EVENT_ID]]);
+	}
+	
+	return(@"");
+}
+
+//Each row should be tall enough to fit the number of lines of events
+- (int)outlineView:(NSOutlineView *)inOutlineView heightForItem:(id)item atRow:(int)row
+{
+	NSEnumerator	*enumerator;
+	NSTableColumn	*tableColumn;
+	float			necessaryHeight = 0;
+	
+	enumerator = [[inOutlineView tableColumns] objectEnumerator];
+	while(tableColumn = [enumerator nextObject]){
+		if([[tableColumn identifier] isEqualToString:@"event"] || [[tableColumn identifier] isEqualToString:@"action"]){
+			NSString		*objectValue = [self outlineView:inOutlineView objectValueForTableColumn:tableColumn byItem:item];
+			float			thisHeight;
+			NSFont			*font = [[tableColumn dataCell] font];
+			NSDictionary	*attributes = nil;
+			
+			if(font){
+				attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+					font, NSFontAttributeName, nil];
+			}
+			
+			NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:objectValue
+																				   attributes:attributes];
+			thisHeight = [attributedTitle heightWithWidth:[tableColumn width]];
+			if(thisHeight > necessaryHeight) necessaryHeight = thisHeight;
+		}
+	}
+
+	/*
+	NSDictionary	*contactEvents = [contactAlertsActions objectAtIndex:row];
+
+	return(17 * [contactEvents count]);
+	 */
+	necessaryHeight += VERTICAL_ROW_PADDING;
+
+	return ((necessaryHeight > MINIMUM_ROW_HEIGHT) ? necessaryHeight : MINIMUM_ROW_HEIGHT);
+}
+
+//Before a cell is display, set its embedded view
+- (void)outlineView:(NSOutlineView *)inOutlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+
+}
+
+/*
+ * @brief Outline view selection changed
+ *
+ * For our summary table, disable the Configure button if no row is selected.
+ * Also, give action handlers a change to preview.
+ */
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	NSOutlineView	*outlineView = [notification object];
+	if(outlineView == outlineView_summary){
+		//Enable/disable our configure button
+		int row = [outlineView_summary selectedRow];
+		[button_configure setEnabled:(row != -1)];
+		
+		NSDictionary	*eventDict;
+		NSEnumerator	*enumerator;
+		NSMutableSet	*perfomedPreviewsSet = [NSMutableSet set];
+		
+		//Preview each action if the action handler supports it
+		enumerator = [[outlineView_summary itemAtRow:row] objectEnumerator];
+		while(eventDict = [enumerator nextObject]){			
+			NSString				*actionID;
+			id <AIActionHandler>	actionHandler;
+
+			actionID = [eventDict objectForKey:KEY_ACTION_ID];
+
+			if(![perfomedPreviewsSet containsObject:actionID]){
+				actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
+				
+				if(actionHandler && [actionHandler respondsToSelector:@selector(performPreviewForAlert:)]){
+					[actionHandler performPreviewForAlert:eventDict];
+					[perfomedPreviewsSet addObject:actionID];
+				}				
+			}
+		}
+	}
+}
+
+- (void)outlineViewDeleteSelectedRows:(NSOutlineView *)inOutlineView
+{
+	int		row = [inOutlineView selectedRow];
+
+	//Remove
+	if(row != -1){
+		NSBeginAlertSheet(AILocalizedString(@"Delete Event?",nil),
+						  AILocalizedString(@"OK",nil),
+						  AILocalizedString(@"Cancel",nil),
+						  nil, /*otherButton*/
+						  [[self view] window],
+						  self,
+						  @selector(sheetDidEnd:returnCode:contextInfo:),
+						  NULL, /* didDismissSelector */
+						  [outlineView_summary itemAtRow:row],
+						  AILocalizedString(@"Remove all actions associated with this event?",nil));
+	}else{
+		NSBeep();
+	}
+}
+
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if(returnCode == NSAlertDefaultReturn){
+		NSDictionary	*eventDict;
+		NSEnumerator	*enumerator;
+		NSArray			*contactEvents = (NSArray *)contextInfo;
+		
+		[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+		enumerator = [contactEvents objectEnumerator];
+		while(eventDict = [enumerator nextObject]){			
+			[[adium contactAlertsController] removeAlert:eventDict fromListObject:nil];
+		}
+		[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+	}
+}
+
+#pragma mark Specific events
+- (IBAction)selectEvent:(id)sender
+{
+	NSString	*eventID;
+	if(eventID = [sender representedObject]){
+		[self editEventsWithEventID:eventID];
+	}
+}
+
+/*!
+ * @brief Edit events for a specified event ID
+ *
+ * Configure the contact alerts view controller, update our tab view, update the Show menu
+ */
+- (void)editEventsWithEventID:(NSString *)eventID
+{
+	[contactAlertsViewController configureForListObject:nil showingAlertsForEventID:eventID];	
+
+	[tabView_summaryAndConfig selectTabViewItemWithIdentifier:@"event"];
+	
+	[popUp_show selectItemWithRepresentedObject:eventID];
+}
+
+- (NSString *)initialEventIDForNewContactAlert
+{
+	id initialEventID;
+
+	initialEventID = [[popUp_show selectedItem] representedObject];
+
+	if(![initialEventID isKindOfClass:[NSString class]]) initialEventID = nil;
+
+	return((NSString *)initialEventID);
+}
+
 #pragma mark Contact alerts changed by user
 - (void)contactAlertsViewController:(ESContactAlertsViewController *)inController
 					   updatedAlert:(NSDictionary *)newAlert
@@ -216,9 +599,10 @@
 	if([actionID isEqualToString:SOUND_ALERT_IDENTIFIER]){
 		
 		NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
-																			   withActionID:SOUND_ALERT_IDENTIFIER];
+																				withEventID:nil
+																				   actionID:SOUND_ALERT_IDENTIFIER];
 		NSMenuItem		*soundMenuItem = nil;
-		
+	
 		//We can select "None" if there are no sounds
 		if(![alertsArray count]){
 			soundMenuItem = (NSMenuItem *)[popUp_soundSet itemWithTitle:@"None"];
@@ -228,18 +612,9 @@
 		//but that would probably be very expensive.
 		//For now, if sounds change, we are 'custom' even if it gets us back to a sound set
 		[self selectSoundSet:soundMenuItem];
-		
-	}else if([actionID isEqualToString:DOCK_BEHAVIOR_ALERT_IDENTIFIER]){
-		//Dock behaviors changed.
-		[plugin updateActiveDockBehaviorSet];
-		
-	}else if([actionID isEqualToString:SPEAK_EVENT_ALERT_IDENTIFIER]){
-		//Speech preset changed.
-		[plugin updateActiveSpeechPreset];
-		
-	}else if([actionID isEqualToString:GROWL_EVENT_ALERT_IDENTIFIER]){
-		//Growl preset changed.
-		[plugin updateActiveGrowlPreset];
+
+	}else{
+		[self saveCurrentEventPreset];
 	}
 }
 
@@ -247,12 +622,95 @@
 //The user selected a sound set
 - (IBAction)selectSoundSet:(id)sender
 {
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:([sender representedObject] ?
-												 [[sender representedObject] stringByCollapsingBundlePath] :
-												 @"")
-										 forKey:KEY_EVENT_SOUND_SET
-										  group:PREF_GROUP_SOUNDS];
+	NSString			*soundSetPath = ([sender representedObject] ?
+										 [[sender representedObject] stringByCollapsingBundlePath] :
+										 @"");
+	
+	//Apply the sound set so its events are in the current alerts. This will also set the KEY_EVENT_SOUND_SET key for PREF_GROUP_SOUNDS
+	[plugin applySoundSetWithPath:soundSetPath];
+	
+	[self saveCurrentEventPreset];
+}
+
+- (NSMutableDictionary *)currentEventSetForSaving
+{
+	NSDictionary		*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
+	NSMutableDictionary	*currentEventSetForSaving = [[eventPreset mutableCopy] autorelease];
+	
+	//Set the sound set, which is just stored here for ease of preference pane display
+	[currentEventSetForSaving setObject:[[adium preferenceController] preferenceForKey:KEY_EVENT_SOUND_SET
+																				 group:PREF_GROUP_SOUNDS]
+								 forKey:KEY_EVENT_SOUND_SET];
+	
+	//Get and store the alerts array
+	NSArray				*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
+																				withEventID:nil
+																				   actionID:nil];
+	[currentEventSetForSaving setObject:alertsArray forKey:@"Events"];
+
+	//Ensure this set doesn't claim to be built in.
+	[currentEventSetForSaving removeObjectForKey:@"Built In"];
+	
+	return(currentEventSetForSaving);
+}
+
+- (void)saveCurrentEventPreset
+{
+	NSDictionary		*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
+
+	if([eventPreset objectForKey:@"Built In"] && [[eventPreset objectForKey:@"Built In"] boolValue]){
+		/* Perform after a delay so that if we got here as a result of a sheet-based add or edit of an event
+		 * the sheet will close before we try to open a new one. */
+		[self performSelector:@selector(showPresetCopySheet:)
+				   withObject:[eventPreset objectForKey:@"Name"]
+				   afterDelay:0];
+	}else{	
+		//Now save the current settings
+		[plugin saveEventPreset:[self currentEventSetForSaving]];
+	}		
+}
+
+- (void)showPresetCopySheet:(NSString *)originalPresetName
+{
+	[textField_name setStringValue:[NSString stringWithFormat:@"%@ (%@)",
+		originalPresetName,
+		AILocalizedString(@"Copy",nil)]];
+	
+	[NSApp beginSheet:panel_editingAdiumPreset
+	   modalForWindow:[[self view] window]
+		modalDelegate:self
+	   didEndSelector:NULL
+		  contextInfo:NULL];
+}
+		
+/*!
+ * @brief Called when the OK button on the preset copy sheet is pressed
+ *
+ * Save the current event set under the name specified by [textField_name stringValue].
+ * Set the name of the active event set to this new name, and ensure our menu is up to date.
+ *
+ * Also, close the sheet.
+ */
+- (IBAction)selectedNameForPresetCopy:(id)sender
+{
+	NSMutableDictionary	*newEventPreset = [self currentEventSetForSaving];
+	NSString			*name = [textField_name stringValue];
+	[newEventPreset setObject:name
+					   forKey:@"Name"];
+
+	[panel_editingAdiumPreset orderOut:nil];
+    [NSApp endSheet:panel_editingAdiumPreset];
+
+	//Now save the current settings
+	[plugin saveEventPreset:newEventPreset];
+
+	//Presets menu
+	[[adium preferenceController] setPreference:name
+										 forKey:@"Active Event Set"
+										  group:PREF_GROUP_EVENT_PRESETS];
+	[popUp_eventPreset setMenu:[self eventPresetsMenu]];
+	[popUp_eventPreset selectItemWithTitle:name];
+	
 }
 
 //Builds and returns a sound set menu
@@ -269,7 +727,8 @@
         NSString	*soundSetFile;
 		
         //Ensure this folder contains a soundset file (Otherwise, we ignore it)
-        soundSetFile = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", setPath, [[setPath stringByDeletingPathExtension] lastPathComponent]]];
+        soundSetFile = [NSString stringWithContentsOfFile:
+			[setPath stringByAppendingPathComponent:[[[setPath stringByDeletingPathExtension] lastPathComponent] stringByAppendingPathExtension:@"txt"]]];
         if(soundSetFile && [soundSetFile length] != 0){
 			
             //Add a menu item for the set
@@ -286,60 +745,6 @@
     return(soundSetMenu);
 }
 
-#pragma mark Dock behavior sets
-- (IBAction)selectDockBehaviorSet:(id)sender
-{
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:([sender representedObject] ?
-												 [sender representedObject] : 
-												 @"")
-										 forKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
-										  group:PREF_GROUP_DOCK_BEHAVIOR];
-}
-
-//Builds and returns a behavior set menu
-- (NSMenu *)_dockBehaviorSetMenu
-{
-	return [self _setMenuFromArray:[plugin availableDockBehaviorPresets]
-						  selector:@selector(selectDockBehaviorSet:)];
-}
-
-#pragma mark Speech presets
-- (IBAction)selectSpeechPreset:(id)sender
-{
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:([sender representedObject] ?
-												 [sender representedObject] : 
-												 @"")
-										 forKey:KEY_SPEECH_ACTIVE_PRESET
-										  group:PREF_GROUP_ANNOUNCER];	
-}
-
-//Builds and returns a speech preset menu
-- (NSMenu *)_speechPresetMenu
-{
-	return [self _setMenuFromArray:[plugin availableSpeechPresets]
-						  selector:@selector(selectSpeechPreset:)];
-}
-
-#pragma mark Growl presets
-
-- (IBAction)selectGrowlPreset:(id)sender
-{
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:([sender representedObject] ?
-												 [sender representedObject] : 
-												 @"")
-										 forKey:KEY_GROWL_ACTIVE_PRESET
-										  group:PREF_GROUP_GROWL];	
-}
-
-- (NSMenu *)_growlPresetMenu
-{
-	return [self _setMenuFromArray:[plugin availableGrowlPresets]
-						  selector:@selector(selectGrowlPreset:)];
-}
-
 #pragma mark Common menu methods
 /*!
  * @brief Localized a menu item title for global events preferences
@@ -352,24 +757,6 @@
 	
 	if([englishTitle isEqualToString:@"None"])
 		localizedTitle = AILocalizedString(@"None",nil);
-	else if([englishTitle isEqualToString:@"Never"])
-		localizedTitle = AILocalizedString(@"Never",nil);
-	else if([englishTitle isEqualToString:@"On New Messages"])
-		localizedTitle = AILocalizedString(@"On New Messages","Events preset for the event to occur whenever a message is received");
-	else if([englishTitle isEqualToString:@"On New Messages And Errors"])
-		localizedTitle = AILocalizedString(@"On New Messages And Errors","Events preset for the event to occur whenever a message is received or an error occurs");
-	else if([englishTitle isEqualToString:@"On New Background Messages"])
-		localizedTitle = AILocalizedString(@"On New Background Messages","Events preset for the event to occur when messages are received in a chat which is not currently active (is in the background)");
-	else if([englishTitle isEqualToString:@"On Errors"])
-		localizedTitle = AILocalizedString(@"On Errors","Events preset for the event to occur when an error occurs");
-	else if([englishTitle isEqualToString:@"On Contact Availability"])
-		localizedTitle = AILocalizedString(@"On Contact Availability","Events preset for the event to occur when a contact becomes available");
-	else if([englishTitle isEqualToString:@"On Contact Connections"])
-		localizedTitle = AILocalizedString(@"On Contact Connections","Events preset for the event to occur when a contact connects");
-	else if([englishTitle isEqualToString:@"All Messages"])
-		localizedTitle = AILocalizedString(@"All Messages","Events preset for the event to occur for any message");
-	else if([englishTitle isEqualToString:@"Incoming Messages"])
-		localizedTitle = AILocalizedString(@"Incoming Messages","Events preset for the event to occur when there is an incoming message");
 
 	return (localizedTitle ? localizedTitle : englishTitle);
 }

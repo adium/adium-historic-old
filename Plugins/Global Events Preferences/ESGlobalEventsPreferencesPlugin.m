@@ -68,34 +68,33 @@
 - (void)_activateSet:(NSArray *)setArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector;
 - (NSArray *)_availablePresetsFromArray:(NSArray *)presetsArray;
 - (void)_updateActiveSetFromPresetsArray:(NSArray *)presetsArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector preferencesKey:(NSString *)prefKey preferencesGroup:(NSString *)prefGroup;
+
+- (void)applySoundSetWithPath:(NSString *)soundSetPath;
 @end
 
 @implementation ESGlobalEventsPreferencesPlugin
 
 - (void)installPlugin
 {
-	//Install our preference view
-    preferences = [[ESGlobalEventsPreferences preferencePaneForPlugin:self] retain];
-	
-	//Load simple presets (dock, speech, etc.)
-    dockBehaviorPresetsArray = [[NSArray arrayNamed:DOCK_BEHAVIOR_PRESETS
-										  forClass:[self class]] retain];
-	speechPresetsArray = [[NSArray arrayNamed:SPEECH_PRESETS
-									 forClass:[self class]] retain];
-	growlPresetsArray = [[NSArray arrayNamed:GROWL_PRESETS
-									forClass:[self class]] retain];
+	builtInEventPresets = [[NSDictionary dictionaryNamed:@"BuiltInEventPresets" forClass:[self class]] retain];
+	storedEventPresets = [[[adium preferenceController] preferenceForKey:@"Event Presets"
+																   group:PREF_GROUP_EVENT_PRESETS] mutableCopy];
+	if(!storedEventPresets) storedEventPresets = [[NSMutableDictionary alloc] init];
 
-    //Register default preferences and pre-set behavior
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS 
+	NSNumber	*setDefaults = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:RegisteredDefaultEvents"];
+	if(TRUE || !setDefaults || ![setDefaults boolValue]){
+		[self setEventPreset:[builtInEventPresets objectForKey:@"Default Notifications"]];
+		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES]
+												  forKey:@"Adium:RegisteredDefaultEvents"];
+	}
+
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS 
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_SOUNDS];	
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS
-																		forClass:[self class]]
-										  forGroup:PREF_GROUP_DOCK_BEHAVIOR];
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GROWL_DEFAULT_PREFS
-																		forClass:[self class]]
-										  forGroup:PREF_GROUP_GROWL];
-	
+
+	//Install our preference view
+    preferences = [[ESGlobalEventsPreferences preferencePaneForPlugin:self] retain];
+
 	//Wait for Adium to finish launching before we perform further actions
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
@@ -114,9 +113,6 @@
 {
     //Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
- 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GROWL];
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_CompletedApplicationLoad
@@ -141,43 +137,8 @@
 										  description:nil]; //Load the soundset
 			[self activateSoundSet:soundSetArray];
 		}
-	}else if([group isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
-		NSString		*activeBehaviorSet;
-		
-		//Load the behaviorSet
-		activeBehaviorSet = [prefDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
-		if(activeBehaviorSet && [activeBehaviorSet length] != 0){ //preset
-			NSArray			*behaviorArray;
-			
-			behaviorArray = [self _behaviorForPreset:activeBehaviorSet inPresetArray:dockBehaviorPresetsArray];
-			[self activateDockBehaviorSet:behaviorArray];
-		}
-	}else if([group isEqualToString:PREF_GROUP_ANNOUNCER]){
-		NSString		*activeSpeechSet;
-		
-		//Load the behaviorSet
-		activeSpeechSet = [prefDict objectForKey:KEY_SPEECH_ACTIVE_PRESET];
-		if(activeSpeechSet && [activeSpeechSet length] != 0){ //preset
-			NSArray			*presetArray;
-			
-			presetArray = [self _behaviorForPreset:activeSpeechSet inPresetArray:speechPresetsArray];
-			[self activateSpeechPreset:presetArray];
-		}
-	}else if([group isEqualToString:PREF_GROUP_GROWL]){
-		NSString		*activeGrowlSet;
-		
-		//Load the behaviorSet
-		activeGrowlSet = [prefDict objectForKey:KEY_GROWL_ACTIVE_PRESET];
-		if(activeGrowlSet && [activeGrowlSet length] != 0){ //preset
-			NSArray			*presetArray;
-			
-			presetArray = [self _behaviorForPreset:activeGrowlSet inPresetArray:growlPresetsArray];
-			[self activateGrowlPreset:presetArray];
-		}		
 	}
 }
-
-
 
 #pragma mark Sound Sets
 //Remove all global sound events; add global sound events for the passed sound set
@@ -185,6 +146,8 @@
 {
 	NSEnumerator	*enumerator;
 	NSDictionary	*eventDict;
+
+	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 
 	//Clear out old global sound alerts
 	[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:SOUND_ALERT_IDENTIFIER];
@@ -200,7 +163,9 @@
 			[NSDictionary dictionaryWithObject:soundPath forKey: KEY_ALERT_SOUND_PATH], KEY_ACTION_DETAILS,nil];
 		
 		[[adium contactAlertsController] addGlobalAlert:soundAlert];
-	}	
+	}
+	
+	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 //Loads various info from a sound set file
@@ -271,99 +236,16 @@
 	[self _activateSet:behaviorArray withActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER alertGenerationSelector:@selector(dockAlertFromPresetDictionary:)];
 }
 
-//Returns an array of the available preset names
-- (NSArray *)availableDockBehaviorPresets
-{
-	return [self _availablePresetsFromArray:dockBehaviorPresetsArray];
-}
-
-- (void)updateActiveDockBehaviorSet
-{
-	[self _updateActiveSetFromPresetsArray:dockBehaviorPresetsArray
-							  withActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER
-				   alertGenerationSelector:@selector(dockAlertFromPresetDictionary:)
-							preferencesKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
-						  preferencesGroup:PREF_GROUP_DOCK_BEHAVIOR];
-}
-
-- (NSDictionary *)dockAlertFromPresetDictionary:(NSDictionary *)dictionary
-{	
-	NSString		*eventID = [dictionary objectForKey:KEY_DOCK_PRESET_EVENT_ID];
-	NSNumber		*behavior = [dictionary objectForKey:KEY_DOCK_PRESET_BEHAVIOR];
-	NSDictionary	*dockAlert = [NSDictionary dictionaryWithObjectsAndKeys:
-		eventID, KEY_EVENT_ID,
-		DOCK_BEHAVIOR_ALERT_IDENTIFIER, KEY_ACTION_ID, 
-		[NSNumber numberWithBool:NO], KEY_ONE_TIME_ALERT,
-		[NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_PRESET_BEHAVIOR_TYPE], KEY_ACTION_DETAILS, nil];
-	
-	return(dockAlert);
-}	
-
 #pragma mark Speech presets
 - (void)activateSpeechPreset:(NSArray *)presetArray
 {
 	[self _activateSet:presetArray withActionID:SPEAK_EVENT_ALERT_IDENTIFIER alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 }
 
-- (NSArray *)availableSpeechPresets
-{
-	return [self _availablePresetsFromArray:speechPresetsArray];
-}
-
-- (void)updateActiveSpeechPreset
-{
-	[self _updateActiveSetFromPresetsArray:speechPresetsArray
-							  withActionID:SPEAK_EVENT_ALERT_IDENTIFIER
-				   alertGenerationSelector:@selector(speechAlertFromDictionary:)
-							preferencesKey:KEY_SPEECH_ACTIVE_PRESET
-						  preferencesGroup:PREF_GROUP_ANNOUNCER];
-}
-
-- (NSDictionary *)speechAlertFromDictionary:(NSDictionary *)dictionary
-{
-	
-	NSString		*eventID = [dictionary objectForKey:KEY_SPEECH_PRESET_EVENT_ID];
-	NSDictionary	*details = [dictionary objectForKey:KEY_SPEECH_PRESET_DETAILS];
-	NSDictionary	*speechAlert = [NSDictionary dictionaryWithObjectsAndKeys:
-		eventID, KEY_EVENT_ID,
-		SPEAK_EVENT_ALERT_IDENTIFIER, KEY_ACTION_ID,
-		[NSNumber numberWithBool:NO], KEY_ONE_TIME_ALERT,
-		details, KEY_ACTION_DETAILS,nil];
-	
-	return(speechAlert);
-}
-
 #pragma mark Growl presets
 - (void)activateGrowlPreset:(NSArray *)presetArray
 {
 	[self _activateSet:presetArray withActionID:GROWL_EVENT_ALERT_IDENTIFIER alertGenerationSelector:@selector(growlAlertFromDictionary:)];
-}
-
-- (NSArray *)availableGrowlPresets
-{
-	return [self _availablePresetsFromArray:growlPresetsArray];
-}
-
-- (void)updateActiveGrowlPreset
-{
-	[self _updateActiveSetFromPresetsArray:growlPresetsArray
-							  withActionID:GROWL_EVENT_ALERT_IDENTIFIER
-				   alertGenerationSelector:@selector(growlAlertFromDictionary:)
-							preferencesKey:KEY_GROWL_ACTIVE_PRESET
-						  preferencesGroup:PREF_GROUP_GROWL];
-}
-
-- (NSDictionary *)growlAlertFromDictionary:(NSDictionary *)dictionary
-{
-	NSString		*eventID = [dictionary objectForKey:KEY_GROWL_PRESET_EVENT_ID];
-//	NSDictionary	*details = [dictionary objectForKey:KEY_GROWL_PRESET_DETAILS];
-	NSDictionary	*speechAlert = [NSDictionary dictionaryWithObjectsAndKeys:
-		eventID, KEY_EVENT_ID,
-		GROWL_EVENT_ALERT_IDENTIFIER, KEY_ACTION_ID,
-		[NSNumber numberWithBool:NO], KEY_ONE_TIME_ALERT,
-		/*details, KEY_ACTION_DETAILS,*/nil];
-
-	return(speechAlert);
 }
 
 #pragma mark All simple presets
@@ -400,63 +282,66 @@
 	}
 }
 
-- (NSArray *)_availablePresetsFromArray:(NSArray *)presetsArray
+- (void)setEventPreset:(NSDictionary *)eventPreset
 {
-	NSMutableArray	*availablePresets = [NSMutableArray array];
-    NSEnumerator	*enumerator;
-    NSDictionary	*set;
-    
-    //Grab the name of each set
-    enumerator = [presetsArray objectEnumerator];
-    while((set = [enumerator nextObject])){
-        [availablePresets addObject:[set objectForKey:@"Name"]];
-    }
-	
-    return availablePresets;
-}
+	NSString	*soundSetPath;
 
-
-- (void)_updateActiveSetFromPresetsArray:(NSArray *)presetsArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector preferencesKey:(NSString *)prefKey preferencesGroup:(NSString *)prefGroup
-{		
-	NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
-																		   withActionID:actionID];
-	NSEnumerator	*enumerator;
-	NSDictionary	*presetDict;
-	NSString		*activeSetName = nil;
+	[[adium contactAlertsController] setAllGlobalAlerts:[eventPreset objectForKey:@"Events"]];
 	
-    //Each set is a dictionary with a Name and a Behavior
-	enumerator = [presetsArray objectEnumerator];
-	
-    while((presetDict = [enumerator nextObject]) && !activeSetName){
-		//the Behavior of a set is an array of dicts, each of which represents a contact alert
-		NSArray	*behaviorArray = [presetDict objectForKey:@"Behavior"];
-		
-		//The alertsArray and this behaviorDict can only be the same if they have the same count
-		if([behaviorArray count] == [alertsArray count]){
-			NSEnumerator	*behaviorEnumerator;
-			NSDictionary	*dictionary;
-			
-			//If they do, then they are the same iff the alertsArray contains each alert created by the behaviorArray.
-			//As soon as it doesn't, we know we don't have a match and can stop.
-			behaviorEnumerator = [behaviorArray objectEnumerator];
-			while((dictionary = [behaviorEnumerator nextObject])){
-				if(![alertsArray containsObject:[self performSelector:selector
-														   withObject:dictionary]]){
-					break;
-				}
-			}
-			
-			//If it made it to the end, dictionary will be nil and we have a match.
-			if(!dictionary) activeSetName = [presetDict objectForKey:@"Name"];
-		}
+	/* For a built in set, we now should apply the sound set it specified. User-created sets already include the
+	 * soundset as individual events.
+	 */
+	if([eventPreset objectForKey:@"Built In"] && [[eventPreset objectForKey:@"Built In"] boolValue]){
+		[self applySoundSetWithPath:[eventPreset objectForKey:KEY_EVENT_SOUND_SET]];		
 	}
 	
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:(activeSetName ?
-												 activeSetName : 
-												 @"")
-										 forKey:prefKey
-										  group:prefGroup];
+	//Set the name of the now-active event set, which includes sounds and all other events
+	[[adium preferenceController] setPreference:[eventPreset objectForKey:@"Name"]
+										 forKey:@"Active Event Set"
+										  group:PREF_GROUP_EVENT_PRESETS];
+
+	//Set the name of the now-active sound set for the preferences to use as needed
+	[[adium preferenceController] setPreference:[eventPreset objectForKey:KEY_EVENT_SOUND_SET]
+										 forKey:KEY_EVENT_SOUND_SET
+										  group:PREF_GROUP_SOUNDS];
 }
 
+- (void)saveEventPreset:(NSDictionary *)eventPreset
+{
+	[storedEventPresets setObject:eventPreset
+						   forKey:[eventPreset objectForKey:@"Name"]];
+
+	[[adium preferenceController] setPreference:storedEventPresets
+										 forKey:@"Event Presets"
+										  group:PREF_GROUP_EVENT_PRESETS];
+}
+
+- (void)applySoundSetWithPath:(NSString *)soundSetPath
+{
+	//Can't set nil because if we do the default will be reapplied on next launch
+	[[adium preferenceController] setPreference:([soundSetPath length] ?
+												 [soundSetPath stringByCollapsingBundlePath] :
+												 @"")
+										 forKey:KEY_EVENT_SOUND_SET
+										  group:PREF_GROUP_SOUNDS];	
+	
+	if(soundSetPath && [soundSetPath length]){ //Soundset
+		NSArray			*soundSetArray;
+		
+		soundSetArray = [self soundSetArrayAtPath:[soundSetPath stringByExpandingBundlePath]
+										  creator:nil
+									  description:nil]; //Load the soundset
+		[self activateSoundSet:soundSetArray];
+	}	
+}
+
+- (NSDictionary *)builtInEventPresets
+{
+	return builtInEventPresets;
+}
+
+- (NSDictionary *)storedEventPresets
+{
+	return storedEventPresets;
+}
 @end
