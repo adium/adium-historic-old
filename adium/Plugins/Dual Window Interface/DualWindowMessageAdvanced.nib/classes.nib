@@ -19,7 +19,6 @@
             OUTLETS = {
                 "autohide_tabBar" = NSButton; 
                 "checkBox_allowInactiveClosing" = NSButton; 
-                "createMessages_inTabs" = NSButton; 
                 "createTabs_inLastWindow" = NSButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
