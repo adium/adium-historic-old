@@ -6,7 +6,7 @@
 
 @protocol AIEventHandler <NSObject>
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID;
-- (NSString *)longDescriptionForEventID:(NSString *)eventID;
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
 @end
 
 @protocol AIActionHandler <NSObject>

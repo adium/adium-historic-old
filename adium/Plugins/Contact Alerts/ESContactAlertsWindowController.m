@@ -162,7 +162,7 @@
 	id <AIEventHandler>		eventHandler = [[[adium contactAlertsController] eventHandlers] objectForKey:eventID];
 
 	if(actionHandler && eventHandler){
-		[cell setStringValue:[eventHandler longDescriptionForEventID:eventID]];
+		[cell setStringValue:[eventHandler longDescriptionForEventID:eventID forListObject:listObject]];
 		[cell setImage:[actionHandler imageForActionID:actionID]];
 		[cell setSubString:[actionHandler longDescriptionForActionID:actionID
 														 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]];
