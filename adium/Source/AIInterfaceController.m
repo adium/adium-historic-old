@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.47 2004/01/05 02:41:49 overmind911 Exp $
+// $Id: AIInterfaceController.m,v 1.48 2004/01/08 03:59:46 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -89,15 +89,14 @@
 	AIListObject *listObject;
     [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] openChat:inChat];
 	
-	// Set the # of chats for all the list objects to +1
+	//Set the # of chats for all the list objects to +1
 	enumerator = [[inChat participatingListObjects] objectEnumerator];
-	while (listObject = [enumerator nextObject]) {
+	while(listObject = [enumerator nextObject]){
 		int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
-		[[listObject statusArrayForKey:@"ChatsCount"] setObject:[NSNumber numberWithInt:(currentCount + 1)] withOwner:listObject];
-		[[owner contactController] listObjectStatusChanged:listObject
-										modifiedStatusKeys:[NSArray arrayWithObject:@"ChatsCount"]
-												   delayed:YES
-													silent:NO];
+		[listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
+						  withOwner:listObject
+							 forKey:@"ChatsCount"
+							 notify:YES];
 	}
 }
 
@@ -108,16 +107,15 @@
 	
     [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] closeChat:inChat];
 	
-	// Set the # of chats for all the list objects to -1
+	//Set the # of chats for all the list objects to -1
 	enumerator = [[inChat participatingListObjects] objectEnumerator];
-	while (listObject = [enumerator nextObject]) {
+	while(listObject = [enumerator nextObject]){
 		int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
-		if (currentCount > 0) {
-			[[listObject statusArrayForKey:@"ChatsCount"] setObject:[NSNumber numberWithInt:(currentCount - 1)] withOwner:listObject];
-			[[owner contactController] listObjectStatusChanged:listObject
-											modifiedStatusKeys:[NSArray arrayWithObject:@"ChatsCount"]
-													   delayed:YES
-														silent:NO];
+		if(currentCount > 0) {
+			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
+							  withOwner:listObject
+								 forKey:@"ChatsCount"
+								 notify:YES];
 		}
 	}
 }

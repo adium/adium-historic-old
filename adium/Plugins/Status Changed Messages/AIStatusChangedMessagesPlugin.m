@@ -35,7 +35,7 @@
 }
 
 //Catch away message changes and display them
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     
     if([inModifiedKeys containsObject:@"StatusMessage"]){
@@ -55,16 +55,14 @@
     return(nil);
 }
 
-
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
     [self statusMessage:@"%@ went away" forObject:[notification object]];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
-
-    AIListObject * object = [notification object];
+    AIListObject *object = [notification object];
     
-    if ([[object statusArrayForKey:@"Online"] greatestIntegerValue])
-	[self statusMessage:@"%@ came back" forObject:object];
+    if([[object statusArrayForKey:@"Online"] greatestIntegerValue])
+		[self statusMessage:@"%@ came back" forObject:object];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
     [self statusMessage:@"%@ connected" forObject:[notification object]];
@@ -85,7 +83,7 @@
 {
     NSEnumerator	*enumerator;
     AIChat		*chat;
-
+	
     enumerator = [[[adium contentController] allChatsWithListObject:object] objectEnumerator];
     while((chat = [enumerator nextObject])){
         AIContentStatus	*content;
@@ -96,11 +94,10 @@
                                     destination:[chat account]
                                            date:[NSDate date]
                                         message:[NSString stringWithFormat:message,[object displayName]]];
-
+		
         //Add the object
         [[adium contentController] addIncomingContentObject:content];
     }
 }
-
 
 @end
