@@ -101,9 +101,6 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	[self gotGroupForContact:theContact];
-	
-	//We should receive retained data
-	[groupName release];
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
@@ -164,14 +161,10 @@ static id<GaimThread> gaimThread = nil;
 											userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
 
 																				 forKey:@"Notify"]];
-	//We should receive retained data
-	[gaimAlias release];
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
-	//We should receive retained data
-	[event release];
 }		
 
 
@@ -225,9 +218,6 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-	
-	//We should receive retained data
-	[signonDate release];
 }
 
 //Away and away return
@@ -267,9 +257,6 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-	
-	//We should receive retained data
-	[idleSinceDate release];
 }
 
 //Evil level (warning level)
@@ -297,9 +284,6 @@ static id<GaimThread> gaimThread = nil;
 
 		}
 	}
-	
-	//We should receive retained data
-	[evilNumber release];
 }   
 
 //Buddy Icon
@@ -318,9 +302,6 @@ static id<GaimThread> gaimThread = nil;
 	
 	//Clear the UserIconData
 	[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];
-	
-	//We should receive retained data
-	[userIconData release];
 }
 
 - (oneway void)removeContact:(AIListContact *)theContact
@@ -581,9 +562,6 @@ static id<GaimThread> gaimThread = nil;
 		   fromListContact:sourceContact 
 					 flags:flags
 					  date:[messageDict objectForKey:@"Date"]];
-	
-	//We receive retained data from SLGaimCocoaAdapter
-	[messageDict release];
 }
 
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
@@ -608,9 +586,6 @@ static id<GaimThread> gaimThread = nil;
 		   fromListContact:sourceContact 
 					 flags:flags
 					  date:[messageDict objectForKey:@"Date"]];
-	
-	//We receive retained data from SLGaimCocoaAdapter
-	[messageDict release];
 }
 
 - (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
@@ -1197,8 +1172,8 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
 	//We receive retained data
-	[lastDisconnectionError release]; lastDisconnectionError = text;
-	NSLog(@"%@ disconnected: %@",[self UID],lastDisconnectionError);
+	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
+	if (GAIM_DEBUG) NSLog(@"%@ disconnected: %@",[self UID],lastDisconnectionError);
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotifications];
@@ -1223,9 +1198,6 @@ static id<GaimThread> gaimThread = nil;
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
                                     withDescription:connectionNotice];
-	
-	//We should receive retained data
-	[connectionNotice release];
 }
 
 //Our account has disconnected
