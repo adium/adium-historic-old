@@ -36,8 +36,6 @@
 #define KEY_CLWH_WINDOW_POSITION	@"Contact Window Position"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
-//#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0]
-
 #define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
 #define TOOL_TIP_DELAY						25.0	//Number of check intervals of no movement before a tip is displayed
 
@@ -48,16 +46,6 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
-//#define BACKGROUND_ALPHA	1.0
-
-
-//#define CONTACTS_USE_MOCKIE_CELL NO
-//#define CONTACTS_USE_BUBBLE_CELL NO
-//
-//#define GROUPS_USE_MOCKIE_CELL		YES 
-//#define GROUPS_USE_GRADIENT_CELL	YES
-//#define DRAW_ALTERNATING_GRID	YES
-//#define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
 
 @interface AIListWindowController (PRIVATE)
@@ -112,7 +100,6 @@
     
     //Restore the window position
     frameString = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
-	NSLog(@"AIListWindowController: frame: %@",frameString);
 	if(frameString){
 		NSRect		windowFrame = NSRectFromString(frameString);
 		
