@@ -121,10 +121,10 @@ static void adiumGaimCoreUiInit(void)
 
 	//Clear the local blist on first launch of .80... temporary code.
 	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium:Cleared blist.xml when installing 0.80"];
+	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.80:Cleared blist.xml on first run"];
 	if(!clearedBlist || ![clearedBlist boolValue]){
 		[userDefaults setObject:[NSNumber numberWithBool:YES]
-						 forKey:@"Adium:Cleared blist.xml when installing 0.80"];
+						 forKey:@"Adium 0.80:Cleared blist.xml on first run"];
 
 		char *user_dir = gaim_user_dir();
 		[[NSFileManager defaultManager] trashFileAtPath:
