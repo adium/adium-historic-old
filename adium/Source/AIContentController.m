@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.67 2004/04/14 23:01:28 evands Exp $
+// $Id: AIContentController.m,v 1.68 2004/04/18 16:42:09 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -322,6 +322,7 @@
 {
     AIChat			*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
+	BOOL			shouldBeFirstMessage = NO;
 
     if(object){
         //Will receive content
@@ -338,6 +339,7 @@
 		#warning dchoby98: Another bad place to put Chat_DidOpen
 		if([inObject trackContent] && [[chat contentObjectArray] count] <= 1) {
 			[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+			shouldBeFirstMessage = YES;
 		}
 
         //Add/Display the object
@@ -347,7 +349,7 @@
 		
         if([inObject trackContent]){
             //Did receive content
-            if ([[chat contentObjectArray] count] > 1) {
+            if ([[chat contentObjectArray] count] > 1 && !shouldBeFirstMessage) {
                 [[owner notificationCenter] postNotificationName:Content_DidReceiveContent
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
