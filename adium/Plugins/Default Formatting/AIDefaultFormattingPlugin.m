@@ -53,10 +53,35 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-/*    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_BEHAVIOR] == 0){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
-
-    }*/
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
+		NSDictionary		*prefDict;
+		NSDictionary		*attributes;
+		NSColor				*textColor;
+		NSColor				*backgroundColor;
+		NSColor				*subBackgroundColor;
+		NSFont				*font;
+				
+		//Get the prefs
+		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+		font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
+		textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
+		backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+		subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
+		
+		//Setup the attributes
+		if(!subBackgroundColor){
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, 
+																textColor, NSForegroundColorAttributeName, 
+																backgroundColor, AIBodyColorAttributeName, nil];
+		}else{
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName,
+																textColor, NSForegroundColorAttributeName,
+																backgroundColor, AIBodyColorAttributeName,
+																subBackgroundColor, NSBackgroundColorAttributeName, nil];
+		}
+		
+		[[adium contentController] setDefaultFormattingAttributes:attributes];
+    }
 }
 
 
@@ -66,32 +91,10 @@
 - (void)_resetFormattingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSMutableAttributedString	*contents;
-    NSDictionary		*prefDict;
-    NSDictionary		*attributes;
-    NSColor			*textColor;
-    NSColor			*backgroundColor;
-    NSColor			*subBackgroundColor;
-    NSFont			*font;
+    NSDictionary				*attributes;
 
-    //Get the prefs
-    prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-    font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
-    textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-    backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
-    subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
-
-    //Setup the attributes
-    if(!subBackgroundColor){
-        attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, 
-																textColor, NSForegroundColorAttributeName, 
-																backgroundColor, AIBodyColorAttributeName, nil];
-    }else{
-        attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName,
-																textColor, NSForegroundColorAttributeName,
-																backgroundColor, AIBodyColorAttributeName,
-																subBackgroundColor, NSBackgroundColorAttributeName, nil];
-    }
-
+	attributes = [[adium contentController] defaultFormattingAttributes];
+	
     //Set them as the typing attributes for all new text
     [inTextEntryView setTypingAttributes:attributes];
 
