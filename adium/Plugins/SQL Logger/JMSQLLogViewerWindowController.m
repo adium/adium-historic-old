@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.8 $
- * $Date: 2003/11/16 02:08:54 $
+ * $Revision: 1.9 $
+ * $Date: 2003/12/12 15:16:06 $
  * $Author: jmelloy $
  */
 
@@ -197,7 +197,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     int 		i;
 
     //Process each account (Everyone in adium.users)
-    sqlStatement = [NSString stringWithString:@"select user_id, username, service from adium.users"];
+    sqlStatement = [NSString stringWithString:@"select user_id, scramble(username), service from adium.users"];
     accountRes = PQexec(conn, [sqlStatement UTF8String]);
     if (!accountRes || PQresultStatus(accountRes) != PGRES_TUPLES_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(accountRes)), PQresultErrorMessage(accountRes), sqlStatement);
@@ -272,7 +272,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     //Flush old selected array
     [selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];
 
-    dateSQL = [NSString stringWithFormat:@"select distinct on(message_date) sender_sn, recipient_sn, message_date::date, date_part(\'year\', message_date) as year, date_part(\'month\', message_date) as month, date_part(\'day\', message_date) as day, sender_id, recipient_id from adium.simple_message_v where sender_id = %@ or recipient_id = %@", inUserID, inUserID];
+    dateSQL = [NSString stringWithFormat:@"select distinct on(message_date) scramble(sender_sn), scramble(recipient_sn), message_date::date, date_part(\'year\', message_date) as year, date_part(\'month\', message_date) as month, date_part(\'day\', message_date) as day, sender_id, recipient_id from adium.simple_message_v where sender_id = %@ or recipient_id = %@", inUserID, inUserID];
 
     dateRes = PQexec(conn, [dateSQL UTF8String]);
     if (!dateRes || PQresultStatus(dateRes) != PGRES_TUPLES_OK) {
@@ -369,7 +369,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     int 		i,j;
     //Load the log
 
-    logSQL = [NSString stringWithFormat:@"select \'<div class=\"' || case when sender_id = %@ then 'send' else 'receive' end || '\"><span class=\"timestamp\">\' || to_char(message_date, \'HH24:MM:SS\') || '</span> ' as time, \'<span class=\"sender\">' || sender_sn || ':</span> ' as sender, \'<pre class=\"message\">' || message || '</pre></div>\n' as message_contents from adium.simple_message_v where ((sender_id = %@ and recipient_id = %@) or (sender_id = %@ and recipient_id = %@)) and message_date > \'%@\'::date and message_date < \'%@\'::date + 1 order by message_date", fromUserID, fromUserID, toUserID, toUserID, fromUserID, messageDate, messageDate];
+    logSQL = [NSString stringWithFormat:@"select \'<div class=\"' || case when sender_id = %@ then 'send' else 'receive' end || '\"><span class=\"timestamp\">\' || to_char(message_date, \'HH24:MM:SS\') || '</span> ' as time, \'<span class=\"sender\">' || scramble(sender_sn) || ':</span> ' as sender, \'<pre class=\"message\">' || message || '</pre></div>\n' as message_contents from adium.simple_message_v where ((sender_id = %@ and recipient_id = %@) or (sender_id = %@ and recipient_id = %@)) and message_date > \'%@\'::date and message_date < \'%@\'::date + 1 order by message_date", fromUserID, fromUserID, toUserID, toUserID, fromUserID, messageDate, messageDate];
 
     logRes = PQexec(conn, [logSQL UTF8String]);
     rawLogText = [NSMutableString stringWithString:@""];

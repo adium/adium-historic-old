@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.27 $
- * $Date: 2003/11/25 22:09:41 $
+ * $Revision: 1.28 $
+ * $Date: 2003/12/12 15:16:05 $
  * $Author: jmelloy $
  *
  */
@@ -41,7 +41,8 @@
     [[owner notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
 
     //Install some prefs.
-    //advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
+
+    advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
     
     //Install Menu item
     logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
@@ -155,6 +156,7 @@
     PQescapeString(escapeSendDisplay, [sendDisp UTF8String], [sendDisp length]);
     PQescapeString(escapeRecDisplay, [destDisp UTF8String], [destDisp length]);
     
+    NSLog(@"Inserting");
     sqlStatement = [NSString stringWithFormat:@"insert into adium.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service, sender_display, recipient_display) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\', \'%s\', \'%s\')", 
     escapeSender, escapeRecip, escapeMessage, s_service, r_service, escapeSendDisplay, escapeRecDisplay];
     
