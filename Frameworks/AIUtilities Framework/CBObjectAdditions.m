@@ -79,6 +79,19 @@
 	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
 }
 
+- (void)performSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 afterDelay:(NSTimeInterval)delay
+{
+	NSInvocation *invocation;
+	invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+	
+	[invocation setSelector:aSelector];
+	[invocation setArgument:&argument1 atIndex:2];
+	[invocation setArgument:&argument2 atIndex:3];
+	[invocation retainArguments];
+	
+	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation afterDelay:delay];	
+}
+
 - (void)handleInvocation:(NSInvocation *)anInvocation
 {
 	[anInvocation invokeWithTarget:self];
