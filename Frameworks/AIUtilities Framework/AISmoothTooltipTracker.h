@@ -18,9 +18,8 @@
 }
 
 + (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate;
-- (void)installCursorRect;
-- (void)removeCursorRect;
-- (void)resetCursorTracking;
++ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate yOffset:(float)inYOffset;
+
 - (void)setDelegate:(id)inDelegate;
 
 @end

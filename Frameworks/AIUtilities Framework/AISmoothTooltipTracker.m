@@ -13,8 +13,15 @@
 #define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
 #define TOOL_TIP_DELAY						35.0	//Number of check intervals of no movement before a tip is displayed
 
+#define	LOG_TRACKING_INFO					FALSE
+
 @interface AISmoothTooltipTracker (PRIVATE)
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate;
+
+- (void)installCursorRect;
+- (void)removeCursorRect;
+- (void)resetCursorTracking;
+
 - (void)_startTrackingMouse;
 - (void)_stopTrackingMouse;
 - (void)_hideTooltip;
@@ -24,7 +31,7 @@
 
 + (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate
 {
-	return([[[self alloc] initForView:inView withDelegate:inDelegate] autorelease]);
+	return([[[self alloc] initForView:inView withDelegate:inDelegate] autorelease]);	
 }
 
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate
@@ -77,7 +84,10 @@
 		
 		//Add a new tracking rect
 		trackingRect = [view frame];
-		mouseInside = NSPointInRect([[view window] convertScreenToBase:[NSEvent mouseLocation]], trackingRect);
+		trackingRect.origin = NSMakePoint(0,0);
+		
+		mouseInside = NSPointInRect([view convertPoint:[[view window] convertScreenToBase:[NSEvent mouseLocation]] fromView:[[view window] contentView]],
+									trackingRect);
 		tooltipTrackingTag = [view addTrackingRect:trackingRect owner:self userData:nil assumeInside:mouseInside];
 		
 		//If the mouse is already inside, begin tracking the mouse immediately
@@ -111,12 +121,18 @@
 //Mouse entered our list, begin tracking it's movement
 - (void)mouseEntered:(NSEvent *)theEvent
 {
+#if LOG_TRACKING_INFO
+	NSLog(@"AISmoothTooltipTracker: *** Mouse entered");	
+#endif
 	[self _startTrackingMouse];
 }
 
 //Mouse left our list, cease tracking
 - (void)mouseExited:(NSEvent *)theEvent
 {
+#if LOG_TRACKING_INFO
+	NSLog(@"AISmoothTooltipTracker: *** Mouse exited");
+#endif
 	[self _stopTrackingMouse];
 }
 
@@ -162,9 +178,22 @@
 //Time to poll mouse location
 - (void)mouseMovementTimer:(NSTimer *)inTimer
 {
-	NSPoint mouseLocation = [NSEvent mouseLocation];
-
-	if([[view window] isVisible] && NSPointInRect([[view window] convertScreenToBase:mouseLocation], [view frame])){
+	NSPoint		mouseLocation = [NSEvent mouseLocation];
+	NSWindow	*theWindow = [view window];
+	
+#if LOG_TRACKING_INFO
+	NSLog(@"AISmoothTooltipTracker: Visible: %i ; Point %@ in %@ = %i",[[view window] isVisible],
+/*		  NSStringFromPoint([[view superview] convertPoint:[[view window] convertScreenToBase:mouseLocation] fromView:[[view window] contentView]]),*/
+		  NSStringFromPoint([[view window] convertScreenToBase:mouseLocation]),
+/*		  NSStringFromRect([view frame]),*/
+		  NSStringFromRect([[[view window] contentView] convertRect:[view frame] fromView:[view superview]]),
+/*		  NSPointInRect([[view window] convertScreenToBase:mouseLocation], [view frame])*/
+		  /*NSPointInRect([[view superview] convertPoint:[[view window] convertScreenToBase:mouseLocation] fromView:[[view window] contentView]],[view frame])*/
+		  NSPointInRect([[view window] convertScreenToBase:mouseLocation],[[[view window] contentView] convertRect:[view frame] fromView:[view superview]]));
+#endif
+	
+	if([theWindow isVisible] && 
+	   NSPointInRect([theWindow convertScreenToBase:mouseLocation],[[theWindow contentView] convertRect:[view frame] fromView:[view superview]])){
 		//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
 		//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
 		//displaying the tooltips
@@ -183,9 +212,10 @@
 			}
 		}
 	}else{
-		//If the cursor has left our frame or the window is no logner visible, stop tracking the cursor.
-		//This protects us in the cases where we do not receive a mouse exited message.
-		[self _stopTrackingMouse];
+		//If the cursor has left our frame or the window is no logner visible, manually hide the tooltip.
+		//This protects us in the cases where we do not receive a mouse exited message; we don't stop tracking
+		//because we could reenter the tracking area without receiving a mouseEntered: message.
+		[self _hideTooltip];
 	}
 }
 
