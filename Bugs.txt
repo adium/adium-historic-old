@@ -10,6 +10,9 @@ Meta Contacts
   - MetaContact ordering does not always restore properly
 
 [MEDIUM]
+    - Plugins always prompt to disable.  I realize this is Adam's preferred
+      behavior, but some people actually use plugins :)
+
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
 Logs
@@ -28,7 +31,7 @@ Logs
   - An incoming message which opens a new tab will also unminimize the associated window
   - Error message window doesn't wrap & resize properly for long titles (Gaim often
 	sends messages with longer titles than we expect)
-	
+
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
 //------------------------------------------------------------------------------------
@@ -36,7 +39,7 @@ Logs
 - (Yahoo) Files over 1 MB in size fail to send
 - (Jabber) Authorization problems
 - (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
-- (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly, 
+- (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly,
 	but can be received - only with certain default languages. English default language
 	works fine for these charactersets... so the default C encoding must be being used
 	(incorrectly) somewhere in libgaim?
@@ -59,7 +62,7 @@ Logs
     "Well, I hit grant to his auth request, and he still won't be able to see
     me." -- xtapo
     previously authorized contacts work as expected.
-  
+
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
