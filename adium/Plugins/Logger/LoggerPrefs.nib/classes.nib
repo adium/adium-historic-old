@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {preferenceChanged = id; }; 
+            CLASS = AILoggerPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_enableLogging" = NSButton; "view_prefView" = NSView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

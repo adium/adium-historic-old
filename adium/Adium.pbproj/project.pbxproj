@@ -4799,6 +4799,57 @@
 			path = "";
 			refType = 4;
 		};
+		4B54D1020502865F00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILoggerPreferences.h;
+			path = Plugins/Logger/AILoggerPreferences.h;
+			refType = 4;
+		};
+		4B54D1030502865F00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILoggerPreferences.m;
+			path = Plugins/Logger/AILoggerPreferences.m;
+			refType = 4;
+		};
+		4B54D1040502865F00A8010A = {
+			fileRef = 4B54D1020502865F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B54D1050502865F00A8010A = {
+			fileRef = 4B54D1030502865F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B54D10605028BC400A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LoggingDefaults.plist;
+			path = Plugins/Logger/LoggingDefaults.plist;
+			refType = 4;
+		};
+		4B54D10705028BC400A8010A = {
+			fileRef = 4B54D10605028BC400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B54D10805028DAE00A8010A = {
+			isa = PBXFileReference;
+			name = LoggerPrefs.nib;
+			path = Plugins/Logger/LoggerPrefs.nib;
+			refType = 4;
+		};
+		4B54D10905028DAE00A8010A = {
+			fileRef = 4B54D10805028DAE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B554115044DEFEF00A8010A = {
 			children = (
 				4B55411F044DF04B00A8010A,
@@ -11796,6 +11847,7 @@
 			files = (
 				9C8C7FA603CBA21B00267226,
 				4BD68229045B010D00A8010A,
+				4B54D1040502865F00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11804,6 +11856,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B3DB8FE04547A8D00A8010A,
+				4B54D10705028BC400A8010A,
+				4B54D10905028DAE00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11813,6 +11867,7 @@
 			files = (
 				9C8C7FA703CBA21B00267226,
 				4BD6822A045B010D00A8010A,
+				4B54D1050502865F00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11913,7 +11968,11 @@
 				9C8C7FA503CBA21B00267226,
 				4BD68227045B010D00A8010A,
 				4BD68228045B010D00A8010A,
+				4B54D1020502865F00A8010A,
+				4B54D1030502865F00A8010A,
 				4B3DB8FD04547A8D00A8010A,
+				4B54D10605028BC400A8010A,
+				4B54D10805028DAE00A8010A,
 			);
 			isa = PBXGroup;
 			name = Logger;

@@ -14,23 +14,16 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 
-#define PATH_LOGS		@"/Logs"
-#define PREF_GROUP_LOGGING	@"Logging"
-#define KEY_LOGGER_ENABLE	@"Enable Logging"
+@interface AILoggerPreferences : NSObject {
+    IBOutlet	NSView		*view_prefView;
+    IBOutlet	NSButton	*checkBox_enableLogging;
 
-@class AILoggerPreferences;
+    AIAdium			*owner;
 
-@interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
-    AILoggerPreferences		*preferences;
-    BOOL			observingContent;
-    
-    NSString			*logBasePath; 			//The base directory of all logs
-
-    NSMenuItem			*logViewerMenuItem;
-    NSMenuItem			*viewContactLogsMenuItem;
-    NSMenuItem			*viewContactLogsContextMenuItem;
 }
+
++ (AILoggerPreferences *)loggerPreferencesWithOwner:(id)inOwner;
+- (IBAction)preferenceChanged:(id)sender;
 
 @end
