@@ -70,7 +70,6 @@
 #define CONTACT_DEFAULT_PREFS			@"ContactPrefs"
 
 #define	SHOW_GROUPS_MENU_TITLE			AILocalizedString(@"Show Contact List Groups",nil)
-#define	HIDE_GROUPS_MENU_TITLE			AILocalizedString(@"Hide Contact List Groups",nil)
 #define SHOW_GROUPS_IDENTIFER			@"ShowGroups"
 
 #define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
@@ -691,13 +690,12 @@ DeclareString(UID);
 																	  group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
 	
 	//Show offline contacts menu item
-    showGroupsMenuItem = [[NSMenuItem alloc] initWithTitle:(useContactListGroups ? 
-															HIDE_GROUPS_MENU_TITLE : 
-															SHOW_GROUPS_MENU_TITLE)
-													 target:self
-													 action:@selector(toggleShowGroups:)
-											  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Content];		
+    showGroupsMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_GROUPS_MENU_TITLE
+													target:self
+													action:@selector(toggleShowGroups:)
+											 keyEquivalent:@""];
+	[showGroupsMenuItem setState:useContactListGroups];
+	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Toggles];		
 	
 	//Toolbar
 	NSToolbarItem	*toolbarItem;
@@ -717,11 +715,8 @@ DeclareString(UID);
 {
 	//Flip-flop.
 	useContactListGroups = !useContactListGroups;
+	[showGroupsMenuItem setState:useContactListGroups];
 	
-	//Update the menu item's title
-	//The menu item shows the opposite of the new state, since that what happens if you toggle it.
-	[showGroupsMenuItem setTitle:(useContactListGroups ? HIDE_GROUPS_MENU_TITLE : SHOW_GROUPS_MENU_TITLE)];
-
 	//Update the contact list.  Do it on the next run loop for better menu responsiveness, as it may be a lengthy procedure.
 	[self performSelector:@selector(_performChangeOfUseContactListGroups)
 			   withObject:nil
