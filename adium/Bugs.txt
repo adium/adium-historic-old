@@ -57,6 +57,9 @@
 - Webkit styles must support multi-line status messages
 	The included style with problems is Smooth Operator
 
+- Webkit header/footer information animates buddy icons
+	This is considered a bug but could be a worthwhile option for webkit authors
+	
 - Bottom alignment issues
 	The simple message style has a bottom alignment issue.  Send a few messages, but
 	not enough to make the scrollbar visible, then type a two line message into the
@@ -68,7 +71,6 @@
 
 - Push/pop indicator spacing
 	It could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar
-
 
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
