@@ -83,93 +83,6 @@
 //112
 //113
 //114
-		112F5651050A3AF3005FD3EF = {
-			children = (
-				112F5664050A3BAF005FD3EF,
-				112F5665050A3BAF005FD3EF,
-				4BEA21ED052B4A8900A8010A,
-				112F5667050A3BAF005FD3EF,
-			);
-			isa = PBXGroup;
-			name = "Grouped Idle Time Idle Away Sort";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		112F5664050A3BAF005FD3EF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIGroupedIdleAwaySortNoGroups.h;
-			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortNoGroups.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		112F5665050A3BAF005FD3EF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIGroupedIdleAwaySortNoGroups.m;
-			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortNoGroups.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		112F5667050A3BAF005FD3EF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIGroupedIdleAwaySortPlugin.m;
-			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		115C720D0470BE5E007DDD3A = {
-			children = (
-				115C720E0470BEFB007DDD3A,
-				115C720F0470BEFB007DDD3A,
-				115C72120470BF33007DDD3A,
-				115C72130470BF33007DDD3A,
-			);
-			isa = PBXGroup;
-			name = "Idle Sort";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		115C720E0470BEFB007DDD3A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleSortPlugin.h;
-			path = "Plugins/Idle Sort/AIIdleSortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		115C720F0470BEFB007DDD3A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleSortPlugin.m;
-			path = "Plugins/Idle Sort/AIIdleSortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		115C72120470BF33007DDD3A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleSortNoGroups.h;
-			path = "Plugins/Idle Sort/AIIdleSortNoGroups.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		115C72130470BF33007DDD3A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleSortNoGroups.m;
-			path = "Plugins/Idle Sort/AIIdleSortNoGroups.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		11B96D81049AF85900C6304D = {
 			children = (
 				11B96D97049AF8FB00C6304D,
@@ -310,12 +223,7 @@
 				34BDA1C60531485C000AB133,
 				9E87CDF105748FFA001CB886,
 				4B7F278305440C0800CDFC90,
-				34BDA1D805314867000AB133,
-				34BDA1EA05314875000AB133,
-				3419F2E605314B6500C68BA3,
-				3419F2F605314B6E00C68BA3,
 				3419F30805314B7700C68BA3,
-				3419F31805314B8100C68BA3,
 				3419F32E05314B8D00C68BA3,
 				3419F34005314B9700C68BA3,
 				34F8A7E705A8920F00577775,
@@ -348,6 +256,7 @@
 				6C5C3C2205F6532600490341,
 				6C5C3C2505F6532600490341,
 				6C5C3C2605F6532600490341,
+				34FB516805FE62F400F0D7D7,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -430,12 +339,7 @@
 				34BDA1B30531485B000AB133,
 				344EE91105744F5F000F342B,
 				4B7F278205440C0800CDFC90,
-				34BDA1C705314866000AB133,
-				34BDA1D905314874000AB133,
-				3419F2D705314B6400C68BA3,
-				3419F2E705314B6D00C68BA3,
 				3419F2F705314B7600C68BA3,
-				3419F30905314B8100C68BA3,
 				3419F31905314B8D00C68BA3,
 				3419F32F05314B9600C68BA3,
 				34F8A7E605A8920F00577775,
@@ -454,6 +358,7 @@
 				3419F3A605314BE000C68BA3,
 				3419F3B405314BEA00C68BA3,
 				3419F3D705314C0500C68BA3,
+				34FB516705FE62F400F0D7D7,
 				3419F3EA05314C1200C68BA3,
 				3419F40205314C2600C68BA3,
 				3419F41905314C3200C68BA3,
@@ -850,244 +755,6 @@
 			settings = {
 			};
 		};
-		3419F2D705314B6400C68BA3 = {
-			buildPhases = (
-				3419F2DA05314B6400C68BA3,
-				3419F2DD05314B6400C68BA3,
-				3419F2DE05314B6400C68BA3,
-				3419F2E105314B6400C68BA3,
-				3419F2E305314B6400C68BA3,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Idle_Away_Manual_Sort.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Idle Away Manual Sort";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				3419F2D805314B6400C68BA3,
-				3419F2D905314B6400C68BA3,
-			);
-			isa = PBXNativeTarget;
-			name = "Idle Away Manual Sort";
-			productInstallPath = /Adium.app/Contents/PlugIns/;
-			productName = IdleAwayManualSort;
-			productReference = 3419F2E605314B6500C68BA3;
-			productType = "com.apple.product-type.bundle";
-		};
-		3419F2D805314B6400C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98A10531467B000AB133;
-		};
-		3419F2D905314B6400C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98A20531467B000AB133;
-		};
-		3419F2DA05314B6400C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F2DB05314B6400C68BA3,
-				3419F2DC05314B6400C68BA3,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2DB05314B6400C68BA3 = {
-			fileRef = F53B4A6E04992C8001803884;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2DC05314B6400C68BA3 = {
-			fileRef = F53B4A7E04993BB901803884;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2DD05314B6400C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2DE05314B6400C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F2DF05314B6400C68BA3,
-				3419F2E005314B6400C68BA3,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2DF05314B6400C68BA3 = {
-			fileRef = F53B4A6F04992C8001803884;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2E005314B6400C68BA3 = {
-			fileRef = F53B4A7F04993BB901803884;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2E105314B6400C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F74205314FA300C68BA3,
-				3419F74305314FA300C68BA3,
-				3419F2E205314B6400C68BA3,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2E205314B6400C68BA3 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2E305314B6400C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2E605314B6500C68BA3 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Idle Away Manual Sort.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3419F2E705314B6D00C68BA3 = {
-			buildPhases = (
-				3419F2EA05314B6D00C68BA3,
-				3419F2ED05314B6D00C68BA3,
-				3419F2EE05314B6D00C68BA3,
-				3419F2F105314B6D00C68BA3,
-				3419F2F305314B6D00C68BA3,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Idle_Away_Sort.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Idle Away Sort";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				3419F2E805314B6D00C68BA3,
-				3419F2E905314B6D00C68BA3,
-			);
-			isa = PBXNativeTarget;
-			name = "Idle Away Sort";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Idle Away Sort";
-			productReference = 3419F2F605314B6E00C68BA3;
-			productType = "com.apple.product-type.bundle";
-		};
-		3419F2E805314B6D00C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98E20531467B000AB133;
-		};
-		3419F2E905314B6D00C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98AA0531467B000AB133;
-		};
-		3419F2EA05314B6D00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F2EB05314B6D00C68BA3,
-				3419F2EC05314B6D00C68BA3,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2EB05314B6D00C68BA3 = {
-			fileRef = 4B4FA11E04125FD900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2EC05314B6D00C68BA3 = {
-			fileRef = 4B4FA12604125FE900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2ED05314B6D00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2EE05314B6D00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F2EF05314B6D00C68BA3,
-				3419F2F005314B6D00C68BA3,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2EF05314B6D00C68BA3 = {
-			fileRef = 4B4FA11F04125FD900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2F005314B6D00C68BA3 = {
-			fileRef = 4B4FA12704125FE900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2F105314B6D00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F74405314FA900C68BA3,
-				3419F74505314FA900C68BA3,
-				3419F2F205314B6D00C68BA3,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2F205314B6D00C68BA3 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F2F305314B6D00C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F2F605314B6E00C68BA3 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Idle Away Sort.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		3419F2F705314B7600C68BA3 = {
 			buildPhases = (
 				3419F2FA05314B7600C68BA3,
@@ -1218,125 +885,6 @@
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Idle Message.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3419F30905314B8100C68BA3 = {
-			buildPhases = (
-				3419F30C05314B8100C68BA3,
-				3419F30F05314B8100C68BA3,
-				3419F31005314B8100C68BA3,
-				3419F31305314B8100C68BA3,
-				3419F31505314B8100C68BA3,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Idle_Sort.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Idle Sort";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				3419F30A05314B8100C68BA3,
-				3419F30B05314B8100C68BA3,
-			);
-			isa = PBXNativeTarget;
-			name = "Idle Sort";
-			productInstallPath = /Adium.app/Contents/PlugIns/;
-			productName = "Idle Sort";
-			productReference = 3419F31805314B8100C68BA3;
-			productType = "com.apple.product-type.bundle";
-		};
-		3419F30A05314B8100C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98A60531467B000AB133;
-		};
-		3419F30B05314B8100C68BA3 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98A50531467B000AB133;
-		};
-		3419F30C05314B8100C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F30D05314B8100C68BA3,
-				3419F30E05314B8100C68BA3,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F30D05314B8100C68BA3 = {
-			fileRef = 115C720E0470BEFB007DDD3A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F30E05314B8100C68BA3 = {
-			fileRef = 115C72120470BF33007DDD3A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F30F05314B8100C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F31005314B8100C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F31105314B8100C68BA3,
-				3419F31205314B8100C68BA3,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F31105314B8100C68BA3 = {
-			fileRef = 115C720F0470BEFB007DDD3A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F31205314B8100C68BA3 = {
-			fileRef = 115C72130470BF33007DDD3A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F31305314B8100C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F74805314FAD00C68BA3,
-				3419F74905314FAD00C68BA3,
-				3419F31405314B8100C68BA3,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F31405314B8100C68BA3 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F31505314B8100C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F31805314B8100C68BA3 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Idle Sort.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -4019,54 +3567,6 @@
 			settings = {
 			};
 		};
-		3419F73E05314F9E00C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F73F05314F9E00C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74005314FA000C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74105314FA000C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74205314FA300C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74305314FA300C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74405314FA900C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74505314FA900C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3419F74605314FAB00C68BA3 = {
 			fileRef = 34BD9DE105314751000AB133;
 			isa = PBXBuildFile;
@@ -4074,18 +3574,6 @@
 			};
 		};
 		3419F74705314FAB00C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74805314FAD00C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F74905314FAD00C68BA3 = {
 			fileRef = 34BD9E9305314755000AB133;
 			isa = PBXBuildFile;
 			settings = {
@@ -4511,38 +3999,8 @@
 			settings = {
 			};
 		};
-		3419FE060531585600C68BA3 = {
-			fileRef = 34BDA1D805314867000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419FE070531585600C68BA3 = {
-			fileRef = 34BDA1EA05314875000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419FE080531585600C68BA3 = {
-			fileRef = 3419F2E605314B6500C68BA3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419FE090531585600C68BA3 = {
-			fileRef = 3419F2F605314B6E00C68BA3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3419FE0A0531585600C68BA3 = {
 			fileRef = 3419F30805314B7700C68BA3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419FE0B0531585600C68BA3 = {
-			fileRef = 3419F31805314B8100C68BA3;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7707,13 +7165,6 @@
 			settings = {
 			};
 		};
-		34BD98890531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 112F56AD050A4371005FD3EF;
-			remoteInfo = "Grouped Idle Away Sort";
-		};
 		34BD988A0531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7798,13 +7249,6 @@
 			remoteGlobalIDString = 6E97F13504A94C1800472FFF;
 			remoteInfo = "Idle Message";
 		};
-		34BD98970531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
 		34BD98980531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7868,20 +7312,6 @@
 			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
 			remoteInfo = AIUtilities.Framework;
 		};
-		34BD98A10531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
-		34BD98A20531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
 		34BD98A30531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7896,20 +7326,6 @@
 			remoteGlobalIDString = 4B18A5250459F8AF00A8010A;
 			remoteInfo = "Contact Status Dock Overlays";
 		};
-		34BD98A50531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
-		34BD98A60531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD98A70531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7923,13 +7339,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
-		};
-		34BD98AA0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
 		};
 		34BD98AB0531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -8127,13 +7536,6 @@
 			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
 			remoteInfo = AIUtilities.Framework;
 		};
-		34BD98C70531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 115C72060470BD91007DDD3A;
-			remoteInfo = "Idle Sort";
-		};
 		34BD98C80531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8302,13 +7704,6 @@
 			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
 			remoteInfo = AIUtilities.Framework;
 		};
-		34BD98E20531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD98E30531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8337,13 +7732,6 @@
 			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
 			remoteInfo = AIUtilities.Framework;
 		};
-		34BD98E90531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F16B1A4705163AEB0000000E;
-			remoteInfo = "Grouped Away By Idle Sort";
-		};
 		34BD98EA0531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8364,13 +7752,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F569E39102CA88C701A8010A;
 			remoteInfo = "Dual Window Interface";
-		};
-		34BD98EF0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
 		};
 		34BD98F00531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -8471,20 +7852,6 @@
 			remoteInfo = Adium.Framework;
 		};
 		34BD99000531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
-		34BD99010531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 4B4FA11404125F3F00A8010A;
-			remoteInfo = "Idle Away Sort";
-		};
-		34BD99020531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
 			proxyType = 1;
@@ -8778,13 +8145,6 @@
 			remoteGlobalIDString = F510B77303339F1C01A8010A;
 			remoteInfo = "Account Menu Access";
 		};
-		34BD992E0531467C000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD992F0531467C000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8798,13 +8158,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F501BB1303882A2901A8010A;
 			remoteInfo = "Standard Toolbar Items";
-		};
-		34BD99310531467C000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B4A6A04991CB601803884;
-			remoteInfo = "Idle Away Manual Sort";
 		};
 		34BD99320531467C000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -8950,12 +8303,7 @@
 				34BD9CF3053146CC000AB133,
 				344EE91E0574500F000F342B,
 				4B7845EC059B50820048A8BA,
-				34BD9D0A053146CC000AB133,
-				34BD9CF4053146CC000AB133,
-				34BD9CF5053146CC000AB133,
-				34BD9CF6053146CC000AB133,
 				34BD9CF7053146CC000AB133,
-				34BD9CF8053146CC000AB133,
 				34BD9CF9053146CC000AB133,
 				34BD9CFA053146CC000AB133,
 				3400240105A96D910047226F,
@@ -8975,6 +8323,7 @@
 				34BD9D03053146CC000AB133,
 				34BD9D04053146CC000AB133,
 				9E87CF61057491C4001CB886,
+				34FB553C05FEDF7200F0D7D7,
 				34BD9D0D053146CC000AB133,
 				34BD9D06053146CC000AB133,
 				349E243405C6DCFF00231A84,
@@ -9148,30 +8497,10 @@
 			target = 34BDA1B30531485B000AB133;
 			targetProxy = 34BD99130531467B000AB133;
 		};
-		34BD9CF4053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BDA1D905314874000AB133;
-			targetProxy = 34BD98890531467B000AB133;
-		};
-		34BD9CF5053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			target = 3419F2D705314B6400C68BA3;
-			targetProxy = 34BD99310531467C000AB133;
-		};
-		34BD9CF6053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			target = 3419F2E705314B6D00C68BA3;
-			targetProxy = 34BD99010531467B000AB133;
-		};
 		34BD9CF7053146CC000AB133 = {
 			isa = PBXTargetDependency;
 			target = 3419F2F705314B7600C68BA3;
 			targetProxy = 34BD98960531467B000AB133;
-		};
-		34BD9CF8053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			target = 3419F30905314B8100C68BA3;
-			targetProxy = 34BD98C70531467B000AB133;
 		};
 		34BD9CF9053146CC000AB133 = {
 			isa = PBXTargetDependency;
@@ -9247,11 +8576,6 @@
 			isa = PBXTargetDependency;
 			target = 34BDA0A4053147E8000AB133;
 			targetProxy = 34BD98F90531467B000AB133;
-		};
-		34BD9D0A053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BDA1C705314866000AB133;
-			targetProxy = 34BD98E90531467B000AB133;
 		};
 		34BD9D0B053146CC000AB133 = {
 			isa = PBXTargetDependency;
@@ -9890,12 +9214,7 @@
 				3419FE050531585600C68BA3,
 				4BED6DEE05D5F96F00ACFD49,
 				4B7F27C705440DE900CDFC90,
-				3419FE060531585600C68BA3,
-				3419FE070531585600C68BA3,
-				3419FE080531585600C68BA3,
-				3419FE090531585600C68BA3,
 				3419FE0A0531585600C68BA3,
-				3419FE0B0531585600C68BA3,
 				3419FE0C0531585600C68BA3,
 				3419FE0D0531585600C68BA3,
 				34D9C11C05AAAF4300AC2E4D,
@@ -9914,6 +9233,7 @@
 				344EE9D305749E38000F342B,
 				3419FE180531585600C68BA3,
 				B723DD9D05F85928003913CC,
+				34FB554405FEDFC800F0D7D7,
 				3419FE1A0531585600C68BA3,
 				3419FDE40531585600C68BA3,
 				3419FE1C0531585600C68BA3,
@@ -13126,7 +12446,6 @@
 			files = (
 				34BD9F8F05314795000AB133,
 				34BD9F9005314795000AB133,
-				34BD9F9105314795000AB133,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13143,15 +12462,11 @@
 			settings = {
 			};
 		};
-		34BD9F9105314795000AB133 = {
-			fileRef = 4B7BD56604123BF500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9F9205314795000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FB534F05FEA03500F0D7D7,
+				34FB541205FEA88900F0D7D7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13161,7 +12476,6 @@
 			files = (
 				34BD9F9405314795000AB133,
 				34BD9F9505314795000AB133,
-				34BD9F9605314795000AB133,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13174,12 +12488,6 @@
 		};
 		34BD9F9505314795000AB133 = {
 			fileRef = 4B7BD56304123BEB00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F9605314795000AB133 = {
-			fileRef = 4B7BD56704123BF500A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -14505,7 +13813,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BDA080053147D6000AB133,
-				34BDA081053147D6000AB133,
+				34FB523805FE6A4C00F0D7D7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14516,26 +13824,14 @@
 			settings = {
 			};
 		};
-		34BDA081053147D6000AB133 = {
-			fileRef = 4B9BF6CD03F8740700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BDA082053147D6000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BDA083053147D6000AB133,
 				34BDA084053147D6000AB133,
+				34FB530E05FE9EB700F0D7D7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA083053147D6000AB133 = {
-			fileRef = 4B9BF6CB03F8704000A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BDA084053147D6000AB133 = {
 			fileRef = 4BE4B0E903F9C2AF00A8010A;
@@ -14547,19 +13843,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BDA086053147D6000AB133,
-				34BDA087053147D6000AB133,
+				34FB523905FE6A4C00F0D7D7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA086053147D6000AB133 = {
 			fileRef = 4B9E73E403F708A800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA087053147D6000AB133 = {
-			fileRef = 4B9BF6CE03F8740700A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16548,244 +15838,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		34BDA1C705314866000AB133 = {
-			buildPhases = (
-				34BDA1CA05314866000AB133,
-				34BDA1CD05314866000AB133,
-				34BDA1CE05314866000AB133,
-				34BDA1D105314866000AB133,
-				34BDA1D505314866000AB133,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Grouped_Away_By_Idle_Sort.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Grouped Away By Idle Sort";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				34BDA1C805314866000AB133,
-				34BDA1C905314866000AB133,
-			);
-			isa = PBXNativeTarget;
-			name = "Grouped Away By Idle Sort";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Grouped Away By Idle Sort";
-			productReference = 34BDA1D805314867000AB133;
-			productType = "com.apple.product-type.bundle";
-		};
-		34BDA1C805314866000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD99020531467B000AB133;
-		};
-		34BDA1C905314866000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98970531467B000AB133;
-		};
-		34BDA1CA05314866000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA1CB05314866000AB133,
-				34BDA1CC05314866000AB133,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1CB05314866000AB133 = {
-			fileRef = F16B1A5E05163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1CC05314866000AB133 = {
-			fileRef = F16B1A6005163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1CD05314866000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1CE05314866000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA1CF05314866000AB133,
-				34BDA1D005314866000AB133,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1CF05314866000AB133 = {
-			fileRef = F16B1A5F05163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1D005314866000AB133 = {
-			fileRef = F16B1A6105163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1D105314866000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F73E05314F9E00C68BA3,
-				3419F73F05314F9E00C68BA3,
-				34BDA1D405314866000AB133,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1D405314866000AB133 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1D505314866000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1D805314867000AB133 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Grouped Away By Idle Sort.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34BDA1D905314874000AB133 = {
-			buildPhases = (
-				34BDA1DC05314874000AB133,
-				34BDA1DF05314874000AB133,
-				34BDA1E005314874000AB133,
-				34BDA1E305314874000AB133,
-				34BDA1E705314874000AB133,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Grouped_Idle_Away_Sort.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Grouped Idle Away Sort";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				34BDA1DA05314874000AB133,
-				34BDA1DB05314874000AB133,
-			);
-			isa = PBXNativeTarget;
-			name = "Grouped Idle Away Sort";
-			productInstallPath = /Adium.app/Contents/PlugIns/;
-			productName = IdleAwayManualSort;
-			productReference = 34BDA1EA05314875000AB133;
-			productType = "com.apple.product-type.bundle";
-		};
-		34BDA1DA05314874000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD992E0531467C000AB133;
-		};
-		34BDA1DB05314874000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98EF0531467B000AB133;
-		};
-		34BDA1DC05314874000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA1DD05314874000AB133,
-				34BDA1DE05314874000AB133,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1DD05314874000AB133 = {
-			fileRef = 112F5664050A3BAF005FD3EF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1DE05314874000AB133 = {
-			fileRef = 4BEA21ED052B4A8900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1DF05314874000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1E005314874000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BDA1E105314874000AB133,
-				34BDA1E205314874000AB133,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1E105314874000AB133 = {
-			fileRef = 112F5665050A3BAF005FD3EF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1E205314874000AB133 = {
-			fileRef = 112F5667050A3BAF005FD3EF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1E305314874000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F74005314FA000C68BA3,
-				3419F74105314FA000C68BA3,
-				34BDA1E605314874000AB133,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1E605314874000AB133 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA1E705314874000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1EA05314875000AB133 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Grouped Idle Away Sort.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		34C1CA8705B15B170055C2E3 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -17327,6 +16379,344 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34FB515B05FE62D200F0D7D7 = {
+			children = (
+				34FB51A405FE651D00F0D7D7,
+				34FB51A505FE651D00F0D7D7,
+				34FB51D705FE674600F0D7D7,
+				34FB51D805FE674600F0D7D7,
+				34FB55B305FEF48200F0D7D7,
+				34FB552A05FED0D400F0D7D7,
+			);
+			isa = PBXGroup;
+			name = "Status Sort";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB516305FE62F400F0D7D7 = {
+			buildActionMask = 2147483647;
+			files = (
+				34FB51A605FE651E00F0D7D7,
+				34FB51D905FE674700F0D7D7,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34FB516405FE62F400F0D7D7 = {
+			buildActionMask = 2147483647;
+			files = (
+				34FB552B05FED0D500F0D7D7,
+				34FB55B405FEF48200F0D7D7,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34FB516505FE62F400F0D7D7 = {
+			buildActionMask = 2147483647;
+			files = (
+				34FB51A705FE651E00F0D7D7,
+				34FB51DA05FE674700F0D7D7,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34FB516605FE62F400F0D7D7 = {
+			buildActionMask = 2147483647;
+			files = (
+				34FB519C05FE64D800F0D7D7,
+				34FB519D05FE64D800F0D7D7,
+				34FB519E05FE64D800F0D7D7,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34FB516705FE62F400F0D7D7 = {
+			buildPhases = (
+				34FB516305FE62F400F0D7D7,
+				34FB516405FE62F400F0D7D7,
+				34FB516505FE62F400F0D7D7,
+				34FB516605FE62F400F0D7D7,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/Status Sort.plist";
+				PRODUCT_NAME = "Status Sort";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Status Sort";
+			productName = "Status Sort";
+			productReference = 34FB516805FE62F400F0D7D7;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Status Sort</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Status_Sort</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		34FB516805FE62F400F0D7D7 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Status Sort.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34FB519C05FE64D800F0D7D7 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB519D05FE64D800F0D7D7 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB519E05FE64D800F0D7D7 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB51A405FE651D00F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESStatusSortPlugin.h;
+			path = "Plugins/Status Sort/ESStatusSortPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB51A505FE651D00F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESStatusSortPlugin.m;
+			path = "Plugins/Status Sort/ESStatusSortPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB51A605FE651E00F0D7D7 = {
+			fileRef = 34FB51A405FE651D00F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB51A705FE651E00F0D7D7 = {
+			fileRef = 34FB51A505FE651D00F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB51D705FE674600F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESStatusSort.h;
+			path = "Plugins/Status Sort/ESStatusSort.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB51D805FE674600F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESStatusSort.m;
+			path = "Plugins/Status Sort/ESStatusSort.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB51D905FE674700F0D7D7 = {
+			fileRef = 34FB51D705FE674600F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB51DA05FE674700F0D7D7 = {
+			fileRef = 34FB51D805FE674600F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB523605FE6A4C00F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactSortConfigurationWindowController.h;
+			path = "Plugins/Contact Sort Selection/ESContactSortConfigurationWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB523705FE6A4C00F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactSortConfigurationWindowController.m;
+			path = "Plugins/Contact Sort Selection/ESContactSortConfigurationWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB523805FE6A4C00F0D7D7 = {
+			fileRef = 34FB523605FE6A4C00F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB523905FE6A4C00F0D7D7 = {
+			fileRef = 34FB523705FE6A4C00F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB530D05FE9EB700F0D7D7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = SortConfiguration.nib;
+			path = "Plugins/Contact Sort Selection/SortConfiguration.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB530E05FE9EB700F0D7D7 = {
+			fileRef = 34FB530D05FE9EB700F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB534E05FEA03500F0D7D7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AlphabeticalSortConfiguration.nib;
+			path = "Plugins/Alphabetical Sort/AlphabeticalSortConfiguration.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB534F05FEA03500F0D7D7 = {
+			fileRef = 34FB534E05FEA03500F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB541105FEA88800F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = AlphabeticalSortDefaults.plist;
+			path = "Plugins/Alphabetical Sort/AlphabeticalSortDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB541205FEA88900F0D7D7 = {
+			fileRef = 34FB541105FEA88800F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB54DD05FEC73A00F0D7D7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESWebFrameViewAdditions.m;
+			path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB54DE05FEC73A00F0D7D7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESWebFrameViewAdditions.h;
+			path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB54DF05FEC73B00F0D7D7 = {
+			fileRef = 34FB54DD05FEC73A00F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB54E005FEC73B00F0D7D7 = {
+			fileRef = 34FB54DE05FEC73A00F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB552A05FED0D400F0D7D7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = StatusSortConfiguration.nib;
+			path = "Plugins/Status Sort/StatusSortConfiguration.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB552B05FED0D500F0D7D7 = {
+			fileRef = 34FB552A05FED0D400F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB553B05FEDF7200F0D7D7 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34FB516705FE62F400F0D7D7;
+			remoteInfo = "Status Sort";
+		};
+		34FB553C05FEDF7200F0D7D7 = {
+			isa = PBXTargetDependency;
+			target = 34FB516705FE62F400F0D7D7;
+			targetProxy = 34FB553B05FEDF7200F0D7D7;
+		};
+		34FB554405FEDFC800F0D7D7 = {
+			fileRef = 34FB516805FE62F400F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FB55B305FEF48200F0D7D7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = StatusSortDefaults.plist;
+			path = "Plugins/Status Sort/StatusSortDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FB55B405FEF48200F0D7D7 = {
+			fileRef = 34FB55B305FEF48200F0D7D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34FDD6E305632BFD00F5B30F = {
 			fileEncoding = 4;
@@ -18236,10 +17626,10 @@
 			children = (
 				4B9E73E303F708A800A8010A,
 				4B9E73E403F708A800A8010A,
-				4B9BF6CD03F8740700A8010A,
-				4B9BF6CE03F8740700A8010A,
-				4B9BF6CB03F8704000A8010A,
+				34FB523605FE6A4C00F0D7D7,
+				34FB523705FE6A4C00F0D7D7,
 				4BE4B0E903F9C2AF00A8010A,
+				34FB530D05FE9EB700F0D7D7,
 			);
 			isa = PBXGroup;
 			name = "Contact Sort Selection";
@@ -18977,13 +18367,9 @@
 		};
 		4B4F5B24042D636A00A8010A = {
 			children = (
-				4BED5A5303C34F1E00A8010A,
 				4B254C4803F7073900A8010A,
-				F16B1A4E05163B960000000E,
-				112F5651050A3AF3005FD3EF,
-				F53B4A5D0499182C01803884,
-				4B4FA10E04125E2600A8010A,
-				115C720D0470BE5E007DDD3A,
+				34FB515B05FE62D200F0D7D7,
+				4BED5A5303C34F1E00A8010A,
 				4B7BD8690412586500A8010A,
 			);
 			isa = PBXGroup;
@@ -19108,55 +18494,6 @@
 			isa = PBXGroup;
 			name = Services;
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4FA10E04125E2600A8010A = {
-			children = (
-				4B4FA11E04125FD900A8010A,
-				4B4FA11F04125FD900A8010A,
-				4B4FA12604125FE900A8010A,
-				4B4FA12704125FE900A8010A,
-			);
-			isa = PBXGroup;
-			name = "Idle Away Sort";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4FA11E04125FD900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleAwaySortPlugin.h;
-			path = "Plugins/Idle Away Sort/AIIdleAwaySortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4FA11F04125FD900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleAwaySortPlugin.m;
-			path = "Plugins/Idle Away Sort/AIIdleAwaySortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4FA12604125FE900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleAwaySortNoGroups.h;
-			path = "Plugins/Idle Away Sort/AIIdleAwaySortNoGroups.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B4FA12704125FE900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleAwaySortNoGroups.m;
-			path = "Plugins/Idle Away Sort/AIIdleAwaySortNoGroups.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -19290,6 +18627,7 @@
 			files = (
 				4B539C4D05EFD6CD00E5921A,
 				4B539C5305EFD6FB00E5921A,
+				34FB54E005FEC73B00F0D7D7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19316,6 +18654,7 @@
 			files = (
 				4B539C4E05EFD6CD00E5921A,
 				4B539C5405EFD6FB00E5921A,
+				34FB54DF05FEC73B00F0D7D7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19344,6 +18683,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
+				OTHER_LDFLAGS = "-undefined suppress -flat_namespace";
 				PRODUCT_NAME = "Webkit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -20482,24 +19822,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B7BD56604123BF500A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAlphabeticalSortNoGroups.h;
-			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortNoGroups.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7BD56704123BF500A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAlphabeticalSortNoGroups.m;
-			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortNoGroups.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B7BD8690412586500A8010A = {
 			children = (
 				4B7BD86A0412588A00A8010A,
@@ -21486,32 +20808,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AISmartStepper.m;
 			path = "Frameworks/AIUtilities Framework/AISmartStepper.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B9BF6CB03F8704000A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = SortingPrefs.nib;
-			path = "Plugins/Contact Sort Selection/SortingPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B9BF6CD03F8740700A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactSortPreferences.h;
-			path = "Plugins/Contact Sort Selection/AIContactSortPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B9BF6CE03F8740700A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactSortPreferences.m;
-			path = "Plugins/Contact Sort Selection/AIContactSortPreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22933,23 +22229,14 @@
 			settings = {
 			};
 		};
-		4BEA21ED052B4A8900A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIGroupedIdleAwaySortPlugin.h;
-			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BED5A5303C34F1E00A8010A = {
 			children = (
 				4BED5A5F03C34FFE00A8010A,
 				4BED5A6003C34FFE00A8010A,
 				4B7BD56204123BEB00A8010A,
 				4B7BD56304123BEB00A8010A,
-				4B7BD56604123BF500A8010A,
-				4B7BD56704123BF500A8010A,
+				34FB541105FEA88800F0D7D7,
+				34FB534E05FEA03500F0D7D7,
 			);
 			isa = PBXGroup;
 			name = "Alphabetical Sort";
@@ -25679,6 +24966,8 @@
 				4B539C4C05EFD6CD00E5921A,
 				4B539C5105EFD6FA00E5921A,
 				4B539C5205EFD6FB00E5921A,
+				34FB54DD05FEC73A00F0D7D7,
+				34FB54DE05FEC73A00F0D7D7,
 				4B539F3705EFE51500E5921A,
 				4BDEC39C05F1A47D00416138,
 				4BDEC39D05F1A47D00416138,
@@ -28893,55 +28182,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F16B1A4E05163B960000000E = {
-			children = (
-				F16B1A5E05163D830000000E,
-				F16B1A5F05163D830000000E,
-				F16B1A6005163D830000000E,
-				F16B1A6105163D830000000E,
-			);
-			isa = PBXGroup;
-			name = "Grouped Away By Idle Sort";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F16B1A5E05163D830000000E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIGroupedAwayByIdleSortNoGroups.h;
-			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortNoGroups.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F16B1A5F05163D830000000E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIGroupedAwayByIdleSortNoGroups.m;
-			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortNoGroups.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F16B1A6005163D830000000E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIGroupedAwayByIdleSortPlugin.h;
-			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F16B1A6105163D830000000E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIGroupedAwayByIdleSortPlugin.m;
-			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F1D0C631051AC2380000000E = {
 			children = (
 				F11B9621051CDB3B0000000E,
@@ -29340,55 +28580,6 @@
 			isa = PBXGroup;
 			name = "Status Circles";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F53B4A5D0499182C01803884 = {
-			children = (
-				F53B4A6E04992C8001803884,
-				F53B4A6F04992C8001803884,
-				F53B4A7E04993BB901803884,
-				F53B4A7F04993BB901803884,
-			);
-			isa = PBXGroup;
-			name = "Idle Away Manual Sort";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F53B4A6E04992C8001803884 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleAwayManualSortPlugin.h;
-			path = "Plugins/Idle Away Manual Sort/AIIdleAwayManualSortPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F53B4A6F04992C8001803884 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleAwayManualSortPlugin.m;
-			path = "Plugins/Idle Away Manual Sort/AIIdleAwayManualSortPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F53B4A7E04993BB901803884 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleAwayManualSort.h;
-			path = "Plugins/Idle Away Manual Sort/AIIdleAwayManualSort.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F53B4A7F04993BB901803884 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleAwayManualSort.m;
-			path = "Plugins/Idle Away Manual Sort/AIIdleAwayManualSort.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
