@@ -819,7 +819,10 @@
     NSEnumerator				*windowEnumerator;
     AIMessageWindowController 	*messageWindowController;
     int							windowKey = 1;
-
+	BOOL						respondsToSetIndentationLevel;
+	
+	AIMenuController			*menuController = [adium menuController];
+	
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
     while((item = [enumerator nextObject])){
@@ -834,7 +837,11 @@
 									  action:@selector(toggleContactList:)
 							   keyEquivalent:@"/"];
     [item setRepresentedObject:contactListWindowController];
-    [[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+	
+	//Use this first item to determine if NSMenuItem will respond to setIndentationLevel:
+	respondsToSetIndentationLevel = [item respondsToSelector:@selector(setIndentationLevel:)];
+	
+    [menuController addMenuItem:item toLocation:LOC_Window_Fixed];
     [windowMenuArray addObject:[item autorelease]];
     
     //Add dock Menu
@@ -843,7 +850,7 @@
 									  action:@selector(showContactListAndBringToFront:) 
 							   keyEquivalent:@""];
     [item setRepresentedObject:contactListWindowController];
-    [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];    
+    [menuController addMenuItem:item toLocation:LOC_Dock_Status];    
     [windowMenuArray addObject:[item autorelease]];
 	
     //Messages window and any open messasges
@@ -854,7 +861,7 @@
 										  target:self
 										  action:@selector(showMessageWindow:)
 								   keyEquivalent:@""];
-        [[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+        [menuController addMenuItem:item toLocation:LOC_Window_Fixed];
         [windowMenuArray addObject:[item autorelease]];
 		
         //Add a 'Messages' menu item to the dock
@@ -862,7 +869,7 @@
 										  target:self 
 										  action:@selector(showMessageWindow:)
 								   keyEquivalent:@""];
-        [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+        [menuController addMenuItem:item toLocation:LOC_Dock_Status];
         [windowMenuArray addObject:[item autorelease]];
 		
 		//enumerate all windows
@@ -875,37 +882,39 @@
 				tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
 				while((tabViewItem = [tabViewEnumerator nextObject])){
 					NSString		*windowKeyString;
-					NSString		*tabViewItemTitle = [NSString stringWithFormat:@"   %@",[tabViewItem label]];
 					
 					//Prepare a key equivalent for the controller
 					if(windowKey < 10){
 						windowKeyString = [NSString stringWithFormat:@"%i",(windowKey)];
 					}else if (windowKey == 10){
-						windowKeyString = [NSString stringWithString:@"0"];
+						windowKeyString = @"0";
 					}else{
-						windowKeyString = [NSString stringWithString:@""];
+						windowKeyString = @"";
 					}
 					
 					//Create the menu item
-					item = [[NSMenuItem alloc] initWithTitle:tabViewItemTitle
+					item = [[NSMenuItem alloc] initWithTitle:[tabViewItem label]
 													  target:self 
 													  action:@selector(showMessageWindow:) 
 											   keyEquivalent:windowKeyString];
 					[item setRepresentedObject:tabViewItem]; //associate this item with a tab
+					if(respondsToSetIndentationLevel){
+						[item setIndentationLevel:1];
+					}
 					
 					//Add it to the menu and array
-					[[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+					[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
                     [windowMenuArray addObject:[item autorelease]];
 					
 					
-                    //Create the same menu item for the dock menu
-                    item = [[NSMenuItem alloc] initWithTitle:tabViewItemTitle
+                    //Create the same menu item for the dock menu, which cleverly doesn't support indentation levels
+                    item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"  %@",[tabViewItem label]]
 													  target:self
 													  action:@selector(showMessageWindow:)
 											   keyEquivalent:@""];
                     [item setRepresentedObject:tabViewItem]; //associate this item with a tab
-                    
-                    [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+					
+                    [menuController addMenuItem:item toLocation:LOC_Dock_Status];
                     [windowMenuArray addObject:[item autorelease]];
 					
 					windowKey++;
@@ -941,12 +950,15 @@
             if(representedObject == (id)activeContainer){
                 [item setState:NSOnState];
             }else{
-                [item setState:NSOffState];
-            }
-        }
-    }
+				[item setState:NSOffState];
+				if ([representedObject isKindOfClass:[AIMessageTabViewItem class]]){
+					NSImage *tabViewItemImage = [(AIMessageTabViewItem *)representedObject image];
+					if (tabViewItemImage) [item setImage:tabViewItemImage];
+				}
+			}
+		}
+	}
 }
-
 //Update the close window/close tab menu item keys
 
 //evands Notes: NSDictionary using the tabview as the key with the message window as the object? We're having to go through this

@@ -27,6 +27,7 @@
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
 - (void)chatStatusChanged:(NSNotification *)notification;
+- (void)updateTabViewItemImage;
 @end
 
 @implementation AIMessageTabViewItem
@@ -44,7 +45,8 @@
 
     messageView = [inMessageView retain];
     adium = [AIObject sharedAdiumInstance];
-
+	tabViewItemImage = nil;
+	
     //Configure ourself for the message view
     [messageView setDelegate:self];
     [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
@@ -55,7 +57,8 @@
 									 object:[messageView chat]];
     [self chatStatusChanged:nil];
     [self chatParticipatingListObjectsChanged:nil];
-
+	[self updateTabViewItemImage];
+	
     //Set our contents
     [self setView:[messageView view]];
     
@@ -65,6 +68,7 @@
 //
 - (void)dealloc
 {
+	[tabViewItemImage release]; tabViewItemImage = nil;
     [messageView release];
     [[adium notificationCenter] removeObserver:self];
 
@@ -88,6 +92,7 @@
 		[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
 										 object:[messageView listObject]];
+		
 	}
 }
 
@@ -118,8 +123,30 @@
         //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
         [[[self tabView] delegate] resizeTabs];
     }
+	
+	if(keys == nil || [keys containsObject:KEY_USER_ICON]){
+		[self updateTabViewItemImage];
+	}
 }
 
+- (void)updateTabViewItemImage
+{
+	AIListObject	*listObject = [messageView listObject];
+
+	[tabViewItemImage release];
+	if (listObject){
+		NSImage		*userIcon = [[listObject displayArrayForKey:KEY_USER_ICON] objectValue];
+		if (userIcon){
+			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
+		}else{
+			if ([listObject isKindOfClass:[AIListContact class]]){
+				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] serviceMenuImage] retain];
+			}
+		}
+	}else{
+		tabViewItemImage = [[[[messageView chat] account] serviceMenuImage] retain];
+	}
+}
 
 //Interface Container ----------------------------------------------------------------------
 //Make this container active
@@ -182,4 +209,8 @@ static NSImage *hackIconCache = nil;
 	return(icon);
 }
 
+- (NSImage *)image
+{
+	return tabViewItemImage;
+}
 @end

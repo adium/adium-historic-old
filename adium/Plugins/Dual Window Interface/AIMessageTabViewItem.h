@@ -19,6 +19,7 @@
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
     AIMessageViewController 	*messageView;
     AIAdium						*adium;
+	NSImage						*tabViewItemImage;
 }
 
 + (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView;
@@ -26,6 +27,7 @@
 - (void)close:(id)sender;
 - (NSString *)label;
 - (NSImage *)icon;
+- (NSImage *)image;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
 
