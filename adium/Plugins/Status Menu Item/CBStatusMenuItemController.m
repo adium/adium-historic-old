@@ -10,7 +10,21 @@
 
 //BOOL isPanther = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
 
+@interface CBStatusMenuItemController (PRIVATE)
+- (id)initWithOwner:(AIAdium *)inOwner;
+@end
+
 @implementation CBStatusMenuItemController
+
+CBStatusMenuItemController *sharedInstance = nil;
+
++ (CBStatusMenuItemController *)statusMenuItemControllerForOwner:(id)inOwner
+{
+    if (!sharedInstance) {
+        sharedInstance = [[self alloc] initWithOwner:inOwner];
+    }
+    return (sharedInstance);
+}
 
 - (id)initWithOwner:(AIAdium *)inOwner
 {
@@ -32,9 +46,10 @@
 
 - (void)dealloc
 {
+    [owner release];
     [statusItem release];
     //[itemMenu release];
-    [owner release];
+    [super dealloc];
 }
 
 @end
