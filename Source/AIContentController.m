@@ -1448,9 +1448,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	NSMenu		*encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
 	NSMenuItem	*menuItem;
-	
-	[encryptionMenu setAutoenablesItems:NO];
-	
+
+	[encryptionMenu setTitle:ENCRYPTION_MENU_TITLE];
+
 	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Disable chat encryption",nil)
 										  target:target
 										  action:@selector(selectedEncryptionPreference:)
@@ -1491,8 +1491,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		[encryptionMenu addItem:[NSMenuItem separatorItem]];
 		
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Default",nil)
-														  target:nil
-														  action:nil
+														  target:target
+														  action:@selector(selectedEncryptionPreference:)
 												   keyEquivalent:@""];
 		
 		[menuItem setTag:EncryptedChat_Default];

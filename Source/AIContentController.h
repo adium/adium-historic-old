@@ -20,6 +20,9 @@
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
 
+//Not displayed, but used for internal identification of the encryption menu
+#define ENCRYPTION_MENU_TITLE						@"Encryption Menu"
+
 @protocol AITextEntryView;
 
 @class AIChat, AIContentObject, NDRunLoopMessenger;
