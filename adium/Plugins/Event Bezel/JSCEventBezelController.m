@@ -121,6 +121,8 @@ JSCEventBezelController *sharedInstance = nil;
         if (message) {
             [bezelView setMainAwayMessage: message];
         } else {
+            // Not working, damn
+            /*
             ownerArray = [contact statusArrayForKey:@"StatusMessage"];
             if(ownerArray && [ownerArray count]) {
                 status = [ownerArray objectAtIndex:0];
@@ -130,7 +132,9 @@ JSCEventBezelController *sharedInstance = nil;
                 [bezelView setMainAwayMessage: [statusString string]];
             } else {
                 [bezelView setMainAwayMessage: @""];
-            }
+            }*/
+            // Remove this line when the code above works
+            [bezelView setMainAwayMessage: @""];
         }
         
         [bezelView setNeedsDisplay:YES];
