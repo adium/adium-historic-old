@@ -132,10 +132,12 @@ void otrl_message_free(char *message);
  * "context->app" field, for example.  If you don't need to do this, you
  * can pass NULL for the last two arguments of otrl_message_sending.  
  *
- * If this routine
- * returns non-zero, then the library tried to encrypt the message,
- * but for some reason failed.  DO NOT send the message in the clear in
- * that case.
+ * tlvs is a chain of OtrlTLVs to append to the private message.  It is
+ * usually correct to just pass NULL here.
+ *
+ * If this routine returns non-zero, then the library tried to encrypt
+ * the message, but for some reason failed.  DO NOT send the message in
+ * the clear in that case.
  * 
  * If *messagep gets set by the call to something non-NULL, then you
  * should replace your message with the contents of *messagep, and
@@ -143,7 +145,8 @@ void otrl_message_free(char *message);
  * done with it. */
 gcry_error_t otrl_message_sending(OtrlUserState us, OtrlMessageAppOps
 	*ops, void *opdata, const char *accountname, const char *protocol,
-	const char *recipient, const char *message, char **messagep,
+	const char *recipient, const char *message, OtrlTLV *tlvs,
+	char **messagep,
 	void (*add_appdata)(void *data, ConnContext *context),
 	void *data);
 
@@ -163,14 +166,18 @@ gcry_error_t otrl_message_sending(OtrlUserState us, OtrlMessageAppOps
  * If it returns 0, then check if *messagep was set to non-NULL.  If
  * so, replace the received message with the contents of *messagep, and
  * deliver that to the user instead.  You must call
- * otrl_message_free(*messagep) when you're done with it.
+ * otrl_message_free(*messagep) when you're done with it.  If tlvsp is
+ * non-NULL, *tlvsp will be set to a chain of any TLVs that were
+ * transmitted along with this message.  You must call
+ * otrl_tlv_free(*tlvsp) when you're done with those.
  *
  * If otrl_message_receiving returns 0 and *messagep is NULL, then this
  * was an ordinary, non-OTR message, which should just be delivered to
  * the user without modification. */
 int otrl_message_receiving(OtrlUserState us, OtrlMessageAppOps *ops,
 	void *opdata, const char *accountname, const char *protocol,
-	const char *sender, const char *message, char **messagep,
+	const char *sender, const char *message, char **newmessagep,
+	OtrlTLV **tlvsp,
 	void (*add_appdata)(void *data, ConnContext *context),
 	void *data);
 
