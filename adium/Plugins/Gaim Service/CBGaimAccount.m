@@ -100,65 +100,54 @@
     AIListContact           *theContact;
 	
     //Get the node's ui_data
-    theContact = (AIListContact *)buddy->node.ui_data;
-	
-	//Create the contact if necessary
-    //if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
-
-	
-#warning Evan: This was me hacking away.  It does not fix the stupid jabber buddy signon problems.
-	//Make sure we know the online status of this buddy
-	if (buddy->present != GAIM_BUDDY_OFFLINE){
-		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
-	}else{
-		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNOFF];	
-	}
-	
-    //Group changes - gaim buddies start off in no group, so this is an important update for us
-    if(theContact && ![theContact remoteGroupName]){
-	//	NSLog(@"checking the group");
-        GaimGroup *g = gaim_find_buddys_group(buddy);
-		if(g && g->name){
-			NSLog(@"found group %s",g->name);
-		    NSString *groupName = [NSString stringWithUTF8String:g->name];
-			if(groupName && [groupName length] != 0){
-				[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-			}else{
-				[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
-			}
-        }
-    }
-
-	//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
-	//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
-	{
-		NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
-		if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-			if (![[theContact statusObjectForKey:KEY_FORMATTED_UID] isEqualToString:gaimAlias]) {
-				[theContact setStatusObject:gaimAlias
-									 forKey:KEY_FORMATTED_UID
-									 notify:NO];
-			}
-		} else {
-			if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
-				//Set the server display name status object as the full display name
-				[theContact setStatusObject:gaimAlias
-									 forKey:@"Server Display Name"
-									 notify:NO];
-				
-				//Set a 20-characters-or-less version as the lowest priority display name
-				[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
-																 withOwner:self
-															 priorityLevel:Lowest_Priority];
-				//notify
-				[[adium contactController] listObjectAttributesChanged:self
-														  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+    if ((theContact = (AIListContact *)buddy->node.ui_data)){
+		//Create the contact if necessary
+		//if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
+		
+		//Group changes - gaim buddies start off in no group, so this is an important update for us
+		if(![theContact remoteGroupName]){
+			GaimGroup *g = gaim_find_buddys_group(buddy);
+			if(g && g->name){
+				NSString *groupName = [NSString stringWithUTF8String:g->name];
+				if(groupName && [groupName length] != 0){
+					[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+				}else{
+					[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
+				}
 			}
 		}
+		
+		//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
+		//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
+		{
+			NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
+			if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
+				if (![[theContact statusObjectForKey:KEY_FORMATTED_UID] isEqualToString:gaimAlias]) {
+					[theContact setStatusObject:gaimAlias
+										 forKey:KEY_FORMATTED_UID
+										 notify:NO];
+				}
+			} else {
+				if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
+					//Set the server display name status object as the full display name
+					[theContact setStatusObject:gaimAlias
+										 forKey:@"Server Display Name"
+										 notify:NO];
+					
+					//Set a 20-characters-or-less version as the lowest priority display name
+					[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
+																	 withOwner:self
+																 priorityLevel:Lowest_Priority];
+					//notify
+					[[adium contactController] listObjectAttributesChanged:self
+															  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+				}
+			}
+		}
+		
+		//Apply any changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-	
-    //Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
@@ -178,7 +167,6 @@
 		//Online / Offline
 		case GAIM_BUDDY_SIGNON:
 		{
-		//	NSLog(@"signing %@ on to %@",[theContact UID],[theContact remoteGroupName]);
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -1756,23 +1744,20 @@
 
 - (void)createNewGaimAccount
 {
-//	NSString *accountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-//	
-//	//Sanity check: If no preference has been set, use the UID
-//	if (!accountName)
-//		accountName = UID;
+	NSString	*hostName;
+	int			portNumber;
 	
-    //Create a fresh version of the account
+	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
 	
 	//Host (server)
-	NSString		*hostName = [self host];
+	hostName = [self host];
 	if (hostName && [hostName length]){
 		gaim_account_set_string(account, "server", [hostName UTF8String]);
 	}
 	
 	//Port
-	int				portNumber = [self port];
+	portNumber = [self port];
 	if (portNumber){
 		gaim_account_set_int(account, "port", portNumber);
 	}

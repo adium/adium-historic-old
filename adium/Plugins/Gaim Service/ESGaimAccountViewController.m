@@ -93,17 +93,20 @@
 	return [menuItem autorelease];
 }
 
+//We set to nil instead of the @"" a stringValue would return because we want to return to the global (default) value
+//if the user clears the field
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
 	NSTextField *sender = [aNotification object];
 	if (sender == textField_hostName){
-		NSString *hostName = [textField_hostName stringValue];
+		NSString	*hostName = [textField_hostName stringValue];
+
 		[account setPreference:([hostName length] ? hostName : nil)
 						forKey:[account hostKey]
 						 group:GROUP_ACCOUNT_STATUS];	
 		
-	}else if (sender == textField_portNumber){
-		[account setPreference:([[sender stringValue] length] ? [NSNumber numberWithInt:[sender intValue]] : nil)
+	}else if (sender == textField_portNumber){		
+		[account setPreference:([[textField_portNumber stringValue] length] ? [NSNumber numberWithInt:[textField_portNumber intValue]] : nil)
 						forKey:[account portKey]
 						 group:GROUP_ACCOUNT_STATUS];
 		
@@ -119,17 +122,44 @@
 		
 	}else if (sender == textField_proxyUserName){
 		NSString	*userName = [sender stringValue];
-		[account setPreference:userName
-						forKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME
-						 group:GROUP_ACCOUNT_STATUS];
-		
-		//Update the password field
-		[textField_proxyPassword setStringValue:@""];
-		[textField_proxyPassword setEnabled:(userName && [userName length])];
+		//If the username changed, save the new username and clear the password field
+		if (![userName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME 
+														   group:GROUP_ACCOUNT_STATUS]]){
+			[account setPreference:userName
+							forKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME
+							 group:GROUP_ACCOUNT_STATUS];
+			
+			//Update the password field
+			[textField_proxyPassword setStringValue:@""];
+			[textField_proxyPassword setEnabled:(userName && [userName length])];
+		}
 		
 	}
 }
 
+- (IBAction)changedPreference:(id)sender
+{
+	[super changedPreference:sender];
+	
+	if (sender == textField_hostName){
+		//If we were given a blank hostName, revert to displaying the default
+		NSString	*hostName = [textField_hostName stringValue];
+		int			length = [hostName length];
+		
+		if (!length){
+			[textField_hostName setStringValue:[account host]];
+		}
+		
+	}else if (sender == textField_portNumber){
+		//If we were given a blank portNumber, revert to displaying the default
+		int length = [[textField_portNumber stringValue] length];
+		
+		if (!length){
+			[textField_portNumber setIntValue:[(CBGaimAccount *)account port]];
+		}
+	}
+}
+	
 - (IBAction)changedConnectionPreference:(id)sender
 {
 	if (sender == textField_proxyPassword){
