@@ -20,6 +20,7 @@
 - (NSString *)_stringWithMacEndlines:(NSString *)inString;
 - (void)setTextEquivalents:(NSArray *)inArray;
 - (void)setCachedString:(NSAttributedString *)inString image:(NSImage *)inImage;
+- (NSString *)_pathToEmoticonImage;
 @end
 
 @implementation AIEmoticon
@@ -118,9 +119,10 @@
 //Returns the image for this emoticon (cached)
 - (NSImage *)image
 {
+    
+    
     if(!_cachedImage){
-        NSString    *imagePath = [path stringByAppendingPathComponent:@"Emoticon.tiff"];
-        _cachedImage = [[NSImage alloc] initWithContentsOfFile:imagePath];
+        _cachedImage = [[NSImage alloc] initWithContentsOfFile:[self _pathToEmoticonImage]];
     }
 
     return(_cachedImage);
@@ -134,8 +136,7 @@
     
     //Cache this attachment for ourself
     if(!_cachedAttributedString){
-        NSString                    *imagePath = [path stringByAppendingPathComponent:@"Emoticon.tiff"];
-        NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:imagePath] autorelease];
+        NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:[self _pathToEmoticonImage]] autorelease];
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         
         [emoticonAttachment setFileWrapper:emoticonFileWrapper];
@@ -148,6 +149,21 @@
     [attachment setString:textEquivalent];
     
     return([attributedString autorelease]);
+}
+
+//Returns the path to our emoticon image
+- (NSString *)_pathToEmoticonImage
+{
+    NSDirectoryEnumerator   *enumerator;
+    NSString		    *fileName;
+    
+    //Search for the file named Emoticon in our bundle (It can be in any image format)
+    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:path];
+    while(fileName = [enumerator nextObject]){
+	if([fileName hasPrefix:@"Emoticon"]) return([path stringByAppendingPathComponent:fileName]);
+    }
+    
+    return(nil);
 }
 
 //A more useful debug description
