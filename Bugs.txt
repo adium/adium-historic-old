@@ -14,6 +14,7 @@
 - First Message Received triggered multiple times
 - [GaduGadu] Contacts not saving to the server-list
 - [MSN] Outoing chat appears twice with a display name set
+- [MSN] Display names shorten incorrectly
 
 //------------------------------------------------------------------------------------
 // Adium X 0.70 remaining issues
@@ -88,10 +89,6 @@
 //------------------------------------------------------------------------------------
 - Event Notification window moves out of place between resolution changes.
     Will be replaced by growl
-
-- MSN display names shorten incorrectly
-    MSN display names are always shortened to the same length, regardless of the
-    contact list's current width.  Will be sweeped in the contact list revamp
 
 - [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
     Tiger is coming
