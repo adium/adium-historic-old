@@ -23,11 +23,17 @@
 //Raise an exception.  This gets called once with no stack trace, then a second time after the stack trace is added by the ExceptionHandling framework.  We therefore just do [super raise] if there is no stack trace, awaiting its addition to write the exception log, load the crash reporter, and exit Adium
 - (void)raise
 {
-    //Hack for an inexplicable exception we don't seem to be able to fix
+    //Ignore various harmless or unavoidable exceptions the system uses
     if ((![self reason]) || ([[self reason] isEqualToString:@"_sharedInstance is invalid."])) {
-        [super raise];
-    } if ((![self name]) || ([[self name] isEqualToString:@"GIFReadingException"])) {
-	[super raise];
+    
+	    [super raise];
+    
+    } if ((![self name]) || 
+	  ([[self name] isEqualToString:@"GIFReadingException"]) || 
+	  ([[self name] isEqualToString:@"NSPortTimeoutException"]) ){
+	
+	    [super raise];
+	
     } else {
         NSDictionary    *dict = [self userInfo];
         NSString        *stackTrace = nil;
