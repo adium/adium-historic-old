@@ -795,7 +795,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 			if (chat){
 				NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
 
-				[adiumAccount mainPerformSelector:@selector(updateChat:type:)
+				[adiumAccount mainPerformSelector:@selector(updateForChat:type:)
 									   withObject:chat
 									   withObject:[NSNumber numberWithInt:updateType]];
 			}
