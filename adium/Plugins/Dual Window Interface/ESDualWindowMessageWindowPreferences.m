@@ -16,7 +16,7 @@
     return(AIPref_Messages_Display);
 }
 - (NSString *)label{
-    return(@"M");
+    return(@"z");
 }
 - (NSString *)nibName{
     return(@"DualWindowMessageWindowPrefs");
