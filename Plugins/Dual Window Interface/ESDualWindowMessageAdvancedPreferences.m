@@ -18,6 +18,8 @@
 #import "ESDualWindowMessageAdvancedPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 
 @class AIPreferenceWindowController;
@@ -91,15 +93,33 @@
 	[self configureControlDimming];
 }
 
+/*!
+* @brief User selected a window level
+ */
+- (void)selectedWindowLevel:(id)sender
+{	
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
+										 forKey:KEY_WINDOW_LEVEL
+										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {
     NSDictionary	*prefDict;
-	
+	int				menuIndex;
+
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     [autohide_tabBar setState:![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
     [checkBox_allowInactiveClosing setState:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 
+	//Window position
+	[popUp_windowPosition setMenu:[[adium interfaceController] menuForWindowLevelsNotifyingTarget:self]];
+	menuIndex =  [popUp_windowPosition indexOfItemWithTag:[[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue]];
+	if(menuIndex >= 0 && menuIndex < [popUp_windowPosition numberOfItems]){
+		[popUp_windowPosition selectItemAtIndex:menuIndex];
+	}
+	
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
@@ -109,7 +129,7 @@
 	
 	[popUp_timeStampFormat setMenu:[self _timeStampMenu]];
 	[popUp_timeStampFormat selectItemWithRepresentedObject:[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT]];
-
+	
     [self configureControlDimming];
 }
 

@@ -33,6 +33,8 @@
 	
 	IBOutlet	NSPopUpButton	*popUp_minimumFontSize;
 	IBOutlet	NSPopUpButton	*popUp_timeStampFormat;
+	
+	IBOutlet	NSPopUpButton	*popUp_windowPosition;
 }
 
 @end
