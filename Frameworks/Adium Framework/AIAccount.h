@@ -129,6 +129,7 @@ typedef enum {
 
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector;
+- (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext;
 
 - (void)connect;
 - (void)disconnect;
