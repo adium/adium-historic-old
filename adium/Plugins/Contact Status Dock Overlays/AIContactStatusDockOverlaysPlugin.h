@@ -41,7 +41,8 @@
     BOOL	showContent;
     BOOL	overlayPosition;
 
-    NSImage	*image;
+    NSImage	*image1;
+    NSImage	*image2;
 }
 
 @end
