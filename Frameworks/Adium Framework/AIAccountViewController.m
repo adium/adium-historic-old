@@ -42,7 +42,12 @@
 
 - (void)awakeFromNib
 {
-	
+	/*
+	//If inheritance were to change we'd want to call [super awakeFromNib];
+	if ([[self superclass] instancesRespondToSelector:@selector(awakeFromNib)]){
+        [super awakeFromNib];
+	}
+	 */
 }
 
 //Dealloc
