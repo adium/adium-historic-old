@@ -19,6 +19,7 @@
 @interface ESImageViewWithImagePicker (PRIVATE)
 - (void)_init;
 - (void)showPickerController;
+- (void)delete;
 @end
 
 @implementation ESImageViewWithImagePicker
@@ -106,10 +107,7 @@
 	unichar key = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 	
 	if (key == NSDeleteCharacter || key == NSBackspaceCharacter){
-		if (delegate && [delegate respondsToSelector:@selector(deleteInImageViewWithImagePicker:)]){
-			[delegate performSelector:@selector(deleteInImageViewWithImagePicker:)
-						   withObject:self];
-		}
+		[self delete];
 	}else if (key == NSEnterCharacter || key == NSCarriageReturnCharacter){
 		[self showPickerController];
 	}else{
@@ -166,6 +164,21 @@
 			}
 		}
 	}
+}
+
+//Cut = copy + delete
+- (void)cut:(id)sender
+{
+	[self copy:sender];
+	[self delete];
+}
+
+- (void)delete
+{
+	if (delegate && [delegate respondsToSelector:@selector(deleteInImageViewWithImagePicker:)]){
+		[delegate performSelector:@selector(deleteInImageViewWithImagePicker:)
+					   withObject:self];
+	}	
 }
 
 // NSImagePicker Access and Delegate ----------------------------------------------------------------
