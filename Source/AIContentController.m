@@ -21,7 +21,7 @@
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
 #import <AIUtilities/NDRunLoopMessenger.h>
