@@ -360,14 +360,7 @@ static NSString	*prefsCategory;
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
-		
-//    } else if ([extension caseInsensitiveCompare:@"AdiumTheme"] == NSOrderedSame){
-//        destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
-//        fileDescription = AILocalizedString(@"Adium theme",nil);
-//		prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
-//		prefsCategory = @"advanced";
-//		advancedPrefsName = [@"Themes" retain];
-		
+
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
         fileDescription = AILocalizedString(@"dock icon set",nil);
@@ -404,9 +397,22 @@ static NSString	*prefsCategory;
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
+		
 	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
+		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
+		prefsCategory = @"appearance";
+		
+	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame){
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Service Icons"];
+		fileDescription = AILocalizedString(@"service icons",nil);
+		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
+		prefsCategory = @"appearance";
+		
+	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame){
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Status Icons"];
+		fileDescription = AILocalizedString(@"status icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 	}
