@@ -323,7 +323,6 @@
 	}
 
 	//Toggles
-	[checkbox_invisible setState:[statusState invisible]];
 	[checkbox_idle setState:[statusState shouldForceInitialIdleTime]];
 	[checkbox_autoReply setState:[statusState hasAutoReply]];
 	[checkbox_customAutoReply setState:![statusState autoReplyIsStatusMessage]];
@@ -368,11 +367,10 @@
 
 	//XXX
 	/*[statusState setTitle:]*/
-	[workingStatusState setStatusMessageData:[[textView_statusMessage textStorage] dataRepresentation]];
-	[workingStatusState setAutoReplyData:[[textView_autoReply textStorage] dataRepresentation]];
+	[workingStatusState setStatusMessage:[[[textView_statusMessage textStorage] copy] autorelease]];
+	[workingStatusState setAutoReply:[[[textView_autoReply textStorage] copy] autorelease]];
 	[workingStatusState setHasAutoReply:[checkbox_autoReply state]];
 	[workingStatusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];
-	[workingStatusState setInvisible:[checkbox_invisible state]];
 	[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
 	[workingStatusState setForcedInitialIdleTime:idleStart];
 
