@@ -337,6 +337,8 @@
 		
         [self _updateWindowTitleAndIcon]; //Reflect change in window title
     }
+	
+	toolbar_selectedTabChanged = YES;
 }
 
 //Update our window title
@@ -578,7 +580,14 @@
 //Install our toolbar
 - (void)_configureToolbar
 {
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_MESSAGE_WINDOW] autorelease];
+	NSToolbar *toolbar;
+	//Toolbar item registration
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
+	
+    toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_MESSAGE_WINDOW] autorelease];
 	
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
@@ -588,13 +597,13 @@
     [toolbar setAutosavesConfiguration:YES];
 	
     //
-	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", nil]] retain];
+	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"ContactList", nil]] retain];
     [[self window] setToolbar:toolbar];
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
-    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+	return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
@@ -611,6 +620,37 @@
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
+}
+
+//After the toolbar has added the item we can set up the submenus
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	if ([notification object] == [[self window] toolbar]){
+		NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+		
+		if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
+			if ([item isKindOfClass:[ESFlexibleToolbarItem class]]){
+				[(ESFlexibleToolbarItem *)item setValidationDelegate:self];
+				[item setEnabled:YES];
+			}
+		}
+	}
+}
+
+- (BOOL)validateToolbarItem:(NSToolbarItem *)inToolbarItem
+{
+	//If our selectedTab has changed since the last validation call, update the listObject
+	if(toolbar_selectedTabChanged){
+		NSImage	*image;
+	
+		image = [[[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] listObject] userIcon];
+		[(ESFlexibleToolbarItem *)[inToolbarItem view] setImage:image];
+		NSLog(@"validate %@",inToolbarItem);
+	
+		toolbar_selectedTabChanged = NO;
+	}
+	
+	return(YES);
 }
 
 @end
