@@ -67,7 +67,7 @@ int HTMLEquivalentForFontSize(int fontSize);
     }
 
     //Append the body tag (If there is a background color)
-    if(messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
+    if(messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]) && encodeFullString){
         [string appendString:@"<BODY BGCOLOR=\"#"];
         [string appendString:[pageColor hexString]];
         [string appendString:@"\">"];
@@ -194,7 +194,7 @@ int HTMLEquivalentForFontSize(int fontSize);
     }
 
     //Close the body tag (if there is one)
-    if(pageColor){
+    if(pageColor && encodeFullString){
         [string appendString:@"</BODY>"];
     }
 

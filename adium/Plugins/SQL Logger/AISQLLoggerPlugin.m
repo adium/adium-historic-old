@@ -128,10 +128,8 @@ recServe:(NSString *)r_service
     PQescapeString(escapeSender, [sourceName UTF8String], [sourceName length]);
     PQescapeString(escapeRecip, [destName UTF8String], [destName length]);
     
-    sqlStatement = [NSString stringWithFormat:@"insert into adium.messages (sender_sn, recipient_sn, message, message_date, sender_service, recipient_service) values (\'%s\',\'%s\',\'%s\', \'%@ %@\', \'%@\', \'%@\')", escapeSender, escapeRecip, escapeMessage, 
-        [date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil], [[NSDate date] 
-        descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil],
-        s_service, r_service];
+    sqlStatement = [NSString stringWithFormat:@"insert into adium.messages (sender_sn, recipient_sn, message, sender_service, recipient_service) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\')", 
+    escapeSender, escapeRecip, escapeMessage, s_service, r_service];
         
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
