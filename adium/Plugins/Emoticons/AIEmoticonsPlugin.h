@@ -28,14 +28,14 @@
 @class AIEmoticonPreferences;
 
 @interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
-    BOOL		replaceEmoticons;
+    BOOL			replaceEmoticons;
     
-    NSMutableArray	*emoticons;
+    NSMutableArray		*emoticons;
     
-    NSMutableArray	*quickScanList;
+    NSMutableArray		*quickScanList;
 	
-	AIEmoticonPreferences	*prefs;
-	NSMutableArray	*cachedPacks;
+    AIEmoticonPreferences	*prefs;
+    NSMutableArray		*cachedPacks;
 }
 
 - (void)preferencesChanged:(NSNotification *)notification;
