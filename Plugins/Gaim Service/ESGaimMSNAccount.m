@@ -157,6 +157,11 @@ static BOOL didInitMSN = NO;
 	}
 }
 
+
+/*
+ gaim_connection_get_display_name(gc) will get the current display name... which is stored serverside so
+ reflects changes made on other clients or other systems.  do we want to use this somehow?
+ */
 -(void)_setFriendlyNameTo:(NSAttributedString *)attributedFriendlyName
 {
 	NSString	*friendlyName = [attributedFriendlyName string];
