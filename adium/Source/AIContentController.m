@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.42 2004/01/13 19:52:15 adamiser Exp $
+// $Id: AIContentController.m,v 1.43 2004/01/13 20:37:37 evands Exp $
 
 #import "AIContentController.h"
 
@@ -392,8 +392,11 @@
             inAccount = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inListObject];
         }
 
-        //Instruct the account to open the new chat
+        //Instruct the account to create a new chat
         chat = [(id <AIAccount_Content>)inAccount openChatWithListObject:inListObject];
+	
+	//Have the interface open this chat
+	[[owner interfaceController] openChat:chat]; 
 
     }else{
         //Have the interface re-open this chat
