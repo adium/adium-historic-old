@@ -65,7 +65,7 @@
 }
 
 - (void)_init
-{
+{    
     cursorTrackingCellArray = [[NSMutableArray alloc] init];
     columnArray = [[NSMutableArray alloc] init];
     delegate = nil;
@@ -80,6 +80,18 @@
     contentBottomAligned = YES;
 
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+}
+
+- (void)dealloc
+{
+    //Ensure we're no longer observing
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
+
+    //Clean up
+    [cursorTrackingCellArray release];
+    [columnArray release];
+    
+    [super dealloc];
 }
 
 
