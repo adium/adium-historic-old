@@ -34,9 +34,9 @@ typedef struct {
 	char *title, const char *primary, const char *secondary);
 
     OtrgDialogWaitHandle (*private_key_wait_start)(const char *account,
-		const char *protocol);
+	const char *protocol);
 
-     void (*private_key_wait_done)(OtrgDialogWaitHandle handle);
+    void (*private_key_wait_done)(OtrgDialogWaitHandle handle);
 
     void (*unknown_fingerprint)(const char *who, const char *protocol,
 	OTRKeyExchangeMsg kem,
@@ -82,14 +82,14 @@ void otrg_dialog_notify_warning(const char *title, const char *primary,
 void otrg_dialog_notify_info(const char *title, const char *primary,
 	const char *secondary);
 
-/* Put up a Please Wait dialog, with the "OK" button desensitized.
+/* Put up a Please Wait dialog. This dialog can not be cancelled.
  * Return a handle that must eventually be passed to
- * otrg_dialog_wait_done. */
-OtrgDialogWaitHandle otrg_dialog_wait_start(const char *account,
+ * otrg_dialog_private_key_wait_done. */
+OtrgDialogWaitHandle otrg_dialog_private_key_wait_start(const char *account,
 	const char *protocol);
 
-/* Append the given text to the dialog, and sensitize the "OK" button. */
-void otrg_dialog_wait_done(OtrgDialogWaitHandle handle);
+/* End a Please Wait dialog. */
+void otrg_dialog_private_key_wait_done(OtrgDialogWaitHandle handle);
 
 /* Show a dialog informing the user that a correspondent (who) has sent
  * us a Key Exchange Message (kem) that contains an unknown fingerprint.

@@ -24,10 +24,6 @@
 #ifndef _MSN_SLP_H_
 #define _MSN_SLP_H_
 
-/* #define DEBUG_SLP 1 */
-/* #define DEBUG_SLP_VERBOSE 1 */
-/* #define DEBUG_SLP_FILES 1 */
-
 #include "slpcall.h"
 
 #include "ft.h"

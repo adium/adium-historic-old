@@ -24,7 +24,10 @@
 {
     return(@"MSNServicePrefs");
 }
-
+- (NSImage *)image
+{
+	return([AIServiceIcons serviceIconForServiceID:@"MSN" type:AIServiceIconLarge direction:AIIconNormal]);
+}
 //- (NSDictionary *)restorablePreferences
 //{
 //	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS forClass:[self class]];

@@ -26,8 +26,6 @@ typedef struct {
     void (*update_fingerprint)(void);
 
     void (*update_keylist)(void);
-	
-	Fingerprint *(*selected_fingerprint)(void);
 } OtrgUiUiOps;
 
 /* Set the UI ops */
@@ -42,5 +40,14 @@ void otrg_ui_update_fingerprint(void);
 
 /* Update the keylist, if it's visible */
 void otrg_ui_update_keylist(void);
+
+/* Send an OTR Query Message to attempt to start a connection */
+void otrg_ui_connect_connection(ConnContext *context);
+
+/* Drop a context to UNCONNECTED state */
+void otrg_ui_disconnect_connection(ConnContext *context);
+
+/* Forget a fingerprint */
+void otrg_ui_forget_fingerprint(Fingerprint *fingerprint);
 
 #endif

@@ -21,7 +21,11 @@
 #define __OTRG_OTR_PLUGIN_H__
 
 /* Gaim headers */
-//#import "plugin.h"
+#include "account.h"
+#include "plugin.h"
+
+/* libotr headers */
+#include <libotr/context.h>
 
 #define PRIVKEYFNAME "otr.private_key"
 #define STOREFNAME "otr.fingerprints"
@@ -42,5 +46,9 @@ void otrg_plugin_create_privkey(const char *accountname,
  * GaimAccount*, but it's declared here as void* so this can be passed
  * as a callback.] */
 void otrg_plugin_send_default_query(ConnContext *context, void *account);
+
+/* Send the default OTR Query message to the correspondent of the given
+ * conversation. */
+void otrg_plugin_send_default_query_conv(GaimConversation *conv);
 
 #endif
