@@ -80,6 +80,8 @@
                                              forKey:KEY_LOGGER_HTML
                                               group:PREF_GROUP_LOGGING];
     }
+    
+    [self configureControlDimming];
 }
 
 //Dims style and font if HTML logs are not selected, all if enable logging is not selected.

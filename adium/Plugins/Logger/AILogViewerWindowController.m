@@ -287,7 +287,7 @@ static AILogViewerWindowController *sharedInstance = nil;
 	if(log){	    
 	    //Open the log
 	    logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[log path]]];
-	    if([[log path] hasSuffix:@".html"]) {
+            if([[log path] hasSuffix:@".html"] || [[log path] hasSuffix:@".html.bak"]) {
 		logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
 	    }else{
 		AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
