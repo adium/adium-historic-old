@@ -22,6 +22,7 @@
 - (oneway void)xferRequest:(GaimXfer *)xfer;
 - (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer;
+- (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 @end
 
 /*!
@@ -50,6 +51,7 @@
 - (oneway void)xferRequest:(GaimXfer *)xfer;
 - (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer;
+- (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;
