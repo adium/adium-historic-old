@@ -13,14 +13,15 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AISMViewController.h"
+
 #import "AIContentController.h"
 #import "AIFlexibleTableCell.h"
 #import "AIFlexibleTableView.h"
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
-#import "AISMViewController.h"
+#import "AIContactController.h"
 #import "AISMViewPlugin.h"
-#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -29,6 +30,7 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
+#import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
 #import <Adium/AIContentMessage.h>
@@ -76,6 +78,8 @@
 - (NSAttributedString *)_stringWithContextStyle:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingAllStyles:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor;
+
+- (void)participatingListObjectsChanged:(NSNotification *)notification;
 @end
 
 @implementation AISMViewController
@@ -101,7 +105,9 @@
     
     //Cache our icons (temp?)
     iconIncoming = [[NSImage imageNamed:@"blue" forClass:[self class]] retain];
+	[iconIncoming setFlipped:YES];
     iconOutgoing = [[NSImage imageNamed:@"green" forClass:[self class]] retain];
+	[iconOutgoing setFlipped:YES];
     
     //Configure our table view
     messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];
@@ -117,9 +123,29 @@
 	[scrollView_messages setHasVerticalScroller:YES];
 	[scrollView_messages setBorderType:NSBezelBorder];
    	[scrollView_messages setPassKeysToDocumentView:YES];
-	
-    [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
+		
+	//Observe source/destination changes
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(sourceOrDestinationChanged:)
+									   name:Chat_SourceChanged 
+									 object:inChat];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(sourceOrDestinationChanged:)
+									   name:Chat_DestinationChanged 
+									 object:inChat];
 
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(contentObjectAdded:)
+									   name:Content_ContentObjectAdded
+									 object:chat];
+
+	//Observe participants list changes
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(participatingListObjectsChanged:)
+									   name:Chat_ParticipatingListObjectsChanged 
+									 object:inChat];
+	[self participatingListObjectsChanged:nil];
+	
     //Observe preferences
    	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 	
@@ -146,6 +172,8 @@
     [iconIncoming release];
     [iconOutgoing release];
     
+	[userIconsDict release];
+	
     [super dealloc];
 }
 
@@ -731,16 +759,97 @@
     return(statusCell);
 }
 
-//User icon cell
+#pragma mark User icon
+
+/*!
+* @brief Update icon masks when participating list objects change
+ *
+ * We want to observe attributesChanged: notifications for all objects which are participating in our chat.
+ * When the list changes, remove the observers we had in place before and add observers for each object in the list
+ * so we never observe for contacts not in the chat.
+ */
+- (void)participatingListObjectsChanged:(NSNotification *)notification
+{
+	NSArray			*participatingListObjects = [chat participatingListObjects];
+	NSEnumerator	*enumerator = [participatingListObjects objectEnumerator];
+	AIListObject	*object;
+	
+	[[adium notificationCenter] removeObserver:self
+										  name:ListObject_AttributesChanged
+										object:nil];
+	
+	while (object = [enumerator nextObject]){
+		//In the future, watch for changes
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:) 
+										   name:ListObject_AttributesChanged
+										 object:object];
+	}
+
+	//Also observe our account
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listObjectAttributesChanged:) 
+									   name:ListObject_AttributesChanged
+									 object:[chat account]];
+	
+	//Clear out dictionary of user icons	
+	[userIconsDict release]; 
+	userIconsDict = [[NSMutableDictionary alloc] init];
+}
+
+/*!
+* @brief Update icon masks when source or destination changes
+ */
+- (void)sourceOrDestinationChanged:(NSNotification *)notification
+{
+	[self participatingListObjectsChanged:nil];
+}
+
+/*!
+* @brief Update icon masks when a list object's attributes change
+ */
+- (void)listObjectAttributesChanged:(NSNotification *)notification
+{
+    AIListObject	*inObject = [notification object];
+    NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
+	
+	if(inObject &&
+	   ([keys containsObject:KEY_USER_ICON]) &&
+	   (([[chat participatingListObjects] indexOfObject:inObject] != NSNotFound) ||
+		([chat account] == inObject))){ /* The account is not on the participating list objects list */
+		
+		[userIconsDict removeObjectForKey:[inObject internalObjectID]];
+	}
+}
+
+/*
+ * @brief User icon cell
+ *
+ * To prevent ridiculous flipping from occurring, we keep a copy of the user icon for ourselves.
+ * There's probably a bug in AIFlexibleTableImageCell making this necessary...
+ */
 - (AIFlexibleTableCell *)_userIconCellForContent:(AIContentObject *)content span:(BOOL)span
 {
     AIFlexibleTableImageCell    *imageCell;
-    NSImage			*userImage;
-    
-    //Get the user icon
-    userImage = [[content source] userIcon];
-    if(!userImage) userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
-    
+    NSImage						*userImage;
+	AIListObject				*listObject = [content source];
+
+	userImage = [userIconsDict objectForKey:[listObject internalObjectID]];
+	
+	if(!userImage){
+		NSImage	*original = [listObject userIcon];
+		
+		userImage = [original imageByScalingToSize:[original size]
+										  fraction:1.0
+										 flipImage:YES
+									proportionally:YES];
+		if(!userImage){
+			userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
+		}
+
+		[userIconsDict setObject:userImage forKey:[listObject internalObjectID]];
+	}
+
     //Create the spanning image cell
     imageCell = [AIFlexibleTableImageCell cellWithImage:userImage];
     [imageCell setPaddingLeft:3 top:6 right:3 bottom:1];

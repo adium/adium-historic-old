@@ -56,6 +56,8 @@
     BOOL					showUserIcons;
     float					headIndent;
     
+	NSMutableDictionary		*userIconsDict;
+		
 	//Threads are a lot like George W. Bush in that they are the devil.
     BOOL					rebuilding;
     BOOL					restartRebuilding;

@@ -79,14 +79,18 @@
 //Draw our custom content
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+	[NSGraphicsContext saveGraphicsState];
+	
     //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
     NSAffineTransform * aliasShift = [NSAffineTransform transform];
     [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
-    
-    [image setFlipped:![image isFlipped]];
-    [image drawInRect:cellFrame fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) operation:NSCompositeSourceOver fraction:opacity];
-    [image setFlipped:![image isFlipped]];
+    [aliasShift concat];
 
+    [image drawInRect:cellFrame
+			 fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+			operation:NSCompositeSourceOver
+			 fraction:opacity];
+	
     //
     if(drawFrame){
         NSBezierPath * internalPath = [NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4];
@@ -104,6 +108,8 @@
         [borderColor set];
         [internalPath stroke];
     }
+	
+	[NSGraphicsContext restoreGraphicsState];
 }
 
 @end
