@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.61 2004/04/20 13:27:56 adamiser Exp $
+$Id: ToDoList.txt,v 1.62 2004/04/20 13:34:54 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -98,6 +98,7 @@ Other:
 		Evan: Auburn University? I'm with you though if we change it... but I really think it's okay as-is.
         Jeff: Remember that we lose CVS history if we change filenames.
 	Chris (tick): We could just commit the cvs history to cvs :P
+	Adam: The AI stands for AdIum ;)
 
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 		Colin: Didn't Mac-arena do this already?
@@ -105,7 +106,8 @@ Other:
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 	+ Add export option to log viewer
-
+	+ Add some indication of service to the 'enter password' window.  Multiple accounts with the same name are indistinguishable
+	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
