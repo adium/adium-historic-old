@@ -27,7 +27,7 @@
                                                       description:@"AIM, AOL, and .Mac"
                                                             image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@.+"]] retain]; //added + for phone numbers - still need to enable the send button though.
 
     //Launch the agent
     [[NSTask launchedTaskWithLaunchPath:@"/System/Library/PrivateFrameworks/InstantMessage.framework/iChatAgent.app/Contents/MacOS/iChatAgent" arguments:[NSArray array]] retain];

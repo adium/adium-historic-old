@@ -104,7 +104,7 @@ extern void* objc_getClass(const char *name);
 
     //Check to see if the handle already exists
     if([handleDict objectForKey:inUID]){
-        [self removeHandleWithUID:inUID]; //If it goes, remove it
+        [self removeHandleWithUID:inUID]; //If it does, remove it
     }
 
     //Create the handle
@@ -508,7 +508,7 @@ extern void* objc_getClass(const char *name);
     
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){
-        NSString	*compactedName = [buddyPropertiesDict objectForKey:@"FZPersonID"];
+        NSString	*compactedName = [[buddyPropertiesDict objectForKey:@"FZPersonID"] compactedString];
         AIHandle	*handle;
         NSArray		*modifiedStatusKeys;
 
@@ -518,7 +518,6 @@ extern void* objc_getClass(const char *name);
             if(!handle){ //If the handle doesn't exist
                 NSString *serverGroup;
                 NSArray	*groupArray;
-                
                 //Get the server group
                 groupArray = [buddyPropertiesDict objectForKey:@"FZPersonBuddyGroups"];
                 if([groupArray count]){
