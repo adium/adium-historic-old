@@ -18,7 +18,6 @@
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
 #import "GBApplescriptFiltersPlugin.h"
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
@@ -26,6 +25,7 @@
 #import <AIUtilities/NDAppleScriptObject.h>
 #import <AIUtilities/NDComponentInstance.h>
 #import <Adium/AIContentObject.h>
+#import <Adium/AIHTMLDecoder.h>
 
 #define SCRIPT_BUNDLE_EXTENSION	@"AdiumScripts"
 #define SCRIPTS_PATH_NAME		@"Scripts"
