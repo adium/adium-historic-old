@@ -535,8 +535,8 @@ DeclareString(UID);
 		}
 	}
 
-	[inContact setStatusObject:(remoteGroupName ? nil : [NSNumber numberWithBool:YES])
-					   forKey:@"Stranger"
+	[inContact setStatusObject:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
+					   forKey:@"NotAStranger"
 					   notify:NotifyLater];
 	[inContact notifyOfChangedStatusSilently:YES];
 
