@@ -81,6 +81,9 @@
 	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
     
     int                     online;*/
+	
+	NSLog(@"%s UPDATE",buddy->name);
+	
     AIListContact           *theContact;
 	
     //Get the node's ui_data
@@ -123,6 +126,7 @@
 		//Online / Offline
 		case GAIM_BUDDY_SIGNON:
 		{
+			NSLog(@"%s signed on",buddy->name);
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -146,22 +150,11 @@
 											 notify:NO];
 					}
 				}
-				
-				//Group changes - gaim buddies start off in no group, so this is an important update for us
-				//(ADAM) - Moved back to accountUpdateBuddy.  We need to add offline contacts to the correct group for accurate group totals
-//				if(![theContact remoteGroupName]){
-//					GaimGroup *g = gaim_find_buddys_group(buddy);
-//					if(g){
-//						NSString *groupName = [NSString stringWithUTF8String:g->name];
-//						if(groupName && [groupName length] != 0){
-//							[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-//						}
-//					}
-//				}
 			}
 		}   break;
 		case GAIM_BUDDY_SIGNOFF:
 		{
+			NSLog(@"%s signed off",buddy->name);
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
 				[theContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
@@ -1132,9 +1125,9 @@
 //Configure libgaim's proxy settings using the current system values
 - (void)configureAccountProxy
 {
+	GaimProxyInfo *proxy_info = gaim_proxy_info_new();
+	
 	if([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
-		GaimProxyInfo *proxy_info = gaim_proxy_info_new();
-		
 		char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
 		int proxytype;
 		
@@ -1161,8 +1154,12 @@
 		
 		NSLog(@"Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
 		
-		gaim_account_set_proxy_info(account,proxy_info);
+	} else {
+		proxy_info->type = GAIM_PROXY_NONE;
+		NSLog(@"No proxy settings.");
 	}
+	
+	gaim_account_set_proxy_info(account,proxy_info);
 }
 
 //Disconnect this account

@@ -12,7 +12,6 @@
 
 #import "GaimServices.h"
 
-
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
 @interface CBGaimServicePlugin (PRIVATE)
@@ -45,13 +44,13 @@ static CBGaimAccount* accountLookup(GaimAccount *acct)
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
     if (GAIM_DEBUG) {
-	gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
-	
-	//Log error
-	if(!category) category = "general"; //Category can be nil
-	NSLog(@"(Debug: %s) %s", category, arg_s);
-	
-	g_free(arg_s);
+		gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
+		
+		//Log error
+		if(!category) category = "general"; //Category can be nil
+		NSLog(@"(Debug: %s) %s", category, arg_s);
+		
+		g_free(arg_s);
     }
 }
 
@@ -118,13 +117,13 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
 {
-
+	
 }
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
     NSCAssert(node != nil, @"BlistUpdate on null node");
-
+	
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
         // ui_data will be NULL if we've connected and disconnected;
         // this purges our handles but not gaim's. So look up the account.
@@ -200,7 +199,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
 	void *blist_handle = gaim_blist_get_handle();
 	void *handle       = gaim_adium_get_handle();
-
+	
 	//Idle
 	gaim_signal_connect(blist_handle, "buddy-idle",
 						handle, GAIM_CALLBACK(buddy_event_cb),
@@ -229,7 +228,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 	gaim_signal_connect(blist_handle, "buddy-icon",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_ICON));
-
+	
 	//Evil
 	gaim_signal_connect(blist_handle, "buddy-evil",
 						handle, GAIM_CALLBACK(buddy_event_cb),
@@ -267,7 +266,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-//    NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",conv->name, who, message);
+	//    NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",conv->name, who, message);
     [accountLookup(conv->account) accountConvReceivedIM: message inConversation: conv withFlags: flags atTime: mtime];
 }
 
@@ -440,7 +439,7 @@ static void *adiumGaimNotifyUri(const char *uri)
 
 static void adiumGaimNotifyClose(GaimNotifyType type, void *uiHandle)
 {
-    NSLog(@"adiumGaimNotifyClose");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimNotifyClose");
 }
 
 static GaimNotifyUiOps adiumGaimNotifyOps = {
@@ -474,55 +473,55 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     /*AILocalizedString(@"Request","Title: General request from gaim")*/
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"Request");
     NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
-	(primary ? primary : ""),
-	((primary && secondary) ? "\n\n" : ""),
-	(secondary ? secondary : "")];
+		(primary ? primary : ""),
+		((primary && secondary) ? "\n\n" : ""),
+		(secondary ? secondary : "")];
     
     NSMutableArray  *buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
     GCallback 	    *callBacks = g_new0(GCallback, actionCount);
     
     //Generate the actions names and callbacks into useable forms
     for (i = 0; i < actionCount; i += 1) {
-	//Get the name - XXX evands:need to localize!
-	[buttonNamesArray addObject:[NSString stringWithUTF8String:(va_arg(actions, char *))]];
-	
-	//Get the callback for that name
-	callBacks[i] = va_arg(actions, GCallback);
+		//Get the name - XXX evands:need to localize!
+		[buttonNamesArray addObject:[NSString stringWithUTF8String:(va_arg(actions, char *))]];
+		
+		//Get the callback for that name
+		callBacks[i] = va_arg(actions, GCallback);
     }
     
     //Make default_action the last one
     if (default_action != -1){
-	GCallback tempCallBack = callBacks[actionCount-1];
-	callBacks[actionCount-1] = callBacks[default_action];
-	callBacks[default_action] = tempCallBack;
-	
-	[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
+		GCallback tempCallBack = callBacks[actionCount-1];
+		callBacks[actionCount-1] = callBacks[default_action];
+		callBacks[default_action] = tempCallBack;
+		
+		[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
     }
     
     switch (actionCount)
     { 
-	case 1:
-	    alertReturn = NSRunInformationalAlertPanel(titleString,msg,
-						       [buttonNamesArray objectAtIndex:0],nil,nil);
-	    break;
-	case 2:
-	    alertReturn = NSRunInformationalAlertPanel(titleString,msg,
-						       [buttonNamesArray objectAtIndex:1],
-						       [buttonNamesArray objectAtIndex:0],nil);
-	    break;
-	case 3:
-	    alertReturn = NSRunInformationalAlertPanel(titleString,msg,
-						       [buttonNamesArray objectAtIndex:2],
-						       [buttonNamesArray objectAtIndex:1],
-						       [buttonNamesArray objectAtIndex:0]);
-	    break;		    
+		case 1:
+			alertReturn = NSRunInformationalAlertPanel(titleString,msg,
+													   [buttonNamesArray objectAtIndex:0],nil,nil);
+			break;
+		case 2:
+			alertReturn = NSRunInformationalAlertPanel(titleString,msg,
+													   [buttonNamesArray objectAtIndex:1],
+													   [buttonNamesArray objectAtIndex:0],nil);
+			break;
+		case 3:
+			alertReturn = NSRunInformationalAlertPanel(titleString,msg,
+													   [buttonNamesArray objectAtIndex:2],
+													   [buttonNamesArray objectAtIndex:1],
+													   [buttonNamesArray objectAtIndex:0]);
+			break;		    
     }
     
     //Convert the return value to an array index
     alertReturn = (alertReturn + (actionCount - 2));
-
+	
     if (callBacks[alertReturn] != NULL) 
-	((GaimRequestActionCb)callBacks[alertReturn])(userData, alertReturn);
+		((GaimRequestActionCb)callBacks[alertReturn])(userData, alertReturn);
     
     //    gaim_request_close(GAIM_REQUEST_INPUT, nil);
     
@@ -553,12 +552,12 @@ static GaimRequestUiOps adiumGaimRequestOps = {
 
 static void adiumGaimNewXfer(GaimXfer *xfer)
 {
-        NSLog(@"adiumGaimNewXfer");
+	NSLog(@"adiumGaimNewXfer");
 }
 
 static void adiumGaimDestroy(GaimXfer *xfer)
 {
-        NSLog(@"adiumGaimDestroy");
+	NSLog(@"adiumGaimDestroy");
 }
 
 static void adiumGaimRequestFile(GaimXfer *xfer)
@@ -572,28 +571,28 @@ static void adiumGaimRequestFile(GaimXfer *xfer)
 
 static void adiumGaimAskCancel(GaimXfer *xfer)
 {
-        NSLog(@"adiumGaimAskCancel");
+	NSLog(@"adiumGaimAskCancel");
 }
 
 static void adiumGaimAddXfer(GaimXfer *xfer)
 {
-        NSLog(@"adiumGaimAddXfer");
+	NSLog(@"adiumGaimAddXfer");
 }
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
- //   NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+	//   NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
     [accountLookup(xfer->account) accountXferUpdateProgress:xfer percent:percent];
 }
 
 static void adiumGaimCancelLocal(GaimXfer *xfer)
 {
-        NSLog(@"adiumGaimCancelLocal");
+	NSLog(@"adiumGaimCancelLocal");
 }
 
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
-        NSLog(@"adiumGaimCancelRemote");
+	NSLog(@"adiumGaimCancelRemote");
     [accountLookup(xfer->account) accountXferCanceledRemotely:xfer];
 }
 
@@ -794,13 +793,16 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     char    host[300];
     size_t  hostSize;
-    
+	
+    NSLog(@"configureGaimProxySettings: Checking proxy settings..");
+	
     proxyDict = SCDynamicStoreCopyProxies(NULL);
     result = (proxyDict != NULL);
      
     // Get the enable flag.  This isn't a CFBoolean, but a CFNumber.
     //check if SOCKS is enabled
     if (result) {
+		NSLog(@"configureGaimProxySettings: Got proxyDict.");
         enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict,
                                                        kSCPropNetProxiesSOCKSEnable);
         
@@ -808,6 +810,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
             && (CFGetTypeID(enableNum) == CFNumberGetTypeID());
     }
     if (result) {
+		NSLog(@"configureGaimProxySettings: got a value for kSCPropNetProxiesSOCKSEnable");
         result = CFNumberGetValue(enableNum, kCFNumberIntType,
                                   &enable) && (enable != 0);
     }
@@ -817,6 +820,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     // field in the Network preferences panel, the CFStringGetCString
     // function will fail and this function will return false.
     if (result) {
+		NSLog(@"configureGaimProxySettings: SOCKS is enabled; looking up kSCPropNetProxiesSOCKSProxy");
         hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict,
                                                      kSCPropNetProxiesSOCKSProxy);
         
@@ -826,6 +830,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if (result) {
         result = CFStringGetCString(hostStr, host,
                                     (CFIndex) hostSize, [NSString defaultCStringEncoding]);
+		NSLog(@"configureGaimProxySettings: got a host of %s",host);
     }
     
     //Get the proxy port
@@ -838,10 +843,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     }
     if (result) {
         result = CFNumberGetValue(portNum, kCFNumberIntType, &portInt);
+		NSLog(@"configureGaimProxySettings: got a port of %i",portInt);
     }
     if (result) {
         //set what we've got so far
-        NSLog(@"setting socks5 settings: %s:%i",host,portInt);
+        NSLog(@"configureGaimProxySettings: setting socks5 settings: %s:%i",host,portInt);
         gaim_prefs_set_string("/core/proxy/type", "socks5");
         gaim_prefs_set_string("/core/proxy/host",host);
         gaim_prefs_set_int("/core/proxy/port",portInt);
@@ -850,14 +856,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         NSDictionary* auth = [self getDictionaryFromKeychainForKey:key];
         
         if(auth) {
-            NSLog(@"proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
+            NSLog(@"configureGaimProxySettings: proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
             
             gaim_prefs_set_string("/core/proxy/username",  [[auth objectForKey:@"username"] UTF8String]);
             gaim_prefs_set_string("/core/proxy/password", [[auth objectForKey:@"password"] UTF8String]);
             
         } else {
             //No username/password.  I think this doesn't need to be an error or anythign since it should have been set in the system prefs
-            NSLog(@"No username/password found");
+            NSLog(@"configureGaimProxySettings: No username/password found");
         }
     }    
     
@@ -865,6 +871,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if (proxyDict != NULL) {
         CFRelease(proxyDict);
     }
+	
+	NSLog(@"configureGaimProxySettings: %i",result);
     return result;
 }    
 
