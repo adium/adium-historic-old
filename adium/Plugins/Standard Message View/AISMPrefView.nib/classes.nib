@@ -19,6 +19,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_combineMessages" = NSButton; 
+                "checkBox_ignoreBackgroundColor" = NSButton; 
+                "checkBox_ignoreTextColor" = NSButton; 
                 "checkBox_showUserIcons" = NSButton; 
                 "popUp_prefixFormat" = NSPopUpButton; 
                 "popUp_timeStamps" = NSPopUpButton; 

@@ -65,6 +65,8 @@
 	[checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
 	[checkBox_showUserIcons setEnabled:YES];
     }
+    [checkBox_ignoreTextColor setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_TEXT_COLOR] boolValue]];
+    [checkBox_ignoreBackgroundColor setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue]];
     
     [checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
     [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
@@ -82,6 +84,16 @@
     }else if(sender == checkBox_combineMessages){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_COMBINE_MESSAGES
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
+    }else if(sender == checkBox_ignoreTextColor){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_IGNORE_TEXT_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	
+    }else if(sender == checkBox_ignoreBackgroundColor){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_IGNORE_BACKGROUND_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     }else if(sender == popUp_timeStamps){
