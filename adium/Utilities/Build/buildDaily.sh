@@ -83,6 +83,10 @@ fi
 # "no".
 should_update="yes"
 
+# If you want your build to be faster but potentially contain outdated plugins and the like,
+# set this to "no".
+clean_build="yes"
+
 # Don't do this unless you are a developer and want to automatically upload the .dmg to adium.sourceforge.net
 copy_to_sourceforge="no"
 
@@ -249,12 +253,11 @@ if [ -e $adium_co_dir/Adium.pbproj ]; then
 	rm -r $adium_co_dir/Adium.pbproj
 fi
 
-# this is only necessary until XCode 1.1 which should bring with it robust prefix header support
-if [ -e $adium_co_dir/PrefixHeaders ]; then
-	rm -r $adium_co_dir/PrefixHeaders
-fi
-
 if [ -e $adium_co_dir/Plugins ]; then
+
+if [ "$clean_build" == "yes" ] ; then
+	rm -r $adium_co_dir/build
+fi
 
 # Produce Changelog
 # Probably don't care about this unless we're building a .dmg for distribution
