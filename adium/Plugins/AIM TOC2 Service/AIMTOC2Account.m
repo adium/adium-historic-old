@@ -419,6 +419,8 @@
 {
     ACCOUNT_STATUS	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
 
+    NSLog(@"Status for %@ will change to %@",key,inValue);
+    
     if([key compare:@"Online"] == 0){
         if([inValue boolValue]){ //Connect
             if(status == STATUS_OFFLINE){
@@ -671,11 +673,15 @@
                     
                     [self holdUpdatesUntilConnectingIsComplete];
 
+                    //Flag ourself as online
+                    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+                    [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
+
                     //Set our correct status
                     {
-                        NSDate 			*idle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
-                        NSAttributedString 	*profile = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"TextProfile" account:self]];
-                        NSAttributedString 	*away = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:self]];
+                        NSDate 		*idle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
+                        NSData	 	*profile = [[owner accountController] statusObjectForKey:@"TextProfile" account:self];
+                        NSData	 	*away = [[owner accountController] statusObjectForKey:@"AwayMessage" account:self];
 
                         if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
                         if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
@@ -684,9 +690,6 @@
                         [self AIM_SetNick:screenName];
                     }
                     
-                    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-                    [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
-
                     //Send AIM the init done message (at this point we become visible to other buddies)
                     [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
 
@@ -795,7 +798,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.75 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.76 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
