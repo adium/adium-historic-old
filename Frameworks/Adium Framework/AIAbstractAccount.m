@@ -324,8 +324,8 @@
  */
 - (void)setStatusState:(AIStatus *)statusState
 {
-	//Store teh status state as a status object so it can be easily used elsewhere
-	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];
+	//Store the status state as a status object so it can be easily used elsewhere
+	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyLater];
 	
 	//Update us to the new state
 	[self updateStatusForKey:@"StatusState"];
@@ -346,6 +346,8 @@
 
 	[[adium notificationCenter] postNotificationName:AIActiveStatusStateChangedNotification
 											  object:self];
+	
+	[self notifyOfChangedStatusSilently:YES];
 }
 
 /*!

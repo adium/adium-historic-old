@@ -1838,11 +1838,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 											forGaimStatusType:gaimStatusType]  :
 								nil);
 
-		[self setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:encodedStatusMessage];
-		
-		[self setStatusObject:statusState
-					   forKey:@"StatusState"
-					   notify:YES]; /* Should notify? */
+		[self setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:encodedStatusMessage];		
 	}
 }
 
