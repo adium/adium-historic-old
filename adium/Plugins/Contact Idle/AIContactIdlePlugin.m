@@ -24,9 +24,14 @@
 
 @implementation AIContactIdlePlugin
 
+DeclareString(IdleSince);
+DeclareString(Idle);
+
 - (void)installPlugin
 {
-    //
+	InitString(IdleSince,@"IdleSince");
+	InitString(Idle,@"Idle");
+	
     idleObjectArray = nil;
 
     //Install our tooltip entry
@@ -41,14 +46,17 @@
     //Stop tracking all idle handles
     [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
     [idleObjectArray release]; idleObjectArray = nil;
+
+	ReleaseString(IdleSince);
+	ReleaseString(Idle);
 }
 
 //Called when a handle's status changes
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-    if(	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]){
+    if(	inModifiedKeys == nil || [inModifiedKeys containsObject:IdleSince]){
 
-        if([inObject statusObjectForKey:@"IdleSince"] != nil){
+        if([inObject statusObjectForKey:IdleSince] != nil){
             //Track the handle
             if(!idleObjectArray){
                 idleObjectArray = [[NSMutableArray alloc] init];
@@ -99,17 +107,17 @@
 //Give a contact its correct idle value
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
-    NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
+    NSDate	*idleSince = [inObject statusObjectForKey:IdleSince];
     
     if(idleSince){ //Set the handle's 'idle' value
         int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
 		[inObject setStatusObject:[NSNumber numberWithInt:idle]
-						   forKey:@"Idle"
+						   forKey:Idle
 						   notify:NO];
         
     }else{ //Remove its idle value
 		[inObject setStatusObject:nil
-						   forKey:@"Idle"
+						   forKey:Idle
 						   notify:NO];
     }
 
@@ -135,7 +143,7 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 				idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
+    int 				idle = [[inObject numberStatusObjectForKey:Idle] intValue];
     NSAttributedString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
