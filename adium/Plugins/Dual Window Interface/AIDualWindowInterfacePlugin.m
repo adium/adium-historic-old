@@ -117,7 +117,10 @@
 - (IBAction)closeTab:(id)sender
 {
     if(messageWindowController){
-        [messageWindowController removeTabViewItemContainer:[messageWindowController selectedTabViewItemContainer]];
+        AIMessageTabViewItem	*container = [messageWindowController selectedTabViewItemContainer];
+        AIContactHandle		*handle = [[container messageViewController] handle];
+
+        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];
     }
 }
 
@@ -217,7 +220,7 @@
                                        account:[userInfo objectForKey:@"From"]
                                        content:[userInfo objectForKey:@"Content"]
                                         create:YES];
-        [container setAccountSelectionMenuVisible:YES]; //Show the message view's account selection menu
+        [[container messageViewController] setAccountSelectionMenuVisible:YES]; //Show the message view's account selection menu
         [container makeActive:nil];			//Select the tab
         
     }else{
@@ -241,6 +244,13 @@
                                        account:[object destination]
                                        content:nil
                                         create:YES];
+
+        //Make sure the account that was messaged is the active account
+        if([object destination] != [[container messageViewController] account]){
+            //Select the correct account, and re-show the account menu
+            [[container messageViewController] setAccount:[object destination]];
+            [[container messageViewController] setAccountSelectionMenuVisible:YES];            
+        }
     }
 }
 

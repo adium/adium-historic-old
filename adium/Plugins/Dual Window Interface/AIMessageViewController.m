@@ -105,6 +105,12 @@
     [self sizeAndArrangeSubviews];
 }
 
+//Sets our text entry view as the first responder
+- (void)makeTextEntryViewFirstResponder
+{
+    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
+}
+
 
 //Private -----------------------------------------------------------------------------
 - (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface
@@ -152,14 +158,6 @@
 
     return(self);
 }
-
-//Called when this view is inserted into a window or tab
-- (void)viewDidMoveToSuperview
-{
-    //Give our text entry view focus.  We can't do this in the init method since we're not yet inserted into a window/tab.  Here we can be sure that our view has been moved to a window/tab, and give first responder to our entry view.
-    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
-}
-
 
 - (void)dealloc
 {

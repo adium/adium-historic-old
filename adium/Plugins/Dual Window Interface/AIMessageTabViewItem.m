@@ -51,11 +51,14 @@
     if(![window isKeyWindow]){
         [window makeKeyAndOrderFront:nil]; //Bring our window to the front        
     }
+
+    [messageView makeTextEntryViewFirstResponder]; //Ensure our entry view is first responder
+
 }
 
-- (void)setAccountSelectionMenuVisible:(BOOL)visible
+- (AIMessageViewController *)messageViewController
 {
-    [messageView setAccountSelectionMenuVisible:YES];
+    return(messageView);
 }
 
 //Close this container
