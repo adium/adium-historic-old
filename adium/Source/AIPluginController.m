@@ -66,7 +66,7 @@
     for(loop = 0;loop < [pluginList count];loop++){
         NSString 		*pluginName;
         NSBundle		*pluginBundle;
-        AIPlugin		*plugin;
+        AIPlugin		*plugin = nil;
 
         pluginName = [pluginList objectAtIndex:loop];
         //NSLog (@"Loading plugin: \"%@\"", pluginName);
