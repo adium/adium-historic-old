@@ -4,7 +4,7 @@
 Version 0.58
 - Added support for server-side AIM buddy comments
 - Added support for server-side AIM and Novell buddy aliases
-- Added automatic use of Safari, Camino, and FireFox bookmarks in the link editor
+- Added automatic use of Safari, Camino, FireFox, and OmniWeb bookmarks
 - Added "new mail" notification support for Yahoo! and MSN
 - Added ability to group chat tabs by contact list groups
 - Improved event notifications
