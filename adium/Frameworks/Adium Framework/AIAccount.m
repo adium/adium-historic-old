@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.48 2004/03/05 23:50:29 adamiser Exp $
+// $Id: AIAccount.m,v 1.49 2004/03/05 23:56:45 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -65,12 +65,6 @@
     [self initAccount];
     
     return(self);
-}
-
-#warning ######REMOVE#######
-- (NSString *)formattedUID
-{
-	return([NSString stringWithFormat:@"[%@]%@",[self uniqueObjectID],[super formattedUID]]);
 }
 
 //Dealloc
