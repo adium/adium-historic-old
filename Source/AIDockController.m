@@ -40,6 +40,12 @@
 - (void)updateAppBundleIcon;
 @end
 
+#ifndef MAC_OS_X_10_4
+@interface NSWorkspace (NewTigerMethod)
+- (void)setIcon:(NSImage *)icon forFile:(NSString *)file options:(int)options;
+@end
+#endif
+						
 @implementation AIDockController
  
 #define DOCK_THEMABLE_PREFS      @"Dock Themable Prefs"
