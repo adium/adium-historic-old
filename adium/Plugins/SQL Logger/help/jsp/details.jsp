@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
-<!--$Rev: 838 $ $Date: 2004/07/20 19:50:04 $ -->
+<!--$Rev: 845 $ $Date: 2004/07/28 22:44:21 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -687,99 +687,67 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select username as username, "+
+    /*
+     * use the select * from (select blah silliness to work around a
+     * postgresql bug
+     */
+
+    pstmt = conn.prepareStatement("select * from ( "+
+    " select username as username, "+
     " recipient_id as \"Recipient\", "+
     " count(*) as \"Sent\", (select count(*)"+
     " from messages where"+
     " recipient_id = a.sender_id and sender_id = a.recipient_id " +
     " and message_date >= ?::timestamp and message_date < ?::timestamp) as " +
-    " \"Recieved\", " +
-    " trunc(avg(length(message)), 2) as "+
-    " \"Avg Sent Length\", (select coalesce(trunc(avg(length(message)),2),0)"+
-    " from "+
-    " messages where a.sender_id = recipient_id and sender_id = " +
-    " a.recipient_id and message_date >= ?::timestamp" +
-    " and message_date < ?::timestamp " +
-    " ) as \"Avg Recd Length\","+
-    " min(length(message)) as \"Min Sent\", max(length(message))"+
-    " as \"Max Sent\","+
-    " (select coalesce(min(length(message)),0) from messages where a.sender_id = "+
-    " recipient_id and sender_id = a.recipient_id " +
-    " and message_date >= ?::timestamp and message_date < ?::timestamp "+
-    " ) as \"Min Received\","+
-    " (select "+
-    " coalesce(max(length(message)),0) from "+
-    " messages where a.sender_id = recipient_id and a.recipient_id " +
-    " = sender_id and message_date >= ?::timestamp " +
-    " and message_date < ?::timestamp)"+
-    " as \"Max Received\" from messages a, users "+
+    " \"Received\", " +
+    " (select message from messages where sender_id = a.recipient_id " +
+    " and message_date >= ?::timestamp and message_date < ?::timestamp " +
+    " order by random() limit 1) as \"Random\" " +
+    " from messages a, users "+
     " where sender_id = ? and message_date >= ?::timestamp " +
     " and message_date < ?::timestamp " +
     " and users.user_id = a.recipient_id " +
-    " group by sender_id, recipient_id, username "+
-    " order by username");
+    " group by sender_id, recipient_id, username) as stats "+
+    " order by \"Sent\" + \"Received\" desc ");
 
     pstmt.setString(1, date);
     pstmt.setString(2, endMonth);
     pstmt.setString(3, date);
     pstmt.setString(4, endMonth);
-    pstmt.setString(5, date);
-    pstmt.setString(6, endMonth);
-    pstmt.setString(7, date);
-    pstmt.setString(8, endMonth);
-    pstmt.setInt(9, sender);
-    pstmt.setString(10, date);
-    pstmt.setString(11, endMonth);
+    pstmt.setInt(5, sender);
+    pstmt.setString(6, date);
+    pstmt.setString(7, endMonth);
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select username as username, "+
+        pstmt = conn.prepareStatement("select * from ( " +
+            " select username as username, "+
             " recipient_id as \"Recipient\", "+
             " count(*) as \"Sent\", (select count(*)"+
             " from messages where"+
             " recipient_id = a.sender_id and sender_id = a.recipient_id " +
             " and message_date >= ?::timestamp " +
             " and message_date < ?::timestamp) as " +
-            " \"Recieved\", " +
-            " trunc(avg(length(message)), 2) as "+
-            " \"Avg Sent Length\", " +
-            " (select coalesce(trunc(avg(length(message)),2),0)"+
-            " from "+
-            " messages " +
-            " where a.sender_id = recipient_id and sender_id = " +
-            " a.recipient_id and message_date >= ?::timestamp" +
+            " \"Received\", " +
+            " (select message from messages where sender_id = a.recipient_id " +
+            " and message_date >= ?::timestamp " +
             " and message_date < ?::timestamp " +
-            " ) as \"Avg Recd Length\","+
-            " min(length(message)) as \"Min Sent\", max(length(message))"+
-            " as \"Max Sent\","+
-            " (select coalesce(min(length(message)),0) from messages where a.sender_id = "+
-            " recipient_id and sender_id = a.recipient_id " +
-            " and message_date >= ?::timestamp and message_date < ?::timestamp "+
-            " ) as \"Min Received\","+
-            " (select "+
-            " coalesce(max(length(message)),0) from "+
-            " messages where a.sender_id = recipient_id and a.recipient_id " +
-            " = sender_id and message_date >= ?::timestamp " +
-            " and message_date < ?::timestamp)"+
-            " as \"Max Received\" from messages a, users, meta_contact "+
-            " where sender_id = meta_contact.user_id "+
+            " order by random() limit 1) as \"Random\" " +
+            " from messages a, users, meta_contact " +
+            " where sender_id = meta_contact.user_id " +
             " and meta_id = ? " +
             " and message_date >= ?::timestamp " +
             " and message_date < ?::timestamp " +
             " and users.user_id = a.recipient_id " +
-            " group by sender_id, recipient_id, username " +
-            " order by username");
+            " group by sender_id, recipient_id, username ) " +
+            " as foo order by \"Sent\" + \"Received\" desc ");
 
         pstmt.setString(1, date);
         pstmt.setString(2, endMonth);
         pstmt.setString(3, date);
         pstmt.setString(4, endMonth);
-        pstmt.setString(5, date);
-        pstmt.setString(6, endMonth);
-        pstmt.setString(7, date);
-        pstmt.setString(8, endMonth);
-        pstmt.setInt(9, meta_id);
-        pstmt.setString(10, date);
-        pstmt.setString(11, endMonth);
+        pstmt.setInt(5, meta_id);
+        pstmt.setString(6, date);
+        pstmt.setString(7, endMonth);
     }
 
     rset = pstmt.executeQuery();
