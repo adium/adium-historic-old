@@ -133,10 +133,10 @@
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
 
         //content object addeed
-        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:YES],@"Incoming",nil]];
+        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
 
         //Did receive content
-        [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+        [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
     }
 }
 
@@ -170,7 +170,7 @@
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
     
         //Content object added
-        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:NO],@"Incoming",nil]];
+        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     
         //Did send content
         [[owner notificationCenter] postNotificationName:Content_DidSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];

@@ -112,6 +112,7 @@
 				4BDDCA08041104ED00A8010A,
 				4B7BD8640412584500A8010A,
 				4B4FA11504125F3F00A8010A,
+				4B0473C0043E443A00A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -168,6 +169,7 @@
 				4BDDCA07041104ED00A8010A,
 				4B7BD8630412584500A8010A,
 				4B4FA11404125F3F00A8010A,
+				4B0473BF043E443A00A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -258,6 +260,7 @@
 				4BDDCA09041104ED00A8010A,
 				4B7BD8650412584500A8010A,
 				4B4FA11604125F3F00A8010A,
+				4B0473C1043E443A00A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -702,6 +705,180 @@
 		};
 		4B04137D041111F200A8010A = {
 			fileRef = 4B04137C041111F200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0473B7043E43F200A8010A = {
+			children = (
+				4B0473B8043E442B00A8010A,
+				4B0473B9043E442B00A8010A,
+			);
+			isa = PBXGroup;
+			name = "Status Changed Messages";
+			refType = 4;
+		};
+		4B0473B8043E442B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusChangedMessagesPlugin.h;
+			path = "Plugins/Status Changed Messages/AIStatusChangedMessagesPlugin.h";
+			refType = 4;
+		};
+		4B0473B9043E442B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusChangedMessagesPlugin.m;
+			path = "Plugins/Status Changed Messages/AIStatusChangedMessagesPlugin.m";
+			refType = 4;
+		};
+		4B0473BA043E443A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B0473C6043E453500A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0473BB043E443A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0473BC043E443A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B0473C7043E453500A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0473BD043E443A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B0473C8043E453900A8010A,
+				4B0473C9043E453A00A8010A,
+				4B0473CA043E453B00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0473BE043E443A00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0473BF043E443A00A8010A = {
+			buildPhases = (
+				4B0473BA043E443A00A8010A,
+				4B0473BB043E443A00A8010A,
+				4B0473BC043E443A00A8010A,
+				4B0473BD043E443A00A8010A,
+				4B0473BE043E443A00A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Status Changed Messages";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B0473C3043E444000A8010A,
+				4B0473C4043E444000A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Status Changed Messages";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Status Changed Messages";
+			productReference = 4B0473C0043E443A00A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIStatusChangedMessagesPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B0473C0043E443A00A8010A = {
+			isa = PBXBundleReference;
+			path = "Status Changed Messages.AdiumPlugin";
+			refType = 3;
+		};
+		4B0473C1043E443A00A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B0473BF043E443A00A8010A;
+		};
+		4B0473C2043E443A00A8010A = {
+			fileRef = 4B0473C0043E443A00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0473C3043E444000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B0473C4043E444000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B0473C6043E453500A8010A = {
+			fileRef = 4B0473B8043E442B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0473C7043E453500A8010A = {
+			fileRef = 4B0473B9043E442B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0473C8043E453900A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0473C9043E453A00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0473CA043E453B00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1180,6 +1357,7 @@
 				4BDDCA0A041104ED00A8010A,
 				4B7BD8660412584500A8010A,
 				4B4FA11704125F3F00A8010A,
+				4B0473C2043E443A00A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1411,6 +1589,7 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
+				4B0473B7043E43F200A8010A,
 				4B52A58603EDB9D200A8010A,
 				9EB7C05703D52AFA00415B22,
 				F5AAD085039BA0D301A8010A,
@@ -4895,6 +5074,32 @@
 			settings = {
 			};
 		};
+		4BFC5407043E509A00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContentStatus.h;
+			path = "Frameworks/Adium Framework/AIContentStatus.h";
+			refType = 4;
+		};
+		4BFC5408043E509A00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContentStatus.m;
+			path = "Frameworks/Adium Framework/AIContentStatus.m";
+			refType = 4;
+		};
+		4BFC5409043E509A00A8010A = {
+			fileRef = 4BFC5407043E509A00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFC540A043E509A00A8010A = {
+			fileRef = 4BFC5408043E509A00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //4B0
 //4B1
 //4B2
@@ -6233,6 +6438,8 @@
 			children = (
 				F579392B033E74C401A8010A,
 				F5793911033E748F01A8010A,
+				4BFC5407043E509A00A8010A,
+				4BFC5408043E509A00A8010A,
 			);
 			isa = PBXGroup;
 			name = Content;
@@ -6639,6 +6846,7 @@
 				4BF5BA18042F3CB200A8010A,
 				4BF5BA1A042F3CB200A8010A,
 				4BF5BA1C042F3CB200A8010A,
+				4BFC5409043E509A00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6667,6 +6875,7 @@
 				4BF5BA19042F3CB200A8010A,
 				4BF5BA1B042F3CB200A8010A,
 				4BF5BA1D042F3CB200A8010A,
+				4BFC540A043E509A00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

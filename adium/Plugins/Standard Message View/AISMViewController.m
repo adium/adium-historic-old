@@ -16,6 +16,11 @@
 @interface AISMViewController (PRIVATE)
 - (id)initForContact:(AIListContact *)inContact owner:(id)inOwner;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (AIFlexibleTableCell *)emptyCellForContent:(id <AIContentObject>)content;
+- (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent;
+- (AIFlexibleTableCell *)senderCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent;
+- (AIFlexibleTableCell *)timeStampCellForContent:(id <AIContentObject>)content previousContent:(id <AIContentObject>)previousContent;
+- (NSColor *)backgroundColorOfContent:(id <AIContentObject>)content;
 @end
 
 @implementation AISMViewController
@@ -33,22 +38,7 @@
 
     //observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-            
-
-    //prefetch our colors
-/*    backColorIn = [[[[owner preferenceController] preferenceForKey:@"message_incoming_backgroundColor" group:PREF_GROUP_GENERAL object:handle] representedColor] retain];
-    backColorOut = [[[[owner preferenceController] preferenceForKey:@"message_outgoing_backgroundColor" group:PREF_GROUP_GENERAL object:handle] representedColor] retain];
-
-    outgoingSourceColor = [[[[owner preferenceController] preferenceForKey:@"message_outgoing_sourceColor" group:PREF_GROUP_GENERAL object:handle] representedColor] retain];
-    outgoingBrightSourceColor = [[[[owner preferenceController] preferenceForKey:@"message_outgoing_brightSourceColor" group:PREF_GROUP_GENERAL object:handle] representedColor] retain];
-
-    incomingSourceColor = [[[[owner preferenceController] preferenceForKey:@"message_incoming_sourceColor" group:PREF_GROUP_GENERAL object:handle] representedColor] retain];
-    incomingBrightSourceColor = [[[[owner preferenceController] preferenceForKey:@"message_incoming_brightSourceColor" group:PREF_GROUP_GENERAL object:handle] representedColor] retain];
-
-    lineColorDivider = [[backColorIn darkenBy:0.1] retain];
-    lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
-*/
-
+    
     [self preferencesChanged:nil];
 
     //Create our table view
@@ -136,17 +126,17 @@
 - (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
 {
     NSArray			*contentArray = [contact contentObjectArray];
-    id <AIContentObject>	object;
+    id <AIContentObject>	content;
     id <AIContentObject>	previousContent = nil;
     AIFlexibleTableCell		*cell = nil;
 
     //Get the content objects
-    object = [contentArray objectAtIndex:([contentArray count] - 1) - inRow]; //Content is stored in reverse order
+    content = [contentArray objectAtIndex:([contentArray count] - 1) - inRow]; //Content is stored in reverse order
     if(inRow > 0) previousContent = [contentArray objectAtIndex:[contentArray count] - inRow];
     
 
-    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){ //Message content
-        AIContentMessage	*contentMessage = (AIContentMessage *)object;
+    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){ //Message content
+/*        AIContentMessage	*contentMessage = (AIContentMessage *)object;
         id			messageSource = [contentMessage source];
         BOOL			duplicateSource, outgoing;
         NSColor			*backgroundColor;
@@ -167,69 +157,198 @@
 
 
         gridColor = [backgroundColor darkenBy:(backgroundIsDark ? - (gridDarkness + DARKEN_LIGHTEN_MODIFIER) : gridDarkness)];
-
+*/
         //        BOOL			displayPrefix;
 //        BOOL			displayTimeStamps;
 
         //Create and return a cell
         if(inCol == senderCol){
-            NSColor	*prefixColor;
-            NSColor	*gradientColor;
-            
-            if(outgoing){
-                prefixColor = (backgroundIsDark ? outgoingLightSourceColor : outgoingSourceColor);
-            }else{
-                prefixColor = (backgroundIsDark ? incomingLightSourceColor : incomingSourceColor);
-            }
-
-            if(displaySenderGradient){
-                gradientColor = (backgroundIsDark ? [backgroundColor darkenBy:-(senderGradientDarkness + DARKEN_LIGHTEN_MODIFIER)] : [backgroundColor darkenBy:senderGradientDarkness]);
-            }else{
-                gradientColor = nil;
-            }            
-
-            cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [[(AIHandle *)messageSource containingContact] displayName])]
-                                                     color:prefixColor
-                                                      font:prefixFont
-                                                 alignment:NSRightTextAlignment
-                                                background:backgroundColor
-                                                  gradient:gradientColor];
-            [cell setPaddingLeft:1 top:1 right:1 bottom:1];
-
-            if(displayGridLines && !duplicateSource) [cell setDividerColor:gridColor];//lineColorDarkDivider];
-            if(hideDuplicatePrefixes && duplicateSource) [cell setDrawContents:NO];
+            cell = [self senderCellForContent:content previousContent:previousContent];
                 
         }else if(inCol == messageCol){
-            cell = [AIFlexibleTableTextCell cellWithAttributedString:message];
-            [cell setPaddingLeft:2 top:1 right:2 bottom:1];
-            [cell setBackgroundColor:backgroundColor];
-            if(displayGridLines && !duplicateSource) [cell setDividerColor:gridColor];
+            cell = [self messageCellForContent:content previousContent:previousContent];
 
         }else if(inCol == timeCol){
-            //User's localized date format: [[NSUserDefaults standardUserDefaults] objectForKey:NSTimeFormatString] (w/ seconds)
-            NSDateFormatter		*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO] autorelease];
-            NSString			*dateString = [dateFormatter stringForObjectValue:[contentMessage date]];
+            cell = [self timeStampCellForContent:content previousContent:previousContent];
 
-            if(!displayTimeStamps){
-                dateString = @"";
-            }
-            
-            cell = [AIFlexibleTableTextCell cellWithString:dateString
-                                       color:(backgroundIsDark ? [NSColor lightGrayColor] : [NSColor grayColor])
-                                        font:[NSFont cachedFontWithName:@"Helvetica" size:10]/*[[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:0 size:10]*/
-                                   alignment:NSRightTextAlignment
-                                  background:backgroundColor
-                                    gradient:nil];
+        }
+
+        //Set up the gridlines.  We draw a gridline above this cell if (Gridlines are enabled) and (there is previous content) and (that content is not the same type as us or content's source is not the same as previous content's source)
+        if(displayGridLines && previousContent && ([[previousContent type] compare:[content type]] != 0 || [content source] != [previousContent source])){
+            BOOL		backgroundIsDark;
+            NSColor		*backgroundColor;
+
+            //Set a divider
+            backgroundColor = [self backgroundColorOfContent:content];
+            backgroundIsDark = [backgroundColor colorIsDark];
+            [cell setDividerColor:[backgroundColor darkenBy:(backgroundIsDark ? - (gridDarkness + DARKEN_LIGHTEN_MODIFIER) : gridDarkness)]];
+        }
+
+    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){ //Status
+        if(inCol == senderCol){
+            cell = [self emptyCellForContent:content];
+
+        }else if(inCol == messageCol){
+            cell = [AIFlexibleTableTextCell cellWithString:[(AIContentStatus *)content message]
+                                                     color:/*(backgroundIsDark ? [NSColor lightGrayColor] : */[NSColor grayColor]/*)*/
+                                                      font:[NSFont cachedFontWithName:@"Helvetica" size:10]
+                                                 alignment:NSLeftTextAlignment
+                                                background:[NSColor whiteColor]
+                                                  gradient:nil];
             [cell setPaddingLeft:1 top:0 right:1 bottom:0];
-            if(displayGridLines && !duplicateSource) [cell setDividerColor:gridColor];
-            if(hideDuplicateTimeStamps && previousContent && [[dateFormatter stringForObjectValue:[(AIContentMessage *)previousContent date]] compare:dateString] == 0){
-                [cell setDrawContents:NO]; //We assume that previous content is also a content message... this is not always true!!!
-            }
+
+
+        }else if(inCol == timeCol){
+            cell = [self timeStampCellForContent:content previousContent:previousContent];
+        }
+
+        //Set up the gridlines.  We draw a gridline above this cell if (Gridlines are enabled) and (there is previous content) and (that content is not the same type as us)
+        if(displayGridLines && previousContent && [[previousContent type] compare:[content type]] != 0){
+            BOOL		backgroundIsDark;
+            NSColor		*backgroundColor;
+
+            //Set a divider
+            backgroundColor = [self backgroundColorOfContent:content];
+            backgroundIsDark = [backgroundColor colorIsDark];
+            [cell setDividerColor:[backgroundColor darkenBy:(backgroundIsDark ? - (gridDarkness + DARKEN_LIGHTEN_MODIFIER) : gridDarkness)]];
         }
     }
 
     return(cell);
 }
+
+- (AIFlexibleTableCell *)emptyCellForContent:(id <AIContentObject>)content
+{
+    AIFlexibleTableCell	*cell;
+
+    //Create the cell
+    cell = [AIFlexibleTableTextCell cellWithString:nil
+                                             color:nil
+                                              font:nil
+                                         alignment:NSLeftTextAlignment
+                                        background:[self backgroundColorOfContent:content]
+                                          gradient:nil];
+    [cell setDrawContents:NO];
+
+    return(cell);
+}
+
+- (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent
+{
+    AIFlexibleTableCell	*cell;
+
+    //Create the cell
+    cell = [AIFlexibleTableTextCell cellWithAttributedString:[content message]];
+    [cell setBackgroundColor:[self backgroundColorOfContent:content]];
+
+    //Padding
+    [cell setPaddingLeft:2 top:1 right:2 bottom:1];
+
+    return(cell);
+}
+
+- (AIFlexibleTableCell *)senderCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent
+{
+    id			messageSource = [content source];
+    NSColor		*gradientColor, *prefixColor, *backgroundColor;
+    AIFlexibleTableCell	*cell;
+    BOOL		outgoing, duplicateSource, backgroundIsDark;
+    
+    //Determine some basic info about the content
+    outgoing = ([messageSource isKindOfClass:[AIAccount class]]);
+    duplicateSource = (previousContent && [[previousContent type] compare:CONTENT_MESSAGE_TYPE] == 0 && [previousContent source] == messageSource);
+
+    //Get the background color
+    backgroundColor = [self backgroundColorOfContent:content];
+    backgroundIsDark = [backgroundColor colorIsDark];
+
+    //Determine the correct prefix color
+    if(outgoing){
+        prefixColor = (backgroundIsDark ? outgoingLightSourceColor : outgoingSourceColor);
+    }else{
+        prefixColor = (backgroundIsDark ? incomingLightSourceColor : incomingSourceColor);
+    }
+
+    //Determine the correct gradient color (if enabled)
+    if(displaySenderGradient){
+        gradientColor = (backgroundIsDark ? [backgroundColor darkenBy:-(senderGradientDarkness + DARKEN_LIGHTEN_MODIFIER)] : [backgroundColor darkenBy:senderGradientDarkness]);
+    }else{
+        gradientColor = nil;
+    }
+
+    //Create the cell
+    cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [[(AIHandle *)messageSource containingContact] displayName])]
+                                             color:prefixColor
+                                              font:prefixFont
+                                         alignment:NSRightTextAlignment
+                                        background:backgroundColor
+                                          gradient:gradientColor];
+
+    //Padding
+    [cell setPaddingLeft:1 top:1 right:1 bottom:1];
+
+    //Hide duplicate senders
+    if(hideDuplicatePrefixes && duplicateSource) [cell setDrawContents:NO];
+
+    return(cell);
+}
+
+//Returns a time stamp cell
+- (AIFlexibleTableCell *)timeStampCellForContent:(id <AIContentObject>)content previousContent:(id <AIContentObject>)previousContent
+{
+    AIFlexibleTableCell	*cell;
+    BOOL		backgroundIsDark;
+
+    //We return a time stamp cell for any content object with a date, and only if time stamps are enabled
+    if(displayTimeStamps && [[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_STATUS_TYPE] == 0){        
+        //Generate the date string
+        NSDateFormatter		*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO] autorelease];
+        NSString		*dateString = [dateFormatter stringForObjectValue:[(AIContentMessage *)content date]];
+
+        //Create the cell
+        cell = [AIFlexibleTableTextCell cellWithString:dateString
+                                                 color:(backgroundIsDark ? [NSColor lightGrayColor] : [NSColor grayColor])
+                                                  font:[NSFont cachedFontWithName:@"Helvetica" size:10]
+                                             alignment:NSRightTextAlignment
+                                            background:[self backgroundColorOfContent:content]
+                                              gradient:nil];
+
+        //Padding
+        [cell setPaddingLeft:1 top:0 right:1 bottom:0];
+        
+        //Duplicate hiding.  We hide this cell's content if:
+        if(hideDuplicateTimeStamps					//Hiding of duplicates is enabled
+            && previousContent 						//and There is previous content
+            && ([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || 	//and The previous content has a date
+                [[content type] compare:CONTENT_STATUS_TYPE] == 0)
+            && [[dateFormatter stringForObjectValue:[(AIContentMessage *)previousContent date]] compare:dateString] == 0){ //and The date is the same as ours
+            [cell setDrawContents:NO]; //Hide the time stamp
+        }
+
+        return(cell);
+
+    }else{ //For other objects, or if time stamps are not enabled, return an empty cell
+        return(nil);
+    }
+    
+}
+
+- (NSColor *)backgroundColorOfContent:(id <AIContentObject>)content
+{
+    NSColor	*backgroundColor = nil;
+
+    //Get the background color
+    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        NSAttributedString	*message = [(AIContentMessage *)content message];
+        backgroundColor = [message attribute:NSBackgroundColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, [message length])];
+    }
+
+    //If no color, use white
+    if(!backgroundColor) backgroundColor = [NSColor whiteColor];
+
+    return(backgroundColor);
+}
+
 
 - (int)numberOfRows
 {

@@ -70,7 +70,7 @@
 
     //Register for the necessary notifications
     [[owner notificationCenter] addObserver:self selector:@selector(initiateMessage:) name:Interface_InitiateMessage object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(closeMessage:) name:Interface_CloseMessage object:nil];
 
     //Install our menu items
@@ -246,31 +246,28 @@
 }
 
 //Called when a message object is added to a handle
-- (void)contentObjectAdded:(NSNotification *)notification
+- (void)didReceiveContent:(NSNotification *)notification
 {
     NSDictionary		*userInfo = [notification userInfo];
     AIMessageTabViewItem	*container;
+    id <AIContentObject>	object = [userInfo objectForKey:@"Object"];
 
-    if([[userInfo objectForKey:@"Incoming"] boolValue] == YES){ //We can safely ignore outgoing messages
-        id <AIContentObject>	object = [userInfo objectForKey:@"Object"];
+    //Ensure a message window/view is open for this contact
+    container = [self messageTabWithContact:[notification object]
+                                    account:[object destination]
+                                    content:nil
+                                        create:YES];
+    
+    //Make sure the account that was messaged is the active account
+    if([object destination] != [[container messageViewController] account]){
+        //Select the correct account, and re-show the account menu
+        [[container messageViewController] setAccount:[object destination]];
+        [[container messageViewController] setAccountSelectionMenuVisible:YES];            
+    }
 
-        //Ensure a message window/view is open for this contact
-        container = [self messageTabWithContact:[notification object]
-                                        account:[object destination]
-                                        content:nil
-                                         create:YES];
-        
-        //Make sure the account that was messaged is the active account
-        if([object destination] != [[container messageViewController] account]){
-            //Select the correct account, and re-show the account menu
-            [[container messageViewController] setAccount:[object destination]];
-            [[container messageViewController] setAccountSelectionMenuVisible:YES];            
-        }
-
-        //Increase the handle's unviewed count (If it's not the active container)
-        if(container != activeContainer){
-            [self increaseUnviewedContentOfHandle:[object source]];        
-        }
+    //Increase the handle's unviewed count (If it's not the active container)
+    if(container != activeContainer){
+        [self increaseUnviewedContentOfHandle:[object source]];        
     }
 }
 

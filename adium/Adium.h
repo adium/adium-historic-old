@@ -19,5 +19,5 @@
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AIListObject.h"
-
+#import "AIContentStatus.h"
 
