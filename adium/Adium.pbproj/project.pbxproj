@@ -1044,6 +1044,7 @@
 				4B5B15290493BFB100A8010A,
 				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
+				F16B1A4805163AEB0000000E,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1128,6 +1129,7 @@
 				F5D2FB7C03B6643B01A8010A,
 				4B5B15280493BFB100A8010A,
 				4B55411B044DF01600A8010A,
+				F16B1A4705163AEB0000000E,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1247,6 +1249,7 @@
 				4B5B152A0493BFB100A8010A,
 				4B55411D044DF01600A8010A,
 				4B5D67D1050CF54700A8010A,
+				F16B1A4905163AEB0000000E,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1334,6 +1337,8 @@
 				9E95316803C8E0BE00415B22,
 				4B82AB7E04576AA600A8010A,
 				4BB54FE60476794200A8010A,
+				F16B1A6205163D830000000E,
+				F16B1A6405163D830000000E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1386,6 +1391,8 @@
 				9E95316A03C8E0C700415B22,
 				4BB54FE70476794200A8010A,
 				4BEC44B204AFCFDB00A8010A,
+				F16B1A6305163D830000000E,
+				F16B1A6505163D830000000E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4427,6 +4434,7 @@
 				4B40E1DA03DB5B9600A8010A,
 				4B5B152B0493BFB100A8010A,
 				4B55411E044DF01600A8010A,
+				F16B1A4A05163AEB0000000E,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4640,6 +4648,7 @@
 			children = (
 				4BED5A5303C34F1E00A8010A,
 				4B254C4803F7073900A8010A,
+				F16B1A4E05163B960000000E,
 				112F5651050A3AF3005FD3EF,
 				F53B4A5D0499182C01803884,
 				4B4FA10E04125E2600A8010A,
@@ -13524,6 +13533,245 @@
 //D22
 //D23
 //D24
+//F10
+//F11
+//F12
+//F13
+//F14
+		F16B1A4205163AEB0000000E = {
+			buildActionMask = 2147483647;
+			files = (
+				F16B1A6605163D830000000E,
+				F16B1A6805163D830000000E,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16B1A4305163AEB0000000E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16B1A4405163AEB0000000E = {
+			buildActionMask = 2147483647;
+			files = (
+				F16B1A6705163D830000000E,
+				F16B1A6905163D830000000E,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16B1A4505163AEB0000000E = {
+			buildActionMask = 2147483647;
+			files = (
+				F16B1A5B05163C610000000E,
+				F16B1A5C05163C620000000E,
+				F16B1A5D05163C620000000E,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16B1A4605163AEB0000000E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16B1A4705163AEB0000000E = {
+			buildPhases = (
+				F16B1A4205163AEB0000000E,
+				F16B1A4305163AEB0000000E,
+				F16B1A4405163AEB0000000E,
+				F16B1A4505163AEB0000000E,
+				F16B1A4605163AEB0000000E,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Grouped Away By Idle Sort";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F16B1A4B05163B430000000E,
+				F16B1A4C05163B430000000E,
+			);
+			isa = PBXBundleTarget;
+			name = "Grouped Away By Idle Sort";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Grouped Away By Idle Sort";
+			productReference = F16B1A4805163AEB0000000E;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIGroupedAwayByIdleSortPlugin</string>
+</dict>
+</plist>
+";
+		};
+		F16B1A4805163AEB0000000E = {
+			isa = PBXBundleReference;
+			path = "Grouped Away By Idle Sort.AdiumPlugin";
+			refType = 3;
+		};
+		F16B1A4905163AEB0000000E = {
+			isa = PBXTargetDependency;
+			target = F16B1A4705163AEB0000000E;
+		};
+		F16B1A4A05163AEB0000000E = {
+			fileRef = F16B1A4805163AEB0000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A4B05163B430000000E = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F16B1A4C05163B430000000E = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F16B1A4E05163B960000000E = {
+			children = (
+				F16B1A5E05163D830000000E,
+				F16B1A5F05163D830000000E,
+				F16B1A6005163D830000000E,
+				F16B1A6105163D830000000E,
+			);
+			isa = PBXGroup;
+			name = "Grouped Away By Idle Sort";
+			path = "";
+			refType = 4;
+		};
+		F16B1A5B05163C610000000E = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A5C05163C620000000E = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A5D05163C620000000E = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A5E05163D830000000E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIGroupedAwayByIdleSortNoGroups.h;
+			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortNoGroups.h";
+			refType = 4;
+		};
+		F16B1A5F05163D830000000E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIGroupedAwayByIdleSortNoGroups.m;
+			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortNoGroups.m";
+			refType = 4;
+		};
+		F16B1A6005163D830000000E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIGroupedAwayByIdleSortPlugin.h;
+			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortPlugin.h";
+			refType = 4;
+		};
+		F16B1A6105163D830000000E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIGroupedAwayByIdleSortPlugin.m;
+			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortPlugin.m";
+			refType = 4;
+		};
+		F16B1A6205163D830000000E = {
+			fileRef = F16B1A5E05163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6305163D830000000E = {
+			fileRef = F16B1A5F05163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6405163D830000000E = {
+			fileRef = F16B1A6005163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6505163D830000000E = {
+			fileRef = F16B1A6105163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6605163D830000000E = {
+			fileRef = F16B1A5E05163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6705163D830000000E = {
+			fileRef = F16B1A5F05163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6805163D830000000E = {
+			fileRef = F16B1A6005163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F16B1A6905163D830000000E = {
+			fileRef = F16B1A6105163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//F10
+//F11
+//F12
+//F13
+//F14
 //F50
 //F51
 //F52
