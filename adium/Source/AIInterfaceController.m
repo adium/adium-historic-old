@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.65 2004/05/24 06:04:04 evands Exp $
+// $Id: AIInterfaceController.m,v 1.66 2004/06/04 19:19:55 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -30,6 +30,7 @@
 - (void)flashTimer:(NSTimer *)inTimer;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
+- (void)pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 @end
 
 @implementation AIInterfaceController
@@ -521,40 +522,48 @@
 
 //Custom pasting ----------------------------------------------------------------------------------------------------
 #pragma mark Custom Pasting
-@protocol _RESPONDS_TO_PASTE //Just a temp protocol to suppress compiler warnings
-- (void)pasteAsPlainText:(id)sender;
-- (void)pasteAsRichText:(id)sender;
-- (void)paste:(id)sender;
-@end
-
 //Paste, stripping formatting
 - (IBAction)paste:(id)sender
 {
-    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    
-    if([responder respondsToSelector:@selector(pasteAsPlainText:)]){
-        [(NSResponder<_RESPONDS_TO_PASTE> *)responder pasteAsPlainText:sender];
-        
-    }else if([responder respondsToSelector:@selector(paste:)]){
-        [(NSResponder<_RESPONDS_TO_PASTE> *)responder paste:sender];
-        
-    }
+	[self pasteWithPreferredSelector:@selector(pasteAsPlainText:) sender:sender];
 }
 
 //Paste with formatting
 - (IBAction)pasteFormatted:(id)sender
 {
-    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    
-    if([responder respondsToSelector:@selector(pasteAsPlainText:)]){
-        [(NSResponder<_RESPONDS_TO_PASTE> *)responder pasteAsRichText:sender];
-        
-    }else if([responder respondsToSelector:@selector(paste:)]){
-        [(NSResponder<_RESPONDS_TO_PASTE> *)responder paste:sender];
-        
-    }
+	[self pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
 }
 
+- (void)pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender
+{
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+	NSResponder	*responder = [keyWindow firstResponder];
+	SEL			pasteSelector = nil;
+	
+	//First, walk down the responder chain looking for a responder which can handle the preferred selector
+	while(responder && !([responder respondsToSelector:preferredSelector])){
+		responder = [responder nextResponder];
+	}
+	
+	if (responder){
+		pasteSelector = preferredSelector;
+		
+	}else{
+		//No responder found.  Try again, looking for one which will respond to paste:
+		responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+		while(responder && !([responder respondsToSelector:@selector(paste:)])){
+			responder = [responder nextResponder];
+		}
+		
+		if (responder) pasteSelector = @selector(paste:);
+	}
+	
+	if (pasteSelector){
+		[keyWindow makeFirstResponder:responder];
+		[responder performSelector:pasteSelector
+						withObject:sender];
+	}
+}
 
 //Custom Dimming menu items --------------------------------------------------------------------------------------------
 #pragma mark Custom Dimming menu items
