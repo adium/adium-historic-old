@@ -61,6 +61,13 @@
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     //flashingListObjectArray = [[NSMutableArray alloc] init];
+/*
+    AIStatusCircle *scTest = [AIStatusCircle statusCircle];
+    [scTest setColor:[NSColor blackColor]];
+    [scTest setStringColor:[NSColor redColor]];
+    NSLog(@"unset");
+    NSLog(@"%f",[scTest widthForHeight:13 computeMax:YES]);
+ */
 }
 
 - (void)uninstallPlugin
@@ -75,7 +82,7 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
-    NSArray		*modifiedAttributes = nil;
+    NSArray *modifiedAttributes = nil;
 
     if(	inModifiedKeys == nil ||
         [inModifiedKeys containsObject:@"Status Color"] ||
@@ -178,12 +185,13 @@
 	    //[tabStatusCircle setFlashColor:unviewedContentColor];
     
 	    //Embedded idle time
-	    if(displayIdleTime && idle > 0){
+	    if(displayIdleTime && idle != 0){
 		[statusCircle setStringContent:[self idleStringForSeconds:idle]];
 		[statusCircle setStringColor:idleStringColor];
 		//[tabStatusCircle setStringContent:[self idleStringForSeconds:idle]];
 	    }else{
-		[statusCircle setStringContent:@""];
+		[statusCircle setStringContent:nil];
+		[statusCircle setStringColor:idleStringColor];
 		//[tabStatusCircle setStringContent:nil];
 	    }
 	    
