@@ -130,7 +130,7 @@
                                     gradient:nil];
             [cell setPaddingLeft:1 top:0 right:1 bottom:0];
             if(!duplicateSource) [cell setDividerColor:lineColorDivider];
-            if(previousContent && [[dateFormatter stringForObjectValue:[previousContent date]] compare:dateString] == 0){
+            if(previousContent && [[dateFormatter stringForObjectValue:[(AIContentMessage *)previousContent date]] compare:dateString] == 0){
                 //We assume that previous content is also a content message... this is not always true.
                 [cell setDrawContents:NO];
             }
