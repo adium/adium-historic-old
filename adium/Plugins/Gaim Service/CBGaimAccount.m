@@ -34,7 +34,7 @@
         //create the handle, group-less for now
         AIHandle *theHandle = [AIHandle 
             handleWithServiceID:[[service handleServiceType] identifier]
-            UID:[NSString stringWithCString:buddy->name]
+            UID:[NSString stringWithUTF8String:buddy->name]
             serverGroup:NO_GROUP
             temporary:NO
             forAccount:self];
@@ -86,21 +86,69 @@
         if(alias && strcmp(disp_name, alias))
         {
             [[theHandle statusDictionary] 
-                setObject:[NSString stringWithCString:alias]
+                setObject:[NSString stringWithUTF8String:alias]
                 forKey:@"Display Name"];
             [modifiedKeys addObject:@"Display Name"];
         }
+                
+        //update their idletime
+        if(buddy->idle != -(int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSinceNow])/60.0)
+        {
+            if(buddy->idle != 0)
+            {
+                [[theHandle statusDictionary]
+                    setObject:[NSDate dateWithTimeIntervalSinceNow:((NSTimeInterval)buddy->idle)*-60.0]
+                    forKey:@"IdleSince"];
+            }
+            else
+            {
+                [[theHandle statusDictionary] removeObjectForKey:@"IdleSince"];
+            }
+            [modifiedKeys addObject:@"IdleSince"];
+        }
         
-        //did the group change (or did we finally find out what group the buddy is in?)
+        //did the group change/did we finally find out what group the buddy is in)
         GaimGroup *g = gaim_find_buddys_group(buddy);
         if(g && strcmp([[theHandle serverGroup] cString], g->name))
         {
             [[owner contactController] handle:[theHandle copy] removedFromAccount:self];
             NSLog(@"Changed to group %s", g->name);
-            [theHandle setServerGroup:[NSString stringWithCString:g->name]];
+            [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
             [[owner contactController] handle:theHandle addedToAccount:self];
         }
         
+        //grab their data, and compare
+        GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
+        if(buddyIcon)
+        {
+            NSData *imageData = [NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) 
+                length:buddyIcon->len];
+            NSData *currentData = [[theHandle statusDictionary] objectForKey:@"BuddyImageData"];
+            
+            if([imageData length] != [currentData length]
+                || memcmp([imageData bytes], [currentData bytes], [imageData length]))
+            {
+                NSLog(@"Icon for %s", buddy->name);
+                                
+                //save this for convenience
+                [[theHandle statusDictionary]
+                    setObject:imageData
+                    forKey:@"BuddyImageData"];
+                    
+                NSImage *icon = [[NSImage alloc] 
+                    initWithData:imageData];
+                    
+                //set the buddy image
+                [[theHandle statusDictionary]
+                    setObject:icon
+                    forKey:@"BuddyImage"];
+                
+                //BuddyImageData is just for us, shh, keep it secret ;)
+                [modifiedKeys addObject:@"BuddyImage"];
+                
+                [icon release];
+            }
+        }
         //if anything chnaged
         if([modifiedKeys count] > 0)
         {
@@ -111,8 +159,9 @@
                 modifiedStatusKeys:modifiedKeys
                 delayed:NO
                 silent:online
-                    ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) != GAIM_CONNECTING)
+                    ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
                     : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
+            /* the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. */
         }
         //nothing changed. boring. :P
         else
@@ -147,7 +196,13 @@
 
 - (NSArray *)supportedPropertyKeys
 {
-    return([NSArray arrayWithObjects:@"Online", @"Offline", nil]);
+    return([NSArray arrayWithObjects:
+        @"Display Name",
+        @"Online",
+        @"Offline",
+        @"IdleSince",
+        @"BuddyImage",
+        nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
@@ -234,15 +289,15 @@
 }
 
 - (NSString *)accountID{
-    return([NSString stringWithCString:SCREEN_NAME]);
+    return([NSString stringWithUTF8String:SCREEN_NAME]);
 }
 
 - (NSString *)UID{
-    return([NSString stringWithCString:SCREEN_NAME]);
+    return([NSString stringWithUTF8String:SCREEN_NAME]);
 }
     
 - (NSString *)serviceID{
-    return([NSString stringWithCString:PROTOCOL]);
+    return([NSString stringWithUTF8String:PROTOCOL]);
 }
 
 - (NSString *)UIDAndServiceID{
