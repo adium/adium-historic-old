@@ -130,7 +130,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	//A quick sign on/sign off can leave these messages in the threaded messaging queue... we most definitely don't want
 	//to put the contact back into a remote group after signing off, as a ghost will appear. Spooky!
-	if([self online]){
+	if([self online] || [self integerStatusObjectForKey:@"Connecting"]){
 		//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
 		//status updates
 		if(!silentAndDelayed){
@@ -850,8 +850,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				NSRange		endlineRange;
 				NSRange		returnRange;
 				
-				while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
-					   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
+				while(((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
+					  ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
 					
 					//Use whichever endline character is found first
 					NSRange	operativeRange = ((endlineRange.location < returnRange.location) ? endlineRange : returnRange);
@@ -1662,11 +1662,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)disconnect
 {
     //We are disconnecting
-	if ([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
+	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]){
 		[self setStatusObject:nil forKey:@"Connecting" notify:NO];
 		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
-		
+
 		//Tell libgaim to disconnect
 		[gaimThread disconnectAccount:self];
 	}
@@ -1706,8 +1706,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	enumerator = [[[adium contactController] allContactsInGroup:nil
 													  subgroups:YES 
 													  onAccount:self] objectEnumerator];
-	while (contact = [enumerator nextObject]){
-		
+	while(contact = [enumerator nextObject]){
 		[contact setRemoteGroupName:nil];
 		[self removeAllStatusFlagsFromContact:contact silently:YES];
 	}
