@@ -29,7 +29,7 @@
 
     //Turn the nonsense of memory addresses into a human-readable backtrace complete with line numbers
     if (dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) { 
-        NSString *str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | c++filt | cat -n",[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation],
+        NSString *str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | c++filt | cat -n",[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] fileSystemRepresentation],
             [[NSProcessInfo processInfo] processIdentifier],
             stackTrace,
             ([[stackTrace componentsSeparatedByString:@"  "] count] - 4)];
