@@ -16,6 +16,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
+
 @class AIDockIconPreferences;
 
 @interface AIDockIconSelectionPlugin : AIPlugin {

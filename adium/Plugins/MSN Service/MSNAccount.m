@@ -818,8 +818,8 @@
                                 setObject:[NSNumber numberWithInt:1]
                                 forKey:@"Online"];
                             
-                            NSLog(@"%@",[[message objectAtIndex:3] 
-                                            urlDecode]);
+                            //NSLog(@"%@ is online (NLN received)",[[message objectAtIndex:3] 
+                            //                urlDecode]);
                             
                             [[theHandle statusDictionary]
                                 setObject:[[message objectAtIndex:3]

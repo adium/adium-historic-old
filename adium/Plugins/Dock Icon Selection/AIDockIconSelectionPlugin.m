@@ -19,11 +19,15 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+
 @implementation AIDockIconSelectionPlugin
 
 //
 - (void)installPlugin
 {
+    //Create Application Support directory
+    [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS]];
+    
     //Install our preference view
     preferences = [[AIDockIconPreferences dockIconPreferencesWithOwner:owner] retain];
 }

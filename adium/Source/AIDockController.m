@@ -196,16 +196,23 @@
     NSDirectoryEnumerator	*fileEnumerator;
     NSString			*iconPath;
     NSString			*filePath;
+    int					curPath;
 
-    //
-    iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
-
-    //Find the desired .AdiumIcon
-    fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
-    while((filePath = [fileEnumerator nextObject])){
-        if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0 && [[[filePath lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:name] == 0){
-            //Found a match, return the path
-            return([iconPath stringByAppendingPathComponent:filePath]);
+    for (curPath = 0; curPath < 2; curPath ++)
+    {
+        //
+        if (curPath == 0)
+            iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
+        else
+            iconPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
+    
+        //Find the desired .AdiumIcon
+        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
+        while((filePath = [fileEnumerator nextObject])){
+            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0 && [[[filePath lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:name] == 0){
+                //Found a match, return the path
+                return([iconPath stringByAppendingPathComponent:filePath]);
+            }
         }
     }
 

@@ -92,7 +92,7 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)contactListEditable
 {
-    return(YES);
+    return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
