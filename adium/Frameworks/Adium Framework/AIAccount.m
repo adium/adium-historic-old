@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.43 2004/02/28 22:04:28 evands Exp $
+// $Id: AIAccount.m,v 1.44 2004/02/28 22:38:16 evands Exp $
 
 #import "AIAccount.h"
 
@@ -81,15 +81,15 @@
 	
 	[UID release]; UID = [inUID retain];
 		
+	[[adium preferenceController] setCachedObjectPrefs:prefDict
+												forKey:[self UIDAndServiceID]
+												  path:[self pathToPreferences]];
+
 	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
 	[self setStatusObject:formattedAccountName
 				   forKey:@"Formatted UID"
 				   notify:YES];	
-	
-	[[adium preferenceController] setCachedObjectPrefs:prefDict
-												forKey:[self UIDAndServiceID]
-												  path:[self pathToPreferences]];
-	
+
 	[self accountUIDdidChange];
 	
 	//Broadcast an account list changed message
