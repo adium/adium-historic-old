@@ -15,6 +15,9 @@
 			forFileTransfer:(ESFileTransfer *)inFileTransfer
 			notifyingTarget:(id)inTarget
 				   selector:(SEL)inSelector;
+
+- (IBAction)closeWindow:(id)sender;
+
 @end
 
 @implementation ESFileTransferRequestPromptController
