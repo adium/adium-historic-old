@@ -7,6 +7,8 @@
 #import "ESGaimJabberAccountViewController.h"
 #import "ESGaimJabberAccount.h"
 
+#import <Libgaim/si.h>
+
 @implementation ESGaimJabberAccount
 
 - (const char*)protocolPlugin

@@ -139,7 +139,8 @@ struct buddyinfo {
 		//Get the node's ui_data
 		theContact = (AIListContact *)buddy->node.ui_data;
 		
-		if (GAIM_BUDDY_IS_ONLINE(buddy) && 
+		if (theContact &&
+			GAIM_BUDDY_IS_ONLINE(buddy) && 
 			(od = gc->proto_data) &&
 			(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))) {
 			
