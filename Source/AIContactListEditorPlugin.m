@@ -36,7 +36,7 @@
 #define ADD_GROUP   				AILocalizedString(@"Add Group",nil)
 #define ADD_GROUP_ELLIPSIS			[ADD_GROUP stringByAppendingString:[NSString ellipsis]]
 
-#define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
+#define DELETE_CONTACT   			AILocalizedString(@"Remove Contact",nil)
 #define DELETE_CONTACT_CONTEXT		AILocalizedString(@"Delete",nil)
 #define DELETE_CONTACT_CONTEXT_ELLIPSIS		[DELETE_CONTACT_CONTEXT stringByAppendingString:[NSString ellipsis]]
 
@@ -72,7 +72,7 @@
 																	 target:self
 																	 action:@selector(addContact:)
 															  keyEquivalent:@"+"] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Manage];
 	
 	//Add contact context menu item
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP_ELLIPSIS
@@ -94,14 +94,14 @@
 																	 action:@selector(addGroup:) 
 															  keyEquivalent:@"+"] autorelease];
 	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Manage];
 	
 	//Delete selection menu item
     menuItem_delete = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT
 																		   target:self
 																		   action:@selector(deleteSelection:) 
 																	keyEquivalent:@"\b"];
-    [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Editing];
+    [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Manage];
 	
 	//Rename group context menu item
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RENAME_GROUP_ELLIPSIS
@@ -167,7 +167,7 @@
                 //Update the menu titles to reflect the selected contact
             if([[adium contactController] selectedListObjectInContactList] != nil){
                 [menuItem_delete setTitle:[NSString stringWithFormat:
-					AILocalizedString(@"Delete %@","%@ will be a contact's name"),
+					AILocalizedString(@"Remove %@","%@ will be a contact's name"),
 					[[[adium contactController] selectedListObjectInContactList] displayName]]];
             }else{
                 [menuItem_delete setTitle:DELETE_CONTACT];

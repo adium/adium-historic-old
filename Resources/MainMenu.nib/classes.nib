@@ -123,7 +123,7 @@
                 "menu_Adium_Preferences" = id; 
                 "menu_Contact_Action" = id; 
                 "menu_Contact_Additions" = id; 
-                "menu_Contact_Editing" = id; 
+                "menu_Contact_Info" = id; 
                 "menu_Contact_Manage" = id; 
                 "menu_Contact_NegativeAction" = id; 
                 "menu_Dock_Status" = id; 

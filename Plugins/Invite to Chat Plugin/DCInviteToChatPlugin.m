@@ -67,9 +67,7 @@
 			if( shouldRebuildChatList ) {
 				[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
 			}
-                        //Update the menu title to reflect the selected contact
-                        [menuItem_inviteToChat setTitle:[NSString stringWithFormat:@"Invite %@ to Chat",[object displayName]]];
-                    
+                     
 			return ([[menuItem_inviteToChat submenu] numberOfItems] > 0);
 		}else{
                         [menuItem_inviteToChat setTitle:INVITE_CONTACT]; // hit the reset button

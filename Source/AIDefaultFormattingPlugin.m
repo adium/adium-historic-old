@@ -48,7 +48,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
 
 	//Reset formatting menu item
-	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Restore Default",nil)
+	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Restore Default Formatting",nil)
 																				  target:self
 																				  action:@selector(restoreDefaultFormat:)
 																		   keyEquivalent:@""] autorelease];

@@ -50,8 +50,7 @@
 #define LOG_CLEAN_SAVE_INTERVAL		500     //Number of logs to index continuiously before saving the dirty array and index
 
 #define LOG_VIEWER					AILocalizedString(@"Log Viewer",nil)
-#define VIEW_CONTACTS_LOGS			AILocalizedString(@"View Contact's Logs",nil)
-#define VIEW_LOGS					AILocalizedString(@"View Logs",nil)
+#define VIEW_LOGS					AILocalizedString(@"View Previous Conversations",nil)
 
 #define	CURRENT_LOG_VERSION			3       //Version of the log index.  Increase this number to reset everyones index.
 
@@ -190,11 +189,11 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 																	   keyEquivalent:@"l"] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
-    viewContactLogsMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_LOGS 
+    viewContactLogsMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS 
 																					target:self
 																					action:@selector(showLogViewerToSelectedContact:) 
 																			 keyEquivalent:@"L"] autorelease];
-    [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
+    [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Info];
 
     viewContactLogsContextMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS
 																						   target:self
@@ -206,28 +205,17 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Enable/Disable our view log menus
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    BOOL valid = YES;
-	
     if(menuItem == viewContactLogsMenuItem){
         AIListObject	*selectedObject = [[adium contactController] selectedListObject];
-		
-		//Update the menu titles to reflect the selected contact
-        if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-            [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedObject displayName]]];
-        }else{
-            [viewContactLogsMenuItem setTitle:@"View Contact's Logs"];
-            valid = NO;
-        }
-		
+		return(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]);
+
     }else if(menuItem == viewContactLogsContextMenuItem){
-        AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
+        AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];		
+		return(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]);
 		
-        if(!(selectedObject && [selectedObject isKindOfClass:[AIListContact class]])){
-			valid = NO;
-		}
     }
 	
-    return(valid);
+    return(YES);
 }
 
 //Show the log viewer, displaying the selected contact's logs

@@ -38,7 +38,7 @@
 		menu_File_New, menu_File_Close, menu_File_Save, menu_File_Additions,	
 		menu_Edit_Bottom, menu_Edit_Additions,
 		menu_View_General, menu_View_Unnamed_A, menu_View_Unnamed_B, menu_View_Unnamed_C, 
-		menu_Contact_Editing, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions,
+		menu_Contact_Manage, menu_Contact_Info, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions,
 		menu_Status_State, menu_Status_Accounts, menu_Status_Additions,
 		menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions,
 		menu_Window_Top, menu_Window_Commands, menu_Window_Auxiliary, menu_Window_Fixed,
