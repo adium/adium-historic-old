@@ -290,13 +290,13 @@
         NSMutableDictionary * keyDict = [delayedDict objectForKey:UIDAndServiceID];
 
         if (keyDict) {
-            NSMutableArray * keyArray = [[NSMutableArray alloc] init];
-            NSArray * oldKeys = [keyDict objectForKey:@"Keys"];
-            
+            NSArray     *oldKeys = [keyDict objectForKey:@"Keys"];
+
             if (!oldKeys || !inModifiedKeys) { //if an all-points bulletin came in, keep it all-points by not adding any other keys
                 [keyDict removeObjectForKey:@"Keys"];
             } else {
-                [keyArray setArray:oldKeys];
+                NSMutableArray  *keyArray = [[oldKeys mutableCopy] autorelease];
+
                 [keyArray addObjectsFromArray:inModifiedKeys];  //consolidate previous modified keys with the new ones
                 [keyDict setObject:keyArray forKey:@"Keys"];
                 [delayedDict setObject:keyDict forKey:UIDAndServiceID];
