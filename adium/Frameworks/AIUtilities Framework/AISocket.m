@@ -149,6 +149,38 @@
         }
     }
 }
+//Read upto \r\n
+- (void)getDataToNewline:(NSData **)outData
+{
+    char tempBuffer[1024];
+    int bytesRead;
+    NSString *readStr;
+    NSMutableData *readBuf = [[[NSMutableData alloc] init] autorelease];
+
+    while(bytesRead = recv(theSocket, &tempBuffer, sizeof(tempBuffer), 0))
+    {
+        if(bytesRead >= 1)
+        {      
+            readStr = [NSString stringWithCString:tempBuffer length:bytesRead];
+            
+            if([readStr rangeOfString:@"\r\n"].location != NSNotFound)
+            {
+                [readBuf appendBytes:[readStr cString] length:[readStr cStringLength]];
+                break;
+            }
+            else
+                [readBuf appendBytes:[readStr cString] length:[readStr cStringLength]];
+        }
+        else if(bytesRead == 0)
+        {
+                NSLog(@"Disconnected.");
+                isValid = NO; 
+                return;
+        }
+    }
+        
+    *outData = readBuf;
+}
 
 //Remove data from the buffer
 - (void)removeDataBytes:(int)inLength

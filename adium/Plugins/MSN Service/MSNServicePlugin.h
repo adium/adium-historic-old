@@ -14,11 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import <AIAdium.h>
+#import "AIAdium.h"
 
 @class AIServiceType;
 
-@interface AIMSNServicePlugin : AIPlugin <AIServiceController>
+@interface MSNServicePlugin : AIPlugin <AIServiceController>
 {
     AIServiceType *handleServiceType;
 }
