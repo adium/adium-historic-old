@@ -47,7 +47,7 @@
 		[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
 		
 		//Only install new observers if we're idle
-		if([prefDict objectForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != nil ) {
+		if([prefDict objectForKey:@"IdleSince"] != nil ) {
 			[[adium notificationCenter] addObserver:self 
 										   selector:@selector(didReceiveContent:) 
 											   name:Content_DidReceiveContent object:nil];
