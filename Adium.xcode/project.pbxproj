@@ -4863,7 +4863,7 @@
 			};
 		};
 		3496A8BF07CE6B3D0055BBAB = {
-			fileEncoding = 30;
+			fileEncoding = 10;
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
 			name = English;
