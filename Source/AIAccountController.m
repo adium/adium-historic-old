@@ -93,9 +93,9 @@
                                      object:nil];
 	
 	//First launch, open the account prefs
-	if([accountArray count] == 0){
-		[[AIAccountListWindowController accountListWindowController] showWindow:nil];
-	}
+//	if([accountArray count] == 0){
+//		[[AIAccountListWindowController accountListWindowController] showWindow:nil];
+//	}
 	
 }
 
@@ -512,6 +512,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Create a new default account
 - (AIAccount *)newAccountAtIndex:(int)index
 {
+	if(index == -1) index = [accountArray count];
+	
     NSParameterAssert(accountArray != nil);
     NSParameterAssert(index >= 0 && index <= [accountArray count]);
     
@@ -524,6 +526,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 - (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service
 {
+	if(index == -1) index = [accountArray count];
+
     NSParameterAssert(accountArray != nil);
     NSParameterAssert(index >= 0 && index <= [accountArray count]);
 
