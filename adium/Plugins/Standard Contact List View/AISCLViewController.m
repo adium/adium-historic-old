@@ -136,7 +136,7 @@
 	
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
 
-#warning These are slow, we dont want to do them unless absolutely necessary
+#warning Adam: These are slow, we dont want to do them unless absolutely necessary
 	//[[contactListView window] compatibleInvalidateShadow];
 	//[[contactListView window] display];
 }

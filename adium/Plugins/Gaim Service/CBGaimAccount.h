@@ -66,22 +66,22 @@
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account
-- (NSDictionary *)availableHandles; //return nil if no contacts/list available
-
-// Returns YES if the list is editable
-- (BOOL)contactListEditable;
-
+//- (NSDictionary *)availableHandles; //return nil if no contacts/list available
+//
+//// Returns YES if the list is editable
+//- (BOOL)contactListEditable;
+//
 // Add a handle to this account
-- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary;
-// Remove a handle from this account
-- (BOOL)removeHandleWithUID:(NSString *)inUID;
-
-// Add a group to this account
-- (BOOL)addServerGroup:(NSString *)inGroup;
-// Remove a group
-- (BOOL)removeServerGroup:(NSString *)inGroup;
-// Rename a group
-- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
+//- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary;
+//// Remove a handle from this account
+//- (BOOL)removeHandleWithUID:(NSString *)inUID;
+//
+//// Add a group to this account
+//- (BOOL)addServerGroup:(NSString *)inGroup;
+//// Remove a group
+//- (BOOL)removeServerGroup:(NSString *)inGroup;
+//// Rename a group
+//- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 
 //AIAccount_Files
 //Instructs the account to accept a file transfer request
