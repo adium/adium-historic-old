@@ -36,11 +36,19 @@
 
 //Run Applescript Alert -------------------------------------------------------------------------------------------------
 #pragma mark Run Applescript Alert
+/*!
+ * @brief Short description
+ * @result A short localized description of the action
+ */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
 	return(APPLESCRIPT_ALERT_SHORT);
 }
 
+/*!
+ * @brief Long description
+ * @result A longer localized description of the action which should take into account the details dictionary as appropraite.
+ */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	NSString	*scriptName = [[[details objectForKey:KEY_APPLESCRIPT_TO_RUN] lastPathComponent] stringByDeletingPathExtension];
@@ -52,16 +60,32 @@
 	}
 }
 
+/*!
+ * @brief Image
+ */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
 	return([NSImage imageNamed:@"ApplescriptAlert" forClass:[self class]]);
 }
 
+/*!
+ * @brief Details pane
+ * @result An <tt>AIModularPane</tt> to use for configuring this action, or nil if no configuration is possible.
+ */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
 	return([ESPanelApplescriptDetailPane actionDetailsPane]);
 }
 
+/*!
+ * @brief Perform an action
+ *
+ * @param actionID The ID of the action to perform
+ * @param listObject The listObject associated with the event triggering the action. It may be nil
+ * @param details If set by the details pane when the action was created, the details dictionary for this particular action
+ * @param eventID The eventID which triggered this action
+ * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
+ */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSURL 			*scriptURL;
@@ -74,6 +98,14 @@
 	[script release];
 }
 
+/*!
+ * @brief Allow multiple actions?
+ *
+ * If this method returns YES, every one of this action associated with the triggering event will be executed.
+ * If this method returns NO, only the first will be.
+ *
+ * Allow multiple applescript actions to be taken.
+ */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
 	return(YES);
