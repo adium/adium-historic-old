@@ -44,7 +44,6 @@ DeclareString(Span);
 DeclareString(CloseSpan);
 DeclareString(BR);
 DeclareString(CloseBR);
-DeclareString(OtherCloseBR);
 DeclareString(B);
 DeclareString(CloseB);
 DeclareString(I);
@@ -88,7 +87,6 @@ DeclareString(TagCharStartString);
 	InitString(CloseSpan,@"/SPAN");
 	InitString(BR,@"BR");
 	InitString(CloseBR,@"/BR");
-	InitString(OtherCloseBR,@"BR /");
 	InitString(B,@"B");
 	InitString(CloseB,@"/B");
 	InitString(I,@"I");
@@ -547,12 +545,14 @@ int HTMLEquivalentForFontSize(int fontSize)
                         [textAttributes setTextColor:[NSColor blackColor]];
                         [textAttributes setFontFamily:@"Helvetica"];
                         [textAttributes setFontSize:12];
+						
                     //Line Break
                     }else if([chunkString caseInsensitiveCompare:BR] == 0 || 
-							 [chunkString caseInsensitiveCompare:CloseBR] == 0 ||
-							 [chunkString caseInsensitiveCompare:OtherCloseBR] == 0){
-                        [attrString appendString:Return withAttributes:nil];
-
+							 [chunkString caseInsensitiveCompare:CloseBR] == 0){
+						[attrString appendString:Return withAttributes:nil];								 
+						//Make sure the tag closes, since it may have a <BR /> which stopped the scanner at the space, not the >
+                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+	
                     //Bold
                     }else if([chunkString caseInsensitiveCompare:B] == 0){
                         [textAttributes enableTrait:NSBoldFontMask];
