@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.67 2004/03/20 13:23:53 adamiser Exp $
+// $Id: AIAccountController.m,v 1.68 2004/03/20 17:12:07 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -84,6 +84,12 @@
 	if(![NSEvent shiftKey]){
 		[self autoConnectAccounts];
 	}
+	
+	//First launch, open the account prefs
+	if([accountArray count] == 0){
+		[[owner preferenceController] openPreferencesToCategory:AIPref_Accounts];
+	}
+	
 }
 
 //close
