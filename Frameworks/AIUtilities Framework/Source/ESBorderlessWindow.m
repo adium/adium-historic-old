@@ -105,7 +105,7 @@ static	NSRect	windowFrame;
     }
 }
 
-//We start tracking the a drag operation here when the user first clicks the mouse with command presed,
+//We start tracking the a drag operation here when the user first clicks the mouse without command presed,
 //to establish the initial location.
 - (void)mouseDown:(NSEvent *)theEvent
 {    
