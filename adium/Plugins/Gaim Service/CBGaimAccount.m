@@ -608,7 +608,7 @@
 - (void)initAccount
 {
     chatDict = [[NSMutableDictionary alloc] init];
-//    filesToSendArray = [[NSMutableArray alloc] init];
+    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 	lastDisconnectionError = nil;
 	
 	//We will create a gaimAccount the first time we attempt to connect
@@ -1472,6 +1472,7 @@
 	proxy_info->username = (char *)[proxyUsername UTF8String];
 	proxy_info->password = (char *)[proxyPassword UTF8String];
 	
+	NSLog(@"Our proxy variables were %i %@:%i (%s:%i) %s %s",gaimAccountProxyType,host,port,[host UTF8String],port,[proxyUsername UTF8String],[proxyPassword UTF8String]);
 	NSLog(@"Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
 				
 	gaim_account_set_proxy_info(account,proxy_info);
