@@ -153,7 +153,7 @@
 		[progressIndicator display];
 		
 		//Copy the file
-		[AIFileUtilities createDirectory:newPath];
+		[[NSFileManager defaultManager] createDirectoriesForPath:newPath];
 		[[NSFileManager defaultManager] copyPath:[subFolderPath stringByAppendingPathComponent:fileName] 
 										  toPath:[newPath stringByAppendingPathComponent:fileName] 
 										 handler:nil];
@@ -212,7 +212,7 @@
 		    [prefDict setObject:[group objectForKey:[NSString stringWithFormat:@"alias %d", j]] forKey:@"Alias"];
 		    
 		    //Save our changes
-		    [AIFileUtilities createDirectory:[prefPath stringByDeletingLastPathComponent]];
+			[[NSFileManager defaultManager] createDirectoriesForPath:[prefPath stringByDeletingLastPathComponent]];
 		    [prefDict writeToFile:prefPath atomically:YES];
 		}
 	    }

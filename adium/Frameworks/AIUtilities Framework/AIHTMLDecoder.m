@@ -313,7 +313,7 @@ DeclareString(TagCharStartString);
 					fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
 					fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
 					//create the images directory if it doesn't exist
-					[AIFileUtilities createDirectory:imagesPath];
+					[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
 					
 					if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
 						[string appendString:@"<img src=\""];

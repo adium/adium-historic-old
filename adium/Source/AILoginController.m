@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AILoginController.m,v 1.11 2004/03/02 02:47:17 adamiser Exp $
+// $Id: AILoginController.m,v 1.12 2004/05/23 12:52:17 adamiser Exp $
 
 #import "AILoginController.h"
 #import "AILoginWindowController.h"
@@ -177,7 +177,7 @@
     userPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
     
     //Create a folder for the new user
-    [AIFileUtilities createDirectory:userPath];
+    [[NSFileManager defaultManager] createDirectoriesForPath:userPath];
 }
 
 // Rename an existing user

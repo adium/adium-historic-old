@@ -1381,7 +1381,7 @@ static id<GaimThread> gaimThread = nil;
     gc = NULL;
     	
     //ensure our user icon cache path exists
-    [AIFileUtilities createDirectory:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
+	[[NSFileManager defaultManager] createDirectoriesForPath:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
 	
 	insideDealloc = NO;
 }

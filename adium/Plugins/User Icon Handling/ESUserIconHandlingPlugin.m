@@ -19,8 +19,8 @@
 - (void)installPlugin
 {
 	//ensure our user icon cache path exists
-    [AIFileUtilities createDirectory:USER_ICON_CACHE_PATH];
-
+	[[NSFileManager defaultManager] createDirectoriesForPath:USER_ICON_CACHE_PATH];
+	
     [[adium contactController] registerListObjectObserver:self];
 	
 	[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 

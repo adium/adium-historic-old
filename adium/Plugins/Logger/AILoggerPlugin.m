@@ -78,7 +78,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	
     //Create a logs directory
     logBasePath = [[[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
-    [AIFileUtilities createDirectory:logBasePath];
+    [[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -281,7 +281,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	fullPath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
 
     //Create a directory for this log (if one doesn't exist)
-	[AIFileUtilities createDirectory:fullPath];
+    [[NSFileManager defaultManager] createDirectoriesForPath:fullPath];
 	
     //Append the new content (We use fopen/fputs/fclose for max speed)
     file = fopen([[fullPath stringByAppendingPathComponent:fileName] fileSystemRepresentation], "a");
@@ -423,7 +423,7 @@ this problem is along the lines of:
     }
     if(!index_Content){
 		//Create the index if one doesn't exist
-		[AIFileUtilities createDirectory:[logIndexPath stringByDeletingLastPathComponent]];
+		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
 		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexVector, NULL);
     }
 }

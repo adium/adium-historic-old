@@ -40,7 +40,6 @@
 #import "AIDockingWindow.h"
 #import "AIEventAdditions.h"
 #import "AIFileManagerAdditions.h"
-#import "AIFileUtilities.h"
 #import "AIFlexibleTableCell.h"
 #import "AIFlexibleTableFramedTextCell.h"
 #import "AIFlexibleTableImageCell.h"
