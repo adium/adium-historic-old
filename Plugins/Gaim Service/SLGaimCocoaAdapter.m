@@ -796,6 +796,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString){
 				AIChatUpdateType	updateType = -1;
+				NSRange				range;
 				
 				if([messageString rangeOfString:@"timed out"].location != NSNotFound){
 					updateType = AIChatTimedOut;
@@ -818,6 +819,9 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 					if([messageString rangeOfString:@"Not logged in"].location != NSNotFound){
 						errorType = AIChatUserNotAvailable;
 					}
+				}else if([messageString rangeOfString:@"transfer"].location != NSNotFound){
+					//Ignore the transfer errors; we will handle them locally
+					errorType = -2;
 				}
 
 				if (errorType == -1){
@@ -825,9 +829,11 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 					NSLog(@"*** Conversation error %@; please report this.",messageString);
 				}
 				
+				if (errorType != -2) {
 				[accountLookup(conv->account) mainPerformSelector:@selector(errorForChat:type:)
 													   withObject:chat
 													   withObject:[NSNumber numberWithInt:errorType]];
+				}
 			}
 		}
 	}
