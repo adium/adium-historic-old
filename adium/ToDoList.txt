@@ -14,8 +14,7 @@ Bugs
 * Don't spawn new windows when we're hidden, doing so will unhide us
     What should we do with the new content then? Throw it in the trash? Feed it to Laura's geckos?
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field.
-* Pushing escape clears the text field, instead of allowing you to convert from kanji to romain. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
-	Evan:I say we just take this nonstandard 'feature' out.
+
 
 
 
@@ -210,6 +209,8 @@ Bug Fixes:
 = Prevent cmd-delete from working in the message window
 = Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
 = Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
+= Pushing escape clears the text field, instead of allowing you to convert from kanji to roman. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
+	Evan:I say we just take this nonstandard 'feature' out.
 
 Features & Changes:
 = Add Offline status coloring
