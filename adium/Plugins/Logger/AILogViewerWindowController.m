@@ -21,19 +21,19 @@
 
 #define LOG_VIEWER_NIB					@"LogViewer"
 #define LOG_VIEWER_JAG_NIB				@"LogViewerJag"
-#define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
-#define	PREF_GROUP_CONTACT_LIST			@"Contact List"
-#define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
+#define KEY_LOG_VIEWER_WINDOW_FRAME                     @"Log Viewer Frame"
+#define	PREF_GROUP_CONTACT_LIST                         @"Contact List"
+#define KEY_LOG_VIEWER_GROUP_STATE                      @"Log Viewer Group State"	//Expand/Collapse state of groups
 
-#define MAX_LOGS_TO_SORT_WHILE_SEARCHING	1000	//Max number of logs we will live sort while searching
+#define MAX_LOGS_TO_SORT_WHILE_SEARCHING                1000	//Max number of logs we will live sort while searching
 #define LOG_SEARCH_STATUS_INTERVAL			20      //1/60ths of a second to wait before refreshing search status
 
-#define LOG_CONTENT_SEARCH_MAX_RESULTS		10000   //Max results allowed from a search
+#define LOG_CONTENT_SEARCH_MAX_RESULTS                  10000   //Max results allowed from a search
 #define LOG_RESULT_CLUMP_SIZE				10      //Number of logs to fetch at a time
 
-#define SEARCH_MENU     AILocalizedString(@"Search Menu",nil)
+#define SEARCH_MENU             AILocalizedString(@"Search Menu",nil)
 #define FROM			AILocalizedString(@"From",nil)
-#define TO				AILocalizedString(@"To",nil)
+#define TO                      AILocalizedString(@"To",nil)
 #define DATE			AILocalizedString(@"Date",nil)
 #define CONTENT			AILocalizedString(@"Content",nil)
 
@@ -164,7 +164,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     }else{
         [[self window] center];
     }
-	
+    	
     //Prepare the search controls
     [self buildSearchMenu];
     if([textView_content respondsToSelector:@selector(setUsesFindPanel:)]){
@@ -181,6 +181,27 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     //Begin our initial search
     if(activeSearchString) [searchField_logs setStringValue:activeSearchString];
     [self updateSearch:nil];
+}
+
+//Delete selected logs
+- (IBAction)deleteSelectedLogs:(id)sender
+{
+    AILog   *theLog = nil;
+    int     row = [tableView_results selectedRow];
+        
+    [resultsLock lock];
+    if(row >= 0 && row < [selectedLogArray count]){
+        theLog = [selectedLogArray objectAtIndex:row];
+    }
+    [selectedLogArray removeObjectAtIndex:row]; // this works well if there is no search active... otherwise the full list is stale
+    [resultsLock unlock];
+    
+    [[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
+
+    [self updateProgressDisplay];
+    [tableView_results reloadData];   
+    [textView_content setString:@""];
+    // at this point the searchkit index is stale as well... but i haven't figured that out yet :(
 }
 
 //Close the window

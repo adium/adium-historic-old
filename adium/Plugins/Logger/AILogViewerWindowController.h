@@ -31,6 +31,7 @@ typedef enum {
     IBOutlet    NSPopUpButton			*popUp_jagSearchMode;   //Used in the jag log viewer to select search mode
     IBOutlet    NSProgressIndicator		*progressIndicator;
     IBOutlet    NSTextField			*textField_progress;
+    IBOutlet    NSButton                        *button_deleteLogs;
 
     //Misc
     NSMutableArray      *availableLogArray;     //Array/tree of all available logs
@@ -60,5 +61,6 @@ typedef enum {
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)updateSearch:(id)sender;
 - (IBAction)selectSearchType:(id)sender;
+- (IBAction)deleteSelectedLogs:(id)sender;
 
 @end
