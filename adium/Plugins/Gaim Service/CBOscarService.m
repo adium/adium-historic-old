@@ -1,14 +1,14 @@
 //
-//  CBAIMService.m
+//  CBOscarService.m
 //  Adium
 //
 //  Created by Evan Schoenberg on Sun Dec 28 2003.
 
-#import "CBGaimAIMAccount.h"
-#import "CBAIMService.h"
-#import "AIGaimAIMAccountViewController.h"
+#import "CBGaimOscarAccount.h"
+#import "CBOscarService.h"
+#import "AIGaimOscarAccountViewController.h"
 
-@implementation CBAIMService
+@implementation CBOscarService
 
 - (id)initWithService:(id)inService
 {
@@ -40,12 +40,12 @@
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
 {    
-    return([[[CBGaimAIMAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+    return([[[CBGaimOscarAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
 }
 
 - (AIAccountViewController *)accountView
 {
-    return([AIGaimAIMAccountViewController accountView]);
+    return([AIGaimOscarAccountViewController accountView]);
 }
 
 

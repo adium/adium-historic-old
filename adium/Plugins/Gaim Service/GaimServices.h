@@ -4,7 +4,7 @@
 //
 //  Created by Evan Schoenberg on Sun Dec 28 2003.
 
-#import "CBAIMService.h"
+#import "CBOscarService.h"
 #import "ESGaduGaduService.h"
 #import "ESJabberService.h"
 #import "ESNapsterService.h"

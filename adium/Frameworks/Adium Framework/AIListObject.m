@@ -45,7 +45,7 @@
 	if (formattedUID){
 		[self setStatusObject:formattedUID
 					   forKey:KEY_FORMATTED_UID
-					   notify:YES];
+					   notify:NO];
 	}
 	
     return(self);
@@ -257,6 +257,16 @@
    return([statusDictionary objectForKey:key]);
 }
 
+//Subclasses may choose to override these
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
+{
+	if (inObject == self) {
+		if ([key isEqualToString:KEY_FORMATTED_UID]){
+			[self setPreference:value forKey:key group:PREF_GROUP_OBJECT_STATUS_CACHE];
+		}
+	}
+}
+
 //Object specific preferences ------------------------------------------------------------------------------------------
 #pragma mark Object specific preferences
 //Set a preference value
@@ -398,14 +408,10 @@
     return(outName ? outName : [self displayName]);
 }
 
-//Subclasses may choose to override these
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
+- (NSString *)displayServiceID
 {
-	if (inObject == self) {
-		if ([key isEqualToString:KEY_FORMATTED_UID]){
-			[self setPreference:value forKey:key group:PREF_GROUP_OBJECT_STATUS_CACHE];
-		}
-	}
+	NSString  *outName = [self statusObjectForKey:KEY_DISPLAY_SERVICE_ID];
+	return (outName ? outName : serviceID);
 }
 
 @end

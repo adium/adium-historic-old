@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.53 2004/04/13 20:27:39 evands Exp $
+// $Id: AIAccount.m,v 1.54 2004/04/14 23:01:20 evands Exp $
 
 #import "AIAccount.h"
 
@@ -36,8 +36,9 @@
 //Init the connection
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID
 {
+	uniqueObjectID = [[NSString stringWithFormat:@"%i",inObjectID] retain];
+	
     [super initWithUID:inUID serviceID:[[inService handleServiceType] identifier]];
-	objectID = inObjectID;
     service = [inService retain];
 
     //Handle the preference changed monitoring (for account status) for our subclass
@@ -82,7 +83,8 @@
 	
     [[adium notificationCenter] removeObserver:self];
     [service release];
-	    
+	[uniqueObjectID release];
+    
     [super dealloc];
 }
 
@@ -95,7 +97,7 @@
 //Our unique object ID is the number associated with this account
 - (NSString *)uniqueObjectID
 {
-	return([NSString stringWithFormat:@"%i",objectID]);
+	return(uniqueObjectID);
 }
 
 //Preferences ----------------------------------------------------------------------------------------------------------
@@ -384,6 +386,15 @@
 	return(3.0); //5 Seconds default
 }
 
+//Contacts -------------------------------------------------------------------------------------------------------------
+#pragma mark Contacts
+- (AIListContact *)_contactWithUID:(NSString *)sourceUID
+{
+	AIListContact *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																 accountID:[self uniqueObjectID]
+																	   UID:sourceUID];
+	return contact;
+}
 
 //Auto-Reconnect -------------------------------------------------------------------------------------------------------
 #pragma mark Auto-Reconnect

@@ -94,6 +94,7 @@
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv;
 - (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv;
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv;
+- (void)addChatConversation:(GaimConversation*)conv;
 
 	//accountXfer
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;

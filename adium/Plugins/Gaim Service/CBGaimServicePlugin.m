@@ -8,7 +8,6 @@
 #import <Security/Security.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
-#import "CBGaimAIMAccount.h"
 #import "SLGaimCocoaAdapter.h"
 
 #import "GaimServices.h"
@@ -789,7 +788,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	_accountDict = [[NSMutableDictionary alloc] init];
 		
     //Install the services
-    AIMService		= [[[CBAIMService alloc] initWithService:self] retain];
+    OscarService	= [[[CBOscarService alloc] initWithService:self] retain];
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
     MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
@@ -805,7 +804,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [_accountDict release]; _accountDict = nil;
     
     //Services
-    [AIMService release]; AIMService = nil;
+    [OscarService release]; OscarService = nil;
     [GaduGaduService release]; GaduGaduService = nil;
 	[JabberService release]; JabberService = nil;
     [NapsterService release]; NapsterService = nil;

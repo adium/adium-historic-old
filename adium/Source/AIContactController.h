@@ -92,7 +92,7 @@ typedef enum {
 - (AIListGroup *)contactList;
 - (AIListContact *)contactWithService:(NSString *)serviceID accountID:(NSString *)accountID UID:(NSString *)UID;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup onAccount:(AIAccount *)inAccount;
-- (AIListContact *)existingContactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID;
+- (AIListContact *)existingContactWithService:(NSString *)serviceID accountID:(NSString *)accountUID UID:(NSString *)UID;
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
 
