@@ -19,6 +19,7 @@
     IBOutlet    NSButton        *checkBox_combineMessages;
     
     IBOutlet    NSPopUpButton   *popUp_timeStamps;
+    IBOutlet    NSPopUpButton   *popUp_prefixFormat;
     
 }
 

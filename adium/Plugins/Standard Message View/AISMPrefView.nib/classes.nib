@@ -20,6 +20,7 @@
             OUTLETS = {
                 "checkBox_combineMessages" = NSButton; 
                 "checkBox_showUserIcons" = NSButton; 
+                "popUp_prefixFormat" = NSPopUpButton; 
                 "popUp_timeStamps" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 

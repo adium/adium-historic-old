@@ -19,6 +19,7 @@
 + (id)rowWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject;
 - (void)drawAtPoint:(NSPoint)point visibleRect:(NSRect)visibleRect inView:(NSView *)controlView;
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView;
+- (void)updateSpanningAndResizeRow:(BOOL)resize;
 - (BOOL)spansRows;
 - (id)representedObject;
 - (NSArray *)cellArray;

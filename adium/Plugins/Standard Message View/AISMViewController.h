@@ -38,6 +38,8 @@
     NSImage			*iconIncoming;
     NSImage			*iconOutgoing;
     
+    BOOL			inlinePrefixes;
+    
     float			gridDarkness;
 
     NSFont			*prefixFont;
@@ -54,6 +56,12 @@
     NSString			*prefixOutgoing;
     
     
+    NSColor			*colorIncoming;
+    NSColor			*colorIncomingBorder;
+    NSColor			*colorIncomingDivider;
+    NSColor			*colorOutgoing;
+    NSColor			*colorOutgoingBorder;
+    NSColor			*colorOutgoingDivider;
     
     
     

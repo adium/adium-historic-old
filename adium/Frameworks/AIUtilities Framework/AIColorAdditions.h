@@ -31,5 +31,6 @@
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
 + (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
 - (NSColor *)colorWithInvertedLuminance;
+- (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit;
 
 @end
