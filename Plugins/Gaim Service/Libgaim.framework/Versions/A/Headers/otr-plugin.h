@@ -26,11 +26,14 @@
 
 /* libotr headers */
 #include <libotr/context.h>
+#include <libotr/userstate.h>
 
 #define PRIVKEYFNAME "otr.private_key"
 #define STOREFNAME "otr.fingerprints"
 
 extern GaimPlugin *otrg_plugin_handle;
+
+extern OtrlUserState otrg_plugin_userstate;
 
 /* Send an IM from the given account to the given recipient.  Display an
  * error dialog if that account isn't currently logged in. */
@@ -50,5 +53,12 @@ void otrg_plugin_send_default_query(ConnContext *context, void *account);
 /* Send the default OTR Query message to the correspondent of the given
  * conversation. */
 void otrg_plugin_send_default_query_conv(GaimConversation *conv);
+
+/* Disconnect a context, sending a notice to the other side, if
+ * appropriate. */
+void otrg_plugin_disconnect(ConnContext *context);
+
+/* Return the user state used by the gaim-otr plugin */
+OtrlUserState* otr_plugin_get_userstate(void);
 
 #endif

@@ -30,18 +30,22 @@
 typedef struct s_OtrgDialogWait *OtrgDialogWaitHandle;
 
 typedef struct {
-    void (*notify_message)(GaimNotifyMsgType type, const
-	char *title, const char *primary, const char *secondary);
+    void (*notify_message)(GaimNotifyMsgType type,
+	const char *accountname, const char *protocol, const char *username,
+	const char *title, const char *primary, const char *secondary);
+
+    int (*display_otr_message)(const char *accountname, const char *protocol,
+	    const char *username, const char *msg);
 
     OtrgDialogWaitHandle (*private_key_wait_start)(const char *account,
 	const char *protocol);
 
     void (*private_key_wait_done)(OtrgDialogWaitHandle handle);
 
-    void (*unknown_fingerprint)(const char *who, const char *protocol,
-	OTRKeyExchangeMsg kem,
-	void (*response_cb)(OtrlMessageAppOps *ops, void *opdata,
-	    OTRConfirmResponse *response_data, int resp),
+    void (*unknown_fingerprint)(OtrlUserState us, const char *accountname,
+	const char *protocol, const char *who, OTRKeyExchangeMsg kem,
+	void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
+	    void *opdata, OTRConfirmResponse *response_data, int resp),
 	OtrlMessageAppOps *ops, void *opdata,
 	OTRConfirmResponse *response_data);
 
@@ -59,28 +63,38 @@ typedef struct {
 } OtrgDialogUiOps;
 
 /* Set the UI ops */
-void otrg_dialog_set_ui_ops(OtrgDialogUiOps *ops);
+void otrg_dialog_set_ui_ops(const OtrgDialogUiOps *ops);
 
 /* Get the UI ops */
-OtrgDialogUiOps *otrg_dialog_get_ui_ops(void);
+const OtrgDialogUiOps *otrg_dialog_get_ui_ops(void);
 
 /* This is just like gaim_notify_message, except: (a) it doesn't grab
  * keyboard focus, (b) the button is "OK" instead of "Close", and (c)
  * the labels aren't limited to 2K. */
-void otrg_dialog_notify_message(GaimNotifyMsgType type, const
-	char *title, const char *primary, const char *secondary);
+void otrg_dialog_notify_message(GaimNotifyMsgType type,
+	const char *accountname, const char *protocol, const char *username,
+	const char *title, const char *primary, const char *secondary);
 
 /* Put up the error version of otrg_dialog_notify_message */
-void otrg_dialog_notify_error(const char *title, const char *primary,
+void otrg_dialog_notify_error(const char *accountname, const char *protocol,
+	const char *username, const char *title, const char *primary,
 	const char *secondary);
 
 /* Put up the warning version of otrg_dialog_notify_message */
-void otrg_dialog_notify_warning(const char *title, const char *primary,
+void otrg_dialog_notify_warning(const char *accountname, const char *protocol,
+	const char *username, const char *title, const char *primary,
 	const char *secondary);
 
 /* Put up the info version of otrg_dialog_notify_message */
-void otrg_dialog_notify_info(const char *title, const char *primary,
+void otrg_dialog_notify_info(const char *accountname, const char *protocol,
+	const char *username, const char *title, const char *primary,
 	const char *secondary);
+
+/* Display an OTR control message for the given accountname / protocol /
+ * username conversation.  Return 0 on success, non-0 on error (in which
+ * case the message will be displayed inline as a received message). */
+int otrg_dialog_display_otr_message( const char *accountname,
+	const char *protocol, const char *username, const char *msg);
 
 /* Put up a Please Wait dialog. This dialog can not be cancelled.
  * Return a handle that must eventually be passed to
@@ -94,13 +108,13 @@ void otrg_dialog_private_key_wait_done(OtrgDialogWaitHandle handle);
 /* Show a dialog informing the user that a correspondent (who) has sent
  * us a Key Exchange Message (kem) that contains an unknown fingerprint.
  * Ask the user whether to accept the fingerprint or not.  If yes, call
- * response_cb(ops, opdata, response_data, resp) with resp = 1.  If no,
+ * response_cb(us, ops, opdata, response_data, resp) with resp = 1.  If no,
  * set resp = 0.  If the user destroys the dialog without answering, set
  * resp = -1. */
-void otrg_dialog_unknown_fingerprint(const char *who, const char *protocol,
-	OTRKeyExchangeMsg kem,
-	void (*response_cb)(OtrlMessageAppOps *ops, void *opdata,
-	    OTRConfirmResponse *response_data, int resp),
+void otrg_dialog_unknown_fingerprint(OtrlUserState us, const char *accountname,
+	const char *protocol, const char *who, OTRKeyExchangeMsg kem,
+	void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
+	    void *opdata, OTRConfirmResponse *response_data, int resp),
 	OtrlMessageAppOps *ops, void *opdata,
 	OTRConfirmResponse *response_data);
 

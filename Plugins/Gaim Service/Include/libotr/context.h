@@ -68,6 +68,7 @@ typedef struct context {
     unsigned int generation;
 
     time_t lastsent;      /* The last time a Data Message was sent */
+    char *lastmessage;    /* The plaintext of the last Data Message sent */
     enum {
 	OFFER_NOT,
 	OFFER_SENT,
@@ -85,19 +86,19 @@ typedef struct context {
     struct context ** tous;            /* A pointer to the pointer to us */
 } ConnContext;
 
-/* The root of the linked list of ConnContexts */
-extern ConnContext *otrl_context_root;
+#include "userstate.h"
 
 /* Strings describing the connection states */
 extern const char *otrl_context_statestr[];
 
-/* Look up a connection context by name/account/protocol.  If add_if_missing
- * is true, allocate and return a new context if one does not currently
- * exist.  In that event, call add_app_data(data, context) so that
- * app_data and app_data_free can be filled in by the application, and
- * set *addedp to 1. */
-ConnContext * otrl_context_find(const char *user, const char *accountname,
-	const char *protocol, int add_if_missing, int *addedp,
+/* Look up a connection context by name/account/protocol from the given
+ * OtrlUserState.  If add_if_missing is true, allocate and return a new
+ * context if one does not currently exist.  In that event, call
+ * add_app_data(data, context) so that app_data and app_data_free can be
+ * filled in by the application, and set *addedp to 1. */
+ConnContext * otrl_context_find(OtrlUserState us, const char *user,
+	const char *accountname, const char *protocol, int add_if_missing,
+	int *addedp,
 	void (*add_app_data)(void *data, ConnContext *context), void *data);
 
 /* Find a fingerprint in a given context, perhaps adding it if not
@@ -123,7 +124,8 @@ void otrl_context_forget_fingerprint(Fingerprint *fprint,
 /* Forget a whole context, so long as it's UNCONNECTED. */
 void otrl_context_forget(ConnContext *context);
 
-/* Forget all the contexts, forcing them to UNCONNECTED. */
-void otrl_context_forget_all(void);
+/* Forget all the contexts in a given OtrlUserState, forcing them to
+ * UNCONNECTED. */
+void otrl_context_forget_all(OtrlUserState us);
 
 #endif
