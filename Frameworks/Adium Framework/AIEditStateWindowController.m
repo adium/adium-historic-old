@@ -18,6 +18,7 @@
 #import "AIEditStateWindowController.h"
 #import "AIStatus.h"
 #import "AIStatusController.h"
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AISendingTextView.h>
@@ -25,6 +26,8 @@
 
 #define CONTROL_SPACING			8
 #define WINDOW_HEIGHT_PADDING	60
+
+#define	SEND_ON_ENTER					@"Send On Enter"
 
 @interface AIEditStateWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
@@ -157,17 +160,28 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (void)windowDidLoad
 {
+	BOOL sendOnEnter;
+	
+	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
+															group:PREF_GROUP_GENERAL] boolValue];
+	
 	[scrollView_statusMessage setAutoHideScrollBar:YES];
 	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_statusMessage setTarget:self action:@selector(okay:)];
-	[textView_statusMessage setSendOnReturn:YES];
-	[textView_statusMessage setSendOnEnter:NO];
+
+	[textView_statusMessage setSendOnReturn:NO];
+	[textView_statusMessage setSendOnEnter:sendOnEnter];
 
 	[scrollView_autoReply setAutoHideScrollBar:YES];
 	[scrollView_autoReply setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_autoReply setTarget:self action:@selector(okay:)];
-	[textView_autoReply setSendOnReturn:YES];
-	[textView_autoReply setSendOnEnter:NO];
+
+	//Return inserts a new line
+	[textView_autoReply setSendOnReturn:NO];
+	
+	/* Enter follows the user's preference. By default, then, enter will send the okay: selector.
+	 * If the user expects enter to insert a newline in a message, however, it will do that here, too. */
+	[textView_autoReply setSendOnEnter:sendOnEnter];
 
 	[self configureForAccountAndWorkingStatusState];
 	
