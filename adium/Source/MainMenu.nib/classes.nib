@@ -80,6 +80,7 @@
                 "menu_Contact_Additions" = NSMenuItem; 
                 "menu_Contact_Manage" = NSMenuItem; 
                 "menu_Contact_NegativeAction" = NSMenuItem; 
+                "menu_Dock_Status" = NSMenuItem; 
                 "menu_Edit_Additions" = NSMenuItem; 
                 "menu_Edit_Bottom" = NSMenuItem; 
                 "menu_File_Accounts" = NSMenuItem; 

@@ -31,10 +31,12 @@
 - (void)accountStatusChanged:(NSNotification *)notification;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 - (void)installAwayMenu;
-- (void)updateAwayMenu;
-- (void)rebuildSavedAways;
 - (BOOL)shouldConfigureForAway;
-- (void)_rebuildSavedAwayArray:(NSArray *)awayArray;
+- (void)_updateMenusToReflectAwayState:(BOOL)shouldConfigureForAway;
+- (void)_updateAwaySubmenus;
+- (NSMenu *)_awaySubmenuFromArray:(NSArray *)awayArray forMainMenu:(BOOL)mainMenu;
+- (void)_appendAwaysFromArray:(NSArray *)awayArray toMenu:(NSMenu *)awayMenu;
+- (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem;
 @end
 
 @implementation AIAwayMessagesPlugin
@@ -88,7 +90,9 @@
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
 
         if([modifiedKey compare:@"AwayMessage"] == 0){
-            [self updateAwayMenu]; //Update our away menu
+            //Update our away menus
+            [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
+            [self _updateAwaySubmenus];
 
             //Remove existing content sent/received observer, and install new (if away)
             [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
@@ -156,98 +160,122 @@
      It would be easier (and safer) to use a single menu item, and dynamically set it to behave as both menu items ("Set Away ->" and "Remove Away"), dynamically adding and removing the submenu and hotkey.  However, NSMenuItem appears to dislike it when a menu that has previously contained a submenu is assigned a hotkey.  setKeyEquivalent is ignored for any menu that has previuosly contained a submenu, resulting in a hotkey that will stick and persist even when the submenu is present, and that cannot be removed.  To work around this we must use two seperate menu items, and sneak them into Adium's menu.  Using the menu controller with two seperate dynamic items would result in them jumping position in the menu if other items were present in the same category, and is not a good solution.
      */
 
-    //Main away items
-    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
-                                               target:self
-                                               action:@selector(enterAwayMessage:)
-                                        keyEquivalent:@""];
-    
-    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
-                                                     target:self
-                                                     action:@selector(removeAwayMessage:)
-                                              keyEquivalent:AWAY_MENU_HOTKEY];
+    //Setup the menubar away selector
+    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
 
-    //Build the 'Go away' Submenu --
-    menuItem_customMessage = [[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
-    menu_awaySubmenu = [[NSMenu alloc] initWithTitle:@""]; //Title is arbitrary
-    [menu_awaySubmenu addItem:menuItem_customMessage];
-    [menu_awaySubmenu addItem:[NSMenuItem separatorItem]];
+    //Setup the dock menu away selector
+    menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+    menuItem_dockRemoveAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:@""];
 
-    [menuItem_away setSubmenu:menu_awaySubmenu];
-
-    //Add the saved away messages
-    [self rebuildSavedAways];
-    
     //Add it to the menubar
     if([self shouldConfigureForAway]){
         [[owner menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
+        [[owner menuController] addMenuItem:menuItem_dockRemoveAway toLocation:LOC_Dock_Status];
     }else{
         [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
+        [[owner menuController] addMenuItem:menuItem_dockAway toLocation:LOC_Dock_Status];
     }
+
+    //Update the menu content
+    [self _updateAwaySubmenus];
 }
 
 //Called as our menu item is displayed, update it to reflect option key status
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
-    [self updateAwayMenu]; //Update the away message menu
+    [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]]; //Update the away message menu
 
     return(YES);
 }
 
-//Update the away message menu
-- (void)updateAwayMenu
+//Is the user currently away?
+- (BOOL)shouldConfigureForAway
 {
-    BOOL shouldConfigureForAway = [self shouldConfigureForAway];
+    return(([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
+}
 
+//Update our menu if the away list changes
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
+       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
+        [self _updateAwaySubmenus]; //Rebuild the away menu
+    }
+}
+
+
+//--- Private
+//Updates the away selection menus to reflect the requested away state
+- (void)_updateMenusToReflectAwayState:(BOOL)shouldConfigureForAway
+{
     if(shouldConfigureForAway != menuConfiguredForAway){
         //Swap the menu items
         if(shouldConfigureForAway){
-            NSMenu	*containingMenu = [menuItem_away menu];
-            int		menuItemIndex = [containingMenu indexOfItem:menuItem_away];
-
-            [containingMenu removeItem:menuItem_away];
-            [containingMenu insertItem:menuItem_removeAway atIndex:menuItemIndex];
+            [self swapMenuItem:menuItem_away with:menuItem_removeAway];
+            [self swapMenuItem:menuItem_dockAway with:menuItem_dockRemoveAway];
             
         }else{
-            NSMenu	*containingMenu = [menuItem_removeAway menu];
-            int		menuItemIndex = [containingMenu indexOfItem:menuItem_removeAway];
+            [self swapMenuItem:menuItem_removeAway with:menuItem_away];
+            [self swapMenuItem:menuItem_dockRemoveAway with:menuItem_dockAway];
 
-            [containingMenu removeItem:menuItem_removeAway];
-            [containingMenu insertItem:menuItem_away atIndex:menuItemIndex];
-            
         }
 
         menuConfiguredForAway = shouldConfigureForAway;
     }
 }
 
-- (BOOL)shouldConfigureForAway
+//Swap two menu items
+- (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem
 {
-    return(([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
+    NSMenu	*containingMenu = [existingItem menu];
+    int		menuItemIndex = [containingMenu indexOfItem:existingItem];
+
+    [containingMenu removeItem:existingItem];
+    [containingMenu insertItem:newItem atIndex:menuItemIndex];
 }
 
-- (void)rebuildSavedAways
+//Refresh the away messages displayed in the away submenus
+- (void)_updateAwaySubmenus
 {
-    NSArray		*awayArray;
+    NSArray	*awayArray;
 
-    //Remove the existing away menu items
-    while([menu_awaySubmenu numberOfItems] > 2){
-        [menu_awaySubmenu removeItemAtIndex:2];
-    }
-    
-    //Load the aways
+    //Load the saved aways
     awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
 
-    //Build the menu items
-    [self _rebuildSavedAwayArray:awayArray];
+    //Update the menus
+    [menuItem_away setSubmenu:[self _awaySubmenuFromArray:awayArray forMainMenu:YES]];
+    [menuItem_dockAway setSubmenu:[self _awaySubmenuFromArray:awayArray forMainMenu:NO]];
+
 }
 
-- (void)_rebuildSavedAwayArray:(NSArray *)awayArray
+//Builds an away message submenu from the passed array of aways
+- (NSMenu *)_awaySubmenuFromArray:(NSArray *)awayArray forMainMenu:(BOOL)mainMenu
+{
+    NSMenu		*awayMenu;
+    NSMenuItem		*menuItem;
+    
+    //Create the menu
+    awayMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+
+    //Add the 'Custom away' menu item and divider
+    menuItem = [[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")];
+    [awayMenu addItem:menuItem];
+    [awayMenu addItem:[NSMenuItem separatorItem]];
+
+    //Add a menu item for each away message
+    [self _appendAwaysFromArray:awayArray toMenu:awayMenu];
+
+    return(awayMenu);
+}
+
+- (void)_appendAwaysFromArray:(NSArray *)awayArray toMenu:(NSMenu *)awayMenu
 {
     NSEnumerator	*enumerator;
     NSDictionary	*awayDict;
 
+    //Add a menu item for each away message
     enumerator = [awayArray objectEnumerator];
     while((awayDict = [enumerator nextObject])){
         NSString *type = [awayDict objectForKey:@"Type"];
@@ -255,8 +283,8 @@
         if([type compare:@"Group"] == 0){
             //NSString		*group = [awayDict objectForKey:@"Name"];
 
-            //Create & process submenu            
-            
+            //Create & process submenu
+
         }else if([type compare:@"Away"] == 0){
             NSString		*away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
             NSMenuItem		*menuItem;
@@ -268,21 +296,10 @@
 
             menuItem = [[NSMenuItem alloc] initWithTitle:away target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
             [menuItem setRepresentedObject:awayDict];
-            [menu_awaySubmenu addItem:menuItem];
+            [awayMenu addItem:menuItem];
         }
     }
-    
-}
 
-//Update our menu if the away list changes
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
-       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
-
-        //Rebuild the away menu
-        [self rebuildSavedAways];
-    }
 }
 
 @end

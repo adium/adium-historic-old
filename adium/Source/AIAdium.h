@@ -62,7 +62,8 @@ typedef enum {
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
     LOC_Window_Commands, LOC_Window_Auxilary, LOC_Window_Fixed,
     LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
-    LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions
+    LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
+    LOC_Dock_Status
 } MENU_LOCATION;
 
 typedef enum {
@@ -498,6 +499,7 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Contact_Action;
     IBOutlet	NSMenuItem	*menu_Contact_NegativeAction;
     IBOutlet	NSMenuItem	*menu_Contact_Additions;
+    IBOutlet	NSMenuItem	*menu_Dock_Status;
         
     NSMutableArray		*locationArray;
 
