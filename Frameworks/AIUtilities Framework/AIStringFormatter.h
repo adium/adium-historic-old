@@ -32,7 +32,7 @@
  * @brief Create an <tt>AIStringFormatter</tt>
  *
  * Create an autoreleased <tt>AIStringFormatter</tt>
- * @param inCharacters An <tt>NSCharacterSet<tt> of all allowed characters
+ * @param inCharacters An <tt>NSCharacterSet</tt> of all allowed characters
  * @param inLength The maximum allowed length of the formatted string
  * @param inCaseSensitive YES if the characters should be tested with respect for case
  * @param errorMessage A message to be displayed to the user after 3 invalid input attempts. If nil, no error message is displayed.
