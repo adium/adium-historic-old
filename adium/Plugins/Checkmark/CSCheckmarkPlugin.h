@@ -6,6 +6,7 @@
 //
 
 #define PREF_GROUP_CHECKMARK    @"Checkmark"
+#define CHECKMARK_DEFAULT_PREFS @"CheckmarkDefaults"
 #define KEY_DISPLAY_CHECKMARK	@"Display Checkmark"
 
 @class CSCheckmarkPreferences;
