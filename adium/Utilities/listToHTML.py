@@ -136,118 +136,118 @@ def listToHTML(infile, outfile):
 		'<style type="text/css">\n'
 		'body { color: black; background-color: white }\n')
 
-	for buf in infile:
-#		buf = buf.strip()
-		if legendRE.search(buf):
-			mode = legendMode
-		elif separatorRE.match(buf):
-#			print 'separator: inBody %i inTask %i inTaskList %i mode %u legendMode %u headingMode %u' % (inBody, inTask, inTaskList, id(mode), id(legendMode), id(headingMode))
-			if not inBody:
-				outfile.write(
-					"</style>\n"
-					"</head>\n"
-					"<body>\n")
-				inBody = True
-			if inTask:
-				outfile.write("\t</li>\n")
-				inTask = False
-			if inTaskList:
-				outfile.write(
-					"</ul>\n"
-					"<hr>\n")
-				inTaskList = False
-			if mode is legendMode:
-				#starting separator.
-				#write out the legend.
-				outfile.write(
-					"<h1>Legend</h1>\n"
-					'<dl>\n')
-				outfile.write(''.join(reservoir))
-				outfile.write('</dl>\n<hr>\n')
-				del reservoir[:]
-
-			if mode is legendMode or mode is taskMode:
-				#begin heading mode
-				outfile.write("\n<h1>")
-				mode = headingMode
-			elif mode is headingMode:
-				#ending separator.
-				outfile.write(''.join(reservoir))
-				del reservoir[:]
-				outfile.write("</h1>\n")
-				mode = taskMode
-		else:
-			if mode is legendMode:
-				match = catsepRE.match(buf)
-				if match:
-					bullet, name = match.groups()
-					if bullet not in task_colours:
-						task_colours[bullet] = fallbacks.pop()
-					task_names[bullet] = CSSname = CSSclass(name)
-					#add the list pair for the legend section of the page.
-					reservoir.append(legendFmt % {
-						'bullet': bullet,
-						'CSS name': CSSname,
-						'name': HTMLescape(name),
-						'color': task_colours[bullet],
-						})
-					#write the CSS rule.
-					outfile.write(ruleFmt % {
-						'bullet name': CSSname,
-						'color': task_colours[bullet],
-						})
-
-			elif mode is headingMode:
-				reservoir.append(buf)
-			elif mode is taskMode:
-				sbuf = buf.strip()
-#				print 'found task "%s"' % sbuf
-				match = taskRE.match(sbuf)
-				if match:
-#					print "starting task"
-					if not inTaskList:
-						outfile.write("<ul>\n")
-						inTaskList = True
-					bullet, taskStart = match.groups()
-					bullet_name = task_names[bullet]
-					if inTask:
-						outfile.write("\t</li>\n")
-					else:
-						inTask = True
-					outfile.write(taskStartFmt % {
-						'bullet': bullet,
-						'task': HTMLescape(taskStart)+'\n',
-						'bullet name': bullet_name
-						})
-				else:
-					match = subheadingRE.match(buf)
+	try:
+		for buf in infile:
+			if legendRE.search(buf):
+				mode = legendMode
+			elif separatorRE.match(buf):
+				if not inBody:
+					outfile.write(
+						"</style>\n"
+						"</head>\n"
+						"<body>\n")
+					inBody = True
+				if inTask:
+					outfile.write("\t</li>\n")
+					inTask = False
+				if inTaskList:
+					outfile.write(
+						"</ul>\n"
+						"<hr>\n")
+					inTaskList = False
+				if mode is legendMode:
+					#starting separator.
+					#write out the legend.
+					outfile.write(
+						"<h1>Legend</h1>\n"
+						'<dl>\n')
+					outfile.write(''.join(reservoir))
+					outfile.write('</dl>\n<hr>\n')
+					del reservoir[:]
+	
+				if mode is legendMode or mode is taskMode:
+					#begin heading mode
+					outfile.write("\n<h1>")
+					mode = headingMode
+				elif mode is headingMode:
+					#ending separator.
+					outfile.write(''.join(reservoir))
+					del reservoir[:]
+					outfile.write("</h1>\n")
+					mode = taskMode
+			else:
+				if mode is legendMode:
+					match = catsepRE.match(buf)
 					if match:
-#						print 'subheading'
-						if inTask:
-							outfile.write("\t</li>\n")
-							inTask = False
-						if inTaskList:
-							outfile.write("</ul>\n")
-						h_number = 2
-						ws = match.group("WHITESPACE").replace('    ', '\t')
-						h_number += len(ws)
-#						print 'whitespace="%s" originally "%s" (%u chars); h_number = %u' % (ws, match.group("WHITESPACE"), len(ws), h_number)
-						outfile.write("<h%u>" % h_number)
-						outfile.write(HTMLescape(match.group("NAME")))
-						outfile.write("</h%u>\n" % h_number)
-						if inTaskList:
+						bullet, name = match.groups()
+						if bullet not in task_colours:
+							task_colours[bullet] = fallbacks.pop()
+						task_names[bullet] = CSSname = CSSclass(name)
+						#add the list pair for the legend section of the page.
+						reservoir.append(legendFmt % {
+							'bullet': bullet,
+							'CSS name': CSSname,
+							'name': HTMLescape(name),
+							'color': task_colours[bullet],
+							})
+						#write the CSS rule.
+						outfile.write(ruleFmt % {
+							'bullet name': CSSname,
+							'color': task_colours[bullet],
+							})
+	
+				elif mode is headingMode:
+					reservoir.append(buf)
+				elif mode is taskMode:
+					sbuf = buf.strip()
+					match = taskRE.match(sbuf)
+					if match:
+						if not inTaskList:
 							outfile.write("<ul>\n")
-					else:
-#						print 'continuing task'
-						#continue a task.
-						if buf.strip():
-							if not inTaskList:
-								outfile.write("<ul>\n")
-								inTaskList = True
-							if not inTask:
-								outfile.write("\t<li>\n")
+							inTaskList = True
+						bullet, taskStart = match.groups()
+						if task_names.has_key(bullet):
+							bullet_name = task_names[bullet]
+							if inTask:
+								outfile.write("\t</li>\n")
+							else:
 								inTask = True
-							outfile.write(HTMLescape(buf))
+							outfile.write(taskStartFmt % {
+								'bullet': bullet,
+								'task': HTMLescape(taskStart)+'\n',
+								'bullet name': bullet_name
+								})
+						else:
+							match = None
+					if not match:
+						match = subheadingRE.match(buf)
+						if match:
+							if inTask:
+								outfile.write("\t</li>\n")
+								inTask = False
+							if inTaskList:
+								outfile.write("</ul>\n")
+							h_number = 2
+							ws = match.group("WHITESPACE").replace('    ', '\t')
+							h_number += len(ws)
+							outfile.write("<h%u>" % h_number)
+							outfile.write(HTMLescape(match.group("NAME")))
+							outfile.write("</h%u>\n" % h_number)
+							if inTaskList:
+								outfile.write("<ul>\n")
+						else:
+							#continue a task.
+							if buf.strip():
+								if not inTaskList:
+									outfile.write("<ul>\n")
+									inTaskList = True
+								if not inTask:
+									outfile.write("\t<li>\n")
+									inTask = True
+								outfile.write(HTMLescape(buf))
+	except:
+		print >> sys.stderr, 'Error while processing line: %r' % (buf,)
+		raise
 	if inTask:
 		outfile.write("\t</li>\n")
 	if inTaskList:
