@@ -830,7 +830,33 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				if([messageString rangeOfString:@"Unable to send message"].location != NSNotFound){
 					if([messageString rangeOfString:@"Not logged in"].location != NSNotFound){
 						errorType = AIChatUserNotAvailable;
+					}else if(([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
+							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)){
+						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
+						errorType = AIChatMessageSendingTooLarge;
 					}
+
+				}else if([messageString rangeOfString:@"You missed"].location != NSNotFound){
+					if (([messageString rangeOfString:@"because they were too large"].location != NSNotFound) ||
+						([messageString rangeOfString:@"because it was too large"].location != NSNotFound)){
+						//The actual message when on AIM via libgaim is "You missed 2 messages" but this is a lie.
+						errorType = AIChatMessageReceivingMissedTooLarge;
+						
+					}else if(([messageString rangeOfString:@"because it was invalid"].location != NSNotFound) ||
+							  ([messageString rangeOfString:@"because they were invalid"].location != NSNotFound)){
+						errorType = AIChatMessageReceivingMissedInvalid;
+						
+					}else if([messageString rangeOfString:@"because the rate limit has been exceeded"].location != NSNotFound){
+						errorType = AIChatMessageReceivingMissedRateLimitExceeded;
+						
+					}else if([messageString rangeOfString:@"because he/she was too evil"].location != NSNotFound){
+						errorType = AIChatMessageReceivingMissedRemoteIsTooEvil;
+						
+					}else if([messageString rangeOfString:@"because you are too evil"].location != NSNotFound){
+						errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
+						
+					}
+					
 				}else if([messageString rangeOfString:@"transfer"].location != NSNotFound){
 					//Ignore the transfer errors; we will handle them locally
 					errorType = -2;
@@ -838,7 +864,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 
 				if (errorType == -1){
 					errorType = AIChatUnknownError;
-					NSLog(@"*** Conversation error %@; please report this.",messageString);
+					NSLog(@"*** Conversation error:\n%@\nPlease report this. ***",messageString);
 				}
 				
 				if (errorType != -2) {
