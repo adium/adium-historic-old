@@ -218,9 +218,8 @@
 			
 			//Now update from our "me" card information
 		    [self updateSelfIncludingIcon:YES];	
-		}
-
-		if (notification != nil){
+			
+		}else{
 			//If we have a notification (so this isn't the first time through), update all contacts,
 			//which will update objects and then our "me" card information
 			[self updateAllContacts];
