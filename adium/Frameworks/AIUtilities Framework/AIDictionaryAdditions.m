@@ -26,8 +26,8 @@
 // Returns a dictionary from the owners bundle with the specified name
 + (NSDictionary *)dictionaryNamed:(NSString *)name forClass:(Class)inClass
 {
-    NSBundle	*ownerBundle;
-    NSString	*dictPath;
+    NSBundle		*ownerBundle;
+    NSString		*dictPath;
     NSDictionary	*dict;
 
     //Get the bundle
@@ -35,9 +35,9 @@
 
     //Open the image
     dictPath = [ownerBundle pathForResource:name ofType:@"plist"];    
-    dict = [[NSDictionary alloc] initWithContentsOfFile:dictPath];
+    dict = [NSDictionary dictionaryWithContentsOfFile:dictPath];
 
-    return([dict autorelease]);
+    return(dict);
 }
 
 // returns the dictionary from the specified path
@@ -78,8 +78,7 @@
 - (NSString *)stringForKey:(NSString *)inKey{
     NSString *string = [self objectForKey:inKey];
 
-    if(string == nil) return(@"");
-    return(string);
+    return(string ? string : @"");
 }
 
 - (int)intForKey:(NSString *)inKey{
@@ -91,18 +90,13 @@
 - (NSColor *)colorForKey:(NSString *)inKey{
     NSString *colorString = [self objectForKey:inKey];
 
-    if(colorString == nil){
-        return([NSColor whiteColor]);
-    }else{
-        return([colorString representedColor]);
-    }
+	return (colorString ? [colorString representedColor] : [NSColor whiteColor]);
 }
 
 - (id)objectForIntegerKey:(int)aKey
 {
     return([self objectForKey:[NSNumber numberWithInt:aKey]]);
 }
-
 
 /*untested
 - (NSAttributedString *)attributedStringForKey:(NSString *)inKey{
