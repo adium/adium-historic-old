@@ -214,7 +214,6 @@
 		changedStatusKeys = nil;
 		
 		//
-		NSLog(@"%@ notifying on keys %@",[self UID],keys); 
 		[[adium contactController] listObjectStatusChanged:self
 										modifiedStatusKeys:keys
 													silent:silent];
