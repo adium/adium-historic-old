@@ -201,7 +201,8 @@
 	
 	range = [inString rangeOfString:@"%message"];
 	if(range.location != NSNotFound){
-		[inString replaceCharactersInRange:range withString:[[content message] string]];
+//		NSLog(@"%@",[AIHTMLDecoder encodeHTML:[content message] encodeFullString:YES]);
+		[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message] encodeFullString:YES]];
 	}
 	
 	range = [inString rangeOfString:@"%time"];
@@ -219,7 +220,7 @@
 	[inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	[inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	[inString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-
+//	[inString replaceOccurrencesOfString:@"\r" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	return(inString);
 }
 
