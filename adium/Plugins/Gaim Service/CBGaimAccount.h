@@ -24,7 +24,7 @@
 #include "sound.h"
 #include "util.h"
 
-@interface CBGaimAccount : AIAccount </*AIAccount_Handles,*/AIAccount_Content>
+@interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content>
 {     
 //    NSMutableDictionary	*handleDict;
     NSMutableDictionary *chatDict;

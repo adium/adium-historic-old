@@ -127,6 +127,11 @@
 }
 
 //
+- (NSEnumerator *)ownerEnumerator
+{
+	return([ownerArray objectEnumerator]);
+}
+//
 - (NSArray *)allValues
 {
 	return(contentArray);

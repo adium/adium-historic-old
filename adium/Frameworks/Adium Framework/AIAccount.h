@@ -48,24 +48,26 @@ typedef enum {
 @end
 
 //Support for standard UID based contacts
-@protocol AIAccount_Handles
-    // Returns a dictionary of AIHandles available on this account
-    - (NSDictionary *)availableHandles; //return nil if no contacts/list available
+@protocol AIAccount_List
+	- (void)removeListObject:(AIListObject *)object;;
 
-    // Returns YES if the list is editable
-    - (BOOL)contactListEditable;
-
-    // Add a handle to this account
-    - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary;
-    // Remove a handle from this account
-    - (BOOL)removeHandleWithUID:(NSString *)inUID;
-
-    // Add a group to this account
-    - (BOOL)addServerGroup:(NSString *)inGroup;
-    // Remove a group
-    - (BOOL)removeServerGroup:(NSString *)inGroup;
-    // Rename a group
-    - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
+//    // Returns a dictionary of AIHandles available on this account
+//    - (NSDictionary *)availableHandles; //return nil if no contacts/list available
+//
+//    // Returns YES if the list is editable
+//    - (BOOL)contactListEditable;
+//
+//    // Add a handle to this account
+//    - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary;
+//    // Remove a handle from this account
+//    - (BOOL)removeHandleWithUID:(NSString *)inUID;
+//
+//    // Add a group to this account
+//    - (BOOL)addServerGroup:(NSString *)inGroup;
+//    // Remove a group
+//    - (BOOL)removeServerGroup:(NSString *)inGroup;
+//    // Rename a group
+//    - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 @end
 
 //Support for file transfer

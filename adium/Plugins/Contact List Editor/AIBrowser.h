@@ -18,6 +18,7 @@
 - (void)reloadData;
 - (void)sizeToFit;
 - (id)selectedItem;
+- (id)selectedColumn;
 
 @end
 
