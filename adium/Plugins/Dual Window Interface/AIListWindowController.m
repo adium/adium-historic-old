@@ -291,7 +291,7 @@
 		contentCell = [[AIListContactMockieCell alloc] init];
 	}else{
 		groupCell = (GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init]);	
-		contentCell = (CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init]);
+		contentCell = [[AIListContactBrickCell alloc] init];//(CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init]);
 	}
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
@@ -299,7 +299,7 @@
 	//Background Coloring
 	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
 	[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? DRAW_ALTERNATING_GRID : NO)];
-	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
+	[contactListView setAlternatingRowColor:[ALTERNATING_GRID_COLOR colorWithAlphaComponent:backgroundAlpha]];
 	[contactListView setBackgroundColor:[BACKGROUND_COLOR colorWithAlphaComponent:backgroundAlpha]];
 	
 	//Transparency.  Bye bye CPU cycles, I'll miss you!

@@ -85,6 +85,12 @@
 	return([controlView font]);
 }
 
+//Does this cell need the grid draw behind it?
+- (BOOL)drawGridBehindCell
+{
+	return(YES);
+}
+
 
 //Sizing and Display ---------------------------------------------------------------------------------------------------
 //

@@ -25,6 +25,8 @@
 
 #define CONTACT_TEXT_ALIGN		NSLeftTextAlignment
 
+#define BACKGROUND_ALPHA		0.5
+
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -115,7 +117,7 @@
 - (NSColor *)labelColor
 {
 	NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
-	return(labelColor ? labelColor : [NSColor whiteColor]);
+	return([labelColor colorWithAlphaComponent:BACKGROUND_ALPHA]);
 }
 
 

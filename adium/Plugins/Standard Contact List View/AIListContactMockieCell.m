@@ -17,8 +17,11 @@
 	int		row = [controlView rowForItem:listObject];
 	
 	if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
-		[[self labelColor] set];
-		[[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] fill];
+		NSColor	*labelColor = [self labelColor];
+		if(labelColor){
+			[labelColor set];
+			[[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] fill];
+		}
 	}else{
 		[super drawBackgroundWithFrame:rect];
 	}
