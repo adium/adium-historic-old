@@ -13,12 +13,14 @@
 	IBOutlet	NSTextField *textField_updateAvailable;
 	IBOutlet	NSButton	*button_updateAvailable_close;
 	IBOutlet	NSButton	*button_updateAvailable_downloadPage;
+	IBOutlet	NSButton	*checkBox_checkAutomatically;
 }
 
 + (void)showVersionCheckerWindowWithLatestBuildDate:(NSDate *)latestBuildDate checkingManually:(BOOL)checkingManually;
 - (void)showWindowWithLatestBuildDate:(NSDate *)latestBuildDate checkingManually:(BOOL)checkingManually;
 
 - (IBAction)pressedButton:(id)sender;
+- (IBAction)changePreference:(id)sender;
 - (IBAction)closeWindow:(id)sender;
 
 @end

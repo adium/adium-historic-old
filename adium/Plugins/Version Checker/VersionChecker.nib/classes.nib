@@ -13,13 +13,14 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {closeWindow = id; pressedButton = id; }; 
+            ACTIONS = {changePreference = id; closeWindow = id; pressedButton = id; }; 
             CLASS = ESVersionCheckerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_upToDate_okay" = NSButton; 
                 "button_updateAvailable_close" = NSButton; 
                 "button_updateAvailable_downloadPage" = NSButton; 
+                "checkBox_checkAutomatically" = NSButton; 
                 "tabView_hidden" = NSTabView; 
                 "textField_upToDate" = NSTextField; 
                 "textField_updateAvailable" = NSTextField; 
