@@ -61,7 +61,7 @@
 	NSColor		*offlineLabelColor;
 	
     float		alpha;
-	float		offlineOpacity;
+	BOOL		offlineImageFading;
 }
 
 @end

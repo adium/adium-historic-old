@@ -8,6 +8,8 @@
 @class AITextColorPreviewView;
 
 @interface AIListThemeWindowController : AIWindowController {
+	IBOutlet	NSTextField				*textField_themeName;
+	
     IBOutlet	NSButton				*checkBox_signedOff;
     IBOutlet	NSColorWell				*colorWell_signedOff;
     IBOutlet	NSColorWell				*colorWell_signedOffLabel;
@@ -65,6 +67,8 @@
 	IBOutlet	AITextColorPreviewView	*preview_grid;
 	IBOutlet	NSButton				*checkBox_drawGrid;
 	IBOutlet	NSButton				*checkBox_backgroundAsStatus;
+	IBOutlet	NSColorWell				*colorWell_statusText;
+	IBOutlet	NSButton				*checkBox_fadeOfflineImages;
 
 	IBOutlet	NSColorWell				*colorWell_groupText;
 	IBOutlet	NSColorWell				*colorWell_groupTextInverted;
@@ -73,10 +77,6 @@
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
 	IBOutlet	AITextColorPreviewView	*preview_group;
 	IBOutlet	AITextColorPreviewView	*preview_groupInverted;
-	
-	IBOutlet	NSTextField				*textField_themeName;
-	
-	IBOutlet	NSColorWell				*colorWell_statusText;
 	
 	NSString				*themeName;
 }
