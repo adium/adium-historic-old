@@ -17183,7 +17183,6 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/AdiumHyperlinks_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = "-seg1addr 0x10200000";
 				PRODUCT_NAME = AdiumHyperlinks;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
