@@ -26,6 +26,7 @@
 #define STRANGER_GROUP_NAME		@"__Strangers"		//The name of the hidden stranger group
 #define KEY_CONTACT_LIST 		@"ContactList"		//Contact list key
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
+#define GET_INFO_MENU_TITLE		@"Get Info"
 
 @interface AIContactController (PRIVATE)
 - (void)_handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
@@ -50,10 +51,9 @@
     groupDict = [[NSMutableDictionary alloc] init];
     abandonedContacts = [[NSMutableDictionary alloc] init];
     abandonedGroups = [[NSMutableDictionary alloc] init];
-    
 
     [owner registerEventNotification:Contact_StatusChanged displayName:@"Contact Status Changed"];
-
+    
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
 }
@@ -83,6 +83,11 @@
 }
 
 // Contact Info --------------------------------------------------------------------------------
+- (IBAction)showContactInfo:(id)sender
+{
+    [self showInfoForContact:[self selectedContact]];
+}
+
 //Show the info window for a contact
 - (void)showInfoForContact:(AIListContact *)inContact
 {
@@ -94,6 +99,44 @@
 {
     [contactInfoCategory addView:inView];
 }
+
+// Selected contact ------------------------------------------------
+@protocol _RESPONDS_TO_CONTACT //Just a temp protocol to suppress compiler warning when I call contact on the responders below
+- (AIListContact *)contact;
+@end
+//Returns the "selected"(represented) contact.
+- (AIListContact *)selectedContact
+{
+    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+
+    //Find the first responder that returns a selected contact
+    //Check the first responder
+    if([responder respondsToSelector:@selector(contact)]){
+        return([(NSResponder<_RESPONDS_TO_CONTACT> *)responder contact]);
+    }
+
+    //Search the responder chain
+    do{
+        responder = [responder nextResponder];
+        if([responder respondsToSelector:@selector(contact)]){
+            return([(NSResponder<_RESPONDS_TO_CONTACT> *)responder contact]);
+        }
+        
+    } while(responder != nil);
+
+    //Noone found, return nil
+    return(nil);
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    return([self selectedContact] != nil);
+}
+
+
+
+
+
 
 
 // Contact list generation

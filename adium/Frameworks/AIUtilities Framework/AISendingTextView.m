@@ -169,18 +169,24 @@
     }
 }
 
-/*- (void)setHandle:(AIContactHandle *)inHandle
+//Contact menu ---------------------------------------------------------------
+//Set and return the selected contact (to auto-configure the contact menu)
+- (void)setContact:(AIListContact *)inContact
 {
-    if(handle != inHandle){
-        [handle release];
-        handle = [inHandle retain];
+    if(contact != inContact){
+        [contact release];
+        contact = [inContact retain];
     }
 }
 
-- (AIContactHandle *)handle
+- (AIListContact *)contact
 {
-    return(handle);
-}*/
+    return(contact);
+}
+
+
+
+
 
 - (void)textDidChange:(NSNotification *)notification
 {

@@ -209,9 +209,8 @@
         while((handle = [enumerator nextObject])){
             [self clearUnviewedContentOfHandle:handle];
         }
-
     }
-    
+
     [self updateActiveWindowMenuItem];
 }
 

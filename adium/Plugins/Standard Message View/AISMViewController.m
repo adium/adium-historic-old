@@ -119,6 +119,13 @@
     return(messageView);
 }
 
+//Return our contact
+- (AIListContact *)contact
+{
+    return(contact);
+}
+
+
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     [messageView loadNewRow]; //Inform our view of the new row

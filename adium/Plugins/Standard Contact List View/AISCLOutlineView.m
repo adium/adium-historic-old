@@ -147,6 +147,20 @@
 }    
 
 
+//Contact menu ---------------------------------------------------------------
+//Return the selected countact (to auto-configure the contact menu)
+- (AIListContact *)contact
+{
+    int selectedRow = [self selectedRow];
+
+    if(selectedRow >= 0 && selectedRow < [self numberOfRows]){
+        return([self itemAtRow:selectedRow]);
+    }else{
+        return(nil);
+    }
+}
+
+
 //Automatic scrollbar hiding ---------------------------------------------------------------
 - (void)configureScrollbarHiding
 {

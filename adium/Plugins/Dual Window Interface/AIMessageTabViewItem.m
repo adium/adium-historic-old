@@ -79,7 +79,8 @@
 //Called when our tab is selected
 - (void)tabViewItemWasSelected
 {
-    [messageView makeTextEntryViewFirstResponder]; //Ensure our entry view is first responder
+    //Ensure our entry view is first responder
+    [messageView makeTextEntryViewFirstResponder];
 }
 
 //
