@@ -438,7 +438,6 @@ DeclareString(AppendNextMessage);
 	do{
 		range = [inString rangeOfString:@"%chatName%"];
 		if(range.location != NSNotFound){
-			NSLog(@"%i %i",range.location,range.length);
 			[inString replaceCharactersInRange:range
 									withString:[chat name]];
 			
@@ -499,7 +498,7 @@ DeclareString(AppendNextMessage);
 	//Background
 	{
 		range = [inString rangeOfString:@"==bodyBackground=="];
-		NSLog(@"found it? %i",range.location);
+
 		if(range.location != NSNotFound){
 			
 			NSString	*background = [[adium preferenceController] preferenceForKey:[self backgroundKeyForStyle:[style name]]
