@@ -65,7 +65,7 @@
                 <h1>News Archives</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
-                    <span class="tiny">Coming soon</span>
+                    <?php include('/home/groups/a/ad/adium/blogs/archives/archive.php'); ?>
                 </div>
                 <div class="boxThinBottom"></div>
             </div>
