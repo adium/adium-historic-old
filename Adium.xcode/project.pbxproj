@@ -7094,6 +7094,7 @@
 				34B70345076EDB370016E8BA,
 				3477CAD10776E55800995429,
 				34C69E6F07794B9200EB423C,
+				34C6A4CB077AB3AA00EB423C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7273,6 +7274,7 @@
 				34B70342076EDB370016E8BA,
 				34B70344076EDB370016E8BA,
 				34C69E7007794B9200EB423C,
+				34C6A4CC077AB3AD00EB423C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8320,6 +8322,36 @@
 		};
 		34C6A3BC077A8CB500EB423C = {
 			fileRef = 34C6A3BB077A8CB500EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C6A4C9077AB3A900EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIImageCellAnimationFix.h;
+			path = "Frameworks/Adium Framework/AIImageCellAnimationFix.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C6A4CA077AB3AA00EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIImageCellAnimationFix.m;
+			path = "Frameworks/Adium Framework/AIImageCellAnimationFix.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C6A4CB077AB3AA00EB423C = {
+			fileRef = 34C6A4C9077AB3A900EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C6A4CC077AB3AD00EB423C = {
+			fileRef = 34C6A4CA077AB3AA00EB423C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12099,6 +12131,8 @@
 		};
 		4B4F5B2E042D647600A8010A = {
 			children = (
+				34C6A4C9077AB3A900EB423C,
+				34C6A4CA077AB3AA00EB423C,
 				34E829820766B0FE00EFB3BC,
 				34E829830766B0FE00EFB3BC,
 				7E1E8176063A3EEC00EB00F7,
