@@ -83,7 +83,7 @@ static NSImage		*tabCloseFrontRollover = nil;
         haveLoadedImages = YES;
     }
 	
-    tabViewItem = inTabViewItem;
+    tabViewItem = [inTabViewItem retain];
     allowsInactiveTabClosing = NO;
     trackingClose = NO;
     hoveringClose = NO;
@@ -98,6 +98,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 - (void)dealloc
 {
 	[attributedLabel release];
+	[tabViewItem release];
 
     [super dealloc];
 }
