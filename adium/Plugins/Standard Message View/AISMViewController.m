@@ -284,8 +284,13 @@
 //Add rows for a content status object
 - (void)_addContentStatus:(AIContentStatus *)content
 {
+    AIFlexibleTableRow  *previousRow = [messageView rowAtIndex:0];
+    
     //Add the status change
     [messageView addRow:[self _statusRowForContent:content]];
+    
+    //Add a separator to our previous row if necessary
+    [[self _cellInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawBottom:YES];
 }
 
 
