@@ -11,6 +11,11 @@
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
+
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject;
 @end
 
 @protocol AIActionHandler <NSObject>
@@ -67,6 +72,10 @@ typedef enum {
 - (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
 
 //Actions
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
