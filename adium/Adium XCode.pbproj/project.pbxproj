@@ -6664,6 +6664,36 @@
 			shellPath = /bin/sh;
 			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
+		346433BA05E408CF00498DE6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AISendingTextView.m;
+			path = "Frameworks/Adium Framework/AISendingTextView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346433BB05E408CF00498DE6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AISendingTextView.h;
+			path = "Frameworks/Adium Framework/AISendingTextView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346433BC05E408CF00498DE6 = {
+			fileRef = 346433BA05E408CF00498DE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346433BD05E408CF00498DE6 = {
+			fileRef = 346433BB05E408CF00498DE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		346E640C05153395003B2F21 = {
 			children = (
 				346E640D051533C0003B2F21,
@@ -9785,7 +9815,6 @@
 				34BD9DB605314751000AB133,
 				34BD9DB705314751000AB133,
 				34BD9DB805314751000AB133,
-				34BD9DB905314751000AB133,
 				34BD9DBB05314751000AB133,
 				34BD9DBC05314751000AB133,
 				34BD9DBD05314751000AB133,
@@ -9805,6 +9834,7 @@
 				4B28DDAD0599FED300343093,
 				4B422C0B05ACB248005E720B,
 				4B09D5C205D5265800BC00F0,
+				346433BD05E408CF00498DE6,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9852,12 +9882,6 @@
 		};
 		34BD9DB805314751000AB133 = {
 			fileRef = F57938F4033E745F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DB905314751000AB133 = {
-			fileRef = F570A61703704F6601A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9952,7 +9976,6 @@
 				34BD9DCC05314751000AB133,
 				34BD9DCD05314751000AB133,
 				34BD9DCE05314751000AB133,
-				34BD9DCF05314751000AB133,
 				34BD9DD105314751000AB133,
 				34BD9DD205314751000AB133,
 				34BD9DD305314751000AB133,
@@ -9972,6 +9995,7 @@
 				4B28DDAE0599FED300343093,
 				4B422C0C05ACB248005E720B,
 				4B09D5C305D5265800BC00F0,
+				346433BC05E408CF00498DE6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10008,12 +10032,6 @@
 		};
 		34BD9DCE05314751000AB133 = {
 			fileRef = F57938B9033E739101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DCF05314751000AB133 = {
-			fileRef = F570A61803704F6601A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -18978,8 +18996,8 @@
 		};
 		4B4F5B2E042D647600A8010A = {
 			children = (
-				F570A61703704F6601A8010A,
-				F570A61803704F6601A8010A,
+				346433BB05E408CF00498DE6,
+				346433BA05E408CF00498DE6,
 				4B435D440528AEEA00A8010A,
 			);
 			isa = PBXGroup;
@@ -30352,24 +30370,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AITextFieldAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AITextFieldAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A61703704F6601A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AISendingTextView.h;
-			path = "Frameworks/Adium Framework/AISendingTextView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A61803704F6601A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AISendingTextView.m;
-			path = "Frameworks/Adium Framework/AISendingTextView.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
