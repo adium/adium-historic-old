@@ -458,13 +458,6 @@
 	
     BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
     
-    //Handle (Formatting)
-    if(key == nil || [key compare:@"Handle"] == 0){
-		[self setStatusObject:[self preferenceForKey:@"Handle" group:GROUP_ACCOUNT_STATUS]
-					   forKey:@"Display Name"
-					   notify:YES];
-    }
-    
     //Ignore the following keys unless we're online
     if(areOnline){
 		if(key == nil || [key compare:@"IdleSince"] == 0){
@@ -842,7 +835,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.100 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.101 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
