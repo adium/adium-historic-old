@@ -110,13 +110,15 @@
 	AIAccount		*account = [accounts objectAtIndex:row];
 
 	if([identifier isEqualToString:@"account"]){
+		NSString	*accountFormattedUID = [account formattedUID];
+		
 		if([account integerStatusObjectForKey:@"Online"]){
-			return([account displayName]);
+			return(accountFormattedUID);
 			
 		}else{
 			//Gray the names of offline accounts
 			NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
-			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:[account displayName] attributes:attributes];
+			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:accountFormattedUID attributes:attributes];
 			return([string autorelease]);
 		}
 		
@@ -143,8 +145,10 @@
 		if(accountOnline){
 			//Get the containing group (taking into account meta contacts)
 			AIListGroup	*group = [existing containingObject];
-			if([group isKindOfClass:[AIMetaContact class]]) group = [group containingObject];
-			
+			while ([group isKindOfClass:[AIMetaContact class]]){
+				group = [group containingObject];
+			}
+
 			if(group){
 				[cell selectItemWithRepresentedObject:group];			
 			}else{
