@@ -207,7 +207,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		 */
 		
 		// Need to start a new chat, associating with the GaimConversation
-		chat = [accountLookup(conv->account) chatWithContact:sourceContact];
+		chat = [accountLookup(conv->account) mainThreadChatWithContact:sourceContact];
 		
 		//Associate the GaimConversation with the AIChat
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
@@ -364,15 +364,17 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-	/*
+	
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
+		/*
 		GaimBuddy *buddy = (GaimBuddy*) node;
 		
 		contactLookupFromBuddy(buddy);
 			
 		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
+		 */
+		NSLog(@"%s",((GaimBuddy*)node) ->name);
     }
-	 */
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
