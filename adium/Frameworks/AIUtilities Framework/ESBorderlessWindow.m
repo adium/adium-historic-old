@@ -18,14 +18,6 @@
     //of the window that we're not drawing into
     [window setBackgroundColor:[NSColor clearColor]];
     
-    //Let's start with no transparency for all drawing into the window
-    [window setAlphaValue:1.0];
-    //but let's turn off opaqueness so that we can see through the parts of the window that we're not drawing into
-    [window setOpaque:NO];
-    
-    //Our content will throw shadows; the window needn't
-    [window setHasShadow:NO];
-    
     return window;
 }
 

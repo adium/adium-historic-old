@@ -14,15 +14,16 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView> {    
-    NSTrackingRectTag		trackingRectTag;	//Tracing rect for the whole outline view
-    int				oldSelection;		//Holds the selection when it's hidden
-    BOOL			editing;		//YES when the list is in edit mode... (temp)
+    NSTrackingRectTag   trackingRectTag;	//Tracing rect for the whole outline view
+    int					oldSelection;		//Holds the selection when it's hidden
+    BOOL				editing;			//YES when the list is in edit mode... (temp)
 
     BOOL			showLabels;
-    BOOL                        labelAroundContactOnly;
-    float                       labelOpacity;
-    BOOL                        outlineLabels;
-	BOOL						useGradient;
+    BOOL			labelAroundContactOnly;
+    float			labelOpacity;
+    BOOL			outlineLabels;
+	BOOL			useGradient;
+	BOOL			updateShadowsWhileDrawing;
 	
     NSFont			*font;
     NSFont			*groupFont;
@@ -30,16 +31,16 @@
     NSColor			*invertedColor;
     NSColor			*groupColor;
     NSColor			*invertedGroupColor;
-    NSColor                     *outlineGroupColor;
-    NSColor                     *labelGroupColor;
+    NSColor			*outlineGroupColor;
+    NSColor			*labelGroupColor;
     
-    float                       spacing;
+    float			spacing;
     int				lastSelectedRow;
     
-    float                       desiredWidth[3];
-    AIListObject                *hadMax[3];
+    float			desiredWidth[3];
+    AIListObject	*hadMax[3];
     
-    NSCell                      *selectedItem;
+    NSCell			*selectedItem;
 }
 
 - (void)setFont:(NSFont *)inFont;
@@ -54,6 +55,8 @@
 - (void)setGroupColor:(NSColor *)inColor;
 - (NSColor *)groupColor;
 - (NSColor *)invertedGroupColor;
+
+- (void)setUpdateShadowsWhileDrawing:(BOOL)update;
 
 - (void)setOutlineGroupColor:(NSColor *)inOutlineGroupColor;
 - (NSColor *)outlineGroupColor;

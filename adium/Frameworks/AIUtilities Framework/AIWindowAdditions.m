@@ -25,13 +25,11 @@
 
 - (BOOL)isBorderless
 {
-	NSLog(@"%i",(int)[self styleMask]);
     return([self styleMask] == NSBorderlessWindowMask);
 }
 
 - (void)compatibleInvalidateShadow
 {
-	NSLog(@"Invalidate Shadow");
     if ([NSApp isOnJaguarOrBetter])
         [self invalidateShadow];
     else {
