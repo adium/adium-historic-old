@@ -87,7 +87,7 @@
     NSImage	*image = [self image];
     BOOL 	highlighted;
 
-	[super drawInteriorWithFrame:cellFrame inView:controlView];
+//	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
     highlighted = [self isHighlighted];
     if(highlighted){

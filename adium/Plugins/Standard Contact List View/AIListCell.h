@@ -71,6 +71,7 @@
 - (int)rightPadding;
 
 //
+- (void)drawSelectionWithFrame:(NSRect)rect;
 - (NSRect)drawDisplayNameWithFrame:(NSRect)rect;
 
 //

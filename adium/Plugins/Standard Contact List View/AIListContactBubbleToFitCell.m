@@ -11,6 +11,13 @@
 
 @implementation AIListContactBubbleToFitCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	id newCell = [super copyWithZone:zone];
+	return(newCell);
+}
+
 //
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {

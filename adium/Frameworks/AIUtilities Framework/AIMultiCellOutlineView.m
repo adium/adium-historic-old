@@ -138,12 +138,18 @@
 	
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+
+		//Draw the grid
 		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
 			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
 						 colored:(!(row % 2) && ![self isRowSelected:row])
 						selected:(row == [self selectedRow])];			
 		}
-		[cell drawWithFrame:[self frameOfCellAtColumn:0 row:row] inView:self];
+		
+		//Draw the cell
+		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
+		if([[self selectedRowIndexes] containsIndex:row]) [cell _drawHighlightWithFrame:cellFrame inView:self];
+		[cell drawWithFrame:cellFrame inView:self];
 	}
 }
 

@@ -61,6 +61,8 @@
 	[fontField_group setShowFontFace:YES];
 	
 	[textField_layoutName setStringValue:layoutName];
+	
+	[popUp_contactCellStyle setAutoenablesItems:NO];
 }
 
 //Window is closing
@@ -313,15 +315,26 @@
 	
 	//Disable the style selectors when in mockie mode
 	[popUp_groupCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
-	[popUp_contactCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
-
-	//Disable contact spacing when not using bubbles
-//	[slider_contactSpacing setEnabled:(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)];
-//	[textField_contactSpacing setEnabled:(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)];
+//	[popUp_contactCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
 
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
+	
+	//Grid is not available in pillows
+	[checkBox_drawGrid setEnabled:(windowStyle != WINDOW_STYLE_PILLOWS)];
+	
+	//Contact style
+	BOOL	enableNormal = (windowStyle != WINDOW_STYLE_PILLOWS);
+	BOOL	enableBubble = (windowStyle != WINDOW_STYLE_MOCKIE);
+	[[[popUp_contactCellStyle menu] itemAtIndex:CELL_STYLE_STANDARD] setEnabled:enableNormal];
+	[[[popUp_contactCellStyle menu] itemAtIndex:CELL_STYLE_BRICK] setEnabled:enableNormal];
+	[[[popUp_contactCellStyle menu] itemAtIndex:CELL_STYLE_BUBBLE] setEnabled:enableBubble];
+	[[[popUp_contactCellStyle menu] itemAtIndex:CELL_STYLE_BUBBLE_FIT] setEnabled:enableBubble];
+		
+	//Group Style
+		
+
 }
 
 

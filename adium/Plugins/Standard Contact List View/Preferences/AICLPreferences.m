@@ -18,6 +18,7 @@
 #import "AISCLViewPlugin.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
+#import "AIListThemePreviewCell.h"
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
@@ -53,6 +54,18 @@
 	[self updateThemes];
 	
 	
+	
+	//Images
+	layoutStandard = [[NSImage imageNamed:@"style-standard" forClass:[self class]] retain];
+	layoutBorderless = [[NSImage imageNamed:@"style-borderless" forClass:[self class]] retain];
+	layoutMockie = [[NSImage imageNamed:@"style-mockie" forClass:[self class]] retain];
+	layoutPillows = [[NSImage imageNamed:@"style-pillows" forClass:[self class]] retain];
+	
+	//
+	[button_themeEdit setTitle:@"Edit"];
+	[button_layoutEdit setTitle:@"Edit"];
+	
+	
 #warning cells
 	NSCell *dataCell;
 		
@@ -68,19 +81,29 @@
 	[dataCell setDrawsGradientHighlight:YES];
 	[[tableView_layout tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
 
-	dataCell = [[[AIGradientCell alloc] init] autorelease];
+	dataCell = [[[AIImageTextCell alloc] init] autorelease];
     [dataCell setFont:[NSFont systemFontOfSize:12]];
 	[dataCell setIgnoresFocus:YES];
 	[dataCell setDrawsGradientHighlight:YES];
 	[[tableView_theme tableColumnWithIdentifier:@"name"] setDataCell:dataCell];
 	
-	dataCell = [[[AIGradientCell alloc] init] autorelease];
-    [dataCell setFont:[NSFont systemFontOfSize:12]];
+//	dataCell = [[[AIGradientCell alloc] init] autorelease];
+//    [dataCell setFont:[NSFont systemFontOfSize:12]];
+//	[dataCell setIgnoresFocus:YES];	
+//	[dataCell setDrawsGradientHighlight:YES];
+//	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
+	
+	dataCell = [[[AIListThemePreviewCell alloc] init] autorelease];
 	[dataCell setIgnoresFocus:YES];	
 	[dataCell setDrawsGradientHighlight:YES];
 	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
 	
 	
+	//
+    [tableView_layout setTarget:self];
+	[tableView_layout setDoubleAction:@selector(editLayout:)];
+    [tableView_theme setTarget:self];
+	[tableView_theme setDoubleAction:@selector(editTheme:)];
 	
 	
 	//Display
@@ -179,7 +202,14 @@
 										  withName:[NSString stringWithFormat:@"%@ Copy",currentThemeName]];
 }
 
-
+- (IBAction)editTheme:(id)sender
+{
+	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window] withName:currentLayoutName];
+}
+- (IBAction)editLayout:(id)sender
+{
+	[AIListThemeWindowController listThemeOnWindow:[[self view] window] withName:currentThemeName];
+}
 
 
 
@@ -209,6 +239,69 @@
 
 
 
+- (IBAction)deleteLayout:(id)sender
+{
+	NSDictionary	*selected = [layoutArray objectAtIndex:[tableView_layout selectedRow]];
+
+	if(selected){
+		int returnCode = NSRunAlertPanel(AILocalizedString(@"Delete Layout",nil), 
+										 AILocalizedString(@"Delete the layout \"%@\" from %@?",nil), 
+										 AILocalizedString(@"Delete",nil), 
+										 AILocalizedString(@"Cancel",nil),
+										 nil,
+										 [selected objectForKey:@"name"],
+										 [selected objectForKey:@"path"]);
+		if(returnCode == 1){
+			NSString *path = [selected objectForKey:@"path"];
+			if(path){
+				[[NSFileManager defaultManager] trashFileAtPath:path];
+				[self updateLayouts];
+			}
+		}
+	}
+}
+
+- (IBAction)deleteTheme:(id)sender
+{
+	NSDictionary	*selected = [themeArray objectAtIndex:[tableView_layout selectedRow]];
+	
+	if(selected){
+		int returnCode = NSRunAlertPanel(AILocalizedString(@"Delete Theme",nil), 
+										 AILocalizedString(@"Delete the theme \"%@\" from %@?",nil), 
+										 AILocalizedString(@"Delete",nil), 
+										 AILocalizedString(@"Cancel",nil),
+										 nil,
+										 [selected objectForKey:@"name"],
+										 [selected objectForKey:@"path"]);
+		if(returnCode == 1){
+			NSString *path = [selected objectForKey:@"path"];
+			if(path){
+				[[NSFileManager defaultManager] trashFileAtPath:path];
+				[self updateThemes];
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if(tableView == tableView_layout){
@@ -225,9 +318,7 @@
 	if(tableView == tableView_layout){
 		NSDictionary	*layoutDict = [layoutArray objectAtIndex:row];
 		
-		if([column isEqualToString:@"type"]){
-			return(@"-");
-		}else if([column isEqualToString:@"name"]){
+		if([column isEqualToString:@"name"]){
 			return([layoutDict objectForKey:@"name"]);
 		}else if([column isEqualToString:@"preview"]){
 			return(@"-");
@@ -262,6 +353,34 @@
 	}
 }
 
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	NSString	*column = [tableColumn identifier];
+
+	if(tableView == tableView_layout){
+		if([column isEqualToString:@"name"]){
+			NSImage	*image = nil;
+			switch([[[[layoutArray objectAtIndex:row] objectForKey:@"preferences"] objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]){
+				case WINDOW_STYLE_STANDARD: image = layoutStandard; break;
+				case WINDOW_STYLE_BORDERLESS: image = layoutBorderless; break;
+				case WINDOW_STYLE_MOCKIE: image = layoutMockie; break;
+				case WINDOW_STYLE_PILLOWS: image = layoutPillows; break;
+			}
+			[cell setImage:image];
+		}else{
+			[cell setImage:nil];
+		}
+	}else if(tableView == tableView_theme){
+		if([column isEqualToString:@"preview"]){
+			[cell setThemeDict:[[themeArray objectAtIndex:row] objectForKey:@"preferences"]];
+		}		
+	}
+	
+}
+
+
+
+
 
 
 
@@ -269,6 +388,10 @@
 
 
 //Sets ----------------------------
+int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context){
+	return([[objectA objectForKey:@"name"] caseInsensitiveCompare:[objectB objectForKey:@"name"]]);
+}
+
 - (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder
 {
 	NSMutableArray	*setArray = [NSMutableArray array];
@@ -279,7 +402,7 @@
         NSEnumerator 	*fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
         NSString		*filePath;
 		
-        //Find all the message styles
+        //Find all the sets
         while((filePath = [fileEnumerator nextObject])){
             if([[filePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame){					
 				NSString		*themePath = [resourcePath stringByAppendingPathComponent:filePath];
@@ -296,8 +419,12 @@
 		}
 	}
 	
-	return(setArray);
+	return([setArray sortedArrayUsingFunction:availableSetSort context:nil]);
 }
+
+
+
+
 
 - (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup
 {

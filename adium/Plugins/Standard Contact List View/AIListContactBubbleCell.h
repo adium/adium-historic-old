@@ -9,7 +9,7 @@
 #import "AIListContactCell.h"
 
 @interface AIListContactBubbleCell : AIListContactCell {
-
+	BOOL drewSelection;
 }
 
 - (NSRect)bubbleRectForFrame:(NSRect)rect;

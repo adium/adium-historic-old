@@ -13,6 +13,13 @@
 
 @implementation AIListGroupMockieCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	id newCell = [super copyWithZone:zone];
+	return(newCell);
+}
+
 //Give our cell some spacing so groups appear as separate blocks, and disallow any bottom spacing
 //- (int)topSpacing{
 //	return([super topSpacing] + MOCKIE_GROUP_TOP_SPACING);

@@ -33,12 +33,23 @@
 	
 	IBOutlet	NSButton		*button_layoutDelete;
 	IBOutlet	NSButton		*button_themeDelete;
+	IBOutlet	NSButton		*button_layoutEdit;
+	IBOutlet	NSButton		*button_themeEdit;
 	
 	NSArray		*layoutArray;
 	NSArray		*themeArray;
+
+	NSImage		*layoutStandard;
+	NSImage		*layoutBorderless;
+	NSImage		*layoutMockie;
+	NSImage		*layoutPillows;
 }
 
 - (IBAction)spawnLayout:(id)sender;
 - (IBAction)spawnTheme:(id)sender;
+- (IBAction)deleteLayout:(id)sender;
+- (IBAction)deleteTheme:(id)sender;
+- (IBAction)editTheme:(id)sender;
+- (IBAction)editLayout:(id)sender;
 
 @end
