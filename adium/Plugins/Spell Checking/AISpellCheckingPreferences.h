@@ -14,17 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium;
-
-@interface AISpellCheckingPreferences : NSObject {
-    AIAdium			*owner;
-
-    IBOutlet	NSView			*view_prefView;
+@interface AISpellCheckingPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_spellChecking;
 }
-
-+ (AISpellCheckingPreferences *)spellCheckingPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end
