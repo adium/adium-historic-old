@@ -3,7 +3,7 @@
  * File:        AWEzv.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzv.m,v 1.2 2004/05/16 16:07:01 proton Exp $
+ * CVS tag:     $Id: AWEzv.m,v 1.3 2004/06/18 15:20:41 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -98,9 +98,11 @@
 - (void) setContactImage:(NSImage *)contactImage {
     NSBitmapImageRep    *img; 
     
-    if (contactImage == nil)
+    if (contactImage == nil) {
+	[manager setImageData: nil];
 	return;
-    
+    }
+        
     img = [NSBitmapImageRep imageRepWithData: [contactImage TIFFRepresentation]];
     [manager setImageData: [img representationUsingType:NSJPEGFileType properties:[NSDictionary dictionary]]];
 }
