@@ -459,10 +459,6 @@
 	SEL updateSelector = nil;
 	
 	switch([event intValue]){
-		case GAIM_BUDDY_STATUS_MESSAGE: {
-			updateSelector = @selector(updateStatusMessage:);
-			break;
-		}
 		case GAIM_BUDDY_INFO_UPDATED: {
 			updateSelector = @selector(updateInfo:);
 			break;

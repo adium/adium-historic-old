@@ -142,23 +142,184 @@
 }
 
 #pragma mark Status Messages
-- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
+
+/*
+ * @brief Status name to use for a Gaim buddy
+ */
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
 {
-	SEL updateSelector = nil;
+	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
+	struct yahoo_data   *od;
+	YahooFriend			*f;
+	NSString			*statusName = nil;
 	
-	switch ([event intValue]){
-		case GAIM_BUDDY_STATUS_MESSAGE: {
-			updateSelector = @selector(updateStatusMessage:);
-			break;
+	if ((gaim_account_is_connected(account)) &&
+		(od = account->gc->proto_data) &&
+		(f = g_hash_table_lookup(od->friends, normalized))) {
+
+		switch(f->status){
+			case YAHOO_STATUS_BRB:
+				statusName = STATUS_NAME_BRB;
+				break;
+				
+			case YAHOO_STATUS_BUSY:
+				statusName = STATUS_NAME_BUSY;
+				break;
+				
+			case YAHOO_STATUS_NOTATHOME:
+				statusName = STATUS_NAME_NOT_AT_HOME;
+				break;
+				
+			case YAHOO_STATUS_NOTATDESK:
+				statusName = STATUS_NAME_NOT_AT_DESK;
+				break;
+				
+			case YAHOO_STATUS_NOTINOFFICE:
+				statusName = STATUS_NAME_NOT_IN_OFFICE;
+				break;
+				
+			case YAHOO_STATUS_ONPHONE:
+				statusName = STATUS_NAME_PHONE;
+				break;
+				
+			case YAHOO_STATUS_ONVACATION:
+				statusName = STATUS_NAME_VACATION;
+				break;
+				
+			case YAHOO_STATUS_OUTTOLUNCH:
+				statusName = STATUS_NAME_LUNCH;
+				break;
+				
+			case YAHOO_STATUS_STEPPEDOUT:
+				statusName = STATUS_NAME_STEPPED_OUT;
+				break;
+				
+			case YAHOO_STATUS_INVISIBLE:
+				statusName = STATUS_NAME_INVISIBLE;
+				break;
 		}
 	}
 	
-	if (updateSelector){
-		[self performSelector:updateSelector
-				   withObject:theContact];
-	}
+	g_free(normalized);
+
+	return statusName;
+}
+
+/*
+ * @brief Status message for a contact
+ */
+- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
+{
+	NSString			*statusMessageString = nil;
+	NSAttributedString	*statusMessage = nil;
+	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
+	struct yahoo_data   *od;
+	YahooFriend			*f;
 	
-	[super updateContact:theContact forEvent:event];
+	if ((gaim_account_is_connected(account)) &&
+		(od = account->gc->proto_data) &&
+		(f = g_hash_table_lookup(od->friends, normalized))) {
+		
+		if(f->msg != NULL){
+			statusMessageString = [NSString stringWithUTF8String:f->msg];
+			
+		}else if(f->status != YAHOO_STATUS_AVAILABLE){
+			switch(f->status){
+				case YAHOO_STATUS_BRB:
+					statusMessageString = STATUS_DESCRIPTION_BRB;
+					break;
+					
+				case YAHOO_STATUS_BUSY:
+					statusMessageString = STATUS_DESCRIPTION_BUSY;
+					break;
+					
+				case YAHOO_STATUS_NOTATHOME:
+					statusMessageString = STATUS_DESCRIPTION_NOT_AT_HOME;
+					break;
+					
+				case YAHOO_STATUS_NOTATDESK:
+					statusMessageString = STATUS_DESCRIPTION_NOT_AT_DESK;
+					break;
+					
+				case YAHOO_STATUS_NOTINOFFICE:
+					statusMessageString = STATUS_DESCRIPTION_NOT_IN_OFFICE;
+					break;
+					
+				case YAHOO_STATUS_ONPHONE:
+					statusMessageString = STATUS_DESCRIPTION_PHONE;
+					break;
+					
+				case YAHOO_STATUS_ONVACATION:
+					statusMessageString = STATUS_DESCRIPTION_VACATION;
+					break;
+					
+				case YAHOO_STATUS_OUTTOLUNCH:
+					statusMessageString = STATUS_DESCRIPTION_LUNCH;
+					break;
+					
+				case YAHOO_STATUS_STEPPEDOUT:
+					statusMessageString = STATUS_DESCRIPTION_STEPPED_OUT;
+					break;
+					
+				case YAHOO_STATUS_INVISIBLE:
+					statusMessageString = STATUS_DESCRIPTION_INVISIBLE;
+					//				statusType = AIInvisibleStatusType; /* Invisible has a special status type */
+					break;
+			}
+		}
+		
+		if(statusMessageString){
+			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
+															 attributes:nil] autorelease];
+		}
+	}
+
+	g_free(normalized);
+	
+	return statusMessage;
+}
+
+/*
+ * @brief Update the status message and away state of the contact
+ */
+- (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
+{
+	char				*normalized = g_strdup(gaim_normalize(account, [[theContact UID] UTF8String]));
+	struct yahoo_data   *od;
+	YahooFriend			*f;
+
+	/* Grab the idle time while we have a chance */
+	if ((gaim_account_is_connected(account)) &&
+		(od = account->gc->proto_data) &&
+		(f = g_hash_table_lookup(od->friends, normalized))) {
+
+		if (f->status == YAHOO_STATUS_IDLE){
+#warning Idle time may not work.
+			//Now idle
+			int		idle = f->idle;
+			NSDate	*idleSince;
+			
+			if(idle != -1){
+				idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
+			}else{
+				idleSince = [NSDate date];
+			}
+			
+			[theContact setStatusObject:idleSince
+								 forKey:@"IdleSince"
+								 notify:NotifyLater];
+			
+		}else if(f->status == YAHOO_STATUS_INVISIBLE){
+			statusTypeNumber = [NSNumber numberWithInt:AIInvisibleStatusType]; /* Invisible has a special status type */
+		}
+	}
+
+	g_free(normalized);
+	
+	[super updateStatusForContact:theContact
+					 toStatusType:statusTypeNumber
+					   statusName:statusName
+					statusMessage:statusMessage];
 }
 
 - (void)updateStatusMessage:(AIListContact *)theContact

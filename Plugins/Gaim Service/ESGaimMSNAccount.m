@@ -278,25 +278,6 @@
 }
 
 #pragma mark Status messages
-- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
-{
-	SEL updateSelector = nil;
-	
-	switch ([event intValue]){
-		case GAIM_BUDDY_STATUS_MESSAGE: {
-			updateSelector = @selector(updateStatusMessage:);
-			break;
-		}
-	}
-	
-	if (updateSelector){
-		[self performSelector:updateSelector
-				   withObject:theContact];
-	}
-	
-	[super updateContact:theContact forEvent:event];
-}
-
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
 	NSAttributedString  *statusMessage = nil;
