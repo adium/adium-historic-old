@@ -23,13 +23,14 @@
 #define	KEY_DOCK_SHOW_CONTENT			@"Show content overlays"
 #define	KEY_DOCK_OVERLAY_POSITION		@"Overlay Position"
 
-@class AIStatusOverlayPreferences, AIIconState;
-@protocol AIListObjectObserver, AIChatObserver;
+#define DOCK_OVERLAY_ALERT_IDENTIFIER		@"DockOverlay"
 
-@interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver, AIChatObserver> {
-    NSMutableArray				*unviewedObjectsArray;
+@class AIIconState;
+@protocol AIListObjectObserver, AIChatObserver, AIActionHandler;
+
+@interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver, AIChatObserver, AIActionHandler> {
+    NSMutableArray				*overlayObjectsArray;
     AIIconState					*overlayState;
-    AIStatusOverlayPreferences	*preferences;
 
     NSColor	*signedOffColor;
     NSColor	*signedOnColor;
