@@ -2361,6 +2361,36 @@
 			settings = {
 			};
 		};
+		34564575069F366500F728BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESOutlineViewAdditions.m;
+			path = "Frameworks/AIUtilities Framework/ESOutlineViewAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564576069F366500F728BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESOutlineViewAdditions.h;
+			path = "Frameworks/AIUtilities Framework/ESOutlineViewAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564577069F366500F728BC = {
+			fileRef = 34564575069F366500F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34564578069F366500F728BC = {
+			fileRef = 34564576069F366500F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		345DFF4A05564DB200CEE7B3 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -6083,6 +6113,7 @@
 				34D13A9406744689001F9B98,
 				3495ACE4068C738700EB5380,
 				4BA4F8DB069C84A300C496EA,
+				34564578069F366500F728BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6541,6 +6572,7 @@
 				34D13A9506744689001F9B98,
 				3495ACE5068C738700EB5380,
 				4BA4F8DC069C84A300C496EA,
+				34564577069F366500F728BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -24308,6 +24340,8 @@
 				4B8EFC0503E18F2D00A8010A,
 				9EAE8FAB0520371600415B25,
 				9EAE8FAC0520371600415B25,
+				34564576069F366500F728BC,
+				34564575069F366500F728BC,
 				F579394C033E74E401A8010A,
 				F579394D033E74E401A8010A,
 				4BEF84CD03BE41C700A8010A,
