@@ -30,7 +30,7 @@ static NSMenu       *bookmarkSets;
 - (void)installPlugin
 {
     NSURL   *appURL = nil; // file URL to the web browser application path
-    importerArray = [[[NSMutableArray alloc] init] autorelease];
+    importerArray = [[NSMutableArray alloc] init];
     
     // We ask Launch services to tell us the default handler for the text/html MIME type.
     // That'd better be the default web brower on the system - if it's not, the user has bigger problems
@@ -41,6 +41,9 @@ static NSMenu       *bookmarkSets;
         // test that the substring exists somewhere in the path then use that importer
         // Ideally, these should be ordered with the most statistically likely on top. (no sense in doing more work)
         // This is my best guess for that order.
+		
+		BOOL	installedImporterClass = YES;
+		
         if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
             [self installImporterClass:[SHSafariBookmarksImporter class]];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Camino"].location){
@@ -53,45 +56,49 @@ static NSMenu       *bookmarkSets;
             [self installImporterClass:[SHMSIEBookmarksImporter class]];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"OmniWeb"].location){
             [self installImporterClass:[SHOmniWebBookmarksImporter class]];
-        }
+        }else{
+			installedImporterClass = NO;
+		}
         CFRelease(appURL);
-    }
-    
-    // observe for the Adium_PluginsDidFinishLoading notification
-    // this lets us delay the thread until after our controllers have fully init'd.
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(_forkBookmarkThread:)
-                                       name:Adium_PluginsDidFinishLoading
-                                     object:nil];
-
-    // We delay the thread build, but attach our menus on plugin init.
-    // So we need to have something to attach -- or else we'll have problems
-    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-                                                       target:self
-                                                       action:@selector(dummyTarget:)
-                                                keyEquivalent:@""] autorelease];
-    [bookmarkRootMenuItem setRepresentedObject:self];
-    
-    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-                                                                 target:self
-                                                                 action:@selector(dummyTarget:)
-                                                          keyEquivalent:@""] autorelease];
-    [bookmarkRootContextualMenuItem setRepresentedObject:self];
-    
-    // init our lock, to make sure the configureMenus: method/thread isn't entered twice
-    bookmarksLock = [[NSLock alloc] init];
-    
-    // pop those menus in the menu.
-    [[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
-    [[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
+		
+		if (installedImporterClass){
+			// observe for the Adium_PluginsDidFinishLoading notification
+			// this lets us delay the thread until after our controllers have fully init'd.
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(_forkBookmarkThread:)
+											   name:Adium_PluginsDidFinishLoading
+											 object:nil];
+			
+			// We delay the thread build, but attach our menus on plugin init.
+			// So we need to have something to attach -- or else we'll have problems
+			bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+															   target:self
+															   action:@selector(dummyTarget:)
+														keyEquivalent:@""] autorelease];
+			[bookmarkRootMenuItem setRepresentedObject:self];
+			
+			bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+																		 target:self
+																		 action:@selector(dummyTarget:)
+																  keyEquivalent:@""] autorelease];
+			[bookmarkRootContextualMenuItem setRepresentedObject:self];
+			
+			// init our lock, to make sure the configureMenus: method/thread isn't entered twice
+			bookmarksLock = [[NSLock alloc] init];
+			
+			// pop those menus in the menu.
+			[[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
+			[[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
+		}
+	}
 }
 
 - (void)uninstallPlugin
 {
     // remove our observer for Adium_PluginsDidFinishLoading
-    [[adium notificationCenter] removeObserver:self
-                                          name:Adium_PluginsDidFinishLoading
-                                        object:nil];
+    [[adium notificationCenter] removeObserver:self];
+	
+	[importerArray release]; importerArray = nil;
 }
 
 - (IBAction)dummyTarget:(id)sender
@@ -158,7 +165,7 @@ static NSMenu       *bookmarkSets;
     }
     
     enumerator = [activeImporters objectEnumerator];
-    // iterate through each importer, and build a menu if it's bookmark file exists
+    // iterate through each importer, and build a menu if its bookmark file exists
     while(importer = [enumerator nextObject]){
         if(!singularMenu){
             // make a new menu item for the browser list submenu, and attach it.
@@ -189,13 +196,13 @@ static NSMenu       *bookmarkSets;
 - (NSMenu *)buildBookmarkMenuFor:(NSMenuItem *)menuItem
 {
     // fetch the importer class from the menu item and call its parsing method
-    NSObject <SHBookmarkImporter> *importer = [menuItem representedObject];
-    return [[importer parseBookmarksForOwner:self] retain];
+    NSObject<SHBookmarkImporter> *importer = [menuItem representedObject];
+    return [importer parseBookmarksForOwner:self];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(id <NSMenuItem>)sender
 {
-    if([[(NSMenuItem *)menuItem representedObject] isKindOfClass:[SHMarkedHyperlink class]])
+    if([[(NSMenuItem *)sender representedObject] isKindOfClass:[SHMarkedHyperlink class]])
         return YES;
     // here's how the basic menu update process works:
     //      1. the menuItem being validated must be the main "Bookmarks" menu item, else stop.
@@ -210,29 +217,23 @@ static NSMenu       *bookmarkSets;
     // we check to see if it's the analogous contextual menu item, and repeat, adjusting the menu copying portion appropriately.
     
     // The insane control flow here is a quick attempt at reducing the number of compares, or at lest their overall complexity
- 
-    NSMenuItem              *subMenuItem;
-    id<SHBookmarkImporter>   importer;
-    BOOL                     toBeReplaced = NO,replaced = NO,fromMain = NO;
-       
-    if([(NSMenuItem *)menuItem isEqualTo:bookmarkRootMenuItem]){
-        fromMain = YES;
-        toBeReplaced = YES;
-    }else if([[menuItem title] isEqualToString:[bookmarkRootContextualMenuItem title]]){
-        fromMain = NO;
-        toBeReplaced = YES;
-    }
-    
-    if(toBeReplaced){
-        if([[menuItem representedObject] isNotEqualTo:self]){
-            importer = [menuItem representedObject];
+
+	BOOL					enabled = YES;
+	
+	if ((sender == bookmarkRootMenuItem) || (sender == bookmarkRootContextualMenuItem)){
+		NSMenuItem				*subMenuItem;
+		id<SHBookmarkImporter>  importer;
+		BOOL					replaced = NO;
+		
+        if([[sender representedObject] isNotEqualTo:self]){
+            importer = [sender representedObject];
             if([importer bookmarksUpdated]){
-                [[menuItem submenu] removeAllItems];
-                [menuItem setSubmenu:[self buildBookmarkMenuFor:menuItem]];
+                [[sender submenu] removeAllItems];
+                [sender setSubmenu:[self buildBookmarkMenuFor:sender]];
                 replaced = YES;
             }
         }else{
-            NSEnumerator    *enumerator = [[[menuItem submenu] itemArray] objectEnumerator];
+            NSEnumerator    *enumerator = [[[sender submenu] itemArray] objectEnumerator];
             while(subMenuItem = [enumerator nextObject]){
                 if([[subMenuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
                     importer = [subMenuItem representedObject];
@@ -244,22 +245,23 @@ static NSMenu       *bookmarkSets;
                 }
             }
         }
-    }
-    if(replaced){
-        if(fromMain){
-            [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
-        }else{
-            [bookmarkRootMenuItem setSubmenu:[[[bookmarkRootContextualMenuItem submenu] copy] autorelease]];
-        }
-    }
-
-    // Enable or disable the menu based upon the existance of an editable NSTextView in the first responder.
-    NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    if(responder && [responder isKindOfClass:[NSTextView class]]){
-        return [(NSTextView *)responder isEditable];
-    }else{
-        return NO; //Disable the menu item if a text field is not key
-    }
+		
+		//If we made a replacement of the submenu, update the other submenu (contextual or menubar) so we don't have to
+		//perform the more expensive rebuilding operation next time
+		if(replaced){
+			if((sender == bookmarkRootMenuItem)){
+				[bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
+			}else{
+				[bookmarkRootMenuItem setSubmenu:[[[bookmarkRootContextualMenuItem submenu] copy] autorelease]];
+			}
+		}
+		
+		// Enable or disable the menu based upon the existance of an editable NSTextView in the first responder.
+		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+		enabled = responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable];
+	}
+	
+	return enabled;
 }
 
 // insert the link into the textView
