@@ -40,8 +40,7 @@
 - (void)viewDidLoad
 {
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 	
 	//Observe for installation of new sound sets
 	[[adium notificationCenter] addObserver:self
@@ -55,6 +54,7 @@
 - (void)viewWillClose
 {
     [AIEventSoundCustom closeEventSoundCustomPanel];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[adium notificationCenter] removeObserver:self];
 }
 
@@ -65,7 +65,7 @@
 		//Build the soundset menu
 		[popUp_soundSet setMenu:[self _soundSetMenu]];
 		
-		[self preferencesChanged:nil];
+//		[self preferencesChanged:nil];
 	}
 }
 
@@ -95,23 +95,20 @@
 }
 
 //Called when the preferences change, update our preference display
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){
-        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-        //If the 'Soundset' changed
-        if(notification == nil || ([key isEqualToString:KEY_EVENT_SOUND_SET])){
-            NSString		*soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
-
-            //Update the soundset popUp
-            if(soundSetPath && [soundSetPath length] != 0){
-                [popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];	
-            }else{
-                [popUp_soundSet selectItem:[popUp_soundSet lastItem]];
-            }
-        }
-    }
+	//If the 'Soundset' changed
+	if(!key || ([key isEqualToString:KEY_EVENT_SOUND_SET])){
+		NSString		*soundSetPath = [prefDict objectForKey:KEY_EVENT_SOUND_SET];
+		
+		//Update the soundset popUp
+		if(soundSetPath && [soundSetPath length] != 0){
+			[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];	
+		}else{
+			[popUp_soundSet selectItem:[popUp_soundSet lastItem]];
+		}
+	}
 }
 
 //Builds and returns a sound set menu
