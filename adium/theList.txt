@@ -233,6 +233,7 @@ Features & Changes:
 = Create new account, tab from username->pass->account list.  Next tab should go back to username
 = Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
 = Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
+= Make the "Custom Tab Status Coloring" preferences work as intended (if disabled, the contact list labels colors are used for tab text colors).
 
 = [DONE] Account auto-connect:
 	Remove the 'auto-connect on launch' feature, and instead restore the accounts which were
