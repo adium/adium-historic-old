@@ -27,7 +27,8 @@
     statusDictionary = (inDictionary ? [inDictionary mutableCopy] : [[NSMutableDictionary alloc] init]);
     contentObjectArray = [[NSMutableArray alloc] init];
     participatingListObjects = [[NSMutableArray alloc] init];
-    
+    dateOpened = [[NSDate date] retain];
+	
     return(self);
 }
 
@@ -57,6 +58,18 @@
 	}
 }
 
+//Date Opened
+#pragma mark Date Opened
+- (NSDate *)dateOpened
+{
+	return(dateOpened);
+}
+
+- (void)setDateOpened:(NSDate *)inDate
+{
+	[dateOpened release]; 
+	dateOpened = [inDate retain];
+}
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
