@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+                                              \---------------------------------------------------------------------------------------------------------/
+                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
+                                              | or (at your option) any later version.
+                                              |
+                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+                                              | Public License for more details.
+                                              |
+                                              | You should have received a copy of the GNU General Public License along with this program; if not,
+                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+                                              \------------------------------------------------------------------------------------------------------ */
 
 #import "AIEnterAwayWindowController.h"
 #import "AIAwayMessagesPlugin.h"
@@ -69,8 +69,22 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     //Set the away
     [[owner accountController] setProperty:newAway forKey:@"AwayMessage" account:nil];
 
-    //Close our window
-    [self closeWindow:nil];
+    //Save the away if requested
+    if ([button_save state] == NSOnState)
+    {
+        NSMutableArray * tempArray;
+        //Load the saved away messages
+        tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+
+        //Add the away
+        [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", [textView_title string], @"Title", nil]];
+
+        //Save the away message array
+        [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
+    }
+
+//Close our window
+[self closeWindow:nil];
 }
 
 
@@ -113,6 +127,8 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         [textView_awayMessage setString:DEFAULT_AWAY_MESSAGE];
     }
 
+    [textView_title setString:[textView_awayMessage string]];
+    
     //Select the away text
     [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
 
@@ -123,6 +139,12 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
     [textView_awayMessage setSendOnReturn:NO]; //Pref for these later :)
     [textView_awayMessage setSendOnEnter:YES]; //
+    [textView_awayMessage setDelegate:self];
+    
+    [textView_title setDelegate:self];
+    edited_title = NO;
+
+    [[self window] makeFirstResponder:textView_awayMessage];
 }
 
 //Close the contact list window
@@ -138,7 +160,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
     //Release the shared instance
     [sharedInstance autorelease]; sharedInstance = nil;
-    
+
     return(YES);
 }
 
@@ -146,5 +168,20 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 {
     return(NO);
 }
+
+//User is editing an away message
+- (void)textDidChange:(NSNotification *)notification
+{
+    if ([notification object] == textView_title)
+    {
+        edited_title = YES;
+        [button_save setState:YES];
+    }
+    else if ( ([notification object] == textView_awayMessage) && !edited_title) //only do this if the user hasn't edited the title manually
+    {
+        [textView_title setString:[textView_awayMessage string]];
+    }
+}
+
 
 @end

@@ -12,7 +12,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
-                "outlineView_aways" = AIVariableRowHeightOutlineView; 
+                "outlineView_aways" = AIAlternatingRowOutlineView; 
                 "scrollView_awayList" = AIAutoScrollView; 
                 "scrollView_awayText" = AIAutoScrollView; 
                 "textView_message" = NSTextView; 

@@ -541,8 +541,8 @@
         NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,nil]];
         if (type && [type isEqualToString:NSRTFPboardType]) { //got RTF data
             AIMessageTabViewItem * theTabViewItem = (AIMessageTabViewItem *)[tabCell tabViewItem];
- //           [[theTabViewItem messageViewController] setTextEntryViewTo:[NSAttributedString stringWithData:[pboard dataForType:NSRTFPboardType]]];
-            [[theTabViewItem messageViewController] appendToTextEntryView:[NSAttributedString stringWithData:[pboard dataForType:NSRTFPboardType]]];
+ //           [[theTabViewItem messageViewController] setTextEntryViewTo:[NSAttributedString stringWithData:[pboard dataForType:NSRTFPboardType]]];- (void)pasteAsRichText:(id)pboard
+            [[theTabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pboard dataForType:NSRTFPboardType]]];
             return YES;
         }
 

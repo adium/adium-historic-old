@@ -55,8 +55,8 @@
 - (AIAccount *)account;
 - (void)setDelegate:(id)inDelegate;
 - (void)setChat:(AIChat *)inChat;
-- (void)setTextEntryViewTo:(NSAttributedString *)inString;
-- (void)appendToTextEntryView:(NSAttributedString *)inString;
+- (void)addToTextEntryView:(NSAttributedString *)inString;
+
 
 @end
 

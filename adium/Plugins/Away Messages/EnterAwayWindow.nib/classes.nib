@@ -5,8 +5,11 @@
             CLASS = AIEnterAwayWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_save" = NSButton; 
                 "button_setAwayMessage" = NSButton; 
+                "scrollView_awayMessageContainer" = NSScrollView; 
                 "textView_awayMessage" = AISendingTextView; 
+                "textView_title" = NSTextView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

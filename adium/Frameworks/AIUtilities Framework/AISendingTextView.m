@@ -106,14 +106,23 @@
 }
 
 //Catch new lines as they're inserted
-- (void)insertText:(NSString *)aString
+- (void)insertText:(id)aString
 {
+    NSString * theString;
+
+    if ([aString isKindOfClass:[NSString class]])
+        theString = aString;
+    else if ([aString isKindOfClass:[NSAttributedString class]])
+        theString = [aString string];
+
+    if (theString)
+    {
     BOOL insertText = YES;
-
+    
     //working...
-    [[owner contentController] stringAdded:aString toTextEntryView:self];
+    [[owner contentController] stringAdded:theString toTextEntryView:self];
 
-    if([aString length] && [aString characterAtIndex:0] == 10){
+    if([theString length] && [theString characterAtIndex:0] == 10){
         NSParameterAssert([returnArray count] != 0);
 
         if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
@@ -127,6 +136,7 @@
     
     if(insertText){
         [super insertText:aString];
+    }
     }
 }
 

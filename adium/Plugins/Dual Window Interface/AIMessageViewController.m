@@ -216,37 +216,11 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
 }
 
-#warning Need to resize our input view somehow in setTextEntryViewTo and appendToTextEntryView.  The below (in setTextEntryViewTo) seems reasonable but doesn't work.
-
-//Set the message entry text view and force a textDidChange: notification
-- (void)setTextEntryViewTo:(NSAttributedString *)inString
-{
-    NSRange oldRange = NSMakeRange(0,([[textView_outgoing textStorage] length]));
-    int changeInLength = [ inString length ] - oldRange.length;
-
-    /* NSTextView
-    NSTextStorage */
-    [textView_outgoing setAttributedString:inString];
-
-    //NSLog(@"calling edit with range location %i length %i and changeinLength %i",[[textView_outgoing textStorage] editedRange].location,[[textView_outgoing textStorage] editedRange].length,[[textView_outgoing textStorage] changeInLength]);
-
-    //  [[textView_outgoing textStorage] edited:NSTextStorageEditedCharacters range:oldRange changeInLength:changeInLength];
-    //	[[textView_outgoing layoutManager] textContainerChangedGeometry:[textView_outgoing textContainer]];
-    //	[self sizeAndArrangeSubviews];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
-    
- //   [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidEndEditingNotification object:textView_outgoing];
-
-    
-}
-
-//Note: this routine is currently used for drag and drop onto tabs.  An appendAttributedString method might reasonably be added to the AISendingTextView, though it seems to be unnecessary.  setTextEntryViewTo: exhibits the same resizing problems.
- //Append to the message entry text view and force a textDidChange: notification
- - (void)appendToTextEntryView:(NSAttributedString *)inString
+//Add to the message entry text view (at the insertion point, replacing the selection is present) and force a textDidChange: notification
+ - (void)addToTextEntryView:(NSAttributedString *)inString
  {
-     [[textView_outgoing textStorage] appendAttributedString:inString];
-     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+    [textView_outgoing insertText:inString];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
  }
  
 

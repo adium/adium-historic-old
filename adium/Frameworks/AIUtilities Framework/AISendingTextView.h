@@ -37,7 +37,7 @@
 - (void)setSendOnEnter:(BOOL)inBool;
 - (void)setTarget:(id)inTarget action:(SEL)inSelector;
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
-- (void)insertText:(NSString *)aString;
+- (void)insertText:(id)aString;
 - (void)interpretKeyEvents:(NSArray *)eventArray;
 - (void)setAvailableForSending:(BOOL)inBool;
 - (BOOL)availableForSending;
