@@ -90,11 +90,90 @@
 	maxImageWidth = inWidth;
 }
 
+- (NSSize)cellSizeForBounds:(NSRect)cellFrame
+{
+	NSString	*title = [self objectValue];
+    NSImage		*image = [self image];
+	NSSize		cellSize = NSMakeSize(0,0);
+	
+	if(image){
+		NSSize	destSize = [image size];
+
+		//Center image vertically, or scale as needed
+		if (destSize.height > cellFrame.size.height){
+			float proportionChange = cellFrame.size.height / destSize.height;
+			destSize.height = cellFrame.size.height;
+			destSize.width = destSize.width * proportionChange;
+		}
+		
+		if (destSize.width > maxImageWidth){
+			float proportionChange = maxImageWidth / destSize.width;
+			destSize.width = maxImageWidth;
+			destSize.height = destSize.height * proportionChange;
+		}
+
+		cellSize.width += destSize.width + 5;
+		cellSize.height = destSize.height;
+	}
+	
+	if(title != nil){
+		NSDictionary	*attributes;
+		NSSize			titleSize;
+
+		cellSize.width += IMAGE_TEXT_PADDING*2;
+		
+		//Truncating paragraph style
+		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																	 lineBreakMode:NSLineBreakByTruncatingTail];
+		
+        //
+        if(font){
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				font, NSFontAttributeName,
+				nil];
+        }else{
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				nil];
+        }
+		
+		titleSize = [title sizeWithAttributes:attributes];
+		
+		if(subString){
+			NSSize			subStringSize;
+
+			attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
+													 forKey:NSFontAttributeName];
+            subStringSize = [subString sizeWithAttributes:attributes];
+			
+			//Use the wider of the two strings as the required width
+			if(subStringSize.width > titleSize.width){
+				cellSize.width += subStringSize.width;
+			}else{
+				cellSize.width += titleSize.width;
+			}
+			
+			if(cellSize.height < (subStringSize.height + titleSize.height)){
+				cellSize.height = (subStringSize.height + titleSize.height);
+			}
+		}else{
+			//No substring
+			cellSize.width += titleSize.width;
+			if(cellSize.height < titleSize.height){
+				cellSize.height = titleSize.height;
+			}
+		}
+	}
+	
+	return(cellSize);
+}
+
 //Draw
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSString	*title = [self objectValue];
-    NSImage	*image = [self image];
+    NSImage		*image = [self image];
     BOOL 	highlighted;
 
 //	[super drawInteriorWithFrame:cellFrame inView:controlView];
@@ -113,7 +192,6 @@
         //Adjust the rects
         destPoint.y += 1;
         destPoint.x += 2;
-
 
         //Center image vertically, or scale as needed
 		if (destSize.height > cellFrame.size.height){
