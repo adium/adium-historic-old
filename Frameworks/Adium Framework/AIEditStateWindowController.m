@@ -220,6 +220,10 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+	//Stop tracking with the controllerDict
+	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[target hash]];
+	[controllerDict removeObjectForKey:targetHash];
+	
     [sheet orderOut:nil];
 }
 
