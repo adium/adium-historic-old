@@ -13,7 +13,7 @@
 
 #define SHOW_USER_ICON			YES
 #define USER_ICON_ON_LEFT		YES
-#define USER_ICON_SIZE			20
+#define USER_ICON_SIZE			28
 #define VERTICAL_ICON_PADDING	1
 #define ICON_LEFT_PADDING 		4
 #define ICON_RIGHT_PADDING 		1
@@ -21,6 +21,10 @@
 #define SHOW_STATUS_ICON		YES
 #define STATUS_ICON_ON_LEFT		NO
 #define CONTACT_FONT 			[NSFont systemFontOfSize:11]
+
+#define SHOW_EXTENDED_STATUS	YES
+#define EXTENDED_STATUS_FONT	[NSFont systemFontOfSize:9]
+#define EXTENDED_STATUS_COLOR	[NSColor grayColor]
 
 #define badgewidth 				30
 
@@ -85,6 +89,26 @@ int		textHeight = [attrString heightWithWidth:1e7];
 		rect.size.width -= USER_ICON_SIZE + ICON_RIGHT_PADDING;
 	}
 
+	//Service badge
+//	if(SHOW_STATUS_ICON){
+//		if(STATUS_ICON_ON_LEFT){
+//			iconRect = iconRect = NSMakeRect(rect.origin.x,
+//											 rect.origin.y,
+//											 badgewidth,
+//											 rect.size.height);
+//		}else{
+//			iconRect = iconRect = NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
+//											 rect.origin.y,
+//											 badgewidth,
+//											 rect.size.height);
+//		}
+//		
+//		[self drawUserServiceIconInRect:iconRect];
+//		
+//		if(STATUS_ICON_ON_LEFT) rect.origin.x += badgewidth;
+//		rect.size.width -= badgewidth;
+//	}
+
 	//Status badge
 	if(SHOW_STATUS_ICON){
 		if(STATUS_ICON_ON_LEFT){
@@ -103,6 +127,19 @@ int		textHeight = [attrString heightWithWidth:1e7];
 
 		if(STATUS_ICON_ON_LEFT) rect.origin.x += badgewidth;
 		rect.size.width -= badgewidth;
+	}
+
+	if(SHOW_EXTENDED_STATUS){
+		int	halfHeight = rect.size.height / 2;
+		
+		rect.origin.y += halfHeight;
+		rect.size.height -= halfHeight;
+		
+		if(![self drawUserExtendedStatusInRect:rect]){
+			rect.size.height += halfHeight;
+		}
+		
+		rect.origin.y -= halfHeight;
 	}
 	
 	[self drawDisplayNameWithFrame:rect];
@@ -135,24 +172,62 @@ int		textHeight = [attrString heightWithWidth:1e7];
 }
 
 
-//User Name
-- (void)drawUserNameInRect:(NSRect)inRect
-{
-	
-}
 
 
 //User Extended Status
-- (void)drawUserExtendedStatusInRect:(NSRect)inRect
+- (BOOL)drawUserExtendedStatusInRect:(NSRect)inRect
 {
+	NSRange glyphRange;
 	
+	//Format string
+	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
+		EXTENDED_STATUS_FONT, NSFontAttributeName,nil];
+	
+	NSString *string = [[listObject statusObjectForKey:@"StatusMessage"] string];
+//	if(!string) string = @"Online";
+
+	if(string){
+		string = [string stringByTruncatingTailToWidth:inRect.size.width ];
+		
+		NSString *extStatus = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
+		
+		
+		[textStorage setAttributedString:extStatus];
+		glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,inRect.size.width,10) inTextContainer:textContainer];
+		[layoutManager drawGlyphsForGlyphRange:glyphRange
+									   atPoint:NSMakePoint(inRect.origin.x, inRect.origin.y)];
+		return(YES);
+	}
+	return(NO);
+}
+
+//
+- (void)drawUserServiceIconInRect:(NSRect)inRect
+{
+	NSImage 	*statusImage;
+	
+	//Get the status image
+#warning using ghetto service menu icons for now
+	statusImage = [[[[AIObject sharedAdiumInstance] accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage];
+	[statusImage setFlipped:YES];
+	
+	//Draw the image centered in the badge rect
+	NSSize	imageSize = [statusImage size];
+	NSRect	centeredRect = NSMakeRect(inRect.origin.x + (inRect.size.width - imageSize.width) / 2.0,
+									  inRect.origin.y + (inRect.size.height - imageSize.height) / 2.0,
+									  imageSize.width,
+									  imageSize.height);
+	[statusImage drawInRect:centeredRect
+				   fromRect:NSMakeRect(0,0,imageSize.width,imageSize.height)
+				  operation:NSCompositeSourceOver
+				   fraction:1.0];
 }
 
 
 //User Status Badge
 - (void)drawUserStatusBadgeInRect:(NSRect)inRect
 {
-//	NSString	*statusName;
 	NSImage 	*statusImage;
 	
 	//Get the status image
