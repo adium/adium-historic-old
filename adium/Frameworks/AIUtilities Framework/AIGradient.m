@@ -13,17 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/* 
+	Cocoa wrapper around lower level gradient drawing functions.  Draws simple gradients.
+ */
+
 #import "AIGradient.h"
 #import "BZContextImageBridge.h"
 
 @interface AIGradient (PRIVATE)
-
-- (id)initWithFirstColor:(NSColor*)inColor1
-			 secondColor:(NSColor*)inColor2
-			   direction:(AIDirection)inDirection;
-
+- (id)initWithFirstColor:(NSColor*)inColor1 secondColor:(NSColor*)inColor2 direction:(AIDirection)inDirection;
 @end
 
+//RGB Color
 typedef struct {
 	float red;
 	float green;
@@ -31,26 +32,24 @@ typedef struct {
 	float alpha;
 } FloatRGB;
 
+//Start and end colors of a gradient
 typedef struct {
-	//the start and end colours of a gradient.
 	FloatRGB start;
 	FloatRGB end;
 } TwoColors;
 
-void returnColorValue(void *refcon, const float *blendPoint, float *output);
-
-int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale);
-
-CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath);
-
+//Number of bits for each component of a colour value.
+//for a 24-bit RGB value, this is 8.
+//for a 32-bit RGBA value (which is what this code uses), this is still 8.
 enum {
-	//number of bits for each component of a colour value.
-	//for a 24-bit RGB value, this is 8.
-	//for a 32-bit RGBA value (which is what this code uses), this is still 8.
-	bitsPerComponent = 8,
 	componentsPerPixel = 4, //RGBA
+	bitsPerComponent = 8,
 	bitsPerPixel = bitsPerComponent * componentsPerPixel
 };
+
+void returnColorValue(void *refcon, const float *blendPoint, float *output);
+int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale);
+CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath);
 
 @implementation AIGradient
 
@@ -69,14 +68,6 @@ enum {
 	return ([self gradientWithFirstColor:[selectedColor darkenAndAdjustSaturationBy:-0.1] secondColor:[selectedColor darkenAndAdjustSaturationBy:0.1] direction:inDirection]);
 }
 
-- (void)dealloc {
-	[color1 release];
-	[color2 release];
-	[super dealloc];
-}
-
-#pragma mark Private
-
 - (id)initWithFirstColor:(NSColor*)inColor1
 			 secondColor:(NSColor*)inColor2
 			   direction:(AIDirection)inDirection
@@ -89,45 +80,52 @@ enum {
 	return self;
 }
 
-#pragma mark Accessor Methods
-
-- (void)setFirstColor:(NSColor*)inColor
+- (void)dealloc
 {
-	if (color1) {
+	[color1 release];
+	[color2 release];
+	[super dealloc];
+}
+
+
+
+//Configure ------------------------------------------------------------------------------------------------------------
+#pragma mark Configure
+//Gradient start color
+- (void)setFirstColor:(NSColor*)inColor{
+	if(color1 != inColor){
 		[color1 release];
-		color1 = nil;
+		color1 = [inColor retain];
 	}
-	color1 = [inColor retain];
 }
-- (NSColor*)firstColor
-{
-	return color1;
+- (NSColor*)firstColor{
+	return(color1);
 }
 
+//Gradient end color
 - (void)setSecondColor:(NSColor*)inColor
 {
-	if (color2) {
+	if(color2 != inColor){
 		[color2 release];
-		color2 = nil;
+		color2 = [inColor retain];
 	}
-	color2 = [inColor retain];
 }
-- (NSColor*)secondColor
-{
-	return color1;
+- (NSColor*)secondColor{
+	return(color1);
 }
 
-- (void)setDirection:(AIDirection)inDirection
-{
+//Gradient Direction
+- (void)setDirection:(AIDirection)inDirection{
 	direction = inDirection;
 }
-- (AIDirection)direction
-{
+- (AIDirection)direction{
 	return direction;
 }
 
-#pragma mark Drawing
 
+//Drawing --------------------------------------------------------------------------------------------------------------
+#pragma mark Drawing
+//Draw in a rect
 - (void)drawInRect:(NSRect)inRect
 {
 	//Non-integer widths will crash this code!
@@ -136,13 +134,13 @@ enum {
 	[self drawInBezierPath:[NSBezierPath bezierPathWithRect:inRect]];
 }
 
-//used, currently.
+//Draw within a bezier path
 - (void)drawInBezierPath:(NSBezierPath *)inPath
 {   
 	NSRect inRect = [inPath bounds];
 	CGRect *cgRect = (CGRect *)&inRect;
 
-	//the transform shifts the CGPath to origin = 0,0 and scales it down to an integer width (and height).
+	//Shifts the CGPath to origin 0,0 and scale it down to an integer width (and height).
 	float wscale = ((int)inRect.size.width)  / inRect.size.width;
 	float hscale = ((int)inRect.size.height) / inRect.size.height;
 	CGAffineTransform transform = CGAffineTransformMake(
@@ -255,6 +253,7 @@ enum {
 
 @end
 
+//C Functions ----------------------------------------------------------------------------------------------------------
 #pragma mark C Functions
 
 //returnColorValue
