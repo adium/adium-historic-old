@@ -23,44 +23,44 @@ typedef enum {
 } LogSearchMode;
 
 @interface AILogViewerWindowController : AIWindowController {
-    AILoggerPlugin				*plugin;
+    AILoggerPlugin						*plugin;
 	
-    IBOutlet	NSTableView			*tableView_results;
-    IBOutlet	NSTextView			*textView_content;
-    IBOutlet    id				searchField_logs;       //May be an NSSearchField or an NSTextField
+    IBOutlet	NSTableView				*tableView_results;
+    IBOutlet	NSTextView				*textView_content;
+    IBOutlet    id						searchField_logs;       //May be an NSSearchField or an NSTextField
     IBOutlet    NSPopUpButton			*popUp_jagSearchMode;   //Used in the jag log viewer to select search mode
     IBOutlet    NSProgressIndicator		*progressIndicator;
-    IBOutlet    NSTextField			*textField_progress;
-    IBOutlet    NSButton                        *button_deleteLogs;
-    IBOutlet    NSView                          *view_SearchField;
-    IBOutlet    NSView                          *view_emoteToggle;
-    IBOutlet    NSButton                        *button_emoticonToggle;
-    IBOutlet    NSDrawer                        *drawer_contacts;
+    IBOutlet    NSTextField				*textField_progress;
+    IBOutlet    NSButton				*button_deleteLogs;
+    IBOutlet    NSView					*view_SearchField;
+    IBOutlet    NSView					*view_emoteToggle;
+    IBOutlet    NSButton				*button_emoticonToggle;
+    IBOutlet    NSDrawer				*drawer_contacts;
 	
     //Misc
-    NSMutableArray      *availableLogArray;     //Array/tree of all available logs
-    NSMutableArray      *fromArray;             //Array of account names
-    NSMutableArray      *serviceArray;          //Array of services for accounts
-    NSMutableArray      *toArray;               //Array of contacts
-    NSTableColumn       *selectedColumn;	//Selected/active sort column
-    BOOL		sortDirection;		//Direction to sort
-    LogSearchMode       searchMode;		//Currently selected search mode
-    NSDateFormatter     *dateFormatter;		//Format for dates displayed in the table
-    NSToolbar           *toolbar;               //Shiny new toolbar of fun
-    BOOL		automaticSearch;	//YES if this search was performed automatically for the user (view ___'s logs...)
-    BOOL		ignoreSelectionChange;  //Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
-    BOOL                filterEmoticons;        //Flag for whether or not to filter into graphics
+    NSMutableArray		*availableLogArray;		//Array/tree of all available logs
+    NSMutableArray		*fromArray;				//Array of account names
+    NSMutableArray		*serviceArray;			//Array of services for accounts
+    NSMutableArray		*toArray;				//Array of contacts
+    NSTableColumn		*selectedColumn;		//Selected/active sort column
+    BOOL				sortDirection;			//Direction to sort
+    LogSearchMode		searchMode;				//Currently selected search mode
+    NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
+    NSToolbar			*toolbar;				//Shiny new toolbar of fun
+    BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
+    BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
+    BOOL				filterEmoticons;		//Flag for whether or not to filter into graphics
 	
     //Search information
-    int			activeSearchID;		//ID of the active search thread, all other threads should quit
-    NSLock		*searchingLock;		//Locked when a search is in progress
-    BOOL		searching;		//YES if a search is in progress
-    NSString		*activeSearchString;    //Current search string
+    int					activeSearchID;			//ID of the active search thread, all other threads should quit
+    NSLock				*searchingLock;			//Locked when a search is in progress
+    BOOL				searching;				//YES if a search is in progress
+    NSString			*activeSearchString;	//Current search string
     
     //Array of selected / displayed logs.  (Locked access)
-    NSMutableArray      *selectedLogArray;      //Array of filtered/resulting logs
-    NSLock		*resultsLock;		//Lock before touching the array
-    AILog		*displayedLog;		//Currently selected/displayed log
+    NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
+    NSLock				*resultsLock;			//Lock before touching the array
+    AILog				*displayedLog;			//Currently selected/displayed log
 	
 	NSMutableDictionary	*toolbarItems;
 }
@@ -78,4 +78,5 @@ typedef enum {
 - (NSMutableArray *)fromArray;
 - (NSMutableArray *)serviceArray;
 - (NSMutableArray *)toArray;
+
 @end
