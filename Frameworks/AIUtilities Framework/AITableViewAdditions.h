@@ -17,6 +17,7 @@
 
 - (int)indexOfTableColumn:(NSTableColumn *)inColumn;
 - (int)indexOfTableColumnWithIdentifier:(id)inIdentifier;
+- (NSArray *)arrayOfSelectedItemsUsingSourceArray:(NSArray *)sourceArray;
 
 @end
 
