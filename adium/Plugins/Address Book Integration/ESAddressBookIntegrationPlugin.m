@@ -28,17 +28,18 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]]  forGroup:PREF_GROUP_ADDRESSBOOK];
        
     advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
-      
-    //Observe preferences changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    //Observe external address book changes
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
-        
+          
     propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo",kABICQInstantProperty,@"ICQ",nil] retain];
     trackingDict = [[NSMutableDictionary alloc] init];
     sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
     
     [self preferencesChanged:nil];
+    
+    //Observe preferences changes
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    //Observe external address book changes
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
+    
 }
 
 - (void)uninstallPlugin
