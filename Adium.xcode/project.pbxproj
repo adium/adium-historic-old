@@ -3601,7 +3601,6 @@
 		};
 		3470638906010161004F0D20 = {
 			children = (
-				9E57141405B2168100283CAD,
 				F50CD61C03603BE201A8010A,
 				34878F710518289B003B2F21,
 				F53B9AC502CD12AB01A8010A,
@@ -4229,6 +4228,47 @@
 		};
 		349C6E4A07C96D45005EB896 = {
 			fileRef = 349C6E4707C96D45005EB896;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349C6E8207C9728B005EB896 = {
+			children = (
+				9E57141405B2168100283CAD,
+				4BB5CBB006EDF04D009B4517,
+			);
+			isa = PBXGroup;
+			name = "Contact List";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349C6E8B07C972B2005EB896 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIExtendedStatusPlugin.h;
+			path = Source/AIExtendedStatusPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349C6E8C07C972B2005EB896 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIExtendedStatusPlugin.m;
+			path = Source/AIExtendedStatusPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349C6E8D07C972B2005EB896 = {
+			fileRef = 349C6E8B07C972B2005EB896;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349C6E8E07C972B2005EB896 = {
+			fileRef = 349C6E8C07C972B2005EB896;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6283,7 +6323,6 @@
 				6EC1684E06C170A000F9FAD3,
 				C45F7F6506C75E210056B1F2,
 				34C18C6E06CAE7BF00FF5FF9,
-				4BB5CBAA06EDF046009B4517,
 				343EAB8C06EF859C001CDAFF,
 				343EAB8E06EF859C001CDAFF,
 				343EAB9206EF8604001CDAFF,
@@ -6350,6 +6389,7 @@
 				4BCAC70707B5A4FB006641B9,
 				4BCAC70907B5A4FB006641B9,
 				349C6E4A07C96D45005EB896,
+				349C6E8D07C972B2005EB896,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6832,7 +6872,6 @@
 				6EC1684F06C170A000F9FAD3,
 				C45F7F6606C75E210056B1F2,
 				34C18C6F06CAE7BF00FF5FF9,
-				4BB5CBAB06EDF046009B4517,
 				343EAB8B06EF859C001CDAFF,
 				343EAB8D06EF859C001CDAFF,
 				343EAB9306EF8604001CDAFF,
@@ -6898,6 +6937,7 @@
 				4BCAC70807B5A4FB006641B9,
 				4BCAC70A07B5A4FB006641B9,
 				349C6E4907C96D45005EB896,
+				349C6E8E07C972B2005EB896,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12832,7 +12872,6 @@
 			children = (
 				34C2D31006334A460018E5D2,
 				4B18A51F0459F89300A8010A,
-				4BB5CBB006EDF04D009B4517,
 				4B0473B7043E43F200A8010A,
 				34086A1005E5E17B00ABB759,
 			);
@@ -13150,6 +13189,7 @@
 			children = (
 				34E29FCE07AF091C006735BC,
 				34E2A2FD07B0193B006735BC,
+				349C6E8207C9728B005EB896,
 				4B587C3707ABFCA8001832A9,
 				4BCAC53407B59F9C006641B9,
 			);
@@ -15592,40 +15632,10 @@
 			settings = {
 			};
 		};
-		4BB5CBA806EDF046009B4517 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIExtendedStatusPlugin.h;
-			path = "Plugins/Contact Extended Status/AIExtendedStatusPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB5CBA906EDF046009B4517 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIExtendedStatusPlugin.m;
-			path = "Plugins/Contact Extended Status/AIExtendedStatusPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB5CBAA06EDF046009B4517 = {
-			fileRef = 4BB5CBA806EDF046009B4517;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BB5CBAB06EDF046009B4517 = {
-			fileRef = 4BB5CBA906EDF046009B4517;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BB5CBB006EDF04D009B4517 = {
 			children = (
-				4BB5CBA806EDF046009B4517,
-				4BB5CBA906EDF046009B4517,
+				349C6E8B07C972B2005EB896,
+				349C6E8C07C972B2005EB896,
 			);
 			isa = PBXGroup;
 			name = "Extended Status";
