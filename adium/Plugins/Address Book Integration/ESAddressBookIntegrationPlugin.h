@@ -34,7 +34,6 @@ typedef enum {
     
     int                 displayFormat;
     bool                useNickName;
-    bool                enableImages;
     bool                automaticSync;
 }
 
