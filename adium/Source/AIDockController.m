@@ -132,10 +132,14 @@
                 image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
                 if(!image){
                     image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
-                    [tempIconCache setObject:image forKey:imagePath];
+                    if(image) [tempIconCache setObject:image forKey:imagePath];
                 }
-                
-                if(image && [image isValid]) [imageArray addObject:image];
+
+                if(image && [image isValid]){
+                    [imageArray addObject:image];
+                }else{
+                    NSLog(@"Failed to load image %@",imagePath);
+                }
             }
 
             //Create the state
