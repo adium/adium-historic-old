@@ -284,6 +284,223 @@
 			settings = {
 			};
 		};
+		3402E01807CB0CE40044F818 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E01A07CB0CEC0044F818 = {
+			children = (
+				3402E01807CB0CE40044F818,
+			);
+			isa = PBXVariantGroup;
+			name = ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E01B07CB0CED0044F818 = {
+			fileRef = 3402E01A07CB0CEC0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E01F07CB0D150044F818 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E02007CB0D150044F818 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/PasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E02307CB0D1B0044F818 = {
+			children = (
+				3402E01F07CB0D150044F818,
+			);
+			isa = PBXVariantGroup;
+			name = ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E02407CB0D1B0044F818 = {
+			fileRef = 3402E02307CB0D1B0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E02507CB0D1B0044F818 = {
+			children = (
+				3402E02007CB0D150044F818,
+			);
+			isa = PBXVariantGroup;
+			name = PasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E02607CB0D1B0044F818 = {
+			fileRef = 3402E02507CB0D1B0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E02D07CB0DBB0044F818 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AboutBox.nib;
+			path = Resources/AboutBox.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E02E07CB0DBB0044F818 = {
+			fileRef = 3402E02D07CB0DBB0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E03607CB0DFB0044F818 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = PreferenceWindow.nib;
+			path = Resources/PreferenceWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E03707CB0DFB0044F818 = {
+			fileRef = 3402E03607CB0DFB0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E03F07CB0E400044F818 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = Resources/English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E04107CB0E4D0044F818 = {
+			children = (
+				3402E03F07CB0E400044F818,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E04207CB0E4D0044F818 = {
+			fileRef = 3402E04107CB0E4D0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E04B07CB0EA70044F818 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E04D07CB0EB00044F818 = {
+			children = (
+				3402E04B07CB0EA70044F818,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E04E07CB0EB00044F818 = {
+			fileRef = 3402E04D07CB0EB00044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E05607CB0EDE0044F818 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E05807CB0EEE0044F818 = {
+			children = (
+				3402E05607CB0EDE0044F818,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E05907CB0EEF0044F818 = {
+			fileRef = 3402E05807CB0EEE0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E06407CB0F2E0044F818 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E06607CB0F3B0044F818 = {
+			children = (
+				3402E06407CB0F2E0044F818,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E06707CB0F3C0044F818 = {
+			fileRef = 3402E06607CB0F3B0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402E06C07CB0F9D0044F818 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = "Plugins/WebKit Message View/English.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E07507CB0FAA0044F818 = {
+			children = (
+				3402E06C07CB0F9D0044F818,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402E07607CB0FAA0044F818 = {
+			fileRef = 3402E07507CB0FAA0044F818;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34048AC50617CB4C004D0B7E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -945,6 +1162,7 @@
 			files = (
 				341591E405463DA800291275,
 				B7FD6C170596550F000C4D9D,
+				3402E06707CB0F3C0044F818,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1074,14 +1292,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = ESProxyPasswordPromptController.m;
 			path = Source/ESProxyPasswordPromptController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3420E65F0611D80000AE67E3 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Source/English.lproj/ProxyPasswordPrompt.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3237,6 +3447,7 @@
 				34C2DF02063498ED0018E5D2,
 				34C2DF03063498EF0018E5D2,
 				4B03711606595A70008F5981,
+				3402E07607CB0FAA0044F818,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5250,7 +5461,7 @@
 				349FE300074D01D300E36B3B,
 				349FE2FF074D01D300E36B3B,
 				349FE2FE074D01D300E36B3B,
-				34A1A79E078634BF005FA1A5,
+				3402E01A07CB0CEC0044F818,
 				349FE2FD074D01D300E36B3B,
 				349FE2FC074D01D200E36B3B,
 				07CE05590661D7E600C50929,
@@ -5327,14 +5538,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = ESFileTransferProgressRow.h;
 			path = Source/ESFileTransferProgressRow.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349FE302074D01D300E36B3B = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Source/English.lproj/ESFileTransferProgressView.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5445,51 +5648,6 @@
 		};
 		349FFA050750755200E36B3B = {
 			fileRef = 349FFA030750755200E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A1A7960786348F005FA1A5 = {
-			children = (
-				F55B416803AB8C0501A8010A,
-			);
-			isa = PBXVariantGroup;
-			name = PasswordPrompt.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A1A7970786348F005FA1A5 = {
-			fileRef = 34A1A7960786348F005FA1A5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A1A79C078634AF005FA1A5 = {
-			children = (
-				3420E65F0611D80000AE67E3,
-			);
-			isa = PBXVariantGroup;
-			name = ProxyPasswordPrompt.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A1A79D078634AF005FA1A5 = {
-			fileRef = 34A1A79C078634AF005FA1A5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A1A79E078634BF005FA1A5 = {
-			children = (
-				349FE302074D01D300E36B3B,
-			);
-			isa = PBXVariantGroup;
-			name = ESFileTransferProgressView.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A1A79F078634BF005FA1A5 = {
-			fileRef = 34A1A79E078634BF005FA1A5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7169,11 +7327,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				349C7BF307C9A948005EB896,
-				34BD9D3D053146CC000AB133,
 				34BD9D2A053146CC000AB133,
 				34BD9D28053146CC000AB133,
-				34BD9D27053146CC000AB133,
-				34A1A7970786348F005FA1A5,
 				4BD6739A06001C400049CAF7,
 				4BD6742506001CF40049CAF7,
 				349C7C7A07C9AE1B005EB896,
@@ -7193,7 +7348,6 @@
 				4BD6757F06001E410049CAF7,
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
-				34A1A79D078634AF005FA1A5,
 				6E7C19BE0623BF80008A1C99,
 				7E824CDD06387FAF00813072,
 				BF00023B063A4FFE0019910B,
@@ -7210,7 +7364,6 @@
 				34A48A4A06F64685002C7C5F,
 				34445922070B613600D8E932,
 				34F1022F0734499700890D3B,
-				34A1A79F078634BF005FA1A5,
 				349FF5E5074D6D6400E36B3B,
 				34D2EB6D0758D65D0054C56D,
 				34BD9D30053146CC000AB133,
@@ -7343,7 +7496,6 @@
 				4BCAC4E507B59B65006641B9,
 				4BCAC4E607B59B65006641B9,
 				4BCAC4E707B59B65006641B9,
-				4BCAC51007B59D7F006641B9,
 				4BCAC56D07B5A31A006641B9,
 				4BCAC71407B5A50F006641B9,
 				4BCAC71507B5A50F006641B9,
@@ -7354,12 +7506,6 @@
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9D27053146CC000AB133 = {
-			fileRef = F57938BC033E739101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9D28053146CC000AB133 = {
 			fileRef = F57938C3033E73AC01A8010A;
@@ -7393,12 +7539,6 @@
 		};
 		34BD9D33053146CC000AB133 = {
 			fileRef = 4B333F73048144D900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D3D053146CC000AB133 = {
-			fileRef = D3B4A91E052DD87700A8010B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7757,6 +7897,12 @@
 				347E792407CAA52300350507,
 				347E792507CAA52300350507,
 				347E792607CAA52300350507,
+				3402E01B07CB0CED0044F818,
+				3402E02407CB0D1B0044F818,
+				3402E02607CB0D1B0044F818,
+				3402E02E07CB0DBB0044F818,
+				3402E03707CB0DFB0044F818,
+				3402E04207CB0E4D0044F818,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11172,6 +11318,7 @@
 				4BAFD5BE06E00B6C00FF7FBC,
 				4947F5CC0655E90C00B791E5,
 				4947F5CD0655E90C00B791E5,
+				3402E05807CB0EEE0044F818,
 				348D8DFC06CC09F400449EBB,
 				348D8E1D06CC0CA800449EBB,
 				4947F5D00655E90C00B791E5,
@@ -11274,6 +11421,7 @@
 				348D8DFD06CC09F500449EBB,
 				348D8E1E06CC0CA800449EBB,
 				34DF00BD07A7FE8E00B92233,
+				3402E05907CB0EEF0044F818,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14273,6 +14421,7 @@
 				4BDD822207A0BAE00057DB2C,
 				4B7A565B07A1742900BDC540,
 				349448C307BB29B2000F2A03,
+				3402E04E07CB0EB00044F818,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14442,6 +14591,7 @@
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
 				34327BD6060D2FE6003D7AD9,
+				3402E04D07CB0EB00044F818,
 				34415880059F8F050019246B,
 				4B76476C07A07BEC0021CCD7,
 				34F59B760667A33900F01E8C,
@@ -16217,41 +16367,6 @@
 		};
 		4BCAC4E707B59B65006641B9 = {
 			fileRef = 4BCAC4E407B59B65006641B9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCAC50D07B59D7F006641B9 = {
-			children = (
-				4BCAC50E07B59D7F006641B9,
-				4BCAC50F07B59D7F006641B9,
-			);
-			isa = PBXVariantGroup;
-			name = Localizable.strings;
-			path = Resources/Strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BCAC50E07B59D7F006641B9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = English;
-			path = English.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BCAC50F07B59D7F006641B9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = Spanish;
-			path = Spanish.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BCAC51007B59D7F006641B9 = {
-			fileRef = 4BCAC50D07B59D7F006641B9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20300,6 +20415,7 @@
 				34C2DF00063498ED0018E5D2,
 				34C2DF01063498ED0018E5D2,
 				4B03711506595A70008F5981,
+				3402E07507CB0FAA0044F818,
 				3470663806015FB6004F0D20,
 			);
 			isa = PBXGroup;
@@ -20889,6 +21005,7 @@
 				B7AE664F0465778E0051E914,
 				B7AE66500465778E0051E914,
 				341591E105463DA800291275,
+				3402E06607CB0F3B0044F818,
 			);
 			isa = PBXGroup;
 			name = "SQL Logger";
@@ -21842,19 +21959,11 @@
 //D32
 //D33
 //D34
-		D3B4A91E052DD87700A8010B = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AboutBox.nib;
-			path = Source/AboutBox.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		D3B4A920052DE51000A8010B = {
 			children = (
 				D3DA2E40052E65E400A8010B,
 				D3DA2E3E052E65DE00A8010B,
-				D3B4A91E052DD87700A8010B,
+				3402E02D07CB0DBB0044F818,
 				3408268E075B5CB900703011,
 				3408268F075B5CB900703011,
 				4BCB9B5E0567FF5D001D3559,
@@ -22068,7 +22177,7 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
-				4BCAC50D07B59D7F006641B9,
+				3402E04107CB0E4D0044F818,
 				4B191D880611C10800E8A4E7,
 				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,
@@ -22352,14 +22461,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F55B416803AB8C0501A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Source/English.lproj/PasswordPrompt.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F55B416E03AB8C3201A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -22532,14 +22633,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIPreferenceWindowController.m;
 			path = Source/AIPreferenceWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F57938BC033E739101A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = PreferenceWindow.nib;
-			path = Source/PreferenceWindow.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22853,8 +22946,8 @@
 				3420E65C0611D80000AE67E3,
 				3420E65D0611D80000AE67E3,
 				3420E65E0611D80000AE67E3,
-				34A1A7960786348F005FA1A5,
-				34A1A79C078634AF005FA1A5,
+				3402E02307CB0D1B0044F818,
+				3402E02507CB0D1B0044F818,
 				4B494B44063AB63000E2EF06,
 			);
 			isa = PBXGroup;
@@ -23018,7 +23111,7 @@
 			children = (
 				F57938F0033E745F01A8010A,
 				F57938BB033E739101A8010A,
-				F57938BC033E739101A8010A,
+				3402E03607CB0DFB0044F818,
 				9C82689903D9B23F00F1D4AF,
 			);
 			isa = PBXGroup;
