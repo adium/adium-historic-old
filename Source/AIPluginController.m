@@ -50,7 +50,7 @@ JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSort
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
 ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin,
-ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptContactAlertPlugin;
+ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptContactAlertPlugin, ESFileTransferMessagesPlugin;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -151,6 +151,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
 	[self loadPluginWithClass:[AIExtendedStatusPlugin class]];
 	[self loadPluginWithClass:[ESApplescriptContactAlertPlugin class]];
+	[self loadPluginWithClass:[ESFileTransferMessagesPlugin class]];
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 #endif
