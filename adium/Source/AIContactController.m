@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.105 2004/02/27 01:09:27 adamiser Exp $
+// $Id: AIContactController.m,v 1.106 2004/02/27 03:48:58 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -819,7 +819,7 @@
 			
 			//Create
 			group = [[[AIListGroup alloc] initWithUID:groupUID] autorelease];
-			[group setStatusObject:groupName forKey:@"Display Name" notify:YES];
+			[group setStatusObject:groupName forKey:@"Server Display Name" notify:YES];
 			
 			//Place new groups at the bottom of our list (by giving them the largest ordering index)
 			largestOrder += 1.0;
