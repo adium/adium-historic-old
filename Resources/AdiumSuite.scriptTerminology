@@ -62,6 +62,13 @@
 					<key>Name</key>
 					<string>ID</string>
 				</dict>
+				<key>account</key>
+				<dict>
+					<key>Description</key>
+					<string>The account on owhich this chat is taking place.</string>
+					<key>Name</key>
+					<string>account</string>
+				</dict>
 			</dict>
 			<key>Description</key>
 			<string>A chat.</string>

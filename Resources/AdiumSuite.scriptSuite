@@ -361,6 +361,15 @@
 					<key>Type</key>
 					<string>AdiumSuite.AIListContact</string>
 				</dict>
+				<key>account</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>AchA</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>AdiumSuite.AIAccount</string>
+				</dict>
 				<key>chatImage</key>
 				<dict>
 					<key>AppleEventCode</key>
