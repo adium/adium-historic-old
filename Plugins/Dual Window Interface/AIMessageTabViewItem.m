@@ -49,7 +49,7 @@
 //init
 - (id)initWithMessageView:(AIMessageViewController *)inMessageViewController
 {
-    [super initWithIdentifier:nil];
+	self = [super initWithIdentifier:nil];
 
     messageViewController = [inMessageViewController retain];
     adium = [AIObject sharedAdiumInstance];
