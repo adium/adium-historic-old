@@ -5,22 +5,25 @@
 //  Created by Stephen Holt on Tue May 25 2004.
 
 #import "SHMozillaBookmarksImporter.h"
+#import "SHMozillaCommonParser.h"
 
 #define MOZILLA_BOOKMARKS_PATH  @"~/Library/Mozilla/Profiles/default"
 #define MOZILLA_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
 #define MOZILLA_ROOT_MENU_TITLE AILocalizedString(@"Mozilla",nil)
 
+@class SHMozillaCommonParser;
+
 @interface SHMozillaBookmarksImporter(PRIVATE)
 - (NSString *)bookmarkPath;
-- (void)parseBookmarksFile:(NSString *)inString;
+//- (void)parseBookmarksFile:(NSString *)inString;
 @end
 
 @implementation SHMozillaBookmarksImporter
 
 static NSMenu   *mozillaBookmarksMenu;
-static NSMenu   *mozillaBookmarksSupermenu;
-static NSMenu   *mozillaTopMenu;
+//static NSMenu   *mozillaBookmarksSupermenu;
+//static NSMenu   *mozillaTopMenu;
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -45,9 +48,10 @@ static NSMenu   *mozillaTopMenu;
     lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
     mozillaBookmarksMenu = [[[NSMenu alloc] initWithTitle:MOZILLA_ROOT_MENU_TITLE] autorelease];
-    mozillaBookmarksSupermenu = mozillaBookmarksMenu;
-    mozillaTopMenu = mozillaBookmarksMenu;
-    [self parseBookmarksFile:bookmarkString];
+//    mozillaBookmarksSupermenu = mozillaBookmarksMenu;
+//    mozillaTopMenu = mozillaBookmarksMenu;
+    //[self parseBookmarksFile:bookmarkString];
+    [SHMozillaCommonParser parseBookmarksfromString:bookmarkString forOwner:owner andMenu:mozillaBookmarksMenu];
     
     return mozillaBookmarksMenu;
 }
@@ -84,71 +88,71 @@ static NSMenu   *mozillaTopMenu;
     return MOZILLA_BOOKMARKS_PATH;
 }
 
-- (void)parseBookmarksFile:(NSString *)inString
-{
-    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-    NSString    *titleString, *urlString;
-    
-    while(![linkScanner isAtEnd]){
-        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
-            [linkScanner setScanLocation:[inString length]];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</H" intoString:&titleString];
-
-            if(titleString){
-                // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
-            }
-            
-            mozillaBookmarksSupermenu = mozillaBookmarksMenu;
-            mozillaBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
-        
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
-                                                                         target:owner
-                                                                         action:nil
-                                                                  keyEquivalent:@""] autorelease];
-            [mozillaBookmarksSupermenu addItem:mozillaSubmenuItem];
-            [mozillaBookmarksSupermenu setSubmenu:mozillaBookmarksMenu forItem:mozillaSubmenuItem];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
-            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:@"\"" intoString:&urlString];
-                
-            [linkScanner scanUpToString:@"\">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
-            [linkScanner scanUpToString:@"</A" intoString:&titleString];
-
-            if(titleString){
-                // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
-            }
-            
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
-                                                                  withValidationStatus:SH_URL_VALID
-                                                                          parentString:titleString? titleString : urlString
-                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
-                                                                          
-            [mozillaBookmarksMenu addItemWithTitle:titleString? titleString : urlString
-                                            target:owner
-                                            action:@selector(injectBookmarkFrom:)
-                                     keyEquivalent:@""
-                                 representedObject:markedLink];
-        
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-            if([mozillaBookmarksMenu isNotEqualTo:mozillaTopMenu]){
-                mozillaBookmarksMenu = mozillaBookmarksSupermenu;
-                mozillaBookmarksSupermenu = [mozillaBookmarksSupermenu supermenu];
-            }
-        }else{
-            [linkScanner scanUpToString:@"<" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-        }
-    }
-}
+//- (void)parseBookmarksFile:(NSString *)inString
+//{
+//    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
+//    NSString    *titleString, *urlString;
+//    
+//    while(![linkScanner isAtEnd]){
+//        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
+//            [linkScanner setScanLocation:[inString length]];
+//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+//            [linkScanner scanUpToString:@">" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+//            [linkScanner scanUpToString:@"</H" intoString:&titleString];
+//
+//            if(titleString){
+//                // decode html stuff
+//                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+//            }
+//            
+//            mozillaBookmarksSupermenu = mozillaBookmarksMenu;
+//            mozillaBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
+//        
+//            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
+//                                                                         target:owner
+//                                                                         action:nil
+//                                                                  keyEquivalent:@""] autorelease];
+//            [mozillaBookmarksSupermenu addItem:mozillaSubmenuItem];
+//            [mozillaBookmarksSupermenu setSubmenu:mozillaBookmarksMenu forItem:mozillaSubmenuItem];
+//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
+//            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+//            [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+//            [linkScanner scanUpToString:@"\"" intoString:&urlString];
+//                
+//            [linkScanner scanUpToString:@"\">" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+//            [linkScanner scanUpToString:@"</A" intoString:&titleString];
+//
+//            if(titleString){
+//                // decode html stuff
+//                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+//            }
+//            
+//            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
+//                                                                  withValidationStatus:SH_URL_VALID
+//                                                                          parentString:titleString? titleString : urlString
+//                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
+//                                                                          
+//            [mozillaBookmarksMenu addItemWithTitle:titleString? titleString : urlString
+//                                            target:owner
+//                                            action:@selector(injectBookmarkFrom:)
+//                                     keyEquivalent:@""
+//                                 representedObject:markedLink];
+//        
+//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
+//            if([mozillaBookmarksMenu isNotEqualTo:mozillaTopMenu]){
+//                mozillaBookmarksMenu = mozillaBookmarksSupermenu;
+//                mozillaBookmarksSupermenu = [mozillaBookmarksSupermenu supermenu];
+//            }
+//        }else{
+//            [linkScanner scanUpToString:@"<" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+//        }
+//    }
+//}
 
 @end

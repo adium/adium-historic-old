@@ -5,22 +5,25 @@
 //  Created by Stephen Holt on Sun May 30 2004.
 
 #import "SHFireFoxBookmarksImporter.h"
+#import "SHMozillaCommonParser.h"
 
 #define FIREFOX_BOOKMARKS_PATH  @"~/Library/Phoenix/Profiles/default"
 #define FIREFOX_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
 #define FIREFOX_ROOT_MENU_TITLE AILocalizedString(@"FireFox",nil)
 
+@class SHMozillaCommonParser;
+
 @interface SHFireFoxBookmarksImporter(PRIVATE)
 - (NSString *)bookmarkPath;
-- (void)parseBookmarksFile:(NSString *)inString;
+//- (void)parseBookmarksFile:(NSString *)inString;
 @end
 
 @implementation SHFireFoxBookmarksImporter
 
 static NSMenu   *firefoxBookmarksMenu;
-static NSMenu   *firefixBookmarksSupermenu;
-static NSMenu   *firefoxTopMenu;
+//static NSMenu   *firefixBookmarksSupermenu;
+//static NSMenu   *firefoxTopMenu;
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -45,9 +48,10 @@ static NSMenu   *firefoxTopMenu;
     lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
     firefoxBookmarksMenu = [[[NSMenu alloc] initWithTitle:FIREFOX_ROOT_MENU_TITLE] autorelease];
-    firefixBookmarksSupermenu = firefoxBookmarksMenu;
-    firefoxTopMenu = firefoxBookmarksMenu;
-    [self parseBookmarksFile:bookmarkString];
+//    firefixBookmarksSupermenu = firefoxBookmarksMenu;
+//    firefoxTopMenu = firefoxBookmarksMenu;
+    //[self parseBookmarksFile:bookmarkString];
+    [SHMozillaCommonParser parseBookmarksfromString:bookmarkString forOwner:owner andMenu:firefoxBookmarksMenu];
     
     return firefoxBookmarksMenu;
 }
@@ -84,71 +88,71 @@ static NSMenu   *firefoxTopMenu;
     return FIREFOX_BOOKMARKS_PATH;
 }
 
-- (void)parseBookmarksFile:(NSString *)inString
-{
-    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-    NSString    *titleString, *urlString;
-    
-    while(![linkScanner isAtEnd]){
-        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
-            [linkScanner setScanLocation:[inString length]];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</H" intoString:&titleString];
-
-            if(titleString){
-                //if we have a title string, decode any html stuff in it.
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
-            }
-            
-            firefixBookmarksSupermenu = firefoxBookmarksMenu;
-            firefoxBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
-        
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
-                                                                         target:owner
-                                                                         action:nil
-                                                                  keyEquivalent:@""] autorelease];
-            [firefixBookmarksSupermenu addItem:mozillaSubmenuItem];
-            [firefixBookmarksSupermenu setSubmenu:firefoxBookmarksMenu forItem:mozillaSubmenuItem];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
-            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:@"\"" intoString:&urlString];
-                
-            [linkScanner scanUpToString:@"\">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
-            [linkScanner scanUpToString:@"</A" intoString:&titleString];
-            
-            if(titleString){
-                // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
-            }
-                
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
-                                                                  withValidationStatus:SH_URL_VALID
-                                                                          parentString:titleString? titleString : urlString
-                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
-                                                                          
-            [firefoxBookmarksMenu addItemWithTitle:titleString? titleString : urlString
-                                            target:owner
-                                            action:@selector(injectBookmarkFrom:)
-                                     keyEquivalent:@""
-                                 representedObject:markedLink];
-        
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-            if([firefoxBookmarksMenu isNotEqualTo:firefoxTopMenu]){
-                firefoxBookmarksMenu = firefixBookmarksSupermenu;
-                firefixBookmarksSupermenu = [firefixBookmarksSupermenu supermenu];
-            }
-        }else{
-            [linkScanner scanUpToString:@"<" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-        }
-    }
-}
+//- (void)parseBookmarksFile:(NSString *)inString
+//{
+//    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
+//    NSString    *titleString, *urlString;
+//    
+//    while(![linkScanner isAtEnd]){
+//        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
+//            [linkScanner setScanLocation:[inString length]];
+//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+//            [linkScanner scanUpToString:@">" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+//            [linkScanner scanUpToString:@"</H" intoString:&titleString];
+//
+//            if(titleString){
+//                //if we have a title string, decode any html stuff in it.
+//                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+//            }
+//            
+//            firefixBookmarksSupermenu = firefoxBookmarksMenu;
+//            firefoxBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
+//        
+//            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
+//                                                                         target:owner
+//                                                                         action:nil
+//                                                                  keyEquivalent:@""] autorelease];
+//            [firefixBookmarksSupermenu addItem:mozillaSubmenuItem];
+//            [firefixBookmarksSupermenu setSubmenu:firefoxBookmarksMenu forItem:mozillaSubmenuItem];
+//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
+//            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+//            [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+//            [linkScanner scanUpToString:@"\"" intoString:&urlString];
+//                
+//            [linkScanner scanUpToString:@"\">" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+//            [linkScanner scanUpToString:@"</A" intoString:&titleString];
+//            
+//            if(titleString){
+//                // decode html stuff
+//                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+//            }
+//                
+//            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
+//                                                                  withValidationStatus:SH_URL_VALID
+//                                                                          parentString:titleString? titleString : urlString
+//                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
+//                                                                          
+//            [firefoxBookmarksMenu addItemWithTitle:titleString? titleString : urlString
+//                                            target:owner
+//                                            action:@selector(injectBookmarkFrom:)
+//                                     keyEquivalent:@""
+//                                 representedObject:markedLink];
+//        
+//        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
+//            if([firefoxBookmarksMenu isNotEqualTo:firefoxTopMenu]){
+//                firefoxBookmarksMenu = firefixBookmarksSupermenu;
+//                firefixBookmarksSupermenu = [firefixBookmarksSupermenu supermenu];
+//            }
+//        }else{
+//            [linkScanner scanUpToString:@"<" intoString:nil];
+//            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+//        }
+//    }
+//}
 
 @end
