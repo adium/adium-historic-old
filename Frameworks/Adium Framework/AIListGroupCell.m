@@ -3,13 +3,12 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Jul 27 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListGroupCell.h"
 #import "AIListOutlineView.h"
 
-#define FLIPPY_TEXT_PADDING		3
+#define FLIPPY_TEXT_PADDING		4
 
 @implementation AIListGroupCell
 
