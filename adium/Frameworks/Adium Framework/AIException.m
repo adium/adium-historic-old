@@ -8,6 +8,8 @@
 #import "AIException.h"
 #import <ExceptionHandling/NSExceptionHandler.h>
 
+#define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
+
 @implementation AIException
 /* load
 *   install ourself to handle exceptions
@@ -18,28 +20,13 @@
     [self poseAsClass: [NSException class]];
 }
 
-/* raise
-*   raise an exception
- */
+//Raise an exception.  This gets called once with no stack trace, then a second time after the stack trace is added by the ExceptionHandling framework.  We therefore just do [super raise] if there is no stack trace, awaiting its addition to write the exception log, load the crash reporter, and exit Adium
 - (void)raise
 {
-    NSLog(@"little angel raised up!");
     NSDictionary    *dict = [self userInfo];
     NSString        *stackTrace = nil;
     NSMutableString *processedStackTrace = [[[NSMutableString alloc] init] autorelease];
 
-    //This call is an NSException addition provided by the ExceptionHandling framework according to class-dump.  It doesn't seem to actually be added?
-   // [super _addExceptionHandlerStackTrace];
-    
-    //This seemed like a clever idea but causes an infinite loop - presumeably the defaultExceptionHandler has to grab the exception when it happens, not afterwards, to generate the stackTrace.
-  /*  if (!dict) {
-        [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
-        [self raise];
-    } else {
-         [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:0];   
-    }
-*/
-    
     //Turn the nonsense of memory addresses into a human-readable backtrace complete with line numbers
     if (dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) { 
         NSString *str = [NSString stringWithFormat:@"/usr/bin/atos -p %d %@ | tail -n +3 | head -n +%d | c++filt | cat -n",
@@ -60,13 +47,15 @@
             
             pclose( file );
         }
-    } 
-    
-    //Log it - this will be replaced by ramoth4's 
-    NSLog(@"***An exception of type %@ occurred:\n%@\nTrace:%@",[self name],[self reason],processedStackTrace);
-   
-    //Pass it along, citizen, nothing to see here.
-    [super raise];
+        
+        [[NSString stringWithFormat:@"Exception:\t%@\nReason:\t%@\nStack trace:\n%@",[self name],[self reason],processedStackTrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
+        NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@)",[self name],[self reason]);
+        [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
+        //Move along, citizen, nothing more to see here.
+        exit(-1);
+    } else {
+        [super raise];
+    }
 }
 
 @end
