@@ -228,8 +228,15 @@ DeclareString(AppendNextMessage);
 	if(customBackgroundPath != inPath){
 		[customBackgroundPath release];
 		customBackgroundPath = [inPath retain];
-		NSLog(@"setCustomBackgroundPath:%@",inPath);
 	}
+}
+
+/*!
+ * @brief Set the custom background image type (How it is displayed - stretched, tiled, centered, etc)
+ */
+- (void)setCustomBackgroundType:(AIWebkitBackgroundType)inType
+{
+	customBackgroundType = inType;
 }
 
 /*!
@@ -830,88 +837,36 @@ DeclareString(AppendNextMessage);
 	} while(range.location != NSNotFound);
 	
 	//Background
-//	if(allowsCustomBackground){
-//		range = [inString rangeOfString:@"==bodyBackgroundKind=="];
-//		
-//		if(range.location != NSNotFound){
-//			NSString *backgroundTag = nil;
-//
-//			//
-//			
-//			[inString replaceCharactersInRange:range withString:(backgroundTag ? backgroundTag : @"")];			
-//		}
-//			
-//			
-//			if(customBackgroundPath){
-//				
-//			}
-//			
-//			if(customBackgroundPath && !([customBackgroundPath length] < 2)){ //XXX - Why < 2? -ai
-//				if (backgroundColor){
-//					switch(imageBackgroundStyle){
-//						case Fill:
-//							backgroundTag = [NSString stringWithFormat:@" style=\"background-color: #%@;\"><img style=\"margin: 0px; position: fixed; top: 0px; left: 0px; width: 100%%; height: 100%%; z-index: -1;\" src=\"%@\" alt=\"image\" border=\"0\">", [backgroundColor hexString], background];
-//							break;
-//						case Tile:
-//							backgroundTag = [NSString stringWithFormat:@" style=\"background-color: #%@; background-image: url('%@'); background-repeat: repeat;\">",[backgroundColor hexString],background];
-//							break;
-//						case NoStretch:
-//							backgroundTag = [NSString stringWithFormat:@" style=\"background-color: #%@; background-image: url('%@'); background-repeat: no-repeat; background-attachment:fixed;\">",[backgroundColor hexString],background];
-//							break;
-//						case Center:
-//							backgroundTag = [NSString stringWithFormat:@" style=\"background-color: #%@; background-image: url('%@'); background-position: center; background-repeat: no-repeat; background-attachment:fixed;\">",[backgroundColor hexString],background];
-//							break;
-//					}
-//				}else{
-//					switch(imageBackgroundStyle){
-//						case Fill:
-//							backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\"><img style=\"margin: 0px; position: fixed; top: 0px; left: 0px; width: 100%%; height: 100%%; z-index: -1;\" src=\"%@\" alt=\"image\" border=\"0\">",background];
-//							break;
-//						case Tile:
-//							backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-image: url('%@'); background-repeat: repeat;\">",background];
-//							break;
-//						case NoStretch:
-//							backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-image: url('%@'); background-repeat: no-repeat; background-attachment:fixed;\">",background];
-//							break;
-//						case Center:
-//							backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-image: url('%@'); background-position: center; background-repeat: no-repeat; background-attachment:fixed;\">",background];
-//							break;
-//					}
-//				}
-//				
-//			} else if(!background && backgroundColor) {
-//				backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-color: #%@;\">", [backgroundColor hexString]];
-//			}
-//		}
-//	}			
-//		
-//		//Default: Just set the onload tag
-//
-//	
-//	}
-	
 	{
 		range = [inString rangeOfString:@"==bodyBackground=="];
+		
+		if(range.location != NSNotFound){ //a backgroundImage tag is not required
+			NSMutableString *bodyTag = nil;
 
-		if(range.location != NSNotFound){
-			NSMutableString *backgroundTag = nil;
-
-			if((allowsCustomBackground && (customBackgroundPath || customBackgroundColor))){				
-				backgroundTag = [[[NSMutableString alloc] init] autorelease];;
+			if(allowsCustomBackground && (customBackgroundPath || customBackgroundColor)){				
+				bodyTag = [[[NSMutableString alloc] init] autorelease];
+				
 				if(customBackgroundPath){
 					if([customBackgroundPath length]){
-						[backgroundTag appendString:[NSString stringWithFormat:@"background: url('%@') no-repeat fixed; ", customBackgroundPath]];
+						switch(customBackgroundType){
+							case BackgroundNormal:
+								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: no-repeat; background-attachment:fixed;", customBackgroundPath]];
+							break;
+							case BackgroundCenter:
+								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-position: center; background-repeat: no-repeat; background-attachment:fixed;", customBackgroundPath]];
+							break;
+							case BackgroundTile:
+								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: repeat;", customBackgroundPath]];
+							break;
+						}
 					}else{
-						[backgroundTag appendString:@"background: none; "];
+						[bodyTag appendString:@"background-image: none; "];
 					}
 				}
 				if(customBackgroundColor){
-					[backgroundTag appendString:[NSString stringWithFormat:@"background-color: #%@; ", [customBackgroundColor hexString]]];
+					[bodyTag appendString:[NSString stringWithFormat:@"background-color: #%@; ", [customBackgroundColor hexString]]];
 				}
  			}
-
- 			[inString replaceCharactersInRange:range
-									withString:(backgroundTag ? (NSString *)backgroundTag : @"")];
  		}
  	}
 

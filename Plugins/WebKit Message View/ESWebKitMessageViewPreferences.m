@@ -165,6 +165,7 @@
 		[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
 
 		[checkBox_useCustomBackground setState:[[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:style]] boolValue]];
+		[popUp_backgroundImageType compatibleSelectItemWithTag:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:style]] intValue]];
 
 		//Disable the custom background controls if the style doesn't support them
 		BOOL	allowCustomBackground = [[previewController messageStyle] allowsCustomBackground];
@@ -217,11 +218,10 @@
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
 	}else if(sender == popUp_backgroundImageType){
-		NSString	*key = [NSString stringWithFormat:@"%@:Type", [plugin styleSpecificKey:@"Background" forStyle:style]];
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
-											 forKey:key
+											 forKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:style]
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-		
+
 	}else if(sender == popUp_styles){
 		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
 											 forKey:KEY_WEBKIT_STYLE
@@ -353,11 +353,10 @@
 {
 	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];	
 
-	[self _addBackgroundImageTypeChoice:Fill toMenu:menu withTitle:@"Fill"];
-	[self _addBackgroundImageTypeChoice:Tile toMenu:menu withTitle:@"Tile"];
-	[self _addBackgroundImageTypeChoice:NoStretch toMenu:menu withTitle:@"Do Not Stretch"];
-	[self _addBackgroundImageTypeChoice:Center toMenu:menu withTitle:@"Center"];
-	
+	[self _addBackgroundImageTypeChoice:BackgroundNormal toMenu:menu withTitle:@"Normal"];
+	[self _addBackgroundImageTypeChoice:BackgroundCenter toMenu:menu withTitle:@"Centered"];
+	[self _addBackgroundImageTypeChoice:BackgroundTile toMenu:menu withTitle:@"Tiled"];
+		
 	return([menu autorelease]);
 }
 - (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title
@@ -365,7 +364,7 @@
 	NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(title, nil)
 																				 action:nil
 																		  keyEquivalent:@""];
-	[menuItem setTag:NoStretch];
+	[menuItem setTag:tag];
 	[menu addItem:menuItem];
 	[menuItem release];
 }

@@ -35,13 +35,6 @@
 #define NEW_CONTENT_RETRY_DELAY					0.01
 #define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
 
-typedef enum {
-	Fill = 0,
-	Tile,
-	NoStretch,
-	Center
-} AIImageBackgroundStyle;
-
 @protocol AIMessageViewPlugin, AIMessageViewController;
 
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
