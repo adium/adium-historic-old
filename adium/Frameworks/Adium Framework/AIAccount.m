@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.64 2004/06/25 02:30:58 evands Exp $
+// $Id: AIAccount.m,v 1.65 2004/07/07 23:15:28 evands Exp $
 
 #import "AIAccount.h"
 
@@ -180,6 +180,12 @@
 		disconnectedByFastUserSwitch = NO;
 	}
 }
+
+- (BOOL)shouldSendAutoresponsesWhileAway
+{
+	return NO;
+}
+
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 //Enable and disable the refresh timers as our account goes online and offline; 
