@@ -105,7 +105,8 @@ typedef enum {
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
-#define Dock_IconChanged					@"Dock_IconChanged"
+#define Dock_IconWillChange					@"Dock_IconWillChange"
+#define Dock_IconDidChange					@"Dock_IconDidChange"
 
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIHandleObserver //notified of changes
@@ -390,12 +391,17 @@ typedef enum {
     IBOutlet	AIAdium 	*owner;
     
     AIIconFamily		*iconFamily;
-    
+
+    NSImage			*currentIcon;
+
     NSTimer 			*currentTimer;
 }
 
 - (AIIconFamily *)currentIconFamily;
 - (void)setIconFamily:(AIIconFamily *)iconFamily;
+- (void)setIconFamily:(AIIconFamily *)newIconFamily initializingClosed:(BOOL)closed;
+
+- (void)alert;
 
 - (void)bounce;
 - (void)bounceWithInterval:(double)delay times:(int)num;

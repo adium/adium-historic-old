@@ -381,6 +381,7 @@
 				9C82689D03D9B26500F1D4AF,
 				9C82689E03D9B26500F1D4AF,
 				9C82689F03D9B26500F1D4AF,
+				9CDF248A03EB394B000001C9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3424,6 +3425,19 @@
 			settings = {
 			};
 		};
+		9CDF248503EB394B000001C9 = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = "Default Icon Family.adiumIconFamily";
+			path = "Source/Default Icon Family.adiumIconFamily";
+			refType = 4;
+		};
+		9CDF248A03EB394B000001C9 = {
+			fileRef = 9CDF248503EB394B000001C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //9C0
 //9C1
 //9C2
@@ -4774,6 +4788,7 @@
 			children = (
 				F5E6713603B4D12601A8010A,
 				F552078B033F727F01A8010A,
+				9CDF248503EB394B000001C9,
 				4BF1F0E803D888EB00A8010A,
 				F59DB6AD033EB74801A8010A,
 				F574173F033E72AC01A8010A,

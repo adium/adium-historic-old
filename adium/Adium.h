@@ -17,3 +17,4 @@
 #import "AIContentMessage.h"
 #import "AIPreferenceCategory.h"
 #import "AISendingTextView.h"
+#import "AIIconFamily.h"

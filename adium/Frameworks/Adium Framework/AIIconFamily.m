@@ -41,10 +41,10 @@
 
 // Private creation methods
 - (id)initWithClosedImage:(NSImage *)newClosedImage openedImage:(NSImage *)newOpenedImage alertImage:(NSImage *)newAlertImage {
-    if (newClosedImage == nil || openedImage == nil || alertImage == nil) {
+    /*if (!newClosedImage || !openedImage || !alertImage) {
         NSLog(@"Warning: Unable to create icon family object (one or more of the provided images were nil).");
         return nil;
-    }
+    }*/
     
     closedImage = [newClosedImage retain];
     openedImage = [newOpenedImage retain];
@@ -54,11 +54,21 @@
 }
 
 - (id)initFromFolder:(NSString *)folderPath {
-    NSString *closedImagePath = [folderPath stringByAppendingPathComponent:@"closed.tif"];
-    NSString *openedImagePath = [folderPath stringByAppendingPathComponent:@"opened.tif"];
-    NSString *alertImagePath = [folderPath stringByAppendingPathComponent:@"alert.tif"];
+    NSString *closedImagePath = [folderPath stringByAppendingPathComponent:@"closed.png"];
+    NSString *openedImagePath = [folderPath stringByAppendingPathComponent:@"opened.png"];
+    NSString *alertImagePath = [folderPath stringByAppendingPathComponent:@"alert.png"];
+    NSImage *closedIcon = [[NSImage alloc] initWithData:[NSData dataWithContentsOfFile:closedImagePath]];
+    NSImage *openedIcon = [[NSImage alloc] initWithData:[NSData dataWithContentsOfFile:openedImagePath]];
+    NSImage *alertIcon = [[NSImage alloc] initWithData:[NSData dataWithContentsOfFile:alertImagePath]];
 
-    return [self initWithClosedImage:[[NSImage alloc] initWithContentsOfFile:closedImagePath] openedImage:[[NSImage alloc] initWithContentsOfFile:openedImagePath] alertImage:[[NSImage alloc] initWithContentsOfFile:alertImagePath]];
+    if (!closedIcon) NSLog(@"closedIcon = nil");
+
+    NSLog([closedIcon description]);
+    NSLog([openedIcon description]);
+    NSLog([alertIcon description]);
+
+    
+    return [self initWithClosedImage:closedIcon openedImage:openedIcon alertImage:alertIcon];
 }
 
 - (id)initFromFolderNamed:(NSString *)folderName {
