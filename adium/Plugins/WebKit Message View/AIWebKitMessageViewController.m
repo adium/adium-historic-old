@@ -941,7 +941,17 @@ DeclareString(AppendNextMessage);
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
 				
-				[inString replaceCharactersInRange:range withString:senderDisplay];
+				NSString *escapeSenderDisplay;
+				escapeSenderDisplay = [NSString stringWithString:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithString:senderDisplay]
+																											  headers:NO 
+																											 fontTags:NO
+																								   includingColorTags:NO  closeFontTags:NO 
+																											styleTags:NO closeStyleTagsOnFontChange:NO 
+																									   encodeNonASCII:YES imagesPath:nil
+																									attachmentsAsText:NO attachmentImagesOnlyForSending:NO
+																									   simpleTagsOnly:NO]];;
+					
+				[inString replaceCharactersInRange:range withString:escapeSenderDisplay];
 			}
 		} while(range.location != NSNotFound);
         
