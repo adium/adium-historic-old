@@ -782,6 +782,20 @@
 			settings = {
 			};
 		};
+		49AD9DBE06B6A3D8005169F7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = expat_external.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		49AD9DBF06B6A3D8005169F7 = {
+			fileRef = 49AD9DBE06B6A3D8005169F7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		49D2A86905C62BC1000207CB = {
 			buildActionMask = 2147483647;
 			files = (
@@ -796,6 +810,7 @@
 				49D2A88C05C62C32000207CB,
 				49D2A89005C62C32000207CB,
 				49D2A89205C62C32000207CB,
+				49AD9DBF06B6A3D8005169F7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -877,6 +892,7 @@
 				49D2A87405C62C32000207CB,
 				49D2A87505C62C32000207CB,
 				49D2A87605C62C32000207CB,
+				49AD9DBE06B6A3D8005169F7,
 				49D2A87705C62C32000207CB,
 				49D2A87805C62C32000207CB,
 				49D2A87905C62C32000207CB,
