@@ -78,6 +78,8 @@ typedef enum {
 	
 	NSMutableDictionary		*contactDict;
 	NSMutableDictionary		*groupDict;
+	NSMutableDictionary		*metaContactDict;
+	NSMutableDictionary		*contactToMetaContactLookupDict;
 	
     AIListGroup				*contactList;
     AIListGroup				*strangerGroup;
@@ -114,12 +116,16 @@ typedef enum {
 //Contact list access
 - (AIListGroup *)contactList;
 - (AIListContact *)contactWithService:(NSString *)serviceID accountID:(NSString *)accountID UID:(NSString *)UID;
+- (AIListContact *)contactOnAccount:(AIAccount *)account fromListContact:(AIListContact *)inContact;
 - (AIListObject *)existingListObjectWithUniqueID:(NSString *)uniqueID;
 - (AIListContact *)existingContactWithService:(NSString *)serviceID accountID:(NSString *)accountUID UID:(NSString *)UID;
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount;
 - (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
+
+- (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
+- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
 
 //Contact status & Attributes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
@@ -128,7 +134,7 @@ typedef enum {
 
 //
 - (void)delayListObjectNotifications;
-- (void)endListObjectNotificationDelay;
+- (void)endListObjectNotificationsDelay;
 - (void)delayListObjectNotificationsUntilInactivity;
 - (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject;
 - (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
