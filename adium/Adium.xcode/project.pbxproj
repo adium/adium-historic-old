@@ -4442,6 +4442,7 @@
 				7E824CEA06387FAF00813072,
 				BF000238063A4D2E0019910B,
 				C41BF734063D006D0006C041,
+				4B909C87064D72EE0074C9A8,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5059,6 +5060,7 @@
 				7E824CEB06387FAF00813072,
 				BF000239063A4D2E0019910B,
 				C41BF735063D006D0006C041,
+				4B909C88064D72EE0074C9A8,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11319,6 +11321,18 @@
 			path = "Frameworks/AIUtilities Framework/AIPopUpButtonAdditions.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B909C87064D72EE0074C9A8 = {
+			fileRef = F55B40FE03AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B909C88064D72EE0074C9A8 = {
+			fileRef = F55B40FF03AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B90B54C064220AB00D23731 = {
 			fileRef = 3499F45106309AC80035B468;

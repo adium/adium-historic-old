@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIToolbarController.m,v 1.11 2003/12/22 23:55:54 adamiser Exp $
+// $Id: AIToolbarController.m,v 1.12 2004/05/08 20:00:03 adamiser Exp $
 
 #import "AIToolbarController.h"
 
@@ -81,12 +81,12 @@
 - (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
 {
     NSMutableDictionary    *itemDict = [toolbarItems objectForKey:type];
-
+	
     if(!itemDict){
-	itemDict = [NSMutableDictionary dictionary];
-	[toolbarItems setObject:itemDict forKey:type];
+		itemDict = [NSMutableDictionary dictionary];
+		[toolbarItems setObject:itemDict forKey:type];
     }
-
+	
     [itemDict setObject:item forKey:[item itemIdentifier]];
 }
 
@@ -100,12 +100,12 @@
     //Add our toolbar items
     enumerator = [types objectEnumerator];
     while(type = [enumerator nextObject]){
-	NSDictionary     *availableItems = [toolbarItems objectForKey:type];
-	if(availableItems){
-	    [items addEntriesFromDictionary:availableItems];
-	}
+		NSDictionary     *availableItems = [toolbarItems objectForKey:type];
+		if(availableItems){
+			[items addEntriesFromDictionary:availableItems];
+		}
     }
-
+	
     return(items);
 }
 

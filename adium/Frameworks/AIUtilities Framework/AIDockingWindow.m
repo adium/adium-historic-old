@@ -56,7 +56,6 @@
 	
 	if(!alreadyMoving){  //Our setFrame call below will cause a re-entry into this function, we must guard against this
 		alreadyMoving = YES;	
-
 		
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
 		NSRect	windowFrame = [self frame];
