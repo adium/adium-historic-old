@@ -8,6 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+//Notifications
+#define AIServiceIconSetDidChangeNotification	@"AIServiceIconSetDidChangeNotification"
+
 typedef enum {
 	AIServiceIconSmall = 0,		//Interface large
 	AIServiceIconLarge,			//Interface small
