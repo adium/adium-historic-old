@@ -526,7 +526,7 @@
 
 enum characterNatureMask {
 	whitespaceNature = 0x1, //space + \t\n\r\f\a 
-	unsafeNature, //backslash + !$`"'
+	shellUnsafeNature, //backslash + !$`"'
 };
 static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	//this array is initialised such that the space character (0x20)
@@ -558,12 +558,12 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 		//	update escapeNames below.
 
 		//finally, memorise which characters have the unsafe (for shells) nature.
-		characterNature['\\'] = unsafeNature;
-		characterNature['\''] = unsafeNature;
-		characterNature['"']  = unsafeNature;
-		characterNature['`']  = unsafeNature;
-		characterNature['!']  = unsafeNature;
-		characterNature['$']  = unsafeNature;
+		characterNature['\\'] = shellUnsafeNature;
+		characterNature['\''] = shellUnsafeNature;
+		characterNature['"']  = shellUnsafeNature;
+		characterNature['`']  = shellUnsafeNature;
+		characterNature['!']  = shellUnsafeNature;
+		characterNature['$']  = shellUnsafeNature;
 	}
 
 	unsigned myLength = [self length];
@@ -626,7 +626,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 			SBEFS_BOUNDARY_GUARD;
 			buf[i] = escapeNames[*myBufPtr];
 		} else {
-			if(characterNature[*myBufPtr] & unsafeNature) {
+			if(characterNature[*myBufPtr] & shellUnsafeNature) {
 				//escape this character
 				buf[i++] = '\\';
 				SBEFS_BOUNDARY_GUARD;
@@ -658,6 +658,30 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	if(!volumePath)
 		volumePath = @"/";
 	return volumePath;
+}
+
+- (unichar)lastCharacter {
+	unsigned length = [self length];
+	if(length < 1)
+		return 0xffff;
+	else
+		return [self characterAtIndex:length - 1];
+}
+- (unichar)nextToLastCharacter {
+	unsigned length = [self length];
+	if(length < 2)
+		return 0xffff;
+	else
+		return [self characterAtIndex:length - 2];
+}
+- (UTF32Char)lastLongCharacter {
+	unichar nextToLast = [self nextToLastCharacter];
+	unichar last       = [self lastCharacter];
+	if(UCIsSurrogateHighCharacter(nextToLast) && UCIsSurrogateLowCharacter(last)) {
+		return UCGetUnicodeScalarValueForSurrogatePair(nextToLast, last);
+	} else {
+		return last;
+	}
 }
 
 @end

@@ -55,4 +55,8 @@
  */
 - (NSString *)volumePath;
 
+- (unichar)lastCharacter;
+- (unichar)nextToLastCharacter;
+- (UTF32Char)lastLongCharacter;
+
 @end
