@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/06/25 01:19:47 $ -->
+<!--$Rev: 697 $ $Date: 2004/06/30 05:19:55 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -68,7 +68,7 @@ try {
                     <form action="updateLogin.jsp" method="get">
 <%
     rset = stmt.executeQuery("select sender_id as user_id, "+
-        " scramble(username) as username, login "+
+        " username as username, login "+
         "from user_statistics, users where sender_id = user_id "+
         " group by sender_id, username, login "+
         " having count(*) > 1 order by username");
@@ -106,8 +106,8 @@ try {
 
     int height = rset.getInt("height");
 
-    pstmt = conn.prepareStatement("select user_id, scramble(username) " +
-        " as username, scramble(display_name) as display_name " +
+    pstmt = conn.prepareStatement("select user_id, username " +
+        " as username, display_name as display_name " +
         " from im.users natural join user_display_name udn " +
         " where not exists (select 'x' from user_display_name " +
         " where user_id = udn.user_id  and effdate > udn.effdate) " +
