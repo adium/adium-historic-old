@@ -13,6 +13,12 @@
  *			debug               : turns on debugging output (string + accepting rule)
  *                                          -- only use while editing rules, and don't commit with this on
  *                                              (it generates a lot of unnecessary output and kills performace.)
+ *
+ * Variables used:      uint SHStringOffset : the position of the pointer, relative to the parent string
+ *                                              incremented by yyleng at each yylex() call.
+ *                      int SHValidShift    : Used only in CANONICAL start state
+ *                                              ensures that yyleng reports whole length of the string,
+ *                                              without a costly call to yymore().
  */
 #define YY_NO_UNPUT
 unsigned int SHStringOffset;
