@@ -162,11 +162,9 @@
     NSNumber                    *status = [[owner accountController] propertyForKey:@"Status" account:targetAccount];
 
     //Toggle the connection
-    if ([status intValue] == STATUS_ONLINE) {
-        [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
-    } else {
-        [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
-    }
+    BOOL newOnlineProperty = !([status intValue] == STATUS_ONLINE);
+    [[owner accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
+                                    forKey:@"Online" account:targetAccount];
 }
 
 //Create the list of account sub menus in the file menu
