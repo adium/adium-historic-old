@@ -18,6 +18,7 @@
  */
 @interface ESImageButton : MVMenuButton {
 	ESFloater	*imageFloater;
+	BOOL		imageFloaterShouldBeOpen; //Track if the image float should currently be open; useful since the floater is desroyed on a delay.
 }
 
 @end
