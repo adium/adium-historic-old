@@ -6469,8 +6469,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9E9F05314758000AB133,
-				34BD9EA005314758000AB133,
-				34BD9EA105314758000AB133,
 				34BD9EA205314758000AB133,
 				34BD9EA305314758000AB133,
 				34BD9EA405314758000AB133,
@@ -6481,18 +6479,6 @@
 		};
 		34BD9E9F05314758000AB133 = {
 			fileRef = F59DB3B4033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA005314758000AB133 = {
-			fileRef = F59DB3C1033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EA105314758000AB133 = {
-			fileRef = F59DB3C3033EA90801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17500,9 +17486,6 @@
 		};
 		9E791D8505768A3000547562 = {
 			children = (
-				9EAD72ED0579E678002927C7,
-				9EAD72EE0579E678002927C7,
-				9EAD72EF0579E678002927C7,
 				9E791E26057746D100547562,
 				6C0FD8C20578D47B00D70FEB,
 				9E791D9405768B7A00547562,
@@ -17637,30 +17620,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		9EAD72ED0579E678002927C7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Account_Online.tiff;
-			path = "Plugins/Status Menu Item/Account_Online.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EAD72EE0579E678002927C7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Account_Offline.tiff;
-			path = "Plugins/Status Menu Item/Account_Offline.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EAD72EF0579E678002927C7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Account_Connecting.tiff;
-			path = "Plugins/Status Menu Item/Account_Connecting.tiff";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		9EAE8FAB0520371600415B25 = {
 			fileEncoding = 4;
@@ -21075,28 +21034,10 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F59DB3C1033EA90801A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = LilYellowDuck.tif;
-			path = "Plugins/AIM TOC2 Service/LilYellowDuck.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F59DB3C3033EA90801A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Refresh.tiff;
-			path = "Plugins/AIM TOC2 Service/Refresh.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F59DB3D4033EA90B01A8010A = {
 			children = (
 				4B0D1C9903B8A89400A8010A,
 				F5C8B7720358631001A8010A,
-				F59DB3C1033EA90801A8010A,
-				F59DB3C3033EA90801A8010A,
 			);
 			isa = PBXGroup;
 			name = Resources;
