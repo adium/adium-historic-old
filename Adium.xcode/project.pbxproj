@@ -6300,7 +6300,6 @@
 				4BD6737506001BF00049CAF7,
 				4BD6737B06001BF40049CAF7,
 				4BD6737E06001BF60049CAF7,
-				4BD6737F06001BF70049CAF7,
 				4BD6738406001BF90049CAF7,
 				4BD6738606001C2B0049CAF7,
 				4BD6738806001C2C0049CAF7,
@@ -6414,7 +6413,6 @@
 				6EC1684C06C170A000F9FAD3,
 				6EC1684E06C170A000F9FAD3,
 				C45F7F6506C75E210056B1F2,
-				34C1889C06CAB35D00FF5FF9,
 				34C18C6E06CAE7BF00FF5FF9,
 				4BB5CBAA06EDF046009B4517,
 				343EAB8C06EF859C001CDAFF,
@@ -6474,6 +6472,8 @@
 				4BE6175B07AC67EE0049C87D,
 				4BE6175D07AC67EE0049C87D,
 				342910CC07AE228600C815F6,
+				34E2A0BB07AF5924006735BC,
+				34E2A0C407AF593B006735BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6882,7 +6882,6 @@
 				4BD6737606001BF10049CAF7,
 				4BD6737C06001BF40049CAF7,
 				4BD6737D06001BF50049CAF7,
-				4BD6738006001BF70049CAF7,
 				4BD6738506001BF90049CAF7,
 				4BD6738706001C2B0049CAF7,
 				4BD6738906001C2C0049CAF7,
@@ -6997,7 +6996,6 @@
 				6EC1684D06C170A000F9FAD3,
 				6EC1684F06C170A000F9FAD3,
 				C45F7F6606C75E210056B1F2,
-				34C1889D06CAB35D00FF5FF9,
 				34C18C6F06CAE7BF00FF5FF9,
 				4BB5CBAB06EDF046009B4517,
 				343EAB8B06EF859C001CDAFF,
@@ -7056,6 +7054,8 @@
 				4BE6175C07AC67EE0049C87D,
 				4BE6175E07AC67EE0049C87D,
 				342910CD07AE228600C815F6,
+				34E2A0BC07AF5924006735BC,
+				34E2A0C307AF593B006735BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8037,43 +8037,14 @@
 			settings = {
 			};
 		};
-		34C1889A06CAB35D00FF5FF9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESAccountNetworkConnectivityPlugin.h;
-			path = "Plugins/Account Network Connectivity/ESAccountNetworkConnectivityPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34C1889B06CAB35D00FF5FF9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESAccountNetworkConnectivityPlugin.m;
-			path = "Plugins/Account Network Connectivity/ESAccountNetworkConnectivityPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34C1889C06CAB35D00FF5FF9 = {
-			fileRef = 34C1889A06CAB35D00FF5FF9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34C1889D06CAB35D00FF5FF9 = {
-			fileRef = 34C1889B06CAB35D00FF5FF9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34C188A006CAB36400FF5FF9 = {
 			children = (
-				34C1889A06CAB35D00FF5FF9,
-				34C1889B06CAB35D00FF5FF9,
+				34E2A0B907AF5924006735BC,
+				34E2A0BA07AF5924006735BC,
 			);
 			isa = PBXGroup;
 			name = "Account Network Connectivity";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -9313,11 +9284,73 @@
 		34E29FCE07AF091C006735BC = {
 			children = (
 				F5B53FBF0333ABA701A8010A,
+				F510B76D03339ED501A8010A,
+				34C188A006CAB36400FF5FF9,
 			);
 			isa = PBXGroup;
 			name = Accounts;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34E2A0B907AF5924006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAccountNetworkConnectivityPlugin.h;
+			path = Source/ESAccountNetworkConnectivityPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A0BA07AF5924006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAccountNetworkConnectivityPlugin.m;
+			path = Source/ESAccountNetworkConnectivityPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A0BB07AF5924006735BC = {
+			fileRef = 34E2A0B907AF5924006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A0BC07AF5924006735BC = {
+			fileRef = 34E2A0BA07AF5924006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A0C107AF593B006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountMenuAccessPlugin.m;
+			path = Source/AIAccountMenuAccessPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A0C207AF593B006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountMenuAccessPlugin.h;
+			path = Source/AIAccountMenuAccessPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A0C307AF593B006735BC = {
+			fileRef = 34E2A0C107AF593B006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A0C407AF593B006735BC = {
+			fileRef = 34E2A0C207AF593B006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34E38235068F7F0300303451 = {
 			children = (
@@ -11901,8 +11934,6 @@
 		};
 		4B1332390459BCFA00A8010A = {
 			children = (
-				F510B76D03339ED501A8010A,
-				34C188A006CAB36400FF5FF9,
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
 				BF7BF5E7052BA0EF00000202,
@@ -16315,18 +16346,6 @@
 		};
 		4BD6737E06001BF60049CAF7 = {
 			fileRef = 348E54C00539D04C0021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6737F06001BF70049CAF7 = {
-			fileRef = F570A584037049D501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738006001BF70049CAF7 = {
-			fileRef = F570A585037049D501A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22892,8 +22911,8 @@
 		};
 		F510B76D03339ED501A8010A = {
 			children = (
-				F570A584037049D501A8010A,
-				F570A585037049D501A8010A,
+				34E2A0C207AF593B006735BC,
+				34E2A0C107AF593B006735BC,
 			);
 			isa = PBXGroup;
 			name = "Account Menu Access";
@@ -23222,24 +23241,6 @@
 			isa = PBXGroup;
 			name = "Message Windows";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A584037049D501A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAccountMenuAccessPlugin.h;
-			path = "Plugins/Account Menu Access/AIAccountMenuAccessPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A585037049D501A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAccountMenuAccessPlugin.m;
-			path = "Plugins/Account Menu Access/AIAccountMenuAccessPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
