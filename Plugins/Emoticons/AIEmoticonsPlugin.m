@@ -51,7 +51,7 @@
 - (void)_sortArrayOfEmoticonPacks:(NSMutableArray *)packArray;
 @end
 
-int packSortFunction(AIEmoticonPack *packA, AIEmoticonPack *packB, NSArray *packOrderingArray);
+int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 @implementation AIEmoticonsPlugin
 
@@ -536,7 +536,7 @@ int packSortFunction(AIEmoticonPack *packA, AIEmoticonPack *packB, NSArray *pack
 	[packArray sortUsingFunction:packSortFunction context:packOrderingArray];
 }
 
-int packSortFunction(AIEmoticonPack *packA, AIEmoticonPack *packB, NSArray *packOrderingArray)
+int packSortFunction(id packA, id packB, void *packOrderingArray)
 {
 	int packAIndex = [(NSArray *)packOrderingArray indexOfObject:[packA name]];
 	int packBIndex = [(NSArray *)packOrderingArray indexOfObject:[packB name]];
