@@ -399,19 +399,24 @@ NSAttributedString *_safeString(NSAttributedString *inString)
         NSRange attachmentRange;
 
         //find attachment
-        attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
+        attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] 
+													 options:0 
+													   range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
 
         while(attachmentRange.length != 0){ //if we found an attachment
 
-            NSString *replacement = [[safeString attribute:NSAttachmentAttributeName atIndex:attachmentRange.location effectiveRange:nil] string];
+            NSString *replacement = [[safeString attribute:NSAttachmentAttributeName
+												   atIndex:attachmentRange.location
+											effectiveRange:nil] string];
 
             if(replacement == nil){
-                replacement = [NSString stringWithString:@"<<NSAttachment>>"];
+                replacement = @"<<NSAttachment>>";
             }
 
             //remove the attachment, replacing it with the original text
+			[safeString removeAttribute:NSAttachmentAttributeName range:attachmentRange];
             [safeString replaceCharactersInRange:attachmentRange withString:replacement];
-
+				
             attachmentRange.length = [replacement length];
 
             currentLocation = attachmentRange.location + attachmentRange.length;
