@@ -1,7 +1,7 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.71
+Version 0.71 (10/29/2004)
 - Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings 
 - Fixed issues with automatic reconnection of accounts after sleeping
 - Fixed issues with tooltip display after opening a message window
