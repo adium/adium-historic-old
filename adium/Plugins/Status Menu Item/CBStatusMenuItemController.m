@@ -10,6 +10,9 @@
 
 @interface CBStatusMenuItemController (PRIVATE)
 - (id)initWithOwner:(AIAdium *)inOwner;
+- (void)accountsChanged:(NSNotification *)notification;
+- (IBAction)toggleConnection:(id)sender;
+- (void)buildMenu;
 @end
 
 @implementation CBStatusMenuItemController
@@ -29,6 +32,10 @@ CBStatusMenuItemController *sharedInstance = nil;
     if(self = [super init])
     {
         owner = [inOwner retain];
+        
+        //alloc and init our arrays
+        accountsMenuItems = [[NSMutableArray alloc] init];
+        //groupsMenuItems = [[NSMutableArray alloc] init];
         
         //Create and set up the Status Item.
         statusItem = [[[NSStatusBar systemStatusBar]
@@ -59,6 +66,8 @@ CBStatusMenuItemController *sharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
+    [accountsMenuItems release];
+    //[groupsMenuItems release];
     [statusItem release];
     [theMenu release];
     [super dealloc];
@@ -66,12 +75,13 @@ CBStatusMenuItemController *sharedInstance = nil;
 
 - (void)accountsChanged:(NSNotification *)notification
 {
+    //we'll be building from scrach for now, so clear the array out.
+    accountsMenuItems = [[NSMutableArray alloc] init];
+    
     AIAccount *account = nil;        
     NSEnumerator *numer = [[[owner accountController] accountArray] objectEnumerator];
     NSMenuItem *item;
-    
-    theMenu = [[NSMenu alloc] init];
-    
+        
     //Add and install menu items for each account
     while(account = [numer nextObject])
     {
@@ -101,10 +111,10 @@ CBStatusMenuItemController *sharedInstance = nil;
                 break;
         }
         
-        [theMenu addItem:item];
+        [accountsMenuItems addObject:item];
     }
     
-    [statusItem setMenu:theMenu];
+    [self buildMenu];
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)
@@ -118,6 +128,35 @@ CBStatusMenuItemController *sharedInstance = nil;
     BOOL newOnlineProperty = !([status intValue] == STATUS_ONLINE);
     [[owner accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
                                     forKey:@"Online" account:targetAccount];
+}
+
+- (void)buildMenu
+{
+    NSEnumerator *numer;
+    NSMenuItem *item;
+    
+    //add a descriptor
+    item = [[[NSMenuItem alloc] initWithTitle:@"Accounts" action:nil keyEquivalent:@""] autorelease];
+    [item setEnabled:NO];
+    [theMenu addItem:item];
+    
+    //traverse the accounts array
+    numer = [accountsMenuItems objectEnumerator];
+    while(item = [numer nextObject])
+        [theMenu addItem:item];
+    
+    //add a divider
+    //[theMenu addItem:[NSMenuItem separatorItem]];
+
+    //add a descriptor
+    //item = [[[NSMenuItem alloc] initWithTitle:@"Accounts" action:nil keyEquivalent:nil] autorelease];
+    //[item setEnabled:NO];
+    //[theMenu addItem:item];
+    
+    //traverse the groups array
+    //numer = [accountsMenuItems objectEnumerator];
+    //while(item = [numer nextObject])
+    //    [theMenu addItem:item];
 }
 
 @end

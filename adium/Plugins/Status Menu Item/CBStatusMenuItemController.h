@@ -11,6 +11,9 @@
     NSStatusItem    *statusItem;
     NSMenu          *theMenu;
     
+    NSMutableArray  *accountsMenuItems;
+    //NSMutableArray  *groupsMenuItems;
+    
     AIAdium         *owner;
 }
 
