@@ -45,7 +45,7 @@
 	
 	//Selection hiding
 //	int					lastSelectedRow;
-
+	BOOL updateShadowsWhileDrawing;
 	//Tooltops
 //	NSTimer				*tooltipMouseLocationTimer;
 //	NSPoint				tooltipLocation;
@@ -87,6 +87,8 @@
 - (void)hideTooltip;
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 
+- (void)setUpdateShadowsWhileDrawing:(BOOL)update;
+	
 @end
 
 @interface NSObject (AIStandardListOutlineViewDelegate)

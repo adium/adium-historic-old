@@ -33,12 +33,6 @@
 	[super setDelegate:delegate];
 }
 
-//If we DO NOT subcalss drawRect, the system will not update our view correctly while resizing (10.3.3)
-- (void)drawRect:(NSRect)rect
-{
-    [super drawRect:rect];
-}
-
 
 //Frame and superview tracking -----------------------------------------------------------------------------------------
 #pragma mark Frame and superview tracking
@@ -308,5 +302,23 @@
 //	return([image autorelease]);
 //}
 
+	
+	
+//Parent window transparency -----------------------------------------------------------------
+//This is a hack and a complete performance disaster, but required because of bugs with transparency in 10.3 :(
+- (void)setUpdateShadowsWhileDrawing:(BOOL)update
+{
+	updateShadowsWhileDrawing = update;
+}
+
+//If we DO NOT subcalss drawRect, the system will not update our view correctly while resizing (10.3.3)
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
+	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
+}
+
+	
+	
 @end
 

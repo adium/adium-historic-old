@@ -11,9 +11,9 @@
 
 @implementation AIListContactCell
 
-#define SHOW_USER_ICON			YES
+#define SHOW_USER_ICON			NO
 #define USER_ICON_ON_LEFT		YES
-#define USER_ICON_SIZE			16
+#define USER_ICON_SIZE			28
 #define VERTICAL_ICON_PADDING	1
 #define ICON_LEFT_PADDING 		4
 #define ICON_RIGHT_PADDING 		1
