@@ -135,7 +135,7 @@ struct oscar_data {
         NSMutableArray *modifiedKeys = [NSMutableArray array];
         AIHandle *theHandle = (AIHandle *)node->ui_data;
         NSMutableDictionary * statusDict = [theHandle statusDictionary];
-        NSLog(@"delayed for %@",[statusDict objectForKey:@"Display Name"]);
+//        NSLog(@"delayed for %@",[statusDict objectForKey:@"Display Name"]);
         if (online) {
             struct oscar_data *od = gc->proto_data;
             //            struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
@@ -145,12 +145,11 @@ struct oscar_data {
                 //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
                 //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
                 if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
-                    NSLog(@"%s",userinfo->away);
+//                    NSLog(@"%s",userinfo->away);
                     gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
                     if (away_utf8 != NULL) {
                         NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
                         NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
-          //              NSLog(@"away msg: %@",statusMsgDecoded);
                         if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
                             [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
                             [modifiedKeys addObject:@"StatusMessage"];
