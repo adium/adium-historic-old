@@ -17,7 +17,8 @@
 - (void)setDataSource:(id)inDataSource;
 - (id)dataSource;
 - (void)reloadData;
-	
+- (void)sizeToFit;
+
 @end
 
 @interface NSObject (AIBrowserViewDelegate)
