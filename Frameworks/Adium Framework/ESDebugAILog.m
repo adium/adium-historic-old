@@ -28,8 +28,8 @@ Adium, Copyright 2001-2005, Adam Iser
  * @param format A printf-style format string
  * @param ... 0 or more arguments to the format string
  */
-void AILog (NSString *format, ...)
-{
+#ifdef DEBUG_BUILD
+void AILog (NSString *format, ...) {
 	va_list		ap; /* Points to each unamed argument in turn */
 	NSString	*actualMessage;
 	
@@ -45,3 +45,4 @@ void AILog (NSString *format, ...)
 	[actualMessage release];
 	va_end(ap); /* clean up when done */
 }
+#endif
