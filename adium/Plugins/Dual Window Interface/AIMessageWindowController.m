@@ -264,7 +264,7 @@
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
 
-    [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
+    //[[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
     [[self window] useOptimizedDrawing:YES]; //should be set to YES unless subviews overlap... we should be good to go.  check the docs on this for more info.
 }
 
