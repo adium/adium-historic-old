@@ -2106,7 +2106,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	AIListContact	*contact;
 
-	contact = [self mainPerformSelector:@selector(_contactWithUID:)
+	contact = [self mainPerformSelector:@selector(contactWithUID:)
 							 withObject:inUID
 							returnValue:YES];
 
