@@ -433,6 +433,13 @@
     
     messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(inlinePrefixes ? [content message] : [self _prefixStringForContent:content])];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
+
+    if(inlinePrefixes){
+	[messageCell setInternalPaddingLeft:(showUserIcons ? 7 : 10) top:2 right:5 bottom:2];
+    }else{
+	[messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
+    }
+
     [messageCell setVariableWidth:YES];
     [messageCell setDrawTop:YES];
     [messageCell setDrawBottom:(inlinePrefixes)];
