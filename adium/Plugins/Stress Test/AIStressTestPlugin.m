@@ -27,10 +27,14 @@
 }
 
 //Return a new account with the specified properties
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
 {
-	NSLog(@"creating %@",inUID);
-    return([[[AIStressTestAccount alloc] initWithUID:inUID service:self] autorelease]);
+    return([[[AIStressTestAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+// Return a view for the connection window
+- (AIAccountViewController *)accountView{
+    return(nil);
 }
 
 // Return a Plugin-specific ID and description

@@ -8,6 +8,7 @@
 
 #import "ESMSNService.h"
 #import "ESGaimMSNAccount.h"
+#import "ESGaimMSNAccountViewController.h"
 
 @implementation ESMSNService
 
@@ -38,11 +39,15 @@
     return([NSString stringWithFormat:@"MSN %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
-{
-    ESGaimMSNAccount *anAccount = [[[ESGaimMSNAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    return anAccount;
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[ESGaimMSNAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
 }
+
+- (AIAccountViewController *)accountView
+{
+    return([ESGaimMSNAccountViewController accountView]);
+}
+
 
 @end

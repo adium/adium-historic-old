@@ -44,7 +44,7 @@
 	BOOL success = YES;
 
 	if([inObject isKindOfClass:[AIListContact class]]){
-		AIAccount * account = [[adium accountController] accountWithID:details];
+		AIAccount * account = [[adium accountController] accountWithObjectID:details];
 		if (![[account statusObjectForKey:@"Online"] boolValue]) { //desired account not available
 			if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
 				account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE

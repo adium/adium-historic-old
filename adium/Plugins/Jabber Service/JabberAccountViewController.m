@@ -10,7 +10,7 @@
 
 @implementation JabberAccountViewController
 
-+ (id)accountViewForAccount:(id)inAccount;
++ (id)accountView
 {
     return [[[self alloc] initForAccount:inAccount] autorelease];
 }

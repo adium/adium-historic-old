@@ -553,7 +553,6 @@
 }
 
 - (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
-- (id <AIAccountViewController>)accountView{ return(nil); }
 
 
 /*********************/
@@ -1010,7 +1009,7 @@
 	
 	//Get our contact
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-												 accountUID:[self UID]
+												  accountID:[self uniqueObjectID]
 														UID:[contactUID compactedString]];
 	
     //Associate the handle with ui_data and the buddy with our statusDictionary
@@ -1091,7 +1090,7 @@
 {
     //****
 	AIListContact   *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																  accountUID:[self UID]
+																   accountID:[self uniqueObjectID]
 																		 UID:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
 	
     ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
@@ -1365,25 +1364,18 @@
 
 - (void)createNewGaimAccount
 {
-	NSString *accountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-	
-	//Sanity check: If no preference has been set, use the UID
-	if (!accountName)
-		accountName = UID;
+//	NSString *accountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+//	
+//	//Sanity check: If no preference has been set, use the UID
+//	if (!accountName)
+//		accountName = UID;
 	
     //Create a fresh version of the account
-    account = gaim_account_new([accountName UTF8String], [self protocolPlugin]);
+    account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
 //	gaim_account_set_username(account, [[self serverDisplayName] UTF8String]);
     
 	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
-}
-
-- (void)accountUIDdidChange
-{
-	//If we currently have a gaimAccount, destroy it and create a new one with the new UID
-	if (account)
-		[self resetLibGaimAccount];
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------

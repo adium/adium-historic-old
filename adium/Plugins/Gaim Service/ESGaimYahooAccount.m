@@ -15,11 +15,6 @@
     return "prpl-yahoo";
 }
 
-- (id <AIAccountViewController>)accountView
-{
-    return([ESGaimYahooAccountViewController accountViewForAccount:self]);
-}
-
 //Yahoo uses 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {

@@ -7,6 +7,7 @@
 
 #import "ESNapsterService.h"
 #import "ESGaimNapsterAccount.h"
+#import "ESGaimNapsterAccountViewController.h"
 
 @implementation ESNapsterService
 
@@ -37,11 +38,14 @@
     return([NSString stringWithFormat:@"Napster %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[ESGaimNapsterAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+- (AIAccountViewController *)accountView
 {
-    ESGaimNapsterAccount *anAccount = [[[ESGaimNapsterAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    return anAccount;
+    return([ESGaimNapsterAccountViewController accountView]);
 }
 
 @end

@@ -119,11 +119,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path] forGroup:GROUP_ACCOUNT_STATUS];
 }
 
-// Return a view for the connection window
-- (id <AIAccountViewController>)accountView{
-    return([AIMTOC2AccountViewController accountViewForAccount:self]);
-}
-
 
 // AIAccount_Handles ---------------------------------------------------------------------------
 - (void)removeContacts:(NSArray *)objects
@@ -611,10 +606,10 @@
 			break;
         case 3: //Send the sign on packets
 				//Send the first sign on packet
-            if([[AIMTOC2Packet signOnPacketForScreenName:[self UID] sequence:&localSequence] sendToSocket:socket]){
+            if([[AIMTOC2Packet signOnPacketForScreenName:[[self UID] compactedString] sequence:&localSequence] sendToSocket:socket]){
 				
                 //Send the login string
-                [self sendCommand:[self loginStringForName:[self UID] password:password]];
+                [self sendCommand:[self loginStringForName:[[self UID] compactedString] password:password]];
 				
                 connectionPhase = 0;
                 
@@ -764,7 +759,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.122 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.123 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -980,7 +975,7 @@
     int				event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
     NSString		*name = [inCommand TOCStringArgumentAtIndex:1];
     AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																  accountUID:[self UID]
+																   accountID:[self uniqueObjectID]
 																		 UID:[name compactedString]];
     
     //Post the correct typing state
@@ -1013,7 +1008,7 @@
 	
 	//
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-												 accountUID:[self UID]
+												  accountID:[self uniqueObjectID]
 														UID:[name compactedString]];
 	
     //Clear the 'typing' flag
@@ -1062,7 +1057,7 @@
 	
     //Get the contact
     if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													accountUID:[self UID]
+													 accountID:[self uniqueObjectID]
 														   UID:compactedName]){
         NSNumber		*storedValue;
         NSDate			*storedDate;
@@ -1282,7 +1277,7 @@
 					AIListContact	*contact;
 					//
 					contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																 accountUID:[self UID]
+																  accountID:[self uniqueObjectID]
 																		UID:[value compactedString]];
 					[contact setRemoteGroupName:currentGroup];
 					
@@ -1535,7 +1530,7 @@
 	
     if(userName && profile){
 		AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																	  accountUID:[self UID]
+																	   accountID:[self uniqueObjectID]
 																			 UID:[userName compactedString]];
         //Add profile to the handle
         [contact setStatusObject:[AIHTMLDecoder decodeHTML:profile] forKey:@"TextProfile" notify:YES];

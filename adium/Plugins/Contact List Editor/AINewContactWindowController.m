@@ -130,7 +130,9 @@
 	while(account = [enumerator nextObject]){
 		//Ignore any accounts with a non-matching service
 		if([[[[account service] handleServiceType] identifier] compare:[serviceType identifier]] == 0){
-			AIListContact	*contact = [[adium contactController] contactWithService:serviceID accountUID:[account UID] UID:UID];
+			AIListContact	*contact = [[adium contactController] contactWithService:serviceID
+																		   accountID:[account uniqueObjectID]
+																				 UID:UID];
 			[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
 										   toGroup:[[popUp_targetGroup selectedItem] representedObject]];
 		}

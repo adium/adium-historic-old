@@ -7,6 +7,7 @@
 
 #import "ESGaduGaduService.h"
 #import "ESGaimGaduGaduAccount.h"
+#import "ESGaimGaduGaduAccountViewController.h"
 
 @implementation ESGaduGaduService
 
@@ -37,11 +38,14 @@
     return([NSString stringWithFormat:@"Gadu-Gadu %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[ESGaimGaduGaduAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+- (AIAccountViewController *)accountView
 {
-    ESGaimGaduGaduAccount *anAccount = [[[ESGaimGaduGaduAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    return anAccount;
+    return([ESGaimGaduGaduAccountViewController accountView]);
 }
 
 @end

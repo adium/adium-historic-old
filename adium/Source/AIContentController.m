@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.53 2004/02/24 15:00:53 evands Exp $
+// $Id: AIContentController.m,v 1.54 2004/03/05 23:50:33 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -461,10 +461,9 @@
 		   [[chat listObject] containingGroup] == [inContact containingGroup]){
 
 			//If we're on a different account now, switch the chat over
-			if([[inContact accountUID] compare:[(AIListContact *)[chat listObject] accountUID]] != 0){
+			if([[inContact accountID] compare:[(AIListContact *)[chat listObject] accountID]] != 0){
 				[self switchChat:chat
-					   toAccount:[[owner accountController] accountWithServiceID:[inContact serviceID]
-																			 UID:[inContact accountUID]]];
+					   toAccount:[[owner accountController] accountWithObjectID:[inContact accountID]]];
 			}
 			
 			break;
@@ -473,8 +472,7 @@
 	if(!chat){
 		
 		//evands - this is returning nil when the stress test Command listobject gets here.
-		AIAccount *account = [[owner accountController] accountWithServiceID:[inContact serviceID] 
-																		 UID:[inContact accountUID]];
+		AIAccount *account = [[owner accountController] accountWithObjectID:[inContact accountID]];
 	
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
 			//Create a new chat
@@ -583,8 +581,8 @@
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount
 {
 	AIListContact	*oldContact = (AIListContact *)[chat listObject];
-	AIListContact	*newContact = [[owner contactController] contactWithService:[oldContact serviceID] accountUID:[newAccount UID] UID:[oldContact UID]];
-	NSLog(@"Switch chat to %@",[newAccount UID]);
+	AIListContact	*newContact = [[owner contactController] contactWithService:[oldContact serviceID] accountID:[newAccount uniqueObjectID] UID:[oldContact UID]];
+
 	//Hang onto stuff until we're done
 	[chat retain];
 	[oldContact retain];

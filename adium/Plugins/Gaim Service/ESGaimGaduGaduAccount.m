@@ -15,9 +15,4 @@
     return "prpl-gg";
 }
 
-- (id <AIAccountViewController>)accountView
-{
-    return([ESGaimGaduGaduAccountViewController accountViewForAccount:self]);
-}
-
 @end

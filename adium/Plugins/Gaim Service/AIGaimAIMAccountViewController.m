@@ -16,36 +16,38 @@
 #import "AIGaimAIMAccountViewController.h"
 #import "CBGaimAccount.h"
 
-#define AIM_AUXILIARY_NIB   @"ESGaimAIMAuxiliaryAccountView"
-
 @implementation AIGaimAIMAccountViewController
 
+- (NSString *)nibName{
+    return(@"ESGaimAIMAuxiliaryAccountView");
+}
+
 //Configure our controls
-- (void)configureViewAfterLoad
+- (void)configureForAccount:(AIAccount *)inAccount
 {
-    //Configure the standard controls
-    [super configureViewAfterLoad];
+    [super configureForAccount:inAccount];
     
     //Full name
-    NSString            *fullName = [account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
-    if (fullName){
+    NSString	*fullName = [account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
+    if(fullName){
         [textField_fullName setStringValue:fullName];
     }
     
     //Profile
-    NSData              *profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-    if (profileData) {
+    NSData		*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+    if(profileData){
         NSAttributedString	*profile = [NSAttributedString stringWithData:profileData];
-        if (profile && [profile length]){
+        if(profile && [profile length]){
             [[textView_textProfile textStorage] setAttributedString:profile];
-        }
+        }else{
+            [textView_textProfile setString:@""];
+		}
     }
 }
 
 //Save changes made to a preference control
 - (IBAction)changedPreference:(id)sender
 {
-    //Handle the standard preferences
     [super changedPreference:sender];
     
     //Our custom preferences
@@ -58,11 +60,6 @@
 - (void)textDidEndEditing:(NSNotification *)notification
 {
     [account setPreference:[[textView_textProfile textStorage] dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-}
-
--(NSString *)auxiliaryGaimAccountViewTabsNib
-{
-    return AIM_AUXILIARY_NIB;
 }
 
 @end

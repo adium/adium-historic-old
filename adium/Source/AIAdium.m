@@ -32,7 +32,6 @@
 
 //Path to Adium's application support preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
-
 #define ADIUM_FAQ_PAGE						@"http://adium.sourceforge.net/faq/"
 
 @interface AIAdium (PRIVATE)

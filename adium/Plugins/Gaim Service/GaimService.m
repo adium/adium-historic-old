@@ -6,6 +6,7 @@
 //
 
 #import "GaimService.h"
+#import "ESGaimAccountViewController.h"
 
 @implementation GaimService
 
@@ -18,11 +19,10 @@
 {
     return nil;
 }
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
 {
     return nil;
 }
-
 
 //GaimService methods
 - (id)initWithService:(id)inService
@@ -62,4 +62,10 @@
 {
     return(@" (LibGaim)");
 }
+
+- (AIAccountViewController *)accountView
+{
+	return([ESGaimAccountViewController accountView]);
+}
+
 @end

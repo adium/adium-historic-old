@@ -9,12 +9,5 @@
 
 
 @implementation ESGaimJabberAccountViewController
-//Configure our controls
-- (void)configureViewAfterLoad
-{
-    //Configure the standard controls
-    [super configureViewAfterLoad];
-    
-}
 
 @end

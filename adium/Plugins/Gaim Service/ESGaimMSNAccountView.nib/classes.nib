@@ -1,15 +1,13 @@
 {
     IBClasses = (
         {
-            ACTIONS = {accountNameChanged = id; changedPreference = id; }; 
+            ACTIONS = {changedPreference = id; }; 
             CLASS = AIAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 account = id; 
-                "textField_accountName" = NSTextField; 
                 "textField_password" = NSTextField; 
                 "view_accountView" = NSView; 
-                "view_auxiliaryAccountDetails" = NSView; 
                 "view_auxiliaryTabView" = NSTabView; 
             }; 
             SUPERCLASS = AIObject; 
@@ -18,7 +16,6 @@
         {
             CLASS = ESGaimAccountViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"view_auxiliaryGaimAccountTabView" = NSTabView; }; 
             SUPERCLASS = AIAccountViewController; 
         }, 
         {

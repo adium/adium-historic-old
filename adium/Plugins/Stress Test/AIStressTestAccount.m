@@ -16,7 +16,7 @@
     chatDict = [[NSMutableDictionary alloc] init];
 
 	commandContact = [[[adium contactController] contactWithService:STRESS_TEST_SERVICE_IDENTIFIER 
-														 accountUID:[self UID]
+														  accountID:[self uniqueObjectID]
 																UID:@"Command"] retain];
     [commandContact setRemoteGroupName:@"Command"];
     [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
@@ -33,11 +33,6 @@
 - (NSDictionary *)defaultProperties
 {
     return([NSDictionary dictionary]);
-}
-
-// Return a view for the connection window
-- (id <AIAccountViewController>)accountView{
-    return(nil);
 }
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
@@ -83,7 +78,9 @@
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				AIListContact	*contact;
 				
-				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID];
+				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+															  accountID:[self uniqueObjectID]
+																	UID:buddyUID];
 				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)]];
             }
 
@@ -100,7 +97,9 @@
 				AIListContact	*contact;
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID];
+				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+															  accountID:[self uniqueObjectID]
+																	UID:buddyUID];
 				[handleArray addObject:contact];
             }
 
@@ -118,7 +117,9 @@
 				AIListContact	*contact;
                 NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID];
+				contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+															  accountID:[self uniqueObjectID]
+																	UID:buddyUID];
 				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
             }
 
@@ -173,7 +174,9 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID]){
+    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													 accountID:[self uniqueObjectID]
+														   UID:buddyUID]){
 		NSLog(@"%@ (%@) chat:%@",contact, buddyUID, [[adium contentController] chatWithContact:contact initialStatus:nil]);
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
@@ -204,7 +207,9 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] accountUID:[self UID] UID:buddyUID]){
+    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													 accountID:[self uniqueObjectID]
+														   UID:buddyUID]){
         AIContentMessage *messageObject;
         if(msgIn){
             messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]

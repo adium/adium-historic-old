@@ -107,10 +107,6 @@ struct buddyinfo {
     return [super supportedPropertyKeys];
 }
 
-- (id <AIAccountViewController>)accountView
-{
-    return nil;
-}
 
 /*
  - (void)accountBlistNewNode:(GaimBlistNode *)node 

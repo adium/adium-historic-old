@@ -9658,6 +9658,7 @@
 				34254F4A05EC0C3D00F11AD7,
 				34254F4C05EC0C4300F11AD7,
 				343B926305F7064700900CE6,
+				4B29094005F944BF0087D16F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18554,6 +18555,21 @@
 		};
 		4B28DDAE0599FED300343093 = {
 			fileRef = 4B28DDAC0599FED200343093;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B29093F05F944BF0087D16F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = AccountPrefs.plist;
+			path = Source/AccountPrefs.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B29094005F944BF0087D16F = {
+			fileRef = 4B29093F05F944BF0087D16F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -31814,6 +31830,7 @@
 				F570A60803704E9701A8010A,
 				F55B416003AB8BE301A8010A,
 				34E8FA33054D9CE7008BB262,
+				4B29093F05F944BF0087D16F,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
 				C497518C05BBB0C5009958A6,

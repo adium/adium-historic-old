@@ -18,28 +18,24 @@
 @implementation AIAccountViewController
 
 //Create a new account view
-+ (id)accountViewForAccount:(id)inAccount
++ (id)accountView
 {
-    return([[[self alloc] initForAccount:inAccount] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Init
-- (id)initForAccount:(id)inAccount
+- (id)init
 {
     [super init];
-    account = inAccount;
-	auxiliaryTabs = nil;
+    account = nil;
 
-    //Open a new instance of the account view
-    if(![NSBundle loadNibNamed:[self nibName] owner:self]){
-        NSLog(@"couldn't load account view bundle");
-    }
-    
-    [self loadAuxiliaryTabsFromTabView:view_auxiliaryTabView];
-
-    //Observer account changes
+    //Observe account changes
     [[adium contactController] registerListObjectObserver:self];
     
+	//Load our auxiliary tabs and view
+	[NSBundle loadNibNamed:[self nibName] owner:self];
+    auxiliaryTabs = [[self loadAuxiliaryTabsFromTabView:view_auxiliaryTabView] retain];
+	
     return(self);
 }
 
@@ -49,7 +45,7 @@
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     [view_accountView release];
-    [auxiliaryTabs release];
+	[auxiliaryTabs release];
     
     [super dealloc];
 }
@@ -60,12 +56,27 @@
     return(@"");    
 }
 
+//Return the inline view for this account
+- (NSView *)view
+{
+    return(view_accountView);
+}
+
+//Return the auxiliary tabs for this account
+- (NSArray *)auxiliaryTabs
+{
+	return(auxiliaryTabs);
+}
+
 //Configure the account view
-- (void)configureViewAfterLoad
+- (void)configureForAccount:(AIAccount *)inAccount
 {
     NSString		*accountName, *savedPassword;
 	AIServiceType	*serviceType = [[account service] handleServiceType];
-
+	
+	//Remember the account
+	account = inAccount;
+	
     //Display saved password
     savedPassword = [[adium accountController] passwordForAccount:account];
     if(savedPassword != nil && [savedPassword length] != 0){
@@ -76,50 +87,30 @@
     
     //Enable/Disable controls
 	[self updateListObject:nil keys:nil silent:NO];
-    
 }
 
-//Return the inline view for this account
-- (NSView *)view
+//Extract auxiliary tabs from an NSTabView inside an NSWindow
+- (NSArray *)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView
 {
-    return(view_accountView);
-}
-
-//Return the auxiliary tabs for this account
-- (NSArray *)auxiliaryTabs
-{    
-    return(auxiliaryTabs);
-}
-
-- (NSView *)auxiliaryAccountDetails
-{
-	return nil;
-}
-
-- (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView
-{
-    //Extract our auxiliary tabs from the nib, where they are stored in an NSTabView inside an NSWindow
-    if(inTabView){
+	NSMutableArray *auxTabs = [NSMutableArray array];
+	
+	if(inTabView){
         //Get the array of tabs
         NSArray *tabViewItems = [inTabView tabViewItems];
-		
-		//Create the auxiliaryTabs array if this is an initial set of auxiliary tabs
-		//or add to the array if auxiliaries already exist
-		if (!auxiliaryTabs)
-			auxiliaryTabs = [tabViewItems mutableCopy];
-		else
-			[auxiliaryTabs addObjectsFromArray:tabViewItems];
+		[auxTabs addObjectsFromArray:tabViewItems];
 		
         //Now release the tabs and the window they came from
         NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
         NSTabViewItem   *tabViewItem;
         
-        while (tabViewItem = [enumerator nextObject]){
+        while(tabViewItem = [enumerator nextObject]){
             [inTabView removeTabViewItem:tabViewItem];
         }
         
         [[inTabView window] release];
     }
+	
+	return(auxTabs);
 }
 
 //Update display for account status change

@@ -10,7 +10,7 @@
     IBOutlet    NSTextField     *textField_host;
 }
 
-+ (id)accountViewForAccount:(id)inAccount;
++ (id)accountView;
 - (NSView *)view;
 - (void)configureViewAfterLoad;
 - (IBAction)preferenceChanged:(id)sender;

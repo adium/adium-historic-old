@@ -95,14 +95,14 @@
     BOOL                success = NO;
 
     //Source account
-    account = [[adium accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
+    account = [[adium accountController] accountWithObjectID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
     
     message = [[NSAttributedString alloc] initWithString:details attributes:attributes];
 
     //intended recipient
     uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
     service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-    contact = [[adium contactController] contactWithService:service accountUID:[account UID] UID:uid];
+    contact = [[adium contactController] contactWithService:service accountID:[account uniqueObjectID] UID:uid];
     
     //error message
     displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];

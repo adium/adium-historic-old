@@ -18,6 +18,6 @@
 - (void)addAccount:(CBGaimAccount *)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;
 - (void)removeAccount:(GaimAccount *)gaimAcct;
 - (BOOL)configureGaimProxySettings;
-
 - (NSString *)gaimDescriptionSuffix;
+
 @end

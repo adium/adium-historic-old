@@ -6,6 +6,7 @@
 
 #import "ESYahooService.h"
 #import "ESGaimYahooAccount.h"
+#import "ESGaimYahooAccountViewController.h"
 
 @implementation ESYahooService
 
@@ -36,11 +37,14 @@
     return([NSString stringWithFormat:@"Yahoo! %@",[self gaimDescriptionSuffix]]);
 }
 
-- (id)accountWithUID:(NSString *)inUID
+- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
+{    
+    return([[[ESGaimYahooAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
+}
+
+- (AIAccountViewController *)accountView
 {
-    ESGaimYahooAccount *anAccount = [[[ESGaimYahooAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    return anAccount;
+    return([ESGaimYahooAccountViewController accountView]);
 }
 
 @end

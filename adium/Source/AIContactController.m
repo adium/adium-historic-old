@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.110 2004/03/05 04:39:05 adamiser Exp $
+// $Id: AIContactController.m,v 1.111 2004/03/05 23:50:33 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -163,9 +163,9 @@
 		//Object
 		if([type compare:@"Contact"] == 0){
 			object = [self contactWithService:[infoDict objectForKey:@"ServiceID"]
-								   accountUID:[infoDict objectForKey:@"AccountUID"]
+									accountID:[infoDict objectForKey:@"AccountID"]
 										  UID:[infoDict objectForKey:@"UID"]];
-
+			
 		}else if([type compare:@"Group"] == 0){
 			object = [self groupWithUID:[infoDict objectForKey:@"UID"]];
 			[(AIListGroup *)object setExpanded:[[infoDict objectForKey:@"Expanded"] boolValue]];
@@ -196,7 +196,7 @@
 			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				@"Contact", @"Type",
 				[object UID], @"UID",
-				[(AIListContact *)object accountUID], @"AccountUID",
+				[(AIListContact *)object accountID], @"AccountID",
 				[object serviceID], @"ServiceID",
 				[NSNumber numberWithFloat:[object orderIndex]], @"Ordering",
 				nil]];
@@ -283,8 +283,7 @@
 		}
 		
 	}else{
-		AIAccount	*account = [[owner accountController] accountWithServiceID:[inContact serviceID]
-																		   UID:[inContact accountUID]];
+		AIAccount	*account = [[owner accountController] accountWithObjectID:[inContact accountID]];
 		
 		[account updateContactStatus:inContact];
 
@@ -760,7 +759,7 @@
 			[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object onAccount:inAccount]];
 		}else if([object isMemberOfClass:[AIListContact class]]){
 			if([[(AIListContact *)object serviceID] compare:[inAccount serviceID]] == 0 &&
-			   [[(AIListContact *)object accountUID] compare:[inAccount UID]] == 0){
+			   [[(AIListContact *)object accountID] compare:[inAccount uniqueObjectID]] == 0){
 				[contactArray addObject:object];
 			}
 		}
@@ -770,17 +769,17 @@
 }
 
 //Retrieve a contact from the contact list (Creating if necessary)
-- (AIListContact *)contactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID
+- (AIListContact *)contactWithService:(NSString *)serviceID accountID:(NSString *)accountID UID:(NSString *)UID
 {
 	AIListContact	*contact = nil;
 	
 	if(serviceID && [serviceID length] && UID && [UID length]){ //Ignore invalid requests
-		NSString		*key = [NSString stringWithFormat:@"%@.%@.%@", serviceID, accountUID, UID];
+		NSString		*key = [NSString stringWithFormat:@"%@.%@.%@", serviceID, accountID, UID];
 		
 		contact = [contactDict objectForKey:key];
 		if(!contact){
 			//Create
-			contact = [[[AIListContact alloc] initWithUID:UID accountUID:accountUID serviceID:serviceID] autorelease];
+			contact = [[[AIListContact alloc] initWithUID:UID accountID:accountID serviceID:serviceID] autorelease];
 
 			//Place new contacts at the bottom of our list (by giving them the largest ordering index)
 			largestOrder += 1.0;
@@ -809,7 +808,7 @@
 	AIAccount	*account = [[owner accountController] preferredAccountForSendingContentType:inType
 																			   toListObject:inObject];
 
-	return([self contactWithService:[inObject serviceID] accountUID:[account UID] UID:[inObject UID]]);
+	return([self contactWithService:[inObject serviceID] accountID:[account uniqueObjectID] UID:[inObject UID]]);
 }
 
 //Retrieve a group from the contact list (Creating if necessary)
@@ -879,8 +878,7 @@
 			[listObject release];
 			
 		}else{
-			AIAccount	*account = [[owner accountController] accountWithServiceID:[listObject serviceID]
-																			   UID:[(AIListContact *)listObject accountUID]];
+			AIAccount	*account = [[owner accountController] accountWithObjectID:[(AIListContact *)listObject accountID]];
 			
 			if([account conformsToProtocol:@protocol(AIAccount_List)]){
 				[(AIAccount<AIAccount_List> *)account removeContacts:[NSArray arrayWithObject:listObject]];
@@ -896,8 +894,7 @@
 	
 	enumerator = [contactArray objectEnumerator];
 	while(listObject = [enumerator nextObject]){
-		AIAccount	*account = [[owner accountController] accountWithServiceID:[listObject serviceID]
-																		   UID:[listObject accountUID]];
+		AIAccount	*account = [[owner accountController] accountWithObjectID:[listObject accountID]];
 		
 		if([account conformsToProtocol:@protocol(AIAccount_List)]){
 			[(AIAccount<AIAccount_List> *)account addContacts:[NSArray arrayWithObject:listObject] toGroup:group];
@@ -952,8 +949,7 @@
 //Move an object to another group
 - (void)_moveObject:(AIListObject *)listObject toGroup:(AIListGroup *)group
 {
-	AIAccount	*account = [[owner accountController] accountWithServiceID:[listObject serviceID]
-																	   UID:[(AIListContact *)listObject accountUID]];
+	AIAccount	*account = [[owner accountController] accountWithObjectID:[(AIListContact *)listObject accountID]];
 	if([account conformsToProtocol:@protocol(AIAccount_List)]){
 		[(AIAccount<AIAccount_List> *)account moveListObjects:[NSArray arrayWithObject:listObject] toGroup:group];
 	}
