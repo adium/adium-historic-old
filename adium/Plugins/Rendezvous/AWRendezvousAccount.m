@@ -216,7 +216,7 @@
     user = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
 			accountID:[self uniqueObjectID] UID:[contact uniqueID]];
 			
-    [user setStatusObject:[NSNumber numberWithBool:(typingStatus == AWEzvIsTyping)]
+    [user setStatusObject:[NSNumber numberWithInt:((typingStatus == AWEzvIsTyping) ? AITyping : AINotTyping)]
 					    forKey:@"Typing"
 					    notify:NO];
     
@@ -277,7 +277,7 @@
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezv sendTypingNotification:([contentTyping typing] ? AWEzvIsTyping : AWEzvNotTyping)
+		[libezv sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
 									to:to];
     }
 }
