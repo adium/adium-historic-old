@@ -361,8 +361,15 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 				if(!scriptResult) scriptResult = @"";
 				
 				//Replace the substring with script result
-				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-												withString:scriptResult];
+				if (([scriptResult hasPrefix:@"<HTML>"])){
+					NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+													withAttributedString:attributedScriptResult];
+
+				}else{
+					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+													withString:scriptResult];
+				}
 				//Adjust for replaced text
 				offset += [scriptResult length] - (keywordEnd - keywordStart);
 				
