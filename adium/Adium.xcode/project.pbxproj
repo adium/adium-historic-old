@@ -386,14 +386,6 @@
 			settings = {
 			};
 		};
-		3401925A06406D9200192BC4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = space.png;
-			path = "Plugins/Standard Toolbar Items/space.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3401925B06406D9200192BC4 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -401,12 +393,6 @@
 			path = "Plugins/Standard Toolbar Items/message.png";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		3401925C06406D9200192BC4 = {
-			fileRef = 3401925A06406D9200192BC4;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		3401925D06406D9200192BC4 = {
 			fileRef = 3401925B06406D9200192BC4;
@@ -4755,7 +4741,6 @@
 				349DDD410640687D00542726,
 				349DDD420640687D00542726,
 				349DDD6A06406CBD00542726,
-				3401925C06406D9200192BC4,
 				3401925D06406D9200192BC4,
 				7EF2D63506476C3E00C829FF,
 			);
@@ -19210,23 +19195,11 @@
 			children = (
 				F55B40FE03AB87CA01A8010A,
 				F55B40FF03AB87CA01A8010A,
-				F55B40FC03AB87CA01A8010A,
-				F55B40FD03AB87CA01A8010A,
-				F501BB1C03882ADA01A8010A,
+				3401925B06406D9200192BC4,
 			);
 			isa = PBXGroup;
 			name = "Standard Toolbar Items";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F501BB1C03882ADA01A8010A = {
-			children = (
-				3401925A06406D9200192BC4,
-				3401925B06406D9200192BC4,
-			);
-			isa = PBXGroup;
-			name = Images;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -19849,24 +19822,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEventSoundsPlugin.m;
 			path = "Plugins/Event Sounds/AIEventSoundsPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F55B40FC03AB87CA01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIFramedMiniToolbarButton.h;
-			path = "Plugins/Standard Toolbar Items/AIFramedMiniToolbarButton.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F55B40FD03AB87CA01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIFramedMiniToolbarButton.m;
-			path = "Plugins/Standard Toolbar Items/AIFramedMiniToolbarButton.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
