@@ -191,7 +191,7 @@ DeclareString(bMdashHTML)
             }
         }
     }
-    return newString;
+    return [newString autorelease];
 }
 
 @end
