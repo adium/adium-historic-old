@@ -19,6 +19,7 @@
 
 #import "AIImageTextCell.h"
 #import "AIParagraphStyleAdditions.h"
+#import "AIAttributedStringAdditions.h"
 
 #define DEFAULT_MAX_IMAGE_WIDTH			24
 #define DEFAULT_IMAGE_TEXT_PADDING		6
@@ -37,6 +38,7 @@
 		subString = nil;
 		maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
 		imageTextPadding = DEFAULT_IMAGE_TEXT_PADDING;
+		lineBreakMode = NSLineBreakByTruncatingTail;
 	}
 
 	return self;
@@ -110,6 +112,11 @@
 - (void)setImageTextPadding:(float)inImageTextPadding
 {
 	imageTextPadding = inImageTextPadding;
+}
+
+- (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode
+{
+	lineBreakMode = inLineBreakMode;
 }
 
 - (NSSize)cellSizeForBounds:(NSRect)cellFrame
@@ -279,10 +286,9 @@
 		cellFrame.origin.x += imageTextPadding;
 		cellFrame.size.width -= imageTextPadding * 2;
 
-		//Truncating paragraph style
-		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-																	 lineBreakMode:NSLineBreakByTruncatingTail];
-		
+		//Paragraph style
+		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:[self alignment]
+																	 lineBreakMode:lineBreakMode];		
 		//
 		if([self font]){
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -299,8 +305,20 @@
 		
 		NSAttributedString	*attributedTitle = [[[NSAttributedString alloc] initWithString:title
 																				attributes:attributes] autorelease];
+		switch(lineBreakMode){
+			case NSLineBreakByWordWrapping:
+			case NSLineBreakByCharWrapping:
+				stringHeight = [attributedTitle heightWithWidth:cellFrame.size.width];
+				break;
+			case NSLineBreakByClipping:
+			case NSLineBreakByTruncatingHead:
+			case NSLineBreakByTruncatingTail:
+			case NSLineBreakByTruncatingMiddle:
+				stringHeight = [title sizeWithAttributes:attributes].height;
+				break;
+		}
+
 		//Calculate the centered rect
-		stringHeight = [title sizeWithAttributes:attributes].height;
 		if(stringHeight < cellFrame.size.height){
 			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
 		}

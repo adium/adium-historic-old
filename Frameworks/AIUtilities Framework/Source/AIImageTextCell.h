@@ -22,10 +22,11 @@
  * This <tt>AIGradientCell</tt> subclass displays in image on the left and one or two lines of text centered vertically in the space remaining for the cell
  */
 @interface AIImageTextCell : AIGradientCell {
-	NSFont 		*font;
-    NSString	*subString;
-	float		maxImageWidth;
-	float		imageTextPadding;
+	NSFont			*font;
+    NSString		*subString;
+	float			maxImageWidth;
+	float			imageTextPadding;
+	NSLineBreakMode lineBreakMode;
 }
 
 /*
@@ -49,5 +50,8 @@
  * Half this distance will be the padding from the right edge of the image or text and the right cell edge.
  */
 - (void)setImageTextPadding:(float)inImageTextPadding;
+
+
+- (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode;
 
 @end
