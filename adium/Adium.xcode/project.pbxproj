@@ -9634,7 +9634,7 @@
 			sourceTree = "<group>";
 		};
 		4B70F29203D1D13800A8010A = {
-			fileEncoding = 4;
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEnterAwayWindowController.m;
