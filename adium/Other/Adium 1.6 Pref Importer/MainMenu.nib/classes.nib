@@ -1,16 +1,14 @@
 {
     IBClasses = (
         {
-            ACTIONS = {import = id; sheetButton = id; }; 
+            ACTIONS = {importAliases = id; importContacts = id; importLogs = id; sheetButton = id; }; 
             CLASS = CBOldPrefsImporterAppController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_Cancel" = NSButton; 
                 "button_OK" = NSButton; 
-                "button_import" = NSButton; 
-                "checkBox_aliases" = NSButton; 
-                "checkBox_contacts" = NSButton; 
                 currentTask = NSTextField; 
+                importListSheet = NSPanel; 
                 "popUpButton_account" = NSPopUpButton; 
                 "popUpButton_user" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 

@@ -10,24 +10,23 @@
 {
     IBOutlet	NSWindow		*window_main;
     IBOutlet	NSPopUpButton		*popUpButton_account;
-    IBOutlet	NSButton		*checkBox_aliases;
-    IBOutlet	NSButton		*checkBox_contacts;
     IBOutlet	NSProgressIndicator	*progressIndicator;
     IBOutlet	NSTextField		*currentTask;
-    IBOutlet	NSButton		*button_import;
     
     IBOutlet	NSWindow		*theSheet;
+    IBOutlet	NSPanel			*importListSheet;
     IBOutlet	NSPopUpButton		*popUpButton_user;
     IBOutlet	NSButton		*button_OK;
     IBOutlet	NSButton		*button_Cancel;
 }
 
-- (IBAction)import:(id)sender;
+- (IBAction)importLogs:(id)sender;
+- (IBAction)importAliases:(id)sender;
+- (IBAction)importContacts:(id)sender;
 - (IBAction)sheetButton:(id)sender;
+- (BOOL)ensureAdiumIsClosed;
 
 //NSApplication delegate methods
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication;
 
-//modal delegate methods
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)code contextInfo:(void *)info;
 @end

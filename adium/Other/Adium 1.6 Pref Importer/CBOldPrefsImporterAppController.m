@@ -7,7 +7,10 @@
 //
 
 #import "CBOldPrefsImporterAppController.h"
+#import <AIUtilities/AIUtilities.h>
 #include <unistd.h>
+
+#define ADIUM_1X_LOGS_PATH	@"~/Library/Application Support/Adium/Users"
 
 @interface CBOldPrefsImporterAppController(PRIVATE)
 - (void)importAliases;
@@ -44,38 +47,188 @@
         if([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
             [popUpButton_user addItemWithTitle:file];
     }
-}
-
-- (IBAction)import:(id)sender
-{
-    if(([checkBox_aliases state] != NSOnState
-        && [checkBox_contacts state] != NSOnState)
-        || ![popUpButton_account selectedItem])
-        NSBeep();
-    else
+    
+    [window_main makeKeyAndOrderFront:nil];
+    
+    //No Adium 1.x prefs
+    if([popUpButton_account numberOfItems] == 0){
+	NSBeginAlertSheet(@"Nothing to import", @"Quit", nil, nil, window_main, NSApp, @selector(terminate:), nil, nil, @"I cannot find any Adium 1.x preferences to import.");
+    }
+    
+    //No Adium 2.0 prefs
+    if([popUpButton_user numberOfItems] == 0){
+	NSBeginAlertSheet(@"Run Adium 2 first", @"Quit", nil, nil, window_main, NSApp, @selector(terminate:), nil, nil, @"You must run Adium 2 before any settings can be imported");
+    }
+    
+    //Multiple Adium 2.0 users
+    if([popUpButton_user numberOfItems] > 1)
     {
-        if([popUpButton_user numberOfItems] > 1)
-        {
-            [NSApp beginSheet:theSheet
-                modalForWindow:window_main
-                modalDelegate:self
-                didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
-                contextInfo:nil];
-        }
-        else
-        {
-            [self sheetDidEnd:nil returnCode:1 contextInfo:nil];
-        }
+	[NSApp beginSheet:theSheet
+    modalForWindow:window_main
+     modalDelegate:self
+    didEndSelector:nil
+       contextInfo:nil];
     }
 }
 
-- (IBAction)sheetButton:(id)sender
+
+//
+- (BOOL)ensureAdiumIsClosed
 {
-    [theSheet orderOut:self];
-    [NSApp endSheet:theSheet returnCode:(sender == button_OK)];
+    NSArray	    *apps = [[NSWorkspace sharedWorkspace] launchedApplications];
+    NSEnumerator    *enumerator;
+    NSDictionary    *appDict;
+    
+    enumerator = [apps objectEnumerator];
+    while(appDict = [enumerator nextObject]){
+	if([[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Adium"].location != NSNotFound &&
+           [[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Importer"].location == NSNotFound){
+	    //Alert
+	    NSBeginAlertSheet(@"Adium is running", @"Okay", nil, nil, window_main, nil, nil, nil, nil, @"Please close all copies of Adium before importing.");
+
+	    //Return NO
+	    return(NO);
+	}
+    }
+    
+    return(YES);
 }
 
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)code contextInfo:(void *)info
+//
+- (IBAction)sheetButton:(id)sender
+{
+    [[sender window] orderOut:self];
+    [NSApp endSheet:[sender window] returnCode:YES];
+}
+
+//
+- (IBAction)importContacts:(id)sender
+{
+    [NSApp beginSheet:importListSheet
+       modalForWindow:window_main
+	modalDelegate:self
+       didEndSelector:nil
+	  contextInfo:nil];
+}
+
+//
+- (IBAction)importLogs:(id)sender
+{
+    NSString	    *importingFromAccount = [popUpButton_account titleOfSelectedItem];
+    NSString	    *importingForAccount = [popUpButton_user titleOfSelectedItem];
+    NSString	    *newLogFolder;
+    NSString	    *oldUserFolder;
+    
+    if([self ensureAdiumIsClosed]){
+	//
+	[progressIndicator setIndeterminate:YES];
+	[progressIndicator startAnimation:nil];
+	
+	//We scan through the log folder, and copy each log as we come across it
+	oldUserFolder = [ADIUM_1X_LOGS_PATH stringByExpandingTildeInPath];
+	newLogFolder = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/Logs", importingForAccount] stringByExpandingTildeInPath];
+	
+	//Do it
+	NSString	    *oldLogFolder;
+	NSEnumerator    *logEnumerator;
+	NSString	    *subFolder;
+	
+	//For every contact they messaged
+	oldLogFolder = [[oldUserFolder stringByAppendingPathComponent:importingFromAccount] stringByAppendingPathComponent:@"Logs"];
+	logEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:oldLogFolder] objectEnumerator];
+	while((subFolder = [logEnumerator nextObject])){
+	    NSString		*subFolderPath;
+	    NSEnumerator	*fileEnumerator;
+	    NSString		*fileName;
+	    
+	    //For every log file they have
+	    subFolderPath = [oldLogFolder stringByAppendingPathComponent:subFolder];
+	    fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:subFolderPath] objectEnumerator];
+	    while((fileName = [fileEnumerator nextObject])){
+		NSString	*newPath = [NSString stringWithFormat:@"%@/AIM.%@/%@", newLogFolder, importingFromAccount, subFolder];
+		
+		//Update status
+		[currentTask setStringValue:[NSString stringWithFormat:@"Copying %@", fileName]];
+		[currentTask display];
+		[progressIndicator animate:nil];
+		[progressIndicator display];
+		
+		//Copy the file
+		[AIFileUtilities createDirectory:newPath];
+		[[NSFileManager defaultManager] copyPath:[subFolderPath stringByAppendingPathComponent:fileName] toPath:[newPath stringByAppendingPathComponent:fileName] handler:nil];
+	    }
+	}
+	
+	//
+	[progressIndicator stopAnimation:nil];
+	[progressIndicator setNeedsDisplay:YES];
+	[currentTask setStringValue:@"Log import complete."];
+    }
+}
+
+//
+- (IBAction)importAliases:(id)sender
+{
+    NSString    *importingFromAccount = [popUpButton_account titleOfSelectedItem];
+    NSString    *importingForAccount = [popUpButton_user titleOfSelectedItem];
+    
+    if([self ensureAdiumIsClosed]){
+	//
+	[progressIndicator setIndeterminate:YES];
+	[progressIndicator startAnimation:nil];
+	
+	//Open the Adium 1.x buddy list
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Adium/Users/%@/BuddyList.plist", importingFromAccount] stringByExpandingTildeInPath];
+	NSDictionary *buddyList = [[NSDictionary alloc] initWithContentsOfFile:path];
+	
+	//Scan through all the buddies and groups
+	int numGroups = [[buddyList objectForKey:@"numGroups"] intValue];
+	int i,j;
+	for(i = 0; i < numGroups; i++)
+	{
+	    NSDictionary *group = [buddyList objectForKey:
+		[NSString stringWithFormat:@"group %d", i]];
+	    
+	    int numContacts = [[group objectForKey:@"numberOfBuddies"] intValue];
+	    for(j = 0; j < numContacts; j++)
+	    {
+		if(![[group objectForKey:[NSString stringWithFormat:@"alias %d", j]] isEqual:@""])
+		{
+		    NSString    *screenname = [[[group objectForKey:[NSString stringWithFormat:@"buddy %d", j]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+		    
+		    //Update our progress display
+		    [currentTask setStringValue:[NSString stringWithFormat:@"Importing alias for %@", screenname]];
+		    [currentTask display];
+		    [progressIndicator animate:nil];
+		    [progressIndicator display];
+		    
+		    //Open the 2.0 object specific preference file for this contact
+		    NSString	    *path = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/ByObject/AIM.%@.plist", importingForAccount, screenname] stringByExpandingTildeInPath];
+		    NSMutableDictionary *prefDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+		    if(!prefDict) prefDict = [NSMutableDictionary dictionary];
+		    
+		    //Add the alias key to it
+		    [prefDict setObject:[group objectForKey:[NSString stringWithFormat:@"alias %d", j]] forKey:@"Alias"];
+		    
+		    //Save our changes
+		    [AIFileUtilities createDirectory:[path stringByDeletingLastPathComponent]];
+		    [prefDict writeToFile:path atomically:YES];
+		}
+	    }
+	}
+	
+	//clean up
+	[buddyList release];
+	
+	//
+	[progressIndicator stopAnimation:nil];
+	[progressIndicator setNeedsDisplay:YES];
+	[currentTask setStringValue:@"Alias import complete."];
+    }
+}
+
+
+/*- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)code contextInfo:(void *)info
 {
     if(code)
     {
@@ -101,72 +254,16 @@
         [button_import setEnabled:YES];
         [popUpButton_account setEnabled:YES];
     }
-}
+}*/
 
-- (void)importContacts
+/*- (void)importContacts
 {
     
-}
+}*/
 
-- (void)importAliases;
+/*- (void)importAliases;
 {
-    //Read the plist
-    NSString *path = [[NSString stringWithFormat:
-        @"~/Library/Application Support/Adium/Users/%@/BuddyList.plist", 
-        [popUpButton_account titleOfSelectedItem]] stringByExpandingTildeInPath];
-    NSDictionary *buddyList = [[NSDictionary alloc] initWithContentsOfFile:path];
-
-    //create aliasDict
-    NSMutableDictionary *aliasDict = [[NSMutableDictionary alloc] init];
-    int numGroups = [[buddyList objectForKey:@"numGroups"] intValue];
-    int i,j;
-    for(i = 0; i < numGroups; i++)
-    {
-        NSDictionary *group = [buddyList objectForKey:
-            [NSString stringWithFormat:@"group %d", i]];
-                        
-        int numContacts = [[group objectForKey:@"numberOfBuddies"] intValue];
-        for(j = 0; j < numContacts; j++)
-        {
-            if(![[group objectForKey:[NSString stringWithFormat:@"alias %d", j]]
-                    isEqual:@""])
-            {
-                NSString *screenname = [[[group objectForKey:
-                            [NSString stringWithFormat:@"buddy %d", j]]
-                        stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-                        lowercaseString];
-                        
-                [currentTask setStringValue:
-                    [NSString stringWithFormat:@"Importing alias for %@", screenname]];
-                                
-                [aliasDict 
-                    setObject:[NSDictionary dictionaryWithObject:
-                            [group objectForKey:[NSString stringWithFormat:@"alias %d", j]]                    
-                        forKey:@"Alias"]
-                    forKey:[NSString stringWithFormat:@"(AIM.%@)", screenname]];
-            }
-        }
-    }
-    
-    path = [[NSString stringWithFormat:
-        @"~/Library/Application Support/Adium 2.0/Users/%@/Aliases.plist", 
-        [popUpButton_user titleOfSelectedItem]] stringByExpandingTildeInPath];
-    
-    NSMutableDictionary *newPrefs;
-    if(!(newPrefs = [[NSMutableDictionary alloc] initWithContentsOfFile:path]))
-        newPrefs = [[NSMutableDictionary alloc] init];
-        
-    [newPrefs addEntriesFromDictionary:aliasDict];
-    if(![newPrefs writeToFile:path atomically:YES])
-    {
-        NSBeginAlertSheet(@"An Error Has Occured", @"OK", nil, nil, window_main, nil, NULL, NULL, nil, @"There was an error saving %@", path);
-    }
-    
-    //clean up
-    [buddyList release];
-    [aliasDict release];
-    [newPrefs release];
-}
+}*/
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
 {

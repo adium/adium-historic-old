@@ -27,6 +27,7 @@
 - (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService
 {
     [super init];
+    //[super initWithUID: serviceID:[inService identifier]];
 
     //
     service = [inService retain];
