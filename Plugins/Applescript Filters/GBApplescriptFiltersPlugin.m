@@ -38,7 +38,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
 	scriptArray = nil;
 	flatScriptArray = nil;
-	currentComponentInstance = nil;
+	componentInstance = nil;
 	
 	//Prepare our script menu item (which will have the Scripts menu as its submenu)
 	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:SCRIPTS_MENU_NAME target:self action:@selector(dummyTarget:) keyEquivalent:@""];
@@ -523,37 +523,37 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
 	NDAppleScriptObject		*script;
-	NSString			*result;
+	NSAppleEventDescriptor	*resultDescriptor;
+	NSString				*result = nil;
 	
 	//Attempt to use a cached script
 	script = [infoDict objectForKey:@"NDAppleScriptObject"];
 	
 	//If none is found, load and cache
-	if (!script){		
+	if (!script){
+		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe.
+		if (!componentInstance){
+			componentInstance = [NDComponentInstance componentInstanceWithComponent:[NDComponentInstance findNextComponent]]
+			
+			//We want to receive the sendAppleEvent calls below for scripts running with our componentInstance
+			[componentInstance setAppleEventSendTarget:self];
+		}
+		
 		//Load the script
-		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]];
+		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]
+													   componentInstance:componentInstance];
 		[infoDict setObject:script
 					 forKey:@"NDAppleScriptObject"];
 	}
-
-	//Configure the componentInstance of the script
-	[currentComponentInstance release];
-	currentComponentInstance = [[script componentInstance] retain];
 	
-	//We want to receive the sendAppleEvent calls below
-	[currentComponentInstance setAppleEventSendTarget:self];
-
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
-
-	/* resultAsString isn't threadsafe; perform it on the main thread and use its return value */
-	result = [script mainPerformSelector:@selector(resultAsString)
-							 returnValue:YES];
 	
-	//Result will be enclosed in quotes; we don't want 'em
-	if (result && ([result length] >= 2)){
-		result = [result substringWithRange:NSMakeRange(1, [result length]-2)];
+	resultDescriptor = [script resultAppleEventDescriptor];
+	
+	if (resultDescriptor){
+		result = [resultDescriptor stringValue];
 	}
-
+	
 	return(result);
 }
 
@@ -589,14 +589,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 								  waitUntilDone:YES];
 		[invocation getReturnValue:&eventDescriptor];
 	}else{
-		eventDescriptor = [currentComponentInstance sendAppleEvent:appleEventDescriptor
-														  sendMode:sendMode
-													  sendPriority:sendPriority
-													timeOutInTicks:timeOutInTicks
-														  idleProc:idleProc
-														filterProc:filterProc];
+		eventDescriptor = [componentInstance sendAppleEvent:appleEventDescriptor
+												   sendMode:sendMode
+											   sendPriority:sendPriority
+											 timeOutInTicks:timeOutInTicks
+												   idleProc:idleProc
+												 filterProc:filterProc];
 	}
-
+	
 	return(eventDescriptor);
 }
 
