@@ -25,7 +25,8 @@
 
 - (BOOL)isBorderless
 {
-    return(([self styleMask] & NSBorderlessWindowMask) != 0);
+	NSLog(@"%i",(int)[self styleMask]);
+    return([self styleMask] == NSBorderlessWindowMask);
 }
 
 - (void)compatibleInvalidateShadow

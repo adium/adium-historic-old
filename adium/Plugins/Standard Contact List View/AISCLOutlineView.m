@@ -43,7 +43,6 @@
     [super initWithFrame:frameRect];
 
     showLabels = YES;
-    isBorderless = NO;
     font = nil;
     groupFont = nil;
     color = nil;
@@ -461,17 +460,12 @@
 	return useGradient;
 }
 
-- (void)setIsBorderless:(BOOL)inIsBorderless{
-    isBorderless = inIsBorderless;
-}
-
 - (void)setLabelAroundContactOnly:(BOOL)inLabelAroundContactOnly{
     labelAroundContactOnly = inLabelAroundContactOnly;
 }
 - (BOOL)labelAroundContactOnly{
     return labelAroundContactOnly;   
 }
-
 
 
 //No available contacts -----------------------------------------------------------------
@@ -510,55 +504,33 @@
     
 }
 
-//highlightedCell
+
 //Custom mouse tracking ----------------------------------------------------------------------
 - (void)mouseMoved:(NSEvent *)theEvent
 {
     [[self delegate] mouseMoved:theEvent];
 }
 
+//Forward mouse events to our containing window if it's borderless (and command is pressed)
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    //If it's borderless, handle passing the cmdKey along to the window or making the window key, as the OS won't do this for us; otherwise, act as normal
-    if (isBorderless && ([theEvent type] == NSLeftMouseDown)) {
-        //Grab the next event
-        NSEvent *newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO];
-        //If the user releases the mouse without moving it, then don't attempt to begin the window drag
-        if ([newEvent type]==NSLeftMouseUp){
-            //The borderless window does not automatically becaome key and main, so force it to be
-            if (![[self window] isMainWindow]) {
-                [[self window] makeKeyWindow];
-                [[self window] makeMainWindow];
-                [[self window] makeFirstResponder:self];
-            }
-            //Pass both events to the outlineView
-            [super mouseDown:theEvent];
-            [super mouseUp:newEvent];
-        } else {
-            if ([theEvent cmdKey]) {
-                if ([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
-                    [[self delegate] performSelector:@selector(_endTrackingMouse)];
-                [[self window] mouseDown:theEvent];
-                if ([newEvent type]==NSLeftMouseDraggedMask) {
-                    [[self window] mouseDragged:newEvent];
-                }
-            } else {
-                //Now pass the event to NSOutlineView
-                [super mouseDown:theEvent];
-            }
-        } 
-    } else {
+	if([[self window] isBorderless] && [theEvent cmdKey]){
+		//Quick hack to hide any active tooltips
+		if([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
+			[[self delegate] performSelector:@selector(_endTrackingMouse)];
+		//Pass along the event
+		[[self window] mouseDown:theEvent];
+	}else{
         [super mouseDown:theEvent];   
-    }
+	}
 }
-
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    if (isBorderless && [theEvent cmdKey])
+    if([[self window] isBorderless] && [theEvent cmdKey]){
         [[self window] mouseDragged:theEvent];   
-    else
-        [super mouseDragged:theEvent];
+	}else{
+		[super mouseDragged:theEvent];
+	}
 }
-
 
 @end

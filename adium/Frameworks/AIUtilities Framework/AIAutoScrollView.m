@@ -133,7 +133,7 @@
     }
     if(updateShadowsWhileScrolling){
 #warning Adam: These are slow, we dont want to do them unless absolutely necessary
-        [[self window] compatibleInvalidateShadow];
+//        [[self window] compatibleInvalidateShadow];
     }
 }
 

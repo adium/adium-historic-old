@@ -185,7 +185,6 @@
 		BOOL			useGradient = [[prefDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue];
 		float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
         
-        isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
         shadows = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
         
         float           spacing = [[prefDict objectForKey:KEY_SCL_SPACING] floatValue];
@@ -196,9 +195,15 @@
         
         allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
         
+		
+		//Opacity, Borderless, Shadows -----
+        isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
+
         //Borderless
-        [contactListView setIsBorderless:isBorderless];
-        
+		
+		
+		
+		
         //Configure shadow drawing
         if ([contactListView window])
             [[contactListView window] setHasShadow:shadows];
@@ -564,7 +569,6 @@
         [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
     }
 }
-
 
 //Called as the mouse moves across the view
 - (void)mouseMoved:(NSEvent *)theEvent
