@@ -22,7 +22,7 @@
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
 
 @interface AIOfflineContactHidingPlugin (PRIVATE)
-- (void)configureOfflineContactHiding:(BOOL)firstTime;
+- (void)configureOfflineContactHiding;
 - (void)configurePreferences;
 @end
 
@@ -31,8 +31,16 @@
 //Install
 - (void)installPlugin
 {
+	//Configure the preferences first to have correct values for the following calls
+    [self configurePreferences];
+	
+	//Observe contact and preference changes
+    [[adium contactController] registerListObjectObserver:self];
+	
 	//Show offline contacts menu item
-    showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
+    showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:(showOfflineContacts ?
+															 HIDE_OFFLINE_MENU_TITLE : 
+															 SHOW_OFFLINE_MENU_TITLE)
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
 											  keyEquivalent:@"H"];
@@ -50,11 +58,6 @@
 														 action:@selector(toggleOfflineContactsMenu:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
-	
-	//Observe contact and preference changes
-    [[adium contactController] registerListObjectObserver:self];
-
-    [self configurePreferences];
 }
 
 //Uninstall
@@ -69,7 +72,6 @@
 {
 	showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
 																	group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-	[self configureOfflineContactHiding:YES];
 }
 
 //Toggle the display of offline contacts (call from menu)
@@ -83,22 +85,20 @@
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
 	//Update the menu item's title
-	[self configureOfflineContactHiding:NO];
+	[self configureOfflineContactHiding];
 }
 
 //Set Show/Hide Text and update the contact list
-- (void)configureOfflineContactHiding:(BOOL)firstTime
+- (void)configureOfflineContactHiding
 {
 	//The menu item shows the opposite of the current state, since that what happens if you toggle it
 	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
-	
-	if (!firstTime){
-		//Refresh visibility of all contacts
-		[[adium contactController] updateAllListObjectsForObserver:self];
-		
-		//Resort the entire list, since we know the whole thing changed
-		[[adium contactController] sortContactList];	
-	}
+
+	//Refresh visibility of all contacts
+	[[adium contactController] updateAllListObjectsForObserver:self];
+
+	//Resort the entire list, since we know the whole thing changed
+	[[adium contactController] sortContactList];	
 }
 
 //Update visibility of a list object
