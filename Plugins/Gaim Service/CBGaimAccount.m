@@ -86,23 +86,29 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #pragma mark Contacts
 - (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName
 {
+
+}
+
+- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName
+{
+	NSLog(@"%@ : %@",[self UID],[theContact UID]);
 	//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
 	//status updates
 	if (!silentAndDelayed){
 		[self silenceAllContactUpdatesForInterval:1.0];
+		[[adium contactController] delayListObjectNotificationsUntilInactivity];
+		
+		NSLog(@"Wasn't silentAndDelayed but now is %i",silentAndDelayed);
 	}
 	
 	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-	if(![inName isEqualToString:[theContact formattedUID]]){
-		[theContact setStatusObject:inName
+	if(![contactName isEqualToString:[theContact formattedUID]]){
+		[theContact setStatusObject:contactName
 							 forKey:@"FormattedUID"
 							 notify:NotifyLater];
 	}
-}
-
-- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName
-{
+	
 	if(groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]){
 		[theContact setRemoteGroupName:nil];
 	}else if(groupName && [groupName length] != 0){
@@ -1353,6 +1359,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Our account has connected
 - (oneway void)accountConnectionConnected
 {
+	NSLog(@"************ %@ CONNECTED ***********",[self UID]);
+	
     //We are now online
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -1387,6 +1395,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
+	
+	NSLog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
 
 - (void)createNewGaimAccount
