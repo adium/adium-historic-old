@@ -15,39 +15,20 @@
     return(@"ESGaimMSNAccountView");
 }
 
-//Configure our controls
+//Configure controls
 - (void)configureForAccount:(AIAccount *)inAccount
 {
     [super configureForAccount:inAccount];
-	
 	[checkBox_HTTPConnectMethod setState:[[account preferenceForKey:KEY_MSN_HTTP_CONNECT_METHOD 
 															  group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
-- (IBAction)changedConnectionPreference:(id)sender
-{	
-	if (sender == checkBox_HTTPConnectMethod){
-		[account setPreference:[NSNumber numberWithBool:[sender state]] 
-						forKey:KEY_MSN_HTTP_CONNECT_METHOD
-						 group:GROUP_ACCOUNT_STATUS];
-	}else{
-		[super changedConnectionPreference:sender];		
-	}
+//Save controls
+- (void)saveConfiguration
+{
+    [super saveConfiguration];
+	[account setPreference:[NSNumber numberWithBool:[checkBox_HTTPConnectMethod state]] 
+					forKey:KEY_MSN_HTTP_CONNECT_METHOD group:GROUP_ACCOUNT_STATUS];
 }
-
-//Update display for account status change
-//XXX - We're not doing any dynamic disabling/enabling at the moment in account views -ai
-//- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-//{
-//	
-//	if(inObject == nil || inObject == account){
-//		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
-//			BOOL shouldEnable = ![[account statusObjectForKey:@"Online"] boolValue];
-//			[checkBox_HTTPConnectMethod setEnabled:shouldEnable];
-//		}
-//	}
-//	
-//	return([super updateListObject:inObject keys:inModifiedKeys silent:silent]);
-//}
 
 @end
