@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIContactController.m,v 1.60 2003/12/14 04:59:38 jmelloy Exp $
+
 #import "AIContactController.h"
 #import "AIAccountController.h"
 #import "AIContactListEditorWindowController.h"
