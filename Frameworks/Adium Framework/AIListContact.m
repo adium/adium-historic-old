@@ -88,15 +88,17 @@
 //Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
 - (void)setRemoteGroupName:(NSString *)inName
 {
-	//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
-	[remoteGroupName autorelease];
-	remoteGroupName = [inName retain];
-
-	[[adium contactController] listObjectRemoteGroupingChanged:self];
-	
-	AIListObject	*myContainingObject = [self containingObject];
-	if([myContainingObject isKindOfClass:[AIMetaContact class]]){
-		[(AIMetaContact *)myContainingObject remoteGroupingOfContainedObject:self changedTo:remoteGroupName];
+	if((!remoteGroupName && inName) || ![inName isEqualToString:remoteGroupName]){
+		//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
+		[remoteGroupName autorelease];
+		remoteGroupName = [inName retain];
+		
+		[[adium contactController] listObjectRemoteGroupingChanged:self];
+		
+		AIListObject	*myContainingObject = [self containingObject];
+		if([myContainingObject isKindOfClass:[AIMetaContact class]]){
+			[(AIMetaContact *)myContainingObject remoteGroupingOfContainedObject:self changedTo:remoteGroupName];
+		}
 	}
 }
 
