@@ -52,7 +52,8 @@
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Alias" categoryName:@"None" view:view_contactAliasInfoView delegate:self] retain];
     [[owner contactController] addContactInfoView:contactView];
-
+    [textField_alias setDelegate:self];
+    
     //Wait for the contact list editor to init so we can add our column
     [[owner notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
 
@@ -92,9 +93,9 @@
         [textField_alias setStringValue:alias];
     }else{
         [textField_alias setStringValue:@""];
-    }        
-
+    }
 }
+
 
 //Called as contacts are created, load their alias
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
@@ -309,10 +310,15 @@
         default: longDisplayName = nil; break;
     }
 
-    //Apply thevalues
+    //Apply the values
     [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
     [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
     [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
 }
 
+//need to watch it as it changes as we can't catch the window closing
+-(void) controlTextDidChange:(NSNotification *)theNotification
+{
+    [self setAlias:nil];
+}
 @end

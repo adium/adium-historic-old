@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, SUSpeaker;
 
 @interface AIAdium : NSObject {
 
@@ -578,13 +578,25 @@ typedef enum {
     int			activeSoundThreads;
 
     NSLock		*soundLock;
+
+    SUSpeaker		*speaker;
+    NSMutableArray 	*speechArray;
+    NSArray		*voiceArray;
+    BOOL		resetNextTime;
+    BOOL		speaking;
+    int                 defaultRate;
+    int                 defaultPitch;
 }
 
 //Sounds
 - (void)playSoundNamed:(NSString *)inName;
 - (void)playSoundAtPath:(NSString *)inPath;
 - (NSArray *)soundSetArray;
-
+- (void)speakText:(NSString *)text;
+- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate;
+- (NSArray *)voices;
+- (int)defaultRate;
+- (int)defaultPitch;
 @end
 
 @interface AIToolbarController : NSObject {

@@ -45,8 +45,6 @@
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
     ESContactAlertsPreferences		*prefs;
-
-    SUSpeaker 				*speaker;
 }
 
 @end

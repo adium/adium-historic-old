@@ -1153,6 +1153,7 @@
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
+				34D300840527A00F0046AB44,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -1349,6 +1350,7 @@
 				9E95316803C8E0BE00415B22,
 				4B82AB7E04576AA600A8010A,
 				4BB54FE60476794200A8010A,
+				34041073052A2D220012A3D2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1404,6 +1406,7 @@
 				9E95316A03C8E0C700415B22,
 				4BB54FE70476794200A8010A,
 				4BEC44B204AFCFDB00A8010A,
+				34041074052A2D230012A3D2,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1431,6 +1434,70 @@
 //342
 //343
 //344
+		34040FD8052A1BB30012A3D2 = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = Sound;
+			refType = 4;
+		};
+		3404106C052A207D0012A3D2 = {
+			children = (
+				F519B01304D480C60196D3C4,
+				F519B01404D480C60196D3C4,
+			);
+			isa = PBXGroup;
+			name = "Text-To-Speech";
+			refType = 4;
+		};
+		34041073052A2D220012A3D2 = {
+			fileRef = F519B01304D480C60196D3C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34041074052A2D230012A3D2 = {
+			fileRef = F519B01404D480C60196D3C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34041075052A74510012A3D2 = {
+			isa = PBXFileReference;
+			name = ContactAnnouncer.nib;
+			path = Plugins/Announcer/ContactAnnouncer.nib;
+			refType = 4;
+		};
+		34041076052A74510012A3D2 = {
+			fileRef = 34041075052A74510012A3D2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344E7995051FB13B003B41B1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = "libpq-fe.h";
+			refType = 4;
+		};
+		344E7996051FB13B003B41B1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = postgres_ext.h;
+			refType = 4;
+		};
+		344E799A051FB5E7003B41B1 = {
+			fileRef = 344E7996051FB13B003B41B1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344E799B051FB5E7003B41B1 = {
+			fileRef = 344E7995051FB13B003B41B1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		346E6401051532D6003B2F21 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -1445,6 +1512,7 @@
 			files = (
 				34ADE00005158D4B003B2F21,
 				34ADE00305159186003B2F21,
+				34041076052A74510012A3D2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1558,6 +1626,7 @@
 				346E641505157B14003B2F21,
 				34ADDFFF05158D4B003B2F21,
 				34ADE00205159186003B2F21,
+				34041075052A74510012A3D2,
 			);
 			isa = PBXGroup;
 			name = Announcer;
@@ -1854,18 +1923,6 @@
 			settings = {
 			};
 		};
-		3487901505194CFF003B2F21 = {
-			fileRef = F519B01404D480C60196D3C4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3487901605194CFF003B2F21 = {
-			fileRef = F519B01304D480C60196D3C4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3487901705194D00003B2F21 = {
 			fileRef = 4B33F8DF0511F45000A8010A;
 			isa = PBXBuildFile;
@@ -1920,6 +1977,11 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34D300840527A00F0046AB44 = {
+			isa = PBXFileReference;
+			path = "Info-Adium__Upgraded_.plist";
+			refType = 4;
 		};
 		34D434FA051A6559003B2F21 = {
 			fileEncoding = 4;
@@ -2259,8 +2321,13 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD";
+				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -2271,7 +2338,9 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				OPTIMIZATION_CFLAGS = "-Os";
+				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;
@@ -10995,8 +11064,6 @@
 				4B33F8DE0511F45000A8010A,
 				4B33F8DD0511F45000A8010A,
 				4B33F8DF0511F45000A8010A,
-				F519B01304D480C60196D3C4,
-				F519B01404D480C60196D3C4,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -14300,6 +14367,8 @@
 			children = (
 				B7AE664F0465778E0051E914,
 				B7AE66500465778E0051E914,
+				344E7995051FB13B003B41B1,
+				344E7996051FB13B003B41B1,
 			);
 			isa = PBXGroup;
 			name = "SQL Logger";
@@ -14324,6 +14393,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7AE6658046579290051E914,
+				344E799A051FB5E7003B41B1,
+				344E799B051FB5E7003B41B1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14369,9 +14440,9 @@
 				B7AE6655046578640051E914,
 			);
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "\"/sw/postgresql:include\" /usr/local/pgsql/include";
+				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
 				INSTALL_PATH = /Adium.app/Contents/Plugins/;
-				LIBRARY_SEARCH_PATHS = "/sw/lib /usr/local/pgsql/lib";
+				LIBRARY_SEARCH_PATHS = "/usr/local/pgsql/lib /sw/lib";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lpq -lssl -lcrypto";
 				OTHER_REZFLAGS = "";
@@ -16511,7 +16582,6 @@
 				4B9AB61904D2C84700A8010A,
 				3C88C78D04D8CB8C00A80106,
 				4B33F8E00511F45000A8010A,
-				3487901605194CFF003B2F21,
 				3487901705194D00003B2F21,
 				9EAE8FAF0520371600415B25,
 				4B740FB5051D500C00A8010A,
@@ -16626,7 +16696,6 @@
 				3C88C78E04D8CB8C00A80106,
 				4B33F8E10511F45000A8010A,
 				4B33F8E20511F45000A8010A,
-				3487901505194CFF003B2F21,
 				9EAE8FB00520371600415B25,
 				4B740FB6051D500C00A8010A,
 				4B740FB8051D500C00A8010A,
@@ -19972,6 +20041,7 @@
 				F549EF13036B101B01A8010A,
 				F549EF0E036B0F8D01A8010A,
 				F549EF14036B104401A8010A,
+				34040FD8052A1BB30012A3D2,
 				F549EF0D036B0F7F01A8010A,
 				F549EF0B036B0F7201A8010A,
 				4BDB240B04AF501400A8010A,
@@ -20888,6 +20958,7 @@
 				F5CDCE460350758501A8010A,
 				F5D746FA0338D79801A8010A,
 				F51DEC0D03262FB501A8010A,
+				3404106C052A207D0012A3D2,
 			);
 			isa = PBXGroup;
 			name = "Core Controllers";

@@ -27,11 +27,16 @@
 
 #define KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME	@"Warned About Custom Volume"
 
+#define TEXT_TO_SPEAK			@"Text"
+#define VOICE_INDEX			@"Voice"
+#define PITCH				@"Pitch"
+#define RATE				@"Rate"
 
 @interface AISoundController (PRIVATE)
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)speakNext;
 @end
 
 @implementation AISoundController
@@ -41,6 +46,15 @@
     soundCacheDict = [[NSMutableDictionary alloc] init];
     activeSoundThreads = 0;
     soundLock = [[NSLock alloc] init];
+
+    voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
+    speaker = [[SUSpeaker alloc] init];
+    [speaker setDelegate:self];
+    defaultRate = [speaker rate];
+    defaultPitch = [speaker pitch];
+    speechArray = [[NSMutableArray alloc] init];
+    resetNextTime = NO;
+    speaking = NO;
     
     //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
     [AIFileUtilities createDirectory:[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS]];
@@ -57,7 +71,7 @@
 //close
 - (void)closeController
 {
-
+    [voiceArray release];
 }
 
 //Returns an array of dictionaries, each representing a soundset with the following keys:
@@ -271,5 +285,98 @@
     }
 }
 
+- (NSArray *)voices
+{
+    return voiceArray;
+}
+
+- (int)defaultRate
+{
+    return defaultRate;
+}
+
+- (int)defaultPitch
+{ 
+    NSLog(@"default pitch is %i",defaultPitch);
+    return defaultPitch;
+}
+
+- (void)speakText:(NSString *)text
+{
+    [self speakText:text withVoice:nil andPitch:0 andRate:0];
+}
+
+//add text & voiceString to the speech queue and attempt to speak text now
+//pass voice as nil to use default voice
+//pass pitch as 0 to use default pitch
+//pass rate as 0 to use default rate
+- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate
+{
+    if (text && [text length]) {
+	NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
+
+	if (text) {
+	    [dict setObject:text forKey:TEXT_TO_SPEAK];
+	}
+
+	if (voiceString) {
+	    int voiceIndex = [voiceArray indexOfObject:voiceString];
+	    if (voiceIndex != NSNotFound) {
+		[dict setObject:[NSNumber numberWithInt:voiceIndex] forKey:VOICE_INDEX];
+	    }
+	}
+
+	if (pitch)
+	    [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
+
+	if (rate)
+	    [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
+	
+	[speechArray addObject:dict];
+	[dict release];
+
+	[self speakNext];
+    }
+}
+
+//attempt to speak the next item in the queue
+- (void)speakNext
+{
+    //we have items left to speak and aren't already speaking
+    if ([speechArray count] && !speaking) {
+	speaking = YES;
+	NSMutableDictionary * dict = [speechArray objectAtIndex:0];
+	NSString * text = [dict objectForKey:TEXT_TO_SPEAK];
+	NSNumber * voiceNumber = [dict objectForKey:VOICE_INDEX];
+	NSNumber * pitchNumber = [dict objectForKey:PITCH];
+	NSNumber * rateNumber = [dict objectForKey:RATE];
+	
+	if (resetNextTime) { //reset after a voice or pitch change so default is used
+	    [speaker resetToDefaults];
+	    resetNextTime = NO;
+	}
+	if (voiceNumber) {
+	    [speaker setVoice:[voiceNumber intValue]];
+	    resetNextTime = YES;
+	}
+	if (pitchNumber) {
+	    [speaker setPitch:[pitchNumber floatValue]];
+	    resetNextTime = YES;
+	}
+	if (rateNumber) {
+	    [speaker setRate:[rateNumber intValue]];
+	    resetNextTime = YES;
+	}
+
+	[speaker speakText:text];
+	[speechArray removeObjectAtIndex:0];
+    }
+}
+
+- (IBAction)didFinishSpeaking:(SUSpeaker *)theSpeaker
+{
+    speaking = NO;
+    [self speakNext];
+}
 
 @end

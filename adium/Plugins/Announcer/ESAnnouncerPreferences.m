@@ -17,6 +17,7 @@
 @interface ESAnnouncerPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
+- (void)configureDimming;
 @end
 
 @implementation ESAnnouncerPreferences
@@ -31,24 +32,26 @@
     if(sender == checkBox_outgoing){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 									forKey:KEY_ANNOUNCER_OUTGOING
-									group:PREF_GROUP_SOUNDS];
+									group:PREF_GROUP_ANNOUNCER];
     } else if(sender == checkBox_incoming){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 									forKey:KEY_ANNOUNCER_INCOMING
-									group:PREF_GROUP_SOUNDS];
+									group:PREF_GROUP_ANNOUNCER];
     } else if(sender == checkBox_status){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 									forKey:KEY_ANNOUNCER_STATUS
-									group:PREF_GROUP_SOUNDS];
+									group:PREF_GROUP_ANNOUNCER];
     } else if(sender == checkBox_time){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 									forKey:KEY_ANNOUNCER_TIME
-									group:PREF_GROUP_SOUNDS];
+									group:PREF_GROUP_ANNOUNCER];
     } else if(sender == checkBox_sender){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 									forKey:KEY_ANNOUNCER_SENDER
-									group:PREF_GROUP_SOUNDS];
+									group:PREF_GROUP_ANNOUNCER];
     }
+
+    [self configureDimming];
 }
 
 //Private ---------------------------------------------------------------------------
@@ -88,12 +91,28 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
 
     [checkBox_outgoing setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue]];
     [checkBox_incoming setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue]];
     [checkBox_status setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_STATUS] boolValue]];
     [checkBox_time setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_TIME] boolValue]];
     [checkBox_sender setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue]];
+
+    [self configureDimming];
+}
+
+- (void)configureDimming
+{
+    BOOL messages = ([checkBox_outgoing state] || [checkBox_incoming state]);
+    if (messages)
+	[checkBox_sender setEnabled:YES];
+    else
+	[checkBox_sender setEnabled:NO];
+
+    if (messages || [checkBox_status state])
+	[checkBox_time setEnabled:YES];
+    else
+	[checkBox_time setEnabled:NO];
 }
 @end

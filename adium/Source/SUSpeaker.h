@@ -1,10 +1,10 @@
 //
 //  SUSpeaker.h
-//  SpeechTest
 //
 //  Created by raf on Sun Jan 28 2001.
-//  Copyright (c) 2000 Raphael Sebbe. All rights reserved.
-//
+//  Based on SpeechUtilities framework by Raphael Sebbe.
+//  Revised by Evan Schoenberg on Tue Sep 30 2003.
+//  Optimized and expanded by Evan Schoenberg.
 
 #import <Foundation/Foundation.h>
 #import <Carbon/Carbon.h>
@@ -21,11 +21,15 @@
 }
 
 +(NSArray*) voiceNames;
-
++(NSString*) defaultVoiceName;
 -(void) setPitch:(float)pitch;
+-(void) setRate:(int)rate;
 -(void) setVoice:(int)index;
 -(void) speakText:(NSString*)text;
 -(void) stopSpeaking;
+-(void) resetToDefaults;
+-(int) pitch;
+-(int) rate;
 
 -(void) setDelegate:(id)delegate;
 -(id) delegate;

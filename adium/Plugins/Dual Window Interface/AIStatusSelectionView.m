@@ -198,10 +198,8 @@
         int status = [[account propertyForKey:@"Status"] intValue];
 
         if(status == STATUS_ONLINE){
-	    NSLog(@"%@ is online",[account UID]);
             onlineAccounts++;
         }else if(status == STATUS_CONNECTING){
-	    NSLog(@"%@ is connecting",[account UID]);
             connectingAccounts++;
         }
     }
