@@ -20,23 +20,40 @@
 - (IBAction)changeFormat:(id)sender;
 @end
 
+/*
+ * @class ESAddressBookIntegrationAdvancedPreferences
+ * @brief Provide advanced preferences for the address book integration
+ */
 @implementation ESAddressBookIntegrationAdvancedPreferences
 
-//Preference pane properties
+/*
+ * @brief Category
+ */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Advanced);
 }
+/*
+ * @brief Label
+ */
 - (NSString *)label{
     return(AILocalizedString(@"Address Book",nil));
 }
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"AddressBookPrefs");
 }
+/*
+ * @brief Image for advanced preferences
+ */
 - (NSImage *)image{
-	if(!_addressBookImage) _addressBookImage = [[NSImage imageNamed:@"AddressBook" forClass:[self class]] retain];
-	return _addressBookImage;
+	return [NSImage imageNamed:@"AddressBook" forClass:[self class]];
 }
 
+/*
+ * @brief Restorable preferences
+ */
 - (NSDictionary *)restorablePreferences
 {
 	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]];
@@ -44,7 +61,9 @@
 	return(defaultsDict);
 }
 
-//Configure the preference view
+/*
+ * @brief Configure the preference view
+ */
 - (void)viewDidLoad
 {
 	[self configureFormatMenu];
@@ -75,12 +94,17 @@
 	[self configureControlDimming];
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
-	[_addressBookImage release];	
 	[super dealloc];
 }
 
+/*
+ * @brief Configure control dimming
+ */
 - (void)configureControlDimming
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
@@ -103,6 +127,9 @@
 	[checkBox_preferABImages setEnabled:useImages];
 }
 
+/*
+ * @brief Configure the menu of name formats
+ */
 - (void)configureFormatMenu
 {
     NSMenu		*choicesMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
@@ -143,7 +170,9 @@
     [popUp_formatMenu setFrameOrigin:oldFrame.origin];
 }
 
-//Save changed preference
+/*
+ * @brief Save changed name format preference
+ */
 - (IBAction)changeFormat:(id)sender
 {
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
@@ -151,6 +180,9 @@
                                             group:PREF_GROUP_ADDRESSBOOK];
 }
 
+/*
+ * @brief Save changed preference
+ */
 - (IBAction)changePreference:(id)sender
 {
     if (sender == checkBox_syncAutomatic){

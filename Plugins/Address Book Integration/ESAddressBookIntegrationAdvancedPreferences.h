@@ -22,8 +22,6 @@
 	IBOutlet	AILocalizationTextField	*label_names;
 	IBOutlet	AILocalizationTextField	*label_images;
 	IBOutlet	AILocalizationTextField	*label_contacts;
-	
-	NSImage		*_addressBookImage;
 }
 
 - (IBAction)changePreference:(id)sender;

@@ -21,10 +21,23 @@
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
 @end
 
+/*
+ * @class ESAddressBookIntegrationPlugin
+ * @brief Provides Apple Address Book integration
+ *
+ * This class allows Adium to seamlessly interact with the Apple Address Book, pulling names and icons, storing icons
+ * if desired, and generating metaContacts based on screen name grouping.  It relies upon cards having screen names listed
+ * in the appropriate service fields in the address book.
+ */
 @implementation ESAddressBookIntegrationPlugin
 
 static	ABAddressBook	*sharedAddressBook = nil;
 
+/*
+ * @brief Install plugin
+ *
+ * This plugin finishes installing in adiumFinishedLaunching:
+ */
 - (void)installPlugin
 {
     meTag = -1;
@@ -59,6 +72,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 									 object:nil];
 }
 
+/*
+ * @brief Uninstall plugin
+ */
 - (void)uninstallPlugin
 {
     [[adium contactController] unregisterListObjectObserver:self];
@@ -72,7 +88,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[sharedAddressBook release]; sharedAddressBook = nil;
 }
 
-//Adium is ready to receive our glory.
+/*
+ * @brief Adium finished launching
+ *
+ * Register our observers for the address book changing externally and for the account list changing.
+ * Register our preference observers. This will trigger initial building of the address book dictionary.
+ */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {	
     //Observe external address book changes
@@ -92,7 +113,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 }
 
-//Called as contacts are created, load their address book information
+/*
+ * @brief Used as contacts are created and icons are changed.
+ *
+ * When first created, load a contact's address book information from our dict.
+ * When an icon as a status object changes, if desired, write the changed icon out to the appropriate AB card.
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Just stop here if we don't have an address book dict to work with
@@ -161,6 +187,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
     return(modifiedAttributes);
 }
 
+/*
+ * @brief Return the name of an ABPerson in the way Adium should display it
+ *
+ * @param person An <tt>ABPerson</tt>
+ * @result A string based on the first name, last name, and/or nickname of the person, as specified via preferences.
+ */
 - (NSString *)nameForPerson:(ABPerson *)person
 {
 	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
@@ -187,6 +219,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	return displayName;
 }
 
+/*
+ * @brief Observe preference changes
+ *
+ * On first call, this method builds the addressBookDict. Subsequently, it rebuilds the dict only if the "create metaContacts"
+ * option is toggled, as metaContacts are created while building the dict.
+ *
+ * If the user set a new image as a preference for an object, write it out to the contact's AB card if desired.
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -254,7 +294,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 #pragma mark Image data
 
-//Called when the address book completes an asynchronous image lookup
+/*
+ * @brief Called when the address book completes an asynchronous image lookup
+ *
+ * @param inData NSData representing an NSImage
+ * @param tag A tag indicating the lookup with which this call is associated. We use a tracking dictionary, trackingDict, to associate this int back to a usable object.
+ */
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
 	if (tag == meTag){
@@ -266,9 +311,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	}else if(useABImages){
 		NSNumber		*tagNumber;
 		NSImage			*image;
-		AIListObject		*listObject;
+		AIListObject	*listObject;
+//		AIListContact	*parentContact;
 		NSString		*uniqueID;
-		id			setOrObject;
+		id				setOrObject;
 		
 		tagNumber = [NSNumber numberWithInt:tag];
 		
@@ -286,17 +332,40 @@ static	ABAddressBook	*sharedAddressBook = nil;
 								 withOwner:self
 							 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
 
+			/*
+			parentContact = [[adium contactController] parentContactForListObject:listObject];
+			 */
+			
 		}else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
 			NSEnumerator	*enumerator;
+			BOOL			checkedForMetaContact = NO;
 
 			//Apply the image to each listObject at the appropriate priority
 			enumerator = [(NSSet *)setOrObject objectEnumerator];
 			while(listObject = [enumerator nextObject]){
+				
+				/*
+				//These objects all have the same unique ID so will all also have the same meta contact; just check once
+				if(!checkedForMetaContact){
+					parentContact = [[adium contactController] parentContactForListObject:listObject];
+					if(parentContact == listObject) parentContact = nil;
+					checkedForMetaContact = YES;
+				}
+				*/
+				
 				[listObject setDisplayUserIcon:image
 									 withOwner:self
 								 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
 			}
 		}
+		
+		/*
+		if(parentContact){
+			[parentContact setDisplayUserIcon:image
+									withOwner:self
+								priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];			
+		}
+		*/
 		
 		//No further need for the dictionary entries
 		[trackingDict removeObjectForKey:tagNumber];
@@ -308,6 +377,20 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	}
 }
 
+/*
+ * @brief Queue an asynchronous image fetch for person associated with inObject
+ *
+ * Image lookups are done asynchronously.  This allows other processing to be done between image calls, improving the perceived
+ * speed.  [Evan: I have seen one instance of this being problematic. My localhost loop was broken due to odd network problems,
+ *			and the asynchronous lookup therefore hung the problem.  Submitted as radar 3977541.]
+ *
+ * We load from the same ABPerson for multiple AIListObjects, one for each service/UID combination times
+ * the number of accounts on that service.  We therefore aggregate the lookups to lower the address book search
+ * and image/data creation overhead.
+ *
+ * @param person The ABPerson to fetch the image from
+ * @pram inObject The AIListObject with which to ultimately associate the image
+ */
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
 {
 	int				tag;
@@ -352,6 +435,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 #pragma mark Searching
+/*
+ * @brief Find an ABPerson corresponding to an AIListObject
+ *
+ * @param inObject The object for which it search
+ * @result An ABPerson is one is found, or nil if none is found
+ */
 - (ABPerson *)searchForObject:(AIListObject *)inObject
 {
 	ABPerson		*person = nil;
@@ -383,6 +472,16 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	}
 	return person;
 }
+
+/*
+ * @brief Find an ABPerson for a given UID and serviceID combination
+ * 
+ * Uses our addressBookDict cache created in rebuildAddressBook.
+ *
+ * @param UID The UID for the contact
+ * @param serviceID The serviceID for the contact
+ * @result A corresponding <tt>ABPerson</tt>
+ */
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
 	ABPerson		*person = nil;
@@ -405,24 +504,39 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 #pragma mark Address book changed
+/*
+ * @brief Address book changed externally
+ *
+ * As a result we rebuld the address book dictionary cache and update all contacts based on it
+ */
 - (void)addressBookChanged:(NSNotification *)notification
 {
 	[self rebuildAddressBookDict];
     [self updateAllContacts];
 }
 
-//Update all existing contacts
+/*
+ * @brief Update all existing contacts and accounts
+ */
 - (void)updateAllContacts
 {
 	[[adium contactController] updateAllListObjectsForObserver:self];
     [self updateSelfIncludingIcon:YES];
 }
 
+/*
+ * @brief Account list changed: Update all existing accounts
+ */
 - (void)accountListChanged:(NSNotification *)notification
 {
 	[self updateSelfIncludingIcon:NO];
 }
 
+/*
+ * @brief Update all existing accounts
+ *
+ * We use the "me" card to determine the default icon and account display name
+ */
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon
 {
 	NS_DURING 
@@ -484,6 +598,18 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 #pragma mark Address book caching
+/*
+ * @brief rebuild our address book lookup dictionary
+ *
+ * Rather than continually searching the address book, a lookup dictionary addressBookDict provides an quick and easy
+ * way to look up a unique record ID for an ABPerson based on the service and UID of a contact. addressBookDict contains
+ * NSDictionary objects keyed by service ID. Each of these NSDictionary objects contains unique record IDs keyed by compacted
+ * (that is, no spaces and no all lowercase) UID. This means we can search while ignoring spaces, which normal AB searching
+ * does not allow.
+ *
+ * In the process of building we look for cards which have multiple screen names listed and, if desired, automatically
+ * create metaContacts baesd on this information.
+ */
 - (void)rebuildAddressBookDict
 {
 	NSEnumerator		*peopleEnumerator;
