@@ -24,8 +24,8 @@
     unviewedObjectsArray = [[NSMutableArray alloc] init];
     unviewedState = NO;
 
-    //Register as a contact observer (So we can catch the unviewed content status flag)
-    [[adium contactController] registerListObjectObserver:self];
+    //Register as a chat observer (So we can catch the unviewed content status flag)
+    [[adium contentController] registerChatObserver:self];
 
 }
 
@@ -34,25 +34,22 @@
 
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-	//Don't watch unviewed content for meta contacts, since this status object has already been noted
-	//for their contained contacts as applicable
-    if((![inObject isKindOfClass:[AIMetaContact class]]) &&
-	   ([inModifiedKeys containsObject:@"UnviewedContent"])){
+    if([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
 		
-        if([inObject integerStatusObjectForKey:@"UnviewedContent"]){
+        if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
             //If this is the first contact with unviewed content, animate the dock
             if(!unviewedState){
                 [[adium dockController] setIconStateNamed:@"Alert"];
                 unviewedState = YES;
             }
 
-            [unviewedObjectsArray addObject:inObject];
+            [unviewedObjectsArray addObject:inChat];
 
         }else{
-            if([unviewedObjectsArray containsObject:inObject]){
-                [unviewedObjectsArray removeObject:inObject];
+            if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+                [unviewedObjectsArray removeObject:inChat];
 
                 //If there are no more contacts with unviewed content, stop animating the dock
                 if([unviewedObjectsArray count] == 0 && unviewedState){
