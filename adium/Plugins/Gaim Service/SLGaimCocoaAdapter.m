@@ -366,17 +366,22 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-	
+	/*
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		/*
 		GaimBuddy *buddy = (GaimBuddy*) node;
 		
 		contactLookupFromBuddy(buddy);
 			
 		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
+<<<<<<< SLGaimCocoaAdapter.m
+		 
+		NSLog(@"%s",((GaimBuddy*)node) ->name);
+=======
 		 */
 //		NSLog(@"%s",((GaimBuddy*)node) ->name);
+>>>>>>> 1.54
     }
+	 */
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
@@ -1279,10 +1284,12 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 	NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
-    [accountLookup(xfer->account) mainPerformSelector:@selector(updateProgressForFileTransfer:percent:bytesSent:)
-										   withObject:fileTransfer
-										   withObject:[NSNumber numberWithFloat:percent]
-										   withObject:[NSNumber numberWithFloat:xfer->bytes_sent]];
+	if (fileTransfer){
+		[accountLookup(xfer->account) mainPerformSelector:@selector(updateProgressForFileTransfer:percent:bytesSent:)
+											   withObject:fileTransfer
+											   withObject:[NSNumber numberWithFloat:percent]
+											   withObject:[NSNumber numberWithFloat:xfer->bytes_sent]];
+	}
 }
 
 static void adiumGaimCancelLocal(GaimXfer *xfer)
