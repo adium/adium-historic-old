@@ -16,7 +16,7 @@
 #define USER_ICON_CACHE_NAME    @"UserIcon_%@"
 
 #define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
-#define RECONNECTION_ATTEMPTS      4
+#define RECONNECTION_ATTEMPTS   4
 
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
@@ -170,8 +170,6 @@
 			
             //BuddyImagePointer is just for us, shh, keep it secret ;)
             [modifiedKeys addObject:@"UserIcon"];
-            
-            NSLog(@"%s: gaim image set",buddy->name);
         }
     }     
     
@@ -334,7 +332,7 @@
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
-	
+
     //create an initial gaim account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
@@ -1008,42 +1006,38 @@
 	[super updateStatusForKey:key];
 
     //Now look at keys which only make sense while online
-    if([[self statusObjectForKey:@"Online"] boolValue]){
-        
-        if([key compare:@"IdleSince"] == 0){
-            NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-            [self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
-            
-        }else if ([key compare:@"AwayMessage"] == 0){
-            NSAttributedString	*awayMessage = nil;
-            
-            if(data = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
-                awayMessage = [NSAttributedString stringWithData:data];
-            }
-            [self setAccountAwayTo:awayMessage];
-            
-        }else if([key compare:@"TextProfile"] == 0){
-            NSAttributedString	*profile = nil;
-            
-            if(data = [self preferenceForKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS]){
-                profile = [NSAttributedString stringWithData:data];
-            }
-	    
-	    if (GAIM_DEBUG) {
-		NSLog(@"updating profile to %@",[profile string]);
-	    }
-	    
-            [self setAccountProfileTo:profile];
-            
+        if([[self statusObjectForKey:@"Online"] boolValue]){
+                NSData  *data;
+                if([key compare:@"IdleSince"] == 0){
+                    NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+                    [self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
+                    
+                } else if ( ([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0) ){
+                    NSAttributedString	*attributedString = nil;
+                    
+                    if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
+                        attributedString = [NSAttributedString stringWithData:data];
+                    }
+                    
+                    [self updateAttributedStatusString:attributedString forKey:key];
+                    
+                }
         }
-    }
-    
+
 	//User Icon can be set regardless of ONLINE state
 	if([key compare:@"UserIcon"] == 0) {
 		if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
 			[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
 		}
 	}
+}
+- (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
+{
+    if ([key compare:@"AwayMessage"] == 0){
+        [self setAccountAwayTo:attributedString];
+    } else if ([key compare:@"TextProfile"] == 0) {
+        [self setAccountProfileTo:attributedString];
+    }
 }
 
 //Set our idle (Pass nil for no idle)
@@ -1059,7 +1053,6 @@
 				   forKey:@"IdleSince" notify:YES];
 }
 
-//Set our away state and message (Pass nil for no away)
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
     char	*awayHTML = nil;
@@ -1075,21 +1068,26 @@
     [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 }
 
-//Set our text profile (Pass nil for no profile)
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
     char 	*profileHTML = nil;
     
-	//Convert the profile to HTML, and pass it to libgaim
+    //Convert the profile to HTML, and pass it to libgaim
     if(profile){
         profileHTML = (char *)[[self encodedStringFromAttributedString:profile] UTF8String];
     }
     serv_set_info(gc, profileHTML);
-	
-	//We now have a profile
-	[self setStatusObject:profile forKey:@"TextProfile" notify:NO];
+    
+    
+    if (GAIM_DEBUG) {
+        NSLog(@"updating profile to %@",[profile string]);
+    }
+    
+    //We now have a profile
+    [self setStatusObject:profile forKey:@"TextProfile" notify:NO];
 }
 
+// *** USER IMAGE
 //Set our user image (Pass nil for no image)
 - (void)setAccountUserImage:(NSImage *)image
 {

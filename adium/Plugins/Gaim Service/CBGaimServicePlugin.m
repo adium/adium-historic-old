@@ -105,7 +105,6 @@ static GaimConnectionUiOps adiumGaimConnectionOps = {
 static void adiumGaimBlistNewList(GaimBuddyList *list)
 {
     //We're allowed to place whatever we want in blist's ui_data.    
-    NSLog(@"adiumGaimBlistNewList");
 }
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
@@ -119,7 +118,7 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
 {
-    NSLog(@"adiumGaimBlistShow");
+
 }
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
