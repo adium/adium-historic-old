@@ -38,6 +38,8 @@
         
     NSSize		lastPostedSize;
     NSSize		_desiredSizeCached;
+    
+    IBOutlet		NSScrollView   *messageScrollView;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;

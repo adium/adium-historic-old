@@ -43,7 +43,12 @@
             SUPERCLASS = NSView; 
         }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
-        {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {
+            CLASS = AISendingTextView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {messageScrollView = NSScrollView; target = id; }; 
+            SUPERCLASS = NSTextView; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
