@@ -40,6 +40,11 @@
     return(self);
 }
 
+- (void)awakeFromNib
+{
+	
+}
+
 //Dealloc
 - (void)dealloc
 {    
