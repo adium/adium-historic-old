@@ -120,7 +120,7 @@ typedef enum {
 - (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject;
 
 //Status
-- (NSArray *)supportedPropertyKeys;
+- (NSSet *)supportedPropertyKeys;
 - (id)statusForKey:(NSString *)key;
 - (void)updateStatusForKey:(NSString *)key;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
