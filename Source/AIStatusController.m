@@ -105,8 +105,13 @@
  */
 - (void)finishIniting
 {
+	//Observe changes to the account list so we can set an initial state when accounts are created
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:) 
+									   name:Account_ListChanged 
+									 object:nil];	
 	[self setInitialStatusState];
-	
+
 	/* Load our array of accounts which were connected when we quit; these will be the accounts to connect if an online
 	 * status is selected with no accounts online. */
 	NSArray	*savedAccountsToConnect = [[adium preferenceController] preferenceForKey:@"SavedAccountsToConnect"
@@ -481,6 +486,13 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			   afterDelay:0];
 }
 
+/*!
+ * @brief Set the initial status state if necessary for each account
+ *
+ * Any account which does not currently have a status state will be set to [self defaultIniitalStatusState].
+ *
+ * This is called as Adium finishes initializing and is also used after accounts are created.
+ */
 - (void)setInitialStatusState
 {
 	AIStatus	*statusState = [self defaultInitialStatusState];
@@ -490,6 +502,17 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
 															  withObject:statusState];
 	[[adium contactController] endListObjectNotificationsDelay];
+}
+
+/*
+ * @brief Account list changed
+ *
+ * Accounts should always have a status state. When the account list changes, ensure taht accounts have an
+ * initial state set.
+ */
+- (void)accountListChanged:(NSNotification *)notification
+{
+	[self setInitialStatusState];
 }
 
 /*!
