@@ -123,8 +123,7 @@ DeclareString(AppendNextMessage);
 	
 	resourcePaths = [[adium resourcePathsForName:@"Message Styles"] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
 	enumerator = [resourcePaths objectEnumerator];
-	
-	
+
 	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
     while(resourcePath = [enumerator nextObject]) {
         fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:resourcePath];
@@ -155,10 +154,19 @@ DeclareString(AppendNextMessage);
 {
 	return [styleDictionary objectForKey:name];
 }
-- (NSString *)keyForDesiredVariantOfStyle:(NSString *)desiredStyle
+- (NSString *)variantKeyForStyle:(NSString *)desiredStyle
 {
 	return [NSString stringWithFormat:@"%@:Variant",desiredStyle];
 }
+- (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle
+{
+	return [NSString stringWithFormat:@"%@:Background",desiredStyle];	
+}
+- (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle
+{
+	return [NSString stringWithFormat:@"%@:Background Color",desiredStyle];
+}
+
 
 #pragma mark Content adding
 
@@ -177,9 +185,10 @@ DeclareString(AppendNextMessage);
 	if ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
 		if(previousContent) {
 			// Are the messages history lines from different days?
-			NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil timeZone:nil];
-			NSCalendarDate *currentDate = [[(AIContentContext *)content date] dateWithCalendarFormat:nil timeZone:nil];
-			
+			NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil
+																									 timeZone:nil];
+			NSCalendarDate *currentDate = [[(AIContentContext *)content date] dateWithCalendarFormat:nil 
+																							timeZone:nil];
 			if( [previousDate dayOfCommonEra] != [currentDate dayOfCommonEra] ) {
 				contentIsSimilar = NO;
 				shouldShowDateHeader = YES;
@@ -192,8 +201,9 @@ DeclareString(AppendNextMessage);
 		// Add the date header (should be farmed out to a separate function)
 		if( shouldShowDateHeader ) {
 						
-			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString] timeZone:nil locale:nil]];
-			
+			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString]
+																													timeZone:nil
+																													  locale:nil]];
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
@@ -208,12 +218,16 @@ DeclareString(AppendNextMessage);
 	// If there was history and we're at the end of it, add a line with the current date
 	if(previousContent && [[content type] compare:CONTENT_MESSAGE_TYPE] == 0 && [[previousContent type] compare:CONTENT_CONTEXT_TYPE] == 0) {
 		
-		NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil timeZone:nil];
+		NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil
+																								 timeZone:nil];
 			
 		// Was the last history from a different day?
-		if( [previousDate dayOfCommonEra] != [[[NSDate date] dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] ) {
+		if( [previousDate dayOfCommonEra] != [[[NSDate date] dateWithCalendarFormat:nil
+																		   timeZone:nil] dayOfCommonEra] ) {
 			
-			dateMessage = [NSString stringWithFormat:@"%@",[[NSDate date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString] timeZone:nil locale:nil]];
+			dateMessage = [NSString stringWithFormat:@"%@",[[NSDate date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString] 
+																							   timeZone:nil
+																								 locale:nil]];
 		
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 										   withSource:[[content chat] listObject]
@@ -244,9 +258,8 @@ DeclareString(AppendNextMessage);
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
 {	
 	NSString		*currentStylePath;
-	NSMutableString	*newHTML;
+	NSMutableString	*newHTML = nil;
 	NSString		*templateFile;
-	NSString		*template = nil;
 	BOOL			isContext = [[content type] isEqualToString:CONTENT_CONTEXT_TYPE];
 //	BOOL			allowColors = (isContext ? NO : YES);
 #warning Disabling colors for now
@@ -262,20 +275,20 @@ DeclareString(AppendNextMessage);
 		templateFile = (isContext ? @"Context.html" : @"Content.html");
 	}
 	
-	template = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
-	//Fall back on the content files if necessary
-	if (!template){
+	newHTML = [NSMutableString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
+	
+	//Fall back on the content files if context files were desired and not present
+	if (!newHTML){
 		if (contentIsSimilar){
 			templateFile = @"NextContent.html";
 		}else{
 			templateFile = @"Content.html";
 		}
 		
-		template = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
+		newHTML = [NSMutableString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
 	}
 
-	//
-	newHTML = [[template mutableCopy] autorelease];
+	//Perform substitutions, then escape the HTML to get it past the evil javascript guards
 	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:allowColors];
 	newHTML = [self escapeString:newHTML];
 
@@ -291,10 +304,9 @@ DeclareString(AppendNextMessage);
 	
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
 {
-	NSMutableString *newHTML;
-    NSString	    *statusTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]];
+    NSMutableString *newHTML = [NSMutableString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]];
 	
-	newHTML = [[statusTemplate mutableCopy] autorelease];
+	//Perform substitutions, then escape the HTML to get it past the evil javascript guards
 	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:YES];
 	newHTML = [self escapeString:newHTML];
 	
@@ -312,17 +324,19 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if(range.location != NSNotFound){
-				NSString    *userIconPath = [[content source] statusObjectForKey:@"UserIconPath"];
-				if (userIconPath && showUserIcons){
-					[inString replaceCharactersInRange:range 
-											withString:[NSString stringWithFormat:@"file://%@", userIconPath]];
+				NSString    *userIconPath ;
+				NSString	*replacementString;
+				
+				if (showUserIcons && (userIconPath = [[content source] statusObjectForKey:@"UserIconPath"])){
+					replacementString = [NSString stringWithFormat:@"file://%@", userIconPath];
+
 				}else{
-					if ([content isOutgoing]){
-						[inString replaceCharactersInRange:range withString:@"Outgoing/buddy_icon.png"];
-					}else{
-						[inString replaceCharactersInRange:range withString:@"Incoming/buddy_icon.png"];
-					}
+					replacementString = ([content isOutgoing]
+										 ? @"Outgoing/buddy_icon.png" 
+										 : @"Incoming/buddy_icon.png");
 				}
+				
+				[inString replaceCharactersInRange:range withString:replacementString];
 			}
 		} while(range.location != NSNotFound);
 		
@@ -417,7 +431,7 @@ DeclareString(AppendNextMessage);
 	return(inString);
 }
 
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forChat:(AIChat *)chat
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style forChat:(AIChat *)chat
 {
 	NSRange	range;
 	
@@ -481,6 +495,33 @@ DeclareString(AppendNextMessage);
 			}
 		}
 	} while(range.location != NSNotFound);
+	
+	//Background
+	{
+		range = [inString rangeOfString:@"%bodyBackground%"];
+		if(range.location != NSNotFound){
+			
+			NSString	*background = [[adium preferenceController] preferenceForKey:[self keyForDesiredBackgroundOfStyle:[style name]]
+																			   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			NSColor		*backgroundColor = [[[adium preferenceController] preferenceForKey:[self keyForDesiredBackgroundColorOfStyle:[style name]]
+																					 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
+			NSMutableString *backgroundTag = nil;
+			
+			if (background || backgroundColor){
+				backgroundTag = [[[NSMutableString alloc] init] autorelease];;
+				if (background){
+					[backgroundTag appendString:[NSString stringWithFormat:@"background: url('%@') no-repeat fixed; ",background]];
+				}
+				if (backgroundColor){
+					[backgroundTag appendString:[NSString stringWithFormat:@"background-color: #%@; ",[backgroundColor hexString]]];
+				}
+			}
+
+			[inString replaceCharactersInRange:range
+									withString:(backgroundTag ? (NSString *)backgroundTag : @"")];
+			
+		}
+	}
 	
 	return(inString);
 }

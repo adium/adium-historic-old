@@ -131,7 +131,8 @@
 					[NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");", CSS]];
 				
 			}else{
-				NSString	*basePath, *headerHTML, *footerHTML, *templateHTML;
+				NSString	*basePath, *headerHTML, *footerHTML;
+				NSMutableString *templateHTML;
 				
 				[stylePath release];
 				stylePath = [newStylePath retain];
@@ -140,13 +141,10 @@
 				
 				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
-				headerHTML = [plugin fillKeywords:[[headerHTML mutableCopy] autorelease] forChat:chat];
-				
 				footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-				footerHTML = [plugin fillKeywords:[[footerHTML mutableCopy] autorelease] forChat:chat];
+				templateHTML = [NSMutableString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+				templateHTML = [plugin fillKeywords:templateHTML forStyle:style forChat:chat];
 				
-				//Load the template, and fill it up
-				templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
 				templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 				
 				//Feed it to the webview

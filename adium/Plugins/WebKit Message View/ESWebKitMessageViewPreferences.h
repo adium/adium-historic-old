@@ -7,6 +7,12 @@
 #import <WebKit/WebKit.h>
 #import "ESWebView.h"
 
+typedef enum {
+	DefaultBackground = 0,
+	CustomBackground,
+	NoBackground
+} BackgroundOptions;
+
 @interface ESWebKitMessageViewPreferences : AIPreferencePane {
 	IBOutlet	ESWebView		*preview;
 	BOOL						webViewIsReady;
@@ -19,6 +25,9 @@
 	
     IBOutlet    NSPopUpButton   *popUp_timeStamps;
 	IBOutlet    NSButton        *checkBox_showUserIcons;
+	IBOutlet	NSPopUpButton   *popUp_customBackground;
+	IBOutlet	NSColorWell		*colorWell_customBackgroundColor;
+	IBOutlet	NSButton		*button_restoreDefaultBackgroundColor;
 	
 	NSMutableDictionary			*previewListObjectsDict;
 	
