@@ -115,7 +115,8 @@
             }
             else if ([action compare:@"Alert"] == 0) {
                 NSAttributedString *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
-                NSRunInformationalAlertPanel(@"Contact Alert", [message string], @"Okay", nil, nil);
+                NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
+                NSRunInformationalAlertPanel(title, [message string], @"Okay", nil, nil);
             }
         }
     }
