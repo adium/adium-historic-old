@@ -44,6 +44,7 @@ DeclareString(Span);
 DeclareString(CloseSpan);
 DeclareString(BR);
 DeclareString(CloseBR);
+DeclareString(OtherCloseBR);
 DeclareString(B);
 DeclareString(CloseB);
 DeclareString(I);
@@ -87,6 +88,7 @@ DeclareString(TagCharStartString);
 	InitString(CloseSpan,@"/SPAN");
 	InitString(BR,@"BR");
 	InitString(CloseBR,@"/BR");
+	InitString(OtherCloseBR,@"BR /");
 	InitString(B,@"B");
 	InitString(CloseB,@"/B");
 	InitString(I,@"I");
@@ -204,7 +206,10 @@ DeclareString(TagCharStartString);
         }
 
         //Font (If the color, font, or size has changed)
-        if(includeFontTags && (pointSize != currentSize || [familyName compare:currentFamily] || [color compare:currentColor] || (currentColor && !color))){
+        if(includeFontTags && (pointSize != currentSize ||
+							   [familyName compare:currentFamily] ||
+							   [color compare:currentColor] ||
+							   (currentColor && !color))){
             //Close any existing font tags, and open a new one
             if(closeFontTags && openFontTag){
                 [string appendString:CloseFontTag];
@@ -547,7 +552,8 @@ int HTMLEquivalentForFontSize(int fontSize)
                         [textAttributes setFontSize:12];
                     //Line Break
                     }else if([chunkString caseInsensitiveCompare:BR] == 0 || 
-							 [chunkString caseInsensitiveCompare:CloseBR] == 0){
+							 [chunkString caseInsensitiveCompare:CloseBR] == 0 ||
+							 [chunkString caseInsensitiveCompare:OtherCloseBR] == 0){
                         [attrString appendString:Return withAttributes:nil];
 
                     //Bold
