@@ -214,25 +214,31 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
-    AIChat				*chat = [notification object];
-    NSString			*logString = nil;
+	if ([content postProcessContent]){
+		AIChat				*chat = [notification object];
+		NSString			*logString = nil;
 
-	//Generate a plaintext string for this content
-    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
-		logString = [self stringForContentMessage:(AIContentMessage *)content];
-    }else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
-		logString = [self stringForContentStatus:(AIContentStatus *)content];
-    }
-	
-	//Log the string, and flag the log as dirty
-    if(logString){
-		NSString	*relativePath;
-		NSString	*objectUID = [chat name];
-		if(!objectUID) objectUID = [[chat listObject] UID];
-		
-		relativePath = [self _writeMessage:logString betweenAccount:[chat account] andObject:objectUID onDate:[content date]];
-		[self markLogDirtyAtPath:relativePath forChat:chat];
-    }
+		//Generate a plaintext string for this content
+		if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+			logString = [self stringForContentMessage:(AIContentMessage *)content];
+		}else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
+			logString = [self stringForContentStatus:(AIContentStatus *)content];
+		}
+
+		//Log the string, and flag the log as dirty
+		if(logString){
+			NSString	*relativePath;
+			NSString	*objectUID = [chat name];
+			if(!objectUID) objectUID = [[chat listObject] UID];
+
+			relativePath = [self _writeMessage:logString
+								betweenAccount:[chat account] 
+									 andObject:objectUID
+										onDate:[content date]];
+
+			[self markLogDirtyAtPath:relativePath forChat:chat];
+		}
+	}
 }
 
 //Generate a plain-text string representing a content message
@@ -264,7 +270,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source UID], [message string]];
 		}
 	}
-	
+
 	return(logString);
 }
 
@@ -274,7 +280,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	NSString		*date = [[content date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
 	NSString		*message = [[content message] string];
 	NSString		*logString = nil;
-	
+
 	if(date && message){
 		if(logHTML){
 			logString = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, date];
@@ -282,7 +288,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 			logString = [NSString stringWithFormat:@"<%@ (%@)>\n", message, date];
 		}
 	}
-	
+
 	return(logString);
 }
 
@@ -293,7 +299,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     NSString    *fullPath;
     NSString	*fileName;
     FILE		*file;
-	
+
 	//Get the log path and name
 	fileName = [AILoggerPlugin fileNameForLogWithObject:object onDate:date plainText:!logHTML];
 	relativePath = [AILoggerPlugin relativePathForLogWithObject:object onAccount:account];
@@ -301,7 +307,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
     //Create a directory for this log (if one doesn't exist)
     [[NSFileManager defaultManager] createDirectoriesForPath:fullPath];
-	
+
     //Append the new content (We use fopen/fputs/fclose for max speed)
     file = fopen([[fullPath stringByAppendingPathComponent:fileName] fileSystemRepresentation], "a");
 	if(file){
@@ -314,11 +320,11 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		}
 		fputs([message UTF8String], file);
 		fclose(file);
-		
+
 	}else{
 		[self displayErrorAndDisableLogging];
 	}
-	
+
 	//Return a RELATIVE path to the log
     return([relativePath stringByAppendingPathComponent:fileName]);
 }
