@@ -37,11 +37,6 @@
     return(self);
 }
 
-- (void)dealloc
-{
-	[super dealloc];
-}
-
 //Compare to another category view (for sorting on the preference window)
 - (NSComparisonResult)compare:(AIModularPane *)inPane
 {
