@@ -9,17 +9,14 @@
 #define PREF_GROUP_UPDATING			@"Updating"
 #define KEY_CHECK_AUTOMATICALLY 	@"Check Automatically"
 
-@interface CPFVersionChecker : AIPlugin <AIListObjectObserver> {
+@interface CPFVersionChecker : AIPlugin {
     NSMenuItem 	*versionCheckerMenuItem;
-	BOOL		observingListUpdates;
-	BOOL		checkingManually;
-	BOOL		timerActive;
 	NSTimer		*timer;
+	BOOL		checkingManually;
+	BOOL		checkWhenConnectionBecomesAvailable;
 }
 
-- (void)checkForNewVersion:(id)sender;
-- (void)timerCheckForNewVersion:(NSTimer *)timer;
-- (void)startTimerChecking;
-- (void)endTimerChecking;
+- (void)manualCheckForNewVersion:(id)sender;
+- (void)automaticCheckForNewVersion:(id)sender;
 
 @end
