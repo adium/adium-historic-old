@@ -82,11 +82,9 @@
 	if(sender == pushButton_OK) {
 		[self savePreferences];
 	}
-	
-	[NSApp stopModal];
-	
-	[panel_options orderOut:panel_options];
-	
+		
+	[panel_options orderOut:nil];
+    [NSApp endSheet:panel_options returnCode:0];
 }
 
 -(IBAction)openOptions:(id)sender
@@ -98,12 +96,6 @@
 		modalDelegate:nil
 	   didEndSelector:nil
 		  contextInfo:nil];
-	
-    [NSApp runModalForWindow:panel_options];
-	[NSApp endSheet:panel_options];
-	[panel_options orderOut:self];
-	
-	//[panel_options makeKeyAndOrderFront:panel_options];
 }
 
 
