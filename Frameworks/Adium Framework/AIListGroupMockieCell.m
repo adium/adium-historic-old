@@ -61,7 +61,7 @@
 	
 	if(!_groupGradient || !NSEqualSizes(inSize,_groupGradientSize)){
 		[_groupGradient release];
-		NSLog(@"rendering gradient");
+		NSLog(@"Reticulating spines");
 		rect = NSMakeRect(0,0,inSize.width,inSize.height);
 		
 		_groupGradient = [[NSImage alloc] initWithSize:inSize];
@@ -80,7 +80,7 @@
 	
 	if(!_groupExpandedGradient || !NSEqualSizes(inSize,_groupExpandedGradientSize)){
 		[_groupExpandedGradient release];
-		NSLog(@"rendering gradient");
+		NSLog(@"Reticulating spines");
 		rect = NSMakeRect(0,0,inSize.width,inSize.height);
 		
 		_groupExpandedGradient = [[NSImage alloc] initWithSize:inSize];

@@ -168,7 +168,7 @@ DeclareString(FormattedUID);
 		//When we get our first containing object, our ordering information is appropriate
 		[containingObject listObject:self didSetOrderIndex:orderIndex];
 	}else{
-		//Otherwise, clear it pending getting new ordering information, putting as the bottom of
+		//Otherwise, clear it pending getting new ordering information, putting us the bottom of
 		//the containing object for now (but not saving that data)
 		orderIndex = ([containingObject largestOrder] + 1.0);
 

@@ -34,6 +34,7 @@
     dateOpened = [[NSDate date] retain];
 	uniqueChatID = nil;
 	isOpen = NO;
+	expanded = YES;
 	
     return(self);
 }
@@ -343,5 +344,88 @@
 	return nil;
 }
 
+#pragma mark AIContainingObject protocol
+//AIContainingObject protocol
+- (NSArray *)containedObjects
+{
+	return([self participatingListObjects]);
+}
+
+- (unsigned)containedObjectsCount
+{
+	return([[self containedObjects] count]);
+}
+
+- (BOOL)containsObject:(AIListObject *)inObject
+{
+	return([[self containedObjects] containsObjectIdenticalTo:inObject]);
+}
+
+- (id)objectAtIndex:(unsigned)index
+{
+	return([[self containedObjects] objectAtIndex:index]);
+}
+
+- (int)indexOfObject:(AIListObject *)inObject
+{
+    return([[self containedObjects] indexOfObject:inObject]);
+}
+
+//Retrieve a specific object by service and UID
+- (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID
+{
+	NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
+	AIListObject	*object;
+	
+	while(object = [enumerator nextObject]){
+		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
+	}
+	
+	return(object);
+}
+//Enumerator of -[containedObjects]
+- (NSEnumerator *)objectEnumerator
+{
+	return([[self containedObjects] objectEnumerator]);
+}
+
+//Should list each list contact only once (for chats, this is the same as the objectEnumerator)
+- (NSEnumerator *)listContactsEnumerator
+{
+	return([self objectEnumerator]);
+}
+
+- (BOOL)addObject:(AIListObject *)inObject
+{
+	[self addParticipatingListObject:inObject];
+	
+	return YES;
+}
+
+- (void)removeObject:(AIListObject *)inObject
+{
+	[self removeParticipatingListObject:inObject];
+}
+
+- (void)removeAllObjects {};
+
+- (void)setExpanded:(BOOL)inExpanded
+{
+	expanded = inExpanded;
+}
+- (BOOL)isExpanded
+{
+	return expanded;
+}
+
+- (unsigned)visibleCount
+{
+	return([self containedObjectsCount]);
+}
+
+//Not used
+- (float)smallestOrder { return(0); }
+- (float)largestOrder { return(1E10); }
+- (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
 @end
