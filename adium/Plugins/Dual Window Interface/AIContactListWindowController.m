@@ -20,6 +20,7 @@
 #define CONTACT_LIST_WINDOW_NIB			@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
 #define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
+#define TOOLBAR_CONTACT_LIST			@"ContactList"			//Toolbar identifier
 
 #define EDGE_CATCH_X 			10
 #define EDGE_CATCH_Y 			40
@@ -39,6 +40,7 @@
 - (NSRect)_desiredWindowFrame;
 - (void)_configureAutoResizing;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)_configureToolbar;
 @end
 
 @implementation AIContactListWindowController
@@ -226,10 +228,15 @@
     NSRect	newFrame;
 
     if([contactListView conformsToProtocol:@protocol(AIAutoSizingView)]){
+	NSSize  contactViewPadding;
         NSRect	currentFrame = [[self window] frame];
         NSSize	desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
         NSRect	screenFrame = [[[self window] screen] visibleFrame];
 
+	//Keep track of padding around the contact view
+	contactViewPadding.height = currentFrame.size.height - [scrollView_contactList frame].size.height;
+	contactViewPadding.width = currentFrame.size.width - [scrollView_contactList frame].size.width;
+	
         //Calculate desired width and height
         if(autoResizeHorizontally){
             newFrame.size.width = desiredSize.width + contactViewPadding.width + SCROLL_VIEW_PADDING_X;
@@ -302,9 +309,6 @@
     //[scrollView_contactList setHasVerticalScroller:YES];
     //[[scrollView_contactList verticalScroller] setControlSize:NSSmallControlSize];
 
-    //Remember how much padding we have around the contact list view, and observe desired size changes
-    contactViewPadding = NSMakeSize([[self window] frame].size.width - [scrollView_contactList frame].size.width,
-                                    [[self window] frame].size.height - [scrollView_contactList frame].size.height);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:AIViewDesiredSizeDidChangeNotification object:contactListView];
     
     //Register for the selection notification
@@ -316,6 +320,9 @@
     //
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
 
+    //Toolbar
+    [self _configureToolbar];
+    
     //Apply initial preference-based settings
     [self preferencesChanged:nil];
 
@@ -366,6 +373,38 @@
 {
     [interface containerDidBecomeActive:nil];
     [[owner notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
+}
+
+//Install our toolbar
+- (void)_configureToolbar
+{
+    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
+    //[self configureToolbarItems];
+    
+    [toolbar setDelegate:self];
+    [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+    [toolbar setSizeMode:NSToolbarSizeModeSmall];
+    [toolbar setVisible:NO];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration:YES];
+    
+    //install it
+    [[self window] setToolbar:toolbar];
+}
+
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+{
+    return(nil);
+}
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([NSArray array]);
+}
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([NSArray array]);
 }
 
 @end
