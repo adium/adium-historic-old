@@ -1421,6 +1421,7 @@
 		3428392307D2D012004F01C9 = {
 			children = (
 				3428392407D2D013004F01C9,
+				34A6FD0207D7A6F000972830,
 			);
 			isa = PBXVariantGroup;
 			name = "Shared Dock Icon Images";
@@ -6150,6 +6151,14 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34A6FD0207D7A6F000972830 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = French;
+			path = "Resources/French.lproj/Shared Dock Icon Images";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34AC36B907B5C51400145239 = {
 			fileEncoding = 30;
