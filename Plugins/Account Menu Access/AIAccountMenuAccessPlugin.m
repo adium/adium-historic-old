@@ -15,50 +15,71 @@
 
 #import "AIAccountMenuAccessPlugin.h"
 
-@interface AIAccountMenuAccessPlugin (PRIVATE)
-
-@end
-
+/*
+ * @class AIAccountMenuAccessPlugin
+ * @brief Provide menu access to account connection/disconnect
+ */
 @implementation AIAccountMenuAccessPlugin
 
+/*
+ * @brief Install the plugin
+ */
 - (void)installPlugin
 {
 	[[adium accountController] registerAccountMenuPlugin:self];
 }
 
+/*
+ * @brief Identifier as an account menu plugin
+ *
+ * Implemented as required by the AccountMenuPlugin protocol
+ */
 - (NSString *)identifier
 {
 	return(@"AccountMenuAccess");
 }
 
+/*
+ * @brief Add account menu items to our location
+ *
+ * Implemented as required by the AccountMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
+ */
 - (void)addAccountMenuItems:(NSArray *)menuItemArray
 {
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
     while((menuItem = [enumerator nextObject])){    
-		//Add the item
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Accounts];
     }
 }
 
+/*
+ * @brief Remove account menu items from our location
+ *
+ * Implemented as required by the AccountMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
+ */
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray
 {
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
-	
-	//remove the existing menu items
+
     while((menuItem = [enumerator nextObject])){    
         [[adium menuController] removeMenuItem:menuItem];
     }
 }
 
-
+/*
+ * @brief Uninstall Plugin
+ */
 - (void)uninstallPlugin
 {
     //Stop observing/receiving notifications
 	[[adium accountController] unregisterAccountMenuPlugin:self];
 }
-
 
 @end
