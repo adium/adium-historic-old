@@ -34,6 +34,7 @@
 #import "AICustomTabCell.h"
 #import "AICustomTabsView.h"
 #import "ESDateFormatterAdditions.h"
+#import "ESDelayedTextField.h"
 #import "AIDictionaryAdditions.h"
 #import "CBEmbossedTextField.h"
 #import "AIEventAdditions.h"
