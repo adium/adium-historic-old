@@ -18,6 +18,7 @@
 
 #define IDLE_TIME_PREF_NIB		@"IdleTimePrefs"		//Name of preference nib
 #define IDLE_TIME_PREF_TITLE		AILocalizedString(@"Idle",nil)  //Title of the preference view
+#define AUTO_AWAY_NO_AWAYS_TITLE	@"No saved aways"   //What to display in popUp_title if no messages are saved
 
 @interface IdleTimePreferences (PRIVATE)
 - (void)configureView;
@@ -192,33 +193,45 @@
     
     [self loadAwayMessages]; //load the away messages into awayMessageArray
 
-    NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
-    NSDictionary *dict;
-    while(dict = [enumerator nextObject]){
-        NSString * title = [dict objectForKey:@"Title"];
-        if(title){
-	    menuItem = [[[NSMenuItem alloc] initWithTitle:title
-                                                target:self
-                                                action:@selector(changeAwayPreference:)
-                                         keyEquivalent:@""] autorelease];
-        }else{
-            NSString * message = [[dict objectForKey:@"Message"] string];
-
-            //Cap the away menu title (so they're not incredibly long)
-            if([message length] > MENU_AWAY_DISPLAY_LENGTH){
-                message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"â€¦"];
+    if (awayMessageArray){
+        NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
+        NSDictionary *dict;
+        while(dict = [enumerator nextObject]){
+            NSString * title = [dict objectForKey:@"Title"];
+            if(title){
+            menuItem = [[[NSMenuItem alloc] initWithTitle:title
+                                                    target:self
+                                                    action:@selector(changeAwayPreference:)
+                                             keyEquivalent:@""] autorelease];
+            }else{
+                NSString * message = [[dict objectForKey:@"Message"] string];
+    
+                //Cap the away menu title (so they're not incredibly long)
+                if([message length] > MENU_AWAY_DISPLAY_LENGTH){
+                    message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
+                }
+                
+                menuItem = [[[NSMenuItem alloc] initWithTitle:message
+                                                       target:self
+                                                       action:@selector(changeAwayPreference:)
+                                                keyEquivalent:@""] autorelease];
             }
-            
-            menuItem = [[[NSMenuItem alloc] initWithTitle:message
-                                                   target:self
-                                                   action:@selector(changeAwayPreference:)
-                                            keyEquivalent:@""] autorelease];
+            [menuItem setRepresentedObject:dict];
+            [menuItem setEnabled:YES];
+            [savedAwaysMenu addItem:menuItem];        
         }
-        [menuItem setRepresentedObject:dict];
-        [menuItem setEnabled:YES];
-        [savedAwaysMenu addItem:menuItem];
-        [savedAwaysMenu setAutoenablesItems:NO];
-    }
+    }else{
+            menuItem = [[[NSMenuItem alloc] initWithTitle:AUTO_AWAY_NO_AWAYS_TITLE
+                                                    target:nil
+                                                    action:nil
+                                                keyEquivalent:@""] autorelease];
+            [menuItem setEnabled:NO];
+            [savedAwaysMenu addItem:menuItem];
+            [checkBox_enableAutoAway setEnabled:NO];
+            [textField_autoAwayMinutes setEnabled:NO];
+                                    
+
+    [savedAwaysMenu setAutoenablesItems:NO];
     return savedAwaysMenu;
 }
 

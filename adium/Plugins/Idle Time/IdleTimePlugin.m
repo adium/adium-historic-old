@@ -156,7 +156,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [self _closeIdleState:idleState]; //Close down current state
     [self _openIdleState:inState]; //Start up new state
     idleState = inState;
-    if ([NSApp isOnPantherOrBetter]) {
+    if ([NSApp isOnPantherOrBetter] && (idleState != AIAutoAway)) {
         [self updateIdleMenu];
     }
 }
