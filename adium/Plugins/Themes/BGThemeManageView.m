@@ -95,9 +95,9 @@
 
 -(IBAction)removeTheme:(id)sender
 {
-    // bam! we get rid of that nasty theme ASAP... so quick there's no status update!
-	NSString *selectedThemePath = [self selectedTheme];
-	if (selectedThemePath) {
+    // bam! we get rid of that nasty theme
+    NSString *selectedThemePath = [self selectedTheme];
+    if (selectedThemePath) {
 		[[NSFileManager defaultManager] removeFileAtPath:selectedThemePath handler:self];
 		[self buildThemesList];
 		[table reloadData];
