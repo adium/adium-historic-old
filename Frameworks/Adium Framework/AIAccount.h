@@ -35,28 +35,6 @@ typedef enum {
     PRIVACY_DENY
 }  PRIVACY_TYPE;
 
-//Support for sending content to contacts
-@protocol AIAccount_Content
-    // Send a message object to its destination
-    - (BOOL)sendContentObject:(AIContentObject *)object;
-    // Returns YES if the object is available for receiving content of the specified type.  Pass a nil object to check the account's ability to send any content of the given type.  Pass YES for absolute and the account will only return YES if it's absolutely certain that it can send content to the specified object.
-    - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject;
-
-    //Open a chat instance
-	- (BOOL)openChat:(AIChat *)chat;
-    //Close a chat instance
-    - (BOOL)closeChat:(AIChat *)chat;
-@end
-
-//Support for standard UID based contacts
-@protocol AIAccount_List
-	- (void)removeContacts:(NSArray *)objects;
-	- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
-	- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
-	- (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
-    - (BOOL)contactListEditable;
-@end
-
 //Support for file transfer
 @protocol AIAccount_Files
     //Instructs the account to accept a file transfer request
@@ -90,11 +68,10 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-    id <AIServiceController>	service;						//The service controller that spawned us
-    NSString                    *password;						//Password of this account
+    NSString                    *password;
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
-    BOOL						disconnectedByFastUserSwitch;
-	int							objectID;
+    BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
+	int							accountNumber;					//Unique integer that represents this account
 	
 	//Auto-reconnect
 	NSTimer						*reconnectTimer;
@@ -110,7 +87,8 @@ typedef enum {
 	NSTimer						*silenceAllContactUpdatesTimer;
 }
 
-- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID;
+- (id)initWithUID:(NSString *)inUID accountNumber:(int)inAccountNumber service:(AIService *)inService;
+- (int)accountNumber;
 
 - (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval;
 - (void)autoReconnectAfterDelay:(int)delay;
@@ -130,7 +108,6 @@ typedef enum {
  * StatusMessage   NSAttributedString
  * Away            boolean
  */
-- (id <AIServiceController>)service;
 
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
@@ -153,16 +130,28 @@ typedef enum {
 - (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact;
 - (BOOL)connectivityBasedOnNetworkReachability;
 
-//Images
-- (NSImage *)image;
-- (NSImage *)menuImage;
-- (NSImage *)onlineMenuImage;
-- (NSImage *)connectingMenuImage;
-- (NSImage *)offlineMenuImage;
-
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID;
 - (void)updateContactStatus:(AIListContact *)inContact;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;
 
+
+//Support for messaging --
+//Send a message object to its destination
+- (BOOL)sendContentObject:(AIContentObject *)object;
+//Returns YES if the object is available for receiving content of the specified type.  Pass a nil object to check the account's ability to send any content of the given type.  Pass YES for absolute and the account will only return YES if it's absolutely certain that it can send content to the specified object.
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
+//Open a chat instance
+- (BOOL)openChat:(AIChat *)chat;
+//Close a chat instance
+- (BOOL)closeChat:(AIChat *)chat;
+
+//Support for standard UID based contacts --
+- (void)removeContacts:(NSArray *)objects;
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
+- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
+- (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
+- (BOOL)contactListEditable;
+
 @end
+
