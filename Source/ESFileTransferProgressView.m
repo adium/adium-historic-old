@@ -59,11 +59,6 @@
 	[super dealloc];
 }
 
-- (id)copyWithZone:(NSZone *)zone
-{
-	return([self retain]);
-}
-
 #pragma mark Source and destination
 - (void)setSourceName:(NSString *)inSourceName
 {
