@@ -154,7 +154,7 @@ typedef enum {
 	}
 }
 
-//ToolbarHeightForWindow frome Apple
+//ToolbarHeightForWindow from Apple
 float ToolbarHeightForWindow(NSWindow *window)
 {
     NSToolbar *toolbar;
