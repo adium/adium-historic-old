@@ -176,11 +176,8 @@ struct buddyinfo {
 					
 					//Update the status message if necessary
 					if (statusMsgString && [statusMsgString length]) {
-						NSAttributedString *oldStatusMsg = [theContact statusObjectForKey:@"StatusMessage" 
-																			  withOwner:self];
 						
-						//If no status message is currently set, it doesn't matter if the previous strings match - we need to set the message. (This occurs between connects).
-						if (!oldStatusMsg || ![statusMsgString isEqualToString:oldStatusMsgString]) {
+						if (![statusMsgString isEqualToString:oldStatusMsgString]) {
 							[theContact setStatusObject:statusMsgString withOwner:self forKey:@"StatusMessageString" notify:NO];
 							[theContact setStatusObject:[AIHTMLDecoder decodeHTML:statusMsgString]
 											  withOwner:self 
@@ -206,11 +203,8 @@ struct buddyinfo {
 																			  withOwner:self];
 							
 							if (profileString && [profileString length]) {
-								NSAttributedString *oldProfile = [theContact statusObjectForKey:@"TextProfile" 
-																					  withOwner:self];
 								
-								//If no profile is currently set, it doesn't matter if the previous strings match - we need to set the profile. (This occurs between connects).
-								if (!oldProfile || ![profileString isEqualToString:oldProfileString]) {
+								if (![profileString isEqualToString:oldProfileString]) {
 									[theContact setStatusObject:profileString withOwner:self 
 														 forKey:@"TextProfileString" 
 														 notify:NO];
@@ -241,93 +235,15 @@ struct buddyinfo {
 	}
 }
 
-/*
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy
+- (NSArray *)contactStatusFlags
 {
-	NSTimer		*timer;
+	static NSArray *contactStatusFlagsArray = nil;
 	
-    //General updates
-    [super accountUpdateBuddy:buddy];
+	if (!contactStatusFlagsArray)
+		contactStatusFlagsArray = [[[NSArray arrayWithObjects:@"StatusMessage",@"StatusMessageString",@"TextProfile",@"TextProfileString",nil] arrayByAddingObjectsFromArray:[super contactStatusFlags]] retain];
 	
-	//we delay for 3 seconds to wait for the away message to come in... is there not some kind of notification when this happens instead?
-	timer = [NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
-	[delayedUpdateTimers addObject:timer];
+	return contactStatusFlagsArray;
 }
-
-- (void)_delayedBlistUpdate:(NSTimer *)inTimer
-{
-    GaimBlistNode * node = [[inTimer userInfo] pointerValue];
-    
-	[delayedUpdateTimers removeObject:inTimer];
-	
-    //AIM-specific updates
-    if(node)
-    {
-        //extract the GaimBuddy from whatever we were passed - we should always get buddies, not contacts, in curent code
-        //but it pays to be safe
-        GaimBuddy *buddy = nil;
-        if(GAIM_BLIST_NODE_IS_BUDDY(node)) {
-            buddy = (GaimBuddy *)node;
-        } else if(GAIM_BLIST_NODE_IS_CONTACT(node)) {
-            buddy = ((GaimContact *)node)->priority;
-        }
-        
-        if (buddy != nil) {
-            int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
-            
-			//            NSMutableArray *modifiedKeys = [NSMutableArray array];
-            AIListContact *theContact = (AIListContact *)node->ui_data;
-			//            NSMutableDictionary * statusDict = [theHandle statusDictionary];
-            
-            if (online) {
-                struct oscar_data *od = gc->proto_data;
-                //            struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
-                if (od != NULL) {
-                    aim_userinfo_t *userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
-                    
-                    if (userinfo != NULL) {
-                        //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
-                        if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
-                            gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
-                            if (away_utf8 != NULL) {
-                                NSString * statusMsgString = [NSString stringWithUTF8String:away_utf8];
-                                if (![statusMsgString isEqualToString:[theContact statusObjectForKey:@"StatusMessageString" withOwner:self]]) {
-                                    NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:statusMsgString];
-                                    [theContact setStatusObject:statusMsgString withOwner:self forKey:@"StatusMessageString" notify:NO];
-                                    [theContact setStatusObject:statusMsgDecoded withOwner:self forKey:@"StatusMessage" notify:NO];
-                                    [theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Away" notify:NO];
-                                }
-                                g_free(away_utf8);
-                            }
-                        }else{ //remove any away message
-                            if ([theContact statusObjectForKey:@"StatusMessage" withOwner:self]) {
-                                [theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
-                                [theContact setStatusObject:[NSNumber numberWithBool:NO]
-												  withOwner:self
-													 forKey:@"Away"
-													 notify:NO];
-                            }
-                        }
-                        
-
-                        
-                        //Set the signon date if one hasn't already been set
-                        if ( (![theContact statusObjectForKey:@"Signon Date" withOwner:self]) && ((userinfo->onlinesince) != 0) ) {
-                            [theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] withOwner:self forKey:@"Signon Date" notify:NO];
-							//                            [modifiedKeys addObject:@"Signon Date"];
-                        }
-						
-
-					}
-				}
-				
-				//if anything changed
-				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-			}
-		}
-    }
-}
-*/
 
 //This check is against the attributed string, not the HTML it creates... so it's worthless. :)
 /*- (void)setProfile:(NSAttributedString *)profile
@@ -389,15 +305,6 @@ tmp = ret;
 ret = g_strconcat(tmp, _("<b>Status:</b> "), status, "\n", NULL);
 g_free(tmp);
 g_free(status);
-}
-
-if (userinfo != NULL) {
-    char *tstr = gaim_str_seconds_to_string(time(NULL) - userinfo->onlinesince +
-                                            (gc->login_time_official ? gc->login_time_official - gc->login_time : 0));
-    tmp = ret;
-    ret = g_strconcat(tmp, _("<b>Logged In:</b> "), tstr, "\n", NULL);
-    g_free(tmp);
-    g_free(tstr);
 }
 
 if ((bi != NULL) && (bi->ipaddr)) {
