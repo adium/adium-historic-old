@@ -124,38 +124,40 @@
 }
 
 // Enable or disable strikethrough
-- (void)setStrikethrough:(BOOL)inStrikethrough  {
-  if(inStrikethrough)  {
-    [dictionary setObject:[NSNumber numberWithBool:inStrikethrough] forKey:NSStrikethroughStyleAttributeName];
-  } else  {
-    [dictionary removeObjectForKey:NSStrikethroughStyleAttributeName];
-  }
+- (void)setStrikethrough:(BOOL)inStrikethrough{
+	if([NSApp isOnPantherOrBetter]){
+		if(inStrikethrough){
+			[dictionary setObject:[NSNumber numberWithBool:inStrikethrough] forKey:NSStrikethroughStyleAttributeName];
+		}else{
+			[dictionary removeObjectForKey:NSStrikethroughStyleAttributeName];
+		}
+	}
 } 
 
 // Enable or disable subscript
-- (void)setSubscript:(BOOL)inSubscript  {
-  if(inSubscript)  {
-    [dictionary setObject:[NSNumber numberWithFloat:(fontSize / -2.0f)] forKey:NSBaselineOffsetAttributeName];
-    [self setFontSize:(fontSize - 2)];
-    
-    [self updateFont];
-  } else  {
-    [dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
-    [self setFontSize:(fontSize + 2)];
-  }
+- (void)setSubscript:(BOOL)inSubscript{
+	if(inSubscript){
+		[dictionary setObject:[NSNumber numberWithFloat:(fontSize / -2.0f)] forKey:NSBaselineOffsetAttributeName];
+		[self setFontSize:(fontSize - 2)];
+		
+		[self updateFont];
+	}else{
+		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
+		[self setFontSize:(fontSize + 2)];
+	}
 }
 
 // Enable or disable superscript
-- (void)setSuperscript:(BOOL)inSuperscript  {
-  if(inSuperscript)  {
-    [dictionary setObject:[NSNumber numberWithFloat:(fontSize / 2.0f)] forKey:NSBaselineOffsetAttributeName];
-    [self setFontSize:(fontSize - 2)];
-    
-    [self updateFont];
-  } else  {
-    [dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
-    [self setFontSize:(fontSize + 2)];
-  }
+- (void)setSuperscript:(BOOL)inSuperscript{
+	if(inSuperscript){
+		[dictionary setObject:[NSNumber numberWithFloat:(fontSize / 2.0f)] forKey:NSBaselineOffsetAttributeName];
+		[self setFontSize:(fontSize - 2)];
+		
+		[self updateFont];
+	}else {
+		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
+		[self setFontSize:(fontSize + 2)];
+	}
 }
 
 - (void)setLinkURL:(NSString *)inURL
