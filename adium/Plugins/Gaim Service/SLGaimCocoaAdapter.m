@@ -349,7 +349,7 @@ static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
     if(GAIM_DEBUG) NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
 	
-	NSString *connectionNotice = [[NSString stringWithUTF8String:text] retain];
+	NSString *connectionNotice = [NSString stringWithUTF8String:text];
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionNotice:)
 										 withObject:connectionNotice];
 }
@@ -358,7 +358,7 @@ static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
     if(GAIM_DEBUG) NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
-	NSString	*disconnectError = [[NSString stringWithUTF8String:text] retain];
+	NSString	*disconnectError = [NSString stringWithUTF8String:text];
     [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionReportDisconnect:)
 										 withObject:disconnectError];
 }
@@ -409,7 +409,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		if(![theContact remoteGroupName]){
 			GaimGroup *g = gaim_find_buddys_group(buddy);
 			if(g && g->name){
-				NSString *groupName = [[NSString stringWithUTF8String:g->name] retain];
+				NSString *groupName = [NSString stringWithUTF8String:g->name];
 				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
 														withObject:theContact
 														withObject:groupName];
@@ -418,7 +418,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		
 		const char *alias = gaim_get_buddy_alias(buddy);
 		if (alias){
-			NSString *aliasString = [[NSString stringWithUTF8String:alias] retain];
+			NSString *aliasString = [NSString stringWithUTF8String:alias];
 			
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
 													withObject:theContact
@@ -551,11 +551,6 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 		}
 		
-		//The account will release when it is done; this is done since there is no guarantee
-		//that the current run loop iteration won't finish (releasing the autorelease pool) before
-		//the account is done with the data.
-		[data retain];
-		
 		if (updateSelector){
 			[accountLookup(buddy->account) mainPerformSelector:updateSelector
 													withObject:theContact
@@ -666,8 +661,6 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 	
-	[messageDict retain];
-	
 	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 										   withObject:messageDict
 										   withObject:chatLookupFromConv(conv)];
@@ -689,8 +682,6 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-	
-	[messageDict retain];
 	
 	[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
 										   withObject:messageDict
@@ -835,7 +826,6 @@ static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int inde
 
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
 {
-	    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowAddConv");
 	//Pass chats along to the account
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 
@@ -1941,6 +1931,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	BOOL		performAdd = NO;
 	
 	//Get the group (Create if necessary)
 	GaimGroup *group = gaim_find_group(groupUTF8String);
@@ -1953,11 +1944,23 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
 	if(!buddy){
 		buddy = gaim_buddy_new(account, buddyUID, NULL);
+		performAdd = YES;
 		
+	}else{
+		GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
+		//If the buddy was in our strangers group before, remove from gaim's internal list
+		if (oldGroup && (strcmp(GAIM_ORPHANS_GROUP_NAME,oldGroup->name) != 0)){
+			gaim_blist_remove_buddy(buddy);
+
+			performAdd = YES;
+		}
+	}
+	
+	if (performAdd){
 		//Add the buddy locally to libgaim and then to the serverside list
 		gaim_blist_add_buddy(buddy, NULL, group, NULL);
 		serv_add_buddy(account->gc, buddyUID, group);
-	}	
+	}
 }
 
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
