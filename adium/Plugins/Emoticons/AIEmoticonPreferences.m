@@ -324,7 +324,7 @@
         return([packs count]);
     else if (tableView == table_curEmoticons)
     {
-        return(([curEmoticons count] / [tableView numberOfColumns]) + 1);	// Should check remainder, I am assuming there is one and adding one.
+        return(ceil((double)([curEmoticons count] / [tableView numberOfColumns])));	// Rounds up if it has to
     }
     else if (tableView == table_curEmoticonTexts)
     {
@@ -335,8 +335,7 @@
             AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
 
             //Does this fix our problem?  The world may never know.
-            return (([[emoPack emoticonAllTextRepresentationsAsArray:emoID] count] / [tableView numberOfColumns]) + 1);
-            
+            return (ceil((double)([[emoPack emoticonAllTextRepresentationsAsArray:emoID] count] / [tableView numberOfColumns])));
         }else{
             return nil;
         }
