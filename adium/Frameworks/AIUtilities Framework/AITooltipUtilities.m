@@ -309,11 +309,15 @@ static	AITooltipOrientation	tooltipOrientation;
           tooltipOrigin.x = tooltipPoint.x;
         }
 
+        NSLog(@"tooltipPoint %f ; screenRect.origin.y %f screenRect.size.height %f tooltipSize.height",tooltipPoint.y,screenRect.origin.y , screenRect.size.height , tooltipSize.height);
         if(tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipSize.height)){
             tooltipOrigin.y = screenRect.origin.y + screenRect.size.height - tooltipSize.height;
         }else{
             tooltipOrigin.y = tooltipPoint.y + 2;
         }
+        
+        if (tooltipOrigin.y < 0)
+            tooltipOrigin.y = 0;
         
     }else{
         if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)){
@@ -327,6 +331,9 @@ static	AITooltipOrientation	tooltipOrientation;
         }else{
             tooltipOrigin.y = tooltipPoint.y - 2 - tooltipSize.height;
         }
+        
+        if (tooltipOrigin.y + tooltipSize.height > screenRect.size.height)
+            tooltipOrigin.y = screenRect.size.height - tooltipSize.height;
     }
     
     return(tooltipOrigin);
