@@ -376,14 +376,19 @@ static AILogViewerWindowController *sharedInstance = nil;
 {
     NSAttributedString	*logText;
     NSString		*logFileText;
+    
     //Load the log
-
     logFileText = [NSString stringWithContentsOfFile:path];
 
-    logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
-    
-    [[textView_content textStorage] setAttributedString:logText];
-
+    if ([path hasSuffix:@".html"]) {
+        logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
+        
+        [[textView_content textStorage] setAttributedString:logText];
+    } else {
+        AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
+        [[textView_content textStorage] setAttributedString:
+            [[[NSAttributedString alloc] initWithString:logFileText attributes:[textAttributes dictionary]] autorelease]];
+    }
     
     //Scroll to the top
     [textView_content scrollRangeToVisible:NSMakeRange(0,0)];    
