@@ -17,13 +17,19 @@
 
     NSString		*identifier;
     NSString		*description;
-    NSImage			*image;
-	NSImage			*menuImage;
+	
+	//User names
     BOOL			caseSensitive;
     NSCharacterSet 	*allowedCharacters;
     NSCharacterSet 	*ignoredCharacters;
 	int				allowedLength;
 
+	//Images
+	NSImage			*image;
+	NSImage			*menuImage;
+	NSImage			*onlineMenuImage;
+	NSImage			*connectingMenuImage;
+	NSImage			*offlineMenuImage;
 }
 
 + (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
@@ -32,12 +38,19 @@
 			  ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength;
 - (NSString *)identifier;
 - (NSString *)description;
-- (NSImage *)image;
-- (NSImage *)menuImage;
+	
+//User names
 - (NSCharacterSet *)allowedCharacters;
 - (NSCharacterSet *)ignoredCharacters;
 - (BOOL)caseSensitive;
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
 - (int)allowedLength;
+
+//Images
+- (NSImage *)image;
+- (NSImage *)menuImage;
+- (NSImage *)onlineMenuImage;
+- (NSImage *)connectingMenuImage;
+- (NSImage *)offlineMenuImage;
 
 @end
