@@ -126,22 +126,6 @@
 	return ([[statusCacheDict objectForKey:key] date]);	
 }
 
-//Handled by AIListObject now
-#warning Deprecated
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
-{
-    AIMutableOwnerArray	*array = [[AIMutableOwnerArray alloc] init];
-    NSEnumerator		*enumerator = [objectArray objectEnumerator];
-    AIListContact		*contact;
-	
-    //Merge the status of our contained objects  
-    while(contact = [enumerator nextObject]){
-		[array setObject:[contact statusObjectForKey:inKey] withOwner:contact];
-    }
-		
-    return([array autorelease]);
-}
-
 
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
