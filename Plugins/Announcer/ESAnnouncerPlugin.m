@@ -86,7 +86,7 @@
 
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
+    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 	
     AIChat			*chat = nil;
     NSString		*message = nil;
