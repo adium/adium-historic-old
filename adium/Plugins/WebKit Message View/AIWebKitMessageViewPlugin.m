@@ -5,7 +5,7 @@
 
 
 @interface AIWebKitMessageViewPlugin (PRIVATE)
-- (void)_loadAvailableWebkitStyles;
+- (void)_scanAvailableWebkitStyles;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content allowingColors:(BOOL)allowColors;
@@ -26,34 +26,35 @@ DeclareString(AppendNextMessage);
 - (void)installPlugin
 {
 	if([NSApp isOnPantherOrBetter]){
+#warning --willmove--
 		InitString(AppendMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
 		InitString(AppendNextMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
 		InitString(AppendMessage,@"appendMessage(\"%@\");");
 		InitString(AppendNextMessage,@"appendNextMessage(\"%@\");");
-		
-		//Register our default preferences and install our preference view
-		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS
-																			forClass:[self class]]
-											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
-		
-		advancedPreferences = [[ESWKMVAdvancedPreferences preferencePaneForPlugin:self] retain];
-		
-		styleDictionary = nil;
-		[self _loadAvailableWebkitStyles];
-			
-		//Observe for installation of new styles
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(stylesChanged:)
-										   name:Adium_Xtras_Changed
-										 object:nil];
-		
 		//Observe preference changes and set our initial preferences
 		[[adium notificationCenter] addObserver:self 
 									   selector:@selector(preferencesChanged:)
 										   name:Preference_GroupChanged
 										 object:nil];
 		[self preferencesChanged:nil];
+#warning --willmove--
+		
+		//Init
+		styleDictionary = nil;
+		[self _scanAvailableWebkitStyles];
+		
+		//Setup our preferences
+		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
+											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
+		advancedPreferences = [[ESWKMVAdvancedPreferences preferencePaneForPlugin:self] retain];
+		
+			
+		//Observe for installation of new styles
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(stylesChanged:)
+										   name:Adium_Xtras_Changed
+										 object:nil];
 		
 		//Register ourself as a message view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
@@ -67,6 +68,97 @@ DeclareString(AppendNextMessage);
 {
     return([AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self]);
 }
+
+
+//Available Webkit Styles ----------------------------------------------------------------------------------------------
+#pragma mark Available Webkit Styles
+//Scan for available webkit styles (Call before trying to load/access a style)
+- (void)_scanAvailableWebkitStyles
+{	
+	NSEnumerator	*enumerator, *fileEnumerator;
+	NSString		*filePath, *resourcePath;
+	NSArray			*resourcePaths;
+	
+	//Clear the current dictionary of styles and ready a new mutable dictionary
+	[styleDictionary release];
+	styleDictionary = [[NSMutableDictionary alloc] init];
+	
+	//Get all resource paths to search
+	resourcePaths = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
+	enumerator = [resourcePaths objectEnumerator];
+	
+	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
+    while(resourcePath = [enumerator nextObject]) {
+        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:resourcePath];
+        
+        //Find all the message styles
+        while((filePath = [fileEnumerator nextObject])){
+            if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
+                NSString		*fullPath;
+                AIIconState		*previewState;
+                NSBundle		*style;
+#warning --store strings, not bundles--
+				//Load the style and add it to our dictionary
+				style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]];
+				if(style){
+					NSString	*styleName = [style name];
+					if(styleName && [styleName length]) [styleDictionary setObject:style forKey:styleName];
+				}
+            }
+        }
+    }
+}
+
+//Returns a dictionary of available style identifiers and their paths
+//- (NSDictionary *)availableStyles
+- (NSDictionary *)availableStyleDictionary
+{
+	return(styleDictionary);
+}
+
+//Fetch the bundle for a message style by its bundle identifier
+//- (NSBundle *)messageStyleBundleWithIdentifier:(NSString *)name
+//{
+//	return([NSBundle bundleWithPath:[styleDictionary objectForKey:name]]);
+//}
+- (NSBundle *)messageStyleBundleWithName:(NSString *)name
+{
+	return([styleDictionary objectForKey:name]);
+}
+
+//The default message style bundle
+//- (NSBundle *)defaultMessageStyleBundle
+//{
+//	return([self messageStyleBundleWithIdentifier:MESSAGE_DEFAULT_STYLE]);
+//}
+
+//If the styles have changed, rebuild our list of available styles
+- (void)stylesChanged:(NSNotification *)notification
+{
+	[self _scanAvailableWebkitStyles];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #pragma mark Message substitution preferences 
 //The plugin needs to know preferences which affect keyword filling
@@ -140,50 +232,7 @@ DeclareString(AppendNextMessage);
 }
 
 #pragma mark Available Webkit Styles
-- (void)_loadAvailableWebkitStyles
-{	
-	NSEnumerator	*enumerator, *fileEnumerator;
-	NSString		*filePath, *resourcePath;
-	NSArray			*resourcePaths;
-	
-	//Clear the current dictionary of styles and ready a new mutable dictionary
-	[styleDictionary release];
-	styleDictionary = [[NSMutableDictionary alloc] init];
-	
-	//Get all resource paths to search
-	resourcePaths = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
-	enumerator = [resourcePaths objectEnumerator];
 
-	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
-    while(resourcePath = [enumerator nextObject]) {
-        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:resourcePath];
-        
-        //Find all the .AdiumIcon's
-        while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
-                NSString		*fullPath;
-                AIIconState		*previewState;
-                NSBundle		*style;
-				
-				//Load the style and add it to our dictionary
-				style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]];
-				if(style){
-					NSString	*styleName = [style name];
-					if(styleName && [styleName length]) [styleDictionary setObject:style forKey:styleName];
-				}
-            }
-        }
-    }
-}
-
-- (NSDictionary *)availableStyleDictionary
-{
-	return styleDictionary;
-}
-- (NSBundle *)messageStyleBundleWithName:(NSString *)name
-{
-	return [styleDictionary objectForKey:name];
-}
 - (NSString *)variantKeyForStyle:(NSString *)desiredStyle
 {
 	return [NSString stringWithFormat:@"%@:Variant",desiredStyle];
@@ -665,12 +714,6 @@ DeclareString(AppendNextMessage);
 	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
 								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	return(inString);
-}
-
-#pragma mark Styles changed
-- (void)stylesChanged:(NSNotification *)notification
-{
-	[self _loadAvailableWebkitStyles];
 }
 
 @end
