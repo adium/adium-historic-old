@@ -27,9 +27,8 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     if(!sharedJoinChatInstance){
         sharedJoinChatInstance = [[self alloc] initWithWindowNibName:JOIN_CHAT_NIB];
     }
-	
-    [[sharedJoinChatInstance window] makeKeyAndOrderFront:nil];
 
+    [[sharedJoinChatInstance window] makeKeyAndOrderFront:nil];
 }
 
 + (void)closeSharedInstance
@@ -119,6 +118,8 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
     //Center the window
     [[self window] center];
+	
+	[super windowDidLoad];
 }
 
 - (IBAction)selectAccount:(id)sender
