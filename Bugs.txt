@@ -9,7 +9,7 @@
 - [AIM] Auto-reply flag being ignored
 - Group chats are logging as (null)
 - Autolinking overwrites custom titled links with domain names in them.
-
+- [ICQ] Encoding problems
 
 //------------------------------------------------------------------------------------
 // Adium X 0.70 remaining issues
@@ -58,10 +58,6 @@
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
-- [ICQ] Encoding problems
-	Encoding, specifically in Hebrew, is not being received properly.  Sending
-	appears to work fine.
-
 - [AIM / Jabber] File transfer limitations
 	File transfers often fail to navigate firewalls and routers
 
