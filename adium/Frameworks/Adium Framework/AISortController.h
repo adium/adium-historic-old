@@ -15,12 +15,16 @@
 
 typedef int(*sortfunc)(id, id, BOOL);
 
-@interface AISortController : NSObject {
+#define PREF_GROUP_CONTACT_SORTING			@"Sorting"
+
+@interface AISortController : AIObject {
 	NSArray					*statusKeysRequiringResort;
 	NSArray					*attributeKeysRequiringResort;
 	BOOL					alwaysSortGroupsToTop;
 	
 	sortfunc				sortFunction;
+	
+	IBOutlet	NSView		*configureView;
 }
 
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
@@ -28,11 +32,17 @@ typedef int(*sortfunc)(id, id, BOOL);
 - (BOOL)alwaysSortGroupsToTop;
 - (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects;
 - (void)sortListObjects:(NSMutableArray *)inObjects;
-- (NSString *)description;
+- (NSView *)configureView;
+
+//For subclasses to override
 - (NSString *)identifier;
 - (NSString *)displayName;
 - (NSArray *)statusKeysRequiringResort;
 - (NSArray *)attributeKeysRequiringResort;
 - (sortfunc)sortFunction;
-
+- (NSString *)configureSortMenuItemTitle;
+- (NSString *)configureSortWindowTitle;
+- (NSString *)configureNibName;
+- (void)viewDidLoad;
+- (IBAction)changePreference:(id)sender;
 @end
