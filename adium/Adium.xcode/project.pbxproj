@@ -5239,6 +5239,7 @@
 				C45F7F6506C75E210056B1F2,
 				4BF5264606CA736900CDBCEB,
 				34C1889C06CAB35D00FF5FF9,
+				34C18C6E06CAE7BF00FF5FF9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5893,6 +5894,7 @@
 				C45F7F6606C75E210056B1F2,
 				4BF5264706CA736900CDBCEB,
 				34C1889D06CAB35D00FF5FF9,
+				34C18C6F06CAE7BF00FF5FF9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8003,6 +8005,46 @@
 		};
 		34C18B0D06CAC95400FF5FF9 = {
 			fileRef = 34E839050583207E00F2AADB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C18C6106CAE78000FF5FF9 = {
+			children = (
+				34C18C6C06CAE7BF00FF5FF9,
+				34C18C6D06CAE7BF00FF5FF9,
+			);
+			isa = PBXGroup;
+			name = "MetaContact Contents";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C18C6C06CAE7BF00FF5FF9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESMetaContactContentsPlugin.h;
+			path = "Plugins/MetaContact Contents/ESMetaContactContentsPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C18C6D06CAE7BF00FF5FF9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESMetaContactContentsPlugin.m;
+			path = "Plugins/MetaContact Contents/ESMetaContactContentsPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C18C6E06CAE7BF00FF5FF9 = {
+			fileRef = 34C18C6C06CAE7BF00FF5FF9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C18C6F06CAE7BF00FF5FF9 = {
+			fileRef = 34C18C6D06CAE7BF00FF5FF9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12201,6 +12243,7 @@
 				4BBF41DC06611949001D31E1,
 				4B18A51F0459F89300A8010A,
 				4BAA1B3F0632EDDE00D8B92C,
+				34C18C6106CAE78000FF5FF9,
 				34086A1005E5E17B00ABB759,
 			);
 			isa = PBXGroup;
