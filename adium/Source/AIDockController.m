@@ -459,4 +459,10 @@
     [self _stopBouncing]; //Stop any bouncing
 }
 
+- (void)handleDockIconClick
+{
+    [[owner interfaceController] showContactList];
+    [[owner contentController] switchToMostRecentChat];
+}
+
 @end
