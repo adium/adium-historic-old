@@ -631,7 +631,8 @@ static  AICustomTabsView        *activeTabBar;
         
         [NSCursor hide]; //with smoke, so it can come back
         
-        dragFloater = [ESFloater floaterWithImage:dragImage at:startingPoint];
+        NSPoint windowOrigin = [[self window] frame].origin;
+        dragFloater = [ESFloater floaterWithImage:dragImage at:NSMakePoint(startingPoint.x+windowOrigin.x,startingPoint.y+windowOrigin.y)];
         
         [self retain];
         [self dragImage:emptyImage
@@ -845,14 +846,17 @@ static  AICustomTabsView        *activeTabBar;
             rearrangeIndex++;
         }
         [(AIMessageWindowController *)[[self window] windowController] supressTabBarHiding:NO];
+        //Inform our delegate
+        if([delegate respondsToSelector:@selector(customTabViewDidChangeOrderOfTabViewItems:)]){
+            [delegate customTabViewDidChangeOrderOfTabViewItems:self];
+        }
     } else { //not already in this window - just let the interfaceController handle it
         [[owner interfaceController] transferMessageTabContainer:[dragTabCell tabViewItem] toWindow:[[self window] windowController] atIndex:index withTabBarAtPoint:NSMakePoint(0,0)];
+        //Inform our delegate
+        if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
+            [delegate customTabViewDidChangeNumberOfTabViewItems:self];
+        }
     }            
-    
-    //Inform our delegate
-    if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
-        [delegate customTabViewDidChangeNumberOfTabViewItems:self];
-    }
     
     //Arrange the views
     if(!viewsRearranging){
