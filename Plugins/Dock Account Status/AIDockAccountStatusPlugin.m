@@ -30,32 +30,22 @@
 	[[adium contactController] registerListObjectObserver:self];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 }
 
 - (void)uninstallPlugin
 {
     //Remove observers (general)
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-    
-    if(notification == nil || [group isEqualToString:PREF_GROUP_GENERAL]){
-		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
-
-		if(notification == nil || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
-			[self updateListObject:nil keys:nil silent:NO];
-		}
-    }
+	if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
+		[self updateListObject:nil keys:nil silent:NO];
+	}
 }
 
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent

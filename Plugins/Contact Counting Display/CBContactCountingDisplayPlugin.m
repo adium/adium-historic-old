@@ -42,65 +42,56 @@
 	visibleCount = NO;
 	showOffline = NO;
 	
-    [self preferencesChanged:nil];
-	
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil ||
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST] ||
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
-
-		BOOL oldAllCount = allCount;
-		BOOL oldVisibleCount = visibleCount;
-		BOOL oldShowOffline = showOffline;
+	BOOL oldAllCount = allCount;
+	BOOL oldVisibleCount = visibleCount;
+	BOOL oldShowOffline = showOffline;
+	
+	allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
+														 group:PREF_GROUP_CONTACT_LIST] boolValue];
+	visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
+															 group:PREF_GROUP_CONTACT_LIST] boolValue];
+	showOffline =  [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+															 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+	if ((allCount && !oldAllCount) || (visibleCount && !oldVisibleCount)){
 		
-		allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
-                                                                     group:PREF_GROUP_CONTACT_LIST] boolValue];
-        visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
-                                                                     group:PREF_GROUP_CONTACT_LIST] boolValue];
-        showOffline =  [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-                                                                     group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-		if ((allCount && !oldAllCount) || (visibleCount && !oldVisibleCount)){
-			
-			if (!oldAllCount && !oldVisibleCount){
-				//Install our observer if we are now counting contacts in some form but weren't before
-				//This will update all list objects.
-				[[adium contactController] registerListObjectObserver:self];				
-			}else{
-				//Refresh all
-				[[adium contactController] updateAllListObjectsForObserver:self];
-			}
-			
-		}else if ((!allCount && oldAllCount) || (!visibleCount && oldVisibleCount)){
-			
-			//Refresh all
-			[[adium contactController] updateAllListObjectsForObserver:self];
-			
-			if (!allCount && !visibleCount){
-				//Remove our observer since we are now doing no counting
-				[[adium contactController] unregisterListObjectObserver:self];
-			}
-			
-		}else if (showOffline != oldShowOffline){
+		if (!oldAllCount && !oldVisibleCount){
+			//Install our observer if we are now counting contacts in some form but weren't before
+			//This will update all list objects.
+			[[adium contactController] registerListObjectObserver:self];				
+		}else{
 			//Refresh all
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 		
+	}else if ((!allCount && oldAllCount) || (!visibleCount && oldVisibleCount)){
 		
-		if(allCount != [allCountingMenuItem state]) {
-			[allCountingMenuItem setState:allCount];
+		//Refresh all
+		[[adium contactController] updateAllListObjectsForObserver:self];
+		
+		if (!allCount && !visibleCount){
+			//Remove our observer since we are now doing no counting
+			[[adium contactController] unregisterListObjectObserver:self];
 		}
-		if(visibleCount != [visibleCountingMenuItem state]) {
-			[visibleCountingMenuItem setState:visibleCount];
-		}
-    }
+		
+	}else if (showOffline != oldShowOffline){
+		//Refresh all
+		[[adium contactController] updateAllListObjectsForObserver:self];
+	}
+	
+	
+	if(allCount != [allCountingMenuItem state]) {
+		[allCountingMenuItem setState:allCount];
+	}
+	if(visibleCount != [visibleCountingMenuItem state]) {
+		[visibleCountingMenuItem setState:visibleCount];
+	}
 }
 
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
