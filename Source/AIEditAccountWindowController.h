@@ -42,10 +42,10 @@
 	NSData						*userIconData;
 
 	//Delete if the sheet is canceled (should be YES when called on a new account, NO otherwise)
-	BOOL	deleteIfCanceled;
+	BOOL	isNewAccount;
 }
 
-+ (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow deleteIfCanceled:(BOOL)inDeleteIfCanceled;
++ (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow isNewAccount:(BOOL)inisNewAccount;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 

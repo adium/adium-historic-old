@@ -177,7 +177,7 @@
 
 	[AIEditAccountWindowController editAccount:account
 									  onWindow:[[self view] window]
-							  deleteIfCanceled:YES];
+							  isNewAccount:YES];
 }
 
 /*!
@@ -189,7 +189,7 @@
 	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
 		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
 										  onWindow:[[self view] window]
-								  deleteIfCanceled:NO];
+								  isNewAccount:NO];
     }
 }
 
