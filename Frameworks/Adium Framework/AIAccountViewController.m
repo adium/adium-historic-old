@@ -235,7 +235,7 @@
 	if(![[account UID] isEqualToString:[textField_accountUID stringValue]]){
 		[[adium accountController] changeUIDOfAccount:account to:[textField_accountUID stringValue]];			
 	}
-	
+
 	//Password
 	NSString		*password = [textField_password secureStringValue];
 	NSString		*oldPassword;

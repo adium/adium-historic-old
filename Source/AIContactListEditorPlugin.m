@@ -111,7 +111,7 @@
     //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 	
 	//Delete selection context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT_ELLIPSIS
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT
 																	 target:self
 																	 action:@selector(deleteSelectionFromTab:) 
 															  keyEquivalent:@""] autorelease];
