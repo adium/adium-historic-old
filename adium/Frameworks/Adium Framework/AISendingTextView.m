@@ -16,7 +16,7 @@
 #import "AISendingTextView.h"
 #import "AIDictionaryAdditions.h"
 
-#define MAX_HISTORY			25
+#define MAX_HISTORY					25
 #define ENTRY_TEXTVIEW_PADDING		6
 
 @interface AISendingTextView (PRIVATE)
@@ -51,6 +51,7 @@ static NSImage *pushIndicatorImage = nil;
 
     //
     adium = [AIObject sharedAdiumInstance];
+	associatedScrollView = nil;
     target = nil;
     selector = nil;
     chat = nil;
@@ -79,6 +80,18 @@ static NSImage *pushIndicatorImage = nil;
     return(self);
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+    [chat release];
+	[associatedScrollView release];
+    [returnArray release]; returnArray = nil;
+    [historyArray release]; historyArray = nil;
+    [pushArray release]; pushArray = nil;
+    [super dealloc];
+}
+
 //If true we will invoke selector on target when a send key is pressed
 - (void)setAvailableForSending:(BOOL)inBool
 {
@@ -97,6 +110,19 @@ static NSImage *pushIndicatorImage = nil;
 {
     sendOnEnter = inBool;
 }
+
+//Associate a scroll view with this text view for the scroll up/down keys
+- (void)setAssociatedScrollView:(NSScrollView *)inScrollView
+{
+	if(inScrollView != associatedScrollView){
+		[associatedScrollView release];
+		associatedScrollView = [inScrollView retain];
+	}
+}
+- (NSScrollView *)associatedScrollView{
+	return(associatedScrollView);
+}
+
 
 //Selector and target to invoke on send
 - (void)setTarget:(id)inTarget action:(SEL)inSelector
@@ -501,14 +527,14 @@ static NSImage *pushIndicatorImage = nil;
 //Page up or down in the message view
 - (void)scrollPageUp:(id)sender
 {
-    if([messageScrollView respondsToSelector:@selector(pageUp:)]){
-		[messageScrollView pageUp:nil];
+    if([associatedScrollView respondsToSelector:@selector(pageUp:)]){
+		[associatedScrollView pageUp:nil];
     }
 }
 - (void)scrollPageDown:(id)sender
 {
-    if([messageScrollView respondsToSelector:@selector(pageDown:)]){
-		[messageScrollView pageDown:nil];
+    if([associatedScrollView respondsToSelector:@selector(pageDown:)]){
+		[associatedScrollView pageDown:nil];
     }
 }
 
@@ -566,48 +592,34 @@ static NSImage *pushIndicatorImage = nil;
 		{
 			if(inChar == NSUpArrowFunctionKey)
 			{
-				NSRect visibleRect = [messageScrollView documentVisibleRect];
-				visibleRect.origin.y -= [messageScrollView verticalLineScroll]*2;
-				[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+				NSRect visibleRect = [associatedScrollView documentVisibleRect];
+				visibleRect.origin.y -= [associatedScrollView verticalLineScroll]*2;
+				[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
 			}
 			else if(inChar == NSDownArrowFunctionKey)
 			{
-				NSRect visibleRect = [messageScrollView documentVisibleRect];
-				visibleRect.origin.y += [messageScrollView verticalLineScroll]*2;
-				[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+				NSRect visibleRect = [associatedScrollView documentVisibleRect];
+				visibleRect.origin.y += [associatedScrollView verticalLineScroll]*2;
+				[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
 			}
 			else
 				[super keyDown:inEvent];
 		}
 		else if(inChar == NSHomeFunctionKey)
 		{
-			NSRect visibleRect = [messageScrollView documentVisibleRect];
+			NSRect visibleRect = [associatedScrollView documentVisibleRect];
 			visibleRect.origin.y = 0;
-			[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+			[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
 		}
 		else if(inChar == NSEndFunctionKey)
 		{
-			NSRect frame = [[messageScrollView documentView] frame];
+			NSRect frame = [[associatedScrollView documentView] frame];
 			frame.origin.y = frame.size.height;
 			frame.size.height = 0;
-			[[messageScrollView documentView] scrollRectToVisible:frame];
+			[[associatedScrollView documentView] scrollRectToVisible:frame];
 		}
 		else [super keyDown:inEvent];
 	}
-}
-
-
-
-//Private ------------------------------------------------------------------------------------
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    [chat release];
-    [returnArray release]; returnArray = nil;
-    [historyArray release]; historyArray = nil;
-    [pushArray release]; pushArray = nil;
-    [super dealloc];
 }
 
 @end

@@ -90,7 +90,7 @@
 	[[scrollView_messages superview] replaceSubview:scrollView_messages with:[messageViewController messageView]];
 	scrollView_messages = [messageViewController messageView];
 	[scrollView_messages setNextResponder:textView_outgoing];
-	
+
 //	[[scrollView_messages superview] addSubview:[messageViewController messageView]];
 //	[[messageViewController messageView] setFrame:[scrollView_messages frame]];
 //	[scrollView_messages removeFromSuperview];
@@ -109,6 +109,7 @@
     //Configure the outgoing text view
 	[textView_outgoing setChat:chat];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
+	[textView_outgoing setAssociatedScrollView:scrollView_messages];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
 		[textView_outgoing setUsesFindPanel:YES];

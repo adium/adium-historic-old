@@ -42,11 +42,14 @@
     NSSize			lastPostedSize;
 	NSSize			_desiredSizeCached;
     
-    IBOutlet		NSScrollView	*messageScrollView;
+    NSScrollView	*associatedScrollView;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
 - (NSSize)desiredSize;
+
+- (void)setAssociatedScrollView:(NSScrollView *)inScrollView;
+- (NSScrollView *)associatedScrollView;
 
 - (void)setSendOnReturn:(BOOL)inBool;
 - (void)setSendOnEnter:(BOOL)inBool;
