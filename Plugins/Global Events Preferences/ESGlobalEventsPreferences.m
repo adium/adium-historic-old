@@ -24,8 +24,13 @@
 - (IBAction)selectDockBehaviorSet:(id)sender;
 - (NSMenu *)_dockBehaviorSetMenu;
 
+- (IBAction)selectSpeechPreset:(id)sender;
 - (NSMenu *)_speechPresetMenu;
-- (void)selectSpeechPreset:(id)sender;
+
+- (IBAction)selectGrowlPreset:(id)sender;
+- (NSMenu *)_growlPresetMenu;
+
+- (NSMenu *)_setMenuFromArray:(NSArray *)array selector:(SEL)selector;
 
 @end
 
@@ -62,10 +67,14 @@
 	//Build and set the speech preset menu
 	[popUp_speechPreset setMenu:[self _speechPresetMenu]];
 
+	//Build and set the growl preset menu
+	[popUp_growlPreset setMenu:[self _growlPresetMenu]];
+
 	//Observer preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GROWL];
 }
 
 //Preference view is closing
@@ -122,10 +131,19 @@
 				[self popUp:popUp_speechPreset shouldShowCustom:YES];
 			}
 		}
-		
-		
+	}else if([group isEqualToString:PREF_GROUP_GROWL]){
+		if(!key || [key isEqualToString:KEY_GROWL_ACTIVE_PRESET]){
+			NSString	*activePreset = [prefDict objectForKey:KEY_GROWL_ACTIVE_PRESET];
+			
+			if(activePreset && ([activePreset length] != 0)){
+				[popUp_growlPreset selectItemWithRepresentedObject:activePreset];
+				[self popUp:popUp_growlPreset shouldShowCustom:NO];
+				
+			}else{
+				[self popUp:popUp_growlPreset shouldShowCustom:YES];
+			}
+		}
 	}
-	
 }
 
 - (void)popUp:(NSPopUpButton *)inPopUp shouldShowCustom:(BOOL)showCustom
@@ -196,6 +214,10 @@
 	}else if([actionID isEqualToString:SPEAK_EVENT_ALERT_IDENTIFIER]){
 		//Speech preset changed.
 		[plugin updateActiveSpeechPreset];
+		
+	}else if([actionID isEqualToString:GROWL_EVENT_ALERT_IDENTIFIER]){
+		//Growl preset changed.
+		[plugin updateActiveGrowlPreset];
 	}
 }
 
@@ -256,34 +278,12 @@
 //Builds and returns a behavior set menu
 - (NSMenu *)_dockBehaviorSetMenu
 {
-    NSEnumerator	*enumerator;
-    NSString		*setName;
-    NSMenu			*behaviorSetMenu;
-	
-    //Create the behavior set menu
-    behaviorSetMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-	
-    //Add all the premade behavior sets
-    enumerator = [[plugin availableDockBehaviorPresets] objectEnumerator];
-    while((setName = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-		
-        //Create the menu item
-        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:setName
-																		 target:self
-																		 action:@selector(selectDockBehaviorSet:)
-																  keyEquivalent:@""] autorelease];
-		
-        //
-        [menuItem setRepresentedObject:setName];
-        [behaviorSetMenu addItem:menuItem];
-    }
-	
-    return(behaviorSetMenu);
+	return [self _setMenuFromArray:[plugin availableDockBehaviorPresets]
+						  selector:@selector(selectDockBehaviorSet:)];
 }
 
 #pragma mark Speech presets
-- (void)selectSpeechPreset:(id)sender
+- (IBAction)selectSpeechPreset:(id)sender
 {
 	//Can't set nil because if we do the default will be reapplied on next launch
 	[[adium preferenceController] setPreference:([sender representedObject] ?
@@ -296,32 +296,56 @@
 //Builds and returns a speech preset menu
 - (NSMenu *)_speechPresetMenu
 {
+	return [self _setMenuFromArray:[plugin availableSpeechPresets]
+						  selector:@selector(selectSpeechPreset:)];
+}
+
+#pragma mark Growl presets
+
+- (IBAction)selectGrowlPreset:(id)sender
+{
+	//Can't set nil because if we do the default will be reapplied on next launch
+	[[adium preferenceController] setPreference:([sender representedObject] ?
+												 [sender representedObject] : 
+												 @"")
+										 forKey:KEY_GROWL_ACTIVE_PRESET
+										  group:PREF_GROUP_GROWL];	
+}
+
+- (NSMenu *)_growlPresetMenu
+{
+	return [self _setMenuFromArray:[plugin availableGrowlPresets]
+						  selector:@selector(selectGrowlPreset:)];
+}
+
+
+- (NSMenu *)_setMenuFromArray:(NSArray *)array selector:(SEL)selector
+{
     NSEnumerator	*enumerator;
     NSString		*setName;
-    NSMenu			*speechPresetMenu;
+    NSMenu			*setMenu;
 	
     //Create the behavior set menu
-    speechPresetMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+    setMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 	
     //Add all the premade behavior sets
-    enumerator = [[plugin availableSpeechPresets] objectEnumerator];
+    enumerator = [array objectEnumerator];
     while((setName = [enumerator nextObject])){
         NSMenuItem	*menuItem;
 		
         //Create the menu item
         menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:setName
 																		 target:self
-																		 action:@selector(selectSpeechPreset:)
+																		 action:selector
 																  keyEquivalent:@""] autorelease];
 		
         //
         [menuItem setRepresentedObject:setName];
-        [speechPresetMenu addItem:menuItem];
+        [setMenu addItem:menuItem];
     }
-
-    return(speechPresetMenu);
+	
+    return(setMenu);
 }
-
 @end
 
 #if 0

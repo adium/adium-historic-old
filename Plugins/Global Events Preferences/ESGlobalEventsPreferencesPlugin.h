@@ -17,7 +17,12 @@
 
 #define PREF_GROUP_ANNOUNCER					@"Announcer"
 #define KEY_SPEECH_ACTIVE_PRESET				@"Active Speech Preset"
-#define SPEAK_EVENT_ALERT_IDENTIFIER	@"SpeakEvent"
+#define SPEAK_EVENT_ALERT_IDENTIFIER			@"SpeakEvent"
+
+#define PREF_GROUP_GROWL						@"Growl"
+#define KEY_GROWL_ACTIVE_PRESET					@"Active Growl Preset"
+
+#define GROWL_EVENT_ALERT_IDENTIFIER			@"Growl"
 
 @class ESGlobalEventsPreferences;
 
@@ -26,6 +31,7 @@
 	
 	NSArray		*dockBehaviorPresetsArray;
 	NSArray		*speechPresetsArray;
+	NSArray		*growlPresetsArray;
 }
 
 - (NSArray *)availableDockBehaviorPresets;
@@ -33,5 +39,8 @@
 
 - (NSArray *)availableSpeechPresets;
 - (void)updateActiveSpeechPreset;
+
+- (NSArray *)availableGrowlPresets;
+- (void)updateActiveGrowlPreset;
 
 @end
