@@ -151,23 +151,6 @@ static char *hash_password(const char * const password);
 
 
 // AIAccount_Handles ---------------------------------------------------------------------------
-/*- (AIHandle *)createTemporaryHandleWithUID:(NSString *)inUID
-{
-    AIHandle	*handle;
-
-    NSLog(@"Create temp %@",inUID);
-
-    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier]
-                                       UID:[inUID compactedString]
-                               serverGroup:@"__Strangers"
-                                     index:0
-                                forAccount:self];
-
-    [self addHandle:handle];
-
-    return(handle);
-}*/
-
 // Add a handle
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 {
@@ -190,7 +173,7 @@ static char *hash_password(const char * const password);
 
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
-        
+
     return(handle);
 }
 
@@ -209,6 +192,63 @@ static char *hash_password(const char * const password);
     return(YES);
 }
 
+// Add a group to this account
+- (BOOL)addServerGroup:(NSString *)inGroup
+{
+    //
+    return(YES);
+}
+
+// Remove a group
+- (BOOL)removeServerGroup:(NSString *)inGroup
+{
+    NSEnumerator	*enumerator;
+    AIHandle		*handle;
+
+    //Empty the group
+    enumerator = [[handleDict allValues] objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        if([[handle serverGroup] compare:inGroup] == 0){
+            [self removeHandleWithUID:[handle UID]];
+        }
+    }
+
+    //Remove it
+//    [self AIM_RemoveGroup:inGroup];
+
+    return(YES);
+}
+
+// Rename a group
+- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
+{
+    NSEnumerator	*enumerator;
+    AIHandle		*handle;
+    NSMutableArray	*groupContents;
+
+    //There is no easy way to rename a group on TOC!!
+    //So what we do is remove all the buddies from the existing group,
+    //and then re-add them to a new group with the correct name.
+    groupContents = [[[NSMutableArray alloc] init] autorelease];
+
+    enumerator = [[handleDict allValues] objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        if([[handle serverGroup] compare:inGroup] == 0){
+            [groupContents addObject:handle];
+            [self removeHandleWithUID:[handle UID]]; //Remove it
+        }
+    }
+
+    enumerator = [groupContents objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        [self addHandleWithUID:[handle UID] serverGroup:newName temporary:NO]; //Add it
+    }
+    
+    //Update the contact list
+    [[owner contactController] handlesChangedForAccount:self];
+
+    return(YES);
+}
 
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
@@ -713,7 +753,7 @@ static char *hash_password(const char * const password);
 
 }
 
-- (void)AIM_RemoveGroup:(NSString *)groupName
+- (void)AIM_RemoveGroup:(NSString *)groupName //(Must be an empty group)
 {
     NSString *message = [NSString stringWithFormat:@"toc2_del_group \"%@\"",groupName];
     

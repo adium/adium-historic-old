@@ -47,5 +47,9 @@
 {
     return(temporary);
 }
+- (void)setTemporary:(BOOL)inTemporary
+{
+    temporary = inTemporary;
+}
 
 @end

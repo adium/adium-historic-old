@@ -23,5 +23,6 @@
 - (void)setContainingGroup:(AIEditorListGroup *)inGroup;
 - (AIEditorListGroup *)containingGroup;
 - (BOOL)temporary;
+- (void)setTemporary:(BOOL)inTemporary;
 
 @end

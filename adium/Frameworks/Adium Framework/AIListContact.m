@@ -70,6 +70,11 @@
     }
 }
 
+- (int)numberOfHandles
+{
+    return([handleArray count]);
+}
+
 
 //Manual Ordering
 /*- (void)setIndex:(int)inIndex
