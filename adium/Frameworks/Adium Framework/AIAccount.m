@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.49 2004/03/05 23:56:45 adamiser Exp $
+// $Id: AIAccount.m,v 1.50 2004/03/06 05:33:34 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -195,12 +195,7 @@
 		//notify
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-    }else if([key compare:@"Handle"] == 0){
-		//Account's screen name formatting changed
-        [self setStatusObject:[self preferenceForKey:@"Handle" group:GROUP_ACCOUNT_STATUS]
-                       forKey:@"Display Name"
-                       notify:YES];
-	}
+    }
 }
 
 //Set an attributed status value (nil for no value), setting up a refresh timer if the filters changed the string

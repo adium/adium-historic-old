@@ -661,7 +661,7 @@
 					
 					//Format our nickname as it was entered for the account
 					if(!connectedWithICQ){
-						[self AIM_SetNick:[self preferenceForKey:@"Handle" group:GROUP_AIM_ACCOUNT]];
+						[self AIM_SetNick:[self UID]];
 					}
                     
                     //Send AIM the init done message (at this point we become visible to other buddies)
@@ -759,7 +759,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.123 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.124 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
