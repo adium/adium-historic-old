@@ -608,7 +608,7 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, 
+    return([NSArray arrayWithObjects:@"UserIcon",@"ShowInfo", NSToolbarSeparatorItemIdentifier, 
 		@"InsertEmoticon", @"LinkEditor", @"InsertBookmark", @"SafariLink", NSToolbarFlexibleSpaceItemIdentifier, 
 		@"ShowPreferences", NSToolbarCustomizeToolbarItemIdentifier, nil]);
 }
