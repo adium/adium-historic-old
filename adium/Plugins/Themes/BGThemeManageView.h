@@ -1,0 +1,24 @@
+//
+//  BGThemeManageView.h
+//  Adium XCode
+//
+//  Created by Brian Ganninger on Sun Jan 11 2004.
+//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+@interface BGThemeManageView :  AIObject {
+    IBOutlet AIAlternatingRowTableView *table;
+    IBOutlet NSWindow *previewWindow;
+    IBOutlet NSTextField *previewName;
+    id themesPlugin;
+    NSArray *themes;
+    int themeCount;
+}
+-(NSString *)selectedTheme;
+-(IBAction)removeTheme:(id)sender;
+-(IBAction)applyTheme:(id)sender;
+-(void)setPlugin:(id)newPlugin;
+-(void)buildThemesList;
+@end
