@@ -38,11 +38,50 @@ static BOOL didInitOscar = NO;
 
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
+
+	encoderCloseFontTagsAttachmentsAsText = [[AIHTMLDecoder alloc] init];
+	[encoderCloseFontTagsAttachmentsAsText setIncludesHeaders:YES];
+	[encoderCloseFontTagsAttachmentsAsText setIncludesFontTags:YES];
+	[encoderCloseFontTagsAttachmentsAsText setClosesFontTags:YES];
+	[encoderCloseFontTagsAttachmentsAsText setIncludesColorTags:YES];
+	[encoderCloseFontTagsAttachmentsAsText setEncodesNonASCII:NO];
+	[encoderCloseFontTagsAttachmentsAsText setPreservesAllSpaces:NO];
+	[encoderCloseFontTagsAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
+	[encoderCloseFontTagsAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+	[encoderCloseFontTagsAttachmentsAsText setOnlyUsesSimpleTags:NO];
+
+	encoderCloseFontTags = [[AIHTMLDecoder alloc] init];
+	[encoderCloseFontTags setIncludesHeaders:YES];
+	[encoderCloseFontTags setIncludesFontTags:YES];
+	[encoderCloseFontTags setClosesFontTags:YES];
+	[encoderCloseFontTags setIncludesColorTags:YES];
+	[encoderCloseFontTags setEncodesNonASCII:NO];
+	[encoderCloseFontTags setPreservesAllSpaces:NO];
+	[encoderCloseFontTags setUsesAttachmentTextEquivalents:NO];
+	[encoderCloseFontTags setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+	[encoderCloseFontTags setOnlyUsesSimpleTags:NO];
+
+	encoderAttachmentsAsText = [[AIHTMLDecoder alloc] init];
+	[encoderAttachmentsAsText setIncludesHeaders:YES];
+	[encoderAttachmentsAsText setIncludesFontTags:YES];
+	[encoderAttachmentsAsText setClosesFontTags:NO];
+	[encoderAttachmentsAsText setIncludesColorTags:YES];
+	[encoderAttachmentsAsText setEncodesNonASCII:NO];
+	[encoderAttachmentsAsText setPreservesAllSpaces:NO];
+	[encoderAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
+	[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+	[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
+	
 }
 
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
+
+	[encoderCloseFontTagsAttachmentsAsText release];
+	[encoderCloseFontTags release];
+	[encoderAttachmentsAsText release];
+
 	[super dealloc];
 }
 
@@ -66,19 +105,8 @@ static BOOL didInitOscar = NO;
 	if (nonHTMLUser){
 		returnString = [inAttributedString string];
 	}else{
-		returnString = [AIHTMLDecoder encodeHTML:inAttributedString
-										 headers:YES
-										fontTags:YES
-							  includingColorTags:YES
-								   closeFontTags:YES
-									   styleTags:YES
-					  closeStyleTagsOnFontChange:NO
-								  encodeNonASCII:NO
-									encodeSpaces:NO
-									  imagesPath:nil
-							   attachmentsAsText:YES
-				  attachmentImagesOnlyForSending:YES
-								  simpleTagsOnly:NO];
+		returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
+															  imagesPath:nil];
 	}
 	
 	return returnString;
@@ -100,20 +128,9 @@ static BOOL didInitOscar = NO;
 				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
 				NSString	*returnString;
 				
-				returnString = [AIHTMLDecoder encodeHTML:inAttributedString
-												 headers:YES
-												fontTags:YES
-									  includingColorTags:YES
-										   closeFontTags:YES
-											   styleTags:YES
-							  closeStyleTagsOnFontChange:NO
-										  encodeNonASCII:NO
-											encodeSpaces:NO
-											  imagesPath:@"/tmp"
-									   attachmentsAsText:NO
-						  attachmentImagesOnlyForSending:YES
-										  simpleTagsOnly:NO];
-				
+				returnString = [encoderCloseFontTags encodeHTML:inAttributedString
+													 imagesPath:@"/tmp"];
+
 				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
 					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
 					//and sending after it is if one is established
@@ -145,36 +162,15 @@ static BOOL didInitOscar = NO;
 				
 			} else {
 #warning DirectIM is not ready for prime time.  Temporary.
-				return([AIHTMLDecoder encodeHTML:inAttributedString
-										 headers:YES
-										fontTags:YES
-							  includingColorTags:YES
-								   closeFontTags:NO
-									   styleTags:YES
-					  closeStyleTagsOnFontChange:NO
-								  encodeNonASCII:NO
-									encodeSpaces:NO
-									  imagesPath:nil
-							   attachmentsAsText:YES
-				  attachmentImagesOnlyForSending:YES
-								  simpleTagsOnly:NO]);
+				return [encoderAttachmentsAsText encodeHTML:inAttributedString
+												 imagesPath:nil];
+
 			}
 		}
 		
 	}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
-		return ([AIHTMLDecoder encodeHTML:inAttributedString
-								  headers:YES
-								 fontTags:YES
-					   includingColorTags:YES
-							closeFontTags:NO
-								styleTags:YES
-			   closeStyleTagsOnFontChange:NO
-						   encodeNonASCII:NO
-							 encodeSpaces:NO
-							   imagesPath:nil
-						attachmentsAsText:YES
-		   attachmentImagesOnlyForSending:YES
-						   simpleTagsOnly:NO]);
+		return [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
+													  imagesPath:nil];
 	}
 }
 

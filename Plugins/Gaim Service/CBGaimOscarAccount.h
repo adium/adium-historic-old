@@ -89,6 +89,10 @@ struct oscar_direct_im {
 {
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
+
+	AIHTMLDecoder *encoderCloseFontTagsAttachmentsAsText;
+	AIHTMLDecoder *encoderCloseFontTags;
+	AIHTMLDecoder *encoderAttachmentsAsText;
 }
 
 - (BOOL)useGaimUserInfo;
