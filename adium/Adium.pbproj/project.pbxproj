@@ -1047,6 +1047,7 @@
 				4B55411C044DF01600A8010A,
 				F16B1A4805163AEB0000000E,
 				34878F6D05182855003B2F21,
+				F1D0C62C051AC1B90000000E,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1120,6 +1121,7 @@
 				4B31E8DD04C4711100A8010A,
 				9C8C7F9C03CBA08400267226,
 				4B7BD8630412584500A8010A,
+				F1D0C62B051AC1B90000000E,
 				F53B9ACB02CD12CB01A8010A,
 				4BDDCA07041104ED00A8010A,
 				4BC8AFDC04FD3C2800A8010A,
@@ -1254,6 +1256,7 @@
 				4B55411D044DF01600A8010A,
 				4B5D67D1050CF54700A8010A,
 				F16B1A4905163AEB0000000E,
+				F1D0C62D051AC1B90000000E,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -3052,6 +3055,7 @@
 		};
 		4B1332410459BF1F00A8010A = {
 			children = (
+				F1D0C631051AC2380000000E,
 				9E4CF9D104AA69B000415B22,
 				4BF4813B049A802E00A8010A,
 				4B6D0E43047D490700A8010A,
@@ -4732,6 +4736,7 @@
 				4B5B152B0493BFB100A8010A,
 				4B55411E044DF01600A8010A,
 				F16B1A4A05163AEB0000000E,
+				F1D0C62E051AC1B90000000E,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13841,6 +13846,32 @@
 //F12
 //F13
 //F14
+		F11B9621051CDB3B0000000E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIMessageAliasPlugin.h;
+			path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h";
+			refType = 4;
+		};
+		F11B9622051CDB3B0000000E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIMessageAliasPlugin.m;
+			path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m";
+			refType = 4;
+		};
+		F11B9623051CDB3B0000000E = {
+			fileRef = F11B9621051CDB3B0000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F11B9624051CDB3B0000000E = {
+			fileRef = F11B9622051CDB3B0000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F16B1A4205163AEB0000000E = {
 			buildActionMask = 2147483647;
 			files = (
@@ -14042,6 +14073,155 @@
 		};
 		F16B1A6905163D830000000E = {
 			fileRef = F16B1A6105163D830000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F1D0C626051AC1B90000000E = {
+			buildActionMask = 2147483647;
+			files = (
+				F11B9623051CDB3B0000000E,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D0C627051AC1B90000000E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D0C628051AC1B90000000E = {
+			buildActionMask = 2147483647;
+			files = (
+				F11B9624051CDB3B0000000E,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D0C629051AC1B90000000E = {
+			buildActionMask = 2147483647;
+			files = (
+				F1D0C63A051AC2B60000000E,
+				F1D0C63B051AC2B70000000E,
+				F1D0C63C051AC2B80000000E,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D0C62A051AC1B90000000E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D0C62B051AC1B90000000E = {
+			buildPhases = (
+				F1D0C626051AC1B90000000E,
+				F1D0C627051AC1B90000000E,
+				F1D0C628051AC1B90000000E,
+				F1D0C629051AC1B90000000E,
+				F1D0C62A051AC1B90000000E,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Message Alias Support";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F1D0C62F051AC21A0000000E,
+				F1D0C630051AC21A0000000E,
+			);
+			isa = PBXBundleTarget;
+			name = "Message Alias Support";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Message Alias Support";
+			productReference = F1D0C62C051AC1B90000000E;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIMessageAliasPlugin</string>
+</dict>
+</plist>
+";
+		};
+		F1D0C62C051AC1B90000000E = {
+			isa = PBXBundleReference;
+			path = "Message Alias Support.AdiumPlugin";
+			refType = 3;
+		};
+		F1D0C62D051AC1B90000000E = {
+			isa = PBXTargetDependency;
+			target = F1D0C62B051AC1B90000000E;
+		};
+		F1D0C62E051AC1B90000000E = {
+			fileRef = F1D0C62C051AC1B90000000E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F1D0C62F051AC21A0000000E = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F1D0C630051AC21A0000000E = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F1D0C631051AC2380000000E = {
+			children = (
+				F11B9621051CDB3B0000000E,
+				F11B9622051CDB3B0000000E,
+			);
+			isa = PBXGroup;
+			name = "Message Alias Support";
+			path = "";
+			refType = 4;
+		};
+		F1D0C63A051AC2B60000000E = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F1D0C63B051AC2B70000000E = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F1D0C63C051AC2B80000000E = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
