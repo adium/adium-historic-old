@@ -291,19 +291,21 @@
 - (void)_createActiveFrameImageFromState:(AIIconState *)iconState
 {
 	NSImage *image = [iconState image];
-	NSSize  size = [image size];
-	
-	[activeFrameImage release]; activeFrameImage = nil;
-
-	activeFrameImage = [[NSImage alloc] initWithSize:size];
-	
-	[activeFrameImage setFlipped:YES];
-	[activeFrameImage lockFocus];
-	[image drawAtPoint:NSMakePoint(0,0)
-							   fromRect:NSMakeRect(0,0,size.width,size.height)
-							  operation:NSCompositeSourceOver
-							   fraction:1.0];
-	[activeFrameImage unlockFocus];
+	if (image) {
+		NSSize  size = [image size];
+		
+		[activeFrameImage release]; activeFrameImage = nil;
+		
+		activeFrameImage = [[NSImage alloc] initWithSize:size];
+		
+		[activeFrameImage setFlipped:YES];
+		[activeFrameImage lockFocus];
+		[image drawAtPoint:NSMakePoint(0,0)
+				  fromRect:NSMakeRect(0,0,size.width,size.height)
+				 operation:NSCompositeSourceOver
+				  fraction:1.0];
+		[activeFrameImage unlockFocus];
+	}
 }
 
 //User selected an icon in the table view
