@@ -24,7 +24,7 @@ typedef enum {
 
 @interface AILogViewerWindowController : AIWindowController {
     AILoggerPlugin				*plugin;
-
+	
     IBOutlet	NSTableView			*tableView_results;
     IBOutlet	NSTextView			*textView_content;
     IBOutlet    id				searchField_logs;       //May be an NSSearchField or an NSTextField
@@ -36,7 +36,7 @@ typedef enum {
     IBOutlet    NSView                          *view_emoteToggle;
     IBOutlet    NSButton                        *button_emoticonToggle;
     IBOutlet    NSDrawer                        *drawer_contacts;
-
+	
     //Misc
     NSMutableArray      *availableLogArray;     //Array/tree of all available logs
     NSMutableArray      *fromArray;             //Array of account names
@@ -50,7 +50,7 @@ typedef enum {
     BOOL		automaticSearch;	//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL		ignoreSelectionChange;  //Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
     BOOL                filterEmoticons;        //Flag for whether or not to filter into graphics
-
+	
     //Search information
     int			activeSearchID;		//ID of the active search thread, all other threads should quit
     NSLock		*searchingLock;		//Locked when a search is in progress
@@ -61,7 +61,8 @@ typedef enum {
     NSMutableArray      *selectedLogArray;      //Array of filtered/resulting logs
     NSLock		*resultsLock;		//Lock before touching the array
     AILog		*displayedLog;		//Currently selected/displayed log
-
+	
+	NSMutableDictionary	*toolbarItems;
 }
 
 + (id)openForPlugin:(id)inPlugin;
