@@ -98,7 +98,7 @@
 }
 
 //Return our scroll view
-- (NSScrollView *)messageScrollView
+- (NSView *)messageScrollView
 {
 	return([[[webView mainFrame] frameView] frameScrollView]);
 }
