@@ -53,12 +53,14 @@
         [inModifiedKeys containsObject:@"Warning"] ||
         [inModifiedKeys containsObject:@"Online"] ||
         [inModifiedKeys containsObject:@"UnviewedContent"] ||
-        [inModifiedKeys containsObject:@"UnrespondedContent"]){
+        [inModifiedKeys containsObject:@"UnrespondedContent"] ||
+        [inModifiedKeys containsObject:@"Signed On"] /*||
+        [inModifiedKeys containsObject:@"Signed Off"]*/){
 
         AIMutableOwnerArray	*iconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
-        int			away, idle, warning, online, unviewedContent, unrespondedContent;
+        int			away, idle, warning, online, unviewedContent, unrespondedContent, signedOn;
         
         //Get the status circle
         iconArray = [inHandle displayArrayForKey:@"Left View"];
@@ -76,10 +78,13 @@
         online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
         unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
         unrespondedContent = [[inHandle statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
+        signedOn = [[inHandle statusArrayForKey:@"Signed On"] greatestIntegerValue];
         
         //Set the circle color
         if(!online){
             circleColor = [NSColor colorWithCalibratedRed:(178.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
+        }else if(signedOn){
+            circleColor = [NSColor colorWithCalibratedRed:(102.0/255.0) green:(102.0/255.0) blue:(229.0/255.0) alpha:1.0];
         }else if(idle && away){
             circleColor = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(153.0/255.0) alpha:1.0];
         }else if(idle){

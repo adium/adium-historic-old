@@ -156,18 +156,25 @@
 - (void)contactAttributesChanged:(NSNotification *)notification
 {
     AIContactHandle	*handle = [notification object];
-    NSEnumerator	*enumerator;
+    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
     AISCLOutlineView	*SCLView;
 
-    enumerator = [SCLViewArray objectEnumerator];
-    while((SCLView = [enumerator nextObject])){
-        int row = [SCLView rowForItem:handle];
-
-        if(row >= 0){
-            [SCLView setNeedsDisplayInRect:[SCLView rectOfRow:row]];
+    if([[[notification userInfo] objectForKey:@"Keys"] containsObject:@"Hidden"]){
+        //Update the entire list (since the visibility of contacts has changed
+        while((SCLView = [enumerator nextObject])){
+            [SCLView reloadData];
         }
 
-    }
+    }else{
+        //Simply redraw the modified contact
+        while((SCLView = [enumerator nextObject])){
+            int row = [SCLView rowForItem:handle];
+
+            if(row >= 0){
+                [SCLView setNeedsDisplayInRect:[SCLView rectOfRow:row]];
+            }
+        }
+    }    
 }
 
 //A contact list preference has changed

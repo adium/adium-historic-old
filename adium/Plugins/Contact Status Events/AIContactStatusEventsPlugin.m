@@ -54,10 +54,21 @@
             BOOL	newStatus = [[inHandle statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
 
             if(newStatus != oldStatus){
+                AIMutableOwnerArray	*ownerArray;
+
                 [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
                                                           object:inHandle
                                                         userInfo:nil];
                 [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
+
+                //Set status flags and install timers for "Just signed on" and "Just signed off"
+                ownerArray = [inHandle statusArrayForKey:(newStatus ? @"Signed On" : @"Signed Off")];
+                [ownerArray removeObjectsWithOwner:self];
+                [ownerArray addObject:[NSNumber numberWithBool:YES] withOwner:self];
+                [[owner contactController] handleStatusChanged:inHandle
+                                            modifiedStatusKeys:[NSArray arrayWithObject:(newStatus ? @"Signed On" : @"Signed Off")]];
+
+                [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(clearOnlineFlags:) userInfo:inHandle repeats:NO];
             }
 
         }else if([inModifiedKeys containsObject:@"Away"]){ //Away / Unaway
@@ -87,6 +98,16 @@
     }
 
     return(nil);
+}
+
+- (void)clearOnlineFlags:(NSTimer *)inTimer
+{
+    AIContactHandle	*handle = [inTimer userInfo];
+
+    [[handle statusArrayForKey:@"Signed On"] removeObjectsWithOwner:self];
+    [[handle statusArrayForKey:@"Signed Off"] removeObjectsWithOwner:self];
+
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil]];
 }
 
 @end
