@@ -112,16 +112,15 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 			if(state.prevChar == '\n' && ch[i] == '#') {
 				state.inComment = YES;
 			} else {
-#warning strtof is not present in 10.2
 				if(!state.redStart) {
 					state.redStart = &ch[i];
-					state.red = strtof(state.redStart, (char **)&state.redEnd) / 255.0;
+					state.red = (float)(strtod(state.redStart, (char **)&state.redEnd) / 255.0);
 				} else if((!state.greenStart) && state.redEnd && (&ch[i] >= state.redEnd)) {
 					state.greenStart = &ch[i];
-					state.green = strtof(state.greenStart, (char **)&state.greenEnd) / 255.0;
+					state.green = (float)(strtod(state.greenStart, (char **)&state.greenEnd) / 255.0);
 				} else if((!state.blueStart) && state.greenEnd && (&ch[i] >= state.greenEnd)) {
 					state.blueStart = &ch[i];
-					state.blue = strtof(state.blueStart, (char **)&state.blueEnd) / 255.0;
+					state.blue = (float)(strtod(state.blueStart, (char **)&state.blueEnd) / 255.0);
 				} else if((!state.nameStart) && state.blueEnd && (&ch[i] >= state.blueEnd)) {
 					state.nameStart  = &ch[i];
 				}
