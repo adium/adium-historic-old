@@ -140,6 +140,7 @@
 	NSMutableArray	*windowMenuArray;
 	
 	AIChat	*activeChat;
+	AIChat	*mostRecentActiveChat;
 	
 	BOOL	tabbedChatting;
 	

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.101 2004/08/16 19:07:22 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.102 2004/08/16 22:29:47 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -57,7 +57,9 @@
     contactListTooltipSecondaryEntryArray = [[NSMutableArray alloc] init];
 	closeMenuConfiguredForChat = NO;
 	_cachedOpenChats = nil;
-
+	mostRecentActiveChat = nil;
+	activeChat = nil;
+	
     tooltipListObject = nil;
     tooltipTitle = nil;
     tooltipBody = nil;
@@ -271,7 +273,9 @@
 	}
 	
 	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
+	[inChat setIsOpen:YES];
 	
+	//Post the notification last, so observers receive a chat whose isOpen flag is yes.
 	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
 }
 
@@ -317,6 +321,16 @@
 - (void)setActiveChat:(AIChat *)inChat
 {
 	[interfacePlugin setActiveChat:inChat];
+}
+//Last chat to be active (should only be nil if no chats are open)
+- (AIChat *)mostRecentActiveChat
+{
+	return(mostRecentActiveChat);
+}
+//Solely for key-value pairing purposes
+- (void)setMostRecentActiveChat:(AIChat *)inChat
+{
+	[self setActiveChat:inChat];
 }
 
 //Returns an array of open chats (cached, so call as frequently as desired)
@@ -367,6 +381,10 @@
 	[self clearUnviewedContentOfChat:inChat];
 	[self updateCloseMenuKeys];
 	[self updateActiveWindowMenuItem];
+	
+	if(inChat){
+		[mostRecentActiveChat release]; mostRecentActiveChat = [inChat retain];
+	}
 }
 
 //A chat window did close: rebuild our window menu to remove the chat
@@ -375,6 +393,10 @@
 	[self _resetOpenChatsCache];
 	[self clearUnviewedContentOfChat:inChat];
 	[self buildWindowMenu];
+	
+	if(inChat == mostRecentActiveChat){
+		[mostRecentActiveChat release]; mostRecentActiveChat = nil;
+	}
 }
 
 //The order of chats has changed: rebuild our window menu to reflect the new order
