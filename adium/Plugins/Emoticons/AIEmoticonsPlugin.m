@@ -84,6 +84,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 									   name:Preference_GroupChanged 
 									 object:nil];
     [self preferencesChanged:nil];
+	
+	//Observe for installation of new emoticon sets
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];
 }
 
 - (void)uninstallPlugin
@@ -423,9 +429,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return(nil);
 }
 
--(void)publicReset
+- (void)xtrasChanged:(NSNotification *)notification
 {
-    [self resetAvailableEmoticons];
+	if (notification == nil || [[notification object] caseInsensitiveCompare:@"AdiumEmoticonset"] == 0){
+		[self resetAvailableEmoticons];
+		[prefs emoticonXtrasDidChange];
+	}
 }
 
 //Returns an array of the emoticon packs at the specified path

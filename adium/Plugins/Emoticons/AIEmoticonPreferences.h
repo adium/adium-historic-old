@@ -26,8 +26,10 @@
     AIEmoticonPack                          *selectedEmoticonPack;
 
     NSArray                                 *dragRows;
+	
+	BOOL									viewIsOpen;
 }
 
--(void)moveSelectedPacksToTrash;
+-(void)emoticonXtrasDidChange;
 
 @end
