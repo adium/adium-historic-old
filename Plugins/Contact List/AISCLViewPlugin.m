@@ -223,7 +223,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	}else{
 		NSRunAlertPanel(@"Error Saving Theme",
 						@"Unable to write file %@ to %@",
-						@"Okay",
+						@"OK",
 						nil,
 						nil,
 						fileName,

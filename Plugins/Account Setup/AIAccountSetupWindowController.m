@@ -413,7 +413,7 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 //	if (![configuredForAccount UID]){
 //		NSRunAlertPanel(AILocalizedString(@"Unable to Register",nil),
 //						AILocalizedString(@"Please input a username and password before clicking Register.",nil),
-//						AILocalizedString(@"Okay",nil), nil, nil);
+//						AILocalizedString(@"OK",nil), nil, nil);
 //	}else{
 //		if ([configuredForAccount requiresPassword]){
 //			//Retrieve the user's password and then call connect
