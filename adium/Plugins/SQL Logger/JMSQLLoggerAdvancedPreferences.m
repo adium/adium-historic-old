@@ -32,7 +32,6 @@
 {
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
-    //[text_Username setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789"] length:64 caseSensitive:NO errorMessage:@"You username must contain only letters and numbers"]];
 
 }
 

@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.32 $
- * $Date: 2003/12/22 06:28:01 $
+ * $Revision: 1.33 $
+ * $Date: 2003/12/22 08:00:32 $
  * $Author: jmelloy $
  *
  */
@@ -55,10 +55,18 @@
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	[self preferencesChanged:nil];
 	
+	if([username isEqualToString:@""] ) {
+		username = nil;
+	}
+	
+	if ([database isEqualToString:@""] ) {
+		database = nil;
+	}
+	
 	connInfo = [NSString stringWithFormat:@"host=\'%@\' port=\'%@\' user=\'%@\' password=\'%@\' dbname=\'%@\' sslmode=\'prefer\'", 
 						(tmp = url) ? tmp: @"", (tmp = port) ? tmp: @"", (tmp = username) ? tmp: NSUserName(), 
 				   (tmp = password) ? tmp: @"", (tmp = database) ? tmp: NSUserName()];
-	
+		
     conn = PQconnectdb([connInfo cString]);
     if (PQstatus(conn) == CONNECTION_BAD)
     {
