@@ -10,7 +10,7 @@
 //notifications separately from regular releases.  Version updates will also be more frequent and cannot be disabled.
 //This is to discourage the use of beta releases after a regular release is made without completely preventing the
 //program from launching.
-#define BETA_RELEASE_EXPIRATION		NO
+#define BETA_RELEASE_EXPIRATION		YES
 //----------------------------------------------------------------------------------------------------------------------
 
 #define KEY_LAST_UPDATE_ASKED		@"LastUpdateAsked"
