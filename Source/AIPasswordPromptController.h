@@ -22,6 +22,7 @@
 
 	IBOutlet	NSTextField	*textField_password;
 	IBOutlet	NSButton	*checkBox_savePassword;
+	IBOutlet	NSButton	*button_OK;
 
 	SEL 		selector;
 	id			target;
