@@ -15,9 +15,11 @@
 	NSMutableDictionary				*alert;
 	id								target;
 	id								userInfo;
+	
+	AIListObject					*listObject;
 }
 
-+ (void)editAlert:(NSDictionary *)inAlert onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)userInfo;
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
 - (IBAction)cancel:(id)sender;
 - (IBAction)save:(id)sender;
 
