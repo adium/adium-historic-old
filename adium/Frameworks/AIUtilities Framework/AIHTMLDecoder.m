@@ -26,7 +26,6 @@ int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
 + (NSDictionary *)parseArguments:(NSString *)arguments;
-+ (NSMutableAttributedString *)decodeHTMLEntities:(NSMutableAttributedString *)inputString;
 @end
 
 @implementation AIHTMLDecoder
@@ -209,6 +208,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
     int				tagType;
+    int				asciiChar;
     
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -368,6 +368,10 @@ int HTMLEquivalentForFontSize(int fontSize)
 				{
 					[attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
 				}
+                            else if ((sscanf([chunkString cString], "#%i", &asciiChar)) == 1) //Using scanf for now; I don't know a good Cocoa way to quickly do this
+				{
+					[attrString appendString:[NSString stringWithFormat:@"%c", asciiChar] withAttributes:[textAttributes dictionary]];
+				}
 				
 				//Invalid
 				else
@@ -421,36 +425,6 @@ int HTMLEquivalentForFontSize(int fontSize)
     }
     
     return([argDict autorelease]);
-}
-
-+ (NSMutableAttributedString *)decodeHTMLEntities:(NSMutableAttributedString *)inputString
-{
-    NSString *plainString = [inputString string];
-    NSRange currentRange;
-    
-    int lastRangeMax = 0;
-
-    while ((currentRange = [plainString rangeOfString:@"&amp;" options:0 range:NSMakeRange(lastRangeMax, [plainString length]-lastRangeMax)]).location != NSNotFound) {
-        lastRangeMax = NSMaxRange(currentRange);
-        [inputString replaceCharactersInRange:currentRange withString:@"&"];
-        plainString = [inputString string];
-    }
-
-    lastRangeMax = 0;
-    while ((currentRange = [plainString rangeOfString:@"&lt;" options:0 range:NSMakeRange(lastRangeMax, [plainString length]-lastRangeMax)]).location != NSNotFound) {
-        lastRangeMax = NSMaxRange(currentRange);
-        [inputString replaceCharactersInRange:currentRange withString:@"<"];
-        plainString = [inputString string];
-    }
-
-    lastRangeMax = 0;
-    while ((currentRange = [plainString rangeOfString:@"&gt;" options:0 range:NSMakeRange(lastRangeMax, [plainString length]-lastRangeMax)]).location != NSNotFound) {
-        lastRangeMax = NSMaxRange(currentRange);
-        [inputString replaceCharactersInRange:currentRange withString:@">"];
-        plainString = [inputString string];
-    }
-
-    return inputString;
 }
 
 @end
