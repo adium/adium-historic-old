@@ -154,7 +154,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>0.8svn, Copyright 2001-2005 Adam Iser</string>
+	<string>0.8svn, Copyright 2001-2005 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Adium Help</string>
 	<key>CFBundleHelpBookName</key>
