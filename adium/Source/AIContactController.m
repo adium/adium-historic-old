@@ -329,7 +329,7 @@
         if(contact){
             [[contact retain] autorelease]; //We need to temporarily hold onto the contact, since removing it from the abandoned contacts array will cause it to be released immediately.
             [abandonedContacts removeObjectForKey:handleUID]; //remove it from abandoned
-        } 
+        }
 
         //If it wasn't in the abandoned dict, we create
         if(!contact){

@@ -24,7 +24,9 @@
 #import "AIEditorListHandle.h"
 #import "AIEditorCollection.h"
 #import "AIEditorAccountCollection.h"
+#import "AIEditorImportCollection.h"
 #import "AIContactListEditorPlugin.h"
+
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
@@ -53,12 +55,14 @@
 - (IBAction)delete:(id)sender;
 - (IBAction)group:(id)sender;
 - (IBAction)handle:(id)sender;
+- (IBAction)import:(id)sender;
 - (void)installToolbar;
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem;
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar;
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar;
 - (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (AIEditorListGroup *)editorListGroupForAccount:(AIAccount *)inAccount;
 - (void)generateCollectionsArray;
 - (void)refreshContentOutlineView;
@@ -217,7 +221,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     while((account = [accountEnumerator nextObject])){
         [collectionsArray addObject:[AIEditorAccountCollection editorCollectionForAccount:account]];
     }
-
+    
+    //Add a single (empty) collection for imported contacts 
+    [collectionsArray addObject:[AIEditorImportCollection editorCollection]];
+    
     //Update the selected collection
     [self tableViewSelectionIsChanging:nil];
 }
@@ -681,6 +688,59 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     }
 }
 
+//Import contacts from a .blt file
+- (IBAction)import:(id)sender
+{
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    
+    [openPanel 
+            beginSheetForDirectory:[[NSString stringWithString:@"~/Documents/"] stringByExpandingTildeInPath]
+            file:nil
+            types:[NSArray arrayWithObject:@"blt"]
+            modalForWindow:[self window]
+            modalDelegate:self
+            didEndSelector:@selector(concludeImportPanel:returnCode:contextInfo:)
+            contextInfo:nil];
+}
+
+//Finish up the importing panel
+- (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    NSEnumerator *enumerator = [collectionsArray objectEnumerator];
+    id anObject;
+    int index = 0;
+    AIEditorImportCollection *defaultCollection = [AIEditorImportCollection editorCollection];
+        
+    if(returnCode == NSOKButton)
+    {
+        while (anObject = [enumerator nextObject])
+        {
+            if([anObject isMemberOfClass:[AIEditorImportCollection class]])
+            {
+                if([[anObject name] isEqual:[defaultCollection name]])//if it's empty..
+                {
+                    [collectionsArray replaceObjectAtIndex:index 
+                        withObject:[AIEditorImportCollection editorCollectionWithPath:
+                            [[panel filenames] objectAtIndex:0]]];
+                            //...replace it
+                }
+                else //it's been added to already
+                {
+                    [anObject importAndAppendContactsFromPath:[[panel filenames] objectAtIndex:0]];
+                    //so append 
+                }
+                //we want to do these things regardless
+                selectedCollection = [collectionsArray objectAtIndex:index]; //select it
+                [tableView_sourceList selectRow:index byExtendingSelection:NO]; //highlight it
+                
+                break; //and get out!
+            }
+            else //otherwise
+                ++index; //move on
+        }
+        [self refreshContentOutlineView]; //refresh
+    }
+}
 
 
 
@@ -726,6 +786,17 @@ static AIContactListEditorWindowController *sharedInstance = nil;
                                    settingSelector:@selector(setImage:)
                                        itemContent:[AIImageUtilities imageNamed:@"remove" forClass:[self class]]
                                             action:@selector(delete:)
+                                              menu:NULL];
+                                            
+        [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Import"
+                                             label:@"Import"
+                                      paletteLabel:@"Import"
+                                           toolTip:@"Load buddies from a .blt file"
+                                            target:self
+                                   settingSelector:@selector(setImage:)
+                                       itemContent:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]
+                                            action:@selector(import:)
                                               menu:NULL];
 
     [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
@@ -778,13 +849,13 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Return the default toolbar set
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return [NSArray arrayWithObjects:@"Group",@"Handle",NSToolbarSeparatorItemIdentifier,@"Delete",NSToolbarFlexibleSpaceItemIdentifier,@"Inspector",nil];
+    return [NSArray arrayWithObjects:@"Group",@"Handle",NSToolbarSeparatorItemIdentifier,@"Delete",@"Import",NSToolbarFlexibleSpaceItemIdentifier,@"Inspector",nil];
 }
 
 //Return a list of allowed toolbar items
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return [NSArray arrayWithObjects:@"Group",@"Handle",@"Delete",@"Inspector",NSToolbarSeparatorItemIdentifier, NSToolbarSpaceItemIdentifier,NSToolbarFlexibleSpaceItemIdentifier,nil];
+    return [NSArray arrayWithObjects:@"Group",@"Handle",@"Delete",@"Import",@"Inspector",NSToolbarSeparatorItemIdentifier, NSToolbarSpaceItemIdentifier,NSToolbarFlexibleSpaceItemIdentifier,nil];
 }
 
 @end

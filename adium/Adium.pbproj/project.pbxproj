@@ -6600,6 +6600,8 @@
 				4BF5BA26042F3CFD00A8010A,
 				4BFB1571043498E200A8010A,
 				4BFB1572043498E200A8010A,
+				9EA81D61044A611A00415B22,
+				9EA81D62044A611A00415B22,
 			);
 			isa = PBXGroup;
 			name = "Editor Collections";
@@ -6978,6 +6980,32 @@
 		};
 		9E95316A03C8E0C700415B22 = {
 			fileRef = 9E95316903C8E0C700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EA81D61044A611A00415B22 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorImportCollection.h;
+			path = "Plugins/Contact List Editor/AIEditorImportCollection.h";
+			refType = 4;
+		};
+		9EA81D62044A611A00415B22 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEditorImportCollection.m;
+			path = "Plugins/Contact List Editor/AIEditorImportCollection.m";
+			refType = 4;
+		};
+		9EA81D63044A611A00415B22 = {
+			fileRef = 9EA81D61044A611A00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EA81D64044A611A00415B22 = {
+			fileRef = 9EA81D62044A611A00415B22;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7509,6 +7537,7 @@
 				4BF5BA32042F3CFD00A8010A,
 				4BF5BA34042F3CFD00A8010A,
 				4BFB1573043498E200A8010A,
+				9EA81D63044A611A00415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7544,6 +7573,7 @@
 				4BF5BA33042F3CFD00A8010A,
 				4BF5BA35042F3CFD00A8010A,
 				4BFB1574043498E200A8010A,
+				9EA81D64044A611A00415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
