@@ -365,7 +365,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 
 	    //Cap the away menu title (so they're not incredibly long)
             if([message length] > MENU_AWAY_DISPLAY_LENGTH){
-                message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"â€¦"];
+                message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
             }
 	    menuItem = [[[NSMenuItem alloc] initWithTitle:message
 					    target:self
