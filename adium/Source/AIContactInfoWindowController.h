@@ -23,8 +23,10 @@
     IBOutlet	NSView		*view_contact;
     
     AIPreferenceCategory	*mainCategory;
+    
+    BOOL                        changeWithSelectionChanges;
 }
 
 + (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory;
-
+- (void)ignoreSelectionChanges:(BOOL)inValue;
 @end
