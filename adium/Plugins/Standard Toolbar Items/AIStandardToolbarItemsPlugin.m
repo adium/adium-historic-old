@@ -108,6 +108,7 @@
     //unregister items
 }
 
+#if 0
 - (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
 {
     AIListObject	*object = [[adium contactController] selectedListObject];
@@ -162,7 +163,7 @@
     return(enabled);
 }
 
-
+#endif
 @end
 
 
