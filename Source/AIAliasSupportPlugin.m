@@ -35,8 +35,8 @@
  * @class AIAliasSupportPlugin
  * @brief Plugin to handle applying aliases to contacts
  *
- * This plugin applies aliases to contacts.  It also also responsible for generating the "long display name"
- * which may include some combination of alias and screen name which is used in the contact list.
+ * This plugin applies aliases to contacts.  It also responsible for generating the "long display name"
+ * used in the contact list which may include some combination of alias and screen name.
  */
 @implementation AIAliasSupportPlugin
 
@@ -252,6 +252,11 @@
 	return(modifiedAttributes);
 }
 
+/*
+ * @brief Generate the menu of long display name format choices
+ *
+ * @result The autoreleased menu
+ */
 - (NSMenu *)_contactNameMenu
 {
 	
