@@ -27,6 +27,7 @@
 - (void)loadAwayMessages;
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
 - (NSMenu *)savedAwaysMenu;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation IdleTimePreferences
@@ -115,14 +116,14 @@
     [checkBox_enableAutoAway setState:[[preferenceDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue]];
     [textField_autoAwayMinutes setIntValue:[[preferenceDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue]];
 	
-	[self configureAutoAwayPreferences];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged 
+									 object:nil];
+	
+	[self preferencesChanged:nil];
 	
     [self configureControlDimming];
-}
-
-- (IBAction)refreshAutoAwayPreferences:(id)sender
-{
-    [self configureAutoAwayPreferences];
 }
 
 - (void)configureAutoAwayPreferences
@@ -240,6 +241,14 @@
 
     [savedAwaysMenu setAutoenablesItems:NO];
     return savedAwaysMenu;
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if(notification == nil || ([[[notification userInfo] objectForKey:@"Group"] isEqualTo:PREF_GROUP_AWAY_MESSAGES] &&
+							   [[[notification userInfo] objectForKey:@"Key"] isEqualTo:KEY_SAVED_AWAYS])) {
+		[self configureAutoAwayPreferences];
+	}
 }
 
     

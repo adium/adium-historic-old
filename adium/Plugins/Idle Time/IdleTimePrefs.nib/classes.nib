@@ -33,15 +33,19 @@
             OUTLETS = {"view_preferences" = NSView; }; 
             SUPERCLASS = AIService; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {changePreference = id; refreshAutoAwayPreferences = id; }; 
+            ACTIONS = {
+                changeAwayPreference = id; 
+                changePreference = id; 
+                refreshAutoAwayPreferences = id; 
+            }; 
             CLASS = IdleTimePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_refreshAutoAwayPreferences" = NSButton; 
                 "checkBox_enableAutoAway" = NSButton; 
                 "checkBox_enableIdle" = NSButton; 
                 "popUp_title" = NSPopUpButton; 
@@ -51,7 +55,7 @@
                 "textField_idleMinutes" = NSTextField; 
                 "view_prefView" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIObject; 
         }
     ); 
     IBVersion = 1; 
