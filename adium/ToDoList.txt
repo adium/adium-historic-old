@@ -15,7 +15,7 @@ Bugs
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
-= Contact list flippy triangles have stripes behind them in 10.2 (fixed?)
+= Contact list flippy triangles have stripes behind them in 10.2 (fixed?) [Colin]
 * If preferences are selected to advanced on close, the window will be vertically small on re-open.
 
 
@@ -48,7 +48,7 @@ WebKit Message View:
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
-        I don't know quite what to do here. I'd like some guideance.
+        I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
 	+ Remember last X lines of previous conversation, restore to new message windows [Dave]
@@ -65,6 +65,7 @@ Other:
         Jeff: Remember that we lose CVS history if we change filenames.
 
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
+		Colin: Didn't Mac-arena do this already?
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
@@ -193,7 +194,6 @@ Unfixable(?) Issues
 -------------------------------------------------------------------------------------------------------
 Waiting On
 -------------------------------------------------------------------------------------------------------
-+ Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
 + Ability to view all currently blocked users  (Libgaim does not yet have support for accessing the privacy settings)
 
 
@@ -248,3 +248,4 @@ Features & Changes:
 = Make the "Custom Tab Status Coloring" preferences work as intended (if disabled, the contact list labels colors are used for tab text colors).
 = Remove submenus from accounts in the File menu
 = Make selecting an account in the menu connect / disconnect
+= Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
