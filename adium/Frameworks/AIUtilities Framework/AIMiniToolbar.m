@@ -194,7 +194,7 @@
     NSString	*itemIdentifier = [notification object];
     
     if(itemIdentifier == nil){ //Refresh the whole toolbar
-        [self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
+        //[self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
         [self setNeedsDisplay:YES];
     
     }else{ //Refresh a single item
@@ -226,10 +226,10 @@
     }
     
     //Draw the 'acceptance' focus ring
-    if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing:self]){
-        NSSetFocusRingStyle(NSFocusRingOnly);
-        NSRectFill(rect);
-    }
+    //if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing:self]){
+    //    NSSetFocusRingStyle(NSFocusRingOnly);
+    //    NSRectFill(rect);
+    //}
 
     //Draw our contents
     [super drawRect:rect];
@@ -448,9 +448,9 @@
     
     //Mark the toolbar for redisplay
     [self setNeedsDisplay:YES];
-    if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing:self]){
-        [self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
-    }
+    //if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing:self]){
+    //    [self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
+    //}
 
     return(finished);
 }
@@ -460,8 +460,8 @@
 {
     if(focusedForDrag != value){
         focusedForDrag = value;
-        [self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
-        [self setNeedsDisplay:YES];
+        //[self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
+        //[self setNeedsDisplay:YES];
     }
 }
 
@@ -595,6 +595,7 @@
         [opaqueImage lockFocus];
             [image dissolveToPoint:NSMakePoint(0,0) fraction:0.7];
         [opaqueImage unlockFocus];
+	[opaqueImage setFlipped:YES];
 
         //Perform the drag
         draggedOffset = NSMakeSize((clickLocation.x - viewFrame.origin.x), (clickLocation.y - viewFrame.origin.y));
