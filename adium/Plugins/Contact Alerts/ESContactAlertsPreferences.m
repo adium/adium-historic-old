@@ -169,7 +169,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil];
     
     NSEnumerator    *enumerator = [contactArray objectEnumerator];
-    NSString        *groupName = nil;
+   // NSString        *groupName = nil;
         
     [prefAlertsArray release]; prefAlertsArray = [[NSMutableArray alloc] init];
 
@@ -460,7 +460,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
         AIListObject	*contact;
-        NSString 	*groupName = [[[NSString alloc] init] autorelease];
+        //NSString 	*groupName = [[[NSString alloc] init] autorelease];
         BOOL		firstOfflineSearch = NO;
 
         while (contact = [enumerator nextObject])
