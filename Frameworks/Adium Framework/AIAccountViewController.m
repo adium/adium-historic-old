@@ -54,6 +54,12 @@
     [super dealloc];
 }
 
+//Awake
+- (void)awakeFromNib
+{
+	//Empty
+}
+
 
 //Account specific views -----------------------------------------------------------------------------------------------
 #pragma mark Account specific views
