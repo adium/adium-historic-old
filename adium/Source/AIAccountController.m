@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.63 2004/03/13 00:11:11 adamiser Exp $
+// $Id: AIAccountController.m,v 1.64 2004/03/14 08:35:52 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -420,7 +420,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	NSString    *accountID;
 	AIAccount	*account;
-
+	
     if(inObject){
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
@@ -438,29 +438,37 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				}
 			}
 		}
-    }
-	
-	//Return the last account used to message someone on this service
-	NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
-	if(lastAccountID && (account = [self accountWithObjectID:lastAccountID])){
-		if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
-			return(account);
+		
+		//Return the last account used to message someone on this service
+		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
+		if(lastAccountID && (account = [self accountWithObjectID:lastAccountID])){
+			if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+				return(account);
+			}
+		}
+		
+		//First available account in our list of the correct service type
+		NSEnumerator	*enumerator = [accountArray objectEnumerator];
+		while(account = [enumerator nextObject]){
+			if([[account serviceID] compare:[inObject serviceID]] == 0 &&
+			   [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+				return(account);
+			}
+		}
+	} else {
+		//First available account in our list
+		NSEnumerator	*enumerator = [accountArray objectEnumerator];
+		while(account = [enumerator nextObject]){
+			if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+				return(account);
+			}
 		}
 	}
 	
-	//First available account in our list of the correct service type
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-	while(account = [enumerator nextObject]){
-		if([[account serviceID] compare:[inObject serviceID]] == 0 &&
-		   [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
-			return(account);
-		}
-	}
-
 	//Can't find anything
 	return(nil);
 }
-	
+
 //Returns a menu of all accounts.  Accounts not available for sending content are disabled.
 //- Selector called on account selection is selectAccount:
 //- The menu item's represented objects are the AIAccounts they represent
