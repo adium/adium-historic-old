@@ -728,11 +728,11 @@ typedef enum {
 
 @interface ESContactAlertsController : NSObject <AIListObjectObserver> {
     IBOutlet            AIAdium		*owner;
-    NSMutableArray                      *contactAlertProviderArray;
+    NSMutableDictionary                 *contactAlertProviderDictionary;
     AIMutableOwnerArray                 *arrayOfStateDictionaries;
     AIMutableOwnerArray                 *arrayOfAlertsArrays;
     
-    BOOL                                keepProcessingForUser;
+    NSMutableArray                      *completedActionTypes;
 }
 //
 - (void)registerContactAlertProvider:(id <ESContactAlertProvider>)contactAlertProvider;
