@@ -1639,7 +1639,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (void)gaimThreadDisconnectAccount:(id)adiumAccount
 {
-	gaim_account_disconnect(accountLookupFromAdiumAccount(adiumAccount));
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	
+	if(gaim_account_is_connected(account)){
+		gaim_account_disconnect(account);
+	}
 }
 
 - (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags
@@ -1797,6 +1801,32 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		 gaim_blist_remove_group(group);                         //remove the old one gaimside
 		 */
 	}	
+}
+
+- (oneway void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadSetAlias:forUID:onAccount:)
+				  withObject:alias
+				  withObject:UID
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadSetAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		const char  *uidUTF8String = [UID UTF8String];
+		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+		const char  *aliasUTF8String = [alias UTF8String];
+		
+		if ((aliasUTF8String && !buddy->alias) ||
+			(!aliasUTF8String && buddy->alias) ||
+			((buddy->alias && aliasUTF8String && (strcmp(buddy->alias,aliasUTF8String) != 0)))){
+			
+			gaim_blist_alias_buddy(buddy,aliasUTF8String);
+			serv_alias_buddy(buddy);
+		}
+	}
 }
 
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
