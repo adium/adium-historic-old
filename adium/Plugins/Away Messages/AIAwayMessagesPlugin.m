@@ -52,6 +52,7 @@
     [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
 }
 
+
 //Private ------------------------------------------------------------------------------
 //Update our menu when the away status changes
 - (void)accountStatusChanged:(NSNotification *)notification

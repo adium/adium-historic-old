@@ -2634,7 +2634,7 @@
 				9EDAC4EB03D5160100415B22,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/ramoth4/adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

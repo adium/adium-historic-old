@@ -67,6 +67,8 @@
     oldWidth = 0;
     editor = nil;
     editorScroll = nil;
+    editedColumn = nil;
+    editedRow = -1;
 
     contentBottomAligned = YES;
     scrollsOnNewContent = YES;
@@ -81,6 +83,10 @@
     if(inDelegate != delegate){
         [delegate release]; delegate = nil;
         delegate = [inDelegate retain];
+
+        respondsTo_shouldEditTableColumn = [delegate respondsToSelector:@selector(shouldEditTableColumn:row:)];
+        respondsTo_setObjectValue = [delegate respondsToSelector:@selector(setObjectValue:forTableColumn:row:)];
+        respondsTo_shouldSelectRow = [delegate respondsToSelector:@selector(shouldSelectRow:)];
     }
 }
 
@@ -140,12 +146,9 @@
 {
     NSRect			documentVisibleRect;
     NSPoint			clickLocation;
-
     NSEnumerator		*enumerator;
-
     AIFlexibleTableColumn	*column;
     int				width = 0;
-
     NSNumber			*rowHeight;
     int				height = 0;
     int				targetedRow = 0;
@@ -180,38 +183,37 @@
     //Open the selected cell for editing
     if([theEvent clickCount] >= 2){
         [self editRow:targetedRow column:column];
-        
     }
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-//    NSLog(@"mouse Up (%i) (%i,%i)", (int)[theEvent clickCount], (int)[theEvent locationInWindow].x, (int)[theEvent locationInWindow].y, (int)[theEvent eventNumber]);
+    
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-//    if(rearrangeSupported){
-//    }else{
     [self mouseDown:theEvent]; //Handle this as a mouse down
-//    }
 }
 
 
+//Row Selection ---------------------------------------------------------------------------------
 //Open a specified row/column for editing
 - (void)selectRow:(int)inRow
 {
-    //Close any existing editor
-    [self endEditing];
-
-    //Deselect the existing selection
-    if(selectedRow != -1){
-        [self setSelected:NO row:selectedRow];
+    if(respondsTo_shouldSelectRow && [(id <AIFlexibleTableViewDelegate_shouldSelectRow>)delegate shouldSelectRow:inRow]){
+        //Close any existing editor
+        [self endEditing];
+    
+        //Deselect the existing selection
+        if(selectedRow != -1){
+            [self setSelected:NO row:selectedRow];
+        }
+    
+        //Select the new row
+        [self setSelected:YES row:inRow];
+        selectedRow = inRow;
     }
-
-    //Select the new row
-    [self setSelected:YES row:inRow];
-    selectedRow = inRow;
 }
 
 //Toggle the selection of a row
@@ -229,41 +231,45 @@
     }
 }
 
-    //Open a specified row/column for editing
+
+//Row Editing ---------------------------------------------------------------------------------
+//Open a specified row/column for editing
 - (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn
 {
-    AIFlexibleTableCell	*cell;
+    if(respondsTo_shouldEditTableColumn && [(id <AIFlexibleTableViewDelegate_shouldEditTableColumn>)delegate shouldEditTableColumn:inColumn row:inRow]){
+        AIFlexibleTableCell	*cell;
 
-    //Get the cell targeted for editing
-    cell = [[inColumn cellArray] objectAtIndex:inRow];
-
-    //Close any existing editor
-    [self endEditing];
-
-    //Create the editor
-    editor = [[NSTextView alloc] init];
-    [editor setDelegate:self];
-    [editor setEditable:YES];
-    [editor setSelectable:YES];
-    [editor setTextContainerInset:[cell paddingInset]];
-//    [editor setBackgroundColor:[NSColor orangeColor]];
-    [editor setFrame:NSMakeRect(0, 0, [cell frame].size.width, [cell frame].size.height)];
-    [[editor textStorage] setAttributedString:[cell string]];
-    [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
-
+        //Get the cell targeted for editing
+        cell = [[inColumn cellArray] objectAtIndex:inRow];
     
-    editorScroll = [[NSScrollView alloc] init];
-    [editorScroll setDocumentView:editor];
-    [editorScroll setBorderType:NSBezelBorder];
-    [editorScroll setBackgroundColor:[NSColor orangeColor]];
-    [editorScroll setDrawsBackground:YES];
-    [editorScroll setHasVerticalScroller:NO];
-    [editorScroll setHasHorizontalScroller:NO];
-    [editorScroll setFrame:[cell frame]];
+        //Close any existing editor
+        [self endEditing];
+    
+        //Create the editor
+        editor = [[NSTextView alloc] init];
+        [editor setDelegate:self];
+        [editor setEditable:YES];
+        [editor setSelectable:YES];
+    //    [editor setTextContainerInset:[cell paddingInset]];
+    //    [editor setBackgroundColor:[NSColor orangeColor]];
+        [editor setFrame:NSMakeRect(0, 0, [cell frame].size.width, [cell frame].size.height)];
+        [[editor textStorage] setAttributedString:[cell string]];
+        [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
+    
+        editorScroll = [[NSScrollView alloc] init];
+        [editorScroll setDocumentView:editor];
+        [editorScroll setBorderType:NSBezelBorder];
+        [editorScroll setHasVerticalScroller:NO];
+        [editorScroll setHasHorizontalScroller:NO];
+        [editorScroll setFrame:[cell frame]];
 
-    //Make it visible and key
-    [self addSubview:editorScroll];
-    [[self window] makeFirstResponder:editor];
+        editedColumn = inColumn;
+        editedRow = inRow;
+
+        //Make it visible and key
+        [self addSubview:editorScroll];
+        [[self window] makeFirstResponder:editor];
+    }
 }
 
 //Cancel any existing editing
@@ -271,6 +277,9 @@
 {
     if(editor){
         //Save
+        if(respondsTo_setObjectValue){
+            [(id <AIFlexibleTableViewDelegate_setObjectValue>)delegate setObjectValue:[editor textStorage] forTableColumn:editedColumn row:editedRow];
+        }
 
         //Close
         [editorScroll removeFromSuperview];
@@ -295,7 +304,6 @@
 - (void)setScrollsOnNewContent:(BOOL)inValue{
     scrollsOnNewContent = inValue;
 }
-
 
 
 //Reloading --------------------------------------------------------------------------------

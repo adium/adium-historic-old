@@ -165,13 +165,26 @@
     return(cell);
 }
 
+- (BOOL)shouldEditTableColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
+{
+    if(inCol == messageColumn){
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
+- (void)setObjectValue:(id)object forTableColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
+{
+    NSLog(@"set \"%@\"",[(NSAttributedString *)object string]);
+}
+
+- (BOOL)shouldSelectRow:(int)row
+{
+    return(YES);
+}
 
 @end
-
-
-
-
-
 
 
 

@@ -13,6 +13,7 @@
                 accountController = AIAccountController; 
                 contactController = AIContactController; 
                 contentController = AIContentController; 
+                dockController = AIDockController; 
                 interfaceController = AIInterfaceController; 
                 loginController = AILoginController; 
                 menuController = AIMenuController; 
@@ -48,6 +49,12 @@
             LANGUAGE = ObjC; 
             OUTLETS = {tabView = NSTabView; }; 
             SUPERCLASS = NSView; 
+        }, 
+        {
+            CLASS = AIDockController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; }; 
+            SUPERCLASS = NSObject; 
         }, 
         {
             ACTIONS = {initiateMessage = id; }; 
