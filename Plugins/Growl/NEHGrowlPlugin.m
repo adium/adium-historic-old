@@ -18,6 +18,9 @@
 
 - (void)installPlugin
 {
+	NSString		*note;
+	NSEnumerator	*enumerator;
+	
 	//Set up the events
 	events = [[NSDictionary alloc] initWithObjectsAndKeys:
 				@"Contact Signed On", CONTACT_STATUS_ONLINE_YES,
@@ -28,21 +31,27 @@
 				@"Contact Is No Longer Idle", CONTACT_STATUS_IDLE_NO,
 				@"New Message Received", Content_FirstContentRecieved,
 				@"Message Received while hidden", Content_DidReceiveContent,
+				@"File Transfer Requested", FILE_TRANSFER_REQUEST,
+				@"File Transfer Began", FILE_TRANSFER_BEGAN,
+				@"File Transfer Canceled", FILE_TRANSFER_CANCELED,
+				@"File Transfer Complete", FILE_TRANSFER_COMPLETE,
 				nil];
 	
 	//Launch Growl if needed
 	[GrowlApplicationBridge launchGrowlIfInstalledNotifyingTarget:self selector:@selector(registerAdium:) context:NULL];
 	
-	NSEnumerator * notes = [events keyEnumerator];
-	NSString	 * note;
-	while(note = [notes nextObject]) {
-		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object: nil];
+	enumerator = [events keyEnumerator];
+	while(note = [enumerator nextObject]) {
+		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object:nil];
 	}
 	
     //Install our contact alert
 	[[adium contactAlertsController] registerActionID:@"Growl" withHandler:self];
 
-	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged
+									 object:nil];
 	
 	[self preferencesChanged:nil];
 }
@@ -123,6 +132,14 @@
 				return;
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
+		}else if([notificationName isEqualToString: FILE_TRANSFER_REQUEST]) {
+			description = AILocalizedString(@"wants to send you a file","");
+		}else if([notificationName isEqualToString: FILE_TRANSFER_BEGAN]) {
+			description = AILocalizedString(@"began a file transfer","");
+		}else if([notificationName isEqualToString: FILE_TRANSFER_CANCELED]) {
+			description = AILocalizedString(@"canceled a file transfer","");
+		}else if([notificationName isEqualToString: FILE_TRANSFER_COMPLETE]) {
+			description = AILocalizedString(@"completed a file transfer","");
 		}else{
 			description = @"OMGWTFBBQ!";
 		}
