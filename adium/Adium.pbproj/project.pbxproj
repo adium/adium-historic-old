@@ -14164,6 +14164,8 @@
 				9E9ED81105433F1800415B25,
 				9E9ED845054340B100415B25,
 				9E9ED846054340B100415B25,
+				BFE8581A0554F53800000202,
+				BFE8581B0554F53800000202,
 				9E9ED81E05433F3700415B25,
 			);
 			isa = PBXGroup;
@@ -14175,6 +14177,11 @@
 			files = (
 				9E9ED81205433F1800415B25,
 				9E9ED847054340B100415B25,
+				BFE858160554F48300000202,
+				BFE858170554F48300000202,
+				BFE858180554F48300000202,
+				BFE858190554F48300000202,
+				BFE8581C0554F53800000202,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14191,6 +14198,7 @@
 			files = (
 				9E9ED81305433F1800415B25,
 				9E9ED848054340B100415B25,
+				BFE8581D0554F53800000202,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14364,6 +14372,7 @@
 				9E9ED81605433F3100415B25,
 				9E9ED81705433F3100415B25,
 				9E9ED81805433F3100415B25,
+				BFE858110554F48300000202,
 				9E9ED82A05433F6700415B25,
 			);
 			isa = PBXGroup;
@@ -15493,6 +15502,123 @@
 		};
 		BFBC6D4B0552D6DC00000202 = {
 			fileRef = BFBC6D4A0552D6DC00000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFBC6D4C0552E81D00000202 = {
+			children = (
+				BFBC6D4D0552E89000000202,
+				BFBC6D4E0552E89000000202,
+				BFBC6D510552EB3100000202,
+			);
+			isa = PBXGroup;
+			name = "Contact Inspector Pane";
+			path = "";
+			refType = 4;
+		};
+		BFBC6D4D0552E89000000202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CSContactAlertsInspectorPane.h;
+			path = "Plugins/Contact Alerts/CSContactAlertsInspectorPane.h";
+			refType = 4;
+		};
+		BFBC6D4E0552E89000000202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CSContactAlertsInspectorPane.m;
+			path = "Plugins/Contact Alerts/CSContactAlertsInspectorPane.m";
+			refType = 4;
+		};
+		BFBC6D510552EB3100000202 = {
+			isa = PBXFileReference;
+			name = ContactAlertsInfo.nib;
+			path = "Plugins/Contact Alerts/ContactAlertsInfo.nib";
+			refType = 4;
+		};
+		BFE858110554F48300000202 = {
+			children = (
+				BFE858120554F48300000202,
+				BFE858130554F48300000202,
+				BFE858140554F48300000202,
+				BFE858150554F48300000202,
+			);
+			isa = PBXGroup;
+			name = oscar;
+			path = "Plugins/Gaim Service/LIBS/include/libgaim/Protocols/oscar";
+			refType = 4;
+		};
+		BFE858120554F48300000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = aim.h;
+			refType = 4;
+		};
+		BFE858130554F48300000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = aim_cbtypes.h;
+			refType = 4;
+		};
+		BFE858140554F48300000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = aim_internal.h;
+			refType = 4;
+		};
+		BFE858150554F48300000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = faimconfig.h;
+			refType = 4;
+		};
+		BFE858160554F48300000202 = {
+			fileRef = BFE858120554F48300000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFE858170554F48300000202 = {
+			fileRef = BFE858130554F48300000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFE858180554F48300000202 = {
+			fileRef = BFE858140554F48300000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFE858190554F48300000202 = {
+			fileRef = BFE858150554F48300000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFE8581A0554F53800000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBGaimAIMAccount.h;
+			path = "Plugins/Gaim Service/CBGaimAIMAccount.h";
+			refType = 4;
+		};
+		BFE8581B0554F53800000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBGaimAIMAccount.m;
+			path = "Plugins/Gaim Service/CBGaimAIMAccount.m";
+			refType = 4;
+		};
+		BFE8581C0554F53800000202 = {
+			fileRef = BFE8581A0554F53800000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFE8581D0554F53800000202 = {
+			fileRef = BFE8581B0554F53800000202;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17448,6 +17574,7 @@
 			children = (
 				F59C2EEA04DDF4DB01496213,
 				F59C2EE904DDF4D301496213,
+				BFBC6D4C0552E81D00000202,
 				F527079504E203BB0114B3C0,
 				F527079604E203BB0114B3C0,
 				F527079704E203BB0114B3C0,
