@@ -46,6 +46,12 @@
     return(columnWidthDidChange);
 }
 
+- (void)removeAllCells
+{
+    [cellArray release];
+    cellArray = [[NSMutableArray alloc] init];
+}
+
 - (NSArray *)cellArray{
     return(cellArray);
 }

@@ -17,6 +17,7 @@
 
     IBOutlet	NSView			*view_prefView;
     IBOutlet	AIFlexibleTableView	*tableView_aways;
+    IBOutlet	NSButton		*button_delete;
 
     AIFlexibleTableColumn		*imageColumn;
     AIFlexibleTableColumn		*messageColumn;

@@ -30,7 +30,7 @@
 - (void)setObjectValue:(id)object forTableColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow;
 @end
 @protocol AIFlexibleTableViewDelegate_shouldSelectRow
-- (BOOL)shouldSelectRow:(int)row;
+- (BOOL)shouldSelectRow:(int)inRow;
 @end
 
 
@@ -68,6 +68,9 @@
 - (void)reloadData;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setScrollsOnNewContent:(BOOL)inValue;
+- (void)selectRow:(int)inRow;
+- (int)selectedRow;
+- (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
 
 @end
 

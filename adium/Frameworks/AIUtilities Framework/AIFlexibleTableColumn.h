@@ -23,5 +23,6 @@
 - (void)setWidth:(float)inWidth;
 - (void)setFlexibleWidth:(BOOL)inFlexible;
 - (BOOL)flexibleWidth;
-  
+- (void)removeAllCells;
+
 @end

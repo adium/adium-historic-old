@@ -4,7 +4,11 @@
             ACTIONS = {deleteAwayMessage = id; newAwayMessage = id; }; 
             CLASS = AIAwayMessagePreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"tableView_aways" = AIFlexibleTableView; "view_prefView" = NSView; }; 
+            OUTLETS = {
+                "button_delete" = NSButton; 
+                "tableView_aways" = AIFlexibleTableView; 
+                "view_prefView" = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {

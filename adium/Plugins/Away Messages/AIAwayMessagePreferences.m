@@ -14,6 +14,7 @@
 
 #define AWAY_MESSAGES_PREF_NIB		@"AwayMessagePrefs"	//Name of preference nib
 #define AWAY_MESSAGES_PREF_TITLE	@"Away Messages"	//Title of the preference view
+#define AWAY_NEW_MESSAGE_STRING		@"(New Away Message)"
 
 @interface AIAwayMessagePreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -33,18 +34,23 @@
 
 - (IBAction)newAwayMessage:(id)sender
 {
+    NSAttributedString	*newAway = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]] autorelease];    
+
     //Add the new away
-    [awayMessageArray addObject:@"New"];
+    [awayMessageArray addObject:newAway];
 
-    //Regresh our table view
+    //Regresh our table view and edit the row
     [tableView_aways loadNewRow];
-
-    //Edit the away
+    [tableView_aways editRow:[awayMessageArray count]-1 column:messageColumn];
 }
 
 - (IBAction)deleteAwayMessage:(id)sender
 {
+    [awayMessageArray removeObjectAtIndex:[tableView_aways selectedRow]];
 
+    //Save changes and reload our view
+    [self saveAwayMessages];
+    [tableView_aways reloadData];
 }
 
 //Private ---------------------------------------------------------------------------
@@ -64,7 +70,10 @@
     preferenceViewController = [AIPreferenceViewController controllerWithName:AWAY_MESSAGES_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
-    //Load the preferences, and configure our view
+    //Load our aways
+    [self loadAwayMessages];
+
+    //Configure our view
     [self configureView];
 
     return(self);
@@ -85,10 +94,6 @@
     [tableView_aways addColumn:messageColumn];
 
     [tableView_aways reloadData];
-
-
-    //Load away messages
-    [self loadAwayMessages];
 }
 
 //Load the away messages into awayMessageArray
@@ -133,15 +138,12 @@
 //Flexible Table View Delegate ----------------------------------------------------
 - (int)numberOfRows
 {
-    NSLog(@"numberOfRows");
     return([awayMessageArray count]);
 }
 
 - (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
 {
     AIFlexibleTableCell	*cell;
-
-    NSLog(@"cellForColumn");
 
     if(inCol == imageColumn){
         cell = [AIFlexibleTableCell cellWithString:@"[:)]"
@@ -150,15 +152,12 @@
                                          alignment:NSLeftTextAlignment
                                         background:[NSColor whiteColor]
                                           gradient:nil];
+        [cell setDividerColor:[NSColor lightGrayColor]];
         
     }else if(inCol == messageColumn){
-        cell = [AIFlexibleTableCell cellWithString:[NSString stringWithFormat:@"Sample Away Message #%i",inRow+1]
-                                             color:[NSColor blackColor]
-                                              font:[NSFont systemFontOfSize:11]
-                                         alignment:NSLeftTextAlignment
-                                        background:[NSColor whiteColor]
-                                          gradient:nil];
-        
+        cell = [AIFlexibleTableCell cellWithAttributedString:[awayMessageArray objectAtIndex:inRow]];
+        [cell setBackgroundColor:[NSColor whiteColor]];
+        [cell setDividerColor:[NSColor lightGrayColor]];
     }
     
 
@@ -176,11 +175,19 @@
 
 - (void)setObjectValue:(id)object forTableColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
 {
-    NSLog(@"set \"%@\"",[(NSAttributedString *)object string]);
+    if(inCol == messageColumn){
+        [awayMessageArray replaceObjectAtIndex:inRow withObject:object];
+    }
+
+    [self saveAwayMessages];
+    [tableView_aways reloadData];
 }
 
-- (BOOL)shouldSelectRow:(int)row
+- (BOOL)shouldSelectRow:(int)inRow
 {
+    //Enable/disable the delete button correctly
+    [button_delete setEnabled:(inRow != -1)];
+    
     return(YES);
 }
 

@@ -30,9 +30,7 @@
 - (void)resizeCells;
 - (void)resizeToFillContainerView;
 - (void)_init;
-- (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
 - (void)endEditing;
-- (void)selectRow:(int)inRow;
 - (void)setSelected:(BOOL)selected row:(int)inRow;
 @end
 
@@ -64,6 +62,7 @@
     columnArray = [[NSMutableArray alloc] init];
     delegate = nil;
     contentsHeight = 0;
+    selectedRow = -1;
     oldWidth = 0;
     editor = nil;
     editorScroll = nil;
@@ -201,19 +200,22 @@
 //Open a specified row/column for editing
 - (void)selectRow:(int)inRow
 {
+    if(inRow < 0 || inRow >= [delegate numberOfRows]){
+        inRow = -1; //No selection
+    }
+
     if(respondsTo_shouldSelectRow && [(id <AIFlexibleTableViewDelegate_shouldSelectRow>)delegate shouldSelectRow:inRow]){
         //Close any existing editor
         [self endEditing];
     
         //Deselect the existing selection
-        if(selectedRow != -1){
-            [self setSelected:NO row:selectedRow];
-        }
-    
+        if(selectedRow != -1) [self setSelected:NO row:selectedRow];
+
         //Select the new row
-        [self setSelected:YES row:inRow];
+        if(inRow != -1) [self setSelected:YES row:inRow];
         selectedRow = inRow;
     }
+
 }
 
 //Toggle the selection of a row
@@ -231,44 +233,52 @@
     }
 }
 
+//returns the selected row
+- (int)selectedRow
+{
+    return(selectedRow);
+}
+
 
 //Row Editing ---------------------------------------------------------------------------------
 //Open a specified row/column for editing
 - (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn
 {
-    if(respondsTo_shouldEditTableColumn && [(id <AIFlexibleTableViewDelegate_shouldEditTableColumn>)delegate shouldEditTableColumn:inColumn row:inRow]){
-        AIFlexibleTableCell	*cell;
-
-        //Get the cell targeted for editing
-        cell = [[inColumn cellArray] objectAtIndex:inRow];
+    if(inRow >= 0 && inRow < [delegate numberOfRows]){
+        if(respondsTo_shouldEditTableColumn && [(id <AIFlexibleTableViewDelegate_shouldEditTableColumn>)delegate shouldEditTableColumn:inColumn row:inRow]){
+            AIFlexibleTableCell	*cell;
     
-        //Close any existing editor
-        [self endEditing];
+            //Get the cell targeted for editing
+            cell = [[inColumn cellArray] objectAtIndex:inRow];
+        
+            //Close any existing editor
+            [self endEditing];
+        
+            //Create the editor
+            editor = [[NSTextView alloc] init];
+            [editor setDelegate:self];
+            [editor setEditable:YES];
+            [editor setSelectable:YES];
+        //    [editor setTextContainerInset:[cell paddingInset]];
+        //    [editor setBackgroundColor:[NSColor orangeColor]];
+            [editor setFrame:NSMakeRect(0, 0, [cell frame].size.width, [cell frame].size.height)];
+            [[editor textStorage] setAttributedString:[cell string]];
+            [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
+        
+            editorScroll = [[NSScrollView alloc] init];
+            [editorScroll setDocumentView:editor];
+            [editorScroll setBorderType:NSBezelBorder];
+            [editorScroll setHasVerticalScroller:NO];
+            [editorScroll setHasHorizontalScroller:NO];
+            [editorScroll setFrame:[cell frame]];
     
-        //Create the editor
-        editor = [[NSTextView alloc] init];
-        [editor setDelegate:self];
-        [editor setEditable:YES];
-        [editor setSelectable:YES];
-    //    [editor setTextContainerInset:[cell paddingInset]];
-    //    [editor setBackgroundColor:[NSColor orangeColor]];
-        [editor setFrame:NSMakeRect(0, 0, [cell frame].size.width, [cell frame].size.height)];
-        [[editor textStorage] setAttributedString:[cell string]];
-        [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
+            editedColumn = inColumn;
+            editedRow = inRow;
     
-        editorScroll = [[NSScrollView alloc] init];
-        [editorScroll setDocumentView:editor];
-        [editorScroll setBorderType:NSBezelBorder];
-        [editorScroll setHasVerticalScroller:NO];
-        [editorScroll setHasHorizontalScroller:NO];
-        [editorScroll setFrame:[cell frame]];
-
-        editedColumn = inColumn;
-        editedRow = inRow;
-
-        //Make it visible and key
-        [self addSubview:editorScroll];
-        [[self window] makeFirstResponder:editor];
+            //Make it visible and key
+            [self addSubview:editorScroll];
+            [[self window] makeFirstResponder:editor];
+        }
     }
 }
 
@@ -323,9 +333,18 @@
 //Call when the data is changed, reloads all the cells
 - (void)reloadData
 {
-    int	numberOfRows = [delegate numberOfRows];
-    int	row;
+    NSEnumerator		*columnEnumerator;
+    AIFlexibleTableColumn	*column;
+    int				numberOfRows = [delegate numberOfRows];
+    int				row;
 
+    //Remove all existing cells
+    columnEnumerator = [columnArray objectEnumerator];
+    while((column = [columnEnumerator nextObject])){
+        [column removeAllCells];
+    }
+
+    //Add a cell to each column
     for(row = 0;row < numberOfRows;row++){
         [self addCellsForRow:row];
     }
