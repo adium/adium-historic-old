@@ -11,7 +11,7 @@
 #define COLOR_SAMPLE_WIDTH		24
 #define COLOR_SAMPLE_HEIGHT		12
 #define SAMPLE_FRAME_DARKEN		0.3
-#define COLOR_CUSTOM_TITLE		@"Custom…"
+#define COLOR_CUSTOM_TITLE		AILocalizedString(@"Custom...", nil)
 
 @interface AIColorSelectionPopUpButton (PRIVATE)
 - (void)_initColorSelectionPopUpButton;
