@@ -6,7 +6,6 @@
 
 #import "SHLinkManagementPlugin.h"
 #import "SHLinkEditorWindowController.h"
-#import "SHLinkFavoritesManageView.h"
 #import "SHLinkFavoritesPreferences.h"
 #import "SHAutoValidatingTextView.h"
 

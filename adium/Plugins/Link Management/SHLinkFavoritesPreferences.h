@@ -4,9 +4,6 @@
 //
 //  Created by Stephen Holt on Tue Apr 20 2004.
 
-#import "SHLinkFavoritesManageView.h"
-
-
 @interface SHLinkFavoritesPreferences : AIPreferencePane {
     IBOutlet AIAlternatingRowTableView  *favoritesTable;
 
