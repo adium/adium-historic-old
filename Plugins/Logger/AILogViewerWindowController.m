@@ -906,30 +906,31 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		value = @"";
     }else{
 		AILog       *theLog = [selectedLogArray objectAtIndex:row];
-                NSArray     *broken = [[theLog from] componentsSeparatedByString:@"."];
-                NSString    *service;
-                NSString    *from;
+		NSArray     *broken = [[theLog from] componentsSeparatedByString:@"."];
+		NSString    *service;
+		NSString    *from;
         
-                // error checking in case of old, malformed or otherwise odd folders & whatnot sitting in log base
-                if([broken count] >= 2){
-                    service = [broken objectAtIndex:0];
-                    from = [[theLog from] substringFromIndex:([service length] + 1)]; //one off for the seperator
-                }
-                else{
-                    service = nil;
-                    from = [theLog from];
-                }
-                
-		if([identifier isEqualToString:@"To"]){
-                    value = [theLog to]; 
-		}else if([identifier isEqualToString:@"From"]){
-                    value = from;
-		}else if([identifier isEqualToString:@"Date"]){
-                    value = [dateFormatter stringForObjectValue:[theLog date]];
+		// error checking in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+		if([broken count] >= 2){
+			service = [broken objectAtIndex:0];
+			from = [[theLog from] substringFromIndex:([service length] + 1)]; //one off for the seperator
 		}
-                else if([identifier isEqualToString:@"Service"]){
-                        value = [[[adium accountController] firstServiceTypeWithServiceID:service] menuImage];
-                }
+		else{
+			service = nil;
+			from = [theLog from];
+		}
+		
+		if([identifier isEqualToString:@"To"]){
+			value = [theLog to]; 
+		}else if([identifier isEqualToString:@"From"]){
+			value = from;
+		}else if([identifier isEqualToString:@"Date"]){
+			value = [dateFormatter stringForObjectValue:[theLog date]];
+		}else if([identifier isEqualToString:@"Service"]){
+			value = [AIServiceIcons serviceIconForService:[[adium accountController] firstServiceWithServiceID:service]
+													 type:AIServiceIconSmall
+												direction:AIIconNormal];
+		}
     }
     [resultsLock unlock];
     
