@@ -92,7 +92,7 @@
     if([customTabsView canDraw]){
         dragTabImage = [[[NSImage alloc] init] autorelease];
         [customTabsView lockFocus];
-        [dragTabImage addRepresentation:[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]]];
+        [dragTabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
         [customTabsView unlockFocus];    
     }
 	
