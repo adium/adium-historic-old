@@ -7,7 +7,6 @@
 	objects = {
 		07CE05580661D7AD00C50929 = {
 			children = (
-				07CE05590661D7E600C50929,
 				07CE058F0661D7FE00C50929,
 				07CE058E0661D7FE00C50929,
 				07CE05920661D87E00C50929,
@@ -24,8 +23,8 @@
 		07CE05590661D7E600C50929 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ActivityWindow.nib;
-			path = Source/ActivityWindow.nib;
+			name = FileTransferProgressWindow.nib;
+			path = Source/FileTransferProgressWindow.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1808,6 +1807,8 @@
 				344161C4059FC72E0019246B,
 				34415A63059F9B9B0019246B,
 				34415A64059F9B9B0019246B,
+				349FFA020750755100E36B3B,
+				349FFA030750755200E36B3B,
 				34416159059FC5330019246B,
 				3441615A059FC5340019246B,
 				34416171059FC55A0019246B,
@@ -2136,6 +2137,7 @@
 		};
 		34416053059FC2270019246B = {
 			children = (
+				349FF9FF0750752100E36B3B,
 				344160C3059FC3080019246B,
 				344160C4059FC3080019246B,
 				6E4D962206B73BE0005235E9,
@@ -4695,6 +4697,204 @@
 			settings = {
 			};
 		};
+		349FE287074D019700E36B3B = {
+			children = (
+				34FDD6E305632BFD00F5B30F,
+				34FDD6E405632BFD00F5B30F,
+				349FE301074D01D300E36B3B,
+				349FE300074D01D300E36B3B,
+				349FE2FF074D01D300E36B3B,
+				349FE2FE074D01D300E36B3B,
+				349FE302074D01D300E36B3B,
+				349FE2FD074D01D300E36B3B,
+				349FE2FC074D01D200E36B3B,
+				07CE05590661D7E600C50929,
+			);
+			isa = PBXGroup;
+			name = "File Transfer";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE2FC074D01D200E36B3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileTransferProgressWindowController.m;
+			path = Source/ESFileTransferProgressWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE2FD074D01D300E36B3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFileTransferProgressWindowController.h;
+			path = Source/ESFileTransferProgressWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE2FE074D01D300E36B3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileTransferProgressView.m;
+			path = Source/ESFileTransferProgressView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE2FF074D01D300E36B3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFileTransferProgressView.h;
+			path = Source/ESFileTransferProgressView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE300074D01D300E36B3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileTransferProgressRow.m;
+			path = Source/ESFileTransferProgressRow.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE301074D01D300E36B3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFileTransferProgressRow.h;
+			path = Source/ESFileTransferProgressRow.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE302074D01D300E36B3B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESFileTransferProgressView.nib;
+			path = Source/ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FE303074D01D300E36B3B = {
+			fileRef = 349FE2FC074D01D200E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FE304074D01D300E36B3B = {
+			fileRef = 349FE2FD074D01D300E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FE305074D01D300E36B3B = {
+			fileRef = 349FE2FE074D01D300E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FE306074D01D300E36B3B = {
+			fileRef = 349FE2FF074D01D300E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FE307074D01D300E36B3B = {
+			fileRef = 349FE300074D01D300E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FE308074D01D300E36B3B = {
+			fileRef = 349FE301074D01D300E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FE309074D01D300E36B3B = {
+			fileRef = 349FE302074D01D300E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FF5E5074D6D6400E36B3B = {
+			fileRef = 07CE05590661D7E600C50929;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FF9F90750751500E36B3B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimAntepoAccount.h;
+			path = "Plugins/Gaim Service/ESGaimAntepoAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FF9FA0750751500E36B3B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimAntepoAccount.m;
+			path = "Plugins/Gaim Service/ESGaimAntepoAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FF9FB0750751500E36B3B = {
+			fileRef = 349FF9F90750751500E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FF9FC0750751600E36B3B = {
+			fileRef = 349FF9FA0750751500E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FF9FF0750752100E36B3B = {
+			children = (
+				349FF9F90750751500E36B3B,
+				349FF9FA0750751500E36B3B,
+			);
+			isa = PBXGroup;
+			name = Antepo;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FFA020750755100E36B3B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAntepoService.h;
+			path = "Plugins/Gaim Service/ESAntepoService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FFA030750755200E36B3B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAntepoService.m;
+			path = "Plugins/Gaim Service/ESAntepoService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349FFA040750755200E36B3B = {
+			fileRef = 349FFA020750755100E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349FFA050750755200E36B3B = {
+			fileRef = 349FFA030750755200E36B3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34A273AA0721E58F004F3455 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -5817,6 +6017,9 @@
 				340EC2280736BF32001653BF,
 				4B5323EC0747BDED0073DF4D,
 				4B53245A0747C82B0073DF4D,
+				349FE304074D01D300E36B3B,
+				349FE306074D01D300E36B3B,
+				349FE308074D01D300E36B3B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6132,6 +6335,8 @@
 				34F1022F0734499700890D3B,
 				C4C63A09073889B2005E076D,
 				C44125540740B4DA003C2C5B,
+				349FE309074D01D300E36B3B,
+				349FF5E5074D6D6400E36B3B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6415,6 +6620,9 @@
 				340EC2290736BF32001653BF,
 				4B5323ED0747BDED0073DF4D,
 				4B53245B0747C82B0073DF4D,
+				349FE303074D01D300E36B3B,
+				349FE305074D01D300E36B3B,
+				349FE307074D01D300E36B3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6584,6 +6792,7 @@
 				344C0F0D06B709AC00DA7200,
 				3419FDE40531585600C68BA3,
 				4B90B54C064220AB00D23731,
+				4B53CD9506B08B2100FCDA0C,
 				340B9BD4069C735900FE1E57,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -11571,7 +11780,6 @@
 			dstPath = "../PlugIns Disabled";
 			dstSubfolderSpec = 7;
 			files = (
-				4B53CD9506B08B2100FCDA0C,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12347,6 +12555,8 @@
 				4B387EB907199FE5004DE713,
 				4B388E0F0719C376004DE713,
 				34F101E707342B5A00890D3B,
+				349FF9FB0750751500E36B3B,
+				349FFA040750755200E36B3B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12457,6 +12667,8 @@
 				4B387EBA07199FE5004DE713,
 				4B388E100719C376004DE713,
 				34F101E807342B5B00890D3B,
+				349FF9FC0750751600E36B3B,
+				349FFA050750755200E36B3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22698,8 +22910,7 @@
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,
 				9E95316903C8E0C700415B22,
-				34FDD6E305632BFD00F5B30F,
-				34FDD6E405632BFD00F5B30F,
+				349FE287074D019700E36B3B,
 				F57938F3033E745F01A8010A,
 				F57938AC033E737001A8010A,
 				F57938FB033E745F01A8010A,
