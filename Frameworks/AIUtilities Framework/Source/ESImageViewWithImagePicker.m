@@ -110,7 +110,6 @@
 	return title;
 }
 
-
 - (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController
 {
 	useNSImagePickerController = inUseNSImagePickerController;
