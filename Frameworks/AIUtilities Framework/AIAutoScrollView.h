@@ -14,18 +14,19 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIAutoScrollView : NSScrollView {
-    NSRect	oldDocumentFrame;
+    NSRect			oldDocumentFrame;
 
-    BOOL	autoScrollToBottom;
-	BOOL	inAutoScrollToBottom;
+    BOOL			autoScrollToBottom;
+	BOOL			inAutoScrollToBottom;
 
-    BOOL	autoHideScrollBar;
+    BOOL			autoHideScrollBar;
 
-    BOOL	updateShadowsWhileScrolling;
-	BOOL	passKeysToDocumentView;
+    BOOL			updateShadowsWhileScrolling;
+	BOOL			passKeysToDocumentView;
 
-	BOOL					shouldDrawFocusRing;
-	NSResponder				*lastResp;
+	BOOL			alwaysDrawFocusRingIfFocused;
+	BOOL			shouldDrawFocusRing;
+	NSResponder		*lastResp;
 }
 
 - (void)setAutoHideScrollBar:(BOOL)inValue;
@@ -35,5 +36,6 @@
 - (void)setCorrectScrollbarVisibility;
 - (void)setUpdateShadowsWhileScrolling:(BOOL)inValue;
 - (void)setPassKeysToDocumentView:(BOOL)inValue;
+- (void)setAlwaysDrawFocusRingIfFocused:(BOOL)inFlag;
 
 @end
