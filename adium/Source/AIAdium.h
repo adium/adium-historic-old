@@ -169,6 +169,7 @@ typedef enum {
 #define Content_DidSendContent					@"Content_DidSendContent"
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
+#define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
 #define Content_ChatStatusChanged				@"Content_ChatStatusChanged"
 #define Content_ChatParticipatingListObjectsChanged		@"Content_ChatParticipatingListObjectsChanged"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
