@@ -79,7 +79,7 @@
 
 //MetaContacts
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID;
-- (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences;
+- (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences;
 - (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray updatingPreferences:(BOOL)updatePreferences;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
@@ -148,7 +148,7 @@ DeclareString(UID);
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:CONTENT_MESSAGE_SENT
-                                     object:nil];	
+                                     object:nil];		
 }
 
 //finish initing
@@ -741,39 +741,46 @@ DeclareString(UID);
 		[contactDict setObject:metaContact forKey:[metaContact internalUniqueObjectID]];
 
 		if (shouldRestoreContacts){
-			[self _restoreContactsToMetaContact:metaContact updatingPreferences:NO];
-			
-			//If restoring the metacontact did not actually add any contacts, delete it as it is invalid
-			if(![metaContact containedObjectsCount]){
+			if(![self _restoreContactsToMetaContact:metaContact updatingPreferences:NO]){
+				
+				//If restoring the metacontact did not actually add any contacts, delete it as it is invalid
 				[self breakdownAndRemoveMetaContact:metaContact];
 				metaContact = nil;
 			}
-			
 		}
 	}
 	
 	return (metaContact);
 }
 
-- (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences
+- (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences
 {
 	NSDictionary	*allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																					group:PREF_GROUP_CONTACT_LIST];
 	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact internalObjectID]];
+	BOOL			restoredContacts;
+	
+	if([containedContactsArray count]){
+		[metaContact setDelayContainedObjectSorting:YES];
+		
+		[self _restoreContactsToMetaContact:metaContact
+								   fromContainedContactsArray:containedContactsArray
+										  updatingPreferences:updatePreferences];
+		
+		[metaContact setDelayContainedObjectSorting:NO];
+		
+		restoredContacts = YES;
 
-	[metaContact setDelayContainedObjectSorting:YES];
+	}else{
+		restoredContacts = NO;
+	}
 	
-	[self _restoreContactsToMetaContact:metaContact
-			 fromContainedContactsArray:containedContactsArray
-					updatingPreferences:updatePreferences];
-	
-	[metaContact setDelayContainedObjectSorting:NO];
+	return restoredContacts;
 }
 
 - (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray updatingPreferences:(BOOL)updatePreferences
 {
 	NSEnumerator		*enumerator = [containedContactsArray objectEnumerator];
-	AIListContact		*listContact = nil;
 	NSMutableDictionary	*allMetaContactsDict = nil;
 	NSDictionary		*containedContact;
 	BOOL				shouldSaveMetaContacts = NO;
@@ -805,9 +812,17 @@ DeclareString(UID);
 			shouldSaveMetaContacts = YES;
 			
 	 	}else{
+
+			//Assign this metaContact to the appropriate internalObjectID for containedContact's represented listObject.
+			//As listObjects are loaded/created/requested which match this internalObjectID, they will be inserted into the metaContact.
+			[contactToMetaContactLookupDict setObject:metaContact 
+											   forKey:[AIListObject internalObjectIDForServiceID:[containedContact objectForKey:ServiceID]
+																							 UID:[containedContact objectForKey:UID]]];
+
+			/*
 			//This contained contact is a regular AIListContact.
 			NSEnumerator	*contactEnumerator;
-			
+			AIListContact	*listContact = nil;			
 			contactEnumerator = [[self allContactsWithServiceID:[containedContact objectForKey:ServiceID]
 															UID:[containedContact objectForKey:UID]] objectEnumerator];
 
@@ -818,6 +833,7 @@ DeclareString(UID);
 				else
 					[self _performAddListObject:listContact toMetaContact:metaContact];					
 			}
+			 */
 		}
 	}
 	
