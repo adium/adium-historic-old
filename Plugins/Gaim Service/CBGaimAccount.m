@@ -992,35 +992,38 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /* AIAccount_Privacy */
 /*********************/
 #pragma mark Privacy
--(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+- (BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
 {
     if (type == PRIVACY_PERMIT)
         return (gaim_privacy_permit_add(account,[[inObject UID] UTF8String],FALSE));
     else
         return (gaim_privacy_deny_add(account,[[inObject UID] UTF8String],FALSE));
 }
--(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+
+- (BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
 {
     if (type == PRIVACY_PERMIT)
         return (gaim_privacy_permit_remove(account,[[inObject UID] UTF8String],FALSE));
     else
         return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
--(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
+
+- (NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
 {
 	return (type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray);
 }
 
--(oneway void)privacyPermitListAdded:(NSString *)sourceUID
+- (oneway void)privacyPermitListAdded:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_PERMIT added:sourceUID];
 }
--(oneway void)privacyDenyListAdded:(NSString *)sourceUID
+
+- (oneway void)privacyDenyListAdded:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_DENY added:sourceUID];
 }
 
--(void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
+- (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]){
@@ -1031,16 +1034,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
--(oneway void)privacyPermitListRemoved:(NSString *)sourceUID
+- (oneway void)privacyPermitListRemoved:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_PERMIT removed:sourceUID];
 }
--(oneway void)privacyDenyListRemoved:(NSString *)sourceUID
+
+- (oneway void)privacyDenyListRemoved:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_DENY removed:sourceUID];
 }
 
--(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
+- (void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]){
@@ -1059,7 +1063,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
--(void)setPrivacyOptions:(PRIVACY_OPTION)option
+- (void)setPrivacyOptions:(PRIVACY_OPTION)option
 {
     account->perm_deny = option;
     serv_set_permit_deny(gaim_account_get_connection(account));
