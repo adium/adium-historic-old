@@ -1,5 +1,28 @@
 				Adium X Version History
 				-----------------------
+
+Version 0.57
+- Fixed issue with HTML sending to MSN users
+- Fixed issue with MSN display names, AIM name formatting
+- Fixed issue with multiple message tabs being created
+- Fixed bug causing ordering info to get lost
+- Fixed issues with auto-resizing not saying on bottom of screen
+- Fixed other option for custom sound alerts
+- Added support for seeing jabber status changes
+- Text color is now ignored for history in message window
+- Fixed something...text from being a link
+- Fixed emoticons flipping in prefs
+- Improvements to the Add/Edit link system
+- Updated mockie to reflect user name format
+- Improved HTML decoder
+- Fixed several memory leaks
+- Added support for hyphens in account names
+- Added support for addBuddy links
+- Fixed message view scrollbar positioning
+- Hide/show toolbar dim correctly
+- Updated away status window
+- Contact list no longer selects first contact
+
 Version 0.56 (5/14/2004)
 - Added 'Insert Emoticon' to the Edit menu, contextual menus
 - Added support for viewing the correct status of yahoo contacts
