@@ -90,29 +90,27 @@
 //Setup the window after it had loaded
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
-    
-    //Swap in the contact list view
-    contactListViewController = [[[adium interfaceController] contactListViewController] retain];
-    contactListView = [[contactListViewController contactListView] retain];
-    [scrollView_contactList setAutoScrollToBottom:NO];
-    [scrollView_contactList setAutoHideScrollBar:YES];
-    [[self window] makeFirstResponder:contactListView];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(contactListDesiredSizeChanged:)
-												 name:AIViewDesiredSizeDidChangeNotification
-											   object:contactListView];
-    
-    //Exclude this window from the window menu (since we add it manually)
-    [[self window] setExcludedFromWindowsMenu:YES];
+    NSString	*frameString;
     
     //Toolbar (can not be added to a borderless window)
     if(!borderless) [self _configureToolbar];
     
+    //Exclude this window from the window menu (since we add it manually)
+    [[self window] setExcludedFromWindowsMenu:YES];
+    
     //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
-    if(savedFrame){
-		[[self window] setFrame:NSRectFromString(savedFrame) display:YES];
+    frameString = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
+	if(frameString){
+		NSRect		windowFrame = NSRectFromString(frameString);
+		
+		//Don't allow the window to shrink smaller than it's toolbar
+		
+		NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
+														   styleMask:[[self window] styleMask]];
+		
+		if(contentFrame.size.height < [[self window] toolbarHeight]) windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
+        
+		[[self window] setFrame:windowFrame display:YES];
 	}
 	
 	//Make sure our window is on a screen; if it isn't, center it on the main screen
@@ -120,11 +118,22 @@
 	
     minWindowSize = [[self window] minSize];
 	
+    //Swap in the contact list view
+    contactListViewController = [[[adium interfaceController] contactListViewController] retain];
+    contactListView = [[contactListViewController contactListView] retain];
+    [scrollView_contactList setAutoScrollToBottom:NO];
+    [scrollView_contactList setAutoHideScrollBar:YES];
+    [[self window] makeFirstResponder:contactListView];
+	[scrollView_contactList setAndSizeDocumentView:contactListView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(contactListDesiredSizeChanged:)
+												 name:AIViewDesiredSizeDidChangeNotification
+											   object:contactListView];
+    
+	
     //Apply initial preference-based settings
     [self preferencesChanged:nil];
     
-	[scrollView_contactList setAndSizeDocumentView:contactListView];
-	
     //Tell the interface to open our window
 //	[interface performSelector:@selector(containerDidOpen:) withObject:self afterDelay:1];
 	[interface containerDidOpen:self];
@@ -243,9 +252,9 @@
     
     [[self window] setMinSize:targetMin];
     [[self window] setMaxSize:targetMax];
-    
-    //Update the size as necessary
-    [self contactListDesiredSizeChanged:nil];
+
+	//Update the size as necessary
+	[self contactListDesiredSizeChanged:nil];
 }
 
 //Dynamically resize the contact list
@@ -278,35 +287,6 @@
 				
 				//Resize the window
 				[[self window] setFrame:newFrame display:YES animate:NO];
-				
-				/*
-				//Resize the window (We animate only if the window is main)
-				if([[self window] isMainWindow] && [NSApp isOnPantherOrBetter]){
-					[scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
-					
-					//Force the scrollbar to disappear if the target frame is such that it will not be desired
-					//This prevents some odd flickering as the view and window sync up
-					if(autoResizeVertically){
-						//Hide the scrollbar if the new frame is smaller than the maximum allowable height
-						if(newFrame.size.height < [[[self window] screen] visibleFrame].size.height){ 
-							[scrollView_contactList setHasVerticalScroller:NO]; 
-						}
-					}else{
-						//Hide the scrollbar if the required frame is smaller than the user-set one, as a scrollbar will not be needed
-						if(desiredFrame.size.height < newFrame.size.height){
-							[scrollView_contactList setHasVerticalScroller:NO]; 
-						}
-					}
-					
-					[[self window] setFrame:newFrame display:YES animate:YES];
-					[scrollView_contactList setAutoHideScrollBar:YES];
-					
-				}else{
-					[[self window] setFrame:newFrame display:YES animate:NO];
-					
-				}
-				 */
-				
 				[[self window] setMinSize:targetMin];
 				[[self window] setMaxSize:targetMax];
 			}
@@ -341,7 +321,7 @@
 		//Remember the padding around the contact list view
 		contactViewPadding.height = currentFrame.size.height - [scrollView_contactList frame].size.height;
 		contactViewPadding.width = currentFrame.size.width - [scrollView_contactList frame].size.width;
-		
+
         //Calculate desired width and height
 		desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
         if(autoResizeHorizontally){
@@ -357,7 +337,7 @@
                 newFrame.size.width += 16; //Factor scrollbar into width
             }
         }
-        
+		
         //If the window is near the right edge of the screen, keep it near that edge
         if(autoResizeHorizontally &&
 		   (currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
@@ -374,22 +354,6 @@
 			newFrame.origin.y += currentFrame.size.height - newFrame.size.height;
 		}
 		
-		//Because the dock is a pain, we have two different behaviors depending on the horizontal location of our list.
-		//Near the right and left edges we will stick to the bottom of the screen.  In the center we will stick to the
-		//top of the dock instead.
-		//		BOOL	stickToBottomOfScreen = ((newFrame.origin.x < EDGE_CATCH_X)||
-		//										 (newFrame.origin.x+newFrame.size.width) > (screenFrame.size.width-EDGE_CATCH_X));
-		
-		
-		//		
-//        float screenOriginY;
-//        
-//        //Use the full screen if the x origin is along the edges and the dock is at the bottom; otherwise use the system-provided screen frame which does not include the dock and menubar
-//		screenOriginY = (useTotalScreenFrame ? totalScreenFrame.origin.y : screenFrame.origin.y);
-//		newFrame.origin.y = topLeftAnchorPoint.y - newFrame.size.height;
-//		if(newFrame.origin.y < screenOriginY){
-//			newFrame.origin.y = screenOriginY;
-//		}
 	}
 	
 	return(newFrame);
