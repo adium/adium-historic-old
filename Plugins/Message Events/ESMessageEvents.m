@@ -27,7 +27,6 @@
 		NSString		*message = nil;
 		NSString		*type = nil;
 		AIListObject	*listObject = [inChat listObject];
-		AIContentStatus	*content;
 		
 		if ([inChat statusObjectForKey:KEY_CHAT_ERROR] != nil){
 		
@@ -101,17 +100,9 @@
 		}
 		
 		if (message){
-			//Create our content object
-			content = [AIContentStatus statusInChat:inChat
-										 withSource:listObject
-										destination:[inChat account]
-											   date:[NSDate date]
-											message:[[[NSAttributedString alloc] initWithString:message
-																					 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-										   withType:type];
-			
-			//Add the object
-			[[adium contentController] receiveContentObject:content];
+			[[adium contentController] displayStatusMessage:message
+													 ofType:type
+													 inChat:inChat];
 		}
 	}
 	

@@ -741,6 +741,23 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     }
 }
 
+- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
+{
+	AIContentStatus	*content;
+
+	//Create our content object
+	content = [AIContentStatus statusInChat:inChat
+								 withSource:[inChat listObject]
+								destination:[inChat account]
+									   date:[NSDate date]
+									message:[[[NSAttributedString alloc] initWithString:message
+																			 attributes:[self defaultFormattingAttributes]] autorelease]
+								   withType:type];
+	
+	//Add the object
+	[self receiveContentObject:content];
+}
+
 //Returns YES if the account/chat is available for sending content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount 
 {

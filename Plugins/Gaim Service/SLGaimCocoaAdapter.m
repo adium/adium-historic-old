@@ -1500,6 +1500,21 @@ NSMutableDictionary* get_chatDict(void)
 	GaimDebug (@"*** Refreshed security...");
 }
 
+- (NSString *)localizedOTRMessage:(const char *)msg withUsername:(const char *)username
+{
+	NSString	*localizedOTRMessage = nil;
+	NSString	*message = [NSString stringWithUTF8String:msg];
+
+	if(([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
+	   ([message rangeOfString:@"who was expecting encrypted messages"].location != NSNotFound)){
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"You sent an unencrypted message, but %s was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
+			username];
+	}
+
+	return localizedOTRMessage;
+}
+
 - (void)dealloc
 {
 	gaim_signals_disconnect_by_handle(adium_gaim_get_handle());
