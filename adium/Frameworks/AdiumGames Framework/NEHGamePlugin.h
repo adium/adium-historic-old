@@ -78,6 +78,4 @@
 //I can't personally think of a use for this one, but flexibility is good :)
 - (void)willRespondToInvitation:(NEHGameController*)control;
 
-
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 @end

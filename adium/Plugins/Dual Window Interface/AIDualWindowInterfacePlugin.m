@@ -788,6 +788,10 @@
 }
 
 //Update the close window/close tab menu item keys
+
+//evands Notes: NSDictionary using the tabview as the key with the message window as the object? We're having to go through this
+//every time a container changes.
+
 - (void)_updateCloseMenuKeys
 {
     if([activeContainer isKindOfClass:[AIMessageTabViewItem class]] && 
@@ -821,6 +825,7 @@
 //Validate a menu item
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
+	NSLog(@"validating %@",[menuItem title]);
     BOOL enabled = YES;
 	
     if(menuItem == menuItem_closeTab){
@@ -945,7 +950,7 @@
 //Returns the message window housing the specified container
 - (AIMessageWindowController *)_messageWindowForContainer:(AIMessageTabViewItem *)container
 {
-    NSEnumerator 		*windowEnumerator = [messageWindowControllerArray objectEnumerator];
+    NSEnumerator				*windowEnumerator = [messageWindowControllerArray objectEnumerator];
     AIMessageWindowController 	*messageWindowController = nil;
 	
     while(messageWindowController = [windowEnumerator nextObject]){

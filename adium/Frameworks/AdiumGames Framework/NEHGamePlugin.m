@@ -201,11 +201,10 @@ static NSMenu			* menu_Games;
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    BOOL valid = YES;
 	AIListContact	*selectedContact = [[adium menuController] contactualMenuContact];
-	if (selectedContact) {
-		valid = (selectedContact && [selectedContact isKindOfClass:[AIListContact class]]);
-	}
+
+	BOOL valid = (selectedContact && [selectedContact isKindOfClass:[AIListContact class]]);
+
     return(valid);
 }
 

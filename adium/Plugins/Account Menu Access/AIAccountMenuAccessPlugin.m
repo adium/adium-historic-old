@@ -129,7 +129,6 @@
 
 - (void)updateMenuForAccount:(AIAccount *)account
 {
-	
 	NSMenuItem		*targetMenuItem = [self _menuItemForAccount:account];
 	
     if(targetMenuItem){
@@ -237,17 +236,24 @@
 	return targetMenuItem;	
 }
 
+/*
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     NSEnumerator    *enumerator;
     AIAccount       *account;
-        
-        enumerator = [[[adium accountController] accountArray] objectEnumerator];
-        while((account = [enumerator nextObject])){
-            [self updateMenuForAccount:account];
-        }
+	
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	while((account = [enumerator nextObject])){
+		[self updateMenuForAccount:account];
+	}
     
     return(YES);
 }
+*/
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return(YES);
+}
+
 
 @end

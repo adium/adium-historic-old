@@ -59,8 +59,9 @@
 {
     [super initWithChat:inChat source:inSource destination:inDest date:inDate];
     
-	if(!inDate)
+	if(!date){
 		date = [[NSDate date] retain];
+	}
 	
     message = [inMessage retain];
     autoreply = inAutoreply;

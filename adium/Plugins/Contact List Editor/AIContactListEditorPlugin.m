@@ -73,8 +73,9 @@
 		AIListObject	*selectedObject = [[adium menuController] contactualMenuContact];
 		
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			return( ([[[selectedObject containingGroup] UID] compare:@"Orphans"] == 0) ||
-					([[[selectedObject containingGroup] UID] compare:@"__Strangers"] == 0) );
+			NSString *containingGroupUID = [[selectedObject containingGroup] UID];
+			return( ([containingGroupUID isEqualToString:@"Orphans"]) ||
+					([containingGroupUID isEqualToString:@"__Strangers"]) );
 		}
 		
 	}

@@ -126,18 +126,18 @@
 	//the NSImage GIF handling is horrible.
 	success = ([[inImage TIFFRepresentation] writeToFile:cachedImagePath
 											  atomically:YES]);
-	if (success)
+	if (success){
 		[inObject setStatusObject:cachedImagePath 
 						   forKey:@"UserIconPath"
 						   notify:YES];
+	}
 	
 	return success;
 }
 
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
 {
-	//Appending .tiff is probably unnecessary; may want to change this later
-	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[inObject uniqueObjectID]]]);
+	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[inObject uniqueObjectID]]);
 }
 
 @end

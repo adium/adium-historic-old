@@ -27,7 +27,6 @@
 
 @interface AIAwayMessagesPlugin (PRIVATE)
 - (void)accountPropertiesChanged:(NSNotification *)notification;
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 - (void)installAwayMenu;
 - (BOOL)shouldConfigureForAway;
 - (void)_updateMenusToReflectAwayState:(BOOL)shouldConfigureForAway;
