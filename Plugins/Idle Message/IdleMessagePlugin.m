@@ -76,7 +76,7 @@
             if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
                 AIChat	*chat = [contentObject chat];
                 //Create and send an idle bounce message (If the sender hasn't received one already)
-                if(![receivedIdleMessage containsObjectIdenticalTo:chat]){
+                if(![receivedIdleMessage containsObjectIdenticalTo:chat] && ([chat listObject])){
                     AIContentMessage	*responseContent;
                     
                     responseContent = [AIContentMessage messageInChat:chat
