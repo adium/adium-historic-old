@@ -21,40 +21,22 @@
 
     AIChat			*chat;
     AIFlexibleTableView		*messageView;
-    AIFlexibleTableCell		*lastMasterCell;
-    AIFlexibleTableFramedTextCell *lastMessageCell;
 
+    NSImage			*iconIncoming;
+    NSImage			*iconOutgoing;
+
+    //Preference cache
     NSColor			*outgoingSourceColor;
     NSColor			*outgoingLightSourceColor;
     NSColor			*incomingSourceColor;
     NSColor			*incomingLightSourceColor;
 
-    BOOL			displayPrefix;
-    BOOL			displayTimeStamps;
-    BOOL			displayGridLines;
-    BOOL			hideDuplicateTimeStamps;
-    BOOL			hideDuplicatePrefixes;
-
-    NSImage			*iconIncoming;
-    NSImage			*iconOutgoing;
-    
-    BOOL			inlinePrefixes;
-    
-    float			gridDarkness;
-
-    NSFont			*prefixFont;
-
-    
-    //Time stamps
-    NSMutableString             *timeStampFormat;
-    NSDateFormatter *timeStampFormatter;
-    
-    BOOL        combineMessages;
-    
-    
     NSString			*prefixIncoming;
     NSString			*prefixOutgoing;
-    
+    NSFont			*prefixFont;
+
+    NSMutableString             *timeStampFormat;
+    NSDateFormatter		*timeStampFormatter;
     
     NSColor			*colorIncoming;
     NSColor			*colorIncomingBorder;
@@ -63,12 +45,10 @@
     NSColor			*colorOutgoingBorder;
     NSColor			*colorOutgoingDivider;
     
-    
-    
+    BOOL			combineMessages;
+    BOOL			inlinePrefixes;
     BOOL                        showUserIcons;
-    
-    
-    
+
 }
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;

@@ -13,20 +13,13 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-
 #import "AISMViewController.h"
 #import "AISMViewPlugin.h"
-
-#define DARKEN_LIGHTEN_MODIFIER		0.2
 
 @interface AISMViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)_flushPreferenceCache;
 - (void)rebuildMessageViewForContent;
 - (void)_addContentObject:(AIContentObject *)content;
 - (void)_addContentMessage:(AIContentMessage *)content;
@@ -48,63 +41,51 @@
 
 @implementation AISMViewController
 
-//
+//Create a new message view
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner
 {
     return([[[self alloc] initForChat:inChat owner:inOwner] autorelease]);
 }
 
-//
+//Init
 - (id)initForChat:(AIChat *)inChat owner:(id)inOwner
 {
     //init
     [super init];
     owner = [inOwner retain];
     chat = [inChat retain];
-    lastMasterCell = nil;
     
     //Cache our icons (temp?)
     iconIncoming = [[AIImageUtilities imageNamed:@"blue" forClass:[self class]] retain];
     iconOutgoing = [[AIImageUtilities imageNamed:@"green" forClass:[self class]] retain];
     
     //Configure our table view
-    messageView = [[AIFlexibleTableView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
+    messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];
     [messageView setForwardsKeyEvents:YES];
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
 
-    //Preferences
+    //Observe preferences
     [self preferencesChanged:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
-    //Rebuild out view to include any content already in the chat
+    //Rebuild our view to include any content already in the chat
     [self rebuildMessageViewForContent];
     
     return(self);
 }
 
-//
+//Dealloc
 - (void)dealloc
 {
     //
     [[owner notificationCenter] removeObserver:self];
-    
-    //Release the old preference cache
-    [outgoingSourceColor release];
-    [outgoingLightSourceColor release];
-    [incomingSourceColor release];
-    [incomingLightSourceColor release];
-    [prefixFont release];
-    [timeStampFormatter release];
-    [prefixIncoming release];
-    [prefixOutgoing release];
-    
-    //
-    [iconIncoming release];
-    [iconOutgoing release];
-    
+    [self _flushPreferenceCache];
+
     //
     [messageView release];
     [chat release];
+    [iconIncoming release];
+    [iconOutgoing release];
     
     [super dealloc];
 }
@@ -116,83 +97,68 @@
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
         //Release the old preference cache
-        [outgoingSourceColor release];
-        [outgoingLightSourceColor release];
-        [incomingSourceColor release];
-        [incomingLightSourceColor release];
-        [prefixFont release];
-        [timeStampFormat release];
-        [timeStampFormatter release];
-        [prefixIncoming release];
-        [prefixOutgoing release];
-        
-        //Cache the new preferences
-        outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
-        outgoingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
-        incomingSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR] representedColor] retain];
-        incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
-        
-        prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];
-        
-        
+	[self _flushPreferenceCache];
+
+	//Config
+        combineMessages = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue];
+	showUserIcons = [[prefDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue];
+
+	//Prefix
+        prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
+        prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];
+	inlinePrefixes = ([prefixIncoming rangeOfString:@"%m"].location == NSNotFound);
+	
+	//Time Stamps
         timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 
-        combineMessages = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue];
-        
-        
-        
-        
-        
-        prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
-        prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];
-        
-	inlinePrefixes = ([prefixIncoming rangeOfString:@"%m"].location == NSNotFound);
-	
-	
-	
-        
-        
-        displayPrefix = [[prefDict objectForKey:KEY_SMV_SHOW_PREFIX] boolValue];
-        displayTimeStamps = [[prefDict objectForKey:KEY_SMV_SHOW_TIME_STAMPS] boolValue];
-        displayGridLines = [[prefDict objectForKey:KEY_SMV_DISPLAY_GRID_LINES] boolValue];
-        hideDuplicateTimeStamps = [[prefDict objectForKey:KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS] boolValue];
-        hideDuplicatePrefixes = [[prefDict objectForKey:KEY_SMV_HIDE_DUPLICATE_PREFIX] boolValue]; 
-        
-        
-        
-        showUserIcons = [[prefDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue];
-	//Force icons off for side prefixes
-        if([prefixIncoming rangeOfString:@"%m"].location != NSNotFound){
-	    showUserIcons = NO;
-	}
-
-	
-	[colorIncoming release];
-	[colorIncomingBorder release];
-	[colorIncomingDivider release];
-	[colorOutgoing release];
-	[colorOutgoingBorder release];
-	[colorOutgoingDivider release];
-	
+	//Coloring
 	colorIncoming = [[NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0] retain];
 	colorIncomingBorder = [[colorIncoming adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
 	colorIncomingDivider = [[colorIncoming adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
-
 	colorOutgoing = [[NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0] retain];
 	colorOutgoingBorder = [[colorOutgoing adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
 	colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
-
 	
-	//Pad bottom depending on mode
+	//Force icons off for side prefixes
+        if([prefixIncoming rangeOfString:@"%m"].location != NSNotFound) showUserIcons = NO;
+	
+	//Pad bottom of the message view depending on mode
 	[messageView setContentPaddingTop:0 bottom:(inlinePrefixes ? 3 : 0)];
+
         
+        //Old
+	outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
+        outgoingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
+        incomingSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR] representedColor] retain];
+        incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
+        prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];        
         
-        gridDarkness = [[prefDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue];
-        
+	
         //Reset all content objects
         [self rebuildMessageViewForContent];
     }
+}
+
+//Release any cached preference values
+- (void)_flushPreferenceCache
+{
+    [prefixIncoming release]; prefixIncoming = nil;
+    [prefixOutgoing release]; prefixOutgoing = nil;
+    [timeStampFormat release]; timeStampFormat = nil;
+    [colorIncoming release]; colorIncoming = nil;
+    [colorIncomingBorder release]; colorIncomingBorder = nil;
+    [colorIncomingDivider release]; colorIncomingDivider = nil;
+    [colorOutgoing release]; colorOutgoing = nil;
+    [colorOutgoingBorder release]; colorOutgoingBorder = nil;
+    [colorOutgoingDivider release]; colorOutgoingDivider = nil;
+
+    //old
+    [outgoingSourceColor release]; outgoingSourceColor = nil;
+    [outgoingLightSourceColor release]; outgoingLightSourceColor = nil;
+    [incomingSourceColor release]; incomingSourceColor = nil;
+    [incomingLightSourceColor release]; incomingLightSourceColor = nil;
+    [prefixFont release]; prefixFont = nil;
 }
 
 //Rebuild our view for any existing content
@@ -276,9 +242,6 @@
         [[self _cellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
 	if(!inlinePrefixes) [[self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
-    
-    //
-    
 }
 
 //Add rows for a content status object

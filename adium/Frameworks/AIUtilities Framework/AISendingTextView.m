@@ -474,16 +474,16 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 //Scroll the message view up or down
-//- (void)moveToEndOfParagraph:(id)sender
-- (void)moveForward:(id)sender
+//- (void)moveForward:(id)sender
+- (void)moveToEndOfParagraph:(id)sender
 {
     NSRect	visibleRect = [messageScrollView documentVisibleRect];
     
     visibleRect.origin.y += [messageScrollView verticalLineScroll] * 2;
     [[messageScrollView documentView] scrollRectToVisible:visibleRect];    
 }
-//- (void)moveToBeginningOfParagraph:(id)sender
-- (void)moveBackward:(id)sender
+//- (void)moveBackward:(id)sender
+- (void)moveToBeginningOfParagraph:(id)sender
 {
     NSRect	visibleRect = [messageScrollView documentVisibleRect];
     
