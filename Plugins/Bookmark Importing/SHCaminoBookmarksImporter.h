@@ -13,5 +13,7 @@
 @interface SHCaminoBookmarksImporter : NSObject <SHBookmarkImporter> {
     id       owner;
     NSDate  *lastModDate;
+	NSArray *emptyArray;
 }
+
 @end

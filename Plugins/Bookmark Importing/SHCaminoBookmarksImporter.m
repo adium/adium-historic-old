@@ -55,6 +55,7 @@ static NSArray *emptyArray;
 - (void)dealloc
 {
 	[lastModDate release];
+	[emptyArray release];
 	[super dealloc];
 }
 
