@@ -87,6 +87,9 @@
 - (AIChat *)_openChatWithContact:(AIListContact *)contact;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
+- (void)setAccountIdleTo:(NSTimeInterval)idle;
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
+- (void)setAccountProfileTo:(NSAttributedString *)profile;
 @end
 
 @implementation AIMTOC2Account
@@ -395,7 +398,8 @@
 }
 
 
-// AIAccount_Status --------------------------------------------------------------------------------
+// Account Status ------------------------------------------------------------------------------------------------------
+#pragma mark Account Status
 // Returns an array of the status keys we support
 - (NSArray *)supportedPropertyKeys
 {
@@ -405,52 +409,78 @@
 //Respond to account status changes
 - (void)updateStatusForKey:(NSString *)key
 {
-	[super updateStatusForKey:key];
-	
+    [super updateStatusForKey:key];
+    
     BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
     
-    //Ignore the following keys unless we're online
+    //Now look at keys which only make sense while online
     if(areOnline){
-		if(key == nil || [key compare:@"IdleSince"] == 0){
-			NSDate      *oldIdle = [self statusObjectForKey:@"IdleSince"];
-			NSDate      *newIdle = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-			
-			if(oldIdle != nil && newIdle != nil){
-				//Most AIM clients will ignore 2 consecutive idles,
-				//so we unidle, then re-idle to the new value
-				[self AIM_SetIdle:0];
-			}
-			
-			[self AIM_SetIdle:(newIdle ? -[newIdle timeIntervalSinceNow] : 0)];
-			[self setStatusObject:newIdle forKey:@"IdleSince" notify:YES];
-			
-		}else if(key == nil || [key compare:@"TextProfile"] == 0){
-			NSData      *profileData = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-			NSString	*profile = [self encodedStringFromAttributedString:[NSAttributedString stringWithData:profileData]];
-			
-			if([profile length] > 1024){
-				[[adium interfaceController] handleErrorMessage:@"Info Size Error"
-												withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
-			}else{
-				[self AIM_SetProfile:profile];
-				[self setStatusObject:profileData forKey:@"TextProfile" notify:YES];
-			}
-			
-		}else if(key == nil || [key compare:@"AwayMessage"] == 0){
-			NSData  *awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-			if(awayData){
-				NSAttributedString *statusMessageHTML = [NSAttributedString stringWithData:awayData];
-				[self AIM_SetAway:[self encodedStringFromAttributedString:statusMessageHTML]];
-				
-				[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
-				[self setStatusObject:statusMessageHTML forKey:@"StatusMessage" notify:YES];
-				
-			}else{
-				[self AIM_SetAway:nil];
-				[self setStatusObject:nil forKey:@"Away" notify:NO];
-				[self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
-			}
-		}
+        NSData  *data;
+        if([key compare:@"IdleSince"] == 0){
+            NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+            [self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
+            
+        } else if ( ([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0) ){
+            NSAttributedString	*attributedString = nil;
+            
+            if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
+                attributedString = [NSAttributedString stringWithData:data];
+            }
+            
+            [self updateAttributedStatusString:attributedString forKey:key];
+            
+        }
+    }
+}
+
+- (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
+{
+    if ([key compare:@"AwayMessage"] == 0){
+        [self setAccountAwayTo:attributedString];
+    } else if ([key compare:@"TextProfile"] == 0) {
+        [self setAccountProfileTo:attributedString];
+    }
+}
+
+//Set our idle (Pass nil for no idle)
+- (void)setAccountIdleTo:(NSTimeInterval)idle
+{
+    NSDate      *oldIdle = [self statusObjectForKey:@"IdleSince"];
+    
+    if(oldIdle != nil && idle != nil){
+        //Most AIM clients will ignore 2 consecutive idles,
+        //so we unidle, then re-idle to the new value
+        [self AIM_SetIdle:0];
+    }
+    
+    [self AIM_SetIdle:idle];
+    //We are now idle
+    [self setStatusObject:(idle ? [NSDate dateWithTimeIntervalSinceNow:-idle] : nil)
+                   forKey:@"IdleSince" notify:YES];
+}
+
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage
+{
+    if (awayMessage){
+        [self AIM_SetAway:[self encodedStringFromAttributedString:awayMessage]];
+        [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+        [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+        
+    }else{
+        [self AIM_SetAway:nil];
+        [self setStatusObject:nil forKey:@"Away" notify:NO];
+        [self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
+    }
+}
+
+- (void)setAccountProfileTo:(NSAttributedString *)profile
+{
+    if([profile length] > 1024){
+        [[adium interfaceController] handleErrorMessage:@"Info Size Error"
+                                        withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
+    }else{
+        [self AIM_SetProfile:[self encodedStringFromAttributedString:profile]];
+        [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
     }
 }
 
@@ -706,7 +736,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.105 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.106 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
