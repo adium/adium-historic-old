@@ -193,7 +193,7 @@ static NSImage *pushIndicatorImage = nil;
         unsigned short 	keyCode = [theEvent keyCode];
         
         if(keyCode == 36 || keyCode == 76 || keyCode == 52){ //if return or enter is pressed
-            if([theEvent modifierFlags] & NSAlternateKeyMask){ //if option is pressed as well, the return always goes through
+            if([theEvent optionKey]){ //if option is pressed as well, the return always goes through
                 [returnArray addObject:[NSNumber numberWithBool:NO]];
         
             }else{

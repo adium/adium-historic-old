@@ -7,6 +7,7 @@
 //
 
 #import "ESAnnouncerPlugin.h"
+#import "ESAnnouncerContactAlert.h"
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults.plist"
@@ -19,6 +20,9 @@
 
 - (void)installPlugin
 {
+    //Install our contact alert
+    [[owner contactAlertsController] registerContactAlertProvider:self];
+    
     //Setup our preferences
     preferences = [[ESAnnouncerPreferences preferencePaneWithOwner:owner] retain];
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
@@ -218,6 +222,33 @@
     } else if (sender == slider_rate) {
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
     }
+}
+
+//*****
+//ESContactAlertProvider
+//*****
+
+- (NSString *)identifier
+{
+    return CONTACT_ALERT_IDENTIFIER;
+}
+
+- (ESContactAlert *)contactAlert
+{
+    return [ESAnnouncerContactAlert contactAlertWithOwner:owner];   
+}
+
+//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status
+{
+    [[owner soundController] speakText:details];
+    return YES;
+}
+
+//continue processing after a successful action
+- (BOOL)shouldKeepProcessing
+{
+    return YES;   
 }
 
 @end

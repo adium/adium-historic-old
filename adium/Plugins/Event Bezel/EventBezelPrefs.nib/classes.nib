@@ -21,27 +21,7 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {
-                changeBackground = id; 
-                changeDuration = id; 
-                changePosition = id; 
-                changeSize = id; 
-                toggleAvailable = id; 
-                toggleAway = id; 
-                toggleColorLabels = id; 
-                toggleFadeIn = id; 
-                toggleFadeOut = id; 
-                toggleFirstMessage = id; 
-                toggleIdle = id; 
-                toggleImageBadges = id; 
-                toggleNameLabels = id; 
-                toggleNoIdle = id; 
-                toggleOffline = id; 
-                toggleOnline = id; 
-                toggleShowAway = id; 
-                toggleShowBezel = id; 
-                toggleShowHidden = id; 
-            }; 
+            ACTIONS = {changePreference = id; }; 
             CLASS = JSCEventBezelPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

@@ -19,5 +19,8 @@
 + (BOOL)shiftKey;
 + (BOOL)optionKey;
 + (BOOL)controlKey;
-    
+- (BOOL)cmdKey;
+- (BOOL)shiftKey;
+- (BOOL)optionKey;
+- (BOOL)controlKey;  
 @end

@@ -20,17 +20,20 @@
 #define PITCH				@"Pitch"
 #define RATE				@"Rate"
 
-@interface ESAnnouncerPlugin : AIPlugin <AIPreferenceViewControllerDelegate> {
-    ESAnnouncerPreferences	* preferences;
+#define CONTACT_ALERT_IDENTIFIER        @"Speak"
 
-    NSString 			* lastSenderString;
-    BOOL speakIncoming;
-    BOOL speakOutgoing;
-    BOOL speakMessages;
-    BOOL speakStatus;
-    BOOL speakTime;
-    BOOL speakSender;
-    BOOL observingContent;
+@interface ESAnnouncerPlugin : AIPlugin <AIPreferenceViewControllerDelegate,ESContactAlertProvider>{
+    ESAnnouncerPreferences	*preferences;
+
+    NSString 			*lastSenderString;
+    
+    BOOL                        speakIncoming;
+    BOOL                        speakOutgoing;
+    BOOL                        speakMessages;
+    BOOL                        speakStatus;
+    BOOL                        speakTime;
+    BOOL                        speakSender;
+    BOOL                        observingContent;
 
     //Contact Editor view
     IBOutlet	NSView		*view_contactAnnouncerInfoView;
@@ -38,7 +41,7 @@
     IBOutlet	NSSlider	*slider_pitch;
     IBOutlet	NSSlider	*slider_rate;
     AIPreferenceViewController	*contactView;
-    AIListObject	*activeListObject;
+    AIListObject                *activeListObject;
 }
 
 - (IBAction)changedSetting:(id)sender;

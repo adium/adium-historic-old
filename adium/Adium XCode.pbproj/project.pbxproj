@@ -5282,6 +5282,50 @@
 			settings = {
 			};
 		};
+		3449D8C60576EF60000BD72D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESAnnouncerContactAlert.h;
+			path = Plugins/Announcer/ESAnnouncerContactAlert.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449D8C70576EF60000BD72D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESAnnouncerContactAlert.m;
+			path = Plugins/Announcer/ESAnnouncerContactAlert.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449D8C80576EF60000BD72D = {
+			fileRef = 3449D8C60576EF60000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449D8C90576EF60000BD72D = {
+			fileRef = 3449D8C70576EF60000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449D9AA0576F19D000BD72D = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = AnnouncerContactAlert.nib;
+			path = Plugins/Announcer/AnnouncerContactAlert.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449D9AB0576F19E000BD72D = {
+			fileRef = 3449D9AA0576F19D000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344EE90D05744F5F000F342B = {
 			buildActionMask = 2147483647;
 			files = (
@@ -5488,11 +5532,14 @@
 			children = (
 				346E640D051533C0003B2F21,
 				346E640E051533C0003B2F21,
-				346E641405157B14003B2F21,
+				3449D8C60576EF60000BD72D,
 				346E641505157B14003B2F21,
 				34ADDFFF05158D4B003B2F21,
 				34F77079052B72F7004616D4,
 				34ADE00205159186003B2F21,
+				346E641405157B14003B2F21,
+				3449D8C70576EF60000BD72D,
+				3449D9AA0576F19D000BD72D,
 			);
 			isa = PBXGroup;
 			name = Announcer;
@@ -11363,6 +11410,7 @@
 			files = (
 				34BD9F5305314787000AB133,
 				34BD9F5405314787000AB133,
+				3449D8C80576EF60000BD72D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11385,6 +11433,7 @@
 				34BD9F5605314787000AB133,
 				34BD9F5705314787000AB133,
 				34BD9F5805314787000AB133,
+				3449D9AB0576F19E000BD72D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11412,6 +11461,7 @@
 			files = (
 				34BD9F5A05314787000AB133,
 				34BD9F5B05314787000AB133,
+				3449D8C90576EF60000BD72D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

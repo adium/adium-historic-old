@@ -357,14 +357,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 // Notification handling -----------
 
-//Our primary text field was modified - save in KEY_EVENT_DETAILS (catch here instead of when it sends its action so a sudden window closure won't leave us without saving
-- (void)controlTextDidChange:(NSNotification *)notification
-{
-    [selectedActionDict setObject:[[notification object] stringValue] forKey:KEY_EVENT_DETAILS];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-    [self saveEventActionArray];
-}
-
 // Update when a one time event fires while we're open
 - (void)oneTimeEventFired:(NSNotification *)notification
 {

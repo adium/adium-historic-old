@@ -32,156 +32,73 @@
 }
 //
 
-- (IBAction)toggleShowBezel:(id)sender
+- (IBAction)changePreference:(id)sender
 {
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_SHOW_EVENT_BEZEL
-                                          group:PREF_GROUP_EVENT_BEZEL];
-    
-    //Enable others checkboxes if this one is checked
-    [checkBox_online setEnabled: [checkBox_showBezel state]];
-    [checkBox_offline setEnabled: [checkBox_showBezel state]];
-    [checkBox_available setEnabled: [checkBox_showBezel state]];
-    [checkBox_away setEnabled: [checkBox_showBezel state]];
-    [checkBox_noIdle setEnabled: [checkBox_showBezel state]];
-    [checkBox_idle setEnabled: [checkBox_showBezel state]];
-    [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
-}
-
-- (IBAction)changePosition:(id)sender
-{
-    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
+    if (sender == popUp_position) {
+        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
                                          forKey: KEY_EVENT_BEZEL_POSITION
                                           group: PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleOnline:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_ONLINE
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleOffline:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_OFFLINE
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleAvailable:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_AVAILABLE
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleAway:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_AWAY
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleNoIdle:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_NO_IDLE
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleIdle:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_IDLE
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleFirstMessage:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_FIRST_MESSAGE
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleImageBadges:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_IMAGE_BADGES
-                                          group:PREF_GROUP_EVENT_BEZEL];
-
-}
-
-- (IBAction)toggleColorLabels:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_COLOR_LABELS
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleNameLabels:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_NAME_LABELS
-                                          group:PREF_GROUP_EVENT_BEZEL];
-
-}
-
-- (IBAction)changeDuration:(id)sender
-{
-    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [slider_duration intValue]]
-                                         forKey: KEY_EVENT_BEZEL_DURATION
-                                          group: PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)changeSize:(id)sender
-{
-    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_size indexOfSelectedItem]]
-                                         forKey: KEY_EVENT_BEZEL_SIZE
-                                          group: PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)changeBackground:(id)sender
-{
-    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_background indexOfSelectedItem]]
-                                         forKey: KEY_EVENT_BEZEL_BACKGROUND
-                                          group: PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleFadeIn:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_FADE_IN
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleFadeOut:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_FADE_OUT
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleShowHidden:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_SHOW_HIDDEN
-                                          group:PREF_GROUP_EVENT_BEZEL];
-}
-
-- (IBAction)toggleShowAway:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_EVENT_BEZEL_SHOW_AWAY
-                                          group:PREF_GROUP_EVENT_BEZEL];
+    } else if (sender == slider_duration) {
+        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [slider_duration intValue]]
+                                             forKey: KEY_EVENT_BEZEL_DURATION
+                                              group:PREF_GROUP_EVENT_BEZEL];
+    } else if (sender == popUp_size) {
+        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_size indexOfSelectedItem]]
+                                             forKey: KEY_EVENT_BEZEL_SIZE
+                                              group: PREF_GROUP_EVENT_BEZEL];
+    } else if (sender == popUp_background) {
+        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_background indexOfSelectedItem]]
+                                             forKey: KEY_EVENT_BEZEL_BACKGROUND
+                                              group: PREF_GROUP_EVENT_BEZEL];
+    } else { //handle the check boxes
+        NSString *key = nil;
+        
+        if (sender == checkBox_showBezel) {
+            key = KEY_SHOW_EVENT_BEZEL;
+        } if (sender == checkBox_online) {
+            key = KEY_EVENT_BEZEL_ONLINE;
+        } else if (sender == checkBox_offline) {
+            key = KEY_EVENT_BEZEL_OFFLINE;
+        } else if (sender == checkBox_available) {
+            key = KEY_EVENT_BEZEL_AVAILABLE;
+        } else if (sender == checkBox_away) {
+            key = KEY_EVENT_BEZEL_AWAY;
+        } else if (sender == checkBox_noIdle) {
+            key = KEY_EVENT_BEZEL_NO_IDLE;
+        } else if (sender == checkBox_idle) {
+            key = KEY_EVENT_BEZEL_IDLE;
+        } else if (sender == checkBox_firstMessage) {
+            key = KEY_EVENT_BEZEL_FIRST_MESSAGE;
+        } else if (sender == checkBox_imageBadges) {
+            key = KEY_EVENT_BEZEL_IMAGE_BADGES;
+        } else if (sender == checkBox_colorLabels) {
+            key = KEY_EVENT_BEZEL_COLOR_LABELS;
+        } else if (sender == checkBox_nameLabels) {
+            key = KEY_EVENT_BEZEL_NAME_LABELS;
+        } else if (sender == checkBox_fadeIn) {
+            key = KEY_EVENT_BEZEL_FADE_IN;
+        } else if (sender == checkBox_fadeOut) {
+            key = KEY_EVENT_BEZEL_FADE_OUT;
+        } else if (sender == checkBox_showHidden) {
+            key = KEY_EVENT_BEZEL_SHOW_HIDDEN;
+        } else if (sender == checkBox_showAway) {
+            key = KEY_EVENT_BEZEL_SHOW_AWAY;
+        }
+        
+        if (key) {
+            [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                                 forKey:key
+                                                  group:PREF_GROUP_EVENT_BEZEL];
+        }
+    }
 }
 
 - (void)viewDidLoad
 {
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
     viewIsLoaded = YES;
+    [self preferencesChanged:nil];
 }
 
 - (void)viewShouldClose
@@ -191,7 +108,7 @@
 //Configure the preference view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if (notification == nil || [[notification name] isEqualToString:PREF_GROUP_EVENT_BEZEL]) {
+    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EVENT_BEZEL] == 0) {
         if (viewIsLoaded) {
             NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
             
@@ -223,13 +140,14 @@
             [checkBox_showAway setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
             
             // Enable or disable checkboxes based on the "show bezel" checkbox
-            [checkBox_online setEnabled: [checkBox_showBezel state]];
-            [checkBox_offline setEnabled: [checkBox_showBezel state]];
-            [checkBox_available setEnabled: [checkBox_showBezel state]];
-            [checkBox_away setEnabled: [checkBox_showBezel state]];
-            [checkBox_noIdle setEnabled: [checkBox_showBezel state]];
-            [checkBox_idle setEnabled: [checkBox_showBezel state]];
-            [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
+            BOOL showBezel = [checkBox_showBezel state];
+            [checkBox_online setEnabled:showBezel];
+            [checkBox_offline setEnabled:showBezel];
+            [checkBox_available setEnabled:showBezel];
+            [checkBox_away setEnabled:showBezel];
+            [checkBox_noIdle setEnabled:showBezel];
+            [checkBox_idle setEnabled:showBezel];
+            [checkBox_firstMessage setEnabled:showBezel];
         }
     }
 }
