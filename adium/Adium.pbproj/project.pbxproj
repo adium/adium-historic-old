@@ -197,6 +197,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		115C72070470BD91007DDD3A = {
 			isa = PBXBundleReference;
@@ -422,6 +423,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		11B487990498CEFC003CE6DB = {
 			isa = PBXTargetDependency;
@@ -583,6 +585,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		11B96D83049AF87D00C6304D = {
 			isa = PBXTargetDependency;
@@ -750,6 +753,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		11C157C504A88D33008E0C76 = {
 			isa = PBXTargetDependency;
@@ -977,6 +981,7 @@
 				4BF48142049A804500A8010A,
 				4B81631903D1C27500A8010A,
 				4BE8E5400483B5A900A8010A,
+				F5148D8E04C8B38E018B6CC7,
 				4BD7D0D204620DAC00A8010A,
 				4BD7D0E104620E7200A8010A,
 				4BAE85AB0498195800A8010A,
@@ -1022,7 +1027,6 @@
 				F5F846F704C7020601A80106,
 				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
-				F5148D8E04C8B38E018B6CC7,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1043,7 +1047,6 @@
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
 			);
-			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -1168,62 +1171,63 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				F5F8478D04C7135801A80106,
 				4BF1F04F03D84D1E00A8010A,
 				4BF1F05203D84D1E00A8010A,
-				9E6C448F048D6CC700415B22,
 				4B64792403DB613700A8010A,
 				4B64792503DB613700A8010A,
-				4B64792603DB613700A8010A,
+				9E6C448F048D6CC700415B22,
+				4B64792D03DB613700A8010A,
+				4B64792C03DB613700A8010A,
+				9E4CF9F304AA6D5600415B22,
+				4B1F0F3604AE303600A8010A,
+				4B64793403DB613700A8010A,
+				4B64793503DB613700A8010A,
+				4BF48143049A804500A8010A,
+				4B64793803DB613700A8010A,
+				4BE8E5410483B5A900A8010A,
+				F504538304CCE09001ECB9E1,
+				4BD7D0D304620DAC00A8010A,
+				4BD7D0E204620E7300A8010A,
+				4BAE85AC0498195800A8010A,
+				4B64792E03DB613700A8010A,
+				4B66890004A60CD900A8010A,
+				4B9E73DF03F7085300A8010A,
 				4B64792703DB613700A8010A,
+				B7CC1DC604ABF06600242696,
+				4B52A57E03EDB96E00A8010A,
+				11B487C00498E698003CE6DB,
+				11B96D93049AF8BD00C6304D,
+				4B1332250459BA6F00A8010A,
+				4B64793903DB613700A8010A,
+				4BC2C6E90480540A00A8010A,
+				4B304913047FBD8200A8010A,
+				4B13321C0459BA3900A8010A,
+				4B64792603DB613700A8010A,
+				11C157E104A8955B008E0C76,
+				4B64793203DB613700A8010A,
+				4B64793003DB613700A8010A,
+				F53B4AFC04995BE001803884,
+				4B4FA11604125F3F00A8010A,
+				6E97F13704A94C1800472FFF,
+				115C72080470BD91007DDD3A,
+				4B64793103DB613700A8010A,
+				4B31E8DF04C4711100A8010A,
+				4B64793603DB613700A8010A,
+				4B7BD8650412584500A8010A,
+				F5A3237404A7AA6401888466,
 				4B64792803DB613700A8010A,
+				4BDDCA09041104ED00A8010A,
+				4B0473C1043E443A00A8010A,
 				4B64792903DB613700A8010A,
 				4B64792A03DB613700A8010A,
 				4B64792B03DB613700A8010A,
-				4B64792C03DB613700A8010A,
-				4B64792D03DB613700A8010A,
-				11C157E104A8955B008E0C76,
-				4B64792E03DB613700A8010A,
 				4B64792F03DB613700A8010A,
-				4B64793003DB613700A8010A,
-				4B64793103DB613700A8010A,
-				4B64793203DB613700A8010A,
-				4B64793303DB613700A8010A,
-				4B64793403DB613700A8010A,
-				4B64793503DB613700A8010A,
-				4B64793603DB613700A8010A,
-				4B64793703DB613700A8010A,
-				4B64793803DB613700A8010A,
-				4B64793903DB613700A8010A,
 				4BBAEE9F03DD7DAB00A8010A,
-				4B52A57E03EDB96E00A8010A,
-				4B9E73DF03F7085300A8010A,
-				4BDDCA09041104ED00A8010A,
-				4B7BD8650412584500A8010A,
-				4B4FA11604125F3F00A8010A,
-				4B0473C1043E443A00A8010A,
-				4B55411D044DF01600A8010A,
-				4B13321C0459BA3900A8010A,
-				4B1332250459BA6F00A8010A,
-				4BD7D0D304620DAC00A8010A,
-				4BD7D0E204620E7300A8010A,
-				11B487C00498E698003CE6DB,
-				115C72080470BD91007DDD3A,
-				4B304913047FBD8200A8010A,
-				4BC2C6E90480540A00A8010A,
-				4BE8E5410483B5A900A8010A,
+				4B64793703DB613700A8010A,
+				4B64793303DB613700A8010A,
 				4B5B152A0493BFB100A8010A,
-				4BAE85AC0498195800A8010A,
-				B7CC1DC604ABF06600242696,
-				F53B4AFC04995BE001803884,
-				4BF48143049A804500A8010A,
-				11B96D93049AF8BD00C6304D,
-				4B66890004A60CD900A8010A,
-				F5A3237404A7AA6401888466,
-				6E97F13704A94C1800472FFF,
-				9E4CF9F304AA6D5600415B22,
-				4B1F0F3604AE303600A8010A,
-				4B31E8DF04C4711100A8010A,
+				F5F8478D04C7135801A80106,
+				4B55411D044DF01600A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1288,6 +1292,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		29B97327FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -1335,6 +1340,7 @@
 				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
 				4BAE56E804CC5FCC00A8010A,
+				F504538404CCE0A001ECB9E1,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1488,6 +1494,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		40AC0EE703B5BEAF00A80202 = {
 			isa = PBXBundleReference;
@@ -1798,6 +1805,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B0473C0043E443A00A8010A = {
 			isa = PBXBundleReference;
@@ -2050,6 +2058,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B13321B0459BA3900A8010A = {
 			isa = PBXBundleReference;
@@ -2163,6 +2172,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B1332240459BA6F00A8010A = {
 			isa = PBXBundleReference;
@@ -2258,14 +2268,14 @@
 		};
 		4B1332370459BCBA00A8010A = {
 			children = (
-				F5148D9404C8B3BF018B6CC7,
-				4BAE85A40498194200A8010A,
 				4B28907503C1D14200A8010A,
-				4B6688F804A60CC300A8010A,
+				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CA04620D7C00A8010A,
+				4BAE85A40498194200A8010A,
 				4BD7D0CB04620D8800A8010A,
-				11B96D81049AF85900C6304D,
+				4B6688F804A60CC300A8010A,
 				4B0E342E04C4677700A8010A,
+				11B96D81049AF85900C6304D,
 				F53B9AC502CD12AB01A8010A,
 				F5370C9202D76F1F01A8010A,
 				4B31E8E104C4712F00A8010A,
@@ -2346,10 +2356,10 @@
 		};
 		4B13323F0459BE4500A8010A = {
 			children = (
-				B7AE664D0465778E0051E914,
-				4BDDCA01041104BB00A8010A,
-				9C8C7FA303CBA17B00267226,
 				4B1F0F2E04AE300500A8010A,
+				9C8C7FA303CBA17B00267226,
+				4BDDCA01041104BB00A8010A,
+				B7AE664D0465778E0051E914,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -2358,10 +2368,10 @@
 		};
 		4B1332400459BEFD00A8010A = {
 			children = (
-				4B1332130459B98E00A8010A,
 				4B18A51F0459F89300A8010A,
-				4B0473B7043E43F200A8010A,
 				9EB7C05703D52AFA00415B22,
+				4B1332130459B98E00A8010A,
+				4B0473B7043E43F200A8010A,
 			);
 			isa = PBXGroup;
 			name = Feedback;
@@ -2370,15 +2380,15 @@
 		};
 		4B1332410459BF1F00A8010A = {
 			children = (
+				9E4CF9D104AA69B000415B22,
+				4BF4813B049A802E00A8010A,
+				4B6D0E43047D490700A8010A,
 				11C157D504A88DE0008E0C76,
 				F5A3236904A7A9A501888466,
-				4BF4813B049A802E00A8010A,
 				11B487810498C792003CE6DB,
-				4B5B15220493BF9A00A8010A,
-				4B6D0E43047D490700A8010A,
 				4BBAEE9703DD7D8900A8010A,
-				9E4CF9D104AA69B000415B22,
 				F5D2FB8403B6649F01A8010A,
+				4B5B15220493BF9A00A8010A,
 			);
 			isa = PBXGroup;
 			name = Attributes;
@@ -2628,6 +2638,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B18A5260459F8AF00A8010A = {
 			isa = PBXBundleReference;
@@ -2801,6 +2812,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B1F0F3504AE303600A8010A = {
 			isa = PBXBundleReference;
@@ -3125,6 +3137,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B28907C03C1D17500A8010A = {
 			isa = PBXBundleReference;
@@ -3344,6 +3357,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B304912047FBD8200A8010A = {
 			isa = PBXBundleReference;
@@ -3662,6 +3676,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B31E8DE04C4711100A8010A = {
 			isa = PBXBundleReference;
@@ -3980,6 +3995,7 @@
 				4B40E1D303DB5B9600A8010A,
 				4B40E1D203DB5B9600A8010A,
 				9E4CF9F404AA6D5600415B22,
+				F504538804CCE0A201ECB9E1,
 				4B40E1DB03DB5B9600A8010A,
 				4B40E1DC03DB5B9600A8010A,
 				4BF48144049A804500A8010A,
@@ -4248,12 +4264,12 @@
 		};
 		4B4F5B24042D636A00A8010A = {
 			children = (
-				4B254C4803F7073900A8010A,
 				4BED5A5303C34F1E00A8010A,
+				4B254C4803F7073900A8010A,
+				F53B4A5D0499182C01803884,
 				4B4FA10E04125E2600A8010A,
 				115C720D0470BE5E007DDD3A,
 				4B7BD8690412586500A8010A,
-				F53B4A5D0499182C01803884,
 			);
 			isa = PBXGroup;
 			name = Sorting;
@@ -4274,8 +4290,8 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
-				4B30490B047FBD6A00A8010A,
 				4B52A58603EDB9D200A8010A,
+				4B30490B047FBD6A00A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				F501BB0D03882A0201A8010A,
 				F5F846FE04C702DB01A80106,
@@ -4475,6 +4491,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B4FA11504125F3F00A8010A = {
 			isa = PBXBundleReference;
@@ -4845,6 +4862,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B52A57D03EDB96E00A8010A = {
 			isa = PBXBundleReference;
@@ -5060,6 +5078,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B55411C044DF01600A8010A = {
 			isa = PBXBundleReference;
@@ -5259,6 +5278,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B5B15290493BFB100A8010A = {
 			isa = PBXBundleReference;
@@ -5764,6 +5784,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B6688FF04A60CD800A8010A = {
 			isa = PBXBundleReference;
@@ -6056,6 +6077,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B71CD5503CBCA7E00A8010A = {
 			isa = PBXBundleReference;
@@ -6508,6 +6530,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B7BD8640412584500A8010A = {
 			isa = PBXBundleReference;
@@ -6765,6 +6788,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B81631903D1C27500A8010A = {
 			isa = PBXBundleReference;
@@ -7310,6 +7334,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4B9E73DE03F7085300A8010A = {
 			isa = PBXBundleReference;
@@ -7525,6 +7550,7 @@
 			);
 			isa = PBXGroup;
 			name = "Contact Info";
+			path = "";
 			refType = 4;
 		};
 		4BAE85A50498195800A8010A = {
@@ -7629,6 +7655,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BAE85AB0498195800A8010A = {
 			isa = PBXBundleReference;
@@ -7948,6 +7975,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BBAEE9E03DD7DAB00A8010A = {
 			isa = PBXBundleReference;
@@ -8259,6 +8287,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BC2C6E80480540A00A8010A = {
 			isa = PBXBundleReference;
@@ -8655,6 +8684,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BD7D0D204620DAC00A8010A = {
 			isa = PBXBundleReference;
@@ -8802,6 +8832,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BD7D0E104620E7200A8010A = {
 			isa = PBXBundleReference;
@@ -9059,6 +9090,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BDDCA08041104ED00A8010A = {
 			isa = PBXBundleReference;
@@ -9330,6 +9362,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BE8E5400483B5A900A8010A = {
 			isa = PBXBundleReference;
@@ -9667,6 +9700,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BED5A5A03C34F4800A8010A = {
 			isa = PBXBundleReference;
@@ -10275,6 +10309,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		4BF48142049A804500A8010A = {
 			isa = PBXBundleReference;
@@ -10740,6 +10775,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		6E97F13604A94C1800472FFF = {
 			isa = PBXBundleReference;
@@ -11044,6 +11080,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		9C8C7F9D03CBA08400267226 = {
 			isa = PBXBundleReference;
@@ -11267,6 +11304,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		9E2E306E046CA9BF00415B22 = {
 			isa = PBXBundleReference;
@@ -11491,6 +11529,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		9E4CF9F204AA6D5600415B22 = {
 			isa = PBXBundleReference;
@@ -11821,6 +11860,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		9EDAC4ED03D5160100415B22 = {
 			isa = PBXBundleReference;
@@ -11999,6 +12039,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		B7AE6657046578640051E914 = {
 			isa = PBXBundleReference;
@@ -12165,6 +12206,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F501BB1403882A2901A8010A = {
 			isa = PBXBundleReference;
@@ -12187,6 +12229,22 @@
 			isa = PBXGroup;
 			name = Images;
 			refType = 4;
+		};
+		F504538304CCE09001ECB9E1 = {
+			isa = PBXTargetDependency;
+			target = F5148D8D04C8B38E018B6CC7;
+		};
+		F504538404CCE0A001ECB9E1 = {
+			fileRef = F5148D8E04C8B38E018B6CC7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F504538804CCE0A201ECB9E1 = {
+			fileRef = F5148D8E04C8B38E018B6CC7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
@@ -12362,6 +12420,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F50CD62903603C7201A8010A = {
 			isa = PBXBundleReference;
@@ -12441,6 +12500,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F50F252E03B0425301A80202 = {
 			isa = PBXTargetDependency;
@@ -12718,6 +12778,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F510B77403339F1C01A8010A = {
 			isa = PBXBundleReference;
@@ -12743,6 +12804,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5148D9B04C8B4AA018B6CC7,
+				F5319C3804CF3900015DA2B6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12830,6 +12892,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5148D8E04C8B38E018B6CC7 = {
 			isa = PBXBundleReference;
@@ -12868,6 +12931,7 @@
 				F5148D9704C8B4AA018B6CC7,
 				F5148D9804C8B4AA018B6CC7,
 				F5148D9504C8B4AA018B6CC7,
+				F5319C3704CF3900015DA2B6,
 				F5148D9604C8B4AA018B6CC7,
 			);
 			isa = PBXGroup;
@@ -12886,6 +12950,7 @@
 			name = ContactAlerts.nib;
 			path = "Plugins/Contact Alerts/ContactAlerts.nib";
 			refType = 4;
+			usesTabs = 0;
 		};
 		F5148D9704C8B4AA018B6CC7 = {
 			fileEncoding = 30;
@@ -13078,6 +13143,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F51DEFAF032633E301A8010A = {
 			isa = PBXBundleReference;
@@ -13138,6 +13204,18 @@
 			name = Carbon.framework;
 			path = /System/Library/Frameworks/Carbon.framework;
 			refType = 0;
+		};
+		F5319C3704CF3900015DA2B6 = {
+			isa = PBXFileReference;
+			name = alerts.tif;
+			path = "Plugins/Contact Alerts/alerts.tif";
+			refType = 4;
+		};
+		F5319C3804CF3900015DA2B6 = {
+			fileRef = F5319C3704CF3900015DA2B6;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F5357E4202F8422E01A8010A = {
 			isa = PBXTargetDependency;
@@ -13291,6 +13369,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5370C9902D76F3B01A8010A = {
 			isa = PBXBundleReference;
@@ -13321,6 +13400,7 @@
 			);
 			isa = PBXGroup;
 			name = "Idle Away Manual Sort";
+			path = "";
 			refType = 4;
 		};
 		F53B4A6504991CB601803884 = {
@@ -13423,6 +13503,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F53B4A6B04991CB601803884 = {
 			isa = PBXBundleReference;
@@ -13755,6 +13836,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F53B9A0702CCED6401A8010A = {
 			isa = PBXFrameworkReference;
@@ -13901,6 +13983,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F53B9A0F02CCED8B01A8010A = {
 			isa = PBXFrameworkReference;
@@ -14064,6 +14147,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F53B9ACC02CD12CB01A8010A = {
 			isa = PBXBundleReference;
@@ -14227,6 +14311,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F53EA2CE02C803C101A8010A = {
 			isa = PBXBundleReference;
@@ -15242,6 +15327,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F569E39202CA88C701A8010A = {
 			isa = PBXBundleReference;
@@ -17291,6 +17377,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F59F9A8A032BE6B101A8010A = {
 			isa = PBXBundleReference;
@@ -17414,6 +17501,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5A01D8C0379813301A8010A = {
 			isa = PBXBundleReference;
@@ -17560,6 +17648,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5A3237004A7A9EC01888466 = {
 			isa = PBXBundleReference;
@@ -17785,6 +17874,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5AAD090039BA10901A8010A = {
 			isa = PBXBundleReference;
@@ -17930,6 +18020,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5B53FC70333AFB501A8010A = {
 			isa = PBXBundleReference;
@@ -18093,6 +18184,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5BD46CF02D0789901A8010A = {
 			isa = PBXBundleReference;
@@ -18339,6 +18431,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5D2FB7D03B6643B01A8010A = {
 			isa = PBXBundleReference;
@@ -18636,6 +18729,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		F5F846F704C7020601A80106 = {
 			isa = PBXBundleReference;
