@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 480 $ $Date: 2003/11/22 18:35:11 $ -->
+<!--$Rev: 483 $ $Date: 2003/11/25 22:09:43 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -233,6 +233,10 @@ try {
                     " where messages.sender_id = s.user_id " +
                     " and messages.recipient_id = r.user_id " +
                     " and idxfti @@ q ";
+
+                if (orderBy == null) {
+                    orderBy = "rank(idxFTI, q) desc";
+                }
             }
 
             cmdAry[cmdCntr++] = new String(searchKey);

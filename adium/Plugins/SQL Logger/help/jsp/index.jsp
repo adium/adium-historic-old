@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 473 $ $Date: 2003/11/09 06:56:53 $ -->
+<!--$Rev: 483 $ $Date: 2003/11/25 22:09:43 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -353,10 +353,15 @@ try {
             int oldIndex = 0;
             while(m.find()) {
                 sb.append(message.substring(oldIndex,m.start()));
-                sb.append(m.group(1) + 
+                if(sb.toString().lastIndexOf('>') > 
+                  sb.toString().lastIndexOf('<')) {
+                    sb.append(m.group(1) + 
                     "<b style=\"color:black;background-color:" +
                     hlColor[i % hlColor.length] + "\">");
-                sb.append(m.group(2) + "</b>" + m.group(3));
+                    sb.append(m.group(2) + "</b>" + m.group(3));
+                } else {
+                    sb.append(m.group(1) + m.group(2) + m.group(3));
+                }
                 oldIndex = m.end();
             }
             sb.append(message.substring(oldIndex, message.length()));

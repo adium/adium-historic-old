@@ -85,12 +85,12 @@ perl -MCPAN -e 'force install DBD::Pg'</pre></div><br />
   top of the scripts to be "#!/usr/bin/perl".</p>
 
 <h3>Installing tsearch and Resin</h3>
-<div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch
+<div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch2
 jmelloy $] make
 jmelloy $] sudo make install
 jmelloy $] psql &lt; tsearch.sql
 jmelloy $] cd ~/adium/Plugins/SQL Logger/help/sql
-jmelloy $] psql &lt; tsearch.sql</pre></div>
+jmelloy $] psql &lt; tsearch2.sql</pre></div>
 
 <p>Now you need to install Resin if you wish to view the logs with the web
   interface.  The web interface is currently more powerful than the built-in
@@ -99,7 +99,8 @@ jmelloy $] psql &lt; tsearch.sql</pre></div>
   download the latest 3.0 version or the latest 2.0, install instructions are
   similar.  Change directories into the Resin folder.</p>
 
-<h4>If you have downloaded Resin 2.1</h4> <a href="#resin3">Resin 3.0 </a> | <a
+<h4>If you have downloaded Resin 2.1</h4> <a href="#resin3">Resin 3.0
+  Instructions</a><br /><a
   href="#comp">End of install</a>
 <div class="tutorialcode"><pre>pico conf/resin.conf</pre></div>
     <p>Look for the section that looks like this:</p>

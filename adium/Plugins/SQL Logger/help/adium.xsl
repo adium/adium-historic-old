@@ -16,22 +16,14 @@
         <link rel="stylesheet" type="text/css" href="stylesheet.css" />
       </head>
       <body>
-        <table border="0" cellspacing="0" cellpadding="5">
-          <tr>
-            <td colspan="2" bgcolor="#000000" align="right">
-              <h2 class="titlebar">
-                <xsl:value-of select="title" />
-              </h2>
-              </td>
-          </tr>
-          <tr>
-            <td width="170" height="20" background="images/transp-change.png"
-            bgcolor="green"></td>
-            <td height="20" background="images/transp-change.png"></td>
-          </tr>
-          <tr>
-            <td width="170" bgcolor="green" valign="top" align="right">
-              <h4>SQL Logger<br /></h4>
+        <div id="container">
+          <div id="banner">
+            <h2 class="titlebar">
+              <xsl:value-of select="title" />
+            </h2>
+          </div>
+          <div id="sidebar-a">
+            <h4>SQL Logger<br /></h4>
               <a href="index.html" class="sidebar">Installation Instructions</a>
               <br /><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a>
               <br /><a href="tsearch.html" class="sidebar">TSearch Installation</a>
@@ -77,16 +69,16 @@
               class="offsides">Films</a>
               <br /><a href="http://www.visualdistortion.org/music/"
               class="offsides">Music</a>
-            </td>
-            <td>
-              <xsl:apply-templates select="body"/>
-              <hr />
-                <div align="right">
-                  <a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
-                </div>
-            </td>
-          </tr>
-        </table>
+          </div>
+          <div id="content">
+            <xsl:apply-templates select="body"/>
+          </div>
+          <div id="footer">
+            <xsl:value-of select="title" /><br />
+            <a
+              href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
+          </div>
+        </div>
       </body>
     </html>
   </xsl:template>

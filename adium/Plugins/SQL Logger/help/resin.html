@@ -5,14 +5,9 @@
 <title>Resin/JSP Installation Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
-<body><table border="0" cellspacing="0" cellpadding="5">
-<tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">Resin/JSP Installation Instructions</h2></td></tr>
-<tr>
-<td width="170" height="20" background="images/transp-change.png" bgcolor="green"></td>
-<td height="20" background="images/transp-change.png"></td>
-</tr>
-<tr>
-<td width="170" bgcolor="green" valign="top" align="right">
+<body><div id="container">
+<div id="banner"><h2 class="titlebar">Resin/JSP Installation Instructions</h2></div>
+<div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
@@ -23,8 +18,8 @@
                 Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
 <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
-</td>
-<td>
+</div>
+<div id="content">
 <p>To view the database logs with a web interface, you need to install a
     JSP servlet engine.  Several are available, but I prefer one called
     "Resin".  You can get it at <a href="http://www.caucho.com" class="offsite">http://www.caucho.com</a>.</p>
@@ -119,9 +114,8 @@ tar -xvf resin-2.1.x.tar</pre>
   have the postgresql.jar added to my CLASSPATH environmental variable, so I
   don't need to explicitly call it) and put the "Resin" folder in 
   <code>/Library/StartupItems</code>.</p>
-<hr>
-<div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
-</td>
-</tr>
-</table></body>
+</div>
+<div id="footer">Resin/JSP Installation Instructions<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
+</div>
+</div></body>
 </html>

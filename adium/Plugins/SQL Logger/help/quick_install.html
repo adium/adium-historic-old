@@ -5,14 +5,9 @@
 <title>SQL Logger Quick Install Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
-<body><table border="0" cellspacing="0" cellpadding="5">
-<tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">SQL Logger Quick Install Instructions</h2></td></tr>
-<tr>
-<td width="170" height="20" background="images/transp-change.png" bgcolor="green"></td>
-<td height="20" background="images/transp-change.png"></td>
-</tr>
-<tr>
-<td width="170" bgcolor="green" valign="top" align="right">
+<body><div id="container">
+<div id="banner"><h2 class="titlebar">SQL Logger Quick Install Instructions</h2></div>
+<div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
@@ -23,8 +18,8 @@
                 Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
 <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
-</td>
-<td>
+</div>
+<div id="content">
 <p>These instructions are intended for people who want to install
     PostgreSQL from source and the SQL Logger components on Panther.  It covers almost
     everything.</p>
@@ -104,19 +99,20 @@ perl -MCPAN -e 'force install DBD::Pg'</pre></div>
 <p>Now you can run parser/parser-2.pl.  You may need to edit the paths at the 
   top of the scripts to be "#!/usr/bin/perl".</p>
 <h3>Installing tsearch and Resin</h3>
-<div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch
+<div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch2
 jmelloy $] make
 jmelloy $] sudo make install
 jmelloy $] psql &lt; tsearch.sql
 jmelloy $] cd ~/adium/Plugins/SQL Logger/help/sql
-jmelloy $] psql &lt; tsearch.sql</pre></div>
+jmelloy $] psql &lt; tsearch2.sql</pre></div>
 <p>Now you need to install Resin if you wish to view the logs with the web
   interface.  The web interface is currently more powerful than the built-in
   log viewer. Download Resin from <a href="http://www.caucho.com/" class="offsite">http://www.caucho.com</a>.  It does not matter if you
   download the latest 3.0 version or the latest 2.0, install instructions are
   similar.  Change directories into the Resin folder.</p>
 <h4>If you have downloaded Resin 2.1</h4>
-<a href="#resin3">Resin 3.0 </a><a href="#comp">End of install</a><div class="tutorialcode"><pre>pico conf/resin.conf</pre></div>
+<a href="#resin3">Resin 3.0
+  Instructions</a><br><a href="#comp">End of install</a><div class="tutorialcode"><pre>pico conf/resin.conf</pre></div>
 <p>Look for the section that looks like this:</p>
 <div class="tutorialcode">
  <pre>&lt;!--
@@ -232,9 +228,8 @@ jmelloy $] psql &lt; tsearch.sql</pre></div>
   Then go into the build directory, select "SQL Logger.AdiumPlugin" and drag
   it to the <code>~/Library/Application Support/Adium 2.0/Plugins</code>.
   That's it.</p>
-<hr>
-<div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
-</td>
-</tr>
-</table></body>
+</div>
+<div id="footer">SQL Logger Quick Install Instructions<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
+</div>
+</div></body>
 </html>

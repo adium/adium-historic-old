@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 418 $ $Date: 2003/09/09 01:18:57 $ -->
+<!--$Rev: 485 $ $Date: 2003/11/25 22:09:43 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -30,6 +30,7 @@ if (date != null && date.equals("")) {
 <html>
     <head>
         <title>Detailed Adium Statistics</title>
+        <link rel="stylesheet" type="text/css" href="stylesheet.css" />
     </head>
     <body>
 <%
@@ -150,9 +151,8 @@ try {
     maxCount *= 1.1;
 
     out.print("<table cellspacing=\"0\"><tr><td colspan=\"" + lastDayOfMonth + 
-    "\" align=\"center\" bgcolor=\"navy\">");
-    out.println("<b><font color=\"white\">");
-    out.println("Number of Messages by Date</font></b>");
+    "\" class=\"header\">");
+    out.println("Number of Messages by Date");
     out.println("</td></tr><tr>");
     
     for (int i = 1; i <= lastDayOfMonth; i++) {
@@ -216,22 +216,18 @@ try {
     }
 
     out.println("<br /><table border=\"0\">");
-    out.println("<tr><td colspan=\"26\" align=\"center\" bgcolor=\"navy\">");
-    out.println("<b><font color=\"white\">");
-    out.println("Instant Messages by Hour of Day</font></b>");
+    out.println("<tr><td colspan=\"26\" class=\"header\">");
+    out.println("Instant Messages by Hour of Day");
     out.println("</td></tr>");
-    out.println("<tr><td bgcolor=\"teal\"></td>");
+    out.println("<tr><td class=\"colhead\"></td>");
     for(int i = 0; i < 24; i++) {
-        out.println("<td bgcolor=\"teal\" align=\"center\">" + 
-        " <font color=\"white\">" + i + 
-        "</font></td>");
+        out.println("<td class=\"colhead\">" + i + "</td>");
     }
-    out.println("<td bgcolor=\"teal\"><font color=\"white\"> "+
-    "<b>Total</b></font></td></tr>");
+    out.println("<td class=\"colhead\">"+
+    "Total</td></tr>");
 
     for(int i = 1; i <= lastDayOfMonth; i++) {
-        out.println("<tr><td align=\"right\"");
-        out.println(" bgcolor=\"#99CCFF\">" + i + "</td>");
+        out.print("<tr><td class=\"rowCount\">" + i + "</td>");
         for(int j = 0; j < 24; j++) {
             String after = new String(date);
             String before = new String(date);
@@ -255,17 +251,20 @@ try {
                 before = sb.toString();
             } 
 
-            out.print("<td align=\"center\"");
-            
+            out.print("<td align=\"center\" class=\"shade\"");
+            /*
             if(i % 2 == 0) {
-                out.print(" bgcolor=\"#cccccc\" ");
+                out.print(" class=\"even\" ");
+            } else {
+                out.print(" class=\"odd\" ");
             }
-            
-            // double shade = ((double) dailyHourly[i][j] / maxHourly) * 255;
+            */
+
+            double shade = (255 - ((double) dailyHourly[i][j] / maxHourly) * 255);
             if (dailyHourly[i][j] != 0) {
-                // out.print(" bgcolor=\"#" + Integer.toHexString((int)shade) +
-                // Integer.toHexString((int)shade) +
-                // Integer.toHexString((int)shade) + "\" ");
+                 out.print(" bgcolor=\"#" + Integer.toHexString((int)shade) +
+                 Integer.toHexString((int)shade) +
+                 Integer.toHexString((int)shade) + "\" ");
                 out.print("><a href=\"index.jsp?after=" + after +
                 "&before=" + before + "\">" + dailyHourly[i][j] + 
                 "</a>");
@@ -275,7 +274,6 @@ try {
             out.print("</td>");
         }
         out.print("<td ");
-        if(i % 2 == 0) out.print(" bgcolor=\"#cccccc\"");
         out.print(" align=\"right\"><b>" + dailyAry[i] + "</b></td>");
         out.print("</tr>");
     }
@@ -324,8 +322,8 @@ try {
     while(rset.next()) {
         if (cntr % 25 == 0) {
             for(int j = 2; j <= rsmd.getColumnCount(); j++) {
-                out.print("<td bgcolor=\"teal\"><font color=\"white\">"+
-                rsmd.getColumnName(j) + "</font></td>");
+                out.print("<td class=\"colhead\">"+
+                rsmd.getColumnName(j) + "</td>");
             }
         }
 
