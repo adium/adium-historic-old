@@ -16,7 +16,6 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
-- (void)_addContentContext:(AIContentContext *)content similar:(BOOL)contentIsSimilar;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
@@ -146,11 +145,8 @@
 		}
 
 		//
-		if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+		if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
 			[self _addContentMessage:(AIContentMessage *)content similar:contentIsSimilar];
-		} else if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
-			[self _addContentContext:(AIContentContext *)content similar:contentIsSimilar];
-
 		}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
 			[self _addContentStatus:(AIContentStatus *)content similar:contentIsSimilar];
 		}
@@ -183,6 +179,8 @@
 {
 	NSString		*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
 	NSMutableString	*newHTML;
+	NSString	*contentTemplate = nil;
+	NSString	*nextContentTemplate = nil;
 	
 	//
 	if([content isOutgoing]){
@@ -191,45 +189,17 @@
 		stylePath = [stylePath stringByAppendingPathComponent:@"Incoming"];
 	}
 	
-	//
-	NSString	*contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Content.html"]];
-	NSString	*nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContent.html"]];
-	
-	//
-	if(!contentIsSimilar){
-		newHTML = [[contentTemplate mutableCopy] autorelease];
-		newHTML = [self fillKeywords:newHTML forContent:content];
-		newHTML = [self escapeString:newHTML];
-        
-		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
-		
-	}else{
-		newHTML = [[nextContentTemplate mutableCopy] autorelease];
-		newHTML = [self fillKeywords:newHTML forContent:content];
-		newHTML = [self escapeString:newHTML];
-		
-		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
-		
+	//Load context templates if appropriate
+	if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
+		contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Context.html"]];
+		nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContext.html"]];
 	}
-}
 
-- (void)_addContentContext:(AIContentContext *)content similar:(BOOL)contentIsSimilar
-{
-	NSString		*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
-	NSMutableString	*newHTML;
-	
-	//
-	if([content isOutgoing]){
-		stylePath = [stylePath stringByAppendingPathComponent:@"Outgoing"];
-	}else{
-		stylePath = [stylePath stringByAppendingPathComponent:@"Incoming"];
-	}
-	
-	//
-	NSString	*contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Content.html"]];
-	NSString	*nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContent.html"]];
+	//Fall back on the content templates for normal content, or if there's no context template
+	if(contentTemplate == nil)	
+		contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Content.html"]];
+	if(nextContentTemplate == nil)
+		nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContent.html"]];
 	
 	//
 	if(!contentIsSimilar){
