@@ -5127,6 +5127,7 @@
 				4B41F9190686173A00C09B4B,
 				4BF302F206873CCE000DCA65,
 				4BC7BA3E069C8BD4001F2DD8,
+				7EBC6E5F069DE5BC00020736,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19744,6 +19745,7 @@
 		};
 		7E64083B06629DD7006A5552 = {
 			children = (
+				7EBC6E5E069DE5BC00020736,
 				7E64084106629E10006A5552,
 				7E64084206629E10006A5552,
 				7E64083E06629DEE006A5552,
@@ -20278,6 +20280,20 @@
 		};
 		7E901611066ABD92005E1FD7 = {
 			fileRef = 7E90160F066ABD92005E1FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7EBC6E5E069DE5BC00020736 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = bookmarkToolbar.tif;
+			path = "Plugins/Bookmark Importing/bookmarkToolbar.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7EBC6E5F069DE5BC00020736 = {
+			fileRef = 7EBC6E5E069DE5BC00020736;
 			isa = PBXBuildFile;
 			settings = {
 			};
