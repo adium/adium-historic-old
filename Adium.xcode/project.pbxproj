@@ -13634,7 +13634,6 @@
 				4947F5C20655E85200B791E5,
 				4947F5C30655E85200B791E5,
 				4947F5C60655E85200B791E5,
-				4947F5CA0655E85200B791E5,
 			);
 			buildRules = (
 			);
@@ -13770,13 +13769,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4947F5CA0655E85200B791E5 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4947F5CB0655E85200B791E5 = {
 			explicitFileType = wrapper.cfbundle;
