@@ -8,7 +8,7 @@
 
 #define META_SERVICE_STRING				AILocalizedString(@"Meta",nil)
 
-@interface AIMetaContact : AIListContact {
+@interface AIMetaContact : AIListContact <AIContainingObject> {
 	NSNumber				*objectID;
 	
 	NSMutableDictionary		*statusCacheDict;	//Cache of the status of our contained objects
@@ -18,6 +18,8 @@
 	
 	BOOL					containsOnlyOneUniqueContact;
 	BOOL					containsOnlyOneService;
+
+	NSMutableArray			*containedObjects;			//Manually ordered array of contents
 }
 
 //The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance
@@ -25,7 +27,7 @@
 - (NSNumber *)objectID;
 
 - (AIListContact *)preferredContact;
-- (AIListContact *)preferredContactWithServiceID:(NSString *)inServiceID;
+- (AIListContact *)preferredContactWithService:(AIService *)inService;
 
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact;
 
@@ -33,5 +35,7 @@
 - (BOOL)containsOnlyOneService;
 - (int)uniqueContainedObjectsCount;
 - (AIListObject *)uniqueObjectAtIndex:(int)inIndex;
+
+- (NSDictionary *)dictionaryOfServicesAndListContacts;
 
 @end
