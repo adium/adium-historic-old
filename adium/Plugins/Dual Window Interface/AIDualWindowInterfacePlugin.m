@@ -595,6 +595,9 @@
 
     menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:@"Consolidate All Chats" target:self action:@selector(consolidateAllChats:) keyEquivalent:@"O"];
     [[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
+	
+	menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:@"Toggle Tab Bar" target:nil action:@selector(toggleForceTabBarVisible:) keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem_toggleTabBar toLocation:LOC_Window_Commands];
 }
 
 //Build the contents of the 'window' menu
