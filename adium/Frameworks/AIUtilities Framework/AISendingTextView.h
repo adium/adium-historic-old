@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_PUSH_PREFS   @"Push Message"
-#define KEY_AUTOPOP				@"Autopop"
-
 @class AIListObject, AIAdium, AIAccount, AIChat;
 @protocol AITextEntryView;
 
@@ -38,7 +35,6 @@
 
     NSMutableArray	*pushArray;
     BOOL			pushIndicatorVisible;
-	NSDictionary	*prefDict;
     NSButton		*indicator;
 	NSMenu			*pushMenu;
         
