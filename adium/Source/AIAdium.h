@@ -604,6 +604,7 @@ typedef enum {
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
 
+- (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
 //- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
 //- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;

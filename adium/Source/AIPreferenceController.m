@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.33 2003/12/16 15:43:17 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.34 2003/12/16 16:15:15 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -128,6 +128,28 @@
 }
 
 //Using Handle/Group Specific Preferences --------------------------------------------------------------
+//
+- (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
+{
+    NSString		    *objectKey = [NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]];
+    NSDictionary	    *prefDict = [self loadPreferenceGroup:groupName];
+    NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
+    id			    oldValue;
+    
+    if(oldValue = [objectPrefDict objectForKey:inKey]){
+	NSLog(@"Imported preference: %@ : %@",objectKey,inKey);
+	[object setPreference:oldValue forKey:inKey group:groupName];
+
+	//Delete old
+	[objectPrefDict removeObjectForKey:inKey];
+	[prefDict setObject:objectPrefDict forKey:objectKey];
+	[self savePreferences:prefDict forGroup:groupName];
+	
+	return(YES);
+    }
+    return(NO);
+}
+
 //Return an object specific preference.
 /*- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
