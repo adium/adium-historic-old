@@ -15,6 +15,7 @@
  */
 
 #import "ESTextAndButtonsWindowController.h"
+#import "AIDockController.h"
 
 #define TEXT_AND_BUTTONS_WINDOW_NIB   @"TextAndButtonsWindow"
 
@@ -77,6 +78,12 @@
 			  contextInfo:nil];
 	}else{
 		[controller showWindow:nil];
+		[[controller window] makeKeyAndOrderFront:nil];
+		
+		//Bounce once after displaying our window if we are not active and not hidden
+		if(![NSApp isActive] && ![NSApp isHidden]){
+			[[[AIObject sharedAdiumInstance] dockController] performBehavior:BOUNCE_ONCE];
+		}
 	}
 	
 	return controller;
@@ -171,8 +178,16 @@
 
 	[super windowDidLoad];
 
+	//Hide the toolbar and zoom buttons
+	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
+	[[[self window] standardWindowButton:NSWindowZoomButton] setFrame:NSMakeRect(0,0,0,0)];
+	
 	//Title
-	[window setTitle:(title ? title : @"Adium")];
+	if(title){
+		[window setTitle:title];
+	}else{
+		[window setExcludedFromWindowsMenu:YES];
+	}
 
 	//Message header
 	[textField_messageHeader setStringValue:(messageHeader ? messageHeader : @"")];
