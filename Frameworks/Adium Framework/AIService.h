@@ -55,6 +55,7 @@ typedef enum {
 - (BOOL)caseSensitive;
 - (BOOL)canCreateGroupChats;
 - (BOOL)canRegisterNewAccounts;
+- (BOOL)supportsProxySettings;
 
 //Utilities
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;

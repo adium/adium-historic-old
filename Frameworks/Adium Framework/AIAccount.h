@@ -149,6 +149,8 @@ typedef enum {
 //Secure messaging
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat;
 - (NSString *)aboutEncryption;
+- (void)requestSecureMessaging:(BOOL)inSecureMessaging
+						inChat:(AIChat *)inChat;
 
 @end
 

@@ -321,7 +321,7 @@ Adium, Copyright 2001-2005, Adam Iser
  * @brief Supports proxy settings?
  *
  * Does this service support connecting via a proxy?
- * @return Supports rpoxy settings
+ * @return Supports proxy settings
  */
 - (BOOL)supportsProxySettings
 {

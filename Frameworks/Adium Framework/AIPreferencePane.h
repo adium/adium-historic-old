@@ -31,5 +31,6 @@
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
 - (PREFERENCE_CATEGORY)category;
 - (NSDictionary *)restorablePreferences;
+- (NSImage *)image;
 
 @end
