@@ -19,6 +19,7 @@
 	id  MSNService;
 	id  TrepiaService;
     id  YahooService;
+	id  YahooJapanService;
 	id  NovellService;
 }
 
