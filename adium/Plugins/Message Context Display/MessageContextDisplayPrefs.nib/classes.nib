@@ -13,10 +13,15 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {
             CLASS = DCMessageContextDisplayPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_showContext" = NSButton; "textField_linesToDisplay" = NSTextField; }; 
+            OUTLETS = {
+                "checkBox_showContext" = NSButton; 
+                "stepper_linesToDisplay" = AISmartStepper; 
+                "textField_linesToDisplay" = NSTextField; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 

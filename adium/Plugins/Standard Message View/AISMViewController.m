@@ -1015,8 +1015,8 @@
 	NSMutableAttributedString   *mutableTemp;
 	
 	// Remove all attributes
-	tempString = [self _stringByRemovingAllStyles:inString];
-	mutableTemp = [[tempString mutableCopy] autorelease];
+	//tempString = [self _stringByRemovingAllStyles:inString];
+	mutableTemp = [[inString mutableCopy] autorelease];
 	NSRange range = NSMakeRange(0,[mutableTemp length]);
 	
 	// Then make the string gray

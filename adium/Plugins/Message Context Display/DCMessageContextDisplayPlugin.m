@@ -7,8 +7,6 @@
 
 #import "DCMessageContextDisplayPlugin.h"
 
-void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate);
-
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
@@ -30,11 +28,6 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 	//Always observe chats closing
 	[[adium notificationCenter] addObserver:self selector:@selector(saveContextForObject:) name:Chat_WillClose object:nil];
 
-}
-
-- (void)uninstallPlugin
-{
-    
 }
 
 - (void)dealloc
@@ -71,16 +64,21 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 // Save the last few lines of a conversation when it closes
 - (void)saveContextForObject:(NSNotification *)notification
 {
-	int					cnt;
+	int					cnt, prevcnt;
 	AIContentObject		*content;
 	AIChat				*chat;
 	NSMutableDictionary *dict;
 	NSDictionary		*contentDict;
+	NSDictionary		*previousDict;
 	NSEnumerator        *enumerator;
 	
 	chat = (AIChat *)[notification object];
 	dict = [NSMutableDictionary dictionary];
 	enumerator = [[chat contentObjectArray] objectEnumerator];
+	
+	//Is there already stored context for this person?
+	previousDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
+	
 	cnt = 1;
 	
 	// Only save if we need to save more AND there is still unsaved content available
@@ -95,12 +93,25 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 		
 	}
 	
+	// If there's room left, append the old messages too
+	if( cnt <= linesToDisplay ) {
+		
+		prevcnt = 1;
+		
+		while( cnt <= linesToDisplay+1 && prevcnt <= [previousDict count] ) {
+			NSDictionary *tempDict = [NSDictionary dictionaryWithDictionary:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]];
+			[dict setObject:tempDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
+			prevcnt++;
+			cnt++;
+		}
+	}
+	
+	
 	// Did we find anything useful to save? If not, leave it untouched
 	if( [dict count] > 0 ) {
 		[[chat listObject] setPreference:dict forKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 	}
 	
-	//NSLog(@"----Dictionary to save: %@",dict);
 }
 
 //Returns a dictionary representation of a content object which can be written to disk
@@ -161,9 +172,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 		
 		//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
 		while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
-			
-			//NSLog(@"#### Adding number %d: %@",[chatDict count]-cnt,[[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]] string]);
-			
+						
 			cnt--;
 			
 			type = [messageDict objectForKey:@"Type"];
@@ -175,7 +184,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 				NSString *from = [messageDict objectForKey:@"From"];
 				NSString *to = [messageDict objectForKey:@"To"];
 				
-				// Was the message outgoing?
+				// The other person is always the one we're chatting with right now
 				if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
 					dest = [chat listObject];
 					source = [[adium accountController] accountWithObjectID:from];
@@ -185,14 +194,17 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 				}
 				
 				// Make the message response if all is well
-				responseContent = [AIContentContext messageInChat:chat
-													   withSource:source
-													  destination:dest
-															 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-														  message:message
-														autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+				if(message && source && dest) {
+					responseContent = [AIContentContext messageInChat:chat
+														   withSource:source
+														  destination:dest
+																 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+															  message:message
+															autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+					
+					[[adium contentController] displayContentObject:responseContent];
+				}
 				
-				[[adium contentController] displayContentObject:responseContent];
 			}
 			
 		}
