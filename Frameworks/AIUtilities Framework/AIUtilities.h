@@ -85,7 +85,6 @@
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AITableViewAdditions.h>
-#import <AIUtilities/AITableViewPopUpButtonCell.h>
 #import <AIUtilities/AITextAttachmentExtension.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AITextFieldAdditions.h>
