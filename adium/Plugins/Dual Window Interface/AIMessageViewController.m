@@ -129,7 +129,7 @@
     owner = [inOwner retain];
     interface = [inInterface retain];
     account = [inAccount retain];
-    if(!account) account = [[[owner accountController] accountForSendingContentToHandle:inHandle] retain];
+    if(!account) account = [[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle] retain];
 
 
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
@@ -368,8 +368,7 @@
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
-            if([(AIAccount <AIAccount_Status> *)anAccount status] != STATUS_ONLINE){
-                //An 'available for sending content' would be more appropriate here
+            if(![(AIAccount<AIAccount_Content> *)anAccount availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]){
                 [menuItem setEnabled:NO];
             }
         

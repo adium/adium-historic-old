@@ -87,10 +87,10 @@
     }
 
     if(targetMenuItem){
-        if([account conformsToProtocol:@protocol(AIAccount_Status)]){
+        if([[account supportedStatusKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
             connectTogleItem = [[targetMenuItem submenu] itemAtIndex:0];
-            switch([(AIAccount<AIAccount_Status> *)account status]){
+            switch([[[owner accountController] statusObjectForKey:@"Status" account:account] intValue]){
                 case STATUS_OFFLINE:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
                     [connectTogleItem setTitle:ACCOUNT_CONNECT_MENU_TITLE];

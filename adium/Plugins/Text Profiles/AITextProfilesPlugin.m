@@ -13,6 +13,10 @@
 
 - (void)installPlugin
 {
+    //Install our preference view
+
+
+    
     NSLog(@"Profiles install");
 }
 

@@ -17,7 +17,7 @@
 
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
-@interface AIMTOC2Account : AIAccount <AIAccount_Required, AIAccount_Content, AIAccount_GroupedContacts, AIAccount_Status, AIAccount_IdleTime> {
+@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_GroupedContacts> {
     
     AIMTOC2AccountViewController	*accountViewController;
 
@@ -40,7 +40,7 @@
     NSTimer		*messageDelayTimer;	// Timer that drives the delayed handle updating
     
     NSDictionary	*preferencesDict;	// Our preferences dictionary
-
+    
     BOOL		idleWasSetManually;
     BOOL		idle;
     
@@ -50,6 +50,5 @@
 - (NSString *)accountID;
 - (NSString *)accountDescription;
 - (void)dealloc;
-- (void)setStatus:(ACCOUNT_STATUS)inStatus;
 
 @end

@@ -120,7 +120,8 @@ static AIOutOfSyncWindowController	*sharedInstance = nil;
 //Disconnect from all accounts with a sync condition
 - (IBAction)disconnect:(id)sender
 {
-    NSEnumerator	*enumerator;
+#warning no owner, disabled for now
+    /*    NSEnumerator	*enumerator;
     NSMutableDictionary	*dict;
 
     //Disconnect every account with a sync condition
@@ -128,11 +129,10 @@ static AIOutOfSyncWindowController	*sharedInstance = nil;
     while((dict = [enumerator nextObject])){
         AIAccount	*account;
 
-        if([account conformsToProtocol:@protocol(AIAccount_Status)]){
-            //Disconnect
-            [(AIAccount<AIAccount_Status> *)account disconnect];
+        if([[account supportedStatusKeys] containsObject:@"Online"]){
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
         }
-    }
+    }*/
 }
 
 //Sync all handles

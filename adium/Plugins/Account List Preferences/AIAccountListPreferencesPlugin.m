@@ -146,11 +146,12 @@
     targetAccount = [accountArray objectAtIndex:index];
     
     //Toggle the connection
-    NSParameterAssert([targetAccount conformsToProtocol:@protocol(AIAccount_Status)]);
-    if([(AIAccount<AIAccount_Status> *)targetAccount status] == STATUS_OFFLINE){
-        [(AIAccount<AIAccount_Status> *)targetAccount connect];
-    }else{
-        [(AIAccount<AIAccount_Status> *)targetAccount disconnect];
+    if([[targetAccount supportedStatusKeys] containsObject:@"Online"]){
+        if([[owner accountController] statusObjectForKey:@"Online" account:targetAccount]){
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
+        }else{
+            [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
+        }
     }
 }
 
@@ -246,13 +247,10 @@
     if([identifier compare:@"icon"] == 0 ){
         NSImage		*image;
         ACCOUNT_STATUS	status = STATUS_NA;
-        BOOL		selected;
-
-        selected = ([tableView selectedRow] == row && [[tableView window] firstResponder] == tableView && [[tableView window] isKeyWindow]);
 
         //Get the account's status
-        if([account conformsToProtocol:@protocol(AIAccount_Status)]){
-            status = [(AIAccount<AIAccount_Status> *)account status];
+        if([[account supportedStatusKeys] containsObject:@"Online"]){
+            status = [[[owner accountController] statusObjectForKey:@"Status" account:account] intValue];
         }
     
         switch(status){
@@ -285,18 +283,16 @@
         NSString	*string;
         NSColor		*color;
         BOOL		selected;
-        ACCOUNT_STATUS	status;
+        ACCOUNT_STATUS	status = STATUS_NA;
 
         //The 'white' when selected text is new in 10.2
         selected = ([tableView selectedRow] == row && [[tableView window] firstResponder] == tableView && [[tableView window] isKeyWindow]);
 
         //Get the account's status
-        if([account conformsToProtocol:@protocol(AIAccount_Status)]){
-            status = [(AIAccount<AIAccount_Status> *)account status];
-        }else{
-            status = STATUS_NA;
+        if([[account supportedStatusKeys] containsObject:@"Online"]){
+            status = [[[owner accountController] statusObjectForKey:@"Status" account:account] intValue];
         }
-
+        
         //Return the correct string
         switch(status){
             case STATUS_NA:
@@ -376,9 +372,9 @@
         }else{
             [button_deleteAccount setEnabled:NO];
         }
-        
-        if([account conformsToProtocol:@protocol(AIAccount_Status)]){
-            switch([(AIAccount<AIAccount_Status> *)account status]){
+
+        if([[account supportedStatusKeys] containsObject:@"Online"]){
+            switch([[[owner accountController] statusObjectForKey:@"Status" account:account] intValue]){
                 case STATUS_OFFLINE:
                     [button_toggleAccount setTitle:ACCOUNT_CONNECT_BUTTON_TITLE];
                     [button_toggleAccount setEnabled:YES];
