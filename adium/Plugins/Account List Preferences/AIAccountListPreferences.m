@@ -308,6 +308,7 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 	
     [cell setImage:image];
     [cell setSubString:[account serviceID]];
+	[cell setDrawsGradientHighlight:YES];
 }
 
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard

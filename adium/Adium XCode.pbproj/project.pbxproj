@@ -10168,6 +10168,7 @@
 				4B215D990598907100305B3C,
 				34F2BC69059CC2850005B238,
 				4B7BB54205B1906700598C55,
+				BF818D7B05C7AD460067008D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10915,6 +10916,7 @@
 				4B215D9A0598907100305B3C,
 				34F2BC6A059CC2850005B238,
 				4B7BB54005B1905800598C55,
+				BF818D7C05C7AD460067008D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28548,6 +28550,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		BF818D7905C7AD450067008D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIGradientCell.h;
+			path = "Frameworks/AIUtilities Framework/AIGradientCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF818D7A05C7AD460067008D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIGradientCell.m;
+			path = "Frameworks/AIUtilities Framework/AIGradientCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF818D7B05C7AD460067008D = {
+			fileRef = BF818D7905C7AD450067008D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF818D7C05C7AD460067008D = {
+			fileRef = BF818D7A05C7AD460067008D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		BFD02C9105A6B27900C7857F = {
 			children = (
 				BF318EC205A5015C00D07184,
@@ -29940,6 +29972,8 @@
 				34F2BC68059CC2840005B238,
 				9E49CC5C04BF6F8700415B22,
 				9E49CC5D04BF6F8700415B22,
+				BF818D7905C7AD450067008D,
+				BF818D7A05C7AD460067008D,
 				F5793944033E74E401A8010A,
 				F5793945033E74E401A8010A,
 				4BC030360452E86200A8010A,
