@@ -24,6 +24,7 @@
 
 #define EMBOSS_OFFSET_X		0
 #define EMBOSS_OFFSET_Y		0.5
+//#define TAB_PADDING		18
 
 @interface AIMessageTabViewItem (PRIVATE)
 - (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
@@ -131,13 +132,13 @@
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
-/*    AIMutableOwnerArray	*leftViewArray;
+//    AIMutableOwnerArray	*leftViewArray;
 
     //Draw icon
-    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
+//    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
 
     //If a left view is present
-    if(leftViewArray && [leftViewArray count]){
+/*    if(leftViewArray && [leftViewArray count]){
         int			loop;
 
         //indent into the margin to save space
@@ -161,6 +162,8 @@
             labelRect.size.width -= (drawRect.size.width + LEFT_VIEW_PADDING);
         }
     }*/
+//    labelRect.origin.x += TAB_PADDING;
+//    labelRect.size.width -= (TAB_PADDING);
 
     //Draw name
 //    [[self attributedLabelString:YES] drawInRect:NSMakeRect(labelRect.origin.x + EMBOSS_OFFSET_X, labelRect.origin.y + EMBOSS_OFFSET_Y, labelRect.size.width, labelRect.size.height)];
@@ -174,9 +177,9 @@
 
     //Name width
     size = [[self attributedLabelString:NO] size];
-/*
+
     //Icon widths
-    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
+/*    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
     if(leftViewArray && [leftViewArray count]){ //If a left view is present
         int	loop;
 
@@ -189,7 +192,9 @@
 
             size.width += [handler widthForHeight:LEFT_VIEW_HEIGHT computeMax:NO] + LEFT_VIEW_PADDING;
         }
-    }*/ 
+    }*/
+
+//    size.width += TAB_PADDING;
 
     //Make sure we return an even integer width
     if(size.width != (int)size.width){
