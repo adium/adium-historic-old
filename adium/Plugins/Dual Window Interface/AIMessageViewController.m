@@ -243,9 +243,14 @@
         AIContentMessage			*message;
 		NSMutableAttributedString	*outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
 
-		if (!sendMessagesToOfflineContact && [[chat participatingListObjects] count] == 1 && ![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Online"] boolValue]) {
+		if (!sendMessagesToOfflineContact &&
+			[[chat participatingListObjects] count] == 1 &&
+			![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Online"] boolValue] &&
+			![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Stranger"] boolValue]){
+			
 			//Contact is offline.  Ask how the user wants to handle the situation.
 			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];
+			
 		} else {
 			//Send the message
 			[[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
