@@ -93,8 +93,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	[super windowDidLoad];
 	
+	//Set the localized title
 	[[self window] setTitle:AILocalizedString(@"File Transfer Progress",nil)];
 
+	//Hide the window's toolbar button since we don't have a toolbar
+	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
+	
 	//Configure the scroll view
 	[scrollView setHasVerticalScroller:YES];
 	[scrollView setHasHorizontalScroller:NO];
@@ -103,6 +107,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		[scrollView setAutohidesScrollers:YES];
 	}
 
+	//Configure the outline view
 	BZGenericViewCell	*cell = [[[BZGenericViewCell alloc] init] autorelease];
 	[cell setDrawsGradientHighlight:YES];
 	[[[outlineView tableColumns] objectAtIndex:0] setDataCell:cell];
@@ -110,7 +115,6 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[outlineView sizeLastColumnToFit];
 	[outlineView setAutoresizesSubviews:YES];
 	[outlineView setAutoresizesAllColumnsToFit:YES];
-
 	[outlineView setDrawsAlternatingRows:YES];
 	[outlineView setDataSource:self];
 	[outlineView setDelegate:self];
@@ -130,6 +134,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//Update our status bar
 	[self updateStatusBar];
 
+	//Go time
 	[self reloadAllData];
 }
 
