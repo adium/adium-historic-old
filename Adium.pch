@@ -1,6 +1,7 @@
 #ifdef __OBJC__
 #import <Cocoa/Cocoa.h>
 
+#import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import <AdiumHyperlinks/AdiumHyperlinks.h>
 #import "AIAdium.h"
