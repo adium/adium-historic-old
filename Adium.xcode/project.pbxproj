@@ -4922,6 +4922,12 @@
 			settings = {
 			};
 		};
+		3496AB7307CE7DD10055BBAB = {
+			fileRef = 3496A8F207CE6CFB0055BBAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3499F45006309AC80035B468 = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
@@ -7551,6 +7557,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				34D837FE07CC339D006466F2,
+				3496AB7307CE7DD10055BBAB,
 				3419FE230531586A00C68BA3,
 				34E9F1F20790BF5500662E8E,
 				349C6F8B07C99D2C005EB896,
@@ -9812,6 +9819,7 @@
 			);
 			isa = PBXGroup;
 			name = "External Sources";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -14219,6 +14227,7 @@
 		4B4F5B2C042D642500A8010A = {
 			children = (
 				F53B9A1302CCEDCA01A8010A,
+				34D8342B07CBE6A4006466F2,
 				3496A8E707CE6CA30055BBAB,
 				3448717006D1E57700DA778C,
 			);
@@ -22461,7 +22470,6 @@
 		};
 		F53B9A1302CCEDCA01A8010A = {
 			children = (
-				34D8342B07CBE6A4006466F2,
 				F59DB3E7033EB4B601A8010A,
 				4B587CA507ABFEFD001832A9,
 				4B587CA807ABFF02001832A9,
