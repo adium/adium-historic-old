@@ -159,6 +159,11 @@ Multi-user chat:
     Powerful multi-user chat that can handle both large, moderated rooms (irc) and multi-way IMs (MSN).
 		- Tick: would we want a drawer or a list, or a collapsable list or what? Everyone seems opposed to a drawer, so a list would do better.
 		- Dave: I'm going to start making this work, but I NEED LOTS OF HELP!!
+	Thoughts:
+		- Dave: We need a tiered status system. Example: in IRC, "dchoby98 was granted ops by ChanServ"
+		  is a status message. In one-on-one chat, "dchoby98 went away: <message>" is a status
+		  message. These need to have different "classes" so that we can pay attention to, or ignore,
+		  an entire class of messages.
 		
 Contact status coloring:
     Status coloring that is easy to configure and consistent throughout Adium.
