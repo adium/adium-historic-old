@@ -56,8 +56,10 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+    NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     //Build the soundset menu
     [popUp_soundSet setMenu:[self _soundSetMenu]];
+    [button_muteWhenAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHEN_AWAY] boolValue]];
 
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -94,6 +96,14 @@
         [AIEventSoundCustom showEventSoundCustomPanelWithOwner:owner];
 
     }
+}
+
+//The user toggled the mute when away checkbox
+- (IBAction)toggleMuteWhenAway:(id)sender
+{
+    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhenAway state]]
+                                         forKey:KEY_EVENT_MUTE_WHEN_AWAY
+                                          group:PREF_GROUP_SOUNDS];
 }
 
 
