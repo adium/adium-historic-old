@@ -128,13 +128,13 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     owner = [inOwner retain];
     
     awayDate = [[NSDate date] retain];
-    awayTimer = [[NSTimer /*scheduledTimerWithTimeInterval:60.0
+    /*awayTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0
         target:self
         selector:@selector(updateAwayTime:)
         userInfo:nil
         repeats:YES]*/
     //retain];
-    alloc] init];
+    //alloc] init];
     return(self);
 }
 
