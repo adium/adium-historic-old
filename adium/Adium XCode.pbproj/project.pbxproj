@@ -21319,7 +21319,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		6C60B13D0560594B00CAD137 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Event Bezel.AdiumPlugin";

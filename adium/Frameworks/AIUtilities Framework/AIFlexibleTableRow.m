@@ -11,20 +11,21 @@
 #import "AIFlexibleTableSpanCell.h"
 
 @interface AIFlexibleTableRow (PRIVATE)
-- (id)initWithCells:(NSArray *)inCells;
+- (id)initWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject;
 - (AIFlexibleTableCell *)_cellAtPoint:(NSPoint)inPoint cellOrigin:(NSPoint *)outOrigin;
 @end
 int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 
 @implementation AIFlexibleTableRow
+
 //
-+ (id)rowWithCells:(NSArray *)inCells
++ (id)rowWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject
 {
-    return([[[self alloc] initWithCells:inCells] autorelease]);
+    return([[[self alloc] initWithCells:inCells representedObject:inRepresentedObject] autorelease]);
 }
 
 //
-- (id)initWithCells:(NSArray *)inCells
+- (id)initWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject
 {
     NSEnumerator	*enumerator;
     AIFlexibleTableCell	*cell;
@@ -32,6 +33,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     //Init
     [super init];
     cellArray = [inCells retain];
+    representedObject = [inRepresentedObject retain];
     tableView = nil;
     spansRows = NO;
     
@@ -45,9 +47,11 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(self);
 }
 
+//Dealloc
 - (void)dealloc
 {
     [cellArray release];
+    [representedObject release];
 
     [super dealloc];
 }
@@ -57,7 +61,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(spansRows);
 }
 
-//
+//Set the table view that owns this row
 - (void)setTableView:(AIFlexibleTableView *)inView{
     tableView = inView;
 }
@@ -65,7 +69,19 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(tableView);
 }
 
+//Returns our represented object
+- (id)representedObject
+{
+    return(representedObject);
+}
+
 //
+- (NSArray *)cellArray{
+    return(cellArray);
+}
+
+
+//Draw this row
 - (void)drawAtPoint:(NSPoint)point visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
     NSEnumerator	*enumerator;
@@ -83,7 +99,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
-//Returns YES if cursor rects were modified
+//Updates any cursor tracking rects.  Returns YES if cursor rects were modified
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
     NSEnumerator	*enumerator;
@@ -106,7 +122,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(installedCursorRects != 0);
 }
 
-// (point local to this row)
+//Handles a mouse down event (point local to this row)
 - (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     AIFlexibleTableCell	*cell;
@@ -121,7 +137,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
-//
+//Select content in this row
 - (void)selectContentFrom:(NSPoint)startPoint to:(NSPoint)endPoint offset:(NSPoint)offset mode:(int)selectMode
 {
     NSEnumerator	*enumerator;
@@ -135,7 +151,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
         endPoint = temp;
     }
 
-    //
+    //Select content in each cell
     enumerator = [cellArray objectEnumerator];
     while(cell = [enumerator nextObject]){
 
@@ -155,7 +171,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
-//
+//Deselect all in this row
 - (void)deselectContent
 {
     NSEnumerator	*enumerator;
@@ -167,6 +183,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
+//Tests if a point is selected
 - (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     NSPoint		cellOrigin;
@@ -179,7 +196,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
-//
+//Returns the selected string value in this row
 - (NSAttributedString *)selectedString
 {
     NSMutableAttributedString	*selectedString = nil;
@@ -200,7 +217,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(selectedString);
 }    
 
-//
+//Returns the cell at a given point (and it's origin)
 - (AIFlexibleTableCell *)_cellAtPoint:(NSPoint)inPoint cellOrigin:(NSPoint *)outOrigin
 {
     NSEnumerator	*enumerator;
@@ -221,7 +238,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(nil);
 }
 
-//
+//Size this row for the passed width (returns our new height)
 - (int)sizeRowForWidth:(int)inWidth
 {
     NSEnumerator	*enumerator;
@@ -270,13 +287,13 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     return(height);
 }
 
-//
+//Returns the height of this row
 - (int)height
 {
     return(height);
 }
 
-// Factors height of the passed into the height of our row, correctly handling span zones and spanned cells
+//Factors height of the passed cell into the height of our row, correctly handling span zones and spanned cells
 int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight)
 {
     int height = currentHeight;

@@ -13,6 +13,7 @@
     BOOL	drawBottom;
     BOOL        drawLeft;
     BOOL        drawRight;
+    BOOL        drawSides;
 
     BOOL    suppressTopLeftCorner;
     BOOL    suppressTopRightCorner;

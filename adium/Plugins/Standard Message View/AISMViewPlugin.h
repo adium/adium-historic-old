@@ -18,6 +18,11 @@
 
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
 
+#define KEY_SMV_SHOW_USER_ICONS                 @"Show icons"
+
+
+
+
 #define	KEY_SMV_PREFIX_FONT			@"Prefix Font"
 #define	KEY_SMV_SHOW_TIME_STAMPS		@"Show Time Stamps"
 #define	KEY_SMV_SHOW_TIME_SECONDS		@"Show Seconds"

@@ -15,7 +15,7 @@
 
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
-
+/*
 #define AISM_PREFIX_COLORS		@"PrefixColors"
 
 #define AISM_PREF_NIB			@"AISMPrefView"
@@ -26,22 +26,56 @@
 
 #define COLOR_SAMPLE_WIDTH		16
 #define COLOR_SAMPLE_HEIGHT		10
-
+*/
 @interface AISMPreferences (PRIVATE)
-- (void)changeFont:(id)sender;
-- (id)initWithOwner:(id)inOwner;
-- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 - (void)configureView;
-- (void)configureControlDimming;
-- (void)buildColorMenu:(NSPopUpButton *)inMenu;
 @end
 
 @implementation AISMPreferences
-//
-+ (AISMPreferences *)messageViewPreferencesWithOwner:(id)inOwner
-{
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Messages_Display);
 }
+- (NSString *)label{
+    return(@"Message Display");
+}
+- (NSString *)nibName{
+    return(@"AISMPrefView");
+}
+
+//Configure the preference view
+- (void)viewDidLoad
+{
+    [self configureView];
+}
+
+//Configures our view for the current preferences
+- (void)configureView
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
+    
+    [checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+    
+}
+
+//Called in response to all preference controls, applies new settings
+- (IBAction)changePreference:(id)sender
+{
+    if(sender == checkBox_showUserIcons){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_SHOW_USER_ICONS
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+    }
+    
+    
+}
+
+
+/*
+
+
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
@@ -319,7 +353,7 @@
     [checkBox_hideDuplicateTimeStamps setEnabled:[checkBox_showTimeStamps state]];
     [checkBox_showSeconds setEnabled:[checkBox_showTimeStamps state]];
 }
-
+*/
 @end
 
 

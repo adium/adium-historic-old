@@ -13,12 +13,15 @@
     NSArray		*cellArray;
     int			height;
     BOOL		spansRows;
+    id                  representedObject;
 }
 
-+ (id)rowWithCells:(NSArray *)inCells;
++ (id)rowWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject;
 - (void)drawAtPoint:(NSPoint)point visibleRect:(NSRect)visibleRect inView:(NSView *)controlView;
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView;
 - (BOOL)spansRows;
+- (id)representedObject;
+- (NSArray *)cellArray;
 
 - (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset;
 - (void)selectContentFrom:(NSPoint)source to:(NSPoint)dest offset:(NSPoint)inOffset mode:(int)selectMode;
@@ -31,5 +34,5 @@
 
 - (void)setTableView:(AIFlexibleTableView *)inView;
 - (AIFlexibleTableView *)tableView;
-    
+
 @end

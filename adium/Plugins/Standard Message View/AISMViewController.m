@@ -13,6 +13,12 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import <Cocoa/Cocoa.h>
+
+#import "AIAdium.h"
+#import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
+
 #import "AISMViewController.h"
 #import "AISMViewPlugin.h"
 
@@ -21,6 +27,14 @@
 @interface AISMViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)rebuildMessageViewForContent;
+- (void)_addContentObject:(AIContentObject *)content;
+- (void)_addContentMessage:(AIContentMessage *)content;
+- (void)_addContentStatus:(AIContentStatus *)content;
+- (AIFlexibleTableRow *)_prefixRowForContent:(AIContentMessage *)content;
+- (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)previousRow;
+- (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content;
+- (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 @end
 
 @implementation AISMViewController
@@ -53,6 +67,9 @@
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
+    //Rebuild out view to include any content already in the chat
+    [self rebuildMessageViewForContent];
+    
     return(self);
 }
 
@@ -67,7 +84,7 @@
     [incomingSourceColor release];
     [incomingLightSourceColor release];
     [prefixFont release];
-    [timeStampFormat release];
+  //  [timeStampFormat release];
     [prefixIncoming release];
     [prefixOutgoing release];
     
@@ -94,6 +111,7 @@
         [incomingLightSourceColor release];
         [prefixFont release];
         [timeStampFormat release];
+        [timeStampFormatter release];
         [prefixIncoming release];
         [prefixOutgoing release];
         
@@ -105,8 +123,12 @@
         
         prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];
         
+        
         timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:[[prefDict objectForKey:KEY_SMV_SHOW_TIME_SECONDS] boolValue]
                                                                                                          showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
+        timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
+
+        
         
         prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
         prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];
@@ -117,10 +139,33 @@
         hideDuplicateTimeStamps = [[prefDict objectForKey:KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS] boolValue];
         hideDuplicatePrefixes = [[prefDict objectForKey:KEY_SMV_HIDE_DUPLICATE_PREFIX] boolValue]; 
         
+        
+        
+        showUserIcons = [[prefDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue];
+        
+        
+        
+        
         gridDarkness = [[prefDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue];
         
-        //[messageView reloadData];
-        //redraw on preferences changed
+        //Reset all content objects
+        [self rebuildMessageViewForContent];
+    }
+}
+
+//Rebuild our view for any existing content
+- (void)rebuildMessageViewForContent
+{
+    NSEnumerator    *enumerator;
+    AIContentObject *content;
+
+    //Move everything out
+    [messageView removeAllRows];
+
+    //Re-add all content one row at a time (slooow)
+    enumerator = [[chat contentObjectArray] reverseObjectEnumerator]; //(Content is stored in reverse order)
+    while(content = [enumerator nextObject]){
+        [self _addContentObject:content];
     }
 }
 
@@ -136,136 +181,200 @@
     return(chat);
 }
 
-//
+//Add a new content object
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-    AIContentMessage	*content = [[notification userInfo] objectForKey:@"Object"];
-    
+    AIContentObject	*content = [[notification userInfo] objectForKey:@"Object"];
+
+    [self _addContentObject:content];
+}
+
+//Add rows for a content object
+- (void)_addContentObject:(AIContentObject *)content
+{
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIFlexibleTableSpanCell		*emptyCell;
-        AIFlexibleTableFramedTextCell	*messageCell;
-        AIContentObject			*previousContent = nil;
-        NSArray				*contentArray;
-        NSColor 			*color;
-        NSImage                         *messageImage;
-        id				messageSource;
-        BOOL				outgoing;
-        
-        //Get chat and content info
-        contentArray = [chat contentObjectArray];
-        messageSource = [content source];
-        outgoing = ([messageSource isKindOfClass:[AIAccount class]]);
-        if([contentArray count] > 1) previousContent = [contentArray objectAtIndex:1];
-        
-        //Set up bubble color ([color darkenBy:0.2] is used for the border)
-        if(!outgoing){
-            color = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0];
-        }else{
-            color = [NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0];
-        }
-        
-        //If this content is different, add a sender/icon row
-        if(!previousContent || ([[previousContent type] compare:[content type]] != 0 || [content source] != [previousContent source])){
-            AIFlexibleTableStringCell	*senderCell, *timeCell;
-            AIFlexibleTableImageCell	*imageCell;
-            
-            //
-            if(lastMessageCell){
-                lastMessageCell = nil;
-            }
-            
-            //Buddy Icon
-            if (outgoing) {
-                //own buddy image here - just iconOutgoing for now
-                messageImage = iconOutgoing;
-            } else {
-                AIMutableOwnerArray *ownerArray = [[chat listObject] statusArrayForKey:@"BuddyImage"];
-                if(ownerArray && [ownerArray count]){
-                    messageImage = [[ownerArray objectAtIndex:0] retain];
-                }else{
-                    messageImage = iconIncoming;
-                }
-            }
-            
-            imageCell = [AIFlexibleTableImageCell cellWithImage:messageImage];
-            [imageCell setPaddingLeft:1 top:6 right:2 bottom:1];
-            [imageCell setBackgroundColor:[NSColor whiteColor]];
-//            [imageCell setDrawsFrame:YES];
-//            [imageCell setFrameColor:[color darkenBy:0.2]];
-            [imageCell setDesiredFrameSize:NSMakeSize(28.0,28.0)];
-            [imageCell setRowSpan:2];
-            lastMasterCell = imageCell;
-            
-            //Sender Name
-            senderCell = [AIFlexibleTableStringCell cellWithString:[messageSource displayName] color:(outgoing ? outgoingSourceColor : incomingSourceColor) font:prefixFont alignment:NSLeftTextAlignment];
-            [senderCell setPaddingLeft:1 top:3 right:1 bottom:0];
-            [senderCell setVariableWidth:YES];
-            
-            //Time Stamp
-            NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO] autorelease];
-            NSString		*dateString = [dateFormatter stringForObjectValue:[(AIContentMessage *)content date]];
-            timeCell = [AIFlexibleTableStringCell cellWithString:dateString color:[NSColor grayColor] font:[NSFont cachedFontWithName:@"Helvetica" size:10] alignment:NSLeftTextAlignment];
-            [timeCell setPaddingLeft:1 top:4 right:4 bottom:0];
-            
-            //
-            [messageView addRow:[AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:imageCell,senderCell,timeCell,nil]]];
-        }
-        
-        //Empty icon span cell
-        emptyCell = [AIFlexibleTableSpanCell spanCellFor:lastMasterCell];
-        
-        //Message cell
-        messageCell = (AIFlexibleTableFramedTextCell *)[AIFlexibleTableFramedTextCell cellWithAttributedString:[content message]];
-        [messageCell setPaddingLeft:0 top:0 right:4 bottom:0];
-        [messageCell setVariableWidth:YES];
-        
-        [messageCell setFrameBackgroundColor:color borderColor:[color darkenBy:0.2]];
-        
-        //
-        if(lastMessageCell){
-            [lastMessageCell setDrawBottom:NO];
-            lastMessageCell = nil;
-        }else{
-            [messageCell setDrawTop:YES];
-        }
-        
-        //
-        [messageCell setDrawBottom:YES];
-        lastMessageCell = messageCell;
-        
-        //
-        [messageView addRow:[AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:emptyCell,messageCell,nil]]];
-        
+        [self _addContentMessage:(AIContentMessage *)content];
+
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
-        AIFlexibleTableCell	*statusCell;
+        [self _addContentStatus:(AIContentStatus *)content];
         
-        //
-        if(lastMessageCell){
-            lastMessageCell = nil;
-        }
-        
-        NSString *theMessage;
-        if(displayTimeStamps)
-        {
-            NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] 
-                initWithDateFormat:timeStampFormat allowNaturalLanguage:NO] autorelease];
-            NSString *dateString = [dateFormatter stringForObjectValue:
-                [(AIContentMessage *)content date]];
-            
-            theMessage = [NSString stringWithFormat:@"%@ (%@)", 
-                [(AIContentStatus *)content message], dateString];
-            
-        }
-        else
-            theMessage = [(AIContentStatus *)content message];
-        //
-        statusCell = [AIFlexibleTableStringCell cellWithString:theMessage color:[NSColor lightGrayColor] font:[NSFont cachedFontWithName:@"Helvetica" size:11] alignment:NSCenterTextAlignment];
-        [statusCell setPaddingLeft:1 top:0 right:1 bottom:0];
-        [statusCell setVariableWidth:YES];
-        
-        //
-        [messageView addRow:[AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:statusCell,nil]]];
     }
+}
+
+//Add rows for a content message object
+- (void)_addContentMessage:(AIContentMessage *)content
+{
+    //Previous row
+    AIFlexibleTableRow  *previousRow = [messageView rowAtIndex:0];
+    AIContentObject     *previousContent = [previousRow representedObject];
+    AIFlexibleTableRow  *prefixRow = nil, *messageRow = nil;
+    BOOL                contentIsSimilar = NO;
+    
+    //We should merge if the previous content is a message and from the same source
+    if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
+        contentIsSimilar = YES;
+    }
+    
+    //Add a message header/prefix (If this message is different from the previous one)
+    if(!contentIsSimilar){
+        prefixRow = [self _prefixRowForContent:content];
+        [messageView addRow:prefixRow];
+    }
+    
+    //Add our message
+    messageRow = [self _messageRowForContent:content previousRow:(prefixRow ? prefixRow : previousRow)];
+    [messageView addRow:messageRow];
+
+    //Merge our new message with the previous one
+    if(contentIsSimilar){
+        [[self _cellInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawBottom:NO];
+        [[self _cellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTop:NO];
+    }
+}
+
+//Add rows for a content status object
+- (void)_addContentStatus:(AIContentStatus *)content
+{
+    //Add the status change
+    [messageView addRow:[self _statusRowForContent:content]];
+}
+
+//Create a status row for a content object
+- (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content
+{
+    NSString            *theMessage = [content message];
+    AIFlexibleTableCell	*statusCell;
+    
+    //Insert a time stamp
+    if(displayTimeStamps){
+        NSString    *dateString = [timeStampFormatter stringForObjectValue:[content date]];
+        theMessage = [NSString stringWithFormat:@"%@ (%@)", theMessage, dateString];
+    }
+
+    //Create the status text cell
+    statusCell = [AIFlexibleTableStringCell cellWithString:theMessage
+                                                     color:[NSColor grayColor]
+                                                      font:[NSFont cachedFontWithName:@"Helvetica" size:11]
+                                                 alignment:NSCenterTextAlignment];
+    [statusCell setPaddingLeft:1 top:0 right:1 bottom:0];
+    [statusCell setVariableWidth:YES];
+    
+    //
+    return([AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:statusCell,nil] representedObject:content]);
+}
+
+//Creates a message prefix row for a content object
+- (AIFlexibleTableRow *)_prefixRowForContent:(AIContentMessage *)content
+{
+    BOOL                        outgoing = ([[content source] isKindOfClass:[AIAccount class]]);
+    AIFlexibleTableStringCell	*senderCell, *timeCell;
+    AIFlexibleTableImageCell	*imageCell = nil;
+    NSImage                     *userIcon;
+
+    //User icon
+    if(showUserIcons){
+        //Get the user icon
+        if(outgoing){
+            userIcon = iconOutgoing; //messageImage = [(AIAccount *)messageSource userIcon];
+
+        }else{
+            AIMutableOwnerArray *ownerArray = [[chat listObject] statusArrayForKey:@"BuddyImage"];
+    
+            if(ownerArray && [ownerArray count]){
+                userIcon = [ownerArray objectAtIndex:0];
+            }else{
+                userIcon = iconIncoming;
+            }
+        }
+
+        //Create a spanning image cell for it
+        imageCell = [AIFlexibleTableImageCell cellWithImage:userIcon];
+        [imageCell setPaddingLeft:1 top:6 right:2 bottom:1];
+        [imageCell setBackgroundColor:[NSColor whiteColor]];
+        [imageCell setDesiredFrameSize:NSMakeSize(28.0,28.0)];
+        [imageCell setRowSpan:2];
+    }
+    
+    //Prefix
+    senderCell = [AIFlexibleTableStringCell cellWithString:[[content source] displayName]
+                                                     color:(outgoing ? outgoingSourceColor : incomingSourceColor)
+                                                      font:prefixFont
+                                                 alignment:NSLeftTextAlignment];
+    [senderCell setPaddingLeft:1 top:3 right:1 bottom:0];
+    [senderCell setVariableWidth:YES];
+
+    //Time Stamp
+    timeCell = [AIFlexibleTableStringCell cellWithString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]
+                                                   color:[NSColor grayColor]
+                                                    font:[NSFont cachedFontWithName:@"Helvetica" size:10]
+                                               alignment:NSLeftTextAlignment];
+    [timeCell setPaddingLeft:1 top:4 right:4 bottom:0];
+    
+    //Build and return the row
+    if(imageCell){
+        return([AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:imageCell, senderCell, timeCell, nil] representedObject:nil]);
+    }else{
+        return([AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:senderCell, timeCell, nil] representedObject:nil]);
+    }    
+}
+
+//Create a bubbled message row for a content object
+- (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)previousRow
+{
+    BOOL                            outgoing = ([[content source] isKindOfClass:[AIAccount class]]);
+    AIFlexibleTableSpanCell         *emptyCell = nil;
+    AIFlexibleTableFramedTextCell   *messageCell;
+    NSColor                         *color;
+    
+    //Empty icon span cell
+    if(showUserIcons && previousRow){
+        id  cell;
+        
+        //Create a span cell with the last image cell as it's master
+        if(cell = [self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]]){
+            emptyCell = [AIFlexibleTableSpanCell spanCellFor:cell];
+            
+        }else if(cell = [self _cellInRow:previousRow withClass:[AIFlexibleTableSpanCell class]]){
+            emptyCell = [AIFlexibleTableSpanCell spanCellFor:[cell masterCell]];
+
+        }
+    }
+    
+    //Get our backgound color
+    if(!outgoing){
+        color = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0];
+    }else{
+        color = [NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0];
+    }
+    
+    //Message cell
+    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:[content message]];
+    [messageCell setPaddingLeft:0 top:0 right:4 bottom:0];
+    [messageCell setVariableWidth:YES];
+    [messageCell setFrameBackgroundColor:color borderColor:[color darkenBy:0.4]];
+    [messageCell setDrawTop:YES];
+    [messageCell setDrawBottom:YES];
+    
+    //
+    if(emptyCell){
+        return([AIFlexibleTableRow rowWithCells:[NSArray arrayWithObjects:emptyCell,messageCell,nil] representedObject:content]);
+    }else{
+        return([AIFlexibleTableRow rowWithCells:[NSArray arrayWithObject:messageCell] representedObject:content]);
+    }
+}
+
+//Finds a cell in a row with the specified class
+- (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class
+{
+    NSEnumerator        *enumerator;
+    AIFlexibleTableCell *cell;
+    
+    enumerator = [[row cellArray] objectEnumerator];
+    while(cell = [enumerator nextObject]){
+        if([cell isKindOfClass:class]) return(cell);
+    }
+    
+    return(nil);
 }
 
 @end
