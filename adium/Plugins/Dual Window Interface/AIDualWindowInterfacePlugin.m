@@ -224,36 +224,22 @@
         if(!newMessageWindow) {
 			AIListObject    *listObject = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
 			
-            //Set the new preference for window location _after_ closing the tab
-            //so we don't get overriden if it was the last tab.
-            NSString        *savedFrame = nil;
             NSRect          newFrame;
             
-            //If a spawn point wasn't specified, we want to use the saved frame's width and height (if one has been saved)
-            if(screenPoint.x == -1 || screenPoint.y == -1){
-                savedFrame = [listObject preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-													group:PREF_GROUP_WINDOW_POSITIONS];
-            }
-            if(savedFrame){
-                newFrame = NSRectFromString(savedFrame);
-                
-            }else{ //Default to the width of the source message window, and the drop point
+            //Default to the width of the source message window, and the drop point
+            if(!(screenPoint.x == -1 || screenPoint.y == -1)){
                 newFrame.size.width = oldMessageWindowFrame.size.width;
                 newFrame.size.height = oldMessageWindowFrame.size.height;   
                 newFrame.origin = screenPoint;
-				
             }
             
-            //Create a new window, set the frame, and save it
+            //Create a new window, set the frame
             newMessageWindow = [self _createMessageWindow];
             [[newMessageWindow window] setFrame:newFrame display:NO];
-            [listObject setPreference:[[newMessageWindow window] stringWithSavedFrame]
-							   forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-								group:PREF_GROUP_WINDOW_POSITIONS];
         }
         
         [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem 
-																	   atIndex:index];
+																	   atIndex:index]; 
 		[tabViewItem makeActive:nil];
         [tabViewItem release];
     }
@@ -290,7 +276,7 @@
 
 //Messages -------------------------------------------------------------------------
 //Close the active window
-- (IBAction)close:(id)sender
+- (IBAction)close:(id)sender-0
 {
     [[[NSApplication sharedApplication] keyWindow] performClose:nil];
 }
@@ -941,7 +927,10 @@
     AIMessageViewController	*messageViewController;
 	
     //Create the message window, view, and tab
-    if(!messageWindowController) messageWindowController = [self _createMessageWindow];
+    if(!messageWindowController){
+        messageWindowController = [self _createMessageWindow];
+    }
+    
     messageViewController = [AIMessageViewController messageViewControllerForChat:inChat];
     messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController];
     
@@ -987,9 +976,9 @@
     
     //Register to be notified when this message window closes
     [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(messageWindowWillClose:) 
-												 name:NSWindowWillCloseNotification 
-											   object:[messageWindowController window]];
+                                             selector:@selector(messageWindowWillClose:) 
+                                                 name:NSWindowWillCloseNotification 
+                                               object:[messageWindowController window]];
     
     //Add the messageWindowController to our array
     [messageWindowControllerArray addObject:messageWindowController];

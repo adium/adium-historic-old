@@ -25,7 +25,6 @@
 #define KEY_USE_LAST_WINDOW			@"Use Last Window"
 #define KEY_AUTOHIDE_TABBAR			@"Autohide Tab Bar"
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
-#define KEY_DUAL_MESSAGE_WINDOW_FRAME           @"Dual Message Window Frame"
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
 #define KEY_SCL_BORDERLESS                      @"Borderless"
