@@ -28,7 +28,7 @@
     
 }
 
-+ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autorelpy:(BOOL)inAutoreply;
++ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply;
 - (NSDate *)date;
 - (NSAttributedString *)message;
 - (void)setMessage:(NSAttributedString *)inMessage;

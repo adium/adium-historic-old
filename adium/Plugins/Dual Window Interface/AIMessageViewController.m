@@ -83,7 +83,7 @@
                                       destination:nil
                                              date:nil
                                           message:[[[textView_outgoing attributedString] copy] autorelease]
-                                        autorelpy:NO];
+                                        autoreply:NO];
 
         
         if([[owner contentController] sendContentObject:message]){

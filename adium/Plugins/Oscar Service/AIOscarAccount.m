@@ -500,7 +500,7 @@
                                         destination:self
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:message]
-                                          autorelpy:NO];
+                                          autoreply:NO];
     [[owner contentController] addIncomingContentObject:messageObject];
 }
 

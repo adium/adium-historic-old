@@ -19,15 +19,15 @@
 #import "AIAdium.h"
 
 @interface AIContentMessage (PRIVATE)
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autorelpy:(BOOL)inAutoreply;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply;
 @end
 
 @implementation AIContentMessage
 
 //Create a content message
-+ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autorelpy:(BOOL)inAutoreply
++ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply
 {
-    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage autorelpy:inAutoreply] autorelease]);
+    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage autoreply:inAutoreply] autorelease]);
 }
 
 //Return the type ID of this content
@@ -61,7 +61,7 @@
 
 // Private ------------------------------------------------------------------------------
 //init
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autorelpy:(BOOL)inAutoreply
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply
 {
     [super initWithChat:inChat source:inSource destination:inDest];
     

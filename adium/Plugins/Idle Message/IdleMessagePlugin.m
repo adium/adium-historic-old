@@ -93,7 +93,7 @@
                                                           destination:contact
                                                                  date:nil
                                                               message:idleMessage
-                                                            autorelpy:YES];
+                                                            autoreply:YES];
 
                     [[owner contentController] sendContentObject:responseContent];
                 }	

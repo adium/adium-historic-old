@@ -57,6 +57,8 @@
     onlineLabelColor = nil;
     idleAndAwayLabelColor = nil;
 
+    alpha = 100.0;
+
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     [self preferencesChanged:nil];
@@ -218,16 +220,22 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
+    if(notification == nil ||  [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
+        	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
+        if (!alpha) alpha = 100.0; //we don't like invisible stuff.
+    }
+    
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
 	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
 
 	//Release the old values..
 	//Cache the preference values
 	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
-	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-	awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
-	idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
-	typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
+        signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+        awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
+        idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
+        typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
         unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
         idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
@@ -241,14 +249,14 @@
         onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
         idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
 
-        awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor] retain];
-        idleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor] retain];
-        signedOffLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
-        signedOnLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
-        typingLabelColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor] retain];
-        unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
-        onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor] retain];
-        idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor] retain];
+        awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
+        idleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColorWithAlpha:alpha] retain];
+        signedOffLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColorWithAlpha:alpha] retain];
+        signedOnLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColorWithAlpha:alpha] retain];
+        typingLabelColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColorWithAlpha:alpha] retain];
+        unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColorWithAlpha:alpha] retain];
+        onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColorWithAlpha:alpha] retain];
+        idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
 
         //
         awayEnabled = [[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue];
