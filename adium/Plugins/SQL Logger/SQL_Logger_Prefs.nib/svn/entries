@@ -11,23 +11,25 @@
    uuid="78ce1152-e5c0-0310-bb23-f261db3f93e4"
    revision="510"/>
 <entry
-   committed-rev="481"
+   committed-rev="511"
    name="objects.nib"
-   text-time="2003-11-24T22:23:00.000000Z"
-   committed-date="2003-11-23T21:33:15.323585Z"
-   checksum="851dfac3fca8ae7763cf91211ee5cb9c"
+   text-time="2003-12-22T17:43:59.000000Z"
+   committed-date="2003-12-22T18:14:30.920598Z"
+   checksum="4befeb96f1fbae85192c5c07e4736fac"
    last-author="jmelloy"
    kind="file"
-   prop-time="2003-11-24T22:23:00.000000Z"/>
+   prop-time="2003-11-24T22:23:00.000000Z"
+   revision="511"/>
 <entry
-   committed-rev="481"
+   committed-rev="511"
    name="info.nib"
-   text-time="2003-11-24T22:23:00.000000Z"
-   committed-date="2003-11-23T21:33:15.323585Z"
-   checksum="c066762819f3a0f242b2e387123ab254"
+   text-time="2003-12-22T17:43:59.000000Z"
+   committed-date="2003-12-22T18:14:30.920598Z"
+   checksum="6d58c29bf66f79768e36d2dd2d0eab50"
    last-author="jmelloy"
    kind="file"
-   prop-time="2003-11-24T22:23:00.000000Z"/>
+   prop-time="2003-11-24T22:23:00.000000Z"
+   revision="511"/>
 <entry
    committed-rev="481"
    name="keyedobjects.nib"
@@ -38,14 +40,15 @@
    kind="file"
    prop-time="2003-11-24T22:23:00.000000Z"/>
 <entry
-   committed-rev="481"
+   committed-rev="511"
    name="classes.nib"
-   text-time="2003-11-24T22:23:00.000000Z"
-   committed-date="2003-11-23T21:33:15.323585Z"
-   checksum="4b760fb2095e4f023a4f99b0f130a330"
+   text-time="2003-12-22T17:43:59.000000Z"
+   committed-date="2003-12-22T18:14:30.920598Z"
+   checksum="255a1e7de339a778006de2602d00fe75"
    last-author="jmelloy"
    kind="file"
-   prop-time="2003-11-24T22:23:00.000000Z"/>
+   prop-time="2003-11-24T22:23:00.000000Z"
+   revision="511"/>
 <entry
    name="CVS"
    kind="dir"/>
