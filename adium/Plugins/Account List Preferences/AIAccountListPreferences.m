@@ -113,18 +113,18 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 {
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
-    NSView			*accountView;
-    BOOL			autoConnect;
-    int				selectedTabIndex;
-
+    NSView              *accountView;
+    BOOL                autoConnect;
+    int                 selectedTabIndex = -1;
+    
     //Remove any tabs
     if([tabView_auxilary selectedTabViewItem]){
-		selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
+        selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
     }
     while([tabView_auxilary numberOfTabViewItems] > 1){
         [tabView_auxilary removeTabViewItem:[tabView_auxilary tabViewItemAtIndex:[tabView_auxilary numberOfTabViewItems] - 1]];
     }
-
+    
     //Close any currently open controllers
     [view_accountDetails removeAllSubviews];
     if(accountViewController){
@@ -170,7 +170,7 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
     }
 	
     //Re-select same index (if possible)
-    if(selectedTabIndex > 0 && selectedTabIndex < [tabView_auxilary numberOfTabViewItems]){
+    if((selectedTabIndex > 0) && (selectedTabIndex < [tabView_auxilary numberOfTabViewItems])){
         [tabView_auxilary selectTabViewItemAtIndex:selectedTabIndex];
     }else{
         [tabView_auxilary selectFirstTabViewItem:nil];
