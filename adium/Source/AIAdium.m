@@ -388,14 +388,6 @@ void Adium_HandleSignal(int i){
 	FSRef ref;
 	OSStatus err = noErr;
 	
-	//Adium bundle
-	if(name) {
-		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
-		if([manager fileExistsAtPath:path]) {
-			[pathArray addObject:path];
-		}
-	}
-
 	// ~/Library/Application\ Support
 	err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
 	if(err == noErr) {
@@ -432,6 +424,14 @@ void Adium_HandleSignal(int i){
 		}
 	}
 
+	//Adium bundle
+	if(name) {
+		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
+		if([manager fileExistsAtPath:path]) {
+			[pathArray addObject:path];
+		}
+	}
+    
 	return pathArray;
 }
 @end
