@@ -76,8 +76,8 @@
 {
     NSEnumerator		*enumerator;
     AIChat				*chat;
-	NSAttributedString	*attributedMessage = [[[NSAttributedString alloc] initWithString:message
-																			  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
+	NSAttributedString	*attributedMessage = [[NSAttributedString alloc] initWithString:message
+																			attributes:[[adium contentController] defaultFormattingAttributes]];
 	
     enumerator = [[[adium contentController] allChatsWithContact:contact] objectEnumerator];
     while((chat = [enumerator nextObject])){
@@ -94,6 +94,8 @@
         //Add the object
         [[adium contentController] receiveContentObject:content];
     }
+	
+	[attributedMessage release];
 }
 
 @end
