@@ -30,6 +30,8 @@
                 "searchField_logs" = id; 
                 "tableView_results" = NSTableView; 
                 "textField_progress" = NSTextField; 
+                "textField_totalAccounts" = NSTextField; 
+                "textField_totalContacts" = NSTextField; 
                 "textView_content" = NSTextView; 
                 "view_SearchField" = NSView; 
                 "view_emoteToggle" = NSView; 

@@ -75,6 +75,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 
 @implementation AILogViewerWindowController
 
+/* A total logs count in the drawer would be nice too, but counting them defeats the lazy nature of Log Viewer right now and running through NSFileManager and eliminating all for a count isn't necesarily good either. If you come up with an efficient method go ahead though :) */
+
 //Open the log viewer window
 static AILogViewerWindowController          *sharedLogViewerInstance = nil;
 static NSTimer                              *refreshResultsTimer = nil;
@@ -136,23 +138,23 @@ static NSString                             *filterForContactName = nil;	//Conta
     automaticSearch = YES;
     showEmoticons = NO;
     activeSearchString = nil;
-	activeSearchStringEncoded = nil;
+    activeSearchStringEncoded = nil;
     displayedLog = nil;
     aggregateLogIndexProgressTimer = nil;
-	windowIsClosing = NO;
+    windowIsClosing = NO;
 	
-	blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+    blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
 
-	sortDirection = YES;
+    sortDirection = YES;
     searchMode = LOG_SEARCH_TO;
     dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] allowNaturalLanguage:YES];
     selectedLogArray = [[NSMutableArray alloc] init];
     fromArray = [[NSMutableArray alloc] init];
     fromServiceArray = [[NSMutableArray alloc] init];
-	logFromGroupDict = [[NSMutableDictionary alloc] init];
+    logFromGroupDict = [[NSMutableDictionary alloc] init];
     toArray = [[NSMutableArray alloc] init];
     toServiceArray = [[NSMutableArray alloc] init];
-	logToGroupDict = [[NSMutableDictionary alloc] init];
+    logToGroupDict = [[NSMutableDictionary alloc] init];
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
 
@@ -175,10 +177,10 @@ static NSString                             *filterForContactName = nil;	//Conta
     [selectedColumn release];
     [dateFormatter release];
     [displayedLog release];
-	[blankImage release];
+    [blankImage release];
     
-	[filterForContactName release]; filterForContactName = nil;
-	[filterForAccountName release]; filterForAccountName = nil;
+    [filterForContactName release]; filterForContactName = nil;
+    [filterForAccountName release]; filterForAccountName = nil;
 
     [super dealloc];
 }
@@ -262,7 +264,9 @@ static NSString                             *filterForContactName = nil;	//Conta
 		for (i=0 ; i < count ; i++){
 			[toServiceArray addObject:serviceClass];
 		}
-	}	
+	}
+        [textField_totalAccounts setIntValue:[fromArray count]];
+        [textField_totalContacts setIntValue:[toArray count]];
 }
 
 //
@@ -391,7 +395,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 - (BOOL)windowShouldClose:(id)sender
 {
 	//Determine and save the current state of the drawer
-	int			drawerState = [drawer_contacts state];
+	int		drawerState = [drawer_contacts state];
 	NSNumber	*drawerIsOpen = nil;
 	
 	switch(drawerState){
@@ -406,8 +410,8 @@ static NSString                             *filterForContactName = nil;	//Conta
 	}
 
 	[[adium preferenceController] setPreference:drawerIsOpen
-										 forKey:KEY_LOG_VIEWER_DRAWER_STATE
-										  group:PREF_GROUP_LOGGING];
+                                             forKey:KEY_LOG_VIEWER_DRAWER_STATE
+                                              group:PREF_GROUP_LOGGING];
 
     //Disable the search field.  If we don't disable the search field, it will often try to call its target action
     //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
@@ -529,7 +533,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 			if (!aggregateLogIndexProgressTimer){
 				aggregateLogIndexProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:7.0
 																				   target:self
-																				 selector:@selector(aggregatedLogIndexingProgressUpdate:)
+                        selector:@selector(aggregatedLogIndexingProgressUpdate:)
 																				 userInfo:[NSNumber numberWithInt:activeSearchID]
 																				  repeats:NO] retain];
 			}
@@ -601,7 +605,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 - (void)displayLog:(AILog *)theLog
 {
     NSAttributedString	*logText = nil;
-    NSString			*logFileText = nil;
+    NSString		*logFileText = nil;
 	
     if(displayedLog != theLog){
 		[displayedLog release];
@@ -726,11 +730,11 @@ static NSString                             *filterForContactName = nil;	//Conta
 //Highlight the occurences of a search string within a displayed log
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange
 {
-    NSMutableAttributedString  *outString = [bigString mutableCopy];
-    NSString	*plainBigString = [bigString string];
-    NSFont		*boldFont = [NSFont boldSystemFontOfSize:14];
-    int			location = 0;
-    NSRange		searchRange, foundRange;
+    NSMutableAttributedString   *outString = [bigString mutableCopy];
+    NSString                    *plainBigString = [bigString string];
+    NSFont                      *boldFont = [NSFont boldSystemFontOfSize:14];
+    int                         location = 0;
+    NSRange                     searchRange, foundRange;
 	
     outRange->location = NSNotFound;
 
@@ -887,10 +891,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	//Update the table periodically while the logs load.
 	[refreshResultsTimer invalidate]; [refreshResultsTimer release];
 	refreshResultsTimer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RESULTS_INTERVAL
-															target:self
-														  selector:@selector(refreshResults)
-														  userInfo:nil
-														   repeats:YES] retain];
+                                                                target:self
+                                                              selector:@selector(refreshResults)
+                                                              userInfo:nil
+                                                               repeats:YES] retain];
 	
     [searchingLock unlock];
 }
@@ -936,7 +940,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)updateRankColumnVisibility
 {
 	NSTableColumn	*resultsColumn = [tableView_results tableColumnWithIdentifier:@"Rank"];
-	NSArray			*tableColumns;
+	NSArray		*tableColumns;
 	NSTableColumn	*nextDoorNeighbor;
 	
 	if ((searchMode == LOG_SEARCH_CONTENT) && ([activeSearchString length])){
@@ -987,18 +991,18 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	if(searchMode == LOG_SEARCH_CONTENT){
 		[activeSearchStringEncoded release];
 		activeSearchStringEncoded = [[AIHTMLDecoder encodeHTML:[[[NSAttributedString alloc] initWithString:activeSearchString] autorelease]
-													   headers:NO 
-													  fontTags:NO 
-											includingColorTags:NO
-												 closeFontTags:NO 
-													 styleTags:NO
-									closeStyleTagsOnFontChange:NO
-												encodeNonASCII:YES 
-												  encodeSpaces:NO
-													imagesPath:nil 
-											 attachmentsAsText:YES 
-								attachmentImagesOnlyForSending:NO 
-												simpleTagsOnly:NO] retain];
+                                                                headers:NO 
+                                                               fontTags:NO 
+                                                     includingColorTags:NO
+                                                          closeFontTags:NO 
+                                                              styleTags:NO
+                                             closeStyleTagsOnFontChange:NO
+                                                         encodeNonASCII:YES 
+                                                           encodeSpaces:NO
+                                                             imagesPath:nil 
+                                                      attachmentsAsText:YES 
+                                         attachmentImagesOnlyForSending:NO 
+                                                         simpleTagsOnly:NO] retain];
 		AILog(@"Search will be on %@",activeSearchStringEncoded);
 	}else{
 		[activeSearchStringEncoded release]; activeSearchStringEncoded = nil;
@@ -1043,11 +1047,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Search the logs, filtering out any matching logs into the selectedLogArray
 - (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict
 {
-    NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    int					mode = [[searchInfoDict objectForKey:@"Mode"] intValue];
-    int					searchID = [[searchInfoDict objectForKey:@"ID"] intValue];
-    NSString			*searchString = [searchInfoDict objectForKey:@"String"];
-    NSString			*searchStringEncoded = [searchInfoDict objectForKey:@"StringEncoded"]; 
+    NSAutoreleasePool       *pool = [[NSAutoreleasePool alloc] init];
+    int                     mode = [[searchInfoDict objectForKey:@"Mode"] intValue];
+    int                     searchID = [[searchInfoDict objectForKey:@"ID"] intValue];
+    NSString                *searchString = [searchInfoDict objectForKey:@"String"];
+    NSString                *searchStringEncoded = [searchInfoDict objectForKey:@"StringEncoded"]; 
 
     //Lock down new thread creation until this thread is complete
     //We must be careful not to wait on performing any main thread selectors when this lock is set!!
@@ -1092,13 +1096,13 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Perform a filter search based on source name, destination name, or date
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode
 {
-    NSEnumerator    *fromEnumerator, *toEnumerator, *logEnumerator;
-    AILogToGroup    *toGroup;
-    AILogFromGroup  *fromGroup;
-    AILog			*theLog;
-    UInt32			lastUpdate = TickCount();
+    NSEnumerator        *fromEnumerator, *toEnumerator, *logEnumerator;
+    AILogToGroup        *toGroup;
+    AILogFromGroup      *fromGroup;
+    AILog               *theLog;
+    UInt32		lastUpdate = TickCount();
     
-	NSCalendarDate	*searchStringDate = nil;
+    NSCalendarDate	*searchStringDate = nil;
 	
 	if ((mode == LOG_SEARCH_DATE) && (searchString != nil)){
 		searchStringDate = [[NSDate dateWithNaturalLanguageString:searchString]  dateWithCalendarFormat:nil timeZone:nil];
@@ -1194,14 +1198,14 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 }
 
 Boolean ContentResultsFilter (SKIndexRef     inIndex,
-							  SKDocumentRef     inDocument,
-							  void      *inContext)
+                              SKDocumentRef     inDocument,
+                              void      *inContext)
 {
 	if(filterForContactName){
 		//Searching for a specific contact
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
-		AILogToGroup	*toGroup = [logToGroupDict objectForKey:toPath];
+		AILogToGroup            *toGroup = [logToGroupDict objectForKey:toPath];
 		
 		return([[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame);
 
@@ -1210,7 +1214,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
 		NSString		*fromPath = [toPath stringByDeletingLastPathComponent];
-		AILogFromGroup	*fromGroup = [logFromGroupDict objectForKey:fromPath];
+		AILogFromGroup          *fromGroup = [logFromGroupDict objectForKey:fromPath];
 
 		return([[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame);
 		
@@ -1223,29 +1227,29 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 //Perform a content search of the indexed logs
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
-	SKIndexRef			logSearchIndex = [plugin logContentIndex];
-	SKSearchGroupRef    searchGroup;
-	CFArrayRef			indexArray;
-	SKSearchResultsRef  searchResults;
-	int					resultCount;    
-	UInt32				lastUpdate = TickCount();
-	void				*indexPtr = &logSearchIndex;
+	SKIndexRef		logSearchIndex = [plugin logContentIndex];
+	SKSearchGroupRef        searchGroup;
+	CFArrayRef		indexArray;
+	SKSearchResultsRef      searchResults;
+	int			resultCount;    
+	UInt32			lastUpdate = TickCount();
+	void			*indexPtr = &logSearchIndex;
 	
 	//We utilize the logIndexAccessLock so we have exclusive access to the logs
-	NSLock				*logAccessLock = [plugin logAccessLock];
+	NSLock			*logAccessLock = [plugin logAccessLock];
 
 	//Perform the content search
 	[logAccessLock lock];
 	indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
 	searchResults = SKSearchResultsCreateWithQuery(
-												   searchGroup,
-												   (CFStringRef)searchString,
-												   kSKSearchRanked,
-												   LOG_CONTENT_SEARCH_MAX_RESULTS,
-												   (void *)self,	/* Must have a context for the ContentResultsFilter */
-												   &ContentResultsFilter	/* Determines if a given document should be included */
-												   );
+                                                        searchGroup,
+                                                        (CFStringRef)searchString,
+                                                        kSKSearchRanked,
+                                                        LOG_CONTENT_SEARCH_MAX_RESULTS,
+                                                        (void *)self,	/* Must have a context for the ContentResultsFilter */
+                                                       &ContentResultsFilter	/* Determines if a given document should be included */
+                                                        );
 	[logAccessLock unlock];
 	
 	//Process the results
@@ -1263,10 +1267,10 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 			
 			//Get the next LOG_RESULT_CLUMP_SIZE results
 			count = SKSearchResultsGetInfoInRange(searchResults,
-												  CFRangeMake(resultRange.location, LOG_RESULT_CLUMP_SIZE),
-												  outDocumentsArray,
-												  NULL,
-												  outScoresArray);
+                                                              CFRangeMake(resultRange.location, LOG_RESULT_CLUMP_SIZE),
+                                                              outDocumentsArray,
+                                                              NULL,
+                                                              outScoresArray);
 			
 			//Process the results
 			for(i = 0; (i < count) && (searchID == activeSearchID); i++){
@@ -1433,7 +1437,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 - (void)installToolbar
 {	
     NSToolbar 		*toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_LOG_VIEWER] autorelease];
-	NSToolbarItem	*toolbarItem;
+    NSToolbarItem	*toolbarItem;
 	
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
@@ -1441,57 +1445,56 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:YES];
     [toolbar setAutosavesConfiguration:YES];
-	toolbarItems = [[NSMutableDictionary alloc] init];
+    toolbarItems = [[NSMutableDictionary alloc] init];
 
 	//Toggle Drawer
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-									withIdentifier:@"toggledrawer"
-											 label:AILocalizedString(@"Contacts",nil)
-									  paletteLabel:AILocalizedString(@"Contacts Drawer",nil)
-										   toolTip:AILocalizedString(@"Show/Hide the Contacts Drawer",nil)
-											target:self
-								   settingSelector:@selector(setImage:)
-									   itemContent:[NSImage imageNamed:@"showdrawer" forClass:[self class]]
-											action:@selector(toggleDrawer:)
-											  menu:nil];
+                                        withIdentifier:@"toggledrawer"
+                                                 label:AILocalizedString(@"Contacts",nil)
+                                          paletteLabel:AILocalizedString(@"Contacts Drawer",nil)
+                                               toolTip:AILocalizedString(@"Show/Hide the Contacts Drawer",nil)
+                                                target:self
+                                       settingSelector:@selector(setImage:)
+                                           itemContent:[NSImage imageNamed:@"showdrawer" forClass:[self class]]
+                                                action:@selector(toggleDrawer:)
+                                                  menu:nil];
 	//Delete Logs
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-									withIdentifier:@"delete"
-											 label:AILocalizedString(@"Delete",nil)
-									  paletteLabel:AILocalizedString(@"Delete",nil)
-										   toolTip:AILocalizedString(@"Delete selected log",nil)
-											target:self
-								   settingSelector:@selector(setImage:)
-									   itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
-											action:@selector(deleteSelectedLogs:)
-											  menu:nil];
+                                        withIdentifier:@"delete"
+                                                 label:AILocalizedString(@"Delete",nil)
+                                          paletteLabel:AILocalizedString(@"Delete",nil)
+                                               toolTip:AILocalizedString(@"Delete selected log",nil)
+                                                target:self
+                                       settingSelector:@selector(setImage:)
+                                           itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
+                                                action:@selector(deleteSelectedLogs:)
+                                                  menu:nil];
 	//Search
 	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"search"
-														  label:AILocalizedString(@"Search",nil)
-												   paletteLabel:AILocalizedString(@"Search",nil)
-														toolTip:AILocalizedString(@"Search or filter logs",nil)
-														 target:self
-												settingSelector:@selector(setView:)
-													itemContent:view_SearchField
-														 action:@selector(updateSearch:)
-														   menu:nil];
+                                                              label:AILocalizedString(@"Search",nil)
+                                                       paletteLabel:AILocalizedString(@"Search",nil)
+                                                            toolTip:AILocalizedString(@"Search or filter logs",nil)
+                                                             target:self
+                                                    settingSelector:@selector(setView:)
+                                                        itemContent:view_SearchField
+                                                            action:@selector(updateSearch:)
+                                                               menu:nil];
 	[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
 	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
 	//Toggle Emoticons
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-									withIdentifier:@"toggleemoticons"
-											 label:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)
-									  paletteLabel:AILocalizedString(@"Show/Hide Emoticons",nil)
-										   toolTip:AILocalizedString(@"Show or hide emoticons in logs",nil)
-											target:self
-								   settingSelector:@selector(setImage:)
-									   itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
-											action:@selector(toggleEmoticonFiltering:)
-											  menu:nil];
-	
+                                        withIdentifier:@"toggleemoticons"
+                                                 label:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)
+                                          paletteLabel:AILocalizedString(@"Show/Hide Emoticons",nil)
+                                               toolTip:AILocalizedString(@"Show or hide emoticons in logs",nil)
+                                                target:self
+                                       settingSelector:@selector(setImage:)
+                                           itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
+                                                action:@selector(toggleEmoticonFiltering:)
+                                                  menu:nil];
 
 	[[self window] setToolbar:toolbar];
 }
