@@ -11,6 +11,7 @@
 
 + (void)showUpToDateWindow;
 + (void)showUpdateWindowFromBuild:(NSDate *)currentBuildDate toBuild:(NSDate *)latestBuildDate;
++ (void)showCannotConnectWindow;
 
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)update:(id)sender;

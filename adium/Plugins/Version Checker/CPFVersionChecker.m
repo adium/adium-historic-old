@@ -120,13 +120,13 @@
 																				group:PREF_GROUP_UPDATING];
 	
 	//If the user has already been informed of this update previously, don't bother them
-	if(checkingManually || !lastDateDisplayedToUser || ![lastDateDisplayedToUser isEqualToDate:newestDate]){
-		if([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]){
+	if(checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate]){
+		if(!newestDate && checkingManually){
+			//Display connection error message
+			[ESVersionCheckerWindowController showCannotConnectWindow];
+		}else if([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]){
 			//Display the 'up to date' message if the user checked for updates manually
-			if(checkingManually){
-				[ESVersionCheckerWindowController showUpToDateWindow];
-			}
-			
+			if(checkingManually) [ESVersionCheckerWindowController showUpToDateWindow];
 		}else{
 			//Display 'update' message always
 			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:newestDate];
@@ -164,8 +164,15 @@
 {
 	NSURL			*versionURL = [NSURL URLWithString:VERSION_PLIST_URL];
 	NSDictionary 	*productVersionDict = [NSDictionary dictionaryWithContentsOfURL:versionURL];
-	
-	return([NSDate dateWithTimeIntervalSince1970:[[productVersionDict objectForKey:VERSION_PLIST_KEY] doubleValue]]);
+        
+        // if everything works out ok, then pass the date along as usual.
+        if(nil != (productVersionDict = [NSDictionary dictionaryWithContentsOfURL:versionURL])){
+            return([NSDate dateWithTimeIntervalSince1970:[[productVersionDict objectForKey:VERSION_PLIST_KEY] doubleValue]]);
+        }else{
+            //if the dictionary is, for some reason, invalid or we can't connect to server,
+            //so pass a nil for the date
+            return(nil);
+        }
 }
 
 @end
