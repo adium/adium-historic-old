@@ -19,10 +19,10 @@
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPackCell.h"
 
-#define	EMOTICON_PREF_NIB               @""
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
-#define EMOTICON_PACKS_TOOLTIP          AILocalizedString(@"Reorder emoticon packs by dragging. Packs get used based on the order from top to bottom.",nil)
+#define EMOTICON_PACKS_TOOLTIP          AILocalizedString(@"Reorder emoticon packs by dragging. Packs are used in the order listed.",nil)
+
 @interface AIEmoticonPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureEmoticonListForSelection;
@@ -130,7 +130,7 @@
 		//Enable the individual emoticon checks only if the selectedEmoticonPack is enabled
 		[checkCell setEnabled:[selectedEmoticonPack isEnabled]];
 		
-        [textField_packTitle setStringValue:[NSString stringWithFormat:@"Emoticons in %@",[selectedEmoticonPack name]]];
+        [textField_packTitle setStringValue:[NSString stringWithFormat:AILocalizedString(@"Emoticons in %@","Emoticons in <an emoticon pack name>"),[selectedEmoticonPack name]]];
     }else{
         [textField_packTitle setStringValue:@""];
     }
