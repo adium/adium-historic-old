@@ -63,6 +63,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
                                               group:PREF_GROUP_WINDOW_POSITIONS];
+        [instance release];
         [[self window] close];
     }
 }
@@ -109,7 +110,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
-    [tableView_actions retain];
+ //   [tableView_actions retain];
 
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
@@ -135,10 +136,6 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [self tableViewSelectionDidChange:nil];
 }
 
--(IBAction)addedEvent:(id)sender
-{
-
-}
 
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -255,6 +252,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [owner release];
     [activeContactObject release];
     [popUp_addEvent release];
+    [instance release];
     [super dealloc];
 }
 

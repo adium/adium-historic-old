@@ -40,6 +40,9 @@
     NSMutableArray			*eventActionArray;
     NSMutableArray			*eventSoundArray;
 
+
+    NSMutableDictionary			*selectedActionDict;
+
     NSMenu				*actionListMenu_cached;
     NSMenu				*eventMenu_cached;
     
@@ -61,7 +64,7 @@
 - (void)currentRowIs:(int)currentRow;
 - (void)setOffset:(int)inOffset;
 - (void)changeOffsetBy:(int)changeOffset;
-- (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)selectedActionDict;
+- (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict;
 - (void)executeAppropriateAction:(NSString *)action inMenu:(NSMenu *)actionMenu;
 - (AIListObject *)activeObject;
 
