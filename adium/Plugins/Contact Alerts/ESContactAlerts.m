@@ -40,7 +40,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 - (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner
 {
     [NSBundle loadNibNamed:CONTACT_ALERT_ACTIONS_NIB owner:self];
-// EDS   cachedAlertsDict = [[[NSMutableDictionary alloc] init] retain];
     cachedAlertsDict = [[NSMutableDictionary alloc] init];
     
     owner = inOwner;
@@ -57,7 +56,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [view_pref retain];
 
     view_blank = [[NSView alloc] init];
- //   [view_blank retain];
 
     if ( view_main && [[view_main subviews] count] == 0 ) //there are no subviews yet
         [view_main addSubview:view_blank];
@@ -71,21 +69,20 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 - (void)dealloc
 {
-    [owner release];
-    
-    [activeContactObject release];
-    [eventActionArray release];
+    [owner release]; owner = nil;
+    [activeContactObject release]; activeContactObject = nil;
+    [eventActionArray release]; eventActionArray = nil;
     
     //views
-    [view_main release];
-    [view_pref release];
-    [view_blank release];
+    [view_main release]; view_main = nil;
+    [view_pref release]; view_pref = nil;
+    [view_blank release]; view_blank = nil;
     
     //caches
-    [cachedAlertsDict release];
-    [actionListMenu_cached release];
-    [eventMenu_cached release];
-    [soundMenu_cached release];
+    [cachedAlertsDict release]; cachedAlertsDict = nil;
+    [actionListMenu_cached release]; actionListMenu_cached = nil;
+    [eventMenu_cached release]; eventMenu_cahced = nil;
+    [soundMenu_cached release]; soundMenu_cached = nil;
 }
 
 // Functions for the window and preference pane to learn about our contact's alerts ---------------------------------------
