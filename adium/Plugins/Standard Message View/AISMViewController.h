@@ -62,7 +62,6 @@
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat;
 - (NSView *)messageView;
-- (NSScrollView *)messageScrollView;
 - (AIChat *)chat;
 
 @end

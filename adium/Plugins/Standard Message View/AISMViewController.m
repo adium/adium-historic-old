@@ -88,7 +88,8 @@
 	[scrollView_messages setAutoHideScrollBar:NO];
 	[scrollView_messages setHasVerticalScroller:YES];
 	[scrollView_messages setBorderType:NSBezelBorder];
-   
+   	[scrollView_messages setPassKeysToDocumentView:YES];
+	
     [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
 
     //Observe preferences
@@ -319,7 +320,7 @@
     return(scrollView_messages);
 }
 //Return our scroll view, which is the same as our message view
-- (NSScrollView *)messageScrollView
+- (NSView *)messageScrollView
 {
     return(scrollView_messages);	
 }
