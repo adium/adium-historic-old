@@ -157,13 +157,14 @@
         view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self];
         [view_contents addSubview:view_accountSelection];
 
+		//Update the selected account
+		[view_accountSelection updateMenu];
+		
     }else if(!visible && view_accountSelection){ //Hide the account selection view
+		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
         [view_accountSelection removeFromSuperview];
         [view_accountSelection release]; view_accountSelection = nil;
     }
-
-    //Update the selected account
-    [view_accountSelection updateMenu];
 
     //
     [self sizeAndArrangeSubviews];
@@ -266,10 +267,7 @@
 
 //
 - (void)dealloc
-{
-    //The account selection view need not bother with delegate-talk since we're closing
-    [view_accountSelection setDelegate:nil];
-    
+{    
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
@@ -285,6 +283,7 @@
 
     //Account selection view
     if(view_accountSelection){
+		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
         [view_accountSelection removeFromSuperview];
         [view_accountSelection release]; view_accountSelection = nil;
     }
@@ -294,6 +293,7 @@
     [view_contents release]; view_contents = nil;
     [messageViewController release];
     [account release]; account = nil;
+
     [super dealloc];
 }
 
