@@ -48,6 +48,7 @@
 - (void)accountBlistRemove:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
 
 //accountConv methods
+- (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
 
 //AIAccount sublcassed methods

@@ -279,6 +279,7 @@ static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
     NSLog(@"adiumGaimConvUpdated");
+    [accountLookup(conv->account) accountConvUpdated:conv type:type];
 }
 
 static GaimConversationUiOps adiumGaimConversationOps = {
