@@ -55,6 +55,8 @@
 
 - Why oh why doesn't our image picker window remember its position whatsoever?
 
+- Autoresponses are sent twice when we are also idle.
+	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
