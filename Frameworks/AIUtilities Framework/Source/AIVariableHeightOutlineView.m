@@ -133,8 +133,14 @@
 #pragma mark Variable row heights
 - (NSRect)frameOfCellAtColumn:(int)column row:(int)row
 {
+	NSRect	columnRect = [self rectOfColumn:column];
+	NSSize	intercellSpacing = [self intercellSpacing];
+
 	[self updateRowHeightCache];
-	return(NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]));
+	return(NSMakeRect(columnRect.origin.x + round((intercellSpacing.width)/2),
+					  rowOriginCache[row],
+					  columnRect.size.width - floor((intercellSpacing.width)/2),
+					  rowHeightCache[row]));
 }
 
 - (NSRect)rectOfRow:(int)row
@@ -242,8 +248,9 @@
 		entriesInCache = numberOfRows;
 
 		//
-		int origin = 0;
-		int i;
+		int		origin = 0;
+		int		i;
+		NSSize	intercellSpacing = [self intercellSpacing];
 		
 		for(i = 0; i < entriesInCache; i++){
 			int height = [self heightForRow:i];
@@ -251,16 +258,16 @@
 			rowHeightCache[i] = height;
 			rowOriginCache[i] = origin;
 			
-			origin += height;
+			origin += height + intercellSpacing.height;
 		}
 		
 		totalHeight = origin;
 	}	
 }
 
-- (id)cellForItem:(id)item
+- (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	return([[[self tableColumns] objectAtIndex:0] dataCell]);
+	return([tableColumn dataCell]);
 }
 
 - (int)heightForRow:(int)row
@@ -268,29 +275,68 @@
 	return([[self dataSource] outlineView:self heightForItem:[self itemAtRow:row] atRow:row]);
 }
 
+#pragma mark Drawing
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-	id		item = [self itemAtRow:row];
-	id		cell = [self cellForItem:item];
-	
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
-		BOOL	selected = [self isRowSelected:row];
+
+		NSArray		*tableColumns = [self tableColumns];
+		id			item = [self itemAtRow:row];
+		unsigned	tableColumnIndex, count = [tableColumns count];
 		
-		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
-		[cell setHighlighted:selected];
+		for(tableColumnIndex = 0 ; tableColumnIndex < count ; tableColumnIndex++){
+			NSTableColumn	*tableColumn;
+			NSRect			cellFrame;
+			id				cell;
+			BOOL			selected;
+			
+			tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
+			cell = [self cellForTableColumn:tableColumn item:item];
+			
+			[[self delegate] outlineView:self
+						 willDisplayCell:cell 
+						  forTableColumn:tableColumn
+									item:item];
+	
+			selected = [self isRowSelected:row];
+			[cell setHighlighted:selected];
 
-		//Draw the grid
-		if([self drawsAlternatingRows] && (![cell respondsToSelector:@selector(drawGridBehindCell)] ||
-										   [cell drawGridBehindCell])){
-			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
-						 colored:!(row % 2)
-						selected:selected];	
+			[cell setObjectValue:[[self dataSource] outlineView:self 
+									  objectValueForTableColumn:tableColumn
+														 byItem:item]];
+			
+			cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
+	
+			/*
+			 * Draw the alternating rows.  If we draw alternating rows, the cell in the first column
+			 * can optionally suppress drawing. We only do this before drawing the first column; that way,
+			 * we can cover the full width of the row in one stroke.
+			 */
+			if([self drawsAlternatingRows] && 
+			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
+			   (tableColumnIndex == 0)){
+/*
+				NSRect backgroundRect;
+				
+				//Account for the corner view if necessary
+				backgroundRect = NSIntersectionRect(cellFrame, rect);
+				if(tableColumnIndex == (count-1)){
+					NSView	*cornerView = [self cornerView];
+					if(cornerView){
+						backgroundRect.size.width += [cornerView frame].size.width;
+					}
+				}
+		*/		
+				[self _drawRowInRect:[self rectOfRow:row]
+							 colored:!(row % 2)
+							selected:selected];
+			}
+			
+			//Draw the cell
+
+			if(selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
+			[cell drawWithFrame:cellFrame inView:self];
 		}
-
-		//Draw the cell
-		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
-		if([self isRowSelected:row]) [cell _drawHighlightWithFrame:cellFrame inView:self];
-		[cell drawWithFrame:cellFrame inView:self];
 	}
 }
 
@@ -299,7 +345,7 @@
 	NSImage			*image;
 	NSRect			rowRect;
 	float			yOffset;
-	unsigned int	i, firstRow, row;
+	unsigned int	i, firstRow, row, tableColumnsCount;
 	
 	firstRow = buf[0];
 	
@@ -314,22 +360,34 @@
 	[image setFlipped:YES];
 	[image lockFocus];
 	
+	tableColumnsCount = [tableColumns count];
+	
 	yOffset = 0;
 	for(i = 0; i < count; i++){
-		
-		row = buf[i];
+
 		id		item = [self itemAtRow:row];
-		id		cell = [self cellForItem:item];
+		row = buf[i];
 		
-		//Render the cell
-		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
-		[cell setHighlighted:NO];
-		
-		//Draw the cell
-		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
-		[cell drawWithFrame:NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height)
-					 inView:self];
-		
+		//Draw each table column
+		unsigned tableColumnIndex;
+		for(tableColumnIndex = 0 ; tableColumnIndex < tableColumnsCount ; tableColumnIndex++){
+			
+			NSTableColumn	*tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
+			id		cell = [self cellForTableColumn:tableColumn item:item];
+			
+			//Render the cell
+			[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:tableColumn item:item];
+			[cell setHighlighted:NO];
+			[cell setObjectValue:[[self dataSource] outlineView:self 
+									  objectValueForTableColumn:tableColumn
+														 byItem:item]];
+			
+			//Draw the cell
+			NSRect	cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
+			[cell drawWithFrame:NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height)
+						 inView:self];
+		}
+	
 		//Offset so the next drawing goes directly below this one
 		yOffset += (rowRect.size.height + [self intercellSpacing].height);
 	}
