@@ -34,7 +34,7 @@
     soundPathDict = nil;
 
     //Setup our preferences
-    preferences = [[AIEventSoundPreferences eventSoundPreferencesWithOwner:owner forPlugin:self] retain];
+    preferences = [[AIEventSoundPreferences preferencePaneWithPlugin:self owner:owner] retain];
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SOUNDS];
 
     //Observer preference changes

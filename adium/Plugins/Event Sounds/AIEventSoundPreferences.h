@@ -14,32 +14,18 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium, AIAlternatingRowTableView, AIEventSoundsPlugin;
+@class AIAlternatingRowTableView, AIEventSoundsPlugin, AIEventSoundCustom;
 
-@interface AIEventSoundPreferences : NSObject {
-    AIAdium				*owner;
+@interface AIEventSoundPreferences : AIPreferencePane {
     AIEventSoundsPlugin			*plugin;
+    IBOutlet	NSPopUpButton		*popUp_soundSet;
 
-    IBOutlet	NSView				*view_prefView;
-    IBOutlet	AIAlternatingRowTableView	*tableView_sounds;
-    IBOutlet	NSButton			*button_delete;
-    IBOutlet	NSPopUpButton			*popUp_soundSet;
-    IBOutlet	NSPopUpButton			*popUp_addEvent;
-    IBOutlet	NSTextField			*textField_creator;
-
-    IBOutlet	NSButton			*button_soundSetInfo;
-    
-    NSMutableArray			*eventSoundArray;
-    BOOL				usingCustomSoundSet;
+    AIEventSoundCustom			*eventSoundCustomPanel;
 }
 
-+ (AIEventSoundPreferences *)eventSoundPreferencesWithOwner:(id)inOwner forPlugin:(id)inPlugin;
++ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner;
 - (IBAction)selectSoundSet:(id)sender;
-- (IBAction)deleteEventSound:(id)sender;
-- (IBAction)playSelectedSound:(id)sender;
-- (IBAction)selectSound:(id)sender;
-- (IBAction)newEventSound:(id)sender;
-- (IBAction)showSoundSetInfo:(id)sender;
 
 @end
