@@ -784,32 +784,50 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	if (flags & GAIM_MESSAGE_SYSTEM){
-		NSString			*messageString = [NSString stringWithUTF8String:message];
-		if (messageString){
-			AIChatUpdateType	updateType = -1;
-			
-			if([messageString rangeOfString:@"timed out"].location != NSNotFound){
-				updateType = AIChatTimedOut;
-			}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
-				updateType = AIChatClosedWindow;
-			}
-			
-			if (updateType != -1){
-				AIChat	*chat = nil;
-				if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-					chat = chatLookupFromConv(conv);
-				}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
-					chat = imChatLookupFromConv(conv);
+	AIChat	*chat = nil;
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+		chat = chatLookupFromConv(conv);
+	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+		chat = imChatLookupFromConv(conv);
+	}
+	
+	if (chat){
+		if (flags & GAIM_MESSAGE_SYSTEM){
+			NSString			*messageString = [NSString stringWithUTF8String:message];
+			if (messageString){
+				AIChatUpdateType	updateType = -1;
+				
+				if([messageString rangeOfString:@"timed out"].location != NSNotFound){
+					updateType = AIChatTimedOut;
+				}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
+					updateType = AIChatClosedWindow;
 				}
 				
-				if (chat){
-					NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
-					
-					[adiumAccount mainPerformSelector:@selector(updateForChat:type:)
-										   withObject:chat
-										   withObject:[NSNumber numberWithInt:updateType]];
+				if (updateType != -1){
+					[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
+															withObject:chat
+															withObject:[NSNumber numberWithInt:updateType]];
 				}
+			}
+		}else if (flags & GAIM_MESSAGE_ERROR){
+			NSString			*messageString = [NSString stringWithUTF8String:message];
+			if (messageString){
+				AIChatErrorType	errorType = -1;
+				
+				if([messageString rangeOfString:@"Unable to send message"].location != NSNotFound){
+					if([messageString rangeOfString:@"Not logged in"].location != NSNotFound){
+						errorType = AIChatUserNotAvailable;
+					}
+				}
+
+				if (errorType == -1){
+					errorType = AIChatUnknownError;
+					NSLog(@"*** Conversation error %@; please report this.",messageString);
+				}
+				
+				[accountLookup(conv->account) mainPerformSelector:@selector(errorForChat:type:)
+													   withObject:chat
+													   withObject:[NSNumber numberWithInt:errorType]];
 			}
 		}
 	}
@@ -1399,12 +1417,14 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 	NSString *titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
 	
     if ([titleString rangeOfString: @"new jabber"].location != NSNotFound) {
-		/* Jabber registration request */
+		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically. */
 		GList					*gl, *fl, *field_list;
 		GaimRequestField		*field;
 		GaimRequestFieldGroup	*group;
-//		JabberStream			*js = (JabberStream *)userData;
-		
+		JabberStream			*js = (JabberStream *)userData;
+		GaimAccount				*account = js->gc->account;
+
+		//Look through each group, processing each field, searching for username and password fields
 		for (gl = gaim_request_fields_get_groups(fields);
 			 gl != NULL;
 			 gl = gl->next) {
@@ -1418,11 +1438,10 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				field = (GaimRequestField *)fl->data;
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_STRING) {
-					/* process a string field, see if we know the information for this field */
 					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
-//						gaim_request_field_string_set_value(field, gaim_account_get_username([target account]));
+						gaim_request_field_string_set_value(field, gaim_account_get_username(account));
 					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
-//						gaim_request_field_string_set_value(field, gaim_account_get_password([target account]));
+						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
 					}
 				}
 			}
@@ -1898,6 +1917,17 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	if(gaim_account_is_connected(account)){
 		gaim_account_disconnect(account);
 	}
+}
+
+- (void)registerAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadRegisterAccount:) 
+				  withObject:adiumAccount];
+}
+- (void)gaimThreadRegisterAccount:(id)adiumAccount
+{
+	gaim_account_register(accountLookupFromAdiumAccount(adiumAccount));
 }
 
 - (oneway void)sendEncodedMessage:(NSString *)encodedMessage

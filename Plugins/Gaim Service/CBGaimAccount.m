@@ -615,6 +615,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
+- (oneway void)errorForChat:(AIChat *)chat type:(NSNumber *)type
+{
+	[chat setStatusObject:type forKey:KEY_CHAT_ERROR notify:YES];
+	[chat setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
+}
+
 - (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
@@ -1144,7 +1150,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self configureGaimAccount];
 	
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
-	[self configureAccountProxy];
+	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueConnectWithConfiguredProxy)];
 }
 
 - (void)continueConnectWithConfiguredProxy
@@ -1188,7 +1194,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 //Configure libgaim's proxy settings using the current system values
-- (void)configureAccountProxy
+- (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector
 {
 	GaimProxyInfo		*proxy_info;
 	GaimProxyType		gaimAccountProxyType;
@@ -1199,7 +1205,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSString			*proxyPassword = nil;
 	AdiumGaimProxyType  proxyType;
 	int					port = 0;
+	NSInvocation		*invocation; 
 	
+	//Configure the invocation we will use when we are done configuring
+	invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+	[invocation setSelector:selector];
+	[invocation setTarget:target];
+		
 	proxy_info = gaim_proxy_info_new();
 	gaim_account_set_proxy_info(account, proxy_info);
 	
@@ -1209,7 +1221,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		//No proxy
 		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
 		
-		[self continueConnectWithConfiguredProxy];
+		[invocation invoke];
 		
 	}else if ((proxyType == Gaim_Proxy_Default_SOCKS5) || 
 			  (proxyType == Gaim_Proxy_Default_HTTP) || 
@@ -1258,8 +1270,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		GaimDebug (@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
-		[self continueConnectWithConfiguredProxy];
-		
+		[invocation invoke];
+
 	}else{
 		host = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
 		port = [[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
@@ -1291,17 +1303,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[[adium accountController] passwordForProxyServer:host 
 													 userName:proxyUserName 
 											  notifyingTarget:self 
-													 selector:@selector(gotProxyServerPassword:)];
+													 selector:@selector(gotProxyServerPassword:)
+													  context:invocation];
 		}else{
 			
 			GaimDebug (@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
-			[self continueConnectWithConfiguredProxy];
+			[invocation invoke];
 		}
 	}
 }
 
 //Retried the proxy password from the keychain
-- (void)gotProxyServerPassword:(NSString *)inPassword
+- (void)gotProxyServerPassword:(NSString *)inPassword context:(NSInvocation *)invocation
 {
 	GaimProxyInfo		*proxy_info = gaim_account_get_proxy_info(account);
 	
@@ -1309,8 +1322,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
 		
 		GaimDebug (@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
-		
-		[self continueConnectWithConfiguredProxy];
+
+		[invocation invoke];
+
 	}else{
 		gaim_proxy_info_set_username(proxy_info, NULL);
 		
@@ -1466,6 +1480,40 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
 	return YES;
+}
+
+#pragma mark Registering
+- (void)performRegisterWithPassword:(NSString *)inPassword
+{
+	//Save the new password
+	if(password != inPassword){
+		[password release]; password = [inPassword retain];
+	}
+	
+	if (!account) {
+		//create a gaim account if one does not already exist
+		[self createNewGaimAccount];
+		GaimDebug (@"Registering: created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+	}
+	
+	//We are connecting
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
+	
+	//Make sure our settings are correct
+	[self configureGaimAccount];
+	
+	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
+	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredProxy)];
+}
+
+- (void)continueRegisterWithConfiguredProxy
+{
+	//Set password and connect
+	gaim_account_set_password(account, [password UTF8String]);
+	
+	GaimDebug (@"Adium: Connect: %@ initiating connection.",[self UID]);
+	
+	[gaimThread registerAccount:self];
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------

@@ -76,7 +76,7 @@
 
 	//Connectivity
 - (void)connect;
-- (void)configureAccountProxy;
+- (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector;
 - (void)disconnect;
 - (NSString *)connectionStringForStep:(int)step;
 - (void)configureGaimAccount;

@@ -37,6 +37,7 @@
 - (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
 - (void)disconnectAccount:(id)adiumAccount;
+- (void)registerAccount:(id)adiumAccount;
 - (oneway void)xferRequest:(GaimXfer *)xfer;
 - (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer;
