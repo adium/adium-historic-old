@@ -164,9 +164,11 @@
 		BOOL shouldCreateMetaContacts = ([sender state] == NSOnState);
 		
 		//XXX - If we now shouldn't create metaContacts, clear 'em all... not pretty, but effective.
+		/*
 		if (!shouldCreateMetaContacts){
 			[[adium contactController] clearAllMetaContactData];
 		}
+		*/
 		
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:shouldCreateMetaContacts]
                                              forKey:KEY_AB_CREATE_METACONTACTS
