@@ -652,8 +652,11 @@ static id<GaimThread> gaimThread = nil;
 						NSAttributedString  *thisPart;
 						
 						thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
-						encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject];								
-						[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+						encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject contentMessage:contentMessage];
+						if (encodedMessage){
+							[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+							sent = YES;
+						}
 					}
 					
 					message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
@@ -662,19 +665,20 @@ static id<GaimThread> gaimThread = nil;
 			}
 			
 			if ([message length]){
-				encodedMessage = [self encodedAttributedString:message forListObject:listObject];
-				[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+				encodedMessage = [self encodedAttributedString:message forListObject:listObject contentMessage:contentMessage];
+				if (encodedMessage){
+					[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+					sent = YES;
+				}
 			}
 			
-			sent = YES;			
-
 		}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
 			AIContentTyping *contentTyping = (AIContentTyping*)object;
 			AIChat *chat = [contentTyping chat];
 			
 			[gaimThread sendTyping:[contentTyping typing] inChat:chat];
-
-				sent = YES;
+			
+			sent = YES;
 		}
 	}
     return sent;
@@ -911,7 +915,7 @@ static id<GaimThread> gaimThread = nil;
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
     gaim_xfer_request_denied((GaimXfer *)[[fileTransfer accountData] pointerValue]);
-    [fileTransfer release];
+    [fileTransfer autorelease];
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
@@ -1460,10 +1464,16 @@ static id<GaimThread> gaimThread = nil;
 						  encodeNonASCII:NO
 							  imagesPath:nil
 					   attachmentsAsText:YES
+		  attachmentImagesOnlyForSending:YES
 							  simpleTagsOnly:NO]);
 	}else{
 		return [inAttributedString string];
 	}
+}
+
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
+{
+	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification

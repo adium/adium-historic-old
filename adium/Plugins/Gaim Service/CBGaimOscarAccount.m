@@ -12,7 +12,7 @@
 
 #define	PREF_GROUP_NOTES			@"Notes"		//Preference group to store notes in
 
-#define DELAYED_UPDATE_INTERVAL		0.5
+#define DELAYED_UPDATE_INTERVAL		1.0
 
 static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
@@ -60,8 +60,8 @@ static BOOL didInitOscar = NO;
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	BOOL	nonHTMLUser = NO;
-	BOOL	noHTML;
+	BOOL		nonHTMLUser = NO;
+	NSString	*returnString;
 	
 	//We don't want to send HTML to ICQ users, or mobile phone users
 	if(inListObject){
@@ -69,19 +69,49 @@ static BOOL didInitOscar = NO;
 	    nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 	}
 	
-	noHTML = (nonHTMLUser || accountIsICQ);
+	if (nonHTMLUser || accountIsICQ){
+		returnString = [inAttributedString string];
+	}else{
+		returnString = [AIHTMLDecoder encodeHTML:inAttributedString
+										 headers:YES
+										fontTags:YES
+							  includingColorTags:YES
+								   closeFontTags:NO
+									   styleTags:YES
+					  closeStyleTagsOnFontChange:NO
+								  encodeNonASCII:NO
+									  imagesPath:@"/tmp"
+							   attachmentsAsText:NO
+				  attachmentImagesOnlyForSending:YES
+								  simpleTagsOnly:NO];
+	}
+	
+	return returnString;
+}
 
-	return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
-																	 headers:YES
-																	fontTags:YES
-														  includingColorTags:YES
-															   closeFontTags:NO
-																   styleTags:YES
-												  closeStyleTagsOnFontChange:NO
-															  encodeNonASCII:NO
-																  imagesPath:nil
-														   attachmentsAsText:YES
-															  simpleTagsOnly:NO]));
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
+{
+	NSString *returnString = [self encodedAttributedString:inAttributedString forListObject:inListObject];
+
+	if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
+		//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
+		//and sending after it is if one is established
+		NSLog(@"No Direct Connect for you! Come back two year!");
+		returnString = [AIHTMLDecoder encodeHTML:inAttributedString
+										 headers:YES
+										fontTags:YES
+							  includingColorTags:YES
+								   closeFontTags:NO
+									   styleTags:YES
+					  closeStyleTagsOnFontChange:NO
+								  encodeNonASCII:NO
+									  imagesPath:nil
+							   attachmentsAsText:YES
+				  attachmentImagesOnlyForSending:YES
+								  simpleTagsOnly:NO];
+	}
+
+	return returnString;
 }
 
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
@@ -278,6 +308,7 @@ static BOOL didInitOscar = NO;
 			
 			if (profileString && [profileString length]) {
 				if (![profileString isEqualToString:oldProfileString]) {
+
 					[theContact setStatusObject:profileString
 										 forKey:@"TextProfileString" 
 										 notify:NO];
