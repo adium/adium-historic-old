@@ -24,6 +24,8 @@
 #define IDLE_SET_CUSTOM_IDLE_TITLE	AILocalizedString(@"Set Custom Idle...","Set a custom idle")
 #define IDLE_SET_IDLE_TITLE			AILocalizedString(@"Set Idle",nil)
 
+#define DEFAULT_AWAY_MESSAGE		@""
+
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @interface AIIdleTimePlugin (PRIVATE)
@@ -271,9 +273,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 			//Load the array of away messages
 			NSArray				*awaysArray = [[adium preferenceController] preferenceForKey:KEY_SAVED_AWAYS
 																					   group:PREF_GROUP_AWAY_MESSAGES];
-			if (autoAwayMessageIndex >= 0 && (autoAwayMessageIndex < [awaysArray count])){
+			if (autoAwayMessageIndex >= 2 && (autoAwayMessageIndex < [awaysArray count])){
 				//If the autoAwayMessageIndex corresponds to a valid away message, set us as away
-				NSDictionary		*awayDict = [awaysArray objectAtIndex:autoAwayMessageIndex];
+				NSDictionary		*awayDict = [awaysArray objectAtIndex:(autoAwayMessageIndex - 2)];
 				NSAttributedString  *awayMessage = [awayDict objectForKey:@"Message"];
 				NSAttributedString  *awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
 				
@@ -283,7 +285,21 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 				[[adium preferenceController] setPreference:awayAutoResponse
 													 forKey:@"Autoresponse" 
 													  group:GROUP_ACCOUNT_STATUS];
-			}
+			}else if(autoAwayMessageIndex == 0){
+				NSAttributedString *awayMessage;
+				awayMessage = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:@"Quick Away Message"];
+				
+				if(!awayMessage){
+				awayMessage = [[NSAttributedString alloc] initWithString:DEFAULT_AWAY_MESSAGE];
+				}
+				
+				[[adium preferenceController] setPreference:awayMessage
+													 forKey:@"AwayMessage"
+													  group:GROUP_ACCOUNT_STATUS];
+				[[adium preferenceController] setPreference:awayMessage
+													 forKey:@"Autoresponse" 
+													  group:GROUP_ACCOUNT_STATUS];
+			}	
 			
 			didAutoAway = YES;
 		}

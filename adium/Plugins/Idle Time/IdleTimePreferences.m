@@ -17,7 +17,7 @@
 #import "IdleTimePlugin.h"
 
 #define IDLE_TIME_PREF_TITLE		AILocalizedString(@"Idle",nil)  //Title of the preference view
-#define AUTO_AWAY_NO_AWAYS_TITLE	@"No saved aways"   //What to display in popUp_title if no messages are saved
+#define AUTO_AWAY_QUICK_AWAY_TITLE  @"Last quick away"
 #define ELIPSIS_STRING				AILocalizedString(@"...",nil)
 
 @interface IdleTimePreferences (PRIVATE)
@@ -173,9 +173,17 @@
     NSMenu		*savedAwaysMenu = [[NSMenu alloc] init];
     NSMenuItem  *menuItem;
     
-    [self loadAwayMessages]; //load the away messages into awayMessageArray
+	[self loadAwayMessages]; //load the away messages into awayMessageArray
 
-    if (awayMessageArray){
+    menuItem = [[[NSMenuItem alloc] initWithTitle:AUTO_AWAY_QUICK_AWAY_TITLE
+											target:self
+											action:nil
+										keyEquivalent:@""] autorelease];
+	[savedAwaysMenu addItem:menuItem];
+	
+	if (awayMessageArray){
+		[savedAwaysMenu addItem:[NSMenuItem separatorItem]];
+
         NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
         NSDictionary *dict;
         while(dict = [enumerator nextObject]){
@@ -202,17 +210,7 @@
             [menuItem setEnabled:YES];
             [savedAwaysMenu addItem:menuItem];        
         }
-    }else{
-		menuItem = [[[NSMenuItem alloc] initWithTitle:AUTO_AWAY_NO_AWAYS_TITLE
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
-		[menuItem setEnabled:NO];
-		[savedAwaysMenu addItem:menuItem];
-		[checkBox_enableAutoAway setState:NO];
-		[checkBox_enableAutoAway setEnabled:NO];
-		[textField_autoAwayMinutes setEnabled:NO];
-	}            
+    }        
 	
     [savedAwaysMenu setAutoenablesItems:NO];
     return savedAwaysMenu;
