@@ -101,7 +101,9 @@
 		description = AILocalizedString(@"Unknown",nil);
 	}
 	
-	return([NSString stringWithFormat:description, [listObject displayName]]);
+	return([NSString stringWithFormat:description,([listObject isKindOfClass:[AIListGroup class]] ?
+												   [NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
+												   [listObject displayName])]);
 }
 
 - (void)handleMessageEvent:(NSNotification *)notification
