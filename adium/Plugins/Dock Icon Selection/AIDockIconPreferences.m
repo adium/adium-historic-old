@@ -121,7 +121,7 @@
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict
 {
     NSDictionary	*iconPackDict;
-    NSDictionary	*descriptionDict, *stateDict;
+    NSDictionary	*stateDict;
     NSString		*title, *creator;
     NSEnumerator	*previewEnumerator, *stateEnumerator;
     NSArray			*stateArray;
@@ -149,18 +149,6 @@
 
     //
     iconPackDict = [[adium dockController] iconPackAtPath:[iconDict objectForKey:@"Path"]];
-
-    //-- Display the icon pack information --
-    descriptionDict = [iconPackDict objectForKey:@"Description"];
-        //Title
-        title = [descriptionDict objectForKey:@"Title"];
-        [textField_title setStringValue:(title ? title : @"")];
-        //Description
-        creator = [descriptionDict objectForKey:@"Creator"];
-        [textField_creator setStringValue:(creator ? creator : @"")];
-        //Link
-//        link = [descriptionDict objectForKey:@"LinkURL"];
-//        [textField_link setStringValue:(link ? link : @"")];
 
     //Display the icon state previews
     stateDict = [iconPackDict objectForKey:@"State"];

@@ -49,7 +49,7 @@
 										  forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
-    preferences = [[AIAwayMessagePreferences awayMessagePreferences] retain];
+    preferences = [[AIAwayMessagePreferences preferencePane] retain];
     
     //Install our 'enter away message' submenu
     [self installAwayMenu];

@@ -65,7 +65,7 @@
 
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-    preferences = [[AIContactStatusColoringPreferences contactStatusColoringPreferences] retain];
+    preferences = [[AIContactStatusColoringPreferences preferencePane] retain];
     
     //Register themable preferences
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:CONTACT_STATUS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];    

@@ -41,7 +41,8 @@
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:LABELS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SCL_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     
-    preferences = [[AICLPreferences contactListPreferences] retain];
+    preferences = [[AICLPreferences preferencePane] retain];
+    preferencesGroup = [[AICLGroupPreferences preferencePane] retain];
     preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];
     preferencesLabelsAdvanced = [[ESCLViewLabelsAdvancedPrefs preferencePane] retain];
 }

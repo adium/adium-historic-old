@@ -52,7 +52,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
     //Register our defaults and install the preference view
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME]; //Register our default preferences
-    preferences = [[IdleTimePreferences idleTimePreferences] retain]; 
+    preferences = [[IdleTimePreferences preferencePane] retain]; 
 
     //Observe preference changed notifications, and setup our initial values
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
