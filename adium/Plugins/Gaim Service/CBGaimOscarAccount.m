@@ -172,7 +172,7 @@ struct buddyinfo {
 						}
 					}
 					
-					if (GAIM_DEBUG) NSLog(@"Status message for %s: %@",buddy->name,statusMsgString);
+//					if (GAIM_DEBUG) NSLog(@"Status message for %s: %@",buddy->name,statusMsgString);
 					
 					//Update the status message if necessary
 					if (statusMsgString && [statusMsgString length]) {

@@ -14,6 +14,7 @@
 #define NO_GROUP                @"__NoGroup__"
 #define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
 #define USER_ICON_CACHE_NAME    @"UserIcon_%@"
+#define MESSAGE_IMAGE_CACHE_NAME	@"Image_%@_%i.tiff"
 
 #define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS   4
@@ -26,10 +27,12 @@
 - (void)connect;
 - (void)disconnect;
 - (NSString *)_userIconCachePath;
+- (NSString *)_messageImageCachePathForID:(int)imageID;
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
 - (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
+- (NSString *)_processGaimImagesInString:(NSString *)inString;
 @end
 
 @implementation CBGaimAccount
@@ -72,7 +75,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
+//	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
     
     int                     online;
     AIListContact           *theContact;
@@ -104,7 +107,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
+//	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
@@ -338,14 +341,21 @@
         // Need to start a new chat
         chat = [self _openChatWithContact:listContact andConversation:conv];
     } else  {
-        //JABBER MESSAGES ARE RECEIVED AND FAIL AT THIS ASSERTION
         NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
     }
     
     //clear the typing flag
     [self setTypingFlagOfContact:listContact to:NO];
     
-    NSAttributedString *body = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String: message]];
+	NSString			*bodyString = [NSString stringWithUTF8String:message];
+
+	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
+		NSLog(@"got me an image! %@",bodyString);
+		bodyString = [self _processGaimImagesInString:bodyString];
+		NSLog(@"done processing. %@",bodyString);
+	}
+	
+    NSAttributedString *body = [AIHTMLDecoder decodeHTML:bodyString];
     AIContentMessage *messageObject =
         [AIContentMessage messageInChat:chat
                              withSource:listContact
@@ -354,6 +364,54 @@
                                 message:body
                               autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
     [[adium contentController] addIncomingContentObject:messageObject];
+}
+
+- (NSString *)_processGaimImagesInString:(NSString *)inString
+{
+	NSScanner			*scanner;
+    NSString			*chunkString = nil;
+    NSMutableString		*newString;
+
+    int imageID;
+	BOOL found = NO;
+	
+    //set up
+	newString = [[NSMutableString alloc] init];
+	
+    scanner = [NSScanner scannerWithString:inString];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+
+	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)	 
+    
+	//Parse the incoming HTML
+    while(![scanner isAtEnd]){
+		
+		//Find the beginning of a gaim IMG ID tag
+		if ([scanner scanUpToString:@"<IMG ID=\"" intoString:&chunkString]) {
+			[newString appendString:chunkString];
+		}
+		
+		if ([scanner scanString:@"<IMG ID=\"" intoString:nil]) {
+
+			//Get the image ID from the tag
+			[scanner scanInt:&imageID];
+			
+			//Scan up to ">
+			[scanner scanString:@"\">" intoString:nil];
+			
+			GaimStoredImage *gaimImage = gaim_imgstore_get(imageID);
+			NSString		*imagePath = [self _messageImageCachePathForID:imageID];
+
+			[[[[[NSImage alloc] initWithData:[NSData dataWithBytes:gaimImage->data 
+															length:gaimImage->size]] autorelease] TIFFRepresentation] writeToFile:imagePath
+																													   atomically:YES];
+				
+			//Write an <IMG SRC="filepath"> tag
+			[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+		}
+	}
+	
+	return ([newString autorelease]);
 }
 
 /********************************/
@@ -914,6 +972,12 @@
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self UIDAndServiceID]];
     return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
+}
+
+- (NSString *)_messageImageCachePathForID:(int)imageID
+{
+    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self UIDAndServiceID], imageID];
+    return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByExpandingTildeInPath]);	
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------

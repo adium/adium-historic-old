@@ -9,6 +9,7 @@
 #include "core.h"
 #include "debug.h"
 #include "ft.h"
+#include "imgstore.h"
 #include "notify.h"
 #include "plugin.h"
 #include "pounce.h"
