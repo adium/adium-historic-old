@@ -264,71 +264,75 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 					}
 				}
 			}
-
+			
 			
 			NS_DURING
 				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
-				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
-					pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-					if(pluginBundle != nil){						
+				if( !confirmLoading || [[[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS] containsObject:pluginName] ) {
+					if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
+						pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
+						if(pluginBundle != nil){						
 #if 1
-						//Create an instance of the plugin
-						Class principalClass = [pluginBundle principalClass];
-						if (principalClass != nil){
-							plugin = [principalClass newInstanceOfPlugin];
-						}else{
-							NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
-						}
+							//Create an instance of the plugin
+							Class principalClass = [pluginBundle principalClass];
+							if (principalClass != nil){
+								plugin = [principalClass newInstanceOfPlugin];
+							}else{
+								NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
+							}
 #else
-						//Plugin load timing
-						
-						NSString	*compactedName = [pluginName compactedString];
-						double		timeInterval;
-						NSDate		*startTime = [NSDate date];
-						
-						plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
-						
-						timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
-						NSLog(@"Plugin Timing: %@ %f",compactedName, timeInterval);
+							//Plugin load timing
+							
+							NSString	*compactedName = [pluginName compactedString];
+							double		timeInterval;
+							NSDate		*startTime = [NSDate date];
+							
+							plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
+							
+							timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
+							NSLog(@"Plugin Timing: %@ %f",compactedName, timeInterval);
 #endif
-						
-						if(plugin != nil){
-							//Add the instance to our list
-							[pluginArray addObject:plugin];
+							
+							if(plugin != nil){
+								//Add the instance to our list
+								[pluginArray addObject:plugin];
+							}else{
+								NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
+							}
 						}else{
-							NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
+							NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
 						}
-					}else{
-						NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
+					} else {
+						NSLog(AILocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
 					}
 				} else {
-					NSLog(AILocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
+					NSLog(@"We shouldn't be loading the plugin %@",pluginName);
 				}
-			NS_HANDLER	// Handle a raised exception
-				NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
-				if (plugin != nil) {
-					NSLog (@"Cleaning up using plugin's pointer");
-					// Make sure the plugin was not stored in the pluginArray, since it failed to successfully initialize
-					long index = [pluginArray indexOfObject:plugin];
-					if (index != NSNotFound) {
-						[pluginArray removeObjectAtIndex:index];
+				NS_HANDLER	// Handle a raised exception
+					NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
+					if (plugin != nil) {
+						NSLog (@"Cleaning up using plugin's pointer");
+						// Make sure the plugin was not stored in the pluginArray, since it failed to successfully initialize
+						long index = [pluginArray indexOfObject:plugin];
+						if (index != NSNotFound) {
+							[pluginArray removeObjectAtIndex:index];
+						}
+						
+						//Remove observers
+						[[owner notificationCenter] removeObserver:plugin];
+						[[NSNotificationCenter defaultCenter] removeObserver:plugin];
 					}
-					
-					//Remove observers
-					[[owner notificationCenter] removeObserver:plugin];
-					[[NSNotificationCenter defaultCenter] removeObserver:plugin];
-				}
-				NSString	*errorPartOne = AILocalizedString(@"The","definite article");
-				NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory","part of the plugin error message");
-				NSString	*errorPartThree = AILocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
-				[[owner interfaceController] handleErrorMessage:(AILocalizedString(@"Plugin load error",nil))
-												withDescription:[NSString stringWithFormat:@"%@ \"%@\" %@ (\"%@\")%@.", errorPartOne,
-																														[pluginName stringByDeletingPathExtension],
-																														errorPartTwo,
-																														pluginPath,
-																														errorPartThree]];
-				// It would probably be unsafe to call the plugin's uninstall
-			NS_ENDHANDLER
+					NSString	*errorPartOne = AILocalizedString(@"The","definite article");
+					NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory","part of the plugin error message");
+					NSString	*errorPartThree = AILocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
+					[[owner interfaceController] handleErrorMessage:(AILocalizedString(@"Plugin load error",nil))
+													withDescription:[NSString stringWithFormat:@"%@ \"%@\" %@ (\"%@\")%@.", errorPartOne,
+														[pluginName stringByDeletingPathExtension],
+														errorPartTwo,
+														pluginPath,
+														errorPartThree]];
+					// It would probably be unsafe to call the plugin's uninstall
+				NS_ENDHANDLER
 	    }
 	}
 }
@@ -338,12 +342,12 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 {
     NSEnumerator	*enumerator;
     AIPlugin		*plugin;
-
+	
     enumerator = [pluginArray objectEnumerator];
     while((plugin = [enumerator nextObject])){
         [plugin uninstallPlugin];
     }
-
+	
 }
 
 @end
