@@ -123,7 +123,7 @@ int HTMLEquivalentForFontSize(int fontSize);
         
                 //( NSNonstandardCharacterSetFontMask = 0x00000008 ) is defined internally but not externally
                 //It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
-                if (traits || 0x00000008) {
+                if (traits && 0x00000008) {
                     langNum = 11;
                 }
                 
