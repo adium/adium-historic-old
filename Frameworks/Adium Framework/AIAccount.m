@@ -27,22 +27,17 @@
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
 - (void)_updateAutoRefereshingKeysForFilteredValue:(NSAttributedString *)filteredValue originalValue:(NSAttributedString *)originalValue key:(NSString *)key;
-
-//- (void)_startStringRefreshTimer;
-//- (void)_stopStringRefreshTimer;
+- (void)initFUSDisconnecting;
 @end
 
 @implementation AIAccount
 
-//-------------------
-//  Public Methods
-//-----------------------
 //Init the connection
-- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService objectID:(int)inObjectID
+- (id)initWithUID:(NSString *)inUID accountNumber:(int)inAccountNumber service:(AIService *)inService
 {
-	objectID = inObjectID;
-    service = [inService retain];
-    [super initWithUID:inUID serviceID:[[inService handleServiceType] identifier]];
+	accountNumber = inAccountNumber;
+
+    [super initWithUID:inUID service:inService];
 	
     //Handle the preference changed monitoring (for account status) for our subclass
     [[adium notificationCenter] addObserver:self
@@ -68,20 +63,9 @@
 	
 	disconnectedByFastUserSwitch = NO;
 	
-	if([self disconnectOnFastUserSwitch] && [NSApp isOnPantherOrBetter]) //only install on Panther
-    {
-        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-															   selector:@selector(switchHandler:) 
-																   name:NSWorkspaceSessionDidBecomeActiveNotification 
-																 object:nil];
-        
-        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
-															   selector:@selector(switchHandler:) 
-																   name:NSWorkspaceSessionDidResignActiveNotification
-																 object:nil];
-    }
 	
     //Init the account
+	[self initFUSDisconnecting];
     [self initAccount];
     
     return(self);
@@ -99,49 +83,23 @@
 	[autoRefreshingKeys release]; autoRefreshingKeys = nil;
 	
     [[adium notificationCenter] removeObserver:self];
-    [service release];
 	
     [super dealloc];
 }
 
-//Return the service that spawned this account
-- (id <AIServiceController>)service
-{
-    return(service);
-}
-
 //Our unique object ID is the number associated with this account
-- (NSString *)uniqueObjectID
+- (NSString *)internalObjectID
 {
-	if (!uniqueObjectID){
-		uniqueObjectID = [[NSString stringWithFormat:@"%i",objectID] retain];
+	if(!internalObjectID){
+		internalObjectID = [[NSString stringWithFormat:@"%i",accountNumber] retain];
 	}
-	return(uniqueObjectID);
+	return(internalObjectID);
 }
 
-//By default, just return the image associated with our handleServiceType
-- (NSImage *)image
+- (int)accountNumber
 {
-	return([[service handleServiceType] image]);
+	return(accountNumber);
 }
-
-- (NSImage *)menuImage
-{
-	return([[service handleServiceType] menuImage]);
-}
-
-- (NSImage *)onlineMenuImage{
-	return([[service handleServiceType] onlineMenuImage]);
-}
-
-- (NSImage *)connectingMenuImage{
-	return([[service handleServiceType] connectingMenuImage]);
-}
-
-- (NSImage *)offlineMenuImage{
-	return([[service handleServiceType] offlineMenuImage]);
-}
-
 
 
 //Preferences ----------------------------------------------------------------------------------------------------------
@@ -190,30 +148,51 @@
     }
 }
 
-- (BOOL)disconnectOnFastUserSwitch
-{
-	return NO;
-}
-- (void)switchHandler:(NSNotification *)notification
-{
-    if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
-		//Deactivation
-		if ([[self statusObjectForKey:@"Online"] boolValue]){
-			[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-			disconnectedByFastUserSwitch = YES;
-		}
-		
-	}else if (disconnectedByFastUserSwitch){
-		//Activation and we disconnected before because of a fast user switch
-        [self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-		disconnectedByFastUserSwitch = NO;
-	}
-}
 
 - (BOOL)shouldSendAutoresponsesWhileAway
 {
 	return NO;
 }
+
+
+//Fast user switch disconnecting ---------------------------------------------------------------------------------------
+#pragma mark Fast user switch disconnecting
+//Set up fast user switch disconnecting
+- (void)initFUSDisconnecting
+{
+	if([self disconnectOnFastUserSwitch] && [NSApp isOnPantherOrBetter]){
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
+															   selector:@selector(fastUserSwitchLeave:) 
+																   name:NSWorkspaceSessionDidResignActiveNotification
+																 object:nil];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+															   selector:@selector(fastUserSwitchReturn:) 
+																   name:NSWorkspaceSessionDidBecomeActiveNotification 
+																 object:nil];
+	}
+}
+
+//System is switching to another account
+- (void)fastUserSwitchLeave:(NSNotification *)notification
+{
+	if([[self statusObjectForKey:@"Online"] boolValue]){
+		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		disconnectedByFastUserSwitch = YES;
+	}
+}
+
+//System is returning to our account
+- (void)fastUserSwitchReturn:(NSNotification *)notification
+{
+	[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+	disconnectedByFastUserSwitch = NO;
+}
+
+//Return YES if this account should disconnect when the system switches to another account
+- (BOOL)disconnectOnFastUserSwitch{
+	return(NO);
+}
+
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
@@ -480,10 +459,9 @@
 #pragma mark Contacts
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
-	AIListContact *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-																 accountID:[self uniqueObjectID]
-																	   UID:sourceUID];
-	return contact;
+	return([[adium contactController] contactWithService:service
+												 account:self
+													 UID:sourceUID]);
 }
 
 //Auto-Reconnect -------------------------------------------------------------------------------------------------------
@@ -573,6 +551,39 @@
 
 - (void)disconnectScriptCommand:(NSScriptCommand *)command {
 	[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
+}
+
+
+//Support for messaging --
+//Send a message object to its destination
+- (BOOL)sendContentObject:(AIContentObject *)object{
+	return(NO);
+}
+
+//Returns YES if the object is available for receiving content of the specified type.  Pass a nil object to check
+//the account's ability to send any content of the given type.  Pass YES for absolute and the account will only
+//return YES if it's absolutely certain that it can send content to the specified object.
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact{
+	return(NO);
+}
+
+//Open a chat instance
+- (BOOL)openChat:(AIChat *)chat{
+	return(NO);
+}
+
+//Close a chat instance
+- (BOOL)closeChat:(AIChat *)chat{
+	return(NO);
+}
+
+//Support for standard UID based contacts --
+- (void)removeContacts:(NSArray *)objects{}
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group{}
+- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group{}
+- (void)renameGroup:(AIListGroup *)group to:(NSString *)newName{}
+- (BOOL)contactListEditable{
+	return(NO);
 }
 
 @end
