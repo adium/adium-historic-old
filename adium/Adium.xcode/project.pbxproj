@@ -5829,6 +5829,7 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "-seg1addr 0x10100000";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = AIUtilities;
