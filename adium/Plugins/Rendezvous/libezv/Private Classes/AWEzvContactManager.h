@@ -3,7 +3,7 @@
  * File:        AWEzvContactManager.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManager.h,v 1.2 2004/06/15 16:08:30 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManager.h,v 1.3 2004/06/16 08:20:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -56,6 +56,7 @@
     NSString			*myname;
     NSString			*myavname;
     DNSRecordReference		imageRef;
+    DNSRecordReference		avImageRef;
 }
 
 - (id) initWithClient:(AWEzv *)client;
