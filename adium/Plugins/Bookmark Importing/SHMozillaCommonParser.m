@@ -23,6 +23,7 @@ DeclareString(hrefStr)
 DeclareString(closeQuote)
 DeclareString(closeLink)
 DeclareString(Aclose)
+DeclareString(DLOpen)
 DeclareString(DLclose)
 DeclareString(ltSign)
 
@@ -55,6 +56,7 @@ DeclareString(untitledString)
     InitString(closeQuote,@"\"")
     InitString(closeLink,@"\">")
     InitString(Aclose,@"</A")
+    InitString(DLOpen,@"<DL>")
     InitString(DLclose,@"/DL>")
     InitString(ltSign,@"<")
     
@@ -81,10 +83,9 @@ DeclareString(untitledString)
 + (NSArray *)parseBookmarksfromString:(NSString *)inString
 {
     NSMutableArray      *bookmarksArray = [NSMutableArray array];
-    //NSMutableArray      *baseArray = bookmarksArray;
+    NSMutableArray      *arrayStack = [NSMutableArray array];
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *titleString, *urlString;
-    //NSString    *untitledString = @"untitled";
     
     unsigned int stringLength = [inString length];
     
@@ -102,13 +103,15 @@ DeclareString(untitledString)
             if([linkScanner scanUpToString:Hclose intoString:&titleString]){
                 // decode html stuff
                 titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
+                [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
             }else{
                 [titleString release];
                 titleString = nil;
             }
-            
-            [bookmarksArray addObject:[self menuDictWithTitle:titleString
-                                                    menuItems:[self parseBookmarksfromString:[inString substringFromIndex:[linkScanner scanLocation]]]]];
+            [arrayStack addObject:bookmarksArray];
+            bookmarksArray = [NSMutableArray array];
+            [[arrayStack lastObject] addObject:[self menuDictWithTitle:titleString
+                                                             menuItems:bookmarksArray]];
 
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
@@ -131,7 +134,10 @@ DeclareString(untitledString)
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             
-            return bookmarksArray;
+            if([arrayStack count]){
+                bookmarksArray = [arrayStack lastObject];
+                [arrayStack removeLastObject];
+            }
         }else{
             [linkScanner scanUpToString:ltSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
@@ -142,7 +148,7 @@ DeclareString(untitledString)
 
 +(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
-    NSString    *title = inString? inString : untitledString;
+    NSString    *title = inString? inString : [[untitledString copy] autorelease];
     return [[[SHMarkedHyperlink alloc] initWithString:inURLString
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
@@ -151,7 +157,7 @@ DeclareString(untitledString)
 
 +(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = inTitle? inTitle : untitledString;
+    NSString    *titleString = inTitle? inTitle : [[untitledString copy] autorelease];
     return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
 }
 
