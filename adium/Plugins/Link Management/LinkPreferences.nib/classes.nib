@@ -28,7 +28,7 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {
-            ACTIONS = {addLink = id; openLinkInBrowser = id; removeLink = id; }; 
+            ACTIONS = {openLinkInBrowser = id; }; 
             CLASS = SHLinkFavoritesManageView; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -39,7 +39,7 @@
             SUPERCLASS = NSView; 
         }, 
         {
-            ACTIONS = {addLink = id; }; 
+            ACTIONS = {addLink = id; removeLink = id; }; 
             CLASS = SHLinkFavoritesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

@@ -17,8 +17,6 @@
                 int                          favoriteCount;
 }
 - (NSString *)selectedLink;
-- (IBAction)removeLink:(id)sender;
-- (IBAction)addLink:(id)sender;
 - (void)buildLinksList;
 - (void)openLinkInBrowser:(id)sender;
 

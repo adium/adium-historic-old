@@ -19,7 +19,7 @@
 
 @implementation SHLinkEditorWindowController
 
-#pragma mark various init methods
+#pragma mark init methods
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder
 {
     if(nil != (editableView = responder)) {
@@ -173,7 +173,6 @@
 
 - (IBAction)cancel:(id)sender;
 {
-    //[NSApp stopModal];
     [self closeWindow:sender];
 }
 
@@ -209,7 +208,6 @@
     }
              
     [self closeWindow:nil];
-    //[NSApp stopModal];
 }
 
 - (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSResponder *)inView withRange:(NSRange)linkRange
