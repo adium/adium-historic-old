@@ -8,20 +8,27 @@
 #import "ESOpenMessageWindowContactAlertPlugin.h"
 //#import "ESOpenMessageWindowContactAlert.h"
 
+#define OPEN_MESSAGE_ALERT_SHORT	@"Open a message window with %a"
+#define OPEN_MESSAGE_ALERT_LONG		@"Open a message window with %a"
+
 @implementation ESOpenMessageWindowContactAlertPlugin
+
 - (void)installPlugin
 {
-//	[[adium contactAlertsController] registerActionID:@"OpenMessageWindow" withHandler:self];
+	[[adium contactAlertsController] registerActionID:@"OpenMessageWindow" withHandler:self];
 }
 
+
+//Open Message Alert ---------------------------------------------------------------------------------------------------
+#pragma mark Play Sound Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(@"Open a message window with %a");
+	return(OPEN_MESSAGE_ALERT_SHORT);
 }
 
-- (NSString *)longDescriptionForActionID:(NSString *)actionID
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(@"Open a message window with %a");
+	return(OPEN_MESSAGE_ALERT_LONG);
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
@@ -29,54 +36,17 @@
 	return([NSImage imageNamed:@"WindowAlert" forClass:[self class]]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	
+	return(nil);
 }
 
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+{
+	if([listObject isKindOfClass:[AIListContact class]]){
+		AIChat	*chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
+		[[adium interfaceController] setActiveChat:chat];
+	}
+}
 
-
-//*****
-//ESContactAlertProvider
-//*****
-
-//- (NSString *)identifier
-//{
-//    return CONTACT_ALERT_IDENTIFIER;
-//}
-//
-//- (ESContactAlert *)contactAlert
-//{
-//    return [ESOpenMessageWindowContactAlert contactAlert];   
-//}
-//
-////performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-//- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
-//{
-//	BOOL success = YES;
-//
-//	if([inObject isKindOfClass:[AIListContact class]]){
-//		AIAccount * account = [[adium accountController] accountWithObjectID:details];
-//		if (![[account statusObjectForKey:@"Online"] boolValue]) { //desired account not available
-//			if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-//				account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-//																			  toListObject:inObject];
-//			}
-//			if (!account)
-//				success = NO;
-//		}
-//		if(success){
-//			AIChat	*chat = [[adium contentController] openChatWithContact:(AIListContact *)inObject];
-//			[[adium interfaceController] setActiveChat:chat];
-//		}
-//	}
-//	
-//    return success;
-//}
-//
-////continue processing after a successful action
-//- (BOOL)shouldKeepProcessing
-//{
-//    return NO;
-//}
 @end

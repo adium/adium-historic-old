@@ -313,26 +313,9 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
 {
-
+	
 }
 
-
-
-
-
-//- (NSString *)identifier
-//{
-//    return BEZEL_CONTACT_ALERT_IDENTIFIER;
-//}
-//
-//- (ESContactAlert *)contactAlert
-//{
-//    return [ESEventBezelContactAlert contactAlert];   
-//}
-//
-////performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-//- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
-//{
 //        NSString * ContactStatusString = nil;
 //        if ([event isEqualToString:@"Signed On"]) {
 //            ContactStatusString = CONTACT_STATUS_ONLINE_YES;
@@ -361,11 +344,6 @@
 //            }
 //        }
 //        return NO;
-//}
-//
-////continue processing after a successful action
-//- (BOOL)shouldKeepProcessing
-//{
-//    return NO;   
-//}
+
+	
 @end

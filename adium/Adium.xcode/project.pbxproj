@@ -1693,9 +1693,6 @@
 			children = (
 				344AB2C30579136900384CEE,
 				344AB2C40579136900384CEE,
-				344AB2D20579140700384CEE,
-				344AB2D30579140800384CEE,
-				344AB4500579195700384CEE,
 				4BAA1B600632EFE700D8B92C,
 			);
 			isa = PBXGroup;
@@ -1730,32 +1727,6 @@
 			isa = PBXGroup;
 			name = "Messaging Contact Alerts";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344AB2D20579140700384CEE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESOpenMessageWindowContactAlert.h;
-			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlert.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344AB2D30579140800384CEE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESOpenMessageWindowContactAlert.m;
-			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlert.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344AB4500579195700384CEE = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = OpenMessageWindowContactAlert.nib;
-			path = "Plugins/Open Message Window Contact Alert/OpenMessageWindowContactAlert.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3859,7 +3830,6 @@
 				4BD6745206001D4D0049CAF7,
 				4BD6745506001D4E0049CAF7,
 				4BD6745606001D4E0049CAF7,
-				4BD6746106001D750049CAF7,
 				4BD6746606001D770049CAF7,
 				4BD6746F06001D810049CAF7,
 				4BD6747006001D820049CAF7,
@@ -13618,12 +13588,6 @@
 			settings = {
 			};
 		};
-		4BD6746106001D750049CAF7 = {
-			fileRef = 344AB4500579195700384CEE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6746206001D750049CAF7 = {
 			fileRef = 342DC5C005783DE7000E1D83;
 			isa = PBXBuildFile;
@@ -16283,8 +16247,6 @@
 				6C0FFB2205723F1B00E75F79,
 				6C24112705849D7900CECFC3,
 				6C24112A05849DBB00CECFC3,
-				6CF4266F0577635B00F27FAA,
-				6CF426700577635B00F27FAA,
 				6C24112D05849DF400CECFC3,
 				4BAA1B560632EF4A00D8B92C,
 				6C24111F05849D1A00CECFC3,
@@ -16502,24 +16464,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = DockBehaviorContactAlert.nib;
 			path = "Plugins/Dock Behavior/DockBehaviorContactAlert.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6CF4266F0577635B00F27FAA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESEventBezelContactAlert.h;
-			path = "Plugins/Event Bezel/ESEventBezelContactAlert.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6CF426700577635B00F27FAA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESEventBezelContactAlert.m;
-			path = "Plugins/Event Bezel/ESEventBezelContactAlert.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};

@@ -178,13 +178,17 @@
 	//Save changes and close down the old pane
 	if(detailsPane) [self saveDetailsPaneChanges];
 	[detailsView removeFromSuperview];
+	detailsView = nil;
 	[detailsPane closeView];
 	[detailsPane release];
+	detailsPane = nil;
 	
 	//Get a new pane for the current action type, and configure it for our alert
 	detailsPane = [[actionHandler detailsPaneForActionID:actionID] retain];
-	detailsView = [detailsPane view];
-	[detailsPane configureForActionDetails:[alert objectForKey:KEY_ACTION_DETAILS]];
+	if(detailsPane){
+		detailsView = [detailsPane view];
+		[detailsPane configureForActionDetails:[alert objectForKey:KEY_ACTION_DETAILS]];
+	}
 
 	//Resize our window for best fit
 	int		currentDetailHeight = [view_auxiliary frame].size.height;
@@ -196,7 +200,7 @@
 					animate:[[self window] isVisible]];
 	
 	//Add the details view
-	[view_auxiliary addSubview:detailsView];
+	if(detailsView) [view_auxiliary addSubview:detailsView];
 }
 
 //User selected an event from the popup
