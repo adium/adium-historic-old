@@ -67,7 +67,7 @@ static NSMenu			* menu_Games;
 - (IBAction)newGame: (id)sender
 {
 	AIListObject   *selectedContact = [[adium contactController] selectedListObject];
-	if(selectedContact)
+	if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]])
 		[textField_handle setStringValue:[selectedContact UID]];
 	
 	[windowController showWindow:nil];
@@ -198,6 +198,16 @@ static NSMenu			* menu_Games;
 - (IBAction)cancelInvite:(id)sender
 {
 	[windowController close];
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    BOOL valid = YES;
+	AIListContact	*selectedContact = [[adium menuController] contactualMenuContact];
+	if (selectedContact) {
+		valid = (selectedContact && [selectedContact isKindOfClass:[AIListContact class]]);
+	}
+    return(valid);
 }
 
 #pragma mark Stubs for things subclasses implement
