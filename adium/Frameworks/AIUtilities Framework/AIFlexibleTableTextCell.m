@@ -24,8 +24,8 @@
 
 #define USE_OPTIMIZED_LIVE_RESIZE   NO  //If YES, text layout will not be recalculated during a resize
 
-#define COPY_EMOTICON_TEXT  AILocalizedString(@"Copy Emoticon Text","Copy the text of an emoticon")
-#define COPY_EMOTICON_IMAGE AILocalizedString(@"Copy Emoticon Image","Copy the image of an emoticon")
+#define COPY_EMOTICON_TEXT  AILocalizedString(@"Copy Image Text","Copy the text of an emoticon/latex function")
+#define COPY_EMOTICON_IMAGE AILocalizedString(@"Copy Image","Copy the image of an emoticon/latex function")
 
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
@@ -394,16 +394,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Supply menu items
 - (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    NSArray *menuItemArray = nil;
+    NSMutableArray *menuItemArray = [[[NSMutableArray alloc] init] autorelease];
 
-    if(containsLinks){
-        //Get link menu items if appropriate
-        menuItemArray = ([linkTrackingController menuItemsForEvent:theEvent withOffset:inOffset]);
-    } else {
-        //Get emoticon menu items if appropriate
-        menuItemArray = [self _emoticonMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
-    }
-    
+    [menuItemArray addObjectsFromArray:
+        [linkTrackingController menuItemsForEvent:theEvent withOffset:inOffset]];
+    [menuItemArray addObjectsFromArray:
+        [self _emoticonMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset]];
+
     return(menuItemArray);
 }
 
