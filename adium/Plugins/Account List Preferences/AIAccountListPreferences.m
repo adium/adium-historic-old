@@ -55,7 +55,9 @@
 	configuredForAccount = nil;
     
 	//
-	[popupMenu_serviceList setMenu:[[adium accountController] menuOfServicesWithTarget:self]];
+	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self];
+	[serviceMenu setAutoenablesItems:YES];
+	[popupMenu_serviceList setMenu:serviceMenu];
 	[self configureAccountList];
 
 	//Observe account list objects so we can enable/disable our controls for connected accounts
@@ -148,7 +150,12 @@
         [tabView_auxiliary selectPreviousTabViewItem:nil];
     }
 	
-    //Hook up the responder chain
+    //Hook up the responder chain --
+	//We must enable these controls.  If they are disabled some of our nextKeyView calls below will be ignored
+	//[popupMenu_serviceList setEnabled:YES];
+	//[textField_accountName setEnabled:YES];
+	//nope, that's not it
+	
 	//Name field goes to first control in account view
 	[textField_accountName setNextKeyView:[accountView nextValidKeyView]];
 
@@ -231,7 +238,6 @@
 //causing it to save any outstanding changes.
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	NSLog(@"makeFirstResponder:%@",popupMenu_serviceList);
 	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 	return(YES);
 }
