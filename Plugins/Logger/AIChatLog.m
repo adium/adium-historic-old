@@ -17,7 +17,7 @@
 #import "AIChatLog.h"
 #import "AILogViewerWindowController.h"
 
-void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate);
+BOOL scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate);
 
 @implementation AIChatLog
 
@@ -209,45 +209,80 @@ static	NSTimeZone	*defaultTimeZone = nil;
 //Returns the date specified by a filename
 + (NSCalendarDate *)dateFromFileName:(NSString *)fileName
 {
-    unsigned long   year = 0;
-    unsigned long   month = 0;
-    unsigned long   day = 0;
-
-    scandate([fileName cString], &year, &month, &day);
-    if(year && month && day){
-        return([NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:defaultTimeZone]);
-    }else{
-        return(nil);
-    }
+	unsigned long   year = 0;
+	unsigned long   month = 0;
+	unsigned long   day = 0;
+	
+	if(scandate([fileName UTF8String], &year, &month, &day)) {
+		if(year && month && day) {
+			return [NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
+		} else {
+			return nil;
+		}
+	}
 }
 
 //Scan an Adium date string, supahfast C style
-//Submitted by Mac-arena the Bored Zo
-void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate) {
+BOOL scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate) {
+	BOOL success = YES;
+	unsigned long component;
     //read three numbers, starting after:
 	
 	//a space...
-    while(*sample != ' ') ++sample;
-	
+	while(*sample != ' ') {
+    	if(!*sample) {
+    		success = NO;
+    		goto fail;
+		} else {
+			++sample;
+		}
+    }
+
 	//...followed by a (
-	while(*sample != '(') ++sample;
-	
-    sample += 1; //start with the next character
-    
+	while(*sample != '(') {
+    	if(!*sample) {
+    		success = NO;
+    		goto fail;
+		} else {
+			++sample;
+		}
+    }
+
+	//current character is a '(' now, so skip over it.
+    ++sample; //start with the next character
+
     /*get the year*/ {
-		while(*sample < '0' || *sample > '9') ++sample;
-		*outyear = strtoul(sample, (char **)&sample, 10);
+		while(*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if(!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if(outyear) *outyear = component;
     }
     
     /*get the month*/ {
-		while(*sample < '0' || *sample > '9') ++sample;
-		*outmonth = strtoul(sample, (char **)&sample, 10);
+		while(*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if(!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if(outmonth) *outmonth = component;
     }
     
     /*get the date*/ {
-		while(*sample < '0' || *sample > '9') ++sample;
-		*outdate = strtoul(sample, (char **)&sample, 10);
+		while(*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if(!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if(outdate) *outdate = component;
     }
+
+fail:
+	return success;
 }
 
 @end
