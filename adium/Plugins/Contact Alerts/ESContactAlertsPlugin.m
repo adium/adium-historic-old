@@ -44,9 +44,6 @@
     //Register as a contact observer
     [[owner contactController] registerListObjectObserver:self];
 
-    //Initialize our text-to-speech object
-    speaker = [[SUSpeaker alloc] init];
-
     //Install the preference pane
     prefs = [[ESContactAlertsPreferences contactAlertsPreferencesWithOwner:owner] retain];
 }
@@ -186,7 +183,7 @@
                     }
 
                     else if ([action compare:@"Speak"] == 0) {
-                        [speaker speakText:details]; //uses Raphael Sebbe's SpeechUtilities.framework
+			[[owner soundController] speakText:details];
                         success = YES;
                     }
 

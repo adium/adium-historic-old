@@ -32,23 +32,23 @@
     if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
     {
         AIContentMessage *inObj = (AIContentMessage *)inObject;
-	
-	NSMutableAttributedString *mesg = [[inObj message] mutableCopy];
+
+	NSMutableAttributedString *mesg = [[inObj message] mutableCopyWithZone:nil];
 	
 	NSString *pattern;
 	NSString *replaceWith;
 	
 	NSEnumerator *enumerator = [hash keyEnumerator];
 	
-	while ((pattern = [enumerator nextObject]))
-	{//This loop gets run for every key in the dictionary
-	    NSRange range; 
-	    int location;
-	    int length;
-
-	    replaceWith = [hash objectForKey:pattern];
+	NSRange range;
+	int location;
+	int length;
 	
-	    if([replaceWith isEqualToString:@"$var$"])
+	while (pattern = [enumerator nextObject])
+	{//This loop gets run for every key in the dictionary
+
+
+	    if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"])
 	    {//if key is a var go find out what the replacement text should be
 		replaceWith = [self hashLookup:pattern contentMessage:inObj];
 	    }

@@ -12,6 +12,6 @@
 	<key>Speak Time</key>
 	    <false/>
 	<key>Speak Sender</key>
-	    <false/>
+	    <true/>
 </dict>
 </plist>

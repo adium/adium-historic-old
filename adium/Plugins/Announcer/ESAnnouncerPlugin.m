@@ -11,7 +11,8 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
-#define ANNOUNCER_DEFAULT_PREFS @"AnnouncerDefaults.plist"
+#define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
+#define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults.plist"
 
 @interface ESAnnouncerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -23,10 +24,16 @@
 {
     //Setup our preferences
     preferences = [[ESAnnouncerPreferences announcerPreferencesWithOwner:owner] retain];
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SOUNDS];
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
 
+    //Install the contact info view
+    [NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
+    contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
+    [[owner contactController] addContactInfoView:contactView];
+    [popUp_voice addItemsWithTitles:[[owner soundController] voices]];
+    
     observingContent = NO;
-
+    lastSenderString = [[NSString alloc] init];
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
@@ -40,8 +47,8 @@
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
-	NSDictionary * dict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ANNOUNCER] == 0){
+	NSDictionary * dict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
 	speakOutgoing = [[dict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
 	speakIncoming = [[dict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
 	speakMessages = speakOutgoing || speakIncoming;
@@ -56,16 +63,9 @@
         if(newValue != observingContent){
             observingContent = newValue;
 
-            if(!observingContent){ //Stop Announcing
-				   //Stop Observing
-		[speaker release]; speaker = nil;
+            if(!observingContent){ //Stop Observing
                 [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-
-            }else{ //Start Announcing
-		if (!speaker) {
-		//Initialize our text-to-speech object if it doesn't already exist (which it shouldn't if we make it to this point)
-		speaker = [[SUSpeaker alloc] init];
-		}
+            }else{ //Start Observing
                 [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
 
 	    }
@@ -102,26 +102,36 @@
 
 	    //Determine some basic info about the content
 	    BOOL isOutgoing = ([source isKindOfClass:[AIAccount class]]);
-
+	    BOOL newParagraph = NO;
 	    if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
-		if (speakSender) {
+		
+		if (speakSender && !isOutgoing) {
 		    NSString * senderString;
 		    //Get the sender string
-		    if(isOutgoing){
+		  /*  if(isOutgoing){
 			senderString = [[owner accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
 			if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
-		    }else{
+		    }else{ */
 			senderString = [(AIListContact *)source displayName];
-		    }
+//		    }
 
-		    [theMessage appendFormat:@"%@...",senderString];
+		    if ([senderString compare:lastSenderString] != 0) {
+		    [theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
+		[theMessage appendFormat:@"[[slnc 50; emph +]] %@...",senderString]; //emphasize first word in sender's name
+		[lastSenderString release]; lastSenderString = [senderString retain];
+		newParagraph = YES;
+		    }
 		}
-		
+
 		if (speakTime) {
 		    dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
 		    [theMessage appendFormat:@" %@...",dateString];
 		}
 
+		if (newParagraph) {
+		    [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
+		}
+		
 		[theMessage appendFormat:@" %@",message];
 	    }
 	}
@@ -146,7 +156,72 @@
 
     //Speak the message
     if(theMessage != nil){
-        [speaker speakText:theMessage];
+	AIListObject * otherPerson = [chat listObject];
+	if (otherPerson) { //one-on-one chat; check for and use custom settings
+	    NSString	*voice = nil;
+	    NSNumber	*pitchNumber = nil;	float pitch = 0;
+	    NSNumber	*rateNumber = nil;	int rate = 0;
+	    voice = [[owner preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    NSLog(@"voice is %@",voice);
+	    
+	    pitchNumber = [[owner preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    if(pitchNumber)
+		pitch = [pitchNumber floatValue];
+
+	    rateNumber = [[owner preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    if(rateNumber)
+		rate = [rateNumber intValue];
+
+	    [[owner soundController] speakText:theMessage withVoice:voice andPitch:pitch andRate:rate];
+	} else { //must be in a chat room - just speak the message
+	[[owner soundController] speakText:theMessage];
+	}
     }
 }
+
+- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
+{
+    NSString	*voice = nil;
+    NSNumber	*pitchNumber = nil;
+    NSNumber	*rateNumber = nil;
+    
+    //Hold onto the object
+    [activeListObject release]; activeListObject = nil;
+    activeListObject = [inObject retain];
+    voice = [[owner preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    if(voice) {
+        [popUp_voice selectItemWithTitle:voice];
+    } else {
+        [popUp_voice selectItemAtIndex:0]; //"Default"
+    }
+
+    pitchNumber = [[owner preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    if(pitchNumber) {
+	[slider_pitch setFloatValue:[pitchNumber floatValue]];
+    } else {
+	[slider_pitch setFloatValue:[[owner soundController] defaultPitch]];
+    }
+
+    rateNumber = [[owner preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    if(rateNumber) {
+	[slider_rate setIntValue:[rateNumber intValue]];
+    } else {
+	[slider_rate setIntValue:[[owner soundController] defaultRate]];
+    }
+}
+
+- (IBAction)changedSetting:(id)sender
+{
+    if (sender == popUp_voice) {
+	NSString * voice = [popUp_voice titleOfSelectedItem];
+	if ([voice compare:@"Default"] == 0)
+	    voice = nil;
+	[[owner preferenceController] setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    } else if (sender == slider_pitch) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    } else if (sender == slider_rate) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    }
+}
+
 @end
