@@ -101,7 +101,7 @@ except ImportError:
 
 from cStringIO import StringIO
 
-# Which SMTP server to do we connect to?  Empty string means localhost.
+# Which SMTP server to do we connect to?
 MAILHOST = 'localhost'
 MAILPORT = 25
 
