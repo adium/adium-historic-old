@@ -25,7 +25,11 @@
     NSRect		closeButtonRect;
     BOOL		trackingClose;
     BOOL		hoveringClose;
+    
     NSTrackingRectTag	trackingTag;
+    NSDictionary        *userData;
+    NSTrackingRectTag   closeTrackingTag;
+    NSDictionary        *closeUserData;
     
     NSTabViewItem	*tabViewItem;
     NSSize		oldSize;
@@ -42,8 +46,8 @@
 - (void)setFrame:(NSRect)inFrame;
 - (NSRect)frame;
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
-- (void)setTrackingTag:(NSTrackingRectTag)inTag;
-- (NSTrackingRectTag)trackingTag;
 - (void)setHighlighted:(BOOL)inHighlighted;
+- (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation;
+- (void)removeTrackingRectsFromView:(NSView *)view;
 
 @end

@@ -8388,6 +8388,7 @@
 				34BD9E4705314755000AB133,
 				34BD9E4805314755000AB133,
 				34BD9E4905314755000AB133,
+				4B863DFA055297D000814AEF,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18090,6 +18091,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B863DF9055297D000814AEF = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = TabClose_Front_Rollover.tif;
+			path = "Frameworks/AIUtilities Framework/Images/TabClose_Front_Rollover.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B863DFA055297D000814AEF = {
+			fileRef = 4B863DF9055297D000814AEF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B8ABA170488ECE100A8010A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
@@ -23472,6 +23487,7 @@
 				4BA59D26050D82EF00A8010A,
 				4BF3F78104B3E14C00A8010A,
 				4B9C09A704B618C000A8010A,
+				4B863DF9055297D000814AEF,
 			);
 			isa = PBXGroup;
 			name = Images;

@@ -328,6 +328,10 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     //Redisplay new cell
     [self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
 
+    //Reset cursor tracking
+    [self _stopTrackingCursor];
+    [self _startTrackingCursor];
+    
     //Inform our delegate
     if([delegate respondsToSelector:@selector(customTabView:didSelectTabViewItem:)]){
         [delegate customTabView:self didSelectTabViewItem:tabViewItem];
@@ -335,10 +339,10 @@ static  NSSize                  dragCellSize;           //Size of the cell being
 }
 
 //Rebuild our tab list to match the tabView
-- (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)TabView
+- (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)inTabView
 {
     //Rebuild cells (If this was called by the tab view)
-    if(TabView){
+    if(inTabView){
         [self rebuildCells];        
     }
 
@@ -403,25 +407,23 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     if([self window]){
         NSEnumerator		*enumerator;
         AICustomTabCell		*tabCell;
-        NSTrackingRectTag	trackingTag;
         NSPoint			localPoint;
 
         //Local mouse location
         localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
         localPoint = [self convertPoint:localPoint fromView:nil];
 
-        //Install a tracking rect for each open tab
+        //Install tracking rects for each tab
         enumerator = [tabCellArray objectEnumerator];
-        while((tabCell = [enumerator nextObject])){
+        while((tabCell = [enumerator nextObject])){            
             NSRect trackRect = [tabCell frame];
 
             //Compensate for overlap
             trackRect.origin.x += CUSTOM_TABS_OVERLAP;
             trackRect.size.width -= CUSTOM_TABS_OVERLAP;
 
-            //add the tracking tag
-            trackingTag = [self addTrackingRect:trackRect owner:self userData:tabCell assumeInside:NSPointInRect(localPoint, trackRect)];
-            [tabCell setTrackingTag:trackingTag];
+            //add the tracking tags
+            [tabCell addTrackingRectsInView:self withFrame:trackRect cursorLocation:localPoint];
         }
     }
 }
@@ -435,27 +437,8 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     //Remove the tracking rect for each open tab
     enumerator = [tabCellArray objectEnumerator];
     while((tabCell = [enumerator nextObject])){
-        [self removeTrackingRect:[tabCell trackingTag]];
-        [tabCell setTrackingTag:0];
+        [tabCell removeTrackingRectsFromView:self];
     }
-}
-
-//Mouse entered one of our tabs
-- (void)mouseEntered:(NSEvent *)theEvent
-{
-    AICustomTabCell	*tabCell = [theEvent userData];
-
-    [tabCell setHighlighted:YES];
-    [self setNeedsDisplayInRect:[tabCell frame]];
-}
-
-//Mouse left one of our tabs
-- (void)mouseExited:(NSEvent *)theEvent
-{
-    AICustomTabCell	*tabCell = [theEvent userData];
-
-    [tabCell setHighlighted:NO];
-    [self setNeedsDisplayInRect:[tabCell frame]];
 }
 
 
