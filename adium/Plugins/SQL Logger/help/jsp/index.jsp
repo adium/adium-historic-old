@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 760 $ $Date: 2004/05/15 17:56:46 $ -->
+<!--$Rev: 765 $ $Date: 2004/05/21 03:47:18 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -376,7 +376,7 @@ try {
                 </tr>
                 </table>
                 <p style="text-indent: 80px"><i>(YYYY-MM-DD hh:mm:ss)</i></p><br />
-                
+
                 <input type="radio" name="screen_or_display" value
                 = "screen" id = "sn" <% if (!showDisplay && !showMeta)
                 out.print("checked=\"true\""); %> />
@@ -388,7 +388,7 @@ try {
                <br /> 
                 <input type="radio" name="screen_or_display" value="meta" id="meta" <% if (showMeta) out.print("checked=\"true\""); %> />
                     <label for="meta">Show Meta Contact</label>
-                
+
                 <div align="right">
                     <input type="reset" /><input type="submit" />
                 </div>
@@ -400,22 +400,22 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    
+
     pstmt = conn.prepareStatement(queryText);
-    
+
     //out.print(queryText + "<br />");
-    
+
     for(int i = 0; i < aryCount; i++) {
       //  out.print(commandArray[i] + "<br />");
         pstmt.setString(i + 1, commandArray[i]);
     }
 
     rset = pstmt.executeQuery();
-    
+
     if (!rset.isBeforeFirst()) {
         out.print("<div align=\"center\"><i>No records found.</i></div>");
     }
-    
+
     ArrayList userArray = new java.util.ArrayList();
     String colorArray[] =
     {"red","blue","green","purple","black","orange", "teal"};
@@ -425,7 +425,7 @@ try {
     String prevSender, prevRecipient;
     prevSender = new String();
     prevRecipient = new String();
-    
+
     int cntr = 1;
     Date currentDate = null;
     Timestamp currentTime = new Timestamp(0);
@@ -434,7 +434,7 @@ try {
             currentDate = rset.getDate("message_date");
             prevSender = "";
             prevRecipient = "";
-            
+
             out.println("<div class=\"weblogDateHeader\">");
             out.println(rset.getString("fancy_date"));
             out.println("</div>");
@@ -442,33 +442,49 @@ try {
             currentTime.getTime() > 60*10*1000) {
             out.println("<hr width=\"75%\">");
         }
-        
+
         currentTime = rset.getTimestamp("message_date");
-        
+
         sent_color = null;
         received_color = null;
         String message = rset.getString("message");
 
         for(int i = 0; i < userArray.size(); i++) {
-            if (userArray.get(i).equals(rset.getString("sender_sn"))) {
+            if (!showMeta && 
+                    userArray.get(i).equals(rset.getString("sender_sn"))) {
+                sent_color = colorArray[i % colorArray.length];
+            } else if (showMeta && 
+                    userArray.get(i).equals(rset.getString("sender_meta"))) {
                 sent_color = colorArray[i % colorArray.length];
             }
         }
 
         if (sent_color == null) {
             sent_color = colorArray[userArray.size() % colorArray.length];
-            userArray.add(rset.getString("sender_sn"));
+            if(!showMeta) {
+                userArray.add(rset.getString("sender_sn"));
+            } else {
+                userArray.add(rset.getString("sender_meta"));
+            }
         }
 
         for(int i = 0; i < userArray.size(); i++) {
-            if (userArray.get(i).equals(rset.getString("recipient_sn"))) {
+            if (!showMeta &&
+                    userArray.get(i).equals(rset.getString("recipient_sn"))) {
+                received_color = colorArray[i % colorArray.length];
+            } else if (showMeta && 
+                    userArray.get(i).equals(rset.getString("recipient_meta"))) {
                 received_color = colorArray[i % colorArray.length];
             }
         }
 
         if (received_color == null) {
             received_color = colorArray[userArray.size() % colorArray.length];
-            userArray.add(rset.getString("recipient_sn"));
+            if(!showMeta) {
+                userArray.add(rset.getString("recipient_sn"));
+            } else {
+                userArray.add(rset.getString("recipient_meta"));
+            }
         }
 
         message = message.replaceAll("\r|\n", "<br />");
