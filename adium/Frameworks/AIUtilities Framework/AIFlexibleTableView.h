@@ -27,7 +27,7 @@
 - (BOOL)shouldSelectRow:(int)inRow;
 @end
 @protocol AIFlexibleTableViewDeleagte <NSObject>
--(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView fromEvent:(NSEvent *)theEvent;
+-(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView;
 @end
 
 @interface AIFlexibleTableView : NSControl {
@@ -66,7 +66,6 @@
 - (void)setDelegate:(id)inDelegate;
 - (int)heightOfSpanCellsAboveRow:(AIFlexibleTableRow *)startRow;
 
-- (NSArray *)arrayOfMenuItemsFromEvent:(NSEvent *)theEvent;
 @end
 
 
