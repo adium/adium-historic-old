@@ -201,6 +201,7 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+		
         NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
         NSColor		*groupColor = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor];
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
@@ -208,15 +209,17 @@
         BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
         
         BOOL		showLabels = [[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
-        BOOL            labelAroundContactOnly = [[prefDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue];
-        BOOL            outlineLabels = [[prefDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue];
-		BOOL			useGradient = [[prefDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue];
-		float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
-        
-        BOOL            outlineGroups = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue];
-        NSColor         *outlineGroupsColor = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor];
-        BOOL            labelGroups = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue];
-        NSColor         *labelGroupsColor = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor];
+        BOOL		labelAroundContactOnly = [[prefDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue];
+        BOOL		outlineLabels = [[prefDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue];
+		BOOL		useGradient = [[prefDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue];
+		float		labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
+
+        //outlineGroups only works on Panther or better
+        BOOL		outlineGroups = ([[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue] && [NSApp isOnPantherOrBetter]);
+        NSColor		*outlineGroupsColor = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor];
+		
+        BOOL		labelGroups = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue];
+        NSColor		*labelGroupsColor = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor];
         
         allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
         
