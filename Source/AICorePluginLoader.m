@@ -156,7 +156,7 @@
 		if(NSRunInformationalAlertPanel([NSString stringWithFormat:@"Disable %@?",[pluginName stringByDeletingPathExtension]],
 										@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
 										@"Disable", 
-										@"Cancel",
+										@"Continue",
 										nil) == NSAlertDefaultReturn){
 			//Disable this plugin
 			[self disablePlugin:[pluginPath stringByAppendingPathComponent:pluginName]];
