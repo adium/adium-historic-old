@@ -154,9 +154,9 @@ static AIOutOfSyncWindowController	*sharedInstance = nil;
           //  if([radio_useCurrentGroups state]){ 
 
             if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){ //Account supports groups
-                //Remove handles and re-add them in the correct group
-                [(AIAccount<AIAccount_GroupedHandles> *)account removeHandle:[entry handle] fromGroup:[entry serverGroup]];
-                [(AIAccount<AIAccount_GroupedHandles> *)account addHandle:[entry handle] toGroup:[[entry handle] containingGroup]];
+                [(AIAccount<AIAccount_GroupedHandles> *)account moveHandle:[entry handle]
+                                                                 fromGroup:[entry serverGroup]
+                                                                   toGroup:[[entry handle] containingGroup]];
             }
 
           //  }else if([radio_useNewGroups state]){ //Apply locally            
