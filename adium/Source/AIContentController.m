@@ -307,7 +307,7 @@
         if([chat listObject] == inListObject) break;
     }
 
-    if(!chat){
+    if(!chat || ([chat account] != inAccount) ){
         //If no account is passed, use the default
         if(!inAccount){
             inAccount = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inListObject];
