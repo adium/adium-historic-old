@@ -117,12 +117,12 @@
 //Called as contacts are created, load their alias
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-    if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"Display Name"])){
+    if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"Formatted UID"])){
         return([self _applyAlias:[inObject preferenceForKey:@"Alias"
 													  group:PREF_GROUP_ALIASES 
 									  ignoreInheritedValues:YES]
 						toObject:inObject
-						  notify:NO]);
+						  notify:YES]);
     }else{
 		return(nil);
 	}
