@@ -294,6 +294,7 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
+	if(GAIM_DEBUG) NSLog(@"accountRemoveBuddy: %s",buddy->name);
 	AIListContact	*theContact = (AIListContact *)buddy->node.ui_data;
 	
     if(theContact){
@@ -789,19 +790,22 @@
 - (BOOL)closeChat:(AIChat*)chat
 {
     GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-    if (conv)
+    if (conv){
         gaim_conversation_destroy(conv);
-
+	}
+	
     [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
 	
 #warning Wrong. perhaps use a chat identifier of sorts
-	AIListObject *listObject = [chat listObject];
+	AIListObject	*listObject = [chat listObject];
 	if (listObject){
 		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
 		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
 	}else{
-		NSAssert([chat name] != nil,@"closeChat: [chat name] was nil");
-		[chatDict removeObjectForKey:[chat name]];	
+		NSString	*name = [chat name];
+		if (name){
+			[chatDict removeObjectForKey:[chat name]];
+		}
 	}
 	
     return YES;
@@ -1475,6 +1479,31 @@
 //Our account was disconnected, report the error
 - (void)accountConnectionReportDisconnect:(const char*)text
 {
+	//We are disconnecting
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+	[[adium contactController] delayListObjectNotifications];
+	
+	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil onAccount:self] objectEnumerator];
+	AIListContact	*contact;
+	
+	while (contact = [enumerator nextObject]){
+		GaimBuddy *buddy;
+		
+		//Clear the buddy's ui_data pointer to avoid accidentally referencing the released AIListObject
+		buddy = [[contact statusObjectForKey:@"GaimBuddy"] pointerValue];
+		if (buddy){
+			buddy->node.ui_data = NULL;
+			[contact setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
+		}
+		
+		[contact setRemoteGroupName:nil];
+		[self removeAllStatusFlagsFromContact:contact];
+		
+		[contact release];
+	}
+	
+	[[adium contactController] endListObjectNotificationDelay];
+	
     [self displayError:[NSString stringWithUTF8String:text]];
 }
 - (void)accountConnectionNotice:(const char*)text
