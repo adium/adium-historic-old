@@ -135,23 +135,17 @@
 {
 	
 	NSMutableDictionary	*contentDict;
-	NSString			*sender;
-	NSString			*receiver;
 	
 	contentDict = [NSMutableDictionary dictionary];
 	[contentDict setObject:[content type] forKey:@"Type"];
 	
+	AIChat		*chat = [content chat];
+	NSString	*objectID = [AIListContact internalUniqueObjectIDForService:[[chat listObject] service]
+																	account:[chat account]
+																		UID:[[chat listObject] UID]];
+	
 	// Outgoing or incoming?
-	if( [content isOutgoing] ) {
-		sender = [[[content chat] account] uniqueObjectID];
-		receiver = [NSString stringWithFormat:@"%@.%@.%@",[[[content chat] listObject] serviceID],[[[content chat] account] UID],[[[content chat] listObject] UID]];
-	} else {
-		receiver = [[[content chat] account] uniqueObjectID];
-		sender = [NSString stringWithFormat:@"%@.%@.%@",[[[content chat] listObject] serviceID],[[[content chat] account] UID],[[[content chat] listObject] UID]];
-	}
-
-	[contentDict setObject:sender forKey:@"From"];
-	[contentDict setObject:receiver forKey:@"To"];
+	[contentDict setObject:objectID forKey:([content isOutgoing] ? @"To" : @"From")];
 	[contentDict setObject:[NSNumber numberWithBool:[content isOutgoing]] forKey:@"Outgoing"];
 	
 	// ONLY log AIContentMessages right now... no status messages
@@ -160,7 +154,6 @@
 	[contentDict setObject:[[[(AIContentMessage *)content message] safeString]dataRepresentation] forKey:@"Message"];
 	
 	return(contentDict);
-	
 }
 
 
@@ -213,10 +206,10 @@
 					// The other person is always the one we're chatting with right now
 					if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
 						dest = [chat listObject];
-						source = [[adium accountController] accountWithObjectID:from];
+						source = [[adium accountController] accountWithAccountNumber:[from intValue]];
 					} else {
 						source = [chat listObject];
-						dest = [[adium accountController] accountWithObjectID:to];
+						dest = [[adium accountController] accountWithAccountNumber:[to intValue]];
 					}
 					
 					// Make the message response if all is well
