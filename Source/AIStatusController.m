@@ -379,7 +379,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			[menuItem setImage:image];
 			[menuItem setEnabled:YES];
 			[menuItems addObject:menuItem];
-			[menuItem release];
 
 			[alreadyAddedTitles addObject:title];
 		}
