@@ -36,6 +36,7 @@
 
 //Display
 - (NSString *)displayName;
+- (NSString *)formattedDisplayName;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
 
 //Nesting
