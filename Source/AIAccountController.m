@@ -334,7 +334,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription
 {	
 	AIServiceImportance	importance;
-	BOOL				firstPass = YES;
 	unsigned			numberOfItems = 0;
 	NSArray				*serviceArray;
 	
