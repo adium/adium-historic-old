@@ -155,6 +155,20 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
+- (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
+{
+    AIFlexibleTableCell	*cell;
+    NSPoint		cellOrigin;
+    
+    //Determine the clicked cell
+    cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin];
+    if(cell){
+        return([cell menuItemsForEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)]);
+    }else{
+        return(nil);
+    }    
+}
+
 //Select content in this row
 - (void)selectContentFrom:(NSPoint)startPoint to:(NSPoint)endPoint offset:(NSPoint)offset mode:(int)selectMode
 {

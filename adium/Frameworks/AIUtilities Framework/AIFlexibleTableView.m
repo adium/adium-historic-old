@@ -16,6 +16,8 @@
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
 
+#define COPY_MENU_ITEM @"Copy"
+
 @interface AIFlexibleTableView (PRIVATE)
 - (void)_init;
 - (NSAttributedString *)_selectedString;
@@ -85,6 +87,10 @@
     [super dealloc];
 }
 
+- (void)setDelegate:(id)inDelegate
+{
+    delegate = inDelegate;
+}
 
 //Config -------------------------------------------------------------------------------
 //Set the content cells bottom aligned
@@ -136,7 +142,45 @@
     }
 }
 
+// Context menu ------------------------------------------------------------------------
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+    //Pass this on to our delegate
+    if([delegate respondsToSelector:@selector(contextualMenuForFlexibleTableView:fromEvent:)]){
+        return([(id<AIFlexibleTableViewDeleagte>)delegate contextualMenuForFlexibleTableView:self fromEvent:theEvent]);
+    }
+    return(nil);   
+}
 
+- (NSArray *)arrayOfMenuItemsFromEvent:(NSEvent *)theEvent
+{
+    AIFlexibleTableRow	*clickedRow;
+    NSPoint		clickLocation, rowClickLocation;
+    NSPoint		rowOrigin;
+    NSMutableArray      *returnArray = [[[NSMutableArray alloc] init] autorelease];
+    
+    //Determine clicked row
+    clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    clickedRow = [self _rowAtPoint:clickLocation rowOrigin:&rowOrigin];
+    rowClickLocation = NSMakePoint(clickLocation.x - rowOrigin.x, clickLocation.y - rowOrigin.y); //Local to the row
+    
+    NSArray *rowContextArray = [clickedRow menuItemsForEvent:theEvent atPoint:rowClickLocation offset:rowOrigin];
+    if (rowContextArray && [rowContextArray count]) {
+        [returnArray addObjectsFromArray:rowContextArray];
+    }
+
+    //[returnArray addObject:[NSMenuItem separatorItem]];
+    
+    //Copy
+    if ([clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
+        [returnArray addObject:[[[NSMenuItem alloc] initWithTitle:COPY_MENU_ITEM
+                                                           target:self
+                                                           action:@selector(copy:)
+                                                    keyEquivalent:@""] autorelease]];
+    }
+
+    return ([returnArray count] ? returnArray : nil);
+}
 //Clicking --------------------------------------------------------------------------------
 //
 - (void)mouseDown:(NSEvent *)theEvent
@@ -152,7 +196,7 @@
     rowClickLocation = NSMakePoint(clickLocation.x - rowOrigin.x, clickLocation.y - rowOrigin.y); //Local to the row
 
     //Remember the number of clicks
-    if(![NSEvent shiftKey]){
+    if(![theEvent shiftKey]){
         clicks = [theEvent clickCount];
         if(!(clicks % 3)){ //Tripple click (Select line)
             selectClicks = 3;

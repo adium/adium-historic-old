@@ -26,7 +26,9 @@
 @protocol AIFlexibleTableViewDelegate_shouldSelectRow
 - (BOOL)shouldSelectRow:(int)inRow;
 @end
-
+@protocol AIFlexibleTableViewDeleagte <NSObject>
+-(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView fromEvent:(NSEvent *)theEvent;
+@end
 
 @interface AIFlexibleTableView : NSControl {
     //Display
@@ -47,6 +49,8 @@
     int					selectClicks;
     
     BOOL                                lockFocus;
+    
+    id                                  delegate;
 }
 
 
@@ -59,7 +63,9 @@
 - (void)setContentPaddingTop:(int)inTop bottom:(int)inBottom;
 - (void)lockTable;
 - (void)unlockTable;
+- (void)setDelegate:(id)inDelegate;
 
+- (NSArray *)arrayOfMenuItemsFromEvent:(NSEvent *)theEvent;
 @end
 
 
