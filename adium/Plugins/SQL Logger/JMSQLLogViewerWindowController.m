@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.10 $
- * $Date: 2003/12/15 03:24:57 $
- * $Author: adamiser $
+ * $Revision: 1.11 $
+ * $Date: 2003/12/22 06:28:01 $
+ * $Author: jmelloy $
  */
 
 #import "JMSQLLogViewerWindowController.h"
@@ -33,6 +33,7 @@
 - (void)makeActiveLogsForServiceID:(NSString *)inUserID;
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
 - (void)displayLogAtPath:(NSString *)messageDate from:(NSString *)fromUserID to:(NSString *)toUserID;
+- (void)setDatabaseConnections;
 @end
 
 int _sortStringWithKey(id objectA, id objectB, void *key);
@@ -68,16 +69,35 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     selectedColumn = nil;
     sortDirection = 0;
 
-    conn = PQconnectdb("");
+	NSString	*connInfo;
+	id			tmp;
+	
+	connInfo = [NSString stringWithFormat:@"host=\'%@\' port=\'%@\' user=\'%@\' password=\'%@\' dbname=\'%@\' sslmode=\'prefer\'", 
+						(tmp = url) ? tmp: @"", (tmp = port) ? tmp: @"", (tmp = username) ? tmp: NSUserName(), 
+				   (tmp = password) ? tmp: @"", (tmp = database) ? tmp: NSUserName()];
+	
+	
+    conn = PQconnectdb([connInfo cString]);
+
     if (PQstatus(conn) == CONNECTION_BAD)
     {
-        [[adium interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:@"Check your settings and try again."];
+        [[adium interfaceController] handleErrorMessage:@"Connection to database for Log Viewer failed." withDescription:@"Check your settings and try again."];
         NSLog(@"%s", PQerrorMessage(conn));
     }
 
     [super initWithWindowNibName:windowNibName];
 
     return(self);
+}
+
+-(void)setDatabaseConnections {
+	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
+	
+	username = [preferenceDict objectForKey:KEY_SQL_USERNAME];
+	url = [preferenceDict objectForKey:KEY_SQL_URL];
+	port = [preferenceDict objectForKey:KEY_SQL_PORT];
+	database = [preferenceDict objectForKey:KEY_SQL_DATABASE];
+	password = [preferenceDict objectForKey:KEY_SQL_PASSWORD];
 }
 
 //

@@ -18,13 +18,20 @@
 
 /**
  * 
- * $Revision: 1.7 $
- * $Date: 2003/11/25 22:09:41 $
+ * $Revision: 1.8 $
+ * $Date: 2003/12/22 06:28:01 $
  * $Author: jmelloy $
  *
  **/
-#define KEY_SQL_LOGGER_ENABLE	@"Enable SQL Logging"
-#define PREF_GROUP_LOGGING	@"SQLLogging"
+
+#define KEY_SQL_LOGGER_ENABLE		@"Enable SQL Logging"
+#define PREF_GROUP_SQL_LOGGING		@"SQLLogging"
+#define SQL_LOGGING_DEFAULT_PREFS   @"SQLLogging.plist"
+#define KEY_SQL_USERNAME			@"Username"
+#define KEY_SQL_PASSWORD			@"Password"
+#define KEY_SQL_URL					@"URL"
+#define KEY_SQL_PORT				@"Port"
+#define KEY_SQL_DATABASE			@"Database"
 
 #import "libpq-fe.h"
 @class JMSQLLoggerAdvancedPreferences;
@@ -32,6 +39,14 @@
 @interface AISQLLoggerPlugin : AIPlugin <AIPluginInfo> {
     JMSQLLoggerAdvancedPreferences  *advancedPreferences;
     PGconn                          *conn;
+	
+	NSString	*username;
+	NSString	*url;
+	NSString	*port;
+	NSString	*database;
+	NSString	*password;
+
+	bool		observingContent;
 }
 
 @end
