@@ -68,6 +68,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }else{
         [cell setBackgroundColor:inBackColor];
     }
+
+    [cell setType:NSTextCellType];
     
     return(cell);
 }
@@ -186,7 +188,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Change this cell's selection
 - (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex
 {
-    NSRange	selectionRange = [self validRangeFromIndex:sourceIndex to:destIndex];
+    selectionRange = [self validRangeFromIndex:sourceIndex to:destIndex];
 
     //Remove any existing coloring
     [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0,[textStorage length])];
@@ -200,13 +202,19 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Returns a portion of the string represented by this cell
 - (NSAttributedString *)stringFromIndex:(int)sourceIndex to:(int)destIndex
 {
-    NSRange	selectionRange = [self validRangeFromIndex:sourceIndex to:destIndex];
+    NSRange	theRange = [self validRangeFromIndex:sourceIndex to:destIndex];
 
     //return([[string safeString] attributedSubstringFromRange:selectionRange]);
-    return([[textStorage attributedSubstringFromRange:selectionRange] safeString]);
+    return([[textStorage attributedSubstringFromRange:theRange] safeString]);
 }
 
-
+- (BOOL)indexIsSelected:(int)index
+{
+    if ( index >= selectionRange.location &&  index <= (selectionRange.location + selectionRange.length) )
+        return YES;
+    else
+        return NO;
+}
 
 // Private -------------
 //Converts the specified source/dest index to a valid NSRange

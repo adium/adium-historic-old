@@ -162,6 +162,10 @@
     return(nil);
 }
 
+- (BOOL)indexIsSelected:(int)index
+{
+    return(NO);
+}
 
 //Sizing ------------------------------------------------------------------------------
 //Returns the size required to display this cell without wrapping
