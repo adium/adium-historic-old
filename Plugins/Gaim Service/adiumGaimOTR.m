@@ -222,7 +222,7 @@ static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 #endif
 	
 	/* XXX DEBUG: Immediately attempt to connect */
-	otrg_plugin_send_default_query_conv(conv);
+	//otrg_plugin_send_default_query_conv(conv);
 }
 
 /* Remove the per-conversation information display */
