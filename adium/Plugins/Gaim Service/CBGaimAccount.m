@@ -71,7 +71,7 @@
 #pragma mark GaimBuddies
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-	if(GAIM_DEBUG) NSLog(@"new: %s",buddy->name);
+//	if(GAIM_DEBUG) NSLog(@"new: %s",buddy->name);
 	[self contactAssociatedWithBuddy:buddy]; //Create a contact and hook it to this buddy
 }
 
@@ -108,7 +108,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
+//	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
@@ -474,28 +474,45 @@
     BOOL            sent = NO;
 	
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
-        AIContentMessage *cm = (AIContentMessage*)object;
-        AIChat *chat = [cm chat];
-        NSString *body = [self encodedAttributedString:[cm message] forListObject:[chat listObject]];
-        GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-        
+        AIContentMessage	*cm = (AIContentMessage*)object;
+        AIChat				*chat = [cm chat];
+
+		//***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
+		AIListObject		*listObject = [chat listObject];
+		
+        NSString			*body = [self encodedAttributedString:[cm message] forListObject:listObject];
+        GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+        char				*destination = [[listObject UID] UTF8String];
+		
         //create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
         //whereas it previously belonged to another account
         if (conv == NULL) {
             //***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
-            conv = gaim_conversation_new(GAIM_CONV_IM, account, [[[chat listObject] UID] UTF8String]);
+            conv = gaim_conversation_new(GAIM_CONV_IM, account, destination);
+
             //associate the AIChat with the gaim conv
             conv->ui_data = chat;
             [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-            //***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
-            [chatDict setObject:chat forKey:[[chat listObject] UID]];                
+            
+            [chatDict setObject:chat forKey:[listObject UID]];                
         }
         
-        GaimConvIm *im = gaim_conversation_get_im_data(conv);
-        
-//        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
-        gaim_conv_im_send(im, [body UTF8String]);
-        sent = YES;
+        switch (gaim_conversation_get_type(conv)) {
+			case GAIM_CONV_IM:
+			{
+				//        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
+				serv_send_im(gc, destination, [body UTF8String], [cm autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
+				//gaim_conv_im_send(im, [body UTF8String]);
+				sent = YES;
+				break;
+			}
+			case GAIM_CONV_CHAT:
+			{
+				NSLog(@"sending to a chat");	
+				sent = NO;
+				break;
+			}
+		}
 	}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
         AIContentTyping *ct = (AIContentTyping*)object;
         AIChat *chat = [ct chat];
@@ -1140,7 +1157,9 @@
 		proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
 		
 		proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
-			proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
+		proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
+		
+		NSLog(@"Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
 		
 		gaim_account_set_proxy_info(account,proxy_info);
 	}
