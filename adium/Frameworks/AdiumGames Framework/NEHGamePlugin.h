@@ -32,8 +32,7 @@
 #define				TAG_CHOOSE_PLAYER   2
 
 @interface NEHGamePlugin : AIPlugin <AIContentFilter> {
-	NSMenuItem				* menuItem_invite;
-	NSMenuItem				* menuItem_newGame;
+	NSMenuItem				* menuItem_game;
 	
 	//This dictionary maps [account UIDAndServiceID] => 
 	//{NSDictionary of [contact UIDAndServiceID] =>  NEHGameController*}
@@ -45,6 +44,10 @@
 	IBOutlet NSMatrix		* radio_playAs;
 	
 	NSWindowController		* windowController;
+	
+	//This is of the form "[<Short Game Name>/", just to avoid recreating that
+	//every time we try to parse an incoming message
+	NSString * prefixString;
 }
 
 - (void)endGameWith:(AIListContact*)contact fromAccount:(AIAccount*)account;

@@ -9,26 +9,37 @@
 #import "NEHGamePlugin.h"
 #import "NEHGameController.h"
 
-#define MENU_INVITE		AILocalizedString(@"Invite to play %@","Contextual menu item to invite someone to a game.")
-#define MENU_NEW		AILocalizedString(@"New %@ Game","File Menu Item.")
+#define MENU_INVITE		AILocalizedString(@"Invite to play game","Contextual menu item to invite someone to a game.")
+#define MENU_NEWGAME	AILocalizedString(@"New Game","File Menu Item.")
 
 #define CONTACT_NOT_FOUND			AILocalizedString(@"Contact Not Found","")
 #define CONTACT_NOT_FOUND_MESSAGE   AILocalizedString(@"Unable to find contact '%@'","")
 
 @implementation NEHGamePlugin
 
-static NSString * prefixString;
+static NSMenuItem		* menuItem_newGame;
+static NSMenuItem		* menuItem_invite;
+static NSMenu			* menu_Games;
 
 - (void)installPlugin
 {
+	//Initialize the global menus
+	if(menu_Games == nil)
+	{
+		menu_Games = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+		menuItem_newGame = [[[NSMenuItem alloc] initWithTitle:MENU_NEWGAME action:NULL keyEquivalent:@""] autorelease];
+		menuItem_invite = [[[NSMenuItem alloc] initWithTitle:MENU_INVITE action:NULL keyEquivalent:@""] autorelease];
+		[menuItem_newGame setSubmenu:menu_Games];
+		[menuItem_invite setSubmenu:menu_Games];
+		[[adium menuController] addContextualMenuItem:menuItem_invite toLocation:Context_Contact_Manage];
+		[[adium menuController] addMenuItem:menuItem_newGame toLocation:LOC_File_New];
+	}
+	
 	prefixString = [[NSString stringWithFormat:@"[%@/",[self gameShortName]] retain];
 	
-	menuItem_invite = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:MENU_INVITE, [self gameLongName]]
+	menuItem_game = [[[NSMenuItem alloc] initWithTitle:[self gameLongName]
 							target:self action:@selector(newGame:) keyEquivalent:@""] autorelease];
-	[[adium menuController] addContextualMenuItem:menuItem_invite toLocation:Context_Contact_Manage];
-	menuItem_newGame = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:MENU_NEW, [self gameLongName]] 
-							target:self action:@selector(newGame:) keyEquivalent:@""] autorelease];
-	[[adium menuController] addMenuItem:menuItem_newGame toLocation:LOC_File_New];
+	[menu_Games addItem:menuItem_game];					
 	
 	[NSBundle loadNibNamed:[self nibName] owner:self];
 	

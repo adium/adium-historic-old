@@ -31,6 +31,11 @@ typedef enum {  State_InviteSent,
 				State_Playing,
 				State_GameOver
 				} GameState;
+typedef enum {
+				End_UserWon,
+				End_UserLost,
+				End_GameTied
+				} GameEndState;
 				
 @interface NEHGameController : AIWindowController
 {
@@ -52,6 +57,8 @@ typedef enum {  State_InviteSent,
 #pragma mark Subclasses use these
 
 - (void)sendMessage:(NSString*)msg ofType:(NSString*)type;
+
+- (void)gameDidComplete:(GameEndState)end displaySheet:(BOOL)display;
 
 #pragma mark Subclasses override
 

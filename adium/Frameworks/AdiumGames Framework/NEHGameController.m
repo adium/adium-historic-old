@@ -21,6 +21,11 @@
 #define TIMEOUT				AILocalizedString(@"Invitation timed out.","")
 #define TIMEOUT_MESSAGE		AILocalizedString(@"The invitation timed out. The other player most likely is not using the appropriate plugin.","")
 
+#define GAME_OVER			AILocalizedString(@"Game Over","Title for game end pane")
+#define YOU_WIN				AILocalizedString(@"You win!","")
+#define YOU_LOSE			AILocalizedString(@"You lost...","")
+#define TIE					AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
+
 #define TIMEOUT_SECONDS		10
 
 @implementation NEHGameController
@@ -83,6 +88,12 @@
 	else
 		chat = [[[adium contentController] allChatsWithListObject:contact_OtherPlayer] objectAtIndex:0];
 	[self sendMessage:msg ofType:type toContact:contact_OtherPlayer fromAccount:account_Player inChat:chat];
+}
+
+- (void)gameDidComplete:(GameEndState)end displaySheet:(BOOL)display
+{
+	if(display)
+		NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,[self window],nil,NULL,NULL,NULL,end==End_GameTied?TIE:(end == End_UserWon?YOU_WIN:YOU_LOSE));
 }
 
 #pragma mark Things for subclasses to implement
@@ -180,9 +191,8 @@
 	if(state == State_Playing)
 	{
 		[self sendMessage:@"" ofType:MSG_TYPE_END_GAME];
-		[self end:nil returnCode:0 contextInfo:NULL];
 	}
-	else NSBeep();
+	[self end:nil returnCode:0 contextInfo:NULL];
 }
 
 - (IBAction)acceptInvite:(id)sender
