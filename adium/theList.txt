@@ -46,7 +46,7 @@ WebKit Message View:
     
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
-	+ Open new windows behind the frontmost window (When not opening in tabs)
+	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
 	+ Remember last X lines of previous conversation, restore to new message windows
