@@ -529,8 +529,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	script = [infoDict objectForKey:@"NDAppleScriptObject"];
 	
 	//If none is found, load and cache
-	if (!script){
-		
+	if (!script){		
 		//Load the script
 		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]];
 		[infoDict setObject:script
@@ -543,34 +542,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	//We want to receive the sendAppleEvent calls below
 	[currentComponentInstance setAppleEventSendTarget:self];
-	
-	//Commands in no tell block should go to the Finder, not Adium
-//	[currentComponentInstance setFinderAsDefaultTarget];
-	
-	/*
-	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
-		NSAppleEventDescriptor	*eventDescriptor;
-		NSInvocation			*invocation;
-		NSString				*function = @"substitute";
-		SEL						selector = @selector(executeFunction:withArguments:error:);
-		
-		invocation = [NSInvocation invocationWithMethodSignature:[script methodSignatureForSelector:selector]];
-		[invocation setSelector:selector];
-		[invocation setTarget:script];
-		[invocation setArgument:&function atIndex:2];
-		[invocation setArgument:&arguments atIndex:3];
-		
-		[invocation performSelectorOnMainThread:@selector(invoke)
-									 withObject:nil
-								  waitUntilDone:YES];
-		
-		[invocation getReturnValue:&eventDescriptor];
-		returnValue = [[eventDescriptor stringValue] retain];
-		
-	}else{
-		returnValue = [[[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue] retain];	
-	}
-*/
+
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
 	
 	return([script resultAsString]);
