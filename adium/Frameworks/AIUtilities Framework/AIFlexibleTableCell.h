@@ -27,8 +27,8 @@
     int			topPadding;
     int			bottomPadding;
 
-    int 	rowSpan;
-    BOOL	variableWidth;
+    int			rowSpan;
+    BOOL		variableWidth;
 
     //Size / Drawing
     NSSize		contentSize;
@@ -56,6 +56,7 @@
 //Spanning
 - (void)setRowSpan:(int)inRowSpan;
 - (int)rowSpan;
+- (BOOL)isSpannedInto;
 
 //Sizing
 - (NSSize)cellSize;

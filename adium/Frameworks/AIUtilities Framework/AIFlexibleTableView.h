@@ -64,6 +64,7 @@
 - (void)lockTable;
 - (void)unlockTable;
 - (void)setDelegate:(id)inDelegate;
+- (int)heightOfSpanCellsAboveRow:(AIFlexibleTableRow *)startRow;
 
 - (NSArray *)arrayOfMenuItemsFromEvent:(NSEvent *)theEvent;
 @end

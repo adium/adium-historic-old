@@ -25,22 +25,20 @@
 
 @implementation AIFlexibleTableImageCell
 
-//
+//Create a new image cell
 + (AIFlexibleTableImageCell *)cellWithImage:(NSImage *)inImage
 {
     return([[[self alloc] initWithImage:inImage] autorelease]);
 }
 
-//
+//Init
 - (id)initWithImage:(NSImage *)inImage
 {
     [super init];
 
     image = [inImage retain];
     
-    //contentSize defaults to the size of the image
-    contentSize = [image size];
-    
+    contentSize = [image size]; //defaults to the size of the image
     imageSize = [image size];
 
     drawFrame = NO;
@@ -49,7 +47,7 @@
     return(self);
 }
 
-//
+//Dealloc
 - (void)dealloc
 {
     [image release];
@@ -57,11 +55,13 @@
     [super dealloc];
 }
 
+//Set our desired size
 - (void)setDesiredFrameSize:(NSSize)inSize
 {
     contentSize = inSize;
 }
 
+//Set the image frame color
 - (void)setFrameColor:(NSColor *)inBorderColor
 {
     if(borderColor != inBorderColor){
@@ -70,6 +70,7 @@
     }
 }
 
+//Toggle display of the image frame
 - (void)setDrawsFrame:(BOOL)inDrawFrame
 {
     drawFrame = inDrawFrame;    
@@ -89,7 +90,7 @@
     if(!imageFlipped) [image setFlipped:NO];
 
     //
-    if (drawFrame) {
+    if(drawFrame){
         NSBezierPath * internalPath = [NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4];
         
         [internalPath transformUsingAffineTransform:aliasShift];

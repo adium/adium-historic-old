@@ -1,10 +1,17 @@
-//
-//  AIFlexibleTableFramedTextCell.m
-//  Adium
-//
-//  Created by Adam Iser on Tue Sep 16 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFlexibleTableFramedTextCell.h"
 
@@ -31,6 +38,7 @@
 
 @implementation AIFlexibleTableFramedTextCell
 
+//Create a new framed cell
 + (AIFlexibleTableFramedTextCell *)cellWithAttributedString:(NSAttributedString *)inString
 {
     return([[[self alloc] initWithAttributedString:inString] autorelease]);
@@ -51,6 +59,7 @@
     return(self);
 }
 
+//init
 - (id)initWithAttributedString:(NSAttributedString *)inString
 {
     drawTopDivider = NO;    
@@ -70,7 +79,7 @@
     [super dealloc];
 }
 
-//
+//Set the internal padding
 - (void)setInternalPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom
 {
     framePadLeft = inLeft;
@@ -79,29 +88,31 @@
     framePadBottom = inBottom;
 }
 
-//
+//Toggle display of the top border
 - (void)setDrawTop:(BOOL)inDrawTop
 {
     drawTop = inDrawTop;
 }
 
-//
+//Toggle display of the top divider line
 - (void)setDrawTopDivider:(BOOL)inDrawTopDivider
 {
     drawTopDivider = inDrawTopDivider;
 }
 
-//
+//Toggle display of the bottom border
 - (void)setDrawBottom:(BOOL)inDrawBottom
 {
     drawBottom = inDrawBottom;
 }
 
+//Toggle display of the side borders
 - (void)setDrawSides:(BOOL)inDrawSides
 {
     drawSides = inDrawSides;
 }   
 
+//Set the frame, border, and divider colors
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor
 {
     if(borderColor != inBorderColor){
@@ -226,7 +237,7 @@
     //Draw our text content
     inFrame.origin.x += framePadLeft;
     inFrame.size.width -= framePadLeft + framePadRight;
-    /*if(drawTop) */inFrame.origin.y += framePadTop;
+    inFrame.origin.y += framePadTop;
     inFrame.size.height -= ((drawTop ? framePadTop : framePadTop) + (drawBottom ? framePadBottom : framePadBottom));
 
     [super drawContentsWithFrame:inFrame inView:controlView];
@@ -389,9 +400,6 @@
         [path stroke];
     }
 }
-
-
-
 
 @end
 
