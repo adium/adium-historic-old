@@ -126,18 +126,36 @@
 			[TARGET_CONTROL setNeedsDisplay:YES];
 		}
 		
-		//Too close on right; need to expand window right
-		if(window_anchorOnRightSide && (NSMaxX(newFrame) > (NSMaxX([window_anchorOnRightSide frame]) - 17))){
-			float		difference =  NSMaxX(newFrame) - (NSMaxX([window_anchorOnRightSide frame]) - 17);
-			
-			//NSLog(@"%@: Move %@ right by %f",inStringValue,window_anchorOnRightSide,difference);
-			[self _resizeWindow:window_anchorOnRightSide rightBy:difference];
+		/* If we have a window anchored to our right side, and we are now too close to the right side of that
+		 * window, resize the window so it is larger horizontally to compensate */
+		if(window_anchorOnRightSide){
+			if(NSMaxX(newFrame) > (NSMaxX([window_anchorOnRightSide frame]) - 17)){
+				float		difference =  NSMaxX(newFrame) - (NSMaxX([window_anchorOnRightSide frame]) - 17);
 				
-			newFrame.origin.x = NSMaxX([window_anchorOnRightSide frame]) - newFrame.size.width - 17;
+				[self _resizeWindow:window_anchorOnRightSide rightBy:difference];
+				
+				newFrame.origin.x = NSMaxX([window_anchorOnRightSide frame]) - newFrame.size.width - 17;
+				
+				[TARGET_CONTROL setFrame:newFrame];
+				[TARGET_CONTROL setNeedsDisplay:YES];
+			}
+		}else{
+			/* We don't have a window anchored to the right side.
+			 * If we are outside our superview's frame, we should try moving our origin left.  If we can do
+			 * that without exiting our superview, it's probably better. */
+			if(NSMaxX(newFrame) > [[TARGET_CONTROL superview] frame].size.width){
+				float	overshoot = (NSMaxX(newFrame) - [[TARGET_CONTROL superview] frame].size.width);
 
-			//NSLog(@"%@: 2 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
-			[TARGET_CONTROL setFrame:newFrame];
-			[TARGET_CONTROL setNeedsDisplay:YES];			
+				//Correct for the overshoot, but don't let it go outside the superview.
+				newFrame.origin.x -= overshoot;
+				if(newFrame.origin.x < 0){
+					newFrame.origin.x = 0;
+					NSLog(@"*** Localization warning: %@ could not fit properly.",inStringValue);
+				}
+				
+				[TARGET_CONTROL setFrame:newFrame];
+				[TARGET_CONTROL setNeedsDisplay:YES];
+			}
 		}
 		
 		if(newFrame.origin.x < oldFrame.origin.x){
