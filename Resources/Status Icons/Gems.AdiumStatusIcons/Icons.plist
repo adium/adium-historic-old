@@ -4,10 +4,29 @@
 <dict>
 	<key>AdiumSetVersion</key>
 	<integer>1</integer>
-	<key>Icons</key>
+	<key>List</key>
 	<dict>
 		<key>available</key>
-		<string>tab-available.tiff</string>
+		<string>available.png</string>
+		<key>away</key>
+		<string>away.png</string>
+		<key>idle</key>
+		<string>idle.png</string>
+		<key>offline</key>
+		<string>offline.png</string>
+		<key>unknown</key>
+		<string>unknown.png</string>
+		<key>content</key>
+		<string>content.png</string>
+		<key>typing</key>
+		<string>typing.png</string>
+		<key>enteredtext</key>
+		<string>enteredtext.png</string>
+	</dict>
+	<key>Tabs</key>
+	<dict>
+		<key>available</key>
+		<string>tab-available.png</string>
 		<key>away</key>
 		<string>tab-away.png</string>
 		<key>idle</key>
@@ -16,10 +35,12 @@
 		<string>tab-offline.png</string>
 		<key>unknown</key>
 		<string>tab-unknown.png</string>
+		<key>content</key>
+		<string>tab-content.png</string>
 		<key>typing</key>
 		<string>tab-typing.png</string>
-		<key>entered-text</key>
-		<string>tab-entered-text.png</string>
+		<key>enteredtext</key>
+		<string>tab-enteredtext.png</string>
 	</dict>
 </dict>
 </plist>

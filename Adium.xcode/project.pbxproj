@@ -2657,14 +2657,6 @@
 			settings = {
 			};
 		};
-		344C0EDF06B6DE3A00DA7200 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-unknown.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-unknown.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		344C0F0706B7099F00DA7200 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -5916,14 +5908,6 @@
 				344C0D4A06B6D61B00DA7200,
 				344C0D4D06B6D62600DA7200,
 				6EC1685006C170A000F9FAD3,
-				4BA62DB306C51297001D6B3C,
-				4BA62DB406C51297001D6B3C,
-				4BA62DB506C51297001D6B3C,
-				4BA62DB606C51297001D6B3C,
-				4BA62DB706C51297001D6B3C,
-				4BA62DB806C51297001D6B3C,
-				4BA62DB906C51297001D6B3C,
-				4BA62DBA06C51298001D6B3C,
 				C45F7F6706C75E210056B1F2,
 				9E23E9E306CC506A00D3C897,
 				4BF98DCD06D149EE00E8781D,
@@ -7590,14 +7574,6 @@
 			lastKnownFileType = text.plist;
 			name = DualWindowMessageDefaults.plist;
 			path = "Plugins/Dual Window Interface/DualWindowMessageDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D509B106A4A82300334A7A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-entered-text.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-entered-text.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -10758,14 +10734,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		4B41F9180686173A00C09B4B = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-content.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-content.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B422C0905ACB248005E720B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -11163,52 +11131,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
 			remoteInfo = libezv;
-		};
-		4B57CDB9068498D7003FF229 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = "Tab Icons";
-			path = "Resources/Tab Icons";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B57CDC5068498E1003FF229 = {
-			fileRef = 4B57CDB9068498D7003FF229;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B57CDC906849ABB003FF229 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-away.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-away.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B57CDCA06849ABB003FF229 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-idle.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-idle.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B57CDCB06849ABB003FF229 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-offline.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-offline.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B57CDD206849AFE003FF229 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-available.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-available.png";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B5827E80613CE9D0004BD25 = {
 			fileEncoding = 30;
@@ -12863,118 +12785,6 @@
 		};
 		4BA62D8E06C51257001D6B3C = {
 			fileRef = 4BA62D7F06C51256001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DAB06C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-available.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-available.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DAC06C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-away.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-away.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DAD06C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-content.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-content.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DAE06C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-entered-text.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-entered-text.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DAF06C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-idle.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-idle.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DB006C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-offline.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-offline.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DB106C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-typing.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-typing.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DB206C51297001D6B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-unknown.png";
-			path = "Resources/Status Icons/Gems.AdiumStatusIcons/tab-unknown.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BA62DB306C51297001D6B3C = {
-			fileRef = 4BA62DAB06C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB406C51297001D6B3C = {
-			fileRef = 4BA62DAC06C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB506C51297001D6B3C = {
-			fileRef = 4BA62DAD06C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB606C51297001D6B3C = {
-			fileRef = 4BA62DAE06C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB706C51297001D6B3C = {
-			fileRef = 4BA62DAF06C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB806C51297001D6B3C = {
-			fileRef = 4BA62DB006C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB906C51297001D6B3C = {
-			fileRef = 4BA62DB106C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DBA06C51298001D6B3C = {
-			fileRef = 4BA62DB206C51297001D6B3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16440,7 +16250,6 @@
 				4BAFD5E806E00D1700FF7FBC,
 				4B5829D30613D0BD0004BD25,
 				4BA62D7F06C51256001D6B3C,
-				4B57CDB9068498D7003FF229,
 			);
 			includeInIndex = 0;
 			isa = PBXGroup;
@@ -16462,7 +16271,6 @@
 				4BF2EA41067CB7A200743318,
 				4BF2EA42067CB7A200743318,
 				4BB1E493067F2EAC00D1DB86,
-				4B57CDC5068498E1003FF229,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16491,34 +16299,10 @@
 			settings = {
 			};
 		};
-		4BF302F106873CCE000DCA65 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-typing.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-typing.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BF303160687466D000DCA65 = {
 			children = (
 				4BF30319068746A8000DCA65,
 				4BF3031A068746A8000DCA65,
-				4BA62DAB06C51297001D6B3C,
-				4BA62DAC06C51297001D6B3C,
-				4BA62DAD06C51297001D6B3C,
-				4BA62DAE06C51297001D6B3C,
-				4BA62DAF06C51297001D6B3C,
-				4BA62DB006C51297001D6B3C,
-				4BA62DB106C51297001D6B3C,
-				4BA62DB206C51297001D6B3C,
-				4B57CDD206849AFE003FF229,
-				4B57CDC906849ABB003FF229,
-				4B57CDCA06849ABB003FF229,
-				344C0EDF06B6DE3A00DA7200,
-				4B57CDCB06849ABB003FF229,
-				4B41F9180686173A00C09B4B,
-				4BF302F106873CCE000DCA65,
-				34D509B106A4A82300334A7A,
 			);
 			isa = PBXGroup;
 			name = "Tab Status Icons";
