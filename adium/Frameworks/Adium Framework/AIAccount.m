@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.38 2004/01/27 17:52:59 evands Exp $
+// $Id: AIAccount.m,v 1.39 2004/02/02 07:57:39 evands Exp $
 
 #import "AIAccount.h"
 
@@ -47,7 +47,8 @@
     	
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-    [self updateStatusForKey:@"Handle"];
+	[self updateStatusForKey:@"Handle"];
+    [self updateStatusForKey:@"FullName"];
     
     refreshDict = [[NSMutableDictionary alloc] init];
     refreshTimer = nil;
@@ -163,14 +164,26 @@
                 [self disconnect];
             }
         }
-    }else if([key compare:@"Handle"] == 0){
-        //Username formatting changed
+    }else if([key compare:@"FullName"] == 0) {
+        //Account's full name (alias) formatting changed
         //Update the display name for this account
         //
+		NSString *displayName = [self preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
+
+		if (!displayName || ![displayName length])
+			displayName = nil;
+		
+		[[self displayArrayForKey:@"Display Name"] setObject:displayName
+												   withOwner:self];
+		//notify
+		[[adium contactController] listObjectAttributesChanged:self
+												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+    }else if([key compare:@"Handle"] == 0){
+		//Account's screen name formatting changed
         [self setStatusObject:[self preferenceForKey:@"Handle" group:GROUP_ACCOUNT_STATUS]
                        forKey:@"Display Name"
                        notify:YES];
-    }
+	}
 }
 
 //Set our away state and message (Pass nil for no away), setting up a refresh timer if the filters changed the string
