@@ -10,6 +10,8 @@
 #define EDGE_CATCH_X				40
 #define EDGE_CATCH_Y				40
 
+#define	MENU_BAR_HEIGHT				22
+
 #define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
 
 @interface AIListController (PRIVATE)
@@ -193,7 +195,7 @@
 			if ((screens = [NSScreen screens]) &&
 				([screens count]) &&
 				(currentScreen == [screens objectAtIndex:0])){
-				boundingFrame.size.height -= 22;
+				boundingFrame.size.height -= MENU_BAR_HEIGHT;
 			}
 
 		}else{
