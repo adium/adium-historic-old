@@ -2,7 +2,7 @@
     require("scripts/binaries.php");
     require("scripts/tabs.php");
     require("scripts/slogan.php");
-    $pageID = "team";
+    $pageID = "irc";
     $details = detailsForPage("parts/tabs.txt", $pageID);
     
 ?>
