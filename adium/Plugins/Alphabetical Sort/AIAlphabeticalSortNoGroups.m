@@ -15,7 +15,7 @@
 
 #import "AIAlphabeticalSortNoGroups.h"
 
-int alphabeticalSortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
+int alphabeticalSortNoGroups(id objectA, id objectB, BOOL groups);
 
 @implementation AIAlphabeticalSortNoGroups
 
@@ -38,13 +38,13 @@ int alphabeticalSortNoGroups(id objectA, id objectB, AIListGroup *containingGrou
 	return(&alphabeticalSortNoGroups);
 }
 
-int alphabeticalSortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
+int alphabeticalSortNoGroups(id objectA, id objectB, BOOL groups)
 {
 	if(!groups){
 		return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 	}else{
 		//Keep groups in manual order
-		if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+		if([objectA orderIndex] > [objectB orderIndex]){
 			return(NSOrderedDescending);
 		}else{
 			return(NSOrderedAscending);

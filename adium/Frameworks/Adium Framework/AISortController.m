@@ -16,6 +16,7 @@
 #import "AISortController.h"
 
 int basicGroupVisibilitySort(id objectA, id objectB, void *context);
+int basicVisibilitySort(id objectA, id objectB, void *context);
 
 @implementation AISortController
 
@@ -26,6 +27,7 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context);
 	statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
 	attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
 	sortFunction = [self sortFunction];
+	alwaysSortGroupsToTop = [self alwaysSortGroupsToTop];
 	
 	return(self);
 }
@@ -38,6 +40,8 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context);
 	[super dealloc];
 }
 
+//Sort Logic -------------------------------------------------------------------------------------------------------
+#pragma mark Sort Logic
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
 {
 	if(statusKeysRequiringResort){
@@ -56,33 +60,53 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context);
 	}
 }
 
-- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects inGroup:(AIListGroup *)inGroup
+- (BOOL)alwaysSortGroupsToTop
+{
+	return(YES);
+}
+
+
+//Sorting -------------------------------------------------------------------------------------------------------
+#pragma mark Sorting
+- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects
 {
 	NSEnumerator 	*enumerator = [inObjects objectEnumerator];
 	AIListObject	*object;
 	int				index = 0;
-	sortContextInfo	info;
-	
-	info.group = inGroup;
-	info.function = sortFunction;
 
-	while((object = [enumerator nextObject]) && basicGroupVisibilitySort(inObject, object, &info) == NSOrderedDescending){
-		index++;
+	if(alwaysSortGroupsToTop){
+		while((object = [enumerator nextObject]) && basicGroupVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;
+	}else{
+		while((object = [enumerator nextObject]) && basicVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;
 	}
 	
 	return(index);
 }
 
-- (void)sortListObjects:(NSMutableArray *)inObjects inGroup:(AIListGroup *)inGroup
+- (void)sortListObjects:(NSMutableArray *)inObjects
 {
-	sortContextInfo	info;
-
-	info.group = inGroup;
-	info.function = sortFunction;
-
-    [inObjects sortUsingFunction:basicGroupVisibilitySort context:&info];
+    [inObjects sortUsingFunction:(alwaysSortGroupsToTop ? basicGroupVisibilitySort : basicVisibilitySort)
+						 context:sortFunction];
 }
 
+//Sort
+int basicVisibilitySort(id objectA, id objectB, void *context)
+{
+    BOOL	visibleA = [objectA isVisible];
+    BOOL	visibleB = [objectB isVisible];
+	
+    if(!visibleA && visibleB){
+        return(NSOrderedDescending);
+    }else if(visibleA && !visibleB){
+        return(NSOrderedAscending);
+    }else{
+		sortfunc	function = context;
+
+		return((function)(objectA, objectB, NO));
+    }
+}
+
+//Sort, groups always at the top
 int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 {
     BOOL	visibleA = [objectA isVisible];
@@ -101,19 +125,20 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
         }else if(!groupA && groupB){
             return(NSOrderedDescending);
         }else{
-			sortContextInfo	*info = context;
+			sortfunc	function = context;
 			
-			return((info->function)(objectA, objectB, info->group, groupA));
+			return((function)(objectA, objectB, groupA));
         }
     }
 }
 
-//For subclasses
+//For subclasses -------------------------------------------------------------------------------------------------------
+#pragma mark For Subclasses:
 - (NSString *)description{ return(nil); };
 - (NSString *)identifier{ return(nil); };
 - (NSString *)displayName{ return(nil); };
 - (NSArray *)statusKeysRequiringResort{ return(nil); };
 - (NSArray *)attributeKeysRequiringResort{ return(nil); };
-- (int (*)(id, id, AIListGroup *, BOOL))sortFunction{ return(nil); };
+- (int (*)(id, id, BOOL))sortFunction{ return(nil); };
 
 @end

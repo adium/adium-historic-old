@@ -50,12 +50,6 @@
     return(@"AccountPrefView");
 }
 
-//Sort an array of services alphabetically by their description
-int alphabeticalServiceSort(id service1, id service2, void *context)
-{
-    return [(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]];
-}
-
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -80,10 +74,8 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
     [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
     
     //Configure the service list
-    NSArray *serviceListArray = [[[[adium accountController] availableServices] allValues] sortedArrayUsingFunction:alphabeticalServiceSort context:nil];
-    enumerator = [serviceListArray objectEnumerator];
-    
     [popupMenu_serviceList removeAllItems];
+    enumerator = [[[adium accountController] availableServices] objectEnumerator];
     while((service = [enumerator nextObject])){
         NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description] target:self action:@selector(selectServiceType:) keyEquivalent:@""] autorelease];
 	

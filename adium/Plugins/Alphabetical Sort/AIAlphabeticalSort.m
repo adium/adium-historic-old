@@ -15,7 +15,7 @@
 
 #import "AIAlphabeticalSort.h"
 
-int alphabeticalSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
+int alphabeticalSort(id objectA, id objectB, BOOL groups);
 
 @implementation AIAlphabeticalSort
 
@@ -38,7 +38,7 @@ int alphabeticalSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL 
 	return(&alphabeticalSort);
 }
 
-int alphabeticalSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
+int alphabeticalSort(id objectA, id objectB, BOOL groups)
 {
 	return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 }

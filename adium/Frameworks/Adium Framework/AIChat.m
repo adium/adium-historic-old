@@ -40,13 +40,26 @@
     
     [super dealloc];
 }
+
     
+//Associated Account ---------------------------------------------------------------------------------------------------
+#pragma mark Associated Account
 - (AIAccount *)account
 {
     return(account);
 }
 
-//Status -------------------------------------------------------------------------------------
+- (void)setAccount:(AIAccount *)inAccount
+{
+	if(inAccount != account){
+		[account release];
+		account = [inAccount retain];
+	}
+}
+
+
+//Status ---------------------------------------------------------------------------------------------------------------
+#pragma mark Status
 //Status
 - (NSMutableDictionary *)statusDictionary
 {
@@ -54,7 +67,8 @@
 }
 
 
-//Users --------------------------------------------------------------------------------------
+//Participating ListObjects --------------------------------------------------------------------------------------------
+#pragma mark Participating ListObjects
 - (NSArray *)participatingListObjects
 {
     return(participatingListObjects);
@@ -84,7 +98,8 @@
 }
 
 
-//Content ------------------------------------------------------------------------------------
+//Content --------------------------------------------------------------------------------------------------------------
+#pragma mark Content
 //Return our array of content objects
 - (NSArray *)contentObjectArray
 {

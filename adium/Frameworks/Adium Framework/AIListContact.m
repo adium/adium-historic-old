@@ -19,49 +19,53 @@
 
 @implementation AIListContact
 
-- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
+- (id)initWithUID:(NSString *)inUID accountUID:(NSString *)inAccountUID serviceID:(NSString *)inServiceID
 {
     [super initWithUID:inUID serviceID:inServiceID];
     
-	remoteGroups = [[AIMutableOwnerArray alloc] init];
+	accountUID = [inAccountUID retain];
+	remoteGroupName = nil;
     
     return(self);
 }
 
 - (void)dealloc
 {
-    [remoteGroups release];
+	[accountUID release];
+    [remoteGroupName release];
     
     [super dealloc];
 }
 
-//Set the desired group for an account that owns this contact
-//Pass nil to indicate an account no longer owns this object
-- (void)setRemoteGroupName:(NSString *)groupName forAccount:(AIAccount *)inAccount
+//
+- (NSString *)accountUID
 {
-	NSString	*oldGroup = [remoteGroups objectWithOwner:inAccount];
+	return(accountUID);
+}
 
-	if(groupName != nil || oldGroup != nil){ //If both are nil, we can skip this operation
-		[oldGroup retain];
+//Remote Grouping ------------------------------------------------------------------------------------------------------
+#pragma mark Remote Grouping
+//Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
+- (void)setRemoteGroupName:(NSString *)inName
+{
+	NSString	*oldGroupName = remoteGroupName;
+
+	if(inName != nil || oldGroupName != nil){ //If both are nil, we can skip this operation
+		[oldGroupName retain];
 
 		//Change it here
-		[remoteGroups setObject:groupName withOwner:inAccount];
+		remoteGroupName = [inName retain];
 		
 		//Tell core it changed
-		[[adium contactController] listObjectRemoteGroupingChanged:self oldGroupName:oldGroup];
+		[[adium contactController] listObjectRemoteGroupingChanged:self];
 
-		[oldGroup release];
+		[oldGroupName release];
 	}
 }
 
-- (NSString *)remoteGroupNameForAccount:(AIAccount *)inAccount
+- (NSString *)remoteGroupName
 {
-	return([remoteGroups objectWithOwner:inAccount]);
-}
-
-- (AIMutableOwnerArray *)remoteGroupArray
-{
-	return(remoteGroups);
+	return(remoteGroupName);
 }
 
 @end

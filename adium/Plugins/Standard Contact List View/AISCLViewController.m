@@ -43,6 +43,7 @@
 - (void)_endTrackingMouse;
 
 - (void)_configureTransparencyAndShadows;
+- (void)_hideTooltip;
 @end
 
 @interface NSObject (_AIRespondsToUpdateShadows)
@@ -66,7 +67,10 @@
     trackingMouseMovedEvents = NO;
     tooltipTimer = nil;
     tooltipCount = 0;
-    
+
+    //
+	[contactListView registerForDraggedTypes:[NSArray arrayWithObject:@"AIListObject"]];
+	
     //Install the necessary observers
     [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
@@ -130,14 +134,17 @@
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
 		
-		//If a containing group was provided, reload the group.  Otherwise, reload the object
-		if(containingGroup){
-			[contactListView reloadItem:containingGroup reloadChildren:YES];
+		if(!containingGroup || containingGroup == contactList){
+			//Reload the whole tree if the containing group is our root
+			[contactListView reloadData];
+			[contactListView _performFullRecalculation];
 		}else{
-			[contactListView reloadItem:object reloadChildren:[contactListView isItemExpanded:object]];
+			//We need to reload the contaning group since this notification is posted when adding and removing objects.
+			//Reloading the actual object that changed will produce no results since it may not be on the list.
+			[contactListView reloadItem:containingGroup reloadChildren:YES];
 		}
 		
-		//Reload the item, reloading its children if it is expanded
+		//Factor the width of this item into our total
 		[contactListView updateHorizontalSizeForObject:object];
 	}
 }
@@ -347,19 +354,21 @@
     
     }else if([selectedObject isKindOfClass:[AIListContact class]]){
         //Open a new message with the contact
-        AIChat	*chat = [[adium contentController] openChatOnAccount:nil withListObject:selectedObject];
-        [[adium interfaceController] setActiveChat:chat];
+		AIListContact	*contact;
+		contact = [[adium contactController] preferredContactForReceivingContentType:CONTENT_MESSAGE_TYPE
+																	   forListObject:selectedObject];
+		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
     }
 }
 
-#pragma mark Outline View data source methods
-
+//Outline View data source ---------------------------------------------------------------------------------------------
+#pragma mark Outline View data source
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
-        return([contactList objectAtIndex:index]);
+		return((index >= 0 && index < [contactList count]) ? [contactList objectAtIndex:index] : nil);
     }else{
-        return([item objectAtIndex:index]);
+        return((index >= 0 && index < [item count]) ? [item objectAtIndex:index] : nil);
     }
 }
 
@@ -436,8 +445,8 @@
     [outlineView selectRow:row byExtendingSelection:NO];
     [[outlineView window] makeKeyAndOrderFront:nil];
 
-    //Stop tracking tooltips
-    [self _endTrackingMouse];
+    //Hide any open tooltip
+    [self _hideTooltip];
 
     //Return the context menu
     return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
@@ -474,7 +483,104 @@
 } 
 
 
-//Auto-resizing support -----------------------------------------------------------------
+- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
+{
+//    NSEnumerator	*enumerator;
+//    id			object;
+//    BOOL		handles = NO, groups = NO;
+//
+//    //We either drag all handles, or all groups.  A mix of the two is not allowed
+//    enumerator = [items objectEnumerator];
+//    while((object = [enumerator nextObject]) && !(handles && groups)){
+//        if([object isKindOfClass:[AIEditorListGroup class]]) groups = YES;
+//        if([object isKindOfClass:[AIEditorListHandle class]]) handles = YES;
+//    }
+//
+//    if(!(handles && groups)){
+
+	
+	
+	//Hide any open tooltip
+    [self _hideTooltip];
+	
+	//Begin the drag
+	if(dragItem) [dragItem release];
+	dragItem = [[items objectAtIndex:0] retain];
+
+	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",nil] owner:self];
+	[pboard setString:@"Private" forType:@"AIListObject"];
+
+	return(YES);
+}
+//
+- (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{
+    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+
+    if([avaliableType compare:@"AIListObject"] == 0){
+		
+		//No dropping into contacts
+		if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
+			return(NSDragOperationNone);
+		}
+	}
+		
+		
+		
+		//        if([[dragItems objectAtIndex:0] isKindOfClass:[AIEditorListGroup class]] &&	//Dragging a group
+//           ([selectedCollection sortMode] == AISortByIndex)){				//List is sorted by index
+//
+//            //If the group is being hovered over a group or within a group, refocus them below the group
+//            if(item != nil){
+//                [outlineView setDropItem:nil dropChildIndex:[[selectedCollection list] indexOfObject:item] + 1];
+//            }
+//            
+//            return(NSDragOperationPrivate);	//Valid Drop
+//
+//        }else if(([[dragItems objectAtIndex:0] isKindOfClass:[AIEditorListHandle class]]) &&	//Dragging a handle
+//                 (item != nil) &&								//Drag to inside a group
+//                 ([item isKindOfClass:[AIEditorListGroup class]])/* &&				//Not dragging onto a handle
+//                 ([dragItems indexOfObject:item] == NSNotFound))*/){				//Not dragged into itself
+//            
+//            //If Collection is alphabetized & user is dropping into a group, refocus them onto the containing group
+//            if([selectedCollection sortMode] != AISortByIndex && index != -1){		
+//                [outlineView setDropItem:item dropChildIndex:-1];
+//            }
+//
+            return(NSDragOperationPrivate); 	//Valid Drop
+//    
+//        }else{
+//            return(NSDragOperationNone);	//Invalid Drop
+//            
+//        }
+//    }
+//
+//    return(NSDragOperationNone);
+}
+
+//
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+{
+    NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+    
+    if([availableType compare:@"AIListObject"] == 0){
+		//The tree root is not associated with our root contact list group, so we need to make that association here
+		if(item == nil) item = contactList;
+		
+		//Move the list object to it's new location
+		if([item isKindOfClass:[AIListGroup class]]){
+			[[adium contactController] moveListObjects:[NSArray arrayWithObject:dragItem]
+											   toGroup:item
+												 index:index];
+		}
+	}
+
+    return(YES);
+}
+
+
+//Auto-resizing support ------------------------------------------------------------------------------------------------
+#pragma mark Auto-resizing support
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
     [self _desiredSizeChanged];
@@ -487,7 +593,8 @@
 
 - (void)_desiredSizeChanged
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
+    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
+														object:contactListView];
 }
 
 - (void)screenParametersChanged:(NSNotification *)notification
@@ -496,7 +603,8 @@
 }
 
 
-// Tooltips ------------------------------------------------------------------------------------
+//Tooltips -------------------------------------------------------------------------------------------------------------
+#pragma mark Tooltips
 //Add a tracking rect to catch when the mouse enters/exits our view
 - (void)updateTooltipTrackingRect
 {
@@ -535,7 +643,8 @@
 // - When the mouse enters, we being tracking cursor movement.
 // - tooltipCount starts at 0.  It is periodically incremented.
 // - If the mouse moves, tooltipCount is reset to 0
-// When the user holds the mouse still over the contact list, tooltipCount will eventually get larger than TOOL_TIP_DELAY.  When this happens, we begin displaying tooltips.
+// When the user holds the mouse still over the contact list, tooltipCount will eventually get larger than
+//TOOL_TIP_DELAY.  When this happens, we begin displaying tooltips.
 - (void)mouseEntered:(NSEvent *)theEvent
 {
     if(!trackingMouseMovedEvents){
@@ -578,6 +687,13 @@
         [self _showTooltipAtPoint:NSMakePoint(0,0)]; //Hide the tooltip
         [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
     }
+}
+
+//Hide any open tooltip and reset the tracking counter
+- (void)_hideTooltip
+{
+	[self _showTooltipAtPoint:NSMakePoint(0,0)];
+	tooltipCount = 0;
 }
 
 //Called as the mouse moves across the view

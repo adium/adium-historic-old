@@ -47,6 +47,97 @@
     return([[[self alloc] initForChat:inChat] autorelease]);
 }
 
+//Init
+- (id)initForChat:(AIChat *)inChat
+{
+    [super init];
+	
+    //
+    view_accountSelection = nil;
+    delegate = nil;
+    chat = nil;
+    showUserList = NO;
+	
+    //view
+    [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
+	
+	//Configure our chat
+	chat = [inChat retain];
+	[[adium notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:inChat];
+	[[adium notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:inChat];
+	[[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
+	[[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
+	[[adium notificationCenter] addObserver:self selector:@selector(chatAccountChanged:) name:Content_ChatAccountChanged object:chat];
+
+	
+	//Create the message view
+	messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
+	[scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
+	[scrollView_messages setNextResponder:textView_outgoing];
+	[scrollView_messages setAutoScrollToBottom:YES];
+	[scrollView_messages setAutoHideScrollBar:NO];
+	[scrollView_messages setHasVerticalScroller:YES];
+	
+	//User List
+	[scrollView_userList setAutoScrollToBottom:NO];
+	[scrollView_userList setAutoHideScrollBar:YES];
+	
+    //Configure the outgoing text view
+	[textView_outgoing setChat:chat];
+    [textView_outgoing setTarget:self action:@selector(sendMessage:)];
+    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
+    if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
+		[textView_outgoing setUsesFindPanel:YES];
+    }
+	[[adium contentController] didOpenTextEntryView:textView_outgoing];
+    
+    //Send button
+    [button_send setTitle:@"Send"];
+    [button_send setButtonType:NSMomentaryPushInButton];
+
+    //Register for notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(outgoingTextViewDesiredSizeDidChange:) name:AIViewDesiredSizeDidChangeNotification object:textView_outgoing];
+    
+    //Finish everything up
+    [self sizeAndArrangeSubviews];
+	[self chatStatusChanged:nil];
+	[self chatParticipatingListObjectsChanged:nil];
+
+    return(self);
+}
+
+//
+- (void)dealloc
+{    
+    //Close the message entry text view
+    [[adium contentController] willCloseTextEntryView:textView_outgoing];
+	
+    //Close chat
+    if(chat){
+        [[adium contentController] closeChat:chat];
+        [chat release]; chat = nil;
+    }
+	
+    //remove notifications
+    [[adium notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+    //Account selection view
+    if(view_accountSelection){
+		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
+        [view_accountSelection removeFromSuperview];
+        [view_accountSelection release]; view_accountSelection = nil;
+    }
+	
+    //nib
+    [view_contents removeAllSubviews];
+    [view_contents release]; view_contents = nil;
+    [messageViewController release];
+	
+    [super dealloc];
+}
+
 //Return our view
 - (NSView *)view{
     return(view_contents);
@@ -58,83 +149,6 @@
     delegate = inDelegate;
 }
 
-//The chat represented by this view
-- (void)setChat:(AIChat *)inChat
-{
-    if(inChat != chat){
-        NSArray	*savedContent = nil;
-
-        if(chat){
-            NSEnumerator	*enumerator;
-            AIContentObject	*contentObject;
-
-            //Close our text entry view
-            [[adium contentController] willCloseTextEntryView:textView_outgoing];
-
-            //Extract the content from our existing chat
-            savedContent = [[[chat contentObjectArray] retain] autorelease];
-
-            //Convert the content to our new chat
-            enumerator = [savedContent objectEnumerator];
-            while(contentObject = [enumerator nextObject]){
-                [contentObject setChat:inChat];
-            }
-
-            //Close our existing chat
-            [[adium contentController] closeChat:chat];
-            [chat release]; chat = nil;
-        }
-
-        //Hold onto the new chat
-        chat = [inChat retain];
-
-        //Transfer over the content from our old chat
-        if(savedContent){
-            [chat setContentArray:savedContent];
-        }
-
-        //Get our new account
-        [account release]; account = [[inChat account] retain];
-
-        //Config the outgoing text view
-        [textView_outgoing setChat:chat];
-
-        //Register for sending notifications
-        [[adium notificationCenter] removeObserver:self name:Interface_SendEnteredMessage object:nil];
-        [[adium notificationCenter] removeObserver:self name:Interface_DidSendEnteredMessage object:nil];
-        [[adium notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:inChat];
-        [[adium notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:inChat];
-
-        //Create the message view
-        [messageViewController release];
-        messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
-        [scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
-        [scrollView_messages setNextResponder:textView_outgoing];
-        [scrollView_messages setAutoScrollToBottom:YES];
-        [scrollView_messages setAutoHideScrollBar:NO];
-        [scrollView_messages setHasVerticalScroller:YES];
-
-        //Open our text entry view for the chat
-        [[adium contentController] didOpenTextEntryView:textView_outgoing];
-
-        //
-        [scrollView_userList setAutoScrollToBottom:NO];
-        [scrollView_userList setAutoHideScrollBar:YES];
-
-        //Observe the chat
-        [[adium notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
-        [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
-        [self chatStatusChanged:nil];
-
-        //Update our participating list objects list
-        [[adium notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
-        [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
-        [self chatParticipatingListObjectsChanged:nil];
-
-        //Notify our delegate of the change
-        [delegate messageViewController:self chatChangedTo:inChat];
-    }
-}
 - (AIChat *)chat{
     return(chat);
 }
@@ -142,23 +156,27 @@
 //The source account of this message
 - (void)setAccount:(AIAccount *)inAccount
 {
-    //Initiate a new chat with the specified account.  The interface will automatically recycle this message view, switching it to the new account.
-    [[adium contentController] openChatOnAccount:inAccount withListObject:[chat listObject]];
+	if(inAccount != [chat account]){
+		[[adium contentController] switchChat:chat toAccount:inAccount];
+	}
 }
 - (AIAccount *)account{
-    return(account);
+    return([chat account]);
 }
 
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
 {
-    //
+	//Ignore requests to show the selection menu if there are no options present
+	if(![AIAccountSelectionView optionsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
+														 toListObject:[chat listObject]]){
+		visible = NO;
+	}
+
+	//
     if(visible && !view_accountSelection){ //Show the account selection view
         view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self];
         [view_contents addSubview:view_accountSelection];
-
-		//Update the selected account
-		[view_accountSelection updateMenu];
 		
     }else if(!visible && view_accountSelection){ //Hide the account selection view
 		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
@@ -166,6 +184,11 @@
         [view_accountSelection release]; view_accountSelection = nil;
     }
 
+	if(view_accountSelection){
+		//Update the selected account
+		[view_accountSelection updateMenu];
+	}
+	
     //
     [self sizeAndArrangeSubviews];
 }
@@ -181,18 +204,18 @@
 {
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
         AIContentMessage	*message;
-	NSAttributedString	* outgoingAttributedString = [[[textView_outgoing attributedString] copy] autorelease];
-	
+		NSAttributedString	* outgoingAttributedString = [[[textView_outgoing attributedString] copy] autorelease];
+		
         //Send the message
         [[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
-
+		
         message = [AIContentMessage messageInChat:chat
-                                       withSource:account
+                                       withSource:[chat account]
                                       destination:nil //meaningless, since we get better info from the AIChat
                                              date:nil //created for us by AIContentMessage
                                           message:outgoingAttributedString
                                         autoreply:NO];
-
+		
         if([[adium contentController] sendContentObject:message]){
             [[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
         }
@@ -226,76 +249,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
 }
 
-//Init
-- (id)initForChat:(AIChat *)inChat
-{
-    [super init];
-
-    //
-    view_accountSelection = nil;
-    account = nil;
-    delegate = nil;
-    chat = nil;
-    showUserList = NO;
-
-    //view
-    [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
-
-    //Config the outgoing text view
-    [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
-    if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
-	[textView_outgoing setUsesFindPanel:YES];
-    }
-    
-    //Send button
-    [button_send setTitle:@"Send"];
-    [button_send setButtonType:NSMomentaryPushInButton];
-
-    //Configure for our chat
-    [self setChat:inChat];
-    
-    //Resize and arrange our views
-    [self sizeAndArrangeSubviews];
-
-    //Register for notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(outgoingTextViewDesiredSizeDidChange:) name:AIViewDesiredSizeDidChangeNotification object:textView_outgoing];
-    
-    return(self);
-}
-
-//
-- (void)dealloc
-{    
-    //Close the message entry text view
-    [[adium contentController] willCloseTextEntryView:textView_outgoing];
-
-    //Close chat
-    if(chat){
-        [[adium contentController] closeChat:chat];
-        [chat release]; chat = nil;
-    }
-
-    //remove notifications
-    [[adium notificationCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    //Account selection view
-    if(view_accountSelection){
-		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
-        [view_accountSelection removeFromSuperview];
-        [view_accountSelection release]; view_accountSelection = nil;
-    }
-
-    //nib
-    [view_contents removeAllSubviews];
-    [view_contents release]; view_contents = nil;
-    [messageViewController release];
-    [account release]; account = nil;
-
-    [super dealloc];
-}
 
 //Our chat's participating list objects did change
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
@@ -321,6 +274,12 @@
     if(showUserList){
         [tableView_userList reloadData];
     }
+}
+
+//Our chat's account changed, re-show the from selector
+- (void)chatAccountChanged:(NSNotification *)notification
+{
+	[self setAccountSelectionMenuVisible:YES];
 }
 
 //Our chat's status did change

@@ -15,7 +15,7 @@
 
 #import "AIGroupedIdleAwaySortNoGroups.h"
 
-int groupedIdleAwaySortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
+int groupedIdleAwaySortNoGroups(id objectA, id objectB, BOOL groups);
 
 @implementation AIGroupedIdleAwaySortNoGroups
 
@@ -38,7 +38,7 @@ int groupedIdleAwaySortNoGroups(id objectA, id objectB, AIListGroup *containingG
 	return(&groupedIdleAwaySortNoGroups);
 }
 
-int groupedIdleAwaySortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
+int groupedIdleAwaySortNoGroups(id objectA, id objectB, BOOL groups)
 {    
 	if(!groups){
 		BOOL idleA = ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
@@ -72,7 +72,7 @@ int groupedIdleAwaySortNoGroups(id objectA, id objectB, AIListGroup *containingG
 		
 	}else{
 		//Keep groups in manual order
-		if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+		if([objectA orderIndex] > [objectB orderIndex]){
 			return(NSOrderedDescending);
 		}else{
 			return(NSOrderedAscending);

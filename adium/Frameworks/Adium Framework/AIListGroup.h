@@ -33,6 +33,7 @@
 - (unsigned)visibleCount;
 - (unsigned)count;
 - (NSArray *)containedObjects;
+- (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
 //Visibility (PRIVATE: For list objects only)
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;

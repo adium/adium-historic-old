@@ -19,11 +19,13 @@
 @class AIAccount, AIContentObject;
 
 @interface AIListContact : AIListObject {
-    AIMutableOwnerArray		*remoteGroups;
+    NSString		*remoteGroupName;
+	NSString		*accountUID;
 }
 
-- (void)setRemoteGroupName:(NSString *)groupName forAccount:(AIAccount *)inAccount;
-- (AIMutableOwnerArray *)remoteGroupArray;
-- (NSString *)remoteGroupNameForAccount:(AIAccount *)inAccount;
+- (id)initWithUID:(NSString *)inUID accountUID:(NSString *)inAccountUID serviceID:(NSString *)inServiceID;
+- (void)setRemoteGroupName:(NSString *)inName;
+- (NSString *)remoteGroupName;
+- (NSString *)accountUID;
 
 @end

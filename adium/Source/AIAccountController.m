@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.49 2004/01/14 19:02:30 adamiser Exp $
+// $Id: AIAccountController.m,v 1.50 2004/02/08 00:23:00 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -48,6 +48,8 @@
 - (void)disconnectAllAccounts;
 - (NSString *)_defaultIconCachePath;
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index;
+- (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
+- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)preferred;
 @end
 
 @implementation AIAccountController
@@ -256,10 +258,42 @@
 
 //Services -------------------------------------------------------------------------------------------------------
 #pragma mark Services
-//Return the available services
-- (NSDictionary *)availableServices
+//Return the available services.  These are used for account creation.
+//Passing YES will only return services for which there exists an account
+- (NSArray *)availableServices
 {
-    return(availableServiceDict);
+	return([availableServiceDict allValues]);
+}
+
+//Sort an array of services alphabetically by their description
+int _alphabeticalServiceSort(id service1, id service2, void *context)
+{
+	return([(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]]);
+}
+
+//Return the active service types (service types for which there is an account).  These are used for contact creation.
+- (NSArray *)activeServiceTypes
+{
+	NSMutableArray	*serviceArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
+	AIAccount		*account;
+	
+	//Build an array of all currently used services
+	while(account = [enumerator nextObject]){
+		NSEnumerator		*duplicateEnum = [serviceArray objectEnumerator];
+		AIServiceType		*existingService;
+		
+		//Prevent any service from going in twice
+		while(existingService = [duplicateEnum nextObject]){
+			if([[existingService identifier] compare:[[[account service] handleServiceType] identifier]] == 0) break;
+		}
+		if(existingService == nil){
+			[serviceArray addObject:[[account service] handleServiceType]];
+		}
+	}
+	
+	//Sort
+	return([serviceArray sortedArrayUsingFunction:_alphabeticalServiceSort context:nil]);
 }
 
 //Returns the specified service controller
@@ -283,6 +317,18 @@
     return(accountArray);
 }
 
+- (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID
+{
+    NSEnumerator	*enumerator = [accountArray objectEnumerator];
+    AIAccount		*account;
+    
+    while((account = [enumerator nextObject])){
+		if([UID compare:[account UID]] == 0 && [serviceID compare:[account serviceID]] == 0) return(account);
+    }
+    
+    return(nil);
+}
+
 //Searches the account list for the specified account
 - (AIAccount *)accountWithID:(NSString *)inID
 {
@@ -299,24 +345,20 @@
     return(nil);
 }
 
-//Returns the number of accounts available to send the content
-- (int)numberOfAccountsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
+//
+- (NSArray *)accountsWithServiceID:(NSString *)serviceID
 {
-    NSEnumerator	*enumerator;
+	NSMutableArray	*array = [NSMutableArray array];
+    NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
     
-    int number = 0;
-    
-    //Accounts that can see the object
-    enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:inObject]){
-            number++;
-        }            
-    }  
+		if([serviceID compare:[account serviceID]] == 0) [array addObject:account];
+    }
     
-    return number;
+    return(array);
 }
+
 
 
 //Account Editing ------------------------------------------------------------------------------------------------------
@@ -410,72 +452,179 @@
 
 //Preferred source account memory --------------------------------------------------------------------------------------
 #pragma mark Preferred Source Accounts
-//Returns the desired source account for messaging the specified contact.  The account is the first one found online
-//following the chain:
-//- The last account used to message this contact
-//- The last account used to message anyone
-//- The first available account on the account list
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
+//Returns the preferred choice for sending content to the passed list object
+//When presenting the user with a list of accounts, this should be the one selected by default
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
 {
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-    
-    //Preferred account for this contact --
-    //The preferred account always has priority, as long as it is available for sending content
+	NSString    *accountID;
+	AIAccount	*account;
+
     if(inObject){
-        NSString    *accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        
+		//If we've messaged this object previously, and the account we used to message it is online, return that account
+        accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
         if(accountID && (account = [self accountWithID:accountID])){
             if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
                 return(account);
             }
         }
+		
+		//If this is not a meta contact, return the account the object is on
+		if(![inObject isKindOfClass:[AIMetaContact class]]){
+			if(account = [self accountWithServiceID:[inObject serviceID] UID:[(AIListContact *)inObject accountUID]]){
+				if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+					return(account);
+				}
+			}
+		}
     }
-    
-    //First available account that can see the object
-    //If this is the first message opened in this session, the first account with the contact on it's contact list is
-    //choosen
-    {
-        enumerator = [accountArray objectEnumerator];
-        while((account = [enumerator nextObject])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:inObject]){
-                return(account);
-            }
-        }        
-    }
-    
-    //Last account used to message anyone --
-    //Next, the last account used to message someone is picked, as long as it is available for sending content
-    NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
-    if(lastAccountID && (account = [self accountWithID:lastAccountID])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
-            return(account);
-        }
-    }
-    
-    //If the handle does not exist on any contact lists, the first account available for sending content is used
-    //First available account that can see the handle --
+	
+	//Return the last account used to message someone on this service
+	NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
+	if(lastAccountID && (account = [self accountWithServiceID:[inObject serviceID] UID:lastAccountID])){
+		if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+			return(account);
+		}
+	}
+	
+	//First available account in our list of the correct service type
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
+	while(account = [enumerator nextObject]){
+		if([[account serviceID] compare:[inObject serviceID]] == 0 &&
+		   [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+			return(account);
+		}
+	}
+
+	//Can't find anything
+	return(nil);
+}
+	
+//Returns a menu of all accounts.  Accounts not available for sending content are disabled.
+//- Selector called on account selection is selectAccount:
+//- The menu item's represented objects are the AIAccounts they represent
+- (NSMenu *)menuOfAccountsWithTarget:(id)target
+{
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	NSMenu			*menu;
+	
+	//Prepare our menu
+	menu = [[NSMenu alloc] init];
+	[menu setAutoenablesItems:NO];
+	
+    //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if(([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) &&
-           [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
-            return(account);
+    while(account = [enumerator nextObject]){
+        NSMenuItem	*menuItem;
+        
+        //Create
+        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName]
+											   target:target
+											   action:@selector(selectAccount:)
+										keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:account];
+		
+        //Disabled if the account is offline
+        if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
+            [menuItem setEnabled:NO];
+        }else{
+            [menuItem setEnabled:YES];
         }
+		
+        //Add
+        [menu addItem:menuItem];
     }
-    
-    //Nothing found (no accounts are available to send)
-    //If no accounts are available, the first one is returned
-    return([accountArray count] ? [accountArray objectAtIndex:0] : nil);
+	
+	return([menu autorelease]);
+}	
+
+//Returns a menu of all accounts available for sending content to a list object
+//- Preferred choices are placed at the top of the menu.
+//- Selector called on account selection is selectAccount:
+//- The menu item's represented objects are the AIAccounts they represent
+- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
+								   toListObject:(AIListObject *)inObject
+									 withTarget:(id)target
+{
+	NSMenu		*menu;
+	NSArray		*topAccounts, *bottomAccounts;
+
+	//Get the list of accounts for each section of our menu
+	topAccounts = [self _accountsForSendingContentType:CONTENT_MESSAGE_TYPE
+										  toListObject:inObject
+											 preferred:YES];
+	bottomAccounts = [self _accountsForSendingContentType:CONTENT_MESSAGE_TYPE
+											 toListObject:inObject
+												preferred:NO];
+	
+	//Build the menu
+	menu = [[NSMenu alloc] init];
+	[menu setAutoenablesItems:NO];
+	if([topAccounts count]) [self _addMenuItemsToMenu:menu withTarget:target forAccounts:topAccounts];
+	if([topAccounts count] &&  [bottomAccounts count]) [menu addItem:[NSMenuItem separatorItem]];
+	if([bottomAccounts count]) [self _addMenuItemsToMenu:menu withTarget:target forAccounts:bottomAccounts];
+	
+	return([menu autorelease]);
+}
+
+- (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts
+{
+	NSEnumerator	*enumerator = [accounts objectEnumerator];
+	AIAccount		*anAccount;
+	
+	while(anAccount = [enumerator nextObject]){
+		NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount displayName]
+															target:target
+															action:@selector(selectAccount:)
+													 keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:anAccount];
+		[menu addItem:menuItem];
+	}
+}
+
+- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred
+{
+	NSMutableArray	*sourceAccounts = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
+	AIAccount		*account;
+	
+	while(account = [enumerator nextObject]){
+		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
+			if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
+				BOOL			knowsObject = NO;
+				BOOL			canFindObject = NO;
+				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
+																								accountUID:[account UID]
+																									   UID:[inObject UID]];
+				
+				//Does the account know this object?
+				if(contactForAccount){
+					knowsObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
+																							 toListObject:contactForAccount];
+				}
+				
+				//Could the account find this object?
+				canFindObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
+																						   toListObject:nil];
+				
+				if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && canFindObject)){
+					[sourceAccounts addObject:account];
+				}
+			}
+		}
+	}
+			
+	return(sourceAccounts);
 }
 
 //Watch outgoing content, remembering the user's choice of source account
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIChat		*chat = [notification object];
+    AIChat			*chat = [notification object];
     AIListObject	*destObject = [chat listObject];
     
     if(chat && destObject){
-        AIContentObject		*contentObject = [[notification userInfo] objectForKey:@"Object"];
+        AIContentObject *contentObject = [[notification userInfo] objectForKey:@"Object"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
         [destObject setPreference:[sourceAccount UIDAndServiceID]

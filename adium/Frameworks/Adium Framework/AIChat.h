@@ -20,6 +20,7 @@
 + (id)chatForAccount:(AIAccount *)inAccount;
 - (NSMutableDictionary *)statusDictionary;
 - (AIAccount *)account;
+- (void)setAccount:(AIAccount *)inAccount;
 
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListObject *)inObject;

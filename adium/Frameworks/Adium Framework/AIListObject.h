@@ -16,20 +16,21 @@
 @class AIMutableOwnerArray, AIListGroup;
 
 @interface AIListObject : AIObject {
-    NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
-    NSMutableArray 			*containingGroups;		//The groups this object is in
     NSString				*UID;
-    NSMutableDictionary		*statusDictionary;
     NSString				*serviceID;
-    NSMutableDictionary 	*prefDict;				//Object specific preferences
-    NSMutableArray			*changedStatusKeys;		//Status keys that have changed since the last notification
 	BOOL					visible;				//Visibility of this object
 	
-	//Manual ordering
-	AIMutableOwnerArray		*multipleOrderIndex;	//Used when we're in more than one group
+	//Status and display
+    NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
+    NSMutableDictionary		*statusDictionary;
+    NSMutableArray			*changedStatusKeys;		//Status keys that have changed since the last notification
+	NSMutableArray			*delayedStatusTimers;
+
+	//Grouping, Manual ordering
+    AIListGroup				*containingGroup;		//The group this object is in
+	float					orderIndex;				//Placement of this contact within a group
 	
 	//
-	NSMutableArray			*delayedStatusTimers;
 }
 
 //
@@ -45,9 +46,8 @@
 - (BOOL)isVisible;
 
 //Grouping
-- (NSArray *)containingGroups;
-- (float)orderIndexForGroup:(AIListGroup *)inGroup;
-- (AIMutableOwnerArray *)orderIndexArray;
+- (AIListGroup *)containingGroup;
+- (float)orderIndex;
 
 //Display
 - (NSString *)serverDisplayName;
@@ -63,20 +63,16 @@
 - (NSString *)pathToPreferences;
 
 //Status
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
-- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify;
-- (void)setStatusObject:(id)value primary:(BOOL)primary withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify;
-- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
-- (void)notifyOfChangedStatusSilently:(BOOL)silent;
-- (id)statusObjectForKey:(NSString *)key withOwner:(id)owner;
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
+- (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
+- (void)notifyOfChangedStatusSilently:(BOOL)silent;
 - (id)statusObjectForKey:(NSString *)key;
+- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
-- (void)setOrderIndex:(float)inIndex forGroup:(AIListGroup *)inGroup;
+- (void)setOrderIndex:(float)inIndex;
 
 //Grouping (PRIVATE: These are for AIListGroup ONLY)
-- (void)addContainingGroup:(AIListGroup *)inGroup;
-- (void)removeContainingGroup:(AIListGroup *)inGroup;
+- (void)setContainingGroup:(AIListGroup *)inGroup;
 
 @end

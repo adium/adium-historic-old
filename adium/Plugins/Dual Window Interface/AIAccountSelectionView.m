@@ -17,6 +17,10 @@
 
 #define ACCOUNT_SELECTION_NIB		@"AccountSelectionView"
 
+@interface AIAccountSelectionView (PRIVATE)
+- (void)_addMenusForAccounts:(NSArray *)accounts;
+@end
+
 @implementation AIAccountSelectionView
 
 - (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate
@@ -87,49 +91,37 @@
     [[popUp_accounts menu] setAutoenablesItems:NO];
 }
 
++ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
+{
+	return([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
+																					   toListObject:inObject
+																						  preferred:YES] count]
+		   +
+		   [[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
+																					   toListObject:inObject
+																						  preferred:NO] count]> 1);
+}
+
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
-    if (delegate){
-	AIListObject	*listObject = [delegate listObject];
-	NSEnumerator	*enumerator;
-	AIAccount		*anAccount;
-	int			selectedIndex;
-	
-	//remove any existing menu items
-	[[popUp_accounts menu] removeAllItems];
-	
-	//insert a menu for each account
-	enumerator = [[[adium accountController] accountArray] objectEnumerator];
-	while((anAccount = [enumerator nextObject])){
-	    
-	    //Accounts only show up in the menu if they're the correct handle type.
-	    if(!listObject || [[listObject serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
-		NSMenuItem	*menuItem;
+    if(delegate){
+		AIListObject	*listObject = [delegate listObject];
+		int				selectedIndex;
+		NSArray			*sources;
 		
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount displayName]
-						       target:self
-						       action:@selector(selectNewAccount:)
-						keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:anAccount];
+		//
+		[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
+																				  toListObject:listObject
+																					withTarget:self]];
 		
-		//They are disabled if the account is offline
-		if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
-								 toListObject:nil
-								    onAccount:anAccount]){
-		    [menuItem setEnabled:NO];
-		}
-		
-		[[popUp_accounts menu] addItem:menuItem];
-	    }
+		//Select our current account
+		selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
+		[popUp_accounts selectItemAtIndex:selectedIndex];
+		[self updateMenu];
 	}
-	
-	//Select our current account
-	selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
-	[popUp_accounts selectItemAtIndex:selectedIndex];
-	[self updateMenu];
-    }
 }
+
 
 //An account's status changed
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
@@ -148,7 +140,7 @@
 }
 
 //User selected a new account from the account menu
-- (IBAction)selectNewAccount:(id)sender
+- (IBAction)selectAccount:(id)sender
 {
     [delegate setAccount:[sender representedObject]];
     [self updateMenu];

@@ -356,21 +356,6 @@
     }
 }
 
-//Return the selected object's containing group
-- (AIListGroup *)listObjectContainingGroup
-{
-    int selectedRow = [self selectedRow];
-	
-	//Is there a faster way to do this? (Since our object may be in multiple groups)
-	while(--selectedRow >= 0){
-		AIListObject	*object = [self itemAtRow:selectedRow];
-
-		if([object isKindOfClass:[AIListGroup class]]) return((AIListGroup *)object);
-	}
-	
-	return(nil);
-}
-
 
 //Custom font settings ------------------------------------------------------------------
 //We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.

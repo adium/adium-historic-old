@@ -41,9 +41,9 @@ typedef enum {
     - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject;
 
     //Open a chat instance
-    - (AIChat *)openChatWithListObject:(AIListObject *)inListObject;
+	- (BOOL)openChat:(AIChat *)chat;
     //Close a chat instance
-    - (BOOL)closeChat:(AIChat *)inChat;
+    - (BOOL)closeChat:(AIChat *)chat;
 
 @end
 
@@ -51,6 +51,7 @@ typedef enum {
 @protocol AIAccount_List
 	- (void)removeContacts:(NSArray *)objects;
 	- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
+	- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 
     - (BOOL)contactListEditable;
 

@@ -9,15 +9,18 @@
 #import "AINewContactWindowController.h"
 
 #define ADD_CONTACT_PROMPT_NIB	@"AddContact"
+
 @interface AINewContactWindowController (PRIVATE)
 - (void)buildContactTypeMenu;
 - (void)buildGroupMenu;
 - (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
 - (void)validateEnteredName;
+- (void)updateAccountList;
 @end
 
 @implementation AINewContactWindowController
 
+//Prompt for a new user.  Pass nil for a panel prompt.
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow
 {
 	AINewContactWindowController	*newContactWindow;
@@ -36,20 +39,118 @@
 	
 }
 
+//Init
+- (id)initWithWindowNibName:(NSString *)windowNibName
+{
+    [super initWithWindowNibName:windowNibName];
+	accounts = nil;
+	addToAccounts = [[NSMutableArray alloc] init];
+	
+    return(self);
+}
+
+//Dealloc
+- (void)dealloc
+{
+	[accounts release];
+	[addToAccounts release];
+	
+    [super dealloc];
+}
+
+//Setup the window before it is displayed
+- (void)windowDidLoad
+{
+	[self buildContactTypeMenu];
+	[self buildGroupMenu];
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateAccountList)
+									   name:Account_ListChanged
+									 object:nil];
+	[self updateAccountList];
+
+	[[self window] center];
+}
+
+//Window is closing
+- (BOOL)windowShouldClose:(id)sender
+{
+	[[adium notificationCenter] removeObserver:self];
+	
+    return(YES);
+}
+
+//Stop automatic window positioning
+- (BOOL)shouldCascadeWindows
+{
+    return(NO);
+}
+
+//Close this window
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
+}
+
+//Called as the user list edit sheet closes, dismisses the sheet
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [sheet orderOut:nil];
+}
+
+//Cancel
+- (IBAction)cancel:(id)sender
+{
+	if([[self window] isSheet]){
+		[NSApp endSheet:[self window]];
+	}else{
+		[self closeWindow:nil];
+	}
+}
+
+//Add the contact
+- (IBAction)addContact:(id)sender
+{
+	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
+	NSString		*serviceID = [serviceType identifier];
+	NSString		*UID = [textField_contactName stringValue];
+	NSEnumerator	*enumerator = [addToAccounts objectEnumerator];
+	AIAccount		*account;
+	
+	while(account = [enumerator nextObject]){
+		//Ignore any accounts with a non-matching service
+		if([[[[account service] handleServiceType] identifier] compare:[serviceType identifier]] == 0){
+			AIListContact	*contact = [[adium contactController] contactWithService:serviceID accountUID:[account UID] UID:UID];
+			[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
+										   toGroup:[[popUp_targetGroup selectedItem] representedObject]];
+		}
+	}
+	
+	if([[self window] isSheet]){
+		[NSApp endSheet:[self window]];
+	}else{
+		[self closeWindow:nil];
+	}
+}
+
+
+//Service Type ---------------------------------------------------------------------------------------------------------
+#pragma mark Service Type
 //Build the menu of contact service types
 - (void)buildContactTypeMenu
 {
-	NSEnumerator				*enumerator;
-	id <AIServiceController>	service;
+	NSEnumerator		*enumerator;
+	AIServiceType		*serviceType;
 	
 	//Empty the menu
 	[popUp_contactType removeAllItems];
 	
 	//Add an item for each service
-	enumerator = [[[adium accountController] availableServices] objectEnumerator];
-	while(service = [enumerator nextObject]){
-		AIServiceType 	*serviceType = [service handleServiceType];
-		
+	enumerator = [[[adium accountController] activeServiceTypes] objectEnumerator];
+	while(serviceType = [enumerator nextObject]){
 		[[popUp_contactType menu] addItemWithTitle:[serviceType description]
 											target:self
 											action:@selector(selectServiceType:)
@@ -58,11 +159,17 @@
 	}
 }
 
+//Service type selected from the menu
 - (void)selectServiceType:(id)sender
 {
 	[self validateEnteredName];
+	[self updateAccountList];
+
 }
 
+
+//Add to Group ---------------------------------------------------------------------------------------------------------
+#pragma mark Add to Group
 //Build the menu of available destination groups
 - (void)buildGroupMenu
 {
@@ -98,44 +205,9 @@
 }
 
 
-//
-- (IBAction)cancel:(id)sender
-{
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		[self closeWindow:nil];
-	}
-}
-
-//Called as the user list edit sheet closes, dismisses the sheet
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    [sheet orderOut:nil];
-}
-
-//
-- (IBAction)addContact:(id)sender
-{
-	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
-	NSString		*serviceID = [serviceType identifier];
-	NSString		*UID = [textField_contactName stringValue];
-	
-	if(serviceID && UID){
-		AIListContact	*contact = [[adium contactController] contactWithService:serviceID UID:UID];
-			
-		[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
-									   toGroup:[[popUp_targetGroup selectedItem] representedObject]
-									onAccounts:[[adium accountController] accountArray]];
-	}
-	
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		[self closeWindow:nil];
-	}
-}
-
+//Contact Name ---------------------------------------------------------------------------------------------------------
+#pragma mark Contact Name
+//Entered name is changing
 - (void)controlTextDidChange:(NSNotification *)notification
 {
 	if([notification object] == textField_contactName){
@@ -143,6 +215,7 @@
 	}
 }
 
+//Validate the entered name, enabling the add button if it is valid
 - (void)validateEnteredName
 {
 	NSString		*name = [textField_contactName stringValue];
@@ -167,48 +240,67 @@
 }
 
 
-
-
-- (id)initWithWindowNibName:(NSString *)windowNibName
+//Add to Accounts ------------------------------------------------------------------------------------------------------
+#pragma mark Add to Accounts
+//Update the accounts list
+- (void)updateAccountList
 {
-    //init
-    [super initWithWindowNibName:windowNibName];    
+	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
 	
-    return(self);
+	[accounts release];
+	accounts = [[[adium accountController] accountsWithServiceID:[serviceType identifier]] retain];
+	[tableView_accounts reloadData];
 }
 
-- (void)dealloc
+//
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    [super dealloc];
+	return([accounts count]);
 }
 
-//Setup the window before it is displayed
-- (void)windowDidLoad
+//
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	[self buildContactTypeMenu];
-	[self buildGroupMenu];
+	NSString	*identifier = [tableColumn identifier];
 	
-    //Center the window
-    [[self window] center];
+	if([identifier compare:@"check"] == 0){
+		return([NSNumber numberWithBool:[addToAccounts containsObject:[accounts objectAtIndex:row]]]);
+	}else if([identifier compare:@"account"] == 0){
+		return([[accounts objectAtIndex:row] displayName]);
+	}else{
+		return(@"");
+	}
 }
 
-- (BOOL)shouldCascadeWindows
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return(NO);
+	[cell setEnabled:[[accounts objectAtIndex:row] contactListEditable]];
 }
 
-//Close this window
-- (IBAction)closeWindow:(id)sender
+//
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
+	NSString	*identifier = [tableColumn identifier];
+
+	if([identifier compare:@"check"] == 0){
+		if([object boolValue] == YES){
+			[addToAccounts addObject:[accounts objectAtIndex:row]];
+		}else{
+			[addToAccounts removeObject:[accounts objectAtIndex:row]];
+		}
+	}
 }
 
-- (BOOL)windowShouldClose:(id)sender
-{
-    return(YES);
+//I don't want the table to display it's selection.
+//Returning NO from 'shouldSelectRow' would work, but if we do that
+//the checkbox cells stop working.  The best solution I've come up with
+//so far is to just force a deselect here :( .
+- (void)tableViewSelectionIsChanging:(NSNotification *)notification{
+	[tableView_accounts deselectAll:nil];
 }
-
+- (void)tableViewSelectionDidChange:(NSNotification *)notification{
+	[tableView_accounts deselectAll:nil];
+}
 
 @end
+

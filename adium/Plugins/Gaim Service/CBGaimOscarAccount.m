@@ -154,7 +154,7 @@ struct buddyinfo {
 				case GAIM_BUDDY_STATUS_MESSAGE:
 				{
 					NSString		*statusMsgString = nil;
-					NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString" withOwner:self];
+					NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
 					
 					struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
 					
@@ -174,9 +174,9 @@ struct buddyinfo {
 							
 							//If the away message changed, make sure the contact is marked as away
 							BOOL newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
-							NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
+							NSNumber *storedValue = [theContact statusObjectForKey:@"Away"];
 							if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
-								[theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:NO];
+								[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
 							}
 
 						}
@@ -186,17 +186,15 @@ struct buddyinfo {
 					
 					//Update the status message if necessary
 					if (statusMsgString && [statusMsgString length]) {
-						
 						if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-							[theContact setStatusObject:statusMsgString withOwner:self forKey:@"StatusMessageString" notify:NO];
+							[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
 							[theContact setStatusObject:[AIHTMLDecoder decodeHTML:statusMsgString]
-											  withOwner:self 
 												 forKey:@"StatusMessage"
 												 notify:NO];
 						}
 					} else if (oldStatusMsgString) {
-						[theContact setStatusObject:nil withOwner:self forKey:@"StatusMessageString" notify:NO];
-						[theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
+						[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+						[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
 					}
 				}	break;
 					
@@ -209,22 +207,20 @@ struct buddyinfo {
 						if (info_utf8) {
 							
 							NSString *profileString = [NSString stringWithUTF8String:info_utf8];
-							NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString" 
-																			  withOwner:self];
+							NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
 							
 							if (profileString && [profileString length]) {
-								
 								if (![profileString isEqualToString:oldProfileString]) {
-									[theContact setStatusObject:profileString withOwner:self 
+									[theContact setStatusObject:profileString
 														 forKey:@"TextProfileString" 
 														 notify:NO];
-									[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString] withOwner:self 
+									[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString]
 														 forKey:@"TextProfile" 
 														 notify:NO];
 								}
 							} else if (oldProfileString) {
-								[theContact setStatusObject:nil withOwner:self forKey:@"TextProfileString" notify:NO];
-								[theContact setStatusObject:nil withOwner:self forKey:@"TextProfile" notify:NO];	
+								[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
+								[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
 							}
 							g_free(info_utf8);
 						}
@@ -282,7 +278,7 @@ struct buddyinfo {
 		
 		//Check their capabilities here?
 		if([inType compare:FILE_TRANSFER_TYPE] == 0){
-			if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online" withOwner:self] boolValue])){ 
+			if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
 				returnValue  = YES;
 			}
 		}

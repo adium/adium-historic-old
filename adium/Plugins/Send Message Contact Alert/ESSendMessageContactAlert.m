@@ -42,7 +42,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 //setup display for the sending message details
 -(IBAction)selectedAlert:(id)sender
-{  
+{  	
     //Get the current dictionary
     NSDictionary *currentDict = [[[adium contactAlertsController] currentDictForContactAlert:self] retain];
     AIListObject *activeContactObject = [[[adium contactAlertsController] currentObjectForContactAlert:self] retain];
@@ -88,15 +88,16 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         [button_anotherAccount setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
         [button_displayAlert setState:[[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]];
 
-        //Send message to:
-        NSString *uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
-        NSString *service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-        AIListContact *contact = [[adium contactController] contactWithService:service UID:uid];
-        [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:contact]];
-        
         //Send from account:
         account = [[adium accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
         [popUp_message_actionDetails_one selectItemAtIndex:[popUp_message_actionDetails_one indexOfItemWithRepresentedObject:account]];
+
+        //Send message to:
+        NSString *uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
+        NSString *service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
+        AIListContact *contact = [[adium contactController] contactWithService:service accountUID:[account UID] UID:uid];
+        [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:contact]];
+        
     }
     [self configureWithSubview:view_details_message];
     

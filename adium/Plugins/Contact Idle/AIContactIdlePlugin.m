@@ -101,13 +101,11 @@
     if(idleSince){ //Set the handle's 'idle' value
         double	idle = -[idleSince timeIntervalSinceNow] / 60.0;
 		[inObject setStatusObject:[NSNumber numberWithDouble:idle]
-						withOwner:inObject
 						   forKey:@"Idle"
 						   notify:NO];
         
     }else{ //Remove its idle value
 		[inObject setStatusObject:nil
-						withOwner:inObject
 						   forKey:@"Idle"
 						   notify:NO];
     }

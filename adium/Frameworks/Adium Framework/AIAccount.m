@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.39 2004/02/02 07:57:39 evands Exp $
+// $Id: AIAccount.m,v 1.40 2004/02/08 00:22:48 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -84,11 +84,13 @@
     return(service);
 }
 
+
+//Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
 //Store our account prefs in a separate folder to keep things clean
 - (NSString *)pathToPreferences
 {
-    return([[[adium loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]);
+    return(ACCOUNT_PREFS_PATH);
 }
 
 //Monitor preferences changed for account status keys, and pass these to our subclass
@@ -124,10 +126,11 @@
     }
 }
 
-#pragma mark Status
 
+//Status ---------------------------------------------------------------------------------------------------------------
+#pragma mark Status
 //Enable and disable the refresh timers as our account goes online and offline
-- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
+- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
 	if([key compare:@"Online"] == 0){
 		if([value boolValue]){
@@ -137,7 +140,7 @@
 		}
 	}
 	
-	[super setStatusObject:value withOwner:owner forKey:key notify:notify];
+	[super setStatusObject:value forKey:key notify:notify];
 }
 
 //Update this account's status
@@ -256,6 +259,8 @@
 //    userIcon = [inUserIcon retain];
 //}
 
+
+//Subclasses -----------------------------------------------------------------------------------------------------------
 #pragma mark Subclasses
 //Functions for subclasses to override
 - (void)initAccount{};
@@ -279,7 +284,7 @@
 }
 
 
-//Contact Status -------------------------------------------------------------------------------------
+//Contact Status -------------------------------------------------------------------------------------------------------
 #pragma mark Contact Status
 //If an account wants to, it can implement delayedUpdateContactStatus to protect itself from flooding
 //While updateContactStatus may be called rapidly, delayedUpdateContactStatus will be called no quicker
@@ -324,11 +329,7 @@
 }
 
 
-
-
-
-
-//Auto-Reconnect -------------------------------------------------------------------------------------
+//Auto-Reconnect -------------------------------------------------------------------------------------------------------
 #pragma mark Auto-Reconnect
 //Attempts to auto-reconnect (after an X second delay)
 - (void)autoReconnectAfterDelay:(int)delay
@@ -361,8 +362,8 @@
 }
 
 
-//Update Silencing --------------------------------------------------------------------------------------------
-
+//Update Silencing -----------------------------------------------------------------------------------------------------
+#pragma mark Update Silencing
 //Silence update for the specified interval
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
 {

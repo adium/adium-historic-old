@@ -19,11 +19,14 @@
 #import "AIEditorImportCollection.h"
 #import "AIEditorAllContactsCollection.h"
 #import "AINewContactWindowController.h"
+#import "AINewGroupWindowController.h"
 
-#define EDIT_CONTACT_LIST   AILocalizedString(@"Edit Contact List…",nil)
+#define EDIT_CONTACT_LIST			AILocalizedString(@"Edit Contact List…",nil)
 #define EDIT_CONTACT_LIST_TOOLBAR   AILocalizedString(@"Edit Contact List",nil)
-#define ADD_CONTACT   AILocalizedString(@"Add Contact…",nil)
-#define DELETE_CONTACT   AILocalizedString(@"Delete Selection",nil)
+#define ADD_CONTACT   				AILocalizedString(@"Add Contact…",nil)
+#define ADD_GROUP   				AILocalizedString(@"Add Group…",nil)
+#define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
+#define	OBJECT_DELETE_KEY			@"Object"
 
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)_generateCollectionsArray;
@@ -48,6 +51,10 @@
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 
+	//Add group menu item
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP target:self action:@selector(addGroup:) keyEquivalent:@""] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+	
 	//Delete selection menu item
     menuItem_delete = [[NSMenuItem alloc] initWithTitle:DELETE_CONTACT target:self action:@selector(deleteSelection:) keyEquivalent:@"\b"];
     [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Editing];
@@ -77,7 +84,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if(menuItem == menuItem_delete){
-		return([[adium contactController] selectedListObject] && [[adium contactController] selectedContaininigGroup]);
+		return([[adium contactController] selectedListObject] != nil);
 	}
 	
 	return(YES);
@@ -97,18 +104,29 @@
 }
 
 //
+- (IBAction)addGroup:(id)sender
+{
+	[AINewGroupWindowController promptForNewGroupOnWindow:nil];
+}
+
+//
 - (IBAction)deleteSelection:(id)sender
 {	
 	AIListObject	*object = [[adium contactController] selectedListObject];
-	AIListGroup		*group = [[adium contactController] selectedContaininigGroup];
 	
-	if(object && group){
-		NSLog(@"Deleting %@ from %@",[object displayName],[group displayName]);
-		[[adium contactController] removeListObjects:[NSArray arrayWithObject:object] fromGroup:group];
+	if(object){
+		//Guard deletion with a warning prompt
+		int result = NSRunAlertPanel([NSString stringWithFormat:@"Remove %@ from your list?", [object displayName]],
+									 @"Be careful, you cannot undo this action.",
+									 @"OK",
+									 @"Cancel",
+									 nil);
+		
+		if(result == NSAlertDefaultReturn){
+			[[adium contactController] removeListObjects:[NSArray arrayWithObject:object]];
+		}
 	}
 }
-
-
 
 
 

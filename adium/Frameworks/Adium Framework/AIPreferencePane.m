@@ -158,9 +158,8 @@
     
 }
 
-
 //Return an array of dictionaries, each dictionary of the form (key, default, group)
-- (NSArray *)restorablePreferences
+- (NSDictionary *)restorablePreferences
 {
 	return(nil);
 }

@@ -28,20 +28,16 @@
     [super init];
 
     displayDictionary = [[NSMutableDictionary alloc] init];
-    containingGroups = [[NSMutableArray alloc] init];
+    containingGroup = nil;
     UID = [inUID retain];
     serviceID = [inServiceID retain];
 
-	multipleOrderIndex = [[AIMutableOwnerArray alloc] init];
+	orderIndex = -1;
 	delayedStatusTimers = nil;
 	
 	visible = YES;
     statusDictionary = [[NSMutableDictionary alloc] init];
     changedStatusKeys = [[NSMutableArray alloc] init];
-
-    //Load our object specific preferences
-    prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences]
-									  withName:[self UIDAndServiceID] create:NO] mutableCopy];
 	
     return(self);
 }
@@ -50,7 +46,7 @@
 {
 	NSEnumerator	*enumerator;
 	NSTimer			*timer;
-	
+
 	//Invalidate any outstanding delayed status changes
 	enumerator = [delayedStatusTimers objectEnumerator];
 	while(timer = [enumerator nextObject]){
@@ -59,18 +55,16 @@
 	[delayedStatusTimers release];
 	
 	//
-	[multipleOrderIndex release];
     [displayDictionary release];
-    [containingGroups release];
     [statusDictionary release];
     [serviceID release];
-    [prefDict release];
 
     [super dealloc];
 }
 
 
-//Identification --------------------------------------------------------------------------------
+//Identification -------------------------------------------------------------------------------------------------------
+#pragma mark Identification
 //Unique identification string for this object
 - (NSString *)UID
 {
@@ -95,20 +89,15 @@
 
 
 //Visibility -----------------------------------------------------------------------------------------------------------
+#pragma mark Visibility
 //Toggle visibility of this object
 - (void)setVisible:(BOOL)inVisible
 {	
 	if(visible != inVisible){
-		NSEnumerator	*enumerator = [containingGroups objectEnumerator];
-		AIListGroup		*group;
-		
-		//
 		visible = inVisible;
 
-		//Let our containing groups know about the visibility change
-		while(group = [enumerator nextObject]){
-			[group visibilityOfContainedObject:self changedTo:inVisible];
-		}
+		//Let our containing group know about the visibility change
+		[containingGroup visibilityOfContainedObject:self changedTo:inVisible];
 	}
 }
 
@@ -119,48 +108,35 @@
 }
 
 
-//Grouping / Ownership ------------------------------------------------------------------------------------------
-//Return the local groups this object is in (will be nil for the root object)
-- (NSArray *)containingGroups
+//Grouping / Ownership -------------------------------------------------------------------------------------------------
+#pragma mark Grouping / Ownership
+//Return the local group this object is in (will be nil for the root object)
+- (AIListGroup *)containingGroup
 {
-    return(containingGroups);
+    return(containingGroup);
+}
+
+//Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
+- (void)setContainingGroup:(AIListGroup *)inGroup
+{
+	containingGroup = inGroup;
 }
 
 //Returns our desired placement within a group
-- (float)orderIndexForGroup:(AIListGroup *)inGroup
+- (float)orderIndex
 {
-	NSNumber	*index = [multipleOrderIndex objectWithOwner:inGroup];
-	return(index ? [index floatValue] : 0);
+	return(orderIndex);
 }
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
-- (void)setOrderIndex:(float)inIndex forGroup:(AIListGroup *)inGroup
+- (void)setOrderIndex:(float)inIndex
 {
-	if(inIndex != 0){ //Add
-		[multipleOrderIndex setObject:[NSNumber numberWithFloat:inIndex] withOwner:inGroup];
-	}else{ //Remove
-		[multipleOrderIndex setObject:nil withOwner:inGroup];
-	}
-}
-
-//Private: Access to the ordering array (For contact controlller / saving)
-- (AIMutableOwnerArray *)orderIndexArray
-{
-	return(multipleOrderIndex);
-}
-
-//Alter the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
-- (void)addContainingGroup:(AIListGroup *)inGroup
-{
-	[containingGroups addObject:inGroup];
-}
-- (void)removeContainingGroup:(AIListGroup *)inGroup
-{
-	[containingGroups removeObject:inGroup];
+	orderIndex = inIndex;
 }
 
 
-//Dynamic Status and Display -------------------------------------------------------------------
+//Dynamic Status and Display -------------------------------------------------------------------------------------------
+#pragma mark Dynamic Status and Display
 //Access to the display arrays for this object
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
 {
@@ -175,40 +151,15 @@
     return(array);
 }
 
-//Access to the status array for this object
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
-{
-    AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
-	
-    if(!array){
-        array = [[AIMutableOwnerArray alloc] init];
-        [statusDictionary setObject:array forKey:inKey];
-        [array release];
-    }
-	
-    return(array);
-}
-
-//Quickly set a status key for this object (owned by this object)
+//Quickly set a status key for this object
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
-	[self setStatusObject:value primary:NO withOwner:self forKey:key notify:notify];
-}
-
-//Quickly set a status key for this object
-- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
-{
-	[self setStatusObject:value primary:NO withOwner:owner forKey:key notify:notify];
-}
-
-- (void)setStatusObject:(id)value primary:(BOOL)primary withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
-{
 	if(key){
-		if (primary)
-			[[self statusArrayForKey:key] setPrimaryObject:value withOwner:owner];
-		else
-			[[self statusArrayForKey:key] setObject:value withOwner:owner];
-		
+		if(value){
+			[statusDictionary setObject:value forKey:key];
+		}else{
+			[statusDictionary removeObjectForKey:key];
+		}
 		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
 		[changedStatusKeys addObject:key];
 	}
@@ -222,14 +173,13 @@
 }
 
 //Perform a status change after a short delay
-- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
+- (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
 	if(!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
 	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
 														  target:self
 														selector:@selector(_applyDelayedStatus:)
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-															owner, @"Owner",
 															key, @"Key",
 															value, @"Value",
 															nil]
@@ -241,7 +191,6 @@
 	NSDictionary	*infoDict = [inTimer userInfo];
 	
 	[self setStatusObject:[infoDict objectForKey:@"Value"]
-				withOwner:[infoDict objectForKey:@"Owner"]
 				   forKey:[infoDict objectForKey:@"Key"]
 				   notify:YES];
 	[delayedStatusTimers removeObject:inTimer];
@@ -266,23 +215,31 @@
     }
 }
 
-//Quickly retrieve a status key for this object (owned by this object)
+//Quickly retrieve a status key for this object
 - (id)statusObjectForKey:(NSString *)key
 {
-    return([[self statusArrayForKey:key] objectWithOwner:self]);
+    return([statusDictionary objectForKey:key]);
 }
 
-//Quickly retrieve a status key for this object
-- (id)statusObjectForKey:(NSString *)key withOwner:(id)owner
+//Access to the status array for this object
+- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
 {
-    return([[self statusArrayForKey:key] objectWithOwner:owner]);
+    AIMutableOwnerArray	*array = [[[AIMutableOwnerArray alloc] init] autorelease];
+
+	[array setObject:[statusDictionary objectForKey:inKey] withOwner:self];
+
+    return(array);
 }
 
 
-//Object specific preferences -------------------------------------------------------------------
+//Object specific preferences ------------------------------------------------------------------------------------------
+#pragma mark Object specific preferences
 //Set a preference value
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
-{    
+{   
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+																					 path:[self pathToPreferences]];
+
     //Set the new value
     if(value != nil){
 		if(!prefDict) prefDict = [[NSMutableDictionary alloc] init];
@@ -292,7 +249,9 @@
     }
     
     //Save
-    [prefDict writeToPath:[self pathToPreferences] withName:[self UIDAndServiceID]];
+	[[adium preferenceController] setCachedObjectPrefs:prefDict
+												forKey:[self UIDAndServiceID]
+												  path:[self pathToPreferences]];
     
     //Broadcast a preference changed notification
     [[adium notificationCenter] postNotificationName:Preference_GroupChanged
@@ -303,39 +262,29 @@
 //Retrieve a preference value (with the option of ignoring inherited values)
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore
 {
-    //If ignore is yes, retrieve a preference value for this list object only, returning nil if no value is present
-    if(ignore){
-		return([prefDict objectForKey:inKey]);
-    }else{
-		return([self preferenceForKey:inKey group:groupName]);
-    }
+	if(!ignore) return([self preferenceForKey:inKey group:groupName]);
+	
+	//Return our value for the preference only
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+																					 path:[self pathToPreferences]];
+	return([prefDict objectForKey:inKey]);
 }
 
 //Retrieve a preference value
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName
 {
-    id		value = nil;
+    id					value = nil;
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+																					 path:[self pathToPreferences]];
     
     //Get our value for the preference
-    if(prefDict) value = [prefDict objectForKey:inKey];
-    
-    //### TEMPORARY (OLD LIST OBJECT PREFERENCE IMPORT CODE) #######
-    if(!value && [[adium preferenceController] tempImportOldPreferenceForKey:inKey group:groupName object:self]){
-	[prefDict release];
-	prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences] withName:[self UIDAndServiceID] create:NO] mutableCopy];
-	if(prefDict) value = [prefDict objectForKey:inKey];
-    }
-    //#########################################################
+    value = [prefDict objectForKey:inKey];
     
     //If we don't have a value
     if(!value){
-#warning Adam: Preferences will only inherit from the first occurence of a list object.
-		//Is the ability to inherit from multiple locations worth the performance impact it would have
-		//for those contacts?  Is inheriting from multiple places the behavior we want?
-		if([containingGroups count]){
+		if(containingGroup){
 			//return the value of the group that contains us
-			value = [[containingGroups objectAtIndex:0] preferenceForKey:inKey group:groupName];
-			
+			value = [containingGroup preferenceForKey:inKey group:groupName];
 		}else{
 			//If we are the root group, return Adium's global preference for this key
 			value = [[adium preferenceController] preferenceForKey:inKey group:groupName];
@@ -345,6 +294,7 @@
     return(value);
 }
 
+//
 - (NSArray *)allPreferencesForKey:(NSString *)inKey group:(NSString *)groupName
 {
     NSMutableArray *returnArray = [self _recursivePreferencesForKey:inKey group:groupName];
@@ -362,36 +312,33 @@
 
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName
 {
-    id				value = nil;
-    NSMutableArray  *returnArray = [NSMutableArray arrayWithCapacity:1];
+    id					value = nil;
+    NSMutableArray  	*returnArray = [NSMutableArray arrayWithCapacity:1];
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+																					 path:[self pathToPreferences]];
     
     //Get our value for the preference
-    if(prefDict){
-        if(value = [prefDict objectForKey:inKey]){
-            [returnArray addObject:value];
-        }
-    }
+	if(value = [prefDict objectForKey:inKey]){
+		[returnArray addObject:value];
+	}
     
     //so long as we aren't the root group, add our containingGroups' preferences
-    if([containingGroups count]){
-        NSEnumerator    *enumerator = [containingGroups objectEnumerator];
-        AIListObject    *containingGroup;
-        while (containingGroup = [enumerator nextObject]) {
-            [returnArray addObjectsFromArray:[containingGroup _recursivePreferencesForKey:inKey group:groupName]];
-        }
-    }
+	if(containingGroup){
+		[returnArray addObjectsFromArray:[containingGroup _recursivePreferencesForKey:inKey group:groupName]];
+	}
     
     return returnArray;
 }
 
-
 //Path for storing our reference file
 - (NSString *)pathToPreferences
 {
-    return([[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]);
+    return(OBJECT_PREFS_PATH);
 }
 
-// Display Name Convenience Methods -----------------------------------------------------------------------
+
+//Display Name Convenience Methods -------------------------------------------------------------------------------------
+#pragma mark Display Name Convenience Methods
 /*
  A list object basically has 4 different variations of display.
 
@@ -400,7 +347,9 @@
  - DisplayName, short formatted name provided by plugins "Adam Iser"
  - LongDisplayName, long formatted name provided by plugins "Adam Iser (AIser 123)"
 
- A value will always be returned by these methods, so if there is no long display name present it will fall back to display name, serverDisplayName, and finally UID (which is guaranteed to be present).  Use whichever one seems best suited for what is being displayed.
+ A value will always be returned by these methods, so if there is no long display name present it will fall back to
+ display name, serverDisplayName, and finally UID (which is guaranteed to be present).  Use whichever one seems best
+ suited for what is being displayed.
  */
 
 //Server display name, specified by server
@@ -432,16 +381,6 @@
         outName = [self serverDisplayName];
     }
 	
-#warning ## Temporary: Display object index ##
-//	NSEnumerator *e = [multipleOrderIndex objectEnumerator];
-//	NSNumber	*n;
-//	outName = [outName stringByAppendingString:@" ["];
-//	while(n = [e nextObject]){
-//		outName = [outName stringByAppendingString:[NSString stringWithFormat:@"%0.2f",[n floatValue]]];
-//	}
-//	outName = [outName stringByAppendingString:@"]"];
-	
-
     return(outName);
 }
 

@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.32 $
- *  $Date: 2004/01/08 16:38:36 $
+ * $Revision: 1.33 $
+ *  $Date: 2004/02/08 00:22:46 $
  *  $Author#
  *
  **/
@@ -38,6 +38,7 @@
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AIListObject.h"
+#import "AIMetaContact.h"
 #import "AIPlugin.h"
 #import "AIPreferenceCategory.h"
 #import "AIPreferencePane.h"

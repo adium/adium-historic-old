@@ -8,13 +8,14 @@
             SUPERCLASS = AIWindowController; 
         }, 
         {
-            ACTIONS = {addContact = id; cancel = id; }; 
+            ACTIONS = {addContact = id; cancel = id; closeWindow = id; }; 
             CLASS = AINewContactWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_add" = NSButton; 
                 "popUp_contactType" = NSPopUpButton; 
                 "popUp_targetGroup" = NSPopUpButton; 
+                "tableView_accounts" = NSTableView; 
                 "textField_contactName" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 

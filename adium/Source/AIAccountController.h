@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.7 $
- * $Date: 2004/01/14 19:02:30 $
+ * $Revision: 1.8 $
+ * $Date: 2004/02/08 00:23:00 $
  * $Author: adamiser $
  **/
 
@@ -54,8 +54,13 @@
 //Access to the account list
 - (NSArray *)accountArray;
 - (AIAccount *)accountWithID:(NSString *)inID;
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
-- (int)numberOfAccountsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
+- (NSArray *)accountsWithServiceID:(NSString *)serviceID;
+- (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID;
+
+//
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
+- (NSMenu *)menuOfAccountsWithTarget:(id)target;
+- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target;	
 
 //Managing accounts
 - (AIAccount *)newAccountAtIndex:(int)index;
@@ -75,7 +80,8 @@
 //Access to services
 - (void)registerService:(id <AIServiceController>)inService;
 - (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
-- (NSDictionary *)availableServices;
+- (NSArray *)availableServices;
+- (NSArray *)activeServiceTypes;
 
 //Private
 - (void)initController;

@@ -17,23 +17,22 @@
 @protocol AIAccountSelectionViewDelegate, AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {
-    IBOutlet	NSView			*view_contents;
+    IBOutlet	NSView				*view_contents;
     IBOutlet	NSScrollView		*scrollView_outgoingView;
     IBOutlet	AISendingTextView	*textView_outgoing;
     IBOutlet	AIAutoScrollView	*scrollView_messages;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
-    IBOutlet	NSTableView		*tableView_userList;
+    IBOutlet	NSTableView			*tableView_userList;
     IBOutlet	AIAutoScrollView	*scrollView_userList;
 
     IBOutlet	AIPlasticButton		*button_send;
 
     id <AIMessageViewController>	messageViewController;
-    AIAccountSelectionView		*view_accountSelection;
+    AIAccountSelectionView			*view_accountSelection;
 
     //Variables
     id				delegate;
-    AIAccount			*account;
     AIChat			*chat;
     BOOL			showUserList;
     BOOL			availableForSending;
@@ -49,14 +48,8 @@
 - (AIListObject *)listObject;
 - (AIAccount *)account;
 - (void)setDelegate:(id)inDelegate;
-- (void)setChat:(AIChat *)inChat;
 - (void)addToTextEntryView:(NSAttributedString *)inString;
 
-
-@end
-
-@interface NSObject (AIMessageViewControllerDelegate)
-- (void)messageViewController:(AIMessageViewController *)messageView chatChangedTo:(AIChat *)chat;
 @end
 
 
