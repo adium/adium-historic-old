@@ -65,4 +65,4 @@
 #import "AIEditStateWindowController.h"
 
 #import "AILocalizationAssistance.h"
-
+#import "ESDebugAILog.h"
