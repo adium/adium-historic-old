@@ -86,22 +86,20 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 + (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage imageOnRight:(BOOL)inImageOnRight onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {    
    if((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage){ //If passed something to display
-       BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
-       BOOL     needToCreateTooltip = (!tooltipTitle && !tooltipBody && !tooltipImage);
-       
-        //Update point and orientation
+       BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || (tooltipOrientation != inOrientation));
+
+	   //Update point and orientation
         tooltipPoint = inPoint;
         tooltipOrientation = inOrientation;
         onWindow = inWindow;
 		
-        if(needToCreateTooltip){
+        if((!tooltipTitle && !tooltipBody && !tooltipImage)){
             [self _createTooltip]; //make the window
         }
         
-        if (needToCreateTooltip ||
-			![inBody isEqualToAttributedString:tooltipBody] ||
-			![inTitle isEqualToAttributedString:tooltipTitle] || 
-			!(inImage==tooltipImage)) { //we don't exist or something changed
+        if(!(inBody == tooltipBody) ||
+		   !(inTitle == tooltipTitle) || 
+		   !(inImage == tooltipImage)) { //we don't exist or something changed
             
 			[tooltipTitle release]; tooltipTitle = [inTitle retain];
             
@@ -129,9 +127,10 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             
             [self _sizeTooltip];
 				
-        } else if(newLocation){
+        }else if(newLocation){ //Everything is the same but the location is different
                 [tooltipWindow setFrameOrigin:[self _tooltipFrameOriginForSize:[[tooltipWindow contentView] frame].size]];
         }
+
     }else{ //If passed a nil string, hide any existing tooltip
         if(tooltipBody){
             [self _closeTooltip];
