@@ -19,9 +19,7 @@
 #import "AIContactInfoWindowController.h"
 
 #define	CONTACT_NOTES_NIB			@"ContactNotes"		 //Filename of the notes info view
-#define	PREF_GROUP_NOTES			@"Notes"                //Preference group to store notes in
 
-#define PREF_GROUP_ADDRESSBOOK                  @"Address Book"
 #define KEY_AB_NOTE_SYNC                        @"AB Note Sync"
 
 //@interface BGContactNotesPlugin (PRIVATE) // should call an internal method to add to the list object :)
