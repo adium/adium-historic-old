@@ -61,7 +61,7 @@
     [scrollView_awayList setAutoScrollToBottom:NO];
     [scrollView_awayText setAutoHideScrollBar:YES];
     [scrollView_awayText setAutoScrollToBottom:NO];
-    
+
     //Load our aways
     [self loadAwayMessages];
 }
