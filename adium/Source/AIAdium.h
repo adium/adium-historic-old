@@ -457,6 +457,8 @@ typedef enum {
     int			customVolume;
 
     int			activeSoundThreads;
+
+    NSLock		*soundLock;
 }
 
 - (void)playSoundNamed:(NSString *)inName;

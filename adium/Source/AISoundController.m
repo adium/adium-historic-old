@@ -39,6 +39,7 @@
 {
     soundCacheDict = [[NSMutableDictionary alloc] init];
     activeSoundThreads = 0;
+    soundLock = [[NSLock alloc] init];
     
     //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
     [AIFileUtilities createDirectory:[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS]];
@@ -49,6 +50,7 @@
     //observe pref changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
+
 }
 
 //close
@@ -165,13 +167,13 @@
 
         
     }else if(!useCustomVolume){ //Otherwise, we can use NSSound
-        if(activeSoundThreads < MAX_THREAD_SOUNDS){
+   //     if(activeSoundThreads < MAX_THREAD_SOUNDS){
             //Detach a thead to play the sound
             [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
             activeSoundThreads++;
-        }else{
-            NSLog(@"Too many sounds playing, skipping %@",[inPath lastPathComponent]);
-        }
+   //     }else{
+   //         NSLog(@"Too many sounds playing, skipping %@",[inPath lastPathComponent]);
+   //     }
     }
 
 }
@@ -185,13 +187,17 @@
     //Load the sound (The system apparently caches these)
     sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
 
+
     //Play the sound
+//I'm getting crashes within [sound play], and I believe they're caused by more than one of these threads calling play simultaneously.  I'm not sure if this lock will have any effect on the crash, but it's worth a try.  Unfortunately it's very difficult to reproduce.
+[soundLock lock];
     [sound play];
-    
+
     //When run on a laptop using battery power, the play method may block while the audio hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.  To get around this, we check to make sure the sound is playing, and if it isn't - we call the play method again.
     if(![sound isPlaying]){
         [sound play];
     }
+[soundLock unlock];
 
     //We keep this thread active until the sound finishes playing, so we can accurately update the activeSoundThread count when it is complete
     while([sound isPlaying]){ //Check every second for sound completion
