@@ -86,14 +86,17 @@
  */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSURL 			*scriptURL;
-	NSAppleScript   *script;
-	
-	scriptURL = [NSURL fileURLWithPath:[details objectForKey:KEY_APPLESCRIPT_TO_RUN]];
-	script = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil];
-	
-	[script executeAndReturnError:nil];
-	[script release];
+	NSString		*path = [details objectForKey:KEY_APPLESCRIPT_TO_RUN];
+	if(path){		
+		NSURL 			*scriptURL;
+		NSAppleScript   *script;
+
+		scriptURL = [NSURL fileURLWithPath:path];
+		script = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil];
+		
+		[script executeAndReturnError:nil];
+		[script release];
+	}
 }
 
 /*!
