@@ -1,26 +1,31 @@
+\set ON_ERROR_STOP
+\echo schema
 create schema im;
 
  -- Stores each user who sends or receives a message.
+\echo table users
 create table im.users (
-user_id     serial primary key,
-username    varchar(50) not null,
-service     varchar(30) not null default 'AIM',
-login       boolean default false,
+user_id         serial primary key,
+username        varchar(50) not null,
+service         varchar(30) not null default 'AIM',
+login           boolean default false,
 unique(username,service)
 );
 
  -- Stores each message sent and received
+\echo table messages
 create table im.messages (
-message_id serial primary key,
-message_date timestamp default now(),
-message varchar(8096),
-sender_id int references im.users(user_id) not null,
-recipient_id int references im.users(user_id) not null
+message_id      serial primary key,
+message_date    timestamp default now(),
+message         varchar(8096),
+sender_id       int references im.users(user_id) not null,
+recipient_id    int references im.users(user_id) not null
 );
 
  -- Stores aliases/display names for users, with history.
  -- This is able to view messages with the display name they were using at the
  -- time it was sent.
+\echo table user_display_name
 create table im.user_display_name (
 user_id         int references im.users(user_id) not null,
 display_name    varchar(300) not null,
@@ -28,6 +33,7 @@ effdate         timestamp not null default now()
 );
 
  -- Stores a total count of messages for speed purposes.
+\echo table user_statistics
 create table im.user_statistics (
 sender_id       int references im.users(user_id) not null,
 recipient_id    int references im.users(user_id) not null,
@@ -37,6 +43,7 @@ primary key (sender_id, recipient_id)
 );
 
  -- Createe a few commonly used indexes
+ \echo indexes
 create index im_sender_recipient on im.messages(sender_id, recipient_id);
 create index im_msg_date_sender_recipient on
    im.messages (message_date, sender_id, recipient_id);
@@ -49,6 +56,7 @@ create index im_message_date on im.messages(message_date);
  -- the subselect to get display names makes it slower than simple_message_v
  -- uses a not exists subselect for the display names to get the first display
  -- name with an effective date less than the message
+\echo view message_v
 create or replace view im.message_v as
 select message_id,
        message_date,
@@ -84,6 +92,7 @@ where  m.sender_id = s.user_id
        );
 
  -- simple_message_v: does not contain display names for speed
+\echo view simple_message_v
 create or replace view im.simple_message_v as
 select  m.message_date,
         s.username as sender_sn,
@@ -107,6 +116,7 @@ where   m.sender_id = s.user_id
  * 4) update user_statistics with a new count
  */
 
+\echo rule insert_message_v
 create or replace rule insert_message_v as
 on insert to im.message_v
 do instead  (
@@ -227,6 +237,7 @@ do instead  (
 );
 
  -- Contains names of the meta contacts.
+\echo table meta_container
 create table im.meta_container (
 meta_id         serial primary key,
 name            text not null
@@ -234,6 +245,7 @@ name            text not null
 
  -- contains users who belong to a meta-contact, with a boolean to determine
  -- which is their primary meta-contact (if one users belongs to more than one)
+\echo table meta_contact
 create table im.meta_contact (
 meta_id         int references im.meta_container (meta_id) not null,
 user_id         int references im.users (user_id) not null,
@@ -245,6 +257,7 @@ preferred       boolean default false
  -- smart folder.  If data is added that fits the criteria, it will show up.
 
  -- used to save the search results
+\echo table saved_searches
 create table im.saved_searches (
 search_id       serial primary key,
 title           text,
@@ -259,6 +272,7 @@ date_added      timestamp default now()
 );
 
  -- used to save the chat settings
+\echo table saved_chats
 create table im.saved_chats (
 chat_id         serial primary key,
 title           text,
@@ -273,15 +287,17 @@ date_added      timestamp default now()
 );
 
  -- used to save queries
+\echo table saved_queries
 create table im.saved_queries (
-query_id       serial primary key,
-title          text,
-notes          text,
-query_text     text,
-date_added     timestamp default now()
+query_id        serial primary key,
+title           text,
+notes           text,
+query_text      text,
+date_added      timestamp default now()
 );
 
  -- saves a note and links it to a message id
+\echo table message_notes
 create table im.message_notes (
 message_id      int references im.messages(message_id),
 title           text not null,
@@ -292,6 +308,7 @@ date_added      timestamp default now()
 
  -- the master table for the extensible metadata system.
  -- saved names of categories (URL, location, etc)
+\echo table information_keys
 create table im.information_keys (
 key_id          serial primary key,
 key_name        text not null,
@@ -300,12 +317,14 @@ delete          boolean default false
 
  -- insert a couple to start with so joins don't get messed up when the
  -- database is clean
+\echo keys inserts
 insert into im.information_keys (key_name) values ('Location');
 insert into im.information_keys (key_name) values ('URL');
 insert into im.information_keys (key_name) values ('Email');
 insert into im.information_keys (key_name) values ('Notes');
 
  -- stores information, linked to either a meta contact or a user.
+\echo table contact_information
 create table im.contact_information (
 meta_id         int references im.meta_container (meta_id),
 user_id         int references im.users (user_id),
@@ -316,28 +335,33 @@ value           text,
 );
 
  -- View to see users with metadata added
+\echo view user_contact_info
 create or replace view im.user_contact_info as
 (select user_id, username, key_id, key_name, value
-from im.users natural join
-     im.contact_information natural join
-     im.information_keys where delete = false);
+from    im.users
+        natural join im.contact_information
+        natural join im.information_keys
+where   delete = false);
 
  -- View to see meta contacts with metadata
+\echo view meta_contact_info
 create or replace view im.meta_contact_info as
 (select meta_id, name, key_id, key_name, value
-from im.meta_container natural join
-     im.contact_information natural join
-     im.information_keys where delete = false);
+from    im.meta_container
+        natural join im.contact_information
+        natural join im.information_keys
+where   delete = false);
 
 -- Insert the default queries into the saved queries
+\echo saved queries inserts
 INSERT INTO im.saved_queries (title, notes, query_text)
 VALUES ('Word Frequency', 'Shows the frequency of a selected word.', 'select s.username as sender,
-          r.username as recipient,
-          count(*)
-from   messages,
-          users s,
-          users r,
-          to_tsquery(''porn'') as q
+        r.username as recipient,
+        count(*)
+from    messages,
+        users s,
+        users r,
+        to_tsquery(''porn'') as q
 where idxfti @@ q
    and  s.user_id = sender_id
    and  r.user_id = recipient_id
@@ -375,3 +399,103 @@ INSERT INTO im.saved_queries (title, notes, query_text) VALUES ('Contact Info', 
 from   users natural join contact_information
           natural join information_keys
 where username = ''fetchgreebledonx''');
+
+--statuses
+\echo table status
+create table im.status (
+status_id       serial primary key,
+user_id         int references im.users (user_id),
+status_date     timestamp default now(),
+status_type     varchar(30),
+status_message  varchar(8096)
+);
+
+\echo view simple_status_v
+create view im.simple_status_v as
+select  status_id,
+        status.user_id,
+        username,
+        service,
+        status_date,
+        status_type,
+        status_message
+from    im.status natural join im.users;
+
+\echo view status_v
+create view im.status_v as
+select  status_id,
+        status.user_id,
+        username,
+        service,
+        display_name,
+        status_date,
+        status_type,
+        status_message
+from    im.status
+        natural join im.users
+        natural join im.user_display_name disp
+where   disp.effdate < status_date
+        and not exists (
+            select  'x'
+            from    im.user_display_name
+            where   user_id = status.user_id
+             and    effdate < status_date
+             and    effdate > disp.effdate
+        );
+
+\echo rule insert_status_v
+create or replace rule insert_status_v as
+on insert to im.status_v
+do instead (
+
+     -- username
+     insert into im.users (username, service)
+     select username, coalesce(new.service, 'AIM')
+     from im.users
+     where not exists (
+        select 'x'
+        from   im.users
+        where  username = new.username
+         and   service ilike coalesce(new.service, 'AIM'));
+
+    -- Display Names
+    insert into im.user_display_name
+    (user_id, display_name, effdate)
+    select user_id,
+           case when new.display_name is null
+             or new.display_name = ''
+            then new.username
+            else new.display_name end,
+           coalesce(new.status_date, now())
+    from   im.users
+    where  username = new.username
+     and   service ilike coalesce(new.service, 'AIM')
+    and not exists (
+        select 'x'
+        from   im.user_display_name udn
+        where  user_id =
+               (select user_id from im.users
+                where  username = new.username
+                 and   service ilike coalesce(new.service, 'AIM'))
+            and   display_name = case when new.display_name is null
+             or new.display_name = '' then new.username
+              else new.display_name end
+            and effdate < coalesce(new.status_date, now())
+            and not exists (
+                select 'x'
+                from im.user_display_name
+                where effdate > udn.effdate
+                and effdate < coalesce(new.status_date, now())
+                and user_id = udn.user_id));
+
+    -- status
+
+    insert into im.status (user_id, status_date, status_type, status_message)
+    values ((select user_id
+             from im.users
+             where username = new.username
+              and service ilike coalesce(new.service, 'AIM')),
+            coalesce(new.status_date, now()),
+            new.status_type,
+            new.status_message);
+);

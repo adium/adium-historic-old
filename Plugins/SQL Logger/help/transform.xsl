@@ -48,8 +48,13 @@
                 class="offsides">CVS Changes</a>
               <br /><a
                 href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz"
-                class="offsides">Adium Plugin</a>
-              <br /><h4>Fire</h4>
+                class="offsides"><b>Adium Plugin (.63)</b></a>
+              <br /><a
+              href="http://www.visualdistortion.org/sqllogger/SQL_Logger_70.tar.gz"
+              class="offsides"><b>Adium Plugin (.70)</b></a>
+              <br/>
+              
+              <h4>Fire</h4>
               <a href="http://fire.sourceforge.net" class="offsides">Fire</a>
               <br /><h4>PostgreSQL</h4>
               <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a>
