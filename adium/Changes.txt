@@ -13,6 +13,7 @@ Version 0.57
 - Fixed something...text from being a link
 - Fixed emoticons flipping in prefs
 - Improvements to the Add/Edit link system
+- Added Contact Notes support
 - Updated mockie to reflect user name format in history messages
 - Improved HTML decoder
 - Fixed several memory leaks
@@ -35,7 +36,7 @@ Version 0.57
 - Fixed a bug with scripts being recognized in other peoples profiles
 - Fixed bug sending wrong text color out.. green text
 - added delete contact menu item
-- implemeneted requestAddContact panels.. xx has added you, add them?
+- implemented requestAddContact panels.. xx has added you, add them?
 - Fixed crashes caused by poorly formed dock icon packs
 - autolink improvements
 - fixed issue preventing mobile and ICQ service types from showing up
