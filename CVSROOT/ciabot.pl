@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.5 2003/11/10 09:03:08 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.6 2003/12/14 05:45:52 jmelloy Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
@@ -104,7 +104,7 @@ my $logmsg_lines;
 
 # These arguments are from %s; first the relative path in the repository
 # and then the list of files modified.
-
+print @ARGV;
 @files = split (' ', ($ARGV[0] or ''));
 $dir[0] = shift @files or die "$0: no directory specified\n";
 $dirfiles[0] = "@files" or die "$0: no files specified\n";
