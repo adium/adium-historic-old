@@ -50,7 +50,7 @@
 {
 	//Configure the controls
 	[self configureStateList];
-	[button_editState setLocalizedString:AILocalizedString(@"Edit",nil)];
+	[button_editState setTitle:AILocalizedString(@"Edit",nil)];
 	
 	/* Register as an observer of state array changes so we can refresh our list
 	 * in response to changes. */
@@ -177,6 +177,13 @@
 - (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState forAccount:(AIAccount *)account
 {
 	if(originalState){
+		/* As far the user was concerned, this was an edit.  The unique status ID should remain the same so that anything
+		 * depending upon this status will update to using it.  At the same time, the old one may still be in use elsewhere
+		 * (if, for example, an account has it active).  It should therefore have its uniqueID cleared so it will obtain a new
+		 * one as needed */
+		[newState setUniqueStatusID:[originalState uniqueStatusID]];
+		[originalState setUniqueStatusID:nil];
+
 		[[adium statusController] replaceExistingStatusState:originalState withStatusState:newState];
 	}else{
 		[[adium statusController] addStatusState:newState];
@@ -318,6 +325,9 @@
 	[checkBox_idle setState:[[prefDict objectForKey:KEY_STATUS_REPORT_IDLE] boolValue]];
 	[textField_idleMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_REPORT_IDLE_INTERVAL] doubleValue] / 60.0)];
 
+	[checkBox_autoAway setState:[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue]];
+	[textField_autoAwayMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_INTERVAL] doubleValue] / 60.0)];
+
 	[self configureControlDimming];
 }
 
@@ -328,7 +338,36 @@
  */
 - (void)configureAutoAwayStatusStatePopUp
 {
+	NSNumber	*targetUniqueStatusIDNumber;
+	int			index = -1;
+
 	[popUp_autoAwayStatusState setMenu:[[adium statusController] statusStatesMenu]];
+
+	//Now select the proper state, or deselect all items if there is no chosen state or the chosen state doesn't exist
+	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+																		  group:PREF_GROUP_STATUS_PREFERENCES];
+	if(targetUniqueStatusIDNumber){
+		NSArray		*itemArray;
+		int			targetUniqueStatusID;
+		unsigned	itemArrayCount, i;
+
+		targetUniqueStatusID = [targetUniqueStatusIDNumber intValue];
+
+		itemArray = [popUp_autoAwayStatusState itemArray];
+		itemArrayCount = [itemArray count];
+		for(i = 0; i < itemArrayCount; i++){
+			NSMenuItem	*menuItem = [popUp_autoAwayStatusState itemAtIndex:i];
+			AIStatus	*statusState = [[menuItem representedObject] objectForKey:@"AIStatus"];
+			
+			//Found the right status by matching its status ID to our preferred one
+			if([statusState preexistingUniqueStatusID] == targetUniqueStatusID){
+				index = i;
+				break;
+			}
+		}
+	}
+	
+	[popUp_autoAwayStatusState selectItemAtIndex:index];
 }
 
 /*
@@ -361,12 +400,16 @@
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 	}else if(sender == checkBox_autoAway){
-		/*
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_STATUS_REPORT_IDLE
+											 forKey:KEY_STATUS_AUTO_AWAY
 											  group:PREF_GROUP_STATUS_PREFERENCES];
-		 */
 		[self configureControlDimming];
+	}else if(sender == popUp_autoAwayStatusState){
+		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
+
+		[[adium preferenceController] setPreference:[statusState uniqueStatusID]
+											 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+											  group:PREF_GROUP_STATUS_PREFERENCES];
 	}
 }
 
@@ -393,11 +436,9 @@
 										 forKey:KEY_STATUS_REPORT_IDLE_INTERVAL
 										  group:PREF_GROUP_STATUS_PREFERENCES];
 
-	/*
 	[[adium preferenceController] setPreference:[NSNumber numberWithDouble:([textField_autoAwayMinutes doubleValue]*60.0)]
-										 forKey:KEY_STATUS_REPORT_IDLE_INTERVAL
+										 forKey:KEY_STATUS_AUTO_AWAY_INTERVAL
 										  group:PREF_GROUP_STATUS_PREFERENCES];
-	 */
 }
 
 @end
