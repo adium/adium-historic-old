@@ -136,7 +136,8 @@ static ESFileTransferPreferences *preferences;
 	
 	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
 									 forListObject:listContact
-										  userInfo:fileTransfer];
+										  userInfo:fileTransfer
+					  previouslyPerformedActionIDs:nil];
 
 	if((autoAcceptType == AutoAccept_All) ||
 	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))){
@@ -241,7 +242,9 @@ static ESFileTransferPreferences *preferences;
 		{
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
 											 forListObject:[fileTransfer contact] 
-												  userInfo:fileTransfer];
+												  userInfo:fileTransfer
+							  previouslyPerformedActionIDs:nil];
+
 			if(showProgressWindow){
 				[self showProgressWindow:nil];
 			}
@@ -252,7 +255,8 @@ static ESFileTransferPreferences *preferences;
 		{		
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
 											 forListObject:[fileTransfer contact] 
-												  userInfo:fileTransfer];
+												  userInfo:fileTransfer
+							  previouslyPerformedActionIDs:nil];
 			
 			//The file is complete; if we are supposed to automatically open safe files and this is one, open it
 			if([self shouldOpenCompleteFileTransfer:fileTransfer]){ 
@@ -269,7 +273,8 @@ static ESFileTransferPreferences *preferences;
 		{
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
 											 forListObject:[fileTransfer contact] 
-												  userInfo:fileTransfer];
+												  userInfo:fileTransfer
+							  previouslyPerformedActionIDs:nil];
 			break;
 		}
 		default:
