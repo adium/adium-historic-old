@@ -17,13 +17,13 @@
 	return([NSColor whiteColor]);
 }
 
-- (NSColor *)textColorInView:(NSView *)controlView
+- (NSColor *)textColor
 {
 	return([NSColor whiteColor]);
 }
 
 //Draw a gradient behind our group
-- (void)drawBackgroundWithFrame:(NSRect)rect inView:(NSView *)controlView
+- (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	AIGradient	*gradient = [AIGradient gradientWithFirstColor:[NSColor colorWithCalibratedRed:0.542 green:0.726 blue:1.0 alpha:1.0]
 												   secondColor:[NSColor colorWithCalibratedRed:0.416 green:0.660 blue:1.0 alpha:1.0]

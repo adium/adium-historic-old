@@ -43,7 +43,7 @@
 - (NSBezierPath *)bezierPathLabelWithRect:(NSRect)bounds;
 - (float)displayViews:(NSArray *)viewArray inRect:(NSRect)drawRect onLeft:(BOOL)onLeft;
 - (float)labelEdgePaddingRequiredForLabelOfSize:(NSSize)backgroundSize;
-- (NSColor *)textColorInView:(AISCLOutlineView *)controlView;
+- (NSColor *)textColor;
 @end
 
 #define USER_ICON_SIZE			28
@@ -65,7 +65,7 @@
 	textContainer = [[NSTextContainer alloc] init];
 	[layoutManager addTextContainer:textContainer];
 	[textStorage addLayoutManager:layoutManager];
-	
+	[textContainer setLineFragmentPadding:0.0];
 	
     return self;
 }
@@ -96,6 +96,13 @@
     isGroup = [listObject isKindOfClass:[AIListGroup class]];
 }
 
+//Set our control view (Better than passing this around like crazy)
+- (void)setControlView:(NSView *)inControlView
+{
+	controlView = inControlView;
+}
+
+
 
 
 //Sizing and Display ---------------------------------------------------------------------------------------------------
@@ -104,14 +111,14 @@
 	return(NSMakeSize(0, 30));
 }
 
-- (NSFont *)fontInView:(NSView *)controlView
+- (NSFont *)font
 {
 	return([controlView font]);
 }
 
-- (NSColor *)textColor
+- (NSTextAlignment)textAlignment
 {
-	return([NSColor blackColor]);
+	return(NSLeftTextAlignment);
 }
 
 //Drawing
@@ -121,13 +128,13 @@
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {	
 	if(listObject){
-		[self drawBackgroundWithFrame:cellFrame inView:controlView];
-		[self drawContentWithFrame:cellFrame inView:controlView];
+		[self drawBackgroundWithFrame:cellFrame];
+		[self drawContentWithFrame:cellFrame];
 	}
 }
 	
 //Draw the background of our cell
-- (void)drawBackgroundWithFrame:(NSRect)rect inView:(NSView *)controlView
+- (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	//
 	
@@ -136,17 +143,30 @@
 }
 
 //Draw content of our cell
-- (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
+- (void)drawContentWithFrame:(NSRect)rect
 {
-	[self drawDisplayNameWithFrame:rect inView:controlView];
+	[self drawDisplayNameWithFrame:rect];
 }
 
 //Draw our display name
-- (void)drawDisplayNameWithFrame:(NSRect)rect inView:(NSView *)controlView
+- (void)drawDisplayNameWithFrame:(NSRect)rect
 {	
-	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES inView:controlView]];
+	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES]];
 	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
 	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
+
+	//Alignment
+	switch([self textAlignment]){
+		case NSCenterTextAlignment:
+			rect.origin.x += (rect.size.width - glyphRect.size.width) / 2.0;
+		break;
+		case NSRightTextAlignment:
+			rect.origin.x += (rect.size.width - glyphRect.size.width);
+		break;
+		default:
+		break;
+	}
+
 	[layoutManager drawGlyphsForGlyphRange:glyphRange
 								   atPoint:NSMakePoint(rect.origin.x,
 													   rect.origin.y + (rect.size.height - glyphRect.size.height) / 2.0)];
@@ -299,9 +319,9 @@
 
 //Returns our display name string.  If the string is only for sizing, passing NO will skip applying non-size changing
 //attributes, giving a bit of a speed boost
-- (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes inView:(AISCLOutlineView *)controlView
+- (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes
 {
-	NSFont				*font = [self fontInView:controlView];//(isGroup ? [NSFont boldSystemFontOfSize:12] : nil);//[controlView groupFont] : [controlView font]);
+	NSFont				*font = [self font];//(isGroup ? [NSFont boldSystemFontOfSize:12] : nil);//[controlView groupFont] : [controlView font]);
 	NSString 			*displayString;
 	NSDictionary		*attributes;
 	
@@ -327,15 +347,15 @@
 		NSParagraphStyle	*paragraphStyle;
 		
 		//Text Color (If this cell is selected, use the inverted color, or white)
-		textColor = [self textColorInView:controlView];
+		textColor = [self textColor];
 		
 		//Font & Clipping paragraph style
 		paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByClipping];
 		
 		attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 			textColor, NSForegroundColorAttributeName,
-			font, NSFontAttributeName,
 			paragraphStyle, NSParagraphStyleAttributeName,
+			font, NSFontAttributeName,
 			nil];
 		
 	}else{
@@ -346,7 +366,7 @@
 }
 
 //Text Color (If this cell is selected, use the inverted color, or white)
-- (NSColor *)textColorInView:(NSView *)controlView
+- (NSColor *)textColor
 {
 	NSColor	*textColor = nil;
 	

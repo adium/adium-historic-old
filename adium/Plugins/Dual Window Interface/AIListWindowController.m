@@ -44,6 +44,11 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
+
+
+#define GROUPS_USE_GRADIENT_CELL		YES
+
+
 @interface AIListWindowController (PRIVATE)
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
@@ -113,7 +118,7 @@
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 	[contactListView setContentCell:[[AIListContactCell alloc] init]];
-	[contactListView setGroupCell:[[AIListGroupCell alloc] init]];	
+	[contactListView setGroupCell:(GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init])];	
 
 #warning grr
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
@@ -540,8 +545,8 @@
 //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	NSLog(@"cell:%@",cell);
 	[(AIListCell *)cell setListObject:item];
+	[(AIListCell *)cell setControlView:outlineView];
 }
 
 //

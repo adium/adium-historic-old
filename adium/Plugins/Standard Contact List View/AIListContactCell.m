@@ -12,25 +12,51 @@
 @implementation AIListContactCell
 
 #define SHOW_USER_ICON			YES
-#define USER_ICON_ON_LEFT		NO
-#define USER_ICON_SIZE			28
+#define USER_ICON_ON_LEFT		YES
+#define USER_ICON_SIZE			20
 #define VERTICAL_ICON_PADDING	1
 #define ICON_LEFT_PADDING 		4
-#define ICON_RIGHT_PADDING 		2
-
+#define ICON_RIGHT_PADDING 		1
+#define ICON_TEXT_PADDING		3
 #define SHOW_STATUS_ICON		YES
-#define STATUS_ICON_ON_LEFT		YES
+#define STATUS_ICON_ON_LEFT		NO
+#define CONTACT_FONT 			[NSFont systemFontOfSize:11]
+
+#define badgewidth 				30
+
+#define CONTACT_TEXT_ALIGN		NSRightTextAlignment //NSLeftTextAlignment
+//NSLeftTextAlignment		= 0, /* Visually left aligned */
+//NSRightTextAlignment	= 1, /* Visually right aligned */
+//NSCenterTextAlignment	= 2,
+
+- (NSFont *)font
+{
+	return(CONTACT_FONT);
+}
 
 
-#define badgewidth 				18
+- (NSTextAlignment)textAlignment
+{
+	return(CONTACT_TEXT_ALIGN);
+}
 
 - (NSSize)cellSize
 {
-	return(NSMakeSize(0, USER_ICON_SIZE + (VERTICAL_ICON_PADDING * 2.0)));
+	if(SHOW_USER_ICON){
+		return(NSMakeSize(0, USER_ICON_SIZE + (VERTICAL_ICON_PADDING * 2)));
+	}else{
+		
+#warning I hate OS X font sizing
+		
+NSAttributedString *		attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
+int		textHeight = [attrString heightWithWidth:1e7];
+
+		return(NSMakeSize(0, /*(int)([[self font] boundingRectForFont].size.height)*/textHeight + (VERTICAL_ICON_PADDING * 2)));
+	}
 }
 
 //Draw content of our cell
-- (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
+- (void)drawContentWithFrame:(NSRect)rect
 {
 	NSRect	iconRect;
 
@@ -55,6 +81,7 @@
 		[self drawUserIconInRect:iconRect];
 
 		if(USER_ICON_ON_LEFT) rect.origin.x += USER_ICON_SIZE + ICON_RIGHT_PADDING;
+		if(USER_ICON_ON_LEFT) rect.origin.x += ICON_TEXT_PADDING;
 		rect.size.width -= USER_ICON_SIZE + ICON_RIGHT_PADDING;
 	}
 
@@ -78,8 +105,7 @@
 		rect.size.width -= badgewidth;
 	}
 	
-	
-	[self drawDisplayNameWithFrame:rect inView:controlView];
+	[self drawDisplayNameWithFrame:rect];
 }
 
 
