@@ -79,7 +79,7 @@
 
 - (void)sendMessage:(NSString*)msg ofType:(NSString*)type
 {
-	AIChat * chat = [[adium contentController] chatWithContact:contact_OtherPlayer initialStatus:nil];
+	AIChat * chat = [[adium contentController] chatWithContact:contact_OtherPlayer];
 	[self sendMessage:msg
 			   ofType:type
 			toContact:contact_OtherPlayer
