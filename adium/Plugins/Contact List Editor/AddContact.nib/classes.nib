@@ -11,7 +11,11 @@
             ACTIONS = {addContact = id; cancel = id; }; 
             CLASS = AINewContactWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_contactType" = NSPopUpButton; "textField_contactName" = NSTextField; }; 
+            OUTLETS = {
+                "popUp_contactType" = NSPopUpButton; 
+                "popUp_targetGroup" = NSPopUpButton; 
+                "textField_contactName" = NSTextField; 
+            }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {
