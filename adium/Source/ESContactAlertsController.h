@@ -66,5 +66,6 @@
 - (void)addGlobalAlert:(NSDictionary *)newAlert;
 - (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject;
 - (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID;
+- (void)mergeAndMoveContactAlertsFromListObject:(AIListObject *)oldObject intoListObject:(AIListObject *)newObject;
 
 @end

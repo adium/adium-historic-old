@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.31 2004/07/09 22:54:00 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.32 2004/07/27 18:52:03 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -11,6 +11,7 @@
 @interface ESContactAlertsController (PRIVATE)
 - (NSMutableDictionary *)appendEventsForObject:(AIListObject *)listObject toDictionary:(NSMutableDictionary *)events;
 - (void)addMenuItemsForEventHandlers:(NSDictionary *)inEventHandlers toArray:(NSMutableArray *)menuItemArray withTarget:(id)target forGlobalMenu:(BOOL)global;
+- (void)removeAllAlertsFromListObject:(AIListObject *)listObject;
 @end
 
 @implementation ESContactAlertsController
@@ -156,8 +157,8 @@ DeclareString(KeyOneTimeAlert);
 {
 	//Get all events from the contanining object if we have an object
 	if(listObject){
-		//If listObject doesn't have a containingGroup, this will pass nil
-		events = [self appendEventsForObject:[listObject containingGroup] toDictionary:events];
+		//If listObject doesn't have a containingObject, this will pass nil
+		events = [self appendEventsForObject:[listObject containingObject] toDictionary:events];
 	}
 	
 	//If we don't have an object, we use the preference controller to get the global alerts
@@ -336,14 +337,17 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	eventArray = [[contactAlerts objectForKey:newAlertEventID] mutableCopy];
 	if(!eventArray) eventArray = [[NSMutableArray alloc] init];
 	
-	//Add the new alert
-	[eventArray addObject:newAlert];
-	
-	//Put the modified event array back into the contact alert dict, and save our changes
-	[contactAlerts setObject:[eventArray autorelease] forKey:newAlertEventID];
-	[preferenceSource setPreference:contactAlerts
-							 forKey:KEY_CONTACT_ALERTS 
-							  group:PREF_GROUP_CONTACT_ALERTS];
+	//Avoid putting the exact same alert into the array twice
+	if ([eventArray indexOfObject:newAlert] != NSNotFound){
+		//Add the new alert
+		[eventArray addObject:newAlert];
+		
+		//Put the modified event array back into the contact alert dict, and save our changes
+		[contactAlerts setObject:[eventArray autorelease] forKey:newAlertEventID];
+		[preferenceSource setPreference:contactAlerts
+								 forKey:KEY_CONTACT_ALERTS 
+								  group:PREF_GROUP_CONTACT_ALERTS];
+	}
 	[contactAlerts release];
 	
 	//Update the default events if we were setting a listObject-specific contact alert
@@ -394,6 +398,13 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	[contactAlerts release];
 }
 
+- (void)removeAllAlertsFromListObject:(AIListObject *)listObject
+{
+	[listObject setPreference:nil
+					   forKey:KEY_CONTACT_ALERTS
+						group:PREF_GROUP_CONTACT_ALERTS];
+}
+
 - (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID
 {
 	NSDictionary		*contactAlerts = [[owner preferenceController] preferenceForKey:KEY_CONTACT_ALERTS 
@@ -439,6 +450,25 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 										 forKey:KEY_CONTACT_ALERTS
 										  group:PREF_GROUP_CONTACT_ALERTS];
 	[newContactAlerts release];
+}
+
+- (void)mergeAndMoveContactAlertsFromListObject:(AIListObject *)oldObject intoListObject:(AIListObject *)newObject
+{
+	NSArray				*oldAlerts = [self alertsForListObject:oldObject];
+	NSEnumerator		*enumerator = [oldAlerts objectEnumerator];
+	NSDictionary		*alertDict;
+	
+	[[owner preferenceController] delayPreferenceChangedNotifications:YES];
+	
+	//Add each alert to the target (addAlert:toListObject: will ensure identical alerts aren't added more than once)
+	while (alertDict  = [enumerator nextObject]){
+		[self addAlert:alertDict toListObject:newObject];
+	}
+	
+	//Remove the alerts from the originating list object
+	[self removeAllAlertsFromListObject:oldObject];
+	
+	[[owner preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 @end
