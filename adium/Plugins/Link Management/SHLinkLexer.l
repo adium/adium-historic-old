@@ -27,10 +27,10 @@ mailSpecifier	[^:\/]+\@.+\.{domains}
 %x CANONICAL
 %%
 
-<CANONICAL>{urlSpecifier}	{BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>.*                   {BEGIN INITIAL; return SH_URL_INVALID;}
+<CANONICAL>{urlSpecifier}	    {BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>.*			    {BEGIN INITIAL; return SH_URL_INVALID;}
 
-file:\/\/\/.*     		{return SH_FILE_VALID;}
+file:\/\/\/.*			    {return SH_FILE_VALID;}
 
 https?:\/\/	|
 ftp:\/\/	|
@@ -41,15 +41,16 @@ irc:\/\/	|
 nntp:\/\/       |
 rstp:\/\/	|
 itms:\/\/	|
-gopher:\/\/                     {BEGIN CANONICAL;}
+gopher:\/\/			    {BEGIN CANONICAL;}
 
-mailto:{mailSpecifier}          {return SH_MAILTO_VALID;}
+mailto:{mailSpecifier}		    {return SH_MAILTO_VALID;}
 
-xmpp:.*@.*(\/.*)?		{return SH_URL_VALID; /*jabber*/}
+xmpp:.*@.*(\/.*)?		    {return SH_URL_VALID; /*jabber*/}
+aim:goim\?screenname=[^\s&]*(&message=.*)?   {return SH_URL_VALID; /* aim */}
 
 
-{mailSpecifier}			{return SH_MAILTO_DEGENERATE;}	
-{urlSpecifier}			{return SH_URL_DEGENERATE;}
+{mailSpecifier}			    {return SH_MAILTO_DEGENERATE;}	
+{urlSpecifier}			    {return SH_URL_DEGENERATE;}
 
-.*				{return SH_URL_INVALID;}
+.*				    {return SH_URL_INVALID;}
 %%
