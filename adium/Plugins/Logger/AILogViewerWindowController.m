@@ -180,9 +180,9 @@ static AILogViewerWindowController *sharedInstance = nil;
 - (void)scanAvailableLogs
 {
     NSString		*logFolderPath = [[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
-    NSString		*accountFolderPath;
-    NSEnumerator	*userEnumerator, *accountEnumerator;
+    NSString		*accountFolderPath, *folderPath;
     NSString		*accountFolderName, *folderName;
+    NSEnumerator	*userEnumerator, *accountEnumerator;
     NSEnumerator	*enumerator;
     NSDictionary	*dictionary;
 
@@ -207,6 +207,12 @@ static AILogViewerWindowController *sharedInstance = nil;
             while((folderName = [userEnumerator nextObject])){
                 NSString		*serverGroup = nil;
                 NSString		*contactKey;
+                BOOL			isDir;
+
+                //Don't bother if this isn't a folder
+                folderPath = [[accountFolderPath stringByAppendingPathComponent:folderName] stringByExpandingTildeInPath];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:folderPath isDirectory:&isDir] && !isDir)
+                    continue;
 
                 //Find the group this contact is in on our contact list
                 AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceID UID:folderName];
