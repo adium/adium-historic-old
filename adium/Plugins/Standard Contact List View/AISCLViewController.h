@@ -17,21 +17,20 @@
 @protocol AIContactListViewController;
 
 @interface AISCLViewController : AIObject <AIContactListViewController> {    
-    AIListGroup		*contactList;
+    AIListGroup			*contactList;
     AISCLOutlineView	*contactListView;
 
     NSTrackingRectTag	tooltipTrackingTag;
-    BOOL		trackingMouseMovedEvents;
+    BOOL				trackingMouseMovedEvents;
     
     BOOL                isBorderless;
     
     BOOL                horizontalResizingEnabled;
     
-    NSTimer 		*tooltipTimer;
-    int 		tooltipCount;
+    NSTimer 			*tooltipTimer;
+    int 				tooltipCount;
     BOOL                allowTooltipsInBackground;
     
-    BOOL                shadows;
 }
 
 + (AISCLViewController *)contactListViewController;
@@ -40,6 +39,4 @@
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
 
-//Relatively private
-- (void)_endTrackingMouse;
 @end

@@ -38,6 +38,7 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 - (void)updateTooltipTrackingRect;
 - (void)_desiredSizeChanged;
+- (void)_endTrackingMouse;
 @end
 
 @implementation AISCLViewController
@@ -57,7 +58,6 @@
     trackingMouseMovedEvents = NO;
     tooltipTimer = nil;
     tooltipCount = 0;
-    shadows = YES;
     
     //Install the necessary observers
     [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
@@ -185,7 +185,6 @@
 		BOOL			useGradient = [[prefDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue];
 		float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
         
-        shadows = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
         
         float           spacing = [[prefDict objectForKey:KEY_SCL_SPACING] floatValue];
         BOOL            outlineGroups = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue];
@@ -196,17 +195,22 @@
         allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
         
 		
-		//Opacity, Borderless, Shadows -----
-        isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
-
+		//Opacity, Shadows -----
+#warning        shadows = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
+		
+		
+		
+		
+		
+		
         //Borderless
 		
 		
 		
 		
         //Configure shadow drawing
-        if ([contactListView window])
-            [[contactListView window] setHasShadow:shadows];
+#warning        if ([contactListView window])
+#warning            [[contactListView window] setHasShadow:shadows];
 
         //Fonts
         NSFont		*boldFont = nil;
@@ -303,7 +307,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSWindowDidBecomeKeyNotification object:[inSuperview window]]; //Force a frame update when window becomes key
     
     //Configure shadow drawing
-    [[inSuperview window] setHasShadow:shadows];
+#warning    [[inSuperview window] setHasShadow:shadows];
 }
 
 //Frame changed, reinstall cursor tracking rect
