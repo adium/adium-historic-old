@@ -10,7 +10,7 @@ AIUtilities:
 
 SQLLogger:
 	xcodebuild -project Adium.xcode -buildstyle $(BUILDSTYLE) -target "SQL Logger" build
-	cp -r "build/SQL Logger.adiumPlugin" "build/Adium.app/Contents/Plugins"; 
+	cp -r "build/SQL Logger.adiumPlugin" "~/Library/Application Support/Adium 2.0/Plugins/";
 
 install:
 	cp -R build/Adium.app ~/Applications/
