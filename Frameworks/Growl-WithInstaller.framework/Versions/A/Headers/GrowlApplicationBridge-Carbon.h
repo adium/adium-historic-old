@@ -44,8 +44,9 @@ struct Growl_Delegate {
 	 */
 	size_t size;
 
-	/*Required attributes. Setting the Growl delegate will fail if any of these
-	 *	is NULL.
+	/*All of these attributes are optional except registrationDictionary.
+	 *Optional attributes can be NULL; required attributes that are NULL cause
+	 *	setting the Growl delegate to fail.
 	 */
 
 	/*!	@field applicationName
@@ -58,8 +59,6 @@ struct Growl_Delegate {
 	 *	 "SurfWriter Lite" are not.
 	 */
 	CFStringRef applicationName;
-
-	//Optional attributes. These can be NULL.
 
 	/*!	@field registrationDictionary
 	 *	@abstract	A dictionary describing your application and the notifications it can send out.
@@ -341,7 +340,7 @@ struct Growl_Notification {
  */
 #define InitGrowlDelegate(delegate) \
 	do { \
-		if((delegate) != NULL) { \
+		if (delegate) { \
 			(delegate)->size = sizeof(struct Growl_Delegate); \
 			(delegate)->applicationName = NULL; \
 			(delegate)->registrationDictionary = NULL; \
@@ -366,7 +365,7 @@ struct Growl_Notification {
  */
 #define InitGrowlNotification(notification) \
 	do { \
-		if((notification) != NULL) { \
+		if (notification) { \
 			(notification)->size = sizeof(struct Growl_Notification); \
 			(notification)->name = NULL; \
 			(notification)->title = NULL; \
