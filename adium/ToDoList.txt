@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.38 2004/04/13 22:17:40 hanji Exp $
+$Id: ToDoList.txt,v 1.39 2004/04/13 23:44:51 the_tick Exp $
 
 Legend
 + Change or Addition
@@ -94,6 +94,7 @@ Other:
 	    Colin: Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P
 		Evan: Auburn University? I'm with you though if we change it... but I really think it's okay as-is.
         Jeff: Remember that we lose CVS history if we change filenames.
+	Chris (tick): We could just commit the cvs history to cvs :P
 
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 		Colin: Didn't Mac-arena do this already?
@@ -127,6 +128,8 @@ Contact alerts:
 	= Auto-fill sheet for new alert based on selection in window on clicking add
 
 
+		- Chris (tick): Is it better to have a separate window for alerts, or is it better to make it into the get info/inspector/whatever thingamabob.
+
 Contact list display:
 	Add user icon and extended status display support to the contact list, and simplify its
 	configuration to a small subset of nice looking cell arrangements.
@@ -146,7 +149,6 @@ Status badges:
 	- Remove status icons plugin
 	+ Add images based status badges to the contact list
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
-    
 
 Event Info (Implement as a new plugin, to replace bezel):
     	Notify the user of status changes for specific contacts with a small, very visible, easy to position, non intrusive
@@ -209,7 +211,7 @@ Protocol Specific Functions:
 File Transfer:
     Non-intrusive prompts, download management, drag & drop transfer, previewing, direct connect,
     progress feedback, etc.
-	
+
 Event integration:
     Shift control of sound playing and dock bouncing to the event controller, keeping the existing preferences
     as a front to hidden events in the event system.  To reduce duplicate code and provide better behavior
