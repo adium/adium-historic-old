@@ -879,7 +879,7 @@
 	
 	if (!_contactStatusObjectKeys)
 		_contactStatusObjectKeys = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
-			@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
+			@"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
 	
 	return _contactStatusObjectKeys;
 }
