@@ -24,11 +24,17 @@
 - (id)init
 {
     [super init];
-
+	
 	topSpacing = 0;
 	bottomSpacing = 0;
 	topPadding = 0;
 	bottomPadding = 0;
+	leftPadding = 0;
+	rightPadding = 0;
+	leftSpacing = 0;
+	rightSpacing = 0;
+	
+	font = [[NSFont systemFontOfSize:12] retain];
 	
 	//Set up our custom text system.
 	//Using drawAtPoint: places our text at a seemingly random vertical alignment, so we do the text drawing at a
@@ -58,6 +64,8 @@
 //	[layoutManager release];
 //	[textStorage release];
 	[genericUserIcon release];
+	[font release];
+	
 	
 	[super dealloc];
 }
@@ -84,10 +92,16 @@
 	return(textAlignment);
 }
 
-//Font
-- (NSFont *)font
+//
+- (void)setFont:(NSFont *)inFont
 {
-	return([controlView font]);
+	if(inFont && inFont != font){
+		[font release];
+		font = [inFont retain];
+	}
+}
+- (NSFont *)font{
+	return(font);
 }
 
 //Does this cell need the grid draw behind it?
@@ -122,6 +136,18 @@
 - (int)bottomSpacing{
 	return(bottomSpacing);
 }
+- (void)setLeftSpacing:(int)inSpacing{
+	leftSpacing = inSpacing;
+}
+- (int)leftSpacing{
+	return(leftSpacing);
+}
+- (void)setRightSpacing:(int)inSpacing{
+	rightSpacing = inSpacing;
+}
+- (int)rightSpacing{
+	return(rightSpacing);
+}
 
 //User-defined padding offsets.  A cell may adjust these values to to obtain a more desirable default.
 //These are offsets, they may be negative!  Padding is the distance between cell edges and their content.
@@ -142,11 +168,17 @@
 	return(bottomPadding);
 }
 
+- (void)setLeftPadding:(int)inPadding{
+	leftPadding = inPadding;
+}
 - (int)leftPadding{
-	return(0);
+	return(leftPadding);
+}
+- (void)setRightPadding:(int)inPadding{
+	rightPadding = inPadding;
 }
 - (int)rightPadding{
-	return(0);
+	return(rightPadding);
 }
 
 
@@ -162,6 +194,8 @@
 		//Cell spacing
 		cellFrame.origin.y += [self topSpacing];
 		cellFrame.size.height -= [self bottomSpacing] + [self topSpacing];
+		cellFrame.origin.x += [self leftSpacing];
+		cellFrame.size.width -= [self rightSpacing] + [self leftSpacing];
 		
 		[self drawBackgroundWithFrame:cellFrame];
 
@@ -188,10 +222,11 @@
 }
 
 //Draw our display name
-- (NSRect)drawDisplayNameWithFrame:(NSRect)rect
+- (NSRect)drawDisplayNameWithFrame:(NSRect)inRect
 {	
 	NSAttributedString	*displayName = [self displayNameStringWithAttributes:YES];
 	NSSize				nameSize = [displayName size];
+	NSRect				rect = inRect;
 	
 	if(nameSize.width > rect.size.width) nameSize = rect.size;
 
@@ -199,12 +234,12 @@
 	switch([self textAlignment]){
 		case NSCenterTextAlignment:
 			rect.origin.x += (rect.size.width - nameSize.width) / 2.0;
-			break;
+		break;
 		case NSRightTextAlignment:
 			rect.origin.x += (rect.size.width - nameSize.width);
-			break;
+		break;
 		default:
-			break;
+		break;
 	}
 
 	//Draw (centered vertical)
@@ -220,15 +255,15 @@
 			//How to handle this case?
 		break;
 		case NSRightTextAlignment:
-			rect.size.width -= nameSize.width;
+			inRect.size.width -= nameSize.width;
 		break;
 		default:
-			rect.origin.x += nameSize.width;
-			rect.size.width -= nameSize.width;
+			inRect.origin.x += nameSize.width;
+			inRect.size.width -= nameSize.width;
 		break;
 	}
 	
-	return(rect);
+	return(inRect);
 	
 	
 //	[[self displayNameStringWithAttributes:YES] drawInRect:rect];

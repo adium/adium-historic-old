@@ -28,9 +28,16 @@
 	int				topPadding;
 	int				bottomPadding;
 
+	int				leftPadding;
+	int				rightPadding;
+	int				leftSpacing;
+	int				rightSpacing;
+
 //	NSTextStorage 	*textStorage;
 //	NSLayoutManager	*layoutManager;
 //	NSTextContainer	*textContainer;
+	
+	NSFont			*font;
 	
 	
 	
@@ -44,9 +51,15 @@
 - (NSTextAlignment)textAlignment;
 
 //
+- (void)setStatusFont:(NSFont *)inFont;
+- (NSFont *)statusFont;
+
+//
 - (void)setSplitVerticalPadding:(int)inPadding;
 - (void)setTopPadding:(int)inPadding;
 - (void)setBottomPadding:(int)inPadding;
+- (void)setLeftPadding:(int)inPadding;
+- (void)setRightPadding:(int)inPadding;
 
 //Sizing and Display
 - (NSSize)cellSize;
@@ -64,5 +77,7 @@
 - (void)setSplitVerticalSpacing:(int)inSpacing;
 - (void)setTopSpacing:(int)inSpacing;
 - (void)setBottomSpacing:(int)inSpacing;
+- (void)setLeftSpacing:(int)inSpacing;
+- (void)setRightSpacing:(int)inSpacing;
 
 @end

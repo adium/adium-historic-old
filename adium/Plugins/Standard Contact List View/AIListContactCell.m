@@ -10,20 +10,19 @@
 
 #import "AIListLayoutWindowController.h"
 
+
+
 @implementation AIListContactCell
 
 
+#define ICON_TEXT_PADDING		3
 
-#define ICON_TEXT_PADDING		2
-#define CONTACT_FONT 			[NSFont systemFontOfSize:11]
-
-#define EXTENDED_STATUS_FONT	[NSFont systemFontOfSize:9]
 #define EXTENDED_STATUS_COLOR	[NSColor grayColor]
 
 #define NAME_STATUS_PAD			6
 
 #define STATUS_ICON_LEFT_PAD			2
-#define STATUS_ICON_RIGHT_PAD			2
+#define STATUS_ICON_RIGHT_PAD			3
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -38,11 +37,29 @@
     [super init];
 	
 	backgroundOpacity = 1.0;
+	statusFont = [[NSFont systemFontOfSize:12] retain];
 	
 	return(self);
 }
 	
+- (void)dealloc
+{
+	[statusFont release];
+	[super dealloc];
+}
 
+
+//
+- (void)setStatusFont:(NSFont *)inFont
+{
+	if(inFont && inFont != statusFont){
+		[statusFont release];
+		statusFont = [inFont retain];
+	}
+}
+- (NSFont *)statusFont{
+	return(statusFont);
+}
 
 
 
@@ -60,10 +77,6 @@
 	backgroundOpacity = inOpacity;
 }
 
-- (NSFont *)font
-{
-	return(CONTACT_FONT);
-}
 
 
 - (NSSize)cellSize
@@ -92,19 +105,29 @@
 //}
 - (int)leftPadding{
 	
-	if((statusIconsVisible && statusIconPosition == LIST_POSITION_FAR_LEFT) ||
-	   (statusIconsVisible && statusIconPosition == LIST_POSITION_LEFT) ||
-	   (serviceIconsVisible && serviceIconPosition == LIST_POSITION_FAR_LEFT )||
-	   (serviceIconsVisible && serviceIconPosition == LIST_POSITION_LEFT) ||
-	   (userIconVisible && userIconPosition == LIST_POSITION_LEFT)){
-		return([super leftPadding] + 2);
+	if([self padToFlippy]){
+		int leftPad = [super leftPadding];
+		int flippy = [[controlView groupCell] flippyIndent];
+		
+		NSLog(@"%i + %i = %i",leftPad, flippy, leftPad + flippy);
+#warning flippy indent already has the padding, so it is being applied twice
+		return(leftPad + flippy);
 	}else{
-		return([super leftPadding] + [[controlView groupCell] flippyIndent]);
+		return([super leftPadding] + 1);
 	}
 }
 - (int)rightPadding{
-	return([super rightPadding] + 4);
+	return([super rightPadding] + 3);
 }
+
+- (BOOL)padToFlippy{
+	return((!statusIconsVisible || statusIconPosition != LIST_POSITION_FAR_LEFT) &&
+		   (!statusIconsVisible || statusIconPosition != LIST_POSITION_LEFT) &&
+		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_FAR_LEFT ) &&
+		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_LEFT) &&
+		   (!userIconVisible || userIconPosition != LIST_POSITION_LEFT));
+}
+
 
 //Draw using our contact's status color
 - (NSColor *)textColor
@@ -226,7 +249,7 @@
 	int		nameHeight = [attrString heightWithWidth:1e7];
 	
 	//status
-	NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:EXTENDED_STATUS_FONT forKey:NSFontAttributeName]] autorelease];
+	NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName]] autorelease];
 	int		statusHeight = [statusString heightWithWidth:1e7];
 	
 	return(nameHeight + statusHeight - HULK_CRUSH_FACTOR <= rect.size.height);
@@ -242,26 +265,26 @@
 
 #warning This is ghetto, deal with it :D
 	//Far Left
-	if(statusIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawStatusIconInRect:rect onLeft:YES];
-	if(serviceIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawServiceIconInRect:rect onLeft:YES];
+	if(statusIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if(serviceIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
 	//User Icon [Left]
-	if(userIconPosition == LIST_POSITION_LEFT) rect = [self drawUserIconInRect:rect onLeft:YES];
+	if(userIconPosition == LIST_POSITION_LEFT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
 	//Left
-	if(statusIconPosition == LIST_POSITION_LEFT) rect = [self drawStatusIconInRect:rect onLeft:YES];
-	if(serviceIconPosition == LIST_POSITION_LEFT) rect = [self drawServiceIconInRect:rect onLeft:YES];
+	if(statusIconPosition == LIST_POSITION_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if(serviceIconPosition == LIST_POSITION_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
 	//Right
-	if(statusIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawStatusIconInRect:rect onLeft:NO];
-	if(serviceIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawServiceIconInRect:rect onLeft:NO];
+	if(statusIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if(serviceIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//User Icon [Right]
-	if(userIconPosition == LIST_POSITION_RIGHT) rect = [self drawUserIconInRect:rect onLeft:NO];
+	if(userIconPosition == LIST_POSITION_RIGHT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//Far Right
-	if(statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect onLeft:NO];
-	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect onLeft:NO];
+	if(statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	BOOL	weFit = [self weFitInRect:rect];
 	
@@ -289,43 +312,75 @@
 
 
 //User Icon
-- (NSRect)drawUserIconInRect:(NSRect)rect onLeft:(BOOL)onLeft
+- (NSRect)drawUserIconInRect:(NSRect)inRect position:(IMAGE_POSITION)position
 {
+	NSRect	rect = inRect;
 	if(userIconVisible){
-		rect = [self drawImage:[self userIconImage]
-						atSize:NSMakeSize(userIconSize, userIconSize)
-						inRect:rect
-						onLeft:onLeft];
-		if(onLeft) rect.origin.x += ICON_TEXT_PADDING;
+		NSImage *image = [self userIconImage];
+		[image setFlipped:![image isFlipped]];
+		rect = [image drawInRect:rect
+						  atSize:NSMakeSize(userIconSize, userIconSize)
+						position:position];
+		[image setFlipped:![image isFlipped]];
+		if(position == IMAGE_POSITION_LEFT) rect.origin.x += ICON_TEXT_PADDING;
+		
+		
+		
+		//BADGES
+#warning baaaah
+		NSRect	drawRect = [[self userIconImage] rectForDrawingInRect:inRect
+																atSize:NSMakeSize(userIconSize, userIconSize)
+															  position:position];
+		if(statusIconPosition == LIST_POSITION_BADGE_LEFT)
+			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
+		if(statusIconPosition == LIST_POSITION_BADGE_RIGHT)
+			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
+		if(serviceIconPosition == LIST_POSITION_BADGE_LEFT)
+			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
+		if(serviceIconPosition == LIST_POSITION_BADGE_RIGHT)
+			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
+								
 	}
+	
 	return(rect);
 }
 
 //Status Icon
-- (NSRect)drawStatusIconInRect:(NSRect)rect onLeft:(BOOL)onLeft
+- (NSRect)drawStatusIconInRect:(NSRect)rect position:(IMAGE_POSITION)position
 {
 	if(statusIconsVisible){
-		if(onLeft)
-		rect.origin.x += STATUS_ICON_LEFT_PAD;
-		rect.size.width -= STATUS_ICON_LEFT_PAD;
-		rect = [self drawImage:[self statusImage]
-						atSize:NSMakeSize(0, 0)
-						inRect:rect
-						onLeft:onLeft];
-		rect.origin.x += STATUS_ICON_RIGHT_PAD;
-		rect.size.width -= STATUS_ICON_RIGHT_PAD;
+		BOOL	isBadge = (position == IMAGE_POSITION_LOWER_LEFT || position == IMAGE_POSITION_LOWER_RIGHT);
+		
+		if(!isBadge){
+			if(position == IMAGE_POSITION_LEFT) rect.origin.x += STATUS_ICON_LEFT_PAD;
+			rect.size.width -= STATUS_ICON_LEFT_PAD;
+		}
+
+		NSImage *image = [self statusImage];
+		[image setFlipped:![image isFlipped]];
+		rect = [image drawInRect:rect
+						  atSize:NSMakeSize(0, 0)
+						position:position];
+		[image setFlipped:![image isFlipped]];
+		
+		if(!isBadge){
+			if(position == IMAGE_POSITION_LEFT) rect.origin.x += STATUS_ICON_RIGHT_PAD;
+			rect.size.width -= STATUS_ICON_RIGHT_PAD;
+		}
 	}
 	return(rect);
 }
 
 //Service Icon
-- (NSRect)drawServiceIconInRect:(NSRect)rect onLeft:(BOOL)onLeft
+- (NSRect)drawServiceIconInRect:(NSRect)rect position:(IMAGE_POSITION)position
 {
 	if(serviceIconsVisible){
-		rect = [self drawImage:[self serviceImage]
-						atSize:NSMakeSize(0, 0)
-						inRect:rect
-						onLeft:onLeft];
+		NSImage *image = [self serviceImage];
+		[image setFlipped:![image isFlipped]];
+		rect = [image drawInRect:rect
+						  atSize:NSMakeSize(0, 0)
+						position:position];
+		[image setFlipped:![image isFlipped]];
 	}
 	return(rect);
 }
@@ -335,132 +390,104 @@
 {
 	if(extendedStatusVisible){
 		if(drawUnder || [self textAlignment] != NSCenterTextAlignment){
-		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
-		NSRange 	glyphRange;
-		
-		//if(!string) string = @"Online";
-		if(string){
-			int	halfHeight = rect.size.height / 2;
-
-			//Pad
-			if(drawUnder){
-				rect.origin.y += halfHeight;
-				rect.size.height -= halfHeight;
-			}else{
-				if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
-				rect.size.width -= NAME_STATUS_PAD;
-			}
+			NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
+			NSRange 	glyphRange;
 			
-			//Format string
-
-			
-			NSParagraphStyle	*paragraphStyle;
-			
-			//Attributes
-			paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByTruncatingTail/*NSLineBreakByClipping*/];
-				
-			
-			
-			
-			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-				paragraphStyle, NSParagraphStyleAttributeName,
-				EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
-				EXTENDED_STATUS_FONT, NSFontAttributeName,nil];
-			
-			
+			//if(!string) string = @"Online";
 			if(string){
-//				string = [string stringByTruncatingTailToWidth:rect.size.width ];
+				int	halfHeight = rect.size.height / 2;
 				
-				NSString *extStatus = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
+				//Pad
+				if(drawUnder){
+					rect.origin.y += halfHeight;
+					rect.size.height -= halfHeight;
+				}else{
+					if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
+					rect.size.width -= NAME_STATUS_PAD;
+				}
 				
-//				[[NSColor orangeColor] set];
-//				[NSBezierPath fillRect:rect];
+				//Format string
 				
+				
+				NSParagraphStyle	*paragraphStyle;
+				
+				//Attributes
+				paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByTruncatingTail/*NSLineBreakByClipping*/];
+				
+				
+				
+				
+				NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+					paragraphStyle, NSParagraphStyleAttributeName,
+					EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
+					[self statusFont], NSFontAttributeName,nil];
+				
+				
+				if(string){
+					//				string = [string stringByTruncatingTailToWidth:rect.size.width ];
+					
+					NSString *extStatus = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
+					
+					//				[[NSColor orangeColor] set];
+					//				[NSBezierPath fillRect:rect];
+					
 #warning gaaaaaah
-				NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:EXTENDED_STATUS_FONT forKey:NSFontAttributeName]] autorelease];
-				int		statusHeight = [statusString heightWithWidth:1e7];
-
-				
-				
-
-				
-				//Alignment
-				NSSize		nameSize = [extStatus size];
-				NSRect		drawRect = rect;
-
-				if(nameSize.width > drawRect.size.width) nameSize = rect.size;
-				
-				switch([self textAlignment]){
-					case NSCenterTextAlignment:
-						drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
-						break;
-					case NSRightTextAlignment:
-						drawRect.origin.x += (drawRect.size.width - nameSize.width);
-						break;
-					default:
-						break;
+					NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName]] autorelease];
+					int		statusHeight = [statusString heightWithWidth:1e7];
+					
+					
+					
+					
+					
+					//Alignment
+					NSSize		nameSize = [extStatus size];
+					NSRect		drawRect = rect;
+					
+					if(nameSize.width > drawRect.size.width) nameSize = rect.size;
+					
+					switch([self textAlignment]){
+						case NSCenterTextAlignment:
+							drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
+							break;
+						case NSRightTextAlignment:
+							drawRect.origin.x += (drawRect.size.width - nameSize.width);
+							break;
+						default:
+							break;
+					}
+					
+					
+					
+					
+					
+					
+					int half = (drawRect.size.height - statusHeight) / 2.0;
+					[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
+													 drawRect.origin.y + half,
+													 drawRect.size.width,
+													 drawRect.size.height - half)];
+					
+					//				[textStorage setAttributedString:extStatus];
+					//				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
+					//				[layoutManager drawGlyphsForGlyphRange:glyphRange
+					//											   atPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
+					
+					
+					
 				}
 				
 				
 				
 				
-				
-				
-				int half = (drawRect.size.height - statusHeight) / 2.0;
-				[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
-												 drawRect.origin.y + half,
-												 drawRect.size.width,
-												 drawRect.size.height - half)];
-	
-//				[textStorage setAttributedString:extStatus];
-//				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
-//				[layoutManager drawGlyphsForGlyphRange:glyphRange
-//											   atPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
+				if(drawUnder){
+					rect.origin.y -= halfHeight;
+				}
 			}
 			
-			if(drawUnder){
-				rect.origin.y -= halfHeight;
-			}
-		}
-		
 		}
 	}
 	return(rect);
 }
 
-//Draw an image, altering and returning the available destination rect
-- (NSRect)drawImage:(NSImage *)image atSize:(NSSize)size inRect:(NSRect)rect onLeft:(BOOL)isOnLeft
-{
-	NSRect	drawRect;
-	
-	//If we're passed a 0,0 size, use the image's size
-	if(size.width == 0 || size.height == 0) size = [image size];
-	
-	//Adjust
-	if(isOnLeft){
-		drawRect = NSMakeRect(rect.origin.x,
-							  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),
-							  size.width,
-							  size.height);
-	}else{
-		drawRect = NSMakeRect(rect.origin.x + rect.size.width - size.width,
-							  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),
-							  size.width,
-							  size.height);
-	}
-	
-	//Draw
-	[image setFlipped:![image isFlipped]];
-	[image drawInRect:drawRect
-			 fromRect:NSMakeRect(0, 0, [image size].width, [image size].height)
-			operation:NSCompositeSourceOver
-			 fraction:1.0];
-	[image setFlipped:![image isFlipped]];
-	
-	if(isOnLeft) rect.origin.x += size.width;
-	rect.size.width -= size.width;
-	
-	return(rect);
-}
 
 @end

@@ -301,13 +301,20 @@
 		[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
-
+		
+		//Fonts
+		[contentCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
+		[contentCell setStatusFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
+		[groupCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
+		
 		//Bubbles special cases
 		LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
 		if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
 			[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
+			[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		}else{
 			[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
+			[contentCell setLeftPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		}
 
 		//Mockie special cases
@@ -321,11 +328,12 @@
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 		
 		//Outline View
+		[self updateCellRelatedThemePreferences];
 		[self updateTransparency];
 		[contactListView setGroupCell:groupCell];
 		[contactListView setContentCell:contentCell];
-		[contactListView setDrawsAlternatingRows:[[prefDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue]];
 		[contactListView setNeedsDisplay:YES];
+		[self contactListDesiredSizeChanged:nil];
 	}
 	
 	//Theme
@@ -334,7 +342,6 @@
 		NSString		*imagePath = [prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
 		float			backgroundAlpha	= [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
 																					group:PREF_GROUP_LIST_LAYOUT] floatValue];
-
 		//Background Image
 		if(imagePath && [imagePath length] && [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
 			[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
@@ -343,6 +350,7 @@
 		}
 		
 		//Background
+		[self updateCellRelatedThemePreferences];
 		[self updateTransparency];
 	}
 }
@@ -350,20 +358,31 @@
 - (void)updateTransparency
 {
 	NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-	NSDictionary	*layoutTheme = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+	NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 	float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 	int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 		
-	[contactListView setBackgroundFade:([[layoutTheme objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
-	[contactListView setBackgroundColor:[[[layoutTheme objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-	[contactListView setAlternatingRowColor:[[[layoutTheme objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-
+	[contactListView setBackgroundFade:([[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
+	[contactListView setBackgroundColor:[[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+	[contactListView setAlternatingRowColor:[[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+	[contactListView setDrawsAlternatingRows:(windowStyle == WINDOW_STYLE_MOCKIE ? NO : [[layoutDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue])];
 	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
 
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
 	[[self window] setOpaque:(backgroundAlpha == 1.0)];
 	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
 	//--
+}
+
+- (void)updateCellRelatedThemePreferences
+{
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+
+	if([groupCell respondsToSelector:@selector(setBackgroundColor:gradientColor:)]){
+		[groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
+						gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
+	}
+	
 }
 
 

@@ -40,6 +40,10 @@
 	return([super rightPadding] + EDGE_INDENT);
 }
 
+- (BOOL)padToFlippy{
+	return(NO);
+}
+
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {

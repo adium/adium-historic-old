@@ -12,6 +12,14 @@ typedef enum {
     AIButtonHovered
 } AICloseButtonState;
 
+typedef enum {
+	IMAGE_POSITION_LEFT = 0,
+	IMAGE_POSITION_RIGHT,
+	IMAGE_POSITION_LOWER_LEFT,
+	IMAGE_POSITION_LOWER_RIGHT
+} IMAGE_POSITION;
+
+
 @interface NSImage (ESImageAdditions)
 
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
@@ -25,6 +33,8 @@ typedef enum {
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
 + (NSImage *)systemCheckmark;
+- (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position;
+- (NSRect)rectForDrawingInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position;
 
 @end
 
