@@ -131,6 +131,10 @@ static NSDictionary		*presetStatusesDictionary = nil;
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super cancelFileTransfer:fileTransfer];
+}
 
 #pragma mark Status Messages
 - (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event

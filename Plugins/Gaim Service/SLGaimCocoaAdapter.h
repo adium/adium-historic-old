@@ -42,6 +42,7 @@
 - (oneway void)xferRequest:(GaimXfer *)xfer;
 - (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer;
+- (oneway void)xferCancel:(GaimXfer *)xfer;
 - (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount;

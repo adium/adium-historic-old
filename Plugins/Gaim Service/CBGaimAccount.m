@@ -718,9 +718,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			AIListContact	*listContact;
 			
 #warning source can be (null) for system messages like topic changes
-			listContact = [self _contactWithUID:source];
+			listContact = (source ? [self _contactWithUID:source] : nil);
 			GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[attributedMessage string],[listContact UID],[chat name]);
-			
+
 			[self _receivedMessage:attributedMessage
 							inChat:chat 
 				   fromListContact:listContact
@@ -1074,11 +1074,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
 		gaim_xfer_set_filename(xfer, [[[fileTransfer localFilename] lastPathComponent] UTF8String]);
 		
-		//request that the transfer begins
+		/*
+		 Request that the transfer begins.
+		 We will be asked to accept it via:
+			- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+		 below.
+		 */
 		[gaimThread xferRequest:xfer];
-		
-		//tell the fileTransferController to display appropriately
-		[[adium fileTransferController] beganFileTransfer:fileTransfer];
 	}
 }
 //By default, protocols can not create GaimXfer objects
@@ -1096,44 +1098,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
-//The account requested that we send a file, but we do not know what file yet.
-//Query the fileTransferController for a target file
-/*- (void)accountXferSendFileWithXfer:(GaimXfer *)xfer
-{
-    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
-    //prompt the fileTransferController for the target filename
-    [[adium fileTransferController] sendRequestForFileTransfer:fileTransfer];
-}
-*/
-
-/*
-- (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer
-{
-    //set up our fileTransfer object
-    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
-    
-    NSString *filename = [filesToSendArray objectAtIndex:0];
-    [fileTransfer setLocalFilename:filename];
-    [filesToSendArray removeObjectAtIndex:0];
-    
-    //set the xfer local filename; accepting the file transfer will take care of setting size and such
-    //gaim takes responsibility for freeing cFilename at a later date
-    char * xferFileName = g_strdup([filename UTF8String]);
-    gaim_xfer_set_local_filename(xfer,xferFileName);
-    
-    //begin transferring the file
-    [self acceptFileTransferRequest:fileTransfer];    
-}
-*/
-
 //Create an ESFileTransfer object from an xfer
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize
 {
 	AIListContact   *contact = [self _contactWithUID:destinationUID];
 	
-    ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
+    ESFileTransfer	*fileTransfer;
+	
+	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
+																   forAccount:self]; 
+	[fileTransfer setSize:inSize];
 
-    return fileTransfer;
+    return(fileTransfer);
 }
 
 //Update an ESFileTransfer object progress
@@ -1143,14 +1119,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedLongValue]];
 }
 
-//The remote side canceled the transfer, the fool.  Tell the fileTransferController
+//The local side canceled the transfer.  We probably already have this status set, but set it just in case.
+- (oneway void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+{
+	[fileTransfer setStatus:Canceled_Local_FileTransfer];
+}
+
+//The remote side canceled the transfer, the fool. Update our status.
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
-    [[adium fileTransferController] transferCanceledRemotely:fileTransfer];
+	[fileTransfer setStatus:Canceled_Remote_FileTransfer];
 }
 
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
 {
+	GaimDebug (@"Destroy file transfer %@",fileTransfer);
 	[fileTransfer release];
 }
 
@@ -1161,33 +1144,48 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     NSLog(@"Accept file transfer");
     GaimDebug (@"Accept file transfer");
 	
-    GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
-    
+	GaimXfer		*xfer;
+	GaimXferType	xferType;
+	
+	xfer = [[fileTransfer accountData] pointerValue];
 
-    GaimXferType xferType = gaim_xfer_get_type(xfer);
+    xferType = gaim_xfer_get_type(xfer);
     if ( xferType == GAIM_XFER_SEND ) {
         [fileTransfer setType:Outgoing_FileTransfer];   
     } else if ( xferType == GAIM_XFER_RECEIVE ) {
         [fileTransfer setType:Incoming_FileTransfer];
+		[fileTransfer setSize:(xfer->size)];
     }
     
     //accept the request
 	[gaimThread xferRequestAccepted:xfer withFileName:[fileTransfer localFilename]];
     
 	//set the size - must be done after request is accepted?
-    [fileTransfer setSize:(xfer->size)];
+
 	
-    //tell the fileTransferController to display appropriately
-    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+	[fileTransfer setStatus:Accepted_FileTransfer];
 }
 
-//User refused a receive request.  Tell gaim, we don't release the ESFileTransfer object since that will happen when the xfer is destroyed
+//User refused a receive request.  Tell gaim; we don't release the ESFileTransfer object
+//since that will happen when the xfer is destroyed.  This will end up calling back on
+//- (oneway void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
 	if (xfer) {
 		[gaimThread xferRequestRejected:xfer];
 	}
+}
+
+//Cancel a file transfer in progress.  Tell gaim; we don't release the ESFileTransfer object
+//since that will happen when the xfer is destroyed.  This will end up calling back on
+//- (oneway void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
+	if (xfer) {
+		[gaimThread xferCancel:xfer];
+	}	
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
@@ -1660,17 +1658,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				[image release];
 			}
 			
+		}else if([key isEqualToString:KEY_ACCOUNT_GAIM_CHECK_MAIL]){
+			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
+			if(account){
+				[gaimThread setCheckMail:[self shouldCheckMail]
+							  forAccount:self];
+			}			
 		}
-
-#warning Do we need to do this?  Can this be done in a better place?
-//		else if((object == self) && ([group isEqualToString:GROUP_ACCOUNT_STATUS])){
-//			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
-//			if(account){
-//				[gaimThread setCheckMail:[self shouldCheckMail]
-//							  forAccount:self];
-//			}
-//		}
-	
 	}
 }
 

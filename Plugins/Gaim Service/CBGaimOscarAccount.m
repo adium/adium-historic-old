@@ -178,6 +178,19 @@ static BOOL didInitOscar = NO;
 	}
 }
 
+//ICQ doesn't support automatic typing notification clearing after a send, but AIM and .Mac do, so we return YES
+//for smooth operation, particularly with iChat where this is very noticeable.
+- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject{
+	const char	firstCharacter = [[listObject UID] characterAtIndex:0];
+	
+	if(firstCharacter >= '0' && firstCharacter <= '9'){
+		return(NO);
+	}
+	
+	return(YES);
+}
+
+#pragma mark AIListContact and AIService special cases for OSCAR
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
@@ -717,6 +730,11 @@ aim_srv_setavailmsg(od->sess, text);
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
     [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super cancelFileTransfer:fileTransfer];
 }
 
 
