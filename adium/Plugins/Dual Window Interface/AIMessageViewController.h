@@ -25,6 +25,9 @@
     IBOutlet	AIAutoScrollView	*scrollView_messages;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
+    IBOutlet	NSTableView		*tableView_userList;
+    IBOutlet	AIAutoScrollView	*scrollView_userList;
+
     NSView				*view_messages;
     NSView				*view_accountSelection;
 
@@ -35,6 +38,7 @@
     AIAccount			*account;
     AIChat			*chat;
     float			currentTextEntryHeight;
+    BOOL			showUserList;
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;

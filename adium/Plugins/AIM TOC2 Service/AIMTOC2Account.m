@@ -55,6 +55,7 @@
 - (void)AIM_HandleClientEvent:(NSString *)inCommand;
 - (void)AIM_HandleEncMessageIn:(NSString *)inCommand;
 - (void)AIM_HandleChatInvite:(NSString *)inCommand;
+- (void)AIM_HandleChatUpdateBuddy:(NSString *)inCommand;
 - (void)AIM_HandleEncChatIn:(NSString *)inCommand;
 - (void)AIM_HandleChatJoin:(NSString *)inCommand;
 - (void)AIM_HandleChatLeft:(NSString *)inCommand;
@@ -727,6 +728,8 @@
                     [self AIM_HandleChatInvite:message];
 
                 }else if([command compare:@"CHAT_UPDATE_BUDDY"] == 0){
+                    [self AIM_HandleChatUpdateBuddy:message];
+                    
                 }else if([command compare:@"ADMIN_NICK_STATUS"] == 0){
                 }else if([command compare:@"ADMIN_PASSWD_STATUS"] == 0){
                 }else if([command compare:@"RVOUS_PROPOSE"] == 0){
@@ -792,7 +795,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.74 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.75 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -921,6 +924,47 @@
 - (void)AIM_HandleChatLeft:(NSString *)inCommand
 {
 
+}
+
+//
+- (void)AIM_HandleChatUpdateBuddy:(NSString *)inCommand
+{
+    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
+    BOOL		entering = ([[inCommand TOCStringArgumentAtIndex:2] characterAtIndex:0] == 'T');
+    NSArray		*userArray = [[inCommand nonBreakingTOCStringArgumentAtIndex:3] componentsSeparatedByString:@":"];
+    NSEnumerator	*enumerator;
+    NSString		*userName;
+    AIChat		*chat;
+    NSMutableArray	*userList;
+
+    //Get the chat
+    chat = [chatDict objectForKey:chatID];
+    userList = [[chat statusDictionary] objectForKey:@"User List"];
+    if(!userList) userList = [NSMutableArray array];
+    
+    //Add/remove users    
+    enumerator = [userArray objectEnumerator];
+    while((userName = [enumerator nextObject])){
+        AIHandle	*handle;
+        
+        //Get the handle for this user
+        handle = [handleDict objectForKey:[userName compactedString]];
+        if(!handle){
+            handle = [self addHandleWithUID:[userName compactedString] serverGroup:nil temporary:YES];
+            NSLog(@"%@ is new: containingContact:%@", userName, [handle containingContact]);
+        }
+
+        //Add/remove them
+        if(entering){
+            [userList addObject:[handle containingContact]];
+        }else{
+            [userList removeObject:[handle containingContact]];
+        }
+    }
+
+    //Save the user list and notify
+    [[chat statusDictionary] setObject:userList forKey:@"User List"];
+    [[owner notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"User List"] forKey:@"Keys"]];
 }
 
 - (void)AIM_HandleEncChatIn:(NSString *)inCommand

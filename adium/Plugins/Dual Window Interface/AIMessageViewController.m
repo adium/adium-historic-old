@@ -38,6 +38,7 @@
 - (float)textHeight;
 - (void)clearTextEntryView;
 - (void)setChat:(AIChat *)inChat;
+- (void)chatStatusChanged:(NSNotification *)notification;
 @end
 
 @implementation AIMessageViewController
@@ -112,7 +113,7 @@
 {
     if([object isKindOfClass:[AIListContact class]]){ //Don't let them do this if the object isn't a contact
         if(account != inAccount){
-            NSArray	*existingContent = [[chat contentObjectArray] retain];
+            //NSArray	*existingContent = [[chat contentObjectArray] retain];
 
             //Set the account
             [account release]; account = nil;
@@ -145,8 +146,6 @@
 
         //Config the outgoing text view
         [textView_outgoing setChat:chat];
-//        [textView_outgoing setListObject:object];
-//        [textView_outgoing setAccount:account];
     
         //Config our toolbar
         [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
@@ -167,6 +166,15 @@
         [scrollView_messages setAutoHideScrollBar:NO];
         [scrollView_messages setHasVerticalScroller:YES];
 
+        //
+        [scrollView_userList setAutoScrollToBottom:NO];
+        [scrollView_userList setAutoHideScrollBar:YES];
+        
+        //Observe the chat
+        [[owner notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:nil];
+
+        [self chatStatusChanged:nil];
     }
 }
 
@@ -214,6 +222,7 @@
     object = nil;
     chat = nil;
     owner = [inOwner retain];
+    showUserList = NO;
 
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
@@ -232,6 +241,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
     [[owner notificationCenter] addObserver:self selector:@selector(listObjectStatusChanged:) name:ListObject_StatusChanged object:object];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+        
     [self preferencesChanged:nil];
     
     
@@ -269,6 +279,25 @@
     [object release]; object = nil;
 
     [super dealloc];
+}
+
+//Our chat's status did change
+- (void)chatStatusChanged:(NSNotification *)notification
+{
+    if(notification == nil || [[[notification userInfo] objectForKey:@"Keys"] containsObject:@"User List"]){
+        NSArray	*userArray = [[chat statusDictionary] objectForKey:@"User List"];
+
+        //Correctly show/hide the userlist
+        if((userArray != nil && showUserList == NO) || (userArray == nil && showUserList == YES)){
+            showUserList = (userArray != nil);
+            [self sizeAndArrangeSubviews];
+        }
+
+        //Update the user list
+        if(showUserList){
+            [tableView_userList reloadData];
+        }
+    }
 }
 
 //Our contact's status did change
@@ -330,6 +359,16 @@
     superFrame.size.height -= currentTextEntryHeight;
     superFrame.origin.y += currentTextEntryHeight;
 
+    //UserList
+    if(showUserList){
+#define fixed_width 100
+        [scrollView_userList setFrame:NSMakeRect(superFrame.size.width - fixed_width, superFrame.origin.y, fixed_width, superFrame.size.height + 1)];
+
+        superFrame.size.width -= fixed_width + 6;
+    }else{
+        [scrollView_userList setFrame:NSMakeRect(100000, 100000, 0, 0)]; //Shove it way off screen for now
+    }
+    
     //Messages
     [scrollView_messages setFrame:NSMakeRect(-1, superFrame.origin.y, superFrame.size.width + 2, superFrame.size.height + 1)];
 }
@@ -357,6 +396,20 @@
     }
 
     return(textHeight);
+}
+
+//User List
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    NSArray	*userArray = [[chat statusDictionary] objectForKey:@"User List"];
+    
+    return([userArray count]);
+}
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    NSArray	*userArray = [[chat statusDictionary] objectForKey:@"User List"];
+
+    return([[userArray objectAtIndex:row] UID]);
 }
 
 
