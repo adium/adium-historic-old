@@ -21,6 +21,7 @@
 #import "ESContactAlertsController.h"
 #import "ESContactAlertsController.h"
 #import "NEHGrowlPlugin.h"
+#import "CBGrowlAlertDetailPane.h"
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -32,8 +33,9 @@
 
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
-#define GROWL_ALERT							AILocalizedString(@"Display Growl Notification",nil)
- 
+#define GROWL_ALERT							AILocalizedString(@"Display a Growl notification",nil)
+#define GROWL_STICKY_ALERT					AILocalizedString(@"Display a sticky Growl notification",nil)
+
 #define GROWL_INSTALLATION_WINDOW_TITLE AILocalizedString(@"Growl Installation Recommended", "Growl installation window title")
 #define GROWL_UPDATE_WINDOW_TITLE AILocalizedString(@"Growl Update Available", "Growl update window title")
 
@@ -49,17 +51,30 @@
 - (NSAttributedString *)_growlInformationForUpdate:(BOOL)isUpdate;
 @end
 
+/*
+ * @class NEHGrowlPlugin
+ * @brief Implements Growl functionality in Adium
+ *
+ * This class manages the Growl event type, and controls the display of Growl notifications that Adium generates.
+ */
 @implementation NEHGrowlPlugin
 
+/*
+ * @brief Initialize the Growl plugin
+ *
+ * Waits for Adium to finish launching before we perform further actions so all events are registered.
+ */
 - (void)installPlugin
 {
-	//Wait for Adium to finish launching before we perform further actions so all events are registered
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
 									   name:Adium_CompletedApplicationLoad
 									 object:nil];	
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
@@ -67,10 +82,14 @@
 	[super dealloc];
 }
 
+/*
+ * @brief Adium finished launching
+ *
+ * Delays one more run loop so any events which are registered on this notification are guaranteed to be complete
+ * regardless of the order in which the observers are called.
+ */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	//Now delay one more run loop so any events which are registered on this notification are guaranteed to be complete
-	//regardless of the order in which the observers are called
 	[self performSelector:@selector(beginGrowling)
 			   withObject:nil
 			   afterDelay:0.00001];
@@ -80,6 +99,9 @@
 										object:nil];
 }
 
+/*
+ * @brief Begin accepting Growl events
+ */
 - (void)beginGrowling
 {
 	[GrowlApplicationBridge setGrowlDelegate:self];
@@ -102,6 +124,11 @@
 #endif
 }
 
+/*
+ * @brief Called when preferences changes
+ *
+ * Used to get the value of the Show While Away preference. 
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -109,22 +136,47 @@
 }
 
 #pragma mark AIActionHandler
-
+/*
+ * @brief Returns a short description of Growl events
+ */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
 	return(GROWL_ALERT);
 }
 
+/*
+ * @brief Returns a long description of Growl events
+ *
+ * The long description reflects the "sticky"-ness of the notification.
+ */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(GROWL_ALERT);
+	if([[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]){
+		return(GROWL_STICKY_ALERT);
+	}else{
+		return(GROWL_ALERT);
+	}
 }
 
+/*
+ * @brief Returns the image associated with the Growl event
+ */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
 	return([NSImage imageNamed:@"GrowlAlert" forClass:[self class]]);
 }
 
+/*
+ * @brief Post a notification for Growl for display
+ *
+ * This method is called when by Adium when a Growl alert is activated. It passes this information on to Growl, which displays a notificaion.
+ *
+ * @param actionID The Action ID being performed, in this case the Growl plugin's Action ID.
+ * @param listObject The list object the event is related to
+ * @param details A dictionary containing additional information about the event
+ * @param eventID The ID of the event (e.g. new message, contact went away, etc)
+ * @param userInfo Any additional information
+ */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	//XXX - bleh
@@ -200,27 +252,43 @@
 						   notificationName:eventID /* Use the same ID as Adium uses to keep things simple */
 								   iconData:iconData
 								   priority:0
-								   isSticky:NO
+								   isSticky:[[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]
 							   clickContext:clickContext];
 }
 
+/*
+ * @brief Returns our details pane, an instance of <tt>CBGrowlAlertDetailPane</tt>
+ */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-    return nil;
+    return([CBGrowlAlertDetailPane actionDetailsPane]);
 }
 
+/*
+ * @brief Allow multiple actions?
+ *
+ * This action should not be performed multiple times for the same triggering event.
+ */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return NO;
+	return(NO);
 }
 
 #pragma mark Growl
 
+/*
+ * @brief Returns the application name Growl will use
+ */
 - (NSString *)applicationNameForGrowl
 {
-	return @"Adium";
+	return(@"Adium");
 }
 
+/*
+ * @brief Registration information for Growl
+ *
+ * Returns information that Growl needs, like which notifications we will post and our application name.
+ */
 - (NSDictionary *)registrationDictionaryForGrowl
 {
 	//Register us with Growl
@@ -234,6 +302,11 @@
 	return(growlReg);
 }
 
+/*
+ * @brief Called when Growl is ready
+ *
+ * Currently, this is just used for debugging Growl.
+ */
 - (void)growlIsReady
 {
 #ifdef GROWL_DEBUG
@@ -241,6 +314,14 @@
 #endif
 }
 
+/*
+ * @brief Called when a Growl notification is clicked
+ *
+ * When a Growl notificaion is clicked, this method is called, allowing us to take action (e.g. open a new window, make
+ * a conversation active, etc).
+ *
+ * @param clickContext A dictionary that was passed to Growl when we installed the notification.
+ */
 - (void)growlNotificationWasClicked:(NSDictionary *)clickContext
 {
 	NSString		*internalObjectID, *uniqueChatID;
@@ -281,26 +362,47 @@
 	}
 }
 
+/*
+ * @brief The title of the window shown if Growl needs to be installed
+ */
 - (NSString *)growlInstallationWindowTitle
 {
-	return GROWL_INSTALLATION_WINDOW_TITLE;	
+	return(GROWL_INSTALLATION_WINDOW_TITLE);	
 }
 
+/*
+ * @brief The title of the window shown if Growl needs to be updated
+ */
 - (NSString *)growlUpdateWindowTitle
 {
-	return GROWL_UPDATE_WINDOW_TITLE;
+	return(GROWL_UPDATE_WINDOW_TITLE);
 }
 
+/*
+ * @brief The body of the window shown if Growl needs to be installed
+ *
+ * This method calls _growlInformationForUpdate.
+ */
 - (NSAttributedString *)growlInstallationInformation
 {
-	return [self _growlInformationForUpdate:NO];
+	return([self _growlInformationForUpdate:NO]);
 }
 
+/*
+ * @brief The body of the window shown if Growl needs to be update
+ *
+ * This method calls _growlInformationForUpdate.
+ */
 - (NSAttributedString *)growlUpdateInformation
 {
-	return [self _growlInformationForUpdate:YES];
+	return([self _growlInformationForUpdate:YES]);
 }
 
+/*
+ * @brief Returns the body text for the window displayed when Growl needs to be installed or updated
+ *
+ * @param isUpdate YES generates the message for the update window, NO likewise for the install window.
+ */
 - (NSAttributedString *)_growlInformationForUpdate:(BOOL)isUpdate
 {
 	NSMutableAttributedString	*growlInfo;
@@ -326,7 +428,7 @@
 	
 	[growlInfo appendAttributedString:defaultExplanation];
 	
-	return growlInfo;
+	return(growlInfo);
 }
 
 @end
