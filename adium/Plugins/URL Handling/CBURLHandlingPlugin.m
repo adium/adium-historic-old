@@ -7,7 +7,6 @@
 //
 
 #import "CBURLHandlingPlugin.h"
-#import "../Contact List Editor/AINewContactWindowController.h"
 
 @interface CBURLHandlingPlugin(PRIVATE)
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
@@ -74,12 +73,13 @@
         
         if([[url scheme] isEqualToString:@"aim"]){
             if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                                
-				NSLog(@"%@\n\n%@",[url queryArgumentForKey:@"message"],[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]);
-                [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] 
+               [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] 
 									   onService:@"AIM" 
 									 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
             } else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
-				[AINewContactWindowController promptForNewContactOnWindow:nil name:[url queryArgumentForKey:@"screenname"]];
+				
+				[[adium contactController] requestAddContactWithUID:[url queryArgumentForKey:@"screenname"]
+														  serviceID:@"AIM"];
 			}
             
         }else if([[url scheme] isEqualToString:@"ymsgr"]){
