@@ -30,7 +30,7 @@
 	NSMutableArray	*loadedPanes;
 }
 
-+ (void)showInfoWindowForListObject:(AIListObject *)listObject;
++ (id)showInfoWindowForListObject:(AIListObject *)listObject;
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
 - (IBAction)closeWindow:(id)sender;
