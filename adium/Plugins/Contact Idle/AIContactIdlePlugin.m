@@ -108,10 +108,10 @@ DeclareString(Idle);
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
     NSDate	*idleSince = [inObject statusObjectForKey:IdleSince];
-	NSLog(@"setIdle %@",idleSince);
+	//NSLog(@"setIdle %@",idleSince);
     if(idleSince){ //Set the handle's 'idle' value
         int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
-		NSLog(@"setIdleForObject: %@  to: %i",[inObject displayName], idle);
+		//NSLog(@"setIdleForObject: %@  to: %i",[inObject displayName], idle);
 		[inObject setStatusObject:[NSNumber numberWithInt:idle]
 						   forKey:Idle
 						   notify:NO];
