@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.51 2004/07/12 07:26:59 evands Exp $
+// $Id: AISoundController.m,v 1.52 2004/08/17 04:17:45 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -22,7 +22,7 @@
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
 #define SOUND_DEFAULT_PREFS			@"SoundPrefs"
-#define MAX_CACHED_SOUNDS			6					//Max cached sounds
+#define MAX_CACHED_SOUNDS			4					//Max cached sounds
 
 #define TEXT_TO_SPEAK				@"Text"
 #define VOICE_INDEX					@"Voice"
@@ -221,16 +221,22 @@
 		justCrushAlot = [[[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
 											 usingSystemAlertDevice:(soundDeviceType == SOUND_SYTEM_ALERT_DEVICE)] autorelease];
 		if(justCrushAlot){
+			/*
+			 It's important that we are caching, not so much because of the overhead but because:
+				1) we don't want to leak QTSoundFilePlayer objects but
+				2) we don't want to release them immediately as then they would crash while playing and
+				3) we don't want to wait here until they finish playing as then Adium would beachball during each sound
+			 So we cache them and release them at some point in the future.  We could accomplish the same using a
+			 non-autoreleasing QTSoundFilePlayer and the provided delegate methods, however:
+				4) we don't want to play the same sound more than once at a time - we would rather reset to the beginning.
+					this implies having one QTSoundFilePlayer per path, which requires caching into a lookup dict.
+			*/
 			[soundCacheDict setObject:justCrushAlot forKey:inPath];
 			[soundCacheArray insertObject:inPath atIndex:0];
 		}
 		
     }else{
-		//Reset the cached sound back to the beginning and set its volume; if it is currently playing,
-		//this will make it restart.
-		[justCrushAlot setPlaybackPosition:0];
-		[justCrushAlot setVolume:customVolume];
-		
+
 		//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
 		[soundCacheArray removeObject:inPath];
 		[soundCacheArray insertObject:inPath atIndex:0];
@@ -238,6 +244,11 @@
 	
     //Set the volume and play sound
     if(justCrushAlot){
+		//Reset the cached sound back to the beginning and set its volume; if it is currently playing,
+		//this will make it restart.
+		[justCrushAlot setVolume:customVolume];
+		[justCrushAlot setPlaybackPosition:0];
+		
 		//QTSoundFilePlayer won't play if the sound is already playing, but that's fine since we
 		//reset the playback position and it will start playing there in the next run loop.
 		[justCrushAlot play];
