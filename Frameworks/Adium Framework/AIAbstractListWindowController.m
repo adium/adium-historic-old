@@ -171,10 +171,10 @@
 	}
 	
 	//Background
+	if([contentCell respondsToSelector:@selector(setBackgroundOpacity:)]){
+		[contentCell setBackgroundOpacity:backgroundAlpha];
+	}
 	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS){
-		if ([contentCell respondsToSelector:@selector(setBackgroundOpacity:)]){
-			[contentCell setBackgroundOpacity:backgroundAlpha];
-		}
 		if ([contactListView respondsToSelector:@selector(setDrawsBackground:)]){
 			[contactListView setDrawsBackground:NO];
 		}
@@ -241,6 +241,10 @@
 	
 	[contentCell setBackgroundColorIsStatus:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
 	[contentCell setStatusColor:[[prefDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
+
+	if([contentCell respondsToSelector:@selector(setDrawsGrid:)]){
+		[(AIListContactMockieCell *)contentCell setDrawsGrid:[[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	}
 }
 
 
