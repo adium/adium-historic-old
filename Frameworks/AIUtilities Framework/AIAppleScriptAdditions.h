@@ -14,7 +14,7 @@
 @interface NSAppleScript (AIAppleScriptAdditions)
 
 /*!
- * @brief Exceute a function
+ * @brief Execute a function
  *
  * Executes a function <b>functionName</b> within the <tt>NSAppleScript</tt>, returning error information if necessary
  * @param functionName An <tt>NSString</tt> of the function to be called. It is case sensitive.
@@ -24,7 +24,7 @@
 - (NSAppleEventDescriptor *)executeFunction:(NSString *)functionName error:(NSDictionary **)errorInfo;
 
 /*!
- * @brief Exceute a function with arguments
+ * @brief Execute a function with arguments
  *
  * Executes a function <b>functionName</b> within the <tt>NSAppleScript</tt>, returning error information if necessary. Arguments in <b>argumentArray</b> are passed to the function.
  * @param functionName An <tt>NSString</tt> of the function to be called. It is case sensitive.
