@@ -64,6 +64,8 @@
 	[fileTransfer setDelegate:nil];
 	[fileTransfer release];
 	[view release]; view = nil;
+	[sizeString release]; sizeString = nil;
+
 	[super dealloc];
 }
 
