@@ -17787,7 +17787,6 @@
 			children = (
 				4BCFC91104E930BA00A8010A,
 				F5A01D85037980F201A8010A,
-				9E2E3073046CAA5F00415B22,
 				F5F846FE04C702DB01A80106,
 			);
 			isa = PBXGroup;
@@ -24076,32 +24075,6 @@
 //9E2
 //9E3
 //9E4
-		9E1D5C54048EB63C00415B22 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libcrypto.dylib;
-			path = /usr/lib/libcrypto.0.9.dylib;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		9E23C02604D996D9008A581D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = MSNAccountViewController.h;
-			path = "Plugins/MSN Service/MSNAccountViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E23C02704D996D9008A581D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = MSNAccountViewController.m;
-			path = "Plugins/MSN Service/MSNAccountViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9E2BD856054BE18200558E56 = {
 			children = (
 				9E2BD857054BE18200558E56,
@@ -25084,63 +25057,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		9E2E3073046CAA5F00415B22 = {
-			children = (
-				9E2E3075046CAB0000415B22,
-				9E2E3076046CAB0000415B22,
-				9E2E307D046CB05F00415B22,
-				9E2E307E046CB05F00415B22,
-				9E23C02604D996D9008A581D,
-				9E23C02704D996D9008A581D,
-				9EF608C404CDFF9000415B25,
-				9EF608C504CDFF9000415B25,
-				9EC861A80494968E00415B22,
-				9EC861A90494968E00415B22,
-				9ECA6F2904D846890083F70D,
-				9ECA6F2804D846680083F70D,
-			);
-			isa = PBXGroup;
-			name = MSN;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2E3075046CAB0000415B22 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = MSNServicePlugin.h;
-			path = "Plugins/MSN Service/MSNServicePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2E3076046CAB0000415B22 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = MSNServicePlugin.m;
-			path = "Plugins/MSN Service/MSNServicePlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2E307D046CB05F00415B22 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = MSNAccount.h;
-			path = "Plugins/MSN Service/MSNAccount.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2E307E046CB05F00415B22 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = MSNAccount.m;
-			path = "Plugins/MSN Service/MSNAccount.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9E49CC5C04BF6F8700415B22 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -25705,50 +25621,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		9EC861A80494968E00415B22 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = MSNStringAdditions.h;
-			path = "Plugins/MSN Service/MSNStringAdditions.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EC861A90494968E00415B22 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = MSNStringAdditions.m;
-			path = "Plugins/MSN Service/MSNStringAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9ECA6F2604D846410083F70D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = MSNAccountView.nib;
-			path = "Plugins/MSN Service/MSNAccountView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9ECA6F2804D846680083F70D = {
-			children = (
-				9E1D5C54048EB63C00415B22,
-			);
-			isa = PBXGroup;
-			name = Libraries;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9ECA6F2904D846890083F70D = {
-			children = (
-				9ECA6F2604D846410083F70D,
-			);
-			isa = PBXGroup;
-			name = Interfaces;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9EE0586F055483DE00505F31 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -25855,24 +25727,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		9EF608C404CDFF9000415B25 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = MSNSBSocket.h;
-			path = "Plugins/MSN Service/MSNSBSocket.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EF608C504CDFF9000415B25 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = MSNSBSocket.m;
-			path = "Plugins/MSN Service/MSNSBSocket.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 //9E0
 //9E1
