@@ -199,19 +199,15 @@
 
 - (void)updateSelf
 {
-    @try {
+    NS_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if (me = [[ABAddressBook sharedAddressBook] me]) {
             meTag = [me beginLoadingImageDataForClient:self];
         }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"ABIntegration: Caught %@: %@", [exception name], [exception reason]);
-    }   
-    @finally {
-
-    }
+    NS_HANDLER
+        NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
+    NS_ENDHANDLER
 }
 
 - (NSArray *)searchForObject:(AIListObject *)inObject
