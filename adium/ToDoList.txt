@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.137 2004/05/16 19:06:30 adamiser Exp $
+$Id: ToDoList.txt,v 1.138 2004/05/16 19:07:07 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -39,7 +39,6 @@ Bugs - Adium
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * Update checker reporting a new version when non exists? (possibly a caching error?)
-* Some webstyles clip long lines, others show a scrollbar.  We should be consistent with our behavior if possible (Adam votes scrollbar)
 * Message formatting is reset after each message sent (was this an intentional change? - it resets things such as right-to-left typing as well)
 * Links with %n's in them beep when clicked (Set a %n link in your profile using AOLIM)
 * Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
