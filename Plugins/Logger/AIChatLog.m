@@ -14,12 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AILoggerPlugin.h"
-#import "AILog.h"
+#import "AIChatLog.h"
 #import "AILogViewerWindowController.h"
 
 void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate);
 
-@implementation AILog
+@implementation AIChatLog
 
 static	NSTimeZone	*defaultTimeZone = nil;
 
@@ -81,7 +81,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
 }
 
 //Sort by To, then Date
-- (NSComparisonResult)compareTo:(AILog *)inLog
+- (NSComparisonResult)compareTo:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [to caseInsensitiveCompare:[inLog to]];
     if(result == NSOrderedSame){
@@ -96,7 +96,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
 	
     return(result);
 }
-- (NSComparisonResult)compareToReverse:(AILog *)inLog
+- (NSComparisonResult)compareToReverse:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [[inLog to] caseInsensitiveCompare:to];
     if(result == NSOrderedSame){
@@ -112,7 +112,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
     return(result);
 }
 //Sort by From, then Date
-- (NSComparisonResult)compareFrom:(AILog *)inLog
+- (NSComparisonResult)compareFrom:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [from caseInsensitiveCompare:[inLog from]];
     if(result == NSOrderedSame){
@@ -127,7 +127,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
 	
     return(result);
 }
-- (NSComparisonResult)compareFromReverse:(AILog *)inLog
+- (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [[inLog from] caseInsensitiveCompare:from];
     if(result == NSOrderedSame){
@@ -144,7 +144,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
 }
 
 //Sort by Date, then To
-- (NSComparisonResult)compareDate:(AILog *)inLog
+- (NSComparisonResult)compareDate:(AIChatLog *)inLog
 {
 	NSComparisonResult  result;
 	NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
@@ -159,7 +159,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
 	
     return(result);
 }
-- (NSComparisonResult)compareDateReverse:(AILog *)inLog
+- (NSComparisonResult)compareDateReverse:(AIChatLog *)inLog
 {
 	NSComparisonResult  result;
 	NSTimeInterval		interval = [[inLog date] timeIntervalSinceDate:date];
@@ -175,7 +175,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
     return(result);
 }
 
--(NSComparisonResult)compareRank:(AILog *)inLog
+-(NSComparisonResult)compareRank:(AIChatLog *)inLog
 {
 	NSComparisonResult  result;
 	float				otherRankingPercentage = [inLog rankingPercentage];
@@ -190,7 +190,7 @@ static	NSTimeZone	*defaultTimeZone = nil;
 	
 	return(result);
 }
--(NSComparisonResult)compareRankReverse:(AILog *)inLog
+-(NSComparisonResult)compareRankReverse:(AIChatLog *)inLog
 {
 	NSComparisonResult  result;
 	float				otherRankingPercentage = [inLog rankingPercentage];

@@ -15,13 +15,13 @@
 
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
-#import "AILog.h"
+#import "AIChatLog.h"
 
 #define OLD_SUFFIX  @".adiumLog.html"
 
 @interface AILogToGroup (PRIVATE)
 - (NSDictionary *)logDict;
-- (AILog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName;
+- (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName;
 @end
 
 @implementation AILogToGroup
@@ -97,7 +97,7 @@
 			NSString		*relativeLogPath = [path stringByAppendingPathComponent:fileName];
 			
 			if (![logDict objectForKey:relativeLogPath]){
-				AILog	*theLog;
+				AIChatLog	*theLog;
 				
 				if (theLog = [self _logAtRelativeLogPath:relativeLogPath fileName:fileName]){
 					[logDict setObject:theLog
@@ -110,10 +110,10 @@
     return(logDict);
 }
 
-- (AILog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName
+- (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName
 {
 	NSDate			*date;
-	AILog			*theLog = nil;
+	AIChatLog		*theLog = nil;
 	NSDictionary	*fileAttributes = [defaultManager fileAttributesAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:relativeLogPath]
 															  traverseLink:NO];
 
@@ -149,9 +149,9 @@
 	//Create & add the log
 
 	if(date = [fileAttributes fileModificationDate]){
-		NSDate	*fileNameDate = [AILog dateFromFileName:(fileName ?
-														 fileName :
-														 [relativeLogPath lastPathComponent])];
+		NSDate	*fileNameDate = [AIChatLog dateFromFileName:(fileName ?
+															 fileName :
+															 [relativeLogPath lastPathComponent])];
 		
 		NSTimeInterval dateTimeIntervalSinceFileNameDate = [date timeIntervalSinceDate:fileNameDate];
 		if (dateTimeIntervalSinceFileNameDate < 0){
@@ -166,19 +166,19 @@
 			date = [NSDate dateWithTimeIntervalSinceReferenceDate:([fileNameDate timeIntervalSinceReferenceDate] + 86399)];
 		}
 
-		theLog = [[[AILog allocWithZone:nil] initWithPath:relativeLogPath
-													 from:from
-													   to:to
-											 serviceClass:serviceClass
-													 date:date] autorelease];
+		theLog = [[[AIChatLog allocWithZone:nil] initWithPath:relativeLogPath
+														 from:from
+														   to:to
+												 serviceClass:serviceClass
+														 date:date] autorelease];
 	}
 	
 	return(theLog);
 }
 
-- (AILog *)logAtPath:(NSString *)inPath
+- (AIChatLog *)logAtPath:(NSString *)inPath
 {
-	AILog	*theLog;
+	AIChatLog	*theLog;
 	
 	if (logDict){
 		//Use the full dictionary if we have it

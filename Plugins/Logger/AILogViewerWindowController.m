@@ -15,7 +15,7 @@
 
 #import "AILogViewerWindowController.h"
 #import "AILoggerPlugin.h"
-#import "AILog.h"
+#import "AIChatLog.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "ESRankingCell.h" 
@@ -53,7 +53,7 @@
 - (void)updateProgressDisplay;
 - (void)refreshResults;
 - (void)refreshResultsSearchIsComplete:(BOOL)searchIsComplete;
-- (void)displayLog:(AILog *)log;
+- (void)displayLog:(AIChatLog *)log;
 - (void)selectFirstLog;
 - (void)selectDisplayedLog;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
@@ -329,7 +329,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 //Delete selected log
 - (IBAction)deleteSelectedLogs:(id)sender
 {
-    AILog   *theLog = nil;
+    AIChatLog   *theLog = nil;
     int     row = [tableView_results selectedRow];
 
     [resultsLock lock];
@@ -627,7 +627,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 }
 
 //Displays the contents of the specified log in our window
-- (void)displayLog:(AILog *)theLog
+- (void)displayLog:(AIChatLog *)theLog
 {
     NSAttributedString	*logText = nil;
     NSString		*logFileText = nil;
@@ -731,7 +731,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 
 - (void)selectFirstLog
 {
-	AILog   *theLog = nil;
+	AIChatLog   *theLog = nil;
 	
 	//If our selected log is no more, select the first one in the list
 	[resultsLock lock];
@@ -1136,7 +1136,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     NSEnumerator        *fromEnumerator, *toEnumerator, *logEnumerator;
     AILogToGroup        *toGroup;
     AILogFromGroup      *fromGroup;
-    AILog               *theLog;
+    AIChatLog			*theLog;
     UInt32		lastUpdate = TickCount();
     
     NSCalendarDate	*searchStringDate = nil;
@@ -1318,7 +1318,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 			for(i = 0; (i < count) && (searchID == activeSearchID); i++){
 				NSString		*path = (NSString *)SKDocumentGetName(outDocumentsArray[i]);
 				NSString		*toPath = [path stringByDeletingLastPathComponent];
-				AILog			*theLog;
+				AIChatLog		*theLog;
 				
 				/*	
 				 Add the log - if our index is currently out of date (for example, a log was just deleted) 
@@ -1375,7 +1375,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
     NSString	*identifier = [tableColumn identifier];
 
 	if([identifier isEqualToString:@"Rank"] && row >= 0 && row < [selectedLogArray count]){
-		AILog       *theLog = [selectedLogArray objectAtIndex:row];
+		AIChatLog       *theLog = [selectedLogArray objectAtIndex:row];
 		
 		[aCell setPercentage:[theLog rankingPercentage]];
 	}
@@ -1396,7 +1396,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		}
 		
 	}else{
-		AILog       *theLog = [selectedLogArray objectAtIndex:row];
+		AIChatLog       *theLog = [selectedLogArray objectAtIndex:row];
 
 		if([identifier isEqualToString:@"To"]){
 			value = [theLog to]; 
@@ -1427,7 +1427,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     if(!ignoreSelectionChange){
-		AILog   *theLog = nil;
+		AIChatLog   *theLog = nil;
 		int     row = [tableView_results selectedRow];
 		
 		//Update the displayed log
@@ -1463,7 +1463,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (IBAction)toggleEmoticonFiltering:(id)sender
 {
-	AILog	*log = displayedLog;
+	AIChatLog	*log = displayedLog;
 	
 	showEmoticons = !showEmoticons;
 	[sender setLabel:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)];
