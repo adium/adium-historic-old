@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.6 2004/06/16 11:23:17 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.7 2004/06/18 15:20:41 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -353,6 +353,12 @@ void av_resolve_reply (struct sockaddr	*interface,
     NSString *error;
     SHA1_CTX ctx;
     unsigned char digest[20];
+
+    if (JPEGData == nil) {
+	[userAnnounceData deleteField:@"phsh"];
+	[self updateAnnounceInfo];
+	return;
+    }
 
     plist = [NSPropertyListSerialization dataFromPropertyList:JPEGData
     				    format:NSPropertyListXMLFormat_v1_0
@@ -821,6 +827,8 @@ NSData *decode_dns(char* buffer, int len )
 		}
 	    }
 	}
+    } else {
+	[contact setContactImage:nil];
     }
 
     /* now set the port */
