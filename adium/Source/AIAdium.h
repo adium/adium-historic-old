@@ -144,7 +144,10 @@
 #define INTERFACE_ERROR_MESSAGE			@"Interface_ErrorMessageRecieved"
 #define ACCOUNT_CONNECTED				@"Account_Connected"
 #define ACCOUNT_DISCONNECTED			@"Account_Disconnected"
-
+#define FILE_TRANSFER_REQUEST			@"FileTransfer_Request"
+#define FILE_TRANSFER_BEGAN				@"FileTransfer_Began"
+#define FILE_TRANSFER_CANCELED			@"FileTransfer_Canceled"
+#define FILE_TRANSFER_COMPLETE			@"FileTransfer_Complete"
 
 #define Adium_Xtras_Changed                     @"Adium_Xtras_Changed"
 #define Adium_PluginsDidFinishLoading           @"Adium_PluginsDidFinishLoading"
