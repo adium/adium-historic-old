@@ -29,6 +29,8 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	sortFunction = [self sortFunction];
 	alwaysSortGroupsToTop = [self alwaysSortGroupsToTop];
 	
+	configureView = nil;
+	
 	return(self);
 }
 
@@ -38,6 +40,16 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	[attributeKeysRequiringResort release];
 	
 	[super dealloc];
+}
+
+- (NSView *)configureView
+{
+	if (!configureView)
+		[NSBundle loadNibNamed:[self configureNibName] owner:self];
+	
+	[self viewDidLoad];
+	
+	return configureView;
 }
 
 //Sort Logic -------------------------------------------------------------------------------------------------------
@@ -143,4 +155,10 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 - (NSArray *)attributeKeysRequiringResort{ return(nil); };
 - (int (*)(id, id, BOOL))sortFunction{ return(nil); };
 
+//Subclasses should provide a title for configuring the sort only if configuration is possible
+- (NSString *)configureSortMenuItemTitle{ return(nil); };
+- (NSString *)configureSortWindowTitle{ return(nil); };
+- (NSString *)configureNibName{ return(nil); };
+- (void)viewDidLoad{ };
+- (IBAction)changePreference:(id)sender{ };
 @end
