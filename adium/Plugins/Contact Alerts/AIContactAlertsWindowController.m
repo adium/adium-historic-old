@@ -103,7 +103,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     //Configure the 'Action' table column
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
     [dataCell setMenu:[self actionListMenu]];
-//    [dataCell setMenu:[self soundListMenu]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];
     [dataCell setBordered:NO];
@@ -115,8 +114,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
+
+    [popUp_actionDetails setEnabled:NO];
+    [textField_actionDetails setEnabled:NO];
+
     
-    //  eventSoundArray = [[preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] mutableCopy]; //Load the user's custom set
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 
     if(!eventActionArray) eventActionArray = [[NSMutableArray alloc] init];
@@ -125,62 +127,61 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions reloadData];
 }
 
-//Builds and returns an event menu
-- (NSMenu *)eventMenu
+- (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName
 {
-//    NSDictionary	*eventDict;
+    NSMenuItem *menuItem;
+    NSMutableDictionary *menuDict;
+    
+    menuItem = [[[NSMenuItem alloc] initWithTitle:displayName
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    menuDict = [[NSMutableDictionary alloc] init];
+    [menuDict setObject:displayName 	forKey:KEY_EVENT_DISPLAYNAME];
+    [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
+    [menuItem setRepresentedObject:menuDict];
+    return menuItem;
+    
+}
+
+//Builds and returns an event menu
+- (NSMenu *) eventMenu
+{
     NSMenu		*eventMenu = [[NSMenu alloc] init];
 
     //Add the static/display menu item
     [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
-/*
-    online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-  */  
+
     //Add a menu item for each event
     NSMenuItem	*menuItem;
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Signed On"
-                                               target:self
-                                               action:@selector(newEvent:)
-                                        keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Signed On"];
+    menuItem = [self eventMenuItem:@"Signed On" withDisplay:@"Signed On"];
     [eventMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Signed Off"
-                                           target:self
-                                           action:@selector(newEvent:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Signed Off"];
+    menuItem = [self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"];
     [eventMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Went Away"
-                                           target:self
-                                           action:@selector(newEvent:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Away"];
+    menuItem = [self eventMenuItem:@"Away" withDisplay:@"Went Away"];
     [eventMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Became Idle"
-                                           target:self
-                                           action:@selector(newEvent:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Idle"];
+    menuItem = [self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"];
     [eventMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Typing"
-                                           target:self
-                                           action:@selector(newEvent:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Typing"];
+    menuItem = [self eventMenuItem:@"Idle" withDisplay:@"Became Idle"];
     [eventMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Has Unviewed Content"
-                                           target:self
-                                           action:@selector(newEvent:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"UnviewedContent"];
+    menuItem = [self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"];
     [eventMenu addItem:menuItem];
-    
+
+    menuItem = [self eventMenuItem:@"Typing" withDisplay:@"Is Typing"];
+    [eventMenu addItem:menuItem];
+
+    menuItem = [self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"];
+    [eventMenu addItem:menuItem];
+
+    menuItem = [self eventMenuItem:@"Warning" withDisplay:@"Was Warned"];
+    [eventMenu addItem:menuItem];
+
     return(eventMenu);
 }
 
@@ -188,11 +189,20 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)newEvent:(id)sender
 {
     NSMutableDictionary	*actionDict;
-
-    //Add the new event
+    NSString * event = [[sender representedObject] objectForKey:KEY_EVENT_NOTIFICATION];
     actionDict = [[NSMutableDictionary alloc] init];
-    [actionDict setObject:[sender representedObject] forKey:KEY_EVENT_NOTIFICATION];
-    [actionDict setObject:@"WhatShouldTheDefaultSoundBe!?" forKey:KEY_EVENT_ACTION];
+    if ( [event hasPrefix:@"!"] ) //negative status
+    {
+        event = [event stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!"]];
+        [actionDict setObject:@"0" forKey:KEY_EVENT_STATUS];
+    }
+    else
+        [actionDict setObject:@"1" forKey:KEY_EVENT_STATUS];
+    
+    //Add the new event
+    [actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_DISPLAYNAME] forKey:KEY_EVENT_DISPLAYNAME];
+    [actionDict setObject:event forKey:KEY_EVENT_NOTIFICATION];
+    [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
     [eventActionArray addObject:actionDict];
 
     //Save event preferences
@@ -313,7 +323,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     [selectedActionDict setObject:[textField_actionDetails stringValue] forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-    NSLog(@"Ended editing the field.");
     [self saveEventActionArray];
 }
 
@@ -321,23 +330,24 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (NSMenu *)actionListMenu //menu of possible actions
 {
     NSMenu		*actionListMenu = [[NSMenu alloc] init];
-    NSMenuItem	*menuItem;
-
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
-                                           target:self
-                                           action:@selector(actionSendMessage:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Message"];
-    [menuItem setEnabled:YES];
-    [actionListMenu addItem:menuItem];
+    NSMenuItem		*menuItem;
 
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"Play a sound"
                                            target:self
                                            action:@selector(actionPlaySound:)
                                     keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Sound"]; //Sound
-        [menuItem setEnabled:YES];
+    [menuItem setRepresentedObject:@"Sound"];
     [actionListMenu addItem:menuItem];
+    
+    
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
+                                           target:self
+                                           action:@selector(actionSendMessage:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Message"];
+
+    [actionListMenu addItem:menuItem];
+
 
     return(actionListMenu);
 
@@ -358,12 +368,14 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (void) configureForTextDetails:(NSString *)instructions
 {
     int row = [tableView_actions selectedRow];
+    NSString * details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+
     [textField_description_textField setStringValue:instructions];
     [textField_description_popUp setStringValue:@""];
     [popUp_actionDetails setEnabled:NO];
     [textField_actionDetails setEnabled:YES];
-    [textField_actionDetails setDrawsBackground:YES];
-    [textField_actionDetails setStringValue:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
+
+    [textField_actionDetails setStringValue:(details ? details : @"")];
 }
 
 - (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
@@ -391,23 +403,21 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     if([identifier compare:TABLE_COLUMN_EVENT] == 0){
         NSDictionary	*actionDict;
-        NSString	*notification;
-        NSDictionary	*eventDict;
+        NSString	*event;
         NSString	*displayName;
 
-        //Get the notification string
+        //Get the event string
         actionDict = [eventActionArray objectAtIndex:row];
-        notification = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
+        event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
 
-        //Get that notification's display name
-        eventDict = [[owner eventNotifications] objectForKey:notification];
-        displayName = [eventDict objectForKey:KEY_EVENT_DISPLAY_NAME];
-
-        return(displayName ? displayName : notification);
+        //Get that event's display name
+        displayName = [actionDict objectForKey:KEY_EVENT_DISPLAYNAME];
+        return(displayName ? displayName : event);
 
     }else if([identifier compare:TABLE_COLUMN_ACTION] == 0){
         NSDictionary	*actionDict;
         NSString	*action;
+        
         //Get the action string
         actionDict = [eventActionArray objectAtIndex:row];
         action = [actionDict objectForKey:KEY_EVENT_ACTION];
@@ -446,7 +456,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
         [selectedActionDict setObject:newAction forKey:KEY_EVENT_ACTION];
         [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-        //Save event sound preferences
+
         [self saveEventActionArray]; 
     }
 }
