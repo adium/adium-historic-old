@@ -161,7 +161,7 @@
 			* Initial configuration of a few key preferences
   - The Migration Assistant, with expanded program support and a revamped UI, should 
     automatically offer its services when Adium is first launched, ‡ la Mail.app's
-	importer.
+	importer.[Brandon: Working on it.]
         
 // Address Book integration [brian - just marking it as mine if no one else beats me done]
     - Sync (optionally) contact notes to an associated AB card's Notes field
