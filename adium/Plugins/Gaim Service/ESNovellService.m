@@ -16,7 +16,7 @@
     [super initWithService:inService];
     
     //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Novell GroupWise"
+    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"GroupWise"
                                                       description:@"Novell GroupWise"
                                                             image:nil
                                                     caseSensitive:NO
