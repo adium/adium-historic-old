@@ -134,6 +134,7 @@
  *
  * @param inKey The status key to search on
  * @result YES if any account returns a non-nil value for the status object for inKey
+ */
 - (BOOL)_accountsWithKey:(NSString *)inKey
 {
     NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
