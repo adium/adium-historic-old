@@ -23,19 +23,21 @@
 - (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
 - (void)validateEnteredName;
 - (void)updateAccountList;
-- (void)enterContactName;
+- (void)configureNameAndService;
 - (void)setContactName:(NSString *)contact;
+- (void)setServiceID:(NSString *)inServiceID;
 @end
 
 @implementation AINewContactWindowController
 
 //Prompt for a new user.  Pass nil for a panel prompt. Include a particular name if you wish.
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact serviceID:(NSString *)inServiceID
 {
 	AINewContactWindowController	*newContactWindow;
 	
 	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB];
 	[newContactWindow setContactName:contact];
+	[newContactWindow setServiceID:inServiceID];
 		
 	if(parentWindow){
 		[NSApp beginSheet:[newContactWindow window]
@@ -54,6 +56,8 @@
 {
     [super initWithWindowNibName:windowNibName];
 	accounts = nil;
+	contactName = nil;
+	serviceID = nil;
 	
     return(self);
 }
@@ -62,8 +66,8 @@
 - (void)dealloc
 {
 	[accounts release];
-	if( contactName )
-		[contactName release];
+	[contactName release];
+	[serviceID release];
 	
     [super dealloc];
 }
@@ -78,8 +82,8 @@
 								   selector:@selector(updateAccountList)
 									   name:Account_ListChanged
 									 object:nil];
-	[self updateAccountList];
-	[self enterContactName];
+
+	[self configureNameAndService];
 	
 	[[self window] center];
 }
@@ -187,9 +191,8 @@
 //Service type selected from the menu
 - (void)selectServiceType:(id)sender
 {
-	[self validateEnteredName];
 	[self updateAccountList];
-
+	[self validateEnteredName];
 }
 
 
@@ -247,19 +250,38 @@
 //Contact Name ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact Name
 //Fill in the name field if we came from a tab
-- (void)enterContactName
+- (void)configureNameAndService
 {
-	if( contactName ) {
+	if(contactName) {
 		[textField_contactName setStringValue:contactName];
-		[self validateEnteredName];
 	}
+	
+	if(serviceID){
+		NSMenuItem		*item;
+		NSEnumerator	*enumerator = [[popUp_contactType itemArray] objectEnumerator];
+		
+		while (item = [enumerator nextObject]){
+			if ([[[item representedObject] identifier] isEqualToString:serviceID]){
+				[popUp_contactType selectItem:item];
+				break;
+			}
+		}
+	}
+	
+	[self updateAccountList];
+	[self validateEnteredName];
 }
 
 - (void)setContactName:(NSString *)contact
 {
-	if( contact ) {
-		contactName = [[contact copy] retain];
-	}
+	[contactName release];
+	contactName = [contact retain];
+}
+
+- (void)setServiceID:(NSString *)inServiceID
+{
+	[serviceID release];
+	serviceID = [inServiceID retain];
 }
 
 //Entered name is changing

@@ -32,19 +32,31 @@
     NSMenuItem		*menuItem;
     
 	//Add contact menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT
+										   target:self
+										   action:@selector(addContact:)
+									keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Add contact context menu item
-	menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT_TO_GROUP target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT_TO_GROUP
+										   target:self
+										   action:@selector(addContact:)
+									keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 
 	//Add contact context menu item for tabs
-	menuItem_tabAddContact = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContactFromTab) keyEquivalent:@""] autorelease];
+	menuItem_tabAddContact = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT
+														 target:self 
+														 action:@selector(addContactFromTab:)
+												  keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_TabAction];
 	
 	//Add group menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP target:self action:@selector(addGroup:) keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP
+										   target:self
+										   action:@selector(addGroup:) 
+									keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Delete selection menu item
@@ -54,11 +66,16 @@
 	//Rename group context menu item
 	menuItem = [[[NSMenuItem alloc] initWithTitle:RENAME_GROUP target:self action:@selector(renameGroup:) keyEquivalent:@""] autorelease];
     //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
-	
+
 	//Delete selection context menu item
 	menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT_CONTEXT target:self action:@selector(deleteSelection:) keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Contact_Manage];
-	
+    
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(addContactRequest:) 
+									   name:Contact_AddNewContact 
+									 object:nil];
+
 }
 
 //Uninstall
@@ -90,13 +107,26 @@
 //Prompt for a new contact
 - (IBAction)addContact:(id)sender
 {
-	[AINewContactWindowController promptForNewContactOnWindow:nil name:nil];
+	[AINewContactWindowController promptForNewContactOnWindow:nil name:nil serviceID:nil];
 }
 
 //Prompt for a new contact with the current tab's name
-- (void)addContactFromTab
+- (IBAction)addContactFromTab:(id)sender
 {
-	[AINewContactWindowController promptForNewContactOnWindow:nil name:[[[adium menuController] contactualMenuContact] UID]];
+	AIListContact *listContact = [[adium menuController] contactualMenuContact];
+	[AINewContactWindowController promptForNewContactOnWindow:nil
+														 name:[listContact UID] 
+													serviceID:[listContact serviceID]];
+}
+
+- (void)addContactRequest:(NSNotification *)notification
+{
+	NSDictionary *userInfo = [notification userInfo];
+	if (userInfo){
+		[AINewContactWindowController promptForNewContactOnWindow:nil
+															 name:[userInfo objectForKey:@"UID"]
+														serviceID:[userInfo objectForKey:@"serviceID"]];
+	}
 }
 
 //Prompt for a new group
