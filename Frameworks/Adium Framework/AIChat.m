@@ -168,7 +168,7 @@
     return(participatingListObjects);
 }
 
-- (void)addParticipatingListObject:(AIListObject *)inObject
+- (void)addParticipatingListObject:(AIListContact *)inObject
 {
 	if (![participatingListObjects containsObjectIdenticalTo:inObject]){
 		[participatingListObjects addObject:inObject]; //Add
@@ -397,14 +397,20 @@
 
 - (BOOL)addObject:(AIListObject *)inObject
 {
-	[self addParticipatingListObject:inObject];
-	
-	return YES;
+	if ([inObject isKindOfClass:[AIListContact class]]){
+		[self addParticipatingListObject:(AIListContact *)inObject];
+		
+		return YES;
+	}else{
+		return NO;
+	}
 }
 
 - (void)removeObject:(AIListObject *)inObject
 {
-	[self removeParticipatingListObject:inObject];
+	if ([inObject isKindOfClass:[AIListContact class]]){
+		[self removeParticipatingListObject:(AIListContact *)inObject];
+	}
 }
 
 - (void)removeAllObjects {};
