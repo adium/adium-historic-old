@@ -125,7 +125,12 @@
 		[contactListView reloadData];
 		[contactListView performFullRecalculation];
 	}else{
-		AIListGroup	*containingGroup = [[object userInfo] objectForKey:@"ContainingGroup"];
+		AIListGroup *containingGroup;
+		if ([object isKindOfClass:[AIListGroup class]])
+			containingGroup = object; //I wonder..
+		else
+			containingGroup = [[object userInfo] objectForKey:@"ContainingGroup"];
+		
 		[contactListView reloadItem:containingGroup reloadChildren:YES];
 		[contactListView updateHorizontalSizeForObject:object];
 	}
