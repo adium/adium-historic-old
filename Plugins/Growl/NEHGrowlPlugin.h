@@ -9,6 +9,6 @@
 	BOOL			 showWhileAway;
 }
 
-- (void)registerAdium:(void*)context;
+- (void)growlLaunched:(void *)context;
 - (void)handleEvent:(NSNotification*)notification;
 @end
