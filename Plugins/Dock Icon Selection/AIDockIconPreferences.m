@@ -21,6 +21,7 @@
 
 @interface AIDockIconPreferences (PRIVATE)
 - (void)_buildIconArray;
+- (void)selectIconWithName:(NSString *)selectName;
 @end
 
 @implementation AIDockIconPreferences
