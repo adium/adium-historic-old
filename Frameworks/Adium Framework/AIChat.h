@@ -90,7 +90,6 @@ typedef enum {
 - (void)appendContentArray:(NSArray *)inContentArray;
 - (void)removeAllContent;
 
-+ (NSString *)uniqueChatIDForChatWithName:(NSString *)name onAccount:(AIAccount *)account;
 - (NSString *)name;
 - (void)setName:(NSString *)inName;
 
