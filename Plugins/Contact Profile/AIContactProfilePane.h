@@ -6,8 +6,8 @@
 //
 
 @interface AIContactProfilePane : AIContactInfoPane <AIListObjectObserver> {
-	IBOutlet		NSTextView			*textView_profile;
-	IBOutlet		NSTextView			*textView_status;
+	IBOutlet		AILinkTextView			*textView_profile;
+	IBOutlet		AILinkTextView			*textView_status;
 
 	AIListObject						*listObject;
 	
