@@ -673,17 +673,17 @@
 														  target:self
 														 action:@selector(arrangeTabs:)
 												   keyEquivalent:@""];
+		[[adium menuController] addMenuItem:menuItem_arrangeTabs toLocation:LOC_Window_Commands];
 		
-		if ([NSApp isOnPantherOrBetter]) {
+		if([NSApp isOnPantherOrBetter]){
 			menuItem_arrangeTabs_alternate = [[NSMenuItem alloc] initWithTitle:ARRANGE_ALTERNATE_MENU_TITLE
 																 target:self
 																 action:@selector(arrangeTabs:)
 														  keyEquivalent:@""];
 			[menuItem_arrangeTabs_alternate setAlternate:YES];
 			[menuItem_arrangeTabs_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+			[[adium menuController] addMenuItem:menuItem_arrangeTabs_alternate toLocation:LOC_Window_Commands];
 		}			
-		[[adium menuController] addMenuItem:menuItem_arrangeTabs toLocation:LOC_Window_Commands];
-		[[adium menuController] addMenuItem:menuItem_arrangeTabs_alternate toLocation:LOC_Window_Commands];
         
 		//menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
 		//												   target:self
