@@ -300,7 +300,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		BOOL			isBold = (traits & NSBoldFontMask);
 		BOOL			isItalic = (traits & NSItalicFontMask);
 		
-		oldLink = link;
 		link = [attributes objectForKey:NSLinkAttributeName];
 		
 		//If we had a link on the last pass, and we don't now or we have a different one, close the link tag
@@ -409,7 +408,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[string appendString:linkString];
 			}
 			[string appendString:@"\">"];
-                        oldLink = link;
+			
+			oldLink = link;
 		}
 
 		//Image Attachments
