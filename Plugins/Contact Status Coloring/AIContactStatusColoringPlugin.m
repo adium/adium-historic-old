@@ -139,7 +139,6 @@
 			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 			
 			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
-				NSLog(@"Add %@",inObject);
 				[self addToFlashArray:inObject];
 			}else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
 				[self removeFromFlashArray:inObject];
@@ -532,6 +531,11 @@
 			
 			//Make our colors end up right (if we were on an off-flash) by updating all list objects
 			[[adium contactController] updateAllListObjectsForObserver:self];
+		}else if (!oldFlashUnviewedContentEnabled && flashUnviewedContentEnabled){
+			if(!firstTime){
+				//Update all list objects so we start flashing
+				[[adium contactController] updateAllListObjectsForObserver:self];
+			}
 		}
 	}
 }
