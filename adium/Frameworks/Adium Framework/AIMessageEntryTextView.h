@@ -23,14 +23,14 @@
     BOOL                 clearOnEscape;
     BOOL                 pushPopEnabled;
 
-    NSMutableArray	*historyArray;
+    NSMutableArray		*historyArray;
     int                  currentHistoryLocation;
 
-    NSMutableArray	*pushArray;
+    NSMutableArray		*pushArray;
     BOOL                 pushIndicatorVisible;
-    NSButton		*indicator;
+    NSButton			*indicator;
     NSMenu              *pushMenu;
-    NSDictionary	*defaultTypingAttributes;
+    NSDictionary		*defaultTypingAttributes;
 	
     NSSize               lastPostedSize;
     NSSize               _desiredSizeCached;
