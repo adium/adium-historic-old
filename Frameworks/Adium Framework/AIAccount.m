@@ -496,18 +496,18 @@
 //Perform the auto-reconnect
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
-	//Clean up the timer
-	[reconnectTimer invalidate];
-	[reconnectTimer release];
-	reconnectTimer = nil;
-
-    //If we still want to be online, and we're not yet online, continue with the reconnect
+	//If we still want to be online, and we're not yet online, continue with the reconnect
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
 	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
 		[self setPreference:[NSNumber numberWithBool:YES] 
 					 forKey:@"Online" 
 					  group:GROUP_ACCOUNT_STATUS];
     }
+	
+	//Clean up the timer
+	[reconnectTimer invalidate];
+	[reconnectTimer release];
+	reconnectTimer = nil;
 }
 
 //Update Silencing -----------------------------------------------------------------------------------------------------
