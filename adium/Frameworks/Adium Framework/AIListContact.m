@@ -117,22 +117,19 @@
     return(outName);
 }
 
-- (NSString *)formattedDisplayName
+- (NSString *)longDisplayName
 {
-    AIMutableOwnerArray * formattedNameArray;
+    AIMutableOwnerArray * longNameArray;
     NSString *outName;
 
-    formattedNameArray = [self displayArrayForKey:@"Formatted Display Name"];
-    if (formattedNameArray && [formattedNameArray count])
-    {
-        outName = [formattedNameArray objectAtIndex:0];
+    longNameArray = [self displayArrayForKey:@"Long Display Name"];
+    if (longNameArray && [longNameArray count]){
+        outName = [longNameArray objectAtIndex:0];
+    } else{
+        outName = [self displayName];
     }
-    else
-    {
-        outName = UID;
-    }
- //   NSLog(@"formatted display name is %@",outName);
     return (outName);
 }
+
 
 @end
