@@ -16,10 +16,10 @@
 #import <Cocoa/Cocoa.h>
 #import <AIUtilities/AIUtilities.h>
 
-
+//@protocol AIListObjectObserver;
 @class AIAdium;
 
-@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView> {    
+@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView,AIListObjectObserver> {    
     NSTrackingRectTag		trackingRectTag;	//Tracing rect for the whole outline view
     int				oldSelection;		//Holds the selection when it's hidden
     BOOL			editing;		//YES when the list is in edit mode... (temp)
@@ -33,6 +33,9 @@
     NSColor			*invertedGroupColor;
 
     int				lastSelectedRow;
+    
+    float                       desiredWidth[3];
+    AIListObject                *hadMax[3];
 }
 
 - (void)setFont:(NSFont *)inFont;
@@ -54,4 +57,6 @@
 - (void)setGroupFont:(NSFont *)inFont;
 - (NSFont *)groupFont;
 
+- (BOOL)updateHorizontalSizeForObject:(AIListObject *)inObject;
+- (void)performFullRecalculation;
 @end

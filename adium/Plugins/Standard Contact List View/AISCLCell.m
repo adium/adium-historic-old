@@ -28,6 +28,11 @@
 #define CELL_SIZE_ADJUST_X	20	//Adjustment for the flippy triangles, and add some padding
 #define BACK_CELL_INDENT	2
 
+@interface AISCLCell (PRIVATE)
+- (NSSize)leftViewSizeForHeight:(float)height;
+- (NSSize)rightViewSizeForHeight:(float)height;
+@end
+
 @implementation AISCLCell
 
 - (void)setContact:(AIListObject *)inObject
@@ -36,14 +41,54 @@
     isGroup = [listObject isKindOfClass:[AIListGroup class]];
 }
 
-- (NSSize)cellSizeForBounds:(NSRect)aRect inView:(NSView *)controlView
+- (NSSize)leftViewSizeForHeight:(float)height
+{
+    AIMutableOwnerArray     *leftViewArray;
+    NSSize                  cellSize = NSMakeSize(0,height);
+    int loop;
+    //Calculate all 'Left Views'
+    leftViewArray = [listObject displayArrayForKey:@"Left View"];
+    if(leftViewArray && [leftViewArray count]){
+        //Indent into the margin to save space
+        cellSize.width += LEFT_MARGIN;
+        
+        //Left aligned icon
+        for(loop = 0;loop < [leftViewArray count];loop++){
+            id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
+            
+            //Calculate the icon size
+            cellSize.width += [handler widthForHeight:height];
+        }
+    }    
+    return cellSize;
+}
+- (NSSize)rightViewSizeForHeight:(float)height
+{
+    AIMutableOwnerArray     *rightViewArray;
+    NSSize                  cellSize = NSMakeSize(0,height);
+    int loop;
+    
+    //Calculate all right views
+    rightViewArray = [listObject displayArrayForKey:@"Right View"];
+    if(rightViewArray && [rightViewArray count]){//Right aligned icon(s)
+        for(loop = 0;loop < [rightViewArray count];loop++){
+            id <AIListObjectLeftView>	handler = [rightViewArray objectAtIndex:loop];
+            
+            //Calculate the icon size
+            cellSize.width += [handler widthForHeight:height];
+        }
+    }    
+    
+    return cellSize;
+}
+
+- (NSArray *)cellSizeArrayForBounds:(NSRect)aRect inView:(NSView *)controlView
 {
     NSFont		*font;
     NSAttributedString	*displayName;
     NSSize		displayNameSize;
-    //AIMutableOwnerArray	*leftViewArray, *rightViewArray;
-    //int			loop;
     NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
+    NSMutableArray      *cellSizeArray = [[NSMutableArray alloc] init];
     
     if(isGroup){ //move text away from flippy triangle
         cellSize.width += GROUP_PADDING;
@@ -54,30 +99,6 @@
     //Pad the right side of our view
     cellSize.width += RIGHT_MARGIN;
 
-    //Display all 'Left Views'
-/*    leftViewArray = [listObject displayArrayForKey:@"Left View"];
-    if(leftViewArray && [leftViewArray count]){
-        //Indent into the margin to save space
-        cellSize.width -= LEFT_MARGIN;
-
-        //Left aligned icon
-        for(loop = 0;loop < [leftViewArray count];loop++){
-            id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
-
-            cellSize.width += ([handler widthForHeight:aRect.size.height computeMax:YES] + LEFT_VIEW_PADDING);
-        }
-    }
-
-    //Display all right views
-    rightViewArray = [listObject displayArrayForKey:@"Right View"];
-    if(rightViewArray && [rightViewArray count]){//Right aligned icon(s)
-        for(loop = 0;loop < [rightViewArray count];loop++){
-            id <AIListObjectLeftView>	handler = [rightViewArray objectAtIndex:loop];
-
-            cellSize.width += ([handler widthForHeight:aRect.size.height computeMax:YES] + RIGHT_VIEW_PADDING);
-        }
-    }*/
-
     //Text Font
     font = [(AISCLOutlineView *)controlView font];
 
@@ -85,7 +106,6 @@
     if(isGroup){
 	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
     }
-
     
     //string
     NSMutableString 	*displayString = [NSMutableString stringWithString:@""];
@@ -94,15 +114,13 @@
     NSString *leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
     NSString *rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
     
-    if(leftText)
-    {
+    if(leftText) {
     	[displayString appendString:leftText];
     }
     
     [displayString appendString:[listObject longDisplayName]];
     
-    if(rightText)
-    {
+    if(rightText) {
     	[displayString appendString:rightText];
     }
     
@@ -112,8 +130,17 @@
     displayNameSize = [displayName size];
     cellSize.width += displayNameSize.width;
     cellSize.height += displayNameSize.height;
-
-    return(cellSize);
+    
+    //Pad the right side of our view
+ //   cellSize.width -= RIGHT_MARGIN;
+    
+    int height = cellSize.height;
+    
+    [cellSizeArray addObject:NSStringFromSize([self leftViewSizeForHeight:height])];
+    [cellSizeArray addObject:NSStringFromSize(cellSize)];
+    [cellSizeArray addObject:NSStringFromSize([self rightViewSizeForHeight:height])];
+    
+    return(cellSizeArray);
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
