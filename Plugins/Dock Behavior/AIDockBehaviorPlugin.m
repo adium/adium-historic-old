@@ -294,6 +294,10 @@ Methods for custom behvaior and contact alert classes
 	[[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]];
 }
 
-@end
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return(NO);
+}
 
+@end
 
