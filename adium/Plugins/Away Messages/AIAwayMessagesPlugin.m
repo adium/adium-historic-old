@@ -379,7 +379,7 @@
     while((awayDict = [enumerator nextObject])){
         NSString *type = [awayDict objectForKey:@"Type"];
         
-        if([type isEqualToString:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             //NSString		*group = [awayDict objectForKey:@"Name"];
             
             //Create & process submenu
