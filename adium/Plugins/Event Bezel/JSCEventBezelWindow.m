@@ -36,7 +36,7 @@
         [self setAlphaValue:0.0];
         [self setFadingOut:NO];
         [self setFadingIn:YES];
-        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.1
+        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.05
                                                              target:self
                                                            selector:@selector(fadeIn:)
                                                            userInfo:nil
@@ -62,7 +62,7 @@
 - (void)endDisplay:(NSTimer *)timer
 {
     if (doFadeOut) {
-        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.1
+        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.05
                                                             target:self
                                                           selector:@selector(fadeOut:)
                                                           userInfo:nil
@@ -80,7 +80,7 @@
 - (void)fadeIn:(NSTimer *)timer
 {
     if ([self alphaValue]<1.0) {
-        [self setAlphaValue: [self alphaValue]+0.2];
+        [self setAlphaValue: [self alphaValue]+0.1];
     }
     if ([self alphaValue]>=1.0) {
         [self setFadeTimer:nil];
