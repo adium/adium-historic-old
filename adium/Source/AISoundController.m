@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.49 2004/07/06 00:22:13 evands Exp $
+// $Id: AISoundController.m,v 1.50 2004/07/11 19:33:42 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -22,11 +22,7 @@
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
 #define SOUND_DEFAULT_PREFS			@"SoundPrefs"
-#define MAX_THREAD_SOUNDS			3					//Max concurrent sounds
-#define SOUND_SLEEP_INTERVAL		0.5					//Seconds to sleep between sound activity checks
-#define MAX_QT_CACHED_SOUNDS		5					//Max sounds cached for QT play
-
-#define KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME	@"Warned About Custom Volume"
+#define MAX_CACHED_SOUNDS			6					//Max cached sounds
 
 #define TEXT_TO_SPEAK				@"Text"
 #define VOICE_INDEX					@"Voice"
@@ -35,7 +31,7 @@
 
 @interface AISoundController (PRIVATE)
 - (void)_removeSystemAlertIDs;
-- (void)_quicktimePlaySound:(NSString *)inPath;
+- (void)_coreAudioPlaySound:(NSString *)inPath;
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -83,33 +79,72 @@
 //close
 - (void)closeController
 {
+	//Stop speaking
 	[self _stopSpeakingNow];
-    [self _removeSystemAlertIDs];
-    [voiceArray release];
+
+	//Stop all sounds from playing
+	NSEnumerator		*enumerator = [soundCacheDict objectEnumerator];
+	QTSoundFilePlayer   *soundFilePlayer;
+	while (soundFilePlayer = [enumerator nextObject]){
+		[soundFilePlayer stop];
+	}
+	
+	//If using CFAlertSound, remove system alert IDs
+	//    [self _removeSystemAlertIDs];
+}
+
+- (void)dealloc
+{
+	[voiceArray release]; voiceArray = nil;
+	[speechArray release]; speechArray = nil;
+	[soundCacheDict release]; soundCacheDict = nil;
+	[soundCacheArray release]; soundCacheArray = nil;
 }
 
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){    
-        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-		NSNumber		*customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
-        
-		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
-		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash
-		if([NSApp isOnPantherOrBetter]){
-			useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
-		}else{
-			useCustomVolume = YES;
-		}
-		customVolume = ([customVolumeNumber floatValue] * 512.0);
+        NSDictionary		*preferenceDict;
+		NSEnumerator		*enumerator;
+		QTSoundFilePlayer   *soundFilePlayer;
+        SoundDeviceType		oldSoundDeviceType;
 		
+		preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+		useCustomVolume = YES;
+		customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]);
+				
         muteSounds = ([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] ||
 					  [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue]);
-        
-        //If we should be muted now, clear out the speech array.
-        if(muteSounds) [speechArray removeAllObjects];
+  
+		oldSoundDeviceType = soundDeviceType;
+		soundDeviceType = [[preferenceDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue];
+		
+		
+		//Clear out our cached sounds and our speech aray if either
+		// -We're probably not going to be using them for a while
+		// -We've changed output device types so will want to recreate our sound output objects
+		//
+		//If neither of these things happened, we need to update our currently playing songs
+		//to the new volume setting.
 
+		BOOL needToStopAndRelease = (muteSounds || (soundDeviceType != oldSoundDeviceType));
+		
+		enumerator = [soundCacheDict objectEnumerator];
+		while (soundFilePlayer = [enumerator nextObject]){
+			if (needToStopAndRelease){
+				[soundFilePlayer stop];
+			}else{
+				[soundFilePlayer setVolume:customVolume];
+			}
+		}
+
+		if (needToStopAndRelease){
+			[speechArray removeAllObjects];
+			[soundCacheDict removeAllObjects];
+			[soundCacheArray removeAllObjects];
+		}
+		
 		muteWhileAway = [[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue];
 	}
 }
@@ -137,63 +172,62 @@
 
     if(path) {
         [self playSoundAtPath:path];
-    }
-    //should create some sort of feedback if the sound was not found.
+    }else{
+		//They wanted a sound.  We can't find the one they wanted.  At least give 'em something.
+		NSBeep();
+	}
 }
 
 //Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
     if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
-        if(useCustomVolume && customVolume != 0){
-			//If the user is specifying a custom volume, we must use quicktime to play our sounds.
-			[self _quicktimePlaySound:inPath];
-
-        }else if(!useCustomVolume){ 
-			if(!soundThreadActive){
-				[NSThread detachNewThreadSelector:@selector(_threadPlaySoundAsAlert:)
-										 toTarget:self
-									   withObject:inPath];
-			}
-		}    
+		[self _coreAudioPlaySound:inPath];
 	}
+
 }
 
 
 //Quicktime ------------------------------------------------------------------------------------------------------------
-#pragma mark Quicktime
-// - Quicktime cannot be threaded to avoid blocking while sound hardware wakes up
-// - Quicktime is slow
-// + Quicktime offers volume contorl
-// + Quicktime can play almost anything
-// - Must cache manually
-//Play a sound using quicktime.
-- (void)_quicktimePlaySound:(NSString *)inPath
+#pragma mark CoreAudio
+// - Sound loading routine is not incredibly cheap (though not bad), so we should cache manually
+// + CoreAudio offers volume control, including in real time as the sound plays
+// + CoreAudio offers control over the output device (system events versus default audio, for example)
+// + CoreAudio is present and functional on OS X 10.2.7 and above
+// + QTSoundFilePlayer utilizes Quicktime for conversion so can play basically anything
+//Play a sound using CoreAudio via QTSoundFilePlayer.
+- (void)_coreAudioPlaySound:(NSString *)inPath
 {
-    NSMovie	*movie;
+    QTSoundFilePlayer	*justCrushAlot;
 
     //Search for this sound in our cache
-    movie = [soundCacheDict objectForKey:inPath];
+    justCrushAlot = [soundCacheDict objectForKey:inPath];
 	
     //If the sound is not cached, load it
-    if(!movie){
+    if(!justCrushAlot){
 		//If the cache is full, remove the less recently used cached sound
-		if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
-			[soundCacheDict removeObjectForKey:[soundCacheArray lastObject]];
+		if([soundCacheDict count] >= MAX_CACHED_SOUNDS){
+			NSString			*lastCachedPath = [soundCacheArray lastObject];
+			QTSoundFilePlayer   *gangstaPlaya = [soundCacheDict objectForKey:lastCachedPath];
+			
+			[gangstaPlaya stop];
+			[soundCacheDict removeObjectForKey:lastCachedPath];
 			[soundCacheArray removeLastObject];
 		}
 		
 		//Load and cache the sound
-		movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
-		if(movie){
-			[soundCacheDict setObject:movie forKey:inPath];
+		justCrushAlot = [[[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
+											 usingSystemAlertDevice:(soundDeviceType == SOUND_SYTEM_ALERT_DEVICE)] autorelease];
+		if(justCrushAlot){
+			[soundCacheDict setObject:justCrushAlot forKey:inPath];
 			[soundCacheArray insertObject:inPath atIndex:0];
 		}
 		
     }else{
-		//Reset the cached sound back to the beginning
-		StopMovie([movie QTMovie]);
-		GoToBeginningOfMovie([movie QTMovie]);
+		//Reset the cached sound back to the beginning and set its volume; if it is currently playing,
+		//this will make it restart.
+		[justCrushAlot setPlaybackPosition:0];
+		[justCrushAlot setVolume:customVolume];
 		
 		//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
 		[soundCacheArray removeObject:inPath];
@@ -201,62 +235,65 @@
     }
 	
     //Set the volume and play sound
-    if(movie){
-		SetMovieVolume([movie QTMovie], customVolume);
-		StartMovie([movie QTMovie]);
+    if(justCrushAlot){
+		//QTSoundFilePlayer won't play if the sound is already playing, but that's fine since we
+		//reset the playback position and it will start playing there in the next run loop.
+		[justCrushAlot play];
     }
 }
 
 
-//NSSound --------------------------------------------------------------------------------------------------------------
-//#pragma mark NSSound
-// + NSSound can be threaded to avoid blocking Adium while the sound hardware wakes up
-// + NSSound is fast
-// - NSSound does not offer volume control
-// - NSSound only plays a few formats
-// + Cached by the system
-//Play a sound using NSSound.  Meant to be detached as a new thread.
-//- (void)_threadPlaySound:(NSString *)inPath
-//{
-//    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
-//    NSSound		*sound;
-//
-//    //Lock to avoid trying to play two sounds at once from two different threads.
-//    soundThreadActive = YES;
-//    [soundLock lock];
-//
-//    //Load the sound (The system apparently caches these)
-//    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
-//    [sound setDelegate:self];
-//
-//    //Play the sound
-//    [sound play];
-//
-//    //When run on a laptop using battery power, the play method may block while the audio
-//    //hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
-//    //To get around this, we check to make sure the sound is playing, and if it isn't
-//    //we call the play method again.
-//    if(![sound isPlaying]){
-//        [sound play];
-//    }
-//
-//    //Unlock and cleanup
-//    [soundLock unlock];
-//    soundThreadActive = NO;
-//	
-//    [pool release];
-//}
-//
-//NSSound finished playing callback
-//- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
-//{
-//    //Clean up the sound
-//    [sound release];
-//}
-	
+//NSSound - Not used --------------------------------------------------------------------------------------------------------------
+/*
+#pragma mark NSSound
+ + NSSound can be threaded to avoid blocking Adium while the sound hardware wakes up
+ + NSSound is fast
+ - NSSound does not offer volume control
+ - NSSound only plays a few formats
+ + Cached by the system
+Play a sound using NSSound.  Meant to be detached as a new thread.
+- (void)_threadPlaySound:(NSString *)inPath
+{
+    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
+    NSSound		*sound;
 
-//CF Alert Sound -------------------------------------------------------------------------------------------------------
-#pragma mark CF Alert Sound
+    //Lock to avoid trying to play two sounds at once from two different threads.
+    soundThreadActive = YES;
+    [soundLock lock];
+
+    //Load the sound (The system apparently caches these)
+    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
+    [sound setDelegate:self];
+
+    //Play the sound
+    [sound play];
+
+    //When run on a laptop using battery power, the play method may block while the audio
+    //hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
+    //To get around this, we check to make sure the sound is playing, and if it isn't
+    //we call the play method again.
+    if(![sound isPlaying]){
+        [sound play];
+    }
+
+    //Unlock and cleanup
+    [soundLock unlock];
+    soundThreadActive = NO;
+	
+    [pool release];
+}
+
+NSSound finished playing callback
+- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
+{
+    //Clean up the sound
+    [sound release];
+}
+*/
+
+/*
+//CF Alert Sound - Not used -------------------------------------------------------------------------------------------------------
+//#pragma mark CF Alert Sound
 // Play a sound using the CF sound API's available in 10.2+ (or so says apple)
 // It's slightly more flexable than NSSound, but higher level than CoreAudio.  Good compromise?
 // ? threadable (works in 10.3, crashes in 10.2 regardless of running in thread or not)
@@ -291,7 +328,7 @@
         }
     }
     
-    //play the sound (system takes care of cueueing and waking audio hardware)
+    //play the sound (system takes care of queueing and waking audio hardware)
     SystemSoundPlay(soundID);
     
     [soundLock unlock];
@@ -312,7 +349,7 @@
         SystemSoundRemoveActionID(soundID);
     }
 }
-
+*/
 
 //Sound Sets -----------------------------------------------------------------------------------------------------------
 #pragma mark Sound Sets
