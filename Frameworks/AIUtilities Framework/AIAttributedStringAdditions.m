@@ -18,7 +18,6 @@
  */
 
 #import "AIAttributedStringAdditions.h"
-#import "AIHTMLDecoder.h"
 #import "AIColorAdditions.h"
 #import "AITextAttributes.h"
 #import "CBApplicationAdditions.h"
@@ -368,16 +367,12 @@
 		}else{
 			//For reading previously stored NSData objects - we used to store them as RTF data, but that
 			//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
-			//here isn't a speed problem.
+			//here isn't a speed problem.  We previously used AIHTMLDecoder to handle Jaguar old-data unarchiving...
+			//but that's in Adium.framework and the cross over most certainly isn't worth it.
 			if([NSApp isOnPantherOrBetter]){
 				
 				returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
 													 documentAttributes:nil] autorelease]);
-			}else{
-				//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
-				NSAttributedString *superSpecialJagString = [[[NSAttributedString alloc] initWithRTF:inData
-																				  documentAttributes:nil] autorelease];
-				returnValue = [AIHTMLDecoder decodeHTML:[superSpecialJagString string]];
 			}
 		}
 		
