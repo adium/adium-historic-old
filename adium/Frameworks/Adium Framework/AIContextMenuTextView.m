@@ -26,8 +26,8 @@ static NSMenu *contextualMenu = nil;
 			[NSNumber numberWithInt:Context_TextView_LinkAction],
 			[NSNumber numberWithInt:Context_TextView_General],
 			[NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
-																							  forTextView:self];
-		itemsArray = [adiumMenu itemArray];
+                                                                                        forTextView:self];
+		itemsArray = [[adiumMenu itemArray] copy];
 		
 		if([itemsArray count] > 0) {
 			[contextualMenu addItem:[NSMenuItem separatorItem]];
