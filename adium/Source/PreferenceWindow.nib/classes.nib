@@ -6,8 +6,8 @@
             SUPERCLASS = NSOutlineView; 
         }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = AIPreferenceCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIPreferenceWindowController; 
@@ -20,19 +20,19 @@
                 "tabView_contactList" = NSTabView; 
                 "tabView_status" = NSTabView; 
                 "textField_advancedTitle" = NSTextField; 
-                "view_Accounts" = AIPreferenceCategoryView; 
-                "view_Advanced" = AIPreferenceCategoryView; 
-                "view_Alerts" = AIPreferenceCategoryView; 
-                "view_ContactList_Contacts" = AIPreferenceCategoryView; 
-                "view_ContactList_General" = AIPreferenceCategoryView; 
-                "view_ContactList_Groups" = AIPreferenceCategoryView; 
-                "view_Dock" = AIPreferenceCategoryView; 
-                "view_Emoticons" = AIPreferenceCategoryView; 
-                "view_Keys" = AIPreferenceCategoryView; 
-                "view_Messages" = AIPreferenceCategoryView; 
-                "view_Sound" = AIPreferenceCategoryView; 
-                "view_Status_Away" = AIPreferenceCategoryView; 
-                "view_Status_Idle" = AIPreferenceCategoryView; 
+                "view_Accounts" = AIModularPaneCategoryView; 
+                "view_Advanced" = AIModularPaneCategoryView; 
+                "view_Alerts" = AIModularPaneCategoryView; 
+                "view_ContactList_Contacts" = AIModularPaneCategoryView; 
+                "view_ContactList_General" = AIModularPaneCategoryView; 
+                "view_ContactList_Groups" = AIModularPaneCategoryView; 
+                "view_Dock" = AIModularPaneCategoryView; 
+                "view_Emoticons" = AIModularPaneCategoryView; 
+                "view_Keys" = AIModularPaneCategoryView; 
+                "view_Messages" = AIModularPaneCategoryView; 
+                "view_Sound" = AIModularPaneCategoryView; 
+                "view_Status_Away" = AIModularPaneCategoryView; 
+                "view_Status_Idle" = AIModularPaneCategoryView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

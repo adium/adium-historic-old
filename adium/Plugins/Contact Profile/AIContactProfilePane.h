@@ -9,7 +9,6 @@
 @interface AIContactProfilePane : AIContactInfoPane {
 	IBOutlet		NSImageView			*imageView_userIcon;
 	IBOutlet		NSTextField			*textField_accountName;
-	
 }
 
 @end

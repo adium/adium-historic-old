@@ -1,18 +1,20 @@
 {
     IBClasses = (
+        {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {closeWindow = id; }; 
-            CLASS = AIContactInfoWindowController; 
+            CLASS = AIContactProfilePane; 
             LANGUAGE = ObjC; 
             OUTLETS = {"imageView_userIcon" = NSImageView; "textField_accountName" = NSTextField; }; 
-            SUPERCLASS = AIWindowController; 
+            SUPERCLASS = AIContactInfoPane; 
         }, 
-        {CLASS = AIToolbarTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }, 
         {
-            CLASS = AIWindowController; 
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
-            SUPERCLASS = NSWindowController; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 

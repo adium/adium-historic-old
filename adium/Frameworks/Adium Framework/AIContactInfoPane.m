@@ -25,6 +25,12 @@
     return(self);
 }
 
+- (CONTACT_INFO_CATEGORY)contactInfoCategory
+{
+	
+}
+
+
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inListObject
 {

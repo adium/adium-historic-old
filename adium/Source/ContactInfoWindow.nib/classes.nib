@@ -4,9 +4,16 @@
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"imageView_userIcon" = NSImageView; "textField_accountName" = NSTextField; }; 
+            OUTLETS = {
+                "tabView_category" = NSTabView; 
+                "view_Accounts" = AIModularPaneCategoryView; 
+                "view_Alerts" = AIModularPaneCategoryView; 
+                "view_Profile" = AIModularPaneCategoryView; 
+                "view_Settings" = AIModularPaneCategoryView; 
+            }; 
             SUPERCLASS = AIWindowController; 
         }, 
+        {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIToolbarTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }, 
         {
             CLASS = AIWindowController; 

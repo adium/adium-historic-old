@@ -33,6 +33,12 @@
 //A unique group name for our root group
 #define ADIUM_ROOT_GROUP_NAME					@"ROOTJKSHFOEIZNGIOEOP"	
 
+typedef enum {
+    AIInfo_Profile = 1, 
+    AIInfo_Accounts,
+    AIInfo_Alerts,
+    AIInfo_Settings
+} CONTACT_INFO_CATEGORY;
 
 typedef enum {
     AISortGroup = 0,
@@ -52,6 +58,8 @@ typedef enum {
 //Empty protocol to allow easy checking for if a particular object is a contact list outline view
 @protocol ContactListOutlineView
 @end
+
+@class AIContactInfoPane;
 
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
@@ -136,6 +144,7 @@ typedef enum {
 - (IBAction)showContactInfo:(id)sender;
 - (void)addContactInfoPane:(AIContactInfoPane *)inPane;
 - (void)updateListContactStatus:(AIListContact *)inContact;
+- (NSArray *)contactInfoPanes;
 
 //Interface selection
 - (AIListObject *)selectedListObject;

@@ -13,30 +13,30 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIPreferenceCategoryView;
+@class AIModularPaneCategoryView;
 
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
 
     IBOutlet	NSTabView					*tabView_contactList;
-    IBOutlet	AIPreferenceCategoryView	*view_ContactList_General;
-    IBOutlet	AIPreferenceCategoryView	*view_ContactList_Groups;
-    IBOutlet	AIPreferenceCategoryView	*view_ContactList_Contacts;
+    IBOutlet	AIModularPaneCategoryView	*view_ContactList_General;
+    IBOutlet	AIModularPaneCategoryView	*view_ContactList_Groups;
+    IBOutlet	AIModularPaneCategoryView	*view_ContactList_Contacts;
 
     IBOutlet	NSTabView					*tabView_status;
-    IBOutlet	AIPreferenceCategoryView	*view_Status_Away;
-    IBOutlet	AIPreferenceCategoryView	*view_Status_Idle;
+    IBOutlet	AIModularPaneCategoryView	*view_Status_Away;
+    IBOutlet	AIModularPaneCategoryView	*view_Status_Idle;
 
-    IBOutlet	AIPreferenceCategoryView	*view_Accounts;
-    IBOutlet	AIPreferenceCategoryView	*view_Messages;
-    IBOutlet	AIPreferenceCategoryView	*view_Dock;
-    IBOutlet	AIPreferenceCategoryView	*view_Sound;
-    IBOutlet 	AIPreferenceCategoryView	*view_Alerts;
-    IBOutlet 	AIPreferenceCategoryView	*view_Emoticons;
-    IBOutlet 	AIPreferenceCategoryView	*view_Keys;
+    IBOutlet	AIModularPaneCategoryView	*view_Accounts;
+    IBOutlet	AIModularPaneCategoryView	*view_Messages;
+    IBOutlet	AIModularPaneCategoryView	*view_Dock;
+    IBOutlet	AIModularPaneCategoryView	*view_Sound;
+    IBOutlet 	AIModularPaneCategoryView	*view_Alerts;
+    IBOutlet 	AIModularPaneCategoryView	*view_Emoticons;
+    IBOutlet 	AIModularPaneCategoryView	*view_Keys;
 
     IBOutlet	NSOutlineView				*outlineView_advanced;
-    IBOutlet	AIPreferenceCategoryView   	*view_Advanced;
+    IBOutlet	AIModularPaneCategoryView   *view_Advanced;
     IBOutlet	NSTextField					*textField_advancedTitle;
     IBOutlet	AIColoredBoxView			*coloredBox_advancedTitle;
 	IBOutlet	NSButton					*button_restoreDefaults;

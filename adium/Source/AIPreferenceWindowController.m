@@ -13,12 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.50 2004/05/27 15:52:17 dchoby98 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.51 2004/05/30 21:17:55 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
-#import "AIPreferenceCategoryView.h"
 
 #define PREFERENCE_WINDOW_NIB					@"PreferenceWindow"	//Filename of the preference window nib
 #define TOOLBAR_PREFERENCE_WINDOW				@"PreferenceWindow"	//Identifier for the preference toolbar
@@ -31,23 +30,17 @@
 #define PREFERENCE_PANE_ARRAY					@"PaneArray"
 #define PREFERENCE_GROUP_NAME					@"GroupName"
 #define ADVANCED_PANE_HEIGHT					350
-#define TAB_PADDING_OFFSET						45
-#define FRAME_PADDING_OFFSET					2
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)configureToolbarItems;
 - (void)installToolbar;
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIPreferenceCategoryView *)inView;
-- (void)_insertPanes:(NSArray *)paneArray intoView:(AIPreferenceCategoryView *)inView;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
-- (void)_sizeWindowToFitFlatView:(AIPreferenceCategoryView *)view;
+- (void)_sizeWindowToFitFlatView:(AIModularPaneCategoryView *)view;
 - (void)_sizeWindowForContentHeight:(int)height;
 - (IBAction)restoreDefaults:(id)sender;
 - (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category;
-- (NSArray *)_prefsInCategory:(PREFERENCE_CATEGORY)category;
-- (int)_heightForFlatView:(AIPreferenceCategoryView *)view;
-- (int)_heightForTabView:(NSTabView *)tabView;
+- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
 @end
 
 @implementation AIPreferenceWindowController
@@ -111,7 +104,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	BOOL				shouldContinue = YES;
 	int					row;
 	
-	advancedPrefArray = [self _prefsInCategory:category];
+	advancedPrefArray = [self _panesInCategory:category];
 	enumerator = [advancedPrefArray objectEnumerator];
 	
 	[self window];
@@ -269,28 +262,28 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
-                [self _insertPanesForCategory:AIPref_Accounts intoView:view_Accounts];
+                [view_Accounts setPanes:[self _panesInCategory:AIPref_Accounts]];
             break;
             case 2:
-                [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
-                [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups];
-                [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts];
+                [view_ContactList_General setPanes:[self _panesInCategory:AIPref_ContactList_General]];
+                [view_ContactList_Groups setPanes:[self _panesInCategory:AIPref_ContactList_Groups]];
+                [view_ContactList_Contacts setPanes:[self _panesInCategory:AIPref_ContactList_Contacts]];
             break;
             case 3:
-                [self _insertPanesForCategory:AIPref_Messages intoView:view_Messages];
+                [view_Messages setPanes:[self _panesInCategory:AIPref_Messages]];
             break;
             case 4:
-                [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
-                [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
+				[view_Status_Away setPanes:[self _panesInCategory:AIPref_Status_Away]];
+                [view_Status_Idle setPanes:[self _panesInCategory:AIPref_Status_Idle]];
             break;
             case 5:
-                [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock];
+				[view_Dock setPanes:[self _panesInCategory:AIPref_Dock]];
             break;
             case 6:
-                [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
+				[view_Sound setPanes:[self _panesInCategory:AIPref_Sound]];
             break;
             case 7:
-                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Emoticons];
+				[view_Emoticons setPanes:[self _panesInCategory:AIPref_Emoticons]];
 			break;
             case 8:
                 [outlineView_advanced reloadData];
@@ -303,7 +296,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 				}
             break;
 			case 9:
-                [self _insertPanesForCategory:AIPref_Keys intoView:view_Keys];
+				[view_Keys setPanes:[self _panesInCategory:AIPref_Keys]];
 			break;
         }
 
@@ -325,86 +318,86 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	switch([[tabViewItem identifier] intValue]){
-		case 1: return([self _heightForFlatView:view_Accounts]); break;
-		case 2: return([self _heightForTabView:tabView_contactList]); break;
-		case 3: return([self _heightForFlatView:view_Messages]); break;
-		case 4: return([self _heightForTabView:tabView_status]); break;
-		case 5: return([self _heightForFlatView:view_Dock]); break;
-		case 6: return([self _heightForFlatView:view_Sound]); break;
-		case 7: return([self _heightForFlatView:view_Emoticons]); break;
+		case 1: return([view_Accounts desiredHeight]); break;
+		case 2: return([AIModularPaneCategoryView heightForTabView:tabView_contactList]); break;
+		case 3: return([view_Messages desiredHeight]); break;
+		case 4: return([AIModularPaneCategoryView heightForTabView:tabView_status]); break;
+		case 5: return([view_Dock desiredHeight]); break;
+		case 6: return([view_Sound desiredHeight]); break;
+		case 7: return([view_Emoticons desiredHeight]); break;
 		case 8: return(ADVANCED_PANE_HEIGHT); break;
-		case 9: return([self _heightForFlatView:view_Keys]); break;
+		case 9: return([view_Keys desiredHeight]); break;
 		default: return(0); break;
 	}
 }
 
 
 //Dynamic Content ------------------------------------------------------------------------------------------------------
-#pragma mark Toolbar
+//#pragma mark Toolbar
 //Insert all the preference panes for the category into the passed view
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory
-					   intoView:(AIPreferenceCategoryView *)inView
-{
-    [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView];    
-}
-
+//- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory
+//					   intoView:(AIPreferenceCategoryView *)inView
+//{
+//    [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView];    
+//}
+//
 //Insert the passed preference panes into a view
-- (void)_insertPanes:(NSArray *)paneArray
-			intoView:(AIPreferenceCategoryView *)inView
-{
-    NSEnumerator		*enumerator;
-    AIPreferencePane	*pane;
-    int					yPos = 0;
-    
-    //Add their views
-    enumerator = [paneArray objectEnumerator];
-    while(pane = [enumerator nextObject]){
-        NSView	*paneView = [pane view];
-        
-        //Add the view
-        if([paneView superview] != inView){
-            [inView addSubview:paneView];
-            [paneView setFrameOrigin:NSMakePoint(0,yPos)];
-        }
-        
-        //Move down for the next view
-        yPos += [paneView frame].size.height;
-    }
-    
-    //Set the desired height of this view
-    [inView setDesiredHeight:yPos+2];
-}
-
-- (int)_heightForTabView:(NSTabView *)tabView
-{
-    NSEnumerator	*enumerator;
-    NSTabViewItem	*tabViewItem;
-    int				maxHeight = 0;
-
-    //Determine the tallest view contained within this tab view.
-    enumerator = [[tabView tabViewItems] objectEnumerator];
-    while(tabViewItem = [enumerator nextObject]){
-        NSEnumerator	*subViewEnumerator;
-        NSView		*subView;
-
-        subViewEnumerator = [[[tabViewItem view] subviews] objectEnumerator];
-        while(subView = [subViewEnumerator nextObject]){
-            int		height = [(AIPreferenceCategoryView *)subView desiredHeight];
-
-            if(height > maxHeight){
-                maxHeight = height;
-            }
-        }
-    }
-
-	return(maxHeight + TAB_PADDING_OFFSET + FRAME_PADDING_OFFSET);
-}
-
+//- (void)_insertPanes:(NSArray *)paneArray
+//			intoView:(AIPreferenceCategoryView *)inView
+//{
+//    NSEnumerator		*enumerator;
+//    AIPreferencePane	*pane;
+//    int					yPos = 0;
+//    
+//    //Add their views
+//    enumerator = [paneArray objectEnumerator];
+//    while(pane = [enumerator nextObject]){
+//        NSView	*paneView = [pane view];
+//        
+//        //Add the view
+//        if([paneView superview] != inView){
+//            [inView addSubview:paneView];
+//            [paneView setFrameOrigin:NSMakePoint(0,yPos)];
+//        }
+//        
+//        //Move down for the next view
+//        yPos += [paneView frame].size.height;
+//    }
+//    
+//    //Set the desired height of this view
+//    [inView setDesiredHeight:yPos+2];
+//}
+//
+//- (int)_heightForTabView:(NSTabView *)tabView
+//{
+//    NSEnumerator	*enumerator;
+//    NSTabViewItem	*tabViewItem;
+//    int				maxHeight = 0;
+//
+//    //Determine the tallest view contained within this tab view.
+//    enumerator = [[tabView tabViewItems] objectEnumerator];
+//    while(tabViewItem = [enumerator nextObject]){
+//        NSEnumerator	*subViewEnumerator;
+//        NSView		*subView;
+//
+//        subViewEnumerator = [[[tabViewItem view] subviews] objectEnumerator];
+//        while(subView = [subViewEnumerator nextObject]){
+//            int		height = [(AIPreferenceCategoryView *)subView desiredHeight];
+//
+//            if(height > maxHeight){
+//                maxHeight = height;
+//            }
+//        }
+//    }
+//
+//	return(maxHeight + TAB_PADDING_OFFSET + FRAME_PADDING_OFFSET);
+//}
+//
 //Resize our window to fit the specified non-tabbed view
-- (int)_heightForFlatView:(AIPreferenceCategoryView *)view
-{
-	return([view desiredHeight] + FRAME_PADDING_OFFSET);
-}
+//- (int)_heightForFlatView:(AIPreferenceCategoryView *)view
+//{
+//	return([view desiredHeight] + FRAME_PADDING_OFFSET);
+//}
 
 
 //Advanced Preferences -------------------------------------------------------------------------------------------------
@@ -433,7 +426,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Load new panes
 	if(preferencePane){
 		loadedAdvancedPanes = [[NSArray arrayWithObject:preferencePane] retain];
-		[self _insertPanes:loadedAdvancedPanes intoView:view_Advanced];
+		[view_Advanced setPanes:loadedAdvancedPanes];
 		[textField_advancedTitle setStringValue:[preferencePane label]];
 	}
 
@@ -462,19 +455,18 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 {
     return([NSDictionary dictionaryWithObjectsAndKeys:
 		inName, PREFERENCE_GROUP_NAME,
-		[self _prefsInCategory:category], PREFERENCE_PANE_ARRAY,
+		[self _panesInCategory:category], PREFERENCE_PANE_ARRAY,
 		nil]);
 }
 
 //Loads, alphabetizes, and caches prefs for the speficied category
-- (NSArray *)_prefsInCategory:(PREFERENCE_CATEGORY)inCategory
+- (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory
 {
-    NSEnumerator	*enumerator;
+    NSMutableArray		*paneArray = [NSMutableArray array];
+    NSEnumerator		*enumerator = [[[adium preferenceController] paneArray] objectEnumerator];
     AIPreferencePane	*pane;
-    NSMutableArray	*paneArray = [NSMutableArray array];
     
     //Get the panes for this category
-    enumerator = [[[adium preferenceController] paneArray] objectEnumerator];
     while(pane = [enumerator nextObject]){
         if([pane category] == inCategory){
             [paneArray addObject:pane];
