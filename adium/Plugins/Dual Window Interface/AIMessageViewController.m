@@ -122,8 +122,8 @@
 	[tableView_userList setDoubleAction:@selector(cellWasDoubleClicked:)];
 	[tableView_userList setNextResponder:controllerView_messages];
 	
-	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
-	[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
+//	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
+//	[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
 	
 	// Set up the split view
 	[splitView_messages setDelegate:self];
@@ -504,11 +504,11 @@
 	AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:row];
 
 	// Identifier 0: status image column. 1: name
-	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
-		return @""; //[AITabStatusIconsPlugin iconForListObject:listObject];
-	} else {
+//	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
+//		return [AITabStatusIconsPlugin iconForListObject:listObject];
+//	} else {
 		return([listObject displayName]);
-	}
+//	}
 }
 
 // Allow selection of a contact, prepare info on them
