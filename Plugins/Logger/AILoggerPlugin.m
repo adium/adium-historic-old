@@ -19,7 +19,6 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
-#define LOG_INDEX_PATH                          @"~/Library/Caches/Adium"
 #define LOG_INDEX_NAME                          @"Logs_%@.index"
 #define DIRTY_LOG_ARRAY_NAME                    @"DirtyLogs_%@.plist"
 #define KEY_LOG_INDEX_VERSION                   @"Log Index Version"
@@ -517,8 +516,7 @@ this problem is along the lines of:
 //Path of log index file
 - (NSString *)_logIndexPath
 {
-    NSString    *logIndexFileName = [NSString stringWithFormat:LOG_INDEX_NAME,[[adium loginController] currentUser]];
-    return([[LOG_INDEX_PATH stringByAppendingPathComponent:logIndexFileName] stringByExpandingTildeInPath]);
+    return([[adium cachesPath] stringByAppendingPathComponent:LOG_INDEX_NAME]);
 }
 
 
@@ -557,8 +555,7 @@ this problem is along the lines of:
 //Path of the dirty log array file
 - (NSString *)_dirtyLogArrayPath
 {
-    NSString    *dirtyLogFileName = [NSString stringWithFormat:DIRTY_LOG_ARRAY_NAME, [[adium loginController] currentUser]];
-    return([[LOG_INDEX_PATH stringByAppendingPathComponent:dirtyLogFileName] stringByExpandingTildeInPath]);
+    return([[adium cachesPath] stringByAppendingPathComponent:DIRTY_LOG_ARRAY_NAME]);
 }
 
 
