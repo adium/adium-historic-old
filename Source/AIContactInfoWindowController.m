@@ -29,6 +29,7 @@
 - (void)selectionChanged:(NSNotification *)notification;
 - (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
 
+- (void)localizeTabViewItemTitles;
 - (void)configureDrawer;
 - (void)setupMetaContactDrawer;
 
@@ -102,6 +103,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     //
 	loadedPanes = [[NSMutableSet alloc] init];
 	
+	[self localizeTabViewItemTitles];
+	
     //Select the previously selected category
     selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
 															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
@@ -133,6 +136,33 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     if([self windowShouldClose:nil]){
         [[self window] close];
     }
+}
+
+- (void)localizeTabViewItemTitles
+{
+	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
+	NSTabViewItem	*tabViewItem;
+	while(tabViewItem = [enumerator nextObject]){		
+		NSString	*label;
+		int			identifier = [[tabViewItem identifier] intValue];
+
+		switch(identifier){
+			case AIInfo_Profile:
+				label = AILocalizedString(@"Info","short form of tab view item title for Contact Info window's first tab");
+				break;
+			case AIInfo_Accounts:
+				label = AILocalizedString(@"Accounts","tab view item title for Accounts a contact is on in the Contact Info window");
+				break;
+			case AIInfo_Alerts:
+				label = AILocalizedString(@"Alerts","tab view item title for Contact Alerts (Alerts)");
+				break;
+			case AIInfo_Settings:
+				label = AILocalizedString(@"Settings","tab view item title for Contact Settings (Settings)");
+				break;
+		}
+		
+		[tabViewItem setLabel:label];
+	}
 }
 
 //called as the window closes
@@ -189,30 +219,28 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		//    [[self window] makeFirstResponder:tabView_category];
 		[[self window] makeFirstResponder:nil];
 		
-		if(tabView == tabView_category){
-			switch(identifier){
-				case AIInfo_Profile:
-					[view_Profile setPanes:[self _panesInCategory:AIInfo_Profile]];
-					break;
-				case AIInfo_Accounts:
-					[view_Accounts setPanes:[self _panesInCategory:AIInfo_Accounts]];
-					break;
-				case AIInfo_Alerts:
-					[view_Alerts setPanes:[self _panesInCategory:AIInfo_Alerts]];
-					break;
-				case AIInfo_Settings:
-					[view_Settings setPanes:[self _panesInCategory:AIInfo_Settings]];
-					break;
-			}
-			
-			//Update the selected toolbar item (10.3 or higher)
-			if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
-				[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
-			}
-			
-			//Configure the loaded panes
-			[self configurePanes];
+		switch(identifier){
+			case AIInfo_Profile:
+				[view_Profile setPanes:[self _panesInCategory:AIInfo_Profile]];
+				break;
+			case AIInfo_Accounts:
+				[view_Accounts setPanes:[self _panesInCategory:AIInfo_Accounts]];
+				break;
+			case AIInfo_Alerts:
+				[view_Alerts setPanes:[self _panesInCategory:AIInfo_Alerts]];
+				break;
+			case AIInfo_Settings:
+				[view_Settings setPanes:[self _panesInCategory:AIInfo_Settings]];
+				break;
 		}
+		
+		//Update the selected toolbar item (10.3 or higher)
+		if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
+		}
+		
+		//Configure the loaded panes
+		[self configurePanes];
 	}
 }
 
