@@ -271,7 +271,6 @@
     //Set the image
     image = [currentIconState image];
     if(image) [[NSApplication sharedApplication] setApplicationIconImage:image];
-    NSLog(@"%@",image);
     
 }
 

@@ -173,7 +173,7 @@
         float			left, right, arcRadius, stringInset;
         NSAttributedString	*nameString;
         NSBezierPath		*path;
-        NSColor			*backColor, *textColor, *borderColor;
+        NSColor			*backColor = nil, *textColor = nil, *borderColor = nil;
 
         //Create the pill frame
         arcRadius = (iconHeight/2.0);
