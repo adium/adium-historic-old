@@ -25,6 +25,7 @@
                                          temporary:YES
                                         forAccount:self] retain];
     [[owner contactController] handle:commandHandle addedToAccount:self];
+    [handleDict setObject:commandHandle forKey:@"Command"];
     
     [[commandHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
     [[owner contactController] handleStatusChanged:commandHandle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:NO];
@@ -202,7 +203,14 @@
 //Initiate a new chat
 - (AIChat *)openChatWithListObject:(AIListObject *)inListObject
 {
-    return(nil);
+    AIHandle	*handle = [handleDict objectForKey:[inListObject UID]];
+    AIChat	*chat;
+
+    if(handle){
+        return([self chatForHandle:handle]);
+    }else{
+        return(nil);
+    }
 }
 
 //Close a chat instance
