@@ -35,6 +35,12 @@ typedef enum {
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key;
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key;
 
+- (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
+- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
+- (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
+- (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
+- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
+
 //Status objects: Specifically for subclasses
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
 - (void)didModifyStatusKeys:(NSArray *)keys silent:(BOOL)silent;
