@@ -258,6 +258,8 @@
 			//Indent our label into the available margins
 			float	indent = [self labelEdgePaddingRequiredForLabelOfSize:labelRect.size];
 			labelRect.origin.x -= indent;
+			
+			//EDS - This should technically be * 2 but that doesn't look right at present.
 			labelRect.size.width += indent * 3;
 			
 			//Adjust labels slightly when displaying for a group (to avoid overlapping the flippy triangle)
