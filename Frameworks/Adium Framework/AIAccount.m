@@ -42,11 +42,8 @@
 	namesAreCaseSensitive = [[self service] caseSensitive];
 	
     //Handle the preference changed monitoring (for account status) for our subclass
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(_accountPreferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-    	
+ 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+   	
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	[self updateStatusForKey:@"Handle"];
@@ -84,6 +81,7 @@
 	[autoRefreshingKeys release]; autoRefreshingKeys = nil;
 	
     [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
     [super dealloc];
 }
@@ -111,20 +109,13 @@
     return(ACCOUNT_PREFS_PATH);
 }
 
-//Monitor preferences changed for account status keys, and pass these to our subclass
-- (void)_accountPreferencesChanged:(NSNotification *)notification
+//For convenience, we let the account know when a status key for it has changed
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    //Ignore changes directed at another account
-    if([notification object] == nil || [notification object] == self){
-        NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-        
-        //For convenience, we let the account know when a status key for it has changed
-        if([group isEqualToString:GROUP_ACCOUNT_STATUS]){
-            NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-            
-            [self updateStatusForKey:key];
-        }
-    }
+	if(!object || object == self){
+		[self updateStatusForKey:key];
+	}
 }
 
 - (BOOL)requiresPassword
