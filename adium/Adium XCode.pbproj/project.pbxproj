@@ -5391,12 +5391,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		343C89AA05704D8E005E0632 = {
-			fileRef = 343C89A505704D8D005E0632;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		343C89AB05704DCB005E0632 = {
 			fileRef = 343C89A505704D8D005E0632;
 			isa = PBXBuildFile;
@@ -5674,12 +5668,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		344AB6F80579231800384CEE = {
-			fileRef = 344AB6ED0579231800384CEE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		344AB7260579237600384CEE = {
 			fileRef = 344AB6ED0579231800384CEE;
 			isa = PBXBuildFile;
@@ -5868,12 +5856,6 @@
 			path = "Fast User Switching Support.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		344EE953057456BE000F342B = {
-			fileRef = 344EE94B057456BE000F342B;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		344EE97C05745706000F342B = {
 			fileRef = 344EE94B057456BE000F342B;
@@ -8215,9 +8197,6 @@
 				4BBEC8B90563E7CD0013C8F7,
 				4BBEC8BA0563E7CD0013C8F7,
 				4BCB9B5F0567FF5D001D3559,
-				343C89AA05704D8E005E0632,
-				344EE953057456BE000F342B,
-				344AB6F80579231800384CEE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
