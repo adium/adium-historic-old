@@ -7,6 +7,7 @@
 //
 
 #import "AIWebKitMessageViewController.h"
+#import "ESWebKitMessageViewPreferences.h"
 #import "ESWebFrameViewAdditions.h"
 
 //#define	WEBKIT_DEBUG
@@ -116,13 +117,14 @@ DeclareString(AppendNextMessage);
 	[webView setUIDelegate:self];
 	[webView setDraggingDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-	
+
 	NSArray *draggedTypes = [NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil];
 	[webView registerForDraggedTypes:draggedTypes];
 
 	//Observe preference changes. Our initial preferences are also applied by refreshView, so no need for an explicit
 	//[self prefrencesChanged:nil] call here.
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+
 	[self refreshView];
 	
 	//Observe a changing participants list and apply our initial settings if needed
@@ -513,7 +515,6 @@ DeclareString(AppendNextMessage);
 	
 	//Release the old preference cache
 	[self _flushPreferenceCache];
-	
 	[self setViewIndependentPrefsFromDict:prefDict];
 	
 	loadedStyleID = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
@@ -553,13 +554,19 @@ DeclareString(AppendNextMessage);
 
 	//Background Preferences [Style specific]
 	if(allowBackgrounds){
-		background = [[prefDict objectForKey:[plugin backgroundKeyForStyle:loadedStyleID]] retain];
+		NSString		*cachedBackgroundKey = [plugin cachedBackgroundKeyForStyle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+		NSString		*cachedBackgroundPath = [prefDict objectForKey:cachedBackgroundKey];
+
+		background = (cachedBackgroundPath ?
+					  [[NSString stringWithFormat:@"file://%@", cachedBackgroundPath] retain] :
+					  nil);
+
 		backgroundColor = [[[prefDict objectForKey:[plugin backgroundColorKeyForStyle:loadedStyleID]] representedColor] retain];
+		imageBackgroundStyle = [[prefDict objectForKey:[NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:loadedStyleID]]] intValue];
 	}
 	
 	stylePath = [[style resourcePath] retain];
 
-	
 	[self loadStyle:style 
 			withCSS:CSS];
 	
@@ -991,106 +998,107 @@ DeclareString(AppendNextMessage);
 			}
 		} while(range.location != NSNotFound);	
 
-//Blatantly stealing the date code for the background color script.
-do{
-		range = [inString rangeOfString:@"%textbackgroundcolor{"];
-		if(range.location != NSNotFound) {
-			NSRange endRange;
-			endRange = [inString rangeOfString:@"}%"];
-			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-			NSString *transparency = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-			
-			if(allowTextBackgrounds){
-			NSString *thisIsATemporaryString;
-			unsigned int rgb = 0, red, green, blue;
-			NSScanner *hexcode;
-			thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
-																				 fontTags:NO
-																	   includingColorTags:NO
-																			closeFontTags:NO
-																				styleTags:NO
-															   closeStyleTagsOnFontChange:NO
-																		   encodeNonASCII:NO
-																			 encodeSpaces:NO
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:YES];
-			hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
-			[hexcode  scanHexInt:&rgb];
-			if(![thisIsATemporaryString length] && rgb == 0){
-			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
-			}else{
-			red = (rgb & 0xff0000) >> 16;
-			green = (rgb & 0x00ff00) >> 8;
-			blue = rgb & 0x0000ff;
-			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
+		//Blatantly stealing the date code for the background color script.
+		do{
+			range = [inString rangeOfString:@"%textbackgroundcolor{"];
+			if(range.location != NSNotFound) {
+				NSRange endRange;
+				endRange = [inString rangeOfString:@"}%"];
+				if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+					NSString *transparency = [inString substringWithRange:NSMakeRange(NSMaxRange(range),
+																					  (endRange.location - NSMaxRange(range)))];
+					
+					if(allowTextBackgrounds){
+						NSString *thisIsATemporaryString;
+						unsigned int rgb = 0, red, green, blue;
+						NSScanner *hexcode;
+						thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
+																  fontTags:NO
+														includingColorTags:NO
+															 closeFontTags:NO
+																 styleTags:NO
+												closeStyleTagsOnFontChange:NO
+															encodeNonASCII:NO
+															  encodeSpaces:NO
+																imagesPath:@"/tmp"
+														 attachmentsAsText:NO
+											attachmentImagesOnlyForSending:NO
+															simpleTagsOnly:NO
+															bodyBackground:YES];
+						hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
+						[hexcode  scanHexInt:&rgb];
+						if(![thisIsATemporaryString length] && rgb == 0){
+							[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+						}else{
+							red = (rgb & 0xff0000) >> 16;
+							green = (rgb & 0x00ff00) >> 8;
+							blue = rgb & 0x0000ff;
+							[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
+						}
+					}else{
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+					}
+				}else if(endRange.location == NSMaxRange(range)){
+					if(allowTextBackgrounds){
+						NSString *thisIsATemporaryString;
+						
+						thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
+																  fontTags:NO
+														includingColorTags:NO
+															 closeFontTags:NO
+																 styleTags:NO
+												closeStyleTagsOnFontChange:NO
+															encodeNonASCII:NO
+															  encodeSpaces:NO
+																imagesPath:@"/tmp"
+														 attachmentsAsText:NO
+											attachmentImagesOnlyForSending:NO
+															simpleTagsOnly:NO
+															bodyBackground:YES];
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
+					}else{
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+					}	
+				}
 			}
-			}else{
-			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
-		}
-			}else if(endRange.location == NSMaxRange(range)){
-			if(allowTextBackgrounds){
-	NSString *thisIsATemporaryString;
-	
-	thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
-																				 fontTags:NO
-																	   includingColorTags:NO
-																			closeFontTags:NO
-																				styleTags:NO
-															   closeStyleTagsOnFontChange:NO
-																		   encodeNonASCII:NO
-																			 encodeSpaces:NO
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:YES];
-	[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
-			}else{
-			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
-				}	
-			}
-		}
-	} while(range.location != NSNotFound);
-
+		} while(range.location != NSNotFound);
+		
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if(range.location != NSNotFound){
-		if(allowTextBackgrounds){
-			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				  headers:NO 
-																				 fontTags:YES
-																	   includingColorTags:YES
-																			closeFontTags:YES
-																				styleTags:YES
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES
-																			 encodeSpaces:YES
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:NO]];
-																		   }else{
-																		   [inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				  headers:NO 
-																				 fontTags:NO
-																	   includingColorTags:YES
-																			closeFontTags:YES
-																				styleTags:YES
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES
-																			 encodeSpaces:YES
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:NO]];
-																		   }
+			if(allowTextBackgrounds){
+				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																					  headers:NO 
+																					 fontTags:YES
+																		   includingColorTags:YES
+																				closeFontTags:YES
+																					styleTags:YES
+																   closeStyleTagsOnFontChange:YES
+																			   encodeNonASCII:YES
+																				 encodeSpaces:YES
+																				   imagesPath:@"/tmp"
+																			attachmentsAsText:NO
+															   attachmentImagesOnlyForSending:NO
+																			   simpleTagsOnly:NO
+																			   bodyBackground:NO]];
+			}else{
+				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																					  headers:NO 
+																					 fontTags:NO
+																		   includingColorTags:YES
+																				closeFontTags:YES
+																					styleTags:YES
+																   closeStyleTagsOnFontChange:YES
+																			   encodeNonASCII:YES
+																				 encodeSpaces:YES
+																				   imagesPath:@"/tmp"
+																			attachmentsAsText:NO
+															   attachmentImagesOnlyForSending:NO
+																			   simpleTagsOnly:NO
+																			   bodyBackground:NO]];
+			}
 		}
-
+		
 	}else if ([content isKindOfClass:[AIContentStatus class]]) {
 		do{
 			range = [inString rangeOfString:@"%status%"];
@@ -1103,37 +1111,37 @@ do{
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if(range.location != NSNotFound){
-		if(allowTextBackgrounds){
-			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				headers:NO 
-																				 fontTags:NO
-																	   includingColorTags:YES
-																			closeFontTags:YES
-																				styleTags:NO
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES
-																			 encodeSpaces:YES
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:NO]];
-																		   }else{
-			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				  headers:NO 
-																				 fontTags:NO
-																	   includingColorTags:YES
-																			closeFontTags:YES
-																				styleTags:NO
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES
-																			 encodeSpaces:YES
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO
-																		   bodyBackground:NO]];
-																			}
+			if(allowTextBackgrounds){
+				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																					  headers:NO 
+																					 fontTags:NO
+																		   includingColorTags:YES
+																				closeFontTags:YES
+																					styleTags:NO
+																   closeStyleTagsOnFontChange:YES
+																			   encodeNonASCII:YES
+																				 encodeSpaces:YES
+																				   imagesPath:@"/tmp"
+																			attachmentsAsText:NO
+															   attachmentImagesOnlyForSending:NO
+																			   simpleTagsOnly:NO
+																			   bodyBackground:NO]];
+			}else{
+				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																					  headers:NO 
+																					 fontTags:NO
+																		   includingColorTags:YES
+																				closeFontTags:YES
+																					styleTags:NO
+																   closeStyleTagsOnFontChange:YES
+																			   encodeNonASCII:YES
+																				 encodeSpaces:YES
+																				   imagesPath:@"/tmp"
+																			attachmentsAsText:NO
+															   attachmentImagesOnlyForSending:NO
+																			   simpleTagsOnly:NO
+																			   bodyBackground:NO]];
+			}
 		}
 	}
 
@@ -1217,28 +1225,81 @@ do{
 	
 	//Background
 	{
+		range = [inString rangeOfString:@"==bodyBackgroundKind=="];
+		
+		if(range.location != NSNotFound){
+			NSString *backgroundTag = nil;
+
+			if (allowBackgrounds){				
+				if (background || backgroundColor){
+					if (background && !([background length] < 2)){
+						if (backgroundColor){
+							switch(imageBackgroundStyle){
+								case Fill:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-color: #%@;\"><img style=\"margin: 0px; position: fixed; top: 0px; left: 0px; width: 100%%; height: 100%%; z-index: -1;\" src=\"%@\" alt=\"image\" border=\"0\">", [backgroundColor hexString], background];
+									break;
+								case Tile:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-color: #%@; background-image: url('%@'); background-repeat: repeat;\">",[backgroundColor hexString],background];
+									break;
+								case NoStretch:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-color: #%@; background-image: url('%@'); background-repeat: no-repeat; background-attachment:fixed;\">",[backgroundColor hexString],background];
+									break;
+								case Center:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-color: #%@; background-image: url('%@'); background-position: center; background-repeat: no-repeat; background-attachment:fixed;\">",[backgroundColor hexString],background];
+									break;
+							}
+						}else{
+							switch(imageBackgroundStyle){
+								case Fill:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\"><img style=\"margin: 0px; position: fixed; top: 0px; left: 0px; width: 100%%; height: 100%%; z-index: -1;\" src=\"%@\" alt=\"image\" border=\"0\">",background];
+									break;
+								case Tile:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-image: url('%@'); background-repeat: repeat;\">",background];
+									break;
+								case NoStretch:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-image: url('%@'); background-repeat: no-repeat; background-attachment:fixed;\">",background];
+									break;
+								case Center:
+									backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-image: url('%@'); background-position: center; background-repeat: no-repeat; background-attachment:fixed;\">",background];
+									break;
+							}
+						}
+
+					} else if(!background && backgroundColor) {
+						backgroundTag = [NSString stringWithFormat:@"<body onload=\"alignchat(true);\" style=\"background-color: #%@;\">", [backgroundColor hexString]];
+					}
+				}
+			}			
+
+			//Default: Just set the onload tag
+			if(!backgroundTag) backgroundTag = @"<body onload=\"alignchat(true);\">";
+
+			[inString replaceCharactersInRange:range
+									withString:backgroundTag];			
+		}
+	}
+	
+	{
 		range = [inString rangeOfString:@"==bodyBackground=="];
 
 		if(range.location != NSNotFound){
 			NSMutableString *backgroundTag = nil;
 
-			if (allowBackgrounds){				
-				if (background || backgroundColor){
-					backgroundTag = [[[NSMutableString alloc] init] autorelease];;
-					if (background){
-						[backgroundTag appendString:[NSString stringWithFormat:@"background: url('%@') no-repeat fixed; ",background]];
-					}
-					if (backgroundColor){
-						[backgroundTag appendString:[NSString stringWithFormat:@"background-color: #%@; ",[backgroundColor hexString]]];
-					}
+			if ((allowBackgrounds && (background || backgroundColor))){				
+				backgroundTag = [[[NSMutableString alloc] init] autorelease];;
+				if (background){
+					[backgroundTag appendString:[NSString stringWithFormat:@"background: url('%@') no-repeat fixed; ",background]];
 				}
-			}
-			
-			[inString replaceCharactersInRange:range
+				if (backgroundColor){
+					[backgroundTag appendString:[NSString stringWithFormat:@"background-color: #%@; ",[backgroundColor hexString]]];
+				}
+ 			}
+
+ 			[inString replaceCharactersInRange:range
 									withString:(backgroundTag ? (NSString *)backgroundTag : @"")];
-		}
-	}
-	
+ 		}
+ 	}
+
 	return(inString);
 }
 //

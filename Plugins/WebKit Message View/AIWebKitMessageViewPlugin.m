@@ -120,6 +120,10 @@
 {
 	return [NSString stringWithFormat:@"%@:Variant",desiredStyle];
 }
+- (NSString *)cachedBackgroundKeyForStyle:(NSString *)desiredStyle
+{
+	return [NSString stringWithFormat:@"%@:CachedBackground",desiredStyle];
+}
 - (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle
 {
 	return [NSString stringWithFormat:@"%@:Background",desiredStyle];	

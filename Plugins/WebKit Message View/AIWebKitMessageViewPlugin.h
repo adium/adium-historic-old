@@ -26,6 +26,7 @@
 #define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
 #define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
 #define KEY_WEBKIT_USE_BACKGROUND			@"Use Background Color"
+#define KEY_WEBKIT_TEMP_LOCATION			@"Current Background Temp Path"
 
 #define NEW_CONTENT_RETRY_DELAY				0.01
 
@@ -42,6 +43,13 @@ typedef enum {
 	Screen_Name = 4
 } NameFormat;
 
+typedef enum {
+	Fill = 0,
+	Tile,
+	NoStretch,
+	Center
+} AIImageBackgroundStyle;
+
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
 	ESWKMVAdvancedPreferences		*advancedPreferences;
@@ -57,6 +65,7 @@ typedef enum {
 
 - (NSString *)variantKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle;
+- (NSString *)cachedBackgroundKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
 
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;

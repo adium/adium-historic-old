@@ -20,7 +20,8 @@
 
 @interface ESWebKitMessageViewPreferences (PRIVATE)
 - (void)updatePreview;
-- (void)preferencesChanged:(NSNotification *)notification;
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
 - (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant;
 - (void) _loadPreviewFromStylePath:(NSString *)inStylePath;
 - (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory;
@@ -31,6 +32,7 @@
 - (void)_buildFontMenus;
 - (NSMenu *)_fontMenu;
 - (NSMenu *)_fontSizeMenu;
+- (NSMenu *)backgroundImageTypeMenu;
 - (void)_buildTimeStampMenu;
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
 - (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName;
@@ -41,7 +43,7 @@
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 
-
+- (void)updateBackgroundImageCache;
 
 @end
 
@@ -70,6 +72,7 @@
 	[fontPreviewField_currentFont setShowFontFace:NO];
 	[fontPreviewField_currentFont setShowPointSize:YES];
 	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
+	[popUp_backgroundImageType setMenu:[self backgroundImageTypeMenu]];
 	
 	[popUp_customBackground setMenu:[self _customBackgroundMenu]];
 	[popUp_styles setMenu:[self _stylesMenu]];
@@ -90,10 +93,9 @@
 	//Observe preference changes and set our initial preferences
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];
-	
+
 	viewIsOpen = YES;
 }
-
 
 - (void)messageStyleXtrasDidChange
 {
@@ -103,7 +105,7 @@
 		
 		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
 		
-		[self preferencesChanged:nil];
+//		[self preferencesChanged:nil];
 	}
 }
 
@@ -167,13 +169,17 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	[self updatePreview];
+	if(!firstTime){
+		[self updatePreview];
+	}
 }
 
 #pragma mark Changing preferences
 //Save changed preference
 - (IBAction)changePreference:(id)sender
 {
+	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+
     if(sender == checkBox_showUserIcons){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_WEBKIT_SHOW_USER_ICONS
@@ -201,15 +207,21 @@
 		[[adium preferenceController] setPreference:nil
                                              forKey:key
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	}else if (sender == popUp_backgroundImageType){
+		NSString	*key = [NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]]];
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
+										 forKey:key
+										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
+		[self updateBackgroundImageCache];
+		[self updatePreview];
 	}
+
+	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 
 - (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
 {
-//	[[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING];
-
-	
 	[preview setFontFamily:[font fontName]];
 	[[preview preferences] setDefaultFontSize:[font pointSize]];
 
@@ -239,7 +251,7 @@
 	
 	//Clicking a variant won't automatically change the popup's selected item, so manually ensure it is selected.
 	[popUp_styles selectItemWithTitle:newStyleName];
-	
+	[self updateBackgroundImageCache];
 	[self updatePreview];
 
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
@@ -267,17 +279,17 @@
 		}
 		
 	}else if ([sender tag] == NoBackground){
-		//Use @"A" since there's no way that would be a file name but we need something that isn't just whitespace to
-		//override style-specified backgrounds
-		newPreference = @"A";
+		//Use @"" to override style-specified backgrounds
+		newPreference = @"";
 	}
 
 	[[adium preferenceController] setPreference:newPreference
 										 forKey:key
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-	
+										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];									
+	[self updateBackgroundImageCache];
 	[self updatePreview];
 }
+
 
 #pragma mark Preview WebView
 - (void)updatePreview
@@ -285,7 +297,7 @@
 	NSString		*styleName;
 	NSString		*variant;
 	NSBundle		*style;
-		
+	
 	//Load the style as per preferences
 	{
 		styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
@@ -306,6 +318,7 @@
 	[self _updateViewForStyle:style variant:variant];
 	
 	[(AIWebKitMessageViewController *)previewController forceReload];
+	
 }
 	
 - (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant
@@ -344,6 +357,7 @@
 	
 	NSString	*customBackground;
 	int			tag;
+	NSString	*tempKey = [NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]]];
 	customBackground = (disableCustomBackground 
 						? nil
 						: [[adium preferenceController] preferenceForKey:[plugin backgroundKeyForStyle:[style name]]
@@ -356,6 +370,8 @@
 	}
 	[popUp_customBackground selectItemAtIndex:[popUp_customBackground indexOfItemWithTag:tag]];
 	[popUp_customBackground setEnabled:!disableCustomBackground];
+	[popUp_backgroundImageType selectItemAtIndex:[[popUp_backgroundImageType menu] indexOfItemWithTag:[[[adium preferenceController] preferenceForKey:tempKey
+																				group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue]]];
 	
 	//Setup the Background Color colorwell (enabled/disable as needed, default to the color specified by the styl/variant or to white
 	NSColor *backgroundColor;
@@ -370,6 +386,7 @@
 	[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
 	[colorWell_customBackgroundColor setEnabled:!disableCustomBackground];
 	[button_restoreDefaultBackgroundColor setEnabled:!disableCustomBackground];
+	[popUp_backgroundImageType setEnabled:!disableCustomBackground];
 	
 	//Font menus
 	NSFont		*font = [NSFont cachedFontWithName:[preview fontFamily]
@@ -377,6 +394,47 @@
 
 	[fontPreviewField_currentFont setFont:font];
 	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
+}
+
+- (void)updateBackgroundImageCache
+{
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	NSString		*cachedBackgroundKey = [plugin cachedBackgroundKeyForStyle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+
+	NSString		*oldCachedBackgroundPath, *currentBackgroundPath;
+	NSString		*newCachedBackgroundPath = nil;
+	NSString		*newCachedFilename;
+	NSNumber		*oldUniqueID, *uniqueID;
+	
+	//Get the path to where we were caching for this style before
+	oldCachedBackgroundPath = [prefDict objectForKey:cachedBackgroundKey];
+	
+	//Delete the old file
+	if(oldCachedBackgroundPath) [defaultManager removeFileAtPath:oldCachedBackgroundPath handler:nil];
+	
+	//Get the path to the background the user selected
+	currentBackgroundPath = [prefDict objectForKey:[plugin backgroundKeyForStyle:[prefDict objectForKey:KEY_WEBKIT_STYLE]]];
+	
+	//Increment our uniqueID
+	if(currentBackgroundPath && [currentBackgroundPath  length]){
+		oldUniqueID = [prefDict objectForKey:@"BackgroundUniqueID"];
+		uniqueID = [NSNumber numberWithInt:([oldUniqueID intValue]+1)];
+		[[adium preferenceController] setPreference:uniqueID
+											 forKey:@"BackgroundUniqueID"
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+		//Now copy the selected file to our cache after adding the uniqueID to its file name
+		newCachedFilename = [[currentBackgroundPath lastPathComponent] stringByAppendingString:[uniqueID stringValue]];
+		newCachedBackgroundPath = [[adium cachesPath] stringByAppendingPathComponent:newCachedFilename];
+		[defaultManager copyPath:currentBackgroundPath
+						  toPath:newCachedBackgroundPath
+						 handler:nil];
+	}
+
+	[[adium preferenceController] setPreference:newCachedBackgroundPath
+										 forKey:cachedBackgroundKey
+										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 }
 
 #pragma mark Menus
@@ -526,6 +584,42 @@
 	}
 	
 	return menu;
+}
+
+- (NSMenu *)backgroundImageTypeMenu
+{
+	NSMenu			*backgroundImageTypeMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+	NSMenuItem		*menuItem;
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Fill",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setTag:Fill];
+	[backgroundImageTypeMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Tile",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setTag:Tile];
+	[backgroundImageTypeMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Do Not Stretch",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setTag:NoStretch];
+	[backgroundImageTypeMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Center",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setTag:Center];
+	[backgroundImageTypeMenu addItem:menuItem];
+	
+	return backgroundImageTypeMenu;
 }
 
 

@@ -31,6 +31,7 @@
 	NSString					*statusHTML;
 	
 	NSString					*background;
+	NSString					*backgroundOriginalPath;
 	NSColor						*backgroundColor;
 	
 	NSDateFormatter				*timeStampFormatter;
@@ -44,6 +45,7 @@
 	int							styleVersion;	
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
+	AIImageBackgroundStyle		imageBackgroundStyle;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
