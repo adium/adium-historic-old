@@ -24,3 +24,12 @@
 
 # Project Builder files
 *.pbxproj -k 'b'
+
+# Graphics
+*.tiff -k 'b'
+*.TIFF -k 'b'
+*.ico -k 'b'
+*.ICO -k 'b'
+
+# NIBS
+*.nib -k 'b'
