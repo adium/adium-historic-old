@@ -1,7 +1,6 @@
 //---------------------------------------------------------------------------------------------
 // Adium 0.8 beta bugs
 //---------------------------------------------------------------------------------------------
-- First launch, need setup assistant or need to open account prefs
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
 - Move window shadow preference from layout to advanced
 - Move opacity preference from layout to main pane or advanced
