@@ -8,6 +8,8 @@
 #import "ESGaimYahooAccountViewController.h"
 #import "ESGaimYahooAccount.h"
 
+#import <Libgaim/yahoo_filexfer.h>
+
 #define KEY_YAHOO_HOST  @"Yahoo:Host"
 #define KEY_YAHOO_PORT  @"Yahoo:Port"
 
