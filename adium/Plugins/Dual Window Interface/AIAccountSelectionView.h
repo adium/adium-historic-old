@@ -31,6 +31,8 @@
 }
 
 - (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
+- (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
+- (id <AIAccountSelectionViewDelegate>)delegate;
 - (void)configureView;
 - (void)configureAccountMenu;
 - (void)updateMenu;

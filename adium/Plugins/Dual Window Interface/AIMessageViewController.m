@@ -267,6 +267,9 @@
 //
 - (void)dealloc
 {
+    //The account selection view need not bother with delegate-talk since we're closing
+    [view_accountSelection setDelegate:nil];
+    
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
