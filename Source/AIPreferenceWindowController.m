@@ -360,11 +360,11 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 }
 
 /*!
- * @brief Tabview will select a new pane; should it show the loading indicator?
+ * @brief Tabview will select a new pane; should it immediately show the loading indicator?
  *
- * We only show the loading inidicator if the view is empty.
+ * We only immediately show the loading inidicator if the view is empty.
  */
-- (BOOL)showLoadingIndicatorForTabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+- (BOOL)immediatelyShowLoadingIndicatorForTabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if(tabView == tabView_category){
 		AIModularPaneCategoryView *view = [viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]];
