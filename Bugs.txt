@@ -51,11 +51,6 @@ Contact List
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
-- Inserting a command which runs an AppleScript which opens a dialog box causes the next
-    messages to appear to be from the wrong person (reported by reikonmusha on AIM)
-    (Example: have someone else send you messages, then use
-    http://mywebpage.netscape.com/EterNal%20x%20OI%20x/AiTC_2_2.zip and
-    call the /help script, then send more messages of your own)
 - If one tries to change one's idle time to a lower amount, (for example, from 2:32
     to :36), an update will not occur, and your idle time will stay at 2:32.
 - Yahoo ignore list is being ignored?
