@@ -194,7 +194,7 @@
         }
         if (isFirstMessage) {
             AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
-            statusMessage = [[contentMessage message] string];
+            statusMessage = [[[contentMessage message] safeString] string];
         } else {
             // If it is a status change, show status message
             // Not working
