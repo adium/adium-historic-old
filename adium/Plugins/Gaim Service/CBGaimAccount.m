@@ -568,7 +568,8 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact = [self _contactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
+
+	AIListContact			*sourceContact = [self _contactWithUID:[messageDict objectForKey:@"Source"]];
 
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
 		/*
@@ -605,9 +606,12 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
 	if (chat){
-		AIListContact *contact = [self _contactWithUID:[contactName compactedString]];
+		AIListContact *contact = [self _contactWithUID:contactName];
 		
-		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+		if (!namesAreCaseSensitive){
+			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+		}
+		
 		[chat addParticipatingListObject:contact];
 		
 		NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
@@ -620,9 +624,13 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
 	if (chat){
+		if (!namesAreCaseSensitive){
+			contactName = [contactName compactedString];
+		}
+		
 		AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
 																			 accountID:[self uniqueObjectID]
-																				   UID:[contactName compactedString]];
+																				   UID:contactName];
 		
 		[chat removeParticipatingListObject:contact];
 		
@@ -778,7 +786,7 @@ static id<GaimThread> gaimThread = nil;
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]){
 		//Get our contact
-		AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
+		AIListContact   *contact = [self _contactWithUID:sourceUID];
 		
 		[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
 	}
@@ -797,10 +805,14 @@ static id<GaimThread> gaimThread = nil;
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]){
+		if (!namesAreCaseSensitive){
+			sourceUID = [sourceUID compactedString];
+		}
+		
 		//Get our contact, which must already exist for us to care about its removal
 		AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
 																			   accountID:[self uniqueObjectID]
-																					 UID:[sourceUID compactedString]];
+																					 UID:sourceUID];
 		
 		if (contact){
 			[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
@@ -882,7 +894,7 @@ static id<GaimThread> gaimThread = nil;
 //Create an ESFileTransfer object from an xfer
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
 {
-	AIListContact   *contact = [self _contactWithUID:[destinationUID compactedString]];
+	AIListContact   *contact = [self _contactWithUID:destinationUID];
 	
     ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
 
@@ -1493,6 +1505,8 @@ static id<GaimThread> gaimThread = nil;
 	permittedContactsArray = [[NSMutableArray alloc] init];
 	deniedContactsArray = [[NSMutableArray alloc] init];
 	
+	namesAreCaseSensitive = [[[self service] handleServiceType] caseSensitive];
+	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
     	
@@ -1643,6 +1657,10 @@ static id<GaimThread> gaimThread = nil;
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID
 {
+	if (!namesAreCaseSensitive){
+		inUID = [inUID compactedString];
+	}
+	
 	[self performSelectorOnMainThread:@selector(_contactWithUID:)
 						   withObject:inUID
 						waitUntilDone:YES];

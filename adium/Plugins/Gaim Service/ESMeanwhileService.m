@@ -15,14 +15,14 @@
     [super initWithService:inService];
     
     //Create our handle service type
-	//A sametime UID may need to be in the form "uid=aforbes ou=employee ..."
+	//A sametime UID may need to be in the form "uid=C'\awef@@+ +3 ou=fuEWJGhw67_ efWEf ..." I'm serious.
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Sametime"
                                                       description:@"Lotus Sametime"
                                                             image:nil
                                                     caseSensitive:YES
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@.,_-()= "]
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.,_-()='/ "]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:255] retain];
+													allowedLength:1000] retain];
     
     //Register this service
     [[adium accountController] registerService:self];

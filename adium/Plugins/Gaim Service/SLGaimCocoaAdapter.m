@@ -103,7 +103,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	
 	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 
-	[[NSRunLoop currentRunLoop] run];
+	CFRunLoopRun();;
 
 	NSAssert(FALSE,@"Should we ever make it here?");
 	runLoopMessenger = nil;
@@ -136,7 +136,7 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	
 	//If the node does not have ui_data yet, we need to create a contact and associate it
 	if (!theContact){
-		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:[[NSString stringWithUTF8String:buddy->name] compactedString]];
+		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:[NSString stringWithUTF8String:buddy->name]];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 //		buddy->node.ui_data = [theContact retain];
@@ -1686,9 +1686,9 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	
     // Re-enable callbacks automatically and _don't_ close the socket on
     // invalidate
-    CFSocketSetSocketFlags(socket,   kCFSocketAutomaticallyReenableDataCallBack
-						   | kCFSocketAutomaticallyReenableWriteCallBack
-						   | kCFSocketAutomaticallyReenableReadCallBack);
+	CFSocketSetSocketFlags(socket, kCFSocketAutomaticallyReenableReadCallBack | 
+									kCFSocketAutomaticallyReenableDataCallBack |
+									kCFSocketAutomaticallyReenableWriteCallBack);
 	
     // Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
