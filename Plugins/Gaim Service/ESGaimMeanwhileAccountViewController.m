@@ -14,6 +14,7 @@
 @interface ESGaimMeanwhileAccountViewController (PRIVATE)
 - (NSMenu *)_contactListMenu;
 - (NSMenuItem *)_contactListMenuItemWithTitle:(NSString *)title tag:(int)tag;
+- (void)_updateContactListWarning;
 @end
 
 @implementation ESGaimMeanwhileAccountViewController
@@ -29,19 +30,40 @@
 {
     [super configureForAccount:inAccount];
 	
+	//Build the contact list mode menu
 	[popUp_contactList setMenu:[self _contactListMenu]];
 	
+	//Select the correct list mode
 	int contactListChoice = [[inAccount preferenceForKey:KEY_MEANWHILE_CONTACTLIST group:GROUP_ACCOUNT_STATUS] intValue];
 	[popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithTag:contactListChoice]];
-	
-	if (contactListChoice == Meanwhile_CL_Load_And_Save){
+	[self _updateContactListWarning];
+}
+
+//Save controls
+- (void)saveConfiguration
+{
+    [super saveConfiguration];
+
+	//Contact list mode
+	[account setPreference:[NSNumber numberWithInt:[[popUp_contactList selectedItem] tag]]
+					forKey:KEY_MEANWHILE_CONTACTLIST
+					 group:GROUP_ACCOUNT_STATUS];
+}
+
+
+//Contact list mode menu -----------------------------------------------------------------------------------------------
+#pragma mark Contact list mode menu
+//Show or hide the contact list warning depending on the contact list mode currently selected
+- (void)_updateContactListWarning
+{
+	if([[popUp_contactList selectedItem] tag] == Meanwhile_CL_Load_And_Save){
 		[textField_contactListWarning setStringValue:SAVE_WARNING];
 	}else{
 		[textField_contactListWarning setStringValue:@""];		
 	}
-
 }
 
+//Returns the contact list popup menu
 - (NSMenu *)_contactListMenu
 {
     NSMenu			*contactListMenu = [[NSMenu alloc] init];
@@ -53,6 +75,7 @@
 	return [contactListMenu autorelease];
 }
 
+//Create a contact list popup menu item
 - (NSMenuItem *)_contactListMenuItemWithTitle:(NSString *)title tag:(int)tag
 {
 	NSMenuItem		*menuItem;
@@ -66,19 +89,11 @@
 	return [menuItem autorelease];
 }
 
+//User selected a new contact list mode
 - (void)changeCLType:(id)sender
 {
-	int contactListChoice = [sender tag];
-	
-	[account setPreference:[NSNumber numberWithInt:contactListChoice]
-					forKey:KEY_MEANWHILE_CONTACTLIST
-					 group:GROUP_ACCOUNT_STATUS];
-	
-	if (contactListChoice == Meanwhile_CL_Load_And_Save){
-		[textField_contactListWarning setStringValue:SAVE_WARNING];
-	}else{
-		[textField_contactListWarning setStringValue:@""];		
-	}
+	//Show or hide the warning depending on their selection
+	[self _updateContactListWarning];
 }
 
 #endif
