@@ -24,28 +24,28 @@
 //Configure the detail view
 - (void)viewDidLoad
 {
-	toListObject = nil;
+	toContact = nil;
 }
 
 //
 - (void)viewWillClose
 {
-	[toListObject release]; toListObject = nil;
+	[toContact release]; toContact = nil;
 }
 
 //Configure for the action
-- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inListObject
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	NSString		*destUniqueID;
-	AIListObject	*destListObject = nil;
+	AIListContact	*destContact = nil;
 
 	//Attempt to find the destination object
 	destUniqueID = [inDetails objectForKey:KEY_MESSAGE_SEND_TO];
-	if(destUniqueID) destListObject = [[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+	if(destUniqueID) destContact = [[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
 	//Configure the destination menu
 	[popUp_messageTo setMenu:[[adium contactController] menuOfAllContactsInGroup:nil withTarget:self]];
-	[self setDestinationListObject:(destListObject ? destListObject : inListObject)];
+	[self setDestinationListObject:(destContact ? destContact : inObject)];
 	
 	//Configure the remaining controls
 	AIAccount *sourceAccount = [[adium accountController] accountWithObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]];
@@ -66,8 +66,8 @@
 - (NSDictionary *)actionDetails
 {
 	return([NSDictionary dictionaryWithObjectsAndKeys:
-		[toListObject uniqueObjectID], KEY_MESSAGE_SEND_TO,
-		[[[popUp_messageFrom selectedItem] representedObject] uniqueObjectID], KEY_MESSAGE_SEND_FROM,
+		[toContact internalObjectID], KEY_MESSAGE_SEND_TO,
+		[[[popUp_messageFrom selectedItem] representedObject] internalObjectID], KEY_MESSAGE_SEND_FROM,
 		[NSNumber numberWithBool:[button_useAnotherAccount state]], KEY_MESSAGE_OTHER_ACCOUNT,
 		[[textView_message textStorage] dataRepresentation], KEY_MESSAGE_SEND_MESSAGE,
 		nil]);
@@ -80,21 +80,21 @@
 }
 
 //Set our destination contact
-- (void)setDestinationListObject:(AIListObject *)inObject
+- (void)setDestinationContact:(AIListContact *)inContact
 {
-	if(inObject != toListObject){
-		[toListObject release]; toListObject = [inObject retain];
-		[popUp_messageTo setTitle:[toListObject displayName]];
+	if(inContact != toContact){
+		[toContact release]; toContact = [inContact retain];
+		[popUp_messageTo setTitle:[toContact displayName]];
 		
 		//Update 'from' menu
 		[popUp_messageFrom setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
-																					 toListObject:toListObject
+																						toContact:toContact
 																					   withTarget:self
 																				   includeOffline:YES]];
 
 		//Select preferred account
 		AIAccount	*preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																							toListObject:toListObject];
+																							   toContact:toContact];
 		if(preferredAccount) [popUp_messageFrom selectItemWithRepresentedObject:preferredAccount];
 
 	}
