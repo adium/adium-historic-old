@@ -121,7 +121,7 @@
     view_messages = nil;
     toolbar_bottom = nil;
     textView_messageEntry = nil;
-    handle = nil;
+    //handle = nil;
     accountMenuVisible = YES;
 
     //
@@ -157,7 +157,7 @@
     }
     
     //Put the initial content in the outgoing text view, and give it focus
-    if(handle){ //The view that's in use depends on if a handle has been locked or not
+    if(inHandle){ //The view that's in use depends on if a handle has been locked or not
         [textView_messageEntry setAttributedString:inContent];
         [[textView_messageEntry window] makeFirstResponder:textView_messageEntry];
     }else{

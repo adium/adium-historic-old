@@ -382,7 +382,17 @@ static AIContactListEditorWindowController *sharedInstance = nil;
                 
             }
         }else{ //NAME
-            [[owner contactController] renameHandle:item to:object];
+			//ikrieg start
+			NSArray	*columns;
+			columns = [outlineView_contactList tableColumns];
+			if ([columns objectAtIndex:([columns count] - 1)] == tableColumn)
+			{	// Set Alias
+				// No way yet
+			}
+			else
+			{//ikrieg end
+				[[owner contactController] renameHandle:item to:object];
+			}//ikrieg's brace
         }
     }
 }

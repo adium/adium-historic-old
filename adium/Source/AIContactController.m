@@ -284,7 +284,7 @@
     [self updateListForObject:inHandle];
 }
 
-//Rename a handle
+//Move a handle
 - (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup
 {
     NSEnumerator	*enumerator;
