@@ -14,5 +14,7 @@
 	<integer>0</integer>
 	<key>Combine Consecutive Messages</key>
 	<true/>
+	<key>Use Custom Name Format</key>
+	<false/>
 </dict>
 </plist>

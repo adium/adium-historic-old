@@ -19,6 +19,7 @@
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT		@"Time Stamp"
 #define KEY_WEBKIT_SHOW_USER_ICONS			@"Show User Icons"
 #define KEY_WEBKIT_NAME_FORMAT				@"Name Format"
+#define KEY_WEBKIT_USE_NAME_FORMAT			@"Use Custom Name Format"
 #define KEY_WEBKIT_STYLE					@"Message Style"
 #define KEY_WEBKIT_COMBINE_CONSECUTIVE		@"Combine Consecutive Messages"
 #define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
@@ -45,6 +46,7 @@ typedef enum {
 	NSDateFormatter					*timeStampFormatter;
 	BOOL							showUserIcons;
 	NameFormat						nameFormat;
+	BOOL							useCustomNameFormat;
 	BOOL							combineConsecutive;
 	
 	NSMutableDictionary				*styleDictionary;
@@ -52,9 +54,12 @@ typedef enum {
 
 - (NSDictionary *)availableStyleDictionary;
 - (NSBundle *)messageStyleBundleWithName:(NSString *)name;
+
 - (NSString *)variantKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
+- (NSString *)fontNameKeyForStyle:(NSString *)desiredStyle;
+
 - (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
 - (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView;
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;
