@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-                                              \---------------------------------------------------------------------------------------------------------/
-                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
-                                              | or (at your option) any later version.
-                                              |
-                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-                                              | Public License for more details.
-                                              |
-                                              | You should have received a copy of the GNU General Public License along with this program; if not,
-                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-                                              \------------------------------------------------------------------------------------------------------ */
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
@@ -47,7 +47,7 @@
 
     messageView = [inMessageView retain];
     owner = [inOwner retain];
-    color = nil;
+    //color = nil;
 
     //Configure ourself for the message view
     [messageView setDelegate:self];
@@ -73,18 +73,6 @@
 - (AIMessageViewController *)messageViewController
 {
     return(messageView);
-}
-
-//Our tab tinting color
-- (void)setColor:(NSColor *)inColor
-{
-    if(color != inColor){
-        [color release];
-        color = [inColor retain];
-    }
-}
-- (NSColor *)color{
-    return(color);
 }
 
 //Message View Delegate ----------------------------------------------------------------------
@@ -133,13 +121,13 @@
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    AIListObject	*listObject = [notification object];
+    //AIListObject	*listObject = [notification object];
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
     //We only need to redraw if the text color has changed
-    if([keys containsObject:@"Tab Color"] || [keys containsObject:@"Text Color"] || [keys containsObject:@"Label Color"]){
+    if(/*[keys containsObject:@"Tab Color"] ||*/ [keys containsObject:@"Tab Text Color"]){
         //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
-        [self setColor:[[listObject displayArrayForKey:@"Tab Color"] averageColor]];
+        //[self setColor:[[listObject displayArrayForKey:@"Tab Color"] averageColor]];
         [[[self tabView] delegate] setNeedsDisplay:YES];
     }
 
@@ -196,7 +184,7 @@
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
     AIListObject		*listObject = [[messageView chat] listObject];
-    NSColor			*backgroundColor = nil;
+    NSColor			*textColor = nil;
     BOOL 			selected;
 
     //Disable sub-pixel rendering.  It looks horrible with embossed text
@@ -204,81 +192,18 @@
 
     //
     selected = ([[self tabView] selectedTabViewItem] == self);
-    backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
+    textColor = [[listObject displayArrayForKey:@"Tab Text Color"] averageColor];
+    if(!textColor) textColor = [NSColor colorWithCalibratedWhite:0.16 alpha:1.0];
 
-    if(selected){
-        labelRect.origin.y += 1;
-    }
-
-    NSRect textRect = labelRect;
-
-    textRect.size.width -= LABEL_SIDE_PAD*2;
-    textRect.origin.x += LABEL_SIDE_PAD;
-
-    //Background
-    if(backgroundColor && !selected){
-        backgroundColor = [backgroundColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-        backgroundColor = [NSColor colorWithCalibratedHue:[backgroundColor hueComponent]
-                                               saturation:[backgroundColor saturationComponent]
-                                               brightness:([backgroundColor brightnessComponent] - 0.2)
-                                                    alpha:0.8];
-
-        int 		innerLeft, innerRight, innerTop, innerBottom;
-        float 		centerY, circleRadius;
-        NSBezierPath	*pillPath;
-
-        //Calculate some points
-        innerLeft = labelRect.origin.x + BACK_CELL_LEFT_INDENT;
-        innerRight = labelRect.origin.x + labelRect.size.width - BACK_CELL_RIGHT_INDENT;
-        innerTop = labelRect.origin.y;
-        innerBottom = labelRect.origin.y + labelRect.size.height;
-        circleRadius = -(innerTop - innerBottom) / 2.0;
-        centerY = (innerTop + innerBottom) / 2.0;
-
-        //Create the circle path
-        pillPath = [NSBezierPath bezierPath];
-        [pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
-        [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:270 endAngle:90 clockwise:NO];
-        [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:90 endAngle:270 clockwise:NO];
-
-        //Draw
-        [backgroundColor set];
-        [pillPath fill];
-
-        NSColor *textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
-
-        if([textColor colorIsDark]){
-            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
-                                  drawInRect:NSOffsetRect(textRect, 0, -1)];
-        }else{
-            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
-                                  drawInRect:NSOffsetRect(textRect, 0, -1)];
-        }
-        [[self attributedLabelStringWithColor:[textColor darkenBy:0.1]]
-                                  drawInRect:textRect];
-
-    }else{
-        NSRect textRect = labelRect;
-
-        textRect.size.width -= LABEL_SIDE_PAD*2;
-        textRect.origin.x += LABEL_SIDE_PAD;
-
-        //Draw name
+    //Draw name
+    if([textColor colorIsDark]){
         [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
-                                drawInRect:NSOffsetRect(textRect, 0, -1)];
-        [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
-                                drawInRect:textRect];
-
-    }
-    /*
-     //Draw name
-     [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
-     [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
-                                    drawInRect:labelRect];
-     */
+    }else{
+        [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
+                                    drawInRect:NSOffsetRect(labelRect, 0, -1)];
+    }
+    [[self attributedLabelStringWithColor:textColor] drawInRect:labelRect];
 }
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
@@ -319,12 +244,12 @@
     //Paragraph Style (Turn off clipping by word)
     paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
+    [paragraphStyle setAlignment:NSCenterTextAlignment];
 
     //Name
     displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
 
     return([displayName autorelease]);
 }
-
 
 @end

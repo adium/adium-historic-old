@@ -22,10 +22,11 @@
 - (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
 @end
 
-#define TAB_LABEL_INSET		-4	//Pixels the tab's label is inset into it's endcap
-#define TAB_CLOSE_LEFTPAD	0
-#define TAB_CLOSE_RIGHTPAD	3
+#define TAB_CLOSE_LEFTPAD	2	//Padding left of close button
+#define TAB_CLOSE_RIGHTPAD	4	//Padding right of close button
 #define TAB_CLOSE_Y_OFFSET	4 // 5
+#define TAB_RIGHT_PAD		6
+#define TAB_MIN_WIDTH		10 //90
 
 @implementation AICustomTabCell
 
@@ -66,7 +67,9 @@
 //Return the desired size of this tab
 - (NSSize)size
 {
-    return( NSMakeSize([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabViewItem sizeOfLabel:NO].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabFrontRight size].width, [tabFrontLeft size].height) );
+    float width = [tabFrontLeft size].width + [tabViewItem sizeOfLabel:NO].width + [tabFrontRight size].width + (TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
+    
+    return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), [tabFrontLeft size].height) );
 }
 
 - (NSComparisonResult)compareWidth:(AICustomTabCell *)tab
@@ -102,6 +105,7 @@
     tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
 
     tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
+    tabCloseBack = [[AIImageUtilities imageNamed:@"TabClose_Back" forClass:[self class]] retain];
     tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
     
     tabViewItem = [inTabViewItem retain];
@@ -130,6 +134,7 @@
     [tabFrontRight release];
     
     [tabCloseFront release];
+    [tabCloseBack release];
     [tabCloseFrontPressed release];
 
     [super dealloc];
@@ -138,9 +143,8 @@
 //Draw
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
-    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth, tabCloseWidth, tabBadgeWidth;
+    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, tabCloseWidth;
     NSRect	sourceRect, destRect;
-    NSPoint	destPoint;
     NSSize	labelSize;
 
     //Pre-calc some dimensions
@@ -150,10 +154,9 @@
     middleSourceWidth = [tabFrontMiddle size].width;
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
     middleLeftEdge = (rect.origin.x + leftCapWidth);
-    middleWidth = middleRightEdge - middleLeftEdge;
     tabCloseWidth = [tabCloseFront size].width;
-    tabBadgeWidth = tabCloseWidth;
 
+    //Background
     if(selected){
         //Draw left mask
         [tabBackLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
@@ -182,35 +185,36 @@
         //Draw the right cap
         [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
 
-    }
-
-    //Fill our content color
-    NSColor	*tabColor = [tabViewItem color];
-    if(tabColor && !selected){
-        [[tabViewItem color] set];
-        [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
-    }else if(highlighted && !selected){
+    }else if(highlighted){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.08] set];
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
     }
+    
 
-    //Draw the title
-    destRect = NSMakeRect(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD,
-                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
-                          middleWidth - tabCloseWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD,
-                          labelSize.height);
-    [tabViewItem drawLabel:YES inRect:destRect];
-
-    //Draw the close widget
-    if(selected){
-        destPoint = NSMakePoint(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
+    //
+    rect.origin.x += leftCapWidth;
+    rect.size.width -= leftCapWidth + rightCapWidth;
+    
+    //Close Button
+    if([[tabViewItem tabView] numberOfTabViewItems] != 1/* && selected*/){
+        NSPoint	destPoint = NSMakePoint(rect.origin.x + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
 
         if(hoveringClose){
             [tabCloseFrontPressed compositeToPoint:destPoint operation:NSCompositeSourceOver];
         }else{
-            [tabCloseFront compositeToPoint:destPoint operation:NSCompositeSourceOver];
+            [(selected ? tabCloseFront : tabCloseBack) compositeToPoint:destPoint operation:NSCompositeSourceOver];
         }
+
+        rect.origin.x += TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD;
+        rect.size.width -= (TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
     }
+    
+    //Draw the title
+    destRect = NSMakeRect(rect.origin.x,
+                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          rect.size.width,
+                          labelSize.height);
+    [tabViewItem drawLabel:YES inRect:destRect];
 
 }
 
@@ -228,7 +232,7 @@
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
     
-    if(NSPointInRect(clickLocation, offsetCloseButtonRect)){
+    if(selected && [[tabViewItem tabView] numberOfTabViewItems] != 1 && NSPointInRect(clickLocation, offsetCloseButtonRect)){
         //Track the close button
         [self trackMouse:theEvent
                   inRect:offsetCloseButtonRect

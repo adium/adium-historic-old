@@ -15,45 +15,39 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AIAdium;
 
-@interface AICustomTabCell : NSCell {
-    //Images
-    NSImage		*tabBackLeft;
-    NSImage		*tabBackMiddle;
-    NSImage		*tabBackRight;
-    NSImage		*tabFrontLeft;
-    NSImage		*tabFrontMiddle;
-    NSImage		*tabFrontRight;
-    NSImage		*tabCloseFront;
-    NSImage		*tabCloseBack;
-    NSImage		*tabCloseFrontPressed;
-    
-    //Properties
-    BOOL		selected;
-    BOOL		highlighted;
-    BOOL		dragging;
+@interface AIContactStatusTabColoringPreferences : NSObject {
+    AIAdium			*owner;
 
-    NSRect		closeButtonRect;
-    BOOL		trackingClose;
-    BOOL		hoveringClose;
-    NSTrackingRectTag	trackingTag;
-    
-    NSTabViewItem	*tabViewItem;
-    NSSize		oldSize;
+    IBOutlet	NSView		*view_prefView;
 
-    NSRect		frame;
+    IBOutlet	NSButton	*checkBox_signedOff;
+    IBOutlet	NSColorWell	*colorWell_signedOff;
+
+    IBOutlet	NSButton	*checkBox_signedOn;
+    IBOutlet	NSColorWell	*colorWell_signedOn;
+
+    IBOutlet	NSButton	*checkBox_away;
+    IBOutlet	NSColorWell	*colorWell_away;
+
+    IBOutlet	NSButton	*checkBox_idle;
+    IBOutlet	NSColorWell	*colorWell_idle;
+
+    IBOutlet	NSButton	*checkBox_typing;
+    IBOutlet	NSColorWell	*colorWell_typing;
+
+    IBOutlet	NSButton	*checkBox_unviewedContent;
+    IBOutlet	NSColorWell	*colorWell_unviewedContent;
+
+    IBOutlet	NSButton	*checkBox_idleAndAway;
+    IBOutlet	NSColorWell	*colorWell_idleAndAway;
+
+    IBOutlet	NSButton	*checkBox_unviewedFlash;
+
 }
 
-+ (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
-- (void)setSelected:(BOOL)inSelected;
-- (NSTabViewItem *)tabViewItem;
-- (NSSize)size;
-- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;
-- (void)setFrame:(NSRect)inFrame;
-- (NSRect)frame;
-- (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
-- (void)setTrackingTag:(NSTrackingRectTag)inTag;
-- (NSTrackingRectTag)trackingTag;
-- (void)setHighlighted:(BOOL)inHighlighted;
++ (AIContactStatusTabColoringPreferences *)contactStatusTabColoringPreferencesWithOwner:(id)inOwner;
+- (IBAction)changePreference:(id)sender;
 
 @end

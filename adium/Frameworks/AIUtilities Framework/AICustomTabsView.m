@@ -355,14 +355,12 @@
     //Remember for dragging
     lastClickLocation = clickLocation;
 
-    if(tabCell == selectedCustomTabCell){
+    if(tabCell){
         //Give the tab cell a chance to handle tracking
-        [tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self];
-
-    }else if(tabCell != nil){
-        //Select the tab
-        [tabView selectTabViewItem:[tabCell tabViewItem]];
-
+        if(![tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self]){
+            //Select the tab
+            [tabView selectTabViewItem:[tabCell tabViewItem]];
+        }
     }
 }
 
