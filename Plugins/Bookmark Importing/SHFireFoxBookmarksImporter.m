@@ -7,14 +7,14 @@
 #import "SHFireFoxBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
 
-#define FIREFOX_BOOKMARKS_PATH  @"~/Library/Phoenix/Profiles/default"
+#define FIREFOX_8_OR_LESS_BOOKMARKS_PATH  @"~/Library/Phoenix/Profiles/default"
 #define FIREFOX_9_BOOKMARKS_PATH @"~/Library/Application Support/Firefox/Profiles"
 #define FIREFOX_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
 @class SHMozillaCommonParser;
 
 @interface SHFireFoxBookmarksImporter(PRIVATE)
-- (NSString *)bookmarkPath;
+- (NSString *)fox8OrLessBookmarkPath;
 - (NSString *)fox9BookmarkPath;
 @end
 
@@ -30,17 +30,18 @@
 {
 	[super init];
 	
-	bookmarkPath = nil;
+	fox8OrLessBookmarkPath = nil;
 	fox9BookmarkPath = nil;
 	lastModDate = nil;
-    fox9 = [[NSFileManager defaultManager] fileExistsAtPath:[self fox9BookmarkPath]];
+
+    fox9 = ([self fox9BookmarkPath] != nil);
 	
     return self;
 }
 
 - (void)dealloc
 {
-	[bookmarkPath release];
+	[fox8OrLessBookmarkPath release];
 	[fox9BookmarkPath release];
 	[lastModDate release]; lastModDate = nil;
 	
@@ -48,7 +49,7 @@
 }
 - (NSArray *)availableBookmarks
 {
-	NSString		*path = (fox9 ? [self fox9BookmarkPath] : [self bookmarkPath]);
+	NSString		*path = [self bookmarkPath];
     NSString		*bookmarkString = [NSString stringWithContentsOfFile:path];
     
     NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:path
@@ -56,23 +57,24 @@
 	
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-	AILog(@"%@: Parsing %@",self,bookmarkString);
+	AILog(@"%@: Parsing %@ from %@ (fox9 %i) (exists %i) (fileProps %@)",
+		  self,
+		  bookmarkString,
+		  path,
+		  fox9,
+		  [self booksmarksExist],
+		  fileProps);
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
 -(BOOL)bookmarksExist
 {
-	AILog(@"%@: fox9: %i; path \"%@\"; exists? %i",self,
-		  fox9,
-		  (fox9 ? [self fox9BookmarkPath] : [self bookmarkPath]),
-		  [[NSFileManager defaultManager] fileExistsAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])]);
-	
-    return [[NSFileManager defaultManager] fileExistsAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])];
+    return [[NSFileManager defaultManager] fileExistsAtPath: [self bookmarkPath]];
 }
 
 -(BOOL)bookmarksUpdated
 {
-    NSDictionary	*fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])
+    NSDictionary	*fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath]
 																		 traverseLink:YES];
     NSDate			*modDate = [fileProps objectForKey:NSFileModificationDate];
     
@@ -80,24 +82,24 @@
 }
 
 #pragma mark private methods
-- (NSString *)bookmarkPath
+- (NSString *)fox8OrLessBookmarkPath
 {
-	if (!bookmarkPath){
-		NSEnumerator *enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[FIREFOX_BOOKMARKS_PATH stringByExpandingTildeInPath]] objectEnumerator];
+	if (!fox8OrLessBookmarkPath){
+		NSEnumerator *enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[FIREFOX_8_OR_LESS_BOOKMARKS_PATH stringByExpandingTildeInPath]] objectEnumerator];
 		NSString    *directory;
 		
 		while(directory = [enumerator nextObject]){
 			NSRange found = [directory rangeOfString:@".slt"];
 			if(found.location != NSNotFound){
-				bookmarkPath = [[NSString stringWithFormat:@"%@/%@/%@",[FIREFOX_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, FIREFOX_BOOKMARKS_FILE_NAME] retain];
+				fox8OrLessBookmarkPath = [[NSString stringWithFormat:@"%@/%@/%@",[FIREFOX_8_OR_LESS_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, FIREFOX_BOOKMARKS_FILE_NAME] retain];
 				break;
 			}
 		}
 		
-		if (!bookmarkPath) bookmarkPath = [FIREFOX_BOOKMARKS_PATH retain];
+		if (!fox8OrLessBookmarkPath) fox8OrLessBookmarkPath = [FIREFOX_8_OR_LESS_BOOKMARKS_PATH retain];
 	}
 	
-	return bookmarkPath;
+	return fox8OrLessBookmarkPath;
 }
 
 - (NSString *)fox9BookmarkPath
@@ -110,8 +112,9 @@
 			NSString    *directory;
 			
 			while(directory = [enumerator nextObject]){
-				NSRange found = [directory rangeOfString:@"default."];
-				if(found.location != NSNotFound){
+				BOOL found = (([directory rangeOfString:@"default."].location != NSNotFound) || /* Fox 0.9 up to but not including 1.0 */
+							  ([directory rangeOfString:@".default"].location != NSNotFound));
+				if(found){
 					fox9BookmarkPath = [[NSString stringWithFormat:@"%@/%@/%@",[FIREFOX_9_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, FIREFOX_BOOKMARKS_FILE_NAME] retain];
 					break;
 				}
@@ -120,6 +123,11 @@
 	}
 	
     return fox9BookmarkPath;
+}
+
+- (NSString *)bookmarkPath
+{
+	return(fox9 ? [self fox9BookmarkPath] : [self fox8OrLessBookmarkPath]);
 }
 
 @end
