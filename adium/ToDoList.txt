@@ -35,6 +35,8 @@ Accounts:
 	+ Add 'Priority' field to jabber advanced preferences
 
 Message Window:
+	+ Need a way to allow tabs to be rearranged (within the same tab bar) even when dragging between windows isn't permitted (i.e. when group-based sorting is enabled), and vice-versa.
+		Currently, tabs can be dragged to new windows but not rearranged when name-based sorting is on, but dragging is right out when group-based sorting is on.
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
         I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
 	= Insert emoticon menu item, contextual menu item [Brian]
