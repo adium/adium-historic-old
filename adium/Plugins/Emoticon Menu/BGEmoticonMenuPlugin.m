@@ -1,10 +1,18 @@
-//
-//  BGEmoticonMenuPlugin.m
-//  Adium XCode
-//
-//  Created by Brian Ganninger on Sun Dec 14 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+                                              \---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
+
 //  *currently only organized with AIM in mind, needs to be redone for all GAIM-based services, or at least more than AIM*
 
 #import "BGEmoticonMenuPlugin.h"
@@ -26,7 +34,7 @@
         // add popup button to window's toolbar
         // register for menus
         [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
-        // return the new menu for the text field(s) --> needs to pass back to the prototype/additions [brian message:duh]
+        [[adium menuController] addMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
     }
     else
     {
@@ -85,10 +93,9 @@
 {
     // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticons array, then get
     // the emoticon itself and ask IT for the textEquivalents, instead of asking an id sender :P
-    AIEmoticon *selectedEmoticon;
-    // selectedEmoticon = some really fun call or other technique :P
+    AIEmoticon *selectedEmoticon = [emoticons objectAtIndex:[[sender menu] indexOfItem:sender]];
     NSString *emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
-    [[[[adium interfaceController] currentChat] textEntryView] insertCharacters:emoString];
+    //     [[[[adium interfaceController] currentChat] textEntryView] insertText:emoString];
 }
 
 -(NSMenu *)eMenu
