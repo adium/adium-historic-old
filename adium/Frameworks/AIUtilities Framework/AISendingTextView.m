@@ -26,10 +26,8 @@
 - (void)_historyDown;
 - (void)_pushContent;
 - (void)_popContent;
-- (void)_popItem:(id)sender;
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
-- (void)_pushClicked;
 @end
 
 /*
@@ -315,21 +313,6 @@ static NSImage *pushIndicatorImage = nil;
 	
 }
 
-
-// Pop. Called by menu items. Their index into the push array is stored in the 'tag'
-- (void)_popItem:(id)sender
-{
-	if([pushArray count]){
-		[self setAttributedString:[pushArray objectAtIndex:[sender tag]]];
-		[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
-		[pushArray removeObjectAtIndex:[sender tag]];
-		if([pushArray count] == 0){
-			[self _setPushIndicatorVisible:NO];
-		}
-	}
-}
-
-
 // Push out of the message entry field
 - (void)_pushContent
 {
@@ -363,7 +346,7 @@ static NSImage *pushIndicatorImage = nil;
 		[indicator setBordered:NO];
         [[self superview] addSubview:indicator];
 		[indicator setTarget:self];
-		[indicator setAction:@selector(_pushClicked)];
+		[indicator setAction:@selector(_popContent)];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewBoundsDidChangeNotification object:[self superview]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewFrameDidChangeNotification object:[self superview]];
@@ -397,77 +380,6 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 
-// Called by the Autopop menu item to change its state and the preferences
-- (void)_toggleAutopop:(id)sender
-{
-	// Flipflop the autopop
-	[sender setState: [sender state] ? NSOffState : NSOnState];
-	
-	// Record it in prefs
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_AUTOPOP
-                                          group:PREF_GROUP_PUSH_PREFS];
-}
-
-
-//Check for mouse down in push indicator
-- (void)_pushClicked
-{
-	NSMenu		*menu = [[NSMenu alloc] initWithTitle:@"push menu"];
-	NSMenuItem  *menuItem;
-	
-	if([pushArray count]){
-		[menu setAutoenablesItems:NO];
-		
-		// Construct a menu containing all pushed messages
-		int i;
-		for(i = 0; i < [pushArray count]; i++) {
-			NSString *temp = [[pushArray objectAtIndex:i] string];
-			if(temp) {
-				menuItem = [[[NSMenuItem alloc] initWithTitle:temp
-													   target:self
-													   action:@selector(_popItem:)
-												keyEquivalent:@""] autorelease];
-				
-				// Set the tag -- this identifies the message's index later
-				[menuItem setTag:i];
-				
-				[menuItem setEnabled:YES];
-				[menu addItem:menuItem];
-			}
-		}
-		
-		// Add the Autopop item
-		[menu addItem:[NSMenuItem separatorItem]];
-		menuItem = [[[NSMenuItem alloc] initWithTitle:@"Autopop Messages"
-											   target:self
-											   action:@selector(_toggleAutopop:)
-										keyEquivalent:@""] autorelease];
-		int theState = ([[prefDict objectForKey:KEY_AUTOPOP] boolValue] ? NSOnState : NSOffState);
-		
-		[menuItem setState:theState];
-		[menu addItem:menuItem];
-		
-		// Generate a fake event to send to the contextual menu so it knows where to appear
-		NSEvent *newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown 
-											   location:[indicator frame].origin
-										  modifierFlags:0
-											  timestamp:nil
-										   windowNumber:[[indicator window] windowNumber]
-												context:nil
-											eventNumber:0
-											 clickCount:0
-											   pressure:0.0];
-		
-		[NSMenu popUpContextMenu:menu withEvent:newEvent forView:indicator];
-	}
-}
-
-// Always enable all of the push menu items
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	return(YES);
-}
 
 //Contact menu ---------------------------------------------------------------
 //Set and return the selected chat (to auto-configure the contact menu)
@@ -565,13 +477,7 @@ static NSImage *pushIndicatorImage = nil;
 			if(inChar == NSUpArrowFunctionKey)
 				[self _popContent];
 			else if(inChar == NSDownArrowFunctionKey)
-				if(flags & NSAlternateKeyMask)
-				{
-					NSLog(@"Ctrl-Opt-Down");
-					[self _pushClicked];
-				}
-				else
-					[self _pushContent];
+				[self _pushContent];
 			else if(inChar == 's')
 			{
 				// Is there text?
