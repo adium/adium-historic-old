@@ -239,8 +239,6 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-//	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];	
-	
 	if ((od = gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 			
@@ -281,7 +279,6 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-//	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
 	if ((od = gc->proto_data) && 
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 	
