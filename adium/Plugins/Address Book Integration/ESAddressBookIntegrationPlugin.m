@@ -150,16 +150,10 @@
     [self updateAllContacts];
 }
 
+//Update all existing contacts
 - (void)updateAllContacts
 {
-    //Update all existing contacts
-    NSEnumerator * contactEnumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-    AIListObject * inObject;
-    while (inObject = [contactEnumerator nextObject]){
-        [self updateListObject:inObject
-                          keys:nil
-                        silent:NO]; 
-    }
+	[[adium contactController] updateAllListObjectsForObserver:self];
     [self updateSelf];
 }
 

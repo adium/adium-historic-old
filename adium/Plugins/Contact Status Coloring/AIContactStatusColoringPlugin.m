@@ -296,11 +296,7 @@
         //
         alpha = [[prefDict objectForKey:KEY_STATUS_LABEL_OPACITY] floatValue];
 		
-        //Force each contact to update (Messy)
-		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-		while((object = [enumerator nextObject])){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
-		}
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 

@@ -32,17 +32,11 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)
 	{
-		NSEnumerator		*enumerator;
-		AIListObject		*object;
-				
 		allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
         visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
-        		
-		enumerator = [[[adium contactController] contactList] objectEnumerator]; //We need all the groups
 		
-		while(object = [enumerator nextObject]){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
-        }
+		//Refresh all
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 

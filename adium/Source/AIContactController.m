@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.76 2004/01/11 06:42:06 adamiser Exp $
+// $Id: AIContactController.m,v 1.77 2004/01/12 20:51:58 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -414,21 +414,40 @@
 //Registers code to observe handle status changes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
-	NSEnumerator	*enumerator = [contactDict objectEnumerator];
-	AIListObject	*listObject;
-    
 	//Add the observer
     [contactObserverArray addObject:inObserver];
 	
     //Let the new observer process all existing objects
-	while(listObject = [enumerator nextObject]){
-		[inObserver updateListObject:listObject keys:nil silent:YES];
-	}
+	[self updateAllListObjectsForObserver:inObserver];
 }
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
     [contactObserverArray removeObject:inObserver];
+	[self sortContactList];
+}
+
+//Instructs a controller to update all available list objects
+- (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*listObject;
+	
+    //Reset all contacts
+	enumerator = [contactDict objectEnumerator];
+	while(listObject = [enumerator nextObject]){
+		NSArray	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
+		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
+	}
+
+    //Reset all groups
+	enumerator = [groupDict objectEnumerator];
+	while(listObject = [enumerator nextObject]){
+		NSArray	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
+		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
+	}
+	
+	//Sort the entire list
 	[self sortContactList];
 }
 

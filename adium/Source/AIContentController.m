@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.39 2004/01/12 20:23:00 evands Exp $
+// $Id: AIContentController.m,v 1.40 2004/01/12 20:51:58 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -350,7 +350,7 @@
 	//If the chat doesn't have content yet, open it
 	if (![chat hasContent]) {
 	    //Have the interface open this chat
-	    [[owner interfaceController] openChat:inChat]; 
+	    [[owner interfaceController] openChat:chat]; 
 	}
 	
 	//Add the object

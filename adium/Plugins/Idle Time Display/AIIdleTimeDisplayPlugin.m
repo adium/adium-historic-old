@@ -145,14 +145,7 @@
         idleTextColor = [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
         
         //Update all our idle views
-		NSEnumerator		*enumerator;
-		AIListObject		*object;
-		
-		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-		
-		while(object = [enumerator nextObject]){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
-        }
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 

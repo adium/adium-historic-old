@@ -126,13 +126,7 @@
         displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]; 
 		
         //Update all existing contacts
-        NSEnumerator *contactEnumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-        AIListObject *inObject;
-        while(inObject = [contactEnumerator nextObject]){
-            [self _applyAlias:[[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]
-                     toObject:inObject
-					   notify:YES]; 
-        }
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 
@@ -193,11 +187,10 @@
 	NSArray			*modifiedAttributes;
     NSString		*displayName = nil;
     NSString		*longDisplayName = nil;
-    NSString            *serverDisplayName = nil;
+    NSString		*serverDisplayName = nil;
     
-	
     //Setup the display names
-    if ( inAlias != nil && [ inAlias length ] != 0 ) {
+    if(inAlias != nil && [inAlias length] != 0) {
         displayName = inAlias;
     }
     
