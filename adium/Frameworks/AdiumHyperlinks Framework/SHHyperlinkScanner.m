@@ -46,9 +46,7 @@
     SH_BUFFER_STATE buf;
     
     buf = SH_scan_string([inString UTF8String]);
-    
-    NSLog(@"-(BOOL)isStringValidURL:@\"%@\"",inString);
-    
+        
     validStatus = SHlex();
     if(validStatus == SH_URL_VALID || validStatus == SH_MAILTO_VALID || validStatus == SH_FILE_VALID){
         SH_delete_buffer(buf);
@@ -68,7 +66,6 @@
 
 -(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
-    NSLog(@"fetching next URL from String: %@",inString);
     NSString    *scanString = [[[NSString alloc] init] autorelease];
     int location = SHStringOffset;
     
@@ -96,7 +93,6 @@
 #pragma mark blah
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
-    NSLog(@"fetching all urls");
     SHStringOffset = 0;
     NSMutableArray *rangeArray = [[[NSMutableArray alloc] init] autorelease];
     SHMarkedHyperlink *markedLink = nil;
@@ -105,7 +101,6 @@
         if(markedLink = [self nextURLFromString:inString]){
             [rangeArray addObject:markedLink];
         }
-        NSLog(@"SHStringOffset = %u",SHStringOffset);
     }
     
     if([rangeArray count] > 0){
@@ -122,7 +117,6 @@
 
 -(NSAttributedString *)linkifyString:(NSAttributedString *)inString
 {
-    NSLog(@"linkifying string");
     NSArray *rangeArray = [self allURLsFromString:[inString string]];
     NSEnumerator *enumerator = [rangeArray objectEnumerator];
     SHMarkedHyperlink *markedLink;
@@ -135,7 +129,6 @@
         [newString addAttribute:NSLinkAttributeName value:[[markedLink URL] retain] range:linkRange];
     }
     
-    NSLog(@"finished linkifying");
     return newString;
 }
 
