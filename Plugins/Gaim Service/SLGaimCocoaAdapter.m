@@ -553,7 +553,6 @@ NSMutableDictionary* get_chatDict(void)
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
 	}
 	
-	GaimDebug (@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
 	//If we didn't grab a translated version, at least display the English version Gaim supplied
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
@@ -562,6 +561,50 @@ NSMutableDictionary* get_chatDict(void)
 	
 	return(adium_gaim_get_handle());
 }
+
+/* XXX ugly */
+- (void *)handleNotifyFormattedWithTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary text:(const char *)text
+{
+	NSString *titleString = (title ? [NSString stringWithUTF8String:title] : nil);
+	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
+	
+	if(!titleString){
+		titleString = primaryString;
+		primaryString = nil;
+	}
+	
+	NSString *secondaryString = (secondary ? [NSString stringWithUTF8String:secondary] : nil);
+	if(!primaryString){
+		primaryString = secondaryString;
+		secondaryString = nil;
+	}
+	
+	static AIHTMLDecoder	*notifyFormattedHTMLDecoder = nil;
+	if(!notifyFormattedHTMLDecoder) notifyFormattedHTMLDecoder = [[AIHTMLDecoder decoder] retain];
+
+	NSString	*textString = (text ? [NSString stringWithUTF8String:text] : nil); 
+	if(textString) textString = [[notifyFormattedHTMLDecoder decodeHTML:textString] string];
+	
+	NSString	*description = nil;
+	if([textString length] && [secondaryString length]){
+		description = [NSString stringWithFormat:@"%@\n\n%@",secondaryString,textString];
+		
+	}else if(textString){
+		description = textString;
+		
+	}else if(secondaryString){
+		description = secondaryString;
+		
+	}
+	
+	NSString	*message = primaryString;
+	
+	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
+										  withObject:(message ? message : @"")
+										  withObject:(description ? description : @"")
+										  withObject:(titleString ? titleString : @"")];
+}
+
 
 #pragma mark File transfers
 - (void)displayFileSendError
