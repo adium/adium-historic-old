@@ -48,8 +48,11 @@
 		int				idle;
 		
 		if (showStatus){
-			statusMessage = [[[[[inObject statusObjectForKey:@"StatusMessage"] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
-				
+			statusMessage = [[[[[[adium contentController] filterAttributedString:[inObject statusObjectForKey:@"StatusMessage"]
+																  usingFilterType:AIFilterDisplay
+																		direction:AIFilterIncoming
+																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
+			
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
 			if([statusMessage length] > STATUS_MAX_LENGTH){
 				[statusMessage deleteCharactersInRange:NSMakeRange(STATUS_MAX_LENGTH,
@@ -80,9 +83,9 @@
 											  options:NSLiteralSearch
 												range:NSMakeRange(0,[statusMessage length])];
 		}
-		
+
 		idle = (showIdle ? [inObject integerStatusObjectForKey:@"Idle"] : 0);
-		
+
 		//
 		if(idle > 0 && statusMessage){
 			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForSeconds:idle], statusMessage];
@@ -107,7 +110,7 @@
 	
 	//Create the idle string
 	if(seconds > 599400){//Cap idle at 999 Hours (999*60*60 seconds)
-		idleString = @"Idle";
+		idleString = AILocalizedString(@"Idle",nil);
 	}else if(seconds >= 600){
 		idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
 	}else if(seconds >= 60){
