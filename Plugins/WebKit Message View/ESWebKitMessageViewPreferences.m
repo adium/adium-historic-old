@@ -618,28 +618,35 @@
 	
 	enumerator = [chatArray objectEnumerator];
 	while(messageDict = [enumerator nextObject]){
-		NSString 		*msgType = [messageDict objectForKey:@"Type"];
 		AIContentObject	*content = nil;
+		AIListObject	*source;
+		NSString 		*from, *msgType;
 		
+		msgType = [messageDict objectForKey:@"Type"];
+		from = [messageDict objectForKey:@"From"];
+
+		source = (from ? [participants objectForKey:from] : nil);
+
 		if([msgType isEqualToString:CONTENT_MESSAGE_TYPE]){
-			AIListObject	*dest, *source;
+			AIListObject		*dest;
+			NSAttributedString  *message;
+			NSString			*to;
+			BOOL				outgoing;
 			
 			//Create message content object
-			NSAttributedString  *message =[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
-			NSString			*from = [messageDict objectForKey:@"From"];
-			NSString			*to = [messageDict objectForKey:@"To"];
-			BOOL				outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
+			
+			message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
+			to = [messageDict objectForKey:@"To"];
+			outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
 			
 			//The other person is always the one we're chatting with right now
 			dest = [participants objectForKey:to];
-			source =  [participants objectForKey:from];
 			content = [AIContentMessage messageInChat:inChat
 										   withSource:source
 										  destination:dest
 												 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
 											  message:message
 											autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
-			[content setTrackContent:NO];
 			
 			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
 			//nor our destination are AIAccount objects.
@@ -647,11 +654,13 @@
 
 		}else if([msgType isEqualToString:CONTENT_STATUS_TYPE]){
 			//Create status content object
-			NSAttributedString	*message = [[[NSAttributedString alloc] initWithString:[messageDict objectForKey:@"Message"]
-																			attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
-			NSString			*statusMessageType = [messageDict objectForKey:@"Status Message Type"];
-			NSString			*from = [messageDict objectForKey:@"From"];
-			AIListObject		*source = (from ? [participants objectForKey:from] : nil);
+			NSAttributedString	*message;
+			NSString			*statusMessageType;
+			AIListObject		*source;
+			
+			message = [[[NSAttributedString alloc] initWithString:[messageDict objectForKey:@"Message"]
+													   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
+			statusMessageType = [messageDict objectForKey:@"Status Message Type"];
 			
 			//Create our content object
 			content = [AIContentStatus statusInChat:inChat
@@ -660,11 +669,14 @@
 											   date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
 											message:message
 										   withType:statusMessageType];
-			[content setTrackContent:NO];
-			
 		}
 
-		if(content) [[adium contentController] displayContentObject:content];
+		if(content){			
+			[content setTrackContent:NO];
+			[content setPostProcessContent:NO];
+			
+			[[adium contentController] displayContentObject:content];
+		}
 	}
 }
 
