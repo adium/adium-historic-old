@@ -37,19 +37,6 @@
 	}
 }
 
-- (NSSet *)supportedPropertyKeys
-{
-	static NSMutableSet *supportedPropertyKeys = nil;
-
-	if (!supportedPropertyKeys){
-		supportedPropertyKeys = [[super supportedPropertyKeys] mutableCopy];
-		//ICQ doesn't support available messages
-		[supportedPropertyKeys removeObject:@"AvailableMessage"];
-	}
-	
-	return supportedPropertyKeys;
-}
-
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
 	//As an ICQ account we should always send plain text, so no more complex checking is needed
@@ -70,7 +57,7 @@
 	return(NO);
 }
 
-#pragma mark Status
+#pragma mark Contact updates
 /*!
  * @brief Get the ICQ status message when going away and coming back
  *
@@ -81,65 +68,52 @@
  */
 - (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
-	[super _updateAwayOfContact:theContact toAway:newAway];
-	
-	[self updateStatusMessage:theContact];
-}
-
-- (NSString *)ICQStatusMessageForState:(int)state
-{
-	NSString	*statusMessage = nil;
-
-	if (state & AIM_ICQ_STATE_CHAT)
-		statusMessage = STATUS_DESCRIPTION_FREE_FOR_CHAT;
-	else if (state & AIM_ICQ_STATE_DND)
-		statusMessage = STATUS_DESCRIPTION_DND;
-	else if (state & AIM_ICQ_STATE_OUT)
-		statusMessage = STATUS_DESCRIPTION_NOT_AVAILABLE;
-	else if (state & AIM_ICQ_STATE_BUSY)
-		statusMessage = STATUS_DESCRIPTION_OCCUPIED;
-	else if (state & AIM_ICQ_STATE_WEBAWARE)
-		statusMessage = AILocalizedString(@"Web Aware",nil);
-	else if (state & AIM_ICQ_STATE_INVISIBLE)
-		statusMessage = STATUS_DESCRIPTION_INVISIBLE;
-
-	return statusMessage;
-}
-
-- (void)updateStatusMessage:(AIListContact *)theContact
-{
 	GaimBuddy	*buddy;
 	const char	*uidUTF8String = [[theContact UID] UTF8String];
 	
 	if ((gaim_account_is_connected(account)) &&
 		(buddy = gaim_find_buddy(account, uidUTF8String))) {
 		
-		NSString		*statusMsgString = nil;
-		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+		NSLog(@"%@ !!! %@ %i",self,theContact,newAway);
+
+		NSString		*statusName = nil;
+		NSString		*statusMessage = nil;
+		AIStatusType	statusType = (newAway ? AIAwayStatusType : AIAvailableStatusType);
 
 		/* ((buddy->uc & 0xffff0000) >> 16) is nicely undocumented magic from oscar.c.  It turns out that real
 		 * men don't document their code. */
-		statusMsgString = [self ICQStatusMessageForState:((buddy->uc & 0xffff0000) >> 16)];
+		int state = ((buddy->uc & 0xffff0000) >> 16);
 		
-		if (statusMsgString && [statusMsgString length]) {
-			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-				NSAttributedString *attrStr;
-				
-				attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
-				
-				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
-				
-				[attrStr release];
-			}
+		if (state & AIM_ICQ_STATE_CHAT){
+			statusName = STATUS_NAME_FREE_FOR_CHAT;
+			statusMessage = STATUS_DESCRIPTION_FREE_FOR_CHAT;
+			statusType = AIAvailableStatusType;
+	
+		}else if (state & AIM_ICQ_STATE_DND){
+			statusName = STATUS_NAME_DND;
+			statusMessage = STATUS_DESCRIPTION_DND;
+
+		}else if (state & AIM_ICQ_STATE_OUT){
+			statusName = STATUS_NAME_NOT_AVAILABLE;
+			statusMessage = STATUS_DESCRIPTION_NOT_AVAILABLE;
 			
-		} else if (oldStatusMsgString && [oldStatusMsgString length]) {
-			//If we had a message before, remove it
-			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
-			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		}else if (state & AIM_ICQ_STATE_BUSY){
+			statusName = STATUS_NAME_OCCUPIED;
+			statusMessage = STATUS_DESCRIPTION_OCCUPIED;
+			
+		}else if (state & AIM_ICQ_STATE_INVISIBLE){
+			statusName = STATUS_NAME_INVISIBLE;
+			statusMessage = STATUS_DESCRIPTION_INVISIBLE;
 		}
+				
+		[theContact setStatusWithName:statusName
+						   statusType:statusType
+						statusMessage:(statusMessage ?
+									   [[[NSAttributedString alloc] initWithString:statusMessage] autorelease] :
+									   nil)
+							   notify:NotifyLater];
 		
-		//apply changes
+		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
@@ -182,15 +156,24 @@
 
 		case AIAwayStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_DND])
+			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
+
+			if(([statusName isEqualToString:STATUS_NAME_DND]) ||
+			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
 				gaimStatusType = "Do Not Disturb";
-			else if ([statusName isEqualToString:STATUS_NAME_NOT_AVAILABLE])
+			else if (([statusName isEqualToString:STATUS_NAME_NOT_AVAILABLE]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_NOT_AVAILABLE] == NSOrderedSame))
 				gaimStatusType = "Not Available";
-			else if ([statusName isEqualToString:STATUS_NAME_OCCUPIED])
+			else if (([statusName isEqualToString:STATUS_NAME_OCCUPIED]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_OCCUPIED] == NSOrderedSame))
 				gaimStatusType = "Occupied";
 			
 			break;
 		}
+			
+		case AIInvisibleStatusType: 
+			gaimStatusType = "Invisible";
+			break;
 	}
 
 	//If we are setting one of our custom statuses, don't use a status message
@@ -202,11 +185,15 @@
 	return gaimStatusType;
 }
 
-//ICQ doesn't support automatic typing notification clearing after a send, but AIM and .Mac do, so we return YES
-//for smooth operation, particularly with iChat where this is very noticeable.
-- (BOOL)suppressTypingNotificationChangesAfterSend
+
+#pragma mark Contact List Menu Items
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	return(YES);
+	if(strcmp(label, "Re-request Authorization") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
+	}
+	
+	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
 
 @end
