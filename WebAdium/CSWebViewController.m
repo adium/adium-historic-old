@@ -33,8 +33,10 @@
 
 - (void)setDelegate:(id)inDelegate
 {
-	if (delegate) {[delegate release];delegate = nil;}
-	delegate = [inDelegate retain];
+	if (delegate != inDelegate) {
+	   [delegate release];
+	   delegate = [inDelegate retain];
+	}
 }
 - (id)delegate
 {

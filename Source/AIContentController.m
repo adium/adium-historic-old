@@ -89,8 +89,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 #pragma mark Default Formatting
 - (void)setDefaultFormattingAttributes:(NSDictionary *)inDict
 {
-	[defaultFormattingAttributes release];
-	defaultFormattingAttributes	= [inDict retain];
+    if(defaultFormattingAttributes != inDict){
+	   [defaultFormattingAttributes release];
+	   defaultFormattingAttributes	= [inDict retain];
+    }
 }
 - (NSDictionary *)defaultFormattingAttributes
 {
@@ -1180,8 +1182,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 // primary use: emoticon menu for grouping by pack, if you find another, congrats!
 - (void)setEmoticonPacks:(NSArray *)inEmoticonPacks
 {
-	[emoticonPacks release];
-    emoticonPacks = [inEmoticonPacks retain];
+    if(emoticonPacks != inEmoticonPacks){
+        [emoticonPacks release];
+        emoticonPacks = [inEmoticonPacks retain];
+    }
 }
 - (NSArray *)emoticonPacks
 {
@@ -1190,8 +1194,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 //emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
 {
-	[emoticonsArray release];
-    emoticonsArray = [inEmoticonsArray retain];
+    if(emoticonsArray != inEmoticonsArray){
+        [emoticonsArray release];
+        emoticonsArray = [inEmoticonsArray retain];
+    }
 }
 - (NSArray *)emoticonsArray
 {

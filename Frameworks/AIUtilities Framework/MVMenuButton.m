@@ -97,8 +97,10 @@
 //Big Image (This is the one that should be called to configure this button)
 - (void)setImage:(NSImage *)inImage
 {
-	[bigImage release];
-	bigImage = [inImage retain];
+	if(bigImage != inImage){
+	   [bigImage release];
+	   bigImage = [inImage retain];
+    }
 	
 	//Update our control size and the displayed image
 	[self setControlSize:controlSize];

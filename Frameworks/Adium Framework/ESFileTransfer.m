@@ -53,8 +53,10 @@
 
 - (void)setRemoteFilename:(NSString *)inRemoteFilename
 {
-    [remoteFilename release]; remoteFilename = nil;
-    remoteFilename = [inRemoteFilename retain];
+    if (remoteFilename != inRemoteFilename){
+        [remoteFilename release];
+        remoteFilename = [inRemoteFilename retain];
+    }
 }
 - (NSString *)remoteFilename
 {
@@ -63,8 +65,10 @@
 
 - (void)setLocalFilename:(NSString *)inLocalFilename
 {
-    [localFilename release]; localFilename = nil;
-    localFilename = [inLocalFilename retain];
+    if (localFilename != inLocalFilename){
+        [localFilename release];
+        localFilename = [inLocalFilename retain];
+	}
 	
 	if (delegate)
 		[delegate fileTransfer:self didSetLocalFilename:localFilename];
@@ -159,8 +163,10 @@
 
 - (void)setAccountData:(id)inAccountData
 {
-    [accountData release]; accountData = nil;
-    accountData = [inAccountData retain];
+    if (accountData != inAccountData){
+        [accountData release];
+        accountData = [inAccountData retain];
+    }
 }
 - (id)accountData
 {

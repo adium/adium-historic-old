@@ -111,8 +111,10 @@ static int nextChatNumber = 0;
 
 - (void)setDateOpened:(NSDate *)inDate
 {
-	[dateOpened release]; 
-	dateOpened = [inDate retain];
+	if(dateOpened != inDate){
+	   [dateOpened release]; 
+	   dateOpened = [inDate retain];
+    }
 }
 
 - (BOOL)isOpen
