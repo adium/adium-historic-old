@@ -108,7 +108,6 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    NSLog(@"preferences changed...");
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
@@ -123,7 +122,6 @@
         prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
         prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];
 	inlinePrefixes = ([prefixIncoming rangeOfString:@"%m"].location == NSNotFound);
-        NSLog(@"**** Prefs: incoming:%@ outgoing:%@",prefixIncoming,prefixOutgoing);
         
 	//Time Stamps
         timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
@@ -188,7 +186,6 @@
 //Rebuild our view for any existing content
 - (void)rebuildMessageViewForContent
 {
-    NSLog(@"rebuildMessageViewForContent");
     if (rebuilding) {
         restartRebuilding = YES;
     } else {
@@ -206,8 +203,6 @@
     AIFlexibleTableRow  *row;
     NSMutableArray      *rowArray = [[NSMutableArray alloc] init];
     
-    //Move everything out
-    [messageView removeAllRows];
     //The first row has no previous row
     previousRow = nil;
     
@@ -227,6 +222,10 @@
         
         [contentRowArray release];
     }
+    
+    //Move everything out
+    if (!restartRebuilding)
+        [messageView removeAllRows];
     
     NSEnumerator *rowArray_enumerator = [rowArray objectEnumerator];
     while ((row = [rowArray_enumerator nextObject]) && !restartRebuilding){
@@ -677,7 +676,7 @@
 
     //Create an attributed string from it with the prefix font and colors
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-        [content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
+        ([content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
         prefixFont, NSFontAttributeName,
         nil];
     
