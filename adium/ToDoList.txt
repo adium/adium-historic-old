@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.56 2004/04/17 06:40:47 ramoth4 Exp $
+$Id: ToDoList.txt,v 1.57 2004/04/17 11:36:45 the_tick Exp $
 
 Legend
 + Change or Addition
@@ -21,7 +21,7 @@ Bugs
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
-	- (Tick: Yes, jabber works, but only for jabber.org.)
+	- (Tick: Yes, jabber works)
 * User icons are still getting flipped (Icons from AIM, apparently)
 * Changing an alias in the inspector does not correctly update the contact list
     - (eevyl: I think this is fixed now at least my test worked, not sure though)
@@ -36,7 +36,7 @@ Bugs
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
 * Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
-* Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well) 
+* Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well) [Evan] 
 * We have issues with not notifying the user when a message fails to send
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
@@ -110,7 +110,7 @@ Other:
 		Colin: Didn't Mac-arena do this already?
     	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
-
+	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 -------------------------------------------------------------------------------------------------------
 Big Stuff
 -------------------------------------------------------------------------------------------------------
