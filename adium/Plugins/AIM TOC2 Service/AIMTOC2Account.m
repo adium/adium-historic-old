@@ -184,7 +184,9 @@ static char *hash_password(const char * const password);
 
 - (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
 {
-    NSLog(@"Move '%@' from '%@' to '%@'",[handle UID],[sourceGroup displayName],[destGroup displayName]);
+    //AIM doesn't support moving, so we simply remove and re-add the handle.
+    [self AIM_RemoveHandle:[handle UID] fromGroup:[sourceGroup displayName]];
+    [self AIM_AddHandle:[handle UID] toGroup:[destGroup displayName]];
 
     return(YES);
 }
