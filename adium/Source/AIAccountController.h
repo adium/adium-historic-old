@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.27 $
- * $Date: 2004/07/27 19:17:58 $
- * $Author: evands $
+ * $Revision: 1.28 $
+ * $Date: 2004/07/28 02:38:53 $
+ * $Author: dchoby98 $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -36,6 +36,7 @@
 - (AIServiceType *)handleServiceType;
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID;
 - (AIAccountViewController *)accountView;	//Return a view controller for the connection window
+- (DCJoinChatViewController *)joinChatView; //Return a custom view for the join chat window
 @end
 
 @protocol AccountMenuPlugin <NSObject>
