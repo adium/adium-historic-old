@@ -291,12 +291,14 @@
 		title = [autoReply string];
 	}
 	
-	//If the state is an away state, use the description of the away state
+	/* If the state is not an available state, or it's an available state with a non-default statusName,
+ 	 * use the description of the state itself. */
 	if(!title &&
-	   ([self statusType] == AIAwayStatusType)){
+	   (([self statusType] != AIAvailableStatusType) || (([self statusName] != nil) &&
+														 ![[self statusName] isEqualToString:STATUS_NAME_AVAILABLE]))){
 		title = [[adium statusController] descriptionForStateOfStatus:self];
 	}
-	
+
 	//If the state is simply idle, use the string "Idle"
 	if(!title && [self shouldForceInitialIdleTime]){
 		title = AILocalizedString(@"Idle",nil);
