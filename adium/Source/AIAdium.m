@@ -413,7 +413,10 @@ void Adium_HandleSignal(int i){
     createIt = !([existing count] - ([existing indexOfObject:[bundleResourcesFolder stringByAppendingPathComponent:name]] != NSNotFound));
     if(createIt) {
         NSLog(@"Creating directory %@ for resource folder name %@\n", [targetPath stringByAbbreviatingWithTildeInPath], name);
-        [mgr createDirectoryAtPath:targetPath attributes:nil];
+        if(![mgr createDirectoryAtPath:targetPath attributes:nil]) {
+			targetPath = nil;
+			NSLog(@"\tFAILED!\n");
+		}
     } else {
         targetPath = [existing objectAtIndex:0];
     }
