@@ -388,24 +388,20 @@
 }
 
 //Status keys this account supports
-- (NSArray *)supportedPropertyKeys
+- (NSSet *)supportedPropertyKeys
 {
-	static NSArray *supportedPropertyKeys = nil;
+	static NSSet *supportedPropertyKeys = nil;
 	
 	if (!supportedPropertyKeys)
-		supportedPropertyKeys = [[NSArray alloc] initWithObjects:
-			@"Display Name",
+		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
 			@"Online",
 			@"Offline",
 			@"IdleSince",
 			@"IdleManuallySet",
-			KEY_USER_ICON,
 			@"Away",
 			@"AwayMessage",
-			//      @"TextProfile",
-			//      @"DefaultUserIconFilename",
-			nil];
-	
+			nil] unionSet:[super supportedPropertyKeys]];
+
 	return supportedPropertyKeys;
 }
 
@@ -413,7 +409,6 @@
 - (void)updateAllStatusKeys
 {
     [self updateStatusForKey:@"IdleSince"];
-    [self updateStatusForKey:@"TextProfile"];
     [self updateStatusForKey:@"AwayMessage"];
     [self updateStatusForKey:KEY_USER_ICON];
 }
