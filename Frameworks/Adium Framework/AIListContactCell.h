@@ -26,6 +26,7 @@
 	float		backgroundOpacity;
 
 	NSFont			*statusFont;
+	NSColor			*statusColor;
 
 	NSDictionary	*_statusAttributes;
 }
@@ -35,6 +36,8 @@
 - (NSFont *)statusFont;
 - (NSDictionary *)statusAttributes;
 - (void)setTextAlignment:(NSTextAlignment)inAlignment;
+- (void)setStatusColor:(NSColor *)inColor;
+- (NSColor *)statusColor;
 
 //Display options
 - (void)setUserIconVisible:(BOOL)inShowIcon;

@@ -76,6 +76,8 @@
 	
 	IBOutlet	NSTextField				*textField_themeName;
 	
+	IBOutlet	NSColorWell				*colorWell_statusText;
+	
 	NSString				*themeName;
 }
 

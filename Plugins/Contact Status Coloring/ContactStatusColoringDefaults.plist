@@ -72,5 +72,7 @@
 	<string>128,128,128</string> 
 	<key>Group Inverted Text Color</key>
 	<string>255,255,255</string> 
+	<key>Contact Status Text Color</key>
+	<string>128,128,128</string> 
 </dict>
 </plist>
