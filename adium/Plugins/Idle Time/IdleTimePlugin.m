@@ -328,7 +328,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
             [NSMenu swapMenuItem:menuItem_setIdle with:menuItem_removeIdle];
             [NSMenu swapMenuItem:menuItem_alternate with:menuItem_alternate];
             idleMenuState = RemoveIdle;
-        } else if (idleMenuState == RemoveIdle) {
+        } else if( (idleState == AINotIdle) && (idleMenuState == RemoveIdle) ){
             [NSMenu swapMenuItem:menuItem_removeIdle with:menuItem_setIdle];
             [NSMenu swapMenuItem:menuItem_alternate with:menuItem_alternate];
             idleMenuState = SetIdle;
