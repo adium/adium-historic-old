@@ -38,6 +38,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_checkMail" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
                 "menu_proxy" = NSPopUpButton; 
                 "textField_alias" = NSTextField; 
                 "textField_hostName" = NSTextField; 
@@ -48,6 +49,13 @@
                 "textField_proxyUserName" = NSTextField; 
             }; 
             SUPERCLASS = AIAccountViewController; 
+        }, 
+        {
+            ACTIONS = {copy = id; paste = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
