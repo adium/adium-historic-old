@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Sun Apr 18 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "ESWebKitMessageViewPreferences.h"
