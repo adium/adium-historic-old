@@ -721,7 +721,6 @@ static NSImage *pushIndicatorImage = nil;
 			[attachment setAttachmentCell:cell];
 			[attachment setShouldSaveImageForLogging:YES];
 			[attachment setHasAlternate:NO];
-			[attachment setPreferredFilename:[[NSProcessInfo processInfo] globallyUniqueString]];
 
 			//Insert an attributed string into the text at the current insertion point
 			attachString = [NSAttributedString attributedStringWithAttachment:attachment];
