@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.25 2004/03/12 06:33:05 evands Exp $
+//$Id: AIPluginController.m,v 1.26 2004/03/12 07:33:37 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -44,7 +44,7 @@ ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWi
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
-AIIdleTimePlugin;
+AIIdleTimePlugin, ESContactServersideDisplayName;
 
 @implementation AIPluginController
 //init
@@ -108,6 +108,7 @@ AIIdleTimePlugin;
 	[self loadPluginWithClass:[ESFastUserSwitchingSupportPlugin class]];
 	[self loadPluginWithClass:[ESOpenMessageWindowContactAlertPlugin class]];
 	[self loadPluginWithClass:[ESSendMessageContactAlertPlugin class]];
+	[self loadPluginWithClass:[ESContactServersideDisplayName class]];
 	[self loadPluginWithClass:[ESStatusSortPlugin class]];
 	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
 	[self loadPluginWithClass:[GBiTunerPlugin class]];
