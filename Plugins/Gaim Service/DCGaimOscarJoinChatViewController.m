@@ -7,6 +7,10 @@
 
 #import "DCGaimOscarJoinChatViewController.h"
 
+@interface DCGaimOscarJoinChatViewController (PRIVATE)
+- (void)validateEnteredText;
+@end
+
 @implementation DCGaimOscarJoinChatViewController
 
 //#pragma mark Subclassed from DCJoinChatViewController
@@ -20,6 +24,12 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
+	if( delegate ) {
+		[delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
+	}
+	
+	[[view window] makeFirstResponder:textField_roomName];
+
 	[super configureForAccount:inAccount];
 }
 
@@ -47,29 +57,10 @@
 
 	if (room && [room length]){
 		exchange = 4;
-		
-		//NSLog(@"#### OSCAR joinChatWithAccount: %@ joining %@ on exchange %i",inAccount,room,exchange);
-		
+				
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
-		
-		/*
-		 Development notes:
-		 
-		 We could have a special key to allow custom handling such as will be needed for MSN,
-		 and use the default hash-table built handling for prpls which properly implement the full Gaim
-		 chat API, such as OSCAR.
-		 
-		 We don't read that proto_info here because it'd just obfuscate the code... we need to manually
-		 hook up the nib and code for each option.  Error logging in SLGaimCocoaAdapter should quickly
-		 indicate if any keys were missed in this method.
-		 */
-		
 		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",[NSNumber numberWithInt:exchange],@"exchange",nil];
 		
-		//Open a chat, using the room as the name, and passing the chatCreationInfo we just built
-		//Note: Gaim expects that the name of the chat be the same as the first entry in the proto_info for that prpl
-		//For OSCAR, that's the value identified by the identifier "room"; it's an equally intuitive choice for
-		//other prpls.
 		[self doJoinChatWithName:room
 					   onAccount:inAccount
 				chatCreationInfo:chatCreationInfo
@@ -86,6 +77,26 @@
 	return @"DCGaimOscarJoinChatView";
 }
 
+//Entered text is changing
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+	if([notification object] == textField_roomName){
+		[self validateEnteredText];
+	}
+}
+
+- (void)validateEnteredText
+{
+	NSString *roomName = [textField_roomName stringValue];
+	BOOL enabled = NO;
+	
+	if( roomName && [roomName length] ) {
+		enabled = YES;
+	}
+	
+	if( delegate )
+		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
+}
 
 //#pragma mark Table View of contacts
 //

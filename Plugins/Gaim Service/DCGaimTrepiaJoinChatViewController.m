@@ -12,6 +12,8 @@
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	[super configureForAccount:inAccount];
+	if( delegate )
+		[delegate setJoinChatEnabled:NO];
 }
 
 - (NSString *)nibName
