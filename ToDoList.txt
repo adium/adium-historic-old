@@ -1,8 +1,14 @@
 5 - Contact list layout defaults
 5 - Contact list toolbar icons for toggle groups, add group, toggle offline
-5 - Mobile status icon (get this in before icon packs start excluding it!)
 4 - Implement status window when away preference
+4 - Verify all defaults are correct (Color backgrounds in the contact list coloring prefs for example?)
+4 - Preference importing wherever possible for .7x -> 0.80
+4 - Create better default event sets
+3 - Short message between +/- and edit in the events pane
+3 - Scroll behavior in events needs to be fixed - follow the current selection
+3 - Reconsider double click behavior for events
 3 - %_statusmessage script is broken
+3 - Icons for .AdiumStatusIcons and .AdiumServiceIcons file types
 3 - Add movement threshold to the borderless window
 3 - Figure out what to do with bubble list specific preferences
 3 - Fix group spacing to be fixed depending on mode
@@ -12,6 +18,8 @@
 3 - Check idle time defaults; add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
 2 - Account online checkboxes have incorrect state after canceling a password prompt
 2 - Change sound sets so that events use key sounds rather then specifing directly
+2 - Sound action should remember last sound selected as default
+2 - Sound action : choice for current set default? Then could move sound set to general...
 2 - Crash reporter should provide an option for send & quit
 2 - Divide the dock menu into bundled/custom
 2 - Divide the theme/layout menu into bundled/custom
@@ -35,6 +43,7 @@
 1 - Improve profile display in the info window
 1 - Improve tab bar graphics
 1 - Improve the dock menu
+1 - Better handling when the other side disconnects an OTR session
 1 - OTR fingerprint management
 1 - Revisit gaim-vv
 1 - Save as support for exporting a log
