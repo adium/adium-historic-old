@@ -29,7 +29,6 @@ typedef enum {
 	AIPref_Appearance,
     AIPref_Messages,
 	AIPref_Events,
-    AIPref_Emoticons,    
 	AIPref_FileTransfer,
     AIPref_Advanced
 } PREFERENCE_CATEGORY;

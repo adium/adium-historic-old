@@ -39,7 +39,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Emoticons);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(AILocalizedString(@"Emoticons","Emoticons/Smilies"));

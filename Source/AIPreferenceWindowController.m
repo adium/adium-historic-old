@@ -155,7 +155,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		view_Appearance,
 		view_Messages, 
 		view_Events,
-		view_Emoticons,
 		view_FileTransfer,
 		view_Advanced,
 		nil] retain];
