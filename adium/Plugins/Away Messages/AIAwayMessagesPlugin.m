@@ -112,32 +112,37 @@
     //If the user received a message which another user sent (not an autoreply), send our away message to source
     if(([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]) &&
 	   ![(AIContentMessage *)contentObject isAutoreply]){
-        
-        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse"
-																													   group:GROUP_ACCOUNT_STATUS]];
-        
-        if(!awayMessage){
-            awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"AwayMessage" 
-																									  group:GROUP_ACCOUNT_STATUS]];
-        }
-        
-        if(awayMessage && [awayMessage length] != 0){
-            AIChat	*chat = [contentObject chat];
-            //Create and send an idle bounce message (If the sender hasn't received one already)
-            if(([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound) && ([chat listObject])){
-				[receivedAwayMessage addObject:chat];
-				
-                AIContentMessage	*responseContent;
-                
-                responseContent = [AIContentMessage messageInChat:chat
-                                                       withSource:[contentObject destination]
-                                                      destination:[contentObject source]
-                                                             date:nil
-                                                          message:awayMessage
-                                                        autoreply:YES];
-                [[adium contentController] sendContentObject:responseContent];
-            }
-        }
+		
+		AIListObject   *destinationObject = [contentObject destination];
+		if ([destinationObject isKindOfClass:[AIAccount class]] && 
+			[(AIAccount *)destinationObject shouldSendAutoresponsesWhileAway]){
+			
+			NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse"
+																														   group:GROUP_ACCOUNT_STATUS]];
+			
+			if(!awayMessage){
+				awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"AwayMessage" 
+																										  group:GROUP_ACCOUNT_STATUS]];
+			}
+			
+			if(awayMessage && [awayMessage length] != 0){
+				AIChat	*chat = [contentObject chat];
+				//Create and send an idle bounce message (If the sender hasn't received one already)
+				if(([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound) && ([chat listObject])){
+					[receivedAwayMessage addObject:chat];
+					
+					AIContentMessage	*responseContent;
+					
+					responseContent = [AIContentMessage messageInChat:chat
+														   withSource:destinationObject
+														  destination:[contentObject source]
+																 date:nil
+															  message:awayMessage
+															autoreply:YES];
+					[[adium contentController] sendContentObject:responseContent];
+				}
+			}
+		}
     }
 }
 
