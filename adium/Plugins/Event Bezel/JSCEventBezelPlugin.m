@@ -171,7 +171,10 @@
     } else {
         contact = [notification object];
     }
-        
+    
+    // make sure the event is from a contact and not from an account
+    if (![contact isKindOfClass: [AIAccount class]]) {
+    
     //Check to be sure bezel for contact and for its group is enabled
     NSNumber *contactDisabledNumber = [contact preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
     //NSNumber *groupDisabledNumber = [[contact containingGroup] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
@@ -267,6 +270,7 @@
                          forEvent: tempEvent
                       withMessage: statusMessage];
     }
+    } // end of check for account change
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
