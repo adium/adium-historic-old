@@ -48,11 +48,23 @@
 - (void)uninstallPlugin
 {
     //remove account menus
+    NSMenuItem		*menuItem;
+    NSEnumerator	*enumerator = [accountMenuArray objectEnumerator];
+    while((menuItem = [enumerator nextObject])){
+        [[owner menuController] removeMenuItem:menuItem];
+    }
+    
+    [accountMenuArray release];
+    
+    //Stop observing/receiving notifications
+    [[owner notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 - (void)dealloc
 {
-    [accountMenuArray release];
+    //[accountMenuArray release];
     
     [super dealloc];
 }
@@ -60,6 +72,7 @@
 - (void)accountListChanged:(NSNotification *)notification
 {
     //Update the account menu
+    
     [self buildAccountMenus];
 }
 
@@ -196,7 +209,7 @@
         
         //Create the submenu's owning item
         menuItem = [[[NSMenuItem alloc] initWithTitle:[account accountDescription] target:nil action:nil keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
+        [menuItem setRepresentedObject:[account retain]];
         [menuItem setSubmenu:subMenu];
         [accountMenuArray addObject:menuItem];
         
