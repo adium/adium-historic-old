@@ -113,12 +113,13 @@
 
 	//Current Date
 	if([str rangeOfString:@"%d"].location != NSNotFound){
-		NSCalendarDate *currentDate = [NSCalendarDate calendarDate];
-		
+		NSCalendarDate	*currentDate = [NSCalendarDate calendarDate];
+		NSString		*calendarFormat = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortDateFormatString];
+
 		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
 		
 		[newAttributedString replaceOccurrencesOfString:@"%d"
-											 withString:[currentDate descriptionWithCalendarFormat:@"%m/%d/%y"]
+											 withString:[currentDate descriptionWithCalendarFormat:calendarFormat]
 												options:NSLiteralSearch
 												  range:NSMakeRange(0, [newAttributedString length])];
 	}
