@@ -69,22 +69,41 @@
         AIPlugin		*plugin;
 
         pluginName = [pluginList objectAtIndex:loop];
+        NSLog (@"Loading plugin: \"%@\"", pluginName);
         if([[pluginName pathExtension] compare:EXTENSION_ADIUM_PLUGIN] == 0){
-            //Load the plugin
-            pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-            if(pluginBundle != nil){
-                //Create an instance of the plugin
-                plugin = [[pluginBundle principalClass] newInstanceOfPluginWithOwner:owner];
-    
-                if(plugin != nil){
-                    //Add the instance to our list
-                    [pluginArray addObject:plugin];
+            NS_DURING
+                //Load the plugin
+                pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
+                if(pluginBundle != nil){
+                    //Create an instance of the plugin
+                    plugin = [[pluginBundle principalClass] newInstanceOfPluginWithOwner:owner];
+        
+                    if(plugin != nil){
+                        //Add the instance to our list
+                        [pluginArray addObject:plugin];
+                    }else{
+                        NSLog(@"Failed to initialize Plugin \"%@\"!",pluginName);
+                    }
                 }else{
-                    NSLog(@"Failed to initialize Plugin \"%@\"!",pluginName);
+                    NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
                 }
-            }else{
-                NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
-            }
+            NS_HANDLER	// Handle a raised exception
+                NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
+                if (plugin != nil) {
+                    NSLog (@"Cleaning up using plugin's pointer");
+                    // Make sure the plugin was not stored in the pluginArray, since it failed to successfully initialize
+                    long index = [pluginArray indexOfObject:plugin];
+                    if (index != NSNotFound) {
+                        [pluginArray removeObjectAtIndex:index];
+                    }
+
+                    //Remove observers
+                    [[owner notificationCenter] removeObserver:plugin];
+                    [[NSNotificationCenter defaultCenter] removeObserver:plugin];
+                }
+                [[owner interfaceController] handleErrorMessage:@"Plugin load error" withDescription:[NSString stringWithFormat:@"The \"%@\" plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory, then quit and relaunch Adium.", [NSString stringByDeletingPathExtension:pluginName]]];
+                // It would probably be unsafe to call the plugin's uninstall
+            NS_ENDHANDLER
         }
     }
 }

@@ -147,10 +147,39 @@
 
 - (void)getCurrentEmoticons
 {
+    // Prepare //
+    // Prep emoticon array
     if (curEmoticons)
         [curEmoticons release];
         
-    curEmoticons = [[plugin getEmoticons] retain];
+    curEmoticons = [[NSMutableArray array] retain];
+    
+    // Check pack array
+    if ([packs count] == 0)
+        [plugin allEmoticonPacks:packs];
+    
+    
+    // Look through all packs for emoticons	//
+    NSEnumerator	*enumerator = [packs objectEnumerator];
+    AIEmoticonPack	*curPack = nil;
+    
+    while (curPack = [enumerator nextObject]) {
+        int packState = [curPack isEnabled];
+        
+        if (packState != NSOffState) {
+            [curPack verifyEmoticons];
+            
+            NSEnumerator	*emoEnumerator = [curPack emoticonEnumerator];
+            id				emoID = nil;
+
+            while (emoID = [emoEnumerator nextObject]) {
+                [curEmoticons addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:[curPack emoticonImage:emoID], @"Image", emoID, @"Emoticon", curPack, @"Pack", [NSNumber numberWithInt:[curPack emoticonEnabled:emoID]], @"Enabled", nil]];
+            }
+            
+        }
+    }
+        
+    /*curEmoticons = [[plugin getEmoticons] retain];
     
     // Stopgap measure: until we write the emoticon-gathering right,
     // go through and remove duplicates from the array
@@ -170,7 +199,7 @@
     enumerator = [emoticonsToRemove objectEnumerator];
     while (emoticon = [enumerator nextObject]) {
         [curEmoticons removeObject:emoticon];
-    }
+    }*/
 }
 
 - (void)initTable:(NSTableView *)table	withEmoticons:(NSArray *)emoticons
@@ -178,11 +207,11 @@
     // Determine optimal cell size
     float	dim = 5;
     NSEnumerator	*enumerator = [emoticons objectEnumerator];
-    AIEmoticon		*emoticon = nil;
+    NSMutableDictionary		*emoDict = nil;
     NSImage			*image = nil;
     
-    while (emoticon = [enumerator nextObject]) {
-        image = [[[NSImage alloc] initWithContentsOfFile:[emoticon path]] autorelease];
+    while (emoDict = [enumerator nextObject]) {
+        image = [emoDict objectForKey:@"Image"];
         
         if ([image size].height > dim)
             dim = [image size].height;
@@ -217,6 +246,7 @@
         [curColumn setResizable:false];
         [curColumn setEditable:false];
         [curColumn setTableView:table];
+        [curColumn setDataCell:[[[NSImageCell alloc] initImageCell:nil] autorelease]];
         
         //NSLog (@"Adding column #%d", i);
         
@@ -257,7 +287,7 @@
         unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
         
         if (index < [curEmoticons count])
-            return [[curEmoticons objectAtIndex:index] attributedEmoticon];
+            return [[curEmoticons objectAtIndex:index] objectForKey:@"Image"];
         else
             return nil;
     }
