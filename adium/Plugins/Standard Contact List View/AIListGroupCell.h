@@ -12,4 +12,6 @@
 
 }
 
+- (int)flippyIndent;
+
 @end

@@ -23,6 +23,8 @@
 #import "AIListContactMockieCell.h"
 #import "AIListContactBrickCell.h"
 #import "AIListContactBubbleToFitCell.h"
+#import "AIListGroupBubbleCell.h"
+#import "AIListGroupBubbleToFitCell.h"
 
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
@@ -250,54 +252,51 @@
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 		float			backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
+		LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
+		Class			cellClass;
 
 		//
 		autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 		autoResizeHorizontally = NO;
         [self _configureAutoResizing];
 		
-		//Cells
+		//Group Cell
 		[groupCell release];
-		[contentCell release];
 		if(windowStyle == WINDOW_STYLE_MOCKIE){
-			groupCell = [[AIListGroupMockieCell alloc] init];	
-			contentCell = [[AIListContactMockieCell alloc] init];
+			groupCell = [[AIListGroupMockieCell alloc] init];
 		}else{
-			Class			cellClass;
-			LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
-
-			//Disallow standard and brick for pillows
-			if(windowStyle == WINDOW_STYLE_PILLOWS &&
-			   (contactCellStyle == CELL_STYLE_STANDARD || contactCellStyle == CELL_STYLE_BRICK)){
-				contactCellStyle = CELL_STYLE_BUBBLE;
-			}
-			
-			//Disallow bubble and bubble to fit for mockie
-			if(windowStyle == WINDOW_STYLE_MOCKIE &&
-			   (contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)){
-				contactCellStyle = CELL_STYLE_STANDARD;
-			}
-			
-			//
 			switch([[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE] intValue]){
 				case CELL_STYLE_STANDARD: 	cellClass = [AIListGroupCell class]; break;
 				case CELL_STYLE_BRICK: 		cellClass = [AIListGroupGradientCell class]; break;
-				case CELL_STYLE_BUBBLE: 	cellClass = [AIListGroupGradientCell class]; break;
-				default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListGroupGradientCell class]; break;
+				case CELL_STYLE_BUBBLE: 	cellClass = [AIListGroupBubbleCell class]; break;
+				default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListGroupBubbleToFitCell class]; break;
 			}
 			groupCell = [[cellClass alloc] init];	
-			
-			switch(contactCellStyle){
-				case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
-				case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
-				case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
-				default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListContactBubbleToFitCell class]; break;
-			}
-			contentCell = [[cellClass alloc] init];
 		}
 		[contactListView setGroupCell:groupCell];
+		
+		//Contact Cell
+		//Disallow standard and brick for pillows
+		if(windowStyle == WINDOW_STYLE_PILLOWS &&
+		   (contactCellStyle == CELL_STYLE_STANDARD || contactCellStyle == CELL_STYLE_BRICK)){
+			contactCellStyle = CELL_STYLE_BUBBLE;
+		}
+		//Disallow bubble and bubble to fit for mockie
+		if(windowStyle == WINDOW_STYLE_MOCKIE &&
+		   (contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)){
+			contactCellStyle = CELL_STYLE_STANDARD;
+		}
+		[contentCell release];
+		switch(contactCellStyle){
+			case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
+			case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
+			case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
+			default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListContactBubbleToFitCell class]; break;
+		}
+		contentCell = [[cellClass alloc] init];
 		[contactListView setContentCell:contentCell];
-
+		
+	
 		//Alignment
 		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 		[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
@@ -318,7 +317,6 @@
 		[groupCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
 		
 		//Bubbles special cases
-		LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
 		if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
 			[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 			[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];

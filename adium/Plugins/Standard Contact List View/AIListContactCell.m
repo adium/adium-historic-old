@@ -21,10 +21,10 @@
 
 #define STATUS_ICON_LEFT_PAD			2
 #define STATUS_ICON_RIGHT_PAD			3
-
+#define HULK_CRUSH_FACTOR 1
+ 
 
 @implementation AIListContactCell
-
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -33,6 +33,7 @@
 	return(newCell);
 }
 
+//Init
 - (id)init
 {
     [super init];
@@ -43,6 +44,7 @@
 	return(self);
 }
 	
+//Dealloc
 - (void)dealloc
 {
 	[statusFont release];
@@ -50,12 +52,9 @@
 }
 
 
-
-
-
-
 //Cell sizing and padding ----------------------------------------------------------------------------------------------
-//
+#pragma mark Cell sizing and padding
+//Size our cell to fit our content
 - (NSSize)cellSize
 {
 	NSSize	size = [super cellSize];
@@ -63,60 +62,13 @@
 	if(userIconVisible){
 		return(NSMakeSize(0, size.height + userIconSize));
 	}else{
-		
-#warning I hate OS X font sizing ... cache this
-		
-		NSAttributedString *		attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
-		int		textHeight = [attrString heightWithWidth:1e7];
-		
-		return(NSMakeSize(0, /*(int)([[self font] boundingRectForFont].size.height)*/ size.height + textHeight));
+		return(NSMakeSize(0, size.height + labelFontHeight));
 	}
 }
-
-//Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
-//- (int)topPadding{
-//	return([super topPadding] + 1);
-//}
-//- (int)bottomPadding{
-//	return([super bottomPadding] + 1);
-//}
-- (int)leftPadding{
-	
-	if([self padToFlippy]){
-		int leftPad = [super leftPadding];
-		int flippy = [[controlView groupCell] flippyIndent];
-		
-		NSLog(@"%i + %i = %i",leftPad, flippy, leftPad + flippy);
-#warning flippy indent already has the padding, so it is being applied twice
-		return(leftPad + flippy);
-	}else{
-		return([super leftPadding] + 1);
-	}
-}
-- (int)rightPadding{
-	return([super rightPadding] + 3);
-}
-
-- (BOOL)padToFlippy{
-	return((!statusIconsVisible || statusIconPosition != LIST_POSITION_FAR_LEFT) &&
-		   (!statusIconsVisible || statusIconPosition != LIST_POSITION_LEFT) &&
-		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_FAR_LEFT ) &&
-		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_LEFT) &&
-		   (!userIconVisible || userIconPosition != LIST_POSITION_LEFT));
-}
-
-
-
-
-
-
-
-
-
-
 
 
 //Status Text ----------------------------------------------------------------------------------------------------------
+#pragma mark Status Text
 //Font used to display status text
 - (void)setStatusFont:(NSFont *)inFont
 {
@@ -164,58 +116,9 @@
 	[_statusAttributes release]; _statusAttributes = nil;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	
-//Label color
-- (NSColor *)labelColor
-{
-	NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
-	return([labelColor colorWithAlphaComponent:backgroundOpacity]);
-}
-
-- (void)setBackgroundOpacity:(float)inOpacity
-{
-	backgroundOpacity = inOpacity;
-}
-
-
-
-
-//Draw using our contact's status color
-- (NSColor *)textColor
-{
-	if([self isSelectionInverted]){
-		return([super textColor]);
-	}else{
-		NSColor	*textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
-		return(textColor ? textColor : [NSColor blackColor]);
-	}
-}
-
-
-
-//Configure ------------------------------------------------------------------------------------------------------------
-#pragma mark Configure
+//Display options ------------------------------------------------------------------------------------------------------
+#pragma mark Display options
 //User Icon Visibility
 - (void)setUserIconVisible:(BOOL)inShowIcon
 {
@@ -272,70 +175,37 @@
 	serviceIconPosition = inPosition;
 }
 
-
-//Images ---------------------------------------------------------------------------------------------------------------
-#pragma mark Images
-//
-- (NSImage *)userIconImage
+//Opacity
+- (void)setBackgroundOpacity:(float)inOpacity
 {
-	NSImage	*image = [listObject userIcon];
+	backgroundOpacity = inOpacity;
+}
+- (float)backgroundOpacity{
+	return(backgroundOpacity);
+}
+
+//Text Font
+- (void)setFont:(NSFont *)inFont
+{
+	NSDictionary		*attributes;
+	NSAttributedString 	*labelString;
 	
-	if(!image){
-		if(!genericUserIcon) genericUserIcon = [[NSImage imageNamed:@"DefaultIcon" forClass:[self class]] retain];
-		image = genericUserIcon;
-	}
+	[super setFont:inFont];
 	
-	return(image);
+	//Calculate and cache the height of this font
+	attributes = [NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName];
+	labelString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
+	labelFontHeight = [labelString heightWithWidth:1e7];
 }
-
-//
-- (NSImage *)statusImage
-{
-#warning using tab status icons for now
-	return([[listObject displayArrayForKey:@"Tab Status Icon"] objectValue]);
-}
-
-//
-- (NSImage *)serviceImage
-{
-	return([[(AIListContact *)listObject account] menuImage]);
-}
-
-
-
-
 
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
-
-
-#define HULK_CRUSH_FACTOR 1
-
-//Draw left or not?
-#warning cache me pleaaaase
-- (BOOL)weFitInRect:(NSRect)rect
-{
-	//Username
-	NSAttributedString *attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
-	int		nameHeight = [attrString heightWithWidth:1e7];
-	
-	//status
-	NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName]] autorelease];
-	int		statusHeight = [statusString heightWithWidth:1e7];
-	
-	return(nameHeight + statusHeight - HULK_CRUSH_FACTOR <= rect.size.height);
-}
-
-
-
-
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect
 {
 	NSRect			iconRect;
 
-#warning This is ghetto, deal with it :D
 	//Far Left
 	if(statusIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
 	if(serviceIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
@@ -358,30 +228,13 @@
 	if(statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
-	BOOL	weFit = [self weFitInRect:rect];
-	
 	//Extended Status
-	if(weFit) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
-	
+	BOOL	drawUnder = [self drawStatusBelowLabelInRect:rect];
+	if(drawUnder) rect = [self drawUserExtendedStatusInRect:rect drawUnder:drawUnder];
 	rect = [self drawDisplayNameWithFrame:rect];
-	
-	if(!weFit) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
+	if(!drawUnder) rect = [self drawUserExtendedStatusInRect:rect drawUnder:drawUnder];
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //User Icon
 - (NSRect)drawUserIconInRect:(NSRect)inRect position:(IMAGE_POSITION)position
@@ -396,10 +249,7 @@
 		[image setFlipped:![image isFlipped]];
 		if(position == IMAGE_POSITION_LEFT) rect.origin.x += ICON_TEXT_PADDING;
 		
-		
-		
-		//BADGES
-#warning baaaah
+		//Badges
 		NSRect	drawRect = [[self userIconImage] rectForDrawingInRect:inRect
 																atSize:NSMakeSize(userIconSize, userIconSize)
 															  position:position];
@@ -510,5 +360,53 @@
 	return(rect);
 }
 
+//Contact label color
+- (NSColor *)labelColor
+{
+	NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
+	return([labelColor colorWithAlphaComponent:backgroundOpacity]);
+}
+
+//Contact text color
+- (NSColor *)textColor
+{
+	if([self isSelectionInverted]){
+		return([super textColor]);
+	}else{
+		NSColor	*textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
+		return(textColor ? textColor : [NSColor blackColor]);
+	}
+}
+
+//Contact user image
+- (NSImage *)userIconImage
+{
+	NSImage	*image = [listObject userIcon];
+	
+	if(!image){
+		if(!genericUserIcon) genericUserIcon = [[NSImage imageNamed:@"DefaultIcon" forClass:[self class]] retain];
+		image = genericUserIcon;
+	}
+	
+	return(image);
+}
+
+//Contact status image
+- (NSImage *)statusImage
+{
+	return([[listObject displayArrayForKey:@"Tab Status Icon"] objectValue]);
+}
+
+//Contact service image
+- (NSImage *)serviceImage
+{
+	return([[(AIListContact *)listObject account] menuImage]);
+}
+
+//YES if our status should draw below the label text
+- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect
+{
+	return(labelFontHeight + statusFontHeight - HULK_CRUSH_FACTOR <= rect.size.height);
+}
 
 @end

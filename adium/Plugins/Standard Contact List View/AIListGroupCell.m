@@ -33,8 +33,6 @@
 	return([super rightPadding] + 4);
 }
 
-
-
 - (NSSize)cellSize
 {
 	NSSize	size = [super cellSize];

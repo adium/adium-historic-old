@@ -8,10 +8,7 @@
 
 #import "AIListContactBubbleCell.h"
 
-#define BUBBLE_TOP_PADDING		0
-#define BUBBLE_BOTTOM_PADDING	0
 #define EDGE_INDENT 			4
-#define BUBBLE_NAME_ONLY		YES
 
 @implementation AIListContactBubbleCell
 
@@ -22,24 +19,7 @@
 	return(newCell);
 }
 
-//Add padding for our bubble
-- (NSSize)cellSize
-{
-	NSSize	size = [super cellSize];
-
-	size.height += BUBBLE_TOP_PADDING + BUBBLE_BOTTOM_PADDING;
-
-	return(size);
-}
-
 //Give ourselves more padding
-- (int)topPadding{
-	return([super topPadding] + BUBBLE_TOP_PADDING);
-}
-- (int)bottomPadding{
-	return([super bottomPadding] + BUBBLE_BOTTOM_PADDING);
-}
-#warning need a real fix...
 - (int)leftPadding{
 	return([super leftPadding] + EDGE_INDENT);
 }
@@ -47,37 +27,27 @@
 	return([super rightPadding] + EDGE_INDENT);
 }
 
-- (BOOL)padToFlippy{
-	return(NO);
-}
-
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	NSColor			*labelColor = [self labelColor];
-	if(drewSelection) {
+	if(!drewSelection){
+		NSColor	*labelColor = [self labelColor];
+
+		if(labelColor){
+			//Retrieve the label and shift it into position
+			NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]];
+			
+			//Fill the label
+			[labelColor set];
+			[pillPath fill];
+		}
+		
+	}else{
 		drewSelection = NO;
-		return;
-	}
-	//Draw our label
-	if(labelColor){
-		//Retrieve the label and shift it into position
-		NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]];
-		
-		//Fill the label
-		[labelColor set];
-		[pillPath fill];
-		
-		//Outline the label
-//		if([self isHighlighted]){
-//			[pillPath setLineWidth:1.0];
-//			[[NSColor selectedControlColor] set];
-//			[pillPath stroke];
-//		}
 	}
 }
 
-//Draw
+//Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
 	[self drawBackgroundWithFrame:cellFrame];
@@ -86,9 +56,7 @@
 	
 	rect = NSInsetRect(rect,1,1);
 	
-	NSLog(@"_drawHighlightWithFrame");
 	NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:rect];
-
 	[pillPath setLineWidth:2.0];
 	[[NSColor alternateSelectedControlColor] set];
 	[pillPath stroke];
