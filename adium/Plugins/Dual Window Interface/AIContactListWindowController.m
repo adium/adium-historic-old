@@ -287,6 +287,9 @@
 //Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Before closing a container, we must set active to nil
+    [interface containerDidBecomeActive:nil];
+
     //Stop observing
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];

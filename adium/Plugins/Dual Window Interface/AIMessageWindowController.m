@@ -160,11 +160,15 @@
 //Remove a tab view item container
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
+    //Before closing a container, we must set active to nil
+    [interface containerDidBecomeActive:nil];
+
     //If the tab is selected, select the next tab.
     if(inTabViewItem == [tabView_messages selectedTabViewItem]){
 	[tabView_messages selectNextTabViewItem:nil];
     }
-    
+
+    //Remove the tab and let the interface know a container closed
     [tabView_messages removeTabViewItem:inTabViewItem];
     [interface containerDidClose:inTabViewItem];
 
@@ -243,11 +247,13 @@
     while((tabViewItem = [enumerator nextObject])){
         [[owner interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
     }
+    [interface containerDidBecomeActive:nil];
 
     //Save the window position
     [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
+
     return(YES);
 }
 
