@@ -521,7 +521,7 @@
 - (void)_resortAllChats
 {
 	AISortController	*sortController = [[adium contactController] activeSortController];
-	NSEnumerator		*containerEnumerator = [[[interfacePlugin openContainers] copy] autorelease] objectEnumerator];
+	NSEnumerator		*containerEnumerator = [[[[interfacePlugin openContainers] copy] autorelease] objectEnumerator];
 	NSString			*containerID;
 	
 	while(containerID = [containerEnumerator nextObject]){
