@@ -897,7 +897,7 @@
 - (void)accountConnectionDisconnected
 {
     NSEnumerator    *enumerator;
-    
+    	
     //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];

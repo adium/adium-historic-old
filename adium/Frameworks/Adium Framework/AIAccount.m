@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.35 2004/01/17 18:21:29 adamiser Exp $
+// $Id: AIAccount.m,v 1.36 2004/01/17 22:15:15 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -22,6 +22,8 @@
 @interface AIAccount (PRIVATE)
 - (void)_setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)_setAccountProfileTo:(NSAttributedString *)profile;
+- (void)_startRefreshTimer;
+- (void)_stopRefreshTimer;
 @end
 
 @implementation AIAccount
@@ -113,6 +115,21 @@
 }
 
 #pragma mark Status
+
+//Enable and disable the refresh timers as our account goes online and offline
+- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
+{
+	if([key compare:@"Online"] == 0){
+		if([value boolValue]){
+			if([refreshDict count])	[self _startRefreshTimer];
+		}else{
+			[self _stopRefreshTimer];
+		}
+	}
+	
+	[super setStatusObject:value withOwner:owner forKey:key notify:notify];
+}
+
 //Update this account's status
 //Status keys that are used by every account (Or used by the majority of accounts and harmless to others) should be
 //placed here, instead of duplicated in each account plugin.
@@ -126,16 +143,6 @@
     if([key compare:@"Online"] == 0){
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
-				//Start refreshing attributed status messages if needed
-				if ([refreshDict count]){
-					if (!refreshTimer){
-						refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:ATTRIBUTED_STRING_REFRESH
-																		 target:self
-																	   selector:@selector(_refreshAttributedStrings:) 
-																	   userInfo:nil repeats:YES] retain];
-					}
-				}
-				
                 //Retrieve the user's password and then call connect
                 [[adium accountController] passwordForAccount:self 
                                               notifyingTarget:self
@@ -143,13 +150,6 @@
             }
         }else{
             if(areOnline && ![[self statusObjectForKey:@"Disconnecting"] boolValue]){
-				//Stop refreshing attributed status message
-				if (refreshTimer) {
-					if ([refreshTimer isValid])
-						[refreshTimer invalidate];
-					[refreshTimer release]; refreshTimer = nil;
-				}
-				
                 //Disconnect
                 [self disconnect];
             }
@@ -173,24 +173,14 @@
     //refresh periodically if the filtered string is different from the original one
     refreshPeriodically = (status && (![[status string] isEqualToString:[filteredMessage string]]));
     
-    if (refreshPeriodically){
+    if(refreshPeriodically){
         [refreshDict setObject:status forKey:key];
-        //Begin the timer if it is currently inactive
-        if (!refreshTimer){
-            refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:ATTRIBUTED_STRING_REFRESH
-                                                                        target:self
-                                                                      selector:@selector(_refreshAttributedStrings:) 
-                                                                      userInfo:nil repeats:YES] retain];
-        }
+		[self _startRefreshTimer];
+
     }else{
         [refreshDict removeObjectForKey:key];
-        
-        //Check if our refreshDict is now empty with a currently running timer
-        if ( ([refreshDict count] == 0) && refreshTimer){
-            if ([refreshTimer isValid])
-                [refreshTimer invalidate];
-            [refreshTimer release]; refreshTimer = nil;
-        }        
+        if([refreshDict count] == 0) [self _stopRefreshTimer];
+
     }
 
     //Set the status in account code
@@ -208,6 +198,25 @@
     }
 }
 
+
+- (void)_startRefreshTimer
+{
+	if(!refreshTimer){
+		refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:ATTRIBUTED_STRING_REFRESH
+														 target:self
+													   selector:@selector(_refreshAttributedStrings:) 
+													   userInfo:nil repeats:YES] retain];
+	}
+}
+
+- (void)_stopRefreshTimer
+{
+	if(refreshTimer){
+		[refreshTimer invalidate];
+		[refreshTimer release];
+		refreshTimer = nil;
+	}
+}
 
 
 
