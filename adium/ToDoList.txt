@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.32 2004/04/10 22:21:14 evands Exp $
+$Id: ToDoList.txt,v 1.33 2004/04/10 23:12:58 evands Exp $
 
 Legend
 + Change or Addition
@@ -18,14 +18,12 @@ Bugs
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
-* Is TOC2 hiding somewhere? Check out: http://www.visualdistortion.org/crash/view.jsp?crash=7680
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 * User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
 * Changing an alias in the inspector does not correctly update the contact list
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
 * Some URLs in profiles aren't allowing clicks properly.
-* We have a 10.2.8 crash in contact list resize code, somehow: http://www.visualdistortion.org/crash/view.jsp?crash=8008 (There are a couple like this)
 -------------------------------------------------------------------------------------------------------
 Minor Changes
 -------------------------------------------------------------------------------------------------------
@@ -236,6 +234,7 @@ Bug Fixes:
 = Spaces in the address book STILL don't work properly, and they really should be better now. Grr.
 = Stray tab divider is displaying when dragging tabs
 = Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
+= We have a 10.2.8 crash in contact list resize code, somehow: http://www.visualdistortion.org/crash/view.jsp?crash=8008 (There are a couple like this)
 = When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
 = Window content is drawing 2 pixels to the left when dragging tabs
 ced preference panes.
