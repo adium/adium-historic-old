@@ -1306,8 +1306,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 	if([NSApp isOnPantherOrBetter]) {
 		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
-        menuItem_getInfoAlternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO 
-															   target:self 
+            menuItem_getInfoAlternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO															   target:self 
 															   action:@selector(showContactInfo:)
 														keyEquivalent:@"i"];
         [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
@@ -1355,9 +1354,17 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Always be able to show the inspector
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)){
-		return([self selectedListObject] != nil);
-	}else if ((menuItem == menuItem_getInfoContextualContact) || 
+        if((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)){
+            //Update the menu titles to reflect the selected contact
+            if([self selectedListObject] != nil){
+                [menuItem_getInfo setTitle:[NSString stringWithFormat:@"View %@'s Info",[[self selectedListObject] displayName]]];
+                [menuItem_getInfoAlternate setTitle:[NSString stringWithFormat:@"View %@'s Info",[[self selectedListObject] displayName]]];
+            }else{
+                [menuItem_getInfo setTitle:@"View Contact's Info"];
+                [menuItem_getInfoAlternate setTitle:@"View Contact's Info"];
+                return NO;
+            }            
+        }else if ((menuItem == menuItem_getInfoContextualContact) || 
 			  (menuItem == menuItem_getInfoContextualGroup)){
 		return([[adium menuController] contactualMenuObject] != nil);
 	}
