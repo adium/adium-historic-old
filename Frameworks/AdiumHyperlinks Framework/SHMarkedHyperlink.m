@@ -89,7 +89,14 @@
 -(void)setURLFromString:(NSString *)inString
 {
     [linkURL release];
-    linkURL = [[NSURL alloc] initWithString:inString];
+    
+    NSString *linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes( NULL,
+                                            (CFStringRef)inString,
+                                            (CFStringRef)@"#%",
+                                            NULL,
+                                            kCFStringEncodingISOLatin1 );
+
+    linkURL = [[NSURL alloc] initWithString:linkString];
 }
 
 -(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
