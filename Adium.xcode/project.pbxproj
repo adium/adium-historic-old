@@ -6259,7 +6259,6 @@
 				4BD6742B06001D1B0049CAF7,
 				4BD6742D06001D1C0049CAF7,
 				4BD6743206001D1F0049CAF7,
-				4BD6743406001D200049CAF7,
 				4BD6743806001D2F0049CAF7,
 				4BD6743A06001D2F0049CAF7,
 				4BD6743E06001D330049CAF7,
@@ -6520,7 +6519,6 @@
 				4BD673FC06001CC10049CAF7,
 				4BD6742506001CF40049CAF7,
 				4BD6742F06001D1D0049CAF7,
-				4BD6743506001D210049CAF7,
 				4BD6743C06001D300049CAF7,
 				4BD6744806001D460049CAF7,
 				4BD6745206001D4D0049CAF7,
@@ -6854,7 +6852,6 @@
 				4BD6742C06001D1C0049CAF7,
 				4BD6742E06001D1D0049CAF7,
 				4BD6743306001D200049CAF7,
-				4BD6743706001D220049CAF7,
 				4BD6743906001D2F0049CAF7,
 				4BD6743B06001D300049CAF7,
 				4BD6743F06001D340049CAF7,
@@ -15313,9 +15310,6 @@
 			children = (
 				4BC8AFE204FD3C5600A8010A,
 				4BC8AFE304FD3C5600A8010A,
-				4BC8AFE604FD3CEB00A8010A,
-				4BC8AFE704FD3CEB00A8010A,
-				4BC8AFEA04FD3E9500A8010A,
 				4BC8AFEC04FD413900A8010A,
 			);
 			isa = PBXGroup;
@@ -15339,32 +15333,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AISpellCheckingPlugin.m;
 			path = "Plugins/Spell Checking/AISpellCheckingPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BC8AFE604FD3CEB00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AISpellCheckingPreferences.h;
-			path = "Plugins/Spell Checking/AISpellCheckingPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BC8AFE704FD3CEB00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AISpellCheckingPreferences.m;
-			path = "Plugins/Spell Checking/AISpellCheckingPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BC8AFEA04FD3E9500A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = SpellCheckingPrefs.nib;
-			path = "Plugins/Spell Checking/SpellCheckingPrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16456,26 +16424,8 @@
 			settings = {
 			};
 		};
-		4BD6743406001D200049CAF7 = {
-			fileRef = 4BC8AFE604FD3CEB00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743506001D210049CAF7 = {
-			fileRef = 4BC8AFEA04FD3E9500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6743606001D210049CAF7 = {
 			fileRef = 4BC8AFEC04FD413900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743706001D220049CAF7 = {
-			fileRef = 4BC8AFE704FD3CEB00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
