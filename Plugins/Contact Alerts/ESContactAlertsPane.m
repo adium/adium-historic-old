@@ -48,6 +48,9 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	[button_edit setTitle:@"Edit"];
 	[button_delete setEnabled:NO];
 	[button_edit setEnabled:NO];
+
+	//
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
 }
 
 //Preference view is closing
@@ -55,7 +58,7 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	[alertArray release]; alertArray = nil;
     [listObject release]; listObject = nil;
-	[[adium notificationCenter] removeObserver:self]; 
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Configure the pane for a list object
@@ -64,24 +67,20 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	//Configure for the list object, using the highest-up metacontact if necessary
 	[listObject release];
 	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
-
-	//Observe alert changes for our list object
-	[[adium notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil]; 
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:listObject];
-	[self preferencesChanged:nil];
+	
+	//
+	[self preferencesChangedForGroup:nil key:nil object:nil preferenceDict:nil];
 }
 
 //Alerts have changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if(notification == nil || 
-	   ([notification object] == listObject && 
-		[(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_ALERTS])){
-		
+	if(!object || object == listObject){
 		//Update our list of alerts
 		[alertArray release];
 		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject] mutableCopy];
-
+		
 		//Sort them
 		[alertArray sortUsingFunction:alertAlphabeticalSort context:nil];
 		
