@@ -258,9 +258,6 @@
 //
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {    
-	//Reftesh
-	[contactListView setNeedsDisplay:YES];
-	
     //Post a 'contact list selection changed' notification on the interface center
 	//If we post this notification immediately, our outline view may not yet be key, and contact controller
 	//will return nil for 'selectedListObject'.  If we wait until we're back in the main run loop, the
