@@ -1111,7 +1111,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 										 size:(unsigned long long)inSize
 							   remoteFilename:(NSString *)remoteFilename
 {
-	return([self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFileName:)
+	return([self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFilename:)
 						  withObject:destinationUID
 						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
 						  withObject:remoteFilename
