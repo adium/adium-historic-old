@@ -32,5 +32,6 @@
 - (void)configureViewForStatus:(ACCOUNT_STATUS)inStatus;
 - (void)initAccountView;
 - (NSView *)view;
+- (void)configureViewAfterLoad;
 
 @end
