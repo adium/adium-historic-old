@@ -94,9 +94,9 @@
 // Libezv Callbacks
 - (void) reportLoggedIn {
     //We are now online
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 
     //Apply any changes
     [self notifyOfChangedStatusSilently:NO];
@@ -114,9 +114,13 @@
     }
     [libezvContacts removeAllObjects];
     
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+	//We are now offline
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
+	
+	//Apply any changes
+    [self notifyOfChangedStatusSilently:NO];
 }
 
 - (void) userChangedState:(AWEzvContact *)contact {
