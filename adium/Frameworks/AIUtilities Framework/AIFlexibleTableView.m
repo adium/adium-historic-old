@@ -235,7 +235,7 @@
     //Remember the number of clicks
     if(![theEvent shiftKey]){
         clicks = [theEvent clickCount];
-        if(!(clicks % 3)){ //Tripple click (Select line)
+        if(!(clicks % 3)){ //Triple click (Select line)
             selectClicks = 3;
         }else if(!(clicks % 2)){ //Double Click (Select word)
             selectClicks = 2;

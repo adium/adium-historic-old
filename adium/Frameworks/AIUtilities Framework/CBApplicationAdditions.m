@@ -22,7 +22,7 @@
 {
     static BOOL _webkitAvailable = NO;
     static BOOL _initialized = NO;
-    NSBundle	*webKitBundle;
+//    NSBundle	*webKitBundle;
 	
     if (_initialized)
         return _webkitAvailable;

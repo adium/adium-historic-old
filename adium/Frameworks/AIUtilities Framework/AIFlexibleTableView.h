@@ -13,6 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AIFlexibleTableCell.h"
+#import "AIFlexibleTableFramedTextCell.h"
+#import "AIFlexibleTableImageCell.h"
+#import "AIFlexibleTableRow.h"
+#import "AIFlexibleTableSpanCell.h"
+#import "AIFlexibleTableStringCell.h"
+#import "AIFlexibleTableTextCell.h"
+
 @class AIContactHandle, AIFlexibleTableColumn, AIFlexibleTableCell, AIFlexibleTableRow;
 
 //Optional

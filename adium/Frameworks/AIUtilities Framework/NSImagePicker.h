@@ -2,29 +2,29 @@
 // Its use requires the target to include the AddressBook framework, and it probably only works on 10.3 or greater.
 
 /*
-	   *     Derrived from the output of class-dump (version 2.1.5) by Nicko van Someren.
-	   *     class-dump is Copyright (C) 1997, 1999, 2000, 2001 by Steve  Nygard.
-	 
-	   *                       ****** WARNING !!!! ******
-	   *
-	   * This set of classes is not documented by Apple, and as such there is
-	   * absolutely no guarantee that it will not change!  There are clear  signs
-	   * that the API was never expected to be used by third parties in its  current
-	   * form.
-	   *
-	   *                 ****** USE AT YOUR OWN RISK !!!! ******
-	 
-	   * Refers to parts of file:  /System/Library/Frameworks/AddressBook.framework/AddressBook and
-	   *  .../AddressBook.framework/ImagePickerQTParts.bundle/Contents/MacOS/ 
-	 ImagePickerQTParts
-	   */
+   *     Derrived from the output of class-dump (version 2.1.5) by Nicko van Someren.
+   *     class-dump is Copyright (C) 1997, 1999, 2000, 2001 by Steve  Nygard.
+ 
+   *                       ****** WARNING !!!! ******
+   *
+   * This set of classes is not documented by Apple, and as such there is
+   * absolutely no guarantee that it will not change!  There are clear  signs
+   * that the API was never expected to be used by third parties in its  current
+   * form.
+   *
+   *                 ****** USE AT YOUR OWN RISK !!!! ******
+ 
+   * Refers to parts of file:  /System/Library/Frameworks/AddressBook.framework/AddressBook and
+   *  .../AddressBook.framework/ImagePickerQTParts.bundle/Contents/MacOS/ 
+ ImagePickerQTParts
+   */
 
 #import <AppKit/AppKit.h>
 
-	// This is defined as a protcol for documentation reasons; it's not really necessary to have it so
+// This is defined as a protcol for documentation reasons; it's not really necessary to have it so
 @protocol ApparentlyNSImagePickerDelegateProtocol
 
-	// This gets called when the user selects OK on a new image
+// This gets called when the user selects OK on a new image
 - (void)imagePicker: (id) sender selectedImage: (NSImage *) image;
 
 	// This is called if the user cancels an image selection
@@ -35,7 +35,7 @@
 	// The junk on the end seems to be the selector name for the method itself
 - (NSImage *) displayImageInPicker: junk;
 
-	// This is called to give a title for the picker.  It is called as above.
+	// This is called to give a title for the picker. It is called as above.
 	// Note that you must not return nil or the window gets upset
 - (NSString *) displayTitleInPicker: junk;
 @end
@@ -69,7 +69,7 @@
 	id _delegate;
 }
 
-	// This seems to be the best way to get the Image Picker we should use
+// This seems to be the best way to get the Image Picker we should use
 + (NSImagePickerController *) sharedImagePickerControllerCreate: (BOOL) create;
 
 	// This is the pop-up for the recently presented pictures
@@ -101,7 +101,7 @@
 @end
 
 @interface NSImagePickerController(QTImagePickerBundle)
-	// Get information about the inner bundle
+// Get information about the inner bundle
 + bundle;
 
 	// Get/Set if the user has changed anything in the dialoge

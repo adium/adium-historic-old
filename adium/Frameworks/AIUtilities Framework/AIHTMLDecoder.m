@@ -204,7 +204,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
         BOOL			isItalic = (traits & NSItalicFontMask);
         
         NSString		*link = [attributes objectForKey:NSLinkAttributeName];
-        AITextAttachmentExtension *attachment = [attributes objectForKey:NSAttachmentAttributeName];
         NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
         //
