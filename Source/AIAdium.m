@@ -467,7 +467,7 @@
 	if (prefsCategory != -1){
 		switch( prefsCategory ) {
  			case AIPref_Advanced:
-				[preferenceController openPreferencesToAdvancedPane:advancedPrefsName inCategory:prefsCategory];
+				[preferenceController openPreferencesToAdvancedPane:advancedPrefsName];
 				[advancedPrefsName release]; advancedPrefsName = nil;
 				break;
 			default:
