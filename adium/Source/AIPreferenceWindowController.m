@@ -29,6 +29,7 @@
 - (void)installToolbar;
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
+- (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view;
 @end
 
 @implementation AIPreferenceWindowController
@@ -266,8 +267,15 @@ static AIPreferenceWindowController *sharedInstance = nil;
         break;
         case 6:
             [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
+            [self _sizeWindowToFitFlatView:view_Sound];
         break;
+        case 7:
+            [self _insertPanesForCategory:AIPref_Alerts	intoView:view_Alerts];
+            [self _sizeWindowToFitFlatView:view_Alerts];
+        break;
+            
     }
+
 }
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
@@ -341,11 +349,25 @@ static AIPreferenceWindowController *sharedInstance = nil;
     maxHeight += yPadding;
 
     //Adjust our window's frame
-    frame.origin.y += frame.size.height -maxHeight;
+    frame.origin.y += frame.size.height - maxHeight;
     frame.size.height = maxHeight;
     [[self window] setFrame:frame display:YES animate:YES];
 }
 
+- (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view
+{
+    NSRect 		frame = [[self window] frame];
+
+    int		height = [(AIFlippedCategoryView *)view desiredHeight];
+
+    //Add in window frame padding
+    height += yPadding;
+
+    //Adjust our window's frame
+    frame.origin.y += frame.size.height - height;
+    frame.size.height = height;
+    [[self window] setFrame:frame display:YES animate:YES];
+}
 //Toolbar item methods
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
