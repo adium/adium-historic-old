@@ -191,6 +191,29 @@
 }
 
 
+- ( NSString* )stringWithoutWhitespace:( NSString* )sourceString
+{
+    NSMutableString* newString = [ [ NSMutableString alloc ] init ];
+    uint lengthOfSourceString;
+    uint currentCharInSourceStringIndex;
+
+    lengthOfSourceString = [ sourceString length ];
+
+    for ( currentCharInSourceStringIndex = 0;
+          currentCharInSourceStringIndex < lengthOfSourceString;
+          currentCharInSourceStringIndex++ )
+    {
+        if ( [ sourceString compare:@" "
+                            options:NSCaseInsensitiveSearch
+                              range:NSMakeRange( currentCharInSourceStringIndex, 1 ) ] != NSOrderedSame )
+        {
+            [ newString appendString:[ sourceString substringWithRange:NSMakeRange( currentCharInSourceStringIndex, 1 ) ] ];
+        }
+    }
+
+    return [ newString autorelease ];
+}
+
 
 //Private ---------------------------------------------------------------------------------------
 //Apply an alias to an object (Does not save the alias!)
@@ -200,19 +223,90 @@
     NSString		*longDisplayName = nil;
 
     //Setup the display names
-    if(inAlias != nil && [inAlias length] != 0){
-        //Display Name
+    if ( inAlias != nil && [ inAlias length ] != 0 ) {
         displayName = inAlias;
-        
-        //Long Display Name
-        switch (displayFormat)
-        {
-            case DISPLAY_NAME: longDisplayName = displayName; break;
-            case DISPLAY_NAME_SCREEN_NAME: longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,[inObject serverDisplayName]]; break;
-            case SCREEN_NAME_DISPLAY_NAME: longDisplayName = [NSString stringWithFormat:@"%@ (%@)",[inObject serverDisplayName],displayName]; break;
-            case SCREEN_NAME: longDisplayName = [inObject serverDisplayName]; break;
-            default: longDisplayName = nil; break;
+    } else {
+        /* Screen Name */
+        displayName = [ inObject serverDisplayName ];
+    }
+    
+    //Long Display Name
+    switch ( displayFormat )
+    {
+        case DISPLAY_NAME:
+            longDisplayName = displayName;
+
+            break;
+            
+        case DISPLAY_NAME_SCREEN_NAME:
+            longDisplayName = [ NSString stringWithFormat:@"%@ (%@)",
+                displayName,
+                [ inObject serverDisplayName ] ];
+
+            break;
+            
+        case SCREEN_NAME_DISPLAY_NAME:
+            longDisplayName = [ NSString stringWithFormat:@"%@ (%@)",
+                [ inObject serverDisplayName ],
+                displayName ];
+
+            break;
+            
+        case SCREEN_NAME:
+            longDisplayName = [inObject serverDisplayName];
+
+            break;
+
+        case ADDRESS_BOOK_FIRST_LAST: {
+            NSArray* contacts;
+            uint numberOfContacts;
+            uint currentContactIndex;
+
+            contacts = [ [ ABAddressBook sharedAddressBook ] people ];
+
+            numberOfContacts = [ contacts count ];
+
+            /* Fall-back */
+            longDisplayName = displayName;
+
+            for ( currentContactIndex = 0;
+                    currentContactIndex < numberOfContacts;
+                    currentContactIndex++ )
+            {
+                ABPerson* currentContact = [ contacts objectAtIndex:currentContactIndex ];
+                NSString* currentContactFirstName = [ currentContact valueForProperty:kABFirstNameProperty ];
+                NSString* currentContactLastName = [ currentContact valueForProperty:kABLastNameProperty ];
+                ABMultiValue* currentContactAIMScreenNames = [ currentContact valueForProperty:kABAIMInstantProperty ];
+                uint numberOfScreenNamesForContact = 0;
+                uint currentScreenNameForContactIndex = 0;
+
+                numberOfScreenNamesForContact = [ currentContactAIMScreenNames count ];
+
+                for ( currentScreenNameForContactIndex = 0;
+                        currentScreenNameForContactIndex < numberOfScreenNamesForContact;
+                        currentScreenNameForContactIndex++ )
+                {
+                    NSString* screenName;
+                    NSString* currentScreenNameForContact =
+                    [ currentContactAIMScreenNames valueAtIndex:currentScreenNameForContactIndex ];
+
+                    screenName = [ self stringWithoutWhitespace:[ inObject serverDisplayName ] ];
+                    currentScreenNameForContact = [ self stringWithoutWhitespace:currentScreenNameForContact ];
+
+                    if ( [ screenName caseInsensitiveCompare:currentScreenNameForContact ] == NSOrderedSame ) {
+                        longDisplayName = [ NSString stringWithFormat:@"%@ %@",
+                            currentContactFirstName,
+                            currentContactLastName ];
+
+                        break;
+                    }
+                }
+            }
+
+            break;
         }
+            
+        default: longDisplayName = nil; break;
     }
 
     //Apply thevalues
