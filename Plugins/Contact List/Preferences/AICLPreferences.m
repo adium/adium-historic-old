@@ -45,7 +45,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_ContactList);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(@"General Appearance");
