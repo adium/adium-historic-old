@@ -178,18 +178,11 @@
 {
     NSMutableAttributedString   *replacementMessage = nil;
     if (inAttributedString) {
-        AIContentMessage    *contentMessage = (AIContentMessage *)inObject;
-        NSString            *messageString = [[[contentMessage message] safeString] string];
-
         //First, we do a quick scan of the message for any characters that might end up being emoticons
         //This avoids having to do the slower, more complicated scan for the majority of messages.
-        if([messageString rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound){
-            
+        if([[inAttributedString string] rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound){
             //If an emoticon character was found, we do a more thorough scan
-            if(replacementMessage = [self _convertEmoticonsInMessage:[contentMessage message]]){
-                [contentMessage setMessage:replacementMessage];
-            }
-            
+            replacementMessage = [self _convertEmoticonsInMessage:inAttributedString];            
         }
     }
     return (replacementMessage ? replacementMessage : inAttributedString);
