@@ -85,19 +85,20 @@
 
     //Online / Offline
     online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
-    if(![[theContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
-            [theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
-		[self _setInstantMessagesWithContact:theContact enabled:online];
-		/*           
-			//buddy->signon is always 0 - this will be fixed gaimside soon.
-			if (online && buddy->signon != 0) {
-				//Set the signon time
-				NSMutableDictionary * statusDict = [theHandle statusDictionary];
-				
-				[statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
-				[modifiedKeys addObject:@"Signon Date"];
-			}
-		*/
+    NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online" withOwner:self];
+    if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != online)){
+	[theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
+	[self _setInstantMessagesWithContact:theContact enabled:online];
+	/*           
+	    //buddy->signon is always 0 - this will be fixed gaimside soon.
+	    if (online && buddy->signon != 0) {
+		//Set the signon time
+		NSMutableDictionary * statusDict = [theHandle statusDictionary];
+		
+		[statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
+		[modifiedKeys addObject:@"Signon Date"];
+	    }
+	*/
     }
 	
     //Display Name - use the serverside buddy_alias if present
