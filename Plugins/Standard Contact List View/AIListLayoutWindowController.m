@@ -64,7 +64,7 @@
 	[fontField_group setShowPointSize:YES];
 	[fontField_group setShowFontFace:YES];
 	
-	[textField_layoutName setStringValue:layoutName];
+	[textField_layoutName setStringValue:(layoutName ? layoutName : @"")];
 	
 	[popUp_contactCellStyle setAutoenablesItems:NO];
 }
