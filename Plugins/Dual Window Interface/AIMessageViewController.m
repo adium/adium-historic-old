@@ -339,30 +339,46 @@
 	
 	if (listObject){
 		NSMutableDictionary *detailsDict, *alertDict;
-		NSAttributedString	*message;
-		
-		message = [[adium contentController] filterAttributedString:[[[textView_outgoing textStorage] copy] autorelease]
-													usingFilterType:AIFilterContent
-														  direction:AIFilterOutgoing
-															context:listObject];
 		
 		detailsDict = [NSMutableDictionary dictionary];
 		[detailsDict setObject:[[chat account] internalObjectID] forKey:@"Account ID"];
 		[detailsDict setObject:[NSNumber numberWithBool:YES] forKey:@"Allow Other"];
 		[detailsDict setObject:[listObject internalObjectID] forKey:@"Destination ID"];
-		[detailsDict setObject:[message dataRepresentation] forKey:@"Message"];
-		
+
 		alertDict = [NSMutableDictionary dictionary];
 		[alertDict setObject:detailsDict forKey:@"ActionDetails"];
 		[alertDict setObject:CONTACT_STATUS_ONLINE_YES forKey:@"EventID"];
 		[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
 		[alertDict setObject:[NSNumber numberWithBool:YES] forKey:@"OneTime"]; 
 		
-		[[adium contactAlertsController] addAlert:alertDict 
-									 toListObject:[[adium contactController] parentContactForListObject:listObject]];
+		[alertDict setObject:listObject forKey:@"TEMP-ListObject"];
 		
+		[[adium contentController] filterAttributedString:[[[textView_outgoing textStorage] copy] autorelease]
+										  usingFilterType:AIFilterContent
+												direction:AIFilterOutgoing
+											filterContext:listObject
+										  notifyingTarget:self
+												 selector:@selector(gotFilteredMessageToSendLater:receivingContext:)
+												  context:alertDict];
+
 		[self didSendMessage:nil];
 	}
+}
+
+- (void)gotFilteredMessageToSendLater:(NSAttributedString *)filteredMessage receivingContext:(NSMutableDictionary *)alertDict
+{
+	NSMutableDictionary	*detailsDict;
+	AIListObject		*listObject;
+	
+	detailsDict = [alertDict objectForKey:@"ActionDetails"];
+	[detailsDict setObject:[filteredMessage dataRepresentation] forKey:@"Message"];
+
+	listObject = [[alertDict objectForKey:@"TEMP-ListObject"] retain];
+	[alertDict removeObjectForKey:@"TEMP-ListObject"];
+	
+	[[adium contactAlertsController] addAlert:alertDict 
+								 toListObject:listObject];
+	[listObject release];
 }
 
 - (void)setShouldSendMessagesToOfflineContacts:(BOOL)should
