@@ -71,7 +71,7 @@ static void adiumGaimConnConnected(GaimConnection *gc)
 static void adiumGaimConnDisconnected(GaimConnection *gc)
 {
     NSLog(@"Disconnected: gc=%x", gc);
-    if (_accountDict == nil) // unloadPlugin has already been called; this has been destroyed
+    if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
         return;
     [accountLookup(gc->account) accountConnectionDisconnected];
 }

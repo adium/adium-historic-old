@@ -26,17 +26,20 @@
 #include "util.h"
 
 @interface CBGaimAccount : AIAccount <AIAccount_Handles,AIAccount_Content>
-{
+{    
+    NSString            *screenName;            // Current signed on screen name
+    NSString		*password;		// Current signed on password
+ 
     NSMutableDictionary	*handleDict;
-    NSString *screenName;
-    GaimAccount *account;
-    GaimConnection *gc;
     NSMutableDictionary *chatDict;
 
-    NSMutableArray *filesToSendArray;
+    NSMutableArray      *filesToSendArray;
     
-    NSTimer *signonTimer;
-    BOOL silentAndDelayed;
+    NSTimer             *signonTimer;
+    BOOL                silentAndDelayed;
+    
+    GaimAccount         *account;
+    GaimConnection      *gc;
 }
 
 - (const char*)protocolPlugin;
