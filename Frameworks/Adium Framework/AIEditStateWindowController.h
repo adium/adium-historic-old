@@ -16,13 +16,12 @@ Adium, Copyright 2001-2005, Adam Iser
 #import <Cocoa/Cocoa.h>
 
 @interface AIEditStateWindowController : AIWindowController {
-	IBOutlet	NSButton		*checkbox_available;
-	IBOutlet	NSScrollView	*scrollView_available;
-	IBOutlet	NSTextView		*textView_available;
-
-	IBOutlet	NSButton		*checkbox_away;
-	IBOutlet	NSScrollView	*scrollView_away;
-	IBOutlet	NSTextView		*textView_away;
+	IBOutlet	NSTextField		*label_state;
+	IBOutlet	NSPopUpButton	*popUp_state;
+	
+	IBOutlet	NSTextField		*label_statusMessage;
+	IBOutlet	NSBox			*box_statusMessage;
+	IBOutlet	NSTextView		*textView_statusMessage;
 
 	IBOutlet	NSButton		*checkbox_autoReply;
 	IBOutlet	NSButton		*checkbox_customAutoReply;
@@ -36,22 +35,26 @@ Adium, Copyright 2001-2005, Adam Iser
 
 	IBOutlet	NSButton		*checkbox_invisible;
 	
-	NSDictionary	*originalState;
-	id				target;
+	IBOutlet	NSButton		*button_save;
+	IBOutlet	NSButton		*button_cancel;
+	IBOutlet	NSButton		*button_OK;
+
+	AIStatus	*originalStatusState;
+	id			target;
 }
 
-+ (void)editCustomState:(NSDictionary *)state onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
++ (void)editCustomState:(AIStatus *)state onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (IBAction)statusControlChanged:(id)sender;
 - (void)updateControlVisibilityAndResizeWindow;
 
-- (void)configureForState:(NSDictionary *)state;
-- (NSDictionary *)currentConfiguration;
+- (void)configureForState:(AIStatus *)state;
+- (AIStatus *)currentConfiguration;
 
 @end
 
 @interface NSObject (AICustomStatusWindowTarget)
-- (void)customStatusState:(NSDictionary *)originalState changedTo:(NSDictionary *)newState;
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState;
 @end
