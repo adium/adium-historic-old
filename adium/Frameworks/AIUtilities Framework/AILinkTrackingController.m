@@ -240,8 +240,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Begins cursor tracking, registering tracking rects for all our available links
 - (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSPoint)offset
 {
-    NSRect	visibleContainerRect;
-    NSRange	visibleGlyphRange, visibleCharRange;
+    NSRect		visibleContainerRect;
+    NSRange		visibleGlyphRange, visibleCharRange;
     NSRange 	scanRange;
 
     //Get the range of visible characters
@@ -256,15 +256,15 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     while(NSMaxRange(scanRange) < NSMaxRange(visibleCharRange)){
         NSString	*linkURL;
 
-        //Get the link
+        //Get the link URL
         linkURL = [textStorage attribute:NSLinkAttributeName
                                  atIndex:NSMaxRange(scanRange)
                           effectiveRange:&scanRange];
-        if(linkURL){
-            NSRectArray		linkRects;
+		if(linkURL){
+            NSRectArray linkRects;
             int			index;
             int			linkCount;
-
+			
             //Get an array of rects that define the location of this link
             linkRects = [layoutManager rectArrayForCharacterRange:scanRange
                                      withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0)
@@ -285,7 +285,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 visibleLinkRect = NSIntersectionRect(linkRect, visibleRect);
                 
                 //Create a flexible link instance
-                link = [[[AIFlexibleLink alloc] initWithTrackingRect:linkRect url:linkURL] autorelease];
+                link = [[[AIFlexibleLink alloc] initWithTrackingRect:linkRect
+																 url:linkURL
+															   title:[[textStorage string] substringWithRange:scanRange]] autorelease];
                 if(!linkArray) linkArray = [[NSMutableArray alloc] init];
                 [linkArray addObject:link];
 
@@ -322,19 +324,23 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
         [[NSCursor handPointCursor] set]; //Set link cursor
 
-        if(showTooltip){
-            [hoveredLink release]; hoveredLink = [inHoveredLink retain];
-            [hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
-
-            [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
-        }
-
-    }else if(inHoveredLink == nil && mouseOverLink == YES){
+		//If the link's title matches it's URL, there is no need to show the tooltip.
+		if(showTooltip &&
+		   [[inHoveredLink title] caseInsensitiveCompare:[inHoveredLink url]] != 0 &&
+		   [[@"http://" stringByAppendingString:[inHoveredLink title]] caseInsensitiveCompare:[inHoveredLink url]] != 0){
+			
+			[hoveredLink release]; hoveredLink = [inHoveredLink retain];
+			[hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
+			
+			[AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
+		}
+		
+	}else if(inHoveredLink == nil && mouseOverLink == YES){
         [[NSCursor arrowCursor] set]; //Restore the regular cursor
         
         if(showTooltip){
             [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0) orientation:TooltipAbove]; //Hide the tooltip
-    
+			
             [hoveredLink release]; hoveredLink = nil;
             [hoveredString release]; hoveredString = nil;
         }

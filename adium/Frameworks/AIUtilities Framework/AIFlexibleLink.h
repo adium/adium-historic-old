@@ -14,16 +14,19 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIFlexibleLink : NSObject {
-    NSString		*url;
+    NSString			*url;
+    NSString			*title;
 
-    NSRect		trackingRect;
+    NSRect				trackingRect;
     NSTrackingRectTag	trackingTag;
 }
 
-- (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL;
+- (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL title:(NSString *)inTitle;
 - (NSRect)trackingRect;
 - (void)setTrackingTag:(NSTrackingRectTag)inTrackingTag;
 - (NSTrackingRectTag)trackingTag;
 - (NSString *)url;
+- (NSString *)title;
+	
 @end
 
