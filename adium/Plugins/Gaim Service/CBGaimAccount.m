@@ -235,6 +235,30 @@
 /* accountConv methods */
 /***********************/
 
+- (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type
+{
+    AIChat *chat = (AIChat*) conv->ui_data;
+    GaimConvIm *im = gaim_conversation_get_im_data(conv);
+    NSAssert(im != nil, @"We only do IM conversations");
+    NSAssert(chat != nil, @"Conversation update with no AIChat");
+    AIListContact *listContact = (AIListContact*) [chat listObject];
+    NSAssert(listContact != nil, @"Conversation with no one?");
+    AIHandle *handle = [listContact handleForAccount:self];
+    NSAssert(handle != nil, @"listContact without handle");
+    switch (type) {
+        case GAIM_CONV_UPDATE_TYPING:
+            {
+                NSNumber *typing = [NSNumber numberWithBool:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+                NSLog(@"Changing typing state to %@", typing);
+                [[handle statusDictionary] setObject:typing forKey:@"Typing"];
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 - (void)accountConvReceivedIM: (const char*)message inConversation:(GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
 {
     if ((flags & GAIM_MESSAGE_SEND) != 0) {
