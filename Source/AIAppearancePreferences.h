@@ -38,6 +38,10 @@
 	IBOutlet	NSTextField		*label_serviceIcons;
 	IBOutlet	NSTextField		*label_statusIcons;
 	IBOutlet	NSTextField		*label_dockIcons;
+
+	//
+	NSArray		*_listLayouts;	//Will NOT always be a valid reference.  Do not use as one!
+	NSArray		*_listThemes;	//Will NOT always be a valid reference.  Do not use as one!
 }
 
 - (IBAction)showAllDockIcons:(id)sender;
