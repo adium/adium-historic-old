@@ -31,6 +31,13 @@
     return(self);
 }
 
+- (void)dealloc
+{
+	[view release]; view = nil;
+	
+	[super dealloc];
+}
+
 - (NSView *)view
 {
 	return(view);
