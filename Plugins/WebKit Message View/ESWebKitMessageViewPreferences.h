@@ -23,6 +23,7 @@ typedef enum {
 	BOOL						webViewIsReady;
 		
 	IBOutlet	NSPopUpButton   *popUp_styles;
+	IBOutlet	NSPopUpButton   *popUp_variants;
 	
 	IBOutlet	JVFontPreviewField  *fontPreviewField_currentFont;
 	IBOutlet	NSPopUpButton   *popUp_minimumFontSize;

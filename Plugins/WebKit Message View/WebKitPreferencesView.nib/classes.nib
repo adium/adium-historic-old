@@ -34,9 +34,10 @@
                 "popUp_minimumFontSize" = NSPopUpButton; 
                 "popUp_styles" = NSPopUpButton; 
                 "popUp_timeStamps" = NSPopUpButton; 
+                "popUp_variants" = NSPopUpButton; 
                 preview = ESWebView; 
                 previewController = id; 
-                "scrollView_previewLocation" = NSScrollView; 
+                "scrollView_previewLocation" = AIAutoScrollView; 
                 "view_previewLocation" = NSView; 
             }; 
             SUPERCLASS = AIPreferencePane; 
