@@ -40,9 +40,11 @@
 #define BACKGROUND_NORMAL                   0
 #define BACKGROUND_DARK                     1
 
+#define CONTACT_ALERT_IDENTIFIER            @"Bezel"
+
 @class JSCEventBezelPreferences;
 
-@interface JSCEventBezelPlugin : AIPlugin <AIPreferenceViewControllerDelegate> {
+@interface JSCEventBezelPlugin : AIPlugin <AIPreferenceViewControllerDelegate,ESContactAlertProvider> {
     JSCEventBezelController     *ebc;
     JSCEventBezelPreferences    *preferences;
     

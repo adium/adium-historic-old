@@ -25,7 +25,6 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin owner:(id)inOwner;
 - (void)configureView;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (NSMenu *)behaviorListMenu;
 - (NSMenu *)behaviorSetMenu;
 - (NSMenu *)eventMenu;
 - (void)saveCustomBehavior;
@@ -78,7 +77,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
 
     //Configure the 'Behavior' table column
     dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
-    [dataCell setMenu:[self behaviorListMenu]];
+    [dataCell setMenu:[AIDockBehaviorPlugin behaviorListMenuForTarget:self]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];
     [dataCell setBordered:NO];
@@ -195,39 +194,9 @@ AIDockCustomBehavior	*sharedInstance = nil;
     return(eventMenu);
 }
 
-//Builds and returns a dock behavior list menu
-- (NSMenu *)behaviorListMenu
-{
-    NSMenu		*behaviorMenu = [[[NSMenu alloc] init] autorelease];
 
-    //Build the menu items
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_ONCE withName:@"Once"]];
-    [behaviorMenu addItem:[NSMenuItem separatorItem]];
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_REPEAT withName:@"Repeatedly"]];
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY5 withName:@"Every 5 Seconds"]];
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY10 withName:@"Every 10 Seconds"]];
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY15 withName:@"Every 15 Seconds"]];
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY30 withName:@"Every 30 Seconds"]];
-    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY60 withName:@"Every Minute"]];
 
-    [behaviorMenu setAutoenablesItems:NO];
 
-    return(behaviorMenu);
-}
-
-//
-- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name
-{
-    NSMenuItem		*menuItem;
-
-    menuItem = [[[NSMenuItem alloc] initWithTitle:name
-                                           target:self
-                                           action:@selector(selectBehavior:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:[NSNumber numberWithInt:behavior]];
-
-    return(menuItem);
-}
 
 
 //TableView datasource --------------------------------------------------------

@@ -23,6 +23,17 @@
     int	index = [self indexOfItemWithRepresentedObject:object];
     [self selectItemAtIndex:index];
 }
+- (void)autosizeAndCenterHorizontally
+{
+    NSString *buttonTitle = [self titleOfSelectedItem];
+    if (buttonTitle && [buttonTitle length]) {
+        [self sizeToFit];
+        NSRect menuFrame = [self frame];
+        menuFrame.origin.x = ([[self superview] frame].size.width / 2) - (menuFrame.size.width / 2);
+        [self setFrame:menuFrame];   
+        [[self superview] display];
+    }
+}
 
 @end
 

@@ -10,6 +10,7 @@
 #import "JSCEventBezelPreferences.h"
 #import "AIContactStatusEventsPlugin.h"
 #import "AIContactStatusColoringPlugin.h"
+#import "ESEventBezelContactAlert.h"
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
 
@@ -61,17 +62,15 @@
                                    selector:@selector(eventNotification:)
                                        name:Content_FirstContentRecieved
                                      object:nil];
-    
-    [[owner notificationCenter] addObserver:self
-                                  selector:@selector(actionNotification:)
-                                      name:@"Display Event Bezel"
-                                    object:nil];
-    
-    
+        
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_BEZEL_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Event Bezel" categoryName:@"None" view:view_contactBezelInfoView delegate:self] retain];
     [[owner contactController] addContactInfoView:contactView];
+    
+    
+    //Install our contact alert
+    [[owner contactAlertsController] registerContactAlertProvider:self];
     
     //watch preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -81,6 +80,8 @@
 
 - (void)uninstallPlugin
 {
+    //Uninstall our contact alert
+    [[owner contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 - (void)dealloc
@@ -141,22 +142,6 @@
             [eventArray addObject:CONTACT_STATUS_IDLE_YES];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue])
             [eventArray addObject:CONTACT_STATUS_IDLE_NO];   
-    }
-}
-
-- (void)actionNotification:(NSNotification *)notification
-{
-    if (!showEventBezel || (![eventArray containsObject:[notification object]])) {
-        NSDictionary * info = [notification userInfo];
-        
-        //Retain to be on the safe side
-        NSString * notificationName = [[notification object] retain];
-        AIListContact * contact = [[info objectForKey:@"object"] retain];
-        
-        [self processBezelForNotification:[NSNotification notificationWithName:notificationName object:contact]];
-
-        //Now release, having displayed the bezel
-        [notificationName release]; [contact release];
     }
 }
 
@@ -308,5 +293,58 @@
     if (sender == checkBox_disableBezel) {
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_disableBezel state]] forKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
     }
+}
+
+//*****
+//ESContactAlertProvider
+//*****
+
+- (NSString *)identifier
+{
+    return CONTACT_ALERT_IDENTIFIER;
+}
+
+- (ESContactAlert *)contactAlert
+{
+    return [ESEventBezelContactAlert contactAlertWithOwner:owner];   
+}
+
+//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status
+{
+        NSString * ContactStatusString = nil;
+        if ([event isEqualToString:@"Signed On"]) {
+            ContactStatusString = CONTACT_STATUS_ONLINE_YES;
+        } else  if ([event isEqualToString:@"Signed Off"]) {
+            ContactStatusString = CONTACT_STATUS_ONLINE_NO;
+        } else {
+            if (event_status) { //positive
+                if ([event isEqualToString:@"Away"]) {
+                    ContactStatusString = CONTACT_STATUS_AWAY_YES;
+                } else if ([event isEqualToString:@"Idle"]) {
+                    ContactStatusString = CONTACT_STATUS_IDLE_YES;
+                }
+            } else {
+                if ([event isEqualToString:@"Away"]) {
+                    ContactStatusString = CONTACT_STATUS_AWAY_NO;
+                } else if ([event isEqualToString:@"Idle"]) {
+                    ContactStatusString = CONTACT_STATUS_IDLE_NO;
+                }
+            }
+        }
+        
+        if (ContactStatusString) {
+            if (!showEventBezel || (![eventArray containsObject:ContactStatusString])) {
+                [self processBezelForNotification:[NSNotification notificationWithName:ContactStatusString object:inObject]];
+                return YES;
+            }
+        }
+        return NO;
+}
+
+//continue processing after a successful action
+- (BOOL)shouldKeepProcessing
+{
+    return NO;   
 }
 @end

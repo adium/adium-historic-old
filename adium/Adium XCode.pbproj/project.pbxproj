@@ -5202,6 +5202,86 @@
 			settings = {
 			};
 		};
+		3449C84605766CD3000BD72D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESDockBehaviorContactAlert.h;
+			path = "Plugins/Dock Behavior/ESDockBehaviorContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449C84705766CD3000BD72D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESDockBehaviorContactAlert.m;
+			path = "Plugins/Dock Behavior/ESDockBehaviorContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449C84805766CD3000BD72D = {
+			fileRef = 3449C84605766CD3000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449C84905766CD4000BD72D = {
+			fileRef = 3449C84705766CD3000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449CBAC0576725E000BD72D = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = DockBehaviorContactAlert.nib;
+			path = "Plugins/Dock Behavior/DockBehaviorContactAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449CBAD0576725F000BD72D = {
+			fileRef = 3449CBAC0576725E000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449CE3205767DF8000BD72D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESEventBezelContactAlert.h;
+			path = "Plugins/Event Bezel/ESEventBezelContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449CE3305767DF9000BD72D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESEventBezelContactAlert.m;
+			path = "Plugins/Event Bezel/ESEventBezelContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3449CE3405767DF9000BD72D = {
+			fileRef = 3449CE3205767DF8000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449CE3505767DF9000BD72D = {
+			fileRef = 3449CE3305767DF9000BD72D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3449CF1E05767F3B000BD72D = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344EE90D05744F5F000F342B = {
 			buildActionMask = 2147483647;
 			files = (
@@ -14533,6 +14613,7 @@
 				34BDA12605314821000AB133,
 				34BDA12705314821000AB133,
 				4B791AF805350B930000969C,
+				3449C84805766CD3000BD72D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14556,6 +14637,7 @@
 				34BDA12A05314821000AB133,
 				4B791AFA05350B930000969C,
 				4B791B2D05350BA20000969C,
+				3449CBAD0576725F000BD72D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14578,6 +14660,7 @@
 				34BDA12C05314821000AB133,
 				34BDA12D05314821000AB133,
 				4B791AF905350B930000969C,
+				3449C84905766CD4000BD72D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22063,6 +22146,7 @@
 				6C60B15E05605A3800CAD137,
 				6C60B16005605A3800CAD137,
 				6C60B16205605A3800CAD137,
+				3449CE3405767DF9000BD72D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22091,6 +22175,7 @@
 				6C60B15F05605A3800CAD137,
 				6C60B16105605A3800CAD137,
 				6C60B16305605A3800CAD137,
+				3449CE3505767DF9000BD72D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22098,7 +22183,7 @@
 		6C60B13B0560594B00CAD137 = {
 			buildActionMask = 2147483647;
 			files = (
-				6CC070540563FA7B0013E642,
+				3449CF1E05767F3B000BD72D,
 				6C60B13F056059BF00CAD137,
 				6C60B140056059C900CAD137,
 			);
@@ -22226,6 +22311,8 @@
 				6C60B14D05605A3600CAD137,
 				6C60B14E05605A3600CAD137,
 				6C60B14F05605A3600CAD137,
+				3449CE3205767DF8000BD72D,
+				3449CE3305767DF9000BD72D,
 				6C60B15005605A3700CAD137,
 				6C60B15105605A3700CAD137,
 				6C60B15205605A3700CAD137,
@@ -22459,12 +22546,6 @@
 		};
 		6C60B1D40560634F00CAD137 = {
 			fileRef = 6C60B13D0560594B00CAD137;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6CC070540563FA7B0013E642 = {
-			fileRef = D2547F1D050AD55B00A80164;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -24320,6 +24401,9 @@
 				4B791AF505350B930000969C,
 				4B791AF605350B930000969C,
 				4B791AF705350B930000969C,
+				3449C84605766CD3000BD72D,
+				3449C84705766CD3000BD72D,
+				3449CBAC0576725E000BD72D,
 				4B68D3880463330600A8010A,
 				4B791B2C05350BA20000969C,
 			);

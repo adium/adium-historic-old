@@ -24,9 +24,11 @@
 }
 
 + (id)contactAlertWithOwner:(id)inOwner;
+- (id)initWithOwner:(id)inOwner;
 - (NSMenuItem *)alertMenuItem;
-
+- (NSString *)nibName;
 //PRIVATE
 - (void)setObject:(id)object forKey:(NSString *)key;
 - (void)saveEventActionArray;
+- (void)configureWithSubview:(NSView *)view;
 @end

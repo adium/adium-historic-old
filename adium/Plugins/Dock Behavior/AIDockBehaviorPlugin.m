@@ -15,6 +15,7 @@
 
 #import "AIDockBehaviorPlugin.h"
 #import "AIDockBehaviorPreferences.h"
+#import "ESDockBehaviorContactAlert.h"
 
 #define DOCK_BEHAVIOR_DEFAULT_PREFS	@"DockBehaviorDefaults"
 #define DOCK_BEHAVIOR_PRESETS		@"DockBehaviorPresets"
@@ -29,6 +30,9 @@
 - (void)installPlugin
 {
     NSString	*path;
+
+    //Install our contact alert
+    [[owner contactAlertsController] registerContactAlertProvider:self];
 
     //
     behaviorDict = nil;
@@ -51,6 +55,8 @@
 {
     [[owner notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
+    //Uninstall our contact alert
+    [[owner contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 //Called when the preferences change, reregister for the notifications
@@ -165,6 +171,76 @@
     NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
     
     return([preferenceDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR]);
+}
+
+//*****
+//ESContactAlertProvider
+//*****
+
+- (NSString *)identifier
+{
+    return CONTACT_ALERT_IDENTIFIER;
+}
+
+- (ESContactAlert *)contactAlert
+{
+    return [ESDockBehaviorContactAlert contactAlertWithOwner:owner];   
+}
+
+//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status
+{
+    if (details) {
+        //Perform the behavior
+        [[owner dockController] performBehavior:[details intValue]];
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+//continue processing after a successful action
+- (BOOL)shouldKeepProcessing
+{
+    return NO;   
+}
+
+/********
+Methods for custom behvaior and contact alert classes
+********/
+
+//Builds and returns a dock behavior list menu
++ (NSMenu *)behaviorListMenuForTarget:(id)target
+{
+    NSMenu		*behaviorMenu = [[[NSMenu alloc] init] autorelease];
+    
+    //Build the menu items
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_ONCE withName:@"Once" target:target]];
+    [behaviorMenu addItem:[NSMenuItem separatorItem]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_REPEAT withName:@"Repeatedly" target:target]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY5 withName:@"Every 5 Seconds" target:target]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY10 withName:@"Every 10 Seconds" target:target]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY15 withName:@"Every 15 Seconds" target:target]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY30 withName:@"Every 30 Seconds" target:target]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY60 withName:@"Every Minute" target:target]];
+    
+    [behaviorMenu setAutoenablesItems:NO];
+    
+    return(behaviorMenu);
+}
+
+//
++ (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name target:(id)target
+{
+    NSMenuItem		*menuItem;
+    
+    menuItem = [[[NSMenuItem alloc] initWithTitle:name
+                                           target:target
+                                           action:@selector(selectBehavior:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:[NSNumber numberWithInt:behavior]];
+    
+    return(menuItem);
 }
 
 @end

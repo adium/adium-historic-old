@@ -47,6 +47,9 @@
 {
     //[[owner contactController] unregisterHandleObserver:self];
     //remove observers
+    
+    //Uninstall our contact alert
+    [[owner contactAlertsController] unregisterContactAlertProvider:self];
     [[owner notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
 }
@@ -182,12 +185,11 @@
 
 - (ESContactAlert *)contactAlert
 {
-    NSLog(@"make me a contact alert!");
     return [ESEventSoundContactAlert contactAlertWithOwner:owner];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict 
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status
 {
     if (details != nil && [details length] != 0) {
             [[owner soundController] playSoundAtPath:details]; //Play the sound

@@ -19,6 +19,19 @@
     return ([[[self alloc] initWithOwner:inOwner] autorelease]);   
 }
 
+
+- (id)initWithOwner:(id)inOwner
+{
+    owner = inOwner;
+    
+    NSString *nibName = [self nibName];
+    if (nibName)
+        [NSBundle loadNibNamed:nibName owner:self];
+    
+    [super init];
+    return (self);
+}
+
 - (void)setObject:(id)object forKey:(NSString *)key
 {
     NSMutableArray * eventActionArray = [[owner contactAlertsController] eventActionArrayForContactAlert:self];
@@ -35,8 +48,16 @@
     [[owner contactAlertsController] saveEventActionArrayForContactAlert:self];
 }
 
+- (void)configureWithSubview:(NSView *)view
+{
+    [[owner contactAlertsController] configureWithSubview:view forContactAlert:self];
+}
 //overridden by subclasses
 - (NSMenuItem *)alertMenuItem
+{
+    return nil;   
+}
+- (NSString *)nibName
 {
     return nil;   
 }
