@@ -17,6 +17,7 @@
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPackPreviewController.h"
+#import "AIEmoticonPackPreviewView.h"
 #import "AIEmoticonPreferences.h"
 #import "AIEmoticonController.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
@@ -139,18 +140,29 @@
 
 - (void)configurePreviewControllers
 {
-	NSEnumerator	*enumerator = [[[adium emoticonController] availableEmoticonPacks] objectEnumerator];
+	NSEnumerator	*enumerator;
 	AIEmoticonPack	*pack;
-
-	[emoticonPackPreviewControllers release];
-	emoticonPackPreviewControllers = [[NSMutableArray alloc] init];
-	while(pack = [enumerator nextObject]){
-		[emoticonPackPreviewControllers addObject:[AIEmoticonPackPreviewController previewControllerForPack:pack
-																								 withPlugin:(AIEmoticonsPlugin *)[adium emoticonController]
-																								preferences:self]];
+	NSView			*view;
+	
+	//First, remove any AIEmoticonPackPreviewView instances from the table
+	enumerator = [[[[table_emoticonPacks subviews] copy] autorelease] objectEnumerator];
+	while(view = [enumerator nextObject]){
+		if([view isKindOfClass:[AIEmoticonPackPreviewView class]]){
+			[view removeFromSuperviewWithoutNeedingDisplay];
+		}
 	}
 	
-	[[[[table_emoticonPacks subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
+	//Now [re]create the array of emoticon pack preview controlls
+	[emoticonPackPreviewControllers release];
+	emoticonPackPreviewControllers = [[NSMutableArray alloc] init];
+	
+	enumerator = [[[adium emoticonController] availableEmoticonPacks] objectEnumerator];
+	while(pack = [enumerator nextObject]){
+		[emoticonPackPreviewControllers addObject:[AIEmoticonPackPreviewController previewControllerForPack:pack
+																								preferences:self]];
+	}
+
+	//Finally, reload
 	[table_emoticonPacks reloadData];
 }
 
@@ -437,7 +449,6 @@
 {
 	if (viewIsOpen){
 		[self configurePreviewControllers];
-		[table_emoticons reloadData];
 	}
 }
 
