@@ -31,6 +31,9 @@
     IBOutlet	AIAutoScrollView		*scrollView_sourceList;
 
     IBOutlet	NSDrawer			*drawer_sourceList;
+
+    IBOutlet	NSButton		*button_newHandle;
+    IBOutlet	NSButton		*button_newGroup;
     
     AIAdium			*owner;				//AIAdium
     AIContactListEditorPlugin	*plugin;			//Our owning plugin
@@ -51,5 +54,9 @@
 + (id)contactListEditorWindowControllerWithOwner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
+- (IBAction)delete:(id)sender;
+- (IBAction)import:(id)sender;
+- (IBAction)group:(id)sender;
+- (IBAction)handle:(id)sender;
 
 @end
