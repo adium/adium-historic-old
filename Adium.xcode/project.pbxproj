@@ -2508,6 +2508,48 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		3444C91607F5235E001279F1 = {
+			children = (
+				3444C9BC07F52919001279F1,
+				3444C9BD07F52919001279F1,
+				34E6D38E0727354600A2643A,
+				34E6D38F0727354600A2643A,
+			);
+			isa = PBXGroup;
+			name = "Working Around System Bugs";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3444C9BC07F52919001279F1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NSHTTPCookieDiskStorageFix.h;
+			path = "Frameworks/Adium Framework/NSHTTPCookieDiskStorageFix.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3444C9BD07F52919001279F1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NSHTTPCookieDiskStorageFix.m;
+			path = "Frameworks/Adium Framework/NSHTTPCookieDiskStorageFix.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3444C9BE07F52919001279F1 = {
+			fileRef = 3444C9BC07F52919001279F1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3444C9BF07F52919001279F1 = {
+			fileRef = 3444C9BD07F52919001279F1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3448054E07AC5151006A7F7B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -8009,6 +8051,7 @@
 				34A6FEBB07D7E2E400972830,
 				34BFD7F507E6A22700AD984D,
 				34BFDB2E07E7710C00AD984D,
+				3444C9BE07F52919001279F1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8224,6 +8267,7 @@
 				34A6FEBC07D7E2E500972830,
 				34BFD7F707E6A22700AD984D,
 				34BFDB2F07E7710C00AD984D,
+				3444C9BF07F52919001279F1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15080,8 +15124,6 @@
 				F5793912033E748F01A8010A,
 				34F2E81807C2CD6B007EAAAB,
 				34F2E81907C2CD6C007EAAAB,
-				34E6D38E0727354600A2643A,
-				34E6D38F0727354600A2643A,
 				348862CD05645E94003C9627,
 				348862CE05645E95003C9627,
 				34F2E83907C2CDBD007EAAAB,
@@ -15343,6 +15385,7 @@
 				4B587CAB07ABFF18001832A9,
 				4BE5AC7F07AFD46800422AD5,
 				3448055407AC5203006A7F7B,
+				3444C91607F5235E001279F1,
 				3402D38A07CB04FC0044F818,
 			);
 			isa = PBXGroup;
