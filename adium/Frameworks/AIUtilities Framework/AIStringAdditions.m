@@ -22,25 +22,28 @@
 //Random alphanumeric string
 + (NSString *)randomStringOfLength:(int)inLength
 {
-	NSMutableString	*string = [[NSMutableString alloc] init];
-	int				i;
+    NSMutableString	*string = [[NSMutableString alloc] init];
+    int				i;
+
+    //Prepare our random
+    srandom(TickCount());
+
+    //Add the random characters
+    for(i = 0; i < inLength; i++){
+	//get a random number between 0 and 35
+	int randomNum = (random() % 36);
+	//0-9 are the digits; add 7 to get to A-Z
+	if (randomNum > 9) randomNum+=7;
 	
-	//Prepare our random
-	srandom(TickCount());
-	
-	//Add the random characters
-	for(i = 0; i < inLength; i++){
-	    //get a random number between 0 and 35
-	    int random = (random() % 36);
-	    //0-9 are the digits; add 7 to get to A-Z
-	    if (random > 9) random+=7;
-	    
-	    char randomChar = '0' + random;
-	    [string appendString:[NSString stringWithFormat:@"%c",randomChar]];
-	}
-	
-	return([string autorelease]);
+	char randomChar = '0' + randomNum;
+	[string appendString:[NSString stringWithFormat:@"%c",randomChar]];
+    }
+
+    return([string autorelease]);
 }
+
+
+
 
 /* compactedString
 *   returns the string in all lowercase without spaces
