@@ -410,7 +410,7 @@ typedef enum {
 - (void)setIconFamily:(AIIconFamily *)iconFamily;
 
 - (void)bounce;
-- (void)bounceWithInterval:(double)delay forever:(BOOL)booly;
+- (void)bounceWithInterval:(double)delay times:(int)num;
 - (void)stopBouncing;
 
 @end
