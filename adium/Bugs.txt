@@ -50,8 +50,6 @@
 
 - Initial message events
 
-- Double history on chat re-open
-
 	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
