@@ -24,7 +24,7 @@
 #define YOU_LOSE			AILocalizedString(@"You lost...","")
 #define TIE					AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
 
-#define TIMEOUT_SECONDS		10
+#define TIMEOUT_SECONDS		60
 
 @implementation NEHGameController
 
