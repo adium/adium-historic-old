@@ -251,7 +251,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 		return nil;
 }
 
-static BOOL getDataFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext )
+static BOOL getDataFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
 {
 	NSData	** theData = (NSData**)aContext;
 	*theData = dataFromResourceHandle( aResHandle );
@@ -303,7 +303,7 @@ static BOOL getDataFunction( Handle aResHandle, ResType aType, short int anId, N
 	return operateOnResourceUsingFunction( fileReference, aType, nil, anId, removeResourceFunction,  NULL);
 }
 
-static BOOL removeResourceFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext )
+static BOOL removeResourceFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
 {
 	if( aResHandle )
 		RemoveResource( aResHandle );		// Disposed of in current resource file
@@ -347,7 +347,7 @@ static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName,
 	return operateOnResourceUsingFunction( fileReference, aType, aName, 0, getIdFunction, NULL );
 }
 
-static BOOL getIdFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext  )
+static BOOL getIdFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext  )
 {
 	Str255		thePName;
 
