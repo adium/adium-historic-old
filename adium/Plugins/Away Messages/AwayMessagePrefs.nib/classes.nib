@@ -14,6 +14,7 @@
                 "button_delete" = NSButton; 
                 "button_import" = NSButton; 
                 "outlineView_aways" = AIAlternatingRowOutlineView; 
+                "popup_Clients" = NSPopUpButton; 
                 "scrollView_awayList" = AIAutoScrollView; 
                 "scrollView_awayText" = AIAutoScrollView; 
                 "textView_autoresponse" = NSTextView; 

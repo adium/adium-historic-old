@@ -1,17 +1,29 @@
 {
     IBClasses = (
         {
-            ACTIONS = {importAliases = id; importContacts = id; importLogs = id; sheetButton = id; }; 
+            ACTIONS = {
+                importAliases = id; 
+                importAwayMessages = id; 
+                importContacts = id; 
+                importLogs = id; 
+                sheetButton = id; 
+            }; 
             CLASS = CBOldPrefsImporterAppController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_Cancel" = NSButton; 
+                "button_ImportAwayMessages" = NSButton; 
                 "button_OK" = NSButton; 
                 currentTask = NSTextField; 
+                "image_AdiumImage" = NSImageView; 
                 importListSheet = NSPanel; 
+                "popUpButton_Clients" = NSPopUpButton; 
                 "popUpButton_account" = NSPopUpButton; 
                 "popUpButton_user" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
+                "spinner_importProgress" = NSProgressIndicator; 
+                "tabView_ClientTabs" = NSTabView; 
+                "tabView_optionsTab" = NSTabView; 
                 theSheet = NSWindow; 
                 "window_main" = NSWindow; 
             }; 
