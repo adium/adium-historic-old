@@ -618,6 +618,40 @@
         //setup the account, get things ready
         GaimAccount *testAccount = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
         gaim_account_set_password(testAccount, [inPassword UTF8String]);
+
+        //configure at sign on time so we get the latest settings from the system
+        [(CBGaimServicePlugin *)service configureGaimProxySettings];
+        
+        //proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the service plugin and are our systemwide prefs) or account-specific prefs
+        GaimProxyInfo *proxy_info = gaim_proxy_info_new();
+
+        char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
+        int proxytype;
+    
+        if (!strcmp(type, "none"))
+            proxytype = GAIM_PROXY_NONE;
+        else if (!strcmp(type, "http"))
+            proxytype = GAIM_PROXY_HTTP;
+        else if (!strcmp(type, "socks4"))
+            proxytype = GAIM_PROXY_SOCKS4;
+        else if (!strcmp(type, "socks5"))
+            proxytype = GAIM_PROXY_SOCKS5;
+        else if (!strcmp(type, "envvar"))
+            proxytype = GAIM_PROXY_USE_ENVVAR;
+        else
+            proxytype = -1;
+            
+        proxy_info->type = proxytype;
+        
+        proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host"),
+        proxy_info->port = (char *)gaim_prefs_get_int("/core/proxy/port"),
+        
+        proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
+        proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
+        
+        gaim_account_set_proxy_info(testAccount,proxy_info);
+        
+        NSLog(@"%i %i",gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_NONE,gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_SOCKS5);
         
         gc = gaim_account_connect(testAccount);
     }
