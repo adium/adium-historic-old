@@ -128,6 +128,9 @@
 		[[adium preferenceController] setPreference:variant
 											 forKey:variantKey
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+		//Clicking a variant won't automatically change the popup's selected item, so change it manually.
+		[popUp_styles selectItemWithTitle:newStyleName];
 	}
 
 	[self updatePreview];
