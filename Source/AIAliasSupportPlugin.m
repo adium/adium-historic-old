@@ -30,9 +30,9 @@
 
 #define CONTACT_NAME_MENU_TITLE		AILocalizedString(@"Contact Name Format",nil)
 #define ALIAS						AILocalizedString(@"Alias",nil)
-#define ALIAS_SCREENNAME			AILocalizedString(@"Alias (Screen Name)",nil)
-#define SCREENNAME_ALIAS			AILocalizedString(@"Screen Name (Alias)",nil)
-#define SCREENNAME					AILocalizedString(@"Screen Name",nil)
+#define ALIAS_SCREENNAME			AILocalizedString(@"Alias (User Name)",nil)
+#define SCREENNAME_ALIAS			AILocalizedString(@"User Name (Alias)",nil)
+#define SCREENNAME					AILocalizedString(@"User Name",nil)
 
 @interface AIAliasSupportPlugin (PRIVATE)
 - (NSSet *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;
