@@ -135,13 +135,7 @@
 	}else{
 		//If we aren't, but we are passed an image, create a menu image from the image
 		if (inImage){
-			menuImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
-			[menuImage lockFocus];
-			[image drawInRect:NSMakeRect(0,0,16,16)
-					 fromRect:NSMakeRect(0,0,[image size].width,[image size].height)
-					operation:NSCompositeCopy
-					 fraction:1.0];
-			[menuImage unlockFocus];
+			menuImage = [[image imageByScalingToSize:NSMakeSize(16,16)] retain];
 		}else{
 			//No menuImage called for.
 			menuImage = nil;
