@@ -30,13 +30,13 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    [super initWithWindowNibName:windowNibName];
-    
-    target = [inTarget retain];
-    selector = inSelector;
+    if((self = [super initWithWindowNibName:windowNibName])) {
+		target = [inTarget retain];
+		selector = inSelector;
 
-	context = [inContext retain];
-	
+		context = [inContext retain];
+	}
+
     return(self);
 }
 
@@ -50,9 +50,10 @@
 
 - (void)windowDidLoad
 {
-	[[self window] setTitle:PASSWORD_REQUIRED];
+	NSWindow *window = [self window];
 
-	[[self window] center];
+	[window setTitle:PASSWORD_REQUIRED];
+	[window center];
 }
 
 - (NSString *)savedPasswordKey
@@ -69,17 +70,17 @@
 
 - (IBAction)okay:(id)sender
 {
-    NSString	*password = [textField_password stringValue];
-    BOOL	savePassword = [checkBox_savePassword state];
+	NSString	*password = [textField_password secureStringValue];
+	BOOL	savePassword = [checkBox_savePassword state];
 
-    //save password?
-    if(savePassword && password && [password length]){
+	//save password?
+	if(savePassword && password && [password length]) {
 		[self savePassword:password];
-    }
+	}
 
-    //close up and notify our caller
-    [self closeWindow:nil];    
-    [target performSelector:selector withObject:password withObject:context];
+	//close up and notify our caller
+	[self closeWindow:nil];    
+	[target performSelector:selector withObject:password withObject:context];
 }
 
 - (IBAction)togglePasswordSaved:(id)sender
@@ -90,16 +91,10 @@
     }
 }
 
-- (void)savePassword:(NSString *)password{ };
-
-- (void)textDidChange:(NSNotification *)notification
+- (void)savePassword:(NSString *)password
 {
-    if([[textField_password stringValue] length] != 0){
-        [textField_password setEnabled:YES];
-    }else{
-        [textField_password setEnabled:NO];
-    }
-}
+	//abstract method. subclasses can do things here.
+};
 
 // closes this window
 - (IBAction)closeWindow:(id)sender

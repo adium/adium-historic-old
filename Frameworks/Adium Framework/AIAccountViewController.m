@@ -229,7 +229,7 @@
 	}
 	
 	//Password
-	NSString		*password = [textField_password stringValue];
+	NSString		*password = [textField_password secureStringValue];
 	NSString		*oldPassword;
 	
 	if(password && [password length] != 0){

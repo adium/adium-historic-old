@@ -36,24 +36,24 @@
 																		notifyingTarget:inTarget
 																			   selector:inSelector
 																				context:inContext] autorelease];
-    //bring the window front
-    [controller showWindow:nil];
+	//bring the window front
+	[controller showWindow:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext];
-    
-    server = [inServer retain];
-	userName = [inUserName retain];
-	[self retain];
-	
-    return(self);
+	if((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
+		server   = [inServer   retain];
+		userName = [inUserName retain];
+		[self retain];
+	}
+
+	return self;
 }
 
 - (void)dealloc
 {
-    [server release];
+	[server   release];
 	[userName release];
 	
 	[super dealloc];
@@ -61,8 +61,8 @@
 
 - (void)windowDidLoad
 {
-    [textField_server setStringValue:([server length] ? server : @"<None>")];
-    [textField_userName setStringValue:([userName length] ? userName : @"<None>")];
+	[textField_server setStringValue:([server length] ? server : @"<None>")];
+	[textField_userName setStringValue:([userName length] ? userName : @"<None>")];
 	
 	[super windowDidLoad];
 }
