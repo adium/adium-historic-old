@@ -3068,6 +3068,66 @@
 			settings = {
 			};
 		};
+		3461621006FB482C009181D8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = "UserList Theme.plist";
+			path = "Plugins/Dual Window Interface/UserList Theme.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3461621106FB482C009181D8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESChatUserListController.h;
+			path = "Plugins/Dual Window Interface/ESChatUserListController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3461621206FB482C009181D8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESChatUserListController.m;
+			path = "Plugins/Dual Window Interface/ESChatUserListController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3461621306FB482D009181D8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = "UserList Layout.plist";
+			path = "Plugins/Dual Window Interface/UserList Layout.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3461621406FB482D009181D8 = {
+			fileRef = 3461621006FB482C009181D8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3461621506FB482D009181D8 = {
+			fileRef = 3461621106FB482C009181D8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3461621606FB482D009181D8 = {
+			fileRef = 3461621206FB482C009181D8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3461621706FB482D009181D8 = {
+			fileRef = 3461621306FB482D009181D8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		346C9A2305FFE3DE000F5A8A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -5597,6 +5657,7 @@
 				34A48A4E06F6468D002C7C5F,
 				34A48A5A06F646BD002C7C5F,
 				34A48B3906F64B27002C7C5F,
+				3461621506FB482D009181D8,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5918,6 +5979,8 @@
 				34A48A6606F646C7002C7C5F,
 				34A48A6706F646C7002C7C5F,
 				34A48A6806F646C7002C7C5F,
+				3461621406FB482D009181D8,
+				3461621706FB482D009181D8,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6193,6 +6256,7 @@
 				34A48A5006F64692002C7C5F,
 				34A48A5B06F646BD002C7C5F,
 				34A48B3A06F64B27002C7C5F,
+				3461621606FB482D009181D8,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22197,10 +22261,14 @@
 				4BACB70203C8CB5E00A8010A,
 				F570A5CD03704D3D01A8010A,
 				F570A5CE03704D3D01A8010A,
+				3461621106FB482C009181D8,
+				3461621206FB482C009181D8,
 				F5793984033E756E01A8010A,
 				F5793981033E756E01A8010A,
 				F5793982033E756E01A8010A,
 				F570A60503704E7201A8010A,
+				3461621006FB482C009181D8,
+				3461621306FB482D009181D8,
 			);
 			isa = PBXGroup;
 			name = Messages;
