@@ -34,7 +34,7 @@
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
-		AIAccountWindowController, AIAccount, AIMessageObject, AIContactInfoView,
+		AIAccountWindowController, AIAccount, AIMessageObject, AIContactInfoView, AICoreComponentLoader,
 		AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup,
 		AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, 
@@ -57,6 +57,7 @@
     IBOutlet    ESContactAlertsController                       *contactAlertsController;
     IBOutlet	ESApplescriptabilityController                  *applescriptabilityController;
 	IBOutlet	ESDebugController				*debugController;
+	IBOutlet	AICoreComponentLoader			*componentLoader;
 	
 //    IBOutlet    BZActivityWindowController  *activityWindowController;
     

@@ -221,6 +221,7 @@
 	[applescriptabilityController initController];
 	
 //    [activityWindowController initController];
+	[componentLoader initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
 	NSDictionary	*versionUpgradeDict = [self versionUpgradeDict];
@@ -275,6 +276,7 @@
 
     //Close the controllers in reverse order
     [pluginController closeController]; //should always unload first.  Plugins rely on all the controllers.
+	[componentLoader closeController];
     [contactAlertsController closeController];
     [fileTransferController closeController];
     [dockController closeController];
