@@ -29,11 +29,13 @@ static NSMenu   *bookmarksSupermenu;
     owner = inObject;
     NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     
+    // remove our root menu, if it exists
     if(bookmarksMenu){
         [bookmarksMenu removeAllItems];
         [bookmarksMenu release];
     }
     
+    // store the modification date for future reference
     if (lastModDate) [lastModDate release];
     NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
     lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];

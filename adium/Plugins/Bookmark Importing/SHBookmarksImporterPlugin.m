@@ -27,9 +27,11 @@ static NSMenu       *bookmarkSets;
 {
     importerArray = [[[NSMutableArray alloc] init] autorelease];
     
+    // install new importer classes here - very similar to AIPluginController
     [self installImporterClass:[SHSafariBookmarksImporter class]];
     [self installImporterClass:[SHCaminoBookmarksImporter class]];
                                                          
+    // install our menuItems
     bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                        target:self
                                                        action:nil
@@ -42,6 +44,7 @@ static NSMenu       *bookmarkSets;
                                                           keyEquivalent:@""] autorelease];
     [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
+    // initial menu configuration
     [self configureMenus];
     
     [[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
@@ -50,8 +53,10 @@ static NSMenu       *bookmarkSets;
 
 - (void)uninstallPlugin
 {
+    //blank for now
 }
 
+// method to nicely install new importers
 - (void)installImporterClass:(Class)inClass
 {
     id object = [[[inClass alloc] init] autorelease];
@@ -63,16 +68,20 @@ static NSMenu       *bookmarkSets;
         NSAssert(object,failureNotice);
     }
 }
+
 - (void)configureMenus
 {
     NSEnumerator *enumerator = [importerArray objectEnumerator];
     id <SHBookmarkImporter> importer;
     
+    // clear out any subMenus before adding new ones.
     if([bookmarkRootMenuItem submenu]) [[bookmarkRootMenuItem submenu] removeAllItems];
     if([bookmarkRootContextualMenuItem submenu]) [[bookmarkRootContextualMenuItem submenu] removeAllItems];
     
+    // create a new menu
     bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
+    // iterate through each importer, and build a menu if it's bookmark file exists
     while(importer = [enumerator nextObject]){
         if([importer bookmarksExist]){
             firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
@@ -86,6 +95,8 @@ static NSMenu       *bookmarkSets;
             [firstMenuItem setSubmenu:firstSubmenu];
         }
     }
+    
+    // install the subMenus to their menuItems
     if([bookmarkSets numberOfItems]){
         [bookmarkRootMenuItem setSubmenu:bookmarkSets];
         [bookmarkRootContextualMenuItem setSubmenu:[[bookmarkSets copy] autorelease]];
@@ -94,6 +105,7 @@ static NSMenu       *bookmarkSets;
 
 - (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem
 {
+    // fetch the importer class from the menu item and call its parsing method
     id <SHBookmarkImporter> importer = [menuItem representedObject];
     return [[importer parseBookmarksForOwner:self] retain];
 }
@@ -102,6 +114,7 @@ static NSMenu       *bookmarkSets;
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 
+        // if for each active importer (actually in the menu) update it's items if it's changed sice the last time
         if([[[bookmarkRootMenuItem submenu] itemArray] count]){
             NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
             NSMenuItem *object;
@@ -109,19 +122,17 @@ static NSMenu       *bookmarkSets;
             while(object = [enumerator nextObject]){
                 if([[object representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
                     if([[object representedObject] bookmarksUpdated]){
-                        NSLog(@"building new menu");
+                        // the menu needs to be changed (bookmarks file mod. date changed)
+                        // so remove the items, rebuild the menu, then reinstall it
                         [[object submenu] removeAllItems];
                         newMenu = [self buildBookmarkMenuFor:object];
                         [object setSubmenu:newMenu];
-                        //[[[(NSMenuItem *)bookmarkRootContextualMenuItem submenu] itemAtIndex:[[(NSMenuItem *)bookmarkRootMenuItem submenu] indexOfItem:object]]
-                        //                                                        setSubmenu:[[newMenu copy] autorelease]];
                         [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
-                        NSLog(@"built new menu");
                     }
                 }
             }
         }else{
-            return NO;
+            return NO; // disable if no sets are active (which would only happen if no browsers were installed... hey, it could happen!
         }
         
         if(responder && [responder isKindOfClass:[NSTextView class]]){
@@ -131,28 +142,31 @@ static NSMenu       *bookmarkSets;
 	}
 }
 
+// insert the link into the textView
 - (void)injectBookmarkFrom:(id)sender
 {
+    // if the sender has a hyperlink attached to it...
     if([[(NSMenuItem *)sender representedObject] isKindOfClass:[SHMarkedHyperlink class]]){
         SHMarkedHyperlink   *markedLink = [(NSMenuItem *)sender representedObject];
         NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	
+        // if the first responder is a text view...
         if(responder && [responder isKindOfClass:[NSTextView class]]){
             NSTextView      *topView = (NSTextView *)responder;
             NSDictionary    *typingAttributes = [topView typingAttributes];
             
+            // new mutable string to build the link with
             NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:[markedLink parentString]
                                                                                               attributes:typingAttributes] autorelease];
             [linkString addAttribute:NSLinkAttributeName value:[markedLink URL] range:[markedLink range]];
             
+            // insert the link to the text view..
             NSRange selRange = [topView selectedRange];
             [[topView textStorage] replaceCharactersInRange:selRange withAttributedString:linkString];
             
-            if([[topView string] length] == selRange.location + selRange.length){
-                NSRange newSelRange = NSMakeRange(selRange.location + selRange.length, 0);
-                [topView setSelectedRange:newSelRange];
-                [topView setSelectedTextAttributes:typingAttributes];
-            }else if([[topView string] characterAtIndex:(selRange.location + [markedLink range].length + 1)] != ' '){
+            // special cases for insertion:
+            if([[topView string] characterAtIndex:(selRange.location + [markedLink range].length + 1)] != ' '){
+                // if we insert a link and the next char isn't a space, insert one.
                 NSAttributedString  *tmpString = [[[NSAttributedString alloc] initWithString:@" "
                                                                                   attributes:typingAttributes] autorelease];
                 [[topView textStorage] insertAttributedString:tmpString

@@ -4,15 +4,14 @@
 //
 //  Created by Stephen Holt on Wed May 19 2004.
 
-#define KEY_LINK_URL        @"URL"
-#define KEY_LINK_TITLE      @"Title"
 
+// protocol bookmark importer classes must impliment
 @protocol SHBookmarkImporter
--(NSMenu *)parseBookmarksForOwner:(id)owner;
--(NSString *)menuTitle;
--(BOOL)bookmarksExist;
--(BOOL)bookmarksUpdated;
-@end
+-(NSMenu *)parseBookmarksForOwner:(id)owner;    // returns a NSMenu with the full hierarchy
+-(NSString *)menuTitle;                         // title for the menu item
+-(BOOL)bookmarksExist;                          // if the bookmarks file exists
+-(BOOL)bookmarksUpdated;                        // if the bookmarks file has been updated
+@end                                            //   since the last time parseBookmarksForOwner: has been called
 
 @interface SHBookmarksImporterPlugin : AIPlugin {
     NSMutableArray  *importerArray;
