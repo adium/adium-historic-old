@@ -18,7 +18,6 @@
 #import "AIContactInfoWindowController.h"
 
 #define	CONTACT_ALIAS_NIB			@"ContactAlias"		//Filename of the alias info view
-#define	PREF_GROUP_ALIASES			@"Aliases"			//Preference group to store aliases in
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
