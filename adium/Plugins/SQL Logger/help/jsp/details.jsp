@@ -1,10 +1,11 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
+<%@ page import = 'java.util.regex.*' %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 356 $ $Date: 2003/08/05 04:25:49 $ -->
+<!--$Rev: 402 $ $Date: 2003/08/29 06:54:47 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -220,9 +221,22 @@ try {
 
             after = after.replaceFirst("01 ", i + " ");
             after = after.replaceFirst("00:", j + ":");
-
-            before = before.replaceFirst("01 ", i + " ");
-            before = before.replaceFirst("00:", j + 1 + ":");
+            if(j != 23) {
+                before = before.replaceFirst("01 ", i + " ");
+                before = before.replaceFirst("00:", j + 1  + ":");
+            } else if (j == 23 && i != lastDayOfMonth) {
+                before = before.replaceFirst("01 ", (i + 1) + " ");
+            } else if (j == 23 && i == lastDayOfMonth) {
+                Pattern p = Pattern.compile("(\\d*-)(\\d*)(-01.*)");
+                Matcher m = p.matcher(before);
+                StringBuffer sb = new StringBuffer();
+                while(m.find()) {
+                    sb.append(m.group(1) +
+                        (Integer.parseInt(m.group(2)) + 1) +
+                        m.group(3));
+                }
+                before = sb.toString();
+            } 
 
             out.print("<td align=\"center\"");
             

@@ -48,15 +48,17 @@ where  m.sender_id = s.user_id
   and  s_disp.effdate < message_date
   and  not exists (
        select 'x'
-       from adium.user_display_name udn
-       where udn.effdate > s_disp.effdate
-       and   udn.user_id = s.user_id)
+       from   adium.user_display_name udn
+       where  udn.effdate > s_disp.effdate
+       and    udn.user_id = s.user_id
+       and    udn.effdate < message_date)
   and  r_disp.effdate < message_date
   and  not exists (
        select 'x'
        from   adium.user_display_name udn
        where  udn.effdate > r_disp.effdate
-       and    udn.user_id = r.user_id);
+       and    udn.user_id = r.user_id
+       and    udn.effdate < message_date);
 
 create or replace rule insert_message_v as
 on insert to adium.message_v
