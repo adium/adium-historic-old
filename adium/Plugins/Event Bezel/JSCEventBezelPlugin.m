@@ -51,6 +51,10 @@
                                         selector:@selector(eventNotification:)
                                             name:CONTACT_STATUS_IDLE_NO
                                           object:nil];
+    [[owner notificationCenter] addObserver:self
+                                        selector:@selector(eventNotification:)
+                                            name:Content_FirstContentRecieved
+                                          object:nil];
 }
 
 - (void)uninstallPlugin
@@ -66,10 +70,18 @@
 
 - (void)eventNotification:(NSNotification *)notification
 {
-    AIListContact   *contact = [notification object];
+    AIListContact   *contact;
     NSEnumerator    *accountEnumerator;
     AIAccount       *account;
+    BOOL            isFirstMessage = NO;
     NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
+    
+    if ([[notification name] isEqualToString: Content_FirstContentRecieved]) {
+        contact = [[[notification object] participatingListObjects] objectAtIndex:0];
+        isFirstMessage = YES;
+    } else {
+        contact = [notification object];
+    }
     
     if ([[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]) {
         accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
@@ -78,7 +90,8 @@
             if (contactHandle = [contact handleForAccount: account]) {
                 AIMutableOwnerArray         *ownerArray;
                 NSImage                     *tempBuddyIcon = nil;
-                NSString                    *tempContactName;
+                NSString                    *tempContactName = nil;
+                NSString                    *statusMessage = nil;
                 
                 ownerArray = [contact statusArrayForKey:@"BuddyImage"];
                 if(ownerArray && [ownerArray count]) {
@@ -209,11 +222,25 @@
                     break;
                     }
                 }
+                if (isFirstMessage) {
+                    AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
+                    statusMessage = [[contentMessage message] string];
+                } else {
+                    // If it is a status change, show status message
+                    // Not working
+                    /*ownerArray = [contact statusArrayForKey: @"StatusMessage"];
+                    if (ownerArray && [ownerArray count]) {
+                        statusMessage = [ownerArray objectAtIndex: 0];
+                    }
+                    if (statusMessage) {
+                    } else {
+                    }*/
+                }
                 
                 [ebc showBezelWithContact: tempContactName
                                 withImage: tempBuddyIcon
                                  forEvent: [notification name]
-                              withMessage: nil
+                              withMessage: statusMessage
                               atPosition: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
             }
         }
