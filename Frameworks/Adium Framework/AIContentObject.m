@@ -72,11 +72,11 @@
 	return(NO);
 }
 
-//Content is from the same day
+//Content is from the same day. If passed nil, content is from the current day.
 - (BOOL)isFromSameDayAsContent:(AIContentObject *)inContent
 {
 	NSCalendarDate *ourDate = [[self date] dateWithCalendarFormat:nil timeZone:nil];
-	NSCalendarDate *inDate = [[inContent date] dateWithCalendarFormat:nil timeZone:nil];
+	NSCalendarDate *inDate = [(inContent ? [inContent date] : [NSDate date]) dateWithCalendarFormat:nil timeZone:nil];
 	
 	return([ourDate dayOfCommonEra] == [inDate dayOfCommonEra]);
 }
