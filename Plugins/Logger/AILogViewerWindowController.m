@@ -413,22 +413,21 @@ static NSString                             *filterForContactName = nil;	//Conta
 			drawerIsOpen = [NSNumber numberWithBool:NO];
 			break;
 	}
-
+	
 	[[adium preferenceController] setPreference:drawerIsOpen
-                                             forKey:KEY_LOG_VIEWER_DRAWER_STATE
-                                              group:PREF_GROUP_LOGGING];
-        
-        // set preference for drawer size
-        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[drawer_contacts contentSize].width]
-                                             forKey:KEY_LOG_VIEWER_DRAWER_SIZE
-                                              group:PREF_GROUP_LOGGING];       
-        
-        // set preference for emoticon filtering
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:showEmoticons]
-                                             forKey:KEY_LOG_VIEWER_EMOTICONS
-                                              group:PREF_GROUP_LOGGING];        
-        
-
+										 forKey:KEY_LOG_VIEWER_DRAWER_STATE
+										  group:PREF_GROUP_LOGGING];
+	
+	// set preference for drawer size
+	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[drawer_contacts contentSize].width]
+										 forKey:KEY_LOG_VIEWER_DRAWER_SIZE
+										  group:PREF_GROUP_LOGGING];       
+	
+	// set preference for emoticon filtering
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showEmoticons]
+										 forKey:KEY_LOG_VIEWER_EMOTICONS
+										  group:PREF_GROUP_LOGGING];
+	
     //Disable the search field.  If we don't disable the search field, it will often try to call its target action
     //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
     //before we close the window down seems to prevent the crash.
@@ -441,8 +440,6 @@ static NSString                             *filterForContactName = nil;	//Conta
     //Abort any in-progress searching and indexing, and wait for their completion
     [self stopSearching];
     [plugin cleanUpLogContentSearching];
-	
-	[super windowShouldClose:sender];
 
     //Clean up
 	[aggregateLogIndexProgressTimer invalidate];
@@ -452,9 +449,11 @@ static NSString                             *filterForContactName = nil;	//Conta
 	[activeSearchString release]; activeSearchString = nil;
 	[self updateRankColumnVisibility];
 	
-    [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
-	[toolbarItems release];
+	[sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
+	[toolbarItems autorelease];
 	
+	[super windowShouldClose:sender];
+
     return(YES);
 }
 
