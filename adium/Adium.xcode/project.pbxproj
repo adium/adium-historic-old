@@ -3299,6 +3299,7 @@
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_LDFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Adium;

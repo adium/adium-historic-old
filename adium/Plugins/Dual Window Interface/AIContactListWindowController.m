@@ -158,6 +158,8 @@
 			default: level = NSNormalWindowLevel; break;
 		}
 		[[self window] setLevel:level];
+		[[self window] setIgnoresExpose:(windowPosition == 2)]; //Ignore expose while on the desktop
+
 
 		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];
     }
