@@ -43,8 +43,11 @@
 
 - (IBAction)blockContextContact:(id)sender
 {
-    AIListContact *contact = [[adium menuController] contactualMenuContact];
-    [self blockContact:contact forAccount:[contact account]];
+    AIListObject *object = [[adium menuController] contactualMenuObject];
+	if([object isKindOfClass:[AIListContact class]]){
+		AIListContact	*contact = (AIListContact *)object;
+		[self blockContact:contact forAccount:[contact account]];
+	}
 }
 
 - (void)blockContact:(AIListContact *)contact forAccount:(AIAccount *)account
