@@ -2,7 +2,7 @@
 //We could change ours in CVS but it wouldn't matter since Gaim itself uses 'libgaim' instead of 'Libgaim'.
 
 //Extensive debug logging
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 #if GAIM_DEBUG
 	#define GaimDebug NSLog

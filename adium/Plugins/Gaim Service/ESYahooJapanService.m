@@ -20,6 +20,7 @@
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Yahoo! Japan"
                                                       description:@"Yahoo! Japan"
                                                             image:nil
+														menuImage:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]

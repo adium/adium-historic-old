@@ -21,6 +21,7 @@
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Napster"
                                                       description:@"Napster"
                                                             image:image
+														menuImage:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]

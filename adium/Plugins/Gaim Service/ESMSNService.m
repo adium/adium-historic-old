@@ -22,6 +22,7 @@
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"MSN"
                                                       description:@"MSN"
                                                             image:image
+														menuImage:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]

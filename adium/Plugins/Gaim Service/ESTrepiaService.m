@@ -19,6 +19,7 @@
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Trepia"
                                                       description:@"Trepia"
                                                             image:nil
+														menuImage:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._"]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
