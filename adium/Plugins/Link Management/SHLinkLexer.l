@@ -24,6 +24,7 @@ uTLD		(aero|coop|museum)
 
 domains		({ccTLD}|{sTLD}|{uTLD}|arpa)
 urlSpecifier	[^\/]+((.*:)?.*@)?(.*\/)*\.{domains}(:[0-9]+)?(\/.*)?
+ipURL		[^\/]+([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\s&]+(&message=.+)?
@@ -36,6 +37,7 @@ yahooIMSpec	ymsgr:sendim\?.+
 %%
 
 <CANONICAL>{urlSpecifier}   {BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>{ipURL}          {BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>.*		    {BEGIN INITIAL; return SH_URL_INVALID;}
 
 file:\/\/\/.*		    {return SH_FILE_VALID;}
