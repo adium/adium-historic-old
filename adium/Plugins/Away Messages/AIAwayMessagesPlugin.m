@@ -73,7 +73,7 @@
     NSAttributedString	*awayMessage = [awayDict objectForKey:@"Message"];
     NSAttributedString	*awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
     [[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-    [[owner accountController] setProperty:awayAutoResponse forKey:@"AutoResponse" account:nil];
+    [[owner accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
 }
 
 //Remove the active away message
@@ -81,7 +81,7 @@
 {
     //Remove the away status flag	
     [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-    [[owner accountController] setProperty:nil forKey:@"AutoResponse" account:nil];
+    [[owner accountController] setProperty:nil forKey:" account:nil];
 }
 
 //Update our menu when the away status changes
@@ -117,7 +117,7 @@
     //If the user received a message, send our away message to source
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         
-        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AutoResponse" account:nil]];
+        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"Autoresponse" account:nil]];
         
         if (!awayMessage) {
             awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
