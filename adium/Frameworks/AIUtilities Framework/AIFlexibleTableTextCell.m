@@ -55,7 +55,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     paragraphStyle = [NSParagraphStyle styleWithAlignment:inAlignment];
     
     //Create the attributed string
-    attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName, inFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName,
+															inFont, NSFontAttributeName, 
+															paragraphStyle, NSParagraphStyleAttributeName, nil];
     attributedString = [[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease];
     
     //Build the cell
@@ -88,7 +90,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     string = [inString retain];
 
     //Create the text system
-    textStorage = [[self createTextSystemWithString:string size:NSMakeSize(1e7, 1e7) container:&textContainer layoutManager:&layoutManager] retain];
+    textStorage = [[self createTextSystemWithString:string 
+											   size:NSMakeSize(1e7, 1e7)
+										  container:&textContainer
+									  layoutManager:&layoutManager] retain];
 
     //Check if our string contains any links
     scanRange = NSMakeRange(0, 0);
@@ -178,7 +183,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
             [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
             
             //Fade our new drawing back towards the original
-            [image drawInRect:cellFrame fromRect:NSMakeRect(0,0,cellFrame.size.width,cellFrame.size.height) operation:NSCompositeSourceOver fraction:(1-opacity)];
+            [image drawInRect:cellFrame
+					 fromRect:NSMakeRect(0,0,cellFrame.size.width,cellFrame.size.height) 
+					operation:NSCompositeSourceOver 
+					 fraction:(1-opacity)];
             [controlView unlockFocus];
             [image release];
         }
@@ -199,7 +207,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     point.y -= [self paddingInset].height;
 
     //Get the character index
-    glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:textContainer fractionOfDistanceThroughGlyph:&fraction];
+    glyphIndex = [layoutManager glyphIndexForPoint:point 
+								   inTextContainer:textContainer 
+					fractionOfDistanceThroughGlyph:&fraction];
     if(fraction >= offset){
         glyphIndex += 1;
     }
@@ -216,7 +226,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     if(containsLinks){
         //Setup our link tracking
         if(!linkTrackingController){
-            linkTrackingController = [[AILinkTrackingController linkTrackingControllerForView:controlView withTextStorage:textStorage layoutManager:layoutManager textContainer:textContainer] retain];
+            linkTrackingController = [[AILinkTrackingController linkTrackingControllerForView:controlView 
+																			  withTextStorage:textStorage 
+																				layoutManager:layoutManager
+																				textContainer:textContainer] retain];
         }
 
         //Update for the new rect
@@ -255,27 +268,37 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     charIndex = [self _characterIndexAtPoint:inPoint fractionOffset:1.0];
     if(charIndex >= 0 && charIndex < [textStorage length]){
        if([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter){ //Check for emoticons to turn into text
-		   AITextAttachmentExtension	*attachment = [textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil];
+		   AITextAttachmentExtension	*attachment = [textStorage attribute:NSAttachmentAttributeName
+																	 atIndex:charIndex
+															  effectiveRange:nil];
            NSString						*repStr = [attachment string];
 
 		   //Check if the string exists and wants its alternate text to be used
            if(repStr != nil && [attachment hasAlternate]) {
                NSMutableAttributedString	*repAttStr = [[NSMutableAttributedString alloc] initWithString:repStr];
 
-               NSMutableDictionary			*attributes = [[textStorage attributesAtIndex:charIndex effectiveRange:nil] mutableCopy];
+               NSMutableDictionary			*attributes = [[textStorage attributesAtIndex:charIndex 
+																		   effectiveRange:nil] mutableCopy];
                unsigned int					tempIndex = charIndex;
                NSColor						*tempColor = nil;
 
                if(tempIndex > 0){
-                   while((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: --tempIndex effectiveRange:nil]) == nil && tempIndex != 0);
+                   while(((tempColor = [textStorage attribute:NSForegroundColorAttributeName 
+													 atIndex: --tempIndex effectiveRange:nil]) == nil) && (tempIndex != 0));
                }else if([textStorage length] > 1){
-                   while((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: ++tempIndex effectiveRange:nil]) == nil && tempIndex != ([textStorage length] - 1));
+                   while(((tempColor = [textStorage attribute:NSForegroundColorAttributeName 
+													 atIndex: ++tempIndex effectiveRange:nil]) == nil) &&
+						 (tempIndex != ([textStorage length] - 1)));
                }
 
                if(tempColor) [attributes setObject:tempColor forKey:NSForegroundColorAttributeName];
-               [attributes setObject:attachment forKey:@"IKHiddenAttachment"];
-               [attributes setObject:[NSNumber numberWithInt:uniqueEmoticonID++] forKey:@"IKHiddenAttachmentUniq"]; //Add unique ID so ranges remain distinct
-               [attributes removeObjectForKey:NSAttachmentAttributeName];
+               
+			   [attributes setObject:attachment
+							  forKey:@"IKHiddenAttachment"];
+               [attributes setObject:[NSNumber numberWithInt:uniqueEmoticonID++] 
+							  forKey:@"IKHiddenAttachmentUniq"]; //Add unique ID so ranges remain distinct
+               
+			   [attributes removeObjectForKey:NSAttachmentAttributeName];
                [repAttStr addAttributes:attributes range:NSMakeRange(0,[repAttStr length])];
                [attributes release];
 
@@ -288,10 +311,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
        }else if([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]){ //Check for text to turn back into emoticons
            NSRange			replaceRange;
            NSMutableAttributedString	*repAttStr;
-           AITextAttachmentExtension	*repAtt = [textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:&replaceRange];
+           AITextAttachmentExtension	*repAtt = [textStorage attribute:@"IKHiddenAttachment" 
+																 atIndex:charIndex
+														  effectiveRange:&replaceRange];
 
            repAttStr = [[NSMutableAttributedString attributedStringWithAttachment:repAtt] retain];
-           [repAttStr addAttributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil] range:NSMakeRange(0,1)];
+           [repAttStr addAttributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil] 
+							  range:NSMakeRange(0,1)];
 
            //Replace text with original image
            [textStorage replaceCharactersInRange:replaceRange withAttributedString:repAttStr];
@@ -330,7 +356,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     selectionRange = [self _validRangeFromIndex:startIndex to:stopIndex];
 
     //Remove any existing coloring
-    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0,[textStorage length])];
+    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName
+						  forCharacterRange:NSMakeRange(0,[textStorage length])];
 
     //Convert those coordinates to the nearest glyph index
     [layoutManager addTemporaryAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor selectedTextBackgroundColor], NSBackgroundColorAttributeName, nil] forCharacterRange:selectionRange];
@@ -344,7 +371,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     selectionRange = NSMakeRange(0,0);
 
-    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0,[textStorage length])];
+    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName
+						  forCharacterRange:NSMakeRange(0,[textStorage length])];
 
     [[tableRow tableView] setNeedsDisplay:YES];
 }
@@ -360,16 +388,19 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSMutableAttributedString *selectedString = nil;
     
-    if(selectionRange.length){
+    if(selectionRange.length && ((selectionRange.location + selectionRange.length) < [string length])){
         //Get the selected text (Safestring converts any attachments to text)
         selectedString = [[[[string attributedSubstringFromRange:selectionRange] safeString] mutableCopy] autorelease];
 
         //Strip any attributes we don't want to return
-        [selectedString removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0,[selectedString length])]; //Background color
-        [selectedString removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange(0,[selectedString length])]; //evands: Paragraph style - some style settings like Centered cause a crash
+        [selectedString removeAttribute:NSBackgroundColorAttributeName
+								  range:NSMakeRange(0,[selectedString length])]; //Background color
+        [selectedString removeAttribute:NSParagraphStyleAttributeName 
+								  range:NSMakeRange(0,[selectedString length])]; //evands: Paragraph style - some style settings like Centered cause a crash
 
         //Add a return character
-        [selectedString appendString:@"\r" withAttributes:[selectedString attributesAtIndex:([selectedString length]-1) effectiveRange:nil]];
+        [selectedString appendString:@"\r" withAttributes:[selectedString attributesAtIndex:([selectedString length]-1) 
+																			 effectiveRange:nil]];
     }
     
     return(selectedString);
@@ -459,7 +490,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 			if(repStr != nil && [attachment hasAlternate]) {
 				
 				NSAttributedString *formattedText = [[NSAttributedString alloc] initWithString:repStr
-																					attributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil]];
+																					attributes:[textStorage attributesAtIndex:charIndex
+																											   effectiveRange:nil]];
 				menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_TEXT
 													   target:self
 													   action:@selector(copyText:)
@@ -503,7 +535,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSAttributedString *copyString = [sender representedObject];
     [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
-    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length])
+													documentAttributes:nil] 
+									  forType:NSRTFPboardType];
 }
 
 - (void)copyImage:(id)sender
