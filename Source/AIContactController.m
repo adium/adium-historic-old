@@ -181,9 +181,6 @@ DeclareString(UID);
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
 	[self _loadGroupsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_GROUPS
 																		group:PREF_GROUP_CONTACT_LIST]];
-#warning I would love a contact system that didnt require loading EVERY contact ever seen by Adium into memory
-//	[self _loadContactsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_CONTACTS
-//																		  group:PREF_GROUP_CONTACT_LIST]];
 	[self _loadMetaContactsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_METACONTACTS
 																			  group:PREF_GROUP_CONTACT_LIST]];
 }

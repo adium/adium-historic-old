@@ -574,11 +574,11 @@
     // Loop through each Proteus away message    
     NSEnumerator *AdiumEnumerator = NULL;
     NSDictionary *AdiumMessage; 
-    NSDictionary *proteusMessage, *proteusCurrentMessage;
+    NSDictionary *proteusMessage/*, *proteusCurrentMessage*/;
     NSString *AdiumMsgTitle, *AdiumMsgContent;
     NSString *proteusMsgTitle, *proteusMsgContent;
     BOOL messageAlreadyExists;
-    BOOL importAllStatus;
+//    BOOL importAllStatus;
     
             
     
