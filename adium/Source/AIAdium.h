@@ -131,6 +131,10 @@ typedef enum {
     Unknown_FileTransfer
 } FileTransferType;
 
+//Crash logging
+#define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
+#define CRASHES_PATH		[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
+
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
 #define PREF_GROUP_ACCOUNTS	 	@"Accounts"

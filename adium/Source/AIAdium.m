@@ -222,7 +222,11 @@ void Adium_HandleSignal(int i){
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    //Log and Handle all exceptions
+	//Remove any existing crash logs
+	[[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
+	[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
+	
+	//Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
 
     //NSExceptionHandler messes up crash signals - install a custom handler which properly terminates Adium if one is received
