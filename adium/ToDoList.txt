@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.47 2004/04/16 06:06:15 bgannin Exp $
+$Id: ToDoList.txt,v 1.48 2004/04/16 09:04:54 eevyl Exp $
 
 Legend
 + Change or Addition
@@ -19,13 +19,11 @@ Bugs
 * Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
-* We aren't processing <code> tags in our HTML decoder (Jabber uses them)
-	- (Tick: I thought jabber sent xml...???)
-* Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 	- (Tick: Yes, jabber works, but only for jabber.org.)
 * User icons are still getting flipped (Icons from AIM, apparently)
 * Changing an alias in the inspector does not correctly update the contact list
+    - (eevyl: I think this is fixed now at least my test worked, not sure though)
 * Some URLs in profiles aren't allowing clicks properly (Ones that include %n ?)
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
@@ -277,6 +275,9 @@ Bug Fixes:
 = When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
 = Window content is drawing 2 pixels to the left when dragging tabs
 ced preference panes.
+= We aren't processing <code> tags in our HTML decoder (Jabber uses them)
+	- (Tick: I thought jabber sent xml...???)
+= Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
 
 
 Features & Changes:
