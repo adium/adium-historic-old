@@ -47,4 +47,29 @@
     return(value);
 }
 
+#define BUNDLE_STRING	@"$$BundlePath$$"
+//
+- (NSString *)stringByExpandingBundlePath
+{
+    if([self hasPrefix:BUNDLE_STRING]){
+        return([NSString stringWithFormat:@"%@%@",
+            [NSString stringWithFormat:[[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath]],
+            [self substringFromIndex:[(NSString *)BUNDLE_STRING length]]]);
+    }else{
+        return(self);
+    }
+}
+
+//
+- (NSString *)stringByCollapsingBundlePath
+{
+    NSString *bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
+
+    if([self hasPrefix:bundlePath]){
+        return([NSString stringWithFormat:@"$$BundlePath$$%@",[self substringFromIndex:[bundlePath length]]]);
+    }else{
+        return(self);
+    }
+}
+
 @end
