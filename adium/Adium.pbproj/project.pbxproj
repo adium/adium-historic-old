@@ -19099,36 +19099,42 @@
 			refType = 4;
 		};
 		F5A8709704ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = ESContactListDisplayFormatPreferences.h;
 			path = "Plugins/Contact List Display Format/ESContactListDisplayFormatPreferences.h";
 			refType = 4;
 		};
 		F5A8709804ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = "Display Format Defaults.plist";
 			path = "Plugins/Contact List Display Format/Display Format Defaults.plist";
 			refType = 4;
 		};
 		F5A8709904ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIKeyWordTextField.m;
 			path = "Plugins/Contact List Display Format/AIKeyWordTextField.m";
 			refType = 4;
 		};
 		F5A8709A04ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = ESContactListDisplayFormatPlugin.m;
 			path = "Plugins/Contact List Display Format/ESContactListDisplayFormatPlugin.m";
 			refType = 4;
 		};
 		F5A8709B04ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICustomFormatTextView.h;
 			path = "Plugins/Contact List Display Format/AICustomFormatTextView.h";
 			refType = 4;
 		};
 		F5A8709C04ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AICustomFormatTextView.m;
 			path = "Plugins/Contact List Display Format/AICustomFormatTextView.m";
@@ -19141,18 +19147,21 @@
 			refType = 4;
 		};
 		F5A8709E04ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIKeyWordTextField.h;
 			path = "Plugins/Contact List Display Format/AIKeyWordTextField.h";
 			refType = 4;
 		};
 		F5A8709F04ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = ESContactListDisplayFormatPlugin.h;
 			path = "Plugins/Contact List Display Format/ESContactListDisplayFormatPlugin.h";
 			refType = 4;
 		};
 		F5A870A004ECAEF50100011E = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = ESContactListDisplayFormatPreferences.m;
 			path = "Plugins/Contact List Display Format/ESContactListDisplayFormatPreferences.m";
