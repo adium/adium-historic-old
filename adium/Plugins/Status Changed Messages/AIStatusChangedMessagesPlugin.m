@@ -52,29 +52,39 @@
         
     }
 
+	//We don't change any keys
     return(nil);
 }
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ went away" forObject:[notification object]];
+    AIListObject *object = [notification object];
+    [self statusMessage:[NSString stringWithFormat:@"%@ went away",[object displayName]] forObject:object];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
     AIListObject *object = [notification object];
     
     if([[object statusArrayForKey:@"Online"] greatestIntegerValue])
-		[self statusMessage:@"%@ came back" forObject:object];
+		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[object displayName]] forObject:object];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ connected" forObject:[notification object]];
+	AIListObject *object = [notification object];
+	
+	[self statusMessage:[NSString stringWithFormat:@"%@ connected",[object displayName]] forObject:object];
 }
 - (void)Contact_StatusOnlineNO:(NSNotification *)notification{
-    [self statusMessage:@"%@ disconnected" forObject:[notification object]];
+	AIListObject *object = [notification object];
+	
+	[self statusMessage:[NSString stringWithFormat:@"%@ disconnected",[object displayName]] forObject:object];
 }
 - (void)Contact_StatusIdleYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ went idle" forObject:[notification object]];
+	AIListObject *object = [notification object];
+	
+	[self statusMessage:[NSString stringWithFormat:@"%@ went idle",[object displayName]] forObject:object];
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
-    [self statusMessage:@"%@ became active" forObject:[notification object]];
+	AIListObject *object = [notification object];
+	
+	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[object displayName]] forObject:object];
 }
 
 
@@ -82,7 +92,7 @@
 - (void)statusMessage:(NSString *)message forObject:(AIListObject *)object
 {
     NSEnumerator	*enumerator;
-    AIChat		*chat;
+    AIChat			*chat;
 	
     enumerator = [[[adium contentController] allChatsWithListObject:object] objectEnumerator];
     while((chat = [enumerator nextObject])){
@@ -93,7 +103,7 @@
                                      withSource:object
                                     destination:[chat account]
                                            date:[NSDate date]
-                                        message:[NSString stringWithFormat:message,[object displayName]]];
+                                        message:message];
 		
         //Add the object
         [[adium contentController] addIncomingContentObject:content];
