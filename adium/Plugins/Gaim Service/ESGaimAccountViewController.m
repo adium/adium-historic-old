@@ -92,12 +92,13 @@
     NSMenu			*proxyMenu = [[NSMenu alloc] init];
 	
     [proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"None",nil) tag:Gaim_Proxy_None]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS Settings",nil) tag:Gaim_Proxy_Default_SOCKS]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS4 Settings",nil) tag:Gaim_Proxy_Default_SOCKS4]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS5 Settings",nil) tag:Gaim_Proxy_Default_SOCKS5]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide HTTP Settings",nil) tag:Gaim_Proxy_Default_HTTP]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Gaim_Proxy_HTTP]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS4" tag:Gaim_Proxy_SOCKS4]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS5" tag:Gaim_Proxy_SOCKS5]];
-				
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Gaim_Proxy_HTTP]];
+	
 	return [proxyMenu autorelease];
 }
 
@@ -239,10 +240,11 @@
 {
 	NSNumber			*proxyTypeNumber = [account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 
-	AdiumGaimProxyType  proxyType = (proxyTypeNumber ? [proxyTypeNumber intValue] : Gaim_Proxy_Default_SOCKS);
+	AdiumGaimProxyType  proxyType = (proxyTypeNumber ? [proxyTypeNumber intValue] : Gaim_Proxy_Default_SOCKS5);
 	BOOL				editableProxySettings = ((proxyType != Gaim_Proxy_None) &&
-												 (proxyType != Gaim_Proxy_Default_SOCKS) &&
-												 (proxyType != Gaim_Proxy_Default_HTTP));
+												 (proxyType != Gaim_Proxy_Default_SOCKS5) &&
+												 (proxyType != Gaim_Proxy_Default_HTTP) && 
+												 (proxyType != Gaim_Proxy_Default_SOCKS4));
 	BOOL				accountOffline = ![[account statusObjectForKey:@"Online"] boolValue];
 	BOOL				enableProxySettings = editableProxySettings && accountOffline;
 	
