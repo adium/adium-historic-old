@@ -82,7 +82,7 @@
         [[owner preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
 
         //Set the selected icon
-        [self configureForSelectedIcon:[iconArray objectAtIndex:index]];
+        [self configureForSelectedIcon:[iconArray objectAtIndex:index]];        
     }
 }
 

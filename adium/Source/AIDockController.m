@@ -84,6 +84,20 @@
             }
         }
 
+        //Change the Adium application icon to this new icon
+        if(notification != nil){
+            NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
+            IconFamily		*iconFamily;
+            NSImage		*image;
+
+            image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
+            if(image){
+                //Create and save a new .icns file for the base icon state image
+                iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
+                [iconFamily writeToFile:icnsPath];
+            }            
+        }
+
         //Recomposite the icon
         [self _buildIcon];
     }
