@@ -42,12 +42,11 @@ TODO:
                 [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] onService:@"AIM" withMessage:nil];
             }
             
-        // DO NOT OPEN UNTIL XMAS...err...0.76
-        }/*else if([[url scheme] isEqualToString:@"ymsgr"]){
+        }else if([[url scheme] isEqualToString:@"ymsgr"]){
             if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
                 [self _openChatToContactWithName:[url query] onService:@"Yahoo!" withMessage:nil];
             }
-        }*/
+        }
     }else{
         NSLog(@"invalid URL");
     }
