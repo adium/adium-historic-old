@@ -2,7 +2,7 @@
 #import "AIWebKitMessageViewPlugin.h"
 #import "AIWebKitMessageViewController.h"
 
-#define WEBKIT_DEFAULT_PREFS	@"WebKit Defaults"
+
 
 @interface AIWebKitMessageViewPlugin (PRIVATE)
 - (void)_loadAvailableWebkitStyles;
