@@ -38,9 +38,9 @@
     categoryArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
     
-    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONNECTIONS image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
-    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_INTERFACE image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
-    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_STATUS image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
+    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONNECTIONS image:[AIImageUtilities imageNamed:@"connectionsprefs" forClass:[self class]]]];
+    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_INTERFACE image:[AIImageUtilities imageNamed:@"interfaceprefs" forClass:[self class]]]];
+    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_STATUS image:[AIImageUtilities imageNamed:@"statusprefs" forClass:[self class]]]];
 
     //Register our toolbar item
     toolbarItem = [[[AIMiniToolbarItem alloc] initWithIdentifier:@"ShowPreferences"] autorelease];
