@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.80 2004/05/01 13:33:42 adamiser Exp $
+$Id: ToDoList.txt,v 1.81 2004/05/01 14:00:18 adamiser Exp $
 
 
 Legend
@@ -13,10 +13,10 @@ If you are working on something big and it may take a while, please tag it with 
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
-* Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
-* Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
+   - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
+
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 
@@ -24,7 +24,6 @@ Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
 
 Contact List:
-* Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Adding a contact that's already online causes them to appear signed off on the list.
 * Adding buddies, sometimes they'll show up on the list twice until a restart
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
@@ -98,6 +97,7 @@ Other:
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
 	+ Interact with libgaim via a thread to improve responsiveness during connect/disconnect/poor connectivity
+    + Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
@@ -347,4 +347,5 @@ Features & Changes:
 = GROUP DRAGGING IS BROKEN
 = Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
 = Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
+= Contact list flippy triangles are white behind them in 10.2
 
