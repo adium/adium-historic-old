@@ -21,6 +21,8 @@
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (void)joinChatWithAccount:(AIAccount *)inAccount;
 
+- (NSString *)impliedCompletion:(NSString *)aString;
+
 - (void)doJoinChatWithName:(NSString *)inName
 				 onAccount:(AIAccount *)inAccount
 		  chatCreationInfo:(NSDictionary *)inInfo 

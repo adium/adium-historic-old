@@ -159,4 +159,22 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	[button_joinChat setEnabled:enabled];
 }
 
+- (AIListContact *)contactFromText:(NSString *)text
+{
+	AIListContact	*contact;
+	AIAccount		*account;
+	NSString		*UID;
+	
+	//Get the service type and UID
+	account = [[popUp_service selectedItem] representedObject];
+	UID = [[account service] filterUID:text removeIgnoredCharacters:YES];
+	
+	//Find the contact
+	contact = [[adium contactController] contactWithService:[account service]
+													account:account 
+														UID:UID];
+	
+	return(contact);
+}
+
 @end

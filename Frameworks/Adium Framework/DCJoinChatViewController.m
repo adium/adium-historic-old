@@ -7,6 +7,10 @@
 
 #import "DCJoinChatViewController.h"
 
+@interface DCJoinChatViewController (PRIVATE)
+- (NSString *)impliedCompletion:(NSString *)aString;
+@end
+
 @implementation DCJoinChatViewController
 
 //Create a new join chat view
@@ -47,6 +51,7 @@
 - (NSString *)nibName { return(nil); };
 - (void)configureForAccount:(AIAccount *)inAccount { };
 - (void)joinChatWithAccount:(AIAccount *)inAccount { };
+- (NSString *)impliedCompletion:(NSString *)aString {return aString;}
 
 //General methods for joining chats and inviting users
 - (void)doJoinChatWithName:(NSString *)inName
@@ -129,30 +134,42 @@
 	NSArray			*contactNames;
 	
 	if ([namesSeparatedByCommas length]){
-		//If the service is not case sensitive, compact the string before proceeding so our UIDs will be correct
-		if (![[inAccount service] caseSensitive]){
-			namesSeparatedByCommas = [namesSeparatedByCommas compactedString];
-		}
+		
 		contactNames = [namesSeparatedByCommas componentsSeparatedByString:@","];
 		
 		if ([contactNames count]){
 			NSEnumerator	*enumerator;
-			NSString		*aContactName;
+			NSString		*aContactName, *UID;
 			AIListContact	*listContact;
 			
 			contactsArray = [NSMutableArray array];
 			
 			enumerator = [contactNames objectEnumerator];		
 			while (aContactName = [enumerator nextObject]){
+				
+				NSLog(@"0 UID: %@",aContactName);
+				
+				UID = [[inAccount service] filterUID:[self impliedCompletion:aContactName] removeIgnoredCharacters:YES];
+				
+				NSLog(@"#### 1 UID: %@",UID);
+				//If the service is not case sensitive, compact the string before proceeding so our UID will be correct
+				if (![[inAccount service] caseSensitive]){
+					UID = [UID compactedString];
+				}
+				
+				NSLog(@"#### 2 UID: %@",UID);
+				
 				if(listContact = [[adium contactController] contactWithService:[inAccount service] 
 																	   account:inAccount 
-																		   UID:aContactName]){
+																		   UID:UID]){
 					[contactsArray addObject:listContact];
+					NSLog(@"#### 3 UID: %@",listContact);
 				}
 			}
 		}
 	}
 	
+	NSLog(@"#### 4 contactsArray: %@",contactsArray);
 	return(contactsArray);
 }
 
