@@ -98,7 +98,7 @@
 //Configure the preference view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EVENT_BEZEL] == 0) {
+    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EVENT_BEZEL]) {
 		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
 		
 		// Set the values of the checkboxes

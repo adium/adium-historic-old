@@ -89,7 +89,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EMOTICONS] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EMOTICONS]){
 		
 		//If all that changed was the active pack list, there's no reason to flush our cache
 		//if (![[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_EMOTICON_ACTIVE_PACKS]) 
@@ -416,7 +416,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
     while(emoticonPack = [enumerator nextObject]){
-        if([[emoticonPack name] compare:inName] == 0) return(emoticonPack);
+        if([[emoticonPack name] isEqualToString:inName]) return(emoticonPack);
     }
 	
     return(nil);
@@ -518,15 +518,19 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 	//Packs which aren't in the ordering index sort to the bottom
 	if (notFoundA && notFoundB) {
 		return ([[packA name] compare:[packB name]]);
+		
 	} else if (notFoundA) {
 		return (NSOrderedDescending);
+		
 	} else if (notFoundB) {
 		return (NSOrderedAscending);
 		
 	} else if (packAIndex > packBIndex) {
 		return(NSOrderedDescending);
+		
 	} else {
 		return(NSOrderedAscending);
+		
 	}
 }
 

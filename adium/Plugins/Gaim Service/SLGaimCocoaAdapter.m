@@ -97,7 +97,6 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	
 	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 
-	NSLog(@"running");
 	[[NSRunLoop currentRunLoop] run];
 
 	NSLog(@"DONE!");

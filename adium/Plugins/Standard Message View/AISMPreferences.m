@@ -66,7 +66,7 @@
 //Reflect new preferences in view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_STANDARD_MESSAGE_DISPLAY]){
 		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 		
 		//Disable and uncheck show user icons when not using an inline prefix
@@ -233,7 +233,7 @@
     //Add the available time stamp formats
     NSString    *noSecondsNoAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
     NSString    *noSecondsAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES];
-    BOOL        twentyFourHourTimeIsOff = ([noSecondsNoAMPM compare:noSecondsAMPM] != 0);
+    BOOL        twentyFourHourTimeIsOff = (![noSecondsNoAMPM isEqualToString:noSecondsAMPM]);
 
     [self _buildTimeStampMenu_AddFormat:noSecondsNoAMPM];
     if (twentyFourHourTimeIsOff)

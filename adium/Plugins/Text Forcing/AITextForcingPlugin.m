@@ -75,7 +75,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_TEXT_FORCING] == 0){
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_TEXT_FORCING]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
 
         //Release the old values..

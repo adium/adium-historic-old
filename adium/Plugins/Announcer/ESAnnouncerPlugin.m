@@ -50,7 +50,7 @@
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ANNOUNCER] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_ANNOUNCER]){
 	NSDictionary * dict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
 
 	speechEnabled = [[dict objectForKey:KEY_ANNOUNCER_ENABLED] boolValue];
@@ -82,7 +82,7 @@
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
 	
-    AIChat		*chat = nil;
+    AIChat			*chat = nil;
     NSString		*message = nil;
     AIAccount		*account = nil;
     NSString		*object = nil;
@@ -94,7 +94,7 @@
 	
 	if(speechEnabled) {
 		//Message Content
-		if(speakMessages && ([[content type] compare:CONTENT_MESSAGE_TYPE] == 0) ){
+		if(speakMessages && ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) ){
 			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
 			chat	= [notification object];
 			object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
@@ -121,7 +121,7 @@
 						senderString = [(AIListContact *)source displayName];
 						//		    }
 						
-						if (!lastSenderString || [senderString compare:lastSenderString] != 0) {
+						if (!lastSenderString || ![senderString isEqualToString:lastSenderString]) {
 							[theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
 							[theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
 							[lastSenderString release]; lastSenderString = [senderString retain];
@@ -144,7 +144,7 @@
 				}
 			}
 		}
-		else if(speakStatus && ([[content type] compare:CONTENT_STATUS_TYPE] == 0) ){
+		else if(speakStatus && ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) ){
 			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
 			chat	= [notification object];
 			object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
@@ -193,7 +193,7 @@
     NSString	*voice = nil;
     NSNumber	*pitchNumber = nil;
     NSNumber	*rateNumber = nil;
-
+	
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
@@ -203,29 +203,30 @@
     } else {
         [popUp_voice selectItemAtIndex:0]; //"Default"
     }
-
+	
     pitchNumber = [activeListObject preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
     if(pitchNumber) {
-	[slider_pitch setFloatValue:[pitchNumber floatValue]];
+		[slider_pitch setFloatValue:[pitchNumber floatValue]];
     } else {
-	[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
+		[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
     }
-
+	
     rateNumber = [activeListObject preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
     if(rateNumber) {
-	[slider_rate setIntValue:[rateNumber intValue]];
+		[slider_rate setIntValue:[rateNumber intValue]];
     } else {
-	[slider_rate setIntValue:[[adium soundController] defaultRate]];
+		[slider_rate setIntValue:[[adium soundController] defaultRate]];
     }
 }
 
 - (IBAction)changedSetting:(id)sender
 {
     if (sender == popUp_voice) {
-	NSString * voice = [popUp_voice titleOfSelectedItem];
-	if ([voice compare:@"Default"] == 0)
-	    voice = nil;
-	[activeListObject setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
+		NSString * voice = [popUp_voice titleOfSelectedItem];
+		if ([voice isEqualToString:@"Default"]){
+			voice = nil;
+		}
+		[activeListObject setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
     } else if (sender == slider_pitch) {
         [activeListObject setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER];
     } else if (sender == slider_rate) {

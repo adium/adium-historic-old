@@ -163,7 +163,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 //Called when the preferences change, update our preference display
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
 
         //Load the user's custom set
@@ -378,7 +378,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:TABLE_COLUMN_EVENT] == 0){
+    if([identifier isEqualToString:TABLE_COLUMN_EVENT]){
         NSDictionary	*soundDict;
         NSString	*notification;
         NSDictionary	*eventDict;
@@ -405,7 +405,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:TABLE_COLUMN_SOUND] == 0){
+    if([identifier isEqualToString:TABLE_COLUMN_SOUND]){
         NSMenuItem		*selectedMenuItem;
         NSMutableDictionary	*selectedSoundDict;
         NSString		*newSoundPath;
@@ -415,7 +415,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
         selectedSoundDict = [[[eventSoundArray objectAtIndex:row] mutableCopy] autorelease];
         newSoundPath = [selectedMenuItem representedObject];
         setRow = row;
-        if(newSoundPath && [newSoundPath compare:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]] != 0){ //Ignore a duplicate selection
+        if(newSoundPath && ![newSoundPath isEqualToString:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]]){ //Ignore a duplicate selection
             //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.
             //[self saveEventSoundArray];
 
@@ -434,7 +434,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:TABLE_COLUMN_SOUND] == 0){
+    if([identifier isEqualToString:TABLE_COLUMN_SOUND]){
         [cell selectItemWithRepresentedObject:[[eventSoundArray objectAtIndex:row] objectForKey:KEY_EVENT_SOUND_PATH]];
     }
 }

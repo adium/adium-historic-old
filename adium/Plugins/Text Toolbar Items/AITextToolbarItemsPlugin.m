@@ -118,8 +118,8 @@
     NSString	*identifier = [inToolbarItem identifier];
     BOOL	enabled = YES;
 
-    if([identifier compare:@"Bold"] == 0 || [identifier compare:@"Italic"] == 0 || [identifier compare:@"Underline"] == 0){
-        AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
+    if([identifier isEqualToString:@"Bold"] || [identifier isEqualToString:@"Italic"] || [identifier isEqualToString::@"Underline"]){
+        AIListObject			*object = [inObjects objectForKey:@"ContactObject"];
         NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
         enabled = (object && [object isKindOfClass:[AIListObject class]] && text);

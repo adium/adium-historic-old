@@ -99,7 +99,7 @@
 	//
 	enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
 	while((controller = [enumerator nextObject])){
-		if([identifier compare:[controller identifier]] == 0){
+		if([identifier compare:[controller identifier]] == NSOrderedSame){
 			[[adium contactController] setActiveSortController:controller];
 			break;
 		}

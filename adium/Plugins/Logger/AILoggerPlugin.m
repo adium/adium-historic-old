@@ -91,7 +91,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Update for the new preferences
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LOGGING] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LOGGING]){
         NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
         BOOL            newLogValue;
 		
@@ -209,9 +209,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     NSString			*logString = nil;
 
 	//Generate a plaintext string for this content
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
 		logString = [self stringForContentMessage:(AIContentMessage *)content];
-    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+    }else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
 		logString = [self stringForContentStatus:(AIContentStatus *)content];
     }
 	

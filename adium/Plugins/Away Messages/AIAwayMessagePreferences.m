@@ -537,7 +537,7 @@
             /*            
             if(item == nil){ //To root
 
-            }else if([itemType compare:@"Group"] == 0){
+            }else if([itemType isEqualToString:@"Group"]){
                 if(index == -1){ //Onto a group
 
                 }else{ //Into a group

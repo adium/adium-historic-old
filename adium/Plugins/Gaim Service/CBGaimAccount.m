@@ -239,7 +239,7 @@ static id<GaimThread> gaimThread = nil;
 
 	if ((idleSinceDate && !currentIdleDate) ||
 		(!idleSinceDate && currentIdleDate) ||
-		([idleSinceDate compare:currentIdleDate] != 0)){
+		([idleSinceDate compare:currentIdleDate] != NSOrderedSame)){
 		
 		[theContact setStatusObject:idleSinceDate
 							 forKey:@"IdleSince"
@@ -638,7 +638,7 @@ static id<GaimThread> gaimThread = nil;
     BOOL            sent = NO;
 	
 	if (gaim_account_is_connected(account)) {
-		if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
+		if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			AIContentMessage	*contentMessage = (AIContentMessage*)object;
 			AIChat				*chat = [contentMessage chat];
 			NSAttributedString  *message = [contentMessage message];
@@ -684,7 +684,7 @@ static id<GaimThread> gaimThread = nil;
 				}
 			}
 			
-		}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
+		}else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
 			AIContentTyping *contentTyping = (AIContentTyping*)object;
 			AIChat *chat = [contentTyping chat];
 			
@@ -1293,17 +1293,17 @@ static id<GaimThread> gaimThread = nil;
 	if([[self statusObjectForKey:@"Online"] boolValue]){
 		NSData  *data;
 		
-		if([key compare:@"IdleSince"] == 0){
+		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
 			
-		}else if([key compare:@"AwayMessage"] == 0){
+		}else if([key isEqualToString:@"AwayMessage"]){
 			[self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 			
-		}else if([key compare:@"TextProfile"] == 0){
+		}else if([key isEqualToString:@"TextProfile"]){
 			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 			
-		}else if([key compare:KEY_USER_ICON] == 0){
+		}else if([key isEqualToString:KEY_USER_ICON]){
 			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 				[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
 			}
@@ -1329,7 +1329,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
-	if(!awayMessage || [[awayMessage string] compare:[[self statusObjectForKey:@"StatusMessage"] string]] != 0){
+	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
 		char	*awayHTML = nil;
 		
 		//Convert the away message to HTML, and pass it to libgaim
@@ -1350,7 +1350,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
-	if(!profile || [[profile string] compare:[[self statusObjectForKey:@"TextProfile"] string]] != 0){
+	if(!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]){
 		char 	*profileHTML = nil;
 		
 		//Convert the profile to HTML, and pass it to libgaim

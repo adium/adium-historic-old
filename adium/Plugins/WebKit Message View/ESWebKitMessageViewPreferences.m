@@ -556,7 +556,7 @@
     //Add the available time stamp formats
     NSString    *noSecondsNoAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
     NSString    *noSecondsAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES];
-    BOOL        twentyFourHourTimeIsOff = ([noSecondsNoAMPM compare:noSecondsAMPM] != 0);
+    BOOL        twentyFourHourTimeIsOff = (![noSecondsNoAMPM isEqualToString:noSecondsAMPM]);
 	
     [self _buildTimeStampMenu_AddFormat:noSecondsNoAMPM];
     if (twentyFourHourTimeIsOff)

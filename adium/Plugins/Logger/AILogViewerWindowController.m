@@ -19,23 +19,23 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
-#define LOG_VIEWER_NIB				@"LogViewer"
-#define LOG_VIEWER_JAG_NIB			@"LogViewerJag"
+#define LOG_VIEWER_NIB					@"LogViewer"
+#define LOG_VIEWER_JAG_NIB				@"LogViewerJag"
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
 
 #define MAX_LOGS_TO_SORT_WHILE_SEARCHING	1000	//Max number of logs we will live sort while searching
-#define LOG_SEARCH_STATUS_INTERVAL		20      //1/60ths of a second to wait before refreshing search status
+#define LOG_SEARCH_STATUS_INTERVAL			20      //1/60ths of a second to wait before refreshing search status
 
 #define LOG_CONTENT_SEARCH_MAX_RESULTS		10000   //Max results allowed from a search
-#define LOG_RESULT_CLUMP_SIZE			10      //Number of logs to fetch at a time
+#define LOG_RESULT_CLUMP_SIZE				10      //Number of logs to fetch at a time
 
 #define SEARCH_MENU     AILocalizedString(@"Search Menu",nil)
-#define FROM		AILocalizedString(@"From",nil)
-#define TO		AILocalizedString(@"To",nil)
-#define DATE		AILocalizedString(@"Date",nil)
-#define CONTENT		AILocalizedString(@"Content",nil)
+#define FROM			AILocalizedString(@"From",nil)
+#define TO				AILocalizedString(@"To",nil)
+#define DATE			AILocalizedString(@"Date",nil)
+#define CONTENT			AILocalizedString(@"Content",nil)
 
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
@@ -114,9 +114,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     selectedLogArray = [[NSMutableArray alloc] init];
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
-
+	
     [super initWithWindowNibName:windowNibName];
-
+	
     return(self);
 }
 
@@ -140,7 +140,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     NSString		*logFolderPath;
     NSEnumerator	*enumerator;
     NSString		*folderName;
-
+	
     //Process each account folder (/Logs/SERVICE.ACCOUNT_NAME/)
     logFolderPath = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
     enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator];
@@ -156,7 +156,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-
+	
     //Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
     if(savedFrame){
@@ -164,20 +164,20 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     }else{
         [[self window] center];
     }
-
+	
     //Prepare the search controls
     [self buildSearchMenu];
     if([textView_content respondsToSelector:@selector(setUsesFindPanel:)]){
-	[textView_content setUsesFindPanel:YES];
+		[textView_content setUsesFindPanel:YES];
     }
-
+	
     //Sort by date
     selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
     
     //Prepare indexing and filter searching
     [self initLogFiltering];
     [plugin prepareLogContentSearching];
-
+	
     //Begin our initial search
     if(activeSearchString) [searchField_logs setStringValue:activeSearchString];
     [self updateSearch:nil];
@@ -207,7 +207,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_LOG_VIEWER_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
-
+	
     //Clean up
     [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
     
@@ -287,7 +287,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 {
     NSAttributedString	*logText = nil;
     NSString			*logFileText = nil;
-
+	
     if(displayedLog != theLog){
 		[displayedLog release];
 		displayedLog = [theLog retain];
@@ -439,19 +439,19 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [tableView_results setHighlightedTableColumn:tableColumn];
     [selectedColumn release]; selectedColumn = [tableColumn retain];
     sortDirection = direction;
-
+	
     //Resort the data
     [resultsLock lock];
     identifier = [selectedColumn identifier];
-    if([identifier compare:@"To"] == 0){
-	[selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareToReverse:) : @selector(compareTo:))];
-	
-    }else if([identifier compare:@"From"] == 0){
+    if([identifier isEqualToString:@"To"]){
+		[selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareToReverse:) : @selector(compareTo:))];
+		
+    }else if([identifier isEqualToString:@"From"]){
         [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareFromReverse:) : @selector(compareFrom:))];
-	
-    }else if([identifier compare:@"Date"] == 0){
+		
+    }else if([identifier isEqualToString:@"Date"]){
         [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareDateReverse:) : @selector(compareDate:))];
-
+		
     }
     [resultsLock unlock];
     
@@ -493,7 +493,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)controlTextDidChange:(NSNotification *)notification
 {
     if(searchMode != LOG_SEARCH_CONTENT){
-	[self updateSearch:nil];
+		[self updateSearch:nil];
     }
 }
 
@@ -531,16 +531,16 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     [self stopSearching];
     
     NSLog(@"startSearching");
-
+	
     //Once all searches have exited, we can start a new one
     [resultsLock lock];
     [selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];
     [resultsLock unlock];
     searchDict = [NSDictionary dictionaryWithObjectsAndKeys:
-	[NSNumber numberWithInt:activeSearchID], @"ID",
-	[NSNumber numberWithInt:searchMode], @"Mode",
-	activeSearchString, @"String",
-	nil];
+		[NSNumber numberWithInt:activeSearchID], @"ID",
+		[NSNumber numberWithInt:searchMode], @"Mode",
+		activeSearchString, @"String",
+		nil];
     [NSThread detachNewThreadSelector:@selector(filterLogsWithSearch:) toTarget:self withObject:searchDict];
     
     [searchingLock unlock];
@@ -565,8 +565,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Set the active search string (Does not invoke a search)
 - (void)setSearchString:(NSString *)inString
 {
-    if([[searchField_logs stringValue] compare:inString] != 0){
-	[searchField_logs setStringValue:inString];
+    if(![[searchField_logs stringValue] isEqualToString:inString]){
+		[searchField_logs setStringValue:inString];
     }
     [activeSearchString release]; activeSearchString = [[searchField_logs stringValue] copy];
 }
@@ -582,10 +582,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     
     //In 10.2 we use a popup button here, later we use the search field's embedded menu
     if(popUp_jagSearchMode){
-	[popUp_jagSearchMode setMenu:cellMenu];
-	[popUp_jagSearchMode selectItem:[cellMenu itemWithTag:searchMode]];
+		[popUp_jagSearchMode setMenu:cellMenu];
+		[popUp_jagSearchMode selectItem:[cellMenu itemWithTag:searchMode]];
     }else{
-	[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
+		[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
     }
 }
 
@@ -613,29 +613,29 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     //We must be careful not to wait on performing any main thread selectors when this lock is set!!
     [searchingLock lock];
     if(searchID == activeSearchID){ //If we're still supposed to go
-	searching = YES;
-	
-	//Search
-	if(searchString && [searchString length]){
-	    switch(mode){
-		case LOG_SEARCH_FROM:
-		case LOG_SEARCH_TO:
-		case LOG_SEARCH_DATE:
-		    [self _logFilter:searchString searchID:searchID mode:mode];
-		break;
-		case LOG_SEARCH_CONTENT:
-		    [self _logContentFilter:searchString searchID:searchID];
-		break;
-	    }
-	}else{
-	    [self _logFilter:nil searchID:searchID mode:mode];
-	}
-    
-	//Refresh
-	searching = NO;
-	[self performSelectorOnMainThread:@selector(refreshResults) withObject:nil waitUntilDone:NO];
+		searching = YES;
+		
+		//Search
+		if(searchString && [searchString length]){
+			switch(mode){
+				case LOG_SEARCH_FROM:
+				case LOG_SEARCH_TO:
+				case LOG_SEARCH_DATE:
+					[self _logFilter:searchString searchID:searchID mode:mode];
+					break;
+				case LOG_SEARCH_CONTENT:
+					[self _logContentFilter:searchString searchID:searchID];
+					break;
+			}
+		}else{
+			[self _logFilter:nil searchID:searchID mode:mode];
+		}
+		
+		//Refresh
+		searching = NO;
+		[self performSelectorOnMainThread:@selector(refreshResults) withObject:nil waitUntilDone:NO];
     }
-
+	
     //Re-allow thread creation
     //We must be careful not to wait on performing any main thread selectors when this lock is set!!
     [searchingLock unlock];	
@@ -749,9 +749,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 				NSString	*fromPath = [toPath stringByDeletingLastPathComponent];
 				
 				AILog		*theLog = [[AILog alloc] initWithPath:path
-														 from:[fromPath lastPathComponent]
-														   to:[toPath lastPathComponent]
-														 date:[AILog dateFromFileName:[path lastPathComponent]]];
+															 from:[fromPath lastPathComponent]
+															   to:[toPath lastPathComponent]
+															 date:[AILog dateFromFileName:[path lastPathComponent]]];
 				
 				//Add the log
 				[resultsLock lock];
@@ -805,11 +805,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     }else{
 		AILog   *theLog = [selectedLogArray objectAtIndex:row];
 		
-		if([identifier compare:@"To"] == 0){
+		if([identifier isEqualToString:@"To"]){
 			value = [theLog to];
-		}else if([identifier compare:@"From"] == 0){
+		}else if([identifier isEqualToString:@"From"]){
 			value = [theLog from];
-		}else if([identifier compare:@"Date"] == 0){
+		}else if([identifier isEqualToString:@"Date"]){
 			value = [dateFormatter stringForObjectValue:[theLog date]];
 		}
     }

@@ -62,11 +62,11 @@
 //Keep the preferences current
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
 
         //If the Behavior set changed
-        if(notification == nil || ([key compare:KEY_DUAL_RESIZE_VERTICAL] == 0) || ([key compare:KEY_DUAL_RESIZE_HORIZONTAL] == 0) ){
+        if(notification == nil || ([key isEqualToString:KEY_DUAL_RESIZE_VERTICAL]) || ([key isEqualToString:KEY_DUAL_RESIZE_HORIZONTAL]) ){
             NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
             
             BOOL vertical = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];

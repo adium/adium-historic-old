@@ -49,7 +49,7 @@
 //Reflect new preferences in view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [PREF_GROUP_SQL_LOGGING compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
+    if(notification == nil || [PREF_GROUP_SQL_LOGGING isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
 		id				tmp;
 		

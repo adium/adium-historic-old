@@ -90,11 +90,11 @@
 //Called when the preferences change, update our preference display
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
         //If the 'Soundset' changed
-        if(notification == nil || ([key compare:KEY_EVENT_SOUND_SET] == 0)){
+        if(notification == nil || ([key isEqualToString:KEY_EVENT_SOUND_SET])){
             NSString		*soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
 
             //Update the soundset popUp

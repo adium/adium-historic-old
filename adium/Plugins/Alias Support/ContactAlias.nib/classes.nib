@@ -1,15 +1,26 @@
 {
     IBClasses = (
+        {CLASS = AIAliasSupportPlugin; LANGUAGE = ObjC; SUPERCLASS = AIPlugin; }, 
+        {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {setAlias = id; }; 
-            CLASS = AIAliasSupportPlugin; 
+            ACTIONS = {setAlias = id; setNotes = id; }; 
+            CLASS = AIContactSettingsPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "textField_alias" = ESDelayedTextField; 
-                "view_contactAliasInfoView" = NSView; 
+                "textField_notes" = ESDelayedTextField; 
             }; 
-            SUPERCLASS = AIPlugin; 
+            SUPERCLASS = AIContactInfoPane; 
         }, 
+        {CLASS = AIContactSettingsPlugin; LANGUAGE = ObjC; SUPERCLASS = AIPlugin; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {setNotes = id; }; 
