@@ -85,17 +85,18 @@ def CSSclass(instr):
 	return instr
 
 def HTMLescape(instr):
-	"given a string, turn it into something usable inside an HTML file (by escaping '<>&' with entities."
+	"given a string, turn it into something usable inside an HTML file (by escaping '<>&' with entities)."
 
 	def HTMLentity(match):
-		if match.group(0) == '&':
+		matchstr = match.group(0)
+		if matchstr == '&':
 			return '&amp;'
-		elif match.group(0) == '<':
+		elif matchstr == '<':
 			return '&lt;'
-		elif match.group(0) == '>':
+		elif matchstr == '>':
 			return '&gt;'
 		else:
-			return match.group(0)
+			return matchstr
 
 	import re
 	return re.sub('[&<>]', HTMLentity, instr)
@@ -136,8 +137,10 @@ def listToHTML(infile, outfile):
 		'<style type="text/css">\n'
 		'body { color: black; background-color: white }\n')
 
+	lineno = 0
 	try:
 		for buf in infile:
+			lineno += 1
 			if legendRE.search(buf):
 				mode = legendMode
 			elif separatorRE.match(buf):
@@ -246,7 +249,7 @@ def listToHTML(infile, outfile):
 									inTask = True
 								outfile.write(HTMLescape(buf))
 	except:
-		print >> sys.stderr, 'Error while processing line: %r' % (buf,)
+		print >> sys.stderr, 'Error while processing line %u: %r' % (lineno, buf)
 		raise
 	if inTask:
 		outfile.write("\t</li>\n")
