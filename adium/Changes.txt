@@ -2,7 +2,7 @@
 				-----------------------
 				
 Version 0.53 (4/30/2004)				
-- Added Webkit Message View (6 Distinct styles, or build your own!  Customizable fonts, backgrounds!) [10.3 only]
+- Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]
 - Added "Novell GroupWise" protocol support
 - Added "Yahoo! Japan" protocol support
 - Added support for custom link titles (Edit->Add Link)
