@@ -153,6 +153,12 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     offset -= changeOffset;
 }
 
+-(void) setOldIdentifier:(NSString *)inIdentifier
+{
+    [oldIdentifier release];
+    oldIdentifier = inIdentifier;
+    [oldIdentifier retain];
+}
 - (AIListObject *)activeObject
 {
     return activeContactObject;
@@ -233,21 +239,22 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 - (IBAction)actionOpenMessage:(id)sender
 {
     [self configureForMenuDetails:@"Open window using account:" menuToDisplay:[self accountForOpenMessageMenu] identifier:@"Open Message"];
-    [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]]];
+    AIAccount * account = [[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
+    if (account) [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:account];
 }
 
 //setup display for sending a message
 - (IBAction)actionSendMessage:(id)sender
 {
-    NSString *details = [[NSString alloc] autorelease];
+    NSString *details = [[[NSString alloc] init]autorelease];
     NSMutableDictionary * detailsDict;
-    NSString *identifier = [selectedActionDict objectForKey:KEY_EVENT_ACTION]; 
-    if ([identifier compare:@"Message"] == 0) //only set the text field if the stored text is for a message
-        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
-    else
-        details = @"";
 
-    [textField_message_actionDetails setStringValue:(details)];
+    if ([oldIdentifier compare:@"Message"] == 0) //only set the text field if the stored text is for a message
+        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+   /* else
+        details = @"";
+*/
+    [textField_message_actionDetails setStringValue:(details ? details : @"")];
     [textField_message_actionDetails setDelegate:self];
 
     [popUp_message_actionDetails_one setMenu:[self accountMenu]];
@@ -283,6 +290,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     }
 
     [self configureWithSubview:view_details_message];
+
+//    [self setOldIdentifier:@"Message"];
 }
 
 //Builds and returns an event menu
@@ -649,20 +658,18 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
 - (void)configureForTextDetails:(NSString *)instructions identifier:(NSString *)identifier
 {
-    NSString *details =  [[NSString alloc] autorelease];
-    NSString *oldIdentifier = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
+    NSString *details =  [[[NSString alloc] init] autorelease];
+//    NSLog (@"old %@ new %@",oldIdentifier, identifier);
     if ([oldIdentifier compare:identifier] == 0)
-    {
         details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
-    }
-    else
-        details = @"";
 
     [textField_actionDetails setDelegate:self];
     [textField_description_textField setStringValue:instructions];
     [textField_actionDetails setStringValue:(details ? details : @"")];
 
     [self configureWithSubview:view_details_text];
+
+//    [self setOldIdentifier:identifier];
 }
 
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu identifier:(NSString *)identifier
@@ -672,6 +679,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
 
     [self configureWithSubview:view_details_menu];
+
+//    [self setOldIdentifier:identifier];
 }
 
 - (void)configureWithSubview:(NSView *)view_inView
@@ -768,9 +777,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
 //editing is over - save in KEY_EVENT_DETAILS
 //- (void)controlTextDidEndEditing:(NSNotification *)notification
-- (void)textDidChange:(NSNotification *)notification
+- (void)controlTextDidChange:(NSNotification *)notification
 {
-
+    NSLog(@"changed");
     [selectedActionDict setObject:[[notification object] stringValue] forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
     [self saveEventActionArray];

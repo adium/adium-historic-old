@@ -286,22 +286,23 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         NSMenuItem		*selectedMenuItem;
         NSMutableDictionary	*selectedActionDict;
         NSString		*newAction;
-
+        
         ESContactAlerts * thisInstance = [prefAlertsArray objectAtIndex:row];
 
         selectedMenuItem = [[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
         selectedActionDict = [[thisInstance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 
+        
         [selectedActionDict setObject:newAction forKey:KEY_EVENT_ACTION];
-        [instance replaceDictAtIndex:row withDict:selectedActionDict];
+        [thisInstance replaceDictAtIndex:row withDict:selectedActionDict];
 
     }
 }
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [self deleteEventAction:nil]; //Delete it, using the preferences view custom deleteEventAction (which calls in the instance)
+    if ([tableView_actions selectedRow] != -1) [self deleteEventAction:nil]; //Delete it, using the preferences view custom deleteEventAction (which calls in the instance)
 }
 
 //selection changed; update the view
@@ -309,7 +310,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 //- (void)tableViewSelectionIsChanging:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
-    NSLog(@"changed to row: %i",row);
     if (row != -1) //a row is selected
     {
         instance = [prefAlertsArray objectAtIndex:row];
@@ -321,6 +321,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         NSDictionary * selectedActionDict = [instance dictAtIndex:row];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
+        [instance setOldIdentifier:action];
+        
         [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
 
