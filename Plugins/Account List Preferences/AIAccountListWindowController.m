@@ -70,14 +70,14 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     accountViewController = nil;
 	configuredForService = nil;
 	configuredForAccount = nil;
-    [textField_accountName setDelayInterval:1.0];
 	
-	//
+	//Configure controls
 	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self 
 															activeServicesOnly:NO
 															   longDescription:YES];
 	[serviceMenu setAutoenablesItems:YES];
 	[popupMenu_serviceList setMenu:serviceMenu];
+    [textField_accountName setDelayInterval:1.0];
 	[self configureAccountList];
 
 	//Observe account list objects so we can enable/disable our controls for connected accounts
@@ -88,7 +88,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	if([[[adium accountController] accountArray] count] == 0){
 		[self performSelector:@selector(newAccount:) withObject:nil afterDelay:0.0001];
 	}
-
+	
+	//Center this panel
+	[[self window] center];
 }
 
 //Close
@@ -113,16 +115,13 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	//Get any final changes to the UID field
 	[textField_accountName fireImmediately];
 	
+	//Cleanup and close our shared instance
 	[configuredForAccount release]; configuredForAccount = nil;
     [accountViewController release]; accountViewController = nil;
+	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
 	
 	return(YES);
 }
-
-
-
-
-
 
 
 //Configuring ---------------------------------------------------------------------------------------------
