@@ -24,8 +24,8 @@
                 "button_icon" = NSButton; 
                 "button_reveal" = AIRolloverButton; 
                 "button_stopResume" = AIRolloverButton; 
-                "imageView_destination" = NSImageView; 
-                "imageView_source" = NSImageView; 
+                "imageView_destination" = NSButton; 
+                "imageView_source" = NSButton; 
                 owner = ESFileTransferProgressRow; 
                 progressIndicator = NSProgressIndicator; 
                 "textField_destination" = NSTextField; 
