@@ -105,7 +105,7 @@
 - (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
 
 - (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
-- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
+- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName;
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event;
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
