@@ -13,8 +13,8 @@
 
 @interface AIContentObject : AIObject {
     AIChat				*chat;
-    id					source;
-    id					destination;
+    AIListObject		*source;
+    AIListObject		*destination;
     BOOL				outgoing;
     
 	NSAttributedString	*message;
@@ -27,10 +27,13 @@
 	BOOL				postProcessContent;
 }
 
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate*)inDate;
 - (id)initWithChat:(AIChat *)inChat
-			source:(id)inSource
-	   destination:(id)inDest
+			source:(AIListObject *)inSource
+	   destination:(AIListObject *)inDest
+	          date:(NSDate*)inDate;
+- (id)initWithChat:(AIChat *)inChat
+			source:(AIListObject *)inSource
+	   destination:(AIListObject *)inDest
 			  date:(NSDate*)inDate
 		   message:(NSAttributedString *)inMessage;
 - (NSString *)type;
@@ -40,8 +43,8 @@
 - (BOOL)isFromSameDayAsContent:(AIContentObject *)inContent;
 
 //Content
-- (id)source;
-- (id)destination;
+- (AIListObject *)source;
+- (AIListObject *)destination;
 - (NSDate *)date;
 - (BOOL)isOutgoing;
 - (void)_setIsOutgoing:(BOOL)inOutgoing;
