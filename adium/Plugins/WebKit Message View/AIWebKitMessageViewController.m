@@ -68,10 +68,16 @@
 
 - (void)dealloc
 {
+	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer = nil;	
 	[[adium notificationCenter] removeObserver:self];
-	[newContent release];
-	[previousContent release];
-	[newContentTimer invalidate]; [newContentTimer release];
+	
+	//Stop being the webView's baby's daddy; the webView may attempt callbacks shortly after we dealloc
+	[webView setFrameLoadDelegate:nil];
+	[webView setPolicyDelegate:nil];
+	[webView setUIDelegate:nil];
+	
+	[newContent release]; newContent = nil;
+	[previousContent release]; previousContent = nil;
 	[plugin release]; plugin = nil;
 	[chat release]; chat = nil;
 	

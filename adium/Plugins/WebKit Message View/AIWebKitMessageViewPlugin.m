@@ -25,6 +25,7 @@ DeclareString(AppendNextMessage);
 
 - (void)installPlugin
 {
+	
 	if([NSApp isOnPantherOrBetter]){
 #warning --willmove--
 		InitString(AppendMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
@@ -40,16 +41,17 @@ DeclareString(AppendNextMessage);
 #warning --willmove--
 		
 		//Init
+
 		styleDictionary = nil;
 		[self _scanAvailableWebkitStyles];
 		
 		//Setup our preferences
+		
 		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
 											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
 		advancedPreferences = [[ESWKMVAdvancedPreferences preferencePaneForPlugin:self] retain];
 		
-			
 		//Observe for installation of new styles
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(stylesChanged:)
@@ -61,6 +63,7 @@ DeclareString(AppendNextMessage);
 	}
 
 	[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
+	 
 }
 
 //Return a message view controller
