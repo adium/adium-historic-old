@@ -120,3 +120,6 @@
 #import <AIUtilities/NSString+CarbonFSSpecCreation.h>
 #import <AIUtilities/QTSoundFilePlayer.h>
 #import <AIUtilities/SUSpeaker.h>
+
+#import <AIUtilities/NDAppleScriptObject.h>
+#import <AIUtilities/NDComponentInstance.h>
