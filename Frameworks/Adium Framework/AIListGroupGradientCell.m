@@ -49,6 +49,9 @@
 		[gradientColor release];
 		gradientColor = [inGradientColor retain];
 	}
+	
+	//Reset gradient cache
+	[_gradient release]; _gradient = nil;
 }
 
 //Draw a gradient behind our group
