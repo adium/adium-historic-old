@@ -108,17 +108,31 @@ static id<GaimThread> gaimThread = nil;
 {
 	//Insert the new display name
 	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
+		BOOL changes = NO;
+		
 		//Remove any display name we'd previously placed
-		[[theContact displayArrayForKey:@"Display Name" create:NO] setObject:nil withOwner:self];
-
+		if ([theContact statusObjectForKey:@"Server Display Name"]){
+			[theContact setStatusObject:nil
+								 forKey:@"Server Display Name"
+								 notify:NO];
+			
+			[[theContact displayArrayForKey:@"Display Name" create:NO] setObject:nil withOwner:self];
+			
+			changes = YES;
+		}
 		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
-
+			
+			changes = YES;
+		}
+		
+		if (changes){
 			//Apply any changes
 			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
+		
 	}else{
 		if(![gaimAlias isEqualToString:[theContact displayName]] &&
 		   ![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
