@@ -66,7 +66,7 @@ typedef enum {
     - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
 
     //Instructs the account to initiate sending of a file
-- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
+	- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 //Support for privacy settings
@@ -75,6 +75,9 @@ typedef enum {
     -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
     //Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
     -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
+
+	//Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
+	-(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type;
 @end
 
 /*!
