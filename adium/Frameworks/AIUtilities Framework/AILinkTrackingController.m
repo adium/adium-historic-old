@@ -221,9 +221,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //
     controlView = inControlView;
-    textStorage = [inTextStorage retain];
-    layoutManager = [inLayoutManager retain];
-    textContainer = [inTextContainer retain];
+    textStorage = inTextStorage;
+    layoutManager = inLayoutManager;
+    textContainer = inTextContainer;
     
     return(self);
 }
@@ -233,9 +233,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     [self _endCursorTracking];
 
-    [textStorage release];
-    [layoutManager release];
-    [textContainer release];
     [hoveredString release];
     [hoveredLink release];
     [linkArray release];
@@ -304,6 +301,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 if(!linkArray) linkArray = [[NSMutableArray alloc] init];
                 [linkArray addObject:link];
 
+				
                 //Install a tracking rect for the link (The userData of each tracking rect is the AIFlexibleLink it covers)
                 trackingTag = [controlView addTrackingRect:visibleLinkRect owner:self userData:link assumeInside:NO];
                 [link setTrackingTag:trackingTag];

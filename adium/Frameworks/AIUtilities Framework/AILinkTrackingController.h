@@ -16,18 +16,18 @@
 @class AIFlexibleLink;
 
 @interface AILinkTrackingController : NSObject {
-    NSView			*controlView;			//The view we're tracking links in
-    NSMutableArray		*linkArray;			//Array of active flexible links
+    NSView				*controlView;			//The view we're tracking links in
+    NSMutableArray		*linkArray;				//Array of active flexible links
 
     AIFlexibleLink		*hoveredLink;			//The link currently being hovered
     NSString			*hoveredString;	
-    BOOL			mouseOverLink;			//Yes if the cursor is over one of our links
-    BOOL			showTooltip;			//Yes if we want to display the tooltip over a hovered link
+    BOOL				mouseOverLink;			//Yes if the cursor is over one of our links
+    BOOL				showTooltip;			//Yes if we want to display the tooltip over a hovered link
 
     //The text system of the view we're tracking links for
     NSTextStorage 		*textStorage;
-    NSLayoutManager 		*layoutManager;
-    NSTextContainer 		*textContainer;
+    NSLayoutManager		*layoutManager;
+    NSTextContainer		*textContainer;
 }
 
 + (id)linkTrackingControllerForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;

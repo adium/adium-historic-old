@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.48 2004/04/22 23:39:57 earthmkii Exp $
+//$Id: AIPluginController.m,v 1.49 2004/04/23 01:47:07 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -119,7 +119,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 	[self loadPluginWithClass:[ESStatusSortPlugin class]];
 	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
 	[self loadPluginWithClass:[GBiTunerPlugin class]];
-	[self loadPluginWithClass:[IdleMessagePlugin class]];
+	[self loadPluginWithClass:[IdleMessagePlugin class]]; //Crash on launch = 1
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
@@ -131,6 +131,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
 	
+	//Crash on launch = 1
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:NO];
 	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:YES];
 }
