@@ -5,23 +5,17 @@
 //  Created by Colin Barrett on Sat Nov 01 2003.
 //
 
-#import "CBGaimAccount.h"
+#import "CBGaimOscarAccount.h"
 #import "aim.h"
 
-@interface CBGaimAIMAccount : CBGaimAccount {
+@interface CBGaimAIMAccount : CBGaimOscarAccount {
 
 }
 
-//Overriden from CBGAimAccount
-- (NSString *)UID;
+//Overriden from CBGAimOscarAccount
+- (void)initAccount;
 - (NSString *)serviceID;
 - (NSString *)UIDAndServiceID;
 - (NSString *)accountDescription;
-- (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
-- (NSArray *)supportedPropertyKeys;
-
-//- (void)accountBlistNewNode:(GaimBlistNode *)node;
-
-extern gchar *oscar_encoding_to_utf8(const char *encoding, char *text, int textlen);
-
+- (id <AIAccountViewController>)accountView;
 @end

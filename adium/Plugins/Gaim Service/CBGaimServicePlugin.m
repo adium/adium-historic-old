@@ -537,7 +537,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
-                                                      description:@"LIBGAIM (Do not use)"
+                                                      description:@"AIM/OSCAR c/o Libgaim"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
