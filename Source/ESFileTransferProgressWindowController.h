@@ -21,6 +21,7 @@
 }
 
 + (id)showFileTransferProgressWindow;
++ (void)removeFileTransfer:(ESFileTransfer *)inFileTransfer;
 
 //For use by ESFileTransferProgressRow
 - (void)progressRowDidAwakeFromNib:(ESFileTransferProgressRow *)progressView;
