@@ -377,7 +377,7 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     AIAccount   *account = [accountArray objectAtIndex:row];
-    NSImage		*image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
+    NSImage		*image = [AIImageUtilities imageNamed:@"DefaultAccountIcon" forClass:[self class]];
 	
     [cell setImage:image];
     [cell setSubString:[account serviceID]];

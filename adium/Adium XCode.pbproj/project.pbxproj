@@ -11573,7 +11573,7 @@
 				34BD9EFB05314771000AB133,
 				34BD9EFC05314771000AB133,
 				34BD9EFD05314771000AB133,
-				34BD9EFE05314771000AB133,
+				4BD677690600301C0049CAF7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11610,12 +11610,6 @@
 		};
 		34BD9EFD05314771000AB133 = {
 			fileRef = 4B34BA8E04FE4D8900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EFE05314771000AB133 = {
-			fileRef = 4BAC8C8C05011FF300A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20938,14 +20932,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BAC8C8C05011FF300A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = DefaultIcon.tiff;
-			path = "Plugins/Account List Preferences/DefaultIcon.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BAC8E9C0448412300A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -21684,6 +21670,20 @@
 			path = "Plugins/Dual Window Interface/AccountSelectionView.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BD677680600301C0049CAF7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = DefaultAccountIcon.tiff;
+			path = "Plugins/Account List Preferences/DefaultAccountIcon.tiff";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BD677690600301C0049CAF7 = {
+			fileRef = 4BD677680600301C0049CAF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BD68227045B010D00A8010A = {
 			fileEncoding = 4;
@@ -30643,7 +30643,7 @@
 				4B15ED2E057AED8600A3B3D3,
 				4B15ED2F057AED8600A3B3D3,
 				F55B414203AB897201A8010A,
-				4BAC8C8C05011FF300A8010A,
+				4BD677680600301C0049CAF7,
 				4B34BA8D04FE4D8900A8010A,
 				4B34BA8E04FE4D8900A8010A,
 			);

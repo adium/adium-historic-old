@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.21 2004/02/28 22:39:07 evands Exp $
+//$Id: AIPluginController.m,v 1.22 2004/03/11 05:37:31 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -23,7 +23,28 @@
 @interface AIPluginController (PRIVATE)
 - (void)unloadPlugins;
 - (void)loadPluginsFromPath:(NSString *)pluginPath;
+- (void)loadPluginWithClass:(Class)inClass;
 @end
+
+@class AIAccountListPreferencesPlugin, AIAccountMenuAccessPlugin, AIAliasSupportPlugin, AIAlphabeticalSortPlugin,
+AIAutoLinkingPlugin, AIAwayMessagesPlugin, AIAwayStatusWindowPlugin, AIContactAwayPlugin, AIContactIdlePlugin,
+AIContactInfoPlugin, AIContactListEditorPlugin, AIContactOnlineSincePlugin, AIContactSortSelectionPlugin,
+AIContactStatusColoringPlugin, AIContactStatusDockOverlaysPlugin, AIContactStatusTabColoringPlugin,
+AIContactWarningLevelPlugin, AIDefaultFormattingPlugin, AIDockAccountStatusPlugin, AIDockBehaviorPlugin,
+AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlugin, AIEmoticonsPlugin,
+AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
+AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, AILoggerPlugin,
+AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
+AISCLViewPlugin, AISMViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
+AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
+AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin,
+AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
+CBStatusMenuItemPlugin, CSDisconnectAllPlugin, ESAddressBookIntegrationPlugin,
+ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
+ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
+ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
+JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, AIWebKitMessageViewPlugin, ESStatusSortPlugin,
+AIIdleTimePlugin;
 
 @implementation AIPluginController
 //init
@@ -31,6 +52,71 @@
 {
     pluginArray = [[NSMutableArray alloc] init];
 
+	//Load integrated plugins
+#warning ** Load integrated plugins
+/*	[self loadPluginWithClass:[AIAccountListPreferencesPlugin class]];
+	[self loadPluginWithClass:[AIAccountMenuAccessPlugin class]];
+	[self loadPluginWithClass:[AIAliasSupportPlugin class]];
+	[self loadPluginWithClass:[AIAlphabeticalSortPlugin class]];
+	[self loadPluginWithClass:[AIAutoLinkingPlugin class]];
+	[self loadPluginWithClass:[AIAwayMessagesPlugin class]];
+	[self loadPluginWithClass:[AIAwayStatusWindowPlugin class]];
+	[self loadPluginWithClass:[AIContactAwayPlugin class]];
+	[self loadPluginWithClass:[AIContactIdlePlugin class]];
+	[self loadPluginWithClass:[AIContactInfoPlugin class]];
+	[self loadPluginWithClass:[AIContactListEditorPlugin class]];
+	[self loadPluginWithClass:[AIContactOnlineSincePlugin class]];
+	[self loadPluginWithClass:[AIContactSortSelectionPlugin class]];
+	[self loadPluginWithClass:[AIContactStatusColoringPlugin class]];
+	[self loadPluginWithClass:[AIContactStatusDockOverlaysPlugin class]];
+	[self loadPluginWithClass:[AIContactStatusTabColoringPlugin class]];
+	[self loadPluginWithClass:[AIContactWarningLevelPlugin class]];
+	[self loadPluginWithClass:[AIDefaultFormattingPlugin class]];
+	[self loadPluginWithClass:[AIDockAccountStatusPlugin class]];
+	[self loadPluginWithClass:[AIDockBehaviorPlugin class]];
+	[self loadPluginWithClass:[AIDockIconSelectionPlugin class]];
+	[self loadPluginWithClass:[AIDockUnviewedContentPlugin class]];
+	[self loadPluginWithClass:[AIDualWindowInterfacePlugin class]];
+	[self loadPluginWithClass:[AIEmoticonsPlugin class]];
+	[self loadPluginWithClass:[AIEventSoundsPlugin class]];
+	[self loadPluginWithClass:[AIIdleTimeDisplayPlugin class]];
+	[self loadPluginWithClass:[AIIdleTimePlugin class]];
+	[self loadPluginWithClass:[AILoggerPlugin class]];
+	[self loadPluginWithClass:[AIManualSortPlugin class]];
+	[self loadPluginWithClass:[AIMessageAliasPlugin class]];
+	[self loadPluginWithClass:[AIMessageViewSelectionPlugin class]];
+	[self loadPluginWithClass:[AIOfflineContactHidingPlugin class]];
+	[self loadPluginWithClass:[AISCLViewPlugin class]];
+	[self loadPluginWithClass:[AISendingKeyPreferencesPlugin class]];
+	[self loadPluginWithClass:[AISMViewPlugin class]];
+	[self loadPluginWithClass:[AISpellCheckingPlugin class]];
+	[self loadPluginWithClass:[AIStandardToolbarItemsPlugin class]];
+	[self loadPluginWithClass:[AIStatusChangedMessagesPlugin class]];
+	[self loadPluginWithClass:[AITextForcingPlugin class]];
+	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
+	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
+	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
+	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
+	[self loadPluginWithClass:[BGThemesPlugin class]];
+	[self loadPluginWithClass:[CBActionSupportPlugin class]];
+	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
+	[self loadPluginWithClass:[CSDisconnectAllPlugin class]];
+	[self loadPluginWithClass:[ErrorMessageHandlerPlugin class]];
+	[self loadPluginWithClass:[ESAddressBookIntegrationPlugin class]];
+	[self loadPluginWithClass:[ESAnnouncerPlugin class]];
+	[self loadPluginWithClass:[ESContactAlertsPlugin class]];
+	[self loadPluginWithClass:[ESContactClientPlugin class]];
+	[self loadPluginWithClass:[ESContactListWindowHandlingPlugin class]];
+	[self loadPluginWithClass:[ESFastUserSwitchingSupportPlugin class]];
+	[self loadPluginWithClass:[ESOpenMessageWindowContactAlertPlugin class]];
+	[self loadPluginWithClass:[ESSendMessageContactAlertPlugin class]];
+	[self loadPluginWithClass:[ESStatusSortPlugin class]];
+	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
+	[self loadPluginWithClass:[GBiTunerPlugin class]];
+	[self loadPluginWithClass:[IdleMessagePlugin class]];
+	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
+	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
+	*/
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]];
 	//[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath]];
 }
@@ -46,6 +132,15 @@
     [pluginArray release]; pluginArray = nil;
 
     [super dealloc];
+}
+
+//
+- (void)loadPluginWithClass:(Class)inClass
+{
+	id	object = [inClass newInstanceOfPlugin];
+	
+	NSAssert(object, @"Failed to load integrated component");
+	[pluginArray addObject:object];
 }
 
 //Load all the plugins
