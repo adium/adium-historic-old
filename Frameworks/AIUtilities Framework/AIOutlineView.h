@@ -60,7 +60,9 @@
 /*!
  * @brief Passes on NSObject's <tt>draggedImage:endedAt:operation:</tt> to the delegate
  *
- * Passes on NSObject's <tt>draggedImage:endedAt:operation:</tt>, which is invoked in the dragging source as the drag ends, to the delegate.  See <tt>NSObject</tt>'s documentation for more details.
+ * Passes on NSObject's <tt>draggedImage:endedAt:operation:</tt>, which is invoked in the dragging source as the drag ends, 
+ * to the delegate.  See <tt>NSObject</tt>'s documentation for more details.
+ *
  * @param outlineView The <tt>NSOutlineView</tt> which ended the drag
  * @param image The <tt>NSImage</tt> drag image
  * @param screenPoint An <tt>NSPoint</tt> in screen coordinates
@@ -71,12 +73,17 @@
 /*!
  * @brief Informs the delegate the user typed into the outline view
  *
- * As the user types, the delegate can be informed of each successive string the typing generates.  If the user does not type for .2 seconds, the next call will start with just the next typed character, so Finder-style name matching can be performed if desired.
+ * As the user types, the delegate can be informed of each successive string the typing generates.
+ *
+ * If the user does not type for .2 seconds, the next call will start with just the next typed character, 
+ * so Finder-style name matching can be performed if desired.  As with the Finder, the user can press Tab to cycle through
+ * available matches.
  *
  * @param outlineView The outline view
  * @param inputString The aggregated typed string
+ * @param targetNumber The number of the target which should be matched.  This will be 1 for a new inputString; it will increase as the user presses tab on the same search.
  */
-- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString;
+- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString matchTargetNumber:(int)targetNumber;
 
 @end
 
@@ -94,8 +101,10 @@
     BOOL		needsReload;
 	BOOL		ignoreExpandCollapse;
 
+	//Finder-style searching
 	UInt32			lastKeypressTick;
 	NSMutableString	*currentInputString;
+	int				tabCount;
 }
 
 @end

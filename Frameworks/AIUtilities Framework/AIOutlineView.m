@@ -62,18 +62,26 @@
 //Process a pressed alphanumeric character. This should only be called if the delegate responds to outlineView:userDidTypeString:
 - (void)_userPressedCharacter:(unichar)pressedChar
 {
-	UInt32				keypressTick = TickCount();	
+	UInt32	keypressTick = TickCount();	
+	BOOL	isTab = (pressedChar == '\t');
 	
 	//If more than GROUPED_TYPING_INTERVAL has passed since the last input, clear the input string and start over
-	if(((keypressTick - lastKeypressTick) / 60.0) > DEFAULT_GROUPED_TYPING_INTERVAL) {
+	//If the pressed key is a tab, allow a greater grouped typing interval
+	//Note that this will resolve to TRUE the first time this method is called since lastKeypressTick == 0.
+	if(((keypressTick - lastKeypressTick) / 60.0) > (DEFAULT_GROUPED_TYPING_INTERVAL * (isTab ? 4 : 1))) {
 		[currentInputString release]; 
 		currentInputString = [[NSMutableString alloc] init];
+		tabCount = 1;
 	}
-	
-	[currentInputString appendString:[NSString stringWithCharacters:&pressedChar length:1]];
-	
-	[[self delegate] outlineView:self userDidTypeString:currentInputString];
-	
+
+	if(isTab){
+		tabCount++;
+	}else{
+		[currentInputString appendString:[NSString stringWithCharacters:&pressedChar length:1]];
+	}
+
+	[[self delegate] outlineView:self userDidTypeString:currentInputString matchTargetNumber:tabCount];
+
 	lastKeypressTick = keypressTick;
 }
 
@@ -81,39 +89,39 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
 	if(!([theEvent modifierFlags] & NSCommandKeyMask)){
-		
+
 		NSString	*charString = [theEvent charactersIgnoringModifiers];
 		unichar		pressedChar = 0;
-		
+
 		//Get the pressed character
 		if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
-		
+
     	if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter){ //Delete
 			if([[self dataSource] respondsToSelector:@selector(outlineViewDeleteSelectedRows:)]){
 				[[self dataSource] outlineViewDeleteSelectedRows:self];
 			}
-			
+
 		}else if(pressedChar == NSCarriageReturnCharacter || pressedChar == NSEnterCharacter){ //Enter or return
 			//doubleAction is NULL by default
 			SEL doubleActionSelector = [self doubleAction];
 			if (doubleActionSelector){
 				[[self delegate] performSelector:doubleActionSelector withObject:self];
 			}
-			
+
         }else if(pressedChar == NSLeftArrowFunctionKey){ //left
             id 	object = [self itemAtRow:[self selectedRow]];
             if(object && [self isExpandable:object] && [self isItemExpanded:object]){
 				[self collapseItem:object];
             }
-			
+
         }else if(pressedChar == NSRightArrowFunctionKey){ //right
             id 	object = [self itemAtRow:[self selectedRow]];
             if(object && [self isExpandable:object] && ![self isItemExpanded:object]){
 				[self expandItem:object];
             }
-			
-        }else if((isalnum(pressedChar)) && 
-				 ([[self delegate] respondsToSelector:@selector(outlineView:userDidTypeString:)])){
+
+        }else if(((isalnum(pressedChar)) || (pressedChar == '\t')) && 
+				 ([[self delegate] respondsToSelector:@selector(outlineView:userDidTypeString:matchTargetNumber:)])){
 			[self _userPressedCharacter:pressedChar];
 
 		}else{
@@ -124,7 +132,6 @@
 	}
 }
 
-
 //Collapse/expand memory -----------------------------------------------------------------------------------------------
 #pragma mark Collapse/expand memory
 //The notifications NSOutlineViewItemDidExpand/Collapse are posted when the outline view is reloaded, making it 
@@ -134,13 +141,13 @@
 - (void)expandItem:(id)item expandChildren:(BOOL)expandChildren
 {
 	[super expandItem:item expandChildren:expandChildren];
-	
+
 	if(!ignoreExpandCollapse){
 		//General expand notification
 		[[NSNotificationCenter defaultCenter] postNotificationName:AIOutlineViewUserDidExpandItemNotification
 															object:self
 														  userInfo:[NSDictionary dictionaryWithObject:item forKey:@"Object"]];
-		
+
 		//Inform our delegate directly
 		if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
 			[[self delegate] outlineView:self setExpandState:YES ofItem:item];
@@ -156,7 +163,7 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:AIOutlineViewUserDidCollapseItemNotification
 															object:self
 														  userInfo:[NSDictionary dictionaryWithObject:item forKey:@"Object"]];
-		
+
 		//Inform our delegate directly
 		if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
 			[[self delegate] outlineView:self setExpandState:NO ofItem:item];
@@ -179,21 +186,21 @@
     if([self numberOfRows] != 0 && ([self editedRow] == [self numberOfRows] - 1) && !needsReload){
         needsReload = YES;
         [self performSelector:@selector(_reloadData) withObject:nil afterDelay:0.0001];
-		
+
     }else{
         needsReload = NO;
 		[super reloadData];
-	
+
 		//After reloading data, we correctly expand/collapse all groups
 		if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
 			id		delegate = [self delegate];
 			int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
 			int 	row;
-			
+
 			//go through all items
 			for(row = 0; row < numberOfRows; row++){
 				id item = [delegate outlineView:self child:row ofItem:nil];
-				
+
 				//If the item is expandable, correctly expand/collapse it
 				if([delegate outlineView:self isItemExpandable:item]){
 					ignoreExpandCollapse = YES;
@@ -221,7 +228,7 @@
 //	NSArray		*selectedItems = [self arrayOfSelectedItems];
 
 	[super reloadItem:item reloadChildren:reloadChildren];
-	
+
 	//Restore (if possible) the previously selected object
 //	[self selectItemsInArray:selectedItems];
 }
