@@ -18,7 +18,7 @@
 #define ONE_MINUTE AILocalizedString(@"1 minute", nil)
 #define MULTIPLE_MINUTES AILocalizedString(@"%i minutes", nil)
 #define ONE_SECOND AILocalizedString(@"1 second", nil)
-#define MULTIPLE_SECONDS AILocalizedString(@"%i seconds", nil)
+#define MULTIPLE_SECONDS AILocalizedString(@"%1.0lf seconds", nil)
 
 typedef enum {
     NONE,
@@ -153,7 +153,7 @@ typedef enum {
         if(minutes)
             [theString appendString:[NSString stringWithFormat:@"%im ",minutes]];
         if(showSeconds && seconds)
-            [theString appendString:[NSString stringWithFormat:@"%is ",(int)seconds]];
+            [theString appendString:[NSString stringWithFormat:@"%%lfs ",seconds]];
         
         //Return the string without the final space
         if ([theString length] > 1){
@@ -191,7 +191,8 @@ typedef enum {
 			[theString appendString:@", "];
 		}
 
-		if (showSeconds && (seconds >= 1)){
+		//Don't show seconds if we showed days; that's just ridiculous.
+		if (showSeconds && (seconds >= 1) && (days == 0)){
 			if(seconds == 1){
 				[theString appendString:ONE_SECOND];
 			}else{
