@@ -17,4 +17,5 @@
 - (BOOL)isTextured;
 - (void)compatibleInvalidateShadow;
 - (BOOL)isBorderless;
+- (void)betterCenter;
 @end

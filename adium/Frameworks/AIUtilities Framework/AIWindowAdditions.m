@@ -17,6 +17,20 @@
 
 @implementation NSWindow (AIWindowAdditions)
 
+//The method 'center' puts the window really close to the top of the screen.  This method puts it not so close.
+- (void)betterCenter
+{
+	NSRect	frame = [self frame];
+	NSRect	screen = [[self screen] visibleFrame];
+		
+	[self setFrame:NSMakeRect(screen.origin.x + (screen.size.width - frame.size.width) / 2.0,
+							  screen.origin.y + (screen.size.height - frame.size.height) / 1.5,
+							  frame.size.width,
+							  frame.size.height)
+		   display:NO];
+}
+
+
 //Is this window textured/brushed metal?
 - (BOOL)isTextured
 {

@@ -27,6 +27,7 @@
 #import "ESFileTransferController.h"
 #import "ESContactAlertsController.h"
 #import "LNAboutBoxController.h"
+#import "AILicenseWindowController.h"
 
 #import <ExceptionHandling/NSExceptionHandler.h>
 
@@ -39,6 +40,7 @@
 #define ADIUM_FORUM_PAGE					@"http://forum.adiumx.com"
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
+#define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
@@ -143,6 +145,16 @@
 //Adium has finished launching
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+	//Display the license agreement
+	NSNumber	*viewedLicense = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_VIEWED_LICENSE];
+	if(!viewedLicense || [viewedLicense intValue] < 1){
+		if([AILicenseWindowController displayLicenseAgreement]){
+			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:1] forKey:KEY_USER_VIEWED_LICENSE];
+		}else{
+			[NSApp terminate:nil];
+		}
+	}
+	
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.

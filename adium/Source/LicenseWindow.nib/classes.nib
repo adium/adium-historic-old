@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {agree = id; closeWindow = id; quit = id; }; 
+            CLASS = AILicenseWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; "textView_license" = NSTextView; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -3730,6 +3730,7 @@
 				6E5A43DF061160C60078C342,
 				3420E6600611D80100AE67E3,
 				3420E6620611D80100AE67E3,
+				4B0DB3AE06122B94004F47D9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4031,6 +4032,7 @@
 				4B191D8A0611C10800E8A4E7,
 				4B191D8B0611C10800E8A4E7,
 				3420E6640611D80100AE67E3,
+				4B0DB3B506123423004F47D9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4345,6 +4347,7 @@
 				6E5A43E0061160C60078C342,
 				3420E6610611D80100AE67E3,
 				3420E6630611D80100AE67E3,
+				4B0DB3AF06122B94004F47D9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7715,6 +7718,61 @@
 			path = "Plugins/AIM TOC2 Service/AIMErrors.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B0DB3AB06122B53004F47D9 = {
+			children = (
+				4B0DB3AC06122B94004F47D9,
+				4B0DB3AD06122B94004F47D9,
+				4B0DB3B406123423004F47D9,
+			);
+			isa = PBXGroup;
+			name = "License Agreement";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0DB3AC06122B94004F47D9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILicenseWindowController.h;
+			path = Source/AILicenseWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0DB3AD06122B94004F47D9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILicenseWindowController.m;
+			path = Source/AILicenseWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0DB3AE06122B94004F47D9 = {
+			fileRef = 4B0DB3AC06122B94004F47D9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0DB3AF06122B94004F47D9 = {
+			fileRef = 4B0DB3AD06122B94004F47D9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0DB3B406123423004F47D9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = LicenseWindow.nib;
+			path = Source/LicenseWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0DB3B506123423004F47D9 = {
+			fileRef = 4B0DB3B406123423004F47D9;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B0E342E04C4677700A8010A = {
 			children = (
@@ -21776,6 +21834,7 @@
 				4BDF17240450CBDE00A8010A,
 				C497518C05BBB0C5009958A6,
 				4B333F73048144D900A8010A,
+				4B0DB3AB06122B53004F47D9,
 				D3B4A920052DE51000A8010B,
 				F5A3C2DD039A516E01A8010A,
 				F5CDCE460350758501A8010A,
