@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.22 2004/03/11 05:37:31 adamiser Exp $
+//$Id: AIPluginController.m,v 1.23 2004/03/11 06:26:43 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -52,9 +52,9 @@ AIIdleTimePlugin;
 {
     pluginArray = [[NSMutableArray alloc] init];
 
+#ifdef ADIUM_COMPONENTS
 	//Load integrated plugins
-#warning ** Load integrated plugins
-/*	[self loadPluginWithClass:[AIAccountListPreferencesPlugin class]];
+	[self loadPluginWithClass:[AIAccountListPreferencesPlugin class]];
 	[self loadPluginWithClass:[AIAccountMenuAccessPlugin class]];
 	[self loadPluginWithClass:[AIAliasSupportPlugin class]];
 	[self loadPluginWithClass:[AIAlphabeticalSortPlugin class]];
@@ -116,7 +116,8 @@ AIIdleTimePlugin;
 	[self loadPluginWithClass:[IdleMessagePlugin class]];
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
-	*/
+#endif
+	
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]];
 	//[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath]];
 }
@@ -170,6 +171,7 @@ AIIdleTimePlugin;
 					//Create an instance of the plugin
 					plugin = [[pluginBundle principalClass] newInstanceOfPlugin];					
 #else
+					//Plugin load timing
 					
 					NSString	*compactedName = [pluginName compactedString];
 					double		timeInterval;
