@@ -147,7 +147,8 @@
                                                              withSource:contact
                                                             destination:ourAccount
                                                                    date:nil
-                                                                message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]];
+                                                                message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]
+                                                              autorelpy:NO];
                         [[owner contentController] addIncomingContentObject:messageObject];
                     }
                     else if([messageLoad objectForKey:@"TypingUser"] != nil)

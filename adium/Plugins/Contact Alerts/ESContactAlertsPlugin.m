@@ -137,7 +137,8 @@
                                                                    withSource:account
                                                                   destination:contact
                                                                          date:nil
-                                                                      message:message];
+                                                                      message:message
+                                                                    autorelpy:NO];
                             success = [[owner contentController] sendContentObject:responseContent];
 
                             if (!success)

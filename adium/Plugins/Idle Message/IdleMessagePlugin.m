@@ -92,7 +92,8 @@
                                                            withSource:[contentObject destination]
                                                           destination:contact
                                                                  date:nil
-                                                              message:idleMessage];
+                                                              message:idleMessage
+                                                            autorelpy:YES];
 
                     [[owner contentController] sendContentObject:responseContent];
                 }	

@@ -64,7 +64,7 @@
 - (void)AIM_HandleChatLeft:(NSString *)inCommand;
 - (void)AIM_SendClientEvent:(int)inEvent toHandle:(NSString *)handleUID;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
-- (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID;
+- (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID autoreply:(BOOL)autoreply;
 - (void)AIM_SendChatEnc:(NSString *)inMessage toChat:(NSString *)chatID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
@@ -328,7 +328,7 @@
                     handle = [self addHandleWithUID:[[listObject UID] compactedString] serverGroup:nil temporary:YES];
                 }
 
-                [self AIM_SendMessageEnc:message toHandle:[handle UID]];
+                [self AIM_SendMessageEnc:message toHandle:[handle UID] autoreply:[(AIContentMessage *)object autoreply]];
 
             }
             
@@ -873,7 +873,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.88 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.89 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -914,8 +914,8 @@
     [self sendCommand:[NSString stringWithFormat:@"toc2_send_im %@ \"%@\"",handleUID,inMessage]];
 }
 
-- (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID{
-    [self sendCommand:[NSString stringWithFormat:@"toc2_send_im_enc %@ F U en \"%@\"",handleUID,inMessage]];
+- (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID autoreply:(BOOL)autoreply{
+    [self sendCommand:[NSString stringWithFormat:@"toc2_send_im_enc %@ F U en \"%@\" %@",handleUID,inMessage,(autoreply ? @"auto" : @"")]];
 }
 
 - (void)AIM_SetNick:(NSString *)nick{
@@ -1076,7 +1076,8 @@
                                                 withSource:[senderHandle containingContact]
                                                 destination:self
                                                     date:nil
-                                                    message:messageText];
+                                                    message:messageText
+                                                  autorelpy:NO];
     
             //Add the content object
             [[owner contentController] addIncomingContentObject:messageObject];
@@ -1143,7 +1144,8 @@
                                          withSource:[handle containingContact]
                                         destination:self
                                                date:nil
-                                            message:[AIHTMLDecoder decodeHTML:rawMessage]];
+                                            message:[AIHTMLDecoder decodeHTML:rawMessage]
+                                          autorelpy:NO];
     [[owner contentController] addIncomingContentObject:messageObject];
 }
 

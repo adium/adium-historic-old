@@ -24,12 +24,14 @@
 @interface AIContentMessage : AIContentObject {
     NSDate 			*date;
     NSAttributedString 		*message;
+    BOOL			autoreply;
     
 }
 
-+ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
++ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autorelpy:(BOOL)inAutoreply;
 - (NSDate *)date;
 - (NSAttributedString *)message;
 - (void)setMessage:(NSAttributedString *)inMessage;
+- (BOOL)autoreply;
 
 @end

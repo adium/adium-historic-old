@@ -269,8 +269,6 @@
 	while((object = [enumerator nextObject])){
             [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
 	}
-
-#warning ??? [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
 }
 

@@ -1410,7 +1410,8 @@
                                                             withSource:[handle containingContact]
                                                         destination:self
                                                                 date:nil
-                                                            message:messageText];
+                                                            message:messageText
+                                                          autorelpy:NO];
                                                             
                     [[owner contentController] addIncomingContentObject:messageObject];*/
                 }
@@ -1506,7 +1507,8 @@
                                          withSource:contact
                                         destination:self
                                                date:nil
-                                            message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]];
+                                            message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]
+                                                              autorelpy:NO];
                         [[owner contentController] addIncomingContentObject:messageObject];
                     }
                     else if([messageLoad objectForKey:@"TypingUser"] != nil)
