@@ -138,8 +138,9 @@ DeclareString(AppendNextMessage);
 				
 				//Load the style and add it to our dictionary
 				style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]];
-				if (style){
-					[styleDictionary setObject:style forKey:[style name]];
+				if(style){
+					NSString	*styleName = [style name];
+					if(styleName && [styleName length]) [styleDictionary setObject:style forKey:[style name]];
 				}
             }
         }
