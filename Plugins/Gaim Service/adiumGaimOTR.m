@@ -32,6 +32,7 @@
 
 /* Adium headers */
 #import "ESGaimOTRUnknownFingerprintController.h"
+#import "ESGaimOTRPrivateKeyGenerationWindowController.h"
 
 #pragma mark Adium convenience functions
 
@@ -146,9 +147,9 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 	}
 }
 
-/* blargh? */
+/* Structure passed to and from OTR in relation to the key generation dialogue */
 struct s_OtrgDialogWait {
-	char	*label;
+	NSString	*identifier;
 };
 
 /* Began generating a private key.
@@ -157,32 +158,18 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
 																   const char *protocol)
 {
 	GaimPlugin *p;
-	char *title, *primary, *secondary;
     const char *protocol_print;
 	
 	p = gaim_find_prpl(protocol);
     protocol_print = (p ? p->info->name : "Unknown");
-	
-    /* Create the Please Wait... dialog */
-	title = "Generating private key";
-	primary =  "Please wait";
-	
-    secondary = g_strdup_printf("Generating private key for %s (%s)...",
-								account, protocol_print);
 
-		/*
-	adiumWidget *label;
-    adiumWidget *dialog = create_dialog(GAIM_NOTIFY_MSG_INFO, title,
-									  primary, secondary, 0, &label);
-		 */
-    OtrgDialogWaitHandle handle = malloc(sizeof(struct s_OtrgDialogWait));
-	/*
-    handle->dialog = dialog;
-    handle->label = label;
-*/
-	gaim_notify_message(adium_gaim_get_handle(), GAIM_NOTIFY_MESSAGE, title, primary, secondary, NULL, NULL);
-		
-	g_free(secondary);
+	NSString				*identifier;
+    OtrgDialogWaitHandle	handle = malloc(sizeof(struct s_OtrgDialogWait));
+
+	identifier = [NSString stringWithFormat:@"%s (%s)",account, protocol_print];
+    handle->identifier = [identifier retain];
+
+	[ESGaimOTRPrivateKeyGenerationWindowController startedGeneratingForIdentifier:identifier];
 	
     return handle;
 }
@@ -190,7 +177,12 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
 /* Done creating the private key */
 static void otrg_adium_dialog_private_key_wait_done(OtrgDialogWaitHandle handle)
 {
-	gaim_notify_message(adium_gaim_get_handle(), GAIM_NOTIFY_MESSAGE, "Done", "Private key generation...", "complete.", NULL, NULL);
+	NSString	*identifier = handle->identifier;
+	
+	[ESGaimOTRPrivateKeyGenerationWindowController finishedGeneratingForIdentifier:identifier];
+
+	[identifier release];
+	handle->identifier = NULL;
 }
 
 /* Show a dialog informing the user that a correspondent (who) has sent
