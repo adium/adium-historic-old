@@ -28,22 +28,18 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 
 - (id)init
 {
-    if(self = [super init]){
-        //Create and set up the Status Item.
+    if(self = [super init]){        
+        //Create and set up the status item
         statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
         [statusItem setHighlightMode:YES];
         [statusItem setImage:[NSImage imageNamed:@"adium.png" forClass:[self class]]];
-        if([NSApp isOnPantherOrBetter]){
-            [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
-        }
-        
+        [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
+
         //Create and install the menu
         theMenu = [[NSMenu alloc] init];
         [theMenu setAutoenablesItems:YES];
         [statusItem setMenu:theMenu];
-        if([NSApp isOnPantherOrBetter]){
-            [theMenu setDelegate:self];
-        }
+        [theMenu setDelegate:self];
 
         //Register ourself
         [[adium accountController] registerAccountMenuPlugin:self];
@@ -54,9 +50,8 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
         unviewedState = NO;
         needsUpdate = YES;
 
-        //Register as a contact observer (So we can catch the unviewed content status flag)
-        [[adium contactController] registerListObjectObserver:self];
-
+        //Register as a chat observer (So we can catch the unviewed content status flag)
+        [[adium contentController] registerChatObserver:self];
     }
     
     return self;
@@ -69,19 +64,13 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     
     //Release our objects
     [statusItem release];
+    //[statusView release];
     [theMenu release];
     [unviewedObjectsArray release];
         
     //To the superclass, Robin!
     [super dealloc];
 }
-
-- (void)activateAdium:(id)sender
-{
-    [NSApp activateIgnoringOtherApps:YES];
-    [NSApp arrangeInFront:nil];
-}
-
 
 //AccountMenuPlugin --------------------------------------------------------
 #pragma mark AccountMenuPlugin
@@ -124,43 +113,42 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     [statusItem setLength:0];
 }
 
-//Contact Observer --------------------------------------------------------
-#pragma mark Contact Observer
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+//Chat Observer --------------------------------------------------------
+#pragma mark Chat Observer
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
 	//If the contact's unviewed content state has changed
-    if([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+    if(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
         //If there is new unviewed content
-        if([inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
-            //Add it, we're watching it
-            [unviewedObjectsArray addObject:inObject];
-            //We need to update our menu
-            needsUpdate = YES;
-            //If this is the first contact with unviewed content, set our icon to unviewed content
-            if(!unviewedState){
-                //Set the image, with the highlight for 10.3 peoples.
-                [statusItem setImage:[NSImage imageNamed:@"adiumRed.png" forClass:[self class]]];
-                if([NSApp isOnPantherOrBetter]){
+        if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+            //If we're not already watching it
+            if(![unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+                //Add it, we're watching it now
+                [unviewedObjectsArray addObject:inChat];
+                //We need to update our menu
+                needsUpdate = YES;
+                //If this is the first contact with unviewed content, set our icon to unviewed content
+                if(!unviewedState){
+                    //Set the image, with the highlight for 10.3 peoples.
+                    [statusItem setImage:[NSImage imageNamed:@"adiumRed.png" forClass:[self class]]];
                     [statusItem setAlternateImage:[NSImage imageNamed:@"adiumRedHighlight.png" forClass:[self class]]];
+                    //Set our state variable
+                    unviewedState = YES;
                 }
-                //Set our state variable
-                unviewedState = YES;
             }
         //If they've viewed the content
         }else{
             //If we're tracking this object
-            if([unviewedObjectsArray containsObject:inObject]){
+            if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
                 //Remove it, it's not unviewed anymore
-                [unviewedObjectsArray removeObject:inObject];
+                [unviewedObjectsArray removeObject:inChat];
                 //We need to update our menu
                 needsUpdate = YES;
                 //If there are no more contacts with unviewed content, set our icon to normal
                 if([unviewedObjectsArray count] == 0 && unviewedState){
-                    //Set the image, with the highlight for 10.3 peoples.
+                    //Set the image, and the highlight
                     [statusItem setImage:[NSImage imageNamed:@"adium.png" forClass:[self class]]];
-                    if([NSApp isOnPantherOrBetter]){
-                        [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
-                    }
+                    [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
                     //Set our state variable
                     unviewedState = NO;
                 }
@@ -175,10 +163,11 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 #pragma mark Menu Delegate
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
+    //If something has changed
     if(needsUpdate){
         NSEnumerator    *enumerator;
         NSMenuItem      *menuItem;
-        AIListObject    *listObject;
+        AIChat          *chat;
         
         //Clear out all the items, start from scratch
         [menu removeAllItems];
@@ -192,28 +181,27 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
         
         //Prepare to add any unviewed objects
         enumerator = [unviewedObjectsArray objectEnumerator];
-        listObject = nil;
+        chat = nil;
         
-        /*
         //If there exist any of unviewed objects, prepare to add them
         if([unviewedObjectsArray count] > 0){
             //Add a seperator
             [menu addItem:[NSMenuItem separatorItem]];
             //Create and add the menu items
-            while(listObject = [enumerator nextObject]){
-                NSLog(@"adding menu item for: %@", [listObject displayName]);
+            while(chat = [enumerator nextObject]){
                 //Create a menu item from the list object
-                menuItem = [[[NSMenuItem alloc] initWithTitle:[listObject displayName] 
-                                                      action:NULL 
-                                               keyEquivalent:@""] autorelease];
+                menuItem = [[[NSMenuItem alloc] initWithTitle:[chat displayName] 
+                                                       target:self
+                                                       action:@selector(switchToChat:) 
+                                                keyEquivalent:@""] autorelease];
+                //Set the represented object
+                [menuItem setRepresentedObject:chat];
                 //Set the image
-                //[menuItem setImage:[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]]];
-                NSLog(@"menu item: %@", menuItem);
+                [menuItem setImage:[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]]];
                 //Add it to the menu
                 [menu addItem:menuItem];
             }
         }
-        */
         
         //Add our last two items
         [menu addItem:[NSMenuItem separatorItem]];
@@ -225,6 +213,25 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
         //Only update next time if we need to
         needsUpdate = NO;
     }
+}
+
+//Menu Actions --------------------------------------------------------
+#pragma mark Menu Actions
+
+- (void)switchToChat:(id)sender
+{
+    //If we're not the active app, activate 
+    if(![NSApp isActive]){
+        [self activateAdium:nil];
+    }
+    
+    [[adium interfaceController] setActiveChat:[sender representedObject]];
+}
+
+- (void)activateAdium:(id)sender
+{
+    [NSApp activateIgnoringOtherApps:YES];
+    [NSApp arrangeInFront:nil];
 }
 
 @end

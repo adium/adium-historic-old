@@ -5,17 +5,19 @@
 //  Created by Colin Barrett on Thu Nov 27 2003.
 //
 
-@interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, AIListObjectObserver>
-{
-    NSStatusItem    *statusItem;
-    NSMenu          *theMenu;
-    
-    NSMutableArray  *accountMenuItemsArray;
-    NSMutableArray  *unviewedObjectsArray;
-    BOOL			unviewedState;
-    
-    BOOL            needsUpdate;
+//#import "CBStatusMenuItemView.h"
 
+@interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, AIChatObserver>
+{
+    NSStatusItem            *statusItem;
+    NSMenu                  *theMenu;
+//  CBStatusMenuItemView    *statusView;
+    
+    NSMutableArray          *accountMenuItemsArray;
+    NSMutableArray          *unviewedObjectsArray;
+    BOOL                    unviewedState;
+    
+    BOOL                    needsUpdate;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
@@ -29,6 +31,6 @@
 - (void)showStatusItem;
 - (void)hideStatusItem;
 
-//Contact Observer
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+//Chat Observer
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
