@@ -6225,7 +6225,6 @@
 				3429BB05070378F700EED705,
 				34B4B5A30708B049002C4C6D,
 				344458EF070B5BEF00D8E932,
-				4B0148D10733D0EA001A4C57,
 				4B0149070733D3A5001A4C57,
 				4B935E690733E4ED00C23FC6,
 				34F102320734499700890D3B,
@@ -6559,6 +6558,7 @@
 				34C68B400778FAB500EB423C,
 				34C68B660778FCB900EB423C,
 				34C6A24F077A7B2500EB423C,
+				34C6A3BC077A8CB500EB423C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6796,7 +6796,6 @@
 				3429BB06070378F700EED705,
 				34B4B5A40708B049002C4C6D,
 				344458F0070B5BEF00D8E932,
-				4B0148D20733D0EA001A4C57,
 				4B0149080733D3A5001A4C57,
 				4B935E6A0733E4ED00C23FC6,
 				34F1022E0734499700890D3B,
@@ -8132,7 +8131,6 @@
 		34C68B1C0778F9C200EB423C = {
 			children = (
 				4B2E560406A33D85008866CF,
-				4B0148CC0733D0B0001A4C57,
 				34C68B230778FA1300EB423C,
 				34C68B240778FA1300EB423C,
 				34C68B290778FA5C00EB423C,
@@ -8140,6 +8138,7 @@
 				34C68B3F0778FAB500EB423C,
 				349DDD310640680600542726,
 				349DDD320640680600542726,
+				34C6A3BB077A8CB500EB423C,
 				4B04137C041111F200A8010A,
 				4BA1300304C0A4E300A8010A,
 			);
@@ -8306,6 +8305,21 @@
 		};
 		34C6A24F077A7B2500EB423C = {
 			fileRef = 34C6A24E077A7B2400EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C6A3BB077A8CB500EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = IconPackDefaults.plist;
+			path = "Plugins/General Preferences/IconPackDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C6A3BC077A8CB500EB423C = {
+			fileRef = 34C6A3BB077A8CB500EB423C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10818,47 +10832,6 @@
 		};
 		4B0118090679168700FCB992 = {
 			fileRef = 4B0118080679168700FCB992;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B0148CC0733D0B0001A4C57 = {
-			children = (
-				4B0148CF0733D0EA001A4C57,
-				4B0148D00733D0EA001A4C57,
-			);
-			isa = PBXGroup;
-			name = "Service Icon Preferences";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0148CF0733D0EA001A4C57 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIServiceIconPreferencesPlugin.h;
-			path = "Plugins/Service Icon Preferences/AIServiceIconPreferencesPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0148D00733D0EA001A4C57 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIServiceIconPreferencesPlugin.m;
-			path = "Plugins/Service Icon Preferences/AIServiceIconPreferencesPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0148D10733D0EA001A4C57 = {
-			fileRef = 4B0148CF0733D0EA001A4C57;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B0148D20733D0EA001A4C57 = {
-			fileRef = 4B0148D00733D0EA001A4C57;
 			isa = PBXBuildFile;
 			settings = {
 			};
