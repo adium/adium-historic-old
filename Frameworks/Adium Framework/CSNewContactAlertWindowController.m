@@ -77,7 +77,7 @@
 
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(alertDetailsForHeaderChanged:)
-									   name:@"ContactAlertDetailsForHeaderChanged"
+									   name:CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED
 									 object:nil];
 
 	return(self);
