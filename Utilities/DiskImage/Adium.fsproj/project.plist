@@ -34,7 +34,7 @@
 			<key>Origin</key>
 			<string>{178, 88}</string>
 			<key>Path</key>
-			<string>/Users/evands/adium/build/Adium.app</string>
+			<string>/Users/adamiser/code/adium/build/Adium.app</string>
 			<key>Type</key>
 			<string>File Item</string>
 		</dict>
@@ -42,7 +42,7 @@
 			<key>Origin</key>
 			<string>{87, 257}</string>
 			<key>Path</key>
-			<string>/Users/evands/adium/Changes.txt</string>
+			<string>/Users/adamiser/code/adium/Changes.txt</string>
 			<key>Type</key>
 			<string>File Item</string>
 		</dict>
@@ -50,7 +50,7 @@
 			<key>Origin</key>
 			<string>{271, 257}</string>
 			<key>Path</key>
-			<string>/Users/evands/adium/License.txt</string>
+			<string>/Users/adamiser/code/adium/License.txt</string>
 			<key>Type</key>
 			<string>File Item</string>
 		</dict>
@@ -60,7 +60,7 @@
 	<key>Lock Frame</key>
 	<string>FALSE</string>
 	<key>Project File Path</key>
-	<string>/Users/evands/adium/Utilities/DiskImage/</string>
+	<string>/Users/adamiser/Code/adium/Utilities/DiskImage/</string>
 	<key>Show Toolbar</key>
 	<string>TRUE</string>
 	<key>Volume Name</key>
