@@ -10,9 +10,11 @@
 	NSMutableString			*mutableDebugString;
 }
 
+#ifdef DEBUG_BUILD
 + (id)showDebugWindow;
 + (void)closeDebugWindow;
 + (BOOL)debugWindowIsOpen;
 + (void)addedDebugMessage:(NSString *)message;
+#endif
 
 @end

@@ -10,12 +10,8 @@
 #define	KEY_DEBUG_WINDOW_FRAME	@"Debug Window Frame"
 #define	DEBUG_WINDOW_NIB		@"DebugWindow"
 
-@interface ESDebugWindowController (PRIVATE)
-- (void)addedDebugMessage:(NSString *)message;
-- (IBAction)closeWindow:(id)sender;
-@end
-
 @implementation ESDebugWindowController
+#ifdef DEBUG_BUILD
 
 static ESDebugWindowController *sharedDebugWindowInstance = nil;
 
@@ -38,24 +34,16 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	return(sharedDebugWindowInstance != nil);
 }
 
-//Close the debug window
-+ (void)closeDebugWindow
-{
-    if(sharedDebugWindowInstance){
-        [sharedDebugWindowInstance closeWindow:nil];
-    }
-}
-
-+ (void)addedDebugMessage:(NSString *)aDebugString
-{
-	if(sharedDebugWindowInstance) [sharedDebugWindowInstance addedDebugMessage:aDebugString];
-}
 - (void)addedDebugMessage:(NSString *)aDebugString
 {
 	[mutableDebugString appendString:aDebugString];
 	if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
 		[mutableDebugString appendString:@"\n"];
 	}
+}
++ (void)addedDebugMessage:(NSString *)aDebugString
+{
+	if(sharedDebugWindowInstance) [sharedDebugWindowInstance addedDebugMessage:aDebugString];
 }
 
 - (NSString *)adiumFrameAutosaveName
@@ -101,6 +89,14 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
     }
 }
 
+//Close the debug window
++ (void)closeDebugWindow
+{
+    if(sharedDebugWindowInstance){
+        [sharedDebugWindowInstance closeWindow:nil];
+    }
+}
+
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
@@ -113,5 +109,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
     return(YES);
 }
 
+#endif
 
 @end

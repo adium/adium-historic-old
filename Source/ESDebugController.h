@@ -9,11 +9,15 @@
 
 @interface ESDebugController : NSObject {
 	IBOutlet	AIAdium		*adium;
+	NSMutableArray			*debugLogArray;
 }
 
 - (void)initController;
 - (void)closeController;
-- (void)adiumDebug:(NSString *)message, ...;
-- (NSArray *)debugLogArray;
+
+#ifdef DEBUG_BUILD
+	+ (ESDebugController *)sharedDebugController;
+	- (NSArray *)debugLogArray;
+#endif
 
 @end
