@@ -376,6 +376,13 @@ static BOOL didInitSSL = NO;
 
 - (void)removeContacts:(NSArray *)objects
 {
+	[gaimThread makeAccount:self
+			performSelector:@selector(performRemoveContacts:)
+				 withObject:objects];
+}
+
+- (void)performRemoveContacts:(NSArray *)objects
+{
 	NSEnumerator	*enumerator = [objects objectEnumerator];
 	AIListContact	*object;
 	
@@ -1231,7 +1238,7 @@ static BOOL didInitSSL = NO;
 	gaim_account_set_password(account, [password UTF8String]);
 
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
-	[gaimThread connect:self];
+	[gaimThread makeAccount:self performSelector:@selector(performConnect)];
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection.");
 }
 
@@ -1362,10 +1369,7 @@ static BOOL didInitSSL = NO;
 
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
-       // gaim_account_disconnect(account); 
-
-		//		NSArray *array = [NSArray arrayWithObject:[NSValue valueWithPointer:account]];
-		[gaimThread disconnect:self];
+		[gaimThread makeAccount:self performSelector:@selector(performDisconnect)];
     }
 }
 - (void)performDisconnect

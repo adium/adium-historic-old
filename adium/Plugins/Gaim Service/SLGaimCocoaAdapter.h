@@ -8,8 +8,9 @@
 
 
 @protocol GaimThread
-- (void)connect:(id)account;
-- (void)disconnect:(id)account;
+- (void)makeAccount:(id)account performSelector:(SEL)selector;
+- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)object;
+- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
 @end
 
 /*!
@@ -23,7 +24,8 @@
 }
 
 + (void)createThreadedGaimCocoaAdapter:(NSArray *)portArray;
-- (void)connect:(id)account;
-- (void)disconnect:(id)account;
+- (void)makeAccount:(id)account performSelector:(SEL)selector;
+- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)object;
+- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
 
 @end
