@@ -13,17 +13,26 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIAutoScrollView : NSScrollView {
-    NSRect	oldDocumentFrame;
-    
-    BOOL	autoScrollToBottom;
-    BOOL	autoHideScrollBar;
+@interface AILog : NSObject {
+    NSString	    *path;
+    NSString	    *from;
+    NSString	    *to;
+    NSCalendarDate  *date;
+    NSString	    *dateSearchString;
 }
 
-- (void)setAutoHideScrollBar:(BOOL)inValue;
-- (void)setAutoScrollToBottom:(BOOL)inValue;
-- (void)scrollToTop;
-- (void)scrollToBottom;
-- (void)setCorrectScrollbarVisibility;
-
++ (NSCalendarDate *)dateFromFileName:(NSString *)fileName;
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo date:(NSCalendarDate *)inDate;
+- (NSString *)path;
+- (NSString *)from;
+- (NSString *)to;
+- (NSCalendarDate *)date;
+- (NSString *)dateSearchString;
+- (NSComparisonResult)compareTo:(AILog *)inLog;
+- (NSComparisonResult)compareToReverse:(AILog *)inLog;
+- (NSComparisonResult)compareFrom:(AILog *)inLog;
+- (NSComparisonResult)compareFromReverse:(AILog *)inLog;
+- (NSComparisonResult)compareDate:(AILog *)inLog;
+- (NSComparisonResult)compareDateReverse:(AILog *)inLog;
+	
 @end

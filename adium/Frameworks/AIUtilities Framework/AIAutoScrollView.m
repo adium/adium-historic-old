@@ -132,13 +132,16 @@
     }
 }
 
+//Scroll to the top of our view
+- (void)scrollToTop
+{    
+    [[self documentView] scrollPoint:NSMakePoint(0, 0)];
+}
+
 //Scroll to the bottom of our view
 - (void)scrollToBottom
 {
-    NSClipView	*contentView = [self contentView];
-    
-    [contentView scrollToPoint:NSMakePoint(0, [[self documentView] frame].size.height - [self documentVisibleRect].size.height) ];
-    [self reflectScrolledClipView:contentView];
+    [[self documentView] scrollPoint:NSMakePoint(0, 1000000)];
 }
 
 

@@ -40,6 +40,7 @@
 - (void)dealloc
 {
     [userDirectory release];
+    [currentUser release];
 
     [super dealloc];
 }
@@ -84,10 +85,17 @@
     return(userDirectory);
 }
 
+//
+- (NSString *)currentUser
+{
+    return(currentUser);
+}
+
 // Sets the correct user directory and sends out a login message
 - (void)loginAsUser:(NSString *)userName
 {
     NSParameterAssert(userName != nil);
+    
     //Close the login panel
     if(loginWindowController){
         [loginWindowController closeWindow:nil];
@@ -95,6 +103,7 @@
     }
 
     //Save the user directory
+    currentUser = [userName copy];
     userDirectory = [[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:userName] retain];
     
     //Tell Adium to complete login

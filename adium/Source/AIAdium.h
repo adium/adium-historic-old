@@ -307,6 +307,7 @@ typedef enum {
 @interface AILoginController : NSObject{
     IBOutlet	AIAdium		*owner;
     
+    NSString			*currentUser;		//The current logged in username
     NSString			*userDirectory;		//The current user's Adium home directory
     AILoginWindowController	*loginWindowController;	//The login select window
     id				target;			//Used to send our owner a 'login complete'
@@ -314,6 +315,7 @@ typedef enum {
 }
 
 - (NSString *)userDirectory;
+- (NSString *)currentUser;
 - (void)switchUsers;
 
 @end
