@@ -13,6 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
 #import "IdleMessagePlugin.h"
 #import "IdleMessagePreferences.h"
@@ -71,7 +72,7 @@
 //Called when Adium receives content
 - (void)didReceiveContent:(NSNotification *)notification
 {
-    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
     // TEMPORARY!!!
     NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"IdleMessage" account:nil]];
     //NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
@@ -87,7 +88,8 @@
                 if(![receivedIdleMessage containsObject:[contact UIDAndServiceID]]){
                     AIContentMessage	*responseContent;
 
-                    responseContent = [AIContentMessage messageWithSource:[contentObject destination]
+                    responseContent = [AIContentMessage messageInChat:[contentObject chat]
+                                                           withSource:[contentObject destination]
                                                           destination:contact
                                                                  date:nil
                                                               message:idleMessage];
@@ -102,7 +104,7 @@
 //Called when Adium sends content
 - (void)didSendContent:(NSNotification *)notification
 {
-    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
 
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         AIListContact	*contact = [contentObject destination];

@@ -61,7 +61,7 @@
 - (void)configureView
 {
     NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"IdleMessage" account:nil]];
-
+    
     [checkBox_enableIdleMessage setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE] objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue]];
     
     [[textView_idleMessage textStorage] setAttributedString:idleMessage];
