@@ -35,7 +35,7 @@
 
     //Install the 'view logs' menu item
     viewContactLogsMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"];
-    [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Action];
+    [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
 
     //Install a 'view logs' contextual menu item
     viewContactLogsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""];
