@@ -82,4 +82,9 @@
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
 }
 
+- (void)windowDidToogleToolbarShown:(NSWindow *)sender
+{
+	[contactListController contactListDesiredSizeChanged];
+}
+
 @end
