@@ -20,12 +20,14 @@
     }
 }
 
-//Redislpay an item on the contact list
+//Redisplay an item (passing nil is the same as requesting a redisplay of the entire list)
 - (void)redisplayItem:(id)item
 {
-	int row = [self rowForItem:item];
-	if(row >= 0 && row < [self numberOfRows]){
-		[self setNeedsDisplayInRect:[self rectOfRow:row]];
+	if (item){
+		int row = [self rowForItem:item];
+		if(row >= 0 && row < [self numberOfRows]){
+			[self setNeedsDisplayInRect:[self rectOfRow:row]];
+		}
 	}else{
 		[self setNeedsDisplay:YES];
 	}
