@@ -63,7 +63,11 @@
     [self statusMessage:@"%@ went away" forObject:[notification object]];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
-    [self statusMessage:@"%@ came back" forObject:[notification object]];
+
+    AIListObject * object = [notification object];
+    
+    if ([[object statusArrayForKey:@"Online"] greatestIntegerValue])
+	[self statusMessage:@"%@ came back" forObject:object];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
     [self statusMessage:@"%@ connected" forObject:[notification object]];
