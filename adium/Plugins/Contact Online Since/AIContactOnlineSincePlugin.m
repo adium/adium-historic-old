@@ -42,7 +42,7 @@
             NSDateFormatter	*dayFormatter, *timeFormatter;
             
             //Create the formatters
-            dayFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m/%d/%y" allowNaturalLanguage:YES] autorelease];
+            dayFormatter = [NSDateFormatter localizedShortDateFormatter];
             timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES] allowNaturalLanguage:YES] autorelease];
             
             //Get day & time strings
