@@ -52,7 +52,7 @@ extern void* objc_getClass(const char *name);
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
     FZDaemon = [[connection rootProxy] retain];
 
-    [connection setIndependentConversationQueueing:YES];
+//    [connection setIndependentConversationQueueing:YES];
     
     //Get the AIM Service
     services   = [FZDaemon allServices];
@@ -255,6 +255,10 @@ extern void* objc_getClass(const char *name);
             }
             [[owner contactController] setHoldContactListUpdates:NO];
 
+            //Stop tracking all idle handles
+            [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
+            [idleHandleArray release]; idleHandleArray = nil;            
+            
             //Clean up and close down
             [screenName release]; screenName = nil;
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
@@ -419,7 +423,7 @@ extern void* objc_getClass(const char *name);
     NSDate		*storedDate;
     NSMutableArray	*alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
     NSMutableDictionary	*handleStatusDict = [inHandle statusDictionary];
-
+    
     //Away message
     if((storedString = [inProperties objectForKey:@"FZPersonStatusMessage"])){
         NSAttributedString	*statusMessage;
@@ -466,6 +470,12 @@ extern void* objc_getClass(const char *name);
             break;
         }
 
+        //If the handle was AWAY or IDLE, and is no longer, remove its status message
+        if(([[handleStatusDict objectForKey:@"Idle"] doubleValue] || [[handleStatusDict objectForKey:@"Away"] intValue]) && (!idleTime && !away)){
+            [handleStatusDict removeObjectForKey:@"StatusMessage"];
+            [alteredStatusKeys addObject:@"StatusMessage"];
+        }
+        
         //Online/Offline
         storedValue = [handleStatusDict objectForKey:@"Online"];
         if(storedValue == nil || online != [storedValue intValue]){

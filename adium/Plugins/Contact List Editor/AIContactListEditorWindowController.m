@@ -88,6 +88,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     //init
     owner = [inOwner retain];
     [super initWithWindowNibName:windowNibName owner:self];
+    selectedCollection = nil;
     
     //Install observers
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
@@ -210,11 +211,17 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //As the selection changes, update the outline view to reflect the selected collection
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification
 {
+    id <AIEditorCollection>	newSelection;
+    
     int	selectedRow = [tableView_sourceList selectedRow];
     if(selectedRow < 0 || selectedRow >= [collectionsArray count]) selectedRow = 0; //Ensure a valid selection
 
     //Record the new selected collection
-    selectedCollection = [collectionsArray objectAtIndex:selectedRow]; 
+    newSelection = [collectionsArray objectAtIndex:selectedRow];
+    if([newSelection enabled]){
+        selectedCollection = newSelection;
+    }
+    
     [self refreshContentOutlineView]; //Refresh the outline view for the new selection
 }
 
@@ -711,8 +718,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Validate a toolbar item
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
-    if([[theItem itemIdentifier] compare:@"Delete"] == 0){
+    if(([[theItem itemIdentifier] compare:@"Delete"] == 0) || ([[theItem itemIdentifier] compare:@"Inspector"] == 0)){
         if([outlineView_contactList selectedRow] != -1 && [[self window] firstResponder] == outlineView_contactList){
+            return(YES);
+        }else{
+            return(NO);
+        }
+    }else if(([[theItem itemIdentifier] compare:@"Group"] == 0) || ([[theItem itemIdentifier] compare:@"Handle"] == 0)){
+        if(selectedCollection){
             return(YES);
         }else{
             return(NO);

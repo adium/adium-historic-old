@@ -353,6 +353,10 @@ static char *hash_password(const char * const password);
         [self removeAllStatusFlagsFromHandle:handle];
     }
     [[owner contactController] setHoldContactListUpdates:NO];
+
+    //Stop tracking all idle handles
+    [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
+    [idleHandleArray release]; idleHandleArray = nil;
     
     //Clean up and close down
     [socket release]; socket = nil;
