@@ -136,9 +136,8 @@ Contact List
 
 
 Address Book Integration:
-	We probably need a default priority preference.
-	We definitely need per-user preferences, including in-Adium setting of the icon.
-	We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
+	= We probably need a default priority preference.
+	+ We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
 
 Emoticon Preferences:
 	= Remove +/- buttons
@@ -166,7 +165,7 @@ Contact Blocking:
 	+ Add "Show Blocked Contacts" menu item to view, blocked contact list group
 	+ Add "Block contacts not on my list" to AIM account preferences.
 	- Ignore AIM's "Allow these" and "Block all" modes (for now, atleast)
-	Evan: libgaim does not have support for accessing the privacy settings... we can add/remove from the list, but we have no way of 	knowing what's on it.
+	Evan: libgaim does not yet have support for accessing the privacy settings... we can add/remove from the list, but we have no way of knowing what's on it.
 
 
 Multi-user chat: <<<INCOMPLETE>>>
@@ -306,6 +305,7 @@ Contact List Display:
 			Other minor issues like draging groups into themselves
 			They limit contact list designs, some layouts won't work with nested groups
 			The group online/count totals are incorrect, difficult to calculate
+			They can't sort into a "by Status" sorted list very well - have to have an option to sort to the top or the bottom
  
  
 	# Extend labels to the full width of the list
@@ -314,12 +314,6 @@ Contact List Display:
 		( Cons )
 		
 	# Remove the rounded caps <<< PILLOWS!!!
-		( Pros )
-		
-		( Cons )
-		
-Address Book Integration:
-	# Give address book icons higher priority than server-side icons (This is not a bug. It's desired behavior by a lot of people.)
 		( Pros )
 		
 		( Cons )
@@ -341,7 +335,7 @@ Message Window:
 		( Pros )
 		
 		( Cons )
-		
+		I'm not sure we're getting animated files from libgaim at present.		
 		
 	# Tab creation preference: Last created window, new window, group by group, group by account
 		( Pros )
@@ -362,6 +356,7 @@ Account / Connect panel
 		
 		( Comments )
 			Hanji: I find gaim's use of a checkbox to connect/disconnect an account extremely unintuitive, I would vote against that.
+			Evan: I'm with Hanji.
 
 Meta Contacts:
 	User Defined Meta Contacts:
