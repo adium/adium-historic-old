@@ -140,7 +140,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Returns the RELATIVE path to the folder where the log should be written
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account
 {	
-    return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [account UID], object]);
+    return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [account formattedUID], object]);
 }
 
 //Returns the file name for the log
@@ -237,8 +237,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		//Log the string, and flag the log as dirty
 		if(logString){
 			NSString	*relativePath;
-			NSString	*objectUID = [chat name];
-			if(!objectUID) objectUID = [[chat listObject] UID];
+                        NSString	*objectUID; // = [chat name];
+                        objectUID = [[chat listObject] formattedUID];
+                        if(!objectUID) objectUID = [chat name];
 
 			relativePath = [self _writeMessage:logString
                                             betweenAccount:[chat account] 
@@ -261,7 +262,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	if(date && message && source){
 		if(logHTML){
 			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
-				([content isOutgoing] ? @"send" : @"receive"), date, [source UID],
+				([content isOutgoing] ? @"send" : @"receive"), date, [source formattedUID],
 				[AIHTMLDecoder encodeHTML:message
                                                   headers:NO 
                                                  fontTags:NO 
@@ -276,7 +277,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
                            attachmentImagesOnlyForSending:NO 
                                            simpleTagsOnly:NO]];
 		}else{
-			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source UID], [message string]];
+			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source formattedUID], [message string]];
 		}
 	}
 
@@ -307,7 +308,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     NSString	*relativePath;
     NSString    *fullPath;
     NSString	*fileName;
-    FILE		*file;
+    FILE        *file;
 
 	//Get the log path and name
 	fileName = [AILoggerPlugin fileNameForLogWithObject:object onDate:date plainText:!logHTML];
