@@ -13,10 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.52 2004/08/17 04:17:45 evands Exp $
+// $Id: AISoundController.m,v 1.53 2004/08/19 16:30:35 adamiser Exp $
 
 #import "AISoundController.h"
-#import <QuickTime/QuickTime.h>
 
 #define	PATH_SOUNDS					@"/Sounds"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
@@ -71,9 +70,6 @@
     //observe pref changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
-
-    //
-    EnterMovies();
 }
 
 //close
