@@ -123,7 +123,7 @@ DeclareString(Value);
 //Nofity of any queued status changes
 - (void)notifyOfChangedStatusSilently:(BOOL)silent
 {
-    if([changedStatusKeys count]){
+    if(changedStatusKeys && [changedStatusKeys count]) {
 		//Clear changedStatusKeys in case this status change invokes another, and we re-enter this code
 		NSSet	*keys = changedStatusKeys;
 		changedStatusKeys = nil;
