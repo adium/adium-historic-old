@@ -57,6 +57,12 @@
     return(@"");    
 }
 
+//String to use for describing the UID/username of this account
+- (NSString *)userNameLabel
+{
+    return(nil);    
+}
+
 //Return the inline view for this account
 - (NSView *)view
 {
