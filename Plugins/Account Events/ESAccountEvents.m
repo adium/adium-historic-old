@@ -96,7 +96,7 @@
 		}
 		
 		if(format){
-			description = [NSString stringWithFormat:format,[listObject displayName]];
+			description = [NSString stringWithFormat:format,[listObject formattedUID]];
 		}
 	}else{
 		if([eventID isEqualToString:ACCOUNT_CONNECTED]){
@@ -150,7 +150,8 @@
 {
 	[[adium contactAlertsController] generateEvent:ACCOUNT_CONNECTED
 									 forListObject:[timer userInfo]
-										  userInfo:nil];
+										  userInfo:nil
+					  previouslyPerformedActionIDs:nil];
 	[accountConnectionStatusGroupingOnlineTimer release]; accountConnectionStatusGroupingOnlineTimer = nil;
 }
 
@@ -158,7 +159,8 @@
 {
 	[[adium contactAlertsController] generateEvent:ACCOUNT_DISCONNECTED
 									 forListObject:[timer userInfo]
-										  userInfo:nil];
+										  userInfo:nil
+					  previouslyPerformedActionIDs:nil];
 	[accountConnectionStatusGroupingOfflineTimer release]; accountConnectionStatusGroupingOfflineTimer = nil;
 }
 
