@@ -27,7 +27,7 @@
 	[textField_encoding setStringValue:[account preferenceForKey:KEY_ZEPHYR_ENCODING group:GROUP_ACCOUNT_STATUS]];
 }
 
-- (IBAction)changedConnectionPreference:(id)sender
+- (IBAction)changedPreference:(id)sender
 {	
 	if (sender == checkBox_exportAnyone){
 		[account setPreference:[NSNumber numberWithBool:[sender state]]
@@ -39,7 +39,7 @@
 						forKey:KEY_ZEPHYR_EXPORT_SUBS
 						 group:GROUP_ACCOUNT_STATUS];
 	}else{
-		[super changedConnectionPreference:sender];
+		[super changedPreference:sender];
 	}
 }
 
