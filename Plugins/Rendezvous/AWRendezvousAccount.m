@@ -29,13 +29,17 @@
 #import "AWEzvContact.h"
 #import "AWEzvDefines.h"
 
+@interface AWRendezvousAccount (PRIVATE)
+- (NSString *)UIDForContact:(AWEzvContact *)contact;
+@end
+
 @implementation AWRendezvousAccount
 //
 - (void)initAccount
 {
     [super initAccount];
 	
-    libezvContacts = [[NSMutableDictionary alloc] init];
+    libezvContacts = [[NSMutableSet alloc] init];
     
     libezv = [[AWEzv alloc] initWithClient:self];
 }
@@ -98,13 +102,13 @@
 - (void) reportLoggedOut 
 {
     NSEnumerator	*enumerator = [libezvContacts objectEnumerator];
-    NSString		*uniqueID;
-    AIListContact	*listContact;
-
-    while (uniqueID = [enumerator nextObject]) {
+    AWEzvContact	*contact;
+	AIListContact	*listContact;
+	
+    while (contact = [enumerator nextObject]) {
 		listContact = [[adium contactController] existingContactWithService:service
 																	account:self
-																		UID:uniqueID];
+																		UID:[self UIDForContact:contact]];
 		[listContact setRemoteGroupName:nil];
     }
     [libezvContacts removeAllObjects];
@@ -126,9 +130,9 @@
 	NSImage			*contactImage;
 	
     listContact = [[adium contactController] contactWithService:service
-												 account:self
-													 UID:[contact uniqueID]];  
-
+														account:self
+															UID:[self UIDForContact:contact]];  
+	
 	if (![listContact remoteGroupName]){
 		[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
 	}
@@ -181,14 +185,17 @@
 	}
 
     //The Rendezvous UID is useless; we'll use the contact alias as the formatted UID
+#if 0 
 	contactName = [contact name];
 	if (![[listContact formattedUID] isEqualToString:contactName]){
 		[listContact setStatusObject:contactName
 							 forKey:@"FormattedUID"
 							 notify:NO];
 	}
-	
-    [libezvContacts setObject:[contact uniqueID] forKey:[contact uniqueID]];   
+#endif
+
+	//Adding an existing object to a set has no effect, so just ensure it is added
+	[libezvContacts addObject:contact];
 	
     //Apply any changes
     [listContact notifyOfChangedStatusSilently:silentAndDelayed];
@@ -200,10 +207,10 @@
     
     listContact = [[adium contactController] existingContactWithService:service
 																account:self 
-																	UID:[contact uniqueID]];
+																	UID:[self UIDForContact:contact]];
     
     [listContact setRemoteGroupName:nil];
-    [libezvContacts removeObjectForKey:[contact uniqueID]];
+    [libezvContacts removeObject:contact];
 }
 
 //We received a message from an AWEzvContact
@@ -214,8 +221,8 @@
     AIChat				*chat;
 	
     listContact = [[adium contactController] existingContactWithService:service
-														 account:self
-															 UID:[contact uniqueID]];
+																account:self
+																	UID:[self UIDForContact:contact]];
 	chat = [[adium contentController] chatWithContact:listContact];
 	
     msgObj = [AIContentMessage messageInChat:chat
@@ -239,7 +246,7 @@
     AIChat			*chat;
     listContact = [[adium contactController] existingContactWithService:service
 																account:self
-																	UID:[contact uniqueID]];
+																	UID:[self UIDForContact:contact]];
 	chat = [[adium contentController] existingChatWithContact:listContact];
 		
     [chat setStatusObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)
@@ -350,19 +357,31 @@
         if([key isEqualToString:@"IdleSince"]){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			
-			[libezv setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
+			[libezv setStatus:AWEzvIdle withMessage:[[[[adium statusController] activeStatusState] statusMessage] string]];
             [self setAccountIdleTo:idleSince];
 			
-        } else if ( ([key isEqualToString:@"AwayMessage"])){
-            [self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];
-			
-        } else if ( ([key isEqualToString:KEY_USER_ICON])) {
+        }else if([key isEqualToString:KEY_USER_ICON]){
 			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 				[libezv setContactImage:[[[NSImage alloc] initWithData:data] autorelease]];
 			}
-			
 		}
     }
+}
+
+- (void)setStatusState:(AIStatus *)statusState
+{
+	if([self online]){
+		AIStatusType	statusType = [statusState statusType];
+		switch(statusType){
+			case AIAvailableStatusType:
+				[self setAccountAwayTo:nil];
+				break;
+			case AIAwayStatusType:
+				[self setAccountAwayTo:[statusState statusMessage]];
+				break;		
+		}		
+		
+	}
 }
 
 - (void)setAccountIdleTo:(NSDate *)idle
@@ -377,7 +396,7 @@
 {
 	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
 		if (awayMessage != nil)
-		    [libezv setStatus:AWEzvAway withMessage:[NSString stringWithString:[awayMessage string]]];
+		    [libezv setStatus:AWEzvAway withMessage:[awayMessage string]];
 		else
 		    [libezv setStatus:AWEzvOnline withMessage:nil];
 		
@@ -414,6 +433,17 @@
     [self updateStatusForKey:@"IdleSince"];
     [self updateStatusForKey:@"AwayMessage"];
     [self updateStatusForKey:KEY_USER_ICON];
+}
+
+- (NSString *)UIDForContact:(AWEzvContact *)contact
+{
+	/*
+	NSString	*uniqueID = [contact uniqueID];
+	NSArray		*components = [uniqueID componentsSeparatedByString:@"@"];
+	NSString	*userName = [contact name];
+	return([NSString stringWithFormat:@"%@ [%@]",name,[ substringFromIndex:[name length]]]);
+	 */
+	return([contact uniqueID]);
 }
 
 

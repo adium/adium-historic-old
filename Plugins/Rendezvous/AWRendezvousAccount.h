@@ -27,7 +27,7 @@
 
 @interface AWRendezvousAccount : AIAccount <AWEzvClientProtocol> {
     AWEzv				*libezv;
-    NSMutableDictionary	*libezvContacts;
+    NSMutableSet		*libezvContacts;
     NSString *savedAwayMessage;
 }
 
