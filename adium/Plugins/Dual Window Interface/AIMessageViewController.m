@@ -78,11 +78,11 @@
 									 object:chat];
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(chatParticipatingListObjectsChanged:)
-									   name:Content_ChatParticipatingListObjectsChanged
+									   name:Chat_ParticipatingListObjectsChanged
 									 object:chat];
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatAccountChanged:) 
-									   name:Content_ChatAccountChanged
+									   name:Chat_AccountChanged
 									 object:chat];
 	
 	//Create the message view
@@ -164,7 +164,7 @@
 
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatParticipantsChanged:)
-									   name:Content_ChatParticipatingListObjectsChanged
+									   name:Chat_ParticipatingListObjectsChanged
 									 object:nil];
 	
     //Finish everything up

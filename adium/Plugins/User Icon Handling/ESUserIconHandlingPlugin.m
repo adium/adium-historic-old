@@ -86,7 +86,7 @@
 			//Note: TIFF supports transparency but not animation
 			NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
 			[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
-			
+
 			[[adium contactController] listObjectAttributesChanged:inObject
 													  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];
 		}

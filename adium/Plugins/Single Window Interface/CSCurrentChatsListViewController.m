@@ -159,7 +159,7 @@
 {
 	AIListObject	*inObject = [[[[messageViewControllerArray objectAtIndex:row] chat] participatingListObjects] objectAtIndex:0];
 	NSString		*displayName = [inObject displayName];
-    int currentUnviewed = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+    int currentUnviewed = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 	
     return((currentUnviewed > 0) ? [NSString stringWithFormat:@"%@ (%d)",displayName,currentUnviewed] : displayName);
 }

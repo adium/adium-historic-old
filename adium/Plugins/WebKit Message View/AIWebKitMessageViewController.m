@@ -129,13 +129,13 @@ DeclareString(AppendNextMessage);
 	//This needs to be done AFTER refreshView
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(participatingListObjectsChanged:)
-									   name:Content_ChatParticipatingListObjectsChanged 
+									   name:Chat_ParticipatingListObjectsChanged 
 									 object:inChat];
 	[self participatingListObjectsChanged:nil];
 	
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(accountChanged:)
-									   name:Content_ChatAccountChanged 
+									   name:Chat_AccountChanged 
 									 object:inChat];
 	[self accountChanged:nil];
 	

@@ -108,10 +108,10 @@
 
 - (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject
 {
-    int			currentUnviewed = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+    int			currentUnviewed = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 
 	//'UnviewedContent'++
-	[inObject setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:@"UnviewedContent" notify:YES];
+	[inObject setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:KEY_UNVIEWED_CONTENT notify:YES];
 }
 
 //Clear unviewed content
@@ -123,8 +123,8 @@
     //Clear the unviewed content of each list object participating in this chat
     enumerator = [[inChat participatingListObjects] objectEnumerator];
     while(listObject = [enumerator nextObject]){
-		if([listObject integerStatusObjectForKey:@"UnviewedContent"]){
-			[listObject setStatusObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent" notify:YES];
+		if([listObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+			[listObject setStatusObject:[NSNumber numberWithInt:0] forKey:KEY_UNVIEWED_CONTENT notify:YES];
 		}
     }
 }

@@ -754,7 +754,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.139 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.140 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -928,7 +928,7 @@
 //    }
 //	
 //    //Notify
-//    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:chat userInfo:nil];
+//    [[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:chat userInfo:nil];
 }
 
 - (void)AIM_HandleEncChatIn:(NSString *)inCommand

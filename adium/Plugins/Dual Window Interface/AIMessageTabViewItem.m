@@ -57,7 +57,7 @@
 									   name:Chat_AttributesChanged
 									 object:[messageView chat]];	
     [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
-									   name:Content_ChatParticipatingListObjectsChanged
+									   name:Chat_ParticipatingListObjectsChanged
 									 object:[messageView chat]];
     [self chatStatusChanged:nil];
     [self chatParticipatingListObjectsChanged:nil];
