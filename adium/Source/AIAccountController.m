@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.92 2004/07/15 08:16:55 evands Exp $
+// $Id: AIAccountController.m,v 1.93 2004/07/15 18:29:27 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -61,7 +61,8 @@
     sleepingOnlineAccounts = nil;
 	accountMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 	accountMenuPluginsArray = [[NSMutableArray alloc] init];
-	
+	_cachedActiveServiceTypes = nil;
+
 	//Default account preferences
 	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_ACCOUNTS];
@@ -122,6 +123,8 @@
 	[unloadableAccounts release];
     [availableServiceDict release];
     [lastAccountIDToSendContent release];
+	
+	[_cachedActiveServiceTypes release]; _cachedActiveServiceTypes = nil;
 }
 
 
@@ -235,29 +238,31 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return([[availableServiceDict allValues] sortedArrayUsingFunction:_alphabeticalServiceSort context:nil]);
 }
 
-//Return the active service types (service types for which there is an account).  These are used for contact creation.
+//Return the active service types (service types for which there is an account).  These are used for contact creation and determining if
+//the service of accounts and contacts should be presented to the user.
 - (NSArray *)activeServiceTypes
 {
-	NSMutableArray	*serviceArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-	AIAccount		*account;
-	
-	//Build an array of all currently used services
-	while(account = [enumerator nextObject]){
-		NSEnumerator		*duplicateEnum = [serviceArray objectEnumerator];
-		AIServiceType		*existingService;
+	NSLog(@"call");
+	if (!_cachedActiveServiceTypes){
+		NSMutableArray	*serviceArray = [NSMutableArray array];
+		NSEnumerator	*enumerator = [accountArray objectEnumerator];
+		AIAccount		*account;
 		
-		//Prevent any service from going in twice
-		while(existingService = [duplicateEnum nextObject]){
-			if([[existingService identifier] isEqualToString:[[[account service] handleServiceType] identifier]]) break;
+		//Build an array of all currently used services
+		while(account = [enumerator nextObject]){
+			AIServiceType		*accountServiceType = [[account service] handleServiceType];
+			
+			//Prevent any service from going in twice
+			if (![serviceArray containsObject:accountServiceType]){
+				[serviceArray addObject:accountServiceType];
+			}
 		}
-		if(existingService == nil){
-			[serviceArray addObject:[[account service] handleServiceType]];
-		}
+		
+		//Sort
+		_cachedActiveServiceTypes = [[serviceArray sortedArrayUsingFunction:_alphabeticalServiceSort context:nil] retain];
 	}
 	
-	//Sort
-	return([serviceArray sortedArrayUsingFunction:_alphabeticalServiceSort context:nil]);
+	return(_cachedActiveServiceTypes);
 }
 
 //Returns the specified service controller
@@ -470,6 +475,15 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return(destIndex);
 }
 
+//The account list changed.
+- (void)accountListChanged:(NSNotification *)notification
+{
+	//Clear our cached active service types
+	[_cachedActiveServiceTypes release]; _cachedActiveServiceTypes = nil;
+
+	// Perform a full rebuild rather than trying to figure out what is different.
+	[self rebuildAllAccountMenuItems];
+}
 
 //Preferred Source Accounts --------------------------------------------------------------------------------------------
 #pragma mark Preferred Source Accounts
@@ -923,7 +937,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting","Disconnecting an account prefix")
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
 
-#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account displayServiceID]]
+#define ACCOUNT_TITLE_NO_SERVICE	[NSString stringWithFormat:@" %@",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)]
+#define ACCOUNT_TITLE_WITH_SERVICE  [NSString stringWithFormat:@" %@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account displayServiceID]]
 
 - (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
@@ -1008,26 +1023,30 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         if([[account supportedPropertyKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
 			
+			BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
+			
+			NSString	*accountTitle = (multipleServices ? ACCOUNT_TITLE_WITH_SERVICE : ACCOUNT_TITLE_NO_SERVICE);
+			
 			[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
 			
 			if([[account statusObjectForKey:@"Online"] boolValue]){
 				[menuItem setImage:[account onlineMenuImage]];
-				[menuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
 				[menuItem setKeyEquivalent:@""];
 				[menuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
 				[menuItem setImage:[account connectingMenuImage]];
-				[menuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
 				[menuItem setKeyEquivalent:@"."];
 				[menuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 				[menuItem setImage:[account connectingMenuImage]];
-				[menuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingString:accountTitle]];
 				[menuItem setKeyEquivalent:@""];
 				[menuItem setEnabled:NO];
 			}else{
 				[menuItem setImage:[account offlineMenuImage]];
-				[menuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingString:accountTitle]];
 				[menuItem setKeyEquivalent:@""];
 				[menuItem setEnabled:YES];
 			}
@@ -1036,12 +1055,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         }        
 		
     }	
-}
-
-//The account list as a whole changed.  Perform a full rebuild rather than trying to figure out what is different.
-- (void)accountListChanged:(NSNotification *)notification
-{
-	[self rebuildAllAccountMenuItems];
 }
 
 //Remove all current account menu items for all account menu item plugins, then create a new, current set.
