@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 723 $ $Date: 2004/05/07 03:03:43 $ -->
+<!--$Rev: 748 $ $Date: 2004/05/11 18:29:32 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -446,8 +446,8 @@ try {
         " from messages where sender_id = ? " +
         " and message_date >= ?::timestamp " +
         " and message_date < ?::timestamp " +
-        " having count(*) > 1 " +
         " group by message " +
+        " having count(*) > 1 " +
         " order by count(*) desc limit 20 ");
 
     pstmt.setInt(1, sender);
