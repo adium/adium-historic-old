@@ -22,8 +22,6 @@ static BOOL didInitMSN = NO;
 {
 	[super initAccount];
 	currentFriendlyName = nil;
-	
-	[self preferencesChanged:nil];
 }
 
 - (const char*)protocolPlugin
