@@ -417,7 +417,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                         [attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
 
                     }else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
-                        [attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
+                        [attrString appendString:@" " withAttributes:[textAttributes dictionary]];
 
                     }else if ([chunkString hasPrefix:@"#x"]) {
                         [attrString appendString:[NSString stringWithFormat:@"%C",

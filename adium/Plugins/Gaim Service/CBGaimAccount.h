@@ -11,6 +11,7 @@
 #import <Adium/Adium.h>
 
 #include "internal.h"
+
 #include "connection.h"
 #include "conversation.h"
 #include "core.h"

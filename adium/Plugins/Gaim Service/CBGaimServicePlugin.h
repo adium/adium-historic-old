@@ -32,7 +32,6 @@
 
 @interface CBGaimServicePlugin : AIPlugin <AIServiceController> {
         AIServiceType			*handleServiceType;
-        NSMutableDictionary		*accountDict;
         
         IBOutlet 	NSView		*view_preferences;
 }

@@ -14,22 +14,20 @@
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
-@interface CBGaimServicePlugin(Internal)
-- (NSMutableDictionary *)_accountDictionary;
-@end
+NSMutableDictionary *_accountDict;
 
 @implementation CBGaimServicePlugin
 
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
-   gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
+   /*gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
 
     //Log error
     if(!category) category = "general"; //Category can be nil
     NSLog(@"(Debug: %s) %s", category, arg_s);
     
-    g_free(arg_s);
+    g_free(arg_s);*/
 }
 
 static GaimDebugUiOps adiumGaimDebugOps = {
@@ -82,21 +80,26 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
     //We're allowed to place whatever we want in node's ui_data.    
-    NSLog(@"adiumGaimBlistNewNode");
+    //NSLog(@"adiumGaimBlistNewNode");
+    
+    //NSLog(@"%d", node ? node->type : -1);
     
     if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
-    {
-        GaimBuddy *buddy = (GaimBuddy *)node;
-        
-        NSMutableDictionary *_accountDict = [[[(AIHandle *)node->ui_data account] service] _accountDictionary];
-        
-        id theAccount = [_accountDict objectForKey:
-            [NSString stringWithFormat:@"%s.%s", 
-                (char *)gaim_account_get_protocol_id(buddy->account),
-                (char *)gaim_account_get_username(buddy->account)]];
-        
-        if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
-            [theAccount accountBlistNewNode:node];
+    { 
+        //NSLog(@"Aloha");
+        GaimBuddy *buddy;
+        if(buddy = (GaimBuddy *)node)
+        {
+            id theAccount = [_accountDict objectForKey:
+                [NSString stringWithFormat:@"%s.%s", 
+                    (char *)gaim_account_get_protocol_id(buddy->account),
+                    (char *)gaim_account_get_username(buddy->account)]];
+                        
+            if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
+                [theAccount accountBlistNewNode:node];
+        }
+        else
+            NSLog(@"what the shit");
     }
 }
 
@@ -107,13 +110,22 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
-    NSLog(@"adiumGaimBlistUpdate");
+    //NSLog(@"adiumGaimBlistUpdate");
     
-    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
-    {        
-        id theAccount = [(AIHandle *)node->ui_data account];
+    if(node && node->ui_data)
+    {
+        id theAccount;
+        if(GAIM_BLIST_NODE_IS_BUDDY(node))
+            theAccount = [(AIHandle *)node->ui_data account];
+        else if(GAIM_BLIST_NODE_IS_CONTACT(node))
+        {
+            GaimBlistNode *n = (GaimBlistNode *)((GaimContact *)node)->priority;
+            theAccount = [(AIHandle *)n->ui_data account];
+        }
+        else
+            return;
         
-        if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
+        if([theAccount respondsToSelector:@selector(accountBlistUpdate:withNode:)])
             [theAccount accountBlistUpdate:list withNode:node];
     }
 }
@@ -121,14 +133,30 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 {
     //Here we're responsible for destroying what we placed in the node's ui_data earlier
-    NSLog(@"adiumGaimBlistRemove");
+    //NSLog(@"adiumGaimBlistRemove");
 
-    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    if(node && node->ui_data)
     {
-        id theAccount = [(AIHandle *)node->ui_data account];
+        id theAccount;
+        if(GAIM_BLIST_NODE_IS_BUDDY(node))
+            theAccount = [(AIHandle *)node->ui_data account];
+        else if(GAIM_BLIST_NODE_IS_CONTACT(node))
+        {
+            GaimBlistNode *n = (GaimBlistNode *)((GaimContact *)node)->priority;
+            theAccount = [(AIHandle *)n->ui_data account];
+        }
+        else
+        {
+            //[node->ui_data release];
+            node->ui_data = NULL;
+            return;
+        }
         
-        if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
+        if([theAccount respondsToSelector:@selector(accountBlistRemove:withNode:)])
             [theAccount accountBlistRemove:list withNode:node];
+        
+        //[node->ui_data release];
+        node->ui_data = NULL;
     }
 }
 
@@ -460,7 +488,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)installPlugin
 {
-    accountDict = [[NSMutableDictionary alloc] init];
+    _accountDict = [[NSMutableDictionary alloc] init];
 
     char *plugin_search_paths[1];
 
@@ -500,7 +528,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)uninstallPlugin
 {
-    [accountDict release];
+    [_accountDict release];
 }
 
 //Periodic timer to run libgaim's event loop
@@ -519,7 +547,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
     CBGaimAccount *anAccount = [[[CBGaimAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease];
     
-    [accountDict setObject:anAccount forKey:[anAccount UIDAndServiceID]];
+    [_accountDict setObject:anAccount forKey:[anAccount UIDAndServiceID]];
     
     return anAccount;
 }
@@ -536,13 +564,5 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (AIServiceType *)handleServiceType
 {
     return(handleServiceType);
-}
-@end
-
-
-@implementation CBGaimServicePlugin(Internal)
-- (NSMutableDictionary *)_accountDictionary
-{
-    return accountDict;
 }
 @end
