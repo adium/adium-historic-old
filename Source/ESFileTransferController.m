@@ -434,4 +434,76 @@ static ESFileTransferPreferences *preferences;
 	return(description);
 }
 
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	NSString		*description = nil;
+	NSString		*displayName, *remoteFilename;
+	ESFileTransfer	*fileTransfer;
+
+	NSParameterAssert([userInfo isKindOfClass:[ESFileTransfer class]]);
+	fileTransfer = (ESFileTransfer *)userInfo;
+	
+	displayName = [listObject displayName];
+	remoteFilename = [fileTransfer remoteFilename];
+	
+	if(includeSubject){
+		NSString	*format = nil;
+		
+		if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+			//Should only happen for an incoming transfer
+			format = AILocalizedString(@"%@ requests to send you %@",nil);
+			
+		}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+			if([fileTransfer type] == Incoming_FileTransfer){
+				format = AILocalizedString(@"%@ began sending you %@",nil);
+			}else{
+				format = AILocalizedString(@"%@ began receiving %@",nil);	
+			}
+		}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+			format = AILocalizedString(@"%@ canceled the transfer of %@",nil);
+		}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+			if([fileTransfer type] == Incoming_FileTransfer){
+				format = AILocalizedString(@"%@ sent you %@",nil);
+			}else{
+				format = AILocalizedString(@"%@ received %@",nil);	
+			}
+		}
+		
+		if(format){
+			description = [NSString stringWithFormat:format,displayName,remoteFilename];
+		}
+	}else{
+		NSString	*format = nil;
+		
+		if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+			//Should only happen for an incoming transfer
+			format = AILocalizedString(@"requests to send you %@",nil);
+			
+		}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+			if([fileTransfer type] == Incoming_FileTransfer){
+				format = AILocalizedString(@"began sending you %@",nil);
+			}else{
+				format = AILocalizedString(@"began receiving %@",nil);	
+			}
+		}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+			format = AILocalizedString(@"canceled the transfer of %@",nil);
+		}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+			if([fileTransfer type] == Incoming_FileTransfer){
+				format = AILocalizedString(@"sent you %@",nil);
+			}else{
+				format = AILocalizedString(@"received %@",nil);	
+			}
+		}
+		
+		if(format){
+			description = [NSString stringWithFormat:format,remoteFilename];
+		}		
+	}
+
+	return(description);
+}
+
 @end
