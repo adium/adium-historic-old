@@ -23,7 +23,7 @@
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
 	NSSize				nameSize = [displayName size];
-	
+	float				originalWidth = rect.size.width;
 
 	//Alignment
 	switch([self textAlignment]){
@@ -44,6 +44,9 @@
 	if([self textAlignment] == NSLeftTextAlignment){
 		rect.size.width += [self flippyIndent];
 	}
+	
+	//Don't let the bubble try to draw larger than the width we were passed, which was the full width possible
+	if (rect.size.width > originalWidth) rect.size.width = originalWidth;
 	
 	return(rect);
 }
