@@ -20,12 +20,16 @@
 //Event preferences
 #define PREF_GROUP_CONTACT_ALERTS	@"Contact Alerts"
 #define KEY_CONTACT_ALERTS			@"Contact Alerts"
+#define KEY_DEFAULT_EVENT_ID		@"Default Event ID"
+#define KEY_DEFAULT_ACTION_ID		@"Default Action ID"
+
 
 //Event Dictionary keys
 #define	KEY_EVENT_ID				@"EventID"
 #define	KEY_ACTION_ID				@"ActionID"
 #define	KEY_ACTION_DETAILS			@"ActionDetails"
 #define KEY_ONE_TIME_ALERT			@"OneTime"
+
 
 @interface ESContactAlertsController : NSObject {
     IBOutlet	AIAdium			*owner;
@@ -43,11 +47,13 @@
 - (NSDictionary *)eventHandlers;
 - (NSMenu *)menuOfEventsWithTarget:(id)target;
 - (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject;
+- (NSString *)defaultEventID;
 
 //Actions
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
 - (NSDictionary *)actionHandlers;
 - (NSMenu *)menuOfActionsWithTarget:(id)target;
+- (NSString *)defaultActionID;
 
 //Alerts
 - (NSArray *)alertsForListObject:(AIListObject *)listObject;

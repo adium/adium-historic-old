@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.24 2004/05/12 22:04:06 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.25 2004/06/12 07:22:30 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -108,7 +108,7 @@
 	if(enclosingGroup){
 		events = [self appendEventsForObject:enclosingGroup toDictionary:events];
 	}
-
+	
 	//Add events for this object (replacing any inherited from the containing object)
 	NSDictionary	*newEvents = [listObject preferenceForKey:KEY_CONTACT_ALERTS group:PREF_GROUP_CONTACT_ALERTS];
 	if(newEvents && [newEvents count]){
@@ -119,6 +119,16 @@
 	return(events);
 }
 
+- (NSString *)defaultEventID
+{
+	NSString *defaultEventID = [[owner preferenceController] preferenceForKey:KEY_DEFAULT_EVENT_ID
+																		group:PREF_GROUP_CONTACT_ALERTS];
+	if (![eventHandlers objectForKey:defaultEventID]){
+		defaultEventID = [[eventHandlers allKeys] objectAtIndex:0];
+	}
+	
+	return defaultEventID;
+}
 
 //Actions --------------------------------------------------------------------------------------------------------------
 #pragma mark Actions
@@ -149,7 +159,7 @@
 	enumerator = [actionHandlers keyEnumerator];
 	while((actionID = [enumerator nextObject])){
 		id <AIActionHandler> actionHandler = [actionHandlers objectForKey:actionID];		
-
+		
         NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
 														target:target 
 														action:@selector(selectAction:) 
@@ -161,6 +171,16 @@
 	return([menu autorelease]);
 }	
 
+- (NSString *)defaultActionID
+{
+	NSString *defaultActionID = [[owner preferenceController] preferenceForKey:KEY_DEFAULT_ACTION_ID
+																		 group:PREF_GROUP_CONTACT_ALERTS];
+	if (![actionHandlers objectForKey:defaultActionID]){
+		defaultActionID = [[actionHandlers allKeys] objectAtIndex:0];
+	}
+	
+	return defaultActionID;
+}
 
 //Alerts ---------------------------------------------------------------------------------------------------------------
 #pragma mark Alerts
@@ -208,6 +228,13 @@
 	//Put the modified event array back into the contact alert dict, and save our changes
 	[contactAlerts setObject:[eventArray autorelease] forKey:newAlertEventID];
 	[listObject setPreference:[contactAlerts autorelease] forKey:KEY_CONTACT_ALERTS group:PREF_GROUP_CONTACT_ALERTS];
+	
+	[[owner preferenceController] setPreference:newAlertEventID
+										 forKey:KEY_DEFAULT_EVENT_ID
+										  group:PREF_GROUP_CONTACT_ALERTS];
+	[[owner preferenceController] setPreference:[newAlert objectForKey:KEY_ACTION_ID]
+										 forKey:KEY_DEFAULT_ACTION_ID
+										  group:PREF_GROUP_CONTACT_ALERTS];	
 }
 
 //Remove the alert (passed as a dictionary, must be an exact = match) form a list object
