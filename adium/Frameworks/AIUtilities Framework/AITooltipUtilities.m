@@ -13,59 +13,86 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AIUtilities.h"
 #import "AITooltipUtilities.h"
 #import "AIAttributedStringAdditions.h"
 
-#define TOOLTIP_MAX_WIDTH	250
-
+#define TOOLTIP_MAX_WIDTH	400
+#define TOOLTIP_INSET           3.0
 @interface AITooltipUtilities (PRIVATE)
 + (void)_createTooltip;
 + (void)_closeTooltip;
 + (void)_sizeTooltip;
-+ (NSPoint)_tooltipFrameOrigin;
++ (void)_drawImage;
++ (NSPoint)_tooltipFrameOriginForSize:(NSSize)tooltipSize;
 @end
 
 @implementation AITooltipUtilities
 
-static	NSPanel			*tooltipWindow;
-static	NSTextField		*textField_tooltip;
-static	NSString		*tooltipString;
+static	NSPanel                 *tooltipWindow;
+static	NSTextView		*textView_tooltipTitle;
+static	NSTextView		*textView_tooltipBody;
+static  ESStaticView            *view_tooltipImage;
+static	NSAttributedString      *tooltipBody;
+static	NSAttributedString      *tooltipTitle;
+static  NSImage                 *tooltipImage;
 static	NSPoint			tooltipPoint;
 static	AITooltipOrientation	tooltipOrientation;
 
 //Tooltips
 + (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
-{    
-    if(inString){ //If passed a string
-        BOOL	newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
+{
+    [self showTooltipWithAttributedString:[[[NSAttributedString alloc] initWithString:inString] autorelease] onWindow:inWindow atPoint:inPoint orientation:inOrientation];
+}
 
++ (void)showTooltipWithAttributedString:(NSAttributedString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
+{
+    [self showTooltipWithTitle:nil body:inString image:nil onWindow:inWindow atPoint:inPoint orientation:inOrientation];
+}
+
++ (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
+{    
+   if(inTitle || inBody || inImage){ //If passed something to display
+       BOOL	newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
+       BOOL     needToCreateTooltip = (!tooltipTitle && !tooltipBody && !tooltipImage);
+       
         //Update point and orientation
         tooltipPoint = inPoint;
         tooltipOrientation = inOrientation;
-
-        if(!tooltipString){
-            [self _createTooltip];
-
-            [tooltipString release]; tooltipString = [inString retain];
-            [textField_tooltip setStringValue:tooltipString];
-
-            [self _sizeTooltip];
-
-        }else{
-            //Update the existing tooltip's string and or position
-            if([inString compare:tooltipString] != 0){
-                [tooltipString release]; tooltipString = [inString retain];
-                [textField_tooltip setStringValue:tooltipString];
-                [self _sizeTooltip];
-            }
-            if(newLocation){
-                [tooltipWindow setFrameOrigin:[self _tooltipFrameOrigin]];
+        
+        if(needToCreateTooltip){
+            [self _createTooltip]; //make the window
+        }
+        
+        if (needToCreateTooltip || ![inBody isEqualToAttributedString:tooltipBody] || ![inTitle isEqualToAttributedString:tooltipTitle] || !(inImage==tooltipImage)) { //we don't exist or something changed
+            if (tooltipTitle) [tooltipTitle release];
+            if (inTitle) {
+                tooltipTitle = [inTitle retain];
+                [textView_tooltipTitle replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length]) withRTF:[tooltipTitle dataRepresentation]];            
+            } else {
+                tooltipTitle = nil;
+                [[textView_tooltipTitle textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])];            
             }
             
+            if (tooltipBody) [tooltipBody release]; 
+            if (inBody) {
+                tooltipBody = [inBody retain];
+                [textView_tooltipBody replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length]) withRTF:[tooltipBody dataRepresentation]];
+            } else {
+                tooltipBody = [inBody retain];
+                [[textView_tooltipBody textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])];
+            }
+            
+            if (tooltipImage) [tooltipImage release];
+            tooltipImage = [inImage retain];
+            [view_tooltipImage setImage:tooltipImage];
+            
+            [self _sizeTooltip];
+        } else if(newLocation){
+                [tooltipWindow setFrameOrigin:[self _tooltipFrameOriginForSize:[[tooltipWindow contentView] frame].size]];
         }
-
     }else{ //If passed a nil string, hide any existing tooltip
-        if(tooltipString){
+        if(tooltipBody){
             [self _closeTooltip];
         }
 
@@ -82,90 +109,189 @@ static	AITooltipOrientation	tooltipOrientation;
     [tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
     [tooltipWindow setAlphaValue:0.9];
     [tooltipWindow setHasShadow:YES];
+    
+    //Add the title text view
+    NSTextStorage * textStorage = [[NSTextStorage alloc] init];
+    
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    [textStorage addLayoutManager:layoutManager];
+    [layoutManager release];
+    
+    NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(10000000.0,10000000.0)];
+    [container setLineFragmentPadding:1.0]; //so widths will caclulate properly
+    [layoutManager addTextContainer:container];
+    [container release];
+    
+    textView_tooltipTitle = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,0,0) textContainer:container];
+    [textView_tooltipTitle setSelectable:NO];
+    [textView_tooltipTitle setRichText:YES];
+    [textView_tooltipTitle setDrawsBackground:NO];
+    [[tooltipWindow contentView] addSubview:textView_tooltipTitle];
+        
+    //Add the body text view
+    textStorage = [[NSTextStorage alloc] init];
+    
+    layoutManager = [[NSLayoutManager alloc] init];
+    [textStorage addLayoutManager:layoutManager];
+    [layoutManager release];
+    
+    container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(10000000.0,10000000.0)];
+    [container setLineFragmentPadding:0.0]; //so widths will caclulate properly
+    [layoutManager addTextContainer:container];
+    [container release];
+    
+    textView_tooltipBody = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,0,0) textContainer:container];
+    [textView_tooltipBody setSelectable:NO];
+    [textView_tooltipBody setRichText:YES];
+    [textView_tooltipBody setDrawsBackground:NO];
 
-    //Add a text field
-    textField_tooltip = [[NSTextField alloc] initWithFrame:NSMakeRect(0,0,0,0)];
-    [textField_tooltip setFont:[NSFont labelFontOfSize:11]];
-    [textField_tooltip setBordered:NO];
-    [textField_tooltip setBezeled:NO];
-    [textField_tooltip setSelectable:NO];
-    [textField_tooltip setDrawsBackground:NO];
-    [[tooltipWindow contentView] addSubview:textField_tooltip];
+    [[tooltipWindow contentView] addSubview:textView_tooltipBody];
+    
+    view_tooltipImage = [[ESStaticView alloc] initWithFrame:NSMakeRect(0,0,0,0)];
+    [[tooltipWindow contentView] addSubview:view_tooltipImage];    
 }
 
 + (void)_closeTooltip
 {
     [tooltipWindow orderOut:nil];
-    [textField_tooltip release]; textField_tooltip = nil;
+    [textView_tooltipBody release]; textView_tooltipBody = nil;
+    [textView_tooltipTitle release]; textView_tooltipTitle = nil;
+    [view_tooltipImage release]; view_tooltipImage = nil;
     [tooltipWindow release]; tooltipWindow = nil;
-    [tooltipString release]; tooltipString = nil;
+    [tooltipBody release]; tooltipBody = nil;
+    [tooltipTitle release]; tooltipTitle = nil;
+    [tooltipImage release]; tooltipImage = nil;
     tooltipPoint = NSMakePoint(0,0);
 }
 
 + (void)_sizeTooltip
 {
-    NSRect	tooltipRect;
-    NSPoint	origin;
-
-    //Set up the tooltip's bounds
-    [textField_tooltip sizeToFit];
-    tooltipRect = [textField_tooltip bounds];
+    NSRect	tooltipTitleRect;
+    NSRect	tooltipBodyRect;
+    NSRect      tooltipWindowRect;
     
-    if(tooltipRect.size.width > TOOLTIP_MAX_WIDTH){
-        NSAttributedString	*attrString = [[[NSAttributedString alloc] initWithString:tooltipString] autorelease];
-
-        tooltipRect.size.width = TOOLTIP_MAX_WIDTH;
-        tooltipRect.size.height = [attrString heightWithWidth:TOOLTIP_MAX_WIDTH];
-
-        [textField_tooltip setFrameSize:tooltipRect.size];
+    if (tooltipTitle && [tooltipTitle length]) {
+        //Make sure we're not wrapping by default
+        [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(10000000.0,10000000.0)];
+        //Set up the tooltip's bounds
+        [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
+        tooltipTitleRect = [[textView_tooltipTitle layoutManager] usedRectForTextContainer:[textView_tooltipTitle textContainer]];
+    } else {
+        tooltipTitleRect = NSMakeRect(0,0,0,0);
+    }
+    
+    if (tooltipBody && [tooltipBody length]) {
+        //Make sure we're not wrapping by default
+        [[textView_tooltipBody textContainer] setContainerSize:NSMakeSize(10000000.0,10000000.0)];
+        //Set up the tooltip's bounds
+        [[textView_tooltipBody layoutManager] glyphRangeForTextContainer:[textView_tooltipBody textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
+        tooltipBodyRect = [[textView_tooltipBody layoutManager] usedRectForTextContainer:[textView_tooltipBody textContainer]];
+    } else {
+        tooltipBodyRect = NSMakeRect(0,0,0,0);   
+    }
+    
+    //Limit the tooltip width - recalculate the height for the new (maxiumum) width as necessary
+    if(tooltipBodyRect.size.width > TOOLTIP_MAX_WIDTH || tooltipTitleRect.size.width > TOOLTIP_MAX_WIDTH){
+        NSLog(@"Too big!");
+        if (tooltipTitle) {
+            [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
+            [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
+            tooltipTitleRect = [[textView_tooltipTitle layoutManager] usedRectForTextContainer:[textView_tooltipTitle textContainer]];
+        } else {
+            tooltipTitleRect = NSMakeRect(0,0,0,0);
+        }
+        if (tooltipBody) {
+            [[textView_tooltipBody textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
+            [[textView_tooltipBody layoutManager] glyphRangeForTextContainer:[textView_tooltipBody textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
+            tooltipBodyRect = [[textView_tooltipBody layoutManager] usedRectForTextContainer:[textView_tooltipBody textContainer]];
+        } else {
+            tooltipBodyRect = NSMakeRect(0,0,0,0);   
+        }
     }
 
-    //Set the origin
-    origin = [self _tooltipFrameOrigin];
-    tooltipRect.origin.x = origin.x;
-    tooltipRect.origin.y = origin.y;
+    //width is the greater of the body and title widths
+    float windowWidth = TOOLTIP_INSET*2 + ((tooltipBodyRect.size.width > tooltipTitleRect.size.width) ? tooltipBodyRect.size.width : tooltipTitleRect.size.width);
+    float windowHeight = TOOLTIP_INSET*2 + (tooltipTitleRect.size.height + tooltipBodyRect.size.height);
     
-    //Apply the frame change and ensure the tip is visible
-    [tooltipWindow setFrame:tooltipRect display:YES];
+    //Set the textView's origin 
+    tooltipTitleRect.origin =  NSMakePoint(windowWidth/2 - tooltipTitleRect.size.width/2,TOOLTIP_INSET + tooltipBodyRect.size.height);
+    tooltipBodyRect.origin =  NSMakePoint(TOOLTIP_INSET, TOOLTIP_INSET);
+    
+    if (tooltipImage) {
+        NSSize imageSize = [tooltipImage size];
+        //if the image isn't going to fit without overlapping the title, expand the window's width
+        if (imageSize.width + tooltipTitleRect.size.width + TOOLTIP_INSET*3 > windowWidth) {
+            windowWidth = imageSize.width + tooltipTitleRect.size.width + (TOOLTIP_INSET*3);   
+        }
+        //The image should not overlap the body of the tooltip, so increase the window height (the body has an origin at the bottom-left so will move with the window)
+        if (imageSize.height > tooltipTitleRect.size.height) {
+            windowHeight = imageSize.height + tooltipBodyRect.size.height + (TOOLTIP_INSET*3);
+        }
+        //recenter the title to be between the left of the window and the left of the image
+        tooltipTitleRect.origin = NSMakePoint(((windowWidth - imageSize.width - tooltipTitleRect.size.width)/2 - TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+
+        [view_tooltipImage setFrame:NSMakeRect(windowWidth - imageSize.width - TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET,imageSize.width,imageSize.height)];
+    } else {
+        [view_tooltipImage setFrame:NSMakeRect(0,0,0,0)];   
+    }
+
+    //Apply the new frames for the text views
+    [textView_tooltipTitle setFrame:tooltipTitleRect];
+    [textView_tooltipBody setFrame:tooltipBodyRect];
+    
+    [textView_tooltipTitle  setNeedsDisplay:YES];
+    [textView_tooltipBody   setNeedsDisplay:YES];
+    [view_tooltipImage      setNeedsDisplay:YES];
+    [[tooltipWindow contentView] setNeedsDisplay:YES];
+    
+    //Set the window origin and give it a border
+    tooltipWindowRect.size = NSMakeSize(windowWidth,windowHeight);
+    tooltipWindowRect.origin =  [self _tooltipFrameOriginForSize:tooltipWindowRect.size];
+    
+    //Apply the frame change
+    [tooltipWindow setFrame:tooltipWindowRect display:YES];
+    
+    //Ensure the tip is visible
     if(![tooltipWindow isVisible]){
         [tooltipWindow makeKeyAndOrderFront:nil];
     }
 }
 
-+ (NSPoint)_tooltipFrameOrigin
++ (NSPoint)_tooltipFrameOriginForSize:(NSSize)tooltipSize;
 {
     NSRect	screenRect = [[NSScreen mainScreen] visibleFrame]; //use tooltip/window screen, not main screen!
-    NSRect	tooltipRect = [textField_tooltip bounds];
-
+    
+    NSPoint      tooltipOrigin;
+    
     //Adjust the tooltip so it fits completely on the screen
     if(tooltipOrientation == TooltipAbove){
-        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipRect.size.width)){
-            tooltipRect.origin.x = tooltipPoint.x - 2 - tooltipRect.size.width;
+        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)){
+           tooltipOrigin.x = tooltipPoint.x - 2 - tooltipSize.width;
         }else{
-            tooltipRect.origin.x = tooltipPoint.x;
+          tooltipOrigin.x = tooltipPoint.x;
         }
 
-        if(tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipRect.size.height)){
-            tooltipRect.origin.y = screenRect.origin.y + screenRect.size.height - tooltipRect.size.height;
+        if(tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipSize.height)){
+            tooltipOrigin.y = screenRect.origin.y + screenRect.size.height - tooltipSize.height;
         }else{
-            tooltipRect.origin.y = tooltipPoint.y + 2;
+            tooltipOrigin.y = tooltipPoint.y + 2;
         }
         
     }else{
-        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipRect.size.width)){
-            tooltipRect.origin.x = tooltipPoint.x - 2 - tooltipRect.size.width;
+        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)){
+            tooltipOrigin.x = tooltipPoint.x - 2 - tooltipSize.width;
         }else{
-            tooltipRect.origin.x = tooltipPoint.x + 10;
+            tooltipOrigin.x = tooltipPoint.x + 10;
         }
 
-        if(tooltipPoint.y < (screenRect.origin.y + tooltipRect.size.height)){
-            tooltipRect.origin.y = tooltipPoint.y + 2;
+        if(tooltipPoint.y < (screenRect.origin.y + tooltipSize.height)){
+            tooltipOrigin.y = tooltipPoint.y + 2;
         }else{
-            tooltipRect.origin.y = tooltipPoint.y - 2 - tooltipRect.size.height;
+            tooltipOrigin.y = tooltipPoint.y - 2 - tooltipSize.height;
         }
     }
-
-    return(tooltipRect.origin);
+    
+    return(tooltipOrigin);
 }
 
 @end
