@@ -15,11 +15,13 @@
 
 #import "AIOfflineContactHidingPlugin.h"
 
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
-#define SHOW_OFFLINE_MENU_TITLE 		@"Show Offline Contacts"
-#define KEY_SHOW_OFFLINE_CONTACTS 		@"Show Offline Contacts"
+#define	PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
+#define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
+#define HIDE_OFFLINE_MENU_TITLE				AILocalizedString(@"Hide Offline Contacts",nil)
+#define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 
 @interface AIOfflineContactHidingPlugin (PRIVATE)
+- (void)configureOfflineContactHiding;
 - (void)configurePreferences;
 @end
 
@@ -52,35 +54,35 @@
 //Toggle the display of offline contacts (call from menu)
 - (IBAction)toggleOfflineContactsMenu:(id)sender
 {
-	//Update the menu item's checkmark
-	[sender setState:![sender state]];
+	hideOfflineContacts = !hideOfflineContacts;
 	
 	//Store the preference
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:hideOfflineContacts]
 										 forKey:KEY_SHOW_OFFLINE_CONTACTS
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+
+	//Update the menu item's title
+	[self configureOfflineContactHiding];
+}
+
+//Set up preferences initially
+- (void)configurePreferences
+{
+	hideOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+																	group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+	[self configureOfflineContactHiding];
+}
+
+//Set Show/Hide Text and update the contact list
+- (void)configureOfflineContactHiding
+{
+	[showOfflineMenuItem setTitle:(hideOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
 	
 	//Refresh visibility of all contacts
 	[[adium contactController] updateAllListObjectsForObserver:self];
 	
 	//Resort the entire list, since we know the whole thing changed
 	[[adium contactController] sortContactList];	
-}
-
-//Set up preferences initially
-- (void)configurePreferences
-{
-	BOOL showOffline = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-																 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-	if(showOffline != [showOfflineMenuItem state]){
-		[showOfflineMenuItem setState:showOffline];
-	}
-	
-	//Refresh visibility of all contacts
-	[[adium contactController] updateAllListObjectsForObserver:self];
-	
-	//Resort the entire list, since we know the whole thing changed
-	[[adium contactController] sortContactList];
 }
 
 //Update visibility of a list object
