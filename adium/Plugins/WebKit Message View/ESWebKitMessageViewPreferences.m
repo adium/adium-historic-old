@@ -76,7 +76,11 @@
 - (void)viewWillClose
 {
     [[adium notificationCenter] removeObserver:self];
-	[previewListObjectsDict release]; previewListObjectsDict = nil;
+	[previewListObjectsDict release];
+	[previousContent release];
+	[newContent release];
+	[newContentTimer invalidate]; [newContentTimer release];
+	[stylePath release];
 }
 
 
