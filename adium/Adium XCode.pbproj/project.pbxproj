@@ -5153,78 +5153,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34B358A20554F1940033C7D5 = {
-			children = (
-				34B358A50554F1D30033C7D5,
-				34B358A60554F1D30033C7D5,
-				34B358A70554F1D30033C7D5,
-				34B358A80554F1D30033C7D5,
-			);
-			isa = PBXGroup;
-			name = liboscar;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34B358A50554F1D30033C7D5 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = faimconfig.h;
-			path = "Plugins/Gaim Service/Protocols/oscar/faimconfig.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		34B358A60554F1D30033C7D5 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = aim.h;
-			path = "Plugins/Gaim Service/Protocols/oscar/aim.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		34B358A70554F1D30033C7D5 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = aim_cbtypes.h;
-			path = "Plugins/Gaim Service/Protocols/oscar/aim_cbtypes.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		34B358A80554F1D30033C7D5 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = aim_internal.h;
-			path = "Plugins/Gaim Service/Protocols/oscar/aim_internal.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		34B358A90554F1D40033C7D5 = {
-			fileRef = 34B358A50554F1D30033C7D5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34B358AA0554F1D40033C7D5 = {
-			fileRef = 34B358A60554F1D30033C7D5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34B358AB0554F1D40033C7D5 = {
-			fileRef = 34B358A70554F1D30033C7D5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34B358AC0554F1D40033C7D5 = {
-			fileRef = 34B358A80554F1D30033C7D5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34B3688F0555ACC90033C7D5 = {
 			expectedFileType = archive.ar;
 			isa = PBXFileReference;
@@ -17991,10 +17919,7 @@
 				9EE058D905548F9400505F31,
 				9EE058DA05548F9400505F31,
 				9EE058DB05548F9400505F31,
-				34B358A90554F1D40033C7D5,
-				34B358AA0554F1D40033C7D5,
-				34B358AB0554F1D40033C7D5,
-				34B358AC0554F1D40033C7D5,
+				9EA125EF055B633000ECF349,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18012,6 +17937,7 @@
 				4B7F278C05440C8D00CDFC90,
 				4B7F278E05440C8D00CDFC90,
 				9EE05872055483DE00505F31,
+				9EA125E9055B630900ECF349,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18110,6 +18036,8 @@
 				4B7F278A05440C8D00CDFC90,
 				4B7F278705440C8D00CDFC90,
 				4B7F278805440C8D00CDFC90,
+				9EA125EE055B633000ECF349,
+				9EA125E8055B630900ECF349,
 				9EE0586F055483DE00505F31,
 				9EE05870055483DE00505F31,
 				4B7F279005440CA100CDFC90,
@@ -21465,7 +21393,6 @@
 		9E2BD856054BE18200558E56 = {
 			children = (
 				9E2BD857054BE18200558E56,
-				34B358A20554F1940033C7D5,
 				9E2BD858054BE18200558E56,
 				9E2BD859054BE18300558E56,
 				9E2BD89C054BE18A00558E56,
@@ -22566,6 +22493,36 @@
 			path = Source/AIDockController.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		9EA125E8055B630900ECF349 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimOscarAccount.m;
+			path = "Plugins/Gaim Service/CBGaimOscarAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EA125E9055B630900ECF349 = {
+			fileRef = 9EA125E8055B630900ECF349;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EA125EE055B633000ECF349 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimOscarAccount.h;
+			path = "Plugins/Gaim Service/CBGaimOscarAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EA125EF055B633000ECF349 = {
+			fileRef = 9EA125EE055B633000ECF349;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9EA81D61044A611A00415B22 = {
 			expectedFileType = sourcecode.c.h;
