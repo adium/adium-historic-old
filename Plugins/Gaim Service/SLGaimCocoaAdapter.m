@@ -1224,7 +1224,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const 
 //	NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
 	NSString	*textString = [NSString stringWithUTF8String:text];
 
-	if (gc){
+	if (GAIM_CONNECTION_IS_VALID(gc)){
 		GaimAccount		*account = gc->account;
 		GaimBuddy		*buddy = gaim_find_buddy(account,who);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
