@@ -33,7 +33,7 @@
 - (NSImage *)image;
 - (NSCharacterSet *)allowedCharacters;
 - (BOOL)caseSensitive;
-- (NSComparisonResult)compare:(AIServiceType *)inService;
+//- (NSComparisonResult)compare:(AIServiceType *)inService;
 - (NSString *)filterUID:(NSString *)inUID;
 - (NSComparisonResult)compareUID:(NSString *)inUID toHandle:(AIContactHandle *)inHandle;
 

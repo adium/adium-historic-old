@@ -30,6 +30,7 @@
 - (NSString *)displayName;
 - (unsigned)count;
 - (id)objectAtIndex:(unsigned)index;
+- (NSEnumerator *)objectEnumerator;
 - (unsigned)sortedCount;
 - (id)sortedObjectAtIndex:(unsigned)index;
 - (void)sortGroupAndSubGroups:(BOOL)subGroups;

@@ -19,21 +19,21 @@
 #import "AIServiceType.h"
 
 @interface AIContactHandle (PRIVATE)
-- (id)initWithService:(AIServiceType *)inService UID:(NSString *)inUID;
+- (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 @end
 
 @implementation AIContactHandle
 
 //Creates and returns a new contact handle
-+ (id)handleWithService:(AIServiceType *)inServiceType UID:(NSString *)inUID
++ (id)handleWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-    return([[[self alloc] initWithService:inServiceType UID:inUID] autorelease]);
+    return([[[self alloc] initWithServiceID:inServiceID UID:inUID] autorelease]);
 }
 
 //Handle service, UID, and display name
-- (AIServiceType *)service
+- (NSString *)serviceID
 {
-    return(service);
+    return(serviceID);
 }
 
 - (NSString *)UID
@@ -129,12 +129,12 @@
 
 // Private ----------------------------------------------------------------------------------
 //Init
-- (id)initWithService:(AIServiceType *)inServiceType UID:(NSString *)inUID
+- (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
     [super init];
 
     //Retain our information
-    service = [inServiceType retain];
+    serviceID = [inServiceID retain];
     UID = [inUID retain];
    
     //init
@@ -149,7 +149,7 @@
     [statusDictionary release];
     [contentObjectArray release];
     [UID release];
-    [service release];
+    [serviceID release];
 
     [super dealloc];
 }
