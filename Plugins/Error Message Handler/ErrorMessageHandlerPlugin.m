@@ -80,7 +80,7 @@
 	if(alertText && [alertText length]){
 		return([NSString stringWithFormat:ERROR_MESSAGE_ALERT_LONG, alertText]);
 	}else{
-		return(ERROR_MESSAGE_ALERT_LONG);
+		return(ERROR_MESSAGE_ALERT_SHORT);
 	}
 }
 

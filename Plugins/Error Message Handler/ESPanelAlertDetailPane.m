@@ -22,9 +22,8 @@
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	NSString *alertText = [inDetails objectForKey:KEY_ALERT_TEXT];
-	if(alertText){
-        [view_alertText setString:alertText];
-	}
+
+	[view_alertText setString:(alertText ? alertText : @"")];
 }
 
 //Return our current configuration

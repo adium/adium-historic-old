@@ -69,6 +69,7 @@ static BOOL didInitOscar = NO;
 									   styleTags:YES
 					  closeStyleTagsOnFontChange:NO
 								  encodeNonASCII:NO
+									encodeSpaces:NO
 									  imagesPath:nil
 							   attachmentsAsText:YES
 				  attachmentImagesOnlyForSending:YES
@@ -102,6 +103,7 @@ static BOOL didInitOscar = NO;
 											   styleTags:YES
 							  closeStyleTagsOnFontChange:NO
 										  encodeNonASCII:NO
+											encodeSpaces:NO
 											  imagesPath:@"/tmp"
 									   attachmentsAsText:NO
 						  attachmentImagesOnlyForSending:YES
@@ -146,6 +148,7 @@ static BOOL didInitOscar = NO;
 									   styleTags:YES
 					  closeStyleTagsOnFontChange:NO
 								  encodeNonASCII:NO
+									encodeSpaces:NO
 									  imagesPath:nil
 							   attachmentsAsText:YES
 				  attachmentImagesOnlyForSending:YES
@@ -162,6 +165,7 @@ static BOOL didInitOscar = NO;
 								styleTags:YES
 			   closeStyleTagsOnFontChange:NO
 						   encodeNonASCII:NO
+							 encodeSpaces:NO
 							   imagesPath:nil
 						attachmentsAsText:YES
 		   attachmentImagesOnlyForSending:YES
