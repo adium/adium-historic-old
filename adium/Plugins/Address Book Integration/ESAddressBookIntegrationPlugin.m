@@ -13,6 +13,7 @@
 - (void)updateAllContacts;
 - (void)updateSelf;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (NSArray *)searchScreenName:(NSString *)name withService:(NSString *)service;
 @end
 
 @implementation ESAddressBookIntegrationPlugin
@@ -59,21 +60,16 @@
             NSString *screenName = [inObject UID];
             
             //search for the screen name as we have it stored (case insensitive)
-            ABSearchElement * searchElement = [ABPerson searchElementForProperty:property 
-                                                                           label:nil 
-                                                                             key:nil 
-                                                                           value:screenName 
-                                                                      comparison:kABEqualCaseInsensitive];
-            NSArray * results = [sharedAddressBook recordsMatchingSearchElement:searchElement];
+            NSArray * results = [self searchScreenName: screenName withService: property];
             
             //If we don't find anything, try again using the compacted version of the screen name (case insensitive)
             if (!results || ![results count]) {
-                searchElement = [ABPerson searchElementForProperty:property 
-                                                             label:nil 
-                                                               key:nil 
-                                                             value:[screenName compactedString] 
-                                                        comparison:kABEqualCaseInsensitive];
-                results = [sharedAddressBook recordsMatchingSearchElement:searchElement];
+                results = [self searchScreenName: [screenName compactedString] withService: property];
+            }
+            
+            //If we don't find anything yet, try again using the ICQ property
+            if ((!results || ![results count]) && [property isEqualToString:kABAIMInstantProperty]) {
+                results = [self searchScreenName: screenName withService: kABICQInstantProperty];
             }
             
             if (results && [results count]) {
@@ -205,5 +201,15 @@
             [[owner accountController] setDefaultUserIcon:[[[NSImage alloc] initWithData:myImage] autorelease]];
         }
     }
+}
+
+- (NSArray *)searchScreenName:(NSString *)name withService:(NSString *)service
+{
+    ABSearchElement * searchElement = [ABPerson searchElementForProperty:service 
+                                                                   label:nil 
+                                                                     key:nil 
+                                                                   value:name 
+                                                              comparison:kABEqualCaseInsensitive];
+    return [sharedAddressBook recordsMatchingSearchElement:searchElement];
 }
 @end
