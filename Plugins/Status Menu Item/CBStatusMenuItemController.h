@@ -12,12 +12,13 @@ typedef enum {
 	UNVIEWED = 2
 } SMI_Icon_State;
 
-@interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, AIChatObserver>
+@interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, StateMenuPlugin, AIChatObserver>
 {
     NSStatusItem            *statusItem;
     NSMenu                  *theMenu;
     
     NSMutableArray          *accountMenuItemsArray;
+    NSMutableArray          *stateMenuItemsArray;
     NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray			*openChatsArray;
     
