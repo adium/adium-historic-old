@@ -224,8 +224,17 @@ void Adium_HandleSignal(int i){
 {
     //Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
-    //NSExceptionHandler messes up crash signals (signal 11) - install a custom handler which properly terminates Adium if one is received
-    signal(11, Adium_HandleSignal);
+
+    //NSExceptionHandler messes up crash signals - install a custom handler which properly terminates Adium if one is received
+    signal(4, Adium_HandleSignal);      /* illegal instruction (not reset when caught) */
+    signal(5, Adium_HandleSignal);      /* trace trap (not reset when caught) */
+    signal(7, Adium_HandleSignal);      /* EMT instruction */
+    signal(8, Adium_HandleSignal);      /* floating point exception */
+    signal(10, Adium_HandleSignal);     /* bus error */
+    signal(11, Adium_HandleSignal);     /* segmentation violation */
+    signal(12, Adium_HandleSignal);     /* bad argument to system call */
+    signal(24, Adium_HandleSignal);     /* exceeded CPU time limit */
+    signal(25, Adium_HandleSignal);     /* exceeded file size limit */
     
     //Load and init the components
     [loginController initController];
