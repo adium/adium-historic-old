@@ -21,6 +21,8 @@
             OUTLETS = {
                 "button_buildButton" = NSButton; 
                 "button_duckIcon" = NSButton; 
+                "button_homepage" = NSButton; 
+                "button_license" = NSButton; 
                 "panel_licenseSheet" = NSPanel; 
                 "textField_version" = NSTextField; 
                 "textView_credits" = NSTextView; 
