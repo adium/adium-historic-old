@@ -185,7 +185,6 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     loaded_message = NO;
 
     [self loadAwayMessages];
- //   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSControlTextDidChangeNotification object:comboBox_title];
 
     [popUp_title setMenu:[self savedAwaysMenu]];
 
@@ -333,7 +332,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"None"
 					   target:self
 					   action:@selector(loadSavedAway:)
-				    keyEquivalent:@"n"] autorelease];
+				    keyEquivalent:@"N"] autorelease];
     [menuItem setRepresentedObject:nil];
     [savedAwaysMenu addItem:menuItem];
 
