@@ -47,24 +47,6 @@
     
     //sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 	
-    [self preferencesChanged:nil];
-	
-    //Observe preferences changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];
-    //Observe external address book changes
-    [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(addressBookChanged:)
-												 name:kABDatabaseChangedExternallyNotification
-											   object:nil];
-    //Observe account changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(accountListChanged:)
-									   name:Account_ListChanged
-									 object:nil];	
-	
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
@@ -84,15 +66,28 @@
 
 //Adium is ready to receive our glory.
 - (void)adiumFinishedLaunching:(NSNotification *)notification
-{
+{	
+    //Observe preferences changes
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
+	
+    //Observe external address book changes
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(addressBookChanged:)
+												 name:kABDatabaseChangedExternallyNotification
+											   object:nil];
 	//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
 	[self rebuildAddressBookDict];
 	
-    //Register ourself as a listObject observer
-    [[adium contactController] registerListObjectObserver:self];
+    //Observe account changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:)
+									   name:Account_ListChanged
+									 object:nil];	
 	
-	//Gotta update 'em all
-	[[adium contactController] updateAllListObjectsForObserver:self];
+    [self preferencesChanged:nil];
 }
 
 //Called as contacts are created, load their address book information
@@ -216,7 +211,18 @@
 		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
 		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 		
-        [self updateAllContacts];
+
+		if (notification != nil){
+			//If we have a notification (so this isn't the first time through), update all contacts,
+			//which will update objects and then our "me" card information
+			[self updateAllContacts];
+		}else{			
+			//Register ourself as a listObject observer, which will update all objects
+			[[adium contactController] registerListObjectObserver:self];
+			
+			//Now update from our "me" card information
+		    [self updateSelfIncludingIcon:YES];	
+		}
 		
     }else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS])){
 		AIListObject	*inObject = [notification object];
