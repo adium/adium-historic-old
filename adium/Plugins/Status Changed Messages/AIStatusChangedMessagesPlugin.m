@@ -92,7 +92,7 @@
     enumerator = [[[owner contentController] allChatsWithListObject:object] objectEnumerator];
     while((chat = [enumerator nextObject])){
         AIContentStatus	*content;
-
+        
         //Create our content object
         content = [AIContentStatus statusInChat:chat
                                      withSource:object
