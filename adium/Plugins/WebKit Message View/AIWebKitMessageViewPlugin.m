@@ -220,8 +220,6 @@ DeclareString(AppendNextMessage);
                                                                          timeZone:nil];
     NSCalendarDate *currentDate = [[content date] dateWithCalendarFormat:nil 
                                                                 timeZone:nil];
-
-
 	// Should we merge consecutive messages?
 	if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source] && [currentDate timeIntervalSinceDate:previousDate] <= 300){
 		contentIsSimilar = YES;
@@ -248,7 +246,7 @@ DeclareString(AppendNextMessage);
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
-													 date:[NSDate date]
+													 date:nil
 												  message:dateMessage
 												 withType:@"date_separator"];
 			//Add the date header
@@ -273,7 +271,7 @@ DeclareString(AppendNextMessage);
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 										   withSource:[[content chat] listObject]
 										  destination:[[content chat] account]
-												 date:[NSDate date]
+												 date:nil
 											  message:dateMessage
 											 withType:@"date_separator"];
 			//Add the date header
@@ -438,12 +436,15 @@ DeclareString(AppendNextMessage);
 		date = [(AIContentStatus *)content date];
 	}
 	
-	//Replacements applicable to any AIContentObject with a date
-	if (date){
+	//Replacements applicable to any AIContentObject
+//	if (date){
 		do{
 			range = [inString rangeOfString:@"%time%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
+				if(date)
+					[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
+				else
+					[inString deleteCharactersInRange:range];
 			}
 		} while(range.location != NSNotFound);
 		
@@ -454,18 +455,21 @@ DeclareString(AppendNextMessage);
 				NSRange endRange;
 				endRange = [inString rangeOfString:@"}%"];
 				if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-					
-					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-					
-					NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																			 allowNaturalLanguage:NO] autorelease];
-					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-											withString:[dateFormatter stringForObjectValue:date]];
+					if(date) {
+						NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+						
+						NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																				 allowNaturalLanguage:NO] autorelease];
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
+												withString:[dateFormatter stringForObjectValue:date]];						
+					} else {
+						[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
+					}
 					
 				}
 			}
 		} while(range.location != NSNotFound);
-	}
+//	}
 	
 	return(inString);
 }
