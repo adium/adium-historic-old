@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/07 18:06:12 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/09 17:13:20 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -162,6 +162,8 @@ try {
     onClick="window.open('<%= formURL %>', 'Add Contact', 'width=450,height=100')">
                 Add Contact ...
             </a></p>
+
+            <div style="clear:both">&nbsp;</div>
 <%
         out.println("</div>");
 

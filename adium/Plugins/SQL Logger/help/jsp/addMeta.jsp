@@ -18,11 +18,12 @@ try {
 <html>
     <head><title>Add Meta-Contact</title></head>
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
+    <link rel="stylesheet" type="text/css" href="styles/users.css" />
     <body style="background: #ffffff">
         <form action="insertNewMeta.jsp" method="get">
             <table border="0" cellpadding="0" cellspacing="5">
             <tr>
-            <td align="right">
+            <td align="right" class="header">
             <label for="name">Name</label>
             </td>
             <td>
