@@ -969,17 +969,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #pragma mark GaimConversation User Lists
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
-	if (chat){
-		AIListContact *contact = [self contactWithUID:contactName];
+	AIListContact *contact;
 
+	if ((chat) &&
+		(contact = [self contactWithUID:contactName])){
+		
 		if (!namesAreCaseSensitive){
 			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
 		}
-
+		
 		[chat addParticipatingListObject:contact];
-
+		
 		GaimDebug (@"added user %@ in chat %@",contactName,[chat name]);
-	}	
+	}
 }
 
 - (oneway void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat
@@ -993,11 +995,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
-	if (chat){
-		AIListContact	*contact = [self contactWithUID:contactName];
+	AIListContact	*contact;
 
+	if ((chat) && 
+		(contact = [self contactWithUID:contactName])){
+		
 		[chat removeParticipatingListObject:contact];
-
+		
 		GaimDebug (@"removed user %@ in chat %@",contactName,[chat name]);
 	}	
 }
