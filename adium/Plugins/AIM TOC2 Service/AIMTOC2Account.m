@@ -1334,6 +1334,9 @@ static char *hash_password(const char * const password) {
 // Dealloc
 - (void)dealloc
 {
+    //Stop observing
+    [[owner notificationCenter] removeObserver:self name:Contact_UpdateStatus object:nil];
+    
     [screenName release];
     [password release];
 
@@ -1351,117 +1354,5 @@ static char *hash_password(const char * const password) {
 }
 
 
-
-
-
 @end
 
-
-
-
-
-/*- (BOOL)contactListEditable
-{
-    return([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]);
-}
-
-// Add an object to the specified groups
-- (BOOL)addObject:(AIContactObject *)object toGroup:(AIContactGroup *)group
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(group != nil);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        //AIM automatically creates groups (when we attempt to add to them), so nothing needs to be done here.
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        //AIM automatically creates the needed containing groups, so they do not need to be added here.
-        [self AIM_AddHandle:[object UID] toGroup:[group UID]];	//Place it on the server side list
-
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
-}
-
-// Remove an object from the specified groups
-- (BOOL)removeObject:(AIContactObject *)object fromGroup:(AIContactGroup *)group
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(group != nil);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        [self AIM_RemoveGroup:[object UID]];
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        //AIM automatically removes unneeded containing groups, so they do not need to be removed here.
-        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object];
-        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; //Remove the handle
-
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
-}
-
-
-// Rename an object
-- (BOOL)renameObject:(AIContactObject *)object inGroup:(AIContactGroup *)group to:(NSString *)inName
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(group != nil);
-    NSParameterAssert(inName != nil); NSParameterAssert([inName length] != 0);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        NSEnumerator	*enumerator;
-        AIContactObject	*target;
-
-        enumerator = [group objectEnumerator]; //Remove all the handles from the group
-        while((target = [enumerator nextObject])){
-            if([target isKindOfClass:[AIContactHandle class]]){
-                [self AIM_RemoveHandle:[target UID] fromGroup:[object UID]];
-            }
-        }
-
-        enumerator = [group objectEnumerator]; //Re-add all the handles into a new group (with the new name)
-        while((target = [enumerator nextObject])){
-            if([target isKindOfClass:[AIContactHandle class]]){
-                [self AIM_AddHandle:[(AIContactHandle *)target UID] toGroup:inName];
-            }
-        }
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; 	//Remove the handle
-        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object]; 				//Remove any status flags from this account (The AIM server will automatically send an update buddy message)
-        [self AIM_AddHandle:inName toGroup:[group UID]]; 		//Re-add the handle (with the new name)
-
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
-}
-
-// Move an object
-- (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(sourceGroup != nil);
-    NSParameterAssert(destGroup != nil);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        //The placement of groups is ignored
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        //AIM doesn't support moving, so we simply remove and re-add the handle.
-        [self AIM_RemoveHandle:[object UID] fromGroup:[sourceGroup UID]];
-        [self AIM_AddHandle:[object UID] toGroup:[destGroup UID]];
-
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
-}*/
