@@ -1,10 +1,6 @@
 
-@interface LNStatusIconsPreferences : AIObject {
-    IBOutlet	NSView		*view_prefView;
+@interface LNStatusIconsPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_displayStatusIcons;
 }
-
-+ (LNStatusIconsPreferences *)statusIconsPreferences;
-- (IBAction)changePreference:(id)sender;
 
 @end
