@@ -18,6 +18,11 @@
     NSString *mainBuddyStatus;
     NSString *mainAwayMessage;
     NSString *queueField;
+    
+    NSDictionary    *mainAttributes;
+    NSDictionary    *secondaryAttributes;
+    NSDictionary    *mainAttributesMask;
+    NSDictionary    *secondaryAttributesMask;
 }
 
 - (NSImage *)buddyIconImage;

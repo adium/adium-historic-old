@@ -17,7 +17,6 @@ BOOL pantherOrLater;
 {
     backdropImage = [[NSImage alloc] initWithContentsOfFile:
         [[NSBundle bundleForClass:[self class]] pathForResource:@"backdrop" ofType:@"png"]];
-    [backdropImage retain];
     
     buddyIconImage = [NSImage imageNamed: @"DefaultIcon"];
     [buddyIconImage setScalesWhenResized:YES];
@@ -34,10 +33,21 @@ BOOL pantherOrLater;
         textShadow = [[NSShadow alloc] init];
         [textShadow retain];
         [textShadow setShadowOffset:shadowSize];
-        [textShadow setShadowBlurRadius:2.0];
+        [textShadow setShadowBlurRadius:3.0];
     }
     
-    [self setNeedsDisplay:YES];
+    // Set the attributes for the main buddy name and the other strings
+    mainAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
+        convertFont:[NSFont systemFontOfSize:0.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
+    mainAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
+        convertFont:[NSFont systemFontOfSize:0.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName, nil] retain];
+    secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:[NSFont smallSystemFontSize]], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
+    secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:[NSFont smallSystemFontSize]], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName, nil] retain];
+    
 }
 
 - (void)dealloc
@@ -50,20 +60,25 @@ BOOL pantherOrLater;
     [mainBuddyStatus release];
     [mainAwayMessage release];
     [queueField release];
+    [mainAttributes release];
+    [mainAttributesMask release];
+    [secondaryAttributes release];
+    [secondaryAttributesMask release];
     [super dealloc];
 }
 
 - (void)drawRect:(NSRect)rect
 {
-    NSPoint tempPoint;
-    NSRect tempRect;
-    NSDictionary *mainAttributes;
-    NSDictionary *secondaryAttributes;
+    NSPoint         tempPoint;
+    NSRect          tempRect;
+    NSString        *tempString;
     
+    // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
     [backdropImage compositeToPoint: NSZeroPoint operation:NSCompositeSourceOver];
     
+    // Paint the buddy icon or placeholder
     tempPoint.x = 12.0;
     tempPoint.y = 146.0;
     [buddyIconImage compositeToPoint: tempPoint operation:NSCompositeSourceOver];
@@ -71,29 +86,29 @@ BOOL pantherOrLater;
         [buddyIconBadge compositeToPoint: tempPoint operation:NSCompositeSourceOver];
     }
     
-    // Set the shadow for better readability
+    // Set the shadow for better readability in Panther
     if (pantherOrLater) {
         [textShadow set];
     }
     
-    mainAttributes = [NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:0.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName, nil];
-    secondaryAttributes = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:[NSFont smallSystemFontSize]], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName, nil];
-    
-    [[NSColor whiteColor] set];
+    // Set the color of text to white and paint all the strings,
     tempPoint.x = 68.0;
     tempPoint.y = 177.0;
+    tempString = [NSString stringWithString: mainBuddyName];
+    [tempString drawAtPoint: NSMakePoint(tempPoint.x + 1.0,tempPoint.y - 1.0) withAttributes: mainAttributesMask];
     [mainBuddyName drawAtPoint: tempPoint withAttributes: mainAttributes];
-    
+        
     tempPoint.y = 163.0;
+    tempString = [NSString stringWithString: mainBuddyStatus];
+    [tempString drawAtPoint: NSMakePoint(tempPoint.x + 1.0,tempPoint.y - 1.0) withAttributes: secondaryAttributesMask];
     [mainBuddyStatus drawAtPoint: tempPoint withAttributes: secondaryAttributes];
     
     tempPoint.y = 112.0;
     tempRect.size.width = 131.0;
     tempRect.size.height = 43.0;
     tempRect.origin = tempPoint;
+    tempString = [NSString stringWithString: mainAwayMessage];
+    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: secondaryAttributesMask];
     [mainAwayMessage drawInRect: tempRect withAttributes: secondaryAttributes];
     
     tempPoint.x = 12.0;
@@ -101,6 +116,8 @@ BOOL pantherOrLater;
     tempRect.size.width = 187.0;
     tempRect.size.height = 83.0;
     tempRect.origin = tempPoint;
+    tempString = [NSString stringWithString: queueField];
+    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: secondaryAttributesMask];
     [queueField drawInRect: tempRect withAttributes: secondaryAttributes];
 }
 
@@ -134,12 +151,15 @@ BOOL pantherOrLater;
 
 - (void)setBuddyIconBadgeType:(NSString *)badgeName
 {
-    [buddyIconBadge release];
     if (![badgeName isEqualToString:@""]) {
-        buddyIconBadge = [[NSImage alloc] initWithContentsOfFile:
+        NSImage     *tempImage;
+        
+        tempImage = [[NSImage alloc] initWithContentsOfFile:
             [[NSBundle bundleForClass:[self class]] pathForResource:badgeName ofType:@"png"]];
-        [buddyIconBadge retain];
+        [buddyIconBadge release];
+        buddyIconBadge = tempImage;
     } else {
+        [buddyIconBadge release];
         buddyIconBadge = nil;
     }
 }
