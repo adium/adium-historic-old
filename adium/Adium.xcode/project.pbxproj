@@ -459,6 +459,7 @@
 				3499F45106309AC80035B468,
 				4947F5CB0655E85200B791E5,
 				BFEBDBFF0669029800CBF845,
+				52C623DA06697AC00006C387,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -519,6 +520,7 @@
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
 				4947F5BC0655E85200B791E5,
+				52C623D906697AC00006C387,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -8894,7 +8896,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				BFEBD9770669022300CBF845,
+				52C6214706697AA90006C387,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10735,6 +10737,7 @@
 				6C60B147056059ED00CAD137,
 				F501BB0D03882A0201A8010A,
 				C42C170005BA687800135D3C,
+				52C623DE06697AFA0006C387,
 			);
 			isa = PBXGroup;
 			name = Interface;
@@ -17733,6 +17736,193 @@
 			settings = {
 			};
 		};
+		52C6214706697AA90006C387 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 52C6219906697AAE0006C387;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52C6219906697AAE0006C387 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		52C623D506697AC00006C387 = {
+			buildActionMask = 2147483647;
+			files = (
+				52C623E406697B3B0006C387,
+				52C623E506697B3B0006C387,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52C623D606697AC00006C387 = {
+			buildActionMask = 2147483647;
+			files = (
+				52C623E006697B1D0006C387,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52C623D706697AC00006C387 = {
+			buildActionMask = 2147483647;
+			files = (
+				52C623E606697B3B0006C387,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52C623D806697AC00006C387 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52C623D906697AC00006C387 = {
+			buildPhases = (
+				52C623D506697AC00006C387,
+				52C623D606697AC00006C387,
+				52C623D706697AC00006C387,
+				52C623D806697AC00006C387,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/Growl-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Growl;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = Growl;
+			productName = Growl;
+			productReference = 52C623DA06697AC00006C387;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Growl</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Growl</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		52C623DA06697AC00006C387 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Growl.AdiumPlugin;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52C623DE06697AFA0006C387 = {
+			children = (
+				52C623E106697B3B0006C387,
+				52C623E206697B3B0006C387,
+				52C623E306697B3B0006C387,
+				52C623DF06697B1D0006C387,
+			);
+			isa = PBXGroup;
+			name = Growl;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52C623DF06697B1D0006C387 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Growl-Info.plist";
+			path = "Plists/Growl-Info.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52C623E006697B1D0006C387 = {
+			fileRef = 52C623DF06697B1D0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52C623E106697B3B0006C387 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GrowlDefines.h;
+			path = Plugins/Growl/GrowlDefines.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52C623E206697B3B0006C387 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHGrowlPlugin.h;
+			path = Plugins/Growl/NEHGrowlPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52C623E306697B3B0006C387 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHGrowlPlugin.m;
+			path = Plugins/Growl/NEHGrowlPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52C623E406697B3B0006C387 = {
+			fileRef = 52C623E106697B3B0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52C623E506697B3B0006C387 = {
+			fileRef = 52C623E206697B3B0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52C623E606697B3B0006C387 = {
+			fileRef = 52C623E306697B3B0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //520
 //521
 //522
@@ -20243,21 +20433,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		BFEBD9770669022300CBF845 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = BFEBDBF60669024700CBF845;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		BFEBDBF60669024700CBF845 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		BFEBDBF90669025600CBF845 = {
 			children = (
 				BFEBDC010669029900CBF845,
@@ -20344,7 +20519,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "WebAdium/WebAdium-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
