@@ -21,14 +21,27 @@
 #endif
 
 @implementation NSApplication (CBApplicationAdditions)
++ (BOOL)isOnTigerOrBetter
+{
+    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);	
+}
 - (BOOL)isOnTigerOrBetter
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);	
 }
 
++ (BOOL)isOnPantherOrBetter
+{
+    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
+}
 - (BOOL)isOnPantherOrBetter
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
+}
+
++ (BOOL)isOnJaguarOrBetter
+{
+    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_1);
 }
 - (BOOL)isOnJaguarOrBetter
 {
