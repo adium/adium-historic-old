@@ -6774,6 +6774,7 @@
 				34BD9D3F053146CC000AB133,
 				34BD9D40053146CC000AB133,
 				34BD9D41053146CC000AB133,
+				4B03DDF40533AC59002B2CA3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15078,6 +15079,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B03DDF30533AC59002B2CA3 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = pref8.tif;
+			path = Source/icons/pref8.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B03DDF40533AC59002B2CA3 = {
+			fileRef = 4B03DDF30533AC59002B2CA3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B04137C041111F200A8010A = {
 			expectedFileType = text.plist;
 			fileEncoding = 30;
@@ -19842,6 +19857,7 @@
 				4B0AABAC05228F9700A8010A,
 				4B0AABAD05228F9700A8010A,
 				4B0AABAE05228F9700A8010A,
+				4B03DDF30533AC59002B2CA3,
 			);
 			isa = PBXGroup;
 			name = Icons;

@@ -14,18 +14,14 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-
-@interface AIAwayStatusWindowPreferences : NSObject {
-    AIAdium				*owner;
-    IBOutlet	NSView			*view_prefView;
+@interface AIAwayStatusWindowPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_showAway;
     IBOutlet	NSButton		*checkBox_floatAway;
     IBOutlet 	NSButton		*checkBox_hideInBackground;
-    
 }
 
-+ (AIAwayStatusWindowPreferences *)awayStatusWindowPreferencesWithOwner:(id)inOwner;
 - (IBAction)toggleShowAway:(id)sender;
 - (IBAction)toggleHideInBackground:(id)sender;
 - (IBAction)toggleFloatAway:(id)sender;

@@ -1381,6 +1381,7 @@
 				D3DA2E3B052E657600A8010B,
 				D3DA2E3D052E657C00A8010B,
 				348B18340530CB7D00FF26A8,
+				D35BB1A50533AD1C00A8010B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13477,6 +13478,7 @@
 				4B0AABAC05228F9700A8010A,
 				4B0AABAD05228F9700A8010A,
 				4B0AABAE05228F9700A8010A,
+				D35BB1A40533AD1C00A8010B,
 			);
 			isa = PBXGroup;
 			name = Icons;
@@ -15088,6 +15090,18 @@
 		};
 		D3376B43052BBC6700A8010B = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D35BB1A40533AD1C00A8010B = {
+			isa = PBXFileReference;
+			name = pref8.tif;
+			path = Source/icons/pref8.tif;
+			refType = 4;
+		};
+		D35BB1A50533AD1C00A8010B = {
+			fileRef = D35BB1A40533AD1C00A8010B;
 			isa = PBXBuildFile;
 			settings = {
 			};

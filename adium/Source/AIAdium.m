@@ -89,7 +89,7 @@
     if(notificationCenter == nil){
         notificationCenter = [[NSNotificationCenter alloc] init];
     }
-
+            
     return(notificationCenter);
 }
 
@@ -98,6 +98,7 @@
 {
     [eventNotifications setObject:[NSDictionary dictionaryWithObjectsAndKeys:inNotification, KEY_EVENT_NOTIFICATION, displayName, KEY_EVENT_DISPLAY_NAME, nil] forKey:inNotification];
 }
+
 
 - (NSDictionary *)eventNotifications
 {
