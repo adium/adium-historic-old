@@ -6,11 +6,14 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
-            ACTIONS = {selectBehaviorSet = id; }; 
-            CLASS = AIDockBehaviorPreferences; 
+            ACTIONS = {closeWindow = id; deleteEvent = id; newEvent = id; }; 
+            CLASS = AIDockCustomBehavior; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_behaviorSet" = NSPopUpButton; }; 
-            SUPERCLASS = AIPreferencePane; 
+            OUTLETS = {
+                "popUp_addEvent" = NSPopUpButton; 
+                "tableView_events" = AIAlternatingRowTableView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {
             ACTIONS = {changePreference = id; }; 

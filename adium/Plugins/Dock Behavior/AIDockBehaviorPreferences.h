@@ -14,28 +14,19 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium, AIAlternatingRowTableView;
+@class AIAdium, AIAlternatingRowTableView, AIDockCustomBehavior, AIDockBehaviorPlugin;
 
-@interface AIDockBehaviorPreferences : NSObject {
-    AIAdium					*owner;
-
-    IBOutlet	AIAlternatingRowTableView	*tableView_events;
-    IBOutlet	NSButton			*button_delete;
-    IBOutlet	NSPopUpButton			*popUp_addEvent;
-    IBOutlet	NSPopUpButton			*popUp_behaviorSet;
+@interface AIDockBehaviorPreferences : AIPreferencePane {
+    AIDockBehaviorPlugin		*plugin;
     
-    IBOutlet	NSView				*view_prefView;
-
-    NSMutableArray				*behaviorArray;
-
-    BOOL				usingCustomBehavior;
+    IBOutlet	NSPopUpButton		*popUp_behaviorSet;
+    
+    AIDockCustomBehavior		*dockBehaviorCustomPanel;
 }
 
-+ (id)dockBehaviorPreferencesWithOwner:(id)inOwner;
-
-
++ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner;
 - (IBAction)selectBehaviorSet:(id)sender;
-- (IBAction)deleteEvent:(id)sender;
 
 @end

@@ -14,32 +14,22 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 
-#define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
+@class AIAdium, AIAlternatingRowTableView, AIDockBehaviorPlugin;
 
-#define KEY_DOCK_CUSTOM_BEHAVIOR			@"Custom Behavior"
-#define KEY_DOCK_ACTIVE_BEHAVIOR_SET			@"Active Behavior Set"
-
-#define KEY_DOCK_EVENT_BEHAVIOR				@"Behavior"
-#define	KEY_DOCK_EVENT_NOTIFICATION			@"Notification"
-
-@class AIDockBehaviorPreferences;
-
-@interface AIDockBehaviorPlugin : AIPlugin {
-    AIDockBehaviorPreferences 	*preferences;
-
-    NSMutableDictionary		*behaviorDict;
-    NSArray			*presetBehavior;
+@interface AIDockCustomBehavior : NSWindowController {
+    AIAdium					*owner;
+    AIDockBehaviorPlugin			*plugin;
+    
+    IBOutlet	AIAlternatingRowTableView	*tableView_events;
+    IBOutlet	NSPopUpButton			*popUp_addEvent;    
+    NSMutableArray				*behaviorArray;
 }
 
-- (void)installPlugin;
-
-- (void)setActivePreset:(NSString *)presetName;
-- (NSString *)activePreset;
-- (NSArray *)behaviorForPreset:(NSString *)presetName;
-- (void)setCustomBehavior:(NSArray *)inBehavior;
-- (NSArray *)customBehavior;
-- (NSArray *)availablePresets;
++ (id)showDockBehaviorCustomPanelWithPlugin:(id)inPlugin owner:(id)inOwner;
++ (void)closeDockBehaviorCustomPanel;
+- (IBAction)deleteEvent:(id)sender;
+- (IBAction)closeWindow:(id)sender;
+- (IBAction)newEvent:(id)sender;
 
 @end

@@ -14241,7 +14241,11 @@
 				9CDF247703E8CBAA000001C9,
 				9CDF247903E8CBBC000001C9,
 				9CDF247B03E8CBC6000001C9,
+				D31CCB67053514EF00A8010B,
+				D31CCB69053514EF00A8010B,
+				D31CCB68053514EF00A8010B,
 				4B68D3880463330600A8010A,
+				D31CCB6A053514EF00A8010B,
 			);
 			isa = PBXGroup;
 			name = "Dock Behavior";
@@ -14309,6 +14313,7 @@
 			files = (
 				4B72129003DE1C8B00A8010A,
 				9CDF247803E8CBAA000001C9,
+				D31CCB6B053514EF00A8010B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14318,6 +14323,8 @@
 			files = (
 				9CDF247C03E8CBC6000001C9,
 				4B68D3890463330600A8010A,
+				D31CCB6C053514EF00A8010B,
+				D31CCB6E053514EF00A8010B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14327,6 +14334,7 @@
 			files = (
 				4B72128F03DE1C8A00A8010A,
 				9CDF247A03E8CBBC000001C9,
+				D31CCB6D053514EF00A8010B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14880,6 +14888,57 @@
 		};
 		D30898100534FDA900A8010B = {
 			fileRef = D308980D0534FDA900A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D31CCB67053514EF00A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockCustomBehavior.h;
+			path = "Plugins/Dock Behavior/AIDockCustomBehavior.h";
+			refType = 4;
+		};
+		D31CCB68053514EF00A8010B = {
+			isa = PBXFileReference;
+			name = DockBehaviorCustom.nib;
+			path = "Plugins/Dock Behavior/DockBehaviorCustom.nib";
+			refType = 4;
+		};
+		D31CCB69053514EF00A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockCustomBehavior.m;
+			path = "Plugins/Dock Behavior/AIDockCustomBehavior.m";
+			refType = 4;
+		};
+		D31CCB6A053514EF00A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DockBehaviorPresets.plist;
+			path = "Plugins/Dock Behavior/DockBehaviorPresets.plist";
+			refType = 4;
+		};
+		D31CCB6B053514EF00A8010B = {
+			fileRef = D31CCB67053514EF00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D31CCB6C053514EF00A8010B = {
+			fileRef = D31CCB68053514EF00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D31CCB6D053514EF00A8010B = {
+			fileRef = D31CCB69053514EF00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D31CCB6E053514EF00A8010B = {
+			fileRef = D31CCB6A053514EF00A8010B;
 			isa = PBXBuildFile;
 			settings = {
 			};

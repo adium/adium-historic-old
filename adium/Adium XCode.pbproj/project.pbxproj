@@ -13490,6 +13490,7 @@
 			files = (
 				34BDA12605314821000AB133,
 				34BDA12705314821000AB133,
+				4B791AF805350B930000969C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13511,6 +13512,8 @@
 			files = (
 				34BDA12905314821000AB133,
 				34BDA12A05314821000AB133,
+				4B791AFA05350B930000969C,
+				4B791B2D05350BA20000969C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13532,6 +13535,7 @@
 			files = (
 				34BDA12C05314821000AB133,
 				34BDA12D05314821000AB133,
+				4B791AF905350B930000969C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17272,6 +17276,65 @@
 			settings = {
 			};
 		};
+		4B791AF505350B930000969C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockCustomBehavior.h;
+			path = "Plugins/Dock Behavior/AIDockCustomBehavior.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791AF605350B930000969C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockCustomBehavior.m;
+			path = "Plugins/Dock Behavior/AIDockCustomBehavior.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791AF705350B930000969C = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = DockBehaviorCustom.nib;
+			path = "Plugins/Dock Behavior/DockBehaviorCustom.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791AF805350B930000969C = {
+			fileRef = 4B791AF505350B930000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791AF905350B930000969C = {
+			fileRef = 4B791AF605350B930000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791AFA05350B930000969C = {
+			fileRef = 4B791AF705350B930000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791B2C05350BA20000969C = {
+			expectedFileType = text.plist;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DockBehaviorPresets.plist;
+			path = "Plugins/Dock Behavior/DockBehaviorPresets.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791B2D05350BA20000969C = {
+			fileRef = 4B791B2C05350BA20000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B79E4F2046D67FC0018AE8B = {
 			expectedFileType = image.tiff;
 			isa = PBXFileReference;
@@ -20309,7 +20372,11 @@
 				9CDF247703E8CBAA000001C9,
 				9CDF247903E8CBBC000001C9,
 				9CDF247B03E8CBC6000001C9,
+				4B791AF505350B930000969C,
+				4B791AF605350B930000969C,
+				4B791AF705350B930000969C,
 				4B68D3880463330600A8010A,
+				4B791B2C05350BA20000969C,
 			);
 			isa = PBXGroup;
 			name = "Dock Behavior";

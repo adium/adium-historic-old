@@ -6,25 +6,5 @@
 	<string>None</string>
 	<key>Custom Behavior</key>
 	<array/>
-	<key>Dock Behavior Sets</key>
-	<dict>
-		<key>Basic</key>
-		<array>
-			<dict>
-				<key>Behavior</key>
-				<integer>1</integer>
-				<key>Notification</key>
-				<string>Content_DidReceiveContent</string>
-			</dict>
-                        <dict>
-                                <key>Behavior</key>
-                                <integer>2</integer>
-                                <key>Notification</key>
-                                <string>Interface_ErrorMessageRecieved</string>
-                        </dict>
-		</array>
-		<key>None</key>
-		<array/>
-	</dict>
 </dict>
 </plist>
