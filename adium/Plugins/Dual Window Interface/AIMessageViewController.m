@@ -87,8 +87,15 @@
 	//Create the message view
 	messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
 
-	[[scrollView_messages superview] replaceSubview:scrollView_messages with:[messageViewController messageView]];
-	scrollView_messages = [messageViewController messageView];
+	//Get the messageView from the controller
+	controllerView_messages = [messageViewController messageView];
+	[controllerView_messages setNextResponder:textView_outgoing];
+	
+	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
+	[[scrollView_messages superview] replaceSubview:scrollView_messages with:controllerView_messages];
+	
+	//scrollView_messages should now be a scroll view from the controller; it may or may not be the same as controllerView_messages
+	scrollView_messages = [messageViewController messageScrollView];
 	[scrollView_messages setNextResponder:textView_outgoing];
 
 //	[[scrollView_messages superview] addSubview:[messageViewController messageView]];
@@ -415,7 +422,7 @@
     }
 
     //Messages
-    [scrollView_messages setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width, superFrame.size.height)];
+    [controllerView_messages setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width, superFrame.size.height)];
 }
 
 //User List
