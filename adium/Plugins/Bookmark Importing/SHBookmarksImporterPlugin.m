@@ -38,7 +38,6 @@
 													keyEquivalent:@""] autorelease];
 		[bookmarkRootMenuItem setRepresentedObject:self];
 		[bookmarkRootMenuItem setSubmenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
-		[[bookmarkRootMenuItem submenu] setDelegate:self];
 		[[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
 		
 		//Contextual bookmark menu item
@@ -48,7 +47,6 @@
 															  keyEquivalent:@""] autorelease];
 		[bookmarkRootContextualMenuItem setRepresentedObject:self];
 		[bookmarkRootContextualMenuItem setSubmenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
-		[[bookmarkRootContextualMenuItem submenu] setDelegate:self];
 		[[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
 		
 		//Wait for Adium to finish launching before we build the content of our menus
