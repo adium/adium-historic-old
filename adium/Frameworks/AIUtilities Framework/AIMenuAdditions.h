@@ -38,7 +38,8 @@
 
 @end
 
-@interface NSMenuItem (ESMenuItemAdditions)
+//Note: AdditionsFromCarbonMenuManager require the menu item already be added to a menu. 
+@interface NSMenuItem (AdditionsFromCarbonMenuManager)
 - (void)setDynamic:(BOOL)dynamic;
 - (BOOL)isDynamic;
 - (void)setHidden:(BOOL)hidden;
