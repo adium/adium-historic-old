@@ -113,19 +113,25 @@
 #define PATHSIZE 1024
 
 #include <glib.h>
+#if GLIB_CHECK_VERSION(2,6,0)
+#	include <glib/gstdio.h>
+#endif
 
 #ifdef _WIN32
 #include "win32dep.h"
 #endif
 
-/* stupid, stupid, stupid */
-/* This is a workaround for the fact that G_GINT64_MODIFIER and
- * G_GUINT64_FORMAT are wrong, even in Glib >= 2.4 */
-#ifdef _WIN32
-#	undef  G_GINT64_MODIFIER
-#	define G_GINT64_MODIFIER "ll"
-#	undef  G_GUINT64_FORMAT
-#	define G_GUINT64_FORMAT "llu"
+#if !GLIB_CHECK_VERSION(2,6,0)
+#	define g_freopen freopen
+#	define g_fopen fopen
+#	define g_rmdir rmdir
+#	define g_remove remove
+#	define g_unlink unlink
+#	define g_lstat lstat
+#	define g_stat stat
+#	define g_mkdir mkdir
+#	define g_rename rename
+#	define g_open open
 #endif
 
 /* ugly ugly ugly */
