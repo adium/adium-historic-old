@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define LOGIN_PREFERENCES_FILE_NAME @"Login Preferences"	//Login preferences file name
-#define LOGIN_HIDE_WINDOW 			@"Hide Login Window"	//Should hide the login window 
+#define LOGIN_SHOW_WINDOW 			@"Show Login Window"	//Should hide the login window 
 #define LOGIN_LAST_USER				@"Last Login Name"		//Last logged in user
 
 @class AILoginWindowController;

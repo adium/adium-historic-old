@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AILoginController.m,v 1.10 2003/12/23 16:50:41 adamiser Exp $
+// $Id: AILoginController.m,v 1.11 2004/03/02 02:47:17 adamiser Exp $
 
 #import "AILoginController.h"
 #import "AILoginWindowController.h"
@@ -66,10 +66,11 @@
 
         //Set 'default' as the login of choice
         [loginDict setObject:DEFAULT_USER_NAME forKey:LOGIN_LAST_USER];
+		[loginDict writeToPath:[AIAdium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME];
     }
 
     //Show the login select window?
-    if([NSEvent optionKey] || [[loginDict objectForKey:LOGIN_HIDE_WINDOW] boolValue] || [loginDict objectForKey:LOGIN_LAST_USER] == nil){
+    if([NSEvent optionKey] || [[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue] || [loginDict objectForKey:LOGIN_LAST_USER] == nil){
 
         //Prompt for the user
         loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
