@@ -26,4 +26,16 @@
 	gaim_account_set_bool(account, "use_full_username", TRUE);
 }
 
+/*!
+* @brief Connect Host
+ *
+ * Convenience method for retrieving the connect host for this account
+ *
+ * Overridden here to return Antepo the default behavior, since normal Jabber overrides this method.
+ */
+- (NSString *)host
+{
+	return([self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS]);
+}
+
 @end

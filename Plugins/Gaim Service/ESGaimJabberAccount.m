@@ -30,10 +30,10 @@ static NSDictionary		*presetStatusesDictionary = nil;
 {
 	if (!presetStatusesDictionary){
 		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			AILocalizedString(@"Away",nil),				[NSNumber numberWithInt:JABBER_STATE_AWAY],
-			AILocalizedString(@"Chatty",nil),			[NSNumber numberWithInt:JABBER_STATE_CHAT],
-			AILocalizedString(@"Extended Away",nil),	[NSNumber numberWithInt:JABBER_STATE_XA],
-			AILocalizedString(@"Do Not Disturb",nil),	[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
+			STATUS_DESCRIPTION_AWAY,			[NSNumber numberWithInt:JABBER_STATE_AWAY],
+			STATUS_DESCRIPTION_FREE_FOR_CHAT,	[NSNumber numberWithInt:JABBER_STATE_CHAT],
+			STATUS_DESCRIPTION_EXTENDED_AWAY,	[NSNumber numberWithInt:JABBER_STATE_XA],
+			STATUS_DESCRIPTION_DND,				[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
 	}
 	
 	[super initAccount];
@@ -86,21 +86,22 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	NSString	*resource, *userNameWithHost = nil, *completeUserName = nil;
 	BOOL		serverAppendedToUID;
 	
-	//Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
-	//createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
-	//than once.
-	//If the user puts the username in username@server format, which is common for Jabber, we should
-	//handle this gracefully, ignoring the server preference entirely.
+	/*
+	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	 * createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
+	 * than once.
+	 * The user should put the username in username@server format, which is common for Jabber. If the user does
+	 * not specify the server, use jabber.org.
+	 */
+
 	serverAppendedToUID = ([UID rangeOfString:@"@"].location != NSNotFound);
 
-	//NSLog(@"%i: %@",serverAppendedToUID,UID);
-	
 	if (serverAppendedToUID){
 		userNameWithHost = UID;
 	}else{
-		userNameWithHost = [NSString stringWithFormat:@"%@@%@",UID,[self host]];
+		userNameWithHost = [NSString stringWithFormat:@"%@@jabber.org",UID];
 	}
-	
+
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
 	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 
@@ -108,6 +109,25 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	gaim_account_set_username(account, [completeUserName UTF8String]);
 }
 
+/*!
+* @brief Connect Host
+ *
+ * Convenience method for retrieving the connect host for this account
+ *
+ * Rather than having a separate server field, Jabber uses the servername after the user name.
+ * username@server.org
+ */
+- (NSString *)host
+{
+	int location = [UID rangeOfString:@"@"].location;
+	if((location != NSNotFound) && (location + 1 < [UID length])){
+		return [UID substringFromIndex:(location + 1)];
+	}else{
+		//If that fails for some reason, fall back on [super host], which probably returns nil, but
+		//really, you never know ;)
+		return [super host];
+	}
+}
 
 #pragma mark Status
 
@@ -285,13 +305,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			if (msg){
 				statusMsgString = [NSString stringWithUTF8String:msg];
 			}
-			//If no custom status message, but the buddy's uc matches the UC_UNAVAILABLE mask, lookup the preset string for the status
-			if (!statusMsgString && (buddy->uc & UC_UNAVAILABLE)){
+			//If no custom status message, lookup the preset string for the status
+			if (!statusMsgString){
 				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:buddy->uc]];
 			}
 			
 			//Update as necessary
-			if ([statusMsgString length] && ![statusMsgString isEqualToString:@"Online"]) {
+			if ([statusMsgString length]) {
 				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
 					NSAttributedString *attrStr;
 					
