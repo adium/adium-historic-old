@@ -84,13 +84,11 @@
 
 - (void)openChat:(AIChat *)inChat
 {
-	NSLog(@"Hit: %@", [inChat participatingListObjects]);
 	[windowController addChat:inChat];
 }
 
 - (void)closeChat:(AIChat *)inChat
 {
-	NSLog(@"Close chat: %@", [inChat participatingListObjects]);
 	[windowController closeChat:inChat];
 	[inChat removeAllContent];
 }

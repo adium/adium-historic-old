@@ -72,11 +72,7 @@
 														  to:folderName];
 				
 				//Not sure why, but I've had that alloc fail on me before
-				if(toGroup){
-					[toGroupArray addObject:toGroup];
-				}else{
-					NSLog(@"FAILED to alloc toGroup %@, trying again",[path stringByAppendingPathComponent:folderName]);
-				}
+				if(toGroup) [toGroupArray addObject:toGroup];
 			}
 			
 			[toGroup release];

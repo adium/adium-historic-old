@@ -56,8 +56,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 			row = [msg characterAtIndex:0] - '0';
 			col = [msg characterAtIndex:2] - '0';
 			[self move:(player == PLAYER_X ? PLAYER_O : PLAYER_X) atRow:row atColumn:col];
-		} else {
-			NSLog(@"TTT:Move message received with state %d.", state);
 		}
 	}
 	[super handleMessage:msg ofType:type];

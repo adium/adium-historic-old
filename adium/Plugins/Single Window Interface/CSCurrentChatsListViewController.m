@@ -70,15 +70,12 @@
 		NSEnumerator *messageViewControllerEnumerator = [messageViewControllerArray objectEnumerator];
 		
 		while (currentMessageViewController = [messageViewControllerEnumerator nextObject]) {
-			NSLog(@"Looking through");
 			if ([currentMessageViewController chat] == inChat) break;
 		}
-		NSLog(@"Message view was found");
 	} else {
 		currentMessageViewController = [[AIMessageViewController messageViewControllerForChat:inChat] retain];
 		[messageViewControllerArray addObject:currentMessageViewController];
 		[view reloadData];
-		NSLog(@"Message view was created, not found");
 	}
 	return (currentMessageViewController);
 }
@@ -127,7 +124,6 @@
 - (void)_tableClicked
 {
 	int	selectedRow = [view selectedRow];
-	NSLog(@"Table Clicked: %d", selectedRow);
     if(selectedRow >=0 && selectedRow < [messageViewControllerArray count]){
         [[adium interfaceController] setActiveChat:[self activeChat]];
     }

@@ -39,7 +39,6 @@
             killRange = [[localString lowercaseString] rangeOfString:[killString lowercaseString]];
             if(NSNotFound != killRange.location){
                 killCount++;
-                NSLog(@"\"%@\" found, killCount now: %i",killString,killCount);
             }
         }
     }

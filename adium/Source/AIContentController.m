@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.93 2004/07/19 19:12:45 adamiser Exp $
+// $Id: AIContentController.m,v 1.94 2004/07/22 16:46:26 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -479,7 +479,6 @@
 			[chatArray addObject:chat];
 
 			//Inform the account of its creation and post a notification if successful
-//			NSLog(@"chatWithContact %@",[inContact UID]);
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
 				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
 			}else{
@@ -510,12 +509,9 @@
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
-//		NSLog(@"Checking %@ (%@) against %@ (%@)",[[chat listObject] UID],[chat listObject],[inContact UID],inContact);
 		//If a chat for this object already exists
 		if([chat listObject] == inContact) break;
 	}
-	
-//	NSLog(@"returning %@",chat);
 	
 	return chat;
 }
@@ -535,7 +531,6 @@
 			[chatArray addObject:chat];
 			
 			//Inform the account of its creation and post a notification if successful
-//			NSLog(@"chatWithName %@",inName);
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
 				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
 			}else{
@@ -599,7 +594,6 @@
 	
 	//Open the chat on account B 
 	[chat addParticipatingListObject:newContact];
-//	NSLog(@"switching %@ to %@",chat,[newAccount UID]);
 	[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
 	[chat setAccount:newAccount];
 	

@@ -142,11 +142,9 @@
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
         [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-        NSLog(@"available");
         
     }else if([title compare:STATUS_NAME_OFFLINE] == 0){ //Offline
 	[[adium accountController] disconnectAllAccounts];
-	NSLog(@"offline");
     }
 }
 

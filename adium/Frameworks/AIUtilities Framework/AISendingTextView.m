@@ -79,47 +79,6 @@
 	}
 }
 
-//Catch new lines as they're inserted
-/*
-- (void)insertText:(id)aString
-{
-    BOOL 		insertText = YES;
-	NSString	*theString;
-	
-	if([aString isKindOfClass:[NSString class]]){
-        theString = aString;
-    }else if([aString isKindOfClass:[NSAttributedString class]]){
-        theString = [aString string];
-    }
-	
-    //Catch newlines as they're inserted
-	NSLog(@"inserting \"%@\" (%i)",theString,[theString length]);
-	int length = [theString length];
-	if (length){
-		if([theString characterAtIndex:0] == 10){
-			NSLog(@"return with returnArray: %@",returnArray);
-			if([returnArray count]){
-				
-				if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
-					if(sendingEnabled) [self sendContent:nil]; //Send the content
-					insertText = NO;
-				}
-				[returnArray removeObjectAtIndex:0]; //remove the return
-			}
-		}else if (length > 1){
-			if([returnArray count]){
-//				[returnArray removeObjectAtIndex:0]; //remove the return
-				[returnArray removeAllObjects];
-				NSLog(@"*** return array becomes: %@",returnArray);
-
-			}
-		}
-	}
-
-	if(insertText) [super insertText:aString];
-}
-*/
-
 // special characters only work at the end of a string of input
 - (void)insertText:(id)aString
 {
@@ -155,71 +114,7 @@
 	if(insertText) [super insertText:aString];
 }
 
-
-/*
-//Catch returns and enters as they're pressed
-- (void)interpretKeyEvents:(NSArray *)eventArray
-{
-    int 	index = 0;
-    BOOL 	send;
-    if ([eventArray count] > 1) NSLog(@"Got %i events:",[eventArray count]);
-    while(index < [eventArray count]){
-        NSEvent		*theEvent = [eventArray objectAtIndex:index];
-        unsigned short 	keyCode = [theEvent keyCode];
-
-		NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
-		NSString *characters = [theEvent characters];
-		
-		if([charactersIgnoringModifiers length]) {
-			
-//			unichar key = [charactersIgnoringModifiers characterAtIndex:0];
-			unichar key = [characters characterAtIndex:0];      
-			// get flags and strip the lower 16 (device dependant) bits
-			unsigned int flags = ( [theEvent modifierFlags] & 0x00FF );
-			
-			switch (key){
-				case NSParagraphSeparatorCharacter:
-					NSLog(@"NSParagraphSeparatorCharacter");
-					break;
-				case NSLineSeparatorCharacter:
-					NSLog(@"NSLineSeparatorCharacter");
-					break;
-				case NSFormFeedCharacter:
-					NSLog(@"NSFormFeedCharacter");
-					break;
-				case NSNewlineCharacter:
-					NSLog(@"NSNewlineCharacter");
-					break;
-				case NSCarriageReturnCharacter:
-					NSLog(@"NSCarriageReturnCharacter");
-					break;	
-					
-				case NSEnterCharacter:
-					NSLog(@"NSEnterCharacter");
-					break;	
-			}
-			
-			NSLog(@"keyCode is %i (%i)",keyCode,(keyCode == 36 || keyCode == 76 || keyCode == 52));
-			// NSEnterCharacter - enter
-			// NSCarriageReturnCharacter - return
-			//NSLog(@"delay 'em? %i",[[NSInputManager currentInputManager] wantsToDelayTextChangeNotifications]);
-			if(keyCode == 36 || keyCode == 76 || keyCode == 52){ //if return or enter is pressed
-				if([theEvent optionKey]){ //if option is pressed as well, the return always goes through
-					[returnArray addObject:[NSNumber numberWithBool:NO]];
-				}else{
-					send = ((keyCode == 36 && sendOnReturn) || ((keyCode == 76 || keyCode == 52) && sendOnEnter));
-					[returnArray addObject:[NSNumber numberWithBool:send]];
-				}
-			}
-		}
-		index++;
-	}
-	
-	[super interpretKeyEvents:eventArray];
-}
-*/
-
-
+//
 - (void)interpretKeyEvents:(NSArray *)eventArray
 {
 	int 	index = 0;
@@ -234,13 +129,7 @@
             if (lastChar == NSCarriageReturnCharacter) {
                 nextIsEnter = NO;
 				nextIsReturn = YES;
-/*
-                if (!([theEvent modifierFlags] & NSShiftKeyMask)) {
-                    _sendNextRet=YES;
-                } else {
-                    _sendNextRet=NO;
-                }
-*/				
+
 				optionPressedWithNext = ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
 				
             } else if (lastChar == NSEnterCharacter) {

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.93 2004/07/15 18:29:27 evands Exp $
+// $Id: AIAccountController.m,v 1.94 2004/07/22 16:46:26 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -161,7 +161,6 @@
             if(newAccount = [self createAccountOfType:serviceType withUID:accountUID objectID:objectID]){
                 [accountArray addObject:newAccount];
             }else{
-				NSLog(@"Unable to load account %i: %@, %@", objectID, serviceType, accountUID);
 				[unloadableAccounts addObject:accountDict];
 			}
         }
@@ -242,8 +241,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //the service of accounts and contacts should be presented to the user.
 - (NSArray *)activeServiceTypes
 {
-	NSLog(@"call");
-	if (!_cachedActiveServiceTypes){
+	if(!_cachedActiveServiceTypes){
 		NSMutableArray	*serviceArray = [NSMutableArray array];
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		AIAccount		*account;

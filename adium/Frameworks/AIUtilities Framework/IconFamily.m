@@ -489,8 +489,6 @@
 	    return NO;
     }
 	
-	// NSLog(@"setIconFamilyElement:%@ fromBitmapImageRep:%@ generated handle %p of size %d", NSFileTypeForHFSTypeCode(elementType), bitmapImageRep, hRawData, GetHandleSize(hRawData));
-	
     if (hRawData == NULL)
 	{
 		NSLog(@"Null data returned to setIconFamilyElement:fromBitmapImageRep:");

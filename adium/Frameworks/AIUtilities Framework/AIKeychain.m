@@ -140,14 +140,8 @@ SecAccessRef createAccess(NSString *accessLabel)
 	}
 	
 	//Cleanup
-	if (itemRef) CFRelease(itemRef);
-	
-	if (ret != noErr){
-		NSLog(@"putPasswordInKeychain: Keychain error number %d",ret);
-		return NO;
-	}
-	
-	return YES;
+	if(itemRef) CFRelease(itemRef);
+	return(ret == noErr);
 }
 
 // Removes a password from the keychain
@@ -163,14 +157,8 @@ SecAccessRef createAccess(NSString *accessLabel)
     if (ret == noErr) SecKeychainItemDelete(itemRef);
 	
 	//Cleanup
-	if (itemRef) CFRelease(itemRef);
-	
-	if (ret != noErr){
-		NSLog(@"removePasswordFromKeychain: Keychain error number %d",ret);
-		return NO;
-	}
-	
-	return YES;
+	if(itemRef) CFRelease(itemRef);
+	return(ret == noErr);
 }
 
 //Next two functions are from the http-mail project.

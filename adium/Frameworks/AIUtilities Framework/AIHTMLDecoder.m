@@ -219,13 +219,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							   (color && ![color isEqualToString:currentColor]) ||
 							   (!color && currentColor))){
 		
-			/*
-			 NSLog(@"%i %i %i %i",pointSize != currentSize,
-								  ![familyName isEqualToString:currentFamily],
-								  ![color isEqualToString:currentColor],
-				  (currentColor && !color));
-			 */
-			
             //Close any existing font tags, and open a new one
             if(closeFontTags && openFontTag){
                 [string appendString:CloseFontTag];
@@ -438,8 +431,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 									}
 								}
 								
-							}else{
-								NSLog(@"Look, NSFileWrapper is stupid.  I don't know how you got here, but I can't help.  Maybe your network administrator can, I dunno.");
 							}
 						}
 					}

@@ -102,8 +102,6 @@
                                                 onService:@"Jabber"
                                                 withMessage:nil];
         }
-    }else{
-        NSLog(@"invalid URL");
     }
 }
 
