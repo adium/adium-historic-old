@@ -75,7 +75,8 @@ typedef enum {
 - (IBAction)deleteSelectedLogs:(id)sender;
 - (IBAction)toggleEmoticonFiltering:(id)sender;
 - (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode;
-- (void)resetSearch;
+- (void)setSearchMode:(LogSearchMode)inMode;
+- (void)setSearchString:(NSString *)inString;
 - (NSMutableArray *)fromArray;
 - (NSMutableArray *)toServiceArray;
 - (NSMutableArray *)fromServiceArray;
