@@ -21,6 +21,7 @@
     IBOutlet NSButton       *checkBox_showHidden;
     IBOutlet NSButton       *checkBox_showAway;
     IBOutlet NSButton       *checkBox_includeText;
+	IBOutlet NSButton		*checkBox_ignoreClicks;
 }
 
 - (IBAction)changePreference:(id)sender;

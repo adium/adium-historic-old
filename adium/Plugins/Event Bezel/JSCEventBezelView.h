@@ -21,6 +21,7 @@
 	
 	NSBezierPath	*backgroundBorder;
 	NSBezierPath	*backgroundContent;
+	BOOL			ignoringClicks;
 }
 
 - (NSImage *)buddyIconImage;
@@ -35,5 +36,8 @@
 - (void)setBuddyIconLabelColor:(NSColor *)newColor;
 - (NSColor *)buddyNameLabelColor;
 - (void)setBuddyNameLabelColor:(NSColor *)newColor;
+
+- (BOOL)ignoringClicks;
+- (void)setIgnoringClicks:(BOOL)ignoreClicks;
 
 @end

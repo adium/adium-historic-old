@@ -59,11 +59,9 @@ JSCEventBezelController *sharedEventBezelInstance = nil;
 	NSData  *autosaveFrame;
     [[self window] setBackgroundColor: [NSColor clearColor]];
     [[self window] setLevel: NSStatusWindowLevel];
-    [[self window] setIgnoresMouseEvents:NO];
 	[[self window] setMovableByWindowBackground:YES];
     [[self window] setAlphaValue:1.0];
     [[self window] setOpaque:NO];
-    [[self window] setHasShadow:YES];
 	autosaveFrame = [[NSUserDefaults standardUserDefaults] objectForKey: AUTOFRAME_KEY];
 	if (!autosaveFrame) {
 		NSRect  defaultFrame = [[self window] frame];
@@ -88,8 +86,11 @@ JSCEventBezelController *sharedEventBezelInstance = nil;
 - (void)showBezelWithContact:(NSString *)contactName
 withImage:(NSImage *)buddyIcon
 forEvent:(NSString *)event
+ignoringClicks:(BOOL)ignoreClicks
 {
     if ([self window]) {
+		[bezelWindow setIgnoresMouseEvents:ignoreClicks];
+		[bezelView setIgnoringClicks:ignoreClicks];
 		if ([bezelWindow onScreen]) {
 			[bezelDataQueue addObject: contactName];
 			[bezelDataQueue addObject: buddyIcon];
@@ -106,7 +107,9 @@ forEvent:(NSString *)event
 			[bezelWindow setDisplayDuration: bezelDuration];
 			
 			[self showWindow:nil];
-			[bezelView setNeedsDisplay: YES];
+			[bezelWindow setHasShadow:!ignoreClicks];
+			[bezelWindow compatibleInvalidateShadow];
+			[bezelWindow setViewsNeedDisplay:YES];
 			[bezelWindow showBezelWindow];
 		}
     }
