@@ -34,6 +34,7 @@
 {
 	[contactListView setDelegate:nil];
 	if (tooltipTracker){
+		[tooltipTracker setDelegate:nil];
 		[tooltipTracker release]; tooltipTracker = nil;
 	}
 
@@ -60,6 +61,7 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
+	[tooltipTracker setDelegate:nil];
 	[tooltipTracker release]; tooltipTracker = nil;
 	
 	return YES;
@@ -183,7 +185,6 @@
 	[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 	
 	//Outline View
-	NSLog(@"set groupCell %@ contentCell %@",groupCell, contentCell);
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
 	[contactListView setNeedsDisplay:YES];
@@ -212,7 +213,6 @@
 	if ([contactListView respondsToSelector:@selector(setUpdateShadowsWhileDrawing:)]){
 		[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
 	}
-	//--
 }
 
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict

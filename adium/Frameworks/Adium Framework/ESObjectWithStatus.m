@@ -268,4 +268,10 @@ DeclareString(Value);
 {
 	return @"";
 }
+
+//Comparing
+- (BOOL)isEqual:(id)otherObject
+{
+	return (self == otherObject);
+}
 @end
