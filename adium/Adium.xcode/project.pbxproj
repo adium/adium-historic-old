@@ -1361,8 +1361,6 @@
 			children = (
 				34415BD1059FA9CE0019246B,
 				34415BCF059FA9CD0019246B,
-				34415BD2059FA9CE0019246B,
-				34415BD0059FA9CE0019246B,
 				342928080628BB4200BB9217,
 				342928090628BB4200BB9217,
 				342928340628BBE300BB9217,
@@ -1381,15 +1379,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34415BD0059FA9CE0019246B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESGaimYahooAccountViewController.m;
-			path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34415BD1059FA9CE0019246B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1399,35 +1388,14 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34415BD2059FA9CE0019246B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESGaimYahooAccountViewController.h;
-			path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34415BD3059FA9CE0019246B = {
 			fileRef = 34415BCF059FA9CD0019246B;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		34415BD4059FA9CE0019246B = {
-			fileRef = 34415BD0059FA9CE0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34415BD5059FA9CE0019246B = {
 			fileRef = 34415BD1059FA9CE0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34415BD6059FA9CE0019246B = {
-			fileRef = 34415BD2059FA9CE0019246B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9132,10 +9100,12 @@
 		};
 		4B582A040613D4CA0004BD25 = {
 			children = (
-				4BC030360452E86200A8010A,
-				4BC030370452E86200A8010A,
+				F570A59003704AB901A8010A,
+				F570A59103704AB901A8010A,
 				346C970505FF8EEB000F5A8A,
 				346C970605FF8EEB000F5A8A,
+				4BC030360452E86200A8010A,
+				4BC030370452E86200A8010A,
 				4B5827EC0613CEB90004BD25,
 				4B5827ED0613CEB90004BD25,
 				34F2BC67059CC2840005B238,
@@ -9151,8 +9121,6 @@
 			children = (
 				4B910DBF053588A900846781,
 				4B910DC0053588A900846781,
-				F570A59003704AB901A8010A,
-				F570A59103704AB901A8010A,
 			);
 			isa = PBXGroup;
 			name = "PopUp Buttons";
@@ -10039,7 +10007,6 @@
 				34415A65059F9B9C0019246B,
 				34415B9D059FA8DF0019246B,
 				34415BD5059FA9CE0019246B,
-				34415BD6059FA9CE0019246B,
 				34415F89059FB7F40019246B,
 				34416072059FC27E0019246B,
 				34416087059FC2A40019246B,
@@ -10089,7 +10056,6 @@
 				34415A66059F9B9C0019246B,
 				34415B9E059FA8DF0019246B,
 				34415BD3059FA9CE0019246B,
-				34415BD4059FA9CE0019246B,
 				34415F88059FB7F40019246B,
 				34416073059FC27E0019246B,
 				34416088059FC2A40019246B,
