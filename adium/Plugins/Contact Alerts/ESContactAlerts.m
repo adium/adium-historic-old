@@ -375,7 +375,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 //determine if two instances of ESContactAlerts refer to the same contact
 - (BOOL)isEqual:(id)inInstance
 {
-    BOOL contactTest = ( [[activeContactObject UIDAndServiceID] compare:[[inInstance activeObject] UIDAndServiceID]] == 0 );
+    BOOL contactTest = ( [inInstance isKindOfClass:[self class]] && [[activeContactObject UIDAndServiceID] compare:[[inInstance activeObject] UIDAndServiceID]] == 0 );
     return contactTest;
 }
 //hash string is simply based on the UIDAndServiceID's NSString hash
