@@ -291,7 +291,7 @@
 		
 		detailsDict = [NSMutableDictionary dictionary];
 		[detailsDict setObject:[[chat account] uniqueObjectID] forKey:@"Account ID"];
-		[detailsDict setObject:[NSNumber numberWithBool:BOOL] forKey:@"Allow Other"];
+		[detailsDict setObject:[NSNumber numberWithBool:YES] forKey:@"Allow Other"];
 		[detailsDict setObject:[listObject uniqueObjectID] forKey:@"Destination ID"];
 		[detailsDict setObject:[[textView_outgoing textStorage] dataRepresentation] forKey:@"Message"];
 		
