@@ -15,16 +15,18 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initMultiCellOutlineView];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initMultiCellOutlineView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _initMultiCellOutlineView];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initMultiCellOutlineView];
+	}
+	return self;
 }
 
 - (void)_initMultiCellOutlineView

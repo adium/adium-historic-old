@@ -31,15 +31,15 @@
 
 - (id)initAllowingCharacters:(NSCharacterSet *)inCharacters length:(int)inLength caseSensitive:(BOOL)inCaseSensitive errorMessage:(NSString *)inErrorMessage
 {
-    [super init];
+	if((self = [super init])) {
+		errorMessage = [inErrorMessage retain];
+		characters = [inCharacters retain];
+		length = inLength;
+		caseSensitive = inCaseSensitive;
+		errorCount = 0;
+	}
 
-    errorMessage = [inErrorMessage retain];
-    characters = [inCharacters retain];
-    length = inLength;
-    caseSensitive = inCaseSensitive;
-    errorCount = 0;
-
-    return(self);
+	return(self);
 }
 
 - (NSString *)stringForObjectValue:(id)obj

@@ -35,22 +35,24 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initAutoScrollView];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initAutoScrollView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _initAutoScrollView];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initAutoScrollView];
+	}
+	return self;
 }
 
 - (void)_initAutoScrollView
 {
     autoScrollToBottom = NO;
-	inAutoScrollToBottom= NO;
+	inAutoScrollToBottom = NO;
     autoHideScrollBar = NO;
 	passKeysToDocumentView = NO;
 	

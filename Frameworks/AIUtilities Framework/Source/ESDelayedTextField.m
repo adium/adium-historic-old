@@ -18,15 +18,17 @@
 //Init the field
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _init];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		self = [self _init];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frame
 {
-	[super initWithFrame:frame];
-	[self _init];	
+	if((self = [super initWithFrame:frame])) {
+		[self _init];
+	}
 	return self;
 }
 

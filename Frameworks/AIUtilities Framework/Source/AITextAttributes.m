@@ -45,52 +45,50 @@
 //init
 - (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
 {
-    [self init];
+	if((self = [self init])) {
+		dictionary = [[NSMutableDictionary alloc] init];
 
-    dictionary = [[NSMutableDictionary alloc] init];
+		fontFamilyName = [inFamilyName retain];
+		fontTraitsMask = inTraits;
+		fontSize = inSize;
 
-    fontFamilyName = [inFamilyName retain];
-    fontTraitsMask = inTraits;
-    fontSize = inSize;
-
-    [self updateFont];
-
-    return(self);
+		[self updateFont];
+	}
+	return self;
 }
 
 - (id)initWithDictionary:(NSDictionary *)inAttributes
 {
-	[self init];
-	
-	dictionary = [inAttributes mutableCopy];
+	if((self = [self init])) {
+		dictionary = [inAttributes mutableCopy];
 
-	NSFont	*font = [dictionary objectForKey:NSFontAttributeName];
+		NSFont	*font = [dictionary objectForKey:NSFontAttributeName];
+
+		if(font) {
+			fontFamilyName = [[font familyName] retain];
+			fontTraitsMask = [[NSFontManager sharedFontManager] traitsOfFont:font];
+			fontSize = [font pointSize];
+		} else {
+			fontFamilyName = [@"Helvetica" retain];
+			fontTraitsMask = 0;
+			fontSize = 12;
+		}
 	
-	if(font){
-		fontFamilyName = [[font familyName] retain];
-		fontTraitsMask = [[NSFontManager sharedFontManager] traitsOfFont:font];
-		fontSize = [font pointSize];
-	}else{
-		fontFamilyName = [@"Helvetica" retain];
-		fontTraitsMask = 0;
-		fontSize = 12;
-	}
-	
-	[self updateFont];
-	
-	return(self);
+		[self updateFont];
+
+		return(self);
 }
 
 - (id)init
 {
-	[super init];
-	
-	dictionary = nil;
-	fontFamilyName = nil;
-	fontTraitsMask = 0;
-	fontSize = 0;
-	
-	return(self);
+	if((self = [super init])) {
+		dictionary = nil;
+		fontFamilyName = nil;
+		fontTraitsMask = 0;
+		fontSize = 0;
+	}
+
+	return self;
 }
 
 //dealloc

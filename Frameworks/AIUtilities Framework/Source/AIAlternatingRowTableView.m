@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAlternatingRowTableView.h"
-#import "BZGenericViewCell.h"
 
 /*
  A subclass of table view that adds:
@@ -34,16 +33,18 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initAlternatingRowTableView];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initAlternatingRowTableView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _initAlternatingRowTableView];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initAlternatingRowTableView];
+	}
+	return(self);
 }
 
 - (void)_initAlternatingRowTableView

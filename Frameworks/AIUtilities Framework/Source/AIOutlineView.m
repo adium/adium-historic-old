@@ -25,16 +25,18 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _initOutlineView];
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initOutlineView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-    [self _initOutlineView];
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initOutlineView];
+	}
+	return self;
 }
 
 - (void)_initOutlineView
@@ -45,7 +47,7 @@
 
 - (void)dealloc
 {
-	[currentInputString release]; currentInputString = nil;
+	[currentInputString release];
 	[super dealloc];
 }
 

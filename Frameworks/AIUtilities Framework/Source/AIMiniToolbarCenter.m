@@ -125,14 +125,13 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 // Private ---------------------------------------------------------------------------
 - (id)init
 {
-    [super init];
-    
-    toolbarDict = [[NSMutableDictionary alloc] init];
-    itemDict = [[NSMutableDictionary alloc] init];
-    customizeIdentifier = nil;
-    customizeController = nil;
-    
-    return(self);
+	if(([super init])) {
+		toolbarDict = [[NSMutableDictionary alloc] init];
+		itemDict = [[NSMutableDictionary alloc] init];
+		customizeIdentifier = nil;
+		customizeController = nil;
+	}
+	return self;
 }
 
 - (void)dealloc

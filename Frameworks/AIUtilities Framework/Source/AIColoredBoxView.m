@@ -24,11 +24,10 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-
-    color = nil;
-
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		color = nil;
+	}
+	return self;
 }
 
 - (void)dealloc

@@ -35,20 +35,18 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-
-    [self _initAlternatingRowOutlineView];
-
-    return(self);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _initAlternatingRowOutlineView];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
-
-    [self _initAlternatingRowOutlineView];
-
-    return(self);
+	if((self = [super initWithFrame:frameRect])) {
+		[self _initAlternatingRowOutlineView];
+	}
+	return self;
 }
 
 - (void)_initAlternatingRowOutlineView

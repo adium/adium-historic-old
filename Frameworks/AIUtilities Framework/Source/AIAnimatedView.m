@@ -27,28 +27,28 @@
 
 - (id)initWithFrame:(NSRect)frameRect image:(NSImage *)inImage frames:(int)inFrames delay:(float)inDelay target:(id)inTarget action:(SEL)inAction
 {
-    [super initWithFrame:frameRect];
+	if((self = [super initWithFrame:frameRect])) {
+		image = [inImage retain];
+		frames = inFrames;
+		delay = inDelay;
+		target = [inTarget retain];
+		action = inAction;
+	}
 
-    image = [inImage retain];
-    frames = inFrames;
-    delay = inDelay;
-    target = [inTarget retain];
-    action = inAction;
-
-    return(self);
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
+	if((self = [super initWithFrame:frameRect])) {
+		image = nil;
+		frames = 1;
+		delay = 0;
+		target = nil;
+		action = nil;
+	}
 
-    image = nil;
-    frames = 1;
-    delay = 0;
-    target = nil;
-    action = nil;
-
-    return(self);
+	return(self);
 }
 
 - (void)dealloc

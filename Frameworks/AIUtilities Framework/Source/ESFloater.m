@@ -24,38 +24,37 @@
 //
 + (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
-    return([[self alloc] initWithImage:inImage styleMask:styleMask]);
+    return [[[self alloc] initWithImage:inImage styleMask:styleMask] autorelease];
 }
 
 //
 - (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
-    NSRect  frame;
-    
-    //Init
-    [super init];
-    windowIsVisible = NO;
-    visibilityTimer = nil;
-    maxOpacity = WINDOW_FADE_MAX;
-    
-    //Set up the panel
-    frame = NSMakeRect(0, 0, [inImage size].width, [inImage size].height);    
-    panel = [[NSPanel alloc] initWithContentRect:frame
-                                       styleMask:styleMask
-                                         backing:NSBackingStoreBuffered
-                                           defer:NO];
-    [panel setHidesOnDeactivate:NO];
-    [panel setIgnoresMouseEvents:YES];
-    [panel setLevel:NSStatusWindowLevel];
-    [self _setWindowOpacity:WINDOW_FADE_MIN];
-    
-    //Setup the static view
-    staticView = [[NSImageView alloc] initWithFrame:frame];
-	[staticView setImage:inImage];
-    [staticView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-    [[panel contentView] addSubview:[staticView autorelease]];
-    
-    return(self);
+	if((self = [super init])) {
+		NSRect  frame;
+		windowIsVisible = NO;
+		visibilityTimer = nil;
+		maxOpacity = WINDOW_FADE_MAX;
+
+		//Set up the panel
+		frame = NSMakeRect(0, 0, [inImage size].width, [inImage size].height);    
+		panel = [[NSPanel alloc] initWithContentRect:frame
+										   styleMask:styleMask
+											 backing:NSBackingStoreBuffered
+											   defer:NO];
+		[panel setHidesOnDeactivate:NO];
+		[panel setIgnoresMouseEvents:YES];
+		[panel setLevel:NSStatusWindowLevel];
+		[self _setWindowOpacity:WINDOW_FADE_MIN];
+
+		//Setup the static view
+		staticView = [[NSImageView alloc] initWithFrame:frame];
+		[staticView setImage:inImage];
+		[staticView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+		[[panel contentView] addSubview:[staticView autorelease]];
+	}
+
+	return(self);
 }
 
 //

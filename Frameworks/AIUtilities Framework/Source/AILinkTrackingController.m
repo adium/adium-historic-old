@@ -214,21 +214,20 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Init
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer
 {
-    //
-    [super init];
-    linkArray = nil;
-    mouseOverLink = NO;
-    hoveredLink = nil;
-    hoveredString = nil;
-    showTooltip = YES;
+	if((self = [super init])) {
+		linkArray = nil;
+		mouseOverLink = NO;
+		hoveredLink = nil;
+		hoveredString = nil;
+		showTooltip = YES;
 
-    //
-    controlView = inControlView;
-    textStorage = inTextStorage;
-    layoutManager = inLayoutManager;
-    textContainer = inTextContainer;
-    
-    return(self);
+		controlView = inControlView;
+		textStorage = inTextStorage;
+		layoutManager = inLayoutManager;
+		textContainer = inTextContainer;
+	}
+
+    return self;
 }
 
 //Dealloc

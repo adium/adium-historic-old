@@ -73,21 +73,21 @@
 //init
 - (id)initWithImage:(NSImage *)inImage
 {
-    NSSize	imageSize = [inImage size];
-    
-    [super initWithFrame:NSMakeRect(0, 0, imageSize.width, imageSize.height)];
-    
-    //config
-    [super setTarget:self];
-    [super setAction:@selector(click:)];
-    [self setTitle:@""];
-    [self setImage:inImage];
-    [self setAlternateTitle:@""];
-    [self setImagePosition:NSImageOnly];
-    [self setButtonType:NSMomentaryChangeButton];
-    [self setBordered:NO];
+	NSRect myFrame = { NSZeroPoint, [inImage size] };
 
-    return(self);
+	if((self = [super initWithFrame:myFrame])) {
+		//config
+		[super setTarget:self];
+		[super setAction:@selector(click:)];
+		[self setTitle:@""];
+		[self setImage:inImage];
+		[self setAlternateTitle:@""];
+		[self setImagePosition:NSImageOnly];
+		[self setButtonType:NSMomentaryChangeButton];
+		[self setBordered:NO];
+	}
+
+	return self;
 }
 
 - (void)dealloc

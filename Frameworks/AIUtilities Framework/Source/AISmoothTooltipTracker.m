@@ -36,19 +36,19 @@
 
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate
 {
-	[super init];
-	
-	view = [inView retain];
-	delegate = inDelegate;
-	tooltipTrackingTag = -1;
-	tooltipLocation = NSZeroPoint;
+	if((self = [super init])) {
+		view = [inView retain];
+		delegate = inDelegate;
+		tooltipTrackingTag = -1;
+		tooltipLocation = NSZeroPoint;
 
-	//Reset cursor tracking when the view's frame changes
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(resetCursorTracking)
-												 name:NSViewFrameDidChangeNotification
-											   object:view];
-	[self installCursorRect];
+		//Reset cursor tracking when the view's frame changes
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(resetCursorTracking)
+													 name:NSViewFrameDidChangeNotification
+												   object:view];
+		[self installCursorRect];
+	}
 	
 	return(self);
 }

@@ -20,13 +20,12 @@
 
 - (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL title:(NSString *)inTitle
 {
-    [super init];
-
-    trackingRect = inTrackingRect;
-    url = [inURL retain];
-	title = [inTitle retain];
-
-    return(self);
+	if((self = [super init])) {
+		trackingRect = inTrackingRect;
+		url = [inURL retain];
+		title = [inTitle retain];
+	}
+	return self;
 }
 
 - (void)dealloc

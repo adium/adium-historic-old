@@ -12,18 +12,18 @@
 //
 - (id)initWithFrame:(NSRect)frame
 {
-	[super initWithFrame:frame];
+	if((self = [super initWithFrame:frame])) {
+		//Default configure
+		bigImage    = nil;
+		toolbarItem = nil;
+		arrowPath   = nil;
+		drawsArrow  = YES;
+		controlSize = NSRegularControlSize;
+		[self setBordered:NO];
+		[self setButtonType:NSMomentaryChangeButton];
+	}
 
-	//Default configure
-	bigImage = nil;
-	toolbarItem = nil;
-	arrowPath = nil;
-	drawsArrow = YES;
-	controlSize = NSRegularControlSize;
-	[self setBordered:NO];
-	[self setButtonType:NSMomentaryChangeButton];
-
-	return(self);
+	return self;
 }
 
 //

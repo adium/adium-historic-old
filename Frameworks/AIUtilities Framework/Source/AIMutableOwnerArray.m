@@ -44,15 +44,15 @@
 //Init
 - (id)init
 {
-    [super init];
+	if((self = [super init])) {
+		contentArray = nil;
+		ownerArray = nil;
+		priorityArray = nil;
+		valueIsSortedToFront = NO;
+		delegate = nil;
+	}
 
-    contentArray = nil;
-    ownerArray = nil;
-    priorityArray = nil;
-	valueIsSortedToFront = NO;
-	delegate = nil;
-	
-    return(self);
+	return self;
 }
 
 //Dealloc
