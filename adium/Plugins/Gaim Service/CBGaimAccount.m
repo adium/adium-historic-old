@@ -12,7 +12,7 @@
 #import "AIAdium.h"
 
 #warning change this to your username to connect :)
-#define SCREEN_NAME "themindoverall"
+#define SCREEN_NAME "otsku"
 
 //don't change this
 #define PROTOCOL "prpl-oscar"
