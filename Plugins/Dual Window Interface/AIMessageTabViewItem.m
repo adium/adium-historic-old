@@ -163,21 +163,32 @@
 
 - (void)updateTabViewItemImage
 {
-	AIListObject	*listObject = [messageView listObject];
-
-	[tabViewItemImage release];
-	if (listObject){
-		NSImage		*userIcon = [listObject userIcon];
-		if (userIcon){
-			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
-		}else{
-			if ([listObject isKindOfClass:[AIListContact class]]){
-				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
-			}
-		}
-	}else{
-		tabViewItemImage = [[[[messageView chat] account] menuImage] retain];
-	}
+//	AIListObject	*listObject = [messageView listObject];
+//
+//	NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
+//	
+//	if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//
+//	[tabViewItemImage release];
+//	if (listObject){
+//		NSImage		*userIcon = [listObject userIcon];
+//		if (userIcon){
+//			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
+//		}else{
+//			if ([listObject isKindOfClass:[AIListContact class]]){
+//				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
+//			}
+//		}
+//	}else{
+//		tabViewItemImage = [[[[messageView chat] account] menuImage] retain];
+//	}
 }
 
 //Interface Container ----------------------------------------------------------------------
