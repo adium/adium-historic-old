@@ -3,7 +3,7 @@
  * File:        AWEzvContact.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.m,v 1.3 2004/05/16 15:06:52 proton Exp $
+ * CVS tag:     $Id: AWEzvContact.m,v 1.4 2004/06/04 05:37:35 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -119,7 +119,7 @@
 }
 
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus {
-    AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *htmlBodyNode, *xNode, *composingNode, *idNode = nil;
+    AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *htmlBodyNode, *xNode, *composingNode = nil, *idNode = nil;
     
     messageNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"message"];
     [messageNode addAttribute:@"to" withValue:_ipAddr];
