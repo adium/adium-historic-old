@@ -39,71 +39,39 @@
     return([[[self alloc] initForPlugin:inPlugin] autorelease]);
 }
 
-
-//Init, passing plugin
-- (id)initForPlugin:(id)inPlugin
-{
-    plugin = inPlugin;
-    return([self init]);
-}
-
 //Init
 - (id)init
 {
     [super init];
-    
-    //Init
-    view = nil;
-    isUpdated = YES;
-    
-    //Register
+	
+    isUpdated = YES; 																//### TRANSITION ONLY, will be removed
     [[adium preferenceController] addPreferencePane:self];
     
     return(self);
 }
 
-//TRANSITION ONLY, will be removed
-- (BOOL)isUpdated
-{
-    return(isUpdated);
-}
-
-//Compare to another category view (for sorting on the preference window)
-- (NSComparisonResult)compare:(AIPreferencePane *)inPane
-{
-    return([[self label] caseInsensitiveCompare:[inPane label]]);
-}
-
-//Returns our view
-- (NSView *)view
-{
-    if(!view){
-        //Load and configure our view
-        [NSBundle loadNibNamed:[self nibName] owner:self];
-        [self viewDidLoad];
-        [view setAutoresizingMask:(NSViewMaxYMargin)];
-    }
-    
-    return(view);
-}
+- (BOOL)isUpdated 																	//### TRANSITION ONLY, will be removed
+{ 																					//### TRANSITION ONLY, will be removed
+    return(isUpdated); 																//### TRANSITION ONLY, will be removed
+}																					//### TRANSITION ONLY, will be removed
 
 //Close our view
 - (void)closeView
 {
-    if(isUpdated){
+    if(isUpdated){																	//### TRANSITION ONLY, will be removed
+		[super closeView];
         if(view){
             [self viewWillClose];
             [view release]; view = nil;
         }
-    }else{ //TRANSITION ONLY, will be removed
-        if([delegate respondsToSelector:@selector(closeViewForPreferencePane:)]){
-            //Tell our delegate to close its view
-            [delegate closeViewForPreferencePane:self];
-        }
+    }else{ 																			//### TRANSITION ONLY, will be removed
+        if([delegate respondsToSelector:@selector(closeViewForPreferencePane:)]){ 	//### TRANSITION ONLY, will be removed
+            [delegate closeViewForPreferencePane:self];								//### TRANSITION ONLY, will be removed
+        }																			//### TRANSITION ONLY, will be removed
         
-        [preferenceView release]; preferenceView = nil;
-        [view_containerView release]; view_containerView = nil;        
-    }
+        [preferenceView release]; preferenceView = nil;								//### TRANSITION ONLY, will be removed
+        [view_containerView release]; view_containerView = nil;        				//### TRANSITION ONLY, will be removed
+    }																				//### TRANSITION ONLY, will be removed
 }
 
 
@@ -111,52 +79,21 @@
 //Preference category
 - (PREFERENCE_CATEGORY)category
 {
-    if(isUpdated){
+    if(isUpdated){																	//### TRANSITION ONLY, will be removed
         return(AIPref_Advanced_Other);
-    }else{ //TRANSITION ONLY, will be removed
-        return(category);
-    }
+    }else{																			//### TRANSITION ONLY, will be removed
+        return(category);															//### TRANSITION ONLY, will be removed
+    }																				//### TRANSITION ONLY, will be removed
 }
 
-//Preference label
-- (NSString *)label
-{
-    if(isUpdated){
-        return(@"");
-    }else{ //TRANSITION ONLY, will be removed
-        return(label);
-    }
-}
-
-//Nib to load
-- (NSString *)nibName
-{
-    return(@"");    
-}
-
-//Configure the preference view
-- (void)viewDidLoad
-{
-    
-}
-
-//Preference view is closing
-- (void)viewWillClose
-{
-    
-}
-
-//Apply a changed preference
-- (IBAction)changePreference:(id)sender
-{
-    [self configureControlDimming];
-}
-
-//Configure control dimming
-- (void)configureControlDimming
-{
-    
-}
+- (NSString *)label																	//### TRANSITION ONLY, will be removed
+{																					//### TRANSITION ONLY, will be removed
+    if(isUpdated){																	//### TRANSITION ONLY, will be removed
+        return(@"");																//### TRANSITION ONLY, will be removed
+    }else{ //TRANSITION ONLY, will be removed										//### TRANSITION ONLY, will be removed
+        return([super label]);														//### TRANSITION ONLY, will be removed
+    }																				//### TRANSITION ONLY, will be removed
+}																					//### TRANSITION ONLY, will be removed
 
 //Return an array of dictionaries, each dictionary of the form (key, default, group)
 - (NSDictionary *)restorablePreferences
@@ -167,8 +104,8 @@
 
 
 
-
 //--------------Old Code, transition only, will be removed---------
+//### TRANSITION ONLY, will be removed//### TRANSITION ONLY, will be removed//### TRANSITION ONLY, will be removed
 #pragma mark
 
 //Create a new preference view controller

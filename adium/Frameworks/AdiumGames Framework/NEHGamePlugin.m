@@ -75,7 +75,7 @@ static NSMenu			* menu_Games;
     AIListContact		*contact;
     
     //Configure the auto-complete view
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
     while((contact = [enumerator nextObject])){
         [textField_handle addCompletionString:[contact UID]];
     }

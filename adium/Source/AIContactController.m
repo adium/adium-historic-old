@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.122 2004/04/14 23:01:27 evands Exp $
+// $Id: AIContactController.m,v 1.123 2004/04/18 17:24:50 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -665,6 +665,7 @@
 											  object:inObject
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys forKey:@"Keys"] : nil)];
 	
+#warning Adam: Legacy.  This is moving back into a plugin and the event controller will be in charge.
 	if (![inObject isKindOfClass: [AIAccount class]]) {
 
 		if([modifiedKeys containsObject:@"Online"]){ //Sign on/off
@@ -744,53 +745,69 @@
     return(contactList);
 }
 
-//Returns a flat array of all the contacts in a group (and all subgroups, if desired).
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups
-{
-    NSMutableArray	*contactArray = [[NSMutableArray alloc] init];
-    NSEnumerator	*enumerator;
-    AIListObject	*object;
-    
-    if(inGroup == nil) inGroup = contactList; //Passing nil scans the entire contact list
-	
-    enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIListGroup class]]){
-            if(subGroups){
-                [contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object subgroups:subGroups]];
-            }
-        }else{
-            [contactArray addObject:object];
-        }
-    }
-	
-    return([contactArray autorelease]);
-}
-
-//Return all the objects in a group on an account
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup onAccount:(AIAccount *)inAccount
+//Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
+- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount
 {
 	NSMutableArray	*contactArray = [NSMutableArray array];
 	NSEnumerator	*enumerator;
     AIListObject	*object;
 	
-	if (inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
+	if(inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
 	
 	enumerator = [inGroup objectEnumerator];
-	
     while((object = [enumerator nextObject])){
         if([object isMemberOfClass:[AIMetaContact class]] || [object isMemberOfClass:[AIListGroup class]]){
-			[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object onAccount:inAccount]];
-			
+            if(subGroups){
+				[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object subgroups:subGroups onAccount:inAccount]];
+			}
 		}else if([object isMemberOfClass:[AIListContact class]]){
-			if([[(AIListContact *)object serviceID] compare:[inAccount serviceID]] == 0 &&
-			   [[(AIListContact *)object accountID] compare:[inAccount uniqueObjectID]] == 0){
+			if(!inAccount || 
+			   ([[(AIListContact *)object serviceID] compare:[inAccount serviceID]] == 0 &&
+				[[(AIListContact *)object accountID] compare:[inAccount uniqueObjectID]] == 0)){
 				[contactArray addObject:object];
 			}
 		}
 	}
 	
 	return(contactArray);
+}
+
+//Returns a menu containing all the objects in a group on an account
+//- Selector called on contact selection is selectContact:
+//- The menu item's represented object is the contact it represents
+- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target
+{
+    NSEnumerator				*enumerator;
+    AIListObject				*object;
+	
+	//Prepare our menu
+	NSMenu *menu = [[NSMenu alloc] init];
+	[menu setAutoenablesItems:NO];
+
+	if(inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
+
+	enumerator = [inGroup objectEnumerator];
+    while((object = [enumerator nextObject])){
+        if([object isMemberOfClass:[AIListGroup class]]){
+			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[object displayName]
+															target:nil 
+															action:nil
+													 keyEquivalent:@""] autorelease];
+			[item setSubmenu:[self menuOfAllContactsInGroup:object withTarget:target]];
+			[menu addItem:item];
+
+		}else if([object isMemberOfClass:[AIListContact class]]){
+			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[object displayName]
+															target:target 
+															action:@selector(selectContact:) 
+													 keyEquivalent:@""] autorelease];
+			[item setRepresentedObject:object];
+			[menu addItem:item];
+
+		}
+	}
+
+	return([menu autorelease]);
 }
 
 //Retrieve a contact from the contact list (Creating if necessary)
@@ -826,6 +843,26 @@
 	}else{
 		return(nil);
 	}
+}
+
+- (AIListObject *)existingListObjectWithUniqueID:(NSString *)uniqueID
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*listObject;
+	
+	//Contact
+	enumerator = [contactDict objectEnumerator];
+	while(listObject = [enumerator nextObject]){
+		if([[listObject uniqueObjectID] compare:uniqueID] == 0) return(listObject);
+	}
+		
+	//Group
+	enumerator = [groupDict objectEnumerator];
+	while(listObject = [enumerator nextObject]){
+		if([[listObject uniqueObjectID] compare:uniqueID] == 0) return(listObject);
+	}
+	
+	return(nil);
 }
 
 - (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact
@@ -906,6 +943,7 @@
 	
 	return(group);
 }
+
 
 //Contact list editing -------------------------------------------------------------------------------------------------
 #pragma mark Contact list editing

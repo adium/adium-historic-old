@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.35 $
- *  $Date: 2004/04/07 05:14:00 $
+ * $Revision: 1.36 $
+ *  $Date: 2004/04/18 17:24:33 $
  *  $Author#
  *
  **/
@@ -24,8 +24,8 @@
 
 #import "AIAccount.h"
 #import "AIAccountViewController.h"
+#import "AIActionDetailsPane.h"
 #import "AIChat.h"
-#import "ESContactAlert.h"
 #import "AIContentMessage.h"
 #import "AIContentContext.h"
 #import "AIContentObject.h"
@@ -41,6 +41,7 @@
 #import "AIListObject.h"
 #import "AIMessageEntryTextView.h"
 #import "AIMetaContact.h"
+#import "AIModularPane.h"
 #import "AIPlugin.h"
 #import "AIPreferenceCategory.h"
 #import "AIPreferencePane.h"

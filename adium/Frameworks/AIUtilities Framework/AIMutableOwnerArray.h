@@ -32,6 +32,7 @@
 - (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority;
 
 //Value Retrieval
+- (NSNumber *)numberValue;
 - (id)objectValue;
 - (int)intValue;
 - (double)doubleValue;

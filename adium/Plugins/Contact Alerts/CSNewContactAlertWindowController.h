@@ -5,34 +5,20 @@
 //  Created by Chris Serino on Wed Mar 31 2004.
 //
 
-@class ESContactAlerts;
-
-@protocol NewContactAlertDelegate
-
-- (void)contactAlertWindowFinished:(id)sender didCreate:(BOOL)created;
-
-@end
-
 @interface CSNewContactAlertWindowController : AIWindowController {
-	IBOutlet NSView					*view_auxilary;
+	IBOutlet NSView					*view_auxiliary;
 	IBOutlet NSPopUpButton			*popUp_event;
 	IBOutlet NSPopUpButton			*popUp_action;
-	IBOutlet NSPopUpButton			*popUp_contact;
 	
-	BOOL							editing;
-	
-	ESContactAlerts					*instance;
-	id								delegate;
+	AIActionDetailsPane				*detailsPane;
+	NSView							*detailsView;
+	NSMutableDictionary				*alert;
+	id								target;
+	id								userInfo;
 }
-- (id)initWithInstance:(ESContactAlerts *)inInstance editing:(BOOL)inEditing;
 
-- (IBAction)add:(id)sender;
++ (void)editAlert:(NSDictionary *)inAlert onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)userInfo;
 - (IBAction)cancel:(id)sender;
-- (IBAction)contactChange:(id)sender;
+- (IBAction)save:(id)sender;
 
-- (void)setContactAlertsInstance:(ESContactAlerts *)inInstance;
-- (ESContactAlerts *)contactAlertsInstance;
-
-- (void)setDelegate:(id)inDelegate;
-- (id)delegate;
 @end

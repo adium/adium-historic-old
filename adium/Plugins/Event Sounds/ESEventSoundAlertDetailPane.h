@@ -6,11 +6,10 @@
 
 #import "AIEventSoundsPlugin.h"
 
-@interface ESEventSoundContactAlert : ESContactAlert {
-    IBOutlet	NSView			*view_details_menu;
+@interface ESEventSoundAlertDetailPane : AIActionDetailsPane {
     IBOutlet	NSPopUpButton		*popUp_actionDetails;
-    
-    NSMenu      *soundMenu_cached;
+
+	NSImage		*soundFileIcon;
 }
 
 @end

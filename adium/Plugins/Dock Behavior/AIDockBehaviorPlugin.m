@@ -15,10 +15,12 @@
 
 #import "AIDockBehaviorPlugin.h"
 #import "AIDockBehaviorPreferences.h"
-#import "ESDockBehaviorContactAlert.h"
+#import "ESDockAlertDetailPane.h"
 
 #define DOCK_BEHAVIOR_DEFAULT_PREFS	@"DockBehaviorDefaults"
 #define DOCK_BEHAVIOR_PRESETS		@"DockBehaviorPresets"
+#define DOCK_BEHAVIOR_ALERT_SHORT	@"Bounce the dock icon"
+#define DOCK_BEHAVIOR_ALERT_LONG	@"Bounce the dock icon"
 
 @interface AIDockBehaviorPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -32,8 +34,8 @@
     NSString	*path;
 
     //Install our contact alert
-    [[adium contactAlertsController] registerContactAlertProvider:self];
-
+	[[adium contactAlertsController] registerActionID:@"BounceDockIcon" withHandler:self];
+	
     //
     behaviorDict = nil;
     path = [[NSBundle bundleForClass:[self class]] pathForResource:DOCK_BEHAVIOR_PRESETS ofType:@"plist"];
@@ -61,7 +63,7 @@
     [[adium notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
     //Uninstall our contact alert
-    [[adium contactAlertsController] unregisterContactAlertProvider:self];
+//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 //Called when the preferences change, reregister for the notifications
@@ -180,37 +182,6 @@
 													group:PREF_GROUP_DOCK_BEHAVIOR]);
 }
 
-//*****
-//ESContactAlertProvider
-//*****
-
-- (NSString *)identifier
-{
-    return CONTACT_ALERT_IDENTIFIER;
-}
-
-- (ESContactAlert *)contactAlert
-{
-    return [ESDockBehaviorContactAlert contactAlert];   
-}
-
-//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
-{
-    if (details) {
-        //Perform the behavior
-        [[adium dockController] performBehavior:[details intValue]];
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-//continue processing after a successful action
-- (BOOL)shouldKeepProcessing
-{
-    return NO;   
-}
 
 /********
 Methods for custom behvaior and contact alert classes
@@ -263,4 +234,38 @@ Methods for custom behvaior and contact alert classes
     return(menuItem);
 }
 
+
+
+
+
+
+//Bounce Dock Alert ----------------------------------------------------------------------------------------------------
+#pragma mark Bounce Dock Alert
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
+{
+	return(DOCK_BEHAVIOR_ALERT_SHORT);
+}
+
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
+{
+	return(DOCK_BEHAVIOR_ALERT_LONG);
+}
+
+- (NSImage *)imageForActionID:(NSString *)actionID
+{
+	return([NSImage imageNamed:@"DockAlert" forClass:[self class]]);
+}
+
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+	return([ESDockAlertDetailPane actionDetailsPane]);
+}
+
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+{
+	[[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]];
+}
+
 @end
+
+

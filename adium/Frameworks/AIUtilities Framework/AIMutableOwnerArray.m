@@ -53,6 +53,20 @@
 }
 
 
+- (NSString *)description
+{
+	NSMutableString	*desc = [[NSMutableString alloc] initWithString:@"<"];
+	NSEnumerator	*enumerator = [contentArray objectEnumerator];
+	id				object;
+	
+	while(object = [enumerator nextObject]){
+		[desc appendFormat:@"%@%@", object, (object == [contentArray lastObject] ? @"" : @", ")];
+	}
+	[desc appendString:@">"];
+	
+	return([desc autorelease]);
+}
+
 //Value Storage --------------------------------------------------------------------------------------------------------
 #pragma mark Value Storage
 //Adds an object with a specified owner at medium priority (Pass nil to remove the object)
@@ -98,6 +112,39 @@
 - (id)objectValue
 {
     return((ownerArray && [ownerArray count]) ? [self _objectWithHighestPriority] : nil);
+}
+
+//Returns the greatest number value
+- (NSNumber *)numberValue
+{
+	int count;
+	if (ownerArray && (count = [ownerArray count])) {
+		//If we have more than one object and the object we want is not already in the front of our arrays, 
+		//we need to find the object with largest int value and move it to the front
+		if(count != 1 && !valueIsSortedToFront){
+			NSNumber 	*currentMax = [NSNumber numberWithInt:0];
+			int			indexOfMax = 0;
+			int			index = 0;
+			
+			//Find the object with the largest int value
+			for(index = 0;index < count;index++){
+				NSNumber	*value = [contentArray objectAtIndex:index];
+
+				if([value compare:currentMax] == NSOrderedDescending){
+					currentMax = value;
+					indexOfMax = index;
+				}
+			}
+			
+			//Move the object to the front, so we don't have to find it next time
+			[self _moveObjectToFront:indexOfMax];
+			
+			return(currentMax);
+		}else{
+			return([contentArray objectAtIndex:0]);
+		}
+	}
+	return 0;
 }
 
 //Returns the greatest double value

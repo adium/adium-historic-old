@@ -81,6 +81,7 @@
 - (int)integerStatusObjectForKey:(NSString *)key;
 - (double)doubleStatusObjectForKey:(NSString *)key;
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key;
+- (NSNumber *)numberStatusObjectForKey:(NSString *)key;
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex;

@@ -8,7 +8,7 @@
 
 #define CONTACT_ALERT_IDENTIFIER            @"Open Message"
 
-@interface ESOpenMessageWindowContactAlertPlugin : AIPlugin <ESContactAlertProvider> {
+@interface ESOpenMessageWindowContactAlertPlugin : AIPlugin <AIActionHandler> {
 
 }
 

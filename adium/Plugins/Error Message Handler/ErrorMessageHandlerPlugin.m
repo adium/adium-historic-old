@@ -15,7 +15,10 @@
 
 #import "ErrorMessageHandlerPlugin.h"
 #import "ErrorMessageWindowController.h"
-#import "ESAlertMessageContactAlert.h"
+#import "ESPanelAlertDetailPane.h"
+
+#define ERROR_MESSAGE_ALERT_SHORT	@"Display an alert"
+#define ERROR_MESSAGE_ALERT_LONG	@"Display an alert"
 
 @implementation ErrorMessageHandlerPlugin
 
@@ -25,15 +28,11 @@
     [[adium notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
     
     //Install our contact alert
-    [[adium contactAlertsController] registerContactAlertProvider:self];
-    
+	[[adium contactAlertsController] registerActionID:@"DisplayAlert" withHandler:self];
 }
 
 - (void)uninstallPlugin
 {
-    //Uninstall our contact alert
-    [[adium contactAlertsController] unregisterContactAlertProvider:self];
-    
     [ErrorMessageWindowController closeSharedInstance]; //Close the error window
 }
 
@@ -57,35 +56,42 @@
     [[ErrorMessageWindowController errorMessageWindowController] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
 }
 
-//*****
-//ESContactAlertProvider
-//*****
-#pragma mark ESContactAlertProvider
 
-- (NSString *)identifier
+//Display Dialog Alert -------------------------------------------------------------------------------------------------
+#pragma mark Display Dialog Alert
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-    return CONTACT_ALERT_IDENTIFIER;
+	return(ERROR_MESSAGE_ALERT_SHORT);
 }
 
-- (ESContactAlert *)contactAlert
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-    return [ESAlertMessageContactAlert contactAlert];   
+	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
+	
+	if(alertText && [alertText length]){
+		return([NSString stringWithFormat:@"%@: %@", ERROR_MESSAGE_ALERT_LONG, alertText]);
+	}else{
+		return(ERROR_MESSAGE_ALERT_LONG);
+	}
 }
 
-//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
+- (NSImage *)imageForActionID:(NSString *)actionID
 {
-    NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], actionName];
-    [[adium interfaceController] handleMessage:title 
-							   withDescription:(details ? details : @"")
+	return([NSImage imageNamed:@"ErrorAlert" forClass:[self class]]);
+}
+
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+	return([ESPanelAlertDetailPane actionDetailsPane]);
+}
+
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+{
+	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
+
+    [[adium interfaceController] handleMessage:[listObject displayName]
+							   withDescription:(alertText ? alertText : @"")
 							   withWindowTitle:@"Contact Alert"];
-    return YES;
-}
-
-//continue processing after a successful action
-- (BOOL)shouldKeepProcessing
-{
-    return YES;
 }
 
 @end

@@ -88,7 +88,7 @@
     if(image != nil){
         NSSize	size = [image size];
         NSPoint	destPoint = cellFrame.origin;
-        
+
         //Adjust the rects
         destPoint.y += cellFrame.size.height;
         destPoint.x += 2;

@@ -242,11 +242,13 @@
 {
     return([statusDictionary objectForKey:key]);
 }
+#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	NSNumber *number = [statusDictionary objectForKey:key];
     return(number ? [number intValue] : 0);
 }
+#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
 - (double)doubleStatusObjectForKey:(NSString *)key
 {
 	NSNumber *number = [statusDictionary objectForKey:key];
@@ -256,6 +258,12 @@
 {
    return([statusDictionary objectForKey:key]);
 }
+- (NSNumber *)numberStatusObjectForKey:(NSString *)key
+{
+    return([statusDictionary objectForKey:key]);
+}
+
+
 
 //Subclasses may choose to override these
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key

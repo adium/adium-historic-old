@@ -5,32 +5,18 @@
 //  Created by Evan Schoenberg on Mon Jul 14 2003.
 //
 
-#import "ESContactAlerts.h"
-
-@class AIAlternatingRowTableView, AIListContact;
-
-#define KEY_CONTACT_ALERTS_WINDOW_FRAME		@"Contact Alerts Window"
+@class AIAlternatingRowTableView;
 
 @interface ESContactAlertsWindowController : AIWindowController {
-
-    IBOutlet	NSTableView			*tableView_actions;
-    IBOutlet	NSTableView			*tableView_source;
+    IBOutlet	AIAlternatingRowTableView	*tableView_actions;
+    IBOutlet	NSButton					*button_delete;
+    IBOutlet	NSButton					*button_edit;
     
-	NSMutableArray					*alertContacts;      //The contacts that have alerts
-	NSMutableArray					*actionsArray;
-	
-	NSToolbar						*toolbar_editing;
-	NSMutableDictionary				*toolbarItems;
-	NSToolbarItem					*addItem,
-									*editItem,
-									*deleteItem;
-	
-    AIListObject					*activeContactObject;
-    ESContactAlerts					*instance;
+	AIListObject				*listObject;
+	NSMutableArray				*alertArray;
 }
 
-+ (id)showContactAlertsWindowForObject:(AIListObject *)inContact;
-+ (void)closeContactAlertsWindow;
++ (void)showContactAlertsWindowForObject:(AIListObject *)inListObject;
 
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)addAlert:(id)sender;
