@@ -17,17 +17,25 @@
     NSString	    *path;
     NSString	    *from;
     NSString	    *to;
-    NSCalendarDate  *date;
+	NSString		*serviceClass;
+    NSDate			*date;
     NSString	    *dateSearchString;
 }
 
+//Given an Adium log file name, return an NSCalendarDate with year, month, and day specified
 + (NSCalendarDate *)dateFromFileName:(NSString *)fileName;
-- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo date:(NSCalendarDate *)inDate;
+
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate;
+
+//Accessors
 - (NSString *)path;
 - (NSString *)from;
 - (NSString *)to;
-- (NSCalendarDate *)date;
-- (NSString *)dateSearchString;
+- (NSString *)serviceClass;
+- (NSDate *)date;
+
+//Comparisons
+- (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate;
 - (NSComparisonResult)compareTo:(AILog *)inLog;
 - (NSComparisonResult)compareToReverse:(AILog *)inLog;
 - (NSComparisonResult)compareFrom:(AILog *)inLog;

@@ -550,16 +550,16 @@ this problem is along the lines of:
     //Process each from folder
     fromEnumerator = [[[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator] retain];
     while((fromName = [[fromEnumerator nextObject] retain])){
-		fromGroup = [[AILogFromGroup alloc] initWithPath:fromName from:fromName];
+		fromGroup = [[AILogFromGroup alloc] initWithPath:fromName fromUID:fromName serviceClass:nil];
 
 		//Walk through every 'to' group
 		toEnumerator = [[[fromGroup toGroupArray] objectEnumerator] retain];
 		while(!stopIndexingThreads && (toGroup = [[toEnumerator nextObject] retain])){
 			//Walk through every log
-			logEnumerator = [[toGroup logArray] objectEnumerator];
+			logEnumerator = [toGroup logEnumerator];
 			while((theLog = [logEnumerator nextObject]) && !stopIndexingThreads){
-				//Add this log's path to our dirty array.  The dirty array is guared with a lock
-				//since it will be access from outside this thread as well
+				//Add this log's path to our dirty array.  The dirty array is guarded with a lock
+				//since it will be accessed from outside this thread as well
 				[dirtyLogLock lock];
 				[dirtyLogArray addObject:[theLog path]];
 				[dirtyLogLock unlock];

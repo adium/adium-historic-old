@@ -13,6 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AILoggerPlugin.h"
+
+#define	KEY_LOG_VIEWER_DRAWER_STATE	@"Log Viewer Drawer State"
+
 @class AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AILog;
 
 typedef enum {
@@ -50,7 +54,7 @@ typedef enum {
     BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
     BOOL				showEmoticons;			//Flag for whether or not to process emoticons
-	
+
     //Search information
     int					activeSearchID;			//ID of the active search thread, all other threads should quit
     NSLock				*searchingLock;			//Locked when a search is in progress
@@ -81,5 +85,8 @@ typedef enum {
 - (NSMutableArray *)toServiceArray;
 - (NSMutableArray *)fromServiceArray;
 - (NSMutableArray *)toArray;
+
+- (void)filterForContactName:(NSString *)inContactName;
+- (void)filterForAccountName:(NSString *)inAccountName;
 
 @end

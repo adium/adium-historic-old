@@ -15,12 +15,14 @@
 
 @interface AILogFromGroup : NSObject {
     NSString	    *path;
-    NSString	    *from;
+    NSString	    *fromUID;
+	NSString		*serviceClass;
     NSMutableArray  *toGroupArray;
 }
 
-- (AILogFromGroup *)initWithPath:(NSString *)inPath from:(NSString *)inFrom;
+- (AILogFromGroup *)initWithPath:(NSString *)inPath fromUID:(NSString *)inFromUID serviceClass:(NSString *)inServiceClass;
 - (NSArray *)toGroupArray;
-- (NSString *)from;
+- (NSString *)fromUID;
+- (NSString *)serviceClass;
 
 @end
