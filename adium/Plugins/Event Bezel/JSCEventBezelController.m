@@ -88,22 +88,23 @@ withMessage:(NSString *)message
         
         [bezelView setMainBuddyName: contactName];
         
-        BOOL isMessageEvent = [event isEqualToString: @"says"];
-        if ((!imageBadges) || [event isEqualToString: @"is now online"] || [event isEqualToString: @"is available"] ||
-                [event isEqualToString: @"is no longer idle"] || isMessageEvent) {
+        BOOL isMessageEvent = [event isEqualToString: AILocalizedString(@"says",nil)];
+        if ((!imageBadges) || [event isEqualToString: AILocalizedString(@"is now online",nil)] ||
+                [event isEqualToString: AILocalizedString(@"is available",nil)] ||
+                [event isEqualToString: AILocalizedString(@"is no longer idle",nil)] || isMessageEvent) {
             [bezelView setBuddyIconBadgeType: @""];
-        } else if ([event isEqualToString: @"has gone offline"]) {
+        } else if ([event isEqualToString: AILocalizedString(@"has gone offline",nil)]) {
             [bezelView setBuddyIconBadgeType: @"offline"];
-        } else if ([event isEqualToString: @"has gone away"]) {
+        } else if ([event isEqualToString: AILocalizedString(@"has gone away",nil)]) {
             [bezelView setBuddyIconBadgeType: @"away"];
-        } else if ([event isEqualToString: @"is idle"]) {
+        } else if ([event isEqualToString: AILocalizedString(@"is idle",nil)]) {
             [bezelView setBuddyIconBadgeType: @"idle"];
         }
         
         if  (isMessageEvent && [self includeText] && message) {
             [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",event, message]];
         } else if (isMessageEvent && ![self includeText] && message) {
-            [bezelView setMainBuddyStatus: @"new message"];
+            [bezelView setMainBuddyStatus: AILocalizedString(@"new message",nil)];
         } else if (!isMessageEvent && message) {
             [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@ \"%@\"",event, message]];
         } else {
