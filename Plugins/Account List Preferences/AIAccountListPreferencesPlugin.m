@@ -18,9 +18,20 @@
 
 @implementation AIAccountListPreferencesPlugin
 
+#define ACCOUNT_MENU_TITLE		@"Accounts..."
+
 //Register our preference pane
 - (void)installPlugin
 {
+	NSMenuItem	*menuItem;
+	
+    //Add/Edit Link... menu item (edit menu)
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_MENU_TITLE
+										   target:self
+										   action:@selector(showAccountWindow:)
+									keyEquivalent:@""] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
+	
     preferences = [[AIAccountListPreferences preferencePaneForPlugin:self] retain];
 }
 
