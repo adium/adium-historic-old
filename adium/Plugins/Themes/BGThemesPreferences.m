@@ -49,7 +49,7 @@
 
 - (void)viewWillClose
 {
-	[themesList release]; themesList = nil;
+//	[themesList release]; themesList = nil;
 }
 
 -(IBAction)createTheme:(id)sender
