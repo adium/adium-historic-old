@@ -161,9 +161,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Returns the current version of Adium
 - (NSString *)_applicationVersion
 {
-    NSDictionary    *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString	    *version = [infoDict objectForKey:@"CFBundleVersion"];
-	
+    NSString	*version = [NSApp applicationVersion];
     return([NSString stringWithFormat:@"Adium X %@",(version ? version : @"")]);
 }
 
