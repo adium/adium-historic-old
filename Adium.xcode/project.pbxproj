@@ -6107,6 +6107,38 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34A6F68207D65D5B00972830 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/GeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6F68407D65D6200972830 = {
+			children = (
+				34A6F68207D65D5B00972830,
+				34A6F68607D65D6E00972830,
+			);
+			isa = PBXVariantGroup;
+			name = GeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6F68507D65D6200972830 = {
+			fileRef = 34A6F68407D65D6200972830;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A6F68607D65D6E00972830 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/GeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34AC36B907B5C51400145239 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7290,7 +7322,6 @@
 				34082691075B5CB900703011,
 				4BC5A5DF0764F75B0080ECF7,
 				346BA3640774C35500628F06,
-				34C68B400778FAB500EB423C,
 				34C6A3BC077A8CB500EB423C,
 				34539E9C077BD09600A83891,
 				3433667507948C1400C84B15,
@@ -7334,6 +7365,7 @@
 				9E124DF107D34C9100AA91C5,
 				9E124DF207D34C9100AA91C5,
 				07AF3C5A07D4897300409BC8,
+				34A6F68507D65D6200972830,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8706,7 +8738,7 @@
 				34C68B240778FA1300EB423C,
 				34C68B290778FA5C00EB423C,
 				34C68B2A0778FA5C00EB423C,
-				34C68B3F0778FAB500EB423C,
+				34A6F68407D65D6200972830,
 				349DDD310640680600542726,
 				349DDD320640680600542726,
 				4B04137C041111F200A8010A,
@@ -8773,20 +8805,6 @@
 		};
 		34C68B2C0778FA5C00EB423C = {
 			fileRef = 34C68B2A0778FA5C00EB423C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34C68B3F0778FAB500EB423C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = GeneralPreferences.nib;
-			path = "Plugins/General Preferences/GeneralPreferences.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34C68B400778FAB500EB423C = {
-			fileRef = 34C68B3F0778FAB500EB423C;
 			isa = PBXBuildFile;
 			settings = {
 			};
