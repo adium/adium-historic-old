@@ -55,3 +55,4 @@
 #import "AIEventAdditions.h"
 #import "AIPopUpButtonAdditions.h"
 #import "AITableViewPopUpButtonCell.h"
+#import "AIStringFormatter.h"
