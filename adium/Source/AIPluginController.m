@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.89 2004/08/11 23:22:48 evands Exp $
+//$Id: AIPluginController.m,v 1.90 2004/08/12 00:56:00 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -50,7 +50,7 @@ JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSort
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
 ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin,
-ESAccountNetworkConnectivityPlugin;
+ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -149,6 +149,9 @@ ESAccountNetworkConnectivityPlugin;
 	[self loadPluginWithClass:[DCJoinChatPanelPlugin class]];
 	[self loadPluginWithClass:[DCInviteToChatPlugin class]];
 	[self loadPluginWithClass:[ESAccountNetworkConnectivityPlugin class]];
+	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
+
+	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 		
 	#ifdef ALL_IN_ONE
