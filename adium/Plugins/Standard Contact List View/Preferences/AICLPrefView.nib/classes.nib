@@ -28,12 +28,17 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {setContactListFont = id; toggleAlternatingGrid = id; }; 
+            ACTIONS = {changePreference = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_setFont" = NSButton; 
                 "checkBox_alternatingGrid" = NSButton; 
+                "colorWell_background" = NSColorWell; 
+                "colorWell_grid" = NSColorWell; 
+                "slider_opacity" = NSSlider; 
                 "textField_fontName" = NSTextField; 
+                "textField_opacityPercent" = NSTextField; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = AIPlugin; 

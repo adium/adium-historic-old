@@ -110,23 +110,24 @@
 
     while((SCLView = [enumerator nextObject])){
         NSFont	*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
+        float	alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
+        NSColor	*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
+        NSColor	*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
         BOOL	alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
-
-        //Font
+        
+        //Display
         [SCLView setFont:font];
         [SCLView setRowHeight:[font defaultLineHeightForFont]];
-
+        [SCLView setBackgroundColor:backgroundColor];
+        
         //Grid
         [SCLView setDrawsAlternatingRows:alternatingGrid];
+        [SCLView setAlternatingRowColor:gridColor];
 
+        //Needed for proper transparency... but not the cleanest way.
+        [[SCLView window] setOpaque:(alpha == 100.0)];
     }
 
-    
-    
-    
-    
-
-    
 }
 
 /*- (void)prefsChanged: (NSNotification *)notification
@@ -156,8 +157,6 @@
                                                                     blue:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"BLUE"] floatValue]
                                                                    alpha:[[dict objectForKey: CL_OPACITY] floatValue]]];
 		// iacas - 12/22/2002
-		if([[dict objectForKey: CL_OPACITY] floatValue] < 100.0)
-			[[SCLView window] setOpaque:NO];
 		
         [SCLView setNeedsDisplay:YES];
     }    

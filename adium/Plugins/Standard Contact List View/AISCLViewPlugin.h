@@ -22,14 +22,10 @@
 
 #define KEY_SCL_FONT			@"Font"
 #define	KEY_SCL_ALTERNATING_GRID	@"Alternating Grid"
+#define KEY_SCL_GRID_COLOR		@"Grid Color"
+#define KEY_SCL_BACKGROUND_COLOR	@"Background Color"
+#define KEY_SCL_OPACITY			@"Opacity"
 
-/*
-#define CL_PREFERENCE_GROUP		@"Contact List Preferences"
-#define CL_DEFAULT_FONT			@"Default Font"
-#define CL_BACKGROUND_COLOR		@"Background Color"
-#define CL_GRID_COLOR			@"Grid Color"
-#define CL_OPACITY			@"Opacity"
-*/
 
 
 @class AIContactGroup, AICLPreferences;

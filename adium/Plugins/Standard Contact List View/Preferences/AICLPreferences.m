@@ -17,12 +17,12 @@
 #define CL_PREF_TITLE		@"Contact List"		//
 
 //Handles the interface interaction, and sets preference values
-//The outline view is responsible for reading & using it's own preferences, as well as observing changes in them
+//The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
 
 @interface AICLPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
-- (void)buildFontMenuFor:(NSPopUpButton *)inFontPopUp;
 - (void)configureView;
+- (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 @end
 
@@ -33,27 +33,44 @@
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
 }
 
-- (IBAction)setContactListFont:(id)sender
+//Called in response to all preference controls, applies new settings
+- (IBAction)changePreference:(id)sender
 {
-    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSFont		*contactListFont = [NSFont labelFontOfSize:11];//[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
+    if(sender == button_setFont){
+        NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+        NSFont		*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
+
+        //In order for the font panel to work, we must be set as the window's delegate
+        [[textField_fontName window] setDelegate:self];
+
+        //Setup and show the font panel
+        [[textField_fontName window] makeFirstResponder:[textField_fontName window]];
+        [fontManager setSelectedFont:contactListFont isMultiple:NO];
+        [fontManager orderFrontFontPanel:self];
+        
+    }else if(sender == checkBox_alternatingGrid){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SCL_ALTERNATING_GRID
+                                              group:GROUP_CONTACT_LIST];
+        
+    }else if(sender == colorWell_grid){
+        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_SCL_GRID_COLOR
+                                              group:GROUP_CONTACT_LIST];    
+        
+    }else if(sender == colorWell_background){
+        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_SCL_BACKGROUND_COLOR
+                                              group:GROUP_CONTACT_LIST];    
+
+    }else if(sender == slider_opacity){
+        [self showOpacityPercent];
+        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+                                             forKey:KEY_SCL_OPACITY
+                                              group:GROUP_CONTACT_LIST];
+    }
     
-    //In order for the font panel to work, we must be set as the window's delegate
-    [[textField_fontName window] setDelegate:self]; 
-    
-    //Setup and show the font panel
-    [[textField_fontName window] makeFirstResponder:[textField_fontName window]];
-    [fontManager setSelectedFont:contactListFont isMultiple:NO];
-    [fontManager orderFrontFontPanel:self];
 }
-
-- (IBAction)toggleAlternatingGrid:(id)sender
-{
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                         forKey:KEY_SCL_ALTERNATING_GRID group:GROUP_CONTACT_LIST];
-}
-
-
 
 
 
@@ -101,233 +118,25 @@
     }
 }
 
+- (void)showOpacityPercent
+{
+    [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%d",([slider_opacity floatValue] * 100.0)]];
+}
+
 //Configures our view for the current preferences
 - (void)configureView
 {
-    //Font
+    //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
+    [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
 
     //Grid
     [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
-    
-    
-    
-//    [self buildFontMenuFor:popUp_font];
-//    [popUp_font selectItemWithTitle:[preferenceDict objectForKey:KEY_SCL_FONT_NAME]];
+    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];
 
-/*    [self _buildFontFaceMenuFor: facePopUp using: fontPopUp];
-
-    [popUp_face selectItemWithTitle:[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FACE"]];
-    [popUp_size selectItemWithTitle:[NSString stringWithFormat:@"%d", [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] intValue]]];
-
-    [alternatingGridSwitch setState:[[dict objectForKey: CL_ALTERNATING_GRID] boolValue]];
-
-    [backgroundColorWell setColor:[NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"RED"] floatValue]
-                                                            green:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"GREEM"] floatValue]
-                                                             blue:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"BLUE"] floatValue]
-                                                            alpha:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"ALPHA"] floatValue]]];
-
-    [gridColorWell setColor: [NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"RED"] floatValue]
-                                                       green:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"GREEM"] floatValue]
-                                                        blue:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"BLUE"] floatValue]
-                                                       alpha:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"ALPHA"] floatValue]]];
-    
-*/
-    
+    //Alpha
+    [slider_opacity setFloatValue:[[preferenceDict objectForKey:KEY_SCL_OPACITY] floatValue]];
+    [self showOpacityPercent];
 }
 
-
-
-/*- (void) initialize: (id) _preferenceController
-{
-    preferenceController = [_preferenceController retain];
-    //initialize values
-    [self _buildFontMenuFor: fontPopUp];
-    [self _loadPrefs];
-}
-
-- (void) setCLController: (id) foo
-{
-    if (parentPlugin != nil)
-        [parentPlugin release];
-    parentPlugin = [foo retain];
-}
-
-- (void) fontPopUps: (id) sender
-{
-    if (sender == fontPopUp)
-    {
-        [self _buildFontFaceMenuFor: facePopUp
-                              using: fontPopUp];
-    }
-    else if (sender == facePopUp)
-    {
-
-    }
-    else if (sender == sizePopUp)
-    {
-
-    }
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-        [[fontPopUp selectedItem] title], @"FONT",
-        [[facePopUp selectedItem] title], @"FACE",
-        [NSNumber numberWithInt:[[[sizePopUp selectedItem] title] intValue]], @"SIZE",
-        nil];
-
-    [preferenceController setPreference: dict forKey:CL_DEFAULT_FONT group:CL_PREFERENCE_GROUP];
-    [self _prefsChangedNotify];
-}
-
-- (void) gridOptions: (id) sender
-{
-    if (sender == enableGridSwitch)
-    {
-        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]] forKey:CL_ENABLE_GRID group:CL_PREFERENCE_GROUP];
-
-        [alternatingGridSwitch setEnabled:[sender state]];
-        [gridColorWell setEnabled:[sender state]];
-        [gridColorLabel setEnabled:[sender state]];
-    }
-    else if (sender == alternatingGridSwitch)
-    {
-        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]] forKey: CL_ALTERNATING_GRID group: CL_PREFERENCE_GROUP];        
-    }
-    [self _prefsChangedNotify];
-}
-
-- (void) colorAndOpacity: (id) sender
-{
-    if (sender == backgroundColorWell)	// iacas - 12/22/2002 - kinda lame to be pulling these into the same action, isn't it???
-    {
-        float red, green, blue, alpha;
-        [[[sender color] colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"] getRed:&red green:&green blue:&blue alpha:&alpha];
-
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-            [NSNumber numberWithFloat: red], @"RED",
-            [NSNumber numberWithFloat: green], @"GREEN",
-            [NSNumber numberWithFloat: blue], @"BLUE",
-            [NSNumber numberWithFloat: alpha], @"ALPHA",
-            nil];
-
-        [preferenceController setPreference: dict
-                                     forKey: CL_BACKGROUND_COLOR
-                                      group: CL_PREFERENCE_GROUP];
-    }
-    else if (sender == gridColorWell)
-    {
-        float red, green, blue, alpha;
-        [[[sender color] colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"] getRed:&red green:&green blue:&blue alpha:&alpha];
-
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-            [NSNumber numberWithFloat: red], @"RED",
-            [NSNumber numberWithFloat: green], @"GREEN",
-            [NSNumber numberWithFloat: blue], @"BLUE",
-            [NSNumber numberWithFloat: alpha], @"ALPHA",
-            nil];
-
-        [preferenceController setPreference: dict
-                                     forKey: CL_GRID_COLOR
-                                      group: CL_PREFERENCE_GROUP];        
-    }
-    else if (sender == opacitySlider)
-    {
-        [opacityPercentLabel setStringValue:[NSString stringWithFormat:@"%d", [[NSNumber numberWithFloat:([sender floatValue]*100)] intValue]]];
-        [preferenceController setPreference: [NSNumber numberWithFloat:[sender floatValue]]
-                                     forKey: CL_OPACITY
-                                      group: CL_PREFERENCE_GROUP];
-    }
-
-
-    [self _prefsChangedNotify];
-}
-@end
-#pragma mark -
-@implementation AICLPreferences (_private)
-- (void) _prefsChangedNotify
-{
-    if (parentPlugin != nil)
-        [parentPlugin prefsChanged: nil];
-}
-
-- (void) _loadPrefs
-{
-    NSDictionary* dict = [preferenceController preferencesForGroup: CL_PREFERENCE_GROUP];
-
-    [fontPopUp selectItemWithTitle:[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FONT"]];
-    [self _buildFontFaceMenuFor: facePopUp using: fontPopUp];
-    
-    [facePopUp selectItemWithTitle:[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FACE"]];
-    [sizePopUp selectItemWithTitle:[NSString stringWithFormat:@"%d", [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] intValue]]];
-
-    [alternatingGridSwitch setState:[[dict objectForKey: CL_ALTERNATING_GRID] boolValue]];
-    
-    [backgroundColorWell setColor:[NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"RED"] floatValue]
-                                                            green:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"GREEM"] floatValue]
-                                                             blue:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"BLUE"] floatValue]
-                                                            alpha:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"ALPHA"] floatValue]]];
-
-    [gridColorWell setColor: [NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"RED"] floatValue]
-                                                       green:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"GREEM"] floatValue]
-                                                        blue:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"BLUE"] floatValue]
-                                                       alpha:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"ALPHA"] floatValue]]];
-
-}
-
-*/
-/*
-- (void)buildFontMenuFor:(NSPopUpButton *)inFontPopUp
-{
-    NSEnumerator	*enumerator;
-    NSArray 		*fontArray;
-    NSMenu		*fontMenu = [[[NSMenu alloc] initWithTitle:@"Fonts"] autorelease];
-    NSString		*fontName;
-    
-    fontArray = [[NSFontManager sharedFontManager] availableFontFamilies]; //get the font list
-    fontArray = [fontArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]; //alphabetize them
-
-    //Add each font to the menu
-    enumerator = [fontArray objectEnumerator];
-    while((fontName = [enumerator nextObject])){
-        [fontMenu addItemWithTitle:fontName target:self action:nil keyEquivalent:@""];
-    }
-
-    [inFontPopUp setMenu:fontMenu];
-}*/
-
-/*
-- (void) _buildFontFaceMenuFor:(NSPopUpButton *)inFacePopUp using:(NSPopUpButton *)inFamilyPopUp
-{
-    NSString	*selectedFamily;
-    NSString	*selectedFace;
-    NSArray 	*fontFaces;
-    NSMenu		*faceMenu = [[NSMenu alloc] initWithTitle:@"Faces"];
-    int		loop;
-
-    //--remember the currently selected font face--
-    selectedFace = [[inFacePopUp titleOfSelectedItem] retain];
-
-    //--get the family--
-    selectedFamily = [inFamilyPopUp titleOfSelectedItem];
-
-    //--build a sorted face list--
-    fontFaces = [[NSFontManager sharedFontManager] availableMembersOfFontFamily:selectedFamily];
-
-    //--create the menu--
-    [inFacePopUp removeAllItems];
-    for(loop = 0;loop < [fontFaces count];loop++){
-        [[faceMenu addItemWithTitle:[[fontFaces objectAtIndex:loop] objectAtIndex:1]
-                             action:nil
-                      keyEquivalent:@""] setTarget:self];
-    }
-    [inFacePopUp setMenu:faceMenu];
-    //--reselect the font face--
-    if(selectedFace != nil && [inFacePopUp itemWithTitle:selectedFace] != nil){
-        [inFacePopUp selectItemWithTitle:selectedFace];
-    }else{
-        if([inFacePopUp numberOfItems] != 0) {
-            [inFacePopUp selectItemAtIndex:0];
-        }
-    }
-    [selectedFace release];
-}*/
 @end
