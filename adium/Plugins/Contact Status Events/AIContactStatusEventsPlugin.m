@@ -63,10 +63,14 @@
                                                             userInfo:nil];
                     [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inContact UID]];
 
+                    //Clear any existing juston/just off values
+                    [[inHandle statusDictionary] removeObjectForKey:@"Signed On"];
+                    [[inHandle statusDictionary] removeObjectForKey:@"Signed Off"];
+
                     //Set status flags and install timers for "Just signed on" and "Just signed off"
                     [[inHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:(newStatus ? @"Signed On" : @"Signed Off")];
                     [[owner contactController] handleStatusChanged:inHandle
-                                                modifiedStatusKeys:[NSArray arrayWithObject:(newStatus ? @"Signed On" : @"Signed Off")]];
+                                                modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On",@"Signed Off",nil]];
 
                     [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(clearOnlineFlags:) userInfo:inHandle repeats:NO];
                 }
