@@ -18,20 +18,17 @@
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
 @class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
-@protocol AIInterfaceContainer;
+@protocol ESFlexibleToolbarItemDelegate;
 
-@interface AIMessageWindowController : AIWindowController {
+@interface AIMessageWindowController : AIWindowController<ESFlexibleToolbarItemDelegate> {
     IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	AICustomTabsView	*tabView_customTabs;
     AIDualWindowInterfacePlugin 	*interface;
 	NSString						*containerName;
 	NSString						*containerID;
-//	NSMutableArray					*listObjectArray;
-	
+
 	BOOL			windowIsClosing;
-		
-//	BOOL			keepTabsArranged;
-//	BOOL			arrangeByGroup;
+
     BOOL			supressHiding;		//YSE to temporarily suppress hiding of the tabs (used for dragging)
 	BOOL			alwaysShowTabs;		//YES if the tabs should always be visible, even if there is only 1
     float			tabBarHeight;		//Height of the tab bar, used to restore their visibility

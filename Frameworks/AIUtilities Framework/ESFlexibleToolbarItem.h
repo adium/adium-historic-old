@@ -17,7 +17,7 @@
  * The delegate is sent - (void)validateToolbarItem:(ESFlexibleToolbarItem *)toolbarItem, which must be efficient
  */
 @protocol ESFlexibleToolbarItemDelegate
-- (void)validateToolbarItem:(ESFlexibleToolbarItem *)toolbarItem;
+- (void)validateFlexibleToolbarItem:(ESFlexibleToolbarItem *)toolbarItem;
 @end
 
 /*!
