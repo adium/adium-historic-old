@@ -97,6 +97,10 @@
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
+	//Add a dummy menu item for the pulldown to display
+	[menu addItem:[[[NSMenuItem alloc] init] autorelease]];
+	
+	//Add a menu item for each state
 	while((menuItem = [enumerator nextObject])){
 		[menu addItem:menuItem];
 	}
