@@ -760,8 +760,6 @@
     [fileTransfer release];
 }
 
-***/
-
 /***************************/
 /* Account private methods */
 /***************************/
