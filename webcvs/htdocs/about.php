@@ -35,7 +35,7 @@
             <div id="buttoncontainer">
                 <ul id="buttonlist">
                     <li><a class="download" href="<?php echo DownloadAddress(); ?>"><?php echo DownloadTitle(); ?></a></li>
-                    <li class="lastItem"><a class="xtras" href="http://ambitiouslemon.com/adiumxtras/">Xtras!</a></li>
+                    <li class="lastItem"><a class="xtras" href="http://www.adiumxtras.com">Xtras!</a></li>
 	           </ul>
 	       </div>
         </div>
