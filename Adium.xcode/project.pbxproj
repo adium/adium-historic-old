@@ -6915,8 +6915,6 @@
 				4B3B125907AC411D00187CCF,
 				4BE6175507AC67EE0049C87D,
 				4BE6175707AC67EE0049C87D,
-				4BE6175907AC67EE0049C87D,
-				4BE6175B07AC67EE0049C87D,
 				4BE6175D07AC67EE0049C87D,
 				342910CC07AE228600C815F6,
 				34E2A0BB07AF5924006735BC,
@@ -7240,7 +7238,6 @@
 				34DFF53907A62EB200B92233,
 				34DFF54307A62EB200B92233,
 				34C14D5107A8BA00003CC138,
-				4BE6174907AC67D50049C87D,
 				4BCAB5F107B59967006641B9,
 				4BCAB5F207B59967006641B9,
 				4BCAB5F307B59967006641B9,
@@ -7409,8 +7406,6 @@
 				4B3B125A07AC411D00187CCF,
 				4BE6175607AC67EE0049C87D,
 				4BE6175807AC67EE0049C87D,
-				4BE6175A07AC67EE0049C87D,
-				4BE6175C07AC67EE0049C87D,
 				4BE6175E07AC67EE0049C87D,
 				342910CD07AE228600C815F6,
 				34E2A0BC07AF5924006735BC,
@@ -14499,7 +14494,6 @@
 				3428328307D263F0004F01C9,
 				4BC32F7107AABC3500DDED66,
 				4B292D4707A9C92D00C5F882,
-				4B587C6F07ABFD31001832A9,
 				4B587C6C07ABFD2E001832A9,
 			);
 			isa = PBXGroup;
@@ -14514,20 +14508,6 @@
 			);
 			isa = PBXGroup;
 			name = "Preset State Menu";
-			path = Plugins/AutoReply;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B587C6F07ABFD31001832A9 = {
-			children = (
-				4BE6175107AC67EE0049C87D,
-				4BE6175207AC67EE0049C87D,
-				4BE6174F07AC67EE0049C87D,
-				4BE6175007AC67EE0049C87D,
-				4BE6174807AC67D50049C87D,
-			);
-			isa = PBXGroup;
-			name = "Preset State Editor";
 			path = Plugins/AutoReply;
 			refType = 4;
 			sourceTree = "<group>";
@@ -18450,20 +18430,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BE6174807AC67D50049C87D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = PresetStatusWindow.nib;
-			path = Resources/PresetStatusWindow.nib;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BE6174907AC67D50049C87D = {
-			fileRef = 4BE6174807AC67D50049C87D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BE6174B07AC67ED0049C87D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -18497,42 +18463,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAutoReplyPlugin.m;
 			path = Source/AIAutoReplyPlugin.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BE6174F07AC67EE0049C87D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIPresetStatusWindowController.h;
-			path = Source/AIPresetStatusWindowController.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BE6175007AC67EE0049C87D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIPresetStatusWindowController.m;
-			path = Source/AIPresetStatusWindowController.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BE6175107AC67EE0049C87D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIStateEditorPlugin.h;
-			path = Source/AIStateEditorPlugin.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4BE6175207AC67EE0049C87D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIStateEditorPlugin.m;
-			path = Source/AIStateEditorPlugin.m;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -18574,30 +18504,6 @@
 		};
 		4BE6175807AC67EE0049C87D = {
 			fileRef = 4BE6174E07AC67ED0049C87D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BE6175907AC67EE0049C87D = {
-			fileRef = 4BE6174F07AC67EE0049C87D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BE6175A07AC67EE0049C87D = {
-			fileRef = 4BE6175007AC67EE0049C87D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BE6175B07AC67EE0049C87D = {
-			fileRef = 4BE6175107AC67EE0049C87D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BE6175C07AC67EE0049C87D = {
-			fileRef = 4BE6175207AC67EE0049C87D;
 			isa = PBXBuildFile;
 			settings = {
 			};
