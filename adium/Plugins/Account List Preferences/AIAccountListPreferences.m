@@ -53,7 +53,7 @@
     accountViewController = nil;
 	configuredForService = nil;
 	configuredForAccount = nil;
-    [textField_accountName setDelayInterval:0.75];
+    [textField_accountName setDelayInterval:1.0];
 	
 	//
 	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self];
