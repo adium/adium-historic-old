@@ -20,7 +20,7 @@
                           description:@"MSN Messenger Service"
                           image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
                           caseSensitive:NO
-                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789"]] retain];
+                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
                           
         [[owner accountController] registerService:self];
 }

@@ -532,8 +532,8 @@
             }case 15:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                        length:[inData length]]); */
+                    //NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                    //    length:[inData length]]); 
                     connectionPhase ++;
                 }
                 break;
@@ -1025,6 +1025,14 @@
 
 - (void)disconnect
 {
+    //NSEnumerator	*enumerator;
+    //AIHandle		*handle;
+    
+    // Set status as disconnecting
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING]
+        forKey:@"Status" account:self];
+    
+    // Tell server we're going out
     if([socket isValid])
     {
         if([socket sendData:[@"OUT\r\n" dataUsingEncoding:NSUTF8StringEncoding]]){
@@ -1032,7 +1040,24 @@
         }
     }
     [socket release];
+    socket = nil;
     
+    //Flush all our handle status flags
+    /*[[owner contactController] setHoldContactListUpdates:YES];
+    enumerator = [[handleDict allValues] objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        [self removeAllStatusFlagsFromHandle:handle];
+    }
+    [[owner contactController] setHoldContactListUpdates:NO];*/
+
+    //Remove all our handles
+    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+    [[owner contactController] handlesChangedForAccount:self];
+    
+    // Kill appropriate timers
+    [stepTimer invalidate];	stepTimer = nil;
+    
+    // Set status as offline
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
 }
