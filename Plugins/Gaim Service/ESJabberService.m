@@ -60,5 +60,8 @@
 - (AIServiceImportance)serviceImportance{
 	return(AIServicePrimary);
 }
+- (BOOL)canRegisterNewAccounts{
+	return(YES);
+}
 
 @end
