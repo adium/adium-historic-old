@@ -12,9 +12,10 @@
 #define FRAME_FLAT_PAD_LEFT     10
 #define FRAME_PAD_RIGHT 	5
 #define FRAME_PAD_TOP 		2
-#define FRAME_PAD_BOTTOM 	1
+#define FRAME_PAD_BOTTOM 	2
 #define FRAME_RADIUS		8
 #define FRAME_FLAT_HEIGHT	1
+#define DIVIDER_FLAT_HEIGHT	1
 #define ALIAS_SHIFT_X		0.5
 #define ALIAS_SHIFT_Y		0.5
 
@@ -24,6 +25,7 @@
 - (void)_drawBubbleBottomInRect:(NSRect)frame;
 - (void)_drawFlatTopInRect:(NSRect)frame;
 - (void)_drawFlatBottomInRect:(NSRect)frame;
+- (void)_drawBubbleDividerInRect:(NSRect)frame;
 @end
 
 @implementation AIFlexibleTableFramedTextCell
@@ -46,6 +48,7 @@
 
 - (id)initWithAttributedString:(NSAttributedString *)inString
 {
+    drawTopDivider = NO;
     drawSides = YES;    
     suppressTopLeftCorner = NO;
     suppressTopRightCorner = NO;
@@ -63,6 +66,7 @@
 {
     [borderColor release];
     [bubbleColor release];
+    [dividerColor release];
     
     [super dealloc];
 }
@@ -71,6 +75,12 @@
 - (void)setDrawTop:(BOOL)inDrawTop
 {
     drawTop = inDrawTop;
+}
+
+//
+- (void)setDrawTopDivider:(BOOL)inDrawTopDivider
+{
+    drawTopDivider = inDrawTopDivider;
 }
 
 //
@@ -114,7 +124,7 @@
     suppressBottomBorder = inSuppressBottomBorder;
 }
 
-- (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor
+- (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor
 {
     if(borderColor != inBorderColor){
         [borderColor release];
@@ -124,6 +134,10 @@
         [bubbleColor release];
         bubbleColor = [inBubbleColor retain];
     }
+    if(dividerColor != inDividerColor){
+        [dividerColor release];
+        dividerColor = [inDividerColor retain];
+    }
 }
 
 //Adjust for our padding
@@ -132,6 +146,8 @@
     inWidth -= (FRAME_PAD_LEFT + FRAME_PAD_RIGHT);
     int newHeight = [super sizeContentForWidth:inWidth] + (FRAME_PAD_TOP + FRAME_PAD_BOTTOM);
 
+    if(drawBottom) newHeight++; //Give ourselves another pixel for the bottom border
+    
     if(drawBottom && drawTop && newHeight < (FRAME_RADIUS * 2)){
         newHeight = (FRAME_RADIUS * 2);
     }
@@ -193,6 +209,13 @@
     aliasShift = [NSAffineTransform transform];
     [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
 
+    //Draw the top (bubble separation) divider
+    if(drawTopDivider){
+        [self _drawBubbleDividerInRect:NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, DIVIDER_FLAT_HEIGHT)];
+        cellFrame.origin.y += DIVIDER_FLAT_HEIGHT;
+        cellFrame.size.height -= DIVIDER_FLAT_HEIGHT;
+    }
+    
     //Draw the bubble top and bottom
     if(drawSides){
         if(drawTop){
@@ -224,12 +247,26 @@
     [self _drawBubbleMiddleInRect:cellFrame];
     
     //Draw our text content
-    inFrame.origin.x += (drawSides ? FRAME_FLAT_PAD_LEFT : FRAME_PAD_LEFT);
-    inFrame.size.width -= (drawSides ? FRAME_FLAT_PAD_LEFT : FRAME_PAD_LEFT) + FRAME_PAD_RIGHT;
-    if(drawTop) inFrame.origin.y += FRAME_PAD_TOP;
-    inFrame.size.height -= ((drawTop ? FRAME_PAD_TOP : 0) + (drawBottom ? FRAME_PAD_BOTTOM : 0));
+    inFrame.origin.x += (drawSides ? FRAME_PAD_LEFT : FRAME_FLAT_PAD_LEFT);
+    inFrame.size.width -= (drawSides ? FRAME_PAD_LEFT : FRAME_FLAT_PAD_LEFT) + FRAME_PAD_RIGHT;
+    /*if(drawTop) */inFrame.origin.y += FRAME_PAD_TOP;
+    inFrame.size.height -= ((drawTop ? FRAME_PAD_TOP : FRAME_PAD_TOP) + (drawBottom ? FRAME_PAD_BOTTOM : FRAME_PAD_BOTTOM));
 
     [super drawContentsWithFrame:inFrame inView:controlView];
+}
+
+//Draw the top bubble separation divider
+- (void)_drawBubbleDividerInRect:(NSRect)frame
+{
+    if(dividerColor){
+        [dividerColor set];
+        [NSBezierPath fillRect:frame];
+    }
+    if(borderColor){
+        [borderColor set];
+        [NSBezierPath fillRect:NSMakeRect(frame.origin.x, frame.origin.y, 1, frame.size.height)];
+        [NSBezierPath fillRect:NSMakeRect(frame.origin.x + frame.size.width, frame.origin.y, 1, frame.size.height)];
+    }
 }
 
 //Draw the top border of a flat frame
@@ -296,10 +333,10 @@
     if(borderColor){
         [borderColor set];
         if(drawSides){
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + ALIAS_SHIFT_Y)
-                                      toPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + frame.size.height + ALIAS_SHIFT_Y)];
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y + ALIAS_SHIFT_Y)
-                                      toPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y + frame.size.height + ALIAS_SHIFT_Y)];
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y)
+                                      toPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + frame.size.height)];
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y)
+                                      toPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y + frame.size.height)];
         }
     }
 }

@@ -60,6 +60,7 @@
     [self _buildTimeStampMenu];
     
     [checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+    [checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
     [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
     
 }
@@ -97,11 +98,16 @@
                                              forKey:KEY_SMV_SHOW_USER_ICONS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
+    }else if(sender == checkBox_combineMessages){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_COMBINE_MESSAGES
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        
     }else if(sender == popUp_timeStamps){
         [[owner preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
                                              forKey:KEY_SMV_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-
+        
     }
 
 }

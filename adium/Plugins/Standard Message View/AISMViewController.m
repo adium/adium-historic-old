@@ -127,6 +127,10 @@
         timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 
+        combineMessages = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue];
+        
+        
+        
         
         
         prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
@@ -210,7 +214,7 @@
     BOOL                contentIsSimilar = NO;
     
     //We should merge if the previous content is a message and from the same source
-    if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
+    if(combineMessages && previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
         contentIsSimilar = YES;
     }
     
@@ -228,6 +232,7 @@
     if(contentIsSimilar){
         [[self _cellInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawBottom:NO];
         [[self _cellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTop:NO];
+        [[self _cellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
     }
 }
 
@@ -353,12 +358,18 @@
     brit -= 0.3; if(brit < 0.0) sat = 0.0;
     NSColor *borderColor = [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
 
+    [color getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
+    sat += 0.1; if(sat > 1.0) sat = 1.0;
+    brit -= 0.1; if(brit < 0.0) sat = 0.0;
+    NSColor *dividerColor = [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
+    
+    
     
     //Message cell
     messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:[content message]];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
     [messageCell setVariableWidth:YES];
-    [messageCell setFrameBackgroundColor:color borderColor:/*[color darkenBy:0.2]*/borderColor];
+    [messageCell setFrameBackgroundColor:color borderColor:/*[color darkenBy:0.2]*/borderColor dividerColor:dividerColor];
     [messageCell setDrawTop:YES];
     [messageCell setDrawBottom:YES];
     [messageCell setDrawSides:showUserIcons];
