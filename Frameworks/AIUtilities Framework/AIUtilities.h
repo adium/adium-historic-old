@@ -37,6 +37,7 @@
 #import <AIUtilities/AIAnimatedFloater.h>
 #import <AIUtilities/AIAnimatedView.h>
 #import <AIUtilities/AIAppleScriptAdditions.h>
+#import <AIUtilities/AISplitView.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
