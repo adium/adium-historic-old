@@ -86,7 +86,7 @@ DeclareString(bMdashHTML)
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
             [linkScanner setScanLocation:[inString length]];
-        }else if(NSOrderedSame == [[inString substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:Hopen]){
+        }else if([[inString substringWithRange:NSMakeRange([linkScanner scanLocation],3)] isEqualToString:Hopen]){
             if((stringLength - [linkScanner scanLocation]) > 3) [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
             [linkScanner scanUpToString:gtSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
@@ -106,7 +106,7 @@ DeclareString(bMdashHTML)
                                                                   keyEquivalent:@""] autorelease];
             [bookmarksSupermenu addItem:mozillaSubmenuItem];
             [bookmarksSupermenu setSubmenu:bookmarksMenu forItem:mozillaSubmenuItem];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Aopen]){
+        }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
             [linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString];
@@ -131,7 +131,7 @@ DeclareString(bMdashHTML)
                                      keyEquivalent:@""
                                  representedObject:markedLink];
         
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:DLclose]){
+        }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             if([bookmarksMenu isNotEqualTo:topMenu]){
                 bookmarksMenu = bookmarksSupermenu;
