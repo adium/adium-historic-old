@@ -27,22 +27,6 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>AdiumTheme</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumTheme.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium Theme</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>AdIM</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
 				<string>AdiumIcon</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
@@ -99,6 +83,8 @@
 			<array>
 				<string>AdiumMessageStyle</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumMessageStyle.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium Message Style</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -115,6 +101,8 @@
 			<array>
 				<string>AdiumScripts</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumScripts.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium Scripts</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -131,6 +119,8 @@
 			<array>
 				<string>ListLayout</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumListLayout.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium List Layout</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -139,12 +129,16 @@
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>ListTheme</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumListTheme.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium List Theme</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -153,6 +147,8 @@
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
