@@ -226,6 +226,9 @@
         container = (AIMessageTabViewItem *)[(NSMenuItem *)sender representedObject];
         [container makeActive:nil];
     }
+    
+    //Give Adium focus
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
 //Called as a message window closes, destroy the window
