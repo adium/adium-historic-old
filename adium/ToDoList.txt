@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.44 2004/04/15 12:52:49 adamiser Exp $
+$Id: ToDoList.txt,v 1.45 2004/04/15 12:54:18 evands Exp $
 
 Legend
 + Change or Addition
@@ -36,7 +36,7 @@ Bugs
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
-* Changes to the password field (Account prefs) aren't applied when connect is clicked.
+* Changes to the password field (Account prefs) aren't applied when connect is clicked. [Evan]
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
