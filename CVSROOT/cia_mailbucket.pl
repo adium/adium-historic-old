@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: cia_mailbucket.pl,v 1.3 2003/12/08 04:37:29 jmelloy Exp $
+# $Id: cia_mailbucket.pl,v 1.4 2003/12/08 04:41:45 jmelloy Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
@@ -76,7 +76,7 @@ $xml = 0;
 #  %trimmed%- a notice about the log message being trimmed, if it is
 #             ($trimmed_template)
 #  %logmsg% - the log message
-$commit_template = '%user% %tag% <br /><br /> %module% <br /><br />%path% (%file%): <br /><br />%logmsg%';
+$commit_template = '%user% %tag% %module% %path% (%file%): %logmsg%';
 
 # The template string describing how the branch tag name should look like.
 # Expansions:
@@ -350,12 +350,12 @@ if ($tag) {
 $logmsg = "\n" . $logmsg if ($logmsg_lines > 1);
 
 my ($bodystr) = $commit_template; # the message to be sent
-$bodystr =~ s/\%user\%/$user/g;
-$bodystr =~ s/\%tag\%/$tagstr/g;
-$bodystr =~ s/\%module\%/$module/g;
-$bodystr =~ s/\%path\%/$path/g;
-$bodystr =~ s/\%file\%/$filestr/g;
-$bodystr =~ s/\%trimmed\%/$trimmedstr/g;
+$bodystr =~ s/\%user\%/$user\n\n/g;
+$bodystr =~ s/\%tag\%/$tagstr\n\n/g;
+$bodystr =~ s/\%module\%/$module\n\n/g;
+$bodystr =~ s/\%path\%/$path\n\n/g;
+$bodystr =~ s/\%file\%/$filestr\n\n/g;
+$bodystr =~ s/\%trimmed\%/$trimmedstr\n\n/g;
 $bodystr =~ s/\%logmsg\%/$logmsg/g;
 
 print MAIL $bodystr."\n";
