@@ -125,12 +125,13 @@
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
 - (int)flippyIndent
 {
-	if([self textAlignment] != NSCenterTextAlignment){
+//	if([self textAlignment] != NSCenterTextAlignment){
 		NSSize size = [self cellSize];
 		return(size.height*.4 + size.height*.2 + FLIPPY_TEXT_PADDING);
-	}else{
+/*	}else{
 		return(0);
 	}
+*/
 }
 
 
@@ -158,10 +159,10 @@
 	[arrowPath closePath];
 	[arrowPath fill];
 
-	if([self textAlignment] != NSCenterTextAlignment){
+//	if([self textAlignment] != NSCenterTextAlignment){
 		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
-	}
+//	}
 
 	[self drawDisplayNameWithFrame:rect];
 }
