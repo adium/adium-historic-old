@@ -1,0 +1,61 @@
+body {
+    padding: 3px;
+    background: #DCDCDC url(bg.png) repeat-y;
+}
+
+.messagehead { /* Sender Titlebar */
+    float: right;
+    padding-left: 5px;
+    width: 95%;
+    margin-top: -14px;
+    margin-right: -1px;
+    margin-bottom: 3px;
+    margin-left: 20px;
+    border: 1px solid #000;
+    background: #DCDCDC url(headerbg2.png) repeat-x;
+    font-size: 12px;
+    font-family: "Lucida Grande";
+    font-weight: bold;
+}
+
+.message { /* First Message & Enclosure */
+    position: relative;
+    border: 1px solid #000;
+    font-family: "Georgia";
+    font-size: 12px;
+    padding: 5px;
+    margin-bottom: 13px;
+    background: url(whitesquare.png);
+}
+
+.messagemore { /* Appended Messages */
+    padding-left: 3px;
+    padding-top: 3px;
+}
+
+h1 { /* Time Stamp */
+    text-align: right;
+    font-family: "Lucida Grande";
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: -15px;
+    margin-bottom: 0px;
+    padding-right: 5px;
+}
+
+h2 { /* Appended Messages Formatting */
+    font-family: "Georgia";
+    font-size: 12px;
+    font-weight: normal;
+    padding-left: 11px;
+    margin-bottom: 1px;
+    margin-top: -13px;
+}
+
+h3 { /* Recipient's Name */
+    font-size: 12px;
+    font-family: "Lucida Grande";
+    font-weight: bold;
+    color: #2F2F45;
+    margin: 0px;
+}
