@@ -7,6 +7,8 @@
 
 #import "AIMultiCellOutlineView.h"
 
+#define	DRAG_IMAGE_FRACTION	0.75
+
 @interface AIMultiCellOutlineView (PRIVATE)
 - (void)resetRowHeightCache;
 - (void)updateRowHeightCache;
@@ -179,6 +181,66 @@
 		[cell drawWithFrame:cellFrame inView:self];
 	}
 }
+
+
+//Our default drag image will be cropped incorrectly, so we need a custom one here
+- (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
+{
+	NSTableColumn	*column;
+	NSCell			*cell;
+	NSImage			*image;
+	NSEnumerator	*enumerator;
+	NSNumber		*rowNumber;
+	NSRect			rowRect, cellRect;
+	int				count, firstRow, row;
+	float			yOffset;
+	
+	count = [dragRows count];
+	firstRow = [[dragRows objectAtIndex:0] intValue];
+	
+	//Since our cells draw outside their bounds, this drag image code will create a drag image as big as the table row
+	//and then draw the cell into it at the regular size.  This way the cell can overflow its bounds as normal and not
+	//spill outside the drag image.
+	rowRect = [self rectOfRow:firstRow];
+	image = [[[NSImage alloc] initWithSize:NSMakeSize(rowRect.size.width,
+													 rowRect.size.height*count + [self intercellSpacing].height*(count-1))] autorelease];
+	
+	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
+	[image setFlipped:YES];
+	[image lockFocus];
+	
+	yOffset = 0;
+	enumerator = [dragRows objectEnumerator];
+	while (rowNumber = [enumerator nextObject]){
+
+		row = [rowNumber intValue];
+		id		item = [self itemAtRow:row];
+		id		cell = ([self isExpandable:item] ? groupCell : contentCell);
+
+		//Render the cell
+		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+		[cell setHighlighted:NO];
+
+		//Draw the cell
+		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
+		[cell drawWithFrame:NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height)
+					 inView:self];
+		
+		//Offset so the next drawing goes directly below this one
+		yOffset += (rowRect.size.height + [self intercellSpacing].height);
+	}
+	
+	[image unlockFocus];
+	[image setFlipped:NO];
+	
+	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
+	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
+	dragImageOffset->x = (rowRect.size.width / 2.0) - clickLocation.x;
+	
+	
+	return([image imageByFadingToFraction:DRAG_IMAGE_FRACTION]);
+}
+
 
 - (int)totalHeight
 {
