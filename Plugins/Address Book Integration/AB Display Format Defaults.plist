@@ -16,5 +16,7 @@
 	<false/>
 	<key>AB Use AB Images</key>
 	<true/>
+	<key>AB Create MetaContacts</key>
+	<true/>
 </dict>
 </plist>
