@@ -104,7 +104,7 @@
 			if (shouldScroll) scrollToBottom();
 		}
 		function windowDidResize(){
-			alignChat(nearBottom());
+			alignChat(true/*nearBottom()*/); //nearBottom buggy with inavtive tabs
 		}
 		
 		window.onresize = windowDidResize;
@@ -113,7 +113,7 @@
 	<style id="mainStyle" type="text/css" media="screen,print">	@import url( "%@" ); </style>
 
 </head>
-<body onload="alignChat(true);" style="==bodyBackground==">
+<body onload="alignchat(true);" style="==bodyBackground==">
 %@
 <div id="Chat">
 </div>
