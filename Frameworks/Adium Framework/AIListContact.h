@@ -18,15 +18,17 @@
 @class AIAccount, AIContentObject;
 
 @interface AIListContact : AIListObject {
+	AIAccount		*account;
     NSString		*remoteGroupName;
-	NSString		*accountID;
-	NSString		*ultraUniqueObjectID;
+	NSString		*internalUniqueObjectID;
 }
 
-- (id)initWithUID:(NSString *)inUID accountID:(NSString *)inAccountID serviceID:(NSString *)inServiceID;
+- (id)initWithUID:(NSString *)inUID account:(AIAccount *)inAccount service:(AIService *)inService;
+- (id)initWithUID:(NSString *)inUID service:(AIService *)inService;
 - (void)setRemoteGroupName:(NSString *)inName;
 - (NSString *)remoteGroupName;
-- (NSString *)accountID;
 - (AIAccount *)account;
+- (NSString *)internalUniqueObjectID;
++ (NSString *)internalUniqueObjectIDForService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
 
 @end
