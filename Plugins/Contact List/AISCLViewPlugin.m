@@ -25,6 +25,9 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
+#warning crosslink
+#import "AIAppearancePreferencesPlugin.h"
+
 #define DEFAULT_LIST_THEME_NAME		@"Aqua (Tiger)"
 #define DEFAULT_LIST_LAYOUT_NAME	@"Standard"
 
@@ -47,7 +50,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	[adium createResourcePathForName:LIST_THEME_FOLDER];
 
     //Install our preference views
-    preferences = [[AICLPreferences preferencePane] retain];
+//    preferences = [[AICLPreferences preferencePane] retain];
 	advancedPreferences = [[ESContactListAdvancedPreferences preferencePane] retain];
 	   
 	//Observe list closing
@@ -75,11 +78,9 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 										  forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	//Observe window style changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 }
-
-
 
 
 //Contact List Controller ----------------------------------------------------------------------------------------------
@@ -127,7 +128,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 
-	if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
+	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
 		//Theme
 		if(!key || [key isEqualToString:KEY_LIST_THEME_NAME]){
 			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
