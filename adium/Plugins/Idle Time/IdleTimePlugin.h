@@ -27,6 +27,11 @@ typedef enum {
     AIDelayedManualIdle
 } AIIdleState;
 
+typedef enum {
+    SetIdle = 0,
+    RemoveIdle,
+} ESIdleMenuState;
+
 @protocol AIMiniToolbarItemDelegate;
 
 @class IdleTimeWindowController, IdleTimePreferences;
@@ -40,9 +45,12 @@ typedef enum {
     BOOL		idleEnabled;
     double		idleThreshold;
 
-    NSMenuItem		*menuItem;
-
+    NSMenuItem		*menuItem_setIdle;
+    NSMenuItem		*menuItem_removeIdle;
+    NSMenuItem          *menuItem_alternate;
+    
     AIIdleState		idleState;
+    ESIdleMenuState     idleMenuState;
     double		manualIdleTime;
 
 }
