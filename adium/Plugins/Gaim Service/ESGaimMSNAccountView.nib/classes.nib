@@ -13,21 +13,18 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
-        {
-            CLASS = AIGaimAIMAccountViewController; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIAccountViewController; 
-        }, 
-        {
-            CLASS = AIGaimAccountViewController; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIAccountViewController; 
-        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            CLASS = ESGaimAccountView; 
+            CLASS = ESGaimAccountViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {"view_auxiliaryGaimAccountTabView" = NSTabView; }; 
             SUPERCLASS = AIAccountViewController; 
+        }, 
+        {
+            CLASS = ESGaimMSNAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textField_friendlyName" = NSTextField; }; 
+            SUPERCLASS = ESGaimAccountViewController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

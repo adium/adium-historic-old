@@ -18,8 +18,8 @@
 @protocol AIListObjectObserver;
 
 @interface AIAccountViewController : AIObject <AIAccountViewController, AIListObjectObserver> {
-    id				account;
-    NSArray			*auxiliaryTabs;
+    id						account;
+    NSMutableArray			*auxiliaryTabs;
     
     IBOutlet		NSView			*view_accountView;              //Inline account preferences
     IBOutlet		NSTextField		*textField_accountName;		//Account name

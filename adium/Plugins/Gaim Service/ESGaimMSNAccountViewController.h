@@ -7,7 +7,7 @@
 #include "ESGaimAccountViewController.h"
 
 @interface ESGaimMSNAccountViewController : ESGaimAccountViewController {
-
+    IBOutlet		NSTextField		*textField_friendlyName;
 }
 
 @end

@@ -97,6 +97,9 @@ typedef enum
 
 } MsnClientVerId;
 
+//**ADIUM
+void msn_set_friendly_name(GaimConnection *gc, const char *entry);
+
 #define MSN_CLIENT_ID_VERSION      MSN_CLIENT_VER_6_0
 #define MSN_CLIENT_ID_RESERVED_1   0x00
 #define MSN_CLIENT_ID_RESERVED_2   0x00

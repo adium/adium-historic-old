@@ -28,7 +28,8 @@
 {
     [super init];
     account = inAccount;
-	
+	auxiliaryTabs = nil;
+	NSLog(@"just did init for account %@ (%@)",inAccount,(AIAccount *)[inAccount UID]);
     //Open a new instance of the account view
     if(![NSBundle loadNibNamed:[self nibName] owner:self]){
         NSLog(@"couldn't load account view bundle");
@@ -116,8 +117,16 @@
     if(inTabView){
         //Get the array of tabs
         NSArray *tabViewItems = [inTabView tabViewItems];
-        auxiliaryTabs = [tabViewItems copy];
-        
+		
+		//Create the auxiliaryTabs array if this is an initial set of auxiliary tabs
+		//or add to the array if auxiliaries already exist
+		NSLog(@"Auxiliary tabs is %@",auxiliaryTabs);
+		if (!auxiliaryTabs)
+			auxiliaryTabs = [tabViewItems mutableCopy];
+		else
+			[auxiliaryTabs addObjectsFromArray:tabViewItems];
+		NSLog(@"Auxiliary tabs is now %@",auxiliaryTabs);
+		
         //Now release the tabs and the window they came from
         NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
         NSTabViewItem   *tabViewItem;

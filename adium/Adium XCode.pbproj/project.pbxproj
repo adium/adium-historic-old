@@ -5557,6 +5557,7 @@
 				34415940059F94C10019246B,
 				344159B3059F977F0019246B,
 				344159B4059F97800019246B,
+				34F1529405E9FDDB00B32FD7,
 			);
 			isa = PBXGroup;
 			name = MSN;
@@ -7073,6 +7074,12 @@
 		};
 		3481DF5805704F9A00CD38D6 = {
 			fileRef = 3481DF5605704F9A00CD38D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3482223805EA069B0015055E = {
+			fileRef = 34F152AE05E9FF0100B32FD7;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17090,6 +17097,43 @@
 			settings = {
 			};
 		};
+		34F1529405E9FDDB00B32FD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimMSNAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimMSNAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1529605E9FDF200B32FD7 = {
+			fileRef = 34F1529405E9FDDB00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F152A505E9FEB500B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = msn.h;
+			path = msn/msn.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F152A605E9FEB500B32FD7 = {
+			fileRef = 34F152A505E9FEB500B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F152AE05E9FF0100B32FD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.ar;
+			name = libmsn.a;
+			path = "Plugins/Gaim Service/LIBS/libmsn.a";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34F2BC67059CC2840005B238 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -20466,6 +20510,7 @@
 				34F142A305E95B0F00B32FD7,
 				34F142A905E95B4D00B32FD7,
 				34F142AC05E962A500B32FD7,
+				34F152A605E9FEB500B32FD7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20476,6 +20521,7 @@
 				344157D1059F5EC80019246B,
 				34415EFE059FB4190019246B,
 				34415F91059FB85F0019246B,
+				34F1529605E9FDF200B32FD7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20516,6 +20562,7 @@
 		4B7F278105440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
+				3482223805EA069B0015055E,
 				6C3E0730054471CD00A4AE2E,
 				6C3E0731054471E400A4AE2E,
 				4B7F279705440CB900CDFC90,
@@ -20555,8 +20602,8 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\"";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" \"/Users/evands/adium/Plugins/Gaim Service/LIBS\"";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit -undefined suppress -flat_namespace";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -20689,6 +20736,7 @@
 				4B7F279505440CB900CDFC90,
 				3453573D059AEE1000A83D9E,
 				343FA4520567DC460049DFFB,
+				34F152AE05E9FF0100B32FD7,
 				34415816059F65100019246B,
 				9E2BD856054BE18200558E56,
 				4B7F27A005440CC900CDFC90,
@@ -25572,7 +25620,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/tcsh;
-			shellScript = "ranlib \"$SRCROOT/Plugins/Gaim Service/LIBS/liboscar.a\"";
+			shellScript = "ranlib \"$SRCROOT/Plugins/Gaim Service/LIBS/liboscar.a\"\nranlib \"$SRCROOT/Plugins/Gaim Service/LIBS/libmsn.a\"";
 		};
 		9CDF247703E8CBAA000001C9 = {
 			fileEncoding = 30;
@@ -27371,6 +27419,7 @@
 		};
 		9EE058D105548F9300505F31 = {
 			children = (
+				34F152A505E9FEB500B32FD7,
 				9EE058D205548F9300505F31,
 			);
 			isa = PBXGroup;
