@@ -104,7 +104,8 @@ ESGlobalEventsPreferencesPlugin,
 ESGeneralPreferencesPlugin,
 NEHGrowlPlugin,
 ESSecureMessagingPlugin,
-ESStatusPreferencesPlugin;
+ESStatusPreferencesPlugin,
+ESAutoAwayPlugin;
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -194,6 +195,7 @@ ESStatusPreferencesPlugin;
 	[self _loadComponentClass:[NEHGrowlPlugin class]];
 	[self _loadComponentClass:[ESSecureMessagingPlugin class]];
 	[self _loadComponentClass:[ESStatusPreferencesPlugin class]];
+	[self _loadComponentClass:[ESAutoAwayPlugin class]];
 }
 
 /*!
