@@ -15,6 +15,7 @@
 {
     BOOL                                allCount;
     BOOL                                visibleCount;
+    BOOL                                showOffline;
     
     NSMenuItem                          *visibleCountingMenuItem;
     NSMenuItem                          *allCountingMenuItem;

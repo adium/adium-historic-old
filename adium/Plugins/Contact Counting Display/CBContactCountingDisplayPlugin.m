@@ -12,6 +12,8 @@
 
 #define VISIBLE_COUNTING_MENU_ITEM_TITLE		@"Count Visible Contacts"
 #define ALL_COUNTING_MENU_ITEM_TITLE			@"Count All Contacts"
+#define	PREF_GROUP_CONTACT_LIST_DISPLAY                 @"Contact List Display"
+#define KEY_SHOW_OFFLINE_CONTACTS                       @"Show Offline Contacts"
 
 @implementation CBContactCountingDisplayPlugin
 
@@ -50,11 +52,14 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0) {
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0 || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) {
             allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
-																 group:PREF_GROUP_CONTACT_LIST] boolValue];
+                                                                     group:PREF_GROUP_CONTACT_LIST] boolValue];
         visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
-																 group:PREF_GROUP_CONTACT_LIST] boolValue];
+                                                                     group:PREF_GROUP_CONTACT_LIST] boolValue];
+        showOffline =  [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+                                                                     group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+
 
 		if(allCount != [allCountingMenuItem state]) {
 			[allCountingMenuItem setState:allCount];
@@ -79,16 +84,22 @@
 		   ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"ObjectCount"] || 
 											[inModifiedKeys containsObject:@"VisibleObjectCount"]))) {
 			NSString *addString = nil;
-			
-			if(visibleCount && allCount)
-				addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+                    
+                    if(showOffline) // if we are showing offline, override everything with just count
+                    {
+                        addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+                    }
+                    else if(!showOffline)
+                    {
+                        if(visibleCount && allCount)
+                            addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
 			else if(visibleCount)
-				addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
+                            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
 			else if(allCount)
-				addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
-			
-			[[inObject displayArrayForKey:@"Right Text"] setObject:addString withOwner:self priorityLevel:High_Priority];
-			modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
+                            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+                    }
+                    [[inObject displayArrayForKey:@"Right Text"] setObject:addString withOwner:self priorityLevel:High_Priority];
+                    modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
 		}
 	}
 	

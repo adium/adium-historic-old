@@ -41,6 +41,7 @@ Version 0.57
 - autolink improvements
 - fixed issue preventing mobile and ICQ service types from showing up
 - AIM escapes (%n %d, etc) are now processed in links.. fixed subprofile links
+- With offline contacts visible, we now hide the online count, example: group (4/4) is now group (4)
 
 
 
