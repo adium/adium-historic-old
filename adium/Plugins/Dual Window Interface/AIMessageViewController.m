@@ -21,11 +21,10 @@
 
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
-#define ENTRY_TEXTVIEW_MIN_HEIGHT	20
-#define ENTRY_TEXTVIEW_MAX_HEIGHT	70
-#define RESIZE_CORNER_TOOLBAR_OFFSET 	0
+#define ENTRY_TEXTVIEW_MIN_HEIGHT			20
+#define ENTRY_TEXTVIEW_MAX_HEIGHT_PERCENT	.50
+#define RESIZE_CORNER_TOOLBAR_OFFSET 		0
 #define TEXT_ENTRY_PADDING 3
-#define SEND_BUTTON_PADDING 0
 #define fixed_width 100
 #define fixed_padding 3
 
@@ -430,23 +429,17 @@
         superFrame.size.height -= height;
     }
 
-    //Send Button
-    int buttonWidth = 0;//[button_send frame].size.width;
-/*    [button_send setFrame:NSMakeRect(superFrame.origin.x + superFrame.size.width - buttonWidth,
-                                     superFrame.origin.y - 1,
-                                     [button_send frame].size.width,
-                                     [button_send frame].size.height)];*/
-
     //Text entry
+	float	entryMaxHeight = [view_contents frame].size.height * ENTRY_TEXTVIEW_MAX_HEIGHT_PERCENT;
     textHeight = [textView_outgoing desiredSize].height;
-    if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
-        textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
+    if(textHeight > entryMaxHeight){
+        textHeight = entryMaxHeight;
     }else if(textHeight < ENTRY_TEXTVIEW_MIN_HEIGHT){
         textHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
     }
 	
-    [scrollView_outgoingView setHasVerticalScroller:(textHeight == ENTRY_TEXTVIEW_MAX_HEIGHT)];
-    [scrollView_outgoingView setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width - (buttonWidth + SEND_BUTTON_PADDING), textHeight)];
+    [scrollView_outgoingView setHasVerticalScroller:(textHeight == entryMaxHeight)];
+    [scrollView_outgoingView setFrame:NSMakeRect(superFrame.origin.x - 1, superFrame.origin.y, superFrame.size.width + 2, textHeight)];
     superFrame.size.height -= textHeight + TEXT_ENTRY_PADDING;
     superFrame.origin.y += textHeight + TEXT_ENTRY_PADDING;
 
