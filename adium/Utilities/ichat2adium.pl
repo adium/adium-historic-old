@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: ichat2adium.pl,v 1.1 2003/11/29 07:12:34 jmelloy Exp $
+# $Id: ichat2adium.pl,v 1.2 2003/11/29 17:50:02 jmelloy Exp $
 #
 # This program imports iChat logs using the program Logorrhea.  Get it from
 # http://spiny.com/logorrhea/
@@ -50,6 +50,8 @@ for (my $i = 0; $i < @input; $i++) {
     if($date) {
         ($month, $day, $year) = /(\d\d)\/(\d\d)\/(\d\d\d\d)/;
     }
+    
+    $chatname =~ s/ //g;
     
     if($chatname && $sender && $date && $month && $day && $year && $message) {
         $outfile = "adiumLogs/$chatname ($year|$month|$day).adiumLog";
