@@ -25,14 +25,6 @@
 	- Dim service icon slightly on selection (Similar to contact list)
 	- Use status icon to show online state instead of postfixing 'online/offline'
 
-//Icon Packs
-  Provide an interface for selection the active service and status icon packs
-    - Menus items should show a preview of the most common icons
-  These preferences will go on the general pane, since they apply throughout Adium  
-
-//General Preferences
-	- Service and status icon pack selection
-
 //Message window toolbar
   Additional message window toolbar items
 	- Open font/color panel (standard system buttons)
