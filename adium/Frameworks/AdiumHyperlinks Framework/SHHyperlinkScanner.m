@@ -125,11 +125,11 @@
             }
             
             //make a marked link
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:newURL
+            SHMarkedHyperlink *markedLink = [[SHMarkedHyperlink alloc] initWithString:newURL
                                                                  withValidationStatus:validStatus
                                                                          parentString:inString
-                                                                             andRange:urlRange] autorelease];
-            return markedLink;
+                                                                             andRange:urlRange];
+            return [markedLink autorelease];
         }
         //step location after scanning a string
         location = SHStringOffset;

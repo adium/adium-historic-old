@@ -18,12 +18,12 @@
 // one really big init method that does it all...
 -(id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
 {
-    linkRange = inRange;
-    pString = [pInString retain];
-    linkURL = [[NSURL URLWithString:inString] retain];
-    urlStatus = status;
-    
     [super init];
+    
+    [self setURLFromString:inString];
+    linkRange = inRange;
+    [self setParentString:pInString];
+    urlStatus = status;
     
     return self;
 }
@@ -43,12 +43,12 @@
 
 -(NSString *)parentString
 {
-    return pString;
+    return [[pString copy] autorelease];
 }
 
 -(NSURL *)URL
 {
-    return linkURL;
+    return [[linkURL copy] autorelease];
 }
 
 -(URI_VERIFICATION_STATUS)validationStatus
@@ -69,14 +69,16 @@
 
 -(void)setURL:(NSURL *)inURL
 {
-    if(linkURL) [linkURL release];
-    linkURL = [inURL retain];
+    if(linkURL != inURL){
+        [linkURL autorelease];
+        linkURL = [inURL retain];
+    }
 }
 
 -(void)setURLFromString:(NSString *)inString
 {
-    if(linkURL) [linkURL release];
-    linkURL = [[NSURL URLWithString:inString] autorelease];
+    [linkURL autorelease];
+    linkURL = [[[NSURL alloc] initWithString:inString] retain];
 }
 
 -(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
@@ -86,8 +88,20 @@
 
 -(void)setParentString:(NSString *)pInString
 {
-    if(pString) [pString release];
-    pString = pInString;
+    if(pString != pInString){
+        [pString autorelease];
+        pString = [pInString retain];
+    }
+}
+
+#pragma mark copying
+- (id)copyWithZone:(NSZone *)zone
+{
+    SHMarkedHyperlink   *newLink = [[[self class] allocWithZone:zone] initWithString:[[self URL] absoluteString]
+                                                                withValidationStatus:[self validationStatus]
+                                                                        parentString:[self parentString]
+                                                                            andRange:[self range]];
+    return newLink;
 }
 
 @end
