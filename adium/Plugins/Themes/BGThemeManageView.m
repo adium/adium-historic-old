@@ -89,7 +89,8 @@
 	} else {
 		NSArray            *resourcesPaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
 		NSEnumerator       *tempEnum       = [resourcesPaths objectEnumerator];
-		NSString           *curResPath, *filePath;
+		NSString           *curResPath;
+		NSString           *filePath = nil;
 		NSFileManager      *mgr            = [NSFileManager defaultManager];
 		BOOL                isDirectory;
 
