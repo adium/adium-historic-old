@@ -38,6 +38,6 @@
     AIEventSoundPreferences	*preferences;
 }
 
-- (BOOL)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray;
+- (NSArray *)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc;
 
 @end
