@@ -13,50 +13,15 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#define PUSH_DEFAULT_PREFS		@"MessagePushDefaults"
 #define PREF_GROUP_PUSH_PREFS   @"Push Message"
 #define KEY_AUTOPOP				@"Autopop"
 
-@class AIListObject, AIAdium, AIAccount, AIChat;
-@protocol AITextEntryView;
-
-@interface AISendingTextView : NSTextView <AITextEntryView> {
-    AIAdium		*adium;
-    AIChat		*chat;
-    
-    BOOL		sendOnEnter;
-    BOOL		sendOnReturn;
-    NSMutableArray	*returnArray;
-    BOOL		insertingText;
-    
-    id			target;
-    SEL			selector;
-    BOOL		availableForSending;
-
-    NSMutableArray	*historyArray;
-    int 		currentHistoryLocation;
-
-    NSMutableArray	*pushArray;
-    BOOL		pushIndicatorVisible;
-	NSDictionary	*prefDict;
-    NSImageView 	*indicator;
-        
-    NSSize		lastPostedSize;
-    NSSize		_desiredSizeCached;
-    
-    IBOutlet		NSScrollView   *messageScrollView;
+@interface DCMessagePushPreferences : AIPreferencePane {
+    IBOutlet		NSView						*view_prefView;
+    IBOutlet		NSButton					*checkBox_autoPop;
 }
 
-- (id)initWithFrame:(NSRect)frameRect;
-- (void)setSendOnReturn:(BOOL)inBool;
-- (void)setSendOnEnter:(BOOL)inBool;
-- (void)setTarget:(id)inTarget action:(SEL)inSelector;
-- (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
-- (void)insertText:(id)aString;
-- (void)interpretKeyEvents:(NSArray *)eventArray;
-- (void)setAvailableForSending:(BOOL)inBool;
-- (BOOL)availableForSending;
-- (void)setChat:(AIChat *)inChat;
-- (AIChat *)chat;
-- (NSSize)desiredSize;
+- (IBAction)changePreference:(id)sender;
 
 @end
