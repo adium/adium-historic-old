@@ -16,7 +16,7 @@
 #import "AIListCell.h"
 #import "AIListOutlineView.h"
 
-#define	ORDERING_DEBUG
+//#define	ORDERING_DEBUG
 
 @implementation AIListCell
 
