@@ -42,6 +42,7 @@
             SUPERCLASS = AISendingTextView; 
         }, 
         {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {sendContent = id; }; 
             CLASS = AISendingTextView; 
