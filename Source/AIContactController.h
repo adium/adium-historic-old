@@ -72,7 +72,7 @@ typedef enum {
 @class AIContactInfoPane, AIListContact, AIListGroup, AISortController;
 
 @interface AIContactController : NSObject {
-    IBOutlet	AIAdium		*owner;
+    IBOutlet	AIAdium		*adium;
 	
 	//Contacts and metaContacts
 	NSMutableDictionary		*contactDict;
