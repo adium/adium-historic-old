@@ -948,7 +948,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         [inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];
     }else{
         //Prompt the user for their password
-        [ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector context:inContext];
+        [ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
+														notifyingTarget:inTarget
+															   selector:inSelector
+																context:inContext];
     }
 }
 
