@@ -1,30 +1,42 @@
-/*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2005, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+/* 
+Adium, Copyright 2001-2005, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #import "AIAccountViewController.h"
 #import "AIAccount.h"
 
+/*!
+ * @class AIAccountViewController
+ * @brief Base account view controller
+ *
+ * This class serves as a foundation for account code's account-specific preference views.  It provides a lot of 
+ * common functionality to cut down on duplicate code, and default views that will be satisfactory for many service
+ * types
+ */
 @implementation AIAccountViewController
 
-//Create a new account view controller
+/*!
+ * @brief Create a new account view controller
+ */
 + (id)accountViewController
 {
     return([[[self alloc] init] autorelease]);
 }
 
-//Init
+/*!
+ * @brief Init
+ */
 - (id)init
 {
 	NSBundle		*ourBundle = [NSBundle bundleForClass:[AIAccountViewController class]];
@@ -46,7 +58,9 @@
     return(self);
 }
 
-//Dealloc
+/*!
+ * @brief Deallocate
+ */
 - (void)dealloc
 {    
     [[adium contactController] unregisterListObjectObserver:self];
@@ -55,7 +69,11 @@
     [super dealloc];
 }
 
-//Awake
+/*!
+ * @brief Awake from nib
+ *
+ * Configure the account view controller after it's loaded from the nib
+ */
 - (void)awakeFromNib
 {
 	//Empty
@@ -64,25 +82,45 @@
 
 //Account specific views -----------------------------------------------------------------------------------------------
 #pragma mark Account specific views
-//Setup view
+/*!
+ * @brief Setup View
+ *
+ * Returns the account setup view.  This view is displayed on the main account preferences pane, and should contain
+ * the fields which are essential.  The default view provides username and password fields.
+ */
 - (NSView *)setupView
 {
     return(view_setup);
 }
 
-//Profile view
+/*!
+ * @brief Profile View
+ *
+ * Returns the account profile view.  This view is for personal information that in most cases is viewable by other 
+ * users.  The default view provides an alias field.
+ */
 - (NSView *)profileView
 {
     return(view_profile);
 }
 
-//Options view
+/*!
+ * @brief Options View
+ *
+ * Returns the account options view.  This view is for additional settings which are not common enough to be a standard
+ * part of Adium.  The default view provides nothing.
+ */
 - (NSView *)optionsView
 {
     return(view_options);
 }
 
-//Nib containing custom views or tabs (Optional, for subclasses)
+/*!
+ * @brief Custom nib name
+ *
+ * Returns the file name of the custom nib to load which contains the account code's custom setup, profile, and options
+ * views.
+ */
 - (NSString *)nibName
 {
     return(@"");    
@@ -91,7 +129,11 @@
 
 //Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
-//Configure the account view
+/*!
+ * @brief Configure the account view
+ *
+ * Configures the account view controls for the passed account.
+ */
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	if(account != inAccount){		
@@ -140,7 +182,12 @@
 	}
 }
 
-//Save all control values
+/*!
+ * @brief Saves the current account view configuration
+ *
+ * Saves the current configuration of the account view to the account it's been configured for.  Not saving changes
+ * immediately allows us to 'cancel' changes, or 'okay' changes and apply them by calling this method.
+ */
 - (void)saveConfiguration
 {
 	//UID
@@ -183,7 +230,13 @@
 	
 }
 
-//For subclasses
+/*!
+ * @brief Invoked when a preference is changed
+ *
+ * This method is invoked when a preference is changed, and may be used to dynamically enable/disable controls or
+ * change other aspects of the view dynamically.  It should not be used to save changes, changes should only be saved
+ * from within the saveConfiguration method.
+ */
 - (IBAction)changedPreference:(id)sender
 {
 	//Empty
