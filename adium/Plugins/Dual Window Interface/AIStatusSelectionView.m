@@ -226,7 +226,19 @@
     }else if(onlineAccounts && awayMessageData){ //Away
         if(awayMessageIndex > 0 && awayMessageIndex < [[popUp_status menu] numberOfItems]){
             selectedMenuItem = [[popUp_status menu] itemAtIndex:awayMessageIndex];
-        }
+        } else { //not a saved away message but away nonetheless
+	    NSString * away = [[NSAttributedString stringWithData:awayMessageData] string];
+
+            //Cap the away menu title (so they're not incredibly long)
+            if([away length] > MENU_AWAY_DISPLAY_LENGTH){
+                away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
+            }
+
+	    [popUp_status selectItem:nil];
+	    [popUp_status setTitle:away];
+	    selectedMenuItem = nil;
+	}
+	
         
     }else if(onlineAccounts){ //Online
         selectedMenuItem = [[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE];
@@ -235,7 +247,8 @@
         selectedMenuItem = [[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE];
         
     }
-    if(selectedMenuItem) [popUp_status selectItem:selectedMenuItem];
+    
+    if(selectedMenuItem) { [popUp_status selectItem:selectedMenuItem];
 
     //Update the 'Checked' menu item
     enumerator = [[[popUp_status menu] itemArray] objectEnumerator];
@@ -246,7 +259,8 @@
             [menuItem setState:NSOffState];
         }
     }
-
+    }
+    
     //Both available and offline have no represented object, but one should be checked and the other off if one is selected.
     if ( selectedMenuItem == [[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE])
     {
