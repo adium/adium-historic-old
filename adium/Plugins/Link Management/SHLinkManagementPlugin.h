@@ -9,7 +9,7 @@
 
 
 @interface SHLinkManagementPlugin : AIPlugin {
-    SHLinkFavoritesPreferences          *preferences;
+
 }
 
 @end
