@@ -14,13 +14,16 @@
 
 - (void)installPlugin
 {
+    allCount = YES;
+    visibleCount = YES;
+    
  /*   //Set up preferences
     prefs = [[CBContactCountingDisplayPreferences contactCountingDisplayPreferences] retain];
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST]; */
 
     //install our observers
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(contactsChanged:) name:ListObject_StatusChanged object:nil];
+    [[adium contactController] registerListObjectObserver:self];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -28,29 +31,31 @@
     
 }
 
-- (void)contactsChanged:(NSNotification *)notification
-{
-    if((visibleCount || allCount) && [[notification object] isKindOfClass:[AIListGroup class]])
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{    
+    if([inObject isKindOfClass:[AIListGroup class]] && (visibleCount || allCount) && ([inModifiedKeys containsObject:@"Object Count"] || [inModifiedKeys containsObject:@"VisibleObjectCount"]))
     {
-        AIListGroup *group = [notification object];
         NSString *addString = nil;
         
         if(visibleCount && allCount)
-            addString = [NSString stringWithFormat:@" (%i/%i)", [[group statusObjectForKey:@"VisibleObjectCount"] intValue], [[group statusObjectForKey:@"ObjectCount"] intValue]];
+            addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
         else if(visibleCount)
-            addString = [NSString stringWithFormat:@" (%i)", [[group statusObjectForKey:@"VisibleObjectCount"] intValue]];
+            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
         else if(allCount)
-            addString = [NSString stringWithFormat:@" (%i)", [[group statusObjectForKey:@"ObjectCount"] intValue]];
+            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
         
         if(addString)
-            [[group displayArrayForKey:@"Right Text"] setPrimaryObject:addString withOwner:self];
+            [[inObject displayArrayForKey:@"Right Text"] setPrimaryObject:addString withOwner:self];
     }
+    
+    return(nil);
 }
 
 - (void)uninstallPlugin
 {
     //we are no longer an observer
     [[adium notificationCenter] removeObserver:self];
+    [[adium contactController] unregisterListObjectObserver:self];
 }
 
 @end
