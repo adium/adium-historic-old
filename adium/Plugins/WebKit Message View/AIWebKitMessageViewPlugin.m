@@ -264,7 +264,7 @@ DeclareString(AppendNextMessage);
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
-													 date:nil
+													 date:[content date]
 												  message:dateMessage
 												 withType:@"date_separator"];
 			//Add the date header
@@ -289,7 +289,7 @@ DeclareString(AppendNextMessage);
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 										   withSource:[[content chat] listObject]
 										  destination:[[content chat] account]
-												 date:nil
+												 date:[content date]
 											  message:dateMessage
 											 withType:@"date_separator"];
 			//Add the date header
