@@ -85,7 +85,10 @@
         //init
         delay = 0;
         animated = NO;
-        image = [[self _compositeStates:inIconStates withBaseState:baseIconState animatingState:animatingState forFrame:0] retain];
+        image = [[self _compositeStates:inIconStates
+						  withBaseState:baseIconState
+						 animatingState:animatingState 
+							   forFrame:0] retain];
 
     }else{ //Animating icon
         //init
@@ -100,7 +103,10 @@
         iconRendering_animationState = [animatingState retain];
 
         //Render the first image
-        image = [[self _compositeStates:inIconStates withBaseState:baseIconState animatingState:animatingState forFrame:0] retain];
+        image = [[self _compositeStates:inIconStates 
+						  withBaseState:baseIconState
+						 animatingState:animatingState
+							   forFrame:0] retain];
         [imageArray addObject:image];
     }
 
@@ -152,7 +158,10 @@
 
         //Get the new image (compositing if necessary)
         if(currentFrame >= [imageArray count] && iconRendering_states && iconRendering_baseState && iconRendering_animationState){
-            [imageArray addObject:[self _compositeStates:iconRendering_states withBaseState:iconRendering_baseState animatingState:iconRendering_animationState forFrame:currentFrame]];
+            [imageArray addObject:[self _compositeStates:iconRendering_states 
+										   withBaseState:iconRendering_baseState 
+										  animatingState:iconRendering_animationState
+												forFrame:currentFrame]];
             
             //After rendering the last frame, we can release our icon rendering information (it's no longer needed)
             if(currentFrame >= (numberOfFrames - 1)){
@@ -211,31 +220,37 @@
     }else{
         workingImage = [[baseState image] copy];
     }
-
+	
     //Draw on the images of all overlayed states
     enumerator = [iconStateArray objectEnumerator];
     while((iconState = [enumerator nextObject])){
         if([iconState overlay]){
             NSImage	*overlayImage;
-
+			
             //Get the overlay image
             if([iconState animated]){
                 if(iconState == animatingState){ //Only one state animates at a time
                     overlayImage = [[iconState imageArray] objectAtIndex:frame];
                 }else{
                     overlayImage = [[iconState imageArray] objectAtIndex:( ((frame + 1) / [animatingState numberOfFrames]) * ([iconState numberOfFrames] - 1)) ];
-		}
+				}
             }else{
                 overlayImage = [iconState image];
             }
-
-            //Layer it ontop our working image
+			
+			NSSize size = [overlayImage size];
+			
+            //Layer it on top of our working image
+			[workingImage setFlipped:YES];
             [workingImage lockFocus];
-            [overlayImage compositeToPoint:NSMakePoint(0,0) operation:NSCompositeSourceOver];
+            [overlayImage drawAtPoint:NSMakePoint(0,0)
+							 fromRect:NSMakeRect(0,0,size.width,size.height)
+							operation:NSCompositeSourceOver
+							 fraction:1.0];
             [workingImage unlockFocus];
         }
     }
-
+	
     return([workingImage autorelease]);
 }
 

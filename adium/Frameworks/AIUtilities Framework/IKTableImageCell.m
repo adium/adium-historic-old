@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Ian Krieg on Mon Jul 28 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "CSBezierPathAdditions.h"
@@ -28,12 +27,9 @@
     NSImage	*img = [self image];
     
     if(img){
+		
         // Handle flipped axes
-        BOOL	wasFlipped = TRUE;
-        if (![img isFlipped]) {
-            wasFlipped = FALSE;
-        }
-        [img setFlipped:TRUE];
+		[img setFlipped:![img isFlipped]];
 
         // Size and location
         // Get image metrics
@@ -55,19 +51,16 @@
         }else{
             targetRect.size.width = imgSize.width;
             targetRect.size.height = imgSize.height;
-            
         }
 
-        //Centering
+        // Centering
         targetRect = NSOffsetRect(targetRect, (cellFrame.size.width - targetRect.size.width) / 2, (cellFrame.size.height - targetRect.size.height) / 2);
         
         // Draw	Image
         [img drawInRect:targetRect fromRect:imgRect operation:NSCompositeSourceOver fraction:([self isEnabled] ? 1.0 : 0.5)];
 
         // Clean-up
-        if (!wasFlipped){
-            [img setFlipped:FALSE];
-        }
+		[img setFlipped:![img isFlipped]];
     }
 }
 
