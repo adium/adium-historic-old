@@ -16,29 +16,29 @@
 @class AIListObject, AISCLOutlineView;
 
 @interface AIListCell : NSCell {
-	NSView			*controlView;
-    AIListObject	*listObject;
-    BOOL			isGroup;
+	AIListOutlineView	*controlView;
+    AIListObject		*listObject;
+    BOOL				isGroup;
 	
-	NSTextAlignment	textAlignment;
+	NSTextAlignment		textAlignment;
 	
-	int				topSpacing;
-	int				bottomSpacing;
-	int				topPadding;
-	int				bottomPadding;
+	int					topSpacing;
+	int					bottomSpacing;
+	int					topPadding;
+	int					bottomPadding;
 
-	int				leftPadding;
-	int				rightPadding;
-	int				leftSpacing;
-	int				rightSpacing;
+	int					leftPadding;
+	int					rightPadding;
+	int					leftSpacing;
+	int					rightSpacing;
 	
-	NSColor			*textColor;
-	NSColor			*invertedTextColor;
+	NSColor				*textColor;
+	NSColor				*invertedTextColor;
 	
-	NSFont			*font;
-	NSImage			*genericUserIcon;
+	NSFont				*font;
+	NSImage				*genericUserIcon;
 	
-	BOOL			useAliasesAsRequested;
+	BOOL				useAliasesAsRequested;
 }
 
 - (void)setListObject:(AIListObject *)inObject;

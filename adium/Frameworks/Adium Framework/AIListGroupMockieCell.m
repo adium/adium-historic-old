@@ -6,6 +6,7 @@
 //
 
 #import "AIListGroupMockieCell.h"
+#import "AIListOutlineView.h"
 
 @interface AIListGroupMockieCell (PRIVATE)
 - (NSImage *)cachedGroupGradient:(NSSize)inSize;

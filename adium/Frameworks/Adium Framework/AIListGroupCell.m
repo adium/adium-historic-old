@@ -7,6 +7,7 @@
 //
 
 #import "AIListGroupCell.h"
+#import "AIListOutlineView.h"
 
 #define FLIPPY_TEXT_PADDING		3
 

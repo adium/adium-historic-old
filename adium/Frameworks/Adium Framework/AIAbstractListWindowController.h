@@ -146,10 +146,20 @@ typedef enum {
 - (void)setContactListRoot:(AIListObject *)newContactListRoot;
 - (void)setHideRoot:(BOOL)inHideRoot;
 - (IBAction)performDefaultActionOnSelectedItem:(id)sender;
-- (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict;
 - (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict;
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict;
+
+- (void)contactListDesiredSizeChanged:(NSNotification *)notification;
+- (void)updateTransparency;
+- (IBAction)performDefaultActionOnSelectedContact:(AIListObject *)selectedObject withSender:(id)sender;
+- (BOOL)useAliasesInContactListAsRequested;
+	
+
+//Tooltip
+- (void)showTooltipAtPoint:(NSPoint)screenPoint;
+- (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint;
+- (void)hideTooltip;
 
 @end

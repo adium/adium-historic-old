@@ -7,6 +7,7 @@
 //
 
 #import "AIListContactBubbleCell.h"
+#import "AIListOutlineView.h"
 
 #define EDGE_INDENT 			4
 

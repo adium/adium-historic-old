@@ -15,11 +15,11 @@
 
 #import "AIContactAwayPlugin.h"
 
-#define	AWAY_LABEL			AILocalizedString(@"Away",nil);
-#define	AWAY_MESSAGE_LABEL	AILocalizedString(@"Away Message",nil);
-#define	STATUS_LABEL		AILocalizedString(@"Status",nil);
+#define	AWAY_LABEL			AILocalizedString(@"Away",nil)
+#define	AWAY_MESSAGE_LABEL	AILocalizedString(@"Away Message",nil)
+#define	STATUS_LABEL		AILocalizedString(@"Status",nil)
 
-#define AWAY_YES			AILocalizedString(@"Yes",nil);
+#define AWAY_YES			AILocalizedString(@"Yes",nil)
 
 @implementation AIContactAwayPlugin
 
@@ -87,7 +87,7 @@
 	if ([serverDisplayName isEqualToString:[statusMessage string]]){
 		//If the status and server display name are the same, just display YES for away since we'll display the
 		//server display name itself in the proper place.
-		if (away){
+		if(away){
 			entry = [[[NSAttributedString alloc] initWithString:AWAY_YES] autorelease];
 		}
 	}else{

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactInfoWindowController.h"
+#import "AIListOutlineView.h"
 
 #define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
