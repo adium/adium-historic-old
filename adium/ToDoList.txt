@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.109 2004/05/08 20:55:15 adamiser Exp $
+$Id: ToDoList.txt,v 1.110 2004/05/09 00:28:13 eevyl Exp $
 
 
 Legend
@@ -174,19 +174,17 @@ Status badges:
 	+ Add images based status badges to the contact list
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
 
-Event Info (Implement as a new plugin, to replace bezel):
-    	Notify the user of status changes for specific contacts with a small, very visible, easy to position, non intrusive
-    	floating 'bezel'
-
-    	Details:
-	+ Give the notification window a titlebar, and allow it to be repositioned while visible.
-	  I think that making only the titlebar clickable would be neat for unobstrusiveness [Jorge]
-	# Stack bezels when multiple events arrive
-	  - I am strongly against the clutter of stacks, I vote for queue events [Jorge]
-	+ Color the entire bezel to match the event being displayed
-	+ Make the bezel smaller, clearer, easier to read, prettier
-	+ Give the event info few preferences if any.
-
+Event Notifications (the feature formerly known as Event Bezel:
+    + Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option hold down should close all queued events altogether.
+    + Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
+    + Add small pretty protocol icons (we need nice icons for this)
+    + Add one more advanced preference to make it unclickable, yet maybe would be nice that in this mode it could be clicked and moved while holding command as in the borderless contact list
+    # Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
+	# Give the notification window a titlebar, and allow it to be repositioned while visible.
+      not sure about adding a titlebar to it [Jorge]
+	= Color the entire bezel to match the event being displayed
+	= Make the bezel smaller, clearer, easier to read, prettier
+	= Give the event info few preferences if any.
 
 [Colin]
 Contact Blocking:
