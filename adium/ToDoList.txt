@@ -62,7 +62,7 @@ Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
         Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P -Colin
-
+	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
