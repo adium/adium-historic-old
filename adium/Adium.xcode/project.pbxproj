@@ -2413,6 +2413,7 @@
 				346C9CE706004613000F5A8A,
 				346C9CE906004614000F5A8A,
 				346C9CEB06004614000F5A8A,
+				6E6EA019066F9C2600FA0D91,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7712,6 +7713,7 @@
 				4BE9201003DEE2FE00A8010A,
 				C497516205BBAEB1009958A6,
 				4B5AAA1F03E02EB900A8010A,
+				6E6EA018066F9C2600FA0D91,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -18703,6 +18705,21 @@
 		};
 		6E5A43E0061160C60078C342 = {
 			fileRef = 6E5A43DE061160C50078C342;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E6EA018066F9C2600FA0D91 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = MessageStyles.plist;
+			path = "Plugins/Standard Message View/MessageStyles.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E6EA019066F9C2600FA0D91 = {
+			fileRef = 6E6EA018066F9C2600FA0D91;
 			isa = PBXBuildFile;
 			settings = {
 			};
