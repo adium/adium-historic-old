@@ -7,6 +7,7 @@
 //
 
 #import "AISendingTextView.h"
+#import "AIStringAdditions.h"
 
 //What's going on in here?
 //
@@ -18,10 +19,10 @@
 //trigger a send.
 //
 //This fix watches for returns in the insertText method.  However, since it's impossible to distinguish a return from
-//an enter by the characters inserted (both insert /r, 10), it also watches and remembers the keys being pressed with
-//interpretKeyEvents... When insertText sees a /r, it checks to see what key was pressed to generate that /r, and makes
+//an enter by the characters inserted (both insert CR, ASCII 10), it also watches and remembers the keys being pressed with
+//interpretKeyEvents... When insertText sees a CR, it checks to see what key was pressed to generate that CR, and makes
 //a decision to send or not.  Since the sending occurs from within insertText, the returns are processed in the correct
-//order with the text, and the problem is illiminated.
+//order with the text, and the problem is eliminated.
 //
 
 @interface AISendingTextView (PRIVATE)
@@ -32,18 +33,16 @@
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {
-    if((self = [super initWithFrame:frameRect])) {
-		[self _initSendingTextView];
-	}
+    self = [super initWithFrame:frameRect];
+	[self _initSendingTextView];
 
 	return(self);
 }
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	if((self = [super initWithCoder:coder])) {
-		[self _initSendingTextView];
-	}
+	self = [super initWithCoder:coder];
+	[self _initSendingTextView];
 	
 	return(self);
 }
