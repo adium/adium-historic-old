@@ -22,14 +22,8 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define RENDEZVOUS_SERVICE_IDENTIFIER  @"Rendezvous"
+@interface AWRendezvousPlugin : AIPlugin {
 
-@class AIServiceType;
-
-@interface AWRendezvousPlugin : AIPlugin <AIServiceController> {
-	IBOutlet 	NSView		*view_preferences;
-
-	AIServiceType		*handleServiceType;
 }
 
 @end

@@ -52,12 +52,7 @@
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return([self uniqueObjectID]);
-}
-
-//The service ID (shared by any account code accessing this service)
-- (NSString *)serviceID{
-    return(RENDEZVOUS_SERVICE_IDENTIFIER);
+    return([self internalObjectID]);
 }
 
 //No need for a password for Rendezvous accounts
@@ -115,8 +110,8 @@
     AIListContact *user;
 
     while (uniqueID = [enumerator nextObject]) {
-		user = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
-														   accountID:[self uniqueObjectID]
+		user = [[adium contactController] existingContactWithService:service
+															 account:self
 																 UID:uniqueID];
 		[user setRemoteGroupName:nil];
     }
@@ -135,8 +130,8 @@
 {
     AIListContact *user;
 	
-    user = [[adium contactController] contactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
-											   accountID:[self uniqueObjectID]
+    user = [[adium contactController] contactWithService:service
+												 account:self
 													 UID:[contact uniqueID]];  
 	
 	[user setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
@@ -189,8 +184,8 @@
 {
     AIListContact *user;
     
-    user = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
-													   accountID:[self uniqueObjectID] 
+    user = [[adium contactController] existingContactWithService:service
+														 account:self 
 															 UID:[contact uniqueID]];
     
     [user setRemoteGroupName:nil];
@@ -203,8 +198,8 @@
     AIListContact *user;
     AIContentMessage *msgObj;
     
-    user = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
-													   accountID:[self uniqueObjectID]
+    user = [[adium contactController] existingContactWithService:service
+														 account:self
 															 UID:[contact uniqueID]];
 	
     msgObj = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:user]
@@ -221,8 +216,8 @@
 {
     AIListContact   *listContact;
     AIChat			*chat;
-    listContact = [[adium contactController] existingContactWithService:RENDEZVOUS_SERVICE_IDENTIFIER
-															  accountID:[self uniqueObjectID]
+    listContact = [[adium contactController] existingContactWithService:service
+																account:self
 																	UID:[contact uniqueID]];
 	chat = [[adium contentController] existingChatWithContact:listContact];
 		
@@ -296,7 +291,7 @@
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
     if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
 		return(YES);
