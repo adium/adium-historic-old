@@ -283,7 +283,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			
 		//Service
 		if([inObject isKindOfClass:[AIListContact class]]){
-			NSString	*displayServiceID = [inObject displayServiceID];
+			NSString	*displayServiceID = [[inObject service] shortDescription];
 			[textField_service setStringValue:(displayServiceID ? displayServiceID : META_SERVICE_STRING)];
 		}
 		
@@ -382,12 +382,12 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
     if(item == nil){
 		if (hideRoot){
-			if ([contactList isKindOfClass:[AIMetaContact class]]){
+			if([contactList isKindOfClass:[AIMetaContact class]]){
 				return((index >= 0 && index < [(AIMetaContact *)contactList uniqueContainedObjectsCount]) ?
 					   [(AIMetaContact *)contactList uniqueObjectAtIndex:index] : 
 					   nil);
 			}else{
-				return((index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
+				return((index >= 0 && index < [(AIListGroup *)contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
 			}
 		}else{
 			return contactList;
@@ -398,7 +398,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				   [(AIMetaContact *)item uniqueObjectAtIndex:index] : 
 				   nil);
 		}else{
-			return((index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
+			return((index >= 0 && index < [(AIListGroup *)item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
 		}
     }
 }
@@ -407,20 +407,20 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     if(item == nil){
-		if (hideRoot){
+		if(hideRoot){
 			if ([contactList isKindOfClass:[AIMetaContact class]]){
 				return([(AIMetaContact *)contactList uniqueContainedObjectsCount]);
 			}else{
-				return([contactList containedObjectsCount]);
+				return([(AIListGroup *)contactList containedObjectsCount]);
 			}
 		}else{
 			return(1);
 		}
     }else{
-		if ([item isKindOfClass:[AIMetaContact class]]){
+		if([item isKindOfClass:[AIMetaContact class]]){
 			return([(AIMetaContact *)item uniqueContainedObjectsCount]);
 		}else{
-			return([item containedObjectsCount]);
+			return([(AIListGroup *)item containedObjectsCount]);
 		}
     }
 }
