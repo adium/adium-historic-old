@@ -6408,6 +6408,7 @@
 				34BD9D0D053146CC000AB133,
 				34BD9D0E053146CC000AB133,
 				34BD9D0F053146CC000AB133,
+				6C3E0150054445BA00A4AE2E,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -17617,6 +17618,8 @@
 		4B7F278105440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
+				6C3E0730054471CD00A4AE2E,
+				6C3E0731054471E400A4AE2E,
 				4B7F279605440CB900CDFC90,
 				4B7F279705440CB900CDFC90,
 				4B7F279805440CB900CDFC90,
@@ -17654,6 +17657,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				6C3E0152054445C000A4AE2E,
+				6C3E0154054445C400A4AE2E,
 			);
 			isa = PBXNativeTarget;
 			name = Gaim;
@@ -20564,6 +20569,54 @@
 			path = buildnum.c;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		6C3E014F054445BA00A4AE2E = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 4B7F278205440C0800CDFC90;
+			remoteInfo = Gaim;
+		};
+		6C3E0150054445BA00A4AE2E = {
+			isa = PBXTargetDependency;
+			target = 4B7F278205440C0800CDFC90;
+			targetProxy = 6C3E014F054445BA00A4AE2E;
+		};
+		6C3E0151054445C000A4AE2E = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		6C3E0152054445C000A4AE2E = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 6C3E0151054445C000A4AE2E;
+		};
+		6C3E0153054445C400A4AE2E = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		6C3E0154054445C400A4AE2E = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 6C3E0153054445C400A4AE2E;
+		};
+		6C3E0730054471CD00A4AE2E = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C3E0731054471E400A4AE2E = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //6C0
 //6C1
