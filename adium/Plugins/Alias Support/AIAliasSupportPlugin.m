@@ -166,7 +166,7 @@
 			case DISPLAY_NAME_SCREEN_NAME:
 				formattedUID = [inObject formattedUID];
 
-				if(!displayName || [displayName isEqualToString:formattedUID]){
+				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
 					longDisplayName = displayName;
 				}else{
 					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
@@ -175,7 +175,7 @@
 				
 			case SCREEN_NAME_DISPLAY_NAME:
 				formattedUID = [inObject formattedUID];
-				if(!displayName || [displayName isEqualToString:formattedUID]){
+				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
 					longDisplayName = displayName;
 				}else{
 					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
@@ -183,7 +183,9 @@
 					break;
 				
 			case SCREEN_NAME:
-				longDisplayName = [inObject formattedUID];
+#warning How should this be handled for metaContacts?  What if there are no aliases set?
+				formattedUID = [inObject formattedUID];
+				longDisplayName = (formattedUID ? formattedUID : displayName);
 				break;
 				
 			default:
