@@ -232,7 +232,7 @@
     AIOscarIcon 	*module = [self moduleForFamily:0x0010];
 
     if(module){
-        NSLog(@"requesing icon (%@)",[requestDict objectForKey:@"Name"]);
+        NSLog(@"requesting icon (%@)",[requestDict objectForKey:@"Name"]);
         [module requestIconForContact:[[requestDict objectForKey:@"Name"] compactedString]
                              checksum:[requestDict objectForKey:@"Checksum"]];
 
@@ -255,7 +255,7 @@
     }else if(!loading){
         loading = YES;
         [(AIOscarService *)[self moduleForFamily:0x0001] requestServiceForFamily:0x0010];
-        NSLog(@"requesing icon server...");
+        NSLog(@"requesting icon server...");
     }
 }
 
@@ -478,7 +478,14 @@
     //Ensure a handle exists (creating a stranger if necessary)
     handle = [handleDict objectForKey:[name compactedString]];
     if(!handle){
+        //NSLog(@"creating stranger %@ %@",name,[name compactedString]);
         handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
+    }
+
+    //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
+    if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
     }
 
     //Clear the 'typing' flag
@@ -486,12 +493,6 @@
 
     //Get chat
     chat = [self _openChatWithHandle:handle];
-    
-    //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
-    if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
-    }
 
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:chat
@@ -554,8 +555,19 @@
 {
     AIHandle		*handle;
     
+    if(inTemporary) inGroup = @"__Strangers";
+    if(!inGroup) inGroup = @"Unknown";
+
+    //Check to see if the handle already exists, and remove the duplicate if it does
+    if(handle = [handleDict objectForKey:inUID]){
+        [self removeHandleWithUID:inUID]; //Remove the handle
+    }
     handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
 
+   [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+
+    [[owner contactController] handle:handle addedToAccount:self];
+       
     return(handle);
 
     //return(nil);
@@ -713,6 +725,7 @@
         //Create the chat
         chat = [AIChat chatWithOwner:owner forAccount:self];
 
+        //NSLog(@"adding list object %@ containingContact %@",[handle UID],[handle containingContact]);
         //Set the chat participants
         [chat addParticipatingListObject:containingContact];
         
