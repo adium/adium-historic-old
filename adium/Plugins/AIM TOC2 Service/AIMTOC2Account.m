@@ -272,7 +272,7 @@ static char *hash_password(const char * const password);
 - (BOOL)sendContentObject:(id <AIContentObject>)object
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        [self AIM_SendMessage:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]]
+        [self AIM_SendMessage:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]
                      toHandle:[[object destination] UID]];
     }
     
@@ -334,11 +334,11 @@ static char *hash_password(const char * const password);
         [self AIM_SetIdle:(-[newIdle timeIntervalSinceNow])];
 
         }else if([key compare:@"TextProfile"] == 0){
-            [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
+            [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue] encodeFullString:YES]];
     
         }else if([key compare:@"AwayMessage"] == 0){
             if(inValue){
-                [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
+                [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue] encodeFullString:YES]];
             }else{
                 [self AIM_SetAway:nil];
             }
@@ -1236,11 +1236,11 @@ static char *hash_password(const char * const password);
     }
 
     if(profile){
-        [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:profile]];
+        [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:profile encodeFullString:YES]];
     }
     
     if(away){
-        [self AIM_SetAway:[AIHTMLDecoder encodeHTML:away]];
+        [self AIM_SetAway:[AIHTMLDecoder encodeHTML:away encodeFullString:YES]];
     }
 }
 

@@ -21,6 +21,6 @@
 }
 
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage;
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage;
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString;
 
 @end
