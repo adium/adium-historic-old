@@ -16,7 +16,9 @@
 
 }
 
+/*
 -(BOOL)importStatusMessages;
 -(BOOL)importLogs;
+*/
 
 @end
