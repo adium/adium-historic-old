@@ -279,7 +279,7 @@
 	}
 
 	//Draw (centered vertical)
-	int half = (rect.size.height - nameSize.height) / 2.0;
+	float half = (rect.size.height - nameSize.height) / 2.0;
 	[displayName drawInRect:NSMakeRect(rect.origin.x,
 									   rect.origin.y + half,
 									   rect.size.width,
@@ -343,12 +343,21 @@
 																 lineBreakMode:NSLineBreakByTruncatingTail];
 	NSColor				*currentTextColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
 	
-	labelAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-		currentTextColor, NSForegroundColorAttributeName,
-		paragraphStyle, NSParagraphStyleAttributeName,
-		[self font], NSFontAttributeName,
-		nil] retain];
-	if(additionalAttributes) [labelAttributes addEntriesFromDictionary:additionalAttributes];
+	if (additionalAttributes){
+		labelAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			currentTextColor, NSForegroundColorAttributeName,
+			paragraphStyle, NSParagraphStyleAttributeName,
+			[self font], NSFontAttributeName,
+			nil];
+		[labelAttributes addEntriesFromDictionary:additionalAttributes];
+
+	}else{
+		labelAttributes = (NSMutableDictionary *)[NSDictionary dictionaryWithObjectsAndKeys:
+			currentTextColor, NSForegroundColorAttributeName,
+			paragraphStyle, NSParagraphStyleAttributeName,
+			[self font], NSFontAttributeName,
+			nil];
+	}
 	
 	return(labelAttributes);
 }
