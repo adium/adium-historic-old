@@ -34,7 +34,7 @@ typedef enum{
 } SoundDeviceType;
 
 @interface AISoundController : NSObject {
-    IBOutlet	AIAdium		*owner;
+    IBOutlet	AIAdium		*adium;
 	
     NSMutableDictionary	*soundCacheDict;
     NSMutableArray		*soundCacheArray;
