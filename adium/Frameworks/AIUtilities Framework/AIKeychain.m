@@ -18,64 +18,112 @@
  */
 
 #import "AIKeychain.h"
-#import <Carbon/Carbon.h>
-#import <CoreServices/CoreServices.h>
-
-@interface AIKeychain (PRIVATE)
-+ (KCItemRef)getKCItemRefWithAccount:(NSString *)account service:(NSString *)service;
-@end
-
+#include <CoreServices/CoreServices.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <Security/Security.h>
 
 @implementation AIKeychain
 
-/* getPasswordFromKeychainForService
-*   gets a password from the keychain for the specified service & account
-*/
+//Convenience accessor for SecKeychainFindGenericPassword
+OSStatus GetPasswordKeychain(const char *service,const char *account,void *passwordData,UInt32 *passwordLength,SecKeychainItemRef *itemRef)
+{
+	OSStatus	ret;
+	
+	ret = SecKeychainFindGenericPassword (NULL,				// default keychain
+										  strlen(service),	// length of service name
+										  service,			// service name
+										  strlen(account),	// length of account name
+										  account,			// account name
+										  passwordLength,   // length of password - NULL if unneedeed, along with passwordData
+										  passwordData,		// pointer to password data - NULL if unneedeed, along with passwordLength
+										  itemRef			// the item reference - NULL if unneedeed
+										  );
+	
+	return ret;
+}
+
+// Retrieves a password from the keychain for the specified service and account
+// Returns nil if no password is found
 + (NSString *)getPasswordFromKeychainForService:(NSString *)service account:(NSString *)account
 {
-    OSStatus ret;
-    UInt32 len;
-    void *p = (void *)malloc(128 * sizeof(char));
-    NSString *string = nil;
-    
-    ret = kcfindgenericpassword([service cString], [account cString], 127, p, &len, NULL);
+	NSString			*passwordString = nil;
+	OSStatus			ret;
 	
-    if (!ret){
-        string = [NSString stringWithCString:(const char*)p length:len];
+	//These will be filled in by GetPasswordKeychain
+	char				*passwordData = nil;
+	UInt32				passwordLength = nil;
+
+	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordData,&passwordLength,NULL);
+	
+    if (ret == noErr){
+        passwordString = [NSString stringWithCString:passwordData length:passwordLength];
+		
+		//Cleanup
+		SecKeychainItemFreeContent(NULL,passwordData);
 	}
 	
-    free(p); 
-    return string;
+    return passwordString;
 }
 
-// puts a password on the keychain for the specified service and account
+// Puts a password on the keychain for the specified service and account
 + (void)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password
 {
-    OSStatus	ret;
-    KCItemRef   itemref = NULL;
+    OSStatus			ret;
+	SecKeychainItemRef  itemRef = nil;
 	
-    if ((itemref = [self getKCItemRefWithAccount:account service:service])){
-		KCDeleteItem(itemref);
+	const char			*serviceUTF8String = [service UTF8String];
+	const char			*accountUTF8String = [account UTF8String];
+	const char			*passwordUTF8String = [password UTF8String];
+	
+	ret = GetPasswordKeychain(serviceUTF8String,accountUTF8String,NULL,NULL,&itemRef);
+
+	if (ret == errSecItemNotFound){
+			//No item in the keychain, so add a new generic password
+		
+			ret = SecKeychainAddGenericPassword (NULL,							// default keychain
+												 strlen(serviceUTF8String),		// length of service name
+												 serviceUTF8String,				// service name
+												 strlen(accountUTF8String),		// length of account name
+												 accountUTF8String,				// account name
+												 strlen(passwordUTF8String),	// length of password
+												 passwordUTF8String,			// pointer to password data
+												 NULL							// the item reference
+												 );
+		
+	}else if (ret == noErr){
+			//Item already present, so change it to the new password
+		
+			// Set up attribute vector (each attribute consists of {tag, length, pointer}):
+			SecKeychainAttribute attrs[] = { 
+			{ kSecAccountItemAttr, strlen(accountUTF8String), (void *)accountUTF8String },
+			{ kSecServiceItemAttr, strlen(serviceUTF8String), (void *)serviceUTF8String } };
+			
+			const SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]), attrs };
+			ret = SecKeychainItemModifyAttributesAndData (itemRef,						// the item reference
+														  &attributes,					// no change to attributes
+														  strlen(passwordUTF8String),	// length of password
+														  passwordUTF8String			// pointer to password data
+														  );
 	}
-    ret = kcaddgenericpassword([service cString], [account cString], [password cStringLength], 
-							   [password cString], NULL);
+	
+	//Cleanup
+	if (itemRef) CFRelease(itemRef);
 }
 
-// removes a password from the keychain
+// Removes a password from the keychain
 + (void)removePasswordFromKeychainForService:(NSString *)service account:(NSString *)account
-{
-	KCItemRef itemref = NULL;
-	if ((itemref = [self getKCItemRefWithAccount:account service:service])){
-		KCDeleteItem(itemref);
-	}
-}
+{	
+	SecKeychainItemRef  itemRef = nil;
+	OSStatus			ret;
+	
+	//Password and password length are irrelevent; we only care about finding an itemRef
+	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],NULL,NULL,&itemRef);
 
-//returns a keychain item ref
-+ (KCItemRef)getKCItemRefWithAccount:(NSString *)account service:(NSString *)service
-{
-	KCItemRef itemref = NULL;
-	kcfindgenericpassword([service cString], [account cString], NULL, NULL, NULL, &itemref);
-	return itemref;
+	//If we found an keychain item, delete it
+    if (ret == noErr) SecKeychainItemDelete(itemRef);
+	
+	//Cleanup
+	if (itemRef) CFRelease(itemRef);
 }
 
 @end
