@@ -716,16 +716,14 @@
  */
 - (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
 {
+	[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
+
 	if(!strcmp(gaimStatusType, "Available")){
 		/*
-		 * As of gaim 1.x, setting an available message in OSCAR requires a special call, not the normal
-		 * serv_set_away() call. */
+		 * As of gaim 1.x, setting/changing an available message in OSCAR requires a special, additional call */
 		
-		//Set the available message, or clear it.  This also brings us back from away if necessary.
+		//Set the available message, or clear it.
 		[[self gaimThread] OSCARSetAvailableMessageTo:statusMessage onAccount:self];
-
-	}else{
-		[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
 	}
 }
 
