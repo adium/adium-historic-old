@@ -7497,6 +7497,7 @@
 				34BFDF2007E8978900AD984D,
 				34BFDF2107E8978900AD984D,
 				34BFE21A07E8E56700AD984D,
+				34BFE30107E8FA7900AD984D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9144,6 +9145,20 @@
 			name = Unused;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34BFE30007E8FA7800AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ContactAccounts.nib;
+			path = Resources/ContactAccounts.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE30107E8FA7900AD984D = {
+			fileRef = 34BFE30007E8FA7800AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34C14CD007A8B1AB003CC138 = {
 			fileEncoding = 4;
@@ -17557,14 +17572,6 @@
 			settings = {
 			};
 		};
-		4BB1E43E067F2CA100D1DB86 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactAccounts.nib;
-			path = "Plugins/Contact Accounts/ContactAccounts.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BB1E47D067F2E9F00D1DB86 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -23463,7 +23470,7 @@
 				34CEBE6106F117DF00A89DDE,
 				34D8328E07CBD5E2006466F2,
 				34D8328F07CBD5E2006466F2,
-				4BB1E43E067F2CA100D1DB86,
+				34BFE30007E8FA7800AD984D,
 				F5148D9604C8B4AA018B6CC7,
 				34575E3207CBA7CC004A4FFF,
 				4BBF41E10661194A001D31E1,
