@@ -16,7 +16,7 @@
 
 //Selections
 #define CONTACT_INVERTED_TEXT_COLOR		[NSColor whiteColor]
-#define CONTACT_INVERTED_STATUS_COLOR	[NSColor lightGrayColor]
+#define CONTACT_INVERTED_STATUS_COLOR	[NSColor whiteColor]
 #define SELECTED_IMAGE_OPACITY			0.8
 #define FULL_IMAGE_OPACITY				1.0
 
@@ -162,7 +162,8 @@
 		[_statusAttributes release]; _statusAttributes = nil;
 	}
 }
-- (NSColor *)statusColor{
+- (NSColor *)statusColor
+{
 	return(statusColor);
 }
 
@@ -174,20 +175,32 @@
 		NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				lineBreakMode:NSLineBreakByTruncatingTail];
 		[paragraphStyle setMaximumLineHeight:(float)labelFontHeight];
-
+		
 		_statusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
 			paragraphStyle, NSParagraphStyleAttributeName,
 			[self statusColor], NSForegroundColorAttributeName,
 			[self statusFont], NSFontAttributeName,nil] retain];
 	}
 	
-	return(_statusAttributes);
+	if(backgroundColorIsEvents && [[listObject displayArrayObjectForKey:@"Is Event"] boolValue]){
+		//If we are showing a temporary event with a custom background color, use the standard text color
+		//since it will be appropriate to the current background color.
+		NSMutableDictionary	*mutableStatusAttributes = [_statusAttributes mutableCopy];
+		[mutableStatusAttributes setObject:[self textColor]
+									forKey:NSForegroundColorAttributeName];
+
+		return([mutableStatusAttributes autorelease]);
+
+	}else{
+		return(_statusAttributes);
+	}
 }
+
 - (NSDictionary *)statusAttributesInverted
 {
 	if(!_statusAttributesInverted){
 		_statusAttributesInverted = [[self statusAttributes] mutableCopy];
-		[_statusAttributesInverted setObject:CONTACT_INVERTED_STATUS_COLOR forKey:NSForegroundColorAttributeName];
+		[_statusAttributesInverted setObject:CONTACT_INVERTED_TEXT_COLOR forKey:NSForegroundColorAttributeName];
 	}
 	
 	return(_statusAttributesInverted);
@@ -517,7 +530,7 @@
 			targetOpacity *= [opacityNumber floatValue];
 		}
 		
-		return([labelColor colorWithAlphaComponent:targetOpacity]);
+		return((targetOpacity != 1.0) ? [labelColor colorWithAlphaComponent:targetOpacity] : labelColor);
 	}else{
 		return(nil);
 	}
