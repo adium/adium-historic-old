@@ -20,6 +20,10 @@
 #define KEY_LAST_VERSION_LAUNCHED	@"Last Version Launched"
 #define FOLDER_DOCK_ICONS			@"Dock Icons"
 
+@protocol AITextEntryView;
+
+@class AIIconState;
+
 typedef enum {
     BOUNCE_NONE = 0,
     BOUNCE_ONCE,

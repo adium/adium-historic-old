@@ -140,7 +140,7 @@ ADD_TOOLBAR_ITEMS_HERE
 - (float)current;
 - (float)speed;
 
-- initWithActivityWindowController:(BZActivityWindowController *)controller autostart:(BOOL)autostart autostop:(BOOL)autostop autodelete:(BOOL)autodelete;
+- (id)initWithActivityWindowController:(BZActivityWindowController *)controller autostart:(BOOL)autostart autostop:(BOOL)autostop autodelete:(BOOL)autodelete;
 - (void)setActivityWindowController:controller;
 
 - (BOOL)canCancel;

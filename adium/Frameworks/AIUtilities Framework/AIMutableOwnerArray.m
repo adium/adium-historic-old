@@ -36,6 +36,7 @@
 - (void)_moveObjectToFront:(int)objectIndex;
 - (void)_createArrays;
 - (void)_destroyArrays;
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)mutableOwnerArray didSetObject:(id)anObject withOwner:(id)inOwner;
 @end
 
 @implementation AIMutableOwnerArray
@@ -123,6 +124,8 @@
 	valueIsSortedToFront = NO;
 }
 
+//The method the delegate would implement, here to make the compiler happy.
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)mutableOwnerArray didSetObject:(id)anObject withOwner:(id)inOwner {};
 
 //Value Retrieval ------------------------------------------------------------------------------------------------------
 #pragma mark Value Retrieval

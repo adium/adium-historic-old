@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.23 2004/08/05 19:37:29 adamiser Exp $ 
+// $Id: AIPreferenceController.h,v 1.24 2004/08/21 05:14:58 evands Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -46,7 +46,7 @@ typedef enum {
 	
 } PREFERENCE_CATEGORY;
 
-@class AIPreferencePane;
+@class AIPreferencePane, AIAdium;
 
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium		*owner;

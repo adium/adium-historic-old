@@ -13,5 +13,6 @@
 }
 
 - (NSRect)bubbleRectForFrame:(NSRect)rect;
+- (NSColor *)labelColor;
 
 @end

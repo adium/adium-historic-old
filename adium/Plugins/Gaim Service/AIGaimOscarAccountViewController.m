@@ -28,17 +28,18 @@
     [super configureForAccount:inAccount];
     
     //Profile
-    NSData		*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-    NSData              *data;
-    NSImage             *image;
+    NSData				*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+	NSAttributedString	*profile = nil;
     if(profileData){
-        NSAttributedString	*profile = [NSAttributedString stringWithData:profileData];
-        if(profile && [profile length]){
-            [[textView_textProfile textStorage] setAttributedString:profile];
-        }else{
-            [textView_textProfile setString:@""];
-		}
-    }
+        profile = [NSAttributedString stringWithData:profileData];
+	}
+	
+	if(profile && [profile length]){
+		[[textView_textProfile textStorage] setAttributedString:profile];
+	}else{
+		[textView_textProfile setString:@""];
+	}
+
     [[NSNotificationCenter defaultCenter] addObserver:textView_textProfile selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_textProfile];
 }
 

@@ -73,11 +73,11 @@
 - (IBAction)inviteToChat:(id)sender
 {
 	NSArray			*repArray = [sender representedObject];
-	AIListObject	*listObject = [repArray objectAtIndex:1];
+	AIListContact	*listContact = [repArray objectAtIndex:1];
 	AIChat			*chat = [repArray objectAtIndex:0];
 	NSString		*service = [repArray objectAtIndex:2];
 	
-	[DCInviteToChatWindowController inviteToChatWindowForChat:chat contact:listObject service:service];
+	[DCInviteToChatWindowController inviteToChatWindowForChat:chat contact:listContact service:service];
 }
 
 #pragma mark Private

@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Mac-arena the Bored Zo on Sat May 08 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "BZActivityWindowController.h"
@@ -480,12 +479,12 @@ ADD_TOOLBAR_ITEMS_HERE
 	return [NSString stringWithString:@"zorkmids"];
 }
 
-- initWithActivityWindowController:(BZActivityWindowController *)controller autostart:(BOOL)autostart autostop:(BOOL)autostop autodelete:(BOOL)autodelete
+- (id)initWithActivityWindowController:(BZActivityWindowController *)controller autostart:(BOOL)autostart autostop:(BOOL)autostop autodelete:(BOOL)autodelete
 {
-	self = [super init];
-	if(self) {
-		[self setActivityWindowController:controller];
-	}
+	[super init];
+
+	[self setActivityWindowController:controller];
+
 	current = 0.0;
 	progressState = ProgressState_Stopped;
 

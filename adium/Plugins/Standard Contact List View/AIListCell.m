@@ -41,7 +41,7 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIListCell *newCell = [super copyWithZone:zone];
 	[newCell setListObject:listObject];
 	return(newCell);
 }
@@ -327,10 +327,10 @@
 	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
 	NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																 lineBreakMode:NSLineBreakByTruncatingTail];
-	NSColor				*textColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
+	NSColor				*currentTextColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
 	
 	labelAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-		textColor, NSForegroundColorAttributeName,
+		currentTextColor, NSForegroundColorAttributeName,
 		paragraphStyle, NSParagraphStyleAttributeName,
 		[self font], NSFontAttributeName,
 		nil] retain];

@@ -4,7 +4,7 @@
 //
 //  Created by Adam Iser on Wed Jan 28 2004.
 
-#import "AIListGroup.h"
+#import "AIListContact.h"
 
 #define META_SERVICE_STRING				AILocalizedString(@"Meta",nil)
 

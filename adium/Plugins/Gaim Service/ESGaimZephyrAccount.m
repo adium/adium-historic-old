@@ -23,7 +23,7 @@ static BOOL didInitZephyr = NO;
 	[super configureGaimAccount];
 	
 	NSString	*exposure_level, *encoding;
-	BOOL		write_anyone, write_zsubs, allowPlaintext;
+	BOOL		write_anyone, write_zsubs;
 	
 	write_anyone = [[self preferenceForKey:KEY_ZEPHYR_EXPORT_ANYONE group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "write_anyone", write_anyone);

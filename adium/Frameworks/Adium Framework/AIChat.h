@@ -4,7 +4,9 @@
 //
 //  Created by Adam Iser on Sun Jun 15 2003.
 
-@class AIAccount, AIContentObject, AIListObject, ESObjectWithStatus;
+#import "ESObjectWithStatus.h"
+
+@class AIAccount, AIContentObject;
 
 #define Chat_WillClose							@"Chat_WillClose"
 #define	Chat_Created							@"Chat_Created"

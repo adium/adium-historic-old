@@ -4,6 +4,8 @@
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
 
+@class AIModularPane;
+
 @protocol AIEventHandler <NSObject>
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;

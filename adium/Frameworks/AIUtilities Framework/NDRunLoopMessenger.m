@@ -14,8 +14,8 @@
 #define DEFAULT_PORT_MESSAGE_RETRY			0.01
 
 static NSString		* kThreadDictionaryKey = @"NDRunLoopMessengerInstance";
-static NSString		* kSendMessageException = @"NDRunLoopMessengerSendException",
-							* kConnectionDoesNotExistsException = @"NDRunLoopMessengerConnectionNoLongerExistsException";
+//static NSString	* kSendMessageException = @"NDRunLoopMessengerSendException";
+static NSString		* kConnectionDoesNotExistsException = @"NDRunLoopMessengerConnectionNoLongerExistsException";
 /*
  * struct message
  */

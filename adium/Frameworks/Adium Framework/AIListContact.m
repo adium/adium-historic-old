@@ -14,6 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIListContact.h"
+#import "AIContentMessage.h"
+#import "ESFileTransfer.h"
 
 #define CONTENT_OBJECT_SCROLLBACK	5  //Number of content object that say in the scrollback
 

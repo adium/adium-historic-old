@@ -6,7 +6,8 @@
 //
 
 #import "ESFileTransfer.h"
-
+#import "AIListContact.h"
+#import "AIAccount.h"
 
 @implementation ESFileTransfer
 //Init

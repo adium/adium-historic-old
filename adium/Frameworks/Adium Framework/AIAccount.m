@@ -13,9 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.77 2004/08/18 04:33:16 evands Exp $
+// $Id: AIAccount.m,v 1.78 2004/08/21 05:14:43 evands Exp $
 
 #import "AIAccount.h"
+#import "AIServiceType.h"
+#import "AIListContact.h"
 
 #define FILTERED_STRING_REFRESH    30.0    //delay in seconds between refresh of our attributed string statuses when needed
 

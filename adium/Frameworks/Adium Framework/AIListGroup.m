@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIListGroup.h"
+#import "AISortController.h"
 
 @interface AIListGroup (PRIVATE)
 - (void)_setVisibleCount:(int)newCount;

@@ -28,6 +28,14 @@
 - (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 - (void)configureControlDimming;
+
+- (void)updateLayouts;
+- (void)updateThemes;
+- (void)updateSelectedLayoutAndTheme;
+
+- (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
+- (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup;
+
 @end
 
 @implementation AICLPreferences

@@ -79,23 +79,6 @@
 //Contact menu 
 - (AIListObject *)listObject;
 
-//Tooltips (Cursor rects)
-- (void)configureTooltipsForNewSuperview:(NSView *)newSuperview;
-- (void)configureTooltipsForNewScrollViewFrame;
-- (void)_installCursorRect;
-- (void)_removeCursorRect;
-
-//Tooltips (Cursor movement)
-- (void)mouseEntered:(NSEvent *)theEvent;
-- (void)mouseExited:(NSEvent *)theEvent;
-- (void)_startTrackingMouse;
-- (void)_stopTrackingMouse;
-- (void)mouseMovementTimer:(NSTimer *)inTimer;
-
-//Tooltips (Display)
-- (void)hideTooltip;
-- (void)_showTooltipAtPoint:(NSPoint)screenPoint;
-
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
 - (void)setBackgroundImage:(NSImage *)inImage;
 - (void)setBackgroundFade:(float)fade;

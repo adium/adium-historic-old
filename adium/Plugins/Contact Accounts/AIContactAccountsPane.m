@@ -144,7 +144,7 @@
 	if([identifier isEqualToString:@"group"]){
 		if(accountOnline){
 			//Get the containing group (taking into account meta contacts)
-			AIListGroup	*group = [existing containingObject];
+			AIListObject	*group = [existing containingObject];
 			while ([group isKindOfClass:[AIMetaContact class]]){
 				group = [group containingObject];
 			}

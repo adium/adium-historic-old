@@ -39,6 +39,7 @@
 
 - (void)dealloc
 {
+	NSLog(@"%@ dealloc",self);
 	[backgroundImage release];
 	[super dealloc];
 }

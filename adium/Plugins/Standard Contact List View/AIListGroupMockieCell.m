@@ -3,10 +3,14 @@
 //  Adium
 //
 //  Created by Adam Iser on Fri Jul 30 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListGroupMockieCell.h"
+
+@interface AIListGroupMockieCell (PRIVATE)
+- (NSImage *)cachedGroupGradient:(NSSize)inSize;
+- (NSImage *)cachedExpandedGroupGradient:(NSSize)inSize;
+@end
 
 @implementation AIListGroupMockieCell
 

@@ -5,7 +5,13 @@
 //  Created by Evan Schoenberg on Thu Nov 13 2003.
 //
 
+#import "AIObject.h"
+
 #define FILE_TRANSFER_TYPE  @"File Transfer Type"
+
+@protocol AIAccount_Files;
+
+@class AIAccount, ESFileTransfer;
 
 typedef enum {
     Incoming_FileTransfer = 0,
@@ -19,8 +25,6 @@ typedef enum {
 -(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetLocalFilename:(NSString *)inLocalFilename;
 -(void)gotUpdateForFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
-
-@class AIAccount;
 
 @interface ESFileTransfer : AIObject {
     AIListContact				*contact;

@@ -10,6 +10,10 @@
 
 #define EDGE_INDENT 			4
 
+@interface AIListContactBubbleCell (PRIVATE)
+
+@end
+
 @implementation AIListContactBubbleCell
 
 //Copy

@@ -276,11 +276,9 @@
 #pragma mark Preview WebView
 - (void)updatePreview
 {
-	NSString		*styleName, *CSS;
+	NSString		*styleName;
 	NSString		*variant;
 	NSBundle		*style;
-	NSString		*loadedPreviewDirectory = nil;
-	NSDictionary	*previewDict;
 		
 	//Load the style as per preferences
 	{
@@ -582,8 +580,6 @@
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
 {
 	NSString			*dateOpened, *type, *name, *UID;
-	NSEnumerator		*enumerator;
-	NSDictionary		*messageDict, *participant;
 	
 	//Date opened
 	if(dateOpened = [chatDict objectForKey:@"Date Opened"]){
@@ -607,9 +603,8 @@
 //Chat content
 - (void)_addContent:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
 {
-	NSString			*dateOpened, *type, *name, *UID;
 	NSEnumerator		*enumerator;
-	NSDictionary		*messageDict, *participant;
+	NSDictionary		*messageDict;
 	
 	enumerator = [chatDict objectEnumerator];
 	while(messageDict = [enumerator nextObject]){

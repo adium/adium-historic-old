@@ -5,6 +5,8 @@
 //  Created by Evan Schoenberg on Sat Jul 31 2004.
 //
 
+#import "AIObject.h"
+
 typedef enum {
 	NotifyNever = -9999,
 	NotifyLater = NO,   /* 0 */

@@ -505,9 +505,7 @@
 //NSDate
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	NSDate *returnValue = [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)];
-	
-	return([[statusCacheDict objectForKey:key] date]);
+	return([self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)]);
 }
 
 //NSNumber
@@ -685,7 +683,6 @@
 	return userIcon;
 }
 
-#warning debugging
 - (NSString *)displayName
 {
 	NSString	*displayName = [super displayName];
@@ -693,7 +690,8 @@
 		displayName = [[self preferredContact] displayName];
 	}
 	
-	return [displayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+	//	return [displayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+	return displayName;
 }
 
 - (NSString *)longDisplayName
@@ -703,8 +701,9 @@
 	if (!longDisplayName){
 		longDisplayName = [[self preferredContact] longDisplayName];
 	}
-	
-    return([longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]]);
+
+	//    return([longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]]);
+	return longDisplayName;
 }
 
 @end

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIPreferenceController.h"
+#import "AIModularPane.h"
 
 @class AIPreferencePane;
 

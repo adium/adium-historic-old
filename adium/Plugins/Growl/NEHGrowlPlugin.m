@@ -64,14 +64,13 @@
 	if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && ! showWhileAway)
 		return;
 	
-	NSString * title;
-	NSString * description;
-	NSString * message;
-	AIListContact * contact;
-	NSString * notificationName = [notification name];
-	NSString * contactName;
-	NSImage  * buddyIcon;
-	NSData   * iconData = nil;
+	NSString		*title;
+	NSString		*description;
+	NSString		*message;
+	AIListContact	*contact;
+	NSString		*notificationName = [notification name];
+	NSString		*contactName;
+	NSData			*iconData = nil;
 	
 	//shamlessly ripped from the event bezel :)
 	if([notificationName isEqualToString:Content_FirstContentRecieved] ||

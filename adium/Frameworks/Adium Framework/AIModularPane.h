@@ -3,9 +3,9 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Apr 18 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+#import "AIObject.h"
 
 @interface AIModularPane : AIObject {
     IBOutlet    	NSView  		*view;

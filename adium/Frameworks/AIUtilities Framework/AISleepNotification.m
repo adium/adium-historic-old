@@ -5,6 +5,19 @@
 //  Created by Adam Iser on Sun Jun 29 2003.
 //
 
+/*
+ AISleepNotification posts two notifications, 
+	AISystemWillSleep_Notification and AISystemDidWake_Notification.
+ Registering for these allow a program to take action before the computer sleeps and after the computer
+ wakes from sleep.
+ 
+ AISleepNotification also observes two notifications, 
+	AISystemHoldSleep_Notification and AISystemContinueSleep_Notification.
+ Through the use of these, a program
+ can preemptively delay sleeping which may occur during, for example, the execution of a lengthy block of
+ code which shouldn't be inerrupted and then remove the delay when execution of the code is complete.
+ */
+
 #import <mach/mach_port.h>
 #import <mach/mach_interface.h>
 #import <mach/mach_init.h>

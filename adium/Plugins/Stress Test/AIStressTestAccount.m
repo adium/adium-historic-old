@@ -74,6 +74,12 @@
     return(@"Stress Test");
 }
 
+//Stress Test certainly doesn't need to receive connect/disconnect requests based on network reachability
+- (BOOL)connectivityBasedOnNetworkReachability
+{
+	return NO;
+}
+
 // AIAccount_Messaging ---------------------------------------------------------------------------
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
@@ -309,7 +315,7 @@
     int				i = [[userInfo objectForKey:@"i"] intValue];
     int				count = [[userInfo objectForKey:@"count"] intValue];
 	int				j;
-    AIListContact	*contact;
+
 	AIContentMessage *messageObject;
 	
 	//Ensure our contacts and group are created when we get to the first contact

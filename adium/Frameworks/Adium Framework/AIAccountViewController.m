@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountViewController.h"
+#import "AIAccount.h"
 
 @implementation AIAccountViewController
 

@@ -172,7 +172,7 @@
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
     if(drawsAlternatingRows){ //Draw alternating rows in the outline view
-        NSRect		segmentRect = rect;
+//        NSRect		segmentRect = rect;
 
         if(colored && !selected){            
             //segmentRect.origin.x = 0;

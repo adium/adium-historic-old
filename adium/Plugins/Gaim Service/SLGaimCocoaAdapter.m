@@ -89,7 +89,6 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	sourceId = 0;
     sourceInfoDict = [[NSMutableDictionary alloc] init];
     accountDict = [[NSMutableDictionary alloc] init];
-//	contactDict = [[NSMutableDictionary alloc] init];
 	chatDict = [[NSMutableDictionary alloc] init];
 		
 	myself = self;
@@ -98,7 +97,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNewAccount:) name:@"AddAccount" object:nil];
 
-	NSConnection *myConnection = [NSConnection defaultConnection];
+//	NSConnection *myConnection = [NSConnection defaultConnection];
 	
 	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 
@@ -261,8 +260,6 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					NSLog(@"gotta create a chat");
 #warning Not all prpls support the below method for chat creation.  Need prpl-specific possibilites.
 					GHashTable				*components;
-					GaimGroup				*group;
-					const char				*group_name = _("Chats");
 					
 					//Prpl Info
 					GaimConnection			*gc = gaim_account_get_connection(account);
@@ -374,6 +371,7 @@ static GaimConversation* existingConvLookupFromChat(AIChat *chat)
 
 #pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
+#if (GAIM_DEBUG)
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
 	gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
@@ -388,6 +386,7 @@ static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, cons
 static GaimDebugUiOps adiumGaimDebugOps = {
     adiumGaimDebugPrint
 };
+#endif
 
 #pragma mark Connection
 // Connection ------------------------------------------------------------------------------------------------------
@@ -648,7 +647,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 
 - (void)configureSignals
 {
-	void *accounts_handle = gaim_accounts_get_handle();
+//	void *accounts_handle = gaim_accounts_get_handle();
 	void *blist_handle = gaim_blist_get_handle();
 	void *handle       = gaim_adium_get_handle();
 	
@@ -2288,7 +2287,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)gaimThreadOpenChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
-	GaimConversation *conv = convLookupFromChat(chat,adiumAccount);
+	//Looking up the conv from the chat will create the GaimConversation gaimside, joining the chat, opening th eserver
+	//connection, or whatever else is done when a chat is opened.
+	convLookupFromChat(chat,adiumAccount);
 }
 
 - (oneway void)closeChat:(AIChat *)chat
@@ -2352,7 +2353,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)gaimThreadCreateNewChat:(AIChat *)chat withListObject:(AIListContact *)contact
 {
 	//Create the chat
-	GaimConversation	*conv = convLookupFromChat(chat, [chat account]);
+	convLookupFromChat(chat, [chat account]);
 	
 	//Invite the contact, with no message
 	[self gaimThreadInviteContact:contact toChat:chat withMessage:nil];
