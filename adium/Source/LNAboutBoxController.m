@@ -10,6 +10,7 @@
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (BOOL)windowShouldClose:(id)sender;
+- (void)_adiumDuckOptionClicked;
 @end
 
 
@@ -56,9 +57,9 @@ LNAboutBoxController *sharedInstance = nil;
 - (void)windowDidLoad
 {
     //Get the directory listing of avatars and put in the avatarArray
-    NSString *avatarName;
-    NSString *avatarPath;
-    NSArray * avatarList;
+    NSString 	*avatarName;
+    NSString 	*avatarPath;
+    NSArray 	*avatarList;
     avatarArray = [[NSMutableArray alloc] init];
     avatarPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_RESOURCES] stringByExpandingTildeInPath];
 
@@ -119,15 +120,46 @@ LNAboutBoxController *sharedInstance = nil;
 
     numberOfDuckClicks++;
 
+    if([NSEvent optionKey]){
+        [self _adiumDuckOptionClicked];
+    }else{
+
+        if(previousKeyWasOption){
+            [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
+            [button_duckIcon setAlternateImage:[AIImageUtilities imageNamed:@"Flap" forClass:[self class]]];
+            previousKeyWasOption = YES;
+        }
+        
+        if(numberOfDuckClicks == [avatarArray count]){
+            numberOfDuckClicks = -1;            
+            [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
+        }else{
+            [[owner soundController] playSoundNamed:@"/Adium/Quack.aif"];
+        }
+    }
+}
+
+
+- (void)_adiumDuckOptionClicked
+{
+    
+    previousKeyWasOption = YES;
+    [button_duckIcon setAlternateImage:nil];
+
+    
     if (numberOfDuckClicks == [avatarArray count]) {
         numberOfDuckClicks = -1;
         [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
+        [button_duckIcon setAlternateImage:nil];
+        
         [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
-    } else {
-        [button_duckIcon setImage:[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]]];
-        [[owner soundController] playSoundNamed:@"/Adium/Quack.aif"];
-    }
+    }else{
 
+        [button_duckIcon setImage:[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]]];
+
+        [[owner soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
+    }
 }
+
 
 @end
