@@ -107,7 +107,7 @@
                 ABPerson * person = [results objectAtIndex:0];
                 
                 if (person) {
-                    AIHandle * handle = [inObject handleForAccount:nil];
+                    AIHandle * handle = [(AIListContact *)inObject handleForAccount:nil];
                     NSMutableDictionary *statusDict = [handle statusDictionary];
                     //apply the image
                     if ([statusDict objectForKey:@"BuddyImage"]) {
