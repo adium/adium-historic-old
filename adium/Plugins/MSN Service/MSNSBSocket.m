@@ -143,7 +143,7 @@
                                                                 silent:NO];
                         
                         //Add a content object for the message
-                        messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:contact onAccount:ourAccount]
+                        messageObject = [AIContentMessage messageInChat:[[owner contentController]  openChatOnAccount:ourAccount withListObject:contact]
                                                              withSource:contact
                                                             destination:ourAccount
                                                                    date:nil
