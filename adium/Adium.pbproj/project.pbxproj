@@ -14799,15 +14799,15 @@
 		BF9CEA9A052BCCE500000202 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = DisconnectAllPlugin.h;
-			path = "Plugins/Disconnect All/DisconnectAllPlugin.h";
+			name = CSDisconnectAllPlugin.h;
+			path = "Plugins/Disconnect All/CSDisconnectAllPlugin.h";
 			refType = 4;
 		};
 		BF9CEA9B052BCCE500000202 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = DisconnectAllPlugin.m;
-			path = "Plugins/Disconnect All/DisconnectAllPlugin.m";
+			name = CSDisconnectAllPlugin.m;
+			path = "Plugins/Disconnect All/CSDisconnectAllPlugin.m";
 			refType = 4;
 		};
 		BF9CEA9C052BCCE500000202 = {
