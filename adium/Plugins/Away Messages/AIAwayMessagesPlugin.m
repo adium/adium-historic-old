@@ -71,6 +71,7 @@
         [menuItem_removeAway_alternate release]; menuItem_removeAway_alternate = nil;
     }
     
+    [super dealloc];
 }
 
 //Display the enter away message window
