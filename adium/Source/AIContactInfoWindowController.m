@@ -288,9 +288,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
 {
-	if (displayedObject && [displayedObject preferenceForKey:KEY_USER_ICON
-													   group:PREF_GROUP_USERICONS
-									   ignoreInheritedValues:YES]){
+	if (displayedObject){
 		NSImage *userImage;
 		
 		//Remove the preference
