@@ -22,14 +22,14 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
 
 //State menu
-#define ELIPSIS_STRING				[NSString stringWithUTF8String:"…"]
 #define STATE_TITLE_MENU_LENGTH		30
-#define STATUS_TITLE_CUSTOM			AILocalizedString(@"Custom...",nil)
+#define STATUS_TITLE_CUSTOM			[AILocalizedString(@"Custom",nil) stringByAppendingString:[NSString ellipsis]]
 #define STATUS_TITLE_OFFLINE		AILocalizedString(@"Offline",nil)
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
@@ -37,10 +37,11 @@
 #define TOP_STATUS_STATE_ID			@"TopStatusID"
 
 @interface AIStatusController (PRIVATE)
+- (NSArray *)builtInStateArray;
+
 - (void)_saveStateArrayAndNotifyOfChanges;
 - (void)_applyStateToAllAccounts:(AIStatus *)state;
 - (void)_upgradeSavedAwaysToSavedStates;
-- (void)upgradeSVNSavedStatesToCurrent;
 - (void)_setMachineIsIdle:(BOOL)inIdle;
 - (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
@@ -53,6 +54,7 @@
 							 toArray:(NSMutableArray *)menuItems
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
 - (void)buildBuiltInStatusTypes;
+
 - (void)setInitialStatusState;
 @end
 									
@@ -60,7 +62,7 @@
  * @class AIStatusController
  * @brief Core status & state methods
  *
- * This class provides a foundation for Adium's status and state systems.
+ * This class provides a foundation for Adium's status and status state systems.
  */
 @implementation AIStatusController
 
@@ -180,6 +182,7 @@
 	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
 }
 
+#pragma mark Status registration
 /*!
  * @brief Register a status for a service
  *
@@ -215,6 +218,7 @@
 	[statusDicts addObject:statusDict];
 }
 
+#pragma mark Status menus
 /*!
  * @brief Generate and return a menu of status types (Away, Be right back, etc.)
  *
@@ -382,6 +386,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}
 }
 
+#pragma mark Status State Descriptions
 /*!
  * @brief Return the localized description for the sate of the passed status
  *
@@ -435,8 +440,109 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return nil;
 }
 
+#pragma mark Setting Status States
 /*!
- * @brief Access to Adium's user-defined states
+ * @brief Set the active status state
+ *
+ * Sets the currently active status state.  This applies throughout Adium and to all accounts.  The state will become
+ * effective immediately.
+ */ 
+- (void)setActiveStatusState:(AIStatus *)statusState
+{	
+	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
+	[self performSelector:@selector(_applyStateToAllAccounts:)
+			   withObject:statusState
+			   afterDelay:0];
+}
+
+/*!
+<<<<<<< .mine
+* @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
+ */
+- (AIStatus *)defaultInitialStatusState
+{
+	return [[self builtInStateArray] objectAtIndex:0];
+}
+
+/*!
+=======
+ * @brief Reset the active status state
+ *
+ * All active status states cache will also reset.  Posts an active status changed notification.  The active state
+ * will be regenerated the next time it is requested.
+ */
+- (void)_resetActiveStatusState
+{
+	//Clear the active status state.  It will be rebuilt next time it is requested
+	[_activeStatusState release]; _activeStatusState = nil;
+	[_allActiveStatusStates release]; _allActiveStatusStates = nil;
+	
+	//Let observers know the active state has changed
+	[[adium notificationCenter] postNotificationName:AIStatusActiveStateChangedNotification object:nil];
+}
+
+/*!
+ * @brief Set the initial status state if necessary for each account
+ *
+ * Any account which does not currently have a status state will be set to [self defaultIniitalStatusState].
+ *
+ * This is called as Adium finishes initializing and is also used after accounts are created.
+ */
+- (void)setInitialStatusState
+{
+	AIStatus	*statusState = [self defaultInitialStatusState];
+
+	//Apply the state to our accounts without notifying
+	[[adium contactController] delayListObjectNotifications];
+	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
+															  withObject:statusState];
+	[[adium contactController] endListObjectNotificationsDelay];
+}
+
+
+
+/*!
+* @brief Apply a state to all accounts
+ *
+ * Applies the passed state to all accounts
+ */ 
+- (void)_applyStateToAllAccounts:(AIStatus *)statusState
+{
+	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	AIAccount		*account;
+	
+	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
+	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
+												![[adium accountController] oneOrMoreConnectedAccounts]);
+	
+	[self setDelayStateMenuUpdates:YES];
+	while(account = [enumerator nextObject]){
+		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
+			//If this account is online, or no accounts are online, set the status completely
+			[account setStatusState:statusState];
+		}else{
+			//If this account should not have its state set now, perform internal bookkeeping so a future sign-on
+			//will be to the most appropriate state
+			[account setStatusStateAndRemainOffline:statusState];
+		}
+	}
+	[self setDelayStateMenuUpdates:NO];
+}
+
+/*!
+ * @brief Account list changed
+ *
+ * Accounts should always have a status state. When the account list changes, ensure taht accounts have an
+ * initial state set.
+ */
+- (void)accountListChanged:(NSNotification *)notification
+{
+	[self setInitialStatusState];
+}
+
+#pragma mark Retrieving Status States
+/*!
+* @brief Access to Adium's user-defined states
  *
  * Returns an array of available user-defined states, which are AIStatus objects
  */
@@ -444,25 +550,22 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
 	if(!stateArray){		
 		NSData	*savedStateArrayData = [[adium preferenceController] preferenceForKey:KEY_SAVED_STATUS
-																	   group:PREF_GROUP_SAVED_STATUS];
+																				group:PREF_GROUP_SAVED_STATUS];
 		if(savedStateArrayData){
 			stateArray = [[NSKeyedUnarchiver unarchiveObjectWithData:savedStateArrayData] mutableCopy];
 		}
 		
 		if(!stateArray) stateArray = [[NSMutableArray alloc] init];
-
-		//Update Adium 0.8svn saved states -- VERY TEMPORARY!
-		[self upgradeSVNSavedStatesToCurrent];
-			
+		
 		//Upgrade Adium 0.7x away messages
 		[self _upgradeSavedAwaysToSavedStates];
 	}
-
+	
 	return(stateArray);
 }
 
 /*!
- * @brief Return the array of built-in states
+* @brief Return the array of built-in states
  *
  * These are basic Available and Away states which should always be visible and are (by convention) immutable.
  * The first state in BUILT_IN_STATE_ARRAY will be used as the default for accounts as they are created.
@@ -483,75 +586,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}
 	
 	return(builtInStateArray);
-}
-
-/*!
- * @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
- */
-- (AIStatus *)defaultInitialStatusState
-{
-	return [[self builtInStateArray] objectAtIndex:0];
-}
-
-/*!
- * @brief Set the active status state
- *
- * Sets the currently active status state.  This applies throughout Adium and to all accounts.  The state will become
- * effective immediately.
- */ 
-- (void)setActiveStatusState:(AIStatus *)statusState
-{	
-	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
-	[self performSelector:@selector(_applyStateToAllAccounts:)
-			   withObject:statusState
-			   afterDelay:0];
-}
-
-/*!
- * @brief Reset the active status state
- *
- * All active status states cache will also reset.  Posts an active status changed notification.  The active state
- * will be regenerated the next time it is requested.
- */
-- (void)_resetActiveStatusState
-{
-	//Clear the active status state.  It will be rebuilt next time it is requested
-	[_activeStatusState release]; _activeStatusState = nil;
-	[_allActiveStatusStates release]; _allActiveStatusStates = nil;
-	
-	//Let observers know the active state has changed
-	[[adium notificationCenter] postNotificationName:AIStatusActiveStateChangedNotification object:nil];
-}
-
-
-
-/*!
- * @brief Set the initial status state if necessary for each account
- *
- * Any account which does not currently have a status state will be set to [self defaultIniitalStatusState].
- *
- * This is called as Adium finishes initializing and is also used after accounts are created.
- */
-- (void)setInitialStatusState
-{
-	AIStatus	*statusState = [self defaultInitialStatusState];
-
-	//Apply the state to our accounts without notifying
-	[[adium contactController] delayListObjectNotifications];
-	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
-															  withObject:statusState];
-	[[adium contactController] endListObjectNotificationsDelay];
-}
-
-/*!
- * @brief Account list changed
- *
- * Accounts should always have a status state. When the account list changes, ensure taht accounts have an
- * initial state set.
- */
-- (void)accountListChanged:(NSNotification *)notification
-{
-	[self setInitialStatusState];
 }
 
 /*!
@@ -667,8 +701,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
 	NSNumber	*nextUniqueStatusID;
 
-	nextUniqueStatusID = [[adium preferenceController] preferenceForKey:TOP_STATUS_STATE_ID
-																  group:PREF_GROUP_SAVED_STATUS];
+	//Retain and autorelease since we'll be replacing this value (and therefore releasing it) via the preferenceController.
+	nextUniqueStatusID = [[[[adium preferenceController] preferenceForKey:TOP_STATUS_STATE_ID
+																  group:PREF_GROUP_SAVED_STATUS] retain] autorelease];
+	if(!nextUniqueStatusID) nextUniqueStatusID = [NSNumber numberWithInt:1];
 
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:([nextUniqueStatusID intValue] + 1)]
 										 forKey:TOP_STATUS_STATE_ID
@@ -678,156 +714,18 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
- * @brief Save changes to the state array and notify observers
- *
- * Saves any outstanding changes to the state array.  There should be no need to call this manually, since all the
- * state array modifying methods in this class call it automatically after making changes.
- *
- * After the state array is saved, observers are notified that is has changed.  Call after making any changes to the
- * state array from within the controller.
- */ 
-- (void)_saveStateArrayAndNotifyOfChanges
-{
-	//Clear the sorted menu items array since our state array changed.
-	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
-	
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
-										 forKey:KEY_SAVED_STATUS
-										  group:PREF_GROUP_SAVED_STATUS];
-	[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
-}
-
-/*!
- * @brief Apply a state to all accounts
- *
- * Applies the passed state to all accounts
- */ 
-- (void)_applyStateToAllAccounts:(AIStatus *)statusState
-{
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
-	AIAccount		*account;
-	
-	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
-	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
-												![[adium accountController] oneOrMoreConnectedAccounts]);
-
-	[self setDelayStateMenuUpdates:YES];
-	while(account = [enumerator nextObject]){
-		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
-			//If this account is online, or no accounts are online, set the status completely
-			[account setStatusState:statusState];
-		}else{
-			//If this account should not have its state set now, perform internal bookkeeping so a future sign-on
-			//will be to the most appropriate state
-			[account setStatusStateAndRemainOffline:statusState];
-		}
-	}
-	[self setDelayStateMenuUpdates:NO];
-}
-
-/*!
- * @brief Temporary upgrade code for 0.7x -> 0.8
- *
- * Versions 0.7x and prior stored their away messages in a different format.  This code allows a seamless
- * transition from 0.7x to 0.8.  We can easily recognize the old format because the away messages are of
- * type "Away" instead of type "State", which is used for all 0.8 and later saved states.
- * Since we are changing the array as we scan it, an enumerator will not work here.
+ * @brief Find the status state with the requested uniqueStatusID
  */
-#define OLD_KEY_SAVED_AWAYS			@"Saved Away Messages"
-#define OLD_GROUP_AWAY_MESSAGES		@"Away Messages"
-#define OLD_STATE_SAVED_AWAY		@"Away"
-#define OLD_STATE_AWAY				@"Message"
-#define OLD_STATE_AUTO_REPLY		@"Autoresponse"
-#define OLD_STATE_TITLE				@"Title"
-- (void)_upgradeSavedAwaysToSavedStates
+- (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID
 {
-	NSArray	*savedAways = [[adium preferenceController] preferenceForKey:OLD_KEY_SAVED_AWAYS
-																   group:OLD_GROUP_AWAY_MESSAGES];
-	
-	if(savedAways){
-		NSEnumerator	*enumerator = [savedAways objectEnumerator];
-		NSDictionary	*state;
-		
-		//Update all the away messages to states
-		while(state = [enumerator nextObject]){
-			if([[state objectForKey:@"Type"] isEqualToString:OLD_STATE_SAVED_AWAY]){
-				AIStatus	*statusState;
-				
-				//Extract the away message information from this old record
-				NSData		*statusMessageData = [state objectForKey:OLD_STATE_AWAY];
-				NSData		*autoReplyMessageData = [state objectForKey:OLD_STATE_AUTO_REPLY];
-				NSString	*title = [state objectForKey:OLD_STATE_TITLE];
-				
-				//Create an AIStatus from this information
-				statusState = [AIStatus status];
-
-				//General category: It's an away type
-				[statusState setStatusType:AIAwayStatusType];
-
-				//Specific state: It's the generic away. Funny how that work out.
-				[statusState setStatusName:STATUS_NAME_AWAY];				
-
-				//Set the status message (which is just the away message)
-				[statusState setStatusMessage:[NSAttributedString stringWithData:statusMessageData]];
-
-				//It has an auto reply
-				[statusState setHasAutoReply:YES];
-
-				if(autoReplyMessageData){
-					//Use the custom auto reply if it was set
-					[statusState setAutoReply:[NSAttributedString stringWithData:autoReplyMessageData]];
-				}else{
-					//If no autoReplyMesssage, use the status message
-					[statusState setAutoReplyIsStatusMessage:YES];
-				}
-
-				if(title) [statusState setTitle:title];
-	
-				//Add the updated state to our state array
-				[stateArray addObject:statusState];
-			}
-		}
-		
-		//Save these changes and delete the old aways so we don't need to do this again
-		[self _saveStateArrayAndNotifyOfChanges];
-		[[adium preferenceController] setPreference:nil
-											 forKey:OLD_KEY_SAVED_AWAYS
-											  group:OLD_GROUP_AWAY_MESSAGES];
+	NSEnumerator	*enumerator = [[self stateArray] objectEnumerator];
+	AIStatus		*statusState;
+	while(statusState = [enumerator nextObject]){
+		if([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
+			break;
 	}
-}
 
-
-/*!
- * @brief Upgrade saved states from January 2005 SVN to the new storage mechanism.
- *
- * This should be removed long before 0.8 ships.
- */
-- (void)upgradeSVNSavedStatesToCurrent
-{
-	NSArray	*savedAways = [[adium preferenceController] preferenceForKey:@"Saved Status"
-																   group:PREF_GROUP_SAVED_STATUS];
-
-	if(savedAways){
-		NSEnumerator	*enumerator = [savedAways objectEnumerator];
-		NSDictionary	*state;
-
-		//Update all the away messages to states
-		while(state = [enumerator nextObject]){
-			AIStatus	*statusState;
-
-			//Create an AIStatus from this information
-			statusState = [AIStatus statusWithDictionary:state];
-
-			//Add the updated state to our state array
-			[stateArray addObject:statusState];
-		}
-
-		//Save these changes and delete the old aways so we don't need to do this again
-		[self _saveStateArrayAndNotifyOfChanges];
-		[[adium preferenceController] setPreference:nil
-											 forKey:@"Saved Status"
-											  group:PREF_GROUP_SAVED_STATUS];
-	}
+	return statusState;
 }
 
 //State Editing --------------------------------------------------------------------------------------------------------
@@ -901,6 +799,32 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[self _saveStateArrayAndNotifyOfChanges];
 }
 
+/*!
+* @brief Save changes to the state array and notify observers
+ *
+ * Saves any outstanding changes to the state array.  There should be no need to call this manually, since all the
+ * state array modifying methods in this class call it automatically after making changes.
+ *
+ * After the state array is saved, observers are notified that is has changed.  Call after making any changes to the
+ * state array from within the controller.
+ */ 
+- (void)_saveStateArrayAndNotifyOfChanges
+{
+	//Clear the sorted menu items array since our state array changed.
+	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
+	
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
+										 forKey:KEY_SAVED_STATUS
+										  group:PREF_GROUP_SAVED_STATUS];
+	[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
+}
+
+- (void)statusStateDidSetUniqueStatusID
+{
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
+										 forKey:KEY_SAVED_STATUS
+										  group:PREF_GROUP_SAVED_STATUS];
+}
 
 //Machine Activity -----------------------------------------------------------------------------------------------------
 #pragma mark Machine Activity
@@ -996,8 +920,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 
-//State menu support ---------------------------------------------------------------------------------------------------
-#pragma mark State menu support
+//Status state menu support ---------------------------------------------------------------------------------------------------
+#pragma mark Status state menu support
 /*!
  * @brief Register a state menu plugin
  *
@@ -1597,7 +1521,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		title = [title substringWithRange:trimRange];
 	}
 	if([title length] > STATE_TITLE_MENU_LENGTH){
-		title = [[title substringToIndex:STATE_TITLE_MENU_LENGTH] stringByAppendingString:ELIPSIS_STRING];
+		title = [[title substringToIndex:STATE_TITLE_MENU_LENGTH] stringByAppendingString:[NSString ellipsis]];
 	}
 	
 	return(title);
@@ -1685,5 +1609,77 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 	return statusStatesMenu;
 }	
+
+#pragma mark Upgrade code
+/*!
+* @brief Temporary upgrade code for 0.7x -> 0.8
+ *
+ * Versions 0.7x and prior stored their away messages in a different format.  This code allows a seamless
+ * transition from 0.7x to 0.8.  We can easily recognize the old format because the away messages are of
+ * type "Away" instead of type "State", which is used for all 0.8 and later saved states.
+ * Since we are changing the array as we scan it, an enumerator will not work here.
+ */
+#define OLD_KEY_SAVED_AWAYS			@"Saved Away Messages"
+#define OLD_GROUP_AWAY_MESSAGES		@"Away Messages"
+#define OLD_STATE_SAVED_AWAY		@"Away"
+#define OLD_STATE_AWAY				@"Message"
+#define OLD_STATE_AUTO_REPLY		@"Autoresponse"
+#define OLD_STATE_TITLE				@"Title"
+- (void)_upgradeSavedAwaysToSavedStates
+{
+	NSArray	*savedAways = [[adium preferenceController] preferenceForKey:OLD_KEY_SAVED_AWAYS
+																   group:OLD_GROUP_AWAY_MESSAGES];
+	
+	if(savedAways){
+		NSEnumerator	*enumerator = [savedAways objectEnumerator];
+		NSDictionary	*state;
+		
+		//Update all the away messages to states
+		while(state = [enumerator nextObject]){
+			if([[state objectForKey:@"Type"] isEqualToString:OLD_STATE_SAVED_AWAY]){
+				AIStatus	*statusState;
+				
+				//Extract the away message information from this old record
+				NSData		*statusMessageData = [state objectForKey:OLD_STATE_AWAY];
+				NSData		*autoReplyMessageData = [state objectForKey:OLD_STATE_AUTO_REPLY];
+				NSString	*title = [state objectForKey:OLD_STATE_TITLE];
+				
+				//Create an AIStatus from this information
+				statusState = [AIStatus status];
+				
+				//General category: It's an away type
+				[statusState setStatusType:AIAwayStatusType];
+				
+				//Specific state: It's the generic away. Funny how that work out.
+				[statusState setStatusName:STATUS_NAME_AWAY];				
+				
+				//Set the status message (which is just the away message)
+				[statusState setStatusMessage:[NSAttributedString stringWithData:statusMessageData]];
+				
+				//It has an auto reply
+				[statusState setHasAutoReply:YES];
+				
+				if(autoReplyMessageData){
+					//Use the custom auto reply if it was set
+					[statusState setAutoReply:[NSAttributedString stringWithData:autoReplyMessageData]];
+				}else{
+					//If no autoReplyMesssage, use the status message
+					[statusState setAutoReplyIsStatusMessage:YES];
+				}
+				
+				if(title) [statusState setTitle:title];
+				
+				//Add the updated state to our state array
+				[stateArray addObject:statusState];
+			}
+		}
+		
+		//Save these changes and delete the old aways so we don't need to do this again
+		[self _saveStateArrayAndNotifyOfChanges];
+		[[adium preferenceController] setPreference:nil
+											 forKey:OLD_KEY_SAVED_AWAYS
+											  group:OLD_GROUP_AWAY_MESSAGES];
+	}
+}
 
 @end
