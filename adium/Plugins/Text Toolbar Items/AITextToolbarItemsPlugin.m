@@ -117,7 +117,7 @@
     NSString	*identifier = [inToolbarItem identifier];
     BOOL	enabled = YES;
 
-    if([identifier compare:@"Bold"] == 0 || [identifier compare:@"Italic"] == 0){
+    if([identifier compare:@"Bold"] == 0 || [identifier compare:@"Italic"] == 0 || [identifier compare:@"Underline"] == 0){
         AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
         NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
