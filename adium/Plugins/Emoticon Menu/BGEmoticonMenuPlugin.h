@@ -20,14 +20,15 @@
 
 @interface BGEmoticonMenuPlugin : AIPlugin
 {
-    NSArray *emoticonPacks;
-  //  NSMenu *eMenu;
-    NSMenuItem *toolbarMenu;
-//    NSMenuItem *quickMenuItem;
-    NSPopUpButton *menuButton;
-    NSToolbarItem *toolbarItem;
+	NSMenuItem			*quickMenuItem;
+	NSMenuItem			*quickContextualMenuItem;
+	BOOL				needToRebuildMenus;
+	
+    NSToolbarItem 		*toolbarItem;			//Cached toolbar item
+	NSMenu				*emoticonMenu;			//Cached emoticon menu
 }
--(NSMenu *)buildMenu:(AIEmoticonPack*)incomingPack;
-//-(NSToolbarItem *)toolbarItem;
-//-(void)buildToolbarItem;
+
+- (NSMenu *)emoticonMenu;
+- (NSMenu *)flatEmoticonMenuForPack:(AIEmoticonPack *)incomingPack;
+
 @end
