@@ -1893,7 +1893,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)displayError:(NSString *)errorDesc
 {
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[[self service] description]]
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[[self service] shortDescription]]
                                     withDescription:errorDesc];
 }
 
