@@ -5156,6 +5156,26 @@
 			settings = {
 			};
 		};
+		343B926205F7064700900CE6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = None.AdiumSoundset;
+			path = Sounds/None.AdiumSoundset;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343B926305F7064700900CE6 = {
+			fileRef = 343B926205F7064700900CE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343B927005F7065400900CE6 = {
+			fileRef = 343B926205F7064700900CE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		343C893305704B5D005E0632 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -9597,6 +9617,7 @@
 				34254F4805EC0C3400F11AD7,
 				34254F4A05EC0C3D00F11AD7,
 				34254F4C05EC0C4300F11AD7,
+				343B926305F7064700900CE6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9980,6 +10001,7 @@
 				34498DC405EEF52100D5816E,
 				34498DC505EEF52100D5816E,
 				34498DC605EEF52100D5816E,
+				343B927005F7065400900CE6,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -29122,6 +29144,7 @@
 				34498CA505EEF31200D5816E,
 				34498CA605EEF31300D5816E,
 				34498CA705EEF31300D5816E,
+				343B926205F7064700900CE6,
 				4BF715C00503AFD200A8010A,
 				F552078B033F727F01A8010A,
 				34254F4305EC0C2700F11AD7,
