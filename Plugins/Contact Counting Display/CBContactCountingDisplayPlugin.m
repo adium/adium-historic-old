@@ -18,21 +18,34 @@
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "CBContactCountingDisplayPlugin.h"
-#import "CBContactCountingDisplayPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListGroup.h>
 
 #define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS  @"ContactCountingDisplayDefaults"
 
-#define VISIBLE_COUNTING_MENU_ITEM_TITLE		@"Count Visible Contacts"
-#define ALL_COUNTING_MENU_ITEM_TITLE			@"Count All Contacts"
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY			@"Contact List Display"
-#define KEY_SHOW_OFFLINE_CONTACTS				@"Show Offline Contacts"
+#define COUNT_ONLINE_CONTACTS_TITLE				AILocalizedString(@"Count Online Contacts", nil)
+#define COUNT_ALL_CONTACTS_TITLE				AILocalizedString(@"Count All Contacts", nil)
 
+#define PREF_GROUP_CONTACT_LIST					@"Contact List"
+#define KEY_COUNT_ALL_CONTACTS					@"Count All Contacts"
+#define KEY_COUNT_ONLINE_CONTACTS				@"Count Online Contacts"
+
+/*
+ * @class CBContactCountingDisplayPlugin
+ *
+ * @brief Component to handle displaying counts of contacts, both online and total, next to group names
+ *
+ * This componenet adds two menu items, "Count All Contacts" and "Count Online Contacts." Both default to being off.
+ * When on, these options display the appropriate count for an AIListGroup's contained objects.
+ */
 @implementation CBContactCountingDisplayPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //register our defaults
@@ -41,43 +54,43 @@
 										  forGroup:PREF_GROUP_CONTACT_LIST];
 
     //init our menu items
-    visibleCountingMenuItem = [[NSMenuItem alloc] initWithTitle:VISIBLE_COUNTING_MENU_ITEM_TITLE 
+    menuItem_countOnlineObjects = [[NSMenuItem alloc] initWithTitle:COUNT_ONLINE_CONTACTS_TITLE 
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-    [[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_Unnamed_C];		
+    [[adium menuController] addMenuItem:menuItem_countOnlineObjects toLocation:LOC_View_Unnamed_C];		
 
-    allCountingMenuItem = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE
+    menuItem_countAllObjects = [[NSMenuItem alloc] initWithTitle:COUNT_ALL_CONTACTS_TITLE
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:allCountingMenuItem toLocation:LOC_View_Unnamed_C];		
+	[[adium menuController] addMenuItem:menuItem_countAllObjects toLocation:LOC_View_Unnamed_C];		
     
 	//set up the prefs
-	allCount = NO;
-	visibleCount = NO;
-	showOffline = NO;
+	countAllObjects = NO;
+	countOnlineObjects = NO;
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
+/*
+ * @brief Preferences changed
+ *
+ * PREF_GROUP_CONTACT_LIST preferences changed; update our counting display as necessary.
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	BOOL oldAllCount = allCount;
-	BOOL oldVisibleCount = visibleCount;
-	BOOL oldShowOffline = showOffline;
+	BOOL oldCountAllObjects = countAllObjects;
+	BOOL oldCountOnlineObjects = countOnlineObjects;
 	
-	allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
-														 group:PREF_GROUP_CONTACT_LIST] boolValue];
-	visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
-															 group:PREF_GROUP_CONTACT_LIST] boolValue];
-	showOffline =  [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-															 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-	if ((allCount && !oldAllCount) || (visibleCount && !oldVisibleCount)){
+	countAllObjects = [[prefDict objectForKey:KEY_COUNT_ALL_CONTACTS] boolValue];
+	countOnlineObjects = [[prefDict objectForKey:KEY_COUNT_ONLINE_CONTACTS] boolValue];
+	
+	if ((countAllObjects && !oldCountAllObjects) || (countOnlineObjects && !oldCountOnlineObjects)){
+		//One of the displays is on, but it was off before
 		
-		if (!oldAllCount && !oldVisibleCount){
+		if (!oldCountAllObjects && !oldCountOnlineObjects){
 			//Install our observer if we are now counting contacts in some form but weren't before
 			//This will update all list objects.
 			[[adium contactController] registerListObjectObserver:self];				
@@ -86,69 +99,85 @@
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 		
-	}else if ((!allCount && oldAllCount) || (!visibleCount && oldVisibleCount)){
+	}else if ((!countAllObjects && oldCountAllObjects) || (!countOnlineObjects && oldCountOnlineObjects)){
+		//One of the displays is off, but it was on before
 		
 		//Refresh all
 		[[adium contactController] updateAllListObjectsForObserver:self];
 		
-		if (!allCount && !visibleCount){
+		if (!countAllObjects && !countOnlineObjects){
 			//Remove our observer since we are now doing no counting
 			[[adium contactController] unregisterListObjectObserver:self];
 		}
-		
-	}else if (showOffline != oldShowOffline){
-		//Refresh all
-		[[adium contactController] updateAllListObjectsForObserver:self];
 	}
-	
-	
-	if(allCount != [allCountingMenuItem state]) {
-		[allCountingMenuItem setState:allCount];
+
+	if([menuItem_countAllObjects state] != countAllObjects) {
+		[menuItem_countAllObjects setState:countAllObjects];
 	}
-	if(visibleCount != [visibleCountingMenuItem state]) {
-		[visibleCountingMenuItem setState:visibleCount];
+	if([menuItem_countOnlineObjects state] != countOnlineObjects) {
+		[menuItem_countOnlineObjects setState:countOnlineObjects];
 	}
 }
 
+/*
+ * @brief Update the counts when a group changes its object count or a contact signs on or off
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {    
 	NSSet		*modifiedAttributes = nil;
+
+	/* We check against a nil inModifiedKeys so we can remove our Counting information from the display when the user
+	 * toggles it off.
+	 *
+	 * We update for any group which isn't the root group when its contained objects count changes.
+	 * We update a contact's containing group when its online state changes.
+	 */
+	if((inModifiedKeys == nil) ||
+	   ((countOnlineObjects || countAllObjects) &&
+		(([inObject isKindOfClass:[AIListGroup class]] && [inModifiedKeys containsObject:@"ObjectCount"] && ![[inObject UID] isEqualToString:ADIUM_ROOT_GROUP_NAME]) ||
+		 ([inObject isKindOfClass:[AIListContact class]] && [inModifiedKeys containsObject:@"Online"])))){
+		
+		//Obtain the group we want to work with -- for a contact, use its parent group.
+		AIListGroup		*targetGroup = ([inObject isKindOfClass:[AIListContact class]] ? 
+										[inObject parentGroup] :
+										inObject);
+
+		NSString		*countString = nil;
+		int onlineObjects, totalObjects;
+
+		//Obtain a count of online objects in this group
+		if(countOnlineObjects){
+			AIListObject	*containedObject;
+			NSEnumerator	*enumerator;
+			
+			onlineObjects = 0;
+			enumerator = [targetGroup objectEnumerator];
+			while(containedObject = [enumerator nextObject]){
+				if([containedObject online]) onlineObjects++;
+			}
+		}
+		
+		//Obtain a count of all objects in this group
+		if(countAllObjects){
+			totalObjects = [[targetGroup statusObjectForKey:@"ObjectCount"] intValue];
+		}
 	
-	if([inObject isKindOfClass:[AIListGroup class]] &&
-	   (inModifiedKeys == nil || 
-		((visibleCount || allCount) && 
-		 [inModifiedKeys containsObject:@"ObjectCount"] || [inModifiedKeys containsObject:@"VisibleObjectCount"]))) {
-		
-		NSString	*addString = nil;
-		NSNumber	*objectCountNumber = nil;
-		NSNumber	*visibleObjectCountNumber = nil;
-		
-		if(showOffline && (visibleCount || allCount)){ 
-			// If we are showing offline contacts, just show the object count since it will always be the same as the visible object count
-			objectCountNumber = [inObject statusObjectForKey:@"ObjectCount"];
-			if (!objectCountNumber) objectCountNumber = [NSNumber numberWithInt:0];
-			
-		} else {
-			if(visibleCount) visibleObjectCountNumber = [inObject statusObjectForKey:@"VisibleObjectCount"];
-			if (allCount) objectCountNumber = [inObject statusObjectForKey:@"ObjectCount"];
-		}
-		
 		//Build a string to add to the right of the name which shows any information we just extracted
-		if (objectCountNumber && visibleObjectCountNumber){
-			addString = [NSString stringWithFormat:@" (%i/%i)", [visibleObjectCountNumber intValue], [objectCountNumber intValue]];
-		}else if(objectCountNumber){
-			addString = [NSString stringWithFormat:@" (%i)", [objectCountNumber intValue]];
-		}else if(visibleObjectCountNumber){
-			addString = [NSString stringWithFormat:@" (%i)", [visibleObjectCountNumber intValue]];
+		if (countOnlineObjects && countAllObjects){
+			countString = [NSString stringWithFormat:@" (%i/%i)", onlineObjects, totalObjects];
+		}else if(countAllObjects){
+			countString = [NSString stringWithFormat:@" (%i)", totalObjects];
+		}else if(countOnlineObjects){
+			countString = [NSString stringWithFormat:@" (%i)", onlineObjects];
 		}
-		
-		if (addString){
-			AIMutableOwnerArray *rightTextArray = [inObject displayArrayForKey:@"Right Text"];
+
+		if (countString){
+			AIMutableOwnerArray *rightTextArray = [targetGroup displayArrayForKey:@"Right Text"];
 			
-			[rightTextArray setObject:addString withOwner:self priorityLevel:High_Priority];
+			[rightTextArray setObject:countString withOwner:self priorityLevel:High_Priority];
 			modifiedAttributes = [NSSet setWithObject:@"Right Text"];
 		}else{
-			AIMutableOwnerArray *rightTextArray = [inObject displayArrayForKey:@"Right Text" create:NO];
+			AIMutableOwnerArray *rightTextArray = [targetGroup displayArrayForKey:@"Right Text" create:NO];
 			
 			//If there is a right text object now but there shouldn't be anymore, remove it
 			if ([rightTextArray objectWithOwner:self]){
@@ -161,19 +190,27 @@
 	return(modifiedAttributes);
 }
 
+/*
+ * @brief User toggled one of our two menu items
+ */
 - (void)toggleMenuItem:(id)sender
 {
-    if(sender == allCountingMenuItem || sender == visibleCountingMenuItem) {
-		BOOL	shouldEnable = ![sender state];
+    if(sender == menuItem_countOnlineObjects || sender == menuItem_countAllObjects) {
+		BOOL	newState = ![sender state];
 		
-		//Toggle and set
-        [sender setState:shouldEnable];
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:shouldEnable]
-											 forKey:(sender == allCountingMenuItem ? KEY_COUNT_ALL_CONTACTS : KEY_COUNT_VISIBLE_CONTACTS)
+		//Toggle and set, which will call back on preferencesChanged: above
+        [sender setState:newState];
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:newState]
+											 forKey:(sender == menuItem_countAllObjects ?
+													 KEY_COUNT_ALL_CONTACTS : 
+													 KEY_COUNT_ONLINE_CONTACTS)
 											  group:PREF_GROUP_CONTACT_LIST];
     }
 }
 
+/*
+ * Uninstall
+ */
 - (void)uninstallPlugin
 {
     //we are no longer an observer

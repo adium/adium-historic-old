@@ -16,23 +16,15 @@
 
 #import <Adium/AIPlugin.h>
 
-#define PREF_GROUP_CONTACT_LIST     @"Contact List"
-#define KEY_COUNT_ALL_CONTACTS      @"Count All Contacts"
-#define KEY_COUNT_VISIBLE_CONTACTS  @"Count Visible Contacts"
-
-@class CBContactCountingDisplayPreferences;
 @protocol AIListObjectObserver;
 
 @interface CBContactCountingDisplayPlugin : AIPlugin <AIListObjectObserver>
 {
-    BOOL                                allCount;
-    BOOL                                visibleCount;
-    BOOL                                showOffline;
+    BOOL                                countAllObjects;
+    BOOL                                countOnlineObjects;
     
-    NSMenuItem                          *visibleCountingMenuItem;
-    NSMenuItem                          *allCountingMenuItem;
-    
-    CBContactCountingDisplayPreferences *prefs;
+    NSMenuItem                          *menuItem_countOnlineObjects;
+    NSMenuItem                          *menuItem_countAllObjects;
 }
 
 @end
