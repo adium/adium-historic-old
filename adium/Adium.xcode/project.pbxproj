@@ -4757,7 +4757,6 @@
 				4BD6756506001E300049CAF7,
 				4BD6756C06001E340049CAF7,
 				4BD6756E06001E360049CAF7,
-				4BD6757406001E3B0049CAF7,
 				4BD6757606001E3B0049CAF7,
 				4BD6757806001E3C0049CAF7,
 				4BD6757B06001E3F0049CAF7,
@@ -5395,7 +5394,6 @@
 				4BD6756606001E300049CAF7,
 				4BD6756D06001E350049CAF7,
 				4BD6756F06001E360049CAF7,
-				4BD6757506001E3B0049CAF7,
 				4BD6757706001E3C0049CAF7,
 				4BD6757906001E3D0049CAF7,
 				4BD6757C06001E400049CAF7,
@@ -16851,18 +16849,6 @@
 			settings = {
 			};
 		};
-		4BD6757406001E3B0049CAF7 = {
-			fileRef = C42C170305BA689F00135D3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6757506001E3B0049CAF7 = {
-			fileRef = C42C170405BA689F00135D3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6757606001E3B0049CAF7 = {
 			fileRef = C42C170505BA689F00135D3C;
 			isa = PBXBuildFile;
@@ -22015,8 +22001,6 @@
 		C42C170005BA687800135D3C = {
 			children = (
 				6EF3F85F05EF179B0037D3CC,
-				C42C170305BA689F00135D3C,
-				C42C170405BA689F00135D3C,
 				C42C170505BA689F00135D3C,
 				C42C170605BA68A000135D3C,
 				C42C170705BA68A000135D3C,
@@ -22026,24 +22010,6 @@
 			isa = PBXGroup;
 			name = Themes;
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C42C170305BA689F00135D3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BGThemeManageView.h;
-			path = Plugins/Themes/BGThemeManageView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C42C170405BA689F00135D3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BGThemeManageView.m;
-			path = Plugins/Themes/BGThemeManageView.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
