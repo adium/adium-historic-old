@@ -39,16 +39,6 @@
     [self forwardSelector:@selector(keyDown:) withObject:theEvent];
 }
 
-- (void)pasteAsPlainText:(id)sender
-{
-    [self forwardSelector:@selector(pasteAsPlainText:) withObject:sender];
-}
-
-- (void)pasteAsRichText:(id)sender
-{
-    [self forwardSelector:@selector(pasteAsRichText:) withObject:sender];
-}
-
 - (void)forwardSelector:(SEL)selector withObject:(id)object
 {
 	id	responder = [self nextResponder];
