@@ -66,7 +66,10 @@
     //Load our images
     tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
 
-    //Configure out tab cells    
+    //register as a drag observer:
+    [self registerForDraggedTypes:[NSArray arrayWithObject:NSRTFPboardType]];
+    
+    //Configure our tab cells    
     [self rebuildCells];
     
     return(self);
@@ -497,6 +500,19 @@
 
     return(tabsChanged || tabHasBeenDragged);
 }
+
+- (unsigned int)draggingUpdated:(id <NSDraggingInfo>)sender {
+    NSPoint		dragLocation = [self convertPoint:[sender draggingLocation] fromView:nil];
+    AICustomTabCell	*tabCell = [self _cellAtPoint:dragLocation];
+
+    if(tabCell != nil && ( [tabView selectedTabViewItem] != [tabCell tabViewItem] ) ){
+        //Select the tab
+        [tabView selectTabViewItem:[tabCell tabViewItem]];
+    }
+    
+    return NSDragOperationNone;
+}
+
 
 
 // Context menu ------------------------------------------------------------------------
