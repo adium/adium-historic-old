@@ -8,6 +8,8 @@
 #import "SHHyperlinkScanner.h"
 
 static NSMutableCharacterSet *skipSet = nil;
+static NSMutableCharacterSet *startSet = nil;
+static NSMutableCharacterSet *endSet = nil;
 
 @implementation SHHyperlinkScanner
 
@@ -92,12 +94,22 @@ static NSMutableCharacterSet *skipSet = nil;
 {
     NSString    *scanString = nil;
     int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
-	if (!skipSet){
-		skipSet = [[NSMutableCharacterSet alloc] init];
-		[skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		[skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
-		[skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-		[skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-"]];
+    if (!skipSet){
+        skipSet = [[NSMutableCharacterSet alloc] init];
+        [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+        [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+    }
+    
+    if(!startSet){
+        startSet = [[NSMutableCharacterSet alloc] init];
+        [startSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [startSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-,:;<([{.?!"]];
+    }
+    
+    if(!endSet){
+        endSet = [[NSMutableCharacterSet alloc] init];
+        [endSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"',;>)]}.?!"]];
     }
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
@@ -105,10 +117,13 @@ static NSMutableCharacterSet *skipSet = nil;
     NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
     [preScanner setCharactersToBeSkipped:skipSet];
     [preScanner setScanLocation:location];
-	
+
+    [preScanner scanCharactersFromSet:startSet intoString:nil];
+
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
         unsigned int localStringLen = [scanString length];
-        if(localStringLen > 2 && [scanString characterAtIndex:localStringLen - 1] == ','){
+
+        if(localStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:localStringLen - 1]]){
             scanString = [NSString stringWithString:[scanString substringToIndex:localStringLen - 1]];
         }
 
