@@ -12,5 +12,7 @@
 	<false/>
 	<key>Status:Resolve Alphabetically</key>
 	<false/>
+	<key>Status:Resolve Alphabetically By Last Name</key>
+	<false/>
 </dict>
 </plist>

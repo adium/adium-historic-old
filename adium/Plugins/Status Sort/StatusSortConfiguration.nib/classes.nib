@@ -14,6 +14,7 @@
             OUTLETS = {
                 "buttonCell_alphabetically" = NSButtonCell; 
                 "buttonCell_manually" = NSButtonCell; 
+                "checkBox_alphabeticallyByLastName" = NSButton; 
                 "checkBox_groupAvailable" = NSButton; 
                 "checkBox_groupAway" = NSButton; 
                 "checkBox_groupIdle" = NSButton; 

@@ -12,6 +12,7 @@
 	
 	IBOutlet	NSMatrix		*matrix_resolution;
 	IBOutlet	NSButtonCell	*buttonCell_alphabetically;
+	IBOutlet	NSButton		*checkBox_alphabeticallyByLastName;
 	IBOutlet	NSButtonCell	*buttonCell_manually;
 }
 

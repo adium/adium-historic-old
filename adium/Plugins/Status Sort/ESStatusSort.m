@@ -14,6 +14,7 @@
 #define KEY_GROUP_IDLE				@"Status:Group Idle"
 #define KEY_SORT_IDLE_TIME			@"Status:Sort by Idle Time"
 #define KEY_RESOLVE_ALPHABETICALLY  @"Status:Resolve Alphabetically"
+#define KEY_RESOLVE_ALPHABETICALLY_BY_LAST_NAME @"Status:Resolve Alphabetically By Last Name"
 
 int statusSort(id objectA, id objectB, BOOL groups);
 
@@ -22,6 +23,7 @@ static BOOL	groupAway;
 static BOOL	groupIdle;
 static BOOL	sortIdleTime;
 static BOOL	resolveAlphabetically;
+static BOOL resolveAlphabeticallyByLastName;
 
 @implementation ESStatusSort
 
@@ -43,6 +45,7 @@ static BOOL	resolveAlphabetically;
 	groupIdle = [[prefDict objectForKey:KEY_GROUP_IDLE] boolValue];
 	sortIdleTime = [[prefDict objectForKey:KEY_SORT_IDLE_TIME] boolValue];
 	resolveAlphabetically = [[prefDict objectForKey:KEY_RESOLVE_ALPHABETICALLY] boolValue];
+	resolveAlphabeticallyByLastName = [[prefDict objectForKey:KEY_RESOLVE_ALPHABETICALLY_BY_LAST_NAME] boolValue];
 	
 	return self;
 }
@@ -78,12 +81,15 @@ static BOOL	resolveAlphabetically;
 	[checkBox_groupAway setState:groupAway];
 	[checkBox_groupIdle setState:groupIdle];
 	[checkBox_sortIdleTime setState:sortIdleTime];
+	[checkBox_alphabeticallyByLastName setState:resolveAlphabeticallyByLastName];
 	if (resolveAlphabetically) {
 		[buttonCell_alphabetically  setState:NSOnState];
 		[buttonCell_manually		setState:NSOffState];
+		[checkBox_alphabeticallyByLastName setEnabled:YES];
 	} else {
 		[buttonCell_alphabetically  setState:NSOffState];
 		[buttonCell_manually		setState:NSOnState];		
+		[checkBox_alphabeticallyByLastName setEnabled:NO];
 	}
 }
 - (IBAction)changePreference:(id)sender
@@ -113,15 +119,22 @@ static BOOL	resolveAlphabetically;
 		
 		if (selectedCell == buttonCell_alphabetically){
 			resolveAlphabetically = YES;
+			[checkBox_alphabeticallyByLastName setEnabled:YES];
 			[[adium preferenceController] setPreference:[NSNumber numberWithBool:resolveAlphabetically]
 												 forKey:KEY_RESOLVE_ALPHABETICALLY
 												  group:PREF_GROUP_CONTACT_SORTING];				
 		}else if (selectedCell == buttonCell_manually){
 			resolveAlphabetically = NO;
+			[checkBox_alphabeticallyByLastName setEnabled:NO];
 			[[adium preferenceController] setPreference:[NSNumber numberWithBool:resolveAlphabetically]
 												 forKey:KEY_RESOLVE_ALPHABETICALLY
 												  group:PREF_GROUP_CONTACT_SORTING];				
 		}
+	}else if (sender == checkBox_alphabeticallyByLastName){
+		resolveAlphabeticallyByLastName = [sender state];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:resolveAlphabeticallyByLastName]
+                                             forKey:KEY_RESOLVE_ALPHABETICALLY_BY_LAST_NAME
+                                              group:PREF_GROUP_CONTACT_SORTING];
 	}
 	
 	[[adium contactController] sortContactList];
@@ -196,7 +209,17 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		
 		//If we made it here, resolve the ordering either alphabetically or by manual ordering
 		if (resolveAlphabetically){
-			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			if (resolveAlphabeticallyByLastName){
+				NSString	*space = @" ";
+				NSArray		*componentsA = [[objectA displayName] componentsSeparatedByString:space];
+				NSArray		*componentsB = [[objectB displayName] componentsSeparatedByString:space];
+				
+				return ([[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]]);
+				
+			}else{
+				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			}
+			
 		}else{
 			//Keep groups in manual order
 			if([objectA orderIndex] > [objectB orderIndex]){
