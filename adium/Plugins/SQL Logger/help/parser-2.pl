@@ -1,8 +1,8 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 442 $ $Date: 2003/10/28 15:59:17 $
+# $Rev: 490 $ $Date: 2003/11/29 19:17:41 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -50,6 +50,7 @@ my $sth = $dbh->prepare("insert into adium.message_v
     (sender_sn, recipient_sn, message, message_date, 
     sender_service, recipient_service) 
     values (?,?,?,?,?,?)");
+
 foreach my $outer_user (glob '*') {
     chdir "$outer_user/Logs";
     foreach my $service_user (glob '*') {
@@ -64,7 +65,7 @@ foreach my $outer_user (glob '*') {
             chdir $folder;
             !$quiet && print "\t" . `ls -1 | wc -l`;
             my $counter = 0;
-            foreach my $file (glob '*adiumLog') {
+            foreach my $file (glob '*.adiumLog *.html') {
                 $verbose && print "\t\t" . $file . "\n";
                 if (++$counter % 50 == 0) {
                     !$quiet && print $counter . "\n";
@@ -81,58 +82,96 @@ foreach my $outer_user (glob '*') {
                 eval {
                     $_ = $file;
                     ($recdName, $date) = /([\w\@\.\_\+\-]*)\s.*(\d\d\d\d\|\d\d\|\d\d)/
-                        or die "$!";
+                        or die "Unable to parse date in $file: $!";
+                    if(/adiumLog$/) {
+                        undef $/;
+                        open (FILE, $file) or die qq{Unable to open file "$file": $!};
+                        my $content = <FILE>;
+                        close(FILE);
+
+                        $content = escapeHTML($content);
+                        $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)[\w\_\.\@\+\-]*\:|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
+
+                        $dbh->begin_work;
+
+                        my @filecontents = split(/\n/, $content);
+
+                        for (my $i = 1; $i < @filecontents; $i++) {
+
+                            $_ = $filecontents[$i];
+
+                            ($time, $sender) = /^\((\d\d\:\d\d\:\d\d)\)([\w\@\_\.\+\-]*)\:/
+                                or ($time) = /^\&lt\;.*(\d\d\:\d\d\:\d\d)/
+                                or die "$file:$_\n$!";
+
+                            if (/^\&lt\;.*\&gt\;/) {
+                                $sender = $recdName;
+                            } 
+
+                            if ($sender eq $sentName) {
+                                $receiver = $recdName;
+                            }
+                            else {
+                                $receiver = $sentName;
+                            }
+
+                            if(/\)[\w\@\_\.\+\-]*\:(.*)/) {
+                                $message = $1;
+                            } else {
+                                $message = $_;
+                            }
+
+                            my $timestamp = $date . " " . $time;
                     
-                    undef $/;
-                    open (FILE, $file) or die qq{Unable to open file "$file": $!};
-                    my $content = <FILE>;
-                    close(FILE);
-                    
-                    $content = escapeHTML($content);
-                    $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)[\w\_\.\@\+\-]*|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
-        
-                    $dbh->begin_work;
-        
-                    my @filecontents = split(/\n/, $content);
-        
-                    for (my $i = 1; $i < @filecontents; $i++) {
-        
-                        $_ = $filecontents[$i];
-        
-                        ($time, $sender) = /^\((\d\d\:\d\d\:\d\d)\)([\w\@\_\.\+\-]*)\:/
-                           or ($time) = /^\&lt\;.*(\d\d\:\d\d\:\d\d)/
-                           or die "$file:$_\n$!";
-        
-                        if (/^\&lt\;.*\&gt\;/) {
-                            $sender = $recdName;
-                        }
-        
-                        if ($folder =~ /Chat Logs/) {
-                            $receiver = $recdName;
-                        } elsif ($sender eq $sentName) {
-                            $receiver = $recdName;
-                        }
-                        else {
-                            $receiver = $sentName;
-                        }
-                
-                        if(/\)[\w\@\_\.\+\-]*\:(.*)/) {
-                            $message = $1;
-                        } else {
-                            $message = $_;
+                            $sth->execute($sender, $receiver, $message, $timestamp, $service, $service) or die ($! . $message);
                         }
 
-                        my $timestamp = $date . " " . $time;
+                    } elsif (/html$/) {
+                    
+                        $/ = "</div>\n";
 
-                        $sth->execute($sender, $receiver, $message, $timestamp, $service, $service) or die ($! . $message);
+                        open (FILE, $file) or die qq{Unable to open file "$file": $!};
+                        my @contents = <FILE>; 
+                        
+                        $dbh->begin_work;
+                        
+                        for(my $i = 0; $i < @contents; $i++) {
+                            my $message_type;
+
+                            $_ = $contents[$i];
+                            
+                            ($message_type, $message) =
+                            /.*class\=\"(.*?)\"\>(.*)\<\/div\>/;
+
+                            if($message_type ne "status") {
+                                ($message_type, $time, $sender, $message) =
+                                /.*class\=\"(.*)\"\>.*?\"timestamp\"\>(\d\d\:\d\d\:\d\d).*?sender\"\>(.*)\:.*?message\"\>(.*)\<\/.*?\>\<\/div\>/s
+                                or die "$file:$_\n$!\n$i\n$contents[$i]";
+                            } else {
+                                $sender = $recdName;
+                                $message = "&lt;" . $message . "&gt;";
+                            }
+
+                            if ($sender eq $sentName) {
+                                $receiver = $recdName;
+                            }
+                            else {
+                                $receiver = $sentName;
+                            }
+
+                            my $timestamp = $date . " " . $time;
+                            
+                            $sth->execute($sender, $receiver, $message, $timestamp, $service, $service) or die ($! . $message);
+                        }
                     }
+
                     $dbh->commit;
                     my $backup = $file . ".bak";
                     system('mv',$file,$backup);
                 }; if ($@) {
                    $dbh->rollback;
                    $dbh->disconnect;
-                   die;
+                   die $@;
                 }
             }
             chdir "$path/$outer_user/Logs/$service_user" or die;

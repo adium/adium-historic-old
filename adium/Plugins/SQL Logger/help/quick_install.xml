@@ -11,9 +11,14 @@
  class="offsite"
  href="http://fink.sourceforge.net">http://fink.sourceforge.net</a></p>
   <p>After fink is set up properly, install a couple programs to make
-    PostgreSQL work better.</p>
+    PostgreSQL work better.  You can also use DarwinPorts (<a class="offsite"
+      href="http://darwinports.opendarwin.org/ports/">http://darwinports.opendarwin.org/ports/</a> for this purpose, if
+  you have the desire.</p>
   <div class="tutorialcode"><pre>fink install readline
 fink install ant</pre></div>
+  <p>If you are using darwinports:</p>
+  <div class="tutorialcode"><pre>sudo port install readline
+sudo port install apache-ant</pre></div>
 <p>Readline is a library which allows history in the PostgreSQL prompt.  Ant
   lets PostgreSQL compile the Java library.</p>
 <p>Download the newest source from <a href="http://www.postgresql.org"
@@ -29,6 +34,9 @@ fink install ant</pre></div>
 make
 sudo make install</pre>
 </div>
+<p>If you are using darwin ports, you need to change the --with-includes and
+  --with-libs flag to <code>--with-includes=/opt/include</code>
+  and <code>--with-libs=/opt/lib</code> (I think).</p>
 <h3>Configuring PostgreSQL</h3>
 <p>That's all it takes to compile and install PostgreSQL.  To set it up, you
   need to create a new user for Postgres to run as.  I used NetInfo Manager to
