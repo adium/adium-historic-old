@@ -1144,7 +1144,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	if (title){
 		titleString = [NSString stringWithFormat:@"Adium Notice: %@",[NSString stringWithUTF8String:title]];
 	}else{
-		titleString = NSLocalizedString(@"Adium : Notice", nil);
+		titleString = AILocalizedString(@"Adium : Notice", nil);
 	}
 	
 	NSString *errorMessage = nil;
@@ -1160,49 +1160,49 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	
     if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound){
 		//Yahoo send error
-		errorMessage = NSLocalizedString(@"Your Yahoo! message did not get sent.", nil);
+		errorMessage = AILocalizedString(@"Your Yahoo! message did not get sent.", nil);
 		
 	}else if ([primaryString rangeOfString: @"did not get sent"].location != NSNotFound){
 		//Oscar send error
 		NSString *targetUserName = [[[[primaryString componentsSeparatedByString:@" message to "] objectAtIndex:1] componentsSeparatedByString:@" did not get "] objectAtIndex:0];
 		
-		errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Your message to %@ did not get sent",nil),targetUserName];
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"Your message to %@ did not get sent",nil),targetUserName];
 		
 		if ([secondaryString rangeOfString:@"Rate"].location != NSNotFound){
-			description = NSLocalizedString(@"You are sending messages too quickly; wait a moment and try again.",nil);
+			description = AILocalizedString(@"You are sending messages too quickly; wait a moment and try again.",nil);
 		}else if ([secondaryString isEqualToString:@"Service unavailable"] || [secondaryString isEqualToString:@"Not logged in"]){
-			description = NSLocalizedString(@"Connection error.",nil);
+			description = AILocalizedString(@"Connection error.",nil);
 		}else if ([secondaryString isEqualToString:@"Refused by client"]){
-			description = NSLocalizedString(@"Your message was refused by the other user.",nil);
+			description = AILocalizedString(@"Your message was refused by the other user.",nil);
 		}else if ([secondaryString isEqualToString:@"Reply too big"]){
-			description = NSLocalizedString(@"Your message was too big.",nil);
+			description = AILocalizedString(@"Your message was too big.",nil);
 		}else if ([secondaryString isEqualToString:@"In local permit/deny"]){
-			description = NSLocalizedString(@"The other user is in your deny list.",nil);
+			description = AILocalizedString(@"The other user is in your deny list.",nil);
 		}else if ([secondaryString rangeOfString:@"Too evil"].location != NSNotFound){
-			description = NSLocalizedString(@"Warning level is too high.",nil);
+			description = AILocalizedString(@"Warning level is too high.",nil);
 		}else if ([secondaryString isEqualToString:@"User temporarily unavailable"]){
-			description = NSLocalizedString(@"The other user is temporarily unavailable.",nil);
+			description = AILocalizedString(@"The other user is temporarily unavailable.",nil);
 		}else{
-			description = NSLocalizedString(@"No reason was given.",nil);
+			description = AILocalizedString(@"No reason was given.",nil);
 		}
 		
     }else if ([primaryString rangeOfString: @"Authorization Denied"].location != NSNotFound){
 		//Authorization denied; grab the user name and reason
 		NSArray		*parts = [[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has denied your request to add them to your buddy list for the following reason:\n"];
 		NSString	*targetUserName =  [parts objectAtIndex:0];
-		NSString	*reason = ([parts count] > 1 ? [parts objectAtIndex:1] : NSLocalizedString(@"(No reason given)",nil));
+		NSString	*reason = ([parts count] > 1 ? [parts objectAtIndex:1] : AILocalizedString(@"(No reason given)",nil));
 		
-		errorMessage = [NSString stringWithFormat:NSLocalizedString(@"%@ denied authorization:",nil),targetUserName];
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ denied authorization:",nil),targetUserName];
 		description = reason;
 
     }else if ([primaryString rangeOfString: @"Authorization Granted"].location != NSNotFound){
 		//ICQ Authorization granted
 		NSString *targetUserName = [[[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has "] objectAtIndex:0];
 		
-		errorMessage = [NSString stringWithFormat:NSLocalizedString(@"%@ granted authorization.",nil),targetUserName];
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
 	}	
 	NSLog(@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
-	//If we didn't grab a translated version using NSLocalizedString, at least display the English version Gaim supplied
+	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
 										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
@@ -1227,7 +1227,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	NSFont			*titleFont;
 	NSDictionary	*titleAttributes;
 	
-	title = NSLocalizedString(@"You have mail!\n",nil);
+	title = AILocalizedString(@"You have mail!\n",nil);
 	titleFont = [fontManager convertFont:[NSFont messageFontOfSize:12]
 							 toHaveTrait:NSBoldFontMask];
 	titleAttributes = [NSDictionary dictionaryWithObjectsAndKeys:titleFont,NSFontAttributeName,
@@ -1241,8 +1241,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	NSDictionary	*numberMessageAttributes;
 	
 	numberMessage = ((count == 1) ? 
-					 [NSString stringWithFormat:NSLocalizedString(@"%s has 1 new message.",nil), *tos] :
-					 [NSString stringWithFormat:NSLocalizedString(@"%s has %i new messages.",nil), *tos,count]);
+					 [NSString stringWithFormat:AILocalizedString(@"%s has 1 new message.",nil), *tos] :
+					 [NSString stringWithFormat:AILocalizedString(@"%s has %i new messages.",nil), *tos,count]);
 	numberMessageAttributes = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,
 		centeredParagraphStyle,NSParagraphStyleAttributeName,nil];
 	
@@ -1266,7 +1266,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 			[[message mutableString] appendString:@"\n\n"];
 			
 			if (haveFroms){
-				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:NSLocalizedString(@"From: ",nil)
+				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ",nil)
 																				 attributes:fieldAttributed] autorelease]];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*froms)]
 																				 attributes:infoAttributed] autorelease]];
@@ -1275,7 +1275,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 				[[message mutableString] appendString:@"\n"];
 			}
 			if (haveSubjects){
-				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Subject: ",nil)
+				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
 																				 attributes:fieldAttributed] autorelease]];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
 																				 attributes:infoAttributed] autorelease]];				
@@ -1510,9 +1510,9 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 - (void)displayFileSendError
 {
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
-										  withObject:NSLocalizedString(@"File Send Error",nil)
-										  withObject:NSLocalizedString(@"An error was encoutered sending the file.  Please note that sending of folders is not currently supported; this includes Application bundles.",nil)
-										  withObject:NSLocalizedString(@"File Send Error",nil)];
+										  withObject:AILocalizedString(@"File Send Error",nil)
+										  withObject:AILocalizedString(@"An error was encoutered sending the file.  Please note that sending of folders is not currently supported; this includes Application bundles.",nil)
+										  withObject:AILocalizedString(@"File Send Error",nil)];
 }
 
 static void adiumGaimAddXfer(GaimXfer *xfer)

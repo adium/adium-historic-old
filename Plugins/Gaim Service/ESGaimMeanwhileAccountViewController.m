@@ -8,7 +8,7 @@
 #import "ESGaimMeanwhileAccountViewController.h"
 #import "ESGaimMeanwhileAccount.h"
 
-#define SAVE_WARNING NSLocalizedString(@"Warning: The 'load and save' option is still experimental. Please back up your contact list with an official client before enabling.",nil)
+#define SAVE_WARNING AILocalizedString(@"Warning: The 'load and save' option is still experimental. Please back up your contact list with an official client before enabling.",nil)
 
 @interface ESGaimMeanwhileAccountViewController (PRIVATE)
 - (NSMenu *)_contactListMenu;
@@ -45,9 +45,9 @@
 {
     NSMenu			*contactListMenu = [[NSMenu alloc] init];
 	
-    [contactListMenu addItem:[self _contactListMenuItemWithTitle:NSLocalizedString(@"Local Only",nil) tag:Meanwhile_CL_None]];
-	[contactListMenu addItem:[self _contactListMenuItemWithTitle:NSLocalizedString(@"Load From Server",nil) tag:Meanwhile_CL_Load]];
-	[contactListMenu addItem:[self _contactListMenuItemWithTitle:NSLocalizedString(@"Load From and Save To Server",nil) tag:Meanwhile_CL_Load_And_Save]];
+    [contactListMenu addItem:[self _contactListMenuItemWithTitle:AILocalizedString(@"Local Only",nil) tag:Meanwhile_CL_None]];
+	[contactListMenu addItem:[self _contactListMenuItemWithTitle:AILocalizedString(@"Load From Server",nil) tag:Meanwhile_CL_Load]];
+	[contactListMenu addItem:[self _contactListMenuItemWithTitle:AILocalizedString(@"Load From and Save To Server",nil) tag:Meanwhile_CL_Load_And_Save]];
 
 	return [contactListMenu autorelease];
 }
