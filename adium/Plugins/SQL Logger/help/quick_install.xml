@@ -56,7 +56,8 @@ postgres $] /usr/local/bin/initdb -D /usr/local/pgsql/data</pre></div>
   true.  If the line starts with #, remove the hash.</p>
 <p>Now Postgres is ready to be started.</p>
 <div class="tutorialcode"><pre>postgres $] /usr/local/bin/pg_ctl -D /usr/local/pgsql/data \
-  -l /usr/local/pgsql/logfile start
+    -l /usr/local/pgsql/logfile start
+postgres $] createlang plpgsql template1
 postgres $] /usr/local/bin/createdb <i>USERNAME</i>
 postgres $] /usr/local/bin/createuser <i>USERNAME</i>
 postgres $] su <i>username</i></pre></div>
@@ -67,7 +68,8 @@ CLASSPATH=/usr/local/pgsql/share/java/postgresql.jar:$CLASSPATH
 export PATH CLASSPATH</pre></div>
 <p>Now you're ready to use the Adium stuff.</p>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
-psql &lt; adium.sql</pre></div>
+psql &lt; adium.sql
+psql &lt; functions.sql</pre></div>
 
 <h3>Installing Perl (DBI and DBD::Pg)</h3>
 <p>To install the Perl stuff (if CPAN asks you about manual setup, just say

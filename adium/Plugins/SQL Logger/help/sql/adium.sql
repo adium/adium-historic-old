@@ -182,3 +182,10 @@ do instead  (
         (select user_id from adium.users where username = 
         new.recipient_sn and service = new.recipient_service))
 );
+
+create table preferences (
+rule text,
+value varchar(30)
+);
+
+insert into preferences values ('scramble', 'false');

@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 483 $ $Date: 2003/11/25 22:09:43 $ -->
+<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -174,10 +174,12 @@ try {
     int aryCount = 0;
     boolean unconstrained = false;
 
-    String queryText = "select sender_sn, recipient_sn, " + 
+    String queryText = "select scramble(sender_sn) as sender_sn, "+
+    " scramble(recipient_sn) as recipient_sn, " + 
     " message, message_date, message_id";
     if(showDisplay) {
-       queryText += ", sender_display, recipient_display "
+       queryText += ", scramble(sender_display) as sender_display, "+
+           " scramble(recipient_display) as recipient_display "
         + " from adium.message_v ";
     } else {
         queryText += " from adium.simple_message_v ";
@@ -234,7 +236,8 @@ try {
     }
     
     if(!showConcurrentUsers) {
-        String query = "select username from adium.users natural join "+
+        String query = "select scramble(username) as username " +
+        "from adium.users natural join "+
         "(select distinct sender_id as user_id from adium.messages "+
         concurrentWhereClause + " union " +
         "select distinct recipient_id as user_id from adium.messages " +
