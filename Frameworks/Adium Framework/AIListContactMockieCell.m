@@ -22,7 +22,7 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(![self isSelectionInverted]){
+	if(![self cellIsSelected]){
 		int		row = [controlView rowForItem:listObject];
 		NSColor	*labelColor;
 		
@@ -30,8 +30,7 @@
 		//We cannot use the regular table background drawing for mockie cells because of the rounded corners
 		//at the top and bottom of the groups.
 		labelColor = [self labelColor];
-		if(!labelColor) labelColor = (drawGrid ? [controlView backgroundColorForRow:row] : [controlView backgroundColor]);
-		[labelColor set];
+		[(labelColor ? labelColor : [self backgroundColor]) set];
 		
 		//Draw the bottom corners rounded if this is the last cell in a group
 		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
@@ -45,10 +44,11 @@
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	if([self isSelectionInverted]){
+	if([self cellIsSelected]){
 		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		int			row = [controlView rowForItem:listObject];
 		
+		//Draw the bottom corners rounded if this is the last cell in a group
 		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
 			[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedBottomCorners:cellFrame radius:MOCKIE_RADIUS]];
 		}else{
@@ -57,16 +57,11 @@
 	}
 }
 
-//We handle gridding on our own
+//Because of the rounded corners, we cannot rely on the outline view to draw our grid.  Return NO here to let
+//the outline view know we'll be drawing the grid ourself
 - (BOOL)drawGridBehindCell
 {
 	return(NO);
-}
-
-//
-- (void)setDrawsGrid:(BOOL)inValue
-{
-	drawGrid = inValue;
 }
 
 @end

@@ -8,11 +8,6 @@
 #import "AIListGroupMockieCell.h"
 #import "AIListOutlineView.h"
 
-@interface AIListGroupMockieCell (PRIVATE)
-- (NSImage *)cachedGradient:(NSSize)inSize;
-- (NSImage *)cachedExpandedGradient:(NSSize)inSize;
-@end
-
 @implementation AIListGroupMockieCell
 
 //Copy
@@ -25,74 +20,84 @@
 //
 - (void)dealloc
 {
-	[_groupGradient release];
-	[_groupExpandedGradient release];
-	
+	[self flushGradientCache];
 	[super dealloc];
 }
 
-//Draw a gradient behind our group
+//Draw a regular mockie background for our cell if gradient background drawing is disabled
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	NSImage			*image;
-	
-	if([controlView isItemExpanded:listObject]){
-		image = [self cachedGradient:rect.size];
+	if(drawsBackground){
+		[super drawBackgroundWithFrame:rect];
 	}else{
-		image = [self cachedExpandedGradient:rect.size];
+		if(![self cellIsSelected]){
+			[[self backgroundColor] set];
+			if([controlView isItemExpanded:listObject]){
+				[[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS] fill];
+			}else{
+				[[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS] fill];
+			}
+		}
 	}
-	
-	[image drawInRect:rect
-			 fromRect:NSMakeRect(0,0,rect.size.width,rect.size.height)
-			operation:NSCompositeSourceOver
-			 fraction:1.0];
 }
 
-//Reset gradient cache
-- (void)flushGradientCache
+//Draw a custom selection
+- (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	[_groupGradient release]; _groupGradient = nil;
-	[_groupExpandedGradient release]; _groupExpandedGradient = nil;
+	if([self cellIsSelected]){
+		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+		if([controlView isItemExpanded:listObject]){
+			[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedTopCorners:cellFrame radius:MOCKIE_RADIUS]];
+		}else{
+			[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:MOCKIE_RADIUS]];
+		}
+	}
 }
 
+//Remake of the cachedGradient method in AIListGroupCell, except supporting 2 gradients depending on group state
 - (NSImage *)cachedGradient:(NSSize)inSize
 {
-	NSRect	rect;
-	
-	if(!_groupGradient || !NSEqualSizes(inSize,_groupGradientSize)){
-		[_groupGradient release];
-		NSLog(@"Reticulating spines");
-		rect = NSMakeRect(0,0,inSize.width,inSize.height);
-		
-		_groupGradient = [[NSImage alloc] initWithSize:inSize];
-		_groupGradientSize = inSize;
+	AIGroupState state = ([controlView isItemExpanded:listObject] ? AIGroupExpanded : AIGroupCollapsed);
 
-		[_groupGradient lockFocus];
-		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS]];
-		[_groupGradient unlockFocus];
+	if(!_mockieGradient[state] || !NSEqualSizes(inSize,_mockieGradientSize[state])){
+		[_mockieGradient[state] release];
+		_mockieGradient[state] = [[NSImage alloc] initWithSize:inSize];
+		_mockieGradientSize[state] = inSize;
+		
+		[_mockieGradient[state] lockFocus];
+		[self drawBackgroundGradientInRect:NSMakeRect(0,0,inSize.width,inSize.height)];
+		[_mockieGradient[state] unlockFocus];
 	}
 	
-	return(_groupGradient);
+	return(_mockieGradient[state]);
 }
-- (NSImage *)cachedExpandedGradient:(NSSize)inSize
+
+//Remake of flushGradientCache, supporting 2 gradients depending on group state
+- (void)flushGradientCache
 {
-	NSRect	rect;
-	
-	if(!_groupExpandedGradient || !NSEqualSizes(inSize,_groupExpandedGradientSize)){
-		[_groupExpandedGradient release];
-		NSLog(@"Reticulating spines");
-		rect = NSMakeRect(0,0,inSize.width,inSize.height);
-		
-		_groupExpandedGradient = [[NSImage alloc] initWithSize:inSize];
-		_groupExpandedGradientSize = inSize;
-		
-		[_groupExpandedGradient lockFocus];
-		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS]];
-		[_groupExpandedGradient unlockFocus];
+	int i;
+	for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+		[_mockieGradient[i] release]; _mockieGradient[i] = nil;
+		_mockieGradientSize[i] = NSMakeSize(0,0);
 	}
-	
-	return(_groupExpandedGradient);
 }
 
+//Draw our background gradient.  For collapsed groups we draw the caps rounded, for expanded groups we only round the
+//upper corners so the group smoothly transitions to the contact below it.
+- (void)drawBackgroundGradientInRect:(NSRect)rect
+{
+	if([controlView isItemExpanded:listObject]){
+		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS]];
+	}else{
+		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS]];
+	}
+}
+
+//Because of the rounded corners, we cannot rely on the outline view to draw our grid.  Return NO here to let
+//the outline view know we'll be drawing the grid ourself
+- (BOOL)drawGridBehindCell
+{
+	return(NO);
+}
 
 @end

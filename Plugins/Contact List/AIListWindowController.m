@@ -176,7 +176,7 @@
         NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		
+		NSLog(@"theme:%@",themeDict);
 		BOOL			autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 		BOOL			autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 		
@@ -253,7 +253,9 @@
 		}
 		
 		//Background
-		[contactListController updateCellRelatedThemePreferencesFromDict:themeDict];
+#warning only a temporary solution
+//		[contactListController updateCellRelatedThemePreferencesFromDict:themeDict];
+		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 	}
 }

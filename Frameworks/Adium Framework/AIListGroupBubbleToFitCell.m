@@ -17,7 +17,7 @@
 	return(newCell);
 }
 
-//
+//Adjust the bubble rect to tightly fit our label string
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]

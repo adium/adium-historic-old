@@ -9,7 +9,7 @@
 
 #import "AIListCell.h"
 #import "AIListOutlineView.h"
-#import "AIListGroupGradientCell.h"
+#import "AIListGroupCell.h"
 #import "AIListContactCell.h"
 #import "AIListContactBubbleCell.h"
 #import "AIListGroupMockieCell.h"
@@ -130,8 +130,7 @@
 {
 	LIST_WINDOW_STYLE	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 	float				backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
-	BOOL				groupGradient = [[themeDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue];
-	
+
 	//Cells
 	[groupCell release];
 	[contentCell release];
@@ -139,7 +138,7 @@
 	switch(windowStyle){
 		case WINDOW_STYLE_STANDARD:
 		case WINDOW_STYLE_BORDERLESS:
-			groupCell = (groupGradient ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init]);
+			groupCell = [[AIListGroupCell alloc] init];
 			contentCell = [[AIListContactCell alloc] init];
 		break;
 		case WINDOW_STYLE_MOCKIE:
@@ -157,7 +156,7 @@
 	}
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
-
+	
 	//"Preferences" determined by the subclass of AIAbstractListController
 	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
 	[contentCell setShouldUseContactTextColors:[self shouldUseContactTextColors]];
@@ -196,10 +195,6 @@
 		[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 		[groupCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
-		
-		//Disable square row highlighting, our bubble cells handle this on their own
-		[contactListView setDrawsSelectedRowHighlight:NO];
-
 	}else{
 		[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
@@ -211,17 +206,23 @@
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	}
 	
+	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
+	if(windowStyle == WINDOW_STYLE_MOCKIE ||
+	   windowStyle == WINDOW_STYLE_PILLOWS ||
+	   windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+		[contactListView setDrawsSelectedRowHighlight:NO];
+	}
+	
 	//Background
 	//Disable background image if we're in mockie or pillows
 	if([contentCell respondsToSelector:@selector(setBackgroundOpacity:)]){
 		[contentCell setBackgroundOpacity:backgroundAlpha];
 	}
-	if([contactListView respondsToSelector:@selector(setDrawsBackground:)]){
-		[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
-											 windowStyle != WINDOW_STYLE_PILLOWS &&
-											 windowStyle != WINDOW_STYLE_PILLOWS_FITTED)];
-	}
-	
+	[contactListView setDrawsAlternatingRows:[[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
+										 windowStyle != WINDOW_STYLE_PILLOWS &&
+										 windowStyle != WINDOW_STYLE_PILLOWS_FITTED)];
+
 	//Shadow
 	[[contactListView window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 	
@@ -249,9 +250,6 @@
 	//Mockie and pillow special cases
 	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
 		backgroundAlpha = 0.0;
-		[contactListView setDrawsAlternatingRows:NO];
-	}else{
-		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue])];
 	}
 	
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
@@ -263,21 +261,18 @@
 
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict
 {
-	if([groupCell isKindOfClass:[AIListGroupGradientCell class]]){
-		[(AIListGroupGradientCell *)groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
-												   gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
+	[groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
+					gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 
-		[(AIListGroupGradientCell *)groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
+	if([[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]){
+		[groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	}
-
+	
+	[groupCell setDrawsBackground:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue]];
 	[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
 
 	[contentCell setBackgroundColorIsStatus:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
 	[contentCell setStatusColor:[[prefDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
-
-	if([contentCell respondsToSelector:@selector(setDrawsGrid:)]){
-		[(AIListContactMockieCell *)contentCell setDrawsGrid:[[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
-	}
 }
 
 //Outline View data source ---------------------------------------------------------------------------------------------

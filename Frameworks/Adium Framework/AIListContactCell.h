@@ -31,7 +31,7 @@
 	NSColor				*statusColor;
 
 	NSDictionary		*_statusAttributes;
-	NSMutableDictionary	*_statusAttributesInverted;
+	NSMutableDictionary	*_statusAttributesInverted;	
 }
 
 //Status Text

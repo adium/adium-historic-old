@@ -12,6 +12,10 @@
 	IBOutlet	NSColorWell		*textShadowColor;
 	IBOutlet	NSColorWell		*backgroundColor;
 	IBOutlet	NSColorWell		*backgroundGradientColor;
+	
+	NSColor		*backColorOverride;
 }
+
+- (void)setBackColorOverride:(NSColor *)inColor;
 
 @end

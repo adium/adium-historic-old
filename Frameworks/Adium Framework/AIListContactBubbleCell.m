@@ -24,7 +24,7 @@
 	return(newCell);
 }
 
-//Give ourselves more padding
+//Give ourselves extra padding to compensate for the rounded bubble
 - (int)leftPadding{
 	return([super leftPadding] + EDGE_INDENT);
 }
@@ -35,42 +35,44 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(![self isSelectionInverted]){
-		NSColor	*labelColor = [self labelColor];
-
-		if(labelColor){
-			//Retrieve the label and shift it into position
-			NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]];
-			
-			//Fill the label
-			[labelColor set];
-			[pillPath fill];
-		}
+	if(![self cellIsSelected]){
+		int		row = [controlView rowForItem:listObject];
+		NSColor	*labelColor;
+		
+		//Label color.  If there is no label color we draw the background color (taking care of gridding if needed)
+		//We cannot use the regular table background drawing for bubble cells because of our rounded corners
+		labelColor = [self labelColor];
+		[(labelColor ? labelColor : [self backgroundColor]) set];
+		
+		//Draw our background with rounded corners
+		[[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]] fill];
 	}
-}
-
-//Contact label color
-- (NSColor *)labelColor
-{
-	NSColor	*labelColor = [super labelColor];
-	return(labelColor ? labelColor : [controlView backgroundColor]);
 }
 
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	if([self isSelectionInverted]){
+	if([self cellIsSelected]){
 		AIGradient 	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		NSRect 		rect = [self bubbleRectForFrame:cellFrame];
 		
+		//Draw our bubble with the selected control gradient
 		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect]];
 	}
 }
 	
-//
+//Pass drawing rects through this method before drawing a bubble.  This allows us to make adjustments to bubble
+//positioning and size.
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {
 	return(rect);
+}
+
+//Because of the rounded corners, we cannot rely on the outline view to draw our grid.  Return NO here to let
+//the outline view know we'll be drawing the grid ourself
+- (BOOL)drawGridBehindCell
+{
+	return(NO);
 }
 
 @end

@@ -6,18 +6,21 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIListGroupGradientCell.h"
+#import "AIListGroupCell.h"
 
 #define MOCKIE_RADIUS		6		//Radius of the rounded mockie corners
 
-@interface AIListGroupMockieCell : AIListGroupGradientCell {
-	NSImage		*_groupGradient;
-	NSImage		*_groupExpandedGradient;
-	NSSize		_groupGradientSize;
-	NSSize		_groupExpandedGradientSize;
+typedef enum {
+	AIGroupCollapsed = 0,
+	AIGroupExpanded
+} AIGroupState;
+#define NUMBER_OF_GROUP_STATES	2
+
+@interface AIListGroupMockieCell : AIListGroupCell {
+	NSImage		*_mockieGradient[NUMBER_OF_GROUP_STATES];
+	NSSize		_mockieGradientSize[NUMBER_OF_GROUP_STATES];
 }
 
 - (id)copyWithZone:(NSZone *)zone;
-- (void)drawBackgroundWithFrame:(NSRect)rect;
 
 @end
