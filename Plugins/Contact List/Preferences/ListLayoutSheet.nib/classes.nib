@@ -6,7 +6,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_extendedStatusVisible" = NSButton; 
-                "checkBox_groupGradient" = NSButton; 
                 "checkBox_horizontalAutosizing" = NSButton; 
                 "checkBox_serviceIconsVisible" = NSButton; 
                 "checkBox_statusIconsVisible" = NSButton; 
@@ -18,6 +17,7 @@
                 "fontField_status" = JVFontPreviewField; 
                 "popUp_contactTextAlignment" = NSPopUpButton; 
                 "popUp_extendedStatusPosition" = NSPopUpButton; 
+                "popUp_extendedStatusStyle" = NSPopUpButton; 
                 "popUp_groupTextAlignment" = NSPopUpButton; 
                 "popUp_serviceIconPosition" = NSPopUpButton; 
                 "popUp_statusIconPosition" = NSPopUpButton; 
