@@ -7,6 +7,9 @@
 
 #import "AIGradientCell.h"
 
+@interface AIGradientCell (PRIVATE)
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+@end
 
 @implementation AIGradientCell
 
@@ -16,7 +19,7 @@
 	
 	drawsGradient = NO;
 	ignoresFocus = NO;
-
+	
 	return self;
 }
 
@@ -26,6 +29,7 @@
 	id newCell = [super copyWithZone:zone];
 	[newCell setDrawsGradientHighlight:drawsGradient];
 	[newCell setIgnoresFocus:ignoresFocus];
+
 	return(newCell);
 }
 
@@ -49,6 +53,7 @@
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSRect goodRect = cellFrame;
+
 	goodRect.size.height += 2;
 	goodRect.size.width += 4;
 	goodRect.origin.x -= 2;
