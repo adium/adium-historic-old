@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerListener.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerListener.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvContactManagerListener.m,v 1.2 2004/06/04 07:21:40 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -139,7 +139,7 @@
     
     if (contact == nil) {
 	AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);
-	[incomingConnection release];
+	[incomingConnection closeFile];
 	return;
     }
     
