@@ -87,20 +87,20 @@
 
 - (NSImage *)imageByScalingToSize:(NSSize)size
 {
-	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO]);
+	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO proportionally:YES]);
 }
 
 - (NSImage *)imageByFadingToFraction:(float)delta
 {
-	return([self imageByScalingToSize:[self size] fraction:delta flipImage:NO]);
+	return([self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO]);
 }
 
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta
 {
-	return([self imageByScalingToSize:size fraction:delta flipImage:NO]);
+	return([self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES]);
 }
 
-- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally
 {
 	NSSize  originalSize = [self size];
 	
@@ -109,14 +109,29 @@
 		return([[self copy] autorelease]);
 		
 	}else{
-		NSImage *newImage = [[NSImage alloc] initWithSize:size];
-
+		NSImage *newImage;
+		NSRect	newRect;
+		
+		//Scale proportionally (rather than stretching to fit) if requested and needed
+		if (proportionally && (originalSize.width != originalSize.height)){
+			if (originalSize.width > originalSize.height){
+				//Give width priority: Make the height change by the same proportion as the width will change
+				size.height = originalSize.height * (size.width / originalSize.width);
+			}else{
+				//Give height priority: Make the width change by the same proportion as the height will change
+				size.width = originalSize.width * (size.height / originalSize.height);
+			}
+		}
+		
+		newRect = NSMakeRect(0,0,size.width,size.height);
 		if(flipImage) [newImage setFlipped:YES];
+		
+		newImage = [[NSImage alloc] initWithSize:size];
 		
 		[newImage lockFocus];
 		//Highest quality interpolation
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-		[self drawInRect:NSMakeRect(0,0,size.width,size.height)
+		[self drawInRect:newRect
 				fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
 			   operation:NSCompositeCopy
 				fraction:delta];
@@ -312,18 +327,30 @@
 {
 	NSRect	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
 	
-	//If we're passed a 0,0 size, use the image's size
-	if(size.width == 0 || size.height == 0) size = [self size];
-	
+	//We use our own size for drawing purposes no matter the passed size to avoid distorting the image via stretching
+	NSSize	ownSize = [self size];
+
+	//If we're passed a 0,0 size, use the image's size for the area taken up by the image 
+	//(which may exceed the actual image dimensions)
+	if(size.width == 0 || size.height == 0) size = ownSize;
+
+	//If we are drawing in a rect wider than we are, center horizontally
+	if (drawRect.size.width > ownSize.width) drawRect.origin.x += (drawRect.size.width - ownSize.width) / 2;
+
+	//If we are drawing in a rect higher than we are, center vertically
+	if (drawRect.size.height > ownSize.height) drawRect.origin.y += (drawRect.size.height - ownSize.height) / 2;
+
 	//Draw
 	[self drawInRect:drawRect
-			fromRect:NSMakeRect(0, 0, [self size].width, [self size].height)
+			fromRect:NSMakeRect(0, 0, ownSize.width, ownSize.height)
 		   operation:NSCompositeSourceOver
 			fraction:fraction];
 	
+	//Shift the origin if needed, and decrease the available destination rect width, by the passed size
+	//(which may exceed the actual image dimensions)
 	if(position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
 	rect.size.width -= size.width;
-	
+
 	return(rect);
 }
 
@@ -364,22 +391,5 @@
 	
 	return(drawRect);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end
