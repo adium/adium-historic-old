@@ -76,7 +76,7 @@
 	newFrame.size.width = round(newFrame.size.width + 0.5);
 	
 	//Enforce a minimum width of the original frame width
-	NSLog(@"%@: new is %@; original is %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(originalFrame));
+//	NSLog(@"%@: new is %@; original is %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(originalFrame));
 	if(newFrame.size.width < originalFrame.size.width){
 		newFrame.size.width = originalFrame.size.width;
 	}
@@ -187,8 +187,10 @@
 					}
 					
 				}else{
-					NSLog(@"%@: Moving left anchor from %@ to %@",inStringValue,NSStringFromRect([view_anchorToLeftSide frame]),
+/*
+ NSLog(@"%@: Moving left anchor from %@ to %@",inStringValue,NSStringFromRect([view_anchorToLeftSide frame]),
 						  NSStringFromRect(leftAnchorFrame));
+ */
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 				}
