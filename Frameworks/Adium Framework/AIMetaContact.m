@@ -18,7 +18,7 @@
 #import "AIMetaContact.h"
 #import "AIService.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 #define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
 #define	OBJECT_STATUS_CACHE			@"Object Status Cache"

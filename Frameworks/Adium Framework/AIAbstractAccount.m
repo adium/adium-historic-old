@@ -18,6 +18,7 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
+#import "AIStatusController.h"
 #import "AIListContact.h"
 #import "AIPreferenceController.h"
 #import "AIService.h"
@@ -340,6 +341,9 @@
 
 		[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 	}
+
+	[[adium notificationCenter] postNotificationName:AIActiveStatusStateChangedNotification
+											  object:self];
 }
 
 /*!

@@ -26,7 +26,7 @@
 #import "AIContactController.h"
 #import "AIContentController.h"
 
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
