@@ -54,6 +54,7 @@ static NSMenu       *bookmarkSets;
         }else if(NSNotFound != [[appURL path] rangeOfString:@"OmniWeb"].location){
             [self installImporterClass:[SHOmniWebBookmarksImporter class]];
         }
+        CFRelease(appURL);
     }
     
     // observe for the Adium_PluginsDidFinishLoading notification
@@ -150,11 +151,9 @@ static NSMenu       *bookmarkSets;
         // many menus - attach to items in a submenu
         singularMenu = NO;
     }else{
-        // no menus.  remove our items, then return
-        [[adium menuController] removeMenuItem:bookmarkRootMenuItem];
-        [[adium menuController] removeMenuItem:bookmarkRootContextualMenuItem];
-//        [bookmarkRootMenuItem setEnabled:NO];
-//        [bookmarkRootContextualMenuItem setEnabled:NO];
+        // no menus.  disable our items, then return
+        [bookmarkRootMenuItem setEnabled:NO];
+        [bookmarkRootContextualMenuItem setEnabled:NO];
         return;
     }
     
