@@ -13,6 +13,7 @@
     IBOutlet	NSPopUpButton		*format_menu;
     IBOutlet    NSButton                *checkBox_enableImages;
     IBOutlet    NSButton                *checkBox_syncAutomatic;
+    IBOutlet    NSButton                *checkBox_useNickName;
 }
 
 - (IBAction)changePreference:(id)sender;

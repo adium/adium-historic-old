@@ -20,6 +20,7 @@
             OUTLETS = {
                 "checkBox_enableImages" = NSButton; 
                 "checkBox_syncAutomatic" = NSButton; 
+                "checkBox_useNickName" = NSButton; 
                 "format_menu" = NSPopUpButton; 
                 "format_textField" = NSTextField; 
             }; 

@@ -12,12 +12,13 @@
 #define KEY_AB_DISPLAYFORMAT    @"AB Display Format"
 #define KEY_AB_IMAGE_SYNC       @"AB Image Sync"
 #define KEY_AB_ENABLE_IMAGES    @"AB Enable Images"
+#define KEY_AB_USE_NICKNAME     @"AB Use NickName"
 
 typedef enum {
     None = 0,
     FirstLast,
     First,
-    LastFirst
+    LastFirst,
 } NameStyle;
 
 
@@ -31,6 +32,7 @@ typedef enum {
     int                 meTag;
     
     int                 displayFormat;
+    bool                useNickName;
     bool                enableImages;
     bool                automaticSync;
 }
