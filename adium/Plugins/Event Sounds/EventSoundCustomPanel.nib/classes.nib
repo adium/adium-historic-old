@@ -21,12 +21,27 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {selectSoundSet = id; }; 
+            ACTIONS = {
+                deleteEventSound = id; 
+                newEventSound = id; 
+                playSelectedSound = id; 
+                selectSound = id; 
+                selectSoundSet = id; 
+                showSoundSetInfo = id; 
+            }; 
             CLASS = AIEventSoundPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_soundSet" = NSPopUpButton; }; 
+            OUTLETS = {
+                "button_delete" = NSButton; 
+                "button_soundSetInfo" = NSButton; 
+                "popUp_addEvent" = NSPopUpButton; 
+                "popUp_soundSet" = NSPopUpButton; 
+                "tableView_sounds" = AIAlternatingRowTableView; 
+                "textField_creator" = NSTextField; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 

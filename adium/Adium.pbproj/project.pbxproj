@@ -14840,6 +14840,44 @@
 //D32
 //D33
 //D34
+		D308980B0534FDA900A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEventSoundCustom.h;
+			path = "Plugins/Event Sounds/AIEventSoundCustom.h";
+			refType = 4;
+		};
+		D308980C0534FDA900A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEventSoundCustom.m;
+			path = "Plugins/Event Sounds/AIEventSoundCustom.m";
+			refType = 4;
+		};
+		D308980D0534FDA900A8010B = {
+			isa = PBXFileReference;
+			name = EventSoundCustomPanel.nib;
+			path = "Plugins/Event Sounds/EventSoundCustomPanel.nib";
+			refType = 4;
+		};
+		D308980E0534FDA900A8010B = {
+			fileRef = D308980B0534FDA900A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D308980F0534FDA900A8010B = {
+			fileRef = D308980C0534FDA900A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D30898100534FDA900A8010B = {
+			fileRef = D308980D0534FDA900A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		D3376B23052BBBD500A8010B = {
 			buildActionMask = 2147483647;
 			files = (
@@ -21166,6 +21204,9 @@
 				4BB17E7103E4636400A8010A,
 				4BB17E7203E4636400A8010A,
 				4BB17E6F03E4633D00A8010A,
+				D308980B0534FDA900A8010B,
+				D308980C0534FDA900A8010B,
+				D308980D0534FDA900A8010B,
 				4BA5325D050FC5E800A8010A,
 			);
 			isa = PBXGroup;
@@ -21178,6 +21219,7 @@
 			files = (
 				F55B40F903AB877401A8010A,
 				4BB17E7303E4636400A8010A,
+				D308980E0534FDA900A8010B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21187,6 +21229,7 @@
 			files = (
 				4BB17E7003E4633D00A8010A,
 				4BA5325E050FC5E800A8010A,
+				D30898100534FDA900A8010B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21196,6 +21239,7 @@
 			files = (
 				F55B40FB03AB877E01A8010A,
 				4BB17E7403E4636400A8010A,
+				D308980F0534FDA900A8010B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

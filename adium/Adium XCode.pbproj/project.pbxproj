@@ -14494,6 +14494,7 @@
 			files = (
 				34BDA1B70531485B000AB133,
 				34BDA1B80531485B000AB133,
+				4B791A250534C4130000969C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14515,6 +14516,7 @@
 			files = (
 				34BDA1BA0531485B000AB133,
 				34BDA1BB0531485B000AB133,
+				4B791A280534C4290000969C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14536,6 +14538,7 @@
 			files = (
 				34BDA1BD0531485B000AB133,
 				34BDA1BE0531485B000AB133,
+				4B791A260534C4130000969C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17174,6 +17177,50 @@
 			path = "Plugins/Dual Window Interface/StatusSelectionView.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B791A230534C4130000969C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEventSoundCustom.h;
+			path = "Plugins/Event Sounds/AIEventSoundCustom.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791A240534C4130000969C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEventSoundCustom.m;
+			path = "Plugins/Event Sounds/AIEventSoundCustom.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791A250534C4130000969C = {
+			fileRef = 4B791A230534C4130000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791A260534C4130000969C = {
+			fileRef = 4B791A240534C4130000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791A270534C4290000969C = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = EventSoundCustomPanel.nib;
+			path = "Plugins/Event Sounds/EventSoundCustomPanel.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791A280534C4290000969C = {
+			fileRef = 4B791A270534C4290000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B79E4F2046D67FC0018AE8B = {
 			expectedFileType = image.tiff;
@@ -23464,6 +23511,9 @@
 				4BB17E7103E4636400A8010A,
 				4BB17E7203E4636400A8010A,
 				4BB17E6F03E4633D00A8010A,
+				4B791A230534C4130000969C,
+				4B791A240534C4130000969C,
+				4B791A270534C4290000969C,
 				4BA5325D050FC5E800A8010A,
 			);
 			isa = PBXGroup;
