@@ -857,6 +857,7 @@
 				4BCFC91804E930D300A8010A,
 				9EB3C52A04F94DD5001D1F74,
 				4BC8AFDD04FD3C2800A8010A,
+				6576A009050269FA000EB664,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -887,6 +888,7 @@
 				F53EA2CD02C803C101A8010A,
 				4BCFC91704E930D300A8010A,
 				9E2E306D046CA9BF00415B22,
+				6576A008050269FA000EB664,
 				F5B53FC60333AFB501A8010A,
 				F510B77303339F1C01A8010A,
 				9E4CF9F104AA6D5600415B22,
@@ -963,6 +965,7 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				6576A01305026B4F000EB664,
 				F53B9A0702CCED6401A8010A,
 				F53B9A0F02CCED8B01A8010A,
 				1058C7A1FEA54F0111CA2CBB,
@@ -989,7 +992,7 @@
 			);
 			buildSettings = {
 				DEBUGGING_SYMBOLS = NO;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" /Users/slamb/cvs/acid/build";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = "";
@@ -4249,6 +4252,7 @@
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
 				9E2E3073046CAA5F00415B22,
+				6576A001050269A6000EB664,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -11552,6 +11556,278 @@
 //4B2
 //4B3
 //4B4
+//650
+//651
+//652
+//653
+//654
+		653FA0980502914E005006E6 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		653FA0990502914F005006E6 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		653FA09A05029150005006E6 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6576A001050269A6000EB664 = {
+			children = (
+				6576A00E05026B16000EB664,
+				6576A00F05026B16000EB664,
+				6576A02C05026BF9000EB664,
+				6576A02D05026BF9000EB664,
+				65D51E0B0502993C0077AADF,
+				65D51E0C0502993C0077AADF,
+				65D51E08050295900077AADF,
+			);
+			isa = PBXGroup;
+			name = Jabber;
+			path = "";
+			refType = 4;
+		};
+		6576A003050269FA000EB664 = {
+			buildActionMask = 2147483647;
+			files = (
+				6576A01005026B16000EB664,
+				6576A02E05026BF9000EB664,
+				65D51E0D0502993C0077AADF,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6576A004050269FA000EB664 = {
+			buildActionMask = 2147483647;
+			files = (
+				65D51E0A050296AB0077AADF,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6576A005050269FA000EB664 = {
+			buildActionMask = 2147483647;
+			files = (
+				6576A01105026B16000EB664,
+				6576A02F05026BF9000EB664,
+				65D51E0E0502993C0077AADF,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6576A006050269FA000EB664 = {
+			buildActionMask = 2147483647;
+			files = (
+				6576A01405026B4F000EB664,
+				653FA0980502914E005006E6,
+				653FA0990502914F005006E6,
+				653FA09A05029150005006E6,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6576A007050269FA000EB664 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6576A008050269FA000EB664 = {
+			buildPhases = (
+				6576A003050269FA000EB664,
+				6576A004050269FA000EB664,
+				6576A005050269FA000EB664,
+				6576A006050269FA000EB664,
+				6576A007050269FA000EB664,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/slamb/cvs/acid/build;
+				HEADER_SEARCH_PATHS = /Users/slamb/cvs/acid/build/acid.framework/Versions/A/Headers;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Jabber;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				6576A00C05026A5B000EB664,
+				6576A00B05026A51000EB664,
+			);
+			isa = PBXBundleTarget;
+			name = Jabber;
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = Jabber;
+			productReference = 6576A009050269FA000EB664;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>JabberServicePlugin</string>
+</dict>
+</plist>
+";
+		};
+		6576A009050269FA000EB664 = {
+			isa = PBXBundleReference;
+			path = Jabber.AdiumPlugin;
+			refType = 3;
+		};
+		6576A00B05026A51000EB664 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		6576A00C05026A5B000EB664 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		6576A00E05026B16000EB664 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = JabberServicePlugin.h;
+			path = "Plugins/Jabber Service/JabberServicePlugin.h";
+			refType = 4;
+		};
+		6576A00F05026B16000EB664 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = JabberServicePlugin.m;
+			path = "Plugins/Jabber Service/JabberServicePlugin.m";
+			refType = 4;
+		};
+		6576A01005026B16000EB664 = {
+			fileRef = 6576A00E05026B16000EB664;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6576A01105026B16000EB664 = {
+			fileRef = 6576A00F05026B16000EB664;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6576A01305026B4F000EB664 = {
+			isa = PBXFrameworkReference;
+			name = acid.framework;
+			path = ../acid/build/acid.framework;
+			refType = 2;
+		};
+		6576A01405026B4F000EB664 = {
+			fileRef = 6576A01305026B4F000EB664;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6576A02C05026BF9000EB664 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = JabberAccount.h;
+			path = "Plugins/Jabber Service/JabberAccount.h";
+			refType = 4;
+		};
+		6576A02D05026BF9000EB664 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = JabberAccount.m;
+			path = "Plugins/Jabber Service/JabberAccount.m";
+			refType = 4;
+		};
+		6576A02E05026BF9000EB664 = {
+			fileRef = 6576A02C05026BF9000EB664;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6576A02F05026BF9000EB664 = {
+			fileRef = 6576A02D05026BF9000EB664;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		65D51E08050295900077AADF = {
+			children = (
+				65D51E09050296AB0077AADF,
+			);
+			isa = PBXGroup;
+			name = Interfaces;
+			refType = 4;
+		};
+		65D51E09050296AB0077AADF = {
+			isa = PBXFileReference;
+			name = JabberAccountView.nib;
+			path = "Plugins/Jabber Service/JabberAccountView.nib";
+			refType = 4;
+		};
+		65D51E0A050296AB0077AADF = {
+			fileRef = 65D51E09050296AB0077AADF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		65D51E0B0502993C0077AADF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = JabberAccountViewController.h;
+			path = "Plugins/Jabber Service/JabberAccountViewController.h";
+			refType = 4;
+		};
+		65D51E0C0502993C0077AADF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = JabberAccountViewController.m;
+			path = "Plugins/Jabber Service/JabberAccountViewController.m";
+			refType = 4;
+		};
+		65D51E0D0502993C0077AADF = {
+			fileRef = 65D51E0B0502993C0077AADF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		65D51E0E0502993C0077AADF = {
+			fileRef = 65D51E0C0502993C0077AADF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//650
+//651
+//652
+//653
+//654
 //6E0
 //6E1
 //6E2
