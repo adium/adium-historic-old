@@ -184,9 +184,9 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     if([inObject isKindOfClass:[AIAccount class]]){
-	if([inModifiedKeys containsObject:@"Online"]){
-	    [popupMenu_serviceList setEnabled:![[(AIAccount *)inObject statusObjectForKey:@"Online"] boolValue]];
-	}
+		if([inModifiedKeys containsObject:@"Online"]){
+			[popupMenu_serviceList setEnabled:![[(AIAccount *)inObject statusObjectForKey:@"Online"] boolValue]];
+		}
     }
     
     return(nil);

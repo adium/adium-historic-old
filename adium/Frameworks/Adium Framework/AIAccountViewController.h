@@ -15,7 +15,7 @@
 
 #define KEY_ACCOUNT_NAME		@"Handle"
 
-@interface AIAccountViewController : AIObject <AIAccountViewController> {
+@interface AIAccountViewController : AIObject <AIAccountViewController, AIListObjectObserver> {
     id				account;
     NSArray			*auxilaryTabs;
 	
