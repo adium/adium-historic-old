@@ -659,7 +659,7 @@
 	}
 }
 
-- (BOOL)validateToolbarItem:(NSToolbarItem *)inToolbarItem
+- (void)validateFlexibleToolbarItem:(ESFlexibleToolbarItem *)inToolbarItem
 {
 	//If our selectedTab has changed since the last validation call, update the listObject
 	if(toolbar_selectedTabChanged){
@@ -688,8 +688,6 @@
 	
 		toolbar_selectedTabChanged = NO;
 	}
-	
-	return(YES);
 }
 
 @end

@@ -26,7 +26,7 @@
 
 - (void)validate
 {
-	[validationDelegate validateToolbarItem:self];
+	[validationDelegate validateFlexibleToolbarItem:self];
 	
 	[super validate];
 }
