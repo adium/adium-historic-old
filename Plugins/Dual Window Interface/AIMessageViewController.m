@@ -684,7 +684,7 @@
 	if(![self userListVisible]){
 		[splitView_messages addSubview:scrollView_userList];
 		[self _updateUserListViewWidth];
-		[scrollView_userList release];
+		[scrollView_userList release]; scrollView_userList = nil;
 	}
 }
 
