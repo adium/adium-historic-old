@@ -233,13 +233,18 @@
 				rightKey = @"]";
 			break;
 		}
+		//Previous and nextMessage menuItems are in the same menu, so the setMenuChangedMessagesEnabled applies to both.
+		[[menuItem_previousMessage menu] setMenuChangedMessagesEnabled:NO];		
+
 		[menuItem_previousMessage setKeyEquivalent:@""];
 		[menuItem_previousMessage setKeyEquivalent:leftKey];
 		[menuItem_previousMessage setKeyEquivalentModifierMask:keyMask];
 		[menuItem_nextMessage setKeyEquivalent:@""];
 		[menuItem_nextMessage setKeyEquivalent:rightKey];
 		[menuItem_nextMessage setKeyEquivalentModifierMask:keyMask];
-		[[menuItem_previousMessage menu] update];
+		
+//		[[menuItem_previousMessage menu] update];
+		[[menuItem_previousMessage menu] setMenuChangedMessagesEnabled:YES];
 		
 		//Cache the tab sorting prefs
 		BOOL newKeepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
@@ -860,7 +865,6 @@
         [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
         [windowMenuArray addObject:[item autorelease]];
 		
-        
 		//enumerate all windows
 		windowEnumerator = [messageWindowControllerArray objectEnumerator];
 		while (messageWindowController = [windowEnumerator nextObject])
