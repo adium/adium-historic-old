@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.29 2004/03/15 05:18:49 evands Exp $
+//$Id: AIPluginController.m,v 1.30 2004/03/15 05:24:16 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -200,7 +200,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin;
 						NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
 					}
 				} else {
-					NSLog(AIlocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
+					NSLog(AILocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
 				}
 			NS_HANDLER	// Handle a raised exception
 				NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
