@@ -130,10 +130,14 @@
 {
     //Save changed password
     if(sender == textField_password){
-        NSString	*password = [sender stringValue];
-        
+        NSString		*password = [sender stringValue];
+        NSString		*oldPassword;
+		
         if(password && [password length] != 0){
-            [[adium accountController] setPassword:password forAccount:account];
+			oldPassword = [[adium accountController] passwordForAccount:account];
+			if (![password isEqualToString:oldPassword]){
+				[[adium accountController] setPassword:password forAccount:account];
+			}
         }else{
             [[adium accountController] forgetPasswordForAccount:account];
         }
