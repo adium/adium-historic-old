@@ -110,7 +110,7 @@
 //Called as contacts are created, load their alias
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-    if(inModifiedKeys == nil){ //Only set an alias on contact creation
+    if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"Display Name"])){
         return([self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
 						toObject:inObject
 						  notify:NO]);
