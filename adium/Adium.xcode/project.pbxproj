@@ -897,6 +897,50 @@
 			settings = {
 			};
 		};
+		342928080628BB4200BB9217 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimYahooAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342928090628BB4200BB9217 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimYahooAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3429280A0628BB4200BB9217 = {
+			fileRef = 342928080628BB4200BB9217;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3429280B0628BB4200BB9217 = {
+			fileRef = 342928090628BB4200BB9217;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342928340628BBE300BB9217 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimYahooAuxiliaryAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimYahooAuxiliaryAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342928350628BBE300BB9217 = {
+			fileRef = 342928340628BBE300BB9217;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		342DC48A05783B8D000E1D83 = {
 			children = (
 				342DC5C005783DE7000E1D83,
@@ -1319,6 +1363,9 @@
 				34415BCF059FA9CD0019246B,
 				34415BD2059FA9CE0019246B,
 				34415BD0059FA9CE0019246B,
+				342928080628BB4200BB9217,
+				342928090628BB4200BB9217,
+				342928340628BBE300BB9217,
 			);
 			isa = PBXGroup;
 			name = "Yahoo!";
@@ -10010,6 +10057,7 @@
 				34F142A905E95B4D00B32FD7,
 				34F142AC05E962A500B32FD7,
 				34048AC70617CB4C004D0B7E,
+				3429280A0628BB4200BB9217,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10021,6 +10069,7 @@
 				34415F91059FB85F0019246B,
 				34F1529605E9FDF200B32FD7,
 				34327CA9060D40A1003D7AD9,
+				342928350628BBE300BB9217,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10055,6 +10104,7 @@
 				34F142A505E95B0F00B32FD7,
 				34F142A805E95B4D00B32FD7,
 				34048AC80617CB4C004D0B7E,
+				3429280B0628BB4200BB9217,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
