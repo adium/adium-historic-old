@@ -30,17 +30,14 @@
                                    selector:@selector(preferencesChanged:)
                                        name:Preference_GroupChanged
                                      object:nil];
-    //Initial setup
     [self preferencesChanged:nil];
-
 }
 
 - (void)uninstallPlugin
 {
-    if(itemController){
-        [itemController release];
-        itemController = nil;
-    }
+	[[adium notificationCenter] removeObserver:self];
+    [itemController release]; itemController = nil;
+	[preferences release];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
