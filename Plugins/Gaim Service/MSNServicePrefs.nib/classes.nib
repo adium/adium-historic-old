@@ -1,0 +1,26 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIMSNServicePreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_conversationClosed" = NSButton; 
+                "checkBox_conversationTimedOut" = NSButton; 
+                "checkBox_treatDisplayNamesAsStatus" = NSButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
