@@ -25,9 +25,6 @@ Vertical resizing errors
     appears although it is not needed.
   - Vertical resizing is initially too small by the height of the toolbar in Standard
 	with the toolbar showing
-  - Vertical resizing really screws up once the scrollbar becomes visible.  The list will
-    not correctly resize when opening/closing groups, and will jump randomly up and down
-    on the screen.
 
 Messages & Chat
   - Initial messages from invisible contacts sometimes don't open new message windows
