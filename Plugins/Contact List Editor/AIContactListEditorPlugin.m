@@ -113,6 +113,7 @@
 - (IBAction)addContactFromTab:(id)sender
 {
 	AIListContact *listContact = [[adium menuController] contactualMenuContact];
+
 	[AINewContactWindowController promptForNewContactOnWindow:nil
 														 name:[listContact UID] 
 													  service:[listContact service]];
