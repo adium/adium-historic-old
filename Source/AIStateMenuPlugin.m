@@ -19,7 +19,6 @@
 #import "AIStateMenuPlugin.h"
 #import "AIStatusController.h"
 
-#define ELIPSIS_STRING				[NSString stringWithUTF8String:"…"]
 #define STATE_TITLE_MENU_LENGTH		30
 
 /*!
