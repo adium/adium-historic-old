@@ -896,6 +896,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	JabberService   = [[[ESJabberService alloc] initWithService:self] retain];
 	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
     YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
+	YahooJapanService = [[[ESYahooJapanService alloc] initWithService:self] retain];
 }
 
 - (void)uninstallPlugin
@@ -912,6 +913,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [MSNService release]; MSNService = nil;
 	[TrepiaService release]; TrepiaService = nil;
     [YahooService release]; YahooService = nil;
+	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
 	
 	[eventLoopAdapter release]; eventLoopAdapter = nil;

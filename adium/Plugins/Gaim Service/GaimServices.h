@@ -12,3 +12,4 @@
 #import "ESTrepiaService.h"
 #import "ESMSNService.h"
 #import "ESYahooService.h"
+#import "ESYahooJapanService.h"

@@ -34,6 +34,8 @@
 	
 	<key>Yahoo:Host</key>
 	<string>scs.msg.yahoo.com</string>
+	<key>Yahoo Japan:Host</key>
+	<string>cs.yahoo.co.jp</string>
 	<key>Yahoo:Port</key>
 	<integer>5050</integer>
 	
