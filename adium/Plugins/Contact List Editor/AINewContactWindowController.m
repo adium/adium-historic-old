@@ -167,15 +167,19 @@
 	//Empty the menu
 	[popUp_contactType removeAllItems];
 	
+	NSMenu				*menu = [popUp_contactType menu];
+	
 	//Add an item for each service
 	enumerator = [[[adium accountController] activeServiceTypes] objectEnumerator];
 	while(serviceType = [enumerator nextObject]){
-		[[popUp_contactType menu] addItemWithTitle:[serviceType description]
+		NSMenuItem  *menuItem = [[[NSMenuItem alloc] initWithTitle:[serviceType description]
 											target:self
 											action:@selector(selectServiceType:)
-									 keyEquivalent:@""
-								 representedObject:serviceType];
+									 keyEquivalent:@""] autorelease];
 		
+		[menuItem setRepresentedObject:serviceType];
+		[menuItem setImage:[serviceType menuImage]];
+		[menu addItem:menuItem];
 	}
 	[[popUp_contactType menu] update];
 	enumerator = [[popUp_contactType itemArray] objectEnumerator];
