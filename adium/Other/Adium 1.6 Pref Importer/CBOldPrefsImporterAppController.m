@@ -7,9 +7,11 @@
 //
 
 #import "CBOldPrefsImporterAppController.h"
+#include <unistd.h>
 
 @interface CBOldPrefsImporterAppController(PRIVATE)
 - (void)importAliases;
+- (void)importContacts;
 @end
 
 @implementation CBOldPrefsImporterAppController
@@ -20,6 +22,7 @@
     [popUpButton_user removeItemAtIndex:0];
     
     [progressIndicator setIndeterminate:NO];
+    [progressIndicator setUsesThreadedAnimation:YES];
     
     NSString *file;
     NSString *dirPath = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
@@ -45,7 +48,8 @@
 
 - (IBAction)import:(id)sender
 {
-    if([checkBox_aliases state] != NSOnState
+    if(([checkBox_aliases state] != NSOnState
+        && [checkBox_contacts state] != NSOnState)
         || ![popUpButton_account selectedItem])
         NSBeep();
     else
@@ -76,22 +80,32 @@
     if(code)
     {
         [progressIndicator setIndeterminate:YES];
-        [progressIndicator startAnimation:nil];
+        [progressIndicator startAnimation:self];
         [button_import setEnabled:NO];
         [popUpButton_account setEnabled:NO];
         
+        if([checkBox_contacts state] == NSOnState
+            && [popUpButton_account selectedItem])
+        {
+            [self importContacts];
+        }
         if([checkBox_aliases state] == NSOnState
             && [popUpButton_account selectedItem])
         {
             [self importAliases];
         }
         
-        [progressIndicator startAnimation:nil];
+        [currentTask setStringValue:@""];
+        [progressIndicator stopAnimation:nil];
         [progressIndicator setIndeterminate:NO];
         [button_import setEnabled:YES];
         [popUpButton_account setEnabled:YES];
-
     }
+}
+
+- (void)importContacts
+{
+    
 }
 
 - (void)importAliases;
@@ -117,14 +131,19 @@
             if(![[group objectForKey:[NSString stringWithFormat:@"alias %d", j]]
                     isEqual:@""])
             {
+                NSString *screenname = [[[group objectForKey:
+                            [NSString stringWithFormat:@"buddy %d", j]]
+                        stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
+                        lowercaseString];
+                        
+                [currentTask setStringValue:
+                    [NSString stringWithFormat:@"Importing alias for %@", screenname]];
+                                
                 [aliasDict 
                     setObject:[NSDictionary dictionaryWithObject:
                             [group objectForKey:[NSString stringWithFormat:@"alias %d", j]]                    
                         forKey:@"Alias"]
-                    forKey:[NSString stringWithFormat:@"(AIM.%@)",
-                        [[[group objectForKey:[NSString stringWithFormat:@"buddy %d", j]]
-                        stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-                        lowercaseString]]];
+                    forKey:[NSString stringWithFormat:@"(AIM.%@)", screenname]];
             }
         }
     }
