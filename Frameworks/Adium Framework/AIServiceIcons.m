@@ -122,7 +122,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 #define	PREVIEW_MENU_IMAGE_SIZE		13
 #define	PREVIEW_MENU_IMAGE_MARGIN	2
 
-+ (NSImage *)previewMenuImageForServiceIconsAtPath:(NSString *)inPath
++ (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath
 {
 	NSImage			*image;
 	NSDictionary	*iconDict;
