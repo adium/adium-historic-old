@@ -52,6 +52,7 @@
     [table_emoticonPacks setToolTip:EMOTICON_PACKS_TOOLTIP];
 	
     //Emoticons table
+	selectedEmoticonPack = nil;
     checkCell = [[NSButtonCell alloc] init];
     [checkCell setButtonType:NSSwitchButton];
     [checkCell setControlSize:NSSmallControlSize];
@@ -76,6 +77,7 @@
 - (void)viewWillClose
 {
 	[checkCell release]; checkCell = nil;
+	[selectedEmoticonPack release]; selectedEmoticonPack = nil;
 	
 	[[adium notificationCenter] removeObserver:self];
 	
@@ -90,7 +92,8 @@
     
     //Remember the selected pack
     if([table_emoticonPacks numberOfSelectedRows] == 1 && [table_emoticonPacks selectedRow] != -1){
-        selectedEmoticonPack = [[plugin availableEmoticonPacks] objectAtIndex:[table_emoticonPacks selectedRow]];
+		[selectedEmoticonPack release];
+        selectedEmoticonPack = [[[plugin availableEmoticonPacks] objectAtIndex:[table_emoticonPacks selectedRow]] retain];
     }else{
         selectedEmoticonPack = nil;
     }
