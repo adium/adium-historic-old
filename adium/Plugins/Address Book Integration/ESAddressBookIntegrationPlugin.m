@@ -11,6 +11,7 @@
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
+- (void)updateSelf;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -55,10 +56,25 @@
                                //look up the property for this serviceID
         NSString * property = [propertyDict objectForKey:[inObject serviceID]];
         if (property) {
-            NSString * screenName = [[inObject UID] compactedString];
+            NSString *screenName = [inObject UID];
             
-            ABSearchElement * searchElement = [ABPerson searchElementForProperty:property label:nil     key:nil value:screenName comparison:kABEqualCaseInsensitive];
+            //search for the screen name as we have it stored (case insensitive)
+            ABSearchElement * searchElement = [ABPerson searchElementForProperty:property 
+                                                                           label:nil 
+                                                                             key:nil 
+                                                                           value:screenName 
+                                                                      comparison:kABEqualCaseInsensitive];
             NSArray * results = [sharedAddressBook recordsMatchingSearchElement:searchElement];
+            
+            //If we don't find anything, try again using the compacted version of the screen name (case insensitive)
+            if (!results || ![results count]) {
+                searchElement = [ABPerson searchElementForProperty:property 
+                                                             label:nil 
+                                                               key:nil 
+                                                             value:[screenName compactedString] 
+                                                        comparison:kABEqualCaseInsensitive];
+                results = [sharedAddressBook recordsMatchingSearchElement:searchElement];
+            }
             
             if (results && [results count]) {
                 ABPerson * person = [results objectAtIndex:0];
@@ -133,7 +149,7 @@
 
 - (void)addressBookChanged:(NSNotification *)notification
 {
-    [self updateAllContacts];   
+    [self updateAllContacts];
 }
 
 - (void)updateAllContacts
@@ -147,6 +163,8 @@
                        delayed:YES
                         silent:NO]; 
     }
+    
+    [self updateSelf];
 }
 
 //Called when the address book completes an asynchronous image lookup
@@ -175,4 +193,17 @@
     }
 }
 
+- (void)updateSelf
+{
+    //Get the "me" address book entry, if one exists
+    ABPerson *me = [sharedAddressBook me];
+    
+    //If one was found
+    if (me) {
+        NSData *myImage = [me imageData];
+        if (myImage) {
+            [[owner accountController] setDefaultUserIcon:[[[NSImage alloc] initWithData:myImage] autorelease]];
+        }
+    }
+}
 @end

@@ -8,19 +8,25 @@
 
 #import "CBGaimAccount.h"
 
-#define NO_GROUP @"__NoGroup__"
-#define OWN_BUDDY_IMAGE @"/Users/evands/evands.gif"
+//#define OWN_BUDDY_IMAGE         @"/Users/evands/Library/Caches/Adium/UserIcon_Default.bmp"
+#define OWN_BUDDY_IMAGE         @"/Users/evands/evands.jpg"
+
+#define NO_GROUP                @"__NoGroup__"
+#define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
+#define USER_ICON_CACHE_NAME    @"UserIcon_%@"
+
 
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
 - (void)displayError:(NSString *)errorDesc;
 - (void)setAwayMessage:(id)msg;
-- (void)setBuddyImage:(char *)imageFilename;
+- (void)setBuddyImageFromFilename:(char *)imageFilename;
 - (void)signonTimerExpired:(NSTimer*)timer;
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 - (void)connect;
 - (void)disconnect;
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
+- (NSString *)_userIconCachePath;
 @end
 
 @implementation CBGaimAccount
@@ -72,13 +78,17 @@
         if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
         if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
     }
-    
     //set the image file name, which is saved in the account preferences and generally easy to access
     [[owner accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
-    //create and set the image itself, which is accessible only to the account (but publically available via [account userIcon]
-    NSImage *buddyImage = [[[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE] autorelease];
-    if (buddyImage && [buddyImage isValid])
-        [self setProperty:buddyImage forKey:@"BuddyImage"];
+    
+    NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
+    if (buddyImage && [buddyImage isValid]) {
+        [[owner accountController] setUserIcon:buddyImage forAccount:self];
+    }
+    [buddyImage release];
+    
+    //let the accountController tell us about the default user icon filename
+    [self statusForKey:@"DefaultUserIconFilename" willChangeTo:[[owner accountController] defaultUserIconFilename]];
 }
 
 
@@ -328,6 +338,7 @@
 //The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
 {
+    NSLog(@"request received");
     ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
     
     [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
@@ -395,6 +406,7 @@
 //Accept a send or receive ESFileTransfer object, beginning the transfer.  Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
+    NSLog(@"accept");
     GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
  
     //gaim takes responsibility for freeing cFilename at a later date
@@ -444,6 +456,8 @@
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     signonTimer = nil;
     
+    //ensure our user icon cache path exists
+    [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
 }
 
 - (void)dealloc
@@ -473,6 +487,8 @@
         @"BuddyImage",
         @"Away",
         @"AwayMessage",
+        @"UserIcon",
+        @"DefaultUserIconFilename",
         nil]);
 }
 
@@ -504,14 +520,39 @@
         else if ([key compare:@"AwayMessage"] == 0) {
             [self setAwayMessage:inValue];
         }
-        else if ( ([key compare:@"BuddyImage"] == 0) || ([key compare:@"BuddyImageFileName"]) ) {
-            NSString *buddyImageFilename = [[owner accountController] propertyForKey:@"BuddyImageFileName" account:self];
-            if (buddyImageFilename && [buddyImageFilename length])
-                [self setBuddyImage:(char *)[buddyImageFilename UTF8String]];
+    }
+    if ([key compare:@"UserIcon"] == 0) {
+        [self setUserIcon:inValue];
+        
+        if (inValue) {          
+            NSData *data = [[(NSImage *)inValue JPEGRepresentation] retain];
+            NSString            *buddyImageFilename = [[self _userIconCachePath] retain];
+            if ([data writeToFile:buddyImageFilename atomically:YES]) {
+                [self setBuddyImageFromFilename:(char *)[buddyImageFilename UTF8String]];
+            } else {
+                NSLog(@"error writing file %@",buddyImageFilename);   
+            }
+            [buddyImageFilename release];
+        } else {
+            [self setBuddyImageFromFilename:nil];   
+        }
+    }
+    else if ([key compare:@"DefaultUserIconFilename"] == 0) {
+        if (!userIcon) {
+            if (inValue) {
+                [self setBuddyImageFromFilename:(char *)[inValue UTF8String]];
+            } else {
+                [self setBuddyImageFromFilename:nil];
+            }
         }
     }
 }
 
+- (NSString *)_userIconCachePath
+{    
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self UIDAndServiceID]];
+    return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
+}
 
 - (void)setAwayMessage:(id)message
 {
@@ -531,8 +572,11 @@
     serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
 }
 
-- (void)setBuddyImage:(char *)imageFilename
+- (void)setBuddyImageFromFilename:(char *)imageFilename
 {
+    //Set to nil first
+    gaim_account_set_buddy_icon(account, nil);
+    //Set to new user icon
     gaim_account_set_buddy_icon(account,imageFilename);
 }
 

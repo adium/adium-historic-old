@@ -84,7 +84,8 @@
     [propertiesDict release]; propertiesDict = nil;
     [owner release];
     [service release];
-
+    [userIcon release]; userIcon = nil;
+    
     [super dealloc];
 }
 
@@ -106,8 +107,17 @@
     return [NSString stringWithFormat:@"%@.%@", [self serviceID], [self UID]];
 }
 
+//Return the account-specific user icon, or the default user icon from the account controlelr if none exists (thee default user icon returns nil if none is set)
 - (NSImage *)userIcon {
-    return [self propertyForKey:@"BuddyImage"];
+    if (userIcon)
+        return userIcon;
+    else
+        return [[owner accountController] defaultUserIcon];
+}
+
+- (void)setUserIcon:(NSImage *)inUserIcon {
+    [userIcon release];
+    userIcon = [inUserIcon retain];
 }
 
 //Functions for subclasses to override

@@ -439,7 +439,7 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 static void adiumGaimRequestFile(GaimXfer *xfer)
 {
     GaimXferType xferType = gaim_xfer_get_type(xfer);
-
+    NSLog(@"adiumGainRequestFile");
     if ( xferType == GAIM_XFER_RECEIVE ) {
         NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
         [accountLookup(xfer->account) accountXferRequestFileReceiveWithXfer:xfer];
@@ -460,7 +460,7 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
- //   NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+    NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
     [accountLookup(xfer->account) accountXferUpdateProgress:xfer percent:percent];
 }
 

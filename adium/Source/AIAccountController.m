@@ -33,6 +33,8 @@
 #define KEY_ACCOUNT_STATUS			@"Status"
 //#define EXTENSION_ADIUM_SERVICE			@"AdiumService"		//File extension on a service
 
+#define DEFAULT_ICON_CACHE_PATH                 @"~/Library/Caches/Adium"
+
 @interface AIAccountController (PRIVATE)
 + (NSBundle *)serviceBundleForAccountType:(NSString *)inType;
 - (void)dealloc;
@@ -45,6 +47,7 @@
 - (void)buildAccountMenus;
 - (void)autoConnectAccounts;
 - (void)disconnectAllAccounts;
+- (NSString *)_defaultIconCachePath;
 @end
 
 @implementation AIAccountController
@@ -56,7 +59,8 @@
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
-
+    defaultUserIcon = nil;
+    
     //Register our default preferences
     accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNT_STATUS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
     if(!accountStatusDict) accountStatusDict = [[NSMutableDictionary alloc] init];
@@ -125,6 +129,7 @@
     [availableServiceArray release];
     [lastAccountIDToSendContent release];
     [accountStatusDict release];
+    [defaultUserIcon release];
 }
 
 // dealloc
@@ -430,7 +435,60 @@
     return(value);
 }
 
+//User icon methods
+- (void)setUserIcon:(NSImage *)inImage forAccount:(AIAccount *)account
+{
+    if([[account supportedPropertyKeys] containsObject:@"UserIcon"]){
+        [account statusForKey:@"UserIcon" willChangeTo:inImage];
+    }
+}
 
+- (void)setDefaultUserIcon:(NSImage *)inImage
+{
+    //keep track of the image
+    [defaultUserIcon release]; defaultUserIcon = nil;
+    defaultUserIcon = [inImage retain];
+    
+    //cache the image to a file
+    if (defaultUserIcon) {
+        [defaultUserIconFilename release];
+        defaultUserIconFilename = [[self _defaultIconCachePath] retain];
+        NSData      *iconData = [defaultUserIcon JPEGRepresentation];
+        
+        [iconData writeToFile:defaultUserIconFilename atomically:YES];
+    } else {
+        defaultUserIconFilename = nil;       
+    }
+    
+    NSEnumerator	*enumerator;
+    AIAccount           *account;
+    
+    //Notify all accounts that support DefaultBuddyImage so they can inform their servers
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        //Tell concerned accounts about the NSImage
+        if([[account supportedPropertyKeys] containsObject:@"DefaultUserIcon"]){
+            [account statusForKey:@"DefaultUserIcon" willChangeTo:defaultUserIcon];
+        }
+        //Tell concerned accounts about the filename
+        if([[account supportedPropertyKeys] containsObject:@"DefaultUserIconFilename"]){
+            [account statusForKey:@"DefaultUserIconFilename" willChangeTo:defaultUserIconFilename];
+        }
+    }
+}
+- (NSImage *)defaultUserIcon
+{
+    return defaultUserIcon;   
+}
+- (NSString *)defaultUserIconFilename
+{
+    return defaultUserIconFilename;
+}
+
+- (NSString *)_defaultIconCachePath
+{
+    return([[DEFAULT_ICON_CACHE_PATH stringByAppendingPathComponent:@"UserIcon_Default"] stringByExpandingTildeInPath]);
+}
 // Internal ----------------------------------------------------------------
 //Watch outgoing content, remembering the user's choice of source account
 - (void)didSendContent:(NSNotification *)notification

@@ -13,7 +13,7 @@
 //init and close
 - (void)initController
 {
-
+    NSLog(@"init file transfer");
 }
 
 - (void)closeController
@@ -23,6 +23,7 @@
 
 - (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
+    NSLog(@"receive request in transfer controller");
     NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setTitle:@"Receive File"];
 
