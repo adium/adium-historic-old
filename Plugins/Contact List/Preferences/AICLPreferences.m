@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AICLPreferences.h"
-#import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
