@@ -137,7 +137,6 @@ typedef enum {
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
-- (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact;
 - (BOOL)connectivityBasedOnNetworkReachability;
 
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID;

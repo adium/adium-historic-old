@@ -396,11 +396,6 @@
 	return NO;
 }
 
-- (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact
-{
-	return NO;
-}
-
 - (BOOL)joinGroupChatNamed:(NSString *)name
 {
 	
