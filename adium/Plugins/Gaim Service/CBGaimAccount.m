@@ -7,6 +7,7 @@
 //
 
 #import "CBGaimAccount.h"
+#import "CBGaimServicePlugin.h"
 
 //#define OWN_BUDDY_IMAGE         @"/Users/evands/Library/Caches/Adium/UserIcon_Default.bmp"
 #define OWN_BUDDY_IMAGE         @"/Users/evands/evands.jpg"
@@ -483,7 +484,7 @@
 - (void)dealloc
 {
     NSLog(@"CBGaimAccount dealloc");
-    [service removeAccount:account];
+    [(CBGaimServicePlugin *)service removeAccount:account];
     
 //    [chatDict release];
     [handleDict release];
