@@ -8,5 +8,6 @@
 @interface NSAppleScript (AIAppleScriptAdditions)
 
 - (NSAppleEventDescriptor *)executeFunction:(NSString *)functionName error:(NSDictionary **)errorInfo;
+- (NSAppleEventDescriptor *)executeFunction:(NSString *)functionName withArguments:(NSArray *)argumentArray error:(NSDictionary **)errorInfo;
 
 @end
