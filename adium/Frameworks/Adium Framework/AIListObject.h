@@ -18,6 +18,7 @@
 @interface AIListObject : AIObject {
     NSString				*UID;
     NSString				*serviceID;
+	NSString				*uniqueObjectID;
 	BOOL					visible;				//Visibility of this object
 	
 	//Status and display

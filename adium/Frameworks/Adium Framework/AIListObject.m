@@ -47,7 +47,7 @@ DeclareString(FormattedUID);
     containingGroup = nil;
     UID = [inUID retain];	
     serviceID = [inServiceID retain];
-	
+	uniqueObjectID = nil;
 	orderIndex = -1;
 	delayedStatusTimers = nil;
 	
@@ -85,7 +85,8 @@ DeclareString(FormattedUID);
 	[changedStatusKeys release];
     [serviceID release];
 	[UID release];
-
+	[uniqueObjectID release];
+    
     [super dealloc];
 }
 
@@ -107,11 +108,15 @@ DeclareString(FormattedUID);
 //Super unique ID string, combining both UID and service ID
 - (NSString *)uniqueObjectID
 {
-    if(serviceID){
-        return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
-    }else{
-        return(UID);
-    }
+	if (!uniqueObjectID){
+		if(serviceID){
+			uniqueObjectID = [[NSString stringWithFormat:@"%@.%@",serviceID,UID] retain];
+		}else{
+			uniqueObjectID = [UID retain];
+		}
+	}
+	
+	return uniqueObjectID;
 }
 
 
