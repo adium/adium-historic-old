@@ -119,6 +119,12 @@
     return(NO);
 }
 
+//Importance grouping of this service.  Used to make service listings and menus more organized.
+- (AIServiceImportance)serviceImportance
+{
+	return(AIServiceUnsupported);
+}
+
 
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities

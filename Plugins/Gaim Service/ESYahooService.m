@@ -52,5 +52,8 @@
 - (BOOL)caseSensitive{
 	return(NO);
 }
+- (AIServiceImportance)serviceImportance{
+	return(AIServicePrimary);
+}
 
 @end
