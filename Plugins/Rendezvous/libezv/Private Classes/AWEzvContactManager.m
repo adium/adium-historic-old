@@ -65,4 +65,12 @@
 - (AWEzv *)client {
     return client;
 }
+
+- (void)dealloc {
+	/* AWEzvContactManagerListener adds an observer; remove it */
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	[super dealloc];
+}
+
 @end
