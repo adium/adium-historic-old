@@ -266,18 +266,16 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		AIListContact   *sourceContact;
 		GaimBuddy		*buddy;
 		GaimAccount		*account;
-		char			*name;
 		
 		account = conv->account;
 //		GaimDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
-		name = g_strdup(gaim_normalize(account, conv->name));
-		
+
 		//First, find the GaimBuddy with whom we are conversing
 		buddy = gaim_find_buddy(account, conv->name);
 		if (!buddy) {
-			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,name);
+			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,gaim_normalize(account,conv->name));
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
-			buddy = gaim_buddy_new(account, name, NULL);	//create a GaimBuddy
+			buddy = gaim_buddy_new(account, gaim_normalize(account, conv->name), NULL);	//create a GaimBuddy
 		}
 
 		NSCAssert(buddy != nil, @"buddy was nil");
@@ -287,16 +285,16 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		// Need to start a new chat, associating with the GaimConversation
 		chat = [accountLookup(account) mainThreadChatWithContact:sourceContact];
 
-		NSCAssert3(chat != nil, @"Got nil chat in lookup for %@ on %@ (%x)",
+		NSCAssert5(chat != nil, @"conv %x: Got nil chat in lookup for sourceContact %@ (%x) on adiumAccount %@ (%x)",
+				   conv,
 				   sourceContact,
+				   buddy,
 				   accountLookup(account),
 				   account);
 
 		//Associate the GaimConversation with the AIChat
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
-		
-		g_free(name);
 	}
 
 	return chat;	
