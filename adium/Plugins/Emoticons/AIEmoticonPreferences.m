@@ -24,13 +24,13 @@
 
 @interface AIEmoticonPreferences (PRIVATE)
 - (void)configureView;
-- (id)initWithOwner:(id)inOwner;
+- (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;
 @end
 
 @implementation AIEmoticonPreferences
-+ (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner
++ (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] initWithOwner:inOwner plugin:pluginSet] autorelease]);
 }
 
 //User changed a preference
@@ -46,12 +46,14 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet
 {
     AIPreferenceViewController	*preferenceViewController;
 
     [super init];
     owner = [inOwner retain];
+	plugin = pluginSet;
+	packs = [[NSMutableArray alloc] init];
 
     //Load the pref view nib
     [NSBundle loadNibNamed:EMOTICON_PREF_NIB owner:self];
@@ -64,7 +66,9 @@
     [newCell setTitle:@""];
     [newCell setRefusesFirstResponder:YES];
     [[[table_packList tableColumns] objectAtIndex:0] setDataCell:newCell];
-	NSLog (@"table_packList: %d", table_packList);
+    [[[table_packList tableColumns] objectAtIndex:0] setIdentifier:@"check"];
+    [[[table_packList tableColumns] objectAtIndex:1] setIdentifier:@"packname"];
+	[table_packList setDataSource:self];
 
     //Install our preference view
     preferenceViewController = [AIPreferenceViewController controllerWithName:EMOTICON_PREF_TITLE categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefView];
@@ -85,6 +89,12 @@
 	//Enablement
 	[checkBox_enable	setState:[[preferenceDict objectForKey:@"Enable"] intValue]];
 	
+	//Emoticon Packs
+	[plugin allEmoticonPacks:packs];
+	[table_packList reloadData];
+	//NSLog (@"plugin = %d", plugin);
+	//NSLog (@"emoticon pack count, configureView = %d", [packs count]);
+	
     //Font
     //[self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
 
@@ -98,32 +108,32 @@
 //Emoticon Packs Table View ----------------------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	NSLog (@"RowCount request");
-    return(2/*[availableUsers count]*/);
+	//NSLog (@"RowCount request");
+	//NSLog (@"pack count = %d", [packs count]);
+    return([packs count]);
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
-	NSLog (@"CellData request");
-
     if([identifier compare:@"check"] == 0){
-        if(row == 1/*[usersToImport containsObject:[availableUsers objectAtIndex:row]]*/){
-            return([NSNumber numberWithBool:YES]);
-        }else{
-            return([NSNumber numberWithBool:NO]);
-        }
+        //if(row == 0/*[usersToImport containsObject:[availableUsers objectAtIndex:row]]*/){
+        //    return([NSNumber numberWithBool:YES]);
+        //}else{
+        //    return([NSNumber numberWithBool:NO]);
+        //}
+		return([[[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_PREFS] objectForKey:@"inUse"]);
     }else{
-		if (row == 1)
+		/*if (row == 0)
 		{
 			return @"First Item :-)";
 		}
 		else
 		{
 			return @"Other Item :-)";
-		}
+		}*/
 		
-		
+		return([[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_TITLE]);
         //return([availableUsers objectAtIndex:row]);
     }
 }
@@ -131,13 +141,48 @@
  // Received when checkboxes are checked and unchecked
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	NSLog (@"SetObjectValue request");
-    /*NSString	*user = [availableUsers objectAtIndex:row];
-    
-    if([object intValue] == 0){
-        [usersToImport removeObject:user];
-    }else{
-        [usersToImport addObject:user];
-    }    */
+	NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_SOURCE], [[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_TITLE]];
+	NSMutableDictionary*	prefDict = [NSMutableDictionary dictionaryWithDictionary:[[packs objectAtIndex:row] objectForKey:KEY_EMOTICON_PACK_PREFS]];
+	
+	switch ([object intValue])
+	{
+		case	NSOffState:
+			// Turn off selected emoticon-pack
+			[prefDict setObject:[NSNumber numberWithInt:NSOffState] forKey:@"inUse"];
+			break;
+			
+		case	NSOnState:
+		{	// Turn on selected emoticon-pack
+			
+			//Conflict resolution
+				// For now, this just turns off the other packs.  Later it will check for individual conflicts
+			NSEnumerator	*numer = [packs objectEnumerator];
+			NSMutableDictionary	*packDict = nil;
+			
+			while (packDict = [numer nextObject])
+			{
+				if ([[[packDict objectForKey:KEY_EMOTICON_PACK_PREFS] objectForKey:@"inUse"] intValue] != NSOffState)
+				{
+					NSString* curPackKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
+					
+					NSMutableDictionary* tempPrefs = [NSMutableDictionary dictionaryWithDictionary:[packDict objectForKey:KEY_EMOTICON_PACK_PREFS]];
+					[tempPrefs setObject:[NSNumber numberWithInt:NSOffState] forKey:@"inUse"];
+					
+					[[owner preferenceController] setPreference:tempPrefs forKey:curPackKey group:PREF_GROUP_EMOTICONS];
+				}
+			}
+			
+			//Action
+			[prefDict setObject:[NSNumber numberWithInt:NSOnState] forKey:@"inUse"];
+			break;
+		}
+		case	NSMixedState:
+			NSLog (@"Mixed State checkbox in pack list, right after click.");
+	}
+				
+	[[owner preferenceController] setPreference:prefDict forKey:packKey group:PREF_GROUP_EMOTICONS];
+	[plugin	loadEmoticonsFromPacks];
+	[self configureView];	// Maybe we can take this out later.  I want to make sure the dicts in the emoticon
+							// packs are up-to-date.  Right now, we certainly need it.
 }
 @end

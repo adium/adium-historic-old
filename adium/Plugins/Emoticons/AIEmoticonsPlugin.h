@@ -21,6 +21,7 @@
 #define KEY_EMOTICON_PACK_CONTENTS	@"EmoticonPackContents"
 #define KEY_EMOTICON_PACK_TITLE	@"EmoticonPackTitle"
 #define KEY_EMOTICON_PACK_SOURCE	@"EmoticonPackSource"
+#define KEY_EMOTICON_PACK_PREFS		@"EmoticonPackPrefsDict"
 
 @protocol AIContentFilter;
 @class AIEmoticonPreferences;
@@ -37,5 +38,6 @@
 
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray;
+- (BOOL)loadEmoticonsFromPacks;
 
 @end
