@@ -179,7 +179,7 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	
 	//If the node does not have ui_data yet, we need to create a contact and associate it
 	if (!theContact){
-		theContact = [accountLookup(buddy->account) _contactWithUID:[NSString stringWithUTF8String:buddy->name]];
+		theContact = [accountLookup(buddy->account) _contactWithUID:[[NSString stringWithUTF8String:buddy->name] compactedString]];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];
