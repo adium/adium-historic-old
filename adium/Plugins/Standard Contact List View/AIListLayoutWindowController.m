@@ -96,11 +96,26 @@
 //
 - (IBAction)okay:(id)sender
 {
-#warning save here!?  or in the main prefs file?
+	NSString	*newName = [textField_layoutName stringValue];
+	
+	//If the user has renamed this layout, delete the old one
+	if(![newName isEqualTo:layoutName]){
+		[AICLPreferences deleteSetWithName:layoutName
+								 extension:LIST_LAYOUT_EXTENSION
+								  inFolder:LIST_LAYOUT_FOLDER];
+	}
+	
+	//Save the layout
 	if([AICLPreferences createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
 											withName:[textField_layoutName stringValue]
 										   extension:LIST_LAYOUT_EXTENSION
 											inFolder:LIST_LAYOUT_FOLDER]){
+
+		[[adium preferenceController] setPreference:newName
+											 forKey:KEY_LIST_LAYOUT_NAME
+											  group:PREF_GROUP_CONTACT_LIST];
+		
+		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_LAYOUT_EXTENSION];
 		[self closeWindow:sender];
 	}
 }
@@ -128,6 +143,7 @@
 	[slider_groupBottomSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING] intValue]];
 	[slider_windowTransparency setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue] * 100.0)];
 	[slider_contactLeftIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
+	[slider_contactRightIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 	[self updateSliderValues];
 	
 	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
@@ -141,8 +157,7 @@
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
 	[fontField_status setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
 	[fontField_group setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
-	NSLog(@"%@",[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT]);
-	NSLog(@"%@",[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]);
+
 	[self configureControlDimming];
 }
 
@@ -259,6 +274,12 @@
                                              forKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self updateSliderValues];
+		
+    }else if(sender == slider_contactRightIndent){
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+                                             forKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		[self updateSliderValues];
 	}
 }
 
@@ -299,6 +320,7 @@
 	[textField_groupBottomSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupBottomSpacing intValue]]];
 	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
 	[textField_contactLeftIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactLeftIndent intValue]]];
+	[textField_contactRightIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactRightIndent intValue]]];
 }
 
 //Configure control dimming
