@@ -3381,6 +3381,9 @@
 				4B9267C304A7583D00A8010A,
 				4B9267C404A7583D00A8010A,
 				4B9267C104A7541200A8010A,
+				D3EBF90F053503D200A8010B,
+				D3EBF911053503D200A8010B,
+				D3EBF910053503D200A8010B,
 				4BB826B504C8876C00A8010A,
 			);
 			isa = PBXGroup;
@@ -3393,6 +3396,7 @@
 			files = (
 				4B18A52D0459F8F200A8010A,
 				4B9267C504A7583D00A8010A,
+				D3EBF912053503D200A8010B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3402,6 +3406,7 @@
 			files = (
 				4B9267C204A7541200A8010A,
 				4BB826B604C8876C00A8010A,
+				D3EBF913053503D200A8010B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3411,6 +3416,7 @@
 			files = (
 				4B18A52E0459F8F200A8010A,
 				4B9267C604A7583D00A8010A,
+				D3EBF914053503D200A8010B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15256,6 +15262,44 @@
 		};
 		D3DA2E41052E65E400A8010B = {
 			fileRef = D3DA2E40052E65E400A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3EBF90F053503D200A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStatusOverlayAdvancedPreferences.h;
+			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayAdvancedPreferences.h";
+			refType = 4;
+		};
+		D3EBF910053503D200A8010B = {
+			isa = PBXFileReference;
+			name = DockOverlayAdvancedPrefs.nib;
+			path = "Plugins/Contact Status Dock Overlays/DockOverlayAdvancedPrefs.nib";
+			refType = 4;
+		};
+		D3EBF911053503D200A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStatusOverlayAdvancedPreferences.m;
+			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayAdvancedPreferences.m";
+			refType = 4;
+		};
+		D3EBF912053503D200A8010B = {
+			fileRef = D3EBF90F053503D200A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3EBF913053503D200A8010B = {
+			fileRef = D3EBF910053503D200A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3EBF914053503D200A8010B = {
+			fileRef = D3EBF911053503D200A8010B;
 			isa = PBXBuildFile;
 			settings = {
 			};

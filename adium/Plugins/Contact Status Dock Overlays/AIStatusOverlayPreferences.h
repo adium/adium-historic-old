@@ -7,18 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@interface AIStatusOverlayPreferences : NSObject {
-    AIAdium			*owner;
-    IBOutlet	NSView		*view_prefView;
-
+@interface AIStatusOverlayPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_showStatusOverlays;
     IBOutlet	NSButton	*checkBox_showContentOverlays;
-    IBOutlet	NSButton	*radioButton_topOfIcon;
-    IBOutlet	NSButton	*radioButton_bottomOfIcon;
 }
-
-+ (id)statusOverlayPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end

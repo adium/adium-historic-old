@@ -1,11 +1,6 @@
 {
     IBClasses = (
         {
-            CLASS = AIAlternatingRowTableView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSTableView; 
-        }, 
-        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
@@ -19,12 +14,9 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            CLASS = AIStatusOverlayPreferences; 
+            CLASS = AIStatusOverlayAdvancedPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "checkBox_showContentOverlays" = NSButton; 
-                "checkBox_showStatusOverlays" = NSButton; 
-            }; 
+            OUTLETS = {"radioButton_bottomOfIcon" = NSButton; "radioButton_topOfIcon" = NSButton; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
