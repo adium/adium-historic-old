@@ -7,7 +7,8 @@
 
 #import "ESCLViewAdvancedPreferences.h"
 #import "AISCLViewPlugin.h"
-
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/CBApplicationAdditions.h>
 
 @implementation ESCLViewAdvancedPreferences
 

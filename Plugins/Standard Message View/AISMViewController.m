@@ -13,12 +13,35 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AIContentController.h"
+#import "AIMenuController.h"
+#import "AIPreferenceController.h"
 #import "AISMViewController.h"
 #import "AISMViewPlugin.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIFlexibleTableCell.h>
+#import <AIUtilities/AIFlexibleTableView.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIScrollViewAdditions.h>
+#import <AIUtilities/AITextAttributes.h>
+#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/ESImageAdditions.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentContext.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentObject.h>
+#import <Adium/AIContentStatus.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListObject.h>
 
 #define ICON_SIZE 32.0
 #define QUEUED_MESSAGE_OPACITY 0.5
 #define NEW_BUBBLE_TIME 600
+
+@class AIContentMessage, AIContentObject, AIContentStatus, AIContentContext;
 
 @interface AISMViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;

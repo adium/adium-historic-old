@@ -7,6 +7,7 @@
 
 #import "ESCLViewLabelsAdvancedPrefs.h"
 #import "AISCLViewPlugin.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
 
 
 @implementation ESCLViewLabelsAdvancedPrefs

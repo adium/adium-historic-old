@@ -22,6 +22,8 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
+#import <Adium/AIAccount.h>
+
 @protocol AWEzvClientProtocol;
 @class AWEzv;
 

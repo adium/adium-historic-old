@@ -1,14 +1,40 @@
-//
-//  ESWebKitMessageViewPreferences.m
-//  Adium
-//
-//  Created by Evan Schoenberg on Sun Apr 18 2004.
-//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
-//
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
-#import "ESWebKitMessageViewPreferences.h"
-#import "AIWebKitMessageViewPlugin.h"
+#import "AIAccountController.h"
+#import "AIContactController.h"
+#import "AIContentController.h"
+#import "AIInterfaceController.h"
 #import "AIWebKitMessageViewController.h"
+#import "AIWebKitMessageViewPlugin.h"
+#import "ESWebKitMessageViewPreferences.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/ESBundleAdditions.h>
+#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/JVFontPreviewField.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentObject.h>
+#import <Adium/AIContentStatus.h>
+#import <Adium/AIService.h>
 
 #define PREVIEW_FILE	@"Preview"
 
@@ -171,9 +197,10 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!firstTime){
-		[self updatePreview];
-	}
+	//XXX - Redundant?
+//	if(!firstTime){
+//		[self updatePreview];
+//	}
 }
 
 #pragma mark Changing preferences
@@ -271,6 +298,18 @@
 
 - (IBAction)changeVariant:(id)sender
 {
+	NSDictionary *newStyleDict = [sender representedObject];
+	NSString	*newStyleName = [newStyleDict objectForKey:@"styleName"];
+
+	//If we were passed a variant as well, we want to change the variant preference for this style.
+	//A variant of @"" indicates the user selected the normal view.
+	//A variant of nil means that the user selected the menu item (rather than a submenu item); we should therefore
+	//leave the variant preference alone - this will let the previously selected variant be selected automatically
+	NSString	*variant = [newStyleDict objectForKey:@"variant"];	
+	NSString	*variantKey = [plugin variantKeyForStyle:newStyleName];
+	[[adium preferenceController] setPreference:([variant length] ? variant : nil)
+										 forKey:variantKey
+										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	
 }
 
@@ -587,7 +626,7 @@
 			variant = [[variant lastPathComponent] stringByDeletingPathExtension];
 			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:variant
 																				target:self
-																				action:@selector(changeStyle:) 
+																				action:@selector(changeVariant:) 
 																		 keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", variant, @"variant", nil]];
 			[variantsMenu addItem:menuItem];

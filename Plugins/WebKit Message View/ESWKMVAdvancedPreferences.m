@@ -8,6 +8,7 @@
 
 #import "ESWKMVAdvancedPreferences.h"
 #import "AIWebKitMessageViewPlugin.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
 
 @implementation ESWKMVAdvancedPreferences
 
