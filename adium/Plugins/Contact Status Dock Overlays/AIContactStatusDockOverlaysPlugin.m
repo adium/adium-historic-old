@@ -31,7 +31,7 @@
     overlayState = nil;
 
     //Install our preference view
-//    preferences = [[AIStatusOverlayPreferences statusOverlayPreferencesWithOwner:owner] retain];
+    //preferences = [[AIStatusOverlayPreferences statusOverlayPreferencesWithOwner:owner] retain];
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
     [[owner contactController] registerListObjectObserver:self];
