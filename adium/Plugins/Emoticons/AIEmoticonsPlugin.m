@@ -128,7 +128,7 @@
                 unichar         firstCharacter;
                 NSString        *firstCharacterString;
                 
-                if([text length] != 0){ //Invalid emoticon files may let empty text equivelants sneak in
+                if([text length] != 0){ //Invalid emoticon files may let empty text equivalents sneak in
                     firstCharacter = [text characterAtIndex:0];
                     firstCharacterString = [NSString stringWithFormat:@"%C",firstCharacter];
                     
@@ -214,7 +214,7 @@
                 while(text = [textEnumerator nextObject]){
                     int     textLength = [text length];
 
-                    if(textLength != 0){ //Invalid emoticon files may let empty text equivalants sneak in
+                    if(textLength != 0){ //Invalid emoticon files may let empty text equivalents sneak in
                         //If there is not enough room in the string for this text, we can skip it
                         if(currentLocation + [text length] <= [messageString length]){
                             if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == 0){
