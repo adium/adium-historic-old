@@ -8,7 +8,8 @@
 
 #import "JSCEventBezelWindow.h"
 #import "JSCEventBezelView.h"
-#define AUTOFRAME_NAME   @"EventBezelWindow"
+#define AUTOFRAME_NAME		@"EventBezelWindow"
+#define AUTOFRAME_KEY		@"NSWindow Frame EventBezelWindow"
 
 @interface JSCEventBezelController : AIWindowController {
     IBOutlet JSCEventBezelWindow    *bezelWindow;
