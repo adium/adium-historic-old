@@ -71,6 +71,7 @@
     NSMutableArray			*messageWindowControllerArray;
     AIMessageWindowController		*lastUsedMessageWindow;
     NSMutableArray			*lastUsedContainerArray;
+	NSMutableDictionary		*arrangeByGroupWindowList;
     
     //Preferences
     AIDualWindowPreferences                 *preferenceController;
