@@ -52,7 +52,7 @@
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
 - (void)prepareContactInfo;
 
-- (NSMenu *)menuOfAllContactsInContainingObject:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
+- (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
 - (void)_menuOfAllGroups:(NSMenu *)menu forGroup:(AIListGroup *)group withTarget:(id)target level:(int)level;
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
@@ -974,10 +974,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			NSImage			*menuServiceImage;
 			NSMenuItem		*menuItem;
 
-			menuServiceImage = [AIServiceIcons serviceIconForObject:contact
-															   type:AIServiceIconSmall
-														  direction:AIIconNormal];
-
+			menuServiceImage = [AIUserIcons menuUserIconForObject:contact];
+			
 			menuItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
 												  target:target
 												  action:@selector(selectContainedContact:)
@@ -1476,31 +1474,35 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     while((object = [enumerator nextObject])){
 		NSImage		*menuServiceImage;
 		NSMenuItem	*menuItem;
+		BOOL		needToCreateSubmenu;
+		BOOL		isGroup = [object isKindOfClass:[AIListGroup class]];
+		BOOL		isValidGroup = (isGroup &&
+									[[(AIListGroup *)object containedObjects] count]);
 		
-		menuServiceImage = [AIServiceIcons serviceIconForObject:object
-														   type:AIServiceIconSmall
-													  direction:AIIconNormal];
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[object displayName]
-											   target:target 
-											   action:@selector(selectContact:)
-										keyEquivalent:@""] autorelease];
-		
-        if([object isKindOfClass:[AIListGroup class]] || [object isKindOfClass:[AIMetaContact class]]){
-
-			[menuItem setSubmenu:[self menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)object withTarget:target firstLevel:NO]];
-			[menuItem setEnabled:![object isKindOfClass:[AIListGroup class]]];
+		//We don't want to include empty groups
+		if (!isGroup || isValidGroup){
 			
-		}/*else if([object isKindOfClass:[AIListContact class]]){
+			needToCreateSubmenu = (isValidGroup ||
+								   ([object isKindOfClass:[AIMetaContact class]] && ([[(AIMetaContact *)object listContacts] count] > 1)));
 			
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[object formattedUID]
+			
+			menuServiceImage = [AIUserIcons menuUserIconForObject:object];
+			
+			menuItem = [[[NSMenuItem alloc] initWithTitle:(needToCreateSubmenu ? 
+														   [object displayName] :
+														   [object formattedUID])
 												   target:target 
-												   action:@selector(selectContact:) 
+												   action:@selector(selectContact:)
 											keyEquivalent:@""] autorelease];
-		}*/
-		
-		[menuItem setRepresentedObject:object];
-		[menuItem setImage:menuServiceImage];
-		[menu addItem:menuItem];
+			
+			if(needToCreateSubmenu){
+				[menuItem setSubmenu:[self menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)object withTarget:target firstLevel:NO]];
+			}
+			
+			[menuItem setRepresentedObject:object];
+			[menuItem setImage:menuServiceImage];
+			[menu addItem:menuItem];
+		}
 	}
 
 	return([menu autorelease]);
