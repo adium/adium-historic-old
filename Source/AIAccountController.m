@@ -561,6 +561,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSParameterAssert(accountArray != nil);
 
 	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
+	[inAccount disconnect];
 	[accountArray removeObject:inAccount];
 	if (shouldSave){
 		[self saveAccounts];
