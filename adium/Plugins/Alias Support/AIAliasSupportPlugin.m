@@ -74,7 +74,7 @@
             alias = nil; 
         
         //Apply
-        [self _applyAlias:alias toObject:activeListObject delayed:NO];
+        [self _applyAlias:alias toObject:activeListObject notify:YES];
         
         //Save the alias
         [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];

@@ -46,23 +46,21 @@
 #pragma mark Private
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CHECKMARK] == 0){
-	
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHECKMARK];
-	
-	//Release the old values..
-	//Cache the preference values
-	displayCheckmark  = [[prefDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue];
-	
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHECKMARK];
+		
+		//Release the old values..
+		//Cache the preference values
+		displayCheckmark  = [[prefDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue];
+		
         //Update all our status icons
-	NSEnumerator		*enumerator;
-	AIListObject		*object;
-	
-	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-	
-	while(object = [enumerator nextObject]){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+		NSEnumerator		*enumerator;
+		AIListObject		*object;
+		
+		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+		
+		while(object = [enumerator nextObject]){
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
         }
     }
     
@@ -70,18 +68,18 @@
 
 
 #pragma mark AIListObjectObserver Protocol
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if ( inModifiedKeys == nil || [inModifiedKeys containsObject:@"ChatsCount"]) {
-	AIMutableOwnerArray		*iconArray = [inObject displayArrayForKey:@"Left View"];
-	int chatsCount = [[inObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
-	
-	if (displayCheckmark && (chatsCount > 0))
-	    [iconArray setObject:self withOwner:self];
-	else
-	    [iconArray setObject:nil withOwner:self];
-	
-	return ([NSArray arrayWithObjects:@"Left View",nil]);
+		AIMutableOwnerArray		*iconArray = [inObject displayArrayForKey:@"Left View"];
+		int chatsCount = [[inObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+		
+		if (displayCheckmark && (chatsCount > 0))
+			[iconArray setObject:self withOwner:self];
+		else
+			[iconArray setObject:nil withOwner:self];
+		
+		return ([NSArray arrayWithObjects:@"Left View",nil]);
     }
     return nil;
 }
