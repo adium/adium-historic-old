@@ -325,7 +325,7 @@
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
         fileDescription = AILocalizedString(@"Adium theme",nil);
 		prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
-		prefsCategory = AIPref_Advanced_Other;
+		prefsCategory = AIPref_Advanced;
 		advancedPrefsName = [@"Themes" retain];
 		
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
@@ -338,7 +338,7 @@
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Sound Prefs",nil);
-		prefsCategory = AIPref_Sound;
+		prefsCategory = AIPref_Events;
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
@@ -466,11 +466,7 @@
 {
 	if (prefsCategory != -1){
 		switch( prefsCategory ) {
-			case AIPref_Advanced_Messages:
-			case AIPref_Advanced_ContactList:
-			case AIPref_Advanced_Status:
-			case AIPref_Advanced_Service:
-			case AIPref_Advanced_Other:
+ 			case AIPref_Advanced:
 				[preferenceController openPreferencesToAdvancedPane:advancedPrefsName inCategory:prefsCategory];
 				[advancedPrefsName release]; advancedPrefsName = nil;
 				break;
