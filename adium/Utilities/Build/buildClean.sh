@@ -15,19 +15,18 @@ else
 	lastbuild=$today
 fi
 
+rm -R /Users/evands/AdiumNightly/adium
+cvs co adium
+
 cd adium
-
-#This gaim stuff has more conflicts and angst than the WB
-rm -f "Plugins/Gaim Service/LIBS/liboscar.a"
-rm -f "Plugins/Gaim Service/CBGaimAIMAccount.m"
-
-cvs update -Pd
 
 #ranlib the static library
 ranlib "Plugins/Gaim Service/LIBS/liboscar.a"
 
-#Delete the prefix header from before, just in case
-rm -r "build/PrefixHeaders"
+#delete the (empty) Adium.pbproj
+if [ -e Adium.pbproj ]; then
+	rm -R Adium.pbproj
+fi
 
 #Log everything
 ../cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
