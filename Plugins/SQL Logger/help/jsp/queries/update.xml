@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Rev: 922 $ $Date: 2004-11-20 10:49:05 -0600 (Sat, 20 Nov 2004) $ -->
+<!-- $Rev: 933 $ $Date: 2004-11-25 00:03:35 -0600 (Thu, 25 Nov 2004) $ -->
 <?xml-stylesheet href="querylib.xsl" type="text/xml"?>
 
 <l:library xmlns:l="http://www.slamb.org/axamol/sql-library/library"
@@ -10,7 +10,7 @@
                                http://www.slamb.org/projects/axamol/sql-library/schema/library.xsd">
 
   <l:version>
-    $Rev: 922 $ $Date: 2004-11-20 10:49:05 -0600 (Sat, 20 Nov 2004) $
+    $Rev: 933 $ $Date: 2004-11-25 00:03:35 -0600 (Thu, 25 Nov 2004) $
   </l:version>
 
   <l:description>
@@ -176,23 +176,6 @@
       values (<s:bind param="message_id" />,
               <s:bind param="title" />,
               <s:bind param="notes" />)
-    </s:sql>
-  </s:update>
-
-  <s:update name="save_query">
-    <l:description>
-      Saves a query
-    </l:description>
-
-    <s:param name="query" type="varchar" />
-    <s:param name="title" type="varchar" />
-    <s:param name="notes" type="varchar" />
-
-    <s:sql databases="pgsql">
-      insert into im.saved_queries (title, notes, query_text)
-      values (<s:bind param="title" />,
-              <s:bind param="notes" />,
-              <s:bind param="query" />)
     </s:sql>
   </s:update>
 
@@ -388,6 +371,40 @@
       (user_id, key_id, value)
       values (<s:bind param="user_id" />, <s:bind param="key_id" />,
       <s:bind param="value" />)
+    </s:sql>
+  </s:update>
+
+  <s:update name="insert_saved_form">
+    <l:description>
+      Adds a saved form.
+    </l:description>
+
+    <s:param name="title" type="varchar" />
+    <s:param name="notes" type="varchar" />
+    <s:param name="type" type="varchar" />
+
+    <s:sql databases="pgsql">
+      insert into im.saved_items (title, notes, item_type)
+      values (<s:bind param="title" />,
+              <s:bind param="notes" />,
+              <s:bind param="type" />)
+    </s:sql>
+  </s:update>
+
+  <s:update name="insert_saved_fields">
+    <l:description>
+      Adds a field to a saved form.
+    </l:description>
+
+    <s:param name="key" type="varchar" />
+    <s:param name="value" type="varchar" />
+    <s:param name="seq" type="integer" />
+
+    <s:sql databases="pgsql">
+      insert into im.saved_fields (item_id, field_name, value)
+      values (<s:bind param="seq" />,
+              <s:bind param="key" />,
+              <s:bind param="value" />)
     </s:sql>
   </s:update>
  </l:library>

@@ -1,26 +1,18 @@
 <%@ page import='java.sql.*' %>
-<%@ page import='javax.sql.*' %>
-<%@ page import='javax.naming.*' %>
 <%@ page import='java.util.Properties' %>
 <%@ page import='java.util.Enumeration' %>
 <%@ page import='java.util.List' %>
 <%@ page import='java.util.ArrayList' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
-<%@ page import = 'java.io.File' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/updateLogin.jsp $-->
-<!--$Rev: 922 $ $Date$-->
+<!--$Rev: 930 $ $Date$-->
 <%
 
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/update.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-update");
 Map params = new HashMap();
 
 Enumeration e = request.getParameterNames();
@@ -47,10 +39,6 @@ try {
 } catch(SQLException err) {
     out.println("<br />Error!\n");
     out.print(err.getMessage());
-}
-
-finally {
-conn.close();
 }
 
 %>

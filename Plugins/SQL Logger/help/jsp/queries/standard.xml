@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Rev: 926 $ $Date: 2004-11-20 22:39:14 -0600 (Sat, 20 Nov 2004) $ -->
+<!-- $Rev: 933 $ $Date: 2004-11-25 00:03:35 -0600 (Thu, 25 Nov 2004) $ -->
 <?xml-stylesheet href="querylib.xsl" type="text/xml"?>
 
 <l:library xmlns:l="http://www.slamb.org/axamol/sql-library/library"
@@ -10,32 +10,12 @@
            http://www.slamb.org/projects/axamol/sql-library/schema/library.xsd">
 
   <l:version>
-    $Rev: 926 $ $Date: 2004-11-20 22:39:14 -0600 (Sat, 20 Nov 2004) $
+    $Rev: 933 $ $Date: 2004-11-25 00:03:35 -0600 (Thu, 25 Nov 2004) $
   </l:version>
 
   <l:description>
     Queries for the SQL Logger.
   </l:description>
-
-  <s:query name="saved_chat">
-    <l:description>
-      Gets information about a saved chat.
-    </l:description>
-
-    <s:param name="chat_id" type="integer" />
-    <s:sql databases="pgsql">
-      select title,
-             notes,
-             sent_sn,
-             received_sn,
-             single_sn,
-             date_start,
-             date_finish,
-             meta_id
-      from   im.saved_chats
-      where  chat_id = <s:bind param="chat_id" />
-    </s:sql>
-  </s:query>
 
   <s:query name="user_display_name">
     <l:description>
@@ -83,6 +63,7 @@
                   and   effdate > udn.effdate)
     </s:sql>
   </s:query>
+
   <s:query name="message_times">
     <l:description>
       Determines message dates plus and minus a certain time.
@@ -102,19 +83,6 @@
     </s:sql>
   </s:query>
 
-  <s:query name="saved_chats_list">
-    <l:description>
-      List of all saved chats.
-    </l:description>
-
-    <s:sql databases="pgsql">
-      select  chat_id,
-              title
-      from    im.saved_chats
-      order by title
-    </s:sql>
-  </s:query>
-
   <s:query name="distinct_services">
     <l:description>
       List of all distinct services.
@@ -124,7 +92,7 @@
       select distinct service
       from im.users
     </s:sql>
-</s:query>
+  </s:query>
 
   <s:query name="meta_contacts">
     <l:description>
@@ -351,6 +319,39 @@
                     'infinity')
               ) messages
       order by username
+    </s:sql>
+  </s:query>
+
+  <s:query name="saved_items_list">
+    <l:description>
+      Gets a list of saved items for a particular type.
+    </l:description>
+
+    <s:param name="type" type="varchar" />
+
+    <s:sql databases="pgsql">
+      select  item_id,
+              title,
+              notes
+      from    im.saved_items
+      where   item_type = <s:bind param="type" />
+    </s:sql>
+  </s:query>
+
+  <s:query name="saved_fields">
+    <l:description>
+      Gets all the fields for a particular saved item.
+    </l:description>
+
+    <s:param name="item_id" type="integer" />
+
+    <s:sql databases="pgsql">
+      select  title,
+              notes,
+              field_name,
+              value
+      from    im.saved_fields natural join im.saved_items
+      where   item_id = <s:bind param="item_id" />
     </s:sql>
   </s:query>
 
@@ -598,27 +599,6 @@
     </s:sql>
   </s:query>
 
-  <s:query name="saved_search" >
-    <l:description>
-      Gets all everything for a saved search.
-    </l:description>
-
-    <s:param name = "search_id" type="integer" />
-
-    <s:sql databases="pgsql" >
-      select  title,
-              notes,
-              sender,
-              recipient,
-              searchstring,
-              date_start,
-              date_finish,
-              orderby
-      from    im.saved_searches
-      where   search_id = <s:bind param="search_id" />
-    </s:sql>
-  </s:query>
-
   <s:query name="check_for_tsearch">
     <l:description>
       Queries the system tables to see if tsearch types exist
@@ -631,19 +611,6 @@
         or    typname ~ '^tsquery$'
        and    pg_catalog.pg_type_is_visible(t.oid)
       order by typname
-    </s:sql>
-  </s:query>
-
-  <s:query name="saved_searches_list">
-    <l:description>
-      Gets a list of all saved searches.
-    </l:description>
-
-    <s:sql databases="pgsql">
-      select    search_id,
-                title
-      from      im.saved_searches
-      order by  title
     </s:sql>
   </s:query>
 
@@ -667,17 +634,22 @@
                 message_id
       from      im.simple_message_v
       where     message ~ <s:bind param="search" />
-       and      (sender_sn like <s:bind param="sender" />
-                  or <s:bind param="sender" /> is null)
-       and      (recipient_sn like <s:bind param="recipient" />
-                  or <s:bind param="recipient" /> is null)
-       and      (message_date >= <s:bind param="dateStart" />
-                  or <s:bind param="dateStart" /> is null)
-       and      (message_date &lt;= <s:bind param="dateFinish" />
-                  or <s:bind param="dateFinish" /> is null)
-       and      (<s:bind param="service" /> is null or (
-                  sender_service = <s:bind param="service" />
-                    or recipient_service = <s:bind param="service" />))
+      <s:ifNotNull param="sender">
+        and      sender_sn like <s:bind param="sender" />
+      </s:ifNotNull>
+      <s:ifNotNull param="recipient">
+        and      recipient_sn like <s:bind param="recipient" />
+      </s:ifNotNull>
+      <s:ifNotNull param="dateStart">
+        and      message_date >= <s:bind param="dateStart" />
+      </s:ifNotNull>
+      <s:ifNotNull param="dateFinish">
+        and      message_date &lt;= <s:bind param="dateFinish" />
+      </s:ifNotNull>
+      <s:ifNotNull param="service">
+       and      (sender_service = <s:bind param="service" />
+       or recipient_service = <s:bind param="service" />)
+     </s:ifNotNull>
     </s:sql>
   </s:query>
 
@@ -708,18 +680,23 @@
       where     messages.sender_id = s.user_id
         and     messages.recipient_id = r.user_id
         and     message_idx ## <s:bind param="search" />
-        and     (s.username like <s:bind param="sender" />
-                 or <s:bind param="sender" /> is null)
-        and     (r.username like <s:bind param="recipient" />
-                or <s:bind param="recipient" /> is null)
         <s:bindlist param="matchRegexp" each=" and message ~* ?" join="" />
-        and     (message_date &lt;= <s:bind param="dateFinish" />
-                  or <s:bind param="dateFinish" /> is null)
-        and     (message_date >= <s:bind param="dateStart" />
-                  or <s:bind param="dateStart" /> is null)
-        and     (<s:bind param="service" /> is null
-                  or (s.service = <s:bind param="service" />
-                    or r.service = <s:bind param="service" />))
+      <s:ifNotNull param="sender">
+        and      sender_sn like <s:bind param="sender" />
+      </s:ifNotNull>
+      <s:ifNotNull param="recipient">
+        and      recipient_sn like <s:bind param="recipient" />
+      </s:ifNotNull>
+      <s:ifNotNull param="dateStart">
+        and      message_date >= <s:bind param="dateStart" />
+      </s:ifNotNull>
+      <s:ifNotNull param="dateFinish">
+        and      message_date &lt;= <s:bind param="dateFinish" />
+      </s:ifNotNull>
+      <s:ifNotNull param="service">
+       and      (sender_service = <s:bind param="service" />
+       or recipient_service = <s:bind param="service" />)
+     </s:ifNotNull>
     </s:sql>
   </s:query>
 
@@ -751,49 +728,23 @@
       where     messages.sender_id = s.user_id
         and     messages.recipient_id = r.user_id
         and     idxfti @@ q
-        and     (s.username like <s:bind param="sender" />
-                 or <s:bind param="sender" /> is null)
-        and     (r.username like <s:bind param="recipient" />
-                or <s:bind param="recipient" /> is null)
-        <s:bindlist param="matchRegexp" join=""
-          each=" and message ~* ? " />
-        and     (message_date &lt;= <s:bind param="dateFinish" />
-                  or <s:bind param="dateFinish" /> is null)
-        and     (message_date >= <s:bind param="dateStart" />
-                  or <s:bind param="dateStart" /> is null)
-        and     (<s:bind param="service" /> is null
-                  or (s.service = <s:bind param="service" />
-                  or r.service = <s:bind param="service" />))
-    </s:sql>
-  </s:query>
-
-  <s:query name="saved_query">
-    <l:description>
-      Gets a saved query.
-    </l:description>
-
-    <s:param name="query_id" type="integer" />
-
-    <s:sql databases="pgsql">
-      select    title,
-                notes,
-                query_text
-      from      im.saved_queries
-      where     query_id = <s:bind param="query_id" />
-    </s:sql>
-  </s:query>
-
-  <s:query name="saved_queries_list">
-    <l:description>
-      Gets a list of all saved queries.
-    </l:description>
-
-    <s:sql databases="pgsql">
-      select    query_id,
-                title,
-                notes
-      from      im.saved_queries
-      order by  title
+        <s:bindlist param="matchRegexp" each=" and message ~* ?" join="" />
+      <s:ifNotNull param="sender">
+        and      sender_sn like <s:bind param="sender" />
+      </s:ifNotNull>
+      <s:ifNotNull param="recipient">
+        and      recipient_sn like <s:bind param="recipient" />
+      </s:ifNotNull>
+      <s:ifNotNull param="dateStart">
+        and      message_date >= <s:bind param="dateStart" />
+      </s:ifNotNull>
+      <s:ifNotNull param="dateFinish">
+        and      message_date &lt;= <s:bind param="dateFinish" />
+      </s:ifNotNull>
+      <s:ifNotNull param="service">
+       and      (sender_service = <s:bind param="service" />
+       or recipient_service = <s:bind param="service" />)
+     </s:ifNotNull>
     </s:sql>
   </s:query>
 
@@ -811,11 +762,7 @@
               display_name || ' (' || service || '.' || username || ')'
                 as full_display
       from    im.users natural join im.user_display_name udn
-      where   (service = <s:bind param="service" />
-                or <s:bind param="service" /> is null)
-        and   (username ilike <s:bind param="username" />
-                or <s:bind param="username" /> is null)
-        and   not exists
+      where   not exists
               (select   'x'
               from      im.user_display_name
               where     user_id = udn.user_id
@@ -825,6 +772,12 @@
               from      im.meta_contact
               where     meta_id = <s:bind param="meta_id" />
                 and     user_id = users.user_id)
+      <s:ifNotNull param="username">
+        and   username ilike <s:bind param="username" />
+      </s:ifNotNull>
+      <s:ifNotNull param="service">
+        and   service = <s:bind param="service" />
+      </s:ifNotNull>
       order by display_name, username
     </s:sql>
   </s:query>
@@ -844,10 +797,12 @@
               message_date
       from    im.simple_message_v
       where   message ~* '(.*http:\\/\\/.*)|(.*&lt;a href.*?&lt;/a>.*)'
-       and    (message_date &lt;= <s:bind param="endDate" />
-               or <s:bind param="endDate" /> is null)
-       and    (message_date >= <s:bind param="startDate" />
-               or <s:bind param="startDate" /> is null)
+      <s:ifNotNull param="endDate">
+        and   message_date &lt;= <s:bind param="endDate" />
+      </s:ifNotNull>
+      <s:ifNotNull param="startDate">
+        and    message_date >= <s:bind param="startDate" />
+      </s:ifNotNull>
       order by message_date desc
     </s:sql>
   </s:query>

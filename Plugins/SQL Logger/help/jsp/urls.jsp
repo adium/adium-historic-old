@@ -1,6 +1,4 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
@@ -12,16 +10,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/urls.jsp $-->
-<!--$Rev: 922 $ $Date$ -->
+<!--$Rev: 930 $ $Date$ -->
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
-
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");
 Map params = new HashMap();
 
 String dateStart, dateFinish;
@@ -86,11 +78,8 @@ try {
         out.println("<p style=\"padding-left: 30px; margin-top:5px\">" +
             sb.toString() + "</p>");
     }
-//} catch (SQLException e) {
-//    out.println(e.getMessage());
-} finally {
-    lc.close();
-    conn.close();
+} catch (SQLException e) {
+    out.println(e.getMessage());
 }
 %>
 

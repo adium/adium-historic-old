@@ -1,28 +1,19 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
-<%@ page import = 'java.io.File' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/meta.jsp $-->
-<!--$Rev: 922 $ $Date$ -->
+<!--$Rev: 930 $ $Date$ -->
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
-
 ResultSet rset = null;
 ResultSet metaSet = null;
 ResultSet infoSet = null;
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");
 Map params = new HashMap();
 
 try {
@@ -172,9 +163,6 @@ try {
 <%
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage());
-} finally {
-    lc.close();
-    conn.close();
 }
 %>
 </body>

@@ -1,6 +1,4 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
-<%@ page import = 'javax.sql.*' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'java.io.File' %>
@@ -8,9 +6,6 @@
 <%@ page import = 'sqllogger.*' %>
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
 
 ResultSet rset = null;
 
@@ -19,9 +14,7 @@ String service = new String();
 String username = new String();
 int meta_id;
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-update");
 Map params = new HashMap();
 
 meta_id = Util.checkInt(request.getParameter("meta_id"));
@@ -95,7 +88,5 @@ try {
 <%
 } catch (SQLException e) {
     out.println("<br />" + e.getMessage());
-} finally {
-    conn.close();
 }
 %>

@@ -1,11 +1,9 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
 <%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/defrag.jsp $-->
-<!--$Rev: 920 $ $Date$ -->
+<!--$Rev: 930 $ $Date$ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
