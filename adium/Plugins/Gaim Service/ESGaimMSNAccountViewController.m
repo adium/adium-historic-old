@@ -5,6 +5,7 @@
 //  Created by Evan Schoenberg on Sun Dec 28 2003.
 
 #import "ESGaimMSNAccountViewController.h"
+#import "ESGaimMSNAccount.h"
 
 @implementation ESGaimMSNAccountViewController
 
@@ -22,6 +23,9 @@
     if(friendlyName){
         [textField_friendlyName setStringValue:friendlyName];
     }
+	
+	BOOL HTTPConnect = [[account preferenceForKey:KEY_MSN_HTTP_CONNECT_METHOD group:GROUP_ACCOUNT_STATUS] boolValue];
+	[checkBox_HTTPConnectMethod setState:HTTPConnect];
 }
 
 //Save changes made to a preference control
@@ -34,6 +38,17 @@
         [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
         
     }
+}
+
+- (IBAction)changedConnectionPreference:(id)sender
+{
+	[super changedConnectionPreference:sender];
+	
+	if (sender == checkBox_HTTPConnectMethod){
+		[account setPreference:[NSNumber numberWithBool:[sender state]] 
+						forKey:@"MSN:HTTP Connect Method"
+						 group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 @end
