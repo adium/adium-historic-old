@@ -230,7 +230,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		}
 */
 		//Update Adium 0.8svn saved states -- VERY TEMPORARY!
-		[self _upgradeSVNSavedStatesToCurrent];
+		[self upgradeSVNSavedStatesToCurrent];
 			
 		//Upgrade Adium 0.7x away messages
 		[self _upgradeSavedAwaysToSavedStates];
