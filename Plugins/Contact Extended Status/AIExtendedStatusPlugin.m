@@ -18,6 +18,8 @@
 - (void)installPlugin
 {
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
+	
+	whitespaceAndNewlineCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -46,8 +48,8 @@
 		int				idle;
 		
 		if (showStatus){
-			statusMessage = [[[[inObject statusObjectForKey:@"StatusMessage"] string] mutableCopy] autorelease];
-			
+			statusMessage = [[[[[inObject statusObjectForKey:@"StatusMessage"] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
+				
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
 			if([statusMessage length] > STATUS_MAX_LENGTH){
 				[statusMessage deleteCharactersInRange:NSMakeRange(STATUS_MAX_LENGTH,

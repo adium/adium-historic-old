@@ -12,6 +12,8 @@
 @interface AIExtendedStatusPlugin : AIPlugin <AIListObjectObserver> {
 	BOOL	showIdle;
 	BOOL	showStatus;
+	
+	NSCharacterSet	*whitespaceAndNewlineCharacterSet;
 }
 
 - (NSString *)idleStringForSeconds:(int)seconds;
