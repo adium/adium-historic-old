@@ -113,9 +113,9 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 {
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
-    NSView              *accountView;
-    BOOL                autoConnect;
-    int                 selectedTabIndex = -1;
+    NSView			*accountView;
+    BOOL			autoConnect;
+    int				selectedTabIndex = -1;
     
     //Remove any tabs
     if([tabView_auxilary selectedTabViewItem]){
@@ -347,6 +347,7 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 		
     }else{
         [button_deleteAccount setEnabled:NO];
+		[popupMenu_serviceList setEnabled:NO];
     }
 }
 
