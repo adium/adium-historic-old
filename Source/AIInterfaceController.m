@@ -521,11 +521,11 @@
 - (void)_resortAllChats
 {
 	AISortController	*sortController = [[adium contactController] activeSortController];
-	NSEnumerator		*containerEnumerator = [[interfacePlugin openContainers] objectEnumerator];
+	NSEnumerator		*containerEnumerator = [[[interfacePlugin openContainers] copy] autorelease] objectEnumerator];
 	NSString			*containerID;
 	
 	while(containerID = [containerEnumerator nextObject]){
-		NSArray			*chatsInContainer = [self openChatsInContainerWithID:containerID];
+		NSArray			*chatsInContainer;
 		NSArray  		*listObjects;
 		NSArray			*sortedListObjects;
 		NSEnumerator	*objectEnumerator;
@@ -533,7 +533,8 @@
 		int				index = 0;
 		
 		//Sort the chats in this container
-		listObjects = [self _listObjectsForChatsInContainerWithID:containerID];
+		chatsInContainer = [[[self openChatsInContainerWithID:containerID] copy] autorelease];
+		listObjects = [[[self _listObjectsForChatsInContainerWithID:containerID] copy] autorelease];
 		sortedListObjects = [sortController sortListObjects:listObjects];
 		
 		//Sync the container with the sorted chats
@@ -546,8 +547,6 @@
 			while((chat = [chatEnumerator nextObject]) && [chat listObject] != object);
 			
 			//Move that chat to the correct spot, and step along to the next listobject
-#warning Can this modify any of the arrays or sets we are currently enumerating? -eds
-			//See http://www.visualdistortion.org/crash/view.jsp?crash=68395 for example...
 			if(chat) [interfacePlugin moveChat:chat toContainerWithID:containerID index:index++];
 		}
 	}
