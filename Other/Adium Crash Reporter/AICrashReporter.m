@@ -35,27 +35,23 @@
 //
 - (id)init
 {
-    [super init];
-	
-	slayerScript = [[NSAppleScript alloc] initWithSource:@"tell application \"UserNotificationCenter\" to quit"];
-	crashLog = nil;
-	buildUser = nil;
-	buildDate = nil;
-	buildNumber = nil;
-	
-    return(self);
+    if((self = [super init])) {
+		slayerScript = [[NSAppleScript alloc] initWithSource:@"tell application \"UserNotificationCenter\" to quit"];
+	}
+
+    return self;
 } 
 
 //
 - (void)dealloc
 {
-    
-    [buildUser release];
-    [buildDate release];
-    [buildNumber release];
-    [crashLog release];
+	[buildUser release];
+	[buildDate release];
+	[buildNumber release];
+	[crashLog release];
 	[slayerScript release];
-    [super dealloc];
+
+	[super dealloc];
 }
 
 //
