@@ -131,6 +131,7 @@
     
     //Refresh our view
     [self updateAccountList];
+    [self tableViewSelectionDidChange:nil];
 }
 
 //The properties of our account changed
@@ -429,6 +430,17 @@
     }else{
         return(NO);
     }
+}
+
+- (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+    NSResponder	*existingResponder = [[tabView window] firstResponder];
+    
+    //Take focus away from any controls to ensure that they register changes and save
+    [[tabView window] makeFirstResponder:tabView];
+
+    //Put focus back
+    [[tabView window] makeFirstResponder:existingResponder];
 }
 
 @end
