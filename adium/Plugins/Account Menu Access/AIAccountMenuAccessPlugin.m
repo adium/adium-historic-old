@@ -39,6 +39,10 @@
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [[adium contactController] registerListObjectObserver:self];
     
     accountMenuArray = [[NSMutableArray alloc] init];
@@ -76,6 +80,21 @@
     }
     
     return(nil);
+}
+
+//
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
+    
+    if([group compare:GROUP_ACCOUNT_STATUS] == 0){
+		AIAccount	*account = [notification object];
+		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
+		
+		if(account && [key compare:@"AutoConnect"] == 0){
+			[self updateMenuForAccount:account];
+		}
+    }
 }
 
 
