@@ -127,13 +127,21 @@
     AIListContact	*listContact;
 	NSString		*contactName, *statusMessage;
 	NSDate			*idleSinceDate;
+	NSImage			*contactImage;
 	
     listContact = [[adium contactController] contactWithService:service
 												 account:self
 													 UID:[contact uniqueID]];  
-	
-	[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
 
+	if (![listContact remoteGroupName]){
+		[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
+	}
+
+	//We only get state change updates on Online contacts
+	if (![listContact online]){
+		[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+	}
+	
 	switch ([contact status]) {
 		case AWEzvAway:
 			if (![listContact integerStatusObjectForKey:@"Away"]){
@@ -143,8 +151,8 @@
 		case AWEzvOnline:
 		case AWEzvIdle:
 		default:
-			if (![listContact online]){
-				[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+			if ([listContact integerStatusObjectForKey:@"Away"]){
+				[listContact setStatusObject:nil forKey:@"Away" notify:NO];
 			}
 	}
 	
@@ -158,7 +166,7 @@
 	}
 	
     if (statusMessage = [contact statusMessage]){
-		NSString	*oldStatusMessage = [listContact stringFromAttributedStatusObjectForKey:@"StatusMessage"];
+		NSString	*oldStatusMessage = [listContact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"];
 		
 		if (!oldStatusMessage || ![oldStatusMessage isEqualToString:statusMessage]){
 			[listContact setStatusObject:[[[NSAttributedString alloc] initWithString:statusMessage] autorelease]
@@ -169,7 +177,10 @@
 		[listContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
 	}
 	
-    [listContact setStatusObject:[contact contactImage] forKey:KEY_USER_ICON notify:NO];
+	contactImage = [contact contactImage];
+	if(contactImage != [listContact userIcon]){
+		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NO];
+	}
 
     //The Rendezvous UID is useless; we'll use the contact alias as the formatted UID
 	contactName = [contact name];
@@ -306,7 +317,7 @@
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-    if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
+    if([inType isEqualToString:CONTENT_MESSAGE_TYPE] && [self online]){
 		return(YES);
     }
     
@@ -383,17 +394,17 @@
 	
 	if (!supportedPropertyKeys)
 		supportedPropertyKeys = [[NSArray alloc] initWithObjects:
-        @"Display Name",
-        @"Online",
-        @"Offline",
-	@"IdleSince",
-	@"IdleManuallySet",
-	KEY_USER_ICON,
-        @"Away",
-        @"AwayMessage",
-//      @"TextProfile",
-//      @"DefaultUserIconFilename",
-        nil];
+			@"Display Name",
+			@"Online",
+			@"Offline",
+			@"IdleSince",
+			@"IdleManuallySet",
+			KEY_USER_ICON,
+			@"Away",
+			@"AwayMessage",
+			//      @"TextProfile",
+			//      @"DefaultUserIconFilename",
+			nil];
 	
 	return supportedPropertyKeys;
 }
