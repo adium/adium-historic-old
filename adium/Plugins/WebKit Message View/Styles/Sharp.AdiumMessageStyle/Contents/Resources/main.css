@@ -1,0 +1,63 @@
+@import url(layout.css);
+
+.name {
+	font: bold 16px Cochin;
+	text-shadow: 2px 2px 3px gray;
+}
+
+.timestamp {
+	font: normal 12px "American Typewriter";
+}
+
+.nofocus {
+	border: 1px dotted #D8D8D8;
+	border-bottom-style: none;
+	background-color: rgba(255,255,255,0.8);
+	color: gray;
+}
+
+.focus .container {
+	border-left: 1px dotted #A6A6A6;
+}
+
+.incoming .focus {
+	background-color: rgba(230,233,242,0.8);
+	border: 1px solid #98A5CB;
+}
+
+.incoming .name {
+	color: #1A2A59;
+}
+
+.incoming .timestamp {
+	color: #46578C;
+}
+
+.outgoing .focus {
+	background-color: rgba(231,242,231,0.8);
+	border: 1px solid #99CC99;
+}
+
+.outgoing .name {
+	color: #1B5A1B;
+}
+
+.outgoing .timestamp {
+	color: #468C46;
+}
+
+.context .focus {
+	background-color: rgba(0,0,0,0.05);
+	border: 1px dotted #D8D8D8;
+	color: gray;
+}
+
+.context .name, .context .timestamp {
+	color: gray;
+	text-shadow: none;
+}
+
+.status_container {
+	color:  gray;
+	font: 12px "American Typewriter";
+}
