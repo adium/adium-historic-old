@@ -17,14 +17,13 @@
 @implementation NEHGamePlugin
 
 static NSMenuItem		* menuItem_newGame;
-static NSMenuItem		* menuItem_invite;
-static NSMenu			* menu_Games;
+static NSMenuItem		*menuItem_invite;
+static NSMenu			*menu_Games;
 
 - (void)installPlugin
 {
 	//Initialize the global menus
-	if(menu_Games == nil)
-	{
+	if(menu_Games == nil) {
 		menu_Games = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 		
 		menuItem_newGame = [[[NSMenuItem alloc] initWithTitle:MENU_NEWGAME
@@ -46,10 +45,8 @@ static NSMenu			* menu_Games;
 							target:self action:@selector(newGame:) keyEquivalent:@""] autorelease];
 	[menu_Games addItem:menuItem_game];					
 	
-	[NSBundle loadNibNamed:[self nibName] owner:self];
 	
-	windowController = [[NSWindowController alloc] initWithWindow:window_newGame];
-	[window_newGame setWindowController:windowController];
+	windowController = nil;
 	
 	gamesForAccounts = [[NSMutableDictionary alloc] init];
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
@@ -57,9 +54,9 @@ static NSMenu			* menu_Games;
 
 - (void)uninstallPlugin
 {
-	[prefixString release];
-	[gamesForAccounts release];
-	[windowController release];
+	[prefixString release]; prefixString = nil;
+	[gamesForAccounts release]; gamesForAccounts = nil;
+	[windowController release]; windowController = nil;
 //	[[adium contentController] unregisterIncomingContentFilter:self];
 }
 
@@ -71,15 +68,18 @@ static NSMenu			* menu_Games;
 
 - (IBAction)newGame: (id)sender
 {
+	[self ensureGameNibIsLoaded];
+	
+	NSEnumerator		*enumerator;
+    AIListContact		*contact;
+
+	//Autofill the contact field is a contact is currently selected
 	AIListObject   *selectedContact = [[adium contactController] selectedListObject];
 	if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]])
 		[textField_handle setStringValue:[selectedContact UID]];
 	
 	[windowController showWindow:nil];
-	
-	NSEnumerator		*enumerator;
-    AIListContact		*contact;
-    
+	    
     //Configure the auto-complete view
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
     while((contact = [enumerator nextObject])){
@@ -96,12 +96,24 @@ static NSMenu			* menu_Games;
 	}
 }
 
+- (void)ensureGameNibIsLoaded
+{
+	if (!window_newGame){
+		[NSBundle loadNibNamed:[self nibName] owner:self];
+		
+		windowController = [[NSWindowController alloc] initWithWindow:window_newGame];
+		[window_newGame setWindowController:windowController];
+	}
+}
+
 - (IBAction)selectAccount:(id)sender
 {
 }
 
 - (IBAction)sendInvite:(id)sender
 {
+	[self ensureGameNibIsLoaded];
+	
 	[windowController close]; 
 	
     NSString		*UID;
@@ -117,29 +129,33 @@ static NSMenu			* menu_Games;
     //Find the contact
 	contact = [[adium contactController] contactWithService:[serviceType identifier] accountID:[account uniqueObjectID] UID:UID];
 	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
-	if(contacts == nil)
-	{
+	if(contacts == nil) {
 		contacts = [[[NSMutableDictionary alloc] init] autorelease];
 		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
 	}
-	if(contact && [contacts objectForKey:[contact uniqueObjectID]])
-	{
+	
+	if(contact && [contacts objectForKey:[contact uniqueObjectID]]) {
 		NSBeep();
 		return;
 		//TODO: Put an error message here, perhaps
 	}
 	
     if(contact){
-		int play = [[radio_playAs selectedCell] tag];
-		if(play == TAG_CHOOSE_PLAYER) play = rand()%2?TAG_PLAYER_1:TAG_PLAYER_2;
-		int playAs = (play == TAG_PLAYER_1)?FIRST_PLAYER:SECOND_PLAYER;
-		NEHGameController * control = [self newController];
+		NEHGameController   *control;
+		int play, playAs;
+		
+		play = [[radio_playAs selectedCell] tag];
+		if(play == TAG_CHOOSE_PLAYER){
+			play = (rand()%2 ? TAG_PLAYER_1: TAG_PLAYER_2);
+		}
+		
+		playAs = ((play == TAG_PLAYER_1) ? FIRST_PLAYER : SECOND_PLAYER);
+		
+		control = [self newController];
 		[self willSendInvitation:control];
 		[control sendInvitation:playAs account:account contact:contact];
         [contacts setObject:control	forKey:[contact uniqueObjectID]];
-    }
-	else
-	{
+    } else {
 		NSRunAlertPanel(CONTACT_NOT_FOUND,[NSString stringWithFormat:CONTACT_NOT_FOUND_MESSAGE,[textField_handle stringValue]],BUTTON_ERR,nil,nil);
 	}
 }
@@ -147,61 +163,70 @@ static NSMenu			* menu_Games;
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	if([context isKindOfClass:[AIContentObject class]]){
-		AIContentObject *inobj = context;
-	
-	
-	NSString * str = [inAttributedString string];
-	NSRange start = [str rangeOfString:prefixString];
-	NSRange end = [str rangeOfString:@"]:"];
-	if(start.location != 0 || end.location == NSNotFound)
-		return inAttributedString;
-	NSRange r;
-	r.location = start.length;
-	r.length = end.location - r.location;
-	NSString * type = [str substringWithRange:r];
-	NSString * msg;
-	if([str length] > end.location+end.length)
-		msg = [str substringFromIndex:(end.location+end.length)];
-	else
-		msg = @"";
+		NSString		*str = [inAttributedString string];
+		NSRange			start, end;
 		
-	[inobj setDisplayContent:NO];
-	[inobj setTrackContent:NO];
-	
-	AIListContact   * contact = [inobj source];
-	AIAccount		* account = [inobj destination];
-	
-	NSMutableDictionary * contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
-	if(contacts == nil)
-	{
-		contacts = [[[NSMutableDictionary alloc] init] autorelease];
-		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
-	}
-	NEHGameController * control = [contacts objectForKey:[contact uniqueObjectID]];
-		
-	if([type isEqualToString:MSG_TYPE_INVITE])
-	{
-		if(control != nil)
-		{
-			//We just got an invitation from someone we think we have a game open with
-			//This means, probably, one of two things.
-			//1) We got unsynced with them, and we shouldn't actually have a game open
-			//		and thus ought to start a new game, or
-			//2) The other guy is running multiple instances of Adium, or knows our
-			//		protocol and wants to mess with us :)
-			//It might make sense to drop our game and start a new one here,
-			//but for now we'll just ignore this
-			return inAttributedString;
+		if((((start = [str rangeOfString:prefixString]).location) == 0) &&
+		   (((end = [str rangeOfString:@"]:"]).location) != NSNotFound)){
+			
+			AIContentObject		*inObj = context;
+			NSRange				r;
+			NSString			*type, *msg;
+			AIListContact		*contact;
+			AIAccount			*account;
+			NSMutableDictionary *contacts;
+			NEHGameController   *control;
+			
+			r.location = start.length;
+			r.length = end.location - r.location;
+			
+			type = [str substringWithRange:r];
+			
+			if([str length] > end.location+end.length)
+				msg = [str substringFromIndex:(end.location+end.length)];
+			else
+				msg = @"";
+			
+			[inObj setDisplayContent:NO];
+			[inObj setTrackContent:NO];
+			
+			contact = [inObj source];
+			account = [inObj destination];
+			
+			contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
+			if(!contacts){
+				contacts = [[[NSMutableDictionary alloc] init] autorelease];
+				[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
+			}
+			
+			control = [contacts objectForKey:[contact uniqueObjectID]];
+			
+			if([type isEqualToString:MSG_TYPE_INVITE]) {
+				if(control != nil) {
+					//We just got an invitation from someone we think we have a game open with
+					//This means, probably, one of two things.
+					//1) We got unsynced with them, and we shouldn't actually have a game open
+					//		and thus ought to start a new game, or
+					//2) The other guy is running multiple instances of Adium, or knows our
+					//		protocol and wants to mess with us :)
+					//It might make sense to drop our game and start a new one here,
+					//but for now we'll just ignore this
+					return inAttributedString;
+				}
+				
+				control = [self newController];
+				[control handleInvitation:msg account:account contact:contact];
+				[contacts setObject:control forKey:[contact uniqueObjectID]];
+				
+			} else if(control != nil) { 
+				//We ignore non-invite messages from people with whom we don't have an open game
+				[control handleMessage:msg ofType:type];
+			}
 		}
-		control = [self newController];
-		[control handleInvitation:msg account:account contact:contact];
-		[contacts setObject:control forKey:[contact uniqueObjectID]];
-	}
-	else if(control != nil)		//We ignore non-invite messages from people with whom we don't have an open game
-	{
-		[control handleMessage:msg ofType:type];
-	}
-	}
+	}	
+	
+	//We don't change the attributed string
+	//though we may have set the content object not to display or track anymore
 	return inAttributedString;	
 }
 
@@ -225,6 +250,7 @@ static NSMenu			* menu_Games;
 //First, things subclasses absolutely must implement for this contraption to work at all
 - (NEHGameController*)newController
 {
+	[self ensureGameNibIsLoaded];
 	return nil;
 }
 
