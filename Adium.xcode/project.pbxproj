@@ -4482,6 +4482,36 @@
 			settings = {
 			};
 		};
+		349E2E8B07A8AF0C00EAB76A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIEmoticonPackPreviewController.h;
+			path = plugins/emoticons/AIEmoticonPackPreviewController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349E2E8C07A8AF0C00EAB76A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIEmoticonPackPreviewController.m;
+			path = plugins/emoticons/AIEmoticonPackPreviewController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349E2E8D07A8AF0C00EAB76A = {
+			fileRef = 349E2E8B07A8AF0C00EAB76A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349E2E8E07A8AF0C00EAB76A = {
+			fileRef = 349E2E8C07A8AF0C00EAB76A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		349E602307543E17008ACCED = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -6290,7 +6320,6 @@
 				4BD6742106001CF20049CAF7,
 				4BD6742306001CF30049CAF7,
 				4BD6742706001D1A0049CAF7,
-				4BD6742906001D1B0049CAF7,
 				4BD6742B06001D1B0049CAF7,
 				4BD6742D06001D1C0049CAF7,
 				4BD6743206001D1F0049CAF7,
@@ -6420,6 +6449,8 @@
 				4B7A567A07A1754400BDC540,
 				34DFF5FC07A63DB100B92233,
 				34DFFEBB07A76E0100B92233,
+				349E2E8D07A8AF0C00EAB76A,
+				34C14CD207A8B1AB003CC138,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6763,6 +6794,7 @@
 				34DFF54607A62EB200B92233,
 				34DFF54707A62EB300B92233,
 				34DFF54807A62EB300B92233,
+				34C14D5107A8BA00003CC138,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6889,7 +6921,6 @@
 				4BD6742206001CF30049CAF7,
 				4BD6742406001CF30049CAF7,
 				4BD6742806001D1A0049CAF7,
-				4BD6742A06001D1B0049CAF7,
 				4BD6742C06001D1C0049CAF7,
 				4BD6742E06001D1D0049CAF7,
 				4BD6743306001D200049CAF7,
@@ -7019,6 +7050,8 @@
 				4B7A567B07A1754400BDC540,
 				34DFF5FD07A63DB400B92233,
 				34DFFEBC07A76E0100B92233,
+				349E2E8E07A8AF0C00EAB76A,
+				34C14CD307A8B1AB003CC138,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7950,6 +7983,50 @@
 			path = "Adium 1.6 Pref Importer.app";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34C14CD007A8B1AB003CC138 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIEmoticonPackPreviewView.h;
+			path = Plugins/Emoticons/AIEmoticonPackPreviewView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C14CD107A8B1AB003CC138 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIEmoticonPackPreviewView.m;
+			path = Plugins/Emoticons/AIEmoticonPackPreviewView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C14CD207A8B1AB003CC138 = {
+			fileRef = 34C14CD007A8B1AB003CC138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C14CD307A8B1AB003CC138 = {
+			fileRef = 34C14CD107A8B1AB003CC138;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C14D5007A8BA00003CC138 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = EmoticonPackPreview.nib;
+			path = Plugins/Emoticons/EmoticonPackPreview.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C14D5107A8BA00003CC138 = {
+			fileRef = 34C14D5007A8BA00003CC138;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34C1889A06CAB35D00FF5FF9 = {
 			fileEncoding = 30;
@@ -12920,24 +12997,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B584E06055DD6A000E89D48 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIEmoticonPackCell.h;
-			path = Plugins/Emoticons/AIEmoticonPackCell.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B584E07055DD6A000E89D48 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIEmoticonPackCell.m;
-			path = Plugins/Emoticons/AIEmoticonPackCell.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B5AAA1F03E02EB900A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -13252,12 +13311,15 @@
 		};
 		4B737B4B065D4FDC0062AB94 = {
 			children = (
+				34C14CD007A8B1AB003CC138,
+				34C14CD107A8B1AB003CC138,
+				349E2E8B07A8AF0C00EAB76A,
+				349E2E8C07A8AF0C00EAB76A,
 				F5F0FE9C04B12CAC01A80106,
 				F5F0FE9D04B12CAC01A80106,
-				4B584E06055DD6A000E89D48,
-				4B584E07055DD6A000E89D48,
 				F5F0FEA004B1336C01A80106,
 				F5F0FEA204B133AB01A80106,
+				34C14D5007A8BA00003CC138,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -16751,18 +16813,6 @@
 		};
 		4BD6742806001D1A0049CAF7 = {
 			fileRef = 3C73F83F04D62A2900A80106;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6742906001D1B0049CAF7 = {
-			fileRef = 4B584E06055DD6A000E89D48;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6742A06001D1B0049CAF7 = {
-			fileRef = 4B584E07055DD6A000E89D48;
 			isa = PBXBuildFile;
 			settings = {
 			};
