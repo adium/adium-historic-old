@@ -26,8 +26,13 @@
 @class JSCEventBezelPreferences;
 
 @interface JSCEventBezelPlugin : AIPlugin {
-    JSCEventBezelController *ebc;
-    JSCEventBezelPreferences *preferences;
+    JSCEventBezelController     *ebc;
+    JSCEventBezelPreferences    *preferences;
+    
+    NSMutableArray              *eventArray;
+    BOOL                        showEventBezel;
+    int                         buddyNameFormat;
+    int                         eventBezelPosition;
 }
 
 - (NSString *)stringWithoutWhitespace:(NSString *)sourceString;
