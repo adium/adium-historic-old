@@ -121,9 +121,6 @@ typedef enum {
 	NSMutableDictionary			*globalOnlyEventHandlers;
 	NSMutableDictionary			*eventHandlers;
 	NSMutableDictionary			*actionHandlers;
-
-	NSMutableDictionary			*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
-	NSMutableDictionary			*eventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 }
 
 //
@@ -135,6 +132,7 @@ typedef enum {
 - (NSArray *)allEventIDs;
 - (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
 - (NSArray *)arrayOfMenuItemsForEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
+- (NSArray *)sortedArrayOfEventIDsFromArray:(NSArray *)inArray;
 - (NSSet *)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo previouslyPerformedActionIDs:(NSSet *)previouslyPerformedActionIDs;
 - (NSString *)defaultEventID;
 - (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
