@@ -27,6 +27,8 @@
     chat = inChat; //Not retained.  Chats hold onto, and store content.  Content need not hold onto chats.
     outgoing = ([source isKindOfClass:[AIAccount class]]);
     
+    date = [[NSDate date] retain];
+    
     return(self);
 }
 
@@ -48,6 +50,10 @@
 - (id)destination
 {
     return(destination);
+}
+
+- (NSDate *)date{
+    return(date);
 }
 
 //Is this content incoming or outgoing?

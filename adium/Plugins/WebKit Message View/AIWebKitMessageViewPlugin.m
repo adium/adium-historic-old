@@ -35,7 +35,7 @@ DeclareString(AppendNextMessage);
 		
 		styleDictionary = [[NSMutableDictionary alloc] init];
 		[self _loadAvailableWebkitStyles];
-		
+        		
 		//Observe preference changes and set our initial preferences
 		[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 		[self preferencesChanged:nil];
@@ -211,19 +211,20 @@ DeclareString(AppendNextMessage);
 	AIContentStatus *dateSeparator = nil;
 	BOOL			contentIsSimilar = NO;
 	BOOL			shouldShowDateHeader = NO;
+    NSCalendarDate *previousDate = [[previousContent date] dateWithCalendarFormat:nil
+                                                                         timeZone:nil];
+    NSCalendarDate *currentDate = [[content date] dateWithCalendarFormat:nil 
+                                                                timeZone:nil];
+
 
 	// Should we merge consecutive messages?
-	if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
+	if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source] && [currentDate timeIntervalSinceDate:previousDate] <= 300){
 		contentIsSimilar = YES;
 	}
 	
 	if ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
 		if(previousContent) {
 			// Are the messages history lines from different days?
-			NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil
-																									 timeZone:nil];
-			NSCalendarDate *currentDate = [[(AIContentContext *)content date] dateWithCalendarFormat:nil 
-																							timeZone:nil];
 			if( [previousDate dayOfCommonEra] != [currentDate dayOfCommonEra] ) {
 				contentIsSimilar = NO;
 				shouldShowDateHeader = YES;

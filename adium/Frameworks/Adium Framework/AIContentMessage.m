@@ -66,9 +66,8 @@
     
     //Store the date and message
     if(!inDate){
+        [date release];
         date = [[NSDate date] retain];
-    }else{
-        date = [inDate retain];
     }
     message = [inMessage retain];
     autoreply = inAutoreply;
