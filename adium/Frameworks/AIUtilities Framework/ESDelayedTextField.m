@@ -33,8 +33,18 @@
 - (id)_init
 {
 	delayedChangesTimer = nil;
-
+	delayInterval = 0.5;
+	
 	return self;
+}
+
+- (void)setDelayInterval:(float)inInterval
+{
+	delayInterval = inInterval;
+}
+- (float)delayInterval
+{
+	return delayInterval;
 }
 
 - (void)fireImmediately
@@ -61,7 +71,7 @@
         [delayedChangesTimer release]; delayedChangesTimer = nil;
     }
     
-    delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
+    delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:delayInterval
                                                             target:self
                                                           selector:@selector(_delayedAction:) 
                                                           userInfo:nil 

@@ -6,8 +6,12 @@
 
 @interface ESDelayedTextField : NSTextField {
 	NSTimer *delayedChangesTimer;
+	float   delayInterval;
 }
 
 - (void)fireImmediately;
+
+- (void)setDelayInterval:(float)inInterval;
+- (float)delayInterval;
 
 @end
