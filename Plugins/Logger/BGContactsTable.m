@@ -15,79 +15,70 @@
 
 #import "BGContactsTable.h"
 
-@interface BGContactsTable (PRIVATE)
--(void)searchForFrom;
--(void)searchForTo;
-@end
-
 @implementation BGContactsTable
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+//
+- (void)awakeFromNib
 {
-    if([[tableColumn identifier] isEqual:@"spacer"]){
-        return @" ";
-		
-    }else if([[tableColumn identifier] isEqual:@"service"]){
-        return [AIServiceIcons serviceIconForService:[[controller_LogViewer serviceArray] objectAtIndex:row]
-												type:AIServiceIconSmall
-										   direction:AIIconNormal];
-		
-    }else if([[tableColumn identifier] isEqual:@"account"]){
-        return [[controller_LogViewer fromArray] objectAtIndex:row];
-		
-    }else if([[tableColumn identifier] isEqual:@"contact"]){
-        return [[controller_LogViewer toArray] objectAtIndex:row];
-		
-    }else{
-		return @"";
+	showingContacts = YES;
+}
+
+//
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	if(showingContacts){
+        return [[controller_LogViewer toArray] count];
+	}else{
+        return [[controller_LogViewer fromArray] count];
 	}
 }
 
+//
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    if([[tableColumn identifier] isEqual:@"service"]){
+		return(@"");
+        /*return [AIServiceIcons serviceIconForService:[[controller_LogViewer serviceArray] objectAtIndex:row]
+												type:AIServiceIconSmall
+										   direction:AIIconNormal];*/
+		
+    }else if([[tableColumn identifier] isEqual:@"name"]){
+		if(showingContacts){
+			return([[controller_LogViewer toArray] objectAtIndex:row]);
+		}else{
+			return([[controller_LogViewer fromArray] objectAtIndex:row]);
+		}
+
+	}
+}
+
+//
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-    if([[popup_switcherThingie selectedItem] tag] == 0){
-        if([table_contacts selectedRow] != -1){
-            [self searchForTo];
-        }
-        else{
-            [controller_LogViewer resetSearch];
-        }
-    }
-    else{
-        if([table_accounts selectedRow] != -1){
-            [self searchForFrom];
-        }
-        else{
-            [controller_LogViewer resetSearch];
-        }
-    }
+	int selectedRow = [table_filterList selectedRow];
+	
+	if(selectedRow >= 0 && selectedRow < [table_filterList numberOfRows]){
+		if(showingContacts){
+            [controller_LogViewer setSearchString:[[controller_LogViewer toArray] objectAtIndex:selectedRow]
+																						   mode:LOG_SEARCH_TO];
+		}else{
+            [controller_LogViewer setSearchString:[[controller_LogViewer fromArray] objectAtIndex:selectedRow]
+											 mode:LOG_SEARCH_FROM];
+		}
+	}else{
+		[controller_LogViewer resetSearch];
+	}
 }
 
--(IBAction)switchTable:(id)sender
+//Switch the displayed filter
+- (IBAction)switchTable:(id)sender
 {
-    [tabs_hiddenLogSwitch selectTabViewItemAtIndex:[sender tag]];
-    [controller_LogViewer resetSearch];
-}
+	//Update our table
+	showingContacts = ([[popup_filterType selectedItem] tag] == 0);
+	[table_filterList reloadData];
 
--(void)searchForFrom
-{
-    [controller_LogViewer setSearchString:[[controller_LogViewer fromArray] objectAtIndex:[table_accounts selectedRow]] mode:LOG_SEARCH_FROM];
-}
-
--(void)searchForTo
-{
-    [controller_LogViewer setSearchString:[[controller_LogViewer toArray] objectAtIndex:[table_contacts selectedRow]] mode:LOG_SEARCH_TO];
-}
-
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    if(tableView == table_accounts)
-    {
-        return [[controller_LogViewer fromArray] count];
-    }
-    else{
-        return [[controller_LogViewer toArray] count];
-    }
+    //Reset any log searching
+	[controller_LogViewer resetSearch];
 }
 
 @end
