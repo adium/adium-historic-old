@@ -343,7 +343,7 @@
 	if(drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])){
 		//Apple wants us to do some pretty crazy stuff for selections in 10.3
 		//We'll continue to use the old simpler cleaner safer easier method for 10.2
-		if([NSApp isPantherOrBetter]){
+		if([NSApp isOnPantherOrBetter]){
 			NSIndexSet *indices = [self selectedRowIndexes];
 			unsigned int bufSize = [indices count];
 			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
