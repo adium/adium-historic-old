@@ -6,5 +6,11 @@
 	<true/>
 	<key>Lines to Display</key>
 	<integer>5</integer>
+	<key>Display Mode</key>
+	<integer>0</integer>
+	<key>Have Talked Days</key>
+	<integer>7</integer>
+	<key>Have Not Talked Days</key>
+	<integer>7</integer>
 </dict>
 </plist>

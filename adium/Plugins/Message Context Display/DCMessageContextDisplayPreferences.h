@@ -15,8 +15,19 @@
 
 @interface DCMessageContextDisplayPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_showContext;
+	IBOutlet	NSButtonCell	*radioButton_always;
+	IBOutlet	NSButtonCell	*radioButton_haveTalked;
+	IBOutlet	NSButtonCell	*radioButton_haveNotTalked;
+	
+	IBOutlet	NSMatrix		*matrix_radioButtons;
+	
 	IBOutlet	NSTextField		*textField_linesToDisplay;
+	IBOutlet	NSTextField		*textField_haveTalkedDays;
+	IBOutlet	NSTextField		*textField_haveNotTalkedDays;
+	
 	IBOutlet	NSStepper		*stepper_linesToDisplay;
+	IBOutlet	NSStepper		*stepper_haveTalkedDays;
+	IBOutlet	NSStepper		*stepper_haveNotTalkedDays;
 }
 
 - (IBAction)changePreference:(id)sender;

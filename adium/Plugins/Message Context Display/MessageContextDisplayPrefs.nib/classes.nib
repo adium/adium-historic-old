@@ -19,7 +19,15 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_showContext" = NSButton; 
+                "matrix_radioButtons" = NSMatrix; 
+                "radioButton_always" = NSButtonCell; 
+                "radioButton_haveNotTalked" = NSButtonCell; 
+                "radioButton_haveTalked" = NSButtonCell; 
+                "stepper_haveNotTalkedDays" = AISmartStepper; 
+                "stepper_haveTalkedDays" = AISmartStepper; 
                 "stepper_linesToDisplay" = AISmartStepper; 
+                "textField_haveNotTalkedDays" = NSTextField; 
+                "textField_haveTalkedDays" = NSTextField; 
                 "textField_linesToDisplay" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 

@@ -43,10 +43,14 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTEXT_DISPLAY];
     
-    // Set the values of the checkboxes
+    // Set the values of the controls and fields
     [checkBox_showContext setState:[[preferenceDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue]];
 	[textField_linesToDisplay setIntValue:[[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue]];
+	[textField_haveTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue]];
+	[textField_haveNotTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue]];
+	[matrix_radioButtons selectCellAtRow:[[preferenceDict objectForKey:KEY_DISPLAY_MODE] intValue] column:0];
 
+	[self configureControlDimming];
 }
 
 - (IBAction)changePreference:(id)sender
@@ -62,19 +66,70 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
 											 forKey:KEY_DISPLAY_LINES
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
+	} else if( sender == textField_haveTalkedDays ) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_HAVE_TALKED_DAYS
+											  group:PREF_GROUP_CONTEXT_DISPLAY];
+	} else if (sender == textField_haveNotTalkedDays ) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_HAVE_NOT_TALKED_DAYS
+											  group:PREF_GROUP_CONTEXT_DISPLAY];
+	} else if( sender == matrix_radioButtons ) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender selectedRow]]
+											 forKey:KEY_DISPLAY_MODE
+											  group:PREF_GROUP_CONTEXT_DISPLAY];
+		[self configureControlDimming];
 	}
 	
 }
 
 - (void)configureControlDimming
 {
+	
+	int selectedRow = [matrix_radioButtons selectedRow];
+	
 	if( [checkBox_showContext state] ) {
 		[textField_linesToDisplay setEnabled:YES];
 		[stepper_linesToDisplay setEnabled:YES];
+		
+		[textField_haveTalkedDays setEnabled:YES];
+		[stepper_haveTalkedDays setEnabled:YES];
+		[textField_haveNotTalkedDays setEnabled:YES];
+		[stepper_haveNotTalkedDays setEnabled:YES];
+		
+		[matrix_radioButtons setEnabled:YES];
 	}else{
 		[textField_linesToDisplay setEnabled:NO];
 		[stepper_linesToDisplay setEnabled:NO];
+		
+		[textField_haveTalkedDays setEnabled:NO];
+		[stepper_haveTalkedDays setEnabled:NO];
+		[textField_haveNotTalkedDays setEnabled:NO];
+		[stepper_haveNotTalkedDays setEnabled:NO];
+		
+		[matrix_radioButtons setEnabled:NO];
 	}
 	
+	if( [checkBox_showContext state] ) {
+		switch( selectedRow ) {
+			case 0:
+				[textField_haveTalkedDays setEnabled:NO];
+				[stepper_haveTalkedDays setEnabled:NO];
+				[textField_haveNotTalkedDays setEnabled:NO];
+				[stepper_haveNotTalkedDays setEnabled:NO];
+				break;
+			case 1:
+				[textField_haveTalkedDays setEnabled:YES];
+				[stepper_haveTalkedDays setEnabled:YES];
+				[textField_haveNotTalkedDays setEnabled:NO];
+				[stepper_haveNotTalkedDays setEnabled:NO];
+				break;
+			case 2:
+				[textField_haveTalkedDays setEnabled:NO];
+				[stepper_haveTalkedDays setEnabled:NO];
+				[textField_haveNotTalkedDays setEnabled:YES];
+				[stepper_haveNotTalkedDays setEnabled:YES];
+		}
+	}
 }
 @end

@@ -42,6 +42,10 @@
 
 		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTEXT_DISPLAY];
 
+		haveTalkedDays = [[preferenceDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
+		haveNotTalkedDays = [[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
+		displayMode = [[preferenceDict objectForKey:KEY_DISPLAY_MODE] intValue];
+		
 		shouldDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
 		linesToDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue];
 
@@ -170,42 +174,52 @@
 	
 	if( chatDict && shouldDisplay && linesToDisplay > 0 ) {
 		
-		//Max number of lines to display
-		cnt = ([chatDict count] >= linesToDisplay ? linesToDisplay : [chatDict count]);
+		//Check if the history fits the date restrictions
 		
-		//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
-		while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
-						
-			cnt--;
+		NSCalendarDate *mostRecentMessage = [NSDate dateWithNaturalLanguageString:[[chatDict objectForKey:@"1"] objectForKey:@"Date"]];
+		
+		if( displayMode == MODE_ALWAYS ||
+			 (displayMode == MODE_HAVE_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) <= haveTalkedDays ) ||
+			 (displayMode == MODE_HAVE_NOT_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) > haveNotTalkedDays) ) {
 			
-			type = [messageDict objectForKey:@"Type"];
+			//Max number of lines to display
+			cnt = ([chatDict count] >= linesToDisplay ? linesToDisplay : [chatDict count]);
 			
-			//Currently, we only add Message content objects
-			if( [type compare:CONTENT_MESSAGE_TYPE] == 0 ) {
-				message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
+			//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
+			while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
 				
-				NSString *from = [messageDict objectForKey:@"From"];
-				NSString *to = [messageDict objectForKey:@"To"];
+				cnt--;
 				
-				// The other person is always the one we're chatting with right now
-				if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
-					dest = [chat listObject];
-					source = [[adium accountController] accountWithObjectID:from];
-				} else {
-					source = [chat listObject];
-					dest = [[adium accountController] accountWithObjectID:to];
-				}
+				type = [messageDict objectForKey:@"Type"];
 				
-				// Make the message response if all is well
-				if(message && source && dest) {
-					responseContent = [AIContentContext messageInChat:chat
-														   withSource:source
-														  destination:dest
-																 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-															  message:message
-															autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+				//Currently, we only add Message content objects
+				if( [type compare:CONTENT_MESSAGE_TYPE] == 0 ) {
+					message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
 					
-					[[adium contentController] displayContentObject:responseContent];
+					NSString *from = [messageDict objectForKey:@"From"];
+					NSString *to = [messageDict objectForKey:@"To"];
+					
+					// The other person is always the one we're chatting with right now
+					if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
+						dest = [chat listObject];
+						source = [[adium accountController] accountWithObjectID:from];
+					} else {
+						source = [chat listObject];
+						dest = [[adium accountController] accountWithObjectID:to];
+					}
+					
+					// Make the message response if all is well
+					if(message && source && dest) {
+						responseContent = [AIContentContext messageInChat:chat
+															   withSource:source
+															  destination:dest
+																	 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+																  message:message
+																autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+						
+						[[adium contentController] displayContentObject:responseContent];
+					}
+					
 				}
 				
 			}
