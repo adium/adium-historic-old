@@ -63,9 +63,6 @@
 - (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
-- (void)setDefaultTypingAttributes:(NSDictionary *)dict;
-- (NSDictionary *)defaultTypingAttributes;
-- (void)resetToDefaultTypingAttributes;
 - (BOOL)availableForSending;
 - (AIChat *)chat;
 @end
