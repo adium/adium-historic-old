@@ -271,14 +271,9 @@
 			
 			if (listObject){
 				//Apply the image at lowest priority
-				[[listObject displayArrayForKey:KEY_USER_ICON] setObject:image 
-															   withOwner:self
-														   priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
-
-				//Notify
-				[[adium contactController] listObjectAttributesChanged:listObject
-														  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];	
-				
+				[listObject setDisplayUserIcon:image
+									 withOwner:self
+								 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
 			}
 			
 			//No further need for the dictionary entry
