@@ -27,7 +27,7 @@
     NSString			*serverDisplayName;
     NSAttributedString	*entry = nil;
 	
-    //Get the client
+    //Get the server display name
     serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
     
     //Return the correct string
@@ -37,6 +37,5 @@
 	
     return([entry autorelease]);
 }
-
 
 @end
