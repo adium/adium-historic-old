@@ -132,6 +132,11 @@
 	return (uniqueChatID);
 }
 
++ (NSString *)uniqueChatIDForChatWithName:(NSString *)name onAccount:(AIAccount *)account
+{
+	return [NSString stringWithFormat:@"%@.%@",name,[account uniqueObjectID]];
+}
+
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
 //Return our array of content objects
