@@ -121,14 +121,26 @@
 
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-//    NSLog(@"accountNewBuddy (%s)", buddy->name);
+    //NSLog(@"accountNewBuddy (%s)", buddy->name);
+    
+    
+     GaimGroup   *group = gaim_find_buddys_group(buddy); //get the group
+    NSString    *groupName;
+    if (group)
+        groupName = [NSString stringWithCString:(group->name)];
+    else
+        groupName = NO_GROUP;
+    
+    
     AIHandle *handle = [AIHandle
         handleWithServiceID:[self serviceID]
         UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
-        serverGroup:NO_GROUP
+        serverGroup:groupName
         temporary:NO
         forAccount:self];
     [handleDict setObject:handle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
+    
+    //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [handle retain];
     [[handle statusDictionary] setObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy"];
 }
@@ -338,7 +350,7 @@
 //The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
 {
-    NSLog(@"request received");
+    NSLog(@"file transfer request received");
     ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
     
     [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
@@ -406,7 +418,7 @@
 //Accept a send or receive ESFileTransfer object, beginning the transfer.  Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
-    NSLog(@"accept");
+    NSLog(@"accept file transfer");
     GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
  
     //gaim takes responsibility for freeing cFilename at a later date
@@ -734,12 +746,14 @@
 // Returns YES if the list is editable
 - (BOOL)contactListEditable
 {
-    return NO;
+    return YES;
 }
 
 // Add a handle to this account
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 {
+    NSLog(@"****\ncalling addHandleWithUID for %@ %@ %i",inUID,inGroup,inTemporary);
+    
     AIHandle	*handle;
     
     if(inTemporary) inGroup = @"__Strangers";    
@@ -752,14 +766,32 @@
     
     //Create the handle
     handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+    NSString    *handleUID = [handle UID];
+    NSString    *handleServerGroup = [handle serverGroup];
     
     //Add the handle
-    //[self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
-    [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+    GaimBuddy *buddy = gaim_find_buddy(account,[handleUID UTF8String]); //see if the account somehow already has the buddy
+    if (buddy == NULL) {                                            //it really should not have the buddy already
+        NSLog(@"Creating a new buddy");
+        buddy = gaim_buddy_new(account,[handleUID UTF8String],NULL);    //so create a buddy
+    }
+    GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]);       //get the GaimGroup
+    if (group == NULL) {                                            //if the group doesn't exist yet
+        NSLog(@"Creating a new group");
+        group = gaim_group_new([handleServerGroup UTF8String]);               //create the GaimGroup
+    }
+
+    gaim_blist_add_buddy(buddy,NULL,group,NULL);                    //and add the buddy serverside
+
+    [handleDict setObject:handle forKey:[handle UID]];              //Add it locally
+
+    //From TOC2
     //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
     
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
+    
+    [self accountUpdateBuddy:buddy];
     
     return(handle);
 }
@@ -767,23 +799,43 @@
 // Remove a handle from this account
 - (BOOL)removeHandleWithUID:(NSString *)inUID
 {
-    return NO;
+    GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]); //get the GaimBuddy
+    if (buddy !=  NULL) {                                           //if we find the GaimBuddy
+        gaim_blist_remove_buddy(buddy);                             //remove it from the list serverside
+        NSLog(@"removed %@",inUID);
+        return YES;
+    } else 
+        return NO;
 }
 
 // Add a group to this account
 - (BOOL)addServerGroup:(NSString *)inGroup
 {
+    GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
+    gaim_blist_add_group(group,NULL);                           //add it serverside
+    NSLog(@"added group %@",inGroup);
     return NO;
 }
 // Remove a group
 - (BOOL)removeServerGroup:(NSString *)inGroup
 {
-    return NO;
+    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
+    if (group != NULL) {                                        //if we find the GaimGroup
+        gaim_blist_remove_group(group);                         //remove it from the list serverside
+        NSLog(@"remove group %@",inGroup);
+        return YES;
+    } else
+        return NO;
 }
 // Rename a group
 - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
 {
-    return NO;
+    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
+    if (group != NULL) {                                        //if we find the GaimGroup
+        gaim_blist_rename_group(group, [newName UTF8String]);
+        return YES;
+    } else
+        return NO;
 }
 
 - (void)displayError:(NSString *)errorDesc

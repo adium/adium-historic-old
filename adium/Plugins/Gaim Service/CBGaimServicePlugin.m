@@ -131,7 +131,7 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
     NSCAssert(node != nil, @"BlistRemove on null node");
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
         GaimBuddy *buddy = (GaimBuddy*) node;
-        [accountLookup(buddy->account) accountUpdateBuddy:buddy];
+        [accountLookup(buddy->account) accountRemoveBuddy:buddy];
     }
 }
 
