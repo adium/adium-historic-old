@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.57 2004/04/17 11:36:45 the_tick Exp $
+$Id: ToDoList.txt,v 1.58 2004/04/17 12:03:55 the_tick Exp $
 
 Legend
 + Change or Addition
@@ -45,6 +45,8 @@ Bugs
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
 -------------------------------------------------------------------------------------------------------
+* Adium may be requiring itunes to be installed to launch. Some users just hate itunes. :D 
+		Tick: http://www.versiontracker.com/php/feedback/article.php?story=20040416164938958
 * Tooltips are flashing when the contact list auto-resizes?
 * Empty groups come back on next launch after being deleted?
 * Unicode (German) messages not working over ICQ ?
