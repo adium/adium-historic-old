@@ -16,6 +16,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+
+#define	KEY_EMOTICON_PACK_PATH	@"EmoticonPackPath"
+#define KEY_EMOTICON_PACK_CONTENTS	@"EmoticonPackContents"
+
 @protocol AIContentFilter;
 
 @interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
