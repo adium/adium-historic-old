@@ -125,4 +125,9 @@
     return([NSString stringWithFormat:@"%@ (%@)", [[path lastPathComponent] stringByDeletingPathExtension], [[self textEquivalents] objectAtIndex:0]]);
 }
 
+- (NSComparisonResult)compare:(AIEmoticon *)otherEmoticon
+{
+	return([name caseInsensitiveCompare:[otherEmoticon name]]);
+}
+
 @end

@@ -159,6 +159,9 @@
 			default: break;
 		}
 	}
+	
+	//Sort the emoticons in this pack using the AIEmoticon compare: selector
+	[emoticonArray sortUsingSelector:@selector(compare:)];
 }
 
 //Adium version 1 emoticon pack
