@@ -40,8 +40,6 @@
     [[adium contactController] addContactInfoView:contactView];
     [popUp_voice addItemsWithTitles:[[adium soundController] voices]];
  */
-    
-    observingContent = NO;
     lastSenderString = nil;
 	
     //Observer preference changes
@@ -60,142 +58,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	speechEnabled = [[prefDict objectForKey:KEY_ANNOUNCER_ENABLED] boolValue];
-	speakOutgoing = [[prefDict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
-	speakIncoming = [[prefDict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
-	speakMessages = speakOutgoing || speakIncoming;
-	
-	speakMessageText = [[prefDict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue];
-	speakStatus = [[prefDict objectForKey:KEY_ANNOUNCER_STATUS] boolValue];
-	
 	speakTime = [[prefDict objectForKey:KEY_ANNOUNCER_TIME] boolValue];
 	speakSender = [[prefDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
-	
-	BOOL	newValue = ((speakMessages || speakStatus) && speechEnabled);
-	
-	if(newValue != observingContent){
-		observingContent = newValue;
-		
-		if(!observingContent){ //Stop Observing
-			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-		}else{ //Start Observing
-			[[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
-		}
-	}
-}
-
-- (void)contentObjectAdded:(NSNotification *)notification
-{
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
-	
-    AIChat			*chat = nil;
-    NSString		*message = nil;
-    AIAccount		*account = nil;
-    AIListObject	*source = nil;
-    NSCalendarDate	*date = nil;
-    NSString		*dateString = nil;
-    NSMutableString	*theMessage = nil;
-	
-
-	if(speechEnabled && [content trackContent]){
-		//Message Content
-		if(speakMessages && ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE])){
-			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
-			chat	= [notification object];
-			account	= [chat account];
-			source	= [content source];
-			message = [[[content message] safeString] string];
-			
-			
-			if(account && source){ //valid message
-				//Determine some basic info about the content
-				BOOL isOutgoing = [content isOutgoing];
-				BOOL newParagraph = NO;
-				if ((isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming)){
-					
-					theMessage = [NSMutableString string];
-					
-					if(speakSender && !isOutgoing) {
-						NSString	*senderString;
-
-						//Get the sender string
-						senderString = [source displayName];
-						
-						if(!lastSenderString || ![senderString isEqualToString:lastSenderString]){
-							NSMutableString		*senderStringToSpeak;
-							
-							[lastSenderString release]; lastSenderString = [senderString retain];
-							
-							senderStringToSpeak = [senderString mutableCopy];
-							[senderStringToSpeak replaceOccurrencesOfString:@" " 
-																 withString:@" [[emph -]] " 
-																	options:NSCaseInsensitiveSearch
-																	  range:NSMakeRange(0, [senderStringToSpeak length])]; //deemphasize all words after first in sender's name
-							[theMessage appendFormat:@"[[emph +]] %@...",senderStringToSpeak]; //emphasize first word in sender's name
-							newParagraph = YES;
-							
-							[senderStringToSpeak release];
-						}
-					}
-					
-					if(speakTime){
-						dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
-						[theMessage appendFormat:@" %@...",dateString];
-					}
-					
-					if(newParagraph){
-						[theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
-					}
-					
-					if(speakMessageText){
-						[theMessage appendFormat:@" %@",message];
-					}
-				}
-			}
-		} else if(speakStatus && ([[content type] isEqualToString:CONTENT_STATUS_TYPE])){
-			account	= [chat account];
-			source	= [content source];
-
-
-			if(account && source){
-
-				theMessage = [NSMutableString string];
-
-				message = [[[content message] safeString] string];
-				date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
-				chat = [notification object];
-				
-				if (speakTime) {
-					dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
-					[theMessage appendFormat:@" %@...",dateString];
-				}
-				[theMessage appendFormat:@" %@",message];
-			}
-		}
-		
-		//Speak the message
-		if(theMessage != nil){
-			AIListObject	*otherPerson = [chat listObject];
-			if (otherPerson) { //one-on-one chat; check for and use custom settings
-				NSString	*voice = nil;
-				NSNumber	*pitchNumber = nil;	float pitch = 0;
-				NSNumber	*rateNumber = nil;	int rate = 0;
-				voice = [otherPerson preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
-				
-				pitchNumber = [otherPerson preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER];
-				if(pitchNumber)
-					pitch = [pitchNumber floatValue];
-				
-				rateNumber = [otherPerson preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER];
-				if(rateNumber)
-					rate = [rateNumber intValue];
-				
-				[[adium soundController] speakText:theMessage withVoice:voice andPitch:pitch andRate:rate];
-			} else { //must be in a chat room - just speak the message
-				[[adium soundController] speakText:theMessage];
-			}
-		}
-	}
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
@@ -207,21 +71,21 @@
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
-    voice = [activeListObject preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER  ignoreInheritedValues:YES];
+    voice = [activeListObject preferenceForKey:KEY_VOICE_STRING group:PREF_GROUP_ANNOUNCER  ignoreInheritedValues:YES];
     if(voice) {
         [popUp_voice selectItemWithTitle:voice];
     } else {
         [popUp_voice selectItemAtIndex:0]; //"Default"
     }
 	
-    pitchNumber = [activeListObject preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
+    pitchNumber = [activeListObject preferenceForKey:KEY_PITCH group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
     if(pitchNumber) {
 		[slider_pitch setFloatValue:[pitchNumber floatValue]];
     } else {
 		[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
     }
 	
-    rateNumber = [activeListObject preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
+    rateNumber = [activeListObject preferenceForKey:KEY_RATE group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
     if(rateNumber) {
 		[slider_rate setIntValue:[rateNumber intValue]];
     } else {
@@ -236,11 +100,11 @@
 		if ([voice isEqualToString:@"Default"]){
 			voice = nil;
 		}
-		[activeListObject setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
+		[activeListObject setPreference:voice forKey:KEY_VOICE_STRING group:PREF_GROUP_ANNOUNCER];
     } else if (sender == slider_pitch) {
-        [activeListObject setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER];
+        [activeListObject setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:KEY_PITCH group:PREF_GROUP_ANNOUNCER];
     } else if (sender == slider_rate) {
-        [activeListObject setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER];
+        [activeListObject setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:KEY_RATE group:PREF_GROUP_ANNOUNCER];
     }
 }
 
@@ -287,19 +151,133 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSString *textToSpeak = nil;
+	NSString			*textToSpeak = nil;
+	NSString			*timeFormat;
+	
+	timeFormat = (speakTime ?
+				  [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO] :
+				  nil);
 	
 	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
-		textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
-	}else{ /*Speak Event*/
-		textToSpeak = [[adium contactAlertsController] naturalLanguageDescriptionForEventID:eventID
-																				 listObject:listObject
-																				   userInfo:userInfo
-																			 includeSubject:YES];		
-	}
+		NSString	*userText = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 
+		if(timeFormat){
+			NSString	*timeString;
+			
+			timeString = [NSString stringWithFormat:@"%@... ",[[NSDate date] descriptionWithCalendarFormat:timeFormat
+																								  timeZone:nil
+																									locale:nil]];
+			textToSpeak = [timeString stringByAppendingString:userText];
+		}else{
+			textToSpeak = userText;
+		}
+
+		//Clear out the lastSenderString so the next speech event will get tagged with the sender's name
+		[lastSenderString release]; lastSenderString = nil;
+		
+	}else{ /*Speak Event*/	
+		
+		//Handle messages in a custom manner
+		if([actionID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+		   [actionID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
+		   [actionID isEqualToString:CONTENT_MESSAGE_SENT]){
+
+			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
+			AIChat				*chat = [content chat];
+			NSString			*message = [[[content message] safeString] string];
+			AIAccount			*account = [chat account];
+			AIListObject		*source = [content source];
+			BOOL				isOutgoing = [content isOutgoing];
+			BOOL				newParagraph = NO;
+			NSMutableString		*theMessage = [NSMutableString string];
+			
+			if(speakSender && !isOutgoing) {
+				NSString	*senderString;
+				
+				//Get the sender string
+				senderString = [source displayName];
+			
+				//Don't repeat the same sender string for messages twice in a row
+				if(!lastSenderString || ![senderString isEqualToString:lastSenderString]){
+					NSMutableString		*senderStringToSpeak;
+					
+					//Track the sender string before modifications
+					[lastSenderString release]; lastSenderString = [senderString retain];
+					
+					senderStringToSpeak = [senderString mutableCopy];
+					
+					 //deemphasize all words after first in sender's name, approximating human name pronunciation better
+					[senderStringToSpeak replaceOccurrencesOfString:@" " 
+														 withString:@" [[emph -]] " 
+															options:NSCaseInsensitiveSearch
+															  range:NSMakeRange(0, [senderStringToSpeak length])];
+					 //emphasize first word in sender's name
+					[theMessage appendFormat:@"[[emph +]] %@...",senderStringToSpeak];
+					newParagraph = YES;
+					
+					[senderStringToSpeak release];
+				}
+			}
+			
+			//Append the date if desired, after the sender name if that was added
+			if(timeFormat){
+				[theMessage appendFormat:@" %@...",[[content date] descriptionWithCalendarFormat:timeFormat
+																						timeZone:nil
+																						  locale:nil]];
+			}
+			
+			if(newParagraph) [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
+
+			//Finally, append the actual message
+			[theMessage appendFormat:@" %@",message];
+			
+			//theMessage is now the final string which will be passed to the speech engine
+			textToSpeak = theMessage;
+
+		}else{
+			//All non-message events use the normal naturalLanguageDescription methods, optionally prepending
+			//the time
+			NSString	*eventDescription;
+			
+			eventDescription = [[adium contactAlertsController] naturalLanguageDescriptionForEventID:eventID
+																						  listObject:listObject
+																							userInfo:userInfo
+																					  includeSubject:YES];
+			
+			if(timeFormat){
+				NSString	*timeString;
+				
+				timeString = [NSString stringWithFormat:@"%@... ",[[NSDate date] descriptionWithCalendarFormat:timeFormat
+																									  timeZone:nil
+																										locale:nil]];
+				textToSpeak = [timeString stringByAppendingString:eventDescription];
+			}else{
+				textToSpeak = eventDescription;
+			}
+			
+			//Clear out the lastSenderString so the next speech event will get tagged with the sender's name
+			[lastSenderString release]; lastSenderString = nil;
+		}
+	}
+	
+	//Do the speech, with custom voice/pitch/rate as desired
 	if(textToSpeak){
-		[[adium soundController] speakText:textToSpeak];
+		NSString	*voice = nil;
+		float		pitch = 0;
+		int			rate = 0;
+		
+		//Retrieve custom settings for this listObject
+		if(listObject){
+			voice = [listObject preferenceForKey:KEY_VOICE_STRING group:PREF_GROUP_ANNOUNCER];			
+			pitch = [[listObject preferenceForKey:KEY_PITCH group:PREF_GROUP_ANNOUNCER] floatValue];
+			rate = [[listObject preferenceForKey:KEY_RATE group:PREF_GROUP_ANNOUNCER] intValue];
+		}
+		
+		if(voice || pitch || rate){
+			[[adium soundController] speakText:textToSpeak withVoice:voice andPitch:pitch andRate:rate];
+		}else{
+			[[adium soundController] speakText:textToSpeak];
+		}
 	}
 }
 
