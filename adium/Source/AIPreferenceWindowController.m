@@ -133,6 +133,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Take focus away from any controls to ensure that they register changes and save
+    [[self window] makeFirstResponder:scrollView_contents];
+
     //Save the window position
     [owner setPreference:[[self window] stringWithSavedFrame]
                   forKey:KEY_PREFERENCE_WINDOW_FRAME
@@ -200,6 +203,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
     NSEnumerator		*enumerator;
     AIPreferenceCategory	*category = nil;
     NSString			*clickedName;
+
+    //Take focus away from any controls to ensure that they register changes and save
+    [[self window] makeFirstResponder:scrollView_contents];
     
     //Get the name of the clicked category
     clickedName = [sender itemIdentifier];
