@@ -145,6 +145,10 @@ typedef enum {
 - (id)destination;
 @end
 
+@protocol AIContentFilter
+- (void)filterContentObject:(id <AIContentObject>)inObject;
+@end
+
 @protocol AITextEntryFilter //Interpret text as it's entered
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSView<AITextEntryView> *)inTextEntryView; //keypress
 - (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
@@ -225,6 +229,8 @@ typedef enum {
     NSNotificationCenter	*contentNotificationCenter;
     NSMutableArray		*textEntryFilterArray;
 
+    NSMutableArray		*outgoingContentFilterArray;
+    NSMutableArray		*incomingContentFilterArray;
 }
 
 - (NSNotificationCenter *)contentNotificationCenter;
@@ -233,7 +239,11 @@ typedef enum {
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle;
 - (void)sendContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle;
 - (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
-- (NSArray *)textEntryFilters;
+//- (NSArray *)textEntryFilters;
+- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSView<AITextEntryView> *)inTextEntryView;
+- (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView;
 
 @end
 

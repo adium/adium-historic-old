@@ -22,8 +22,10 @@
 //init
 - (void)initController
 {
-
+    outgoingContentFilterArray = [[NSMutableArray alloc] init];
+    incomingContentFilterArray = [[NSMutableArray alloc] init];
 }
+
 - (void)closeController
 {
 
@@ -66,23 +68,66 @@
     [textEntryFilterArray addObject:inFilter];
 }
 
-- (NSArray *)textEntryFilters
+/*- (NSArray *)textEntryFilters
 {
     return(textEntryFilterArray);
+}*/
+
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSView<AITextEntryView> *)inTextEntryView
+{
+    NSEnumerator		*enumerator;
+    id <AITextEntryFilter>	filter;
+
+    enumerator = [textEntryFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter stringAdded:inString toTextEntryView:inTextEntryView];
+    }
+}
+
+- (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView
+{
+    NSEnumerator		*enumerator;
+    id <AITextEntryFilter>	filter;
+
+    enumerator = [textEntryFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter contentsChangedInTextEntryView:inTextEntryView];
+    }
 }
 
 
+
+
+
+
 //Content Filters--
-//RegisterFilter:(id <AIContentFilter>) forContentType:
+- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter 
+{
+    [outgoingContentFilterArray addObject:inFilter];
+}
+
+- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter
+{
+    [incomingContentFilterArray addObject:inFilter];
+}
+
+
 
 // Messaging --------------------------------------------------------------------------------
 //Add a message object to a handle
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
 {
+    NSEnumerator	*enumerator;
+    id<AIContentFilter>	filter;
+    
     //Will receive content
     [[self contentNotificationCenter] postNotificationName:Content_WillReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 
     //Filter the object
+    enumerator = [incomingContentFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter filterContentObject:inObject];
+    }
 
     //Add the object
     [inHandle addContentObject:inObject];
@@ -96,11 +141,18 @@
 
 - (void)sendContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
 {
+    NSEnumerator	*enumerator;
+    id<AIContentFilter>	filter;
+
     //Will send content
     [[self contentNotificationCenter] postNotificationName:Content_WillSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 
     //Filter the object
-
+    enumerator = [outgoingContentFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter filterContentObject:inObject];
+    }
+    
     //Send the object
     [(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject toHandle:inHandle];
     
