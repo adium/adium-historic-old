@@ -104,9 +104,9 @@
 		{
 			NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
 			if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-				if (![[theContact statusObjectForKey:KEY_FORMATTED_UID] isEqualToString:gaimAlias]) {
+				if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
 					[theContact setStatusObject:gaimAlias
-										 forKey:KEY_FORMATTED_UID
+										 forKey:@"FormattedUID"
 										 notify:NO];
 				}
 			} else {
@@ -738,7 +738,7 @@
 		NSString	*contactName = [NSString stringWithUTF8String:user];
 		contact = [self _contactWithUID:[contactName compactedString]];
 
-		[contact setStatusObject:contactName forKey:KEY_FORMATTED_UID notify:YES];
+		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
 		[chat addParticipatingListObject:contact];
 	}
 	NSLog(@"added user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
