@@ -273,8 +273,9 @@ BOOL pantherOrLater;
     if (![badgeName isEqualToString:@""]) {
         NSImage     *tempImage;
         
-        tempImage = [[NSImage alloc] initWithContentsOfFile:
-            [[NSBundle bundleForClass:[self class]] pathForResource:badgeName ofType:@"png"]];
+        tempImage = [[AIImageUtilities imageNamed:badgeName forClass:[self class]] retain];
+        //tempImage = [[NSImage alloc] initWithContentsOfFile:
+        //    [[NSBundle bundleForClass:[self class]] pathForResource:badgeName ofType:@"png"]];
         [buddyIconBadge release];
         buddyIconBadge = tempImage;
     } else {
