@@ -71,6 +71,7 @@
 	IBOutlet	NSButton				*checkBox_fadeOfflineImages;
 
 	IBOutlet	NSColorWell				*colorWell_groupText;
+	IBOutlet	NSColorWell				*colorWell_groupTextInverted;
 	IBOutlet	NSColorWell				*colorWell_groupShadow;
 	IBOutlet	NSColorWell				*colorWell_groupBackground;
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
