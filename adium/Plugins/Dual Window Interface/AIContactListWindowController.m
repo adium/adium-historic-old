@@ -259,8 +259,13 @@
 					newFrame.origin.y = oldFrame.origin.y;
 				}
 				
+#warning Evan: I disabled contact list resizing animation. IMO, the animation does not look better and is much slower.
+				//Resize the window
+				[[self window] setFrame:newFrame display:YES animate:NO];
+				
+				/*
 				//Resize the window (We animate only if the window is main)
-				if([[self window] isMainWindow]){
+				if([[self window] isMainWindow] && [NSApp isOnPantherOrBetter]){
 					[scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
 					
 					//Force the scrollbar to disappear if the target frame is such that it will not be desired
@@ -284,7 +289,8 @@
 					[[self window] setFrame:newFrame display:YES animate:NO];
 					
 				}
-
+				 */
+				
 				[[self window] setMinSize:targetMin];
 				[[self window] setMaxSize:targetMax];
 			}
