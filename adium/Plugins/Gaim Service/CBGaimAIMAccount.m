@@ -3,14 +3,13 @@
 //  Adium XCode
 //
 //  Created by Colin Barrett on Sat Nov 01 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "CBGaimAIMAccount.h"
 #import "aim.h"
 
 #warning change this to your SN to connect :-)
-#define SCREEN_NAME "otsku"
+#define SCREEN_NAME "otksu"
 
 //From oscar.c
 struct oscar_data {
@@ -64,7 +63,7 @@ struct oscar_data {
 - (void)initAccount
 {
     NSLog(@"CBGaimAIMAccount initAccount");
-    screenName = @SCREEN_NAME;
+    screenName = [NSString stringWithUTF8String:SCREEN_NAME];
     [super initAccount];
 }
 
@@ -94,28 +93,9 @@ struct oscar_data {
  - (void)accountBlistNewNode:(GaimBlistNode *)node 
  {
      [super accountBlistNewNode:node];
-     
-     if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
-     {
-         GaimBuddy *buddy = (GaimBuddy *)node;
-         
-         struct oscar_data *od = gc->proto_data;
-//      struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
-         aim_userinfo_t *userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
-         AIHandle *theHandle = (AIHandle *)node->ui_data;
-         
-         if (theHandle && userinfo) {
-             NSLog(@"%i %d",userinfo->onlinesince,userinfo->onlinesince);
-             //Set the signon time
-             NSMutableDictionary * statusDict = [theHandle statusDictionary];
-             
-             [statusDict
-                    setObject:[NSDate dateWithTimeIntervalSince1970:userinfo->onlinesince]
-                       forKey:@"Signon Date"];
-         }
-     }
  }
  */
+ 
 
 - (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node
 {
@@ -169,16 +149,15 @@ struct oscar_data {
                         [modifiedKeys addObject:@"StatusMessage"];
                     }
                 }
-                /*
-                 //This doesn't work, either
-                 if (userinfo->onlinesince != 0) {
-                     [statusDict
-                    setObject:[NSDate dateWithTimeIntervalSince1970:((time_t)(userinfo->onlinesince))]
-                       forKey:@"Signon Date"];
+                
+                //Set the signon date if one hasn't already been set
+                if ( (![statusDict objectForKey:@"Signon Date"]) && ((userinfo->onlinesince) != 0) ) {
+                    [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] forKey:@"Signon Date"];
+                    [modifiedKeys addObject:@"Signon Date"];
                  }
-                 */
             }
         }
+        
         //if anything changed
         if([modifiedKeys count] > 0)
         {
