@@ -310,17 +310,17 @@
 													   group:PREF_GROUP_EVENT_PRESETS] isEqualToString:name]);
 }
 
-- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)name inPresets:(NSArray *)presets
+- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)newName inPresets:(NSArray *)presets renamedPreset:(id *)renamedPreset
 {
 	NSString				*oldPresetName = [preset objectForKey:@"Name"];
 	NSMutableDictionary		*newPreset = [preset mutableCopy];
-	[newPreset setObject:name
+	[newPreset setObject:newName
 				  forKey:@"Name"];
 
 	//Mark the newly created (but still functionally identical) event set as active if the old one was active
 	if([[[adium preferenceController] preferenceForKey:@"Active Event Set"
 												 group:PREF_GROUP_EVENT_PRESETS] isEqualToString:oldPresetName]){
-		[[adium preferenceController] setPreference:name
+		[[adium preferenceController] setPreference:newName
 											 forKey:@"Active Event Set"
 											  group:PREF_GROUP_EVENT_PRESETS];
 	}
@@ -329,6 +329,8 @@
 	[plugin deleteEventPreset:preset];
 	[plugin saveEventPreset:newPreset];
 	
+	if(renamedPreset) *renamedPreset = newPreset;
+
 	//Return an updated presets array
 	return [plugin storedEventPresetsArray];
 }

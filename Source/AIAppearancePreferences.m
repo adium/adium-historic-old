@@ -623,26 +623,44 @@ typedef enum {
 /*!
  * 
  */
-- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)name inPresets:(NSArray *)presets
+- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)newName inPresets:(NSArray *)presets renamedPreset:(id *)renamedPreset
 {
+	NSArray		*newPresets;
+
 	if(presets == _listLayouts){
 		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_LAYOUT_EXTENSION
 								  inFolder:LIST_LAYOUT_FOLDER
-									toName:name];		
-		
-		return([AISCLViewPlugin availableLayoutSets]);
+									toName:newName];		
+		_listLayouts = [AISCLViewPlugin availableLayoutSets];
+		newPresets = _listLayouts;
 		
 	}else if(presets == _listThemes){
 		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_THEME_EXTENSION
 								  inFolder:LIST_THEME_FOLDER
-									toName:name];		
-		
-		return([AISCLViewPlugin availableThemeSets]);
+									toName:newName];		
+		_listThemes = [AISCLViewPlugin availableThemeSets];
+		newPresets = _listThemes;
+
 	}else{
-		return(nil);
+		newPresets = nil;
 	}
+	
+	//Return the new duplicate by reference for the preset controller
+	if(renamedPreset){
+		NSEnumerator	*enumerator = [newPresets objectEnumerator];
+		NSDictionary	*aPreset;
+		
+		while(aPreset = [enumerator nextObject]){
+			if([newName isEqualToString:[aPreset objectForKey:@"name"]]){
+				*renamedPreset = aPreset;
+				break;
+			}
+		}
+	}
+	
+	return newPresets;
 }
 
 /*!
@@ -650,42 +668,40 @@ typedef enum {
  */
 - (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset
 {
-	NSString			*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"name"], AILocalizedString(@"Copy",nil)];
+	NSString	*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"name"], AILocalizedString(@"Copy",nil)];
+	NSArray		*newPresets;
 	
 	if(presets == _listLayouts){
 		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
 									extension:LIST_LAYOUT_EXTENSION
 									 inFolder:LIST_LAYOUT_FOLDER
 									  newName:newName];		
+		_listLayouts = [AISCLViewPlugin availableLayoutSets];
+		newPresets = _listLayouts;
 		
 	}else if(presets == _listThemes){
 		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
 									extension:LIST_THEME_EXTENSION
 									 inFolder:LIST_THEME_FOLDER
-									  newName:newName];		
+									  newName:newName];
+		_listThemes = [AISCLViewPlugin availableThemeSets];
+		newPresets = _listThemes;
 	}
-	
+
 	//Return the new duplicate by reference for the preset controller
 	if(duplicatePreset){
-		NSEnumerator	*enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
-		NSDictionary	*layout;
+		NSEnumerator	*enumerator = [newPresets objectEnumerator];
+		NSDictionary	*aPreset;
 		
-		while(layout = [enumerator nextObject]){
-			if([newName isEqualToString:[layout objectForKey:@"name"]]){
-				if(duplicatePreset) *duplicatePreset = layout;
+		while(aPreset = [enumerator nextObject]){
+			if([newName isEqualToString:[aPreset objectForKey:@"name"]]){
+				*duplicatePreset = aPreset;
 				break;
 			}
 		}
 	}
 
-	//Return the updated sets for the preset controller
-	if(presets == _listLayouts){
-		return([AISCLViewPlugin availableLayoutSets]);
-	}else if(presets == _listThemes){
-		return([AISCLViewPlugin availableThemeSets]);
-	}else{
-		return(nil);
-	}
+	return newPresets;
 }
 
 /*!
@@ -697,15 +713,18 @@ typedef enum {
 		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_LAYOUT_EXTENSION
 								  inFolder:LIST_LAYOUT_FOLDER];		
-
-		return([AISCLViewPlugin availableLayoutSets]);
+		_listLayouts = [AISCLViewPlugin availableLayoutSets];
+		
+		return(_listLayouts);
 	
 	}else if(presets == _listThemes){
 		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_THEME_EXTENSION
 								  inFolder:LIST_THEME_FOLDER];		
+		_listThemes = [AISCLViewPlugin availableThemeSets];
+		
+		return(_listThemes);
 
-		return([AISCLViewPlugin availableThemeSets]);
 	}else{
 		return(nil);
 	}

@@ -33,7 +33,7 @@
 @end
 
 @interface NSObject (ESPresetManagementControllerDelegate)
-- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)name inPresets:(NSArray *)presets;
+- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)newName inPresets:(NSArray *)presets renamedPreset:(id *)renamedPreset;
 - (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset;
 - (NSArray *)deletePreset:(NSDictionary *)preset inPresets:(NSArray *)presets;
 @end
