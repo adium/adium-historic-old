@@ -19,7 +19,8 @@
 -(void)awakeFromNib
 {        
 	themes = nil;
-	
+	defaultThemePath = [[NSBundle bundleForClass:[self class]] pathForResource:THEME_ADIUM_DEFAULT ofType:@"AdiumTheme"];
+
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
     [table setDoubleAction:@selector(applyTheme:)];
@@ -42,15 +43,22 @@
     NSMutableArray *tempThemesList = [[[NSFileManager defaultManager] subpathsAtPath:THEME_PATH] mutableCopy];
     NSEnumerator *tempEnum = [tempThemesList objectEnumerator];
     NSString *object;
+	
     while(object = [tempEnum nextObject]) {
 		
         if([object hasPrefix:@"."]) { // remove hidden files from the list
             [tempThemesList removeObject:object];
         }
-    }  
+    }
+	
+	// HERE
+	
+	[tempThemesList insertObject:defaultThemePath atIndex:0];
+	
     themeCount = [tempThemesList count];
     [themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
     [self configureControlDimming];
+	
 	[table reloadData];
 }
 
@@ -61,8 +69,14 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSDictionary *object = [NSDictionary dictionaryWithContentsOfFile:[THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:row]]];
-    
+	
+	NSDictionary *object;
+	if( [[themes objectAtIndex:row] isEqualToString:defaultThemePath] ) {
+		object = [NSDictionary dictionaryWithContentsOfFile:defaultThemePath];
+	} else {
+		object = [NSDictionary dictionaryWithContentsOfFile:[THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:row]]];
+    }
+	
     // a good programmer would set this to return an italicized version when it's backup :)
     if([[tableColumn identifier] isEqualToString:@"themeName"])
     {
@@ -86,7 +100,11 @@
 {
 	int selectedRow = [table selectedRow];
 	if (selectedRow != -1) {
-		return [THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:selectedRow]];
+		if( [[themes objectAtIndex:selectedRow] isEqualToString:defaultThemePath] ) {
+			return defaultThemePath;
+		} else {
+			return [THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:selectedRow]];
+		}
 	} else {
 		return nil;
 	}

@@ -14,6 +14,8 @@
 
 #import "BGThemesPreferences.h"
 
+#define THEME_ADIUM_DEFAULT		@"Adium Default"
+
 @interface BGThemesPlugin : AIPlugin {
     BGThemesPreferences *themePane;
     NSString *themePath;

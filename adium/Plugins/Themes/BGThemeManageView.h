@@ -15,6 +15,7 @@
     id themesPlugin;
     NSArray *themes;
     int themeCount;
+	NSString	*defaultThemePath;
 }
 -(NSString *)selectedTheme;
 -(IBAction)removeTheme:(id)sender;
