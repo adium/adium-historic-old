@@ -270,7 +270,7 @@
             [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
 	}
 
-	[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+#warning ??? [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
 }
 
