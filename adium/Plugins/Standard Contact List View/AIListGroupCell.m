@@ -21,6 +21,14 @@
 
 @implementation AIListGroupCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	AIListGroupCell	*newCell = [[AIListGroupCell alloc] init];
+	[newCell setListObject:listObject];
+	return(newCell);
+}
+
 - (NSSize)cellSize
 {
 	return(NSMakeSize(0, (int)[[self font] defaultLineHeightForFont] + (VERTICAL_GROUP_PADDING * 2)));

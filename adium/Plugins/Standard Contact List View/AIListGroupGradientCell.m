@@ -11,6 +11,14 @@
 
 @implementation AIListGroupGradientCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	AIListGroupGradientCell	*newCell = [[AIListGroupGradientCell alloc] init];
+	[newCell setListObject:listObject];
+	return(newCell);
+}
+
 //
 - (NSColor *)flippyColor
 {
