@@ -229,8 +229,16 @@
 - (void)_drawBubbleDividerInRect:(NSRect)frame
 {
     if(dividerColor){
+        float dividerSpace = (drawSides ? framePadLeft : FRAME_FLAT_PAD_LEFT) + 2;
+        
         [dividerColor set];
-        [NSBezierPath fillRect:frame];
+        [NSBezierPath fillRect:NSMakeRect(frame.origin.x+dividerSpace,frame.origin.y,frame.size.width-dividerSpace,frame.size.height)];
+
+        //fill the sides, where the line is not, with the bubble color
+        [bubbleColor set];
+        [NSBezierPath fillRect:NSMakeRect(frame.origin.x,frame.origin.y,dividerSpace,frame.size.height)];
+        [NSBezierPath fillRect:NSMakeRect(frame.origin.x+frame.size.width-dividerSpace,frame.origin.y,dividerSpace,frame.size.height)];
+        
     }
     if(borderColor){
         [borderColor set];
