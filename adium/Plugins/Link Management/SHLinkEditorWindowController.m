@@ -54,9 +54,20 @@
 
 - (void)dealloc
 {
+	[[adium notificationCenter] removeObserver:self];
 	[textView release];
 	[target release];
     [super dealloc];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if(notification == nil ||
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LINK_FAVORITES] == 0){
+
+		//Refresh our favorites menu
+		[self _buildPopUpMenu];
+	}
 }
 
 
@@ -98,43 +109,16 @@
 		}
 	}
     
-    //Retrive our favorites
-	favoritesDict = [[[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
-	if(!favoritesDict) favoritesDict = [[NSMutableArray alloc] init];
-		
-    //notice changes
-    [[adium notificationCenter] addObserver:self selector:@selector(favoritesChanged:) name:Preference_GroupChanged object:nil];
-    
-    //build the popUp menu for favorites
-    [self _buildPopUpMenu];
-        
+	//Observe preference changes
+	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	[self preferencesChanged:nil];
+
     //turn on URL validation for our textView
     [textView_URL setContiniousURLValidationEnabled:YES];
     
     if(![NSApp isOnPantherOrBetter]){
         [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];
     }
-}
-
-- (void)_buildPopUpMenu
-{
-    NSDictionary		*favorite;
-    NSEnumerator        *enumerator;
-    
-	//Empty the menu and insert an empty menu item to serve as the pop-up button's selected item
-    [[popUp_Favorites menu] removeAllItemsButFirst];
-
-	//Add items for each link
-    enumerator = [favoritesDict objectEnumerator];
-    while(favorite = [enumerator nextObject]){
-		[[popUp_Favorites menu] addItemWithTitle:[favorite objectForKey:KEY_LINK_TITLE]
-										  target:self
-										  action:nil
-								   keyEquivalent:@""
-							   representedObject:favorite];
-    }
-	
-    [popUp_Favorites setTitle:CHOOSE_URL];
 }
 
 //Window is closing
@@ -163,6 +147,45 @@
 - (IBAction)cancel:(id)sender
 {
     [self closeWindow:sender];
+}
+
+
+//Favorites Popup Menu -------------------------------------------------------------------------------------------------
+#pragma mark Favorites Popup Menu
+//Build the favorites popup menu
+- (void)_buildPopUpMenu
+{
+    NSDictionary		*favorite;
+    NSEnumerator        *enumerator;
+	NSDictionary		*favoriteArray = [[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES
+																				  group:PREF_GROUP_LINK_FAVORITES];
+    
+	//Empty the menu and insert an empty menu item to serve as the pop-up button's selected item
+    [[popUp_Favorites menu] removeAllItemsButFirst];
+	
+	//Add items for each link
+    enumerator = [favoriteArray objectEnumerator];
+    while(favorite = [enumerator nextObject]){
+		[[popUp_Favorites menu] addItemWithTitle:[favorite objectForKey:KEY_LINK_TITLE]
+										  target:self
+										  action:nil
+								   keyEquivalent:@""
+							   representedObject:favorite];
+    }
+	
+    [popUp_Favorites setTitle:CHOOSE_URL];
+}
+
+//User selected a link, display it in the text fields (Called by menu item)
+- (IBAction)selectFavoriteURL:(NSPopUpButton *)sender
+{
+    if([sender isKindOfClass:[NSPopUpButton class]]){
+		NSDictionary		*favorite = [[sender selectedItem] representedObject];
+		NSAttributedString	*attrTitle = [[[NSAttributedString alloc] initWithString:[favorite objectForKey:KEY_LINK_URL]] autorelease];
+		
+        [[textView_URL textStorage] setAttributedString:attrTitle];
+        [textField_linkText setStringValue:[favorite objectForKey:KEY_LINK_TITLE]];
+    }
 }
 
 
@@ -234,42 +257,6 @@
 }
 
 
-//Favorite URL Management ----------------------------------------------------------------------------------------------
-#pragma mark Favorite URL Management
-//User selected a link, display it in the text fields (Called by menu item)
-- (IBAction)selectFavoriteURL:(NSPopUpButton *)sender
-{
-    if([sender isKindOfClass:[NSPopUpButton class]]){
-		NSDictionary		*favorite = [[sender selectedItem] representedObject];
-		NSAttributedString	*attrTitle = [[[NSAttributedString alloc] initWithString:[favorite objectForKey:KEY_LINK_URL]] autorelease];
-		
-        [[textView_URL textStorage] setAttributedString:attrTitle];
-        [textField_linkText setStringValue:[favorite objectForKey:KEY_LINK_TITLE]];
-    }
-}
-
-//- (IBAction)addURLToFavorites:(id)sender
-//{
-//    //get our info form text fields and set a new pref/key for it (We need to make sure we're getting copies of these,
-//	//otherwise the fields will change them later, changing the copy in our dictionary)
-//	[favoritesDict addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-//		[[[textField_linkText stringValue] copy] autorelease], KEY_LINK_TITLE,
-//		[[[[textView_URL textStorage] string] copy] autorelease], KEY_LINK_URL,
-//		nil]];
-//    [[adium preferenceController] setPreference:favoritesDict forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
-//    
-//    [self favoritesChanged:nil];
-//}
-
-- (void)favoritesChanged:(NSNotification *)notification
-{
-    //refresh our favorites
-	[favoritesDict release];
-    favoritesDict = [[[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
-    
-    [self _buildPopUpMenu];
-}
-
 
 //URL Validation and other Delegate Oddities ---------------------------------------------------------------------------
 #pragma mark URL Validation and other Delegate Oddities
@@ -301,4 +288,5 @@
     }
     return NO;
 }
+
 @end
