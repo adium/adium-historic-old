@@ -16,9 +16,6 @@
 
 #import <Adium/AIPlugin.h>
 
-#define PREF_GROUP_TYPING_NOTIFICATIONS			@"Typing Notifications"
-#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
-
 @interface AITypingNotificationPlugin : AIPlugin {
 	BOOL								disableTypingNotifications;
 }

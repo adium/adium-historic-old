@@ -35,15 +35,10 @@
 #define ENTERED_TEXT_TIMER		@"EnteredTextTimer"
 #define ENTERED_TEXT_INTERVAL   3.0
 
-#define SUPPRESS_TYPING_NOTIFICATIONS	@"SuppressTypingNotificationChanges"
-
 @implementation AITypingNotificationPlugin
 
 - (void)installPlugin
 {
-    //Preferences
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_TYPING_NOTIFICATIONS];
-	
     //Register as an entry filter and observe content
 	[[adium contentController] registerTextEntryFilter:self];
 
@@ -53,13 +48,6 @@
 									   name:Interface_DidSendEnteredMessage
 									 object:nil];
 }
-
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	disableTypingNotifications = [[prefDict objectForKey:KEY_DISABLE_TYPING_NOTIFICATIONS] boolValue];
-}
-
 
 //Text entry -----------------------------------------------------------------------------------------------------------
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
@@ -136,7 +124,7 @@
 	if([[chat account] suppressTypingNotificationChangesAfterSend]){
 		//Set the suppress typing flag for this chat
 		[chat setStatusObject:[NSNumber numberWithBool:YES]
-					   forKey:SUPPRESS_TYPING_NOTIFICATIONS
+					   forKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS
 					   notify:NotifyNever];
 		
 		//Clear the flag after a short delay
@@ -146,7 +134,7 @@
 - (void)_removeSuppressFlagFromChat:(AIChat *)chat
 {
 	[chat setStatusObject:nil
-				   forKey:SUPPRESS_TYPING_NOTIFICATIONS
+				   forKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS
 				   notify:NotifyNever];
 }
 
@@ -155,11 +143,8 @@
 //Typing state ---------------------------------------------------------------------------------------------------------
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
-#warning Evan: May want to cache the typing preference lookup within the chat?
-	if(![chat integerStatusObjectForKey:SUPPRESS_TYPING_NOTIFICATIONS] &&
-	   (([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping && typingState == AINotTyping) //We need this to allow 'stop typing' changes incase the user turns off the preference while they're typing
-		|| ![[[chat account] preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
-										group:GROUP_ACCOUNT_STATUS] boolValue])){
+	if([chat sendTypingNotifications] ||
+	   ([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping && typingState == AINotTyping)){ //We need this to allow 'stop typing' changes incase the user turns off the preference while they're typing
 		AIAccount		*account = [chat account];
 		AIContentTyping	*contentObject;
 		
