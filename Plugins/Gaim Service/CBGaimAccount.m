@@ -78,7 +78,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)initSSL
 {
 	if (!didInitSSL) {
-		didInitSSL = gaim_init_ssl_gnutls_plugin();
+		didInitSSL = gaim_init_ssl_openssl_plugin();
 	}
 }
 
