@@ -112,9 +112,10 @@
 {
     AIListContact	*object = [[adium contactController] selectedContact];
     AIChat		*chat;
-
-    chat = [[adium contentController] openChatOnAccount:nil withListObject:object];
-    [[adium interfaceController] setActiveChat:chat];
+    if ([object isKindOfClass:[AIListContact class]]) {
+        chat = [[adium contentController] openChatOnAccount:nil withListObject:object];
+        [[adium interfaceController] setActiveChat:chat];
+    }
 }
 
 - (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem

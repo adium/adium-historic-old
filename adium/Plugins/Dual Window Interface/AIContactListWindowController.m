@@ -146,10 +146,7 @@
 //Called when the user selects a new contact object
 - (void)contactSelectionChanged:(NSNotification *)notification
 {
-    AIListObject	*object = [[notification userInfo] objectForKey:@"Object"];
-
-    //Configure our toolbar for the new object
-    [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:object,@"ContactObject",nil]];
+    //AIListObject	*object = [[notification userInfo] objectForKey:@"Object"];
 }
 
 //Configure auto-resizing
@@ -371,9 +368,7 @@
     
     //Toolbar (can not be added to a borderless window)
     if (!borderless) {
-        //
-        [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
-        
+        //        
         [self _configureToolbar];
     }
     

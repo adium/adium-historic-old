@@ -22,7 +22,6 @@
 
 @interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
     IBOutlet	AIAutoScrollView	*scrollView_contactList;
-    IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
     id <AIContactListViewController>	contactListViewController;
     NSView				*contactListView;
