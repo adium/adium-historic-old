@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.82 2004/05/01 16:33:14 adamiser Exp $
+$Id: ToDoList.txt,v 1.83 2004/05/01 16:41:30 adamiser Exp $
 
 
 Legend
@@ -16,6 +16,8 @@ Bugs
 * User icons are still getting flipped (Icons from AIM, apparently)
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
    - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
+
+* Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
 
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
