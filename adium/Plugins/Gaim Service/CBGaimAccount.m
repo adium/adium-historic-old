@@ -16,7 +16,7 @@
 #define USER_ICON_CACHE_NAME    @"UserIcon_%@"
 
 #define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
-#define RECONNECT_ATTEMPTS      4
+#define RECONNECTION_ATTEMPTS      4
 
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
