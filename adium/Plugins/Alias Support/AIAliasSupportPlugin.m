@@ -114,12 +114,10 @@
 	
 }
 
-#warning Evan: We are not configuring the alias field properly when the contact switches.  I am not sure why not.
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
 	NSString	*alias;
 	
-//	NSLog(@"Alias preference is %@",[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]);
     //Be sure we've set the last changes before changing which object we are editing
 	[textField_alias fireImmediately];
     
@@ -130,7 +128,6 @@
     //Fill in the current alias
     if(alias = [inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
         [textField_alias setStringValue:alias];
-//		NSLog(@"After setting to %@ the stringValue is %@",alias,[textField_alias stringValue]);
     }else{
         [textField_alias setStringValue:@""];
     }
