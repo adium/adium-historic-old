@@ -1217,8 +1217,8 @@ static id<GaimThread> gaimThread = nil;
 //Our account has disconnected
 - (oneway void)accountConnectionDisconnected
 {
-//	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
-	
+	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
+
     //We are now offline
 	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
 	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
@@ -1236,7 +1236,7 @@ static id<GaimThread> gaimThread = nil;
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
 	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/){
 		if (reconnectAttemptsRemaining && 
-			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError]/* && !(connectionIsSuicidal)*/) {
+			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
 			
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
