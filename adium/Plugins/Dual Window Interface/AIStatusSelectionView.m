@@ -234,6 +234,9 @@
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
             }
 
+	    //we're neither offline nor available, but selectItem:nil doesn't seem to uncheck things
+	    [[[popUp_status menu] itemWithTitle:STATUS_NAME_OFFLINE] setState:NSOffState];
+	    [[[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE] setState:NSOffState];
 	    [popUp_status selectItem:nil];
 	    [popUp_status setTitle:away];
 	    selectedMenuItem = nil;
