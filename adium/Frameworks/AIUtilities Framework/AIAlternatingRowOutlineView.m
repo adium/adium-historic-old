@@ -231,7 +231,7 @@
             
             //Draw the correct column/row color
             if(!selected){
-                if( (NSLocationInRange(column,range)) && (firstColumnColored && !(column % 2)) || (!firstColumnColored && (column % 2)) ){
+                if( (NSLocationInRange(column,range)) && ((firstColumnColored && !(column % 2)) || (!firstColumnColored && (column % 2))) ){
                     if(!colored){
                         [alternatingColumnColor set];
                         [NSBezierPath fillRect:segmentRect];
