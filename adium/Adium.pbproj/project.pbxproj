@@ -6245,7 +6245,7 @@
 				F5AAD08E039BA10901A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /build;
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
