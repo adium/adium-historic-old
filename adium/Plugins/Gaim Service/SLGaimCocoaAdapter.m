@@ -31,7 +31,7 @@
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
 - (void)initLibGaim;
-- (NSString *)_messageImageCachePathForID:(int)imageID forAdiumAccount:(id<AdiumGaimDO>)adiumAccount;
+- (NSString *)_messageImageCachePathForID:(int)imageID forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount;
 @end
 
 /*
@@ -649,7 +649,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	NSDictionary	*messageDict;
-	id<AdiumGaimDO> *adiumAccount = accountLookup(conv->account);
+	NSObject<AdiumGaimDO> *adiumAccount = accountLookup(conv->account);
 	NSString		*messageString;
 	
 	messageString = [NSString stringWithUTF8String:message];
@@ -892,8 +892,7 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls, GCallback cb,void *userData)
 {
     //Values passed can be null
-    NSLog(@"adiumGaimNotifyEmails");
-	return ([myself handleNotifyEmails:count detailed:detailed subjects:subjects froms:froms tos:tos urls:urls]);
+    return ([myself handleNotifyEmails:count detailed:detailed subjects:subjects froms:froms tos:tos urls:urls]);
 }
 
 static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)
@@ -1602,7 +1601,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)connectAccount:(id)adiumAccount
 {
-	NSLog(@"connect");
 	[runLoopMessenger target:self 
 			 performSelector:@selector(gaimThreadConnectAccount:) 
 				  withObject:adiumAccount];
@@ -1867,7 +1865,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 
 #pragma mark Gaim Images
-- (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(id<AdiumGaimDO>)adiumAccount
+- (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
 {
 	NSScanner			*scanner;
     NSString			*chunkString = nil;

@@ -354,8 +354,7 @@ static id<GaimThread> gaimThread = nil;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if (gaim_account_is_connected(account) && 
-	   ([[inContact statusObjectForKey:@"Online"] boolValue])){
+    if ([[inContact statusObjectForKey:@"Online"] boolValue]){
 		[gaimThread getInfoFor:[inContact UID] onAccount:self];
     }
 }
@@ -1345,7 +1344,6 @@ static id<GaimThread> gaimThread = nil;
 			profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
 		}
 		
-		NSLog(@"Setting to %s",profileHTML);
 		if (gaim_account_is_connected(account)){
 			serv_set_info(account->gc, profileHTML);
 		}
@@ -1614,4 +1612,8 @@ static id<GaimThread> gaimThread = nil;
 	return ([[self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]); 
 }
 
+- (NSString *)uniqueObjectID
+{
+	return ([super uniqueObjectID]);
+}
 @end
