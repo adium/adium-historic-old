@@ -52,7 +52,7 @@
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
 - (void)prepareContactInfo;
 
-- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
+- (NSMenu *)menuOfAllContactsInContainingObject:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
 - (void)_menuOfAllGroups:(NSMenu *)menu forGroup:(AIListGroup *)group withTarget:(id)target level:(int)level;
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
@@ -996,6 +996,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return( [self menuOfContainedContacts:inContact forService:nil withTarget:target includeOffline:YES] );
 }
 
+//Return either the highest metaContact containing this list object, or the list object itself.  Appropriate for when
+//preferences should be read from/to the most generalized contact possible.
+- (AIListObject *)parentContactForListObject:(AIListObject *)listObject
+{
+	if ([listObject isKindOfClass:[AIListContact class]]){
+		//Find the highest-up metaContact
+		AIListObject	*containingObject;
+		while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+			listObject = (AIMetaContact *)containingObject;
+		}
+	}
+	
+	return(listObject);
+}
 //Contact Info --------------------------------------------------------------------------------
 #pragma mark Contact Info
 //Show info for the selected contact
@@ -1439,10 +1453,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Returns a menu containing all the objects in a group on an account
 //- Selector called on contact selection is selectContact:
 //- The menu item's represented object is the contact it represents
-- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target{
-	return([self menuOfAllContactsInGroup:inGroup withTarget:target firstLevel:YES]);
+- (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inObject withTarget:(id)target{
+	return([self menuOfAllContactsInContainingObject:inObject withTarget:target firstLevel:YES]);
 }
-- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel
+- (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inObject withTarget:(id)target firstLevel:(BOOL)firstLevel
 {
     NSEnumerator				*enumerator;
     AIListObject				*object;
@@ -1452,31 +1466,41 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	[menu setAutoenablesItems:NO];
 
 	//Passing nil scans the entire contact list
-	if(inGroup == nil) inGroup = contactList;
+	if(inObject == nil) inObject = contactList;
 
-	//The pull down menu needs an extra item at the top of it's root menu to handle the selection.
+	//The pull down menu needs an extra item at the top of its root menu to handle the selection.
 	if(firstLevel) [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
 
 	//All menu items for all contained objects
-	enumerator = [inGroup objectEnumerator];
+	enumerator = [inObject listContactsEnumerator];
     while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIListGroup class]]){
-			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[object displayName]
-															target:nil 
-															action:nil
-													 keyEquivalent:@""] autorelease];
-			[item setSubmenu:[self menuOfAllContactsInGroup:(AIListGroup *)object withTarget:target firstLevel:NO]];
-			[menu addItem:item];
+		NSImage		*menuServiceImage;
+		NSMenuItem	*menuItem;
+		
+		menuServiceImage = [AIServiceIcons serviceIconForObject:object
+														   type:AIServiceIconSmall
+													  direction:AIIconNormal];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[object displayName]
+											   target:target 
+											   action:@selector(selectContact:)
+										keyEquivalent:@""] autorelease];
+		
+        if([object isKindOfClass:[AIListGroup class]] || [object isKindOfClass:[AIMetaContact class]]){
 
-		}else if([object isKindOfClass:[AIListContact class]]){
-			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[object displayName]
-															target:target 
-															action:@selector(selectContact:) 
-													 keyEquivalent:@""] autorelease];
-			[item setRepresentedObject:object];
-			[menu addItem:item];
-
-		}
+			[menuItem setSubmenu:[self menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)object withTarget:target firstLevel:NO]];
+			[menuItem setEnabled:![object isKindOfClass:[AIListGroup class]]];
+			
+		}/*else if([object isKindOfClass:[AIListContact class]]){
+			
+			menuItem = [[[NSMenuItem alloc] initWithTitle:[object formattedUID]
+												   target:target 
+												   action:@selector(selectContact:) 
+											keyEquivalent:@""] autorelease];
+		}*/
+		
+		[menuItem setRepresentedObject:object];
+		[menuItem setImage:menuServiceImage];
+		[menu addItem:menuItem];
 	}
 
 	return([menu autorelease]);
