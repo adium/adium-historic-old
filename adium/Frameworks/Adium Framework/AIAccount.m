@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.40 2004/02/08 00:22:48 adamiser Exp $
+// $Id: AIAccount.m,v 1.41 2004/02/08 18:12:06 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -369,11 +369,11 @@
 {
     silentAndDelayed = YES;
 	
-    [[NSTimer scheduledTimerWithTimeInterval:interval
-									  target:self
-									selector:@selector(_endSilenceAllUpdates)
-									userInfo:nil
-									 repeats:NO] retain];
+    [NSTimer scheduledTimerWithTimeInterval:interval
+									 target:self
+								   selector:@selector(_endSilenceAllUpdates)
+								   userInfo:nil
+									repeats:NO];
 }
 
 //Stop silencing 
