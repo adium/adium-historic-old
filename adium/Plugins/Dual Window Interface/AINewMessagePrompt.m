@@ -111,17 +111,19 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
 		NSString *UID = [contact UID];
-        [textField_handle addCompletionString:UID];
+		[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 		[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:UID];
+		[textField_handle addCompletionString:UID];
     }
 
     //Configure the handle type menu
     [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
 
     //Select the last used account / Available online account
-	int index = [popUp_service indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]];
-    if(index < [popUp_service numberOfItems] && index >= 0){
-		[popUp_service selectItemAtIndex:index];
+	int serviceIndex = [popUp_service indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																														   toListObject:nil]];
+    if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
+		[popUp_service selectItemAtIndex:serviceIndex];
 	}
 
     //Center the window
