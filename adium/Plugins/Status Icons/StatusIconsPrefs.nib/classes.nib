@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = LNStatusIconsPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_displayStatusIcons" = NSButton; "view_prefView" = NSView; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

@@ -1037,6 +1037,7 @@
 				4BA88A390524A98F00A8010A,
 				4BA88A530524AFF600A8010A,
 				BF7BF5EE052BA13000000202,
+				D3376B29052BBBD500A8010B,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1127,6 +1128,7 @@
 				F5D2FB7C03B6643B01A8010A,
 				4B5B15280493BFB100A8010A,
 				4B55411B044DF01600A8010A,
+				D3376B28052BBBD500A8010B,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1252,6 +1254,7 @@
 				4BA88A3A0524A98F00A8010A,
 				4BA88A540524AFF600A8010A,
 				BF7BF5EF052BA13000000202,
+				D3376B2A052BBBD500A8010B,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -3112,6 +3115,16 @@
 				11B96D81049AF85900C6304D,
 				F53B9AC502CD12AB01A8010A,
 				F5370C9202D76F1F01A8010A,
+				D3376B2C052BBC2900A8010B,
+				D3376B2D052BBC4800A8010B,
+				D3376B2E052BBC4800A8010B,
+				D3376B2F052BBC4800A8010B,
+				D3376B30052BBC4800A8010B,
+				D3376B31052BBC4800A8010B,
+				D3376B32052BBC4800A8010B,
+				D3376B33052BBC4800A8010B,
+				D3376B34052BBC4800A8010B,
+				D3376B35052BBC4800A8010B,
 				4B31E8E104C4712F00A8010A,
 			);
 			isa = PBXGroup;
@@ -4842,6 +4855,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				D3376B2B052BBBD500A8010B,
 				4BA88A550524AFF600A8010A,
 				4BA88A3B0524A98F00A8010A,
 				4B40E1CB03DB5B9600A8010A,
@@ -14566,8 +14580,6 @@
 //BF4
 		BF7BF5E7052BA0EF00000202 = {
 			children = (
-				BF7BF5F6052BA16200000202,
-				BF7BF5F7052BA16200000202,
 			);
 			isa = PBXGroup;
 			name = "Disconnect All";
@@ -14576,7 +14588,6 @@
 		BF7BF5E8052BA13000000202 = {
 			buildActionMask = 2147483647;
 			files = (
-				BF7BF5F8052BA16200000202,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14591,7 +14602,6 @@
 		BF7BF5EA052BA13000000202 = {
 			buildActionMask = 2147483647;
 			files = (
-				BF7BF5F9052BA16200000202,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14622,7 +14632,6 @@
 				BF7BF5EC052BA13000000202,
 			);
 			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -14674,7 +14683,7 @@
 		};
 		BF7BF5EE052BA13000000202 = {
 			isa = PBXBundleReference;
-			path = "Disconnect All.bundle";
+			path = "Disconnect All.AdiumPlugin";
 			refType = 3;
 		};
 		BF7BF5EF052BA13000000202 = {
@@ -14701,32 +14710,6 @@
 		};
 		BF7BF5F5052BA13F00000202 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF7BF5F6052BA16200000202 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = DisconnectAllPlugin.h;
-			path = "Plugins/Disconnect All/DisconnectAllPlugin.h";
-			refType = 4;
-		};
-		BF7BF5F7052BA16200000202 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = DisconnectAllPlugin.m;
-			path = "Plugins/Disconnect All/DisconnectAllPlugin.m";
-			refType = 4;
-		};
-		BF7BF5F8052BA16200000202 = {
-			fileRef = BF7BF5F6052BA16200000202;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BF7BF5F9052BA16200000202 = {
-			fileRef = BF7BF5F7052BA16200000202;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -14772,6 +14755,274 @@
 //D22
 //D23
 //D24
+//D30
+//D31
+//D32
+//D33
+//D34
+		D3376B23052BBBD500A8010B = {
+			buildActionMask = 2147483647;
+			files = (
+				D3376B39052BBC4800A8010B,
+				D3376B3B052BBC4800A8010B,
+				D3376B3D052BBC4800A8010B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3376B24052BBBD500A8010B = {
+			buildActionMask = 2147483647;
+			files = (
+				D3376B37052BBC4800A8010B,
+				D3376B38052BBC4800A8010B,
+				D3376B3F052BBC4800A8010B,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3376B25052BBBD500A8010B = {
+			buildActionMask = 2147483647;
+			files = (
+				D3376B3A052BBC4800A8010B,
+				D3376B3C052BBC4800A8010B,
+				D3376B3E052BBC4800A8010B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3376B26052BBBD500A8010B = {
+			buildActionMask = 2147483647;
+			files = (
+				D3376B41052BBC6600A8010B,
+				D3376B42052BBC6700A8010B,
+				D3376B43052BBC6700A8010B,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3376B27052BBBD500A8010B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3376B28052BBBD500A8010B = {
+			buildPhases = (
+				D3376B23052BBBD500A8010B,
+				D3376B24052BBBD500A8010B,
+				D3376B25052BBBD500A8010B,
+				D3376B26052BBBD500A8010B,
+				D3376B27052BBBD500A8010B,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Status Icons";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXBundleTarget;
+			name = "Status Icons";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Status Icons";
+			productReference = D3376B29052BBBD500A8010B;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>LNStatusIconsPlugin</string>
+</dict>
+</plist>
+";
+		};
+		D3376B29052BBBD500A8010B = {
+			isa = PBXBundleReference;
+			path = "Status Icons.AdiumPlugin";
+			refType = 3;
+		};
+		D3376B2A052BBBD500A8010B = {
+			isa = PBXTargetDependency;
+			target = D3376B28052BBBD500A8010B;
+		};
+		D3376B2B052BBBD500A8010B = {
+			fileRef = D3376B29052BBBD500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B2C052BBC2900A8010B = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = "Status Icons";
+			path = "";
+			refType = 4;
+		};
+		D3376B2D052BBC4800A8010B = {
+			isa = PBXFileReference;
+			name = AwayIcon.tiff;
+			path = "Plugins/Status Icons/AwayIcon.tiff";
+			refType = 4;
+		};
+		D3376B2E052BBC4800A8010B = {
+			isa = PBXFileReference;
+			name = IdleIcon.tiff;
+			path = "Plugins/Status Icons/IdleIcon.tiff";
+			refType = 4;
+		};
+		D3376B2F052BBC4800A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LNStatusIcon.h;
+			path = "Plugins/Status Icons/LNStatusIcon.h";
+			refType = 4;
+		};
+		D3376B30052BBC4800A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LNStatusIcon.m;
+			path = "Plugins/Status Icons/LNStatusIcon.m";
+			refType = 4;
+		};
+		D3376B31052BBC4800A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LNStatusIconsPlugin.h;
+			path = "Plugins/Status Icons/LNStatusIconsPlugin.h";
+			refType = 4;
+		};
+		D3376B32052BBC4800A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LNStatusIconsPlugin.m;
+			path = "Plugins/Status Icons/LNStatusIconsPlugin.m";
+			refType = 4;
+		};
+		D3376B33052BBC4800A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LNStatusIconsPreferences.h;
+			path = "Plugins/Status Icons/LNStatusIconsPreferences.h";
+			refType = 4;
+		};
+		D3376B34052BBC4800A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LNStatusIconsPreferences.m;
+			path = "Plugins/Status Icons/LNStatusIconsPreferences.m";
+			refType = 4;
+		};
+		D3376B35052BBC4800A8010B = {
+			isa = PBXFileReference;
+			name = StatusIconsPrefs.nib;
+			path = "Plugins/Status Icons/StatusIconsPrefs.nib";
+			refType = 4;
+		};
+		D3376B37052BBC4800A8010B = {
+			fileRef = D3376B2D052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B38052BBC4800A8010B = {
+			fileRef = D3376B2E052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B39052BBC4800A8010B = {
+			fileRef = D3376B2F052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B3A052BBC4800A8010B = {
+			fileRef = D3376B30052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B3B052BBC4800A8010B = {
+			fileRef = D3376B31052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B3C052BBC4800A8010B = {
+			fileRef = D3376B32052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B3D052BBC4800A8010B = {
+			fileRef = D3376B33052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B3E052BBC4800A8010B = {
+			fileRef = D3376B34052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B3F052BBC4800A8010B = {
+			fileRef = D3376B35052BBC4800A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B41052BBC6600A8010B = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B42052BBC6700A8010B = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3376B43052BBC6700A8010B = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//D30
+//D31
+//D32
+//D33
+//D34
 //F10
 //F11
 //F12
