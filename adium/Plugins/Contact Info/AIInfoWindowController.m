@@ -75,7 +75,9 @@ static AIListObject				*activeListObject = nil;
     
     //Buddy Icon
     if(buddyImage = [[activeListObject displayArrayForKey:@"UserIcon"] objectValue]){
-        //resize to default buddy icon size for consistency
+		//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
+		buddyImage = [[buddyImage copy] autorelease];		
+        //Resize to default buddy icon size for consistency
         [buddyImage setScalesWhenResized:YES];
         [buddyImage setSize:NSMakeSize(48,48)];
     }else{
