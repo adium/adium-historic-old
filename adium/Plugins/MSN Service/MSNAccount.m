@@ -25,7 +25,7 @@
 - (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)Socket;
 - (void)sendMessageHelper:(NSTimer *)timer;
 - (void)startSBSessionHelper:(NSTimer *)timer;
-- (unsigned long)getTrid;
+- (unsigned long)getTrid:(BOOL)increment;
 @end
 
 @implementation MSNAccount
@@ -62,6 +62,7 @@
                 target:self
                 selector:@selector(startSBSessionHelper:)
                 userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    @"Message", @"Type",
                     payload, @"Payload",
                     handle, @"Handle",
                     [NSNumber numberWithInt:0], @"Phase"]
@@ -76,11 +77,31 @@
 // Returns YES if the contact is available for receiving content of the specified type
 - (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
 {
+    if([[inChat object] isKindOfClass:[AIListContact class]])
+    {
+        AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
+        
+        return([[[handle statusDictionary] objectForKey:@"Online"] intValue]
+                && [inType isEqual:CONTENT_MESSAGE_TYPE]);
+    }
     return NO;
 }
 
 - (BOOL)openChat:(AIChat *)inChat
 {
+    if([[inChat object] isKindOfClass:[AIListContact class]])
+    {
+        AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
+        
+        [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
+            target:self
+            selector:@selector(startSBSessionHelper:)
+            userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                @"Empty", @"Type",
+                handle, @"Handle",
+                [NSNumber numberWithInt:0], @"Phase"]
+            repeats:YES];
+    }
     return(NO);
 }
 
@@ -1052,13 +1073,14 @@
 }
 
 - (void)startSBSessionHelper:(NSTimer *)timer
-{
-    NSString *temp;
+{ 
+    NSData *inData = nil;
+    NSString *temp = nil;
     
     switch([[[timer userInfo] objectForKey:@"Phase"] intValue])
     {
         case 0:
-            temp = [NSString stringWithFormat:@"XFR %U", [self getTrid]];
+            temp = [NSString stringWithFormat:@"XFR %u SB", [self getTrid:YES]];
             
             if ([socket sendData:[[NSString stringWithFormat:@"%@\r\n", temp]
                         dataUsingEncoding:NSUTF8StringEncoding]])
@@ -1069,18 +1091,59 @@
             break;
             
         case 1:
+            if([socket getDataToNewline:&inData remove:NO])
+            {
+                NSLog(@"<<< %@", [NSString stringWithCString:[inData bytes] length:[inData length]]);
+                
+                NSArray *message = [[NSString stringWithCString:[inData bytes] 
+                                        length:[inData length]] componentsSeparatedByString:@" "];
+                
+                //is this command for us?
+                if([[message objectAtIndex:0] isEqual:@"XFR"]
+                    && [[message objectAtIndex:1] isEqual:[NSString stringWithFormat:@"%u", 
+                            [self getTrid:NO]]])
+                {
+                    //it's ours, take it out of the buffer
+                    [socket removeDataBytes:[inData length]];
+                    
+                    //store this for later
+                    [[timer userInfo] setObject:[message objectAtIndex:5] forKey:@"IDString"];
+                    
+                    //connect to the switchboard
+                    NSArray *hostAndPort = [[message objectAtIndex:3]
+                        componentsSeparatedByString:@":"];
+                    AISocket *sbSocket = [AISocket socketWithHost:[hostAndPort objectAtIndex:0]
+                                                port:[[hostAndPort objectAtIndex:1] intValue]];
+                    
+                    //add it to the dict
+                    [switchBoardDict setObject:sbSocket 
+                        forKey:[[timer userInfo] objectForKey:@"Handle"]];
+                    
+                    //move on
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Phase"];
+
+                }
+            }
+            break;
+            
+        case 2:
             break;
     }
 }
 
-- (unsigned long)getTrid
+- (unsigned long)getTrid:(BOOL)increment
 {
     static unsigned long lastTrid = 1;
     
-    if (lastTrid >= 4294967295UL)
-        lastTrid = 1;
-        
-    return lastTrid++;
+    if(increment)
+    {
+        if (lastTrid >= 4294967295UL)
+            lastTrid = 1;
+            
+        return lastTrid++;
+    }
+    else
+        return lastTrid;
 }
 
 @end
