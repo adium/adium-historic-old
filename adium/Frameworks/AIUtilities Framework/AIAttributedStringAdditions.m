@@ -37,6 +37,11 @@
     [tempString release];
 }
 
+- (NSData *)dataRepresentation
+{
+    return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
+}
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
@@ -61,6 +66,16 @@
     (void)[layoutManager glyphRangeForTextContainer:textContainer];
     
     return([layoutManager usedRectForTextContainer:textContainer].size.height);
+}
+
+- (NSData *)dataRepresentation
+{
+    return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
+}
+
++ (NSAttributedString *)stringWithData:(NSData *)inData
+{
+    return([[[NSAttributedString alloc] initWithRTF:inData documentAttributes:nil] autorelease]);
 }
 
 @end

@@ -45,6 +45,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
+- (void)AIM_SetStatus;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
 - (void)disconnect;
@@ -267,7 +268,7 @@ static char *hash_password(const char * const password);
         [self AIM_SetIdle:newIdle];
 
     }else if([key compare:@"TextProfile"] == 0){
-        NSString		*profile = [AIHTMLDecoder encodeHTML:inValue];
+        NSString		*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]];
 
         [self AIM_SetProfile:profile];
     }
@@ -392,7 +393,8 @@ static char *hash_password(const char * const password);
 
             }else if([command compare:@"CONFIG2"] == 0){
                 [self AIM_HandleConfig:message];
-
+                [self AIM_SetStatus];	//Set our status
+                
                 //Send AIM the init done message (at this point we become visible to other buddies)
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
 
@@ -938,6 +940,21 @@ static char *hash_password(const char * const password);
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 }
+
+- (void)AIM_SetStatus
+{
+    double 		idle = [[[owner accountController] statusObjectForKey:@"IdleTime" account:self] doubleValue];
+    NSAttributedString 	*profile = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"TextProfile" account:self]];
+    
+    if(idle){
+        [self AIM_SetIdle:idle];
+    }
+
+    if(profile){
+        [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:profile]];
+    }
+}
+
 
 
 // Hashes a password for sending to AIM (to avoid sending them in plain-text)

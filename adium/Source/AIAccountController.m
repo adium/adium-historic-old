@@ -30,6 +30,7 @@
 #define ACCOUNT_PROPERTIES			@"Properties"		//Account properties
 //Other
 #define KEY_PREFERRED_SOURCE_ACCOUNT		@"Preferred Account"
+#define KEY_ACCOUNT_STATUS			@"Status"
 //#define EXTENSION_ADIUM_SERVICE			@"AdiumService"		//File extension on a service
 
 @interface AIAccountController (PRIVATE)
@@ -56,14 +57,20 @@
     accountArray = [[NSMutableArray alloc] init];
     lastAccountIDToSendContent = nil;
 
-    accountStatusDict = [[NSMutableDictionary alloc] init]; //This _should_ be saved & restored...
+    //Register our default preferences
+    accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
+    if(!accountStatusDict) accountStatusDict = [[NSMutableDictionary alloc] init];
 }
 
 // close
 - (void)closeController
 {
+    //Save the current account status dict
+    [[owner preferenceController] setPreference:accountStatusDict forKey:KEY_ACCOUNT_STATUS group:PREF_GROUP_ACCOUNTS];
+
+    //The account list is saved as changes are made, so there is no need to save it on close        
+
     [self disconnectAllAccounts]; //Disconnect all accounts
-    //The account list is saved as changes are made, so there is no need to save it on close
 }
 
 // dealloc
@@ -73,6 +80,7 @@
     [accountNotificationCenter release];
     [availableServiceArray release];
     [lastAccountIDToSendContent release];
+    [accountStatusDict release];
 
     [super dealloc];
 }
