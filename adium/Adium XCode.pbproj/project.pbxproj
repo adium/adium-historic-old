@@ -21319,6 +21319,7 @@
 			files = (
 				4B7F78C20597F5B700162728,
 				4B215DBE0598A71400305B3C,
+				4BB7670D05B31DBA00E89FA2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21421,6 +21422,7 @@
 				4B7F78BD0597F44D00162728,
 				4B7F78BE0597F44D00162728,
 				4B215DBD0598A71400305B3C,
+				4BB7670C05B31DBA00E89FA2,
 			);
 			isa = PBXGroup;
 			name = "Adium Crash Reporter";
@@ -22342,6 +22344,20 @@
 			path = Sounds/iChat;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BB7670C05B31DBA00E89FA2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = crashDuck.png;
+			path = "Adium Crash Reporter/crashDuck.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BB7670D05B31DBA00E89FA2 = {
+			fileRef = 4BB7670C05B31DBA00E89FA2;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BB826B504C8876C00A8010A = {
 			fileEncoding = 30;
