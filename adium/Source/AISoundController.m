@@ -127,7 +127,9 @@
         }
 
         //Set the volume & play sound
+        //NSLog (@"Setting sound volume to %d", customVolume);
         SetMovieVolume([movie QTMovie], customVolume);
+        //NSLog (@"Sound volume is %d", GetMovieVolume([movie QTMovie]));
         StartMovie([movie QTMovie]);
 
         
@@ -181,6 +183,7 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
+    //NSLog (@"Prefs changed (sound controller response)");
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){    
         NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
@@ -188,7 +191,9 @@
         useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
         customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue] * 512.0);
         muteSounds = [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue];
+        //NSLog (@"Custom volume changed to %d", customVolume);
         if(customVolume <= 5) customVolume = 5; //Too quiet to hear is silly
+        //NSLog (@"Custom volume now %d", customVolume);
         
         //Display the custom volume performance warning
         if(useCustomVolume && ![[preferenceDict objectForKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME] intValue]){
