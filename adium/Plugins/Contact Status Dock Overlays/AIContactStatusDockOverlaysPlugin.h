@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define PREF_GROUP_DOCK_OVERLAYS		@"Dock Overlays"
-#define DOCK_OVERLAY_DEFAULT_PREFS	@"DockOverlayDefaults"
+#define DOCK_OVERLAY_DEFAULT_PREFS		@"DockOverlayDefaults"
 
 #define	KEY_DOCK_SHOW_STATUS			@"Show status overlays"
 #define	KEY_DOCK_SHOW_CONTENT			@"Show content overlays"
@@ -23,8 +23,8 @@
 @class AIStatusOverlayPreferences;
 
 @interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver> {
-    NSMutableArray		*unviewedObjectsArray;
-    AIIconState			*overlayState;
+    NSMutableArray				*unviewedObjectsArray;
+    AIIconState					*overlayState;
     AIStatusOverlayPreferences	*preferences;
 
     NSColor	*signedOffColor;
