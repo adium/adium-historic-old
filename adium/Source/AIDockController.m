@@ -55,7 +55,7 @@
     
     if(num == 0) // bounce forever!!
     {
-        //currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:0 repeats:YES];
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:0 repeats:YES];
     }
     else // bounce num # of times
     {
