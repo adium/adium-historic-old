@@ -380,7 +380,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     int 		i,j;
     //Load the log
 
-    logSQL = [NSString stringWithFormat:@"select \'<div class=\"' || case when sender_id = %@ then 'send' else 'receive' end || '\"><font class=\"timestamp\">\' || to_char(message_date, \'HH24:MM:SS\') || '</font> ' as time, \'<font class=\"sender\">' || sender_sn || '</font> ' as sender, \'<pre class=\"message\">' || message || '</pre></div>\n' as message_contents from adium.simple_message_v where ((sender_id = %@ and recipient_id = %@) or (sender_id = %@ and recipient_id = %@)) and message_date > \'%@\'::date and message_date < \'%@\'::date + 1 order by message_date", fromUserID, fromUserID, toUserID, toUserID, fromUserID, messageDate, messageDate];
+    logSQL = [NSString stringWithFormat:@"select \'<div class=\"' || case when sender_id = %@ then 'send' else 'receive' end || '\"><span class=\"timestamp\">\' || to_char(message_date, \'HH24:MM:SS\') || '</span> ' as time, \'<span class=\"sender\">' || sender_sn || '</span> ' as sender, \'<pre class=\"message\">' || message || '</pre></div>\n' as message_contents from adium.simple_message_v where ((sender_id = %@ and recipient_id = %@) or (sender_id = %@ and recipient_id = %@)) and message_date > \'%@\'::date and message_date < \'%@\'::date + 1 order by message_date", fromUserID, fromUserID, toUserID, toUserID, fromUserID, messageDate, messageDate];
 
     logRes = PQexec(conn, [logSQL UTF8String]);
     rawLogText = [NSMutableString stringWithString:@""];

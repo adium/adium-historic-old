@@ -127,9 +127,9 @@
 	
         if(account &&/* object && */source){
             if ([[account UID] isEqualTo:[source UID]]) {
-                logMessage = [NSString stringWithFormat:@"<div class=\"send\"><font class=\"timestamp\">%@</font> <font class=\"sender\">%@:</font><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+                logMessage = [NSString stringWithFormat:@"<div class=\"send\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@:</span><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
             } else {
-                logMessage = [NSString stringWithFormat:@"<div class=\"receive\"><font class=\"timestamp\">%@</font> <font class=\"sender\">%@:</font><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+                logMessage = [NSString stringWithFormat:@"<div class=\"receive\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@:</span><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
             }
 	}
 
@@ -144,7 +144,7 @@
         message = [content message];
 
         if(account && source){
-	    logMessage = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, dateString];
+	    logMessage = [NSString stringWithFormat:@"<span class=\"status\">%@ (%@)</span>\n", message, dateString];
 	}
     }
 
