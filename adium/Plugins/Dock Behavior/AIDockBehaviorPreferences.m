@@ -29,7 +29,8 @@
 }
 - (IBAction)changePreference:(id)sender 
 {
-
+    [self configureDimming]; // this has to go first.
+    
     if(sender == enabledCheckBox)
     {
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -38,18 +39,46 @@
     }
     else if(sender == bounceField)
     {	
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
-                                        forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
-                                        group:PREF_GROUP_DOCK_BEHAVIOR];    
+        if([sender intValue] >= 0)
+        {
+            [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+                                            forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
+                                            group:PREF_GROUP_DOCK_BEHAVIOR];
+        }
+        else
+        {
+            NSBeep();
+            [sender setSelected: YES];
+        }
     }
     else if(sender == delayField)
     {    
-        [[owner preferenceController] setPreference:[NSNumber numberWithDouble:[sender doubleValue]]
-                                        forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY
-                                        group:PREF_GROUP_DOCK_BEHAVIOR];    
+        if([sender doubleValue] >= 0)
+        {
+            [[owner preferenceController] 
+                setPreference:[NSNumber numberWithDouble:[sender doubleValue]]
+                            forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY
+                            group:PREF_GROUP_DOCK_BEHAVIOR];
+        }
+        else
+        {
+            NSBeep();
+            [sender setSelected: YES];
+        }
     }
-    
-    [self configureDimming];
+    else if(sender == bounceMatrix)
+    {
+        if([[sender selectedCell] tag] == 0) //forever mode
+        {
+            [[owner preferenceController] setPreference:[NSNumber numberWithInt:-1]
+                                            forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
+                                            group:PREF_GROUP_DOCK_BEHAVIOR];
+        }
+        else
+        {
+            [[sender window] makeFirstResponder:bounceField];
+        }
+    }
 } 
 
 //-------Private----------------------------------
@@ -80,18 +109,29 @@
 {
     [enabledCheckBox setState:
         [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT] boolValue]];
-    [bounceField setIntValue: 
-        [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] intValue]];
+    
+    if([[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] intValue] == -1)
+    {
+        [bounceMatrix selectCellWithTag:0];
+    }
+    else
+    {
+        [bounceMatrix selectCellWithTag:1];
+        [bounceField setIntValue: 
+            [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] intValue]];
+    }
+    
     [delayField setDoubleValue:
         [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY] doubleValue]];
     
     [self configureDimming];
 }
 
-//enable and disable the boxes
+//enable and disable the items
 - (void)configureDimming
 {	
-    [bounceField setEnabled:[enabledCheckBox state]];
     [delayField setEnabled:[enabledCheckBox state]];
+    [bounceMatrix setEnabled:[enabledCheckBox state]];
+    [bounceField setEnabled:([[bounceMatrix selectedCell] tag] == 1 && [enabledCheckBox state])];
 }   
 @end
