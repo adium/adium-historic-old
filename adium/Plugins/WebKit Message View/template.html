@@ -9,7 +9,12 @@
 	<script type="text/ecmascript" defer="defer">
 		var scrollToBottomIsNeeded = false;
 
-		function documentAppend(html) {
+		function appendMessage(html) {
+			//Remove any existing insertion point
+			insert = document.getElementById("insert");
+			if(insert) insert.parentNode.removeChild(insert);
+
+			//Append the new message to the bottom of our chat block
 			chat = document.getElementById("Chat");
 			range = document.createRange();
 			range.selectNode(chat);
@@ -17,14 +22,19 @@
 			chat.appendChild(documentFragment);
 		}
 		
-		function documentAppendMessage(html) {
-			chat =  document.getElementById("Chat").lastChild;
+		function appendNextMessage(html){
+			//
+			insert = document.getElementById("insert");
+		
+			//make new node
 			range = document.createRange();
-			range.selectNode(chat);
-			documentFragment = range.createContextualFragment(html);
-			chat.appendChild(documentFragment);
-		}
+			range.selectNode(insert.parentNode);
+			newNode = range.createContextualFragment(html);
 
+			//swap
+			insert.parentNode.replaceChild(newNode,insert);
+		}
+		
 		function scrollToBottom() {
 			document.body.scrollTop = document.body.offsetHeight;
 		}
