@@ -13,10 +13,9 @@ Adium, Copyright 2001-2005, Adam Iser
  write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class AIHandleIdentifier, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer, DCJoinChatWindowController;
-@protocol AIServiceController;
-
 #import "AIListObject.h"
+
+@class AIListContact, AIChat, AIContentObject, ESFileTransfer, AIStatus;
 
 #define GROUP_ACCOUNT_STATUS   @"Account Status"
 
@@ -126,6 +125,7 @@ typedef enum {
 - (void)updateStatusForKey:(NSString *)key;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;
+- (void)setStatusState:(AIStatus *)statusState;
 
 //Messaging, Chatting, Strings
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;

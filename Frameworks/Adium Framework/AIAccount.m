@@ -203,6 +203,16 @@ Adium, Copyright 2001-2005, Adam Iser
 	return(3.0);
 }
 
+/*!
+ * @brief Set the account to an AIStatus status state
+ *
+ * Sets the account to a passed status state.  The account should set itself to best possible status given the return
+ * values of statusState's accessors.
+ */
+- (void)setStatusState:(AIStatus *)statusState
+{
+	
+}
 
 //Messaging, Chatting, Strings -----------------------------------------------------------------------------------------
 #pragma mark Messaging, Chatting, Strings
