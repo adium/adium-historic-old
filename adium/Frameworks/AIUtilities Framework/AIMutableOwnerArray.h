@@ -13,15 +13,22 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+typedef enum {
+    Highest_Priority = 0,
+    Medium_Priority = 5,
+    Lowest_Priority = 10
+} PriorityLevel;
 
 @interface AIMutableOwnerArray : NSObject {
     NSMutableArray	*contentArray;
     NSMutableArray	*ownerArray;
-    
+	
+	NSMutableArray *contentSubArray[11];
+	NSMutableArray *ownerSubArray[11];    
 }
 
 - (void)setObject:(id)anObject withOwner:(id)inOwner;
-- (void)setPrimaryObject:(id)anObject withOwner:(id)inOwner;
+- (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(int)priority;
 - (unsigned)count;
 - (BOOL)containsAnyIntegerValueOf:(int)inValue;
 - (NSColor *)averageColor;
