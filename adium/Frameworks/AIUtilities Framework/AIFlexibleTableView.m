@@ -65,6 +65,7 @@
     bottomPadding = 0;
 
     contentBottomAligned = YES;
+    lockFocus = NO;
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 }
 
@@ -107,27 +108,29 @@
 //Draw
 - (void)drawRect:(NSRect)rect
 {
-    NSEnumerator		*rowEnumerator;
-    AIFlexibleTableRow		*row;
-    NSRect			documentVisibleRect;
-    NSPoint			cellPoint = contentOrigin;
-    BOOL			foundVisible = NO;
-    
-    //Get our visible rect (we don't want to draw non-visible rows)
-    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-
-    //Enumerate through each row
-    //We draw from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
-    rowEnumerator = [rowArray objectEnumerator];
-    while((row = [rowEnumerator nextObject])){
-        int	rowHeight = [row height];
-
-        cellPoint.y -= rowHeight;
-        if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || (foundVisible && [row spansRows])){ //If visible
-            [row drawAtPoint:cellPoint visibleRect:documentVisibleRect inView:self];
-            if(!foundVisible) foundVisible = YES;
-        }else{
-            if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
+    if (!lockFocus) {
+        NSEnumerator		*rowEnumerator;
+        AIFlexibleTableRow		*row;
+        NSRect			documentVisibleRect;
+        NSPoint			cellPoint = contentOrigin;
+        BOOL			foundVisible = NO;
+        
+        //Get our visible rect (we don't want to draw non-visible rows)
+        documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+        
+        //Enumerate through each row
+        //We draw from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
+        rowEnumerator = [rowArray objectEnumerator];
+        while((row = [rowEnumerator nextObject])){
+            int	rowHeight = [row height];
+            
+            cellPoint.y -= rowHeight;
+            if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || (foundVisible && [row spansRows])){ //If visible
+                [row drawAtPoint:cellPoint visibleRect:documentVisibleRect inView:self];
+                if(!foundVisible) foundVisible = YES;
+            }else{
+                if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
+            }
         }
     }
 }
@@ -378,19 +381,27 @@
     //Add the new row (To the head of our array)
     [rowArray insertObject:inRow atIndex:0];
     [inRow setTableView:self];
-    [self resizeRow:inRow];
 
-    //Update our cursor tracking (We can skip this if our view is tall enough to scroll, since it will be called automatically then)
-    if([self frame].size.height <= [[self enclosingScrollView] documentVisibleRect].size.height){
-        [self resetCursorRects];
+    [self resizeRow:inRow];
+    if (!lockFocus) {  
+        //Update our cursor tracking (We can skip this if our view is tall enough to scroll, since it will be called automatically then)
+        if([self frame].size.height <= [[self enclosingScrollView] documentVisibleRect].size.height){
+            [self resetCursorRects];
+        }
     }
+    
+    //   [self setNeedsDisplay:YES];
 }
 
 - (void)removeAllRows
 {
     [rowArray release]; rowArray = [[NSMutableArray alloc] init];
-    [self resetCursorRects];
-    [self _resizeContents:YES];
+    if (!lockFocus) {
+        [self resetCursorRects];
+        [self _resizeContents:YES];
+    }
+    
+    [self setNeedsDisplay:YES];
 }
 
 - (AIFlexibleTableRow *)rowAtIndex:(int)index
@@ -511,25 +522,27 @@
 //Recalculate our table view's dimensions so it completely fills the contianing scrollview's visible rect.  If YES is passed, recalculates the size of all our rows as well.
 - (void)_resizeContents:(BOOL)resizeContents
 {
-    NSRect		documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    NSEnumerator	*rowEnumerator;
-    AIFlexibleTableRow	*row;
-    NSSize		size;
-
-    //Get our view's new width
-    size.width = documentVisibleRect.size.width;
-
-    //Enumerate through each row, resizing it to the new width
-    if(resizeContents){
-        contentsHeight = topPadding + bottomPadding;
-        rowEnumerator = [rowArray objectEnumerator];
-        while((row = [rowEnumerator nextObject])){
-            contentsHeight += [row sizeRowForWidth:size.width];
+    if (!lockFocus) {
+        NSRect		documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+        NSEnumerator	*rowEnumerator;
+        AIFlexibleTableRow	*row;
+        NSSize		size;
+        
+        //Get our view's new width
+        size.width = documentVisibleRect.size.width;
+        
+        //Enumerate through each row, resizing it to the new width
+        if(resizeContents){
+            contentsHeight = topPadding + bottomPadding;
+            rowEnumerator = [rowArray objectEnumerator];
+            while((row = [rowEnumerator nextObject])){
+                contentsHeight += [row sizeRowForWidth:size.width];
+            }
         }
+        
+        //Resize our view
+        [self _resizeViewToWidth:size.width height:contentsHeight];
     }
-
-    //Resize our view
-    [self _resizeViewToWidth:size.width height:contentsHeight];
 }
 
 //Recalculate the size of an individual row
@@ -538,10 +551,25 @@
     //Resize the row
     contentsHeight -= [inRow height];
     contentsHeight += [inRow sizeRowForWidth:[self frame].size.width];
-    [self setNeedsDisplay:YES];
+    
+    if (!lockFocus) {        
+        //Resize our view
+        [self _resizeViewToWidth:[self frame].size.width height:contentsHeight];
+    }
+}
 
-    //Resize our view
-    [self _resizeViewToWidth:[self frame].size.width height:contentsHeight];
+- (void)lockTable
+{
+    lockFocus = YES;
+}
+
+- (void)unlockTable
+{
+    lockFocus = NO;
+    [self resetCursorRects];
+    [self _resizeContents:YES];
+    
+    [self display];
 }
 
 //Resize our view to the passed dimensions

@@ -45,6 +45,8 @@
     NSMutableArray			*cursorTrackingRowArray;
     NSPoint				selection_startPoint;
     int					selectClicks;
+    
+    BOOL                                lockFocus;
 }
 
 
@@ -55,6 +57,8 @@
 - (void)removeAllRows;
 - (AIFlexibleTableRow *)rowAtIndex:(int)index;
 - (void)setContentPaddingTop:(int)inTop bottom:(int)inBottom;
+- (void)lockTable;
+- (void)unlockTable;
 
 @end
 
