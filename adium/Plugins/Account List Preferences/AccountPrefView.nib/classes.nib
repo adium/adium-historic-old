@@ -13,6 +13,7 @@
                 newAccount = id; 
                 selectServiceType = id; 
                 toggleAutoConnect = id; 
+                toggleConnectStatus = id; 
             }; 
             CLASS = AIAccountListPreferences; 
             LANGUAGE = ObjC; 
@@ -20,14 +21,16 @@
                 "button_autoConnect" = NSButton; 
                 "button_deleteAccount" = NSButton; 
                 "button_newAccount" = NSButton; 
+                "button_toggleConnect" = NSButton; 
                 configuredForService = id; 
                 "popupMenu_serviceList" = NSPopUpButton; 
+                "progress_status" = NSProgressIndicator; 
                 "scrollView_accountList" = AIAutoScrollView; 
                 "tabView_auxiliary" = NSTabView; 
                 "tableView_accountList" = AIAlternatingRowTableView; 
                 "textField_accountName" = ESDelayedTextField; 
+                "textField_status" = NSTextField; 
                 "view_accountDetails" = NSView; 
-                "view_accountPreferences" = NSView; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

@@ -130,6 +130,9 @@ enum {
 
 - (void)drawInRect:(NSRect)inRect
 {
+	//Non-integer widths will crash this code!
+	inRect = NSMakeRect((int)inRect.origin.x, (int)inRect.origin.y, (int)inRect.size.width, (int)inRect.size.height);
+	
 	[self drawInBezierPath:[NSBezierPath bezierPathWithRect:inRect]];
 }
 
