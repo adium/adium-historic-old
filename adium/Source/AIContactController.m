@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.139 2004/06/04 20:55:44 evands Exp $
+// $Id: AIContactController.m,v 1.140 2004/06/05 01:53:12 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -291,7 +291,16 @@
 															 selector:@selector(_performDelayedUpdates:) 
 															 userInfo:nil 
 															  repeats:YES] retain];
-    }
+    }else{
+		//Reset the timer
+		[delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
+		
+		delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL 
+															   target:self
+															 selector:@selector(_performDelayedUpdates:) 
+															 userInfo:nil 
+															  repeats:YES] retain];
+	}
 }
 
 //Update the status of a list object.  This will update any information that is otherwise too expensive to update
@@ -515,7 +524,7 @@
 {
 	AIListObject *listObject = nil;
 	
-	if (sender = menuItem_getInfoContextual){
+	if (sender == menuItem_getInfoContextual){
 		listObject = [[owner menuController] contactualMenuContact];
 	}else{
 		listObject = [self selectedListObject];
