@@ -26,9 +26,10 @@
 
     NSMenuItem			*menuItem_away;
     NSMenuItem			*menuItem_removeAway;
-    NSMenuItem			*menuItem_customMessage;
-    NSMenu			*menu_awaySubmenu;
-
+    
+    NSMenuItem			*menuItem_dockAway;
+    NSMenuItem			*menuItem_dockRemoveAway;
+    
     BOOL			menuConfiguredForAway;
 
     NSMutableArray		*receivedAwayMessage;
