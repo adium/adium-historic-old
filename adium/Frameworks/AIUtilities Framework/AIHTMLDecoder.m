@@ -150,7 +150,7 @@ int HTMLEquivalentForFontSize(int fontSize);
         while (loop < (searchRange.location + searchRange.length))
         {
             long currentChar = [inMessageString characterAtIndex:loop];
-            /*
+            
             if(currentChar == 60){ //replace less-than's (<) with their HTML code (&lt;)
                 [string appendString:@"&lt;"];
                 
@@ -160,7 +160,7 @@ int HTMLEquivalentForFontSize(int fontSize);
             }else if(currentChar == '&'){ //replace with (&amp;) (breaks links, but we'll deal with that later)
                 [string appendString:@"&amp;"];
 
-            }else*/{
+            }else{
                 [string appendCharacter:currentChar]; //!! Undocumented / Private method !!
 
             }
@@ -368,7 +368,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 				{
 					[attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
 				}
-                            else if ((sscanf([chunkString cString], "#%i", &asciiChar)) == 1) //Using scanf for now; I don't know a good Cocoa way to quickly do this
+                else if ((sscanf([chunkString cString], "#%i", &asciiChar)) == 1) //Using scanf for now; I don't know a good Cocoa way to quickly do this
 				{
 					[attrString appendString:[NSString stringWithFormat:@"%c", asciiChar] withAttributes:[textAttributes dictionary]];
 				}
@@ -388,8 +388,6 @@ int HTMLEquivalentForFontSize(int fontSize)
 		}
     }
 
-#warning There is no 'decodeHTMLEntities:' method.  Commented for now to stop the assertions  - Adam I (01/09/03)
-//    [AIHTMLDecoder decodeHTMLEntities:attrString];
     
     return([attrString autorelease]);
 }
