@@ -130,92 +130,93 @@ CBStatusMenuItemController *sharedInstance = nil;
     {
         //snag the contact from the notification
         AIListObject    *contact;
-        
         if (contact = [notification object]){
             
-            NSString        *containingGroupUID = [[contact containingGroup] UID];
-            
-            //see if there's already a group menu for this contact
-            NSMenuItem *groupItem = [groupsMenuItems objectForKey:containingGroupUID];
-            
-            if(!groupItem) //No group menu item!
-            {
-                //so we create one
-                groupItem = [[[NSMenuItem alloc] initWithTitle:containingGroupUID action:nil keyEquivalent:@""] autorelease];
-                [groupItem setRepresentedObject:[contact containingGroup]];
-                [groupItem setEnabled:YES];
+            NSString        *containingGroupUID;
+            if (containingGroupUID = [[contact containingGroup] UID]) {
                 
-                //and add it to our dict
-                [groupsMenuItems setObject:groupItem forKey:containingGroupUID];
-            }
-            
-            if(![groupItem hasSubmenu]) //No submenuon the group menu item
-            {
-                //so we add them
-                [groupItem setSubmenu:[[NSMenu alloc] initWithTitle:containingGroupUID]];
-            } /* small WoA: the reason I didn't combine this with the above is in case Something Weird happens
+                //see if there's already a group menu for this contact
+                NSMenuItem *groupItem = [groupsMenuItems objectForKey:containingGroupUID];
+                
+                if(!groupItem) //No group menu item!
+                {
+                    //so we create one
+                    groupItem = [[[NSMenuItem alloc] initWithTitle:containingGroupUID action:nil keyEquivalent:@""] autorelease];
+                    [groupItem setRepresentedObject:[contact containingGroup]];
+                    [groupItem setEnabled:YES];
+                    
+                    //and add it to our dict
+                    [groupsMenuItems setObject:groupItem forKey:containingGroupUID];
+                }
+                
+                if(![groupItem hasSubmenu]) //No submenuon the group menu item
+                {
+                    //so we add them
+                    [groupItem setSubmenu:[[NSMenu alloc] initWithTitle:containingGroupUID]];
+                } /* small WoA: the reason I didn't combine this with the above is in case Something Weird happens
                 and we don't have a menu for the existing group (bad reference counting, or just plain
                                                                  Wackyness). I don't actually expect this case to happen without the (!groupItem) statement being
                 evaluated, but hey, you never know -chb */
-            
-            //active iff online ^ ~(away v idle)
-            BOOL isActive = [[contact statusArrayForKey:@"Online"] greatestIntegerValue] && !([[contact statusArrayForKey:@"Away"] greatestIntegerValue] || [[contact statusArrayForKey:@"Idle"] greatestIntegerValue]);
-            int indexOfItem = [[groupItem submenu] indexOfItemWithRepresentedObject:contact];
-            
-            //add if active and not in menu.
-            if(isActive && indexOfItem == -1)
-            {
-                //What we're doing here is the following:
-                //  A) If we have items already,
-                //      1) build an array of ListObjects
-                //      2) send that array to the Sort Method
-                //      3) find out what index our contact is in that array
-                //      4) and insert him in the same place in our menu
-                //  B) Otherwise, just insert him at the top, it doesn't matter
                 
-                NSMutableArray *sortArray = [NSMutableArray arrayWithObject:contact];
-                NSMenuItem *menuItemObj = nil;
-                NSMenuItem *contactMenuItem = [[[NSMenuItem alloc] initWithTitle:[contact displayName] target:self action:@selector(messageContact:) keyEquivalent:@""] autorelease];
-                [contactMenuItem setRepresentedObject:contact];
-                [contactMenuItem setEnabled:YES];
+                //active iff online ^ ~(away v idle)
+                BOOL isActive = [[contact statusArrayForKey:@"Online"] greatestIntegerValue] && !([[contact statusArrayForKey:@"Away"] greatestIntegerValue] || [[contact statusArrayForKey:@"Idle"] greatestIntegerValue]);
+                int indexOfItem = [[groupItem submenu] indexOfItemWithRepresentedObject:contact];
                 
-                if([[[groupItem submenu] itemArray] count] > 0)
+                //add if active and not in menu.
+                if(isActive && indexOfItem == -1)
                 {
-                    NSEnumerator *numer = [[[groupItem submenu] itemArray] objectEnumerator];
-                    while(menuItemObj = [numer nextObject])
+                    //What we're doing here is the following:
+                    //  A) If we have items already,
+                    //      1) build an array of ListObjects
+                    //      2) send that array to the Sort Method
+                    //      3) find out what index our contact is in that array
+                    //      4) and insert him in the same place in our menu
+                    //  B) Otherwise, just insert him at the top, it doesn't matter
+                    
+                    NSMutableArray *sortArray = [NSMutableArray arrayWithObject:contact];
+                    NSMenuItem *menuItemObj = nil;
+                    NSMenuItem *contactMenuItem = [[[NSMenuItem alloc] initWithTitle:[contact displayName] target:self action:@selector(messageContact:) keyEquivalent:@""] autorelease];
+                    [contactMenuItem setRepresentedObject:contact];
+                    [contactMenuItem setEnabled:YES];
+                    
+                    if([[[groupItem submenu] itemArray] count] > 0)
                     {
-                        [sortArray addObject:[menuItemObj representedObject]];
+                        NSEnumerator *numer = [[[groupItem submenu] itemArray] objectEnumerator];
+                        while(menuItemObj = [numer nextObject])
+                        {
+                            [sortArray addObject:[menuItemObj representedObject]];
+                        }
+                        
+                        [[[adium contactController] activeSortController] sortListObjects:sortArray];
+                        
+                        [[groupItem submenu] insertItem:contactMenuItem atIndex:[sortArray indexOfObjectIdenticalTo:contact]];
+                    }
+                    else
+                    {
+                        [[groupItem submenu] addItem:contactMenuItem];
                     }
                     
-                    [[[adium contactController] activeSortController] sortListObjects:sortArray];
-                    
-                    [[groupItem submenu] insertItem:contactMenuItem atIndex:[sortArray indexOfObjectIdenticalTo:contact]];
-                }
-                else
-                {
-                    [[groupItem submenu] addItem:contactMenuItem];
-                }
-                
-                //GO GO GO!
-                [self buildMenu];
+                    //GO GO GO!
+                    [self buildMenu];
         }
-            
-            //remove if not active and in menu
-            else if(!isActive && indexOfItem != -1)
-            {
-                [[groupItem submenu] removeItemAtIndex:indexOfItem];
                 
-                //GO GO GO!
-                [self buildMenu];
-            }
-            
-            //if this group is empty, remove it!
-            if([[[groupItem submenu] itemArray] count] == 0)
-            {
-                [groupsMenuItems removeObjectForKey:containingGroupUID];
+                //remove if not active and in menu
+                else if(!isActive && indexOfItem != -1)
+                {
+                    [[groupItem submenu] removeItemAtIndex:indexOfItem];
+                    
+                    //GO GO GO!
+                    [self buildMenu];
+                }
                 
-                //GO GO GO!
-                [self buildMenu];
+                //if this group is empty, remove it!
+                if([[[groupItem submenu] itemArray] count] == 0)
+                {
+                    [groupsMenuItems removeObjectForKey:containingGroupUID];
+                    
+                    //GO GO GO!
+                    [self buildMenu];
+                }
             }
         }
     }
