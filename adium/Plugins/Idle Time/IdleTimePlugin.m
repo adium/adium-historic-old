@@ -47,7 +47,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"Set Idle…" target:self action:@selector(showIdleTimeWindow:) keyEquivalent:@"I"] autorelease];
     [[owner menuController] addMenuItem:menuItem toLocation:LOC_File_Status];
-    
+
+    //Install our tooltip entry
+    [[owner interfaceController] registerContactListTooltipEntry:self];
+
     //Install all the toolbar item to manually set idle time
     AIMiniToolbarItem	*toolbarItem;
 
@@ -72,6 +75,37 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
     [[IdleTimeWindowController idleTimeWindowControllerWithOwner:owner] showWindow:nil];
 }
+
+
+
+//Tooltip entry --
+- (NSString *)label
+{
+    return(@"Idle");
+}
+
+- (NSString *)entryForObject:(AIListObject *)inObject
+{
+    NSString	*entry = nil;
+    
+    if([inObject isKindOfClass:[AIListContact class]]){
+        int idle = [[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestIntegerValue];
+
+        if(idle){
+            int	hours = (int)(idle / 60);
+            int	minutes = (int)(idle % 60);
+                        
+            if(hours){
+                entry = [NSString stringWithFormat:@"%i hours, %i minutes", hours, minutes];
+            }else{
+                entry = [NSString stringWithFormat:@"%i minutes", minutes];
+            }
+        }
+    }
+
+    return(entry);
+}
+
 
 
 // Private ---------------------------------------------------------------------------------

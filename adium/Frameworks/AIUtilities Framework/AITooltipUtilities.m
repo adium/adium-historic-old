@@ -7,12 +7,15 @@
 //
 
 #import "AITooltipUtilities.h"
+#import "AIAttributedStringAdditions.h"
 
+#define TOOLTIP_MAX_WIDTH	250
 
 @interface AITooltipUtilities (PRIVATE)
 + (void)_createTooltip;
 + (void)_closeTooltip;
-+ (void)_positionAndSizeTooltip;
++ (void)_sizeTooltip;
++ (NSPoint)_tooltipFrameOrigin;
 @end
 
 @implementation AITooltipUtilities
@@ -33,18 +36,19 @@ static	NSPoint		tooltipPoint;
             [tooltipString release]; tooltipString = [inString retain];
             [textField_tooltip setStringValue:tooltipString];
 
-            [self _positionAndSizeTooltip];
+            [self _sizeTooltip];
 
         }else{
             //Update the existing tooltip's string and or position
             if([inString compare:tooltipString] != 0){
+                tooltipPoint = inPoint;
                 [tooltipString release]; tooltipString = [inString retain];
                 [textField_tooltip setStringValue:tooltipString];
-                [self _positionAndSizeTooltip];
+                [self _sizeTooltip];
             }
             if(!NSEqualPoints(inPoint,tooltipPoint)){
                 tooltipPoint = inPoint;
-                [self _positionAndSizeTooltip];
+                [tooltipWindow setFrameOrigin:[self _tooltipFrameOrigin]];
             }
         }
 
@@ -87,16 +91,40 @@ static	NSPoint		tooltipPoint;
     tooltipPoint = NSMakePoint(0,0);
 }
 
-+ (void)_positionAndSizeTooltip
++ (void)_sizeTooltip
 {
-#warning use tooltip/window screen, not main screen
-    NSRect	screenRect = [[NSScreen mainScreen] visibleFrame];
     NSRect	tooltipRect;
+    NSPoint	origin;
 
     //Set up the tooltip's bounds
     [textField_tooltip sizeToFit];
-    tooltipRect.size.width = [textField_tooltip bounds].size.width;
-    tooltipRect.size.height = [textField_tooltip bounds].size.height;
+    tooltipRect = [textField_tooltip bounds];
+    
+    if(tooltipRect.size.width > TOOLTIP_MAX_WIDTH){
+        NSAttributedString	*attrString = [[[NSAttributedString alloc] initWithString:tooltipString] autorelease];
+
+        tooltipRect.size.width = TOOLTIP_MAX_WIDTH;
+        tooltipRect.size.height = [attrString heightWithWidth:TOOLTIP_MAX_WIDTH];
+
+        [textField_tooltip setFrameSize:tooltipRect.size];
+    }
+
+    //Set the origin
+    origin = [self _tooltipFrameOrigin];
+    tooltipRect.origin.x = origin.x;
+    tooltipRect.origin.y = origin.y;
+    
+    //Apply the frame change and ensure the tip is visible
+    [tooltipWindow setFrame:tooltipRect display:YES];
+    if(![tooltipWindow isVisible]){
+        [tooltipWindow makeKeyAndOrderFront:nil];
+    }
+}
+
++ (NSPoint)_tooltipFrameOrigin
+{
+    NSRect	screenRect = [[NSScreen mainScreen] visibleFrame]; //use tooltip/window screen, not main screen!
+    NSRect	tooltipRect = [textField_tooltip bounds];
 
     //Adjust the tooltip so it fits completely on the screen
     if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipRect.size.width)){
@@ -111,11 +139,7 @@ static	NSPoint		tooltipPoint;
         tooltipRect.origin.y = tooltipPoint.y - 2 - tooltipRect.size.height;
     }
 
-    //Apply the frame change and ensure the tip is visible
-    [tooltipWindow setFrame:tooltipRect display:YES];
-    if(![tooltipWindow isVisible]){
-        [tooltipWindow makeKeyAndOrderFront:nil];
-    }
+    return(tooltipRect.origin);
 }
 
 @end

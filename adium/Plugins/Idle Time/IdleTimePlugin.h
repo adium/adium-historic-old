@@ -21,7 +21,7 @@
 
 @class IdleTimeWindowController, IdleTimePreferences;
 
-@interface AIIdleTimePlugin : AIPlugin <AIMiniToolbarItemDelegate> {
+@interface AIIdleTimePlugin : AIPlugin <AIMiniToolbarItemDelegate, AIContactListTooltipEntry> {
     IdleTimePreferences	*preferences;
 
     BOOL		isIdle;

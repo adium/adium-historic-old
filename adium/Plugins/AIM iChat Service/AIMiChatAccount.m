@@ -379,8 +379,6 @@ extern void* objc_getClass(const char *name);
     NSEnumerator	*buddyEnumerator;
     NSDictionary	*buddyPropertiesDict;
     
-    NSLog(@"Update %i %@",(int)[inProperties count],inProperties);
-    
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){
         NSString	*compactedName = [buddyPropertiesDict objectForKey:@"FZPersonID"];
