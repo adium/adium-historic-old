@@ -15,7 +15,6 @@
  */
 
 #import "AIBorderlessListWindowController.h"
-#import "AICLPreferences.h"
 #import "AIInterfaceController.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
@@ -35,12 +34,9 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 
 @interface AISCLViewPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
-+ (NSDictionary *)cachedSetDictWithName:(NSString *)setName extension:(NSString *)extension;
 @end
 
 @implementation AISCLViewPlugin
-
-static 	NSMutableDictionary	*_xtrasDict = nil;
 
 - (void)installPlugin
 {
@@ -182,23 +178,17 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	NSEnumerator	*enumerator;
 	NSString		*fileName, *resourcePath;
 	NSString		*key;
-	NSDictionary	*setDict, *setDictionary = nil;
+	NSDictionary	*setDictionary = nil;
 
-	if (setDict = [self cachedSetDictWithName:setName extension:extension]){
-		setDictionary = [setDict objectForKey:@"preferences"];
-	}
+	//Look in each resource location until we find it
+	fileName = [setName stringByAppendingPathExtension:extension];
 	
-	if (!setDictionary){
-		//If we didn't find a setDictionary already loaded, look in each resource location until we find it
-		fileName = [setName stringByAppendingPathExtension:extension];
+	enumerator = [[adiumInstance resourcePathsForName:folder] objectEnumerator];
+	while((resourcePath = [enumerator nextObject]) && !setDictionary) {
+		NSString		*filePath = [resourcePath stringByAppendingPathComponent:fileName];
 		
-		enumerator = [[adiumInstance resourcePathsForName:folder] objectEnumerator];
-		while((resourcePath = [enumerator nextObject]) && !setDictionary) {
-			NSString		*filePath = [resourcePath stringByAppendingPathComponent:fileName];
-			
-			if ([defaultManager fileExistsAtPath:filePath]){
-				setDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
-			}
+		if ([defaultManager fileExistsAtPath:filePath]){
+			setDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		}
 	}
 	
@@ -248,15 +238,9 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	NSDictionary	*setDict;
 	BOOL			success;
 	
-	if (setDict = [self cachedSetDictWithName:setName extension:extension]){
-		path = [setDict objectForKey:@"path"];
-	}
-	
-	if (!path){
 		NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
 		NSString	*fileName = [setName stringByAppendingPathExtension:extension];
 		path = [destFolder stringByAppendingPathComponent:fileName];
-	}
 	
 	success = [[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
 	
@@ -266,55 +250,65 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	return(success);
 }
 
-//When our preferences view closes, clear out the cache of all the various themes and layouts which we had in memory
-+ (void)resetXtrasCache
+//
++ (BOOL)renameSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toName:(NSString *)newName
 {
-	[_xtrasDict release]; _xtrasDict = nil;
+	NSString		*path = nil;
+	NSDictionary	*setDict;
+	BOOL			success;
+	
+	path = [setDict objectForKey:@"path"];
+	
+	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
+	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
+	
+	success = [[NSFileManager defaultManager] movePath:[destFolder stringByAppendingPathComponent:fileName]
+												toPath:[destFolder stringByAppendingPathComponent:newFileName]
+											   handler:nil];
+
+	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
+	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	
+	return(success);
 }
+
+//
++ (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName
+{
+	NSString		*path = nil;
+	NSDictionary	*setDict;
+	BOOL			success;
+	
+	path = [setDict objectForKey:@"path"];
+
+	//Duplicate the set
+	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
+	NSString	*newFileName = [newName stringByAppendingPathExtension:extension];
+	
+	success = [[NSFileManager defaultManager] copyPath:[destFolder stringByAppendingPathComponent:fileName]
+												toPath:[destFolder stringByAppendingPathComponent:newFileName]
+											   handler:nil];
+	
+	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
+	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+
+	return(success);
+}
+
+
+
+
 
 + (NSArray *)availableLayoutSets
 {
-	NSArray	*availableLayoutSets = [_xtrasDict objectForKey:LIST_LAYOUT_EXTENSION];
-
-	if (!availableLayoutSets){
-		availableLayoutSets = [AISCLViewPlugin availableSetsWithExtension:LIST_LAYOUT_EXTENSION 
-															   fromFolder:LIST_LAYOUT_FOLDER];
-
-		if (!_xtrasDict) _xtrasDict = [[NSMutableDictionary alloc] init];
-		[_xtrasDict setObject:availableLayoutSets
-					   forKey:LIST_LAYOUT_EXTENSION];
-	}
-
-	return availableLayoutSets;
+	return([AISCLViewPlugin availableSetsWithExtension:LIST_LAYOUT_EXTENSION 
+											fromFolder:LIST_LAYOUT_FOLDER]);
 }
 + (NSArray *)availableThemeSets
 {
-	NSArray	*availableThemeSets = [_xtrasDict objectForKey:LIST_THEME_EXTENSION];
-
-	if (!availableThemeSets){
-		availableThemeSets = [AISCLViewPlugin availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER];
-		
-		if (!_xtrasDict) _xtrasDict = [[NSMutableDictionary alloc] init];
-		[_xtrasDict setObject:availableThemeSets
-					   forKey:LIST_THEME_EXTENSION];
-	}
-
-	return availableThemeSets;
-}
-
-+ (NSDictionary *)cachedSetDictWithName:(NSString *)setName extension:(NSString *)extension
-{
-	NSArray			*setArray = [_xtrasDict objectForKey:extension];
-	NSEnumerator	*enumerator;
-	NSDictionary	*setDict;
-	
-	//Try to find an existing object with this name to overwrite
-	enumerator = [setArray objectEnumerator];
-	while (setDict = [enumerator nextObject]){
-		if ([[setDict objectForKey:@"name"] isEqualToString:setName]) break;
-	}
-	
-	return(setDict);
+	return([AISCLViewPlugin availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER]);
 }
 
 //
