@@ -455,7 +455,7 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	if([[menuItem representedObject] isKindOfClass:[AIServiceType class]]) {
+//	if([[menuItem representedObject] isKindOfClass:[AIServiceType class]]) {
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
 		
@@ -466,8 +466,8 @@
 			}
 		}
 		return NO;
-	}
-	return YES;
+//	}
+//	return YES;
 }
 
 - (void)selectGroup:(id)sender
