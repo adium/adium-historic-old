@@ -128,7 +128,7 @@
 						   iconData:iconData
 						   priority:0
 						   isSticky:NO
-					 notificationID:[listObject internalObjectID]];
+					   clickContext:[listObject internalObjectID]];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
@@ -172,13 +172,13 @@
 						   iconData:nil
 						   priority:0
 						   isSticky:YES
-					 notificationID:@"The Growl! IT IS READY!"];
+					   clickContext:@"The Growl! IT IS READY!"];
 #endif
 }
 
-- (void)growlNotificationWasClicked:(NSString *)notificationID
+- (void)growlNotificationWasClicked:(NSString *)clickContext
 {
-	NSLog(@"%@ was clicked",notificationID);
+	NSLog(@"%@ was clicked",clickContext);
 }
 
 @end
