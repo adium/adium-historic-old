@@ -74,7 +74,7 @@
 - (void)sendFile:(NSString *)inFile toListContact:(AIListContact *)listContact
 {
 	AIAccount *account = [[owner accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
-																			 toListObject:listContact];
+																				toContact:listContact];
 	if (account) {
 
 		//Set up a fileTransfer object
