@@ -35,5 +35,6 @@
 - (NSString *)nibName;
 - (NSArray *)auxiliaryTabs;
 - (void)saveFieldsImmediately;
+- (NSString *)userNameLabel;
 
 @end
