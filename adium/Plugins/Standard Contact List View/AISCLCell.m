@@ -252,13 +252,13 @@
 			
 			//Restict our label to the object name if desired
 			if(labelAroundContactOnly) {				
-				labelRect.size = [displayName size];
+				labelRect.size.width = [displayName size].width;
 			}
 			
 			//Indent our label into the available margins
 			float	indent = [self labelEdgePaddingRequiredForLabelOfSize:labelRect.size];
 			labelRect.origin.x -= indent;
-			labelRect.size.width += indent * 2;
+			labelRect.size.width += indent * 3;
 			
 			//Adjust labels slightly when displaying for a group (to avoid overlapping the flippy triangle)
 			if(isGroup){
