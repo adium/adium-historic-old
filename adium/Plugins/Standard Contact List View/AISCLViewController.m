@@ -26,6 +26,8 @@
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
+#define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
+
 @interface AISCLViewController (PRIVATE)
 - (void)contactListChanged:(NSNotification *)notification;
 - (void)contactOrderChanged:(NSNotification *)notification;
@@ -205,7 +207,7 @@
 				[contactListView updateHorizontalSizeForObject:object];
 			}
 		}else{
-#warning	[contactListView reloadData]; seems needed here but "sucks performancewise" to quote some buddhist monk guy
+			
 			[contactListView _performFullRecalculation];	
 		}
     }
@@ -239,9 +241,6 @@
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
 		
 				
-		//Opacity, Shadows
-		[self _configureTransparencyAndShadows];
-		
         //Contact and group fonts
         NSFont  *font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
 		NSFont	*boldFont = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
@@ -300,6 +299,9 @@
         [contactListView setDrawsAlternatingRows:alternatingGrid];
         [contactListView setAlternatingRowColor:gridColor];
 
+		//Opacity, Shadows
+		[self _configureTransparencyAndShadows];
+				
 		[contactListView _performFullRecalculation];
     }
    
@@ -312,6 +314,10 @@
         horizontalResizingEnabled = [[notOurPrefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
     }
 
+	if ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_STATUS_COLORING]){
+		//Update the display if the coloring we're using on our contacts changed.
+		[contactListView display];
+	}
 }
 
 //Configure the transparency and shadowing of the window containing our list
