@@ -94,6 +94,7 @@ typedef enum {
 - (AIChat *)openChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
+- (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID;
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
 - (void)openChat:(AIChat *)chat;
