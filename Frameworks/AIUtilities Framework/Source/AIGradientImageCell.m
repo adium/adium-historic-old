@@ -15,6 +15,7 @@
 	if((self = [super init])) {
 		drawsGradient = NO;
 		ignoresFocus = NO;
+		maxSize = NSZeroSize;
 	}
 	
 	return self;
@@ -31,25 +32,33 @@
 }
 
 //Draw Gradient
-- (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient{
+- (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient
+{
 	drawsGradient = inDrawsGradient;
 }
-- (BOOL)drawsGradientHighlight{
+- (BOOL)drawsGradientHighlight
+{
 	return(drawsGradient);
 }
 
 //Ignore focus (Draw as active regardless of focus)
-- (void)setIgnoresFocus:(BOOL)inIgnoresFocus{
+- (void)setIgnoresFocus:(BOOL)inIgnoresFocus
+{
 	ignoresFocus = inIgnoresFocus;
 }
-- (BOOL)ignoresFocus{
+- (BOOL)ignoresFocus
+{
 	return(ignoresFocus);
+}
+
+- (void)setMaxSize:(NSSize)inMaxSize
+{
+	maxSize = inMaxSize;
 }
 
 //Draw with the selected-control colours.
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	NSLog(@"%i: %@",[self drawsGradientHighlight],NSStringFromRect(cellFrame));
 	if([self drawsGradientHighlight]){
 		//Draw the gradient
 		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
@@ -87,14 +96,24 @@
 		
 		//Scaling
 		NSRect	targetRect = cellFrame;
-		if ((imgSize.height > cellFrame.size.height) ||
-			(imgSize.width  >  cellFrame.size.width)) {
+		
+		//Determine the correct maximum size, taking into account maxSize and our cellFrame.
+		NSSize	ourMaxSize = cellFrame.size;
+		if((maxSize.width != 0) && (ourMaxSize.width > maxSize.width)){
+			ourMaxSize.width = maxSize.width;
+		}
+		if((maxSize.height != 0) && (ourMaxSize.height > maxSize.height)){
+			ourMaxSize.height = maxSize.height;
+		}
+		
+		if ((imgSize.height > ourMaxSize.height) ||
+			(imgSize.width  >  ourMaxSize.width)) {
 			
-			if ((imgSize.height / cellFrame.size.height) >
-				(imgSize.width / cellFrame.size.width)) {
-				targetRect.size.width  = roundf(imgSize.width  / (imgSize.height / cellFrame.size.height));
+			if ((imgSize.height / ourMaxSize.height) >
+				(imgSize.width / ourMaxSize.width)) {
+				targetRect.size.width  = roundf(imgSize.width  / (imgSize.height / ourMaxSize.height));
 			} else {
-				targetRect.size.height = roundf(imgSize.height / (imgSize.width  / cellFrame.size.width));
+				targetRect.size.height = roundf(imgSize.height / (imgSize.width  / ourMaxSize.width));
 			}
 			
 		}else{
