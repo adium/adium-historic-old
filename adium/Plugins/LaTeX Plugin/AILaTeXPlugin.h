@@ -12,4 +12,6 @@
 {
 }
 
+- (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent;
+
 @end

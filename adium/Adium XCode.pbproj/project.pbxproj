@@ -25925,8 +25925,7 @@
 		B72537B6058C4577004BA969 = {
 			buildActionMask = 2147483647;
 			files = (
-				B72537C7058C4608004BA969,
-				B72537C8058C4608004BA969,
+				B747E986058D144C00A9F037,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -25941,8 +25940,7 @@
 		B72537B8058C4577004BA969 = {
 			buildActionMask = 2147483647;
 			files = (
-				B72537C9058C4611004BA969,
-				B72537CA058C4611004BA969,
+				B747E987058D144C00A9F037,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26080,26 +26078,32 @@
 			settings = {
 			};
 		};
-		B72537C7058C4608004BA969 = {
-			fileRef = B782F08D058BB66A00AF4BBA;
+		B747E984058D144C00A9F037 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILaTeXPlugin.h;
+			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B747E985058D144C00A9F037 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILaTeXPlugin.m;
+			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B747E986058D144C00A9F037 = {
+			fileRef = B747E984058D144C00A9F037;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		B72537C8058C4608004BA969 = {
-			fileRef = B782F08C058BB66A00AF4BBA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B72537C9058C4611004BA969 = {
-			fileRef = B782F08B058BB66A00AF4BBA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B72537CA058C4611004BA969 = {
-			fileRef = B782F08E058BB66B00AF4BBA;
+		B747E987058D144C00A9F037 = {
+			fileRef = B747E985058D144C00A9F037;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -26124,50 +26128,12 @@
 		};
 		B782F088058BB60B00AF4BBA = {
 			children = (
-				B782F08B058BB66A00AF4BBA,
-				B782F08C058BB66A00AF4BBA,
-				B782F08D058BB66A00AF4BBA,
-				B782F08E058BB66B00AF4BBA,
+				B747E984058D144C00A9F037,
+				B747E985058D144C00A9F037,
 			);
 			isa = PBXGroup;
 			name = "LaTeX Plugin";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		B782F08B058BB66A00AF4BBA = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AILaTeXAttachment.m;
-			path = "Plugins/LaTeX Plugin/AILaTeXAttachment.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		B782F08C058BB66A00AF4BBA = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AILaTeXPlugin.h;
-			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		B782F08D058BB66A00AF4BBA = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AILaTeXAttachment.h;
-			path = "Plugins/LaTeX Plugin/AILaTeXAttachment.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		B782F08E058BB66B00AF4BBA = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AILaTeXPlugin.m;
-			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
