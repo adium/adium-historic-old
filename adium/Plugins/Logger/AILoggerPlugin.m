@@ -35,8 +35,9 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
 
     //Observe content sending and receiving
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:Content_DidSendContent object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:Content_DidReceiveContent object:nil];
+    //[[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:Content_DidSendContent object:nil];
+    //[[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:Content_DidReceiveContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
 
     //Install the log viewer menu item
     logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"];
@@ -120,12 +121,76 @@
         NSString	*message = [[content message] string];
         AIAccount	*account = [content destination];
         AIListContact	*contact = [content source];
-        
+
         //Log the message
         [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message]
            betweenAccount:account
                andContact:contact
                    onDate:date];
+    }
+}
+
+//Content was added
+/* this observer method could replace both the above sending and recieving observers
+ * by using:
+ * [[content destination] isKindOfClass:[AIAccount class]] and
+ * [[content destination] isKindOfClass:[AIAccount class]]
+ * to determine whether the message is sending or recieving
+ * the only reason for using Content_ContentObjectAdded is because status changes are not
+ * recieved content.
+ *
+ * the downside to moving both to this method is the reliance on isKindOfClass
+ * the downside to not moving it is that the contentObjectAdded observer is activated
+ * twice as often as is needed
+ */
+- (void)contentObjectAdded:(NSNotification *)notification
+{
+    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
+
+    NSString		*message = nil;
+    AIAccount		*account = nil;
+    AIListContact	*contact = nil;
+
+    NSDate	*date = [content date];
+    NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+
+    NSString	*logMessage = nil;
+
+    //Message Content
+    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+	if([[content destination] isKindOfClass:[AIAccount class]] && [[content source] isKindOfClass:[AIListContact class]]){
+	    account = [content destination];
+	    contact = [content source];
+
+	}else if([[content source] isKindOfClass:[AIAccount class]] && [[content destination] isKindOfClass:[AIListContact class]]){
+	    account = [content source];
+	    contact = [content destination];
+
+	}
+	
+	message = (NSString *)[[content message] string];
+	
+        if(account && contact){
+//	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message];
+	}
+
+    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+        account = [content destination];
+        contact = [content source];
+
+	message = (NSString *)[content message];
+
+	//only log the status change if the contact has a currently open tab
+	//this doesn't match the actual status notification of adium, but it does match the logging of 1.x
+        if(account && contact && [[contact statusArrayForKey:@"Open Tab"] greatestIntegerValue]){
+	    logMessage = [NSString stringWithFormat:@"<%@ (%@)>\n", message, dateString];
+	}
+    }
+
+    //Log the message
+    if(logMessage != nil){
+        [self _addMessage:logMessage betweenAccount:account andContact:contact onDate:date];
+	//NSLog(@"account:%@ contact:%@ message:%@",[account UID], [contact UID], logMessage);
     }
 }
 

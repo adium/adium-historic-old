@@ -50,7 +50,7 @@
 
 - (void)updateOpenTabStatusOnContact:(AIListContact *)inContact withStatus:(BOOL)inStatus
 {
-    [[inContact statusArrayForKey:@"Open Tab"] setObject:[NSNumber numberWithInt:inStatus] withOwner:self];
+    [[inContact statusArrayForKey:@"Open Tab"] setObject:[NSNumber numberWithBool:(BOOL)inStatus] withOwner:self];
     [[owner contactController] contactStatusChanged:inContact modifiedStatusKeys:[NSArray arrayWithObject:@"Open Tab"]];
 }
 
