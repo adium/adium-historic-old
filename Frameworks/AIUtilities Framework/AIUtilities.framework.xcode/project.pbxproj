@@ -3369,6 +3369,39 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34BFE58007E9180500AD984D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIVariableHeightFlexibleColumnsOutlineView.h;
+			path = Source/AIVariableHeightFlexibleColumnsOutlineView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE58107E9180500AD984D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIVariableHeightFlexibleColumnsOutlineView.m;
+			path = Source/AIVariableHeightFlexibleColumnsOutlineView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE58207E9180500AD984D = {
+			fileRef = 34BFE58007E9180500AD984D;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34BFE58307E9180500AD984D = {
+			fileRef = 34BFE58107E9180500AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34D1838D075FC20E0075A380 = {
 			children = (
 				34D18390075FC2390075A380,
@@ -4500,6 +4533,8 @@
 		};
 		4BD1EFB906D265AA00B3975E = {
 			children = (
+				34BFE58007E9180500AD984D,
+				34BFE58107E9180500AD984D,
 				34E46928075681AE004C3A42,
 				34E46929075681AE004C3A42,
 				34486B9406D1DF0300DA778C,
@@ -5137,6 +5172,7 @@
 				3402D33107CB043F0044F818,
 				34D835D007CBED06006466F2,
 				3459C58F07E291EC005F284E,
+				34BFE58207E9180500AD984D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5280,6 +5316,7 @@
 				6E03C8D407C68A5800EAA71E,
 				34D835CF07CBED06006466F2,
 				3459C58E07E291EC005F284E,
+				34BFE58307E9180500AD984D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
