@@ -9,6 +9,8 @@
 
 @implementation DCGaimTrepiaJoinChatViewController
 
+#ifndef TREPIA_NOT_AVAILABLE
+
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	[super configureForAccount:inAccount];
@@ -18,5 +20,7 @@
 {
 	return @"DCGaimTrepiaJoinChatView";
 }
+
+#endif
 
 @end

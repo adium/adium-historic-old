@@ -10,6 +10,8 @@
 
 @implementation ESGaimTrepiaAccount
 
+#ifndef TREPIA_NOT_AVAILABLE
+
 static BOOL didInitTrepia = NO;
 
 - (const char*)protocolPlugin
@@ -44,4 +46,6 @@ static BOOL didInitTrepia = NO;
 	}
 	return nil;
 }
+
+#endif
 @end

@@ -17,6 +17,8 @@
 
 @implementation ESGaimMeanwhileAccountViewController
 
+#ifndef MEANWHILE_NOT_AVAILABLE
+
 - (NSString *)nibName{
     return(@"ESGaimMeanwhileAccountView");
 }
@@ -77,5 +79,7 @@
 		[textField_contactListWarning setStringValue:@""];		
 	}
 }
+
+#endif
 
 @end

@@ -9,6 +9,8 @@
 
 @implementation DCGaimMeanwhileJoinChatViewController
 
+#ifndef MEANWHILE_NOT_AVAILABLE
+
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	[super configureForAccount:inAccount];
@@ -18,5 +20,7 @@
 {
 	return @"DCGaimMeanwhileJoinChatView";
 }
+
+#endif
 
 @end

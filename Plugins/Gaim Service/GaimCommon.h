@@ -2,13 +2,16 @@
 //We could change ours in CVS but it wouldn't matter since Gaim itself uses 'libgaim' instead of 'Libgaim'.
 
 //Extensive debug logging
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 #if GAIM_DEBUG
 	#define GaimDebug NSLog
 #else
 	#define GaimDebug //
 #endif
+
+#define TREPIA_NOT_AVAILABLE
+//#define MEANWHILE_NOT_AVAILABLE
 
 //Gaim includes
 #include <Libgaim/libgaim.h>
