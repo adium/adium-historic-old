@@ -1,13 +1,9 @@
-<div class="outgoing">
-    <img class="icon" src="%userIconPath%" width="28" height="28" />
-    <div class="name">
-        %sender%
-        <span class="timestamp">%time%</span>
-    </div>
-	<div class="topleft"></div>
-	<div class="topmiddle"><div class="topright"></div></div>
-    <div class="messagebody">%message%</div>
-	<div id="insert"></div>
-	<div class="bottomleft"></div>
-    <div class="bottommiddle"><div class="bottomright"></div></div>
+<div class="chatbox outgoing">
+	<img src="%userIconPath%" width="32" height="32" class="buddyicon" />
+    <div class="name">%sender%<span class="timestamp">%time%</span></div>
+	<div class="message">
+        <div class="r tb"></div><div class="r lr"></div><div class="r tl"></div><div class="r tr"></div><div class="r bl"></div><div class="r br"></div>
+        <p>%message%</p>
+        <div id="insert"></div>
+	</div>
 </div>
