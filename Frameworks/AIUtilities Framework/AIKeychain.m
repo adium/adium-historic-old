@@ -66,7 +66,8 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 	if (ret == noErr){
 		NSData	*passwordData = [AIWiredData dataWithBytes:passwordBytes length:passwordLength];
 		passwordString = [[[AIWiredString alloc] initWithData:passwordData
-													 encoding:NSUTF8StringEncoding] autorelease];			
+													 encoding:NSUTF8StringEncoding] autorelease];
+		if([passwordString length] == 0) passwordString = nil;
 	}
 	if(passwordBytes)
 		SecKeychainItemFreeContent(/*attrList*/ NULL, passwordBytes);
