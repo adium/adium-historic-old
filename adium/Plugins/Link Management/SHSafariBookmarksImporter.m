@@ -28,14 +28,16 @@
 -(NSMenu *)parseSafariBookmarksForOwner:(id)inObject
 {
     owner = inObject;
-    NSDictionary    *bookmarkDict = [[NSDictionary dictionaryWithContentsOfFile:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]] autorelease];
+    NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     
-    safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:@"Safari bl bl bl"] autorelease];
+    safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:@"Safari Imported Bookmarks"] autorelease];
     safariBookmarksSupermenu = safariBookmarksMenu;
     [self drillPropertyList:bookmarkDict];
     
     return safariBookmarksMenu;
 }
+
+
 
 -(void)drillPropertyList:(id)inObject
 {
@@ -56,12 +58,13 @@
                 // if outObject is a list, then get the array it contains, then push the menu down.
                 safariBookmarksSupermenu = safariBookmarksMenu;
                 safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
+                
                 NSMenuItem *safariSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[safariBookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
                                                                      keyEquivalent:@""] autorelease];
-                [safariBookmarksSupermenu addItem:safariSubMenuItem];
-                [safariBookmarksSupermenu setSubmenu:safariBookmarksMenu forItem:safariSubMenuItem];
+                [safariBookmarksSupermenu addItem:[safariSubMenuItem retain]];
+                [safariBookmarksSupermenu setSubmenu:[safariBookmarksMenu retain] forItem:safariSubMenuItem];
                 [self drillPropertyList:outObject];
             }
         }
