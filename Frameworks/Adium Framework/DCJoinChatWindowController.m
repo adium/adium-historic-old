@@ -133,7 +133,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	
     //Select the last used account / Available online account
 	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																						toListObject:nil];
+																						   toContact:nil];
 	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
 	
     if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
