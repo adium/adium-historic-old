@@ -15,9 +15,9 @@
 
 #import <AIUtilities/AIUtilities.h>
 #import "AIFlexibleTableCell.h"
+#import "AIFlexibleTableRow.h"
 
 @interface AIFlexibleTableCell (PRIVATE)
-- (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (id)init;
 - (void)dealloc;
 @end
@@ -29,18 +29,15 @@
 {
     [super init];
 
+    contentSize = NSMakeSize(0,0);
+    variableWidth = NO;
     backgroundColor = nil;
-    gradientColor = nil;
-    dividerColor = nil;
-    drawContents = YES;
-
     leftPadding = 0;
     rightPadding = 0;
     topPadding = 0;
     leftPadding = 0;
-
-    selected = NO;
-
+    rowSpan = 1;
+    
     return(self);
 }
 
@@ -48,48 +45,24 @@
 - (void)dealloc
 {
     [backgroundColor release];
-    [gradientColor release];
-    [dividerColor release];
 
     [super dealloc];
 }
 
-
-//Configure ----------------------------------------------------------------------
 - (void)setBackgroundColor:(NSColor *)inColor
 {
     if(backgroundColor != inColor){
-        [backgroundColor release]; backgroundColor = nil;
-        backgroundColor = [inColor retain];
+        [backgroundColor release]; backgroundColor = [inColor retain];
     }
-    [gradientColor release]; gradientColor = nil;
 }
 
-- (void)setBackgroundGradientFrom:(NSColor *)inColorA to:(NSColor *)inColorB
+- (void)setTableRow:(AIFlexibleTableRow *)inRow
 {
-    if(backgroundColor != inColorA){
-        [backgroundColor release]; backgroundColor = nil;
-        backgroundColor = [inColorA retain];
-    }
-    if(gradientColor != inColorB){
-        [gradientColor release]; gradientColor = nil;
-        gradientColor = [inColorB retain];
-    }
+    tableRow = inRow;
 }
 
-- (void)setDrawContents:(BOOL)inValue
-{
-    drawContents = inValue;
-}
 
-- (void)setDividerColor:(NSColor *)inColor
-{
-    if(inColor != dividerColor){
-        [dividerColor release]; dividerColor = nil;
-        dividerColor = [inColor retain];
-    }
-}
-
+//Padding ------------------------------------------------------------------------------
 - (void)setPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom
 {
     leftPadding = inLeft;
@@ -97,86 +70,94 @@
     topPadding = inTop;
     bottomPadding = inBottom;
 }
-
-- (void)setSelected:(BOOL)inSelected
-{
-    selected = inSelected;
-}
-
-- (void)setTableView:(AIFlexibleTableView *)inView
-{
-    tableView = inView;
-}
-
-
-
-//Access ------------------------------------------------------------------------------
-- (NSSize)paddingInset
-{
+- (NSSize)paddingInset{
     return(NSMakeSize(leftPadding, topPadding));
 }
 
 
-//Cursor Tracking ----------------------------------------------------------------------
-- (BOOL)usesCursorRects
+//Spanning ------------------------------------------------------------------------------
+- (void)setRowSpan:(int)inRowSpan
 {
-    return(NO);
+    rowSpan = inRowSpan;
+}
+- (int)rowSpan{
+    return(rowSpan);
 }
 
-- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
+
+//Cursor Tracking ----------------------------------------------------------------------
+//Reset our cursor rects
+- (void)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
-    return(NO);
+    
 }
 
 //Handle a mouse down
-- (BOOL)handleMouseDown:(NSEvent *)theEvent
-{
-    return(NO);
-}
-
-
-
-//Selecting ----------------------------------------------------------------------------
-//Returns a character index within this cell for the specified point
-- (int)characterIndexAtPoint:(NSPoint)point
-{
-    return(0); //Return 0 since we don't contain text
-}
-
-- (NSRange)rangeForWordAtIndex:(int)index
-{
-    NSRange wordRange;
-    wordRange.location = 0;	wordRange.length = 0;
-    return(wordRange); //override if needed (for text)
-}
-//Sets this cell's selection to the proposed index
-- (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex
-{
-    //Return NO - passing the selection to the next view
+- (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
+{    
     return(NO);
 }
 
 //
-- (NSAttributedString *)stringFromIndex:(int)sourceIndex to:(int)destIndex
+- (void)selectContentFrom:(NSPoint)source to:(NSPoint)dest offset:(NSPoint)inOffset mode:(int)selectMode
 {
-    return(nil);
+
 }
 
-- (BOOL)indexIsSelected:(int)index
+//
+- (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     return(NO);
 }
 
-//Sizing ------------------------------------------------------------------------------
-//Returns the size required to display this cell without wrapping
-- (NSSize)cellSize
+//
+- (void)deselectContent
 {
-    return(NSMakeSize(0,0));
+
 }
 
-//Dynamically resizes this cell for the desired width
+//
+- (NSAttributedString *)selectedString
+{
+    return(nil);
+}
+
+
+//Sizing ------------------------------------------------------------------------------
+//The size of our cell (content + padding)
+- (NSSize)cellSize
+{
+    NSSize	size = [self contentSize];
+
+    return(NSMakeSize(leftPadding + size.width + rightPadding, topPadding + size.height + bottomPadding));
+}
+
+//The size of our content
+- (NSSize)contentSize
+{
+    return(contentSize);
+}
+
+//Set to YES if the width of this cell is variable
+- (void)setVariableWidth:(BOOL)inVariableWidth
+{
+    variableWidth = inVariableWidth;
+}
+- (BOOL)variableWidth{
+    return(variableWidth);
+}
+
+//Resize this cell to the desired width
 - (void)sizeCellForWidth:(float)inWidth
 {
+    contentSize.width = inWidth - (leftPadding + rightPadding);
+    contentSize.height = [self sizeContentForWidth:contentSize.width];
+}
+
+//Resize the content of this cell to the desired width, returns new height
+- (int)sizeContentForWidth:(float)inWidth
+{
+    return(contentSize.height);
 }
 
 
@@ -185,32 +166,9 @@
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {    
     //Draw the background
-    if(!selected){
-        if(!gradientColor){ //Plain background
-            [backgroundColor set];
-            [NSBezierPath fillRect:cellFrame];
-
-        }else{ //Gradient background
-            [AIGradient drawGradientInRect:cellFrame from:backgroundColor to:gradientColor];
-
-        }
-    }else{
-        if([[tableView window] isKeyWindow] && [[tableView window] firstResponder] == tableView){
-            [[NSColor alternateSelectedControlColor] set];
-        }else{
-            [[NSColor secondarySelectedControlColor] set];
-        }
-
-        [NSBezierPath fillRect:cellFrame];
-    }
-
-    //Draw our divider line (offset 0.5 for an aliased line)
-    if(dividerColor){
-        [dividerColor set];
-        [NSBezierPath strokeLineFromPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + 0.5)
-                                  toPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y + 0.5)];
-    }
-
+    [(backgroundColor ? backgroundColor : [NSColor whiteColor]) set];
+    [NSBezierPath fillRect:cellFrame];
+    
     //Draw Contents
     cellFrame.origin.x += leftPadding;
     cellFrame.size.width -= leftPadding + rightPadding;
@@ -224,15 +182,5 @@
 {
 
 }
-
-//Set and retrieve our frame
-- (void)setFrame:(NSRect)inFrame
-{
-    frame = inFrame;
-}
-- (NSRect)frame{
-    return(frame);
-}
-
 
 @end

@@ -15,12 +15,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIContactHandle, AIFlexibleTableColumn, AIFlexibleTableCell;
+@class AIAdium, AIContactHandle, AIFlexibleTableColumn, AIFlexibleTableCell, AIFlexibleTableRow;
 
-@protocol AIFlexibleTableViewDelegate <NSObject>
-- (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow;
-- (int)numberOfRows;
-@end
 //Optional
 //I've created additional protocols here ONLY for the reason of stopping compiler warnings.  There is no reason to claim conformance to these protocols.
 @protocol AIFlexibleTableViewDelegate_shouldEditTableColumn
@@ -41,34 +37,22 @@
     NSMutableArray			*rowHeightArray; 	//Height of every row
     AIFlexibleTableColumn		*flexibleColumn;	//Our variable-width column
 
-    //Delegate
-    id <AIFlexibleTableViewDelegate>	delegate;		//Our delegate
-
     //Configuration
-    NSMutableArray			*columnArray;		//Our columns
+    NSMutableArray			*rowArray;		//Our rows
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
     BOOL				forwardsKeyEvents;	//Pass keypresses to next responder
 
-    //Cursor tracking
+    //Cursor tracking & selecting
     NSMutableArray			*cursorTrackingCellArray;
-    
-    //Selecting
-    int					selection_startIndex;
-    int					selection_startRow;
-    int					selection_startColumn;
-    int					selection_endIndex;
-    int					selection_endRow;
-    int					selection_endColumn;
-    }
+    NSPoint				selection_startPoint;
+    int					selectClicks;
+}
 
-- (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate;
-- (void)addColumn:(AIFlexibleTableColumn *)inColumn;
-- (void)loadNewRow;
-- (void)reloadData;
-- (void)reloadRow:(int)inRow;
+
+- (void)addRow:(AIFlexibleTableRow *)inRow;
+- (void)resizeRow:(AIFlexibleTableRow *)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setForwardsKeyEvents:(BOOL)inValue;
-- (void)resizeCellHeight:(AIFlexibleTableCell *)inCell;
 
 @end
 

@@ -28,7 +28,7 @@
 
 @interface AILinkTrackingController (PRIVATE)
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;
-- (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSSize)offset;
+- (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSPoint)offset;
 - (void)_endCursorTracking;
 - (void)_setMouseOverLink:(AIFlexibleLink *)inHoveredLink atPoint:(NSPoint)inPoint;
 - (void)_showTooltipAtScreenPoint:(NSPoint)inPoint;
@@ -51,7 +51,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 //Track links in the passed rect.  Returns YES if links exist within our text.  Pass a 0 width/height visible rect to stop any link tracking.
-- (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSSize)offset
+- (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSPoint)offset
 {
     //remove any existing tooltips
     [self _setMouseOverLink:nil atPoint:NSMakePoint(0,0)];
@@ -88,7 +88,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 //Handle a mouse down.  Returns NO if the mouse down event should continue to be processed
-- (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSSize)offset
+- (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSPoint)offset
 {
     BOOL		success = NO;
     NSPoint		mouseLoc;
@@ -100,9 +100,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Find clicked char index
     mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-    mouseLoc.x += offset.width;
-    mouseLoc.y += offset.height;
-
+    mouseLoc.x -= offset.x;
+    mouseLoc.y -= offset.y;
+    NSLog(@"click %0.2f %0.2f (%0.2f, %0.2f)",mouseLoc.x,mouseLoc.y,offset.x,offset.y);
     glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
 
@@ -152,8 +152,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                         //Get the next event and mouse location
                         theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
                         mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-                        mouseLoc.x += offset.width;
-                        mouseLoc.y += offset.height;
+                        mouseLoc.x -= offset.x;
+                        mouseLoc.y -= offset.y;
 
                         switch([theEvent type]){
                             case NSRightMouseUp:		//Done Tracking Clickscr
@@ -231,7 +231,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 //Begins cursor tracking, registering tracking rects for all our available links
-- (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSSize)offset
+- (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSPoint)offset
 {
     NSRect	visibleContainerRect;
     NSRange	visibleGlyphRange, visibleCharRange;
@@ -239,8 +239,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Get the range of visible characters
     visibleContainerRect = visibleRect;
-    visibleContainerRect.origin.x += offset.width;
-    visibleContainerRect.origin.y += offset.height;
+    visibleContainerRect.origin.x -= offset.x;
+    visibleContainerRect.origin.y -= offset.y;
     visibleGlyphRange = [layoutManager glyphRangeForBoundingRect:visibleContainerRect inTextContainer:textContainer];
     visibleCharRange = [layoutManager characterRangeForGlyphRange:visibleGlyphRange actualGlyphRange:NULL];
 
@@ -273,8 +273,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 linkRect = linkRects[index];
 
                 //Adjust the link rect back to our view's coordinates
-                linkRect.origin.x -= offset.width;
-                linkRect.origin.y -= offset.height;
+                linkRect.origin.x += offset.x;
+                linkRect.origin.y += offset.y;
                 visibleLinkRect = NSIntersectionRect(linkRect, visibleRect);
                 
                 //Create a flexible link instance

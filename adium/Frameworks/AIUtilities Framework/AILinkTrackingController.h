@@ -34,7 +34,7 @@
 
 + (id)linkTrackingControllerForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;
 + (id)linkTrackingControllerForTextView:(NSTextView *)inTextView;
-- (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSSize)offset;
-- (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSSize)offset;
+- (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSPoint)offset;
+- (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSPoint)offset;
 
 @end

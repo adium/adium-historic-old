@@ -1,46 +1,36 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-                                              \---------------------------------------------------------------------------------------------------------/
-                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
-                                              | or (at your option) any later version.
-                                              |
-                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-                                              | Public License for more details.
-                                              |
-                                              | You should have received a copy of the GNU General Public License along with this program; if not,
-                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-                                              \------------------------------------------------------------------------------------------------------ */
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
 
 #import <AIUtilities/AIUtilities.h>
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
-#import "AIFlexibleTableColumn.h"
 
-#define AUTOSCROLL_CATCH_SIZE 	20	//The distance (in pixels) that the scrollview must be within (from the bottom) for auto-scroll to kick in.
+#define VIEW_PADDING_TOP 	0
+#define VIEW_PADDING_BOTTOM 	2
 
 @interface AIFlexibleTableView (PRIVATE)
-- (BOOL)isFlipped;
-- (void)frameChanged:(NSNotification *)notification;
-- (void)buildMessageCellArray;
-- (BOOL)_addCellsForRow:(int)inRow;
-- (BOOL)_removeCellsForRow:(int)inRow;
-- (void)resizeContents:(BOOL)resizeContents;
 - (void)_init;
-- (void)_endEditing;
-- (void)_setSelected:(BOOL)selected row:(int)inRow;
-- (AIFlexibleTableCell *)cellAtPoint:(NSPoint)inPoint row:(int *)outRow column:(int *)outColumn;
-- (void)deselectAll;
-- (AIFlexibleTableColumn *)columnAtIndex:(int)index;
-- (BOOL)selectRow:(int)inRow;
-
-- (void)_resizeColumns;
-- (void)_resizeRows;
-- (void)_resizeCellsRowHeightsChanged:(BOOL)rowHeightsChanged;
-
-- (void)_resetCursorRects;
-- (NSMutableAttributedString *)selectedString;
+- (NSAttributedString *)_selectedString;
+- (void)_resizeViewToWidth:(int)width height:(int)height;
+- (void)_resizeContents:(BOOL)resizeContents;
+- (AIFlexibleTableRow *)_rowAtPoint:(NSPoint)inPoint rowOrigin:(NSPoint *)outOrigin;
+- (void)_resetCursorRectsForVisibleRect:(NSRect)visibleRect;
+- (void)_selectFromPoint:(NSPoint)startPoint toPoint:(NSPoint)endPoint;
+- (void)_deselectAll;
+- (void)_dragMouseWithEvent:(NSEvent *)theEvent;
+- (void)_dragSelectedContentWithEvent:(NSEvent *)theEvent;
 @end
 
 @implementation AIFlexibleTableView
@@ -70,12 +60,11 @@
 - (void)_init
 {
     cursorTrackingCellArray = [[NSMutableArray alloc] init];
-    columnArray = [[NSMutableArray alloc] init];
-    delegate = nil;
+    rowArray = [[NSMutableArray alloc] init];
     rowHeightArray = nil;
     contentsHeight = 0;
-    oldWidth = 0;
     forwardsKeyEvents = NO;
+    selectClicks = 1;
 
     contentBottomAligned = YES;
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
@@ -88,7 +77,7 @@
 
     //Clean up
     [cursorTrackingCellArray release];
-    [columnArray release];
+    [rowArray release];
     [rowHeightArray release];
 
     [super dealloc];
@@ -107,311 +96,212 @@
 }
 
 
-
 //Drawing -------------------------------------------------------------------------------
 //Draw
 - (void)drawRect:(NSRect)rect
 {
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-    NSRect			cellFrame = NSMakeRect(0, 0, 0, 0);
+    NSEnumerator		*rowEnumerator;
+    AIFlexibleTableRow		*row;
     NSRect			documentVisibleRect;
-
-    //Get our visible rect (we don't want to draw non-visible cells)
+    NSPoint			cellPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+    BOOL			foundVisible = NO;
+    
+    //Get our visible rect (we don't want to draw non-visible rows)
     documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    NSInsetRect(documentVisibleRect,-40,-40);
 
-    //Enumerate through each column
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        NSEnumerator		*cellEnumerator;
-        NSEnumerator		*rowHeightEnumerator;
-        AIFlexibleTableCell	*cell;
+    //Enumerate through each row
+    //We draw from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
+    rowEnumerator = [rowArray objectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+        int	rowHeight = [row height];
 
-        //Enumerate through each cell
-        rowHeightEnumerator = [rowHeightArray objectEnumerator];
-        cellEnumerator = [[column cellArray] objectEnumerator];
-        while((cell = [cellEnumerator nextObject])){
-            //Get the cell frame, and adjust it for our start origin
-            cellFrame = [cell frame];
+        cellPoint.y -= rowHeight;
 
-            //Only draw visible cells
-            if(NSIntersectsRect(documentVisibleRect,cellFrame)){
-                [cell drawWithFrame:cellFrame inView:self];
-            }
+        if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || [row spansRows]){ //If visible
+            [row drawAtPoint:cellPoint visibleRect:documentVisibleRect inView:self];
+            if(!foundVisible && ![row spansRows]) foundVisible = YES;
+        }else{
+            if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
         }
     }
 }
 
 
 //Clicking --------------------------------------------------------------------------------
+//
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    AIFlexibleTableCell		*cell;
-    int				row, column;
-    NSPoint			clickLocation;
-    int				clicked_index;
+    AIFlexibleTableRow	*clickedRow;
+    NSPoint		clickLocation, rowClickLocation;
+    NSPoint		rowOrigin;
+    int			clicks;
 
-    //Determine the clicked cell/row/column
+    //Determine clicked row
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    cell = [self cellAtPoint:clickLocation row:&row column:&column];
+    clickedRow = [self _rowAtPoint:clickLocation rowOrigin:&rowOrigin];
+    rowClickLocation = NSMakePoint(clickLocation.x - rowOrigin.x, clickLocation.y - rowOrigin.y); //Local to the row
 
-    //Give the cell a chance to process the mouse down
-    if(![cell handleMouseDown:theEvent]){
-        //Text selection within the cell
-        NSPoint		localPoint;
-        int clicks = [theEvent clickCount];
+    //Remember the number of clicks
+    if(![NSEvent shiftKey]){
+        clicks = [theEvent clickCount];
+        if(!(clicks % 3)){ //Tripple click (Select line)
+            selectClicks = 3;
+        }else if(!(clicks % 2)){ //Double Click (Select word)
+            selectClicks = 2;
+        }else{
+            selectClicks = 1;
+        }
+    }
 
-        localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
-        clicked_index = [cell characterIndexAtPoint:localPoint];
+    //Give the row a chance to handle the click
+    if(![clickedRow handleMouseDownEvent:theEvent atPoint:rowClickLocation offset:rowOrigin]){
+        NSEvent	*newEvent = nil;
+        BOOL	handled = NO;
 
-        NSMutableAttributedString * copyString = [self selectedString];
-        BOOL inside = ( [cell indexIsSelected:clicked_index] && [[copyString string] length] );
+        //Drag --------------------
+        if(selectClicks < 3 && [clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]){
+            //Trigger a periodic event to start the drag after a short delay
+            [NSEvent startPeriodicEventsAfterDelay:0.25 withPeriod:0];
 
-        if (inside) //only update if not inside the current selection
-        {
-            NSEvent *newEvent;
-            [NSEvent startPeriodicEventsAfterDelay:0.5 withPeriod:0];
-            newEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask];
-            switch ([newEvent type]) {
-                case NSLeftMouseUp:
-                {
-                    [self deselectAll];	  //Deselect all text
-                    selection_startRow = row;
-                    selection_startColumn = column;
-                    selection_endRow = selection_startRow;
-                    selection_endColumn = selection_startColumn;
-                    selection_startIndex = [cell characterIndexAtPoint:localPoint];
-                    selection_endIndex = selection_startIndex;
-
-                    //Redisplay
-                    [self setNeedsDisplay:YES];
-                    
-                    break;
-                }
-                case NSLeftMouseDragged: //immediate drag
-                case NSPeriodic: //click & drag
-                {
-                    NSSize dragOffset = NSMakeSize(0.0, 0.0);
-                    NSPasteboard *pboard;
-                    
-                    pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-                    [pboard declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:self];
-                    [pboard setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
-
-                    NSImage *dragImage = [AIImageUtilities imageNamed:@"Clipping" forClass:[self class]];
-                    [[self superview] dragImage:dragImage at:clickLocation offset:dragOffset
-                                          event:theEvent pasteboard:pboard source:self slideBack:YES];
-                    break;
-                }
-                default:
-                {
-                    NSLog(@"default");
-                    break;
-                }
+            //Grab the next event
+            newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO];
+            switch([newEvent type]){
+                case NSPeriodic: //If the user stays still, initiate the drag
+                    [self _dragSelectedContentWithEvent:theEvent];
+                    handled = YES;
+                break;
+                default: break; //Mouse up or drag will cancel
             }
+
+            //Stop the periodic event
             [NSEvent stopPeriodicEvents];
         }
-        else // not inside
-        {
-            [self deselectAll];	  //Deselect all text
-            selection_startRow = row;
-            selection_startColumn = column;
-            selection_endRow = selection_startRow;
-            selection_endColumn = selection_startColumn;
 
-            if (clicks % 3 == 0)
-                //triple click: select the whole cell
-            {
-                selection_startIndex = 0;
-                selection_endIndex = 10000; //insert generic big number here
-                [cell selectFrom:selection_startIndex to:selection_endIndex];
-            }
-
-            else if (clicks % 2 == 0)
-                //double click: select word
-            {
-                NSRange wordRange = [cell rangeForWordAtIndex:[cell characterIndexAtPoint:localPoint]];
-                selection_startIndex = wordRange.location;
-                selection_endIndex = selection_startIndex + wordRange.length;
-                [cell selectFrom:selection_startIndex to:selection_endIndex];
-            }
-
-            else
-                //single click: selection is cleared; this is our new starting/ending point for a drag operation
-            {
-                selection_startIndex = [cell characterIndexAtPoint:localPoint];
-                selection_endIndex = selection_startIndex;
-            }
-
-            //Redisplay
-            [self setNeedsDisplay:YES];
-        }
-    }
-}
-
-//Selecting --------------------------------------------------------------------------------
-- (void)deselectAll
-{
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-
-    //Enumerate through each column
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        NSEnumerator		*cellEnumerator;
-        AIFlexibleTableCell	*cell;
-
-        //Enumerate through each cell
-        cellEnumerator = [[column cellArray] objectEnumerator];
-        while((cell = [cellEnumerator nextObject])){
-            [cell selectFrom:0 to:0];
-        }
-    }
-}
-
-- (void)clear:(id)sender
-{
-    NSLog(@"clear");
-}
-
-- (void)selectAll:(id)sender
-{
-    NSLog(@"selectAll");
-}
-
-- (NSMutableAttributedString *)selectedString
-{
-    NSMutableAttributedString	*copyString = [[NSMutableAttributedString alloc] init];
-    int				row, column, index, lowColumn, highColumn;
-//    NSLog(@"start (%i,%i,%i) end (%i,%i,%i)",selection_startRow,selection_startColumn,selection_startIndex,selection_endRow,selection_endColumn,selection_endIndex);
-
-    if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
-        AIFlexibleTableCell *startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
-        [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:selection_endIndex]];
-    }
-    else //The selection spans at least two cells
-    {
-        if(selection_startRow > selection_endRow) //If the start cell is below the end cell, swap
-        {
-            row = selection_endRow;
-            selection_endRow = selection_startRow;
-            selection_startRow = row;
-
-            column = selection_endColumn;
-            selection_endColumn = selection_startColumn;
-            selection_startColumn = column;
-
-            index = selection_endIndex;
-            selection_endIndex = selection_startIndex;
-            selection_startIndex = index;
-        }
-
-        if(selection_startColumn < selection_endColumn) //left-to-right selection
-        {
-            lowColumn = selection_startColumn;
-            highColumn = selection_endColumn;
-        }
-        else //right-to-left selection
-        {
-            lowColumn = selection_endColumn;
-            highColumn = selection_startColumn;
-        }
-
-        //Select all text in every cell between start and end - traverse each row, column by column, left-to-right
-        for(row = selection_startRow ; row <= selection_endRow; row++) {
-            for(column = lowColumn; column <= highColumn; column++) {
-                AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row];
-                if(row == selection_startRow && column == selection_startColumn) { //starting cell
-                    if (lowColumn == selection_startColumn)  //copy index to end of cell
-                        [copyString appendAttributedString:[cell stringFromIndex:selection_startIndex to:10000]];
-                    else //copy left to index of cell
-                        [copyString appendAttributedString:[cell stringFromIndex:0 to:selection_startIndex]];
-                } else if(row == selection_endRow && column == selection_endColumn) { //ending cell
-                    if (highColumn == selection_endColumn) //copy left to index of cell
-                        [copyString appendAttributedString:[cell stringFromIndex:0 to:selection_endIndex]];
-                    else //copy index to end of cell
-                        [copyString appendAttributedString:[cell stringFromIndex:selection_endIndex to:10000]];
-
-                } else { //intermediary cells - copy entire contents
-                    [copyString appendAttributedString:[cell stringFromIndex:0 to:10000]];
+        //Select --------------------
+        if(!handled){
+            //Update selected range
+            [self _deselectAll];
+            selection_startPoint = clickLocation;
+            [clickedRow selectContentFrom:rowClickLocation to:rowClickLocation offset:rowOrigin mode:selectClicks];
+            
+            //Handle selection until a mouse up
+            [NSEvent startPeriodicEventsAfterDelay:0.0 withPeriod:0.05];
+            do{
+                newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)];
+    
+                switch([newEvent type]){
+                    case NSLeftMouseDraggedMask:
+                    case NSPeriodic:
+                        [self _dragMouseWithEvent:newEvent];
+                    break;
+                    default: break;
                 }
-            } //end column for-loop
-            if (row != selection_endRow) [copyString appendString:@"\r" withAttributes:nil]; //end line after each row except last
-        } //end row for-loop
-
-    }
-    return copyString;
-}
-
-- (void)copy:(id)sender
-{
-    NSMutableAttributedString * copyString = [self selectedString];
-    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
-    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
-}
-
-- (void)mouseDragged:(NSEvent *)theEvent
-{
-    AIFlexibleTableCell		*cell;
-    AIFlexibleTableCell		*startCell = nil, *endCell = nil;
-    int				row, column;
-    NSPoint			clickLocation;
-
-    //Determine the clicked cell/row/column
-    clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    cell = [self cellAtPoint:clickLocation row:&row column:&column];
-
-    //Remove all current selections
-    [self deselectAll];
-
-    //Save the new selection end information
-    selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
-    selection_endRow = row;
-    selection_endColumn = column;
-
-//    NSLog(@"Dragging: start (%i,%i,%i) end (%i,%i,%i)",selection_startRow,selection_startColumn,selection_startIndex,selection_endRow,selection_endColumn,selection_endIndex);
-
-    //Select partial text in the start and end cells
-    startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
-    endCell = [[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];
-
-    if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
-        [startCell selectFrom:selection_startIndex to:selection_endIndex];
-
-    }else if(selection_startRow < selection_endRow || selection_startColumn < selection_endColumn){ //The start cell is above or left of the end cell
-        [startCell selectFrom:selection_startIndex to:10000]; //insert generic big number here
-        [endCell selectFrom:0 to:selection_endIndex];
-
-    }else if(selection_startRow > selection_endRow || selection_startColumn > selection_endColumn){ //The start cell is below or right of the end cell
-        [startCell selectFrom:selection_startIndex to:0];
-        [endCell selectFrom:10000 to:selection_endIndex]; //insert generic big number here
-
-    }
-
-    //Select all text in every cell between start and end
-    //These loops are conditioned so that they always run top to bottom, left to right (Allowing selection to occur in any direction)
-    //We want to run through every cell within the selection block except the first and last cell (which have already been processed)
-    for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
-        column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
-        column++){
-        for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
-            row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
-            row++){
-
-            if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
-                AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row];
-                [cell selectFrom:0 to:10000]; //insert generic big number here
-            }
+                
+            }while(newEvent == nil || [newEvent type] != NSLeftMouseUp);
+            [NSEvent stopPeriodicEvents];
         }
     }
+}
 
-    //Mark our view for redisplay
-    [self setNeedsDisplay:YES];
-    //  }
+//Deselect all content
+- (void)_deselectAll
+{
+    NSEnumerator		*rowEnumerator;
+    AIFlexibleTableRow		*row;
+
+    //Determine the clicked row
+    rowEnumerator = [rowArray objectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+        [row deselectContent];
+    }    
+}
+
+//
+- (void)_dragMouseWithEvent:(NSEvent *)theEvent
+{
+    NSScrollView	*scrollView = [self enclosingScrollView];
+    NSClipView		*clipView = [scrollView contentView];
+    NSPoint		location = [self convertPoint:[[self window] convertScreenToBase:[theEvent locationInWindow]] fromView:nil];
+    NSRect		visibleRect = [scrollView documentVisibleRect];
+
+    if(!NSPointInRect(location, visibleRect)){
+        NSPoint	scrollPoint = location;
+
+        //down
+        if(scrollPoint.y >= visibleRect.origin.y + visibleRect.size.height){
+            scrollPoint.y -= visibleRect.size.height;
+        }
+
+        //accelerate
+        scrollPoint.y -= visibleRect.origin.y;
+        scrollPoint.y *= [scrollView lineScroll] / 3.0;
+        scrollPoint.y += visibleRect.origin.y;
+
+        [clipView scrollToPoint:[clipView constrainScrollPoint:scrollPoint]];
+        [scrollView reflectScrolledClipView:clipView];
+    }
+
+    [self _selectFromPoint:selection_startPoint
+                   toPoint:location];
+}
+
+- (void)_dragSelectedContentWithEvent:(NSEvent *)theEvent
+{
+    NSPoint		location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSSize 		dragOffset = NSMakeSize(0.0, 0.0);
+    NSPasteboard 	*pboard;
+    NSAttributedString 	*copyString = [self _selectedString];
+
+    //Put the text to drag on our pasteboard
+    pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+    [pboard declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:self];
+    [pboard setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+
+    //Create a temporary drag image
+    NSImage *dragImage = [AIImageUtilities imageNamed:@"Clipping" forClass:[self class]];
+    [[self superview] dragImage:dragImage at:location offset:dragOffset event:theEvent pasteboard:pboard source:self slideBack:YES];
     
 }
 
+//
+- (void)_selectFromPoint:(NSPoint)startPoint toPoint:(NSPoint)endPoint
+{
+    NSEnumerator		*rowEnumerator;
+    AIFlexibleTableRow		*row;
+    NSPoint			rowPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
 
+    //Deselect all
+    [self _deselectAll];
+
+    //Flip, so we're working from top to bottom
+    if(endPoint.y < startPoint.y){
+        NSPoint	temp = startPoint;
+        startPoint = endPoint;
+        endPoint = temp;
+    }
+
+    //Determine the clicked row
+    rowEnumerator = [rowArray objectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+
+        rowPoint.y -= [row height];
+
+        if(rowPoint.y < endPoint.y && (rowPoint.y + [row height]) > startPoint.y){
+            BOOL end = NO, start = NO;
+
+            if(rowPoint.y + [row height] > endPoint.y) end = YES; //selection ends in this row
+            if(rowPoint.y  < startPoint.y) start = YES; //starts in this row
+
+            [row selectContentFrom:(start ? NSMakePoint(startPoint.x - rowPoint.x, startPoint.y - rowPoint.y) : NSMakePoint(-1,-1))
+                                to:(end ? NSMakePoint(endPoint.x - rowPoint.x, endPoint.y - rowPoint.y) : NSMakePoint(1e7,1e7))
+                            offset:rowPoint
+                              mode:selectClicks];
+        }
+    }
+}
+
+    
 //Misc --------------------------------------------------------------------------------
 - (BOOL)needsPanelToBecomeKey
 {
@@ -429,6 +319,7 @@
     return(YES);
 }
 
+//
 - (void)viewDidMoveToSuperview
 {
     //Remove existing observers
@@ -439,148 +330,87 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollViewFrameChanged:) name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
 
         //fit our new view
-        [self resizeContents:YES];
+        [self _resizeContents:YES];
     }
 }
 
-//Called when our scroll view's frame changes.  Adjust to fill the new frame
+//Called when our scroll view's frame changes.  Adjust our view to completely fill the new frame
 - (void)scrollViewFrameChanged:(NSNotification *)notification
 {
-    BOOL resizeContents = NO;
-
-    //Resize our cells
-    //To make things faster, we only resize our contents if the width changed (requiring a column/cell resize), or if our view doesn't fully fill it's containing scrollview vertically (requiring a resize to keep the content bottom-aligned).
-    if([self frame].size.width != oldWidth || !([self frame].size.height > [[self enclosingScrollView] documentVisibleRect].size.height)){
-        resizeContents = YES;
-    }
+    //Resize our contents (We skip resizing our cells if the scrollview's width did not change)
+    [self _resizeContents:([self frame].size.width != oldWidth)];
     oldWidth = [self frame].size.width;
-
-    //Resize ourself vertically and redisplay
-    [self resizeContents:resizeContents];
 }
 
-//called when a live resize ends, perform a full resize
+//Called when a live resize ends, perform a full resize
 - (void)viewDidEndLiveResize
 {
-    [self resizeContents:YES]; //Resize our cells, our view vertically, and redisplay
+    [self _resizeContents:YES]; //Resize our cells, our view vertically, and redisplay
 }
 
 
-//Delegate / Content -------------------------------------------------------------------------------
-//Set our delegate
-- (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate
-{
-    delegate = inDelegate;
-}
-
-//Add a Column
-- (void)addColumn:(AIFlexibleTableColumn *)inColumn
-{
-    [columnArray addObject:inColumn];
-
-    //If this column is flexible, mark it as our flexible column (used by other parts of the code)
-    if([inColumn flexibleWidth]){
-        flexibleColumn = inColumn;
-    }
-}
-
+//Content -------------------------------------------------------------------------------
 //Load the content in a newly added row (Quicker than doing a full reload of the content)
-- (void)loadNewRow
+- (void)addRow:(AIFlexibleTableRow *)inRow
 {
-    BOOL resizeContents = NO;
+    //Add the new row (To the head of our array)
+    [rowArray insertObject:inRow atIndex:0];
+    [inRow setTableView:self];
+    [self resizeRow:inRow];
 
-    //Add the new content
-    //To make things run faster, we can skip resizing of our contents if these conditions are true:
-    // - The column widths do not change (signified by _addCellsForRow returning YES)
-    // - Our view fully fill its scrollview vertically (otherwise we need to resize to keep our cells bottom aligned)
-    if([self _addCellsForRow:([delegate numberOfRows] - 1)] || !([self frame].size.height > [[self enclosingScrollView] documentVisibleRect].size.height)){
-        resizeContents = YES;
+    //Update our cursor tracking (We can skip this if our view is tall enough to scroll, since it will be called automatically then)
+    if([self frame].size.height <= [[self enclosingScrollView] documentVisibleRect].size.height){
+        [self resetCursorRects];
     }
-
-    //Resize and redisplay
-    [self resizeContents:resizeContents];
-}
-
-//Call when the data is changed, reloads the content of all cells
-- (void)reloadData
-{
-    NSEnumerator		*enumerator;
-    AIFlexibleTableColumn	*column;
-    AIFlexibleTableCell		*cell;
-    int				numberOfRows = [delegate numberOfRows];
-    int				row;
-
-    //Reset all cursor tracking
-    enumerator = [cursorTrackingCellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
-        [cell resetCursorRectsInView:self visibleRect:NSMakeRect(0,0,0,0)]; //Remove any current tracking rects for this cell
-    }
-    [cursorTrackingCellArray release]; cursorTrackingCellArray = [[NSMutableArray alloc] init]; //Flush the list of tracking cells
-
-    //Remove all existing cells
-    enumerator = [columnArray objectEnumerator];
-    while((column = [enumerator nextObject])){
-        [column removeAllCells];
-    }
-
-    //Rebuild our content
-    for(row = 0;row < numberOfRows;row++){
-        [self _addCellsForRow:row];
-    }
-
-    //Resize and redisplay
-    [self resizeContents:YES];
-}
-
-//Reload the content of a single row
-- (void)reloadRow:(int)inRow
-{
-    BOOL needResize = NO;
-
-    //If either method returns YES, we'll need to resize all the contents
-    needResize |= [self _removeCellsForRow:inRow];
-    needResize |= [self _addCellsForRow:inRow];
-
-    //Remove the row and add the new cells
-    [self resizeContents:needResize];
-}
-
-//Resize the specified cell's row to the correct height
-- (void)resizeCellHeight:(AIFlexibleTableCell *)inCell
-{
-    [self resizeContents:YES]; //For now just resize everything
 }
 
 
 //Cursor Tracking -----------------------------------------------------------------------------------
 //This method is automatically called when our size or position changes, allowing for our cells to re-configure any cursor tracking rects they've set up.
-- (void)_resetCursorRects
+- (void)resetCursorRects
 {
-    NSRect			documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    NSEnumerator		*enumerator;
-    AIFlexibleTableCell		*cell;
-
-    //Loop through all cursor-tracking cells, informing them of the cursor rect reset
-    enumerator = [cursorTrackingCellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
-        [cell resetCursorRectsInView:self visibleRect:NSIntersectionRect(documentVisibleRect , [cell frame])];
-    }
+    //Reset cursor tracking for our visible rect
+    [self _resetCursorRectsForVisibleRect:[[self enclosingScrollView] documentVisibleRect]];
 }
 
 //If we're being removed from the window, we need to remove our tracking rects
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
     if(newWindow == nil){
-        NSEnumerator		*enumerator;
-        AIFlexibleTableCell	*cell;
+        //Remove cursor tracking (by passing an empty rect) 
+        [self _resetCursorRectsForVisibleRect:NSMakeRect(0,0,0,0)];
+    }
+}
 
-        //Loop through all cursor tracking cells, and pass them an empty visible rect (to end any tracking).
-        enumerator = [cursorTrackingCellArray objectEnumerator];
-        while((cell = [enumerator nextObject])){
-            [cell resetCursorRectsInView:self visibleRect:NSMakeRect(0,0,0,0)];
+//Reset cursor tracking for cells within the passed visible rect
+- (void)_resetCursorRectsForVisibleRect:(NSRect)visibleRect
+{
+    NSPoint			cellPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+    NSEnumerator		*rowEnumerator;
+    AIFlexibleTableRow		*row;
+    BOOL			foundVisible = NO;
+    NSRect			documentVisibleRect;
+
+    //Get our visible rect (we don't want to process non-visible rows)
+    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+
+    //Enumerate through each row
+    //We move from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
+    rowEnumerator = [rowArray objectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+        int	rowHeight = [row height];
+
+        cellPoint.y -= [row height];
+
+        if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, visibleRect.size.width, rowHeight), documentVisibleRect) || [row spansRows]){ //If visible
+            [row resetCursorRectsAtOffset:cellPoint visibleRect:visibleRect inView:self];
+            if(!foundVisible && ![row spansRows]) foundVisible = YES;
+        }else{
+            if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
         }
     }
 }
+
 
 //Key Forwarding ---------------------------------------------------------------------------------
 //When the user attempts to type into the table view, we push the keystroke to the next responder, and make it key.  This isn't required, but convienent behavior since one will never want to type into this view.
@@ -606,317 +436,111 @@
 
 
 //Cell, Column, and Row Access --------------------------------------------------------------------
-//Returns the specified column
-- (AIFlexibleTableColumn *)columnAtIndex:(int)index
+- (AIFlexibleTableRow *)_rowAtPoint:(NSPoint)inPoint rowOrigin:(NSPoint *)outOrigin
 {
-    if(index >= 0 && index < [columnArray count]){
-        return([columnArray objectAtIndex:index]);
-    }else{
-        return(nil);
-    }
-}
+    NSEnumerator		*rowEnumerator;
+    AIFlexibleTableRow		*row;
 
-//Returns the cell and column index at the passed point
-- (AIFlexibleTableCell *)cellAtPoint:(NSPoint)inPoint row:(int *)outRow column:(int *)outColumn
-{
-    NSRect			documentVisibleRect;
-    NSEnumerator		*enumerator;
-    AIFlexibleTableColumn	*column;
-    int				width = 0;
-    NSNumber			*rowHeight;
-    int				height = 0;
-    int				targetedRow = 0;
-    int				targetedColumn = 0;
+    *outOrigin = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
 
-    //The cell check is broken by the bottom aligning offset, so we need to adjust our calculations
-    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
-        height = (documentVisibleRect.size.height - contentsHeight);
+    //Determine the clicked row
+    rowEnumerator = [rowArray objectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+        (*outOrigin).y -= [row height];
+        if(inPoint.y > (*outOrigin).y) return(row);
     }
 
-    //Determine the row that was clicked
-    enumerator = [rowHeightArray objectEnumerator];
-    while((rowHeight = [enumerator nextObject])){
-        height += [rowHeight intValue];
-        if(height > inPoint.y) break;
-        targetedRow++;
-    }
-
-    //Determine the column that was clicked
-    enumerator = [columnArray objectEnumerator];
-    while((column = [enumerator nextObject])){
-        width += [column width];
-        if(width > inPoint.x) break;
-        targetedColumn++;
-    }
-
-    //Return the row, column, and cell
-    if(outRow) *outRow = targetedRow;
-    if(outColumn) *outColumn = targetedColumn;
-    if(column && targetedRow >= 0 && targetedRow < [[column cellArray] count]){
-        return([[column cellArray] objectAtIndex:targetedRow]);
-    }else{
-        return(nil);
-    }
-}
-
-//Removes a row of cells.  Returns YES if the other cells should be resized in response.
-- (BOOL)_removeCellsForRow:(int)inRow
-{
-    BOOL			columnWidthDidChange = NO;
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-
-    //Remove the cell from each column
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        AIFlexibleTableCell	*cell = [column cellAtIndex:inRow];
-
-        //If this cell is tracking the cursor, we must reset its cursor rects and remove it from our tracking array.
-        if([cursorTrackingCellArray containsObject:cell]){
-            [cell resetCursorRectsInView:self visibleRect:NSMakeRect(0,0,0,0)];
-            [cursorTrackingCellArray removeObject:cell];
-        }
-
-        //Remove the cell
-        if([column removeCellAtRow:inRow]){ //Returns YES if the column's width was changed
-            columnWidthDidChange = YES;
-        }
-    }
-
-    contentsHeight -= [[rowHeightArray objectAtIndex:inRow] intValue];
-    [rowHeightArray removeObjectAtIndex:inRow];
-
-    return(columnWidthDidChange); //Return YES if the cells should be resized
-}
-
-//Add a row of cells.  Returns YES if the other cells should be resized in response.
-- (BOOL)_addCellsForRow:(int)inRow
-{
-    BOOL			columnWidthDidChange = NO;
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-    int				newRowHeight = 0;
-    NSRect			cellFrame;
-
-    //Process each column, adding a cell to each one
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        AIFlexibleTableCell	*cell = [delegate cellForColumn:column row:inRow];
-
-        if(cell){
-            //Add the cell, recording if column width changed (so we can return YES indicating a resize is necessary)
-            columnWidthDidChange = [column addCell:cell forRow:inRow];
-            [cell setTableView:self];
-
-            //By comparing the heights of each cell, we find the largest height and set it as the height of our row
-            if([cell cellSize].height > newRowHeight){
-                newRowHeight = [cell cellSize].height;
-            }
-
-            //If this cell tracks the cursor, reset its cursor rects and add it to our tracking array
-            if([cell usesCursorRects]){
-                [cursorTrackingCellArray addObject:cell];
-            }
-        }
-    }
-
-    //If the column width didn't change, and this is the bottom row, we can correctly set the frames of the cells we just added.  This avoids having to call resizeContents when adding new rows, speeding things up quite a bit.
-    if(!columnWidthDidChange && inRow == [rowHeightArray count]){
-        //
-        cellFrame.origin.x = 0;
-        cellFrame.origin.y = contentsHeight; //Start at the bottom of our view
-        columnEnumerator = [columnArray objectEnumerator];
-        while((column = [columnEnumerator nextObject])){
-            AIFlexibleTableCell	*cell = [column cellAtIndex:inRow];
-
-            cellFrame.size.width = [column width];
-            cellFrame.size.height = newRowHeight;
-            [cell setFrame:cellFrame]; //Set the cell's frame
-
-            cellFrame.origin.x += [column width]; //Move to the next column
-        }
-
-        //Add this row's height to our array, and increase our total contents height to include it
-        [rowHeightArray insertObject:[NSNumber numberWithInt:newRowHeight] atIndex:inRow];
-        contentsHeight += newRowHeight;
-        return(NO); //NO, Cells need not be resized
-    }else{
-        return(YES); //YES, all cells should be resized
-    }
+    return(nil);
 }
 
 
 //Sizing calculations ------------------------------------------------------------------------------
-//Recalculate our table view's dimensions so it completely fills the contianing scrollview's visible rect
-- (void)resizeContents:(BOOL)resizeContents
+//Recalculate our table view's dimensions so it completely fills the contianing scrollview's visible rect.  If YES is passed, recalculates the size of all our rows as well.
+- (void)_resizeContents:(BOOL)resizeContents
 {
-    NSRect			documentVisibleRect;
-    NSSize			size;
+    NSRect		documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    NSEnumerator	*rowEnumerator;
+    AIFlexibleTableRow	*row;
+    NSSize		size;
 
-    //Resize Content
+    //Get our view's new width
+    size.width = documentVisibleRect.size.width;
+    
+    //Enumerate through each row, resizing it to the new width
     if(resizeContents){
-        //Resize our columns first
-        [self _resizeColumns];
-
-        //During a live resize, we don't recalcluate row heights to give things a little speed boost
-        if([self inLiveResize]){
-            [self _resizeCellsRowHeightsChanged:NO];
-        }else{
-            [self _resizeRows];
-            [self _resizeCellsRowHeightsChanged:YES];
-        }
-
-        //Reset our tracking rects
-        if(![self inLiveResize]){
-            [self _resetCursorRects];
+        contentsHeight = VIEW_PADDING_TOP + VIEW_PADDING_BOTTOM;
+        rowEnumerator = [rowArray objectEnumerator];
+        while((row = [rowEnumerator nextObject])){
+            contentsHeight += [row sizeRowForWidth:size.width];
         }
     }
 
     //Resize our view
-    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    size.width = documentVisibleRect.size.width;
-    size.height = contentsHeight;
+    [self _resizeViewToWidth:size.width height:contentsHeight];
+}
+
+//Recalculate the size of an individual row
+- (void)resizeRow:(AIFlexibleTableRow *)inRow
+{
+    //Resize the row
+    contentsHeight -= [inRow height];
+    contentsHeight += [inRow sizeRowForWidth:[self frame].size.width];
+    [self setNeedsDisplay:YES];
+
+    //Resize our view
+    [self _resizeViewToWidth:[self frame].size.width height:contentsHeight];
+}
+
+//Resize our view to the passed dimensions
+- (void)_resizeViewToWidth:(int)width height:(int)height
+{
+    NSRect	documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    NSSize	size;
+
+    //Get our view's new dimensions
+    size.width = width;
+    size.height = height;
     if(size.height < documentVisibleRect.size.height){
         size.height = documentVisibleRect.size.height;
     }
+
+    //Resize our view, and redisplay
     if(!NSEqualSizes([self frame].size, size)){
         [self setFrameSize:size];
     }
-
-    //Redisplay
     [self setNeedsDisplay:YES];
 }
 
-//Resize the columns
-- (void)_resizeColumns
-{
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-    int				columnWidth = [self frame].size.width;
 
-    //This enumeration is to determine the remaining table width (total width - width of every fixed-width column)
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        if(![column flexibleWidth]){
-            columnWidth -= [column width];
+//Selecting ------------------------------------------------------------------------------
+//
+- (NSAttributedString *)_selectedString
+{
+    NSMutableAttributedString	*selectedString = nil;
+    NSEnumerator		*rowEnumerator;
+    AIFlexibleTableRow		*row;
+    NSAttributedString		*segment;
+
+    //Enumerate through each row
+    rowEnumerator = [rowArray reverseObjectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+        if(segment = [row selectedString]){
+            if(!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
+            [selectedString appendAttributedString:segment];
         }
     }
 
-    //Set the width of our flexible column to the remainding width
-    if(flexibleColumn){
-        [flexibleColumn setWidth:columnWidth];
-    }
+    //
+    return(selectedString);
 }
 
-//Recalculate our row heights
-- (void)_resizeRows
-{
-    NSEnumerator		*rowHeightEnumerator, *columnEnumerator, *cellEnumerator;
-    AIFlexibleTableColumn	*column;
-    AIFlexibleTableCell		*cell;
-    NSNumber			*rowHeight;
-    int 			columnWidth;
-
-    //Reset the row height array
-    [rowHeightArray release]; rowHeightArray = [[NSMutableArray alloc] init];
-
-    //Since the flexible column is most likely to determine the height of each row, we use the height of its cells to fill the row height array.
-    columnWidth = [flexibleColumn width];
-    cellEnumerator = [[flexibleColumn cellArray] objectEnumerator];
-    while((cell = [cellEnumerator nextObject])){
-        [cell sizeCellForWidth:columnWidth]; //Resize the cell to fit its column width
-        [rowHeightArray addObject:[NSNumber numberWithInt:[cell cellSize].height]]; //The resulting height will be the new row height
-    }
-
-    //After the height array is filled, we process the other columns and correct any instances where the flexible column's cells were not the tallest
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        if(column != flexibleColumn){ //We've already processed the flexible column
-            NSEnumerator	*cellEnumerator;
-            AIFlexibleTableCell	*cell;
-            int			rowIndex = 0;
-
-            //Step through each cell in this column
-            columnWidth = [column width];
-            rowHeightEnumerator = [rowHeightArray objectEnumerator];
-            cellEnumerator = [[column cellArray] objectEnumerator];
-            while((cell = [cellEnumerator nextObject])){
-                int	cellHeight, existingHeight;
-
-                [cell sizeCellForWidth:columnWidth]; //Resize the cell to fit its column width
-
-                //Check the cell's height
-                cellHeight = [cell cellSize].height;
-                existingHeight = [[rowHeightEnumerator nextObject] intValue];
-                if(cellHeight > existingHeight){ //The row height is too small to fit this cell, correct it
-                    [rowHeightArray replaceObjectAtIndex:rowIndex withObject:[NSNumber numberWithInt:cellHeight]];
-                }
-
-                rowIndex++;
-            }
-        }
-    }
-
-    //Recalculate our total height
-    contentsHeight = 0;
-    rowHeightEnumerator = [rowHeightArray objectEnumerator];
-    while((rowHeight = [rowHeightEnumerator nextObject])){
-        contentsHeight += [rowHeight intValue];
-    }
+//
+- (void)copy:(id)sender
+{    
+    NSAttributedString *copyString = [self _selectedString];
+    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
+    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
 }
-
-//Resize all our cells
-//If row heights have not been changed since the last resize, pass NO and this method will perform faster.
-- (void)_resizeCellsRowHeightsChanged:(BOOL)rowHeightsChanged
-{
-    NSEnumerator		*rowHeightEnumerator = nil;
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-    NSRect			cellFrame;
-
-    cellFrame.origin.x = 0; //Start our cell frames on the left
-
-    NSRect			documentVisibleRect;
-    int				startOriginY = 0;
-
-    //If there isn't enough content to fill our entire view, we move down so the content is bottom-aligned
-    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
-        startOriginY = (documentVisibleRect.size.height - contentsHeight);
-    }
-
-    //Go through each column
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        NSEnumerator		*cellEnumerator;
-        AIFlexibleTableCell	*cell;
-
-        //Start our cell frames at the top for this new column
-        cellFrame.origin.y = startOriginY;//0;
-            cellFrame.size.width = [column width];
-
-            //If row heights need to be reset, we set up an enumerator on the row height array
-            if(rowHeightsChanged) rowHeightEnumerator = [rowHeightArray objectEnumerator];
-
-            //Go through each cell
-            cellEnumerator = [[column cellArray] objectEnumerator];
-            while((cell = [cellEnumerator nextObject])){
-                if(!rowHeightsChanged){ //We can assume the row height has not changed, and use the existing height
-                    cellFrame.size.height = [cell frame].size.height;
-                }else{ //Otherwise we must fetch the row height from our array
-                    cellFrame.size.height = [[rowHeightEnumerator nextObject] intValue];
-                }
-
-                //Set the cell's new frame
-                [cell setFrame:cellFrame];
-                cellFrame.origin.y += cellFrame.size.height;
-            }
-
-            cellFrame.origin.x += cellFrame.size.width;
-    }
-}
-
 
 @end
 
