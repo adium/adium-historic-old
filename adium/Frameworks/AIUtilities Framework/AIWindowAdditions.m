@@ -53,36 +53,48 @@
     }
 }
 
-//Exposé code from Richard Wareham, Desktop Manager developer
-//Modified by Yann Bizeul, GeekTool Developer :-)
-//######## THIS CODE PREVENTS LAUNCH IN 10.2 #########
+//We must weak link these symbols.  Failure to will crash us on launch under 10.2
+//extern OSStatus CGSGetWindowTags(const CGSConnection cid, const CGSWindow wid, 
+//								 int *tags, int thirtyTwo) __attribute__((weak_import));
+//extern OSStatus CGSClearWindowTags(const CGSConnection cid, const CGSWindow wid, 
+//								   int *tags, int thirtyTwo) __attribute__((weak_import));
+//extern OSStatus CGSSetWindowTags(const CGSConnection cid, const CGSWindow wid, 
+//								 int *tags, int thirtyTwo) __attribute__((weak_import));
 -(void)setIgnoresExpose:(BOOL)flag
 {
-//    CGSConnection cid;
-//    CGSWindow wid;
-//    SInt32 vers; 
-//    
-//    Gestalt(gestaltSystemVersion,&vers); 
-//    if (vers < 0x1030)
-//	return;
-//    wid = [ self windowNumber ];
-//    cid = _CGSDefaultConnection();
-//    int tags[2];
-//    tags[0] = tags[1] = 0;
-//    OSStatus retVal = CGSGetWindowTags(cid, wid, tags, 32);
-//    if(!retVal) {
-//	if (flag)
-//	    tags[0] = tags[0] | 0x00000800;
-//	else
-//	    tags[0] -= tags[0] & 0x00000800;
-//	
-//	CGSSetWindowTags(cid, wid, tags, 32);
-//	
-//	if (flag) {
-//	    tags[0] = 0x02;
-//	    tags[1] = 0;
-//	    CGSClearWindowTags(cid, wid, tags, 32);
+	// ### This code correctly sets the expose flag, but doesn't remove it ###
+	
+	//Check for the presence of all three symbols.  If they do not exist, we simply return
+//	if(CGSGetWindowTags != NULL && CGSClearWindowTags != NULL && CGSSetWindowTags != NULL){
+//		CGSConnection cid;
+//		CGSWindow wid;
+//		SInt32 vers; 
+//		
+//		//As an extra layer of security, make sure we're in 10.3 or newer
+//		Gestalt(gestaltSystemVersion,&vers); 
+//		if(vers >= 0x1030){
+//			wid = [self windowNumber];
+//			cid = _CGSDefaultConnection();
+//			int tags[2];
+//			tags[0] = tags[1] = 0;
+//			OSStatus retVal = CGSGetWindowTags(cid, wid, tags, 32);
+//			if(!retVal){
+//				if(flag){
+//					tags[0] = tags[0] | 0x00000800;
+//				}else{
+//					tags[0] -= tags[0] & 0x00000800;
+//				}
+//				
+//				CGSSetWindowTags(cid, wid, tags, 32);
+//				
+//				if(flag){
+//					tags[0] = 0x02;
+//					tags[1] = 0;
+//					CGSClearWindowTags(cid, wid, tags, 32);
+//				}
+//			}
+//		}
 //	}
-//    }
 }
+
 @end
