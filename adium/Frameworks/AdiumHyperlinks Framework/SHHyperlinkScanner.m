@@ -97,7 +97,7 @@ static NSMutableCharacterSet *skipSet = nil;
 		[skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		[skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
 		[skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-		[skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-"]];
     }
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
