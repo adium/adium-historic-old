@@ -8807,6 +8807,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				34F2BD23059CF23F0005B238,
 				3419FE230531586A00C68BA3,
 				4B7845FA059B558C0048A8BA,
 				4BFEA735059B679200874BD5,
@@ -16595,6 +16596,7 @@
 				34CDB7A60571D66800D50469,
 				4BE9201003DEE2FE00A8010A,
 				4B5AAA1F03E02EB900A8010A,
+				34F2BD0A059CF1E80005B238,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -16734,6 +16736,26 @@
 		};
 		34F2BC6A059CC2850005B238 = {
 			fileRef = 34F2BC68059CC2840005B238;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2BD0A059CF1E80005B238 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			name = libcharset.dylib;
+			path = "Plugins/Gaim Service/LIBS/libcharset.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2BD0B059CF1E90005B238 = {
+			fileRef = 34F2BD0A059CF1E80005B238;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2BD23059CF23F0005B238 = {
+			fileRef = 34F2BD0A059CF1E80005B238;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19825,6 +19847,7 @@
 				34535743059AEE1000A83D9E,
 				34535744059AEE1000A83D9E,
 				4B7845F0059B50AF0048A8BA,
+				34F2BD0B059CF1E90005B238,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19848,7 +19871,7 @@
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\"";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" \"/Users/evands/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
