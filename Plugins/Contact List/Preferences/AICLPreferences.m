@@ -353,6 +353,7 @@
 				case WINDOW_STYLE_BORDERLESS: image = layoutBorderless; break;
 				case WINDOW_STYLE_MOCKIE: image = layoutMockie; break;
 				case WINDOW_STYLE_PILLOWS: image = layoutPillows; break;
+				case WINDOW_STYLE_PILLOWS_FITTED: image = layoutPillows; break;
 			}
 			[cell setImage:image];
 		}else{
