@@ -16,15 +16,17 @@
 
 #import "AIAccount.h"
 #import "AIChat.h"
-#import "AIContactController.h"
-#import "AIContentController.h"
 #import "AIContentMessage.h"
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
-#import <AIUtilities/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
+#import "AIServiceIcons.h"
+#import "AIUserIcons.h"
+
+#import "AIContactController.h"
+#import "AIContentController.h"
+
 #import <AIUtilities/BZArrayAdditions.h>
-#import <Adium/AIServiceIcons.h>
-#import <Adium/AIUserIcons.h>
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;

@@ -18,7 +18,7 @@
 #import "AIContentController.h"
 #import "AIContentObject.h"
 #import "AIListObject.h"
-#import <AIUtilities/AIHTMLDecoder.h>
+#import "AIHTMLDecoder.h"
 
 @implementation AIContentObject
 
