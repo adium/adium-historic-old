@@ -6,7 +6,7 @@
 //
 
 #import "CBOldPrefsImporterAppController.h"
-#import <AIUtilities/AIUtilities.h>
+
 #import "AIContentController.h"
 #include <unistd.h>
 
@@ -252,7 +252,7 @@
 		NSString		*newLogFolder;
 		NSString		*oldUserFolder;
 		NSString		*oldLogFolder;
-		NSEnumerator	*logEnumerator;
+		NSEnumerator            *logEnumerator;
 		NSString		*subFolder;
 		
 		NSFileManager   *defaultFileManager = [NSFileManager defaultManager];
@@ -427,230 +427,232 @@
 #pragma mark -
 #pragma mark Other Client Shtuff
 
-- (IBAction)importAwayMessages:(id)sender
-{
-    if([self ensureAdiumIsClosed]){
-        NSString *whichClient;
-        whichClient = [popUpButton_Clients titleOfSelectedItem];
-    
-        if(whichClient == @"iChat"){
-            [self importiChatAways];
-        }
-        else if(whichClient == @"Proteus"){
-            [self importProteusAways];
-        }
-        else if(whichClient == @"Fire"){
-            [self importFireAways];
-        }
-    }
-}
-
-- (void)importiChatAways
-{
-    [spinner_importProgress setHidden:NO];
-    [spinner_importProgress startAnimation:nil];
-    [spinner_importProgress display];
-    NSAttributedString *newAwayString;
-    NSMutableDictionary	*newAwayDict;
-    NSString *importingForAccount = [NSString stringWithString:[popUpButton_user titleOfSelectedItem]];
-   
-    // Create array of iChat away messages
-    NSString *iChatPath = [NSString stringWithString:[@"~/Library/Preferences/com.apple.iChat.plist" stringByExpandingTildeInPath]];
-    NSDictionary *iChatDict = [NSDictionary dictionaryWithContentsOfFile:iChatPath];
-    NSArray *iChatMessageArray = [iChatDict objectForKey:@"CustomAwayMessages"];
-        
-    // Create an array of Adium's away messages
-    NSString *awayMessagePath = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/Away Messages.plist", importingForAccount] stringByExpandingTildeInPath];
-    NSMutableDictionary *adiumDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:awayMessagePath];
-            
-    NSArray *tempArray = [NSArray arrayWithArray:[adiumDictionary objectForKey:@"Saved Away Messages"]];
-    NSMutableArray *AdiumMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
-    // Or, create a blank list if we've never saved one before
-    if (AdiumMessageArray == nil)
-        AdiumMessageArray = [NSMutableArray array];
-    
-        
-    // Loop through each iChat away message
-    NSEnumerator *iChatEnumerator = [iChatMessageArray objectEnumerator];
-    NSEnumerator *AdiumEnumerator = NULL;
-    NSDictionary *AdiumMessage; 
-    NSString *iChatMsgTitle, *iChatMsgContent;
-    NSString *AdiumMsgTitle, *AdiumMsgContent;
-    BOOL messageAlreadyExists;
-        
-    while(iChatMsgContent = [iChatEnumerator nextObject])
-        {
-            
-            // Create a title for the message by truncating it
-            iChatMsgTitle = [iChatMsgContent stringWithEllipsisByTruncatingToLength:25];
-            
-            // Loop through each Adium away message and compare it to the current iChat message
-            AdiumEnumerator = [AdiumMessageArray objectEnumerator];
-            messageAlreadyExists = NO;
-            
-            while(AdiumMessage = [AdiumEnumerator nextObject])
-            {
-                AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
-                AdiumMsgContent = [AdiumMessage objectForKey:@"Message"];
-                
-                // If either the title or the content matches, we assume it's already been imported...
-                if ( AdiumMessage && ([AdiumMsgTitle isEqualToString:iChatMsgTitle] || [AdiumMsgContent isEqual:iChatMsgContent])) {
-                    messageAlreadyExists = YES;
-                    break;
-                }
-            }
-            
-            // If the message isn't already in Adium's list, add it
-            if (!messageAlreadyExists) {
-                
-                // Casting like a drunk fisherman...
-                newAwayString = [[[NSAttributedString alloc] initWithString:iChatMsgContent 
-                                                                 attributes:[[self contentController] defaultFormattingAttributes]] autorelease];
-                
-                // Add the away message to the array... hallelujah!
-                
-                newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message", iChatMsgTitle, @"Title", nil];
-                
-                
-                [AdiumMessageArray addObject:newAwayDict];
-            }
-        }
-    NSArray *finalArray = [self _saveArrayFromArray:AdiumMessageArray];
-    [adiumDictionary setObject:finalArray forKey:@"Saved Away Messages"];
-    NSDictionary *finalDict = [NSDictionary dictionaryWithDictionary:adiumDictionary];
-    [spinner_importProgress stopAnimation:nil];
-    [spinner_importProgress setHidden:YES];
-        
-    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
-    {
-        NSLog(@"Success");
-        NSBeginAlertSheet(@"iChat messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your iChat away messages have been imported and are now available in Adium.");
-    }
-    else
-    {
-        NSLog(@"Fail");
-        NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contact an Adium developer.");
-    }
-        
-    
-}
-
-- (void)importProteusAways
-{
-    NSLog(@"Proteus");
-}
-
-- (void)importFireAways
-{
-    NSLog(@"Fire");
-    [spinner_importProgress setHidden:NO];
-    [spinner_importProgress startAnimation:nil];
-    [spinner_importProgress display];
-    NSAttributedString *newAwayString;
-    NSMutableDictionary	*newAwayDict;
-    NSString *importingForAccount = [NSString stringWithString:[popUpButton_user titleOfSelectedItem]];
-    
-    //Create an array of Fire Away Messages
-    NSString *firePath = [NSString stringWithString:[@"~/Library/Application Support/Fire/FireConfiguration.plist" stringByExpandingTildeInPath]];
-       
-    NSDictionary *fireDict = [NSDictionary dictionaryWithContentsOfFile:firePath];
-    NSDictionary *fireMessageDict = [fireDict objectForKey:@"awayMessages"];
-    
-    
-    // Create an array of Adium's away messages
-    NSString *awayMessagePath = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/Away Messages.plist", importingForAccount] stringByExpandingTildeInPath];
-    NSMutableDictionary *adiumDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:awayMessagePath];
-    NSArray *tempArray = [NSArray arrayWithArray:[adiumDictionary objectForKey:@"Saved Away Messages"]];
-    NSMutableArray *AdiumMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
-    // Or, create a blank list if we've never saved one before
-    if (AdiumMessageArray == nil)
-        AdiumMessageArray = [NSMutableArray array];
-    
-    
-    // Loop through each Fire away message    
-    NSEnumerator *AdiumEnumerator = NULL;
-    NSDictionary *AdiumMessage; 
-    NSDictionary *fireMessage, *fireCurrentMessage;
-    NSString *AdiumMsgTitle, *AdiumMsgContent;
-    NSString *fireMsgTitle, *fireMsgContent;
-    BOOL messageAlreadyExists;
-    
-    //Get us an array of all the keys in the dictionary
-    NSArray *fireKeyArray = [[NSArray alloc] initWithArray:[fireMessageDict allKeys]];
-              
-    NSEnumerator *fireEnumerator = [fireKeyArray objectEnumerator];
-    while(fireMsgTitle = [fireEnumerator nextObject])
-    {
-        fireMessage = [fireMessageDict objectForKey:fireMsgTitle];
-        
-        fireMsgContent = [fireMessage objectForKey:@"message"];
-        NSLog(fireMsgTitle);
-        NSLog(fireMsgContent);
-        
-        // Loop through each Adium away message and compare it to the current Fire message
-        AdiumEnumerator = [AdiumMessageArray objectEnumerator];
-        messageAlreadyExists = NO;
-        
-        while(AdiumMessage = [AdiumEnumerator nextObject])
-        {
-            // If either the title or the content matches, we assume it's already been imported...
-            if ( AdiumMessage && ([AdiumMsgTitle isEqualToString:fireMsgTitle] || [AdiumMsgContent isEqual:fireMsgContent])) {
-                messageAlreadyExists = YES;
-                break;
-            }
-        }
-        
-        
-        // If the message isn't already in Adium's list, add it
-        if (!messageAlreadyExists) 
-        {
-            
-            // Casting like a drunk fisherman...
-            newAwayString = [[[NSAttributedString alloc] initWithString:fireMsgContent 
-                                                             attributes:[[self contentController] defaultFormattingAttributes]] autorelease];
-            
-            // Add the away message to the array... hallelujah!
-            
-            newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message", fireMsgTitle, @"Title", nil];
-            
-            
-            [AdiumMessageArray addObject:newAwayDict];
-        }
-        
-    }
-    NSArray *finalArray = [self _saveArrayFromArray:AdiumMessageArray];
-    [adiumDictionary setObject:finalArray forKey:@"Saved Away Messages"];
-    NSDictionary *finalDict = [NSDictionary dictionaryWithDictionary:adiumDictionary];
-    [spinner_importProgress stopAnimation:nil];
-    [spinner_importProgress setHidden:YES];
-    
-    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
-    {
-        NSLog(@"Success");
-        NSBeginAlertSheet(@"Fire messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your Fire away messages have been imported and are now available in Adium.");
-    }
-    else
-    {
-        NSLog(@"Fail");
-        NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contact an Adium developer.");
-    }
-  }
-
-    
-    
-    
-
-#pragma mark -
-#pragma mark Application Delegate Methods & Other Ugly Stuff(tm)
-
-- (AIContentController *)contentController{
-    return(contentController);
-}
-
-
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
-{
-	return YES;
-}
+//- (IBAction)importAwayMessages:(id)sender
+//{
+//    if([self ensureAdiumIsClosed]){
+//        NSString *whichClient;
+//        whichClient = [popUpButton_Clients titleOfSelectedItem];
+//    
+//        if(whichClient == @"iChat"){
+//            [self importiChatAways];
+//        }
+//        else if(whichClient == @"Proteus"){
+//            [self importProteusAways];
+//        }
+//        else if(whichClient == @"Fire"){
+//            [self importFireAways];
+//        }
+//    }
+//}
+//
+//- (void)importiChatAways
+//{
+//    [spinner_importProgress setHidden:NO];
+//    [spinner_importProgress startAnimation:nil];
+//    [spinner_importProgress display];
+//    NSAttributedString *newiChatAwayString;
+//    NSMutableDictionary	*newAwayDict;
+//    NSString *importingForAccount = [NSString stringWithString:[popUpButton_user titleOfSelectedItem]];
+//   
+//    // Create array of iChat away messages
+//    NSString *iChatPath = [NSString stringWithString:[@"~/Library/Preferences/com.apple.iChat.plist" stringByExpandingTildeInPath]];
+//    NSDictionary *iChatDict = [NSDictionary dictionaryWithContentsOfFile:iChatPath];
+//    NSArray *iChatMessageArray = [iChatDict objectForKey:@"CustomAwayMessages"];
+//        
+//    // Create an array of Adium's away messages
+//    NSString *awayMessagePath = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/Away Messages.plist", importingForAccount] stringByExpandingTildeInPath];
+//    NSMutableDictionary *adiumDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:awayMessagePath];
+//            
+//    NSArray *tempArray = [NSArray arrayWithArray:[adiumDictionary objectForKey:@"Saved Away Messages"]];
+//    NSMutableArray *AdiumMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
+//    // Or, create a blank list if we've never saved one before
+//    if (AdiumMessageArray == nil)
+//        AdiumMessageArray = [NSMutableArray array];
+//    
+//        
+//    // Loop through each iChat away message
+//    NSEnumerator *iChatEnumerator = [iChatMessageArray objectEnumerator];
+//    NSEnumerator *AdiumEnumerator = NULL;
+//    NSDictionary *AdiumMessage; 
+//    NSString *iChatMsgTitle, *iChatMsgContent;
+//    NSString *AdiumMsgTitle, *AdiumMsgContent;
+//    BOOL messageAlreadyExists;
+//        
+//    while(iChatMsgContent = [iChatEnumerator nextObject])
+//        {
+//            
+//            // Create a title for the message by truncating it
+//            iChatMsgTitle = [iChatMsgContent stringWithEllipsisByTruncatingToLength:25];
+//            
+//            // Loop through each Adium away message and compare it to the current iChat message
+//            AdiumEnumerator = [AdiumMessageArray objectEnumerator];
+//            messageAlreadyExists = NO;
+//            
+//            while(AdiumMessage = [AdiumEnumerator nextObject])
+//            {
+//                AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
+//                AdiumMsgContent = [AdiumMessage objectForKey:@"Message"];
+//                
+//                // If either the title or the content matches, we assume it's already been imported...
+//                if ( AdiumMessage && ([AdiumMsgTitle isEqualToString:iChatMsgTitle] || [AdiumMsgContent isEqual:iChatMsgContent])) {
+//                    messageAlreadyExists = YES;
+//                    break;
+//                }
+//            }
+//            
+//            // If the message isn't already in Adium's list, add it
+//            if (!messageAlreadyExists) {
+//                
+//                // Casting like a drunk fisherman...
+//                newiChatAwayString = [[[NSAttributedString alloc] initWithString:iChatMsgContent 
+//                                                                 attributes:[[self contentController] defaultFormattingAttributes]] autorelease];
+//                
+//                // Add the away message to the array... hallelujah!
+//                
+//                newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newiChatAwayString,@"Message", iChatMsgTitle, @"Title", nil];
+//                
+//                
+//                [AdiumMessageArray addObject:newAwayDict];
+//            }
+//        }
+//    NSArray *finalArray = [self _saveArrayFromArray:AdiumMessageArray];
+//    [adiumDictionary setObject:finalArray forKey:@"Saved Away Messages"];
+//    NSDictionary *finalDict = [NSDictionary dictionaryWithDictionary:adiumDictionary];
+//    [spinner_importProgress stopAnimation:nil];
+//    [spinner_importProgress setHidden:YES];
+//        
+//    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
+//    {
+//        NSLog(@"Success");
+//        NSBeginAlertSheet(@"iChat messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your iChat away messages have been imported and are now available in Adium.");
+//    }
+//    else
+//    {
+//        NSLog(@"Fail");
+//        NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contac
+//t an Adium developer.");
+//    }
+//        
+//    
+//}
+//
+//- (void)importProteusAways
+//{
+//    NSLog(@"Proteus");
+//}
+//
+//- (void)importFireAways
+//{
+//    NSLog(@"Fire");
+//    [spinner_importProgress setHidden:NO];
+//    [spinner_importProgress startAnimation:nil];
+//    [spinner_importProgress display];
+//    NSAttributedString *newAwayString;
+//    NSMutableDictionary	*newAwayDict;
+//    NSString *importingForAccount = [NSString stringWithString:[popUpButton_user titleOfSelectedItem]];
+//    
+//    //Create an array of Fire Away Messages
+//    NSString *firePath = [NSString stringWithString:[@"~/Library/Application Support/Fire/FireConfiguration.plist" stringByExpandingTildeInPath]];
+//       
+//    NSDictionary *fireDict = [NSDictionary dictionaryWithContentsOfFile:firePath];
+//    NSDictionary *fireMessageDict = [fireDict objectForKey:@"awayMessages"];
+//    
+//    
+//    // Create an array of Adium's away messages
+//    NSString *awayMessagePath = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/Away Messages.plist", importingForAccount] stringByExpandingTildeInPath];
+//    NSMutableDictionary *adiumDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:awayMessagePath];
+//    NSArray *tempArray = [NSArray arrayWithArray:[adiumDictionary objectForKey:@"Saved Away Messages"]];
+//    NSMutableArray *AdiumMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
+//    // Or, create a blank list if we've never saved one before
+//    if (AdiumMessageArray == nil)
+//        AdiumMessageArray = [NSMutableArray array];
+//    
+//    
+//    // Loop through each Fire away message    
+//    NSEnumerator *AdiumEnumerator = NULL;
+//    NSDictionary *AdiumMessage; 
+//    NSDictionary *fireMessage, *fireCurrentMessage;
+//    NSString *AdiumMsgTitle, *AdiumMsgContent;
+//    NSString *fireMsgTitle, *fireMsgContent;
+//    BOOL messageAlreadyExists;
+//    
+//    //Get us an array of all the keys in the dictionary
+//    NSArray *fireKeyArray = [[NSArray alloc] initWithArray:[fireMessageDict allKeys]];
+//              
+//    NSEnumerator *fireEnumerator = [fireKeyArray objectEnumerator];
+//    while(fireMsgTitle = [fireEnumerator nextObject])
+//    {
+//        fireMessage = [fireMessageDict objectForKey:fireMsgTitle];
+//        
+//        fireMsgContent = [fireMessage objectForKey:@"message"];
+//        NSLog(fireMsgTitle);
+//        NSLog(fireMsgContent);
+//        
+//        // Loop through each Adium away message and compare it to the current Fire message
+//        AdiumEnumerator = [AdiumMessageArray objectEnumerator];
+//        messageAlreadyExists = NO;
+//        
+//        while(AdiumMessage = [AdiumEnumerator nextObject])
+//        {
+//            // If either the title or the content matches, we assume it's already been imported...
+//            if ( AdiumMessage && ([AdiumMsgTitle isEqualToString:fireMsgTitle] || [AdiumMsgContent isEqual:fireMsgContent])) {
+//                messageAlreadyExists = YES;
+//                break;
+//            }
+//        }
+//        
+//        
+//        // If the message isn't already in Adium's list, add it
+//        if (!messageAlreadyExists) 
+//        {
+//            
+//            // Casting like a drunk fisherman...
+//            newAwayString = [[[NSAttributedString alloc] initWithString:fireMsgContent 
+//                                                             attributes:[[self contentController] defaultFormattingAttributes]] autorelease];
+//            
+//            // Add the away message to the array... hallelujah!
+//            
+//            newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message", fireMsgTitle, @"Title", nil];
+//            
+//            
+//            [AdiumMessageArray addObject:newAwayDict];
+//        }
+//        
+//    }
+//    NSArray *finalArray = [self _saveArrayFromArray:AdiumMessageArray];
+//    [adiumDictionary setObject:finalArray forKey:@"Saved Away Messages"];
+//    NSDictionary *finalDict = [NSDictionary dictionaryWithDictionary:adiumDictionary];
+//    [spinner_importProgress stopAnimation:nil];
+//    [spinner_importProgress setHidden:YES];
+//    
+//    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
+//    {
+//        NSLog(@"Success");
+//        NSBeginAlertSheet(@"Fire messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your Fire away messages have been imported and are now available in Adium.");
+//    }
+//    else
+//    {
+//        NSLog(@"Fail");
+//        NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contac
+//t an Adium developer.");
+//    }
+//  }
+//
+//    
+//    
+//    
+//
+//#pragma mark -
+//#pragma mark Application Delegate Methods & Other Ugly Stuff(tm)
+//
+//- (AIContentController *)contentController{
+//    return(contentController);
+//}
+//
+//
+//- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
+//{
+//	return YES;
+//}
 
 @end
