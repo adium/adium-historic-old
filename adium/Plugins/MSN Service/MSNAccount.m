@@ -80,6 +80,45 @@
             
             return YES;
         }
+    }    
+    if([[object type] isEqual:CONTENT_MESSAGE_TYPE] && [(AIContentTyping *)object typing])
+    {
+        AIHandle	*handle;
+        AISocket	*sbSocket;
+        NSLog(@"STUFF");
+        handle = [[object destination] handleForAccount:self];
+        sbSocket = [[switchBoardDict objectForKey:[handle UID]] objectForKey:@"Socket"];
+
+        //create the payload
+        NSString *payload = [NSString stringWithFormat:
+            @"MIME-Version: 1.0\r\nContent-Type: text/x-msmsgscontrol\r\nTypingUser: %@\r\n\r\n\r\n",
+            screenName];
+            
+        if(sbSocket && [sbSocket isValid])//there's already an SB session
+        {
+            [self sendMessage:payload onSocket:sbSocket];
+            
+            return YES;
+        }
+        else // create a session
+        {
+            if(sbSocket && ![sbSocket isValid]) // if it's dead, don't dothis!
+            {
+                [switchBoardDict removeObjectForKey:[handle UID]];
+            }
+            NSLog(@"creating an SB session");
+            [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
+                target:self
+                selector:@selector(startSBSessionHelper:)
+                userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    @"Message", @"Type",
+                    payload, @"Payload",
+                    [handle UID], @"Handle",
+                    [NSNumber numberWithInt:0], @"Phase", nil]
+                repeats:YES];
+            
+            return YES;
+        }
     }
     return NO;
 }
@@ -90,7 +129,7 @@
     AIListObject 	*listObject = [inChat object];
     BOOL 		available = NO;
 
-    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0 || [inType isEqual:CONTENT_TYPING_TYPE]){
         //If we are online
         if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
             if(!inChat || !listObject){
@@ -1484,10 +1523,10 @@
                         NSLog (@"MSN Got message, sending to interface"); 
                         
                         // Not typing anymore, they sent!
-                        AIHandle *handle = [handleDict objectForKey:handle];
-                        [[handle statusDictionary] 
+                        AIHandle *Handle = [handleDict objectForKey:handle];
+                        [[Handle statusDictionary] 
                             setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
-                        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:
+                        [[owner contactController] handleStatusChanged:Handle modifiedStatusKeys:
                             [NSArray arrayWithObject:@"Typing"]];
                         
                         //Add a content object for the message
