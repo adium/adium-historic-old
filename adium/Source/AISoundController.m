@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.45 2004/06/07 06:54:14 evands Exp $
+// $Id: AISoundController.m,v 1.46 2004/06/28 03:43:24 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -108,6 +108,10 @@
         //If we should be muted now, clear out the speech array.
         if(muteSounds) [speechArray removeAllObjects];
     }
+	
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){    
+		muteWhileAway = [[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue];
+	}
 }
 
 
@@ -140,7 +144,7 @@
 //Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    if(!muteSounds){
+    if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
         if(useCustomVolume && customVolume != 0){
 			//If the user is specifying a custom volume, we must use quicktime to play our sounds.
 			[self _quicktimePlaySound:inPath];
@@ -436,7 +440,9 @@
 		
 		[speechArray addObject:dict];
 		[dict release];
-        if(!muteSounds) [self speakNext];
+		if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+			[self speakNext];
+		}
     }
 }
 
