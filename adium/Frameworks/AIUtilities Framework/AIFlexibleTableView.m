@@ -606,12 +606,37 @@
 //Key/Paste Forwarding ---------------------------------------------------------------------------------
 //When the user attempts to type into the table view, we push the keystroke to the next responder,
 //and make it key.  This isn't required, but convienent behavior since one will never want to type
-//into this view.
+//into this view.  If the user attempts to scroll and we are inside an AIAutoScrollView
+//we should pass the request to the scroll view.
 - (void)keyDown:(NSEvent *)theEvent
 {
-    [self forwardSelector:@selector(keyDown:) withObject:theEvent];
-}
+	id superview = [self superview];
+	
+	while (superview && !([superview isKindOfClass:[AIAutoScrollView class]])){
+		superview = [superview superview];
+	}
 
+	if (superview){
+		NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
+		
+		if ([charactersIgnoringModifiers length]) {
+			unichar inChar = [charactersIgnoringModifiers characterAtIndex:0];
+			
+			if(inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey ||
+			   inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey || 
+			   inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey){
+				[[self superview] keyDown:theEvent];
+			}else{
+				[self forwardSelector:@selector(keyDown:) withObject:theEvent];
+			}
+		}else{
+			[self forwardSelector:@selector(keyDown:) withObject:theEvent];	
+		}
+	}else{
+		[self forwardSelector:@selector(keyDown:) withObject:theEvent];
+	}
+}
+	
 - (void)pasteAsPlainText:(id)sender
 {
     [self forwardSelector:@selector(pasteAsPlainText:) withObject:sender];
@@ -634,7 +659,7 @@
         
         if(responder){
             [[self window] makeFirstResponder:responder]; //Make it first responder
-            [[self nextResponder] tryToPerform:selector with:object]; //Pass it this key event
+            [responder tryToPerform:selector with:object]; //Pass it this key event
         }
         
     }else{
