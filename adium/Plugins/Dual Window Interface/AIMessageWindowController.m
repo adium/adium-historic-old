@@ -112,11 +112,23 @@
     [[self window] performClose:nil];
 }
 
+//
+- (void)showWindowInFront:(BOOL)inFront
+{
+	if(inFront){
+		[self showWindow:nil];
+	}else{
+		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
+	}
+}
+
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
     NSEnumerator			*enumerator;
     AIMessageTabViewItem	*tabViewItem;
+	
+	windowIsClosing = YES;
 
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
     enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];
@@ -127,7 +139,7 @@
 	//Chats have all closed, set active to nil, let the interface know we closed
 	[[adium interfaceController] chatDidBecomeActive:nil];
 	[interface containerDidClose:self];
-	
+
     return(YES);
 }
 
@@ -181,7 +193,7 @@
 - (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem
 {
     //If the tab is selected, select the next tab before closing it (To mirror the behavior of safari)
-    if(inTabViewItem == [tabView_messages selectedTabViewItem]){
+    if(!windowIsClosing && inTabViewItem == [tabView_messages selectedTabViewItem]){
 		[tabView_messages selectNextTabViewItem:nil];
     }
 	
@@ -190,6 +202,11 @@
 	[[adium interfaceController] chatDidClose:[inTabViewItem chat]];
     [tabView_messages removeTabViewItem:inTabViewItem];
 	[inTabViewItem setContainer:nil];
+	
+	//close if we're empty
+	if(!windowIsClosing && [containedChats count] == 0){
+		[self closeWindow:nil];
+	}
 }
 
 //

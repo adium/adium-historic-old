@@ -31,14 +31,15 @@
 @interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController> {
     ESDualWindowMessageAdvancedPreferences  *preferenceMessageAdvController;
     
-	BOOL					applicationIsHidden;
 	NSMutableArray			*delayedContainerShowArray;
 	NSMutableDictionary		*containers;
 	int						uniqueContainerNumber;
+	BOOL					applicationIsHidden;
 }
 
 - (id)openContainerNamed:(NSString *)containerName;
 - (void)closeContainer:(AIMessageWindowController *)container;
+- (void)containerDidClose:(AIMessageWindowController *)container;
 - (void)transferMessageTab:(AIMessageTabViewItem *)tabViewItem toContainer:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint;
 
 @end

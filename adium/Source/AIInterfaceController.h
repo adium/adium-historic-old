@@ -160,6 +160,7 @@
 - (void)openChat:(AIChat *)inChat;
 - (void)setActiveChat:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
+- (AIChat *)activeChat;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
 

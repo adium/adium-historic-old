@@ -27,7 +27,8 @@
 	NSString						*name;
 //	NSMutableArray					*listObjectArray;
 	
-	
+	BOOL			windowIsClosing;
+		
 //	BOOL			keepTabsArranged;
 //	BOOL			arrangeByGroup;
     BOOL			supressHiding;		//YSE to temporarily suppress hiding of the tabs (used for dragging)
@@ -41,6 +42,7 @@
 }
 
 + (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface withName:(NSString *)inName;
+- (void)showWindowInFront:(BOOL)inFront;
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)name;
 
