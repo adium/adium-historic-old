@@ -119,6 +119,7 @@
 				4B18A5260459F8AF00A8010A,
 				4BD7D0D204620DAC00A8010A,
 				4BD7D0E104620E7200A8010A,
+				B7AE6657046578640051E914,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -182,6 +183,7 @@
 				4B18A5250459F8AF00A8010A,
 				4BD7D0D104620DAC00A8010A,
 				4BD7D0E004620E7200A8010A,
+				B7AE6656046578640051E914,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1409,6 +1411,7 @@
 		};
 		4B13323F0459BE4500A8010A = {
 			children = (
+				B7AE664D0465778E0051E914,
 				4BDDCA01041104BB00A8010A,
 				9C8C7FA303CBA17B00267226,
 			);
@@ -7136,6 +7139,175 @@
 //9E2
 //9E3
 //9E4
+//B70
+//B71
+//B72
+//B73
+//B74
+		B7AE664D0465778E0051E914 = {
+			children = (
+				B7AE664F0465778E0051E914,
+				B7AE66500465778E0051E914,
+			);
+			isa = PBXGroup;
+			name = "SQL Logger";
+			path = "Plugins/SQL Logger";
+			refType = 4;
+		};
+		B7AE664F0465778E0051E914 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AISQLLoggerPlugin.h;
+			path = "Plugins/SQL Logger/AISQLLoggerPlugin.h";
+			refType = 2;
+		};
+		B7AE66500465778E0051E914 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AISQLLoggerPlugin.m;
+			path = "Plugins/SQL Logger/AISQLLoggerPlugin.m";
+			refType = 2;
+		};
+		B7AE6651046578640051E914 = {
+			buildActionMask = 2147483647;
+			files = (
+				B7AE6658046579290051E914,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7AE6652046578640051E914 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7AE6653046578640051E914 = {
+			buildActionMask = 2147483647;
+			files = (
+				B7AE6659046579390051E914,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7AE6654046578640051E914 = {
+			buildActionMask = 2147483647;
+			files = (
+				B7AE6661046579590051E914,
+				B7AE6663046579880051E914,
+				B7AE6665046580AF0051E914,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7AE6655046578640051E914 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7AE6656046578640051E914 = {
+			buildPhases = (
+				B7AE6651046578640051E914,
+				B7AE6652046578640051E914,
+				B7AE6653046578640051E914,
+				B7AE6654046578640051E914,
+				B7AE6655046578640051E914,
+			);
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "\"/sw/postgresql:include\" /usr/local/pgsql/include";
+				INSTALL_PATH = /Adium.app/Contents/Plugins/;
+				LIBRARY_SEARCH_PATHS = "/sw/lib /usr/local/pgsql/lib";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lpq -lssl -lcrypto";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "SQL Logger";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = bundle;
+			};
+			dependencies = (
+			);
+			isa = PBXBundleTarget;
+			name = "SQL Logger";
+			productInstallPath = /Adium.app/Contents/Plugins/;
+			productName = "SQL Logger";
+			productReference = B7AE6657046578640051E914;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AISQLLogger</string>
+</dict>
+</plist>
+";
+		};
+		B7AE6657046578640051E914 = {
+			isa = PBXBundleReference;
+			path = "SQL Logger.bundle";
+			refType = 3;
+		};
+		B7AE6658046579290051E914 = {
+			fileRef = B7AE664F0465778E0051E914;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B7AE6659046579390051E914 = {
+			fileRef = B7AE66500465778E0051E914;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B7AE6661046579590051E914 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B7AE6663046579880051E914 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B7AE6665046580AF0051E914 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//B70
+//B71
+//B72
+//B73
+//B74
 //F50
 //F51
 //F52
