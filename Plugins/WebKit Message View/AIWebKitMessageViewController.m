@@ -135,10 +135,14 @@ DeclareString(AppendNextMessage);
 	[self participatingListObjectsChanged:nil];
 	
 	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(accountChanged:)
-									   name:Chat_AccountChanged 
+								   selector:@selector(sourceOrDestinationChanged:)
+									   name:Chat_SourceChanged 
 									 object:inChat];
-	[self accountChanged:nil];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(sourceOrDestinationChanged:)
+									   name:Chat_DestinationChanged 
+									 object:inChat];
+	[self sourceOrDestinationChanged:nil];
 	
 	
     return(self);
@@ -241,7 +245,7 @@ DeclareString(AppendNextMessage);
 	objectsWithUserIconsArray = [participatingListObjects mutableCopy];
 }
 
-- (void)accountChanged:(NSNotification *)notification
+- (void)sourceOrDestinationChanged:(NSNotification *)notification
 {
 	NSEnumerator	*enumerator = [[chat participatingListObjects] objectEnumerator];
 	AIListObject	*object;
