@@ -24,14 +24,14 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    NSFont	*font = [self font];
+    NSFont		*font = [self font];
     NSString	*title = [self stringValue];
     NSColor 	*highlightColor;
-    BOOL 	highlighted;
-
+    BOOL 		highlighted;
+	
     highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
     highlighted = [self isHighlighted];
-    if(highlighted) {
+    if(highlighted){
         [highlightColor set];
         NSRectFill(cellFrame);
     }
@@ -54,11 +54,21 @@
             }
         }
 
+		//Paragraph style for alignment and clipping
+		NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		[style setAlignment:[self alignment]];
+		[style setLineBreakMode:NSLineBreakByTruncatingTail];
+
         //
         if(font){
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,textColor,NSForegroundColorAttributeName,nil];
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				font, NSFontAttributeName,
+				style, NSParagraphStyleAttributeName,
+				textColor, NSForegroundColorAttributeName,nil];
         }else{
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,nil];
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				style, NSParagraphStyleAttributeName,
+				textColor, NSForegroundColorAttributeName,nil];
         }
 
         //Calculate the centered rect
