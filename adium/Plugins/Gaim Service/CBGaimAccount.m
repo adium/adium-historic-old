@@ -423,15 +423,16 @@ static BOOL didInitSSL = NO;
      	//verify the buddy does not already exist, and create it
 		GaimBuddy *buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
 		if(buddy == NULL){
-			buddy = gaim_buddy_new(account, [[object UID] UTF8String], NULL);
-		}
+                        buddy = gaim_buddy_new(account, [[object UID] UTF8String], NULL);
+		//}
 		
-		//Add the buddy locally to libgaim, and then to the serverside list
-		gaim_blist_add_buddy(buddy, NULL, group, NULL);
-		serv_add_buddy(gc, [[object UID] UTF8String], group);
+                        //Add the buddy locally to libgaim, and then to the serverside list
+                        gaim_blist_add_buddy(buddy, NULL, group, NULL);
+                        serv_add_buddy(gc, [[object UID] UTF8String], group);
 		
-		//Add it to Adium's list
-		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
+                        //Add it to Adium's list
+                        [object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
+                }
 	}
 }
 
